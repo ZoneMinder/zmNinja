@@ -1,0 +1,80 @@
+<div class="col-xs-5">
+    <h2>Live edit</h2>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group ">
+            <label class="control-label"
+                   for="chart-data-rows-1-3-v">February server sale units</label>
+
+            <input class="form-control" type="number" min="0" max="100" ng-model="chart.data.rows[1].c[3].v"
+                   id="chart-data-rows-1-3-v"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label"
+                   for="chart-options-vAxis-gridlines-count">Number of grid lines</label>
+
+            <input class="form-control" type="number" min="0" max="100" ng-model="chart.options.vAxis.gridlines.count"
+                   id="chart-options-vAxis-gridlines-count"/>
+        </div>
+
+        <div class="form-group">
+            <label for="chartType">Chart type</label>
+
+            <select class="form-control" id="chartType" ng-model="chart.type" ng-change="chartSelectionChange()">
+                <option value="AreaChart">AreaChart</option>
+                <option value="PieChart">PieChart</option>
+                <option value="ColumnChart">ColumnChart</option>
+                <option value="LineChart">LineChart</option>
+                <option value="Table">Table</option>
+                <option value="BarChart">BarChart</option>
+            </select>
+
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label for="hideServer">
+                    <input id="hideServer" type="checkbox" ng-model="hideServer"
+                           ng-change="selectionChange()"/>
+                    Hide Server</label>
+
+            </div>
+
+
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox">
+                <label for="htmlTooltip" ng-show="chart.type!='Table'">
+                    <input id="htmlTooltip" type="checkbox" ng-model="chart.options.tooltip.isHtml"
+                           ng-change="htmlTooltip()"/>
+                    HTML Tooltip
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="chart.type=='Table'">
+            <label for="chartType">Format</label>
+
+            <ul class="inputs-list">
+                <li ng-repeat="format in formatCollection">
+                    <button class="btn primary" ng-click="toggleFormat(format)">{{format.name}}</button>
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>
+
+<div class="col-xs-7">
+    <div google-chart chart="chart" style="{{cssStyle}}" on-ready="chartReady()"></div>
+    <!-- explicit close of tag seems to be necessary -->
+</div>
+
+
+<div class="col-xs-12">
+
+    <h2>Usage</h2>
+    <pre ng-non-bindable>&lt;div google-chart chart="chartObject" style="{{cssStyle}}"&gt;&lt;/div&gt;</pre>
+    <h2>Setup</h2>
+    <pre>$scope.chartObject = {{chart|json}}</pre>
+
+</div>

@@ -1,0 +1,52 @@
+<ion-view view-title="Monitors">
+    
+     <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons> 
+    
+    
+    <ion-content>
+        <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
+        <div class="list card" ng-repeat="monitor in monitors">
+            <!-- <a href="#/app/events" ng-click="toggleLeft()"> -->
+            <div class="item" ng-style="{'background-color': monitor.Monitor.Enabled=='1'?'white':'white'}">
+                <div ng-if="monitor.Monitor.Enabled == '1'">
+                    <span class='item item-icon-left item-icon-right'>
+                <i class="icon ion-ios-monitor-outline"></i>
+                 <b>{{monitor.Monitor.Name}}</b>
+                <i class="icon ion-checkmark-circled" style="color:green;"></i>
+                </span>
+                </div>
+
+
+                <div ng-if="monitor.Monitor.Enabled != '1'">
+                    <span class='item item-icon-left item-icon-right'>
+                    <i class="icon ion-ios-monitor-outline"></i>
+                     <b>{{monitor.Monitor.Name}}</b>
+                    <i class="icon ion-minus-circled" style="color:red;"></i>
+                </span>
+
+                </div>
+
+
+                <p>Mode :{{monitor.Monitor.Function}}</br>
+                    <!-- Current State: {{monitor.STATE}}</br> 
+            Events: {{monitor.NUMEVENTS}}</br> -->
+                    Resolution: {{monitor.Monitor.Width}}*{{monitor.Monitor.Height}}</br>
+                    Max FPS: {{monitor.Monitor.MaxFPS}}
+                    <br/> Alarm Max FPS:{{monitor.Monitor.AlarmMaxFPS}}
+                    <br/> Alarm Frame Count: {{monitor.Monitor.AlarmFrameCount}}
+                    <br/>
+                </p>
+
+                <div style="float:right;">
+                    <a class="button button-small icon icon-left icon ion-gear-a" href="#/app/events">Configuration</a>
+                    <a class="button button-small icon icon-left ion-calendar" href="#/events/{{monitor.Monitor.Id}}">Events</a>
+                    <a class="button button-small icon icon-left ion-ios-eye" href="#/app/events">Live View</a>
+                </div>
+
+            </div>
+        </div>
+        <!-- </a> -->
+    </ion-content>
+</ion-view>

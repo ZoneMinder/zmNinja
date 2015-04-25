@@ -1,0 +1,38 @@
+{
+  "name": "angular-google-chart",
+  "version": "0.0.11",
+  "main": "./ng-google-chart.js",
+  "homepage": "http://bouil.github.io/angular-google-chart/",
+  "authors": [
+    "Nicolas Bouillon <nicolas@bouil.org>",
+    "GitHub Contributors"
+  ],
+  "keywords": [
+    "angular",
+    "angularjs",
+    "google",
+    "chart",
+    "graph"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt",
+    "**/.*",
+    "bower_components"
+  ],
+  "dependencies": {
+    "angular": "~1.2.9"
+  },
+  "devDependencies": {},
+  "_release": "0.0.11",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.11",
+    "commit": "96a9b1d37c9d30d8666e45fe9d1255290d84951b"
+  },
+  "_source": "git://github.com/bouil/angular-google-chart.git",
+  "_target": "~0.0.11",
+  "_originalSource": "angular-google-chart",
+  "_direct": true
+}

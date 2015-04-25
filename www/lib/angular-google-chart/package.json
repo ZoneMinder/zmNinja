@@ -1,0 +1,22 @@
+{
+    "name": "angular-google-chart",
+    "version": "0.0.11",
+    "main": "./ng-google-chart.js",
+    "homepage": "http://bouil.github.io/angular-google-chart/",
+    "author": {
+      "name": "Nicolas Bouillon",
+      "email": "nicolas@bouil.org"
+    },
+    "keywords": [
+        "angular",
+        "angularjs",
+        "google",
+        "chart",
+        "graph"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "angular": "~1.2.9"
+    },
+    "devDependencies": {}
+}

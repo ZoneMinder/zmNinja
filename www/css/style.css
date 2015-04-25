@@ -1,0 +1,68 @@
+/* Empty. Add your own CSS if you like */
+
+
+
+.wrapper {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    
+    font-weight: normal;
+    text-align: left;
+    flex-wrap:wrap;
+}
+
+.wrapper > * {
+    padding: 5px;
+    flex: 1 100%;
+}
+
+.header {
+    background: #DDDDDD;
+}
+
+.footer {
+    background: #666666;
+    color:#ffffff;
+    padding:2px;
+}
+
+.main {
+    text-align: center;
+    background: #EEEEEE;
+    padding:2px;
+}
+
+.aside-1 {
+    background: gold;
+}
+
+.aside-2 {
+    background: hotpink;
+}
+
+@media all and (min-width: 600px) {
+    .aside { flex: 1 auto; }
+}
+
+@media all and (min-width: 800px) {
+    .main    { flex: 3 0px; }
+    .aside-1 { order: 1; }
+    .main    { order: 2; }
+    .aside-2 { order: 3; }
+    .footer  { order: 4; }
+}
+
+.notification-badge{
+  position: absolute;
+  top: 3px;
+  right: 0px;
+  font-size: 8px;
+}
+
+

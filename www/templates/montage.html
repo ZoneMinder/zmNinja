@@ -1,0 +1,46 @@
+<ion-view title="Montage View" class="bar-stable" cache-view="false">
+<ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>   
+    
+    <ion-content padding="true">
+        
+        <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
+        <!-- Hi:ROOT: {{montageSize}} LOCAL {{slider.monsize}} -->
+        <div class=" range range-positive">
+            <i class="icon ion-arrow-shrink"></i>
+
+            <input type="range" ng-model="slider.monsize" min="1" max="6">
+            <i class="icon ion-arrow-expand"></i>
+            
+        </div>
+        <!-- Hi:{{slider.monsize}} {{devWidth}} -->
+        <div class="wrapper">
+
+            <span ng-repeat="monitor in monitors">
+           
+          
+           <header class="header">&nbsp;<i class="ion-monitor"></i> {{monitor.Monitor.Name}}&nbsp;</header>
+               <article class="main">
+                <img  ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"   />
+                    <!-- <br/><i class="ion-monitor"></i> Hello -->
+     
+                </article>
+               <span style="font-size:10px;">
+               <footer class="footer">
+                  
+                   {{monitor.Monitor.Enabled=="1"?"Enabled":"Not Enabled"}}
+                   &nbsp;
+                   <span style="float:right">
+                       <i class="icon ion-android-alert"></i>
+                       
+                       :{{monitor.Monitor.Function}}
+                    </span>
+            </span>
+            </footer>
+
+            </span>
+        </div>
+    </ion-content>
+
+</ion-view>

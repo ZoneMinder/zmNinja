@@ -1,0 +1,29 @@
+
+[ng-cloak] {
+    display: none;
+}
+
+body {
+    padding: 20px;
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+table td.number {
+    text-align: right;
+}
+
+.navbar-fixed-top {
+    z-index: 1111;
+}
+
+.inputs-list li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.inputs-list > li input[type="checkbox"] {
+    margin: 0;
+}
+
+
