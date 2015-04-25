@@ -4,7 +4,7 @@
             <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         </ion-nav-buttons>
         <ion-tabs class="tabs-icon-top tabs-stable">
-            <ion-tab title="Events" icon="ion-stats-bars">
+            <ion-tab title="Events" icon="ion-stats-bars" on-select="generateChart('All Events')">
                 <ion-nav-view>
                     <ion-content class="has-header">
 
@@ -15,12 +15,12 @@
                 </ion-nav-view>
             </ion-tab>
 
-            <ion-tab title="About" icon="ion-gear-a" on-select="anotherChart()">
+            <ion-tab title="About" icon="ion-gear-a" on-select="generateChart('Events in the last hour')">
                 <ion-nav-view>
 
                     <ion-content>
                         <span></span>
-                            <div google-chart chart="chart2Object"></div>
+                            <div google-chart chart="chartObject"></div>
                        This is 2-2
 
                     </ion-content>
