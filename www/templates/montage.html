@@ -1,10 +1,10 @@
 <ion-view title="Montage View" class="bar-stable" cache-view="false">
-<ion-nav-buttons side="left">
-          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        </ion-nav-buttons>   
-    
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+
     <ion-content padding="true">
-        
+
         <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
         <!-- Hi:ROOT: {{montageSize}} LOCAL {{slider.monsize}} -->
         <div class=" range range-positive">
@@ -12,7 +12,7 @@
 
             <input type="range" ng-model="slider.monsize" min="1" max="6">
             <i class="icon ion-arrow-expand"></i>
-            
+
         </div>
         <!-- Hi:{{slider.monsize}} {{devWidth}} -->
         <div class="wrapper">
@@ -22,6 +22,9 @@
           
            <header class="header">&nbsp;<i class="ion-monitor"></i> {{monitor.Monitor.Name}}&nbsp;</header>
                <article class="main">
+                <!-- does not route via APIs. As of today, there is no way to do this via apis.
+                 FIXME: I should probably not pass username and password here - instead go the http interceptor
+                 and auth token mode -->
                 <img  ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"   />
                     <!-- <br/><i class="ion-monitor"></i> Hello -->
      

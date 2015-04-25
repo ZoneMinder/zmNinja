@@ -1,3 +1,5 @@
+// controller for Monitor View
+
 angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($scope, ZMDataModel, message,$ionicSideMenuDelegate) {
 
     $scope.monitors = [];

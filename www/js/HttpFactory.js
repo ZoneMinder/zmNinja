@@ -1,3 +1,5 @@
+// NOT USED ANYMORE. FIXME: DELETE THIS FILE
+
 angular.module('zmApp.controllers').factory('ZMHttpFactory', ['$http', '$rootScope','$ionicLoading', '$ionicPopup','$timeout'
   function($http, $rootScope, $ionicLoading, $ionicPopup, $timeout) {
 

@@ -1,3 +1,7 @@
+// This is the controller for Event view. StateParams is if I recall the monitor ID.
+// This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
+// and whether the new API has a better mechanism
+
 angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel,$ionicSideMenuDelegate) {
     console.log("I got STATE PARAM " + $stateParams.id);
     $scope.id = parseInt($stateParams.id,10);
@@ -20,13 +24,10 @@ $scope.openMenu = function () {
                 myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
             }
 
-            //for (var i = 0; i< myevents.length; i++)
-            // {
-            //      console.log ("I got Name as " + myevents[i].Event.MonitorName);
-            //  }
+
             $scope.events = myevents;
         });
-    //ZMDataModel.getEvents();
+
 
 
     $scope.doRefresh = function () {
@@ -42,10 +43,7 @@ $scope.openMenu = function () {
                     myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
                 }
 
-                //for (var i = 0; i< myevents.length; i++)
-                // {
-                //      console.log ("I got Name as " + myevents[i].Event.MonitorName);
-                //  }
+
                 $scope.events = myevents;
                 $scope.$broadcast('scroll.refreshComplete');
             });

@@ -1,55 +1,66 @@
+// This is my central data respository and common functions
+// that many other controllers use
+// It's grown over time. I guess I may have to split this into multiple services in the future
+
 angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', function ($http, $q, $ionicLoading) {
     // var deferred='';
     var monitorsLoaded = 0;
     var simulationMode = 0; // make 1 for simulation
-    var simSize = 30;
+    var simSize = 30; // how many monitors to simulate
     var montageSize = 3;
     var monitors = [];
     var oldevents = [];
     var loginData = {
         'username': '',
         'password': '',
-        'url': '',
-        'apiurl': ''
+        'url': '', // This is ZM portal API (Don't add /zm)
+        'apiurl': '' // This is the API path
     };
-    //greeas
-   
-    var simulation = 
-        {
-            fillSimulatedMonitors: function(cnt)
-            {
-                var simmonitors = [];
-                console.log ("*** Returning "+cnt+" simulated monitors");
-                for (var i=0; i < cnt; i++)
-                {
-                   
-                    
-                    simmonitors.push(
-                        {
-                            "Monitor":
-                            {
-                                "Id":i.toString(),
-                                "Name":"Monitor Simulation "+i.toString(),
-                                "Type":"Remote",
-                                "Function":"Modect",
-                                "Enabled":"1",
-                                "Width":"1280",
-                                "Height":"960",
-                                "Colours":"4",
-                                "MaxFPS":"10.00",
-                                "AlarmMaxFPS":"10.00",
-                                "AlarmFrameCount":"10.00"
-                            }
-                        }
-                    );
-                    
-                }
-                console.log ("Simulated: "+JSON.stringify(simmonitors));
-                return simmonitors;           
-            },
-        };
+
+    // This is really a test mode. This is how I am validating
+    // how my app behaves if you have many monitors. If you set simulationMode above to 1
+    // then this is the function that getMonitors and getEvents (not yet) calls
+
+    var simulation = {
+        fillSimulatedMonitors: function (cnt) {
+            var simmonitors = [];
+            console.log("*** Returning " + cnt + " simulated monitors");
+            for (var i = 0; i < cnt; i++) {
+
+
+                simmonitors.push({
+                    "Monitor": {
+                        // Obviously this is dummy data
+                        "Id": i.toString(),
+                        "Name": "Monitor Simulation " + i.toString(),
+                        "Type": "Remote",
+                        "Function": "Modect",
+                        "Enabled": "1",
+                        "Width": "1280",
+                        "Height": "960",
+                        "Colours": "4",
+                        "MaxFPS": "10.00",
+                        "AlarmMaxFPS": "10.00",
+                        "AlarmFrameCount": "10.00"
+                    }
+                });
+
+            }
+            // console.log ("Simulated: "+JSON.stringify(simmonitors));
+            return simmonitors;
+        },
+    };
 
     return {
+
+        // This function is called when the app is ready to run
+        // sets up various variables
+        // including persistent login data for the ZM apis and portal
+        // The reason I need both is because as of today, there is no way
+        // to access images using the API and they are authenticated via
+        // the ZM portal authentication, which is pretty messy. But unless
+        // the ZM authors fix this and streamline the access of images
+        // from APIs, I don't have an option
 
         init: function () {
             console.log("****** DATAMODEL INIT SERVICE CALLED ********");
@@ -71,7 +82,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     window.localStorage.getItem("url");
 
             }
-            
+
             if (window.localStorage.getItem("apiurl") != undefined) {
                 loginData.apiurl =
                     window.localStorage.getItem("apiurl");
@@ -82,9 +93,9 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             console.log("Getting out of ZMDataModel init");
 
         },
-        
-        
-       
+
+
+
         getLogin: function () {
             return loginData;
         },
@@ -97,17 +108,26 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         },
 
+        // This function returns a list of monitors
+        // if forceReload == 1 then it will force an HTTP API request to get a list of monitors
+        // if 0. then it will return back the previously loaded monitor list if one exists, else
+        // will issue a new HTTP API to get it
+
+        // I've wrapped this function in my own promise even though http returns a promise. This is because
+        // depending on forceReload and simulation mode, http may or may not be called. So I'm promisifying
+        // the non http stuff too to keep it consistent to the calling function.
+
         getMonitors: function (forceReload) {
             console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
             var d = $q.defer();
-            if (((monitorsLoaded == 0) || (forceReload == 1)) && (simulationMode !=1) ) // monitors are empty or force reload
+            if (((monitorsLoaded == 0) || (forceReload == 1)) && (simulationMode != 1)) // monitors are empty or force reload
             {
-                console.log("ZMDataModel: Invoking HTTP Factory to load monitors");
+                console.log("ZMDataModel: Invoking HTTP get to load monitors");
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + "/monitors.json";
                 $http.get(myurl)
                     .success(function (data) {
-                         console.log ("HTTP success got " + JSON.stringify(data.monitors));
+                        console.log("HTTP success got " + JSON.stringify(data.monitors));
                         monitors = data.monitors;
                         console.log("promise resolved inside HTTP success");
                         monitorsLoaded = 1;
@@ -115,6 +135,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     })
                     .error(function (err) {
                         console.log("HTTP Error " + err);
+                        // To keep it simple for now, I'm translating an error
+                        // to imply no monitors could be loaded. FIXME: conver to proper error
                         monitors = [];
                         console.log("promise resolved inside HTTP fail");
                         d.resolve(monitors);
@@ -123,8 +145,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             } else // monitors are loaded
             {
-                if (simulationMode == 1) 
-                {
+                if (simulationMode == 1) {
                     monitors = simulation.fillSimulatedMonitors(simSize);
                     //fillSimulatedMonitors
                 }
@@ -138,14 +159,18 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             console.log("ZMData setMonitors called with " + mon.length + " monitors");
             monitors = mon;
         },
-        
-        getAllPreexistingEvents: function()
-        {
-            console.log ("returning "+oldevents.length+" preexisting events");
+        // Not sure if I am using this anymore. I was using this for graphs, but I
+        // don't think I am now
+        getAllPreexistingEvents: function () {
+            console.log("returning " + oldevents.length + " preexisting events");
             return oldevents;
         },
-        
-       
+
+        // This function returns events for  specific monitor or all monitors
+        // You get here by tapping on events in the monitor screen or from
+        // the menu events option
+        // monitorId == 0 means all monitors (ZM starts from 1)
+
         getEvents: function (monitorId) {
 
             $ionicLoading.show({
@@ -156,18 +181,20 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 showDelay: 0
             });
 
-            console.log("ZMData getEvents called with ID="+monitorId);
+            console.log("ZMData getEvents called with ID=" + monitorId);
             var d = $q.defer();
             var myevents = [];
             var apiurl = loginData.apiurl;
-            var myurl = (monitorId == 0) ? apiurl + "/events.json" : apiurl + "/events/index/MonitorId:"+monitorId+".json";
-            console.log ("Constructed URL is " + myurl);
+            var myurl = (monitorId == 0) ? apiurl + "/events.json" : apiurl + "/events/index/MonitorId:" + monitorId + ".json";
+            console.log("Constructed URL is " + myurl);
+            // FIXME: When retrieving lots of events, I really need to do pagination here - more complex
+            // as I have to do that in list scrolling too. For now, I hope your events don't kill the phone
+            // memory
             $http.get(myurl)
                 .success(function (data) {
                     $ionicLoading.hide();
                     myevents = data.events.reverse();
-                    if (monitorId == 0)
-                    {
+                    if (monitorId == 0) {
                         oldevents = myevents;
                     }
                     //console.log (JSON.stringify(data));
@@ -180,11 +207,11 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     $ionicLoading.hide();
                     console.log("HTTP Events error " + err);
                     d.resolve(myevents);
-                    if (monitorId ==0)
-                    {
+                    if (monitorId == 0) {
+                        // FIXME: make this into a proper error
                         oldevents = [];
                     }
-                        return d.promise;
+                    return d.promise;
                 })
             return d.promise;
 
@@ -211,15 +238,11 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             monitorsLoaded = loaded;
         },
 
+        // Given a monitor Id it returns the monitor name
+        // FIXME: Can I do a better job with associative arrays?
         getMonitorName: function (id) {
             var idnum = parseInt(id);
-            // console.log ("I have " + monitors.length + " monitors to match");
-
-            //console.log (JSON.stringify(monitors));
             for (var i = 0; i < monitors.length; i++) {
-                // console.log ("Searching for:"+idnum+"& got:"+monitors[i].Monitor.Id);
-                //console.log ("Searching for monitors id:"+monitors[i].Mo
-                // console.log ("Iteration #"+i+" " +monitors[i].Monitor.Id + " " + monitors[i].Monitor.Name);
                 if (parseInt(monitors[i].Monitor.Id) == idnum) {
                     // console.log ("Matched, exiting getMonitorname");
                     return monitors[i].Monitor.Name;
@@ -228,8 +251,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             }
             return "(Unknown)";
         },
-        
-        
-        
+
+
+
     };
 }]);

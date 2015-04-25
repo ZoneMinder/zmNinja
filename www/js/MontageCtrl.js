@@ -1,3 +1,5 @@
+// Controller for the montage view
+
 angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', function ($scope, $rootScope, ZMDataModel, message,$ionicSideMenuDelegate) {
     
     
@@ -8,24 +10,26 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', function ($s
     //var monsize =3;
     console.log("********* Inside Montage Ctrl");
     $scope.LoginData = ZMDataModel.getLogin();
+
+    // slider is tied to the view slider for montage
+    //Remember not to use a variable. I'm using an object
+    // so it's passed as a reference - otherwise it makes
+    // a copy and the value never changes
     $scope.slider = {};
     $scope.slider.monsize = ZMDataModel.getMontageSize();
     $scope.$on('$ionicView.afterEnter', function () {
+        // This rand is really used to reload the monitor image in img-src so it is not cached
+        // I am making sure the image in montage view is always fresh
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-        //console.log("*********IN VIEW, generated " + $rootScope.rand);
-
         console.log("Rootscoxxpe Montage is " + ZMDataModel.getMontageSize() + " and slider montage is " + $scope.slider.monsize);
     });
-
-
-
 
 
     $scope.$watch('slider.monsize', function () {
         console.log('Slider has changed');
         ZMDataModel.setMontageSize($scope.slider.monsize);
         console.log("Rootscope Montage is " + ZMDataModel.getMontageSize() + " and slider montage is " + $scope.slider.monsize);
-        //$rootScope.montageSize = $scope.slider.monsize;
+
     });
 
     $scope.monitors = [];
@@ -33,11 +37,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', function ($s
 
     $scope.monitors = message;
     console.log("I have received the monitors inside Montage and there are " + $scope.monitors.length);
-    // console.log("***CALLING FACTORY");
-    //ZMHttpFactory.getMonitors().then(function(data) //{
-    //                                  $scope.monitors = data;
-    // console.log("I GOT " + $scope.monitors);
-    //    });
 
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");

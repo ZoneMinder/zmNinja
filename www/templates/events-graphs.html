@@ -3,8 +3,11 @@
   <ion-nav-buttons side="left">
             <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         </ion-nav-buttons>
+
+        <!-- I'm calling the same controller function but with different parameters when
+            you switch between tabs -->
         <ion-tabs class="tabs-icon-top tabs-stable">
-            <ion-tab title="All Events" icon="ion-stats-bars" on-select="generateChart('All Events')">
+            <ion-tab title="All" icon="ion-stats-bars" on-select="generateChart('All Events')">
                 <ion-nav-view>
                     <ion-content class="has-header">
 
@@ -15,7 +18,7 @@
                 </ion-nav-view>
             </ion-tab>
 
-            <ion-tab title="Events in last hour" icon="ion-stats-bars" on-select="generateChart('Events in the last hour')">
+            <ion-tab title="Last Hour" icon="ion-stats-bars" on-select="generateChart('Events in the last hour')">
                 <ion-nav-view>
 
                     <ion-content>
@@ -27,12 +30,29 @@
                 </ion-nav-view>
             </ion-tab>
 
-            <ion-tab title="Settings" icon="ion-ios-information">
-                <ion-content>
+             <ion-tab title="Day" icon="ion-stats-bars" on-select="generateChart('Events in the last day')">
+                <ion-nav-view>
 
-                    Tab 3
-                </ion-content>
+                    <ion-content>
+                        <span></span>
+                            <div google-chart chart="chartObject"></div>
+
+
+                    </ion-content>
+                </ion-nav-view>
             </ion-tab>
+             <ion-tab title="Week" icon="ion-stats-bars" on-select="generateChart('Events in the last week')">
+                <ion-nav-view>
+
+                    <ion-content>
+                        <span></span>
+                            <div google-chart chart="chartObject"></div>
+
+
+                    </ion-content>
+                </ion-nav-view>
+            </ion-tab>
+
         </ion-tabs>
 
         <!--

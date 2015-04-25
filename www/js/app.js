@@ -1,4 +1,3 @@
-
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
@@ -17,14 +16,20 @@ angular.module('zmApp', [
 
     }
 
-    window.onorientationchange = function() { 
-        console.log ("**ORIENTATION CHANGE**");
+    // This routine is called whenever the orientation changes
+    // so I can recompute my width and height. I use them
+    // for scoping graphs as well as figuring out how many thumbnails
+    // to show for montages
+    window.onorientationchange = function () {
+        console.log("**ORIENTATION CHANGE**");
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
-        console.log("********Computed Dev Width & Height as" + $rootScope.devWidth+"*"+$rootScope.devHeight);
+        console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
     }
-    
+
+    // This is a skeleton for now. Eventually I am going to prohibit
+    // certain views to load unless you've logged in
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
         //   console.log ("***** STATE CHANGE CHECK ****");
         var requireLogin = toState.data.requireLogin;
@@ -43,9 +48,14 @@ angular.module('zmApp', [
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
-        
-          console.log("********Computed Dev Width & Height as" + $rootScope.devWidth+"*"+$rootScope.devHeight);
 
+        console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+
+        // What I noticed is when I moved the app to the device
+        // the montage screens were not redrawn after resuming from background mode
+        // Everything was fine if I switched back to the montage screen
+        // so as a global hack I'm just reloading the current state if you switch
+        // from foreground to background and back
         document.addEventListener("resume", function () {
             console.log("****The application is resuming from the background");
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
@@ -68,13 +78,13 @@ angular.module('zmApp', [
     });
 })
 
-
+// My route map connecting menu options to their respective templates and controllers
 .config(function ($stateProvider, $urlRouterProvider) {
 
 
     $stateProvider
 
-      /*.state('app', {
+    /*.state('app', {
         data: {
             requireLogin: false
         },
@@ -86,15 +96,15 @@ angular.module('zmApp', [
 
     })*/
 
-    .state('login', {
+        .state('login', {
         data: {
             requireLogin: false
         },
         url: "/login",
         templateUrl: "templates/login.html",
         controller: 'zmApp.LoginCtrl',
-            
-        
+
+
     })
 
     .state('monitors', {
@@ -112,52 +122,50 @@ angular.module('zmApp', [
         controller: 'zmApp.MonitorCtrl',
 
     })
-        
-    
-    
+
 
     .state('events', {
-            data: {
-                requireLogin: false
-            },
-            resolve: {
-                message: function (ZMDataModel) {
-                    console.log("Inside app.events resolve");
-                    return ZMDataModel.getMonitors(0);
-                }
-            },
-            url: "/events/:id",
-            templateUrl: "templates/events.html",
-            controller: 'zmApp.EventCtrl',
+        data: {
+            requireLogin: false
+        },
+        resolve: {
+            message: function (ZMDataModel) {
+                console.log("Inside app.events resolve");
+                return ZMDataModel.getMonitors(0);
+            }
+        },
+        url: "/events/:id",
+        templateUrl: "templates/events.html",
+        controller: 'zmApp.EventCtrl',
 
-        })
-        
-//n
+    })
+
+    //n
     .state('events-graphs', {
-            data: {
-                requireLogin: false
-            },
-            url: "/events-graphs",
-            templateUrl: "templates/events-graphs.html",
-            controller: 'zmApp.EventsGraphsCtrl',
-        })
+        data: {
+            requireLogin: false
+        },
+        url: "/events-graphs",
+        templateUrl: "templates/events-graphs.html",
+        controller: 'zmApp.EventsGraphsCtrl',
+    })
 
-    
+
     .state('montage', {
         data: {
             requireLogin: false
-            },
-            resolve: {
-                        message: function (ZMDataModel) {
-                        console.log("Inside app.montage resolve");
-                        return ZMDataModel.getMonitors(0);
-                    }
-                },
-    url: "/montage",
-    templateUrl: "templates/montage.html",
-    controller: 'zmApp.MontageCtrl',
+        },
+        resolve: {
+            message: function (ZMDataModel) {
+                console.log("Inside app.montage resolve");
+                return ZMDataModel.getMonitors(0);
+            }
+        },
+        url: "/montage",
+        templateUrl: "templates/montage.html",
+        controller: 'zmApp.MontageCtrl',
 
-});
+    });
 
 
     // if none of the above states are matched, use this as the fallback

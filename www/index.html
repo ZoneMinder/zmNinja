@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <head> 
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-      <link href="lib/nvd3/nv.d3.min.css" rel="stylesheet">
+    <link href="lib/nvd3/nv.d3.min.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -15,47 +16,44 @@
 
     <!-- ionic/angularjs js -->
 
-      <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
-    
+
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
-   
-   
-   <!-- <script src="js/CentralObjectModel.js"></script> -->
-   <script src="js/DataModel.js"></script>
-    <!-- <script src="js/HttpFactory.js"></script> -->
+
+    <script src="js/DataModel.js"></script>
     <script src="js/LoginCtrl.js"></script>
-  
+
     <script src="js/MontageCtrl.js"></script>
     <script src="js/EventCtrl.js"></script>
     <script src="js/EventsGraphsCtrl.js"></script>
     <script src="js/MonitorCtrl.js"></script>
-   
-   <!--   <script src="lib/Chart.js/Chart.js"></script>-->
-     <!-- <script src="lib/angular/angular.min.js"></script> -->
-      <script src="lib/angular-google-chart/ng-google-chart.js"></script>
-     
-      
-<!--   
-<script src="lib/tc-angular-chartjs/dist/tc-angular-chartjs.js"></script>
-<script src="lib/angular-charts/dist/angular-charts.min.js"></script>-->  
-     
-  
-    
-
-  
-  </head>
 
 
-  <!-- <body ng-app="starter" > -->
- <body>
+    <script src="lib/angular-google-chart/ng-google-chart.js"></script>
+
+
+</head>
+
+
+<!-- <body ng-app="starter" > -->
+<!-- I want to start angular only after cordova device is ready, so I'll tag it on device ready -->
+
+<body>
+
+    <!-- For some reason - which I haven't debugged yet, when I was using the ionic side menu template
+      I was having problems with tabs/sliders in views, I think its to do with controls being alive in
+      the menu. this approach puts controls in each page and that works well, except that it looks lie
+      parts of this body are rendered upon index.html load result in a few odd icons before angular kicks
+      in. I'll eventually get to fixing this -->
+
+    <!-- This is the Side menu options -->
     <ion-side-menus>
-
         <ion-pane ion-side-menu-content>
             <ion-nav-bar class="bar-stable nav-title-slide-ios7">
                 <ion-nav-back-button class="button-icon"><span class="icon ion-ios7-arrow-left"></span>
@@ -65,7 +63,9 @@
         </ion-pane>
 
         <ion-side-menu side="left">
-            <ion-header-bar class="bar bar-header bar-dark"><h1 class="title">Options</h1></ion-header-bar>
+            <ion-header-bar class="bar bar-header bar-dark">
+                <h1 class="title">Options</h1>
+            </ion-header-bar>
             <ion-content has-header="true">
                 <ion-list>
                     <ion-item href="#/monitors" menu-close><span class=" item-icon-left">
@@ -75,40 +75,39 @@
                 
                 <i class="icon ion-ios-eye"></i>
             </span>View</ion-item>
-                    
+
                     <ion-item href="#/events/0" menu-close><span class=" item-icon-left">
             <i class="icon ion-ios-calendar-outline"></i>
             </span>Events</ion-item>
-                    
-                   <!-- <ion-item href="#/events-graphs" menu-close>Graphs</ion-item> -->
-                    
-<ion-item nav-clear menu-close href="#/login">
-            <span class=" item-icon-left">
+
+                    <!-- <ion-item href="#/events-graphs" menu-close>Graphs</ion-item> -->
+
+                    <ion-item nav-clear menu-close href="#/login">
+                        <span class=" item-icon-left">
                 <i class="icon ion-ios-gear-outline"></i>
-            </span>
-            Settings
-        </ion-item>
-                    
+            </span> Settings
+                    </ion-item>
+
                 </ion-list>
             </ion-content>
         </ion-side-menu>
 
     </ion-side-menus>
-    
-         
 
-	
-    
+
+
+
+    <!--  This is where is bootstrap angular - if I don't do this, then the window jumps around
+    after the status bar comes on - because the window kicked in before phonegap got ready -->
+
     <script>
-        
-        window.ionic.Platform.ready(function() 
-        {
-            console.log ("******* PLATFORM READY ****");
-            angular.bootstrap(document, ['zmApp']); 
+        window.ionic.Platform.ready(function () {
+            console.log("******* PLATFORM READY ****");
+            angular.bootstrap(document, ['zmApp']);
         });
-
     </script>
-    
-    
-  </body>
+
+
+</body>
+
 </html>
