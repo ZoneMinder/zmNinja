@@ -5,7 +5,13 @@ by many for home and commercial security monitoring. http://www.zoneminder.com
 The ZoneMinder folks are implementing a new API based system and I decided to contribute
 by developing a client that uses the new APIs. The APIs are evolving along with this client
 so you can expect this to be in alpha/beta stage till the fine folks at ZM release a new
-version with the APIs fully integrated.
+version with the APIs fully integrated. To that extent, some of the features of the app
+won't work till Kyle Johnson @ ZM finishes his API work. If you are interested, you can track
+https://github.com/ZoneMinder/ZoneMinder/issues/799 to keep a tab of the API status of ZM
+
+Features
+--------
+Please see the Wiki
 
 
 Objective
@@ -29,38 +35,44 @@ as I mentioned, expect to see many many changes over the next few weeks/months
 
 Bugs/Issues
 ------------
-a) There are several right now, but the app works quite well. Like I said, I'll be working over the next few weeks to clean it up
-b) A lot of functionality is still missing - keep a tab
-c) The ZM APIs are not fully functional. I unfortunately need to reply on ZM devs to fix them and that will depend on how soon they can address it. You can track ZM API issues here https://github.com/ZoneMinder/ZoneMinder/issues/799
+* There are several right now, but the app works quite well. Like I said, I'll be working over the next few weeks to clean it up
+* A lot of functionality is still missing - keep a tab
+*  The ZM APIs are not fully functional. I unfortunately need to reply on ZM devs to fix them and that will depend on how soon they can address it. You can track ZM API issues here https://github.com/ZoneMinder/ZoneMinder/issues/799
 
 
 Important Notes
 ---------------
-a) You need to have the latest ZM APIs installed. These apis are in the angular-ui branch of ZM.
-If you don't know what that means, then you will have to wait till ZM folks integrate their APIs
+* You need to have the latest ZM APIs installed. These apis are in the angular-ui branch of ZM.
+* If you don't know what that means, then you will have to wait till ZM folks integrate their APIs
 into the main stream (the current APIs in 1.28 are limited - and will not be sufficient for the client)
-b) Alternatively, just download the app and enable simulation mode
+* Alternatively, just download the app and enable simulation mode
 
 
 Screenshots:
 ------------
 
 Menu:
+
 ![](http://www.pbase.com/arjunrc/image/159760951/medium.jpg "Menu")
 
 Events List:
+
 ![](http://www.pbase.com/arjunrc/image/159760954/medium.jpg "Events List")
 
 Sliding Montage View 1:
+
 ![](http://www.pbase.com/arjunrc/image/159760952/medium.jpg "Sliding Montage View")
 
 Sliding Montage View 2:
+
 ![] (http://www.pbase.com/arjunrc/image/159760953/medium.jpg "Sliding Montage View again")
 
 Monitor View:
+
 ![](http://www.pbase.com/arjunrc/image/159760955/medium.jpg "Monitor View")
 
 Graphs:
+
 ![] (http://www.pbase.com/arjunrc/image/159760956/medium.jpg "Graphs")
 
 
