@@ -13,6 +13,13 @@ Features
 --------
 Please see the Wiki
 
+Thanks
+------
+To the zonemider community in general, and the awesome Stack Overflow community.
+But specifically, Andrew Bauer (knnniggett) - he is a ZoneMinder maintainer and
+helped me significantly in getting into ZoneMinder and also continues to help
+me with my client goals. https://github.com/knnniggett
+
 
 Objective
 ----------
