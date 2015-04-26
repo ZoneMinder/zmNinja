@@ -13,6 +13,7 @@
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="BackupWebStorage" value="none"/>
+  <preference name="AutoHideSplashScreen" value="false" />
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="3000"/>
   <feature name="StatusBar">
@@ -35,15 +36,16 @@
     <icon src="resources/ios/icon/icon-small.png" width="29" height="29"/>
     <icon src="resources/ios/icon/icon-small@2x.png" width="58" height="58"/>
     <icon src="resources/ios/icon/icon-small@3x.png" width="87" height="87"/>
-    <splash src="resources/ios/splash/Default-568h@2x~iphone.png" height="1136" width="640"/>
-    <splash src="resources/ios/splash/Default-667h.png" height="1334" width="750"/>
-    <splash src="resources/ios/splash/Default-736h.png" height="2208" width="1242"/>
-    <splash src="resources/ios/splash/Default-Landscape-736h.png" height="1242" width="2208"/>
-    <splash src="resources/ios/splash/Default-Landscape@2x~ipad.png" height="1536" width="2048"/>
-    <splash src="resources/ios/splash/Default-Landscape~ipad.png" height="768" width="1024"/>
-    <splash src="resources/ios/splash/Default-Portrait@2x~ipad.png" height="2048" width="1536"/>
-    <splash src="resources/ios/splash/Default-Portrait~ipad.png" height="1024" width="768"/>
-    <splash src="resources/ios/splash/Default@2x~iphone.png" height="960" width="640"/>
-    <splash src="resources/ios/splash/Default~iphone.png" height="480" width="320"/>
+    <splash src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" height="1136"/>
+    <splash src="resources/ios/splash/Default-667h.png" width="750" height="1334"/>
+    <splash src="resources/ios/splash/Default-736h.png" width="1242" height="2208"/>
+    <splash src="resources/ios/splash/Default-Landscape-736h.png" width="2208" height="1242"/>
+    <splash src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" height="1536"/>
+    <splash src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" height="768"/>
+    <splash src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" height="2048"/>
+    <splash src="resources/ios/splash/Default-Portrait~ipad.png" width="768" height="1024"/>
+    <splash src="resources/ios/splash/Default@2x~iphone.png" width="640" height="960"/>
+    <splash src="resources/ios/splash/Default~iphone.png" width="320" height="480"/>
   </platform>
+  <icon src="resources/ios/icon/icon-small@3x.png"/>
 </widget>
