@@ -12,10 +12,10 @@
     <ion-content>
 
         <ion-refresher pulling-text="Pull to reload Events..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
-        <ion-list>
-            <div ng-repeat="event in events">
+        <!--<ion-list>-->
+           <!-- <div ng-repeat="event in events">-->
 
-                <ion-item>
+                <ion-item collection-repeat="event in events">
 
                     <div class="row">
                         <div class="col col-left">
@@ -67,8 +67,8 @@
 
                 </ion-item>
 
-            </div>
-        </ion-list>
+            <!--</div> -->
+        <!--</ion-list>-->
 
     </ion-content>
 </ion-view>
