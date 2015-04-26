@@ -5,7 +5,11 @@ angular.module('zmApp', [
 
                         ])
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel,$cordovaSplashscreen) {
+
+    setTimeout(function() {
+    $cordovaSplashscreen.hide()
+  }, 5000)
 
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
