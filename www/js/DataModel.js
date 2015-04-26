@@ -5,7 +5,6 @@
 angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', function ($http, $q, $ionicLoading) {
     // var deferred='';
     var monitorsLoaded = 0;
-    var simulationMode = 0; // make 1 for simulation
     var simSize = 30; // how many monitors to simulate
     var montageSize = 3;
     var monitors = [];
@@ -14,7 +13,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'username': '',
         'password': '',
         'url': '', // This is ZM portal API (Don't add /zm)
-        'apiurl': '' // This is the API path
+        'apiurl': '', // This is the API path
+        'simulationMode':false // if true, data will be simulated
     };
 
     // This is really a test mode. This is how I am validating
@@ -89,12 +89,41 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             }
 
+            if (window.localStorage.getItem("simulationMode") != undefined) {
+                // Remember to convert back to Boolean!
+                var tvar = window.localStorage.getItem("simulationMode");
+                loginData.simulationMode = ( tvar ==="true");
+                console.log ("***** STORED SIMULATION IS "+tvar);
+                console.log ("******* BOOLEAN VALUE IS " + loginData.simulationMode);
+
+            }
+
             monitorsLoaded = 0;
             console.log("Getting out of ZMDataModel init");
 
         },
 
+        isLoggedIn: function()
+        {
+            if (loginData.username != "" && loginData.password !="" && loginData.url !="" && loginData.apiurl !="")
+            {
+                return 1;
+            }
+            else
+                return 0;
+            {
+            }
+        },
 
+        isSimulated: function()
+        {
+            return loginData.simulationMode;
+        },
+
+         setSimulated: function(mode)
+        {
+             loginData.simulationMode = mode;
+        },
 
         getLogin: function () {
             return loginData;
@@ -105,6 +134,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("password", loginData.password);
             window.localStorage.setItem("url", loginData.url);
             window.localStorage.setItem("apiurl", loginData.apiurl);
+             window.localStorage.setItem("simulationMode", loginData.simulationMode);
+            console.log ("********** SIMULATION IS " + loginData.simulationMode);
 
         },
 
@@ -120,14 +151,14 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         getMonitors: function (forceReload) {
             console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
             var d = $q.defer();
-            if (((monitorsLoaded == 0) || (forceReload == 1)) && (simulationMode != 1)) // monitors are empty or force reload
+            if (((monitorsLoaded == 0) || (forceReload == 1)) && (loginData.simulationMode != true)) // monitors are empty or force reload
             {
                 console.log("ZMDataModel: Invoking HTTP get to load monitors");
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + "/monitors.json";
                 $http.get(myurl)
                     .success(function (data) {
-                        console.log("HTTP success got " + JSON.stringify(data.monitors));
+                        //console.log("HTTP success got " + JSON.stringify(data.monitors));
                         monitors = data.monitors;
                         console.log("promise resolved inside HTTP success");
                         monitorsLoaded = 1;
@@ -145,7 +176,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             } else // monitors are loaded
             {
-                if (simulationMode == 1) {
+                if (loginData.simulationMode == true) {
                     monitors = simulation.fillSimulatedMonitors(simSize);
                     //fillSimulatedMonitors
                 }

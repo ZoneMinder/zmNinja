@@ -1,25 +1,30 @@
-<ion-view view-title="Login" >
-    
+<ion-view view-title="Settings">
+
     <ion-nav-buttons side="left">
-          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        </ion-nav-buttons> 
-    
-    
-  <ion-content class="padding">
-      <div class="list list-inset">
-          <label class="item item-input">
-              <input autocapitalize="none" type="text" placeholder="Username" ng-model="loginData.username">
-          </label>
-          <label class="item item-input">
-              <input type="password" placeholder="Password" ng-model="loginData.password">
-          </label>
-          <label class="item item-input">
-              <input autocapitalize="none" type="text" placeholder="Zoneminder base URL" ng-model="loginData.url">
-          </label>
-          <label class="item item-input">
-              <input autocapitalize="none" type="text" placeholder="API base URL" ng-model="loginData.apiurl">
-          </label>
-      </div>
-      <button class="button button-block button-balanced icon ion-locked" ng-click="login()"> Save</button>
-  </ion-content>
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+
+
+    <ion-content class="padding">
+        <div class="list list-inset">
+            <label class="item item-input">
+                <input autocapitalize="none" type="text" placeholder="Username" ng-model="loginData.username">
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="Password" ng-model="loginData.password">
+            </label>
+            <label class="item item-input">
+                <input autocapitalize="none" type="text" placeholder="Zoneminder base URL" ng-model="loginData.url">
+            </label>
+            <label class="item item-input">
+                <input autocapitalize="none" type="text" placeholder="API base URL" ng-model="loginData.apiurl">
+            </label>
+        </div>
+
+         <ion-toggle ng-model="loginData.simulationMode" ng-checked={{loginData.simulationMode}} toggle-class="toggle-energized">Simulation Mode</ion-toggle>
+
+        <button class="button button-block button-balanced icon ion-locked" ng-click="login()"> Save</button>
+
+
+    </ion-content>
 </ion-view>

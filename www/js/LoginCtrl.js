@@ -6,6 +6,7 @@ $scope.openMenu = function () {
     $scope.loginData = ZMDataModel.getLogin();
 
 
+
     // Perform the login action when the user submits the login form
     $scope.login = function () {
         console.log('Saving login');

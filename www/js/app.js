@@ -10,7 +10,7 @@ angular.module('zmApp', [
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
 
-    if (loginData.username && loginData.password && loginData.url && loginData.apiurl) {
+    if (ZMDataModel.isLoggedIn()) {
         console.log("VALID CREDENTIALS. Grabbing Monitors");
         ZMDataModel.getMonitors(0);
 
@@ -28,19 +28,30 @@ angular.module('zmApp', [
         console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
     }
 
-    // This is a skeleton for now. Eventually I am going to prohibit
-    // certain views to load unless you've logged in
+
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
         //   console.log ("***** STATE CHANGE CHECK ****");
         var requireLogin = toState.data.requireLogin;
-        // console.log ("STATE REQUIRE LOGIN: "+requireLogin);
-        if (requireLogin) {
-            event.preventDefault();
-            //$state.go('app');
-            //$ionicPopup.alert ({title: "Error", template:"You are not logged in."});
-            //alert ("Not logged in");
-            // get me a login modal!
+
+        if (ZMDataModel.isLoggedIn() || ZMDataModel.isSimulated())
+        {
+            console.log ("State transition is authorized");
+            return;
         }
+
+        if (requireLogin) {
+
+           // alert ("Not logged in");
+            console.log ("**** STATE from "+ "**** STATE TO " + toState.name);
+
+           $ionicPopup.alert ({title: "Credentials Required",
+                             template:"Please provide your ZoneMinder credentials or switch to simulation mode"});
+            // for whatever reason, .go was resulting in digest loops.
+            // if you don't prevent, states will stack
+            event.preventDefault();
+            $state.transitionTo('login');
+        }
+
     });
 
 
@@ -83,19 +94,6 @@ angular.module('zmApp', [
 
 
     $stateProvider
-
-    /*.state('app', {
-        data: {
-            requireLogin: false
-        },
-        url: "/app",
-        abstract: true,
-        templateUrl: "templates/intro.html",
-        controller: 'zmApp.AppCtrl',
-
-
-    })*/
-
         .state('login', {
         data: {
             requireLogin: false
@@ -109,7 +107,7 @@ angular.module('zmApp', [
 
     .state('monitors', {
         data: {
-            requireLogin: false
+            requireLogin: true
         },
         resolve: {
             message: function (ZMDataModel) {
@@ -126,7 +124,7 @@ angular.module('zmApp', [
 
     .state('events', {
         data: {
-            requireLogin: false
+            requireLogin: true
         },
         resolve: {
             message: function (ZMDataModel) {
@@ -143,7 +141,7 @@ angular.module('zmApp', [
     //n
     .state('events-graphs', {
         data: {
-            requireLogin: false
+            requireLogin: true
         },
         url: "/events-graphs",
         templateUrl: "templates/events-graphs.html",
@@ -153,7 +151,7 @@ angular.module('zmApp', [
 
     .state('montage', {
         data: {
-            requireLogin: false
+            requireLogin: true
         },
         resolve: {
             message: function (ZMDataModel) {
@@ -168,8 +166,13 @@ angular.module('zmApp', [
     });
 
 
+
     // if none of the above states are matched, use this as the fallback
     var defaultState = "/monitors";
-    //var defaultState = "/app/montage";
+    // as it turns out I can't really inject a factory in config the normal way
+    // FIXME: In future, read up http://stackoverflow.com/questions/15937267/inject-service-in-app-config
+    //var defaultState = (ZMDataModel.isLoggedIn())?  "/monitors":"/login";
     $urlRouterProvider.otherwise(defaultState);
+
+
 });
