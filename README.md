@@ -1,11 +1,21 @@
 zmNinja is a multi platform client for ZoneMinder users.
+ZoneMinder is an incredible open source camera monitoring system and is used
+by many for home and commercial security monitoring. http://www.zoneminder.com
+
+The ZoneMinder folks are implementing a new API based system and I decided to contribute
+by developing a client that uses the new APIs. The APIs are evolving along with this client
+so you can expect this to be in alpha/beta stage till the fine folks at ZM release a new
+version with the APIs fully integrated.
+
+
 This is a very initial version - I'll keep refining it over time as I learn more
 of AngularJS and stuff.
 
 Note that I am only currently testing on iOS as a platform for now
 
-My plan is to make the iOS version work and then move to other platforms (Android)
-can generate other plaforms
+My plan is to make the iOS version work and then move to other platforms (Android).
+
+
 
 as I mentioned, expect to see many many changes over the next few weeks/months
 
