@@ -6,6 +6,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
     // var deferred='';
     var monitorsLoaded = 0;
     var simSize = 30; // how many monitors to simulate
+    var eventSimSize = 10; // events to simulare per monitor
     var montageSize = 3;
     var monitors = [];
     var oldevents = [];
@@ -14,17 +15,17 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'password': '',
         'url': '', // This is ZM portal API (Don't add /zm)
         'apiurl': '', // This is the API path
-        'simulationMode':false // if true, data will be simulated
+        'simulationMode': false // if true, data will be simulated
     };
 
     // This is really a test mode. This is how I am validating
-    // how my app behaves if you have many monitors. If you set simulationMode above to 1
-    // then this is the function that getMonitors and getEvents (not yet) calls
+    // how my app behaves if you have many monitors. If you set simulationMode to true
+    // then this is the function that getMonitors and getEvents calls
 
     var simulation = {
         fillSimulatedMonitors: function (cnt) {
             var simmonitors = [];
-            console.log("*** Returning " + cnt + " simulated monitors");
+            console.log("*** SIM MONITORS: Returning " + cnt + " simulated monitors");
             for (var i = 0; i < cnt; i++) {
 
 
@@ -49,6 +50,44 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             // console.log ("Simulated: "+JSON.stringify(simmonitors));
             return simmonitors;
         },
+
+        fillSimulatedEvents: function (cnt) {
+            var simevents = [];
+            if (monitors.length == 0) // we have arrived at events before simulating monitors
+            { // not sure if it will ever happen as I have a route resolve
+                console.log("Monitors have not been simulated yet. Filling them in");
+                monitors = simulation.fillSimulatedMonitors(simSize);
+            }
+            console.log("*** Returning " + cnt + " simulated events Per " + monitors.length + "Monitors");
+            var causes = ["Motion", "Signal", "Something else"];
+            for (var mon = 0; mon < monitors.length; mon++) {
+                console.log("Simulating " + cnt + "events for Monitor " + mon);
+                for (var i = 0; i < cnt; i++) {
+
+
+                    simevents.push({
+                        "Event": {
+                            // Obviously this is dummy data
+                            "MonitorId": mon.toString(),
+                            "Cause": causes[Math.floor(Math.random() * (2 - 0 + 1)) + 0],
+                            "Length": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
+                            "Name": "Event Simulation " + i.toString(),
+                            "Frames": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
+                            "AlarmFrames": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
+                            "TotScore": Math.floor(Math.random() * (100 - 2 + 1)) + 2,
+                            "StartTime": "2015 12-12-12 12:12",
+                            "Notes": "This is simulated",
+
+                        }
+                    });
+
+                } // for i
+            } // for mon
+            // console.log ("Simulated: "+JSON.stringify(simmonitors));
+            return simevents;
+        },
+
+
     };
 
     return {
@@ -92,9 +131,9 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             if (window.localStorage.getItem("simulationMode") != undefined) {
                 // Remember to convert back to Boolean!
                 var tvar = window.localStorage.getItem("simulationMode");
-                loginData.simulationMode = ( tvar ==="true");
-                console.log ("***** STORED SIMULATION IS "+tvar);
-                console.log ("******* BOOLEAN VALUE IS " + loginData.simulationMode);
+                loginData.simulationMode = (tvar === "true");
+                console.log("***** STORED SIMULATION IS " + tvar);
+                console.log("******* BOOLEAN VALUE IS " + loginData.simulationMode);
 
             }
 
@@ -103,26 +142,19 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         },
 
-        isLoggedIn: function()
-        {
-            if (loginData.username != "" && loginData.password !="" && loginData.url !="" && loginData.apiurl !="")
-            {
+        isLoggedIn: function () {
+            if (loginData.username != "" && loginData.password != "" && loginData.url != "" && loginData.apiurl != "") {
                 return 1;
-            }
-            else
-                return 0;
-            {
-            }
+            } else
+                return 0; {}
         },
 
-        isSimulated: function()
-        {
+        isSimulated: function () {
             return loginData.simulationMode;
         },
 
-         setSimulated: function(mode)
-        {
-             loginData.simulationMode = mode;
+        setSimulated: function (mode) {
+            loginData.simulationMode = mode;
         },
 
         getLogin: function () {
@@ -134,8 +166,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("password", loginData.password);
             window.localStorage.setItem("url", loginData.url);
             window.localStorage.setItem("apiurl", loginData.apiurl);
-             window.localStorage.setItem("simulationMode", loginData.simulationMode);
-            console.log ("********** SIMULATION IS " + loginData.simulationMode);
+            window.localStorage.setItem("simulationMode", loginData.simulationMode);
+            console.log("********** SIMULATION IS " + loginData.simulationMode);
 
         },
 
@@ -204,14 +236,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         getEvents: function (monitorId) {
 
-            $ionicLoading.show({
-                template: 'Loading ZoneMinder Events...',
-                animation: 'fade-in',
-                showBackdrop: true,
-                maxWidth: 200,
-                showDelay: 0
-            });
-
             console.log("ZMData getEvents called with ID=" + monitorId);
             var d = $q.defer();
             var myevents = [];
@@ -221,31 +245,45 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             // FIXME: When retrieving lots of events, I really need to do pagination here - more complex
             // as I have to do that in list scrolling too. For now, I hope your events don't kill the phone
             // memory
-            $http.get(myurl)
-                .success(function (data) {
-                    $ionicLoading.hide();
-                    myevents = data.events.reverse();
-                    if (monitorId == 0) {
-                        oldevents = myevents;
-                    }
-                    //console.log (JSON.stringify(data));
-                    console.log("Returning " + myevents.length + "events");
-                    d.resolve(myevents);
-                    return d.promise;
 
-                })
-                .error(function (err) {
-                    $ionicLoading.hide();
-                    console.log("HTTP Events error " + err);
-                    d.resolve(myevents);
-                    if (monitorId == 0) {
-                        // FIXME: make this into a proper error
-                        oldevents = [];
-                    }
-                    return d.promise;
-                })
-            return d.promise;
+            if (loginData.simulationMode == true) {
+                console.log("Events will be simulated");
+                myevents = simulation.fillSimulatedEvents(eventSimSize);
+                d.resolve(myevents);
+                return d.promise;
+            } else { // not simulated
+                $ionicLoading.show({
+                    template: 'Loading ZoneMinder Events...',
+                    animation: 'fade-in',
+                    showBackdrop: true,
+                    maxWidth: 200,
+                    showDelay: 0
+                });
+                $http.get(myurl)
+                    .success(function (data) {
+                        $ionicLoading.hide();
+                        myevents = data.events.reverse();
+                        if (monitorId == 0) {
+                            oldevents = myevents;
+                        }
+                        //console.log (JSON.stringify(data));
+                        console.log("Returning " + myevents.length + "events");
+                        d.resolve(myevents);
+                        return d.promise;
 
+                    })
+                    .error(function (err) {
+                        $ionicLoading.hide();
+                        console.log("HTTP Events error " + err);
+                        d.resolve(myevents);
+                        if (monitorId == 0) {
+                            // FIXME: make this into a proper error
+                            oldevents = [];
+                        }
+                        return d.promise;
+                    })
+                return d.promise;
+            } // not simulated
         },
 
         getMontageSize: function () {
@@ -283,12 +321,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             return "(Unknown)";
         },
 
-        getMontageImagePath: function (){
+        getMontageImagePath: function () {
 
-        var path = "{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}";
+            var path = "{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}";
 
-        return (path);
-    }
+            return (path);
+        }
 
 
     };
