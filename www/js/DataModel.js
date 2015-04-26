@@ -6,7 +6,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
     // var deferred='';
     var monitorsLoaded = 0;
     var simSize = 30; // how many monitors to simulate
-    var eventSimSize = 10; // events to simulare per monitor
+    var eventSimSize = 40; // events to simulare per monitor
     var montageSize = 3;
     var monitors = [];
     var oldevents = [];
@@ -33,7 +33,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     "Monitor": {
                         // Obviously this is dummy data
                         "Id": i.toString(),
-                        "Name": "Monitor Simulation " + i.toString(),
+                        "Name": "Sim-Monitor" + i.toString(),
                         "Type": "Remote",
                         "Function": "Modect",
                         "Enabled": "1",
@@ -75,7 +75,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                             "Frames": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
                             "AlarmFrames": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
                             "TotScore": Math.floor(Math.random() * (100 - 2 + 1)) + 2,
-                            "StartTime": "2015 12-12-12 12:12",
+                            "StartTime": "2015-04-24 09:00:00",
                             "Notes": "This is simulated",
 
                         }
@@ -182,6 +182,13 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         getMonitors: function (forceReload) {
             console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
+            $ionicLoading.show({
+                    template: 'Loading ZoneMinder Monitors...',
+                    animation: 'fade-in',
+                    showBackdrop: true,
+                    maxWidth: 200,
+                    showDelay: 0
+                });
             var d = $q.defer();
             if (((monitorsLoaded == 0) || (forceReload == 1)) && (loginData.simulationMode != true)) // monitors are empty or force reload
             {
@@ -195,6 +202,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                         console.log("promise resolved inside HTTP success");
                         monitorsLoaded = 1;
                         d.resolve(monitors);
+                        $ionicLoading.hide();
                     })
                     .error(function (err) {
                         console.log("HTTP Error " + err);
@@ -203,6 +211,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                         monitors = [];
                         console.log("promise resolved inside HTTP fail");
                         d.resolve(monitors);
+                         $ionicLoading.hide();
                     });
                 return d.promise;
 
@@ -214,6 +223,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 }
                 console.log("Returning pre-loaded list of " + monitors.length + " monitors");
                 d.resolve(monitors);
+                 $ionicLoading.hide();
                 return d.promise;
             }
 
@@ -237,6 +247,15 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         getEvents: function (monitorId) {
 
             console.log("ZMData getEvents called with ID=" + monitorId);
+
+            $ionicLoading.show({
+                    template: 'Loading ZoneMinder Events...',
+                    animation: 'fade-in',
+                    showBackdrop: true,
+                    maxWidth: 200,
+                    showDelay: 0
+                });
+
             var d = $q.defer();
             var myevents = [];
             var apiurl = loginData.apiurl;
@@ -250,15 +269,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 console.log("Events will be simulated");
                 myevents = simulation.fillSimulatedEvents(eventSimSize);
                 d.resolve(myevents);
+                $ionicLoading.hide();
                 return d.promise;
             } else { // not simulated
-                $ionicLoading.show({
-                    template: 'Loading ZoneMinder Events...',
-                    animation: 'fade-in',
-                    showBackdrop: true,
-                    maxWidth: 200,
-                    showDelay: 0
-                });
+
                 $http.get(myurl)
                     .success(function (data) {
                         $ionicLoading.hide();
