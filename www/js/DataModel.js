@@ -283,6 +283,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             return "(Unknown)";
         },
 
+        getMontageImagePath: function (){
+
+        var path = "{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}";
+
+        return (path);
+    }
 
 
     };

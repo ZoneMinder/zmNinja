@@ -7,6 +7,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', function ($s
     $ionicSideMenuDelegate.toggleLeft();
   }
 
+    $scope.getMontageImagePath = function ()
+    {
+        return ZMDataModel.getMontageImagePath();
+    }
+
+    $scope.isSimulated = function ()
+    {
+        return ZMDataModel.isSimulated();
+    }
+
+
     //var monsize =3;
     console.log("********* Inside Montage Ctrl");
     $scope.LoginData = ZMDataModel.getLogin();

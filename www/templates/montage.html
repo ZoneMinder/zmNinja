@@ -25,7 +25,17 @@
                 <!-- does not route via APIs. As of today, there is no way to do this via apis.
                  FIXME: I should probably not pass username and password here - instead go the http interceptor
                  and auth token mode -->
+                <div ng-if="!isSimulated()">
                 <img  ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"   />
+
+                   </div>
+
+                   <div ng-if="isSimulated()">
+                       <img  ng-src="img/demo.gif?rand={{rand}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"
+                   </div>
+
+                   <!-- <img  ng-src="img/demo.gif?rand={{rand}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"   />-->
+
                     <!-- <br/><i class="ion-monitor"></i> Hello -->
      
                 </article>
