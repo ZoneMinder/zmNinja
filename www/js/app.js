@@ -169,10 +169,20 @@ angular.module('zmApp', [
 
     // if none of the above states are matched, use this as the fallback
     var defaultState = "/monitors";
+    //var defaultState = "/login";
     // as it turns out I can't really inject a factory in config the normal way
     // FIXME: In future, read up http://stackoverflow.com/questions/15937267/inject-service-in-app-config
     //var defaultState = (ZMDataModel.isLoggedIn())?  "/monitors":"/login";
-    $urlRouterProvider.otherwise(defaultState);
 
+    //$urlRouterProvider.otherwise(defaultState);
+
+    // https://github.com/angular-ui/ui-router/issues/600
+    // If I start using the urlRouterProvider above and the
+    // first state is monitors it goes into a digest loop.
+
+     $urlRouterProvider.otherwise( function($injector, $location) {
+            var $state = $injector.get("$state");
+            $state.go("monitors");
+        });
 
 });
