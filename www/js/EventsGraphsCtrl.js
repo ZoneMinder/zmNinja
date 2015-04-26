@@ -34,6 +34,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
         $scope.chartObject.type = "BarChart";
         $scope.chartObject.options = {
             title: chartTitle,
+
             height: $rootScope.devHeight, // FIXME: I need to make this dynamic depending on
             // # of bars
             legend: 'none',
@@ -52,7 +53,12 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
         ZMDataModel.getMonitors(0).then(function (data) {
 
             monitors = data;
-
+            var adjustedHeight = monitors.length * 30;
+            if (adjustedHeight > $rootScope.devHeight)
+            {
+                console.log ("Readjusting chart height to " + adjustedHeight + " pixels");
+                $scope.chartObject.options.height = adjustedHeight;
+            }
             for (var i = 0; i < monitors.length; i++) {
                 (function (j) { // loop closure - http is async, so success returns after i goes out of scope
                     // so we need to bind j to i when http returns so its not out of scope. Gak.
@@ -62,6 +68,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
                         "/events/index/MonitorId:" + monitors[j].Monitor.Id + // FIXME: need to add hr/week
                         ".json?page=1";
                     console.log("Monitor event URL:" + url);
+                    if (!ZMDataModel.isSimulated())
+                    {
                     $http.get(url)
                         .success(function (data) {
                             console.log("**** EVENT COUNT FOR MONITOR " +
@@ -84,7 +92,14 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
                                                       0, 'opacity: 0.4', 0]);
 
                         });
+                    } // is not simulated
+                    else // grab a random event count
+                    {
+                        var rndEventCount = Math.floor(Math.random() * (100 - 20 + 1)) + 20;
+                        $scope.chartObject.data.push([monitors[j].Monitor.Name, rndEventCount,
+                          'opacity: 0.4', rndEventCount]);
 
+                    }
                 })(i); // j
 
             } //for
