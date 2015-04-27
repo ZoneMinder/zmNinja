@@ -68,6 +68,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     simevents.push({
                         "Event": {
                             // Obviously this is dummy data
+                            "Id":Math.floor(Math.random() * (5000 - 100 + 1)) + 1000,
                             "MonitorId": mon.toString(),
                             "Cause": causes[Math.floor(Math.random() * (2 - 0 + 1)) + 0],
                             "Length": Math.floor(Math.random() * (700 - 20 + 1)) + 20,

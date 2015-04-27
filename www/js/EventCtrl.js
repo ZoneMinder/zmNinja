@@ -2,13 +2,43 @@
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
 // and whether the new API has a better mechanism
 
-angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel,$ionicSideMenuDelegate) {
+angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel,$ionicSideMenuDelegate, $ionicModal) {
     console.log("I got STATE PARAM " + $stateParams.id);
     $scope.id = parseInt($stateParams.id,10);
 
 $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   }
+
+// This is a modal to show the event footage
+$ionicModal.fromTemplateUrl('templates/events-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  })
+    .then(function(modal) {
+    $scope.modal = modal;
+
+  });
+
+
+$scope.openModal = function(eid,ename,edur) {
+      console.log ("Open Modal");
+    $scope.eventName = ename;
+    $scope.eventId = eid;
+    $scope.eventDur = Math.round(edur);
+    $scope.loginData = ZMDataModel.getLogin();
+    $scope.modal.show();
+  };
+  $scope.closeModal = function() {
+      console.log ("Close Modal");
+    $scope.modal.hide();
+
+  };
+  //Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+      console.log ("Destroy Modal");
+    $scope.modal.remove();
+  });
 
     console.log("***CALLING EVENTS FACTORY");
     var lData = ZMDataModel.getLogin();
