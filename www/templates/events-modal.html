@@ -1,8 +1,11 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">{{eventName}} (Duration:{{eventDur}}s)
-        <span style="float:right">
-        <button class="button  button-clear icon icon-left ion-close" ng-click="closeModal()" >Close</button>
+        <h1 class="title">
+            <span style="float:left">
+                <button class="button  button-clear icon icon-left ion-close" ng-click="closeModal()" >Close</button>
+            </span>
+            <span style="float:right">
+                {{eventName}} (Duration:{{eventDur}}s)
             </span>
         </h1>
     </ion-header-bar>
