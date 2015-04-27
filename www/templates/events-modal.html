@@ -10,6 +10,13 @@
         </h1>
     </ion-header-bar>
     <ion-content>
-        <img ng-src="{{loginData.url}}cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&scale=100&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}" width="100%" />
+        <div ng-if="!isSimulated()">
+            <img ng-src="{{loginData.url}}cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&scale=100&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}" width="100%" />
+        </div>
+
+        <div ng-if="isSimulated()">
+            <img ng-src="img/demo.gif" width="100%">
+        </div>
+
     </ion-content>
 </ion-modal-view>
