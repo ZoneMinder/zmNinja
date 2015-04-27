@@ -58,6 +58,10 @@ $scope.openModal = function(eid,ename,edur) {
             $scope.events = myevents;
         });
 
+$scope.isSimulated = function ()
+    {
+        return ZMDataModel.isSimulated();
+    };
 
 
     $scope.doRefresh = function () {
