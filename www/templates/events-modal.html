@@ -1,0 +1,12 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">{{eventName}} (Duration:{{eventDur}}s)
+        <span style="float:right">
+        <button class="button  button-clear icon icon-left ion-close" ng-click="closeModal()" >Close</button>
+            </span>
+        </h1>
+    </ion-header-bar>
+    <ion-content>
+        <img ng-src="{{loginData.url}}cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&scale=100&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}" width="100%" />
+    </ion-content>
+</ion-modal-view>

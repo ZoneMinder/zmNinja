@@ -15,9 +15,9 @@
         <!--<ion-list>-->
            <!-- <div ng-repeat="event in events">-->
 
-                <ion-item collection-repeat="event in events">
+                <ion-item collection-repeat="event in events" >
 
-                    <div class="row">
+                    <div class="row"  >
                         <div class="col col-left">
                             <!-- this ngswitch displays different icons
                                 depending on the cause of the event -->
@@ -48,7 +48,10 @@
                             <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                             <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
                             <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
-                            <br/>
+
+                            <span style="float:right">
+                                <button class="button button-small icon icon-left ion-ios-eye" ng-click="openModal(event.Event.Id, event.Event.Name, event.Event.Length)" >View Footage</button></span>
+
                         </div>
 
                         <!--<div class="col">
