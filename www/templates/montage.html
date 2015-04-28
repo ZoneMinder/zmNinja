@@ -27,7 +27,7 @@
                  and auth token mode -->
                 <div ng-if="!isSimulated()">
                     <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-                <img  ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"   />
+                <img  ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"   />
                     </ion-scroll>
 
                    </div>

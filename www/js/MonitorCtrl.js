@@ -9,6 +9,22 @@ $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   }
 
+ $scope.$on('$ionicView.loaded', function(){
+    console.log("**VIEW ** Monitor Ctrl Loaded");
+  });
+
+    $scope.$on('$ionicView.enter', function(){
+    console.log("**VIEW ** Monitor Ctrl Entered");
+  });
+
+      $scope.$on('$ionicView.leave', function(){
+    console.log("**VIEW ** Monitor Ctrl Left");
+  });
+
+         $scope.$on('$ionicView.unloaded', function(){
+    console.log("**VIEW ** Monitor Ctrl Unloaded");
+  });
+
  $scope.openModal = function (mid) {
         console.log("Open Monitor Modal");
 

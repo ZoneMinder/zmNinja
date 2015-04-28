@@ -11,6 +11,26 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         $ionicSideMenuDelegate.toggleLeft();
     }
 
+     $scope.$on('$ionicView.loaded', function(){
+    console.log("**VIEW ** Events Ctrl Loaded");
+  });
+
+    $scope.$on('$ionicView.enter', function(){
+    console.log("**VIEW ** Events Ctrl Entered");
+  });
+
+      $scope.$on('$ionicView.leave', function(){
+    console.log("**VIEW ** Events Ctrl Left");
+  });
+
+         $scope.$on('$ionicView.unloaded', function(){
+    console.log("**VIEW ** Events Ctrl Unloaded");
+    console.log ("*** MODAL ** Destroying modal too");
+              $scope.modal.remove();
+
+  });
+
+
     // This is a modal to show the event footage
     $ionicModal.fromTemplateUrl('templates/events-modal.html', {
             scope: $scope,

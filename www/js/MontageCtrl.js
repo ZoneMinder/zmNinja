@@ -7,6 +7,25 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', function ($s
     $ionicSideMenuDelegate.toggleLeft();
   }
 
+
+    $scope.$on('$ionicView.loaded', function(){
+    console.log("**VIEW ** Montage Ctrl Loaded");
+  });
+
+    $scope.$on('$ionicView.enter', function(){
+    console.log("**VIEW ** Montage Ctrl Entered");
+  });
+
+      $scope.$on('$ionicView.leave', function(){
+    console.log("**VIEW ** Montage Ctrl Left");
+  });
+
+         $scope.$on('$ionicView.unloaded', function(){
+    console.log("**VIEW ** Montage Ctrl Unloaded");
+  });
+
+
+
     $scope.getMontageImagePath = function ()
     {
         return ZMDataModel.getMontageImagePath();

@@ -8,6 +8,23 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
         $ionicSideMenuDelegate.toggleLeft();
     }
 
+     $scope.$on('$ionicView.loaded', function(){
+    console.log("**VIEW ** Graph Ctrl Loaded");
+  });
+
+    $scope.$on('$ionicView.enter', function(){
+    console.log("**VIEW ** Graph Ctrl Entered");
+  });
+
+      $scope.$on('$ionicView.leave', function(){
+    console.log("**VIEW ** Graph Ctrl Left");
+  });
+
+         $scope.$on('$ionicView.unloaded', function(){
+    console.log("**VIEW ** Graph Ctrl Unloaded");
+  });
+
+
     $scope.navTitle = 'Tab Page';
     $scope.leftButtons = [{
         type: 'button-icon icon ion-navicon',
