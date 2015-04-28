@@ -1,4 +1,4 @@
-<ion-modal-view>
+<ion-modal-view cache="false">
 
     <!-- <ion-header-bar>
         <h1 class="title">
@@ -15,7 +15,7 @@
         <!-- replay can also be gapless -->
         <div ng-if="!isSimulated()">
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-            <img ng-src="{{loginData.url}}/cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&scale=100&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}&connkey={{connKey}}" width="100%" />
+            <img ng-src="{{loginData.url}}/cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}&connkey={{connKey}}" width="100%" />
             </ion-scroll>
         </div>
 

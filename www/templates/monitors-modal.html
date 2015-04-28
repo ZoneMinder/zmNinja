@@ -1,4 +1,4 @@
-<ion-modal-view>
+<ion-modal-view cache="false">
 
     <!-- <ion-header-bar>
         <h1 class="title">
@@ -16,7 +16,7 @@
 
         <div ng-if="!isSimulated()">
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-            <img ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitorId}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="100%" />
+            <img ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="100%" />
             </ion-scroll>
         </div>
 
