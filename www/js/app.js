@@ -7,9 +7,10 @@ angular.module('zmApp', [
 
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel,$cordovaSplashscreen) {
 
+    // generates and error in desktops but works fine
     setTimeout(function() {
     $cordovaSplashscreen.hide()
-  }, 5000)
+  }, 3000)
 
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
