@@ -107,7 +107,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         req.success(function (resp) {
 
             console.log("SUCCESS: " + JSON.stringify(resp));
-            var str = toast_blurb + "Event:" + resp.status.event;
+            var str = toast_blurb + "event:" + resp.status.event;
             console.log(str);
             $ionicLoading.show({
                 template: str,
