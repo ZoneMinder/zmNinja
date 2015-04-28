@@ -42,7 +42,7 @@
                 <div style="float:right;">
                     <a class="button button-small icon icon-left icon ion-gear-a" href="#/app/events">Configuration</a>
                     <a class="button button-small icon icon-left ion-calendar" href="#/events/{{monitor.Monitor.Id}}">Events</a>
-                    <a class="button button-small icon icon-left ion-ios-eye" href="#/app/events">Live View</a>
+                    <a class="button button-small icon icon-left ion-ios-eye" ng-click="openModal(monitor.Monitor.Id)"  >Live View</a>
                 </div>
 
             </div>
