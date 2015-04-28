@@ -2,43 +2,144 @@
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
 // and whether the new API has a better mechanism
 
-angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel,$ionicSideMenuDelegate, $ionicModal) {
+angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel, $ionicSideMenuDelegate, $ionicModal, $ionicLoading, $http) {
     console.log("I got STATE PARAM " + $stateParams.id);
-    $scope.id = parseInt($stateParams.id,10);
+    $scope.id = parseInt($stateParams.id, 10);
+    $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
-$scope.openMenu = function () {
-    $ionicSideMenuDelegate.toggleLeft();
-  }
+    $scope.openMenu = function () {
+        $ionicSideMenuDelegate.toggleLeft();
+    }
 
-// This is a modal to show the event footage
-$ionicModal.fromTemplateUrl('templates/events-modal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  })
-    .then(function(modal) {
-    $scope.modal = modal;
+    // This is a modal to show the event footage
+    $ionicModal.fromTemplateUrl('templates/events-modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        })
+        .then(function (modal) {
+            $scope.modal = modal;
 
-  });
+        });
+
+    var eventCommands = {
+        next: "13",
+        previous: "12",
+        zoomin: "8",
+        zoomout: "9",
+        stop: "3",
+        pause: "1",
+        play: "2"
+    }
 
 
-$scope.openModal = function(eid,ename,edur) {
-      console.log ("Open Modal");
-    $scope.eventName = ename;
-    $scope.eventId = eid;
-    $scope.eventDur = Math.round(edur);
-    $scope.loginData = ZMDataModel.getLogin();
-    $scope.modal.show();
-  };
-  $scope.closeModal = function() {
-      console.log ("Close Modal");
-    $scope.modal.hide();
+    $scope.eventCommands = eventCommands;
 
-  };
-  //Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-      console.log ("Destroy Modal");
-    $scope.modal.remove();
-  });
+    // this routine handles skipping through events
+    // in different event views
+    $scope.controlEventStream = function (cmd) {
+        console.log("Command value " + cmd);
+
+        if (ZMDataModel.isSimulated()) {
+            var str = "simulation mode. no action taken";
+            $ionicLoading.show({
+                template: str,
+                noBackdrop: true,
+                duration: 3000
+            });
+            return;
+        }
+
+
+        var loginData = ZMDataModel.getLogin();
+
+        var toast_blurb = "";
+        switch (cmd) {
+        case "13":
+            toast_blurb = "moving to ";
+            break;
+        case "12":
+            toast_blurb = "moving to ";
+            break;
+        case "8":
+            toast_blurb = "zoomed into ";
+            break;
+        case "9":
+            toast_blurb = "zoomed out of ";
+            break;
+        case "3":
+            toast_blurb = "stopping playback for ";
+            break;
+        case "2":
+            toast_blurb = "resuming playback for ";
+            break;
+        case "1":
+            toast_blurb = "pausing playback for ";
+            break;
+        };
+
+
+        var req = $http({
+            method: 'POST',
+            url: loginData.url + 'zm/index.php',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': '*/*',
+            },
+            transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                    str.push(encodeURIComponent(p) + "=" +
+                        encodeURIComponent(obj[p]));
+                var foo = str.join("&");
+                console.log("****RETURNING " + foo);
+                return foo;
+            },
+
+            data: {
+                view: "request",
+                request: "stream",
+                connkey: $scope.connKey,
+                command: cmd,
+                user: loginData.username,
+                pass: loginData.password
+            }
+        });
+        req.success(function (resp) {
+
+            console.log("SUCCESS: " + JSON.stringify(resp));
+            var str = toast_blurb + "Event:" + resp.status.event;
+            console.log(str);
+            $ionicLoading.show({
+                template: str,
+                noBackdrop: true,
+                duration: 3000
+            });
+        });
+
+        req.error(function (resp) {
+            console.log("ERROR: " + JSON.stringify(resp));
+        });
+    }
+
+
+    $scope.openModal = function (eid, ename, edur) {
+        console.log("Open Modal");
+        $scope.eventName = ename;
+        $scope.eventId = eid;
+        $scope.eventDur = Math.round(edur);
+        $scope.loginData = ZMDataModel.getLogin();
+        $scope.modal.show();
+    };
+    $scope.closeModal = function () {
+        console.log("Close Modal");
+        $scope.modal.hide();
+
+    };
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function () {
+        console.log("Destroy Modal");
+        $scope.modal.remove();
+    });
 
     console.log("***CALLING EVENTS FACTORY");
     var lData = ZMDataModel.getLogin();
@@ -58,8 +159,7 @@ $scope.openModal = function(eid,ename,edur) {
             $scope.events = myevents;
         });
 
-$scope.isSimulated = function ()
-    {
+    $scope.isSimulated = function () {
         return ZMDataModel.isSimulated();
     };
 

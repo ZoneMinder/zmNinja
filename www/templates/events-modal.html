@@ -1,5 +1,6 @@
 <ion-modal-view>
-    <ion-header-bar>
+
+    <!-- <ion-header-bar>
         <h1 class="title">
             <span style="float:left">
                 <button class="button  button-clear icon icon-left ion-close" ng-click="closeModal()" >Close</button>
@@ -8,10 +9,12 @@
                 {{eventName}} (Duration:{{eventDur}}s)
             </span>
         </h1>
-    </ion-header-bar>
+    </ion-header-bar> -->
     <ion-content>
+
+        <!-- replay can also be gapless -->
         <div ng-if="!isSimulated()">
-            <img ng-src="{{loginData.url}}cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&scale=100&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}" width="100%" />
+            <img ng-src="{{loginData.url}}/cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&scale=100&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}&connkey={{connKey}}" width="100%" />
         </div>
 
         <div ng-if="isSimulated()">
@@ -19,4 +22,23 @@
         </div>
 
     </ion-content>
+    <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+        <button mfb-button icon="ion-close" label="close" ng-click="closeModal()"></button>
+
+
+        <a mfb-button icon="ion-skip-backward" label="previous" ng-click="controlEventStream(eventCommands.previous)"></a>
+
+
+        <a mfb-button icon="ion-skip-forward" label="next" ng-click="controlEventStream(eventCommands.next)"></a>
+
+
+
+    </nav>
+
+    <nav mfb-menu position="bl" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+        <a mfb-button icon="ion-pause" label="pause" ng-click="controlEventStream(eventCommands.pause)"></a>
+
+        <a mfb-button icon="ion-play" label="play" ng-click="controlEventStream(eventCommands.play)"></a>
+    </nav>
+
 </ion-modal-view>
