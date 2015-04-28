@@ -11,14 +11,14 @@ https://github.com/ZoneMinder/ZoneMinder/issues/799 to keep a tab of the API sta
 
 Features
 --------
-Please see the Wiki
+Please see the [Wiki](https://github.com/arjunroychowdhury/zmNinja/wiki)
 
 Thanks
 ------
 To the zonemider community in general, and the awesome Stack Overflow community.
-But specifically, Andrew Bauer (knnniggett) - he is a ZoneMinder maintainer and
+But specifically, [Andrew Bauer](https://github.com/knnniggett) (knnniggett) - he is a ZoneMinder maintainer and
 helped me significantly in getting into ZoneMinder and also continues to help
-me with my client goals. https://github.com/knnniggett
+me with my client goals. 
 
 
 Objective
@@ -65,6 +65,9 @@ Menu:
 Events List:
 
 ![](http://www.pbase.com/arjunrc/image/159760954/medium.jpg "Events List")
+
+Full Screen Events Footage View (with floating buttons)
+![](http://www.pbase.com/arjunrc/image/159892344/medium.jpg "Events View")
 
 Sliding Montage View 1:
 
