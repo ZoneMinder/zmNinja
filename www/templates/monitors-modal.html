@@ -13,8 +13,10 @@
     <ion-content>
 
         <!-- replay can also be gapless -->
+        {{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitorId}}&amp;scale=100&amp;maxfps=3&amp;buffer=1000&amp;user={{LoginData.username}}&amp;pass={{LoginData.password}}&amp;rand={{rand}}
+
         <div ng-if="!isSimulated()">
-            <img ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="100%" />
+            <img ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitorId}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="100%" />
         </div>
 
         <div ng-if="isSimulated()">
