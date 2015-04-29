@@ -11,37 +11,36 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         $ionicSideMenuDelegate.toggleLeft();
     }
 
-$scope.reloadView = function ()
-{
-    console.log ("*** Refreshing Modal view ***");
-    //$state.go($state.current, {}, {reload: true});
-    $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-    $ionicLoading.show({
-                template: "refreshed view",
-                noBackdrop: true,
-                duration: 3000
-            });
+    $scope.reloadView = function () {
+        console.log("*** Refreshing Modal view ***");
+        //$state.go($state.current, {}, {reload: true});
+        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        $ionicLoading.show({
+            template: "refreshed view",
+            noBackdrop: true,
+            duration: 3000
+        });
 
-}
+    }
 
-     $scope.$on('$ionicView.loaded', function(){
-    console.log("**VIEW ** Events Ctrl Loaded");
-  });
+    $scope.$on('$ionicView.loaded', function () {
+        console.log("**VIEW ** Events Ctrl Loaded");
+    });
 
-    $scope.$on('$ionicView.enter', function(){
-    console.log("**VIEW ** Events Ctrl Entered");
-  });
+    $scope.$on('$ionicView.enter', function () {
+        console.log("**VIEW ** Events Ctrl Entered");
+    });
 
-      $scope.$on('$ionicView.leave', function(){
-    console.log("**VIEW ** Events Ctrl Left");
-  });
+    $scope.$on('$ionicView.leave', function () {
+        console.log("**VIEW ** Events Ctrl Left");
+    });
 
-         $scope.$on('$ionicView.unloaded', function(){
-    console.log("**VIEW ** Events Ctrl Unloaded");
-    console.log ("*** MODAL ** Destroying modal too");
-              $scope.modal.remove();
+    $scope.$on('$ionicView.unloaded', function () {
+        console.log("**VIEW ** Events Ctrl Unloaded");
+        console.log("*** MODAL ** Destroying modal too");
+        $scope.modal.remove();
 
-  });
+    });
 
 
     // This is a modal to show the event footage
@@ -218,6 +217,3 @@ $scope.reloadView = function ()
     }; //dorefresh
 
 });
-
-
-
