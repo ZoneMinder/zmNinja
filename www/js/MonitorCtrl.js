@@ -1,6 +1,6 @@
 // controller for Monitor View
 
-angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($scope, ZMDataModel, message,$ionicSideMenuDelegate, $ionicLoading, $ionicModal) {
+angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($scope, ZMDataModel, message,$ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $ionicLoading) {
 
     $scope.monitors = [];
 
@@ -8,6 +8,17 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($s
 $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   }
+
+$scope.reloadView = function ()
+{
+    console.log ("*** Refreshing Modal view ***");
+     $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+    $ionicLoading.show({
+                template: "refreshed view",
+                noBackdrop: true,
+                duration: 3000
+            });
+}
 
  $scope.$on('$ionicView.loaded', function(){
     console.log("**VIEW ** Monitor Ctrl Loaded");

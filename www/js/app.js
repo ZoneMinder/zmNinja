@@ -5,6 +5,19 @@ angular.module('zmApp', [
 
                         ])
 
+.directive('img', function () {
+    return {
+        restrict: 'E',
+        link: function (scope, element, attrs) {
+            console.log ("********** IMG DIRECTIVE ");
+            // show an image-missing image
+           // element.error(function () {
+
+          //  });
+        }
+    }
+})
+
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel,$cordovaSplashscreen) {
 
     // generates and error in desktops but works fine

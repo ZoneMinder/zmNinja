@@ -2,7 +2,7 @@
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
 // and whether the new API has a better mechanism
 
-angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel, $ionicSideMenuDelegate, $ionicModal, $ionicLoading, $http) {
+angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel, $ionicSideMenuDelegate, $ionicModal, $ionicLoading, $http, $state, $window) {
     console.log("I got STATE PARAM " + $stateParams.id);
     $scope.id = parseInt($stateParams.id, 10);
     $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
@@ -10,6 +10,19 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     }
+
+$scope.reloadView = function ()
+{
+    console.log ("*** Refreshing Modal view ***");
+    //$state.go($state.current, {}, {reload: true});
+    $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+    $ionicLoading.show({
+                template: "refreshed view",
+                noBackdrop: true,
+                duration: 3000
+            });
+
+}
 
      $scope.$on('$ionicView.loaded', function(){
     console.log("**VIEW ** Events Ctrl Loaded");
@@ -148,6 +161,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         $scope.eventId = eid;
         $scope.eventDur = Math.round(edur);
         $scope.loginData = ZMDataModel.getLogin();
+        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $scope.modal.show();
     };
     $scope.closeModal = function () {
@@ -204,3 +218,6 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     }; //dorefresh
 
 });
+
+
+
