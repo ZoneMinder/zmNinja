@@ -16,22 +16,22 @@
 
         <div ng-if="!isSimulated()">
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-            <img ng-src="{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}"  width="100%" style="background-image:url('http://www.pbase.com/arjunrc/image/159892445/medium.jpg');"/>
+                <img ng-src="{{LoginData.url}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="100%" style="background-image:url('http://www.pbase.com/arjunrc/image/159892445/medium.jpg');" />
             </ion-scroll>
         </div>
 
         <div ng-if="isSimulated()">
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-            <img ng-src="img/demo.gif" width="100%">
+                <img ng-src="img/demo.gif" width="100%">
             </ion-scroll>
         </div>
 
     </ion-content>
     <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-         <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView()"></button>
+        <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView()"></button>
         <button mfb-button icon="ion-close" label="close" ng-click="closeModal()"></button>
     </nav>
 
-    
+
 
 </ion-modal-view>
