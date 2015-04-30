@@ -44,14 +44,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
 
 
     // This is a modal to show the event footage
-    $ionicModal.fromTemplateUrl('templates/events-modal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        })
-        .then(function (modal) {
-            $scope.modal = modal;
 
-        });
 
     var eventCommands = {
         next: "13",
@@ -168,11 +161,20 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         $scope.eventDur = Math.round(edur);
         $scope.loginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-        $scope.modal.show();
+
+        $ionicModal.fromTemplateUrl('templates/events-modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        })
+        .then(function (modal) {
+            $scope.modal = modal;
+             $scope.modal.show();
+        });
+
     };
     $scope.closeModal = function () {
-        console.log("Close Modal");
-        $scope.modal.hide();
+        console.log("Close & Destroy Modal");
+        $scope.modal.remove();
 
     };
     //Cleanup the modal when we're done with it!
