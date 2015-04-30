@@ -260,6 +260,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             var d = $q.defer();
             var myevents = [];
             var apiurl = loginData.apiurl;
+
+            // FIXME: THIS IS JUST FETCHING PAGE 1 !!
+            // looks like I have more work to do here
+
             var myurl = (monitorId == 0) ? apiurl + "/events.json" : apiurl + "/events/index/MonitorId:" + monitorId + ".json";
             console.log("Constructed URL is " + myurl);
             // FIXME: When retrieving lots of events, I really need to do pagination here - more complex
