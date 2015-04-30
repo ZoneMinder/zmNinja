@@ -5,12 +5,27 @@ angular.module('zmApp', [
 
                         ])
 
+
+.directive('imageonload', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                element.bind('load', function() {
+                    //call the function that was passed
+                    scope.$apply(attrs.imageonload);
+                });
+            }
+        };
+    })
+
 .directive('img', function () {
+   // element[0].src = 'img/demo.gif';
+
     return {
-        restrict: 'AE',
+        restrict: 'E',
         link: function (scope, element, attrs) {
             console.log ("********** IMG DIRECTIVE ");
-
+ //console.log ("Attr ng-src="+attr.ngSrc);
            // if (!attr.ngSrc)
                // element[0].src = 'img/demo.gif';
             // show an image-missing image

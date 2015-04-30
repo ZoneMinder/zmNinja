@@ -20,6 +20,22 @@ $scope.reloadView = function ()
             });
 }
 
+$scope.initLoadingImage = function()
+    {
+        console.log ("***Loading***");
+       /* $ionicLoading.show({
+            template: "loading, please wait...",
+            noBackdrop: true,
+        });*/
+    }
+
+
+    $scope.finishedLoadingImage = function()
+    {
+         $ionicLoading.hide();
+       // alert ("IMAGE LOADED");
+    }
+
  $scope.$on('$ionicView.loaded', function(){
     console.log("**VIEW ** Monitor Ctrl Loaded");
   });
@@ -50,6 +66,12 @@ $scope.reloadView = function ()
         })
         .then(function (modal) {
             $scope.modal = modal;
+
+         $ionicLoading.show({
+                template: "please wait...",
+                noBackdrop: true,
+                duration:10000
+        })
             $scope.modal.show();
         });
 

@@ -16,7 +16,7 @@
 
         <div ng-if="!isSimulated()">
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-                <img ng-src="{{LoginData.url}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="100%" style="background-image:url('http://www.pbase.com/arjunrc/image/159892445/medium.jpg');" />
+                <img imageonload="finishedLoadingImage()" ng-src="{{LoginData.url}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="100%" style="background-image:url('http://www.pbase.com/arjunrc/image/159892445/medium.jpg');" />
             </ion-scroll>
         </div>
 
