@@ -81,6 +81,12 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
             return;
         }
 
+        $ionicLoading.hide();
+            $ionicLoading.show({
+                template: "please wait...",
+                noBackdrop: true,
+
+            });
 
         var loginData = ZMDataModel.getLogin();
 
@@ -141,10 +147,11 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
             console.log("SUCCESS: " + JSON.stringify(resp));
             var str = toast_blurb + "event:" + resp.status.event;
             console.log(str);
+            $ionicLoading.hide();
             $ionicLoading.show({
                 template: str,
                 noBackdrop: true,
-                duration: 3000
+                duration: 2000
             });
         });
 
