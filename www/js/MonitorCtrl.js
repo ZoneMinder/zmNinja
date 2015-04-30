@@ -42,11 +42,21 @@ $scope.reloadView = function ()
         $scope.monitorId = mid;
         $scope.LoginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-        $scope.modal.show();
+
+     // This is a modal to show the monitor footage
+    $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        })
+        .then(function (modal) {
+            $scope.modal = modal;
+            $scope.modal.show();
+        });
+
     };
     $scope.closeModal = function () {
-        console.log("Close Monitor Modal");
-        $scope.modal.hide();
+        console.log("Close & Destroy Monitor Modal");
+        $scope.modal.remove();
 
     };
     //Cleanup the modal when we're done with it!
@@ -55,15 +65,7 @@ $scope.reloadView = function ()
         $scope.modal.remove();
     });
 
-// This is a modal to show the monitor footage
-    $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        })
-        .then(function (modal) {
-            $scope.modal = modal;
 
-        });
 
     console.log("***EVENTS: Waiting for Monitors to load before I proceed");
 

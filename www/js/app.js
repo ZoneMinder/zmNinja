@@ -7,9 +7,12 @@ angular.module('zmApp', [
 
 .directive('img', function () {
     return {
-        restrict: 'E',
+        restrict: 'AE',
         link: function (scope, element, attrs) {
             console.log ("********** IMG DIRECTIVE ");
+
+           // if (!attr.ngSrc)
+               // element[0].src = 'img/demo.gif';
             // show an image-missing image
            // element.error(function () {
 
