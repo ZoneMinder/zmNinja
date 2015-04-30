@@ -56,6 +56,21 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         play: "2"
     }
 
+    $scope.initLoadingImage = function()
+    {
+        console.log ("***Loading***");
+       /* $ionicLoading.show({
+            template: "loading, please wait...",
+            noBackdrop: true,
+        });*/
+    }
+
+
+    $scope.finishedLoadingImage = function()
+    {
+         $ionicLoading.hide();
+       // alert ("IMAGE LOADED");
+    }
 
     $scope.eventCommands = eventCommands;
 
@@ -168,10 +183,18 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         })
         .then(function (modal) {
             $scope.modal = modal;
-             $scope.modal.show();
-        });
 
-    };
+            $ionicLoading.show({
+                template: "please wait...",
+                noBackdrop: true,
+                duration:10000
+        })
+             $scope.modal.show();
+
+        })
+    }
+
+
     $scope.closeModal = function () {
         console.log("Close & Destroy Modal");
         $scope.modal.remove();
