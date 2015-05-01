@@ -56,18 +56,12 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         play: "2"
     }
 
-    $scope.initLoadingImage = function()
-    {
-        console.log ("***Loading***");
-       /* $ionicLoading.show({
-            template: "loading, please wait...",
-            noBackdrop: true,
-        });*/
-    }
+    
 
 
     $scope.finishedLoadingImage = function()
     {
+        console.log ("*** Events image FINISHED loading ***");
          $ionicLoading.hide();
        // alert ("IMAGE LOADED");
     }
@@ -93,7 +87,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
             $ionicLoading.show({
                 template: "please wait...",
                 noBackdrop: true,
-
+                duration: 10000,
             });
 
         var loginData = ZMDataModel.getLogin();
@@ -123,13 +117,14 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
             break;
         };
 
-
+        console.log ("** POST URL " +loginData.url+ 'zm/index.php');
         var req = $http({
             method: 'POST',
-            url: loginData.url + 'zm/index.php',
+            timeout: 10000,
+            url: loginData.url + '/zm/index.php',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': '*/*',
+                //'Accept': '*/*',
             },
             transformRequest: function (obj) {
                 var str = [];

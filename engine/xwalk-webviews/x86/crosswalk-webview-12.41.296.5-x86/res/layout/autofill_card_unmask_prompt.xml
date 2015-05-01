@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2014 The Chromium Authors. All rights reserved.
+
+     Use of this source code is governed by a BSD-style license that can be
+     found in the LICENSE file.
+-->
+<LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
+  
+
+    
+  <TextView android:gravity="start" android:id="@+id/card_unmask_instructions" android:layout_height="wrap_content" android:layout_width="match_parent" android:paddingBottom="5dp" android:paddingLeft="5dp" android:paddingRight="5dp" android:paddingTop="5dp" android:textSize="20sp"/>
+  
+
+    
+  <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="horizontal">
+    
+
+        
+    <EditText android:ems="4" android:hint="@string/card_unmask_input_hint" android:id="@+id/card_unmask_input" android:inputType="number" android:layout_height="wrap_content" android:layout_marginLeft="16dp" android:layout_marginRight="16dp" android:layout_width="wrap_content"/>
+    
+
+        
+    <TextView android:gravity="start" android:id="@+id/card_unmask_verification_message" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone"/>
+    
+     
+  </LinearLayout>
+  
+
+
+</LinearLayout>
