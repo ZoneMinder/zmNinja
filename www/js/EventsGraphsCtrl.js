@@ -87,7 +87,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
                     console.log("Monitor event URL:" + url);
                     if (!ZMDataModel.isSimulated())
                     {
-                    $http.get(url)
+                    $http.get(url, {timeout:10000})
                         .success(function (data) {
                             console.log("**** EVENT COUNT FOR MONITOR " +
                                 monitors[j].Monitor.Id + " IS " + data.pagination.count);

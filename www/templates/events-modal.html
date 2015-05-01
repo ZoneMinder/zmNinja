@@ -24,7 +24,7 @@
 
         <div ng-if="isSimulated()">
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-                <img ng-src="img/demo.gif" width="100%">
+                <img imageonload="finishedLoadingImage()" ng-src="img/demo.gif" width="100%" />
             </ion-scroll>
 
         </div>

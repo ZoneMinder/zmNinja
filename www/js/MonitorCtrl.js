@@ -16,25 +16,26 @@ $scope.reloadView = function ()
     $ionicLoading.show({
                 template: "refreshed view",
                 noBackdrop: true,
-                duration: 3000
+                duration: 2000
             });
 }
 
-$scope.initLoadingImage = function()
+$scope.isSimulated = function () {
+        return ZMDataModel.isSimulated();
+    };
+
+
+$scope.finishedLoadingImage = function()
     {
-        console.log ("***Loading***");
+        console.log ("***Monitor image FINISHED Loading***");
+        $ionicLoading.hide();
        /* $ionicLoading.show({
             template: "loading, please wait...",
             noBackdrop: true,
         });*/
     }
 
-
-    $scope.finishedLoadingImage = function()
-    {
-         $ionicLoading.hide();
-       // alert ("IMAGE LOADED");
-    }
+   
 
  $scope.$on('$ionicView.loaded', function(){
     console.log("**VIEW ** Monitor Ctrl Loaded");

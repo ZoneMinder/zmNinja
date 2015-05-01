@@ -6,6 +6,10 @@ angular.module('zmApp', [
                         ])
 
 
+// this directive will be load any time an image completes loading 
+// via img tags where this directive is added (I am using this in
+// events and mionitor view to show a loader while the image is
+// downloading from ZM
 .directive('imageonload', function() {
         return {
             restrict: 'A',
@@ -14,11 +18,14 @@ angular.module('zmApp', [
                     //call the function that was passed
                     scope.$apply(attrs.imageonload);
                 });
-            }
+            },
+            
+            
         };
     })
 
-.directive('img', function () {
+/*
+    .directive('img', function () {
    // element[0].src = 'img/demo.gif';
 
     return {
@@ -34,14 +41,11 @@ angular.module('zmApp', [
           //  });
         }
     }
-})
+})*/
 
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel,$cordovaSplashscreen) {
 
-    // generates and error in desktops but works fine
-    setTimeout(function() {
-    $cordovaSplashscreen.hide()
-  }, 3000)
+   
 
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
@@ -92,6 +96,13 @@ angular.module('zmApp', [
 
 
     $ionicPlatform.ready(function () {
+        
+         // generates and error in desktops but works fine
+        console.log ("**** DEVICE READY ***");
+    setTimeout(function() {
+    $cordovaSplashscreen.hide()
+  }, 3000)
+        
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);

@@ -184,9 +184,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         getMonitors: function (forceReload) {
             console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
             $ionicLoading.show({
-                    template: 'Loading ZoneMinder Monitors...',
+                    template: 'Loading Monitors...',
                     animation: 'fade-in',
                     showBackdrop: true,
+                    duration:10000,
                     maxWidth: 200,
                     showDelay: 0
                 });
@@ -196,7 +197,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 console.log("ZMDataModel: Invoking HTTP get to load monitors");
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + "/monitors.json";
-                $http.get(myurl)
+                $http.get(myurl, {timeout:10000})
                     .success(function (data) {
                         //console.log("HTTP success got " + JSON.stringify(data.monitors));
                         monitors = data.monitors;
@@ -250,11 +251,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             console.log("ZMData getEvents called with ID=" + monitorId);
 
             $ionicLoading.show({
-                    template: 'Loading ZoneMinder Events...',
+                    template: 'Loading Events...',
                     animation: 'fade-in',
                     showBackdrop: true,
                     maxWidth: 200,
-                    showDelay: 0
+                    showDelay: 0,
+                    duration:10000, //specifically for Android - http seems to get stuck at times
                 });
 
             var d = $q.defer();
@@ -278,7 +280,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 return d.promise;
             } else { // not simulated
 
-                $http.get(myurl)
+                $http.get(myurl,  {timeout:10000})
                     .success(function (data) {
                         $ionicLoading.hide();
                         myevents = data.events.reverse();
