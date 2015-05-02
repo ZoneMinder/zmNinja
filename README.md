@@ -37,6 +37,7 @@ I'll keep refining it over time as I learn more of AngularJS and stuff.
 
 Note that I am only currently testing on iOS as a platform for now
 My plan is to make the iOS version work and then move to other platforms (Android).
+Updated: Works great on Android too - integrated the ultra-fast crosswalk project
 
 as I mentioned, expect to see many many changes over the next few weeks/months
 
