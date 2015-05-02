@@ -28,7 +28,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 .wrapper > * {
     padding: 5px;
-    flex: 1 100%;
+    /*flex: 1 100%; -- I commented this out - the wrapper was taking up full width in Chrome*/
 }
 
 .header {
