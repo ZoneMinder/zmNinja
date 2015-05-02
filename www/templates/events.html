@@ -13,64 +13,64 @@
 
         <ion-refresher pulling-text="Pull to reload Events..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
         <!--<ion-list>-->
-           <!-- <div ng-repeat="event in events">-->
+        <!-- <div ng-repeat="event in events">-->
 
-                <ion-item collection-repeat="event in events" >
+        <ion-item collection-repeat="event in events">
 
-                    <div class="row"  >
-                        <div class="col col-left">
-                            <!-- this ngswitch displays different icons
+            <div class="row">
+                <div class="col col-left">
+                    <!-- this ngswitch displays different icons
                                 depending on the cause of the event -->
-                            <div ng-switch on="event.Event.Cause">
-                                <div ng-switch-when="Motion">
-                                    <i class="ion-android-walk" style="float:left; font-size:200%;"></i>
-                                    <br/>
-                                </div>
-                                <div ng-switch-when="Signal">
-                                    <i class="ion-wifi" style="float:left; font-size:200%;"></i>
-                                    <br/>
-                                </div>
-                                <div ng-switch-default>
-                                    <i class="ion-ionic" style="float:left; font-size:200%;"></i>
-                                    <br/>
-                                </div>
-                            </div>
-                            <!-- ng switch -->
-                            <!-- {{event.Event.Cause}} -->
-
-                            <br/> <span style="font-size:80%; color:rgb(110,110,110)">{{event.Event.Length}}s</span>
+                    <div ng-switch on="event.Event.Cause">
+                        <div ng-switch-when="Motion">
+                            <i class="ion-android-walk" style="float:left; font-size:200%;"></i>
+                            <br/>
                         </div>
-                        <!-- col col left-->
+                        <div ng-switch-when="Signal">
+                            <i class="ion-wifi" style="float:left; font-size:200%;"></i>
+                            <br/>
+                        </div>
+                        <div ng-switch-default>
+                            <i class="ion-ionic" style="float:left; font-size:200%;"></i>
+                            <br/>
+                        </div>
+                    </div>
+                    <!-- ng switch -->
+                    <!-- {{event.Event.Cause}} -->
 
-                        <div class="col col-80">
-                            <div class="item-text-wrap"><i class="ion-monitor"></i> <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}})</div>
+                    <br/> <span style="font-size:80%; color:rgb(110,110,110)">{{event.Event.Length}}s</span>
+                </div>
+                <!-- col col left-->
 
-                            <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
-                            <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
-                            <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
+                <div class="col col-80">
+                    <div class="item-text-wrap"><i class="ion-monitor"></i> <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}})</div>
 
-                            <span style="float:right">
+                    <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
+                    <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
+                    <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
+
+                    <span style="float:right">
                                 <button class="button button-small icon icon-left ion-ios-eye" ng-click="openModal(event.Event.Id, event.Event.Name, event.Event.Length)" >View Footage</button></span>
 
-                        </div>
+                </div>
 
-                        <!--<div class="col">
+                <!--<div class="col">
                                 <img ng-src="{{event.image}}" style="float:right; height:40px;" />
                             </div> -->
 
-                    </div>
+            </div>
 
-                    <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-                        <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp;{{event.Event.StartTime}}
-                            <br/>
-                            <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
-                            <br/>
-                        </div>
-                    </div>
+            <div class="row" style="font-size:80%; color:rgb(110,110,110)">
+                <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp;{{event.Event.StartTime}}
+                    <br/>
+                    <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
+                    <br/>
+                </div>
+            </div>
 
-                </ion-item>
+        </ion-item>
 
-            <!--</div> -->
+        <!--</div> -->
         <!--</ion-list>-->
 
     </ion-content>

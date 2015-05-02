@@ -2,6 +2,9 @@
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
 
+// FIXME: I need to clean this up, the animation is stupid because the data loads
+// dynamically
+
 angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', function ($ionicPlatform, $scope, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
     console.log("Inside Graphs controller");
     $scope.openMenu = function () {
@@ -87,7 +90,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
                     console.log("Monitor event URL:" + url);
                     if (!ZMDataModel.isSimulated())
                     {
-                    $http.get(url, {timeout:10000})
+                    $http.get(url /*,{timeout:15000}*/)
                         .success(function (data) {
                             console.log("**** EVENT COUNT FOR MONITOR " +
                                 monitors[j].Monitor.Id + " IS " + data.pagination.count);
@@ -110,7 +113,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
 
                         });
                     } // is not simulated
-                    else // grab a random event count
+                    else // simulated: grab a random event count
                     {
                         var rndEventCount = Math.floor(Math.random() * (100 - 20 + 1)) + 20;
                         $scope.chartObject.data.push([monitors[j].Monitor.Name, rndEventCount,

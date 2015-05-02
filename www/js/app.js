@@ -6,46 +6,45 @@ angular.module('zmApp', [
                         ])
 
 
+
+
 // this directive will be load any time an image completes loading 
 // via img tags where this directive is added (I am using this in
 // events and mionitor view to show a loader while the image is
 // downloading from ZM
-.directive('imageonload', function() {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                element.bind('load', function() {
-                    //call the function that was passed
-                    scope.$apply(attrs.imageonload);
-                });
-            },
-            
-            
-        };
-    })
-
-/*
-    .directive('img', function () {
-   // element[0].src = 'img/demo.gif';
-
+.directive('imageonload', function () {
     return {
-        restrict: 'E',
+        restrict: 'A',
         link: function (scope, element, attrs) {
-            console.log ("********** IMG DIRECTIVE ");
- //console.log ("Attr ng-src="+attr.ngSrc);
-           // if (!attr.ngSrc)
-               // element[0].src = 'img/demo.gif';
-            // show an image-missing image
-           // element.error(function () {
+            element.bind('load', function () {
+                //call the function that was passed
+                scope.$apply(attrs.imageonload);
+            });
+        },
 
-          //  });
+
+    };
+})
+
+// In Android, HTTP requests seem to get stuck once in a while
+// It may be a crosswalk issue.
+// To tackle this gracefully, I've set up a global interceptor
+// If the HTTP request does not complete in 15 seconds, it cancels
+// That way the user can try again, and won't get stuck
+// Also remember you need to add it to .config
+
+.factory('timeoutHttpIntercept', function ($rootScope, $q) {
+    console.log("*** HTTP INTERCEPTOR CALLED ***");
+    return {
+        'request': function (config) {
+            config.timeout = 15000;
+            console.log("*** HTTP INTERCEPTOR CALLED ***");
+            return config;
         }
-    }
-})*/
+    };
+})
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel,$cordovaSplashscreen) {
-
-   
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen) {
 
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
@@ -56,36 +55,35 @@ angular.module('zmApp', [
 
     }
 
-    // This routine is called whenever the orientation changes
-    // so I can recompute my width and height. I use them
-    // for scoping graphs as well as figuring out how many thumbnails
-    // to show for montages
-    window.onorientationchange = function () {
-        console.log("**ORIENTATION CHANGE**");
+
+    // this works reliably on both Android and iOS. The "onorientation" seems to reverse w/h in Android. Go figure.
+    // http://stackoverflow.com/questions/1649086/detect-rotation-of-android-phone-in-the-browser-with-javascript
+
+    var checkOrientation = function () {
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
-        console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
-    }
+        console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+    };
 
+    window.addEventListener("resize", checkOrientation, false);
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-        //   console.log ("***** STATE CHANGE CHECK ****");
         var requireLogin = toState.data.requireLogin;
 
-        if (ZMDataModel.isLoggedIn() || ZMDataModel.isSimulated())
-        {
-            console.log ("State transition is authorized");
+        if (ZMDataModel.isLoggedIn() || ZMDataModel.isSimulated()) {
+            console.log("State transition is authorized");
             return;
         }
 
         if (requireLogin) {
 
-           // alert ("Not logged in");
-            console.log ("**** STATE from "+ "**** STATE TO " + toState.name);
+            console.log("**** STATE from " + "**** STATE TO " + toState.name);
 
-           $ionicPopup.alert ({title: "Credentials Required",
-                             template:"Please provide your ZoneMinder credentials or switch to simulation mode"});
+            $ionicPopup.alert({
+                title: "Credentials Required",
+                template: "Please provide your ZoneMinder credentials or switch to simulation mode"
+            });
             // for whatever reason, .go was resulting in digest loops.
             // if you don't prevent, states will stack
             event.preventDefault();
@@ -96,13 +94,13 @@ angular.module('zmApp', [
 
 
     $ionicPlatform.ready(function () {
-        
-         // generates and error in desktops but works fine
-        console.log ("**** DEVICE READY ***");
-    setTimeout(function() {
-    $cordovaSplashscreen.hide()
-  }, 3000)
-        
+
+        // generates and error in desktops but works fine
+        console.log("**** DEVICE READY ***");
+        setTimeout(function () {
+            $cordovaSplashscreen.hide()
+        }, 3000)
+
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
@@ -137,20 +135,21 @@ angular.module('zmApp', [
 })
 
 // My route map connecting menu options to their respective templates and controllers
-.config(function ($stateProvider, $urlRouterProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
+    $httpProvider.interceptors.push('timeoutHttpIntercept');
 
     $stateProvider
         .state('login', {
-        data: {
-            requireLogin: false
-        },
-        url: "/login",
-        templateUrl: "templates/login.html",
-        controller: 'zmApp.LoginCtrl',
+            data: {
+                requireLogin: false
+            },
+            url: "/login",
+            templateUrl: "templates/login.html",
+            controller: 'zmApp.LoginCtrl',
 
 
-    })
+        })
 
     .state('monitors', {
         data: {
@@ -227,9 +226,9 @@ angular.module('zmApp', [
     // If I start using the urlRouterProvider above and the
     // first state is monitors it goes into a digest loop.
 
-     $urlRouterProvider.otherwise( function($injector, $location) {
-            var $state = $injector.get("$state");
-            $state.go("monitors");
-        });
+    $urlRouterProvider.otherwise(function ($injector, $location) {
+        var $state = $injector.get("$state");
+        $state.go("monitors");
+    });
 
 });

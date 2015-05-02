@@ -12,6 +12,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     }
 
     $scope.reloadView = function () {
+        // All we really need to do here is change the random token
+        // in the image src and it will refresh. No need to reload the view
+        // and if you did reload the view, it would go back to events list
+        // which is the view - and when you are in the modal it will go away
         console.log("*** Refreshing Modal view ***");
         //$state.go($state.current, {}, {reload: true});
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
@@ -43,9 +47,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     });
 
 
-    // This is a modal to show the event footage
-
-
+    // These are the commands ZM uses to move around
+    // in ZMS
     var eventCommands = {
         next: "13",
         previous: "12",
@@ -56,14 +59,15 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         play: "2"
     }
 
-    
+    // When loading images, it sometimes takes time -  the images can be quite
+    // large. What practically was happening was you'd see a blank screen for a few
+    // seconds. Not a good UX. So what I am doing is when the events modal or
+    // monitor modal is loaded, I show an ionic loading. And then when the first frame
+    // finishes loading, I take it away
 
-
-    $scope.finishedLoadingImage = function()
-    {
-        console.log ("*** Events image FINISHED loading ***");
-         $ionicLoading.hide();
-       // alert ("IMAGE LOADED");
+    $scope.finishedLoadingImage = function () {
+        console.log("*** Events image FINISHED loading ***");
+        $ionicLoading.hide();
     }
 
     $scope.eventCommands = eventCommands;
@@ -84,11 +88,11 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         }
 
         $ionicLoading.hide();
-            $ionicLoading.show({
-                template: "please wait...",
-                noBackdrop: true,
-                duration: 10000,
-            });
+        $ionicLoading.show({
+            template: "please wait...",
+            noBackdrop: true,
+            duration: 15000,
+        });
 
         var loginData = ZMDataModel.getLogin();
 
@@ -117,10 +121,15 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
             break;
         };
 
-        console.log ("** POST URL " +loginData.url+ 'zm/index.php');
+        console.log("** POST URL " + loginData.url + 'zm/index.php');
+        // You need to POST commands to control zms
+        // Note that I am url encoding the parameters into the URL
+        // If I leave it as JSON, it gets converted to OPTONS due
+        // to CORS behaviour and ZM/Apache don't seem to handle it
+
         var req = $http({
             method: 'POST',
-            timeout: 10000,
+            /*timeout: 15000,*/
             url: loginData.url + '/zm/index.php',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -163,6 +172,11 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         });
     }
 
+    // This is called when we first tap on an event to see
+    // the feed. It's important to instantiate ionicModal here
+    // as otherwise you'd instantiate it when the view loads
+    // and our "Please wait loading" technique I explained
+    //earlier won't work
 
     $scope.openModal = function (eid, ename, edur) {
         console.log("Open Modal");
@@ -173,29 +187,31 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
         $ionicModal.fromTemplateUrl('templates/events-modal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        })
-        .then(function (modal) {
-            $scope.modal = modal;
+                scope: $scope,
+                animation: 'slide-in-up'
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
 
-            $ionicLoading.show({
-                template: "please wait...",
-                noBackdrop: true,
-                duration:10000
-        })
-             $scope.modal.show();
+                $ionicLoading.show({
+                    template: "please wait...",
+                    noBackdrop: true,
+                    duration: 10000
+                })
+                $scope.modal.show();
 
-        })
+            })
     }
 
-
+    // We need to destroy because we are instantiating
+    // it on open
     $scope.closeModal = function () {
         console.log("Close & Destroy Modal");
         $scope.modal.remove();
 
     };
-    //Cleanup the modal when we're done with it!
+    //Cleanup the modal when we're done with it
+    // I Don't think it ever comes here
     $scope.$on('$destroy', function () {
         console.log("Destroy Modal");
         $scope.modal.remove();
@@ -203,8 +219,11 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
 
     console.log("***CALLING EVENTS FACTORY");
     var lData = ZMDataModel.getLogin();
-    console.log("ZM Service Username = " + lData.username);
     $scope.monitors = message;
+
+    // I am converting monitor ID to monitor Name
+    // so I can display it along with Events
+    // Is there a better way?
     $scope.events = ZMDataModel.getEvents($scope.id)
         .then(function (data) {
             console.log("EventCtrl Got events");
