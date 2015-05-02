@@ -47,7 +47,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 });
 
             }
-            // console.log ("Simulated: "+JSON.stringify(simmonitors));
             return simmonitors;
         },
 
@@ -187,7 +186,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     template: 'Loading Monitors...',
                     animation: 'fade-in',
                     showBackdrop: true,
-                    duration:10000,
+                    duration:15000,
                     maxWidth: 200,
                     showDelay: 0
                 });
@@ -197,7 +196,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 console.log("ZMDataModel: Invoking HTTP get to load monitors");
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + "/monitors.json";
-                $http.get(myurl, {timeout:10000})
+                $http.get(myurl /*,{timeout:15000}*/)
                     .success(function (data) {
                         //console.log("HTTP success got " + JSON.stringify(data.monitors));
                         monitors = data.monitors;
@@ -256,7 +255,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     showBackdrop: true,
                     maxWidth: 200,
                     showDelay: 0,
-                    duration:10000, //specifically for Android - http seems to get stuck at times
+                    duration:15000, //specifically for Android - http seems to get stuck at times
                 });
 
             var d = $q.defer();
@@ -280,7 +279,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 return d.promise;
             } else { // not simulated
 
-                $http.get(myurl,  {timeout:10000})
+                $http.get(myurl  /*,{timeout:15000}*/)
                     .success(function (data) {
                         $ionicLoading.hide();
                         myevents = data.events.reverse();
@@ -341,14 +340,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             }
             return "(Unknown)";
         },
-
-        getMontageImagePath: function () {
-
-            var path = "{{LoginData.url}}/cgi-bin/nph-zms?mode=jpeg&amp;monitor={{monitor.Monitor.Id}}&scale=100&maxfps=3&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}";
-
-            return (path);
-        }
-
 
     };
 }]);

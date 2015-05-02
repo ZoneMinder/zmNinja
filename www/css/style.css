@@ -1,7 +1,16 @@
-/* Empty. Add your own CSS if you like */
+/* Using this for full screen modals for event and monitor mode */
 
-
-
+.modal{
+  top: 0 ;
+  bottom: 0 ;
+  left: 0 ;
+  right: 0 ;
+  width: 100% ;
+}
+/* I am using flexboxes to dynamicall adapt content
+in montage view.
+Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+*/
 .wrapper {
     display: -webkit-box;
     display: -moz-box;
@@ -58,6 +67,7 @@
     .footer  { order: 4; }
 }
 
+/* Not using this -eventually. Think notification badges on buttons */
 .notification-badge{
   position: absolute;
   top: 3px;
@@ -65,10 +75,4 @@
   font-size: 8px;
 }
 
-.modal{
-  top: 0 ;
-  bottom: 0 ;
-  left: 0 ;
-  right: 0 ;
-  width: 100% ;
-}
+
