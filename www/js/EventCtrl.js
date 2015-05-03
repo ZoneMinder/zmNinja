@@ -59,6 +59,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         play: "2"
     }
 
+    var eventsPage = 1;
+    var moreEvents = true;
+
     // When loading images, it sometimes takes time -  the images can be quite
     // large. What practically was happening was you'd see a blank screen for a few
     // seconds. Not a good UX. So what I am doing is when the events modal or
@@ -224,7 +227,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     // I am converting monitor ID to monitor Name
     // so I can display it along with Events
     // Is there a better way?
-    $scope.events = ZMDataModel.getEvents($scope.id)
+    console.log("Calling --> EventsPage = " + eventsPage);
+    //$scope.events =
+    $scope.events = [];
+    ZMDataModel.getEvents($scope.id, eventsPage)
         .then(function (data) {
             console.log("EventCtrl Got events");
             //var events = [];
@@ -238,6 +244,33 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
             $scope.events = myevents;
         });
 
+    $scope.moreDataCanBeLoaded = function () {
+        return moreEvents;
+    }
+
+    $scope.loadMore = function () {
+        console.log("***** LOADING MORE INFINITE SCROLL ****");
+        eventsPage++;
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+        ZMDataModel.getEvents($scope.id, eventsPage)
+            .then(function (data) {
+                    console.log("Got new page of events");
+                    var myevents = data;
+                    for (var i = 0; i < myevents.length; i++) {
+
+                        myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
+                    }
+                    $scope.events = $scope.events.concat(myevents);
+                },
+
+                function (error) {
+                    console.log("*** No More Events to Load, Stop Infinite Scroll ****");
+                    moreEvents = false;
+
+                });
+
+    }
+
     $scope.isSimulated = function () {
         return ZMDataModel.isSimulated();
     };
@@ -246,7 +279,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
         $scope.events = [];
-        $scope.events = ZMDataModel.getEvents($scope.id)
+        $scope.events = ZMDataModel.getEvents($scope.id, 1)
             .then(function (data) {
                 console.log("EventCtrl Got events");
                 //var events = [];
@@ -256,7 +289,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
                     myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
                 }
 
-
+                moreEvents = true;
                 $scope.events = myevents;
                 $scope.$broadcast('scroll.refreshComplete');
             });
