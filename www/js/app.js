@@ -34,11 +34,11 @@ angular.module('zmApp', [
 // Also remember you need to add it to .config
 
 .factory('timeoutHttpIntercept', function ($rootScope, $q) {
-    console.log("*** HTTP INTERCEPTOR CALLED ***");
+    //console.log("*** HTTP INTERCEPTOR CALLED ***");
     return {
         'request': function (config) {
             config.timeout = 15000;
-            console.log("*** HTTP INTERCEPTOR CALLED ***");
+            //console.log("*** HTTP INTERCEPTOR CALLED ***");
             return config;
         }
     };
@@ -97,6 +97,7 @@ angular.module('zmApp', [
 
         // generates and error in desktops but works fine
         console.log("**** DEVICE READY ***");
+
         setTimeout(function () {
             $cordovaSplashscreen.hide()
         }, 3000)

@@ -67,7 +67,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     simevents.push({
                         "Event": {
                             // Obviously this is dummy data
-                            "Id":Math.floor(Math.random() * (5000 - 100 + 1)) + 1000,
+                            "Id": Math.floor(Math.random() * (5000 - 100 + 1)) + 1000,
                             "MonitorId": mon.toString(),
                             "Cause": causes[Math.floor(Math.random() * (2 - 0 + 1)) + 0],
                             "Length": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
@@ -183,20 +183,20 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         getMonitors: function (forceReload) {
             console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
             $ionicLoading.show({
-                    template: 'Loading Monitors...',
-                    animation: 'fade-in',
-                    showBackdrop: true,
-                    duration:15000,
-                    maxWidth: 200,
-                    showDelay: 0
-                });
+                template: 'Loading Monitors...',
+                animation: 'fade-in',
+                showBackdrop: true,
+                duration: 15000,
+                maxWidth: 200,
+                showDelay: 0
+            });
             var d = $q.defer();
             if (((monitorsLoaded == 0) || (forceReload == 1)) && (loginData.simulationMode != true)) // monitors are empty or force reload
             {
                 console.log("ZMDataModel: Invoking HTTP get to load monitors");
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + "/monitors.json";
-                $http.get(myurl /*,{timeout:15000}*/)
+                $http.get(myurl /*,{timeout:15000}*/ )
                     .success(function (data) {
                         //console.log("HTTP success got " + JSON.stringify(data.monitors));
                         monitors = data.monitors;
@@ -212,7 +212,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                         monitors = [];
                         console.log("promise resolved inside HTTP fail");
                         d.resolve(monitors);
-                         $ionicLoading.hide();
+                        $ionicLoading.hide();
                     });
                 return d.promise;
 
@@ -224,7 +224,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 }
                 console.log("Returning pre-loaded list of " + monitors.length + " monitors");
                 d.resolve(monitors);
-                 $ionicLoading.hide();
+                $ionicLoading.hide();
                 return d.promise;
             }
 
@@ -245,18 +245,18 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         // the menu events option
         // monitorId == 0 means all monitors (ZM starts from 1)
 
-        getEvents: function (monitorId) {
+        getEvents: function (monitorId, pageId) {
 
-            console.log("ZMData getEvents called with ID=" + monitorId);
+            console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
             $ionicLoading.show({
-                    template: 'Loading Events...',
-                    animation: 'fade-in',
-                    showBackdrop: true,
-                    maxWidth: 200,
-                    showDelay: 0,
-                    duration:15000, //specifically for Android - http seems to get stuck at times
-                });
+                template: 'Loading Events...',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0,
+                duration: 15000, //specifically for Android - http seems to get stuck at times
+            });
 
             var d = $q.defer();
             var myevents = [];
@@ -266,6 +266,11 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             // looks like I have more work to do here
 
             var myurl = (monitorId == 0) ? apiurl + "/events.json" : apiurl + "/events/index/MonitorId:" + monitorId + ".json";
+            if (pageId) {
+                var myurl = myurl + "?page=" + pageId;
+            } else {
+                console.log("**** PAGE WAS " + pageId);
+            }
             console.log("Constructed URL is " + myurl);
             // FIXME: When retrieving lots of events, I really need to do pagination here - more complex
             // as I have to do that in list scrolling too. For now, I hope your events don't kill the phone
@@ -279,10 +284,11 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 return d.promise;
             } else { // not simulated
 
-                $http.get(myurl  /*,{timeout:15000}*/)
+                $http.get(myurl /*,{timeout:15000}*/ )
                     .success(function (data) {
                         $ionicLoading.hide();
-                        myevents = data.events.reverse();
+                        myevents = data.events;
+                        //myevents = data.events.reverse();
                         if (monitorId == 0) {
                             oldevents = myevents;
                         }
@@ -295,9 +301,15 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     .error(function (err) {
                         $ionicLoading.hide();
                         console.log("HTTP Events error " + err);
-                        d.resolve(myevents);
+                        // I need to reject this as I have infinite scrolling
+                        // implemented in EventCtrl.js --> and if it does not know
+                        // it got an error going to the next page, it will get into
+                        // an infinite loop as we are at the bottom of the list always
+
+                        d.reject(myevents);
+
+                        // FIXME: Check what pagination does to this logic
                         if (monitorId == 0) {
-                            // FIXME: make this into a proper error
                             oldevents = [];
                         }
                         return d.promise;
