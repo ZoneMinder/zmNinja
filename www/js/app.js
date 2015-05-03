@@ -151,6 +151,18 @@ angular.module('zmApp', [
 
         })
 
+    $stateProvider
+        .state('help', {
+            data: {
+                requireLogin: false
+            },
+            url: "/help",
+            templateUrl: "templates/help.html",
+            controller: 'zmApp.HelpCtrl',
+
+
+        })
+
     .state('monitors', {
         data: {
             requireLogin: true
