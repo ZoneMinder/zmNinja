@@ -1,0 +1,58 @@
+<ion-view view-title="Help">
+
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+
+
+    <ion-content class="padding">
+    <div class="list">
+
+        <ion-item>
+            <h2><b> What is the ZM Base login and the API login?</b> </h2>
+        The latest versions of ZoneMinder have an API that is supposed to replace the XML skin.
+        It is ionly available in the latest and greatest ZoneMinder releases. If you don't have
+        the API installed the client WILL NOT WORK.
+
+        </ion-item>
+
+        <ion-item>
+            <h2> <b>What should I be entering in the Base URL and API URL?</b></h2>
+        The base url is typically of the format "http://yourserver:port/" (don't specify zm)
+        The API url is typically of the format "http://yourserver:port/zm/api"
+        But it depends on how you've installed ZoneMinder
+        </ion-item>
+
+
+        <ion-item>
+            <h2><b> The data is not refreshing!</b></h2>
+        Most screens that show lists of data has a pull down action. Pull down to refresh and your data
+        should be reloaded.
+        </ion-item>
+
+        <ion-item>
+            <h2><b> What is this simulator mode?</b></h2>
+        It was really a way for me to test how the app behaves when there are 1000s of events and many monitors.
+        Practically, you won't have a need for it
+        </ion-item>
+
+        <ion-item>
+            <h2><b>When I switch between Simulator to Real mode, the data does not change</b></h2>
+        Pull to refresh.
+        </ion-item>
+
+        <ion-item>
+            <h2><b>I want to contribute!</b></h2>
+        Awesome. <a  href="#" onclick="window.open('http://github.com/arjunroychowdhury/zmNinja', '_blank', 'location=yes'); return false;"> Grab</a> the source code!
+        </ion-item>
+
+        <ion-item>
+            <h2><b>How do I contact the author?</b></h2>
+            Send me an <a  href="#" onclick="window.open('mailto:arjunrc@gmail.com', 'blank', 'location=yes'); return false;">email</a>
+        </ion-item>
+
+        </div>
+
+    </ion-content>
+
+</ion-view>
