@@ -279,7 +279,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
         $scope.events = [];
-        $scope.events = ZMDataModel.getEvents($scope.id, 1)
+        ZMDataModel.getEvents($scope.id, 1)
             .then(function (data) {
                 console.log("EventCtrl Got events");
                 //var events = [];
@@ -287,6 +287,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
                 for (var i = 0; i < myevents.length; i++) {
 
                     myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
+
                 }
 
                 moreEvents = true;

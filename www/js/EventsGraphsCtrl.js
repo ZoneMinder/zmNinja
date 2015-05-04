@@ -11,21 +11,21 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
         $ionicSideMenuDelegate.toggleLeft();
     }
 
-     $scope.$on('$ionicView.loaded', function(){
-    console.log("**VIEW ** Graph Ctrl Loaded");
-  });
+    $scope.$on('$ionicView.loaded', function () {
+        console.log("**VIEW ** Graph Ctrl Loaded");
+    });
 
-    $scope.$on('$ionicView.enter', function(){
-    console.log("**VIEW ** Graph Ctrl Entered");
-  });
+    $scope.$on('$ionicView.enter', function () {
+        console.log("**VIEW ** Graph Ctrl Entered");
+    });
 
-      $scope.$on('$ionicView.leave', function(){
-    console.log("**VIEW ** Graph Ctrl Left");
-  });
+    $scope.$on('$ionicView.leave', function () {
+        console.log("**VIEW ** Graph Ctrl Left");
+    });
 
-         $scope.$on('$ionicView.unloaded', function(){
-    console.log("**VIEW ** Graph Ctrl Unloaded");
-  });
+    $scope.$on('$ionicView.unloaded', function () {
+        console.log("**VIEW ** Graph Ctrl Unloaded");
+    });
 
 
     $scope.navTitle = 'Tab Page';
@@ -36,9 +36,23 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
         }
         }];
 
-    $scope.generateChart = function (chartTitle) {
+    $scope.generateChart = function (chartTitle, hrs) {
 
         $scope.chartObject = {};
+
+        var dateRange = "";
+        var startDate = "";
+        var endDate = "";
+
+        if (hrs) {
+            // Apply a time based filter if I am not watching all events
+            var cur = moment();
+            endDate = cur.format("YYYY-MM-DD hh:mm:ss");
+            startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD hh:mm:ss");
+            console.log("Start and End " + startDate + "==" + endDate);
+
+        }
+
         $scope.chartObject.data = [
         ['Monitor', 'Events', {
                 role: 'style'
@@ -74,44 +88,45 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
 
             monitors = data;
             var adjustedHeight = monitors.length * 30;
-            if (adjustedHeight > $rootScope.devHeight)
-            {
-                console.log ("Readjusting chart height to " + adjustedHeight + " pixels");
+            if (adjustedHeight > $rootScope.devHeight) {
+                console.log("Readjusting chart height to " + adjustedHeight + " pixels");
                 $scope.chartObject.options.height = adjustedHeight;
             }
             for (var i = 0; i < monitors.length; i++) {
                 (function (j) { // loop closure - http is async, so success returns after i goes out of scope
                     // so we need to bind j to i when http returns so its not out of scope. Gak.
                     // I much prefer the old days of passing context data from request to response
-
+                    var dateString = "";
+                    if (hrs) {
+                        dateString = "/StartTime >=:" + startDate + "/EndTime <=:" + endDate;
+                    }
                     var url = loginData.apiurl +
-                        "/events/index/MonitorId:" + monitors[j].Monitor.Id + // FIXME: need to add hr/week
+                        "/events/index/MonitorId:" + monitors[j].Monitor.Id + dateString +
                         ".json?page=1";
                     console.log("Monitor event URL:" + url);
-                    if (!ZMDataModel.isSimulated())
-                    {
-                    $http.get(url /*,{timeout:15000}*/)
-                        .success(function (data) {
-                            console.log("**** EVENT COUNT FOR MONITOR " +
-                                monitors[j].Monitor.Id + " IS " + data.pagination.count);
+                    if (!ZMDataModel.isSimulated()) {
+                        $http.get(url /*,{timeout:15000}*/ )
+                            .success(function (data) {
+                                console.log("**** EVENT COUNT FOR MONITOR " +
+                                    monitors[j].Monitor.Id + " IS " + data.pagination.count);
 
-                            console.log("Pushing " + monitors[j].Monitor.Name +
-                                " AND " + data.pagination.count);
+                                console.log("Pushing " + monitors[j].Monitor.Name +
+                                    " AND " + data.pagination.count);
 
-                            $scope.chartObject.data.push([monitors[j].Monitor.Name, data.pagination.count,
+                                $scope.chartObject.data.push([monitors[j].Monitor.Name, data.pagination.count,
                           'opacity: 0.4', data.pagination.count]);
 
-                        })
-                        .error(function (data) {
-                            // ideally I should be treating it as an error
-                            // but what I am really doing now is treating it like no events
-                            // works but TBD: make this into a proper error handler
-                            console.log("**** EVENT COUNT FOR MONITOR " +
-                                monitors[i].Monitor.Id + " IS ERROR ");
-                            $scope.chartObject.data.push([monitors[j].Monitor.Name,
+                            })
+                            .error(function (data) {
+                                // ideally I should be treating it as an error
+                                // but what I am really doing now is treating it like no events
+                                // works but TBD: make this into a proper error handler
+                                console.log("**** EVENT COUNT FOR MONITOR " +
+                                    monitors[i].Monitor.Id + " IS ERROR ");
+                                $scope.chartObject.data.push([monitors[j].Monitor.Name,
                                                       0, 'opacity: 0.4', 0]);
 
-                        });
+                            });
                     } // is not simulated
                     else // simulated: grab a random event count
                     {
