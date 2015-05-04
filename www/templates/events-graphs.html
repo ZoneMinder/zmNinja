@@ -7,7 +7,7 @@
     <!-- I'm calling the same controller function but with different parameters when
             you switch between tabs -->
     <ion-tabs class="tabs-icon-top tabs-stable">
-        <ion-tab title="All" icon="ion-stats-bars" on-select="generateChart('All Events')">
+        <ion-tab title="All" icon="ion-stats-bars" on-select="generateChart('All Events',0)">
             <ion-nav-view>
                 <ion-content class="has-header">
 
@@ -18,7 +18,7 @@
             </ion-nav-view>
         </ion-tab>
 
-        <ion-tab title="Last Hour" icon="ion-stats-bars" on-select="generateChart('Events in the last hour')">
+        <ion-tab title="Last Hour" icon="ion-stats-bars" on-select="generateChart('Events in the last hour',1)">
             <ion-nav-view>
 
                 <ion-content>
@@ -30,7 +30,7 @@
             </ion-nav-view>
         </ion-tab>
 
-        <ion-tab title="Day" icon="ion-stats-bars" on-select="generateChart('Events in the last day')">
+        <ion-tab title="Day" icon="ion-stats-bars" on-select="generateChart('Events in the last day',24)">
             <ion-nav-view>
 
                 <ion-content>
@@ -41,7 +41,7 @@
                 </ion-content>
             </ion-nav-view>
         </ion-tab>
-        <ion-tab title="Week" icon="ion-stats-bars" on-select="generateChart('Events in the last week')">
+        <ion-tab title="Week" icon="ion-stats-bars" on-select="generateChart('Events in the last week',168)">
             <ion-nav-view>
 
                 <ion-content>
