@@ -16,8 +16,8 @@
         </div>
         <!-- Hi:{{slider.monsize}} {{devWidth}} -->
         <div class="wrapper">
-
-            <span ng-repeat="monitor in monitors">
+{{monLimit}}
+            <span ng-repeat="monitor in monitors| limitTo: monLimit">
            
           
            <header class="header">&nbsp;<i class="ion-monitor"></i> {{monitor.Monitor.Name}}&nbsp;</header>
