@@ -42,7 +42,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     $scope.$on('$ionicView.unloaded', function () {
         console.log("**VIEW ** Events Ctrl Unloaded");
         console.log("*** MODAL ** Destroying modal too");
-        $scope.modal.remove();
+        if (!($scope.modal===undefined)) {$scope.modal.remove()};
 
     });
 
@@ -130,10 +130,12 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         // If I leave it as JSON, it gets converted to OPTONS due
         // to CORS behaviour and ZM/Apache don't seem to handle it
 
+        console.log ("POST: "+loginData.url +'/'+ loginData.alias+'/index.php');
+
         var req = $http({
             method: 'POST',
             /*timeout: 15000,*/
-            url: loginData.url + '/zm/index.php',
+            url: loginData.url +'/'+ loginData.alias+'/index.php',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 //'Accept': '*/*',
@@ -210,14 +212,14 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     // it on open
     $scope.closeModal = function () {
         console.log("Close & Destroy Modal");
-        $scope.modal.remove();
+        if (!($scope.modal===undefined)) {$scope.modal.remove()};
 
     };
     //Cleanup the modal when we're done with it
     // I Don't think it ever comes here
     $scope.$on('$destroy', function () {
         console.log("Destroy Modal");
-        $scope.modal.remove();
+        if (!($scope.modal===undefined)) {$scope.modal.remove()};
     });
 
     console.log("***CALLING EVENTS FACTORY");

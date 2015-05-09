@@ -13,9 +13,11 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
     var loginData = {
         'username': '',
         'password': '',
-        'url': '', // This is ZM portal API (Don't add /zm)
+        'url': '', // This is the ZM portal path
         'apiurl': '', // This is the API path
-        'simulationMode': false // if true, data will be simulated
+        'simulationMode': false, // if true, data will be simulated
+        'maxMontage':"10", //total # of monitors to display in montage
+        'alias':""
     };
 
     // This is really a test mode. This is how I am validating
@@ -137,6 +139,18 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             }
 
+            if (window.localStorage.getItem("maxMontage") != undefined) {
+                loginData.maxMontage =
+                    window.localStorage.getItem("maxMontage");
+
+            }
+
+             if (window.localStorage.getItem("alias") != undefined) {
+                loginData.alias =
+                    window.localStorage.getItem("alias");
+
+            }
+
             monitorsLoaded = 0;
             console.log("Getting out of ZMDataModel init");
 
@@ -167,6 +181,25 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("url", loginData.url);
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("simulationMode", loginData.simulationMode);
+            window.localStorage.setItem("alias",loginData.alias);
+
+
+
+            if (!loginData.maxMontage)
+            {
+                console.log ("INVALID MONTAGE NUM");
+                loginData.maxMontage="10";
+            }
+
+            if (parseInt(loginData.maxMontage)<=0)
+            {
+                console.log ("*** TOO LOW ***");
+                loginData.maxMontage=1;
+            }
+
+
+            window.localStorage.setItem("maxMontage", loginData.maxMontage);
+
             console.log("********** SIMULATION IS " + loginData.simulationMode);
 
         },

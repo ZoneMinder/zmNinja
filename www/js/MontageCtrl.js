@@ -73,8 +73,10 @@ function onPause() {
     }
 
 
-    console.log("********* Inside Montage Ctrl");
+
     $scope.LoginData = ZMDataModel.getLogin();
+    $scope.monLimit = $scope.LoginData.maxMontage;
+    console.log("********* Inside Montage Ctrl, MAX LIMIT="+$scope.monLimit);
 
     // slider is tied to the view slider for montage
     //Remember not to use a variable. I'm using an object

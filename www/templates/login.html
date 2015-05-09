@@ -7,6 +7,7 @@
 
     <ion-content class="padding">
         <div class="list list-inset">
+            <span style="color:rgb(100,100,100)"> <i class="ion-android-home" style="font-size:150%"></i> ZoneMinder portal</span>
             <label class="item item-input">
                 <input autocapitalize="none" type="text" placeholder="Username" ng-model="loginData.username">
             </label>
@@ -14,15 +15,29 @@
                 <input type="password" placeholder="Password" ng-model="loginData.password">
             </label>
             <label class="item item-input">
-                <input autocapitalize="none" type="text" placeholder="ZM base URL (please don't add /zm)" ng-model="loginData.url">
+                <input autocapitalize="none" type="text" placeholder="ZM base URL " ng-model="loginData.url">
             </label>
+
+            <label class="item item-input">
+                <input autocapitalize="none" type="text" placeholder="ZM portal alias (if any) " ng-model="loginData.alias">
+            </label>
+
+            <span style="color:rgb(100,100,100)"><br/><i class="ion-social-angular" style="font-size:150%"></i> ZoneMinder API</span>
             <label class="item item-input">
                 <input autocapitalize="none" type="text" placeholder="API base URL" ng-model="loginData.apiurl">
             </label>
         </div>
-
+        <span style="color:rgb(100,100,100)"><i class="ion-android-settings" style="font-size:150%"></i> Developer Options</span>
          <ion-toggle ng-model="loginData.simulationMode" ng-checked={{loginData.simulationMode}} toggle-class="toggle-energized">Simulation Mode</ion-toggle>
+       <div class="item item-input-inset">
+           Maximum Monitors in Montage View&nbsp;
+    <label class="item-input-wrapper">
+      <input type="tel" placeholder="be careful" ng-model="loginData.maxMontage">
+    </label>
 
+
+
+  </div>
         <button class="button button-block button-balanced icon ion-locked" ng-click="login()"> Save</button>
 
 

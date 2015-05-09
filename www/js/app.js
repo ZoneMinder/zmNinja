@@ -98,9 +98,10 @@ angular.module('zmApp', [
         // generates and error in desktops but works fine
         console.log("**** DEVICE READY ***");
 
+
         setTimeout(function () {
             $cordovaSplashscreen.hide()
-        }, 3000)
+            }, 3000)
 
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);

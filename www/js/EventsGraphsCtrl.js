@@ -68,8 +68,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
         $scope.chartObject.type = "BarChart";
         $scope.chartObject.options = {
             title: chartTitle,
-
-            height: $rootScope.devHeight, // FIXME: I need to make this dynamic depending on
+            tooltip: {isHtml:true, trigger: 'both'},
+            height: $rootScope.devHeight,
             // # of bars
             legend: 'none',
             animation: {
