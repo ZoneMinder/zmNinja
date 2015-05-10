@@ -1,6 +1,10 @@
 // Controller for the montage view
+/* jshint -W041 */
+/* jslint browser: true*/
+/* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', function ($scope, $rootScope, ZMDataModel, message,$ionicSideMenuDelegate, $timeout, $interval) {
+
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message','$ionicSideMenuDelegate', '$timeout', '$interval', function ($scope, $rootScope, ZMDataModel, message,$ionicSideMenuDelegate, $timeout, $interval) {
     
     var timestamp = new Date().getUTCMilliseconds();
 
@@ -42,7 +46,7 @@ function onPause() {
     
     $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
-  }
+  };
 
      $scope.$on('$destroy', function () {
          console.log ("*** CANCELLING INTERVAL ****");
@@ -70,7 +74,7 @@ function onPause() {
     $scope.isSimulated = function ()
     {
         return ZMDataModel.isSimulated();
-    }
+    };
 
 
 
@@ -117,4 +121,4 @@ function onPause() {
         });
 
     };
-});
+}]);

@@ -1,14 +1,18 @@
+/* jshint -W041 */
+/* jslint browser: true*/
+/* global cordova,StatusBar,angular,console */
+
 // controller for Monitor View
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
-angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $ionicLoading) {
+angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state',function ($scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state) {
 
     $scope.monitors = [];
 
 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
-    }
+    };
 
     $scope.reloadView = function () {
         console.log("*** Refreshing Modal view ***");
@@ -18,7 +22,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($s
             noBackdrop: true,
             duration: 2000
         });
-    }
+    };
 
     $scope.isSimulated = function () {
         return ZMDataModel.isSimulated();
@@ -32,7 +36,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($s
              template: "loading, please wait...",
              noBackdrop: true,
          });*/
-    }
+    };
 
 
 
@@ -71,7 +75,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($s
                     template: "please wait...",
                     noBackdrop: true,
                     duration: 15000
-                })
+                });
                 $scope.modal.show();
             });
 
@@ -105,4 +109,4 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', function ($s
 
     };
 
-});
+}]);

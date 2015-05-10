@@ -1,7 +1,11 @@
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading) {
+/* jshint -W041 */
+/* jslint browser: true*/
+/* global cordova,StatusBar,angular,console */
+
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
-    }
+    };
 
     $scope.loginData = ZMDataModel.getLogin();
 
@@ -100,11 +104,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', function ($sco
                             {
                                 $ionicPopup.alert({
                                     title: 'Error Details',
-                                    template: JSON.stringify(error)})
+                                    template: JSON.stringify(error)});
                             }
                         }
                     ]
-                })
+                });
 
             }
 
@@ -113,4 +117,4 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', function ($sco
     };
 
 
-})
+}]);

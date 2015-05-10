@@ -1,7 +1,12 @@
+/* jshint -W041 */
+/* jslint browser: true*/
+/* global cordova,StatusBar,angular,console */
+
+
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
-                            'zmApp.controllers',
+                            'zmApp.controllers'
 
                         ])
 
@@ -20,7 +25,7 @@ angular.module('zmApp', [
                 //call the function that was passed
                 scope.$apply(attrs.imageonload);
             });
-        },
+        }
 
 
     };
@@ -100,8 +105,8 @@ angular.module('zmApp', [
 
 
         setTimeout(function () {
-            $cordovaSplashscreen.hide()
-            }, 1500)
+            $cordovaSplashscreen.hide();
+            }, 1500);
 
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
@@ -151,7 +156,7 @@ angular.module('zmApp', [
             controller: 'zmApp.LoginCtrl',
 
 
-        })
+        });
 
     $stateProvider
         .state('help', {

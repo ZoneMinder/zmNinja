@@ -1,3 +1,7 @@
+/* jshint -W041 */
+/* jslint browser: true*/
+/* global cordova,StatusBar,angular,console */
+
 // This is my central data respository and common functions
 // that many other controllers use
 // It's grown over time. I guess I may have to split this into multiple services in the future
@@ -300,7 +304,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             var myurl = (monitorId == 0) ? apiurl + "/events.json" : apiurl + "/events/index/MonitorId:" + monitorId + ".json";
             if (pageId) {
-                var myurl = myurl + "?page=" + pageId;
+                 myurl = myurl + "?page=" + pageId;
             } else {
                 console.log("**** PAGE WAS " + pageId);
             }
@@ -346,7 +350,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                             oldevents = [];
                         }
                         return d.promise;
-                    })
+                    });
                 return d.promise;
             } // not simulated
         },
