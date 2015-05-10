@@ -1,3 +1,8 @@
+/* jshint -W041 */
+/* jshint -W083 */ /*This is for the loop closure I am using in line 143 */
+/* jslint browser: true*/
+/* global cordova,StatusBar,angular,console,moment */
+
 // This controller generates a graph for events
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
@@ -5,11 +10,11 @@
 // FIXME: I need to clean this up, the animation is stupid because the data loads
 // dynamically
 
-angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', function ($ionicPlatform, $scope, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
+angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
     console.log("Inside Graphs controller");
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
-    }
+    };
 
     $scope.$on('$ionicView.loaded', function () {
         console.log("**VIEW ** Graph Ctrl Loaded");
@@ -79,7 +84,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
             },
 
 
-        }
+        };
 
         var monitors = [];
         var loginData = ZMDataModel.getLogin();
@@ -143,4 +148,4 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', functio
 
     }; // scope function
 
-});
+}]);

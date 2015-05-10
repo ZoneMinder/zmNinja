@@ -1,15 +1,19 @@
+/* jshint -W041 */
+/* jslint browser: true*/
+/* global cordova,StatusBar,angular,console */
+
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
 // and whether the new API has a better mechanism
 
-angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel, $ionicSideMenuDelegate, $ionicModal, $ionicLoading, $http, $state, $window) {
+angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatform', '$scope', '$stateParams', 'message', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicModal', '$ionicLoading', '$http', '$state', '$window', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel, $ionicSideMenuDelegate, $ionicModal, $ionicLoading, $http, $state, $window) {
     console.log("I got STATE PARAM " + $stateParams.id);
     $scope.id = parseInt($stateParams.id, 10);
     $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
-    }
+    };
 
     $scope.reloadView = function () {
         // All we really need to do here is change the random token
@@ -25,7 +29,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
             duration: 3000
         });
 
-    }
+    };
 
     $scope.$on('$ionicView.loaded', function () {
         console.log("**VIEW ** Events Ctrl Loaded");
@@ -42,7 +46,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     $scope.$on('$ionicView.unloaded', function () {
         console.log("**VIEW ** Events Ctrl Unloaded");
         console.log("*** MODAL ** Destroying modal too");
-        if (!($scope.modal===undefined)) {$scope.modal.remove()};
+        if ($scope.modal!==undefined) {$scope.modal.remove();}
 
     });
 
@@ -57,7 +61,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         stop: "3",
         pause: "1",
         play: "2"
-    }
+    };
 
     var eventsPage = 1;
     var moreEvents = true;
@@ -71,7 +75,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
     $scope.finishedLoadingImage = function () {
         console.log("*** Events image FINISHED loading ***");
         $ionicLoading.hide();
-    }
+    };
 
     $scope.eventCommands = eventCommands;
 
@@ -122,7 +126,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         case "1":
             toast_blurb = "pausing playback for ";
             break;
-        };
+        }
 
         console.log("** POST URL " + loginData.url + 'zm/index.php');
         // You need to POST commands to control zms
@@ -175,7 +179,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
         req.error(function (resp) {
             console.log("ERROR: " + JSON.stringify(resp));
         });
-    }
+    };
 
     // This is called when we first tap on an event to see
     // the feed. It's important to instantiate ionicModal here
@@ -202,24 +206,25 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
                     template: "please wait...",
                     noBackdrop: true,
                     duration: 10000
-                })
+                });
+
                 $scope.modal.show();
 
-            })
-    }
+            });
+    };
 
     // We need to destroy because we are instantiating
     // it on open
     $scope.closeModal = function () {
         console.log("Close & Destroy Modal");
-        if (!($scope.modal===undefined)) {$scope.modal.remove()};
+        if ($scope.modal!==undefined) {$scope.modal.remove();}
 
     };
     //Cleanup the modal when we're done with it
     // I Don't think it ever comes here
     $scope.$on('$destroy', function () {
         console.log("Destroy Modal");
-        if (!($scope.modal===undefined)) {$scope.modal.remove()};
+        if ($scope.modal!==undefined) {$scope.modal.remove();}
     });
 
     console.log("***CALLING EVENTS FACTORY");
@@ -248,7 +253,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
 
     $scope.moreDataCanBeLoaded = function () {
         return moreEvents;
-    }
+    };
 
     $scope.loadMore = function () {
         console.log("***** LOADING MORE INFINITE SCROLL ****");
@@ -271,7 +276,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
 
                 });
 
-    }
+    };
 
     $scope.isSimulated = function () {
         return ZMDataModel.isSimulated();
@@ -298,4 +303,4 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', function ($ion
             });
     }; //dorefresh
 
-});
+}]);
