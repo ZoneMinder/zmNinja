@@ -101,7 +101,7 @@ angular.module('zmApp', [
 
         setTimeout(function () {
             $cordovaSplashscreen.hide()
-            }, 3000)
+            }, 1500)
 
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
