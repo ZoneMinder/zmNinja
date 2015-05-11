@@ -5,9 +5,11 @@
 // controller for Monitor View
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
-angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state',function ($scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state) {
+angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http',  function ($ionicPopup,$scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope) {
 
     $scope.monitors = [];
+
+
 
 
     $scope.openMenu = function () {
@@ -23,6 +25,16 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$scope', '
             duration: 2000
         });
     };
+
+    $scope.notSupported = function()
+    {
+
+        $ionicPopup.alert({
+                title: 'In a Galaxy Far Far Away...',
+                template: 'This feature will be supported sometime in the future.'
+            });
+    };
+
 
     $scope.isSimulated = function () {
         return ZMDataModel.isSimulated();
@@ -46,6 +58,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$scope', '
 
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** Monitor Ctrl Entered");
+
     });
 
     $scope.$on('$ionicView.leave', function () {
@@ -59,37 +72,38 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$scope', '
     $scope.openModal = function (mid) {
         console.log("Open Monitor Modal");
 
-        $scope.monitorId = mid;
-        $scope.LoginData = ZMDataModel.getLogin();
-        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+       $scope.monitorId = mid;
+    $scope.LoginData = ZMDataModel.getLogin();
+    $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
-        // This is a modal to show the monitor footage
-        $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            })
-            .then(function (modal) {
-                $scope.modal = modal;
+    // This is a modal to show the monitor footage
+    $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        })
+        .then(function (modal) {
+            $scope.modal = modal;
 
-                $ionicLoading.show({
-                    template: "please wait...",
-                    noBackdrop: true,
-                    duration: 15000
-                });
-                $scope.modal.show();
+            $ionicLoading.show({
+                template: "please wait...",
+                noBackdrop: true,
+                duration: 15000
             });
+            $scope.modal.show();
+        });
 
     };
+
     $scope.closeModal = function () {
-        console.log("Close & Destroy Monitor Modal");
-        $scope.modal.remove();
+    console.log("Close & Destroy Monitor Modal");
+    $scope.modal.remove();
 
     };
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function () {
-        console.log("Destroy Monitor Modal");
-        $scope.modal.remove();
-    });
+    console.log("Destroy Monitor Modal");
+    $scope.modal.remove();
+});
 
 
 
@@ -98,14 +112,14 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$scope', '
     $scope.monitors = message;
 
     $scope.doRefresh = function () {
-        console.log("***Pull to Refresh");
-        $scope.monitors = [];
+    console.log("***Pull to Refresh");
+    $scope.monitors = [];
 
-        var refresh = ZMDataModel.getMonitors(1);
-        refresh.then(function (data) {
-            $scope.monitors = data;
-            $scope.$broadcast('scroll.refreshComplete');
-        });
+    var refresh = ZMDataModel.getMonitors(1);
+    refresh.then(function (data) {
+        $scope.monitors = data;
+        $scope.$broadcast('scroll.refreshComplete');
+    });
 
     };
 
