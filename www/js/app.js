@@ -17,6 +17,7 @@ angular.module('zmApp', [
 // via img tags where this directive is added (I am using this in
 // events and mionitor view to show a loader while the image is
 // downloading from ZM
+
 .directive('imageonload', function () {
     return {
         restrict: 'A',
@@ -46,8 +47,37 @@ angular.module('zmApp', [
             //console.log("*** HTTP INTERCEPTOR CALLED ***");
             return config;
         }
+
+
     };
 })
+
+/* For future use - does not work with img src intercepts
+.factory ('httpAuthIntercept', function ($rootScope, $q)
+{
+    return {
+    requestError: function (response) {
+      console.log ("**** REJECT REQUEST: "+JSON.stringify(response));
+      return $q.reject(response);
+    },
+
+    responseError: function (response) {
+      console.log ("**** REJECT RESPONSE: "+JSON.stringify(response));
+      return $q.reject(response);
+    },
+    response: function (response)
+        {
+            console.log("*******RESPONSE with status: "+response.status+"****************");
+            if (response.status == 500)
+            {
+             console.log ("**** RESPONSE: "+JSON.stringify(response));
+            }
+                return (response);
+        }
+  };
+})
+*/
+
 
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen) {
 
@@ -145,6 +175,8 @@ angular.module('zmApp', [
 .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
     $httpProvider.interceptors.push('timeoutHttpIntercept');
+    //$httpProvider.interceptors.push('httpAuthIntercept');
+
 
     $stateProvider
         .state('login', {
