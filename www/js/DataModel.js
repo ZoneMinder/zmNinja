@@ -28,7 +28,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
     // This is really a test mode. This is how I am validating
     // how my app behaves if you have many monitors. If you set simulationMode to true
     // then this is the function that getMonitors and getEvents calls
-//test
+
     var simulation = {
         fillSimulatedMonitors: function (cnt) {
             var simmonitors = [];
