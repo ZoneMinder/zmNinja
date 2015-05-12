@@ -1,0 +1,49 @@
+<ion-view view-title="System Status" cache="false">
+
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+
+
+    <ion-content>
+        <ion-refresher pulling-text="Pull to reload data..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
+        <ion-list>
+
+            <!-- <a href="#/app/events" ng-click="toggleLeft()"> -->
+            <ion-item>
+                <div class="row">
+                    <div class="col">
+                        ZoneMinder is:
+                    </div>
+                    <div class="col" style="text-align:right; {{color}}">
+                        {{zmRun}}
+                    </div>
+                </div>
+            </ion-item>
+            <ion-item>
+                <div class="row">
+                    <div class="col">
+                        ZoneMinder load:
+                    </div>
+                    <div class="col" style="text-align:right;">
+                        {{zmLoad}}
+                    </div>
+                </div>
+            </ion-item>
+            <ion-item>
+                <button class="button button-full button-assertive">
+                    <i class="ion-alert-circled" "style:font-size:200%;"></i> Danger Zone
+                </button>
+
+                <div class="button-bar">
+                    <a class="button button-outline icon-left ion-android-refresh button-dark " ng-click="controlZM('restart');" href="">Restart</a>
+                    <a class="button button-outline icon-left ion-stop button-dark" href="" ng-click="controlZM('stop');" >Stop</a>
+                    <a class="button button-outline icon-left ion-play button-dark" ng-click="controlZM('start');" href="">Start</a>
+                </div>
+            </ion-item>
+
+
+
+        </ion-list>
+    </ion-content>
+</ion-view>

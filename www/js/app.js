@@ -245,6 +245,14 @@ angular.module('zmApp', [
         controller: 'zmApp.EventsGraphsCtrl',
     })
 
+    .state('state', {
+        data: {
+            requireLogin: true
+        },
+        url: "/state",
+        templateUrl: "templates/state.html",
+        controller: 'zmApp.StateCtrl',
+    })
 
     .state('montage', {
         data: {

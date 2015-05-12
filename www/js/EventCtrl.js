@@ -128,18 +128,18 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
             break;
         }
 
-        console.log("** POST URL " + loginData.url + 'zm/index.php');
+
         // You need to POST commands to control zms
         // Note that I am url encoding the parameters into the URL
         // If I leave it as JSON, it gets converted to OPTONS due
         // to CORS behaviour and ZM/Apache don't seem to handle it
 
-        console.log ("POST: "+loginData.url +'/'+ loginData.alias+'/index.php');
+        console.log ("POST: "+loginData.url +'/index.php');
 
         var req = $http({
             method: 'POST',
             /*timeout: 15000,*/
-            url: loginData.url +'/'+ loginData.alias+'/index.php',
+            url: loginData.url +'/index.php',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 //'Accept': '*/*',

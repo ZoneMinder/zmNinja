@@ -32,7 +32,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.url = $scope.loginData.url.trim();
         $scope.loginData.apiurl = $scope.loginData.apiurl.trim();
         $scope.loginData.username = $scope.loginData.username.trim();
-        $scope.loginData.alias = $scope.loginData.alias.trim();
+        $scope.loginData.streamingurl = $scope.loginData.streamingurl.trim();
 
         if ($scope.loginData.url.slice(-1) == '/')
         {
@@ -47,23 +47,28 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
 
 
-         if ($scope.loginData.alias.slice(-1) == '/')
+         if ($scope.loginData.streamingurl.slice(-1) == '/')
         {
-            $scope.loginData.alias = $scope.loginData.alias.slice(0,-1);
+            $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0,-1);
 
         }
-        // take off leading "/" in alias too
-         if ($scope.loginData.alias[0] == '/')
-        {
-            $scope.loginData.alias = $scope.loginData.alias.substring(1);
 
+        // strip cgi-bin if it is there but only at the end
+        if ($scope.loginData.streamingurl.slice(-7).toLowerCase() == 'cgi-bin')
+        {
+             $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0,-7);
         }
+
 
         // FIXME:: Do a login id check too
 
         var apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
-        var portalurl = $scope.loginData.url + '/' + $scope.loginData.alias + '/index.php';
-        console.log("API: " + apiurl + " PORTAL: " + portalurl);
+        var portalurl = $scope.loginData.url + '/index.php';
+        var streamingurl = $scope.loginData.streamingurl +
+            '/cgi-bin/zms?user='+$scope.loginData.username+"&pass="+$scope.loginData.password;
+
+
+        console.log("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: "+streamingurl);
 
 
         // Let's do a sanity check to see if the URLs are ok
@@ -80,7 +85,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         $q.all([
     $http.get(apiurl),
-    $http.get(portalurl)
+    $http.get(portalurl),
+    //$http.get(streamingurl),
   ]).then(
             function (results) {
                 $ionicLoading.hide();
