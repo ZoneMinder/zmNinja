@@ -18,46 +18,62 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     var apiExec =  loginData.apiurl+"/states/change/";
 
     var inProgress = 0;
+    getRunStatus();
+    getLoadStatus();
 
+
+    function getRunStatus() {
     $http.get(apiRun)
-    .then(
-        function (success)
-        {
-            switch (success.data.result)
-            {
-                case 1: $scope.zmRun = 'running'; $scope.color='color:green;'; break;
-                case 0: $scope.zmRun = 'stopped'; $scope.color = 'color:red;'; break;
-                default:  $scope.zmRun = 'undetermined'; $scope.color='color:orange;'; break;
+        .then(
+            function (success) {
+                switch (success.data.result) {
+                case 1:
+                    $scope.zmRun = 'running';
+                    $scope.color = 'color:green;';
+                    break;
+                case 0:
+                    $scope.zmRun = 'stopped';
+                    $scope.color = 'color:red;';
+                    break;
+                default:
+                    $scope.zmRun = 'undetermined';
+                    $scope.color = 'color:orange;';
+                    break;
+                }
+
+
+                // console.log("X"+success.data.result+"X");
+            },
+            function (error) {
+                console.log("ERROR in getRun: " + JSON.stringify(error));
+                $scope.color = 'color:red;';
+                $scope.zmRun = 'undetermined';
             }
+        );
+
+}
 
 
-           // console.log("X"+success.data.result+"X");
-        },
-        function (error)
-        {
-             console.log("ERROR in getRun: "+JSON.stringify(error));
-            $scope.color = 'color:red;';
-            $scope.zmRun = 'undetermined';
-        }
-    );
-
+    function getLoadStatus() {
     $http.get(apiLoad)
-    .then(
-        function (success)
-        {
-             //console.log(JSON.stringify(success));
-            // load returns 3 params - one in the middle is avg.
-            $scope.zmLoad = success.data.load[1];
+        .then(
+            function (success) {
+                //console.log(JSON.stringify(success));
+                // load returns 3 params - one in the middle is avg.
+                $scope.zmLoad = success.data.load[1];
 
 
-           // console.log("X"+success.data.result+"X");
-        },
-        function (error)
-        {
-             console.log("ERROR in getLoad: "+JSON.stringify(error));
-            $scope.zmLoad = 'undetermined';
-        }
-    );
+                // console.log("X"+success.data.result+"X");
+            },
+            function (error) {
+                console.log("ERROR in getLoad: " + JSON.stringify(error));
+                $scope.zmLoad = 'undetermined';
+            }
+        );
+}
+
+
+
 
     $scope.controlZM = function(str)
     {
@@ -158,14 +174,10 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
 
     $scope.doRefresh = function () {
-    console.log("***Pull to Refresh");
-    $scope.monitors = [];
-
-    var refresh = ZMDataModel.getMonitors(1);
-    refresh.then(function (data) {
-        $scope.monitors = data;
+        console.log("***Pull to Refresh");
+        getRunStatus();
+        getLoadStatus();
         $scope.$broadcast('scroll.refreshComplete');
-    });
 
     };
 
