@@ -26,7 +26,8 @@
                  FIXME: I should probably not pass username and password here - instead go the http interceptor
                  and auth token mode -->
                 <div ng-if="!isSimulated()">
-                    <img  ng-src="{{LoginData.url}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps=3&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"   />
+
+                    <img  ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps=3&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;"   />
 
                    </div>
 
