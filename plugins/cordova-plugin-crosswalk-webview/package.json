@@ -1,0 +1,40 @@
+{
+  "name": "cordova-plugin-crosswalk-webview",
+  "version": "1.0.1-dev",
+  "description": "Changes the default WebView to CrossWalk",
+  "cordova": {
+    "id": "cordova-plugin-crosswalk-webview",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MobileChromeApps/cordova-crosswalk-engine.git"
+  },
+  "keywords": [
+    "cordova",
+    "chromium",
+    "crosswalk",
+    "webview",
+    "engine",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova-android",
+      "version": ">=4"
+    },
+    {
+      "name": "cordova-plugman",
+      "version": ">=4.2.0"
+    }
+  ],
+  "author": "",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/MobileChromeApps/cordova-crosswalk-engine/issues"
+  },
+  "homepage": "https://github.com/MobileChromeApps/cordova-crosswalk-engine"
+}
