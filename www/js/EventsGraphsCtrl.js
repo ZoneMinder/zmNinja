@@ -8,7 +8,7 @@
 // from the template file
 
 // FIXME: I need to clean this up, the animation is stupid because the data loads
-// dynamically
+// dynamically. I think I should really be using $q.all to animate after we get everything
 
 angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
     console.log("Inside Graphs controller");
@@ -77,11 +77,21 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             height: $rootScope.devHeight,
             // # of bars
             legend: 'none',
+            bar: {
+                groupWidth:"90%",
+            },
             animation: {
                 duration: 700,
-                easing: 'out',
-                startup: 'false',
+                easing: 'linear',
+                startup: 'true',
             },
+
+            hAxis: {
+                gridlines: {
+                    color: 'transparent',
+                    },
+                textPosition:'none'
+            }
 
 
         };
@@ -119,7 +129,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                                     " AND " + data.pagination.count);
 
                                 $scope.chartObject.data.push([monitors[j].Monitor.Name, data.pagination.count,
-                          'opacity: 0.4', data.pagination.count]);
+                          'color: #76A7FA', data.pagination.count]);
 
                             })
                             .error(function (data) {
@@ -129,7 +139,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                                 console.log("**** EVENT COUNT FOR MONITOR " +
                                     monitors[i].Monitor.Id + " IS ERROR ");
                                 $scope.chartObject.data.push([monitors[j].Monitor.Name,
-                                                      0, 'opacity: 0.4', 0]);
+                                                      0, 'color: #76A7FA', 0]);
 
                             });
                     } // is not simulated
@@ -137,7 +147,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                     {
                         var rndEventCount = Math.floor(Math.random() * (100 - 20 + 1)) + 20;
                         $scope.chartObject.data.push([monitors[j].Monitor.Name, rndEventCount,
-                          'opacity: 0.4', rndEventCount]);
+                          'color: #76A7FA', rndEventCount]);
 
                     }
                 })(i); // j
