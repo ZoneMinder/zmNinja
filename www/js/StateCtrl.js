@@ -121,12 +121,12 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                                         },
                                         function (error)
                                         {
-                                            if (error.status) // it seems to return error with status 0 if ok
-                                            {
+                                            //if (error.status) // it seems to return error with status 0 if ok
+                                           // {
                                                 console.log("ERROR in Change State:"+JSON.stringify(error));
                                                 $scope.zmRun = 'undetermined'; $scope.color='color:orange;';
-                                            }
-                                            else
+                                         //   }
+                                            /*else
                                             {
                                                 switch (str)
                                                 {
@@ -138,7 +138,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
                                                 }
                                                 inProgress = 0;
-                                            }
+                                            }*/
 
                                         }
 

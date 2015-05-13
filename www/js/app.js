@@ -43,8 +43,17 @@ angular.module('zmApp', [
     //console.log("*** HTTP INTERCEPTOR CALLED ***");
     return {
         'request': function (config) {
-            config.timeout = 15000;
-            //console.log("*** HTTP INTERCEPTOR CALLED ***");
+            if ( !(config.url.indexOf("stop.json") > -1 ||
+                config.url.indexOf("start.json") > -1 ||
+                config.url.indexOf("restart.json") > -1 ))
+            {
+               config.timeout = 15000;
+            }
+            else
+            {
+                console.log ("HTTP INTERCEPT:Skipping HTTP timeout for "+config.url);
+            }
+            //console.log("*** HTTP URL INTERCEPTOR CALLED with "+config.url+" ***");
             return config;
         }
 
