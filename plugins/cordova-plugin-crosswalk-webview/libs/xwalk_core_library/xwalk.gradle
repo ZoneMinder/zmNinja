@@ -1,0 +1,17 @@
+repositories {
+  maven {
+    url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2'
+  }
+}
+
+if (cdvBuildMultipleApks == null) {
+    ext.cdvBuildMultipleApks = true
+}
+if (cdvMinSdkVersion == null) {
+    ext.cdvMinSdkVersion = 10
+}
+
+dependencies {
+  compile 'org.xwalk:xwalk_core_library_beta:11+'
+}
+
