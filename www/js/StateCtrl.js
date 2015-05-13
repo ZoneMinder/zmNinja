@@ -8,22 +8,51 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     $scope.zmRun="loading...";
     $scope.zmLoad="loading...";
+    $scope.zmDisk = "loading...";
     $scope.color="";
     $scope.showDanger=false;
-    $scope.dangerText = ["Show Danger Zone", "Hide Danger Zone"];
+    $scope.dangerText = ["Show ZoneMinder Controls", "Hide ZoneMinder Controls"];
     $scope.dangerButtonColor = ["button-positive", "button-assertive"];
 
     var loginData = ZMDataModel.getLogin();
 
     var apiRun = loginData.apiurl+"/host/daemonCheck.json";
     var apiLoad = loginData.apiurl+"/host/getLoad.json";
+    var apiDisk = loginData.apiurl+"/host/getDiskPercent.json";
 
     var apiExec =  loginData.apiurl+"/states/change/";
 
     var inProgress = 0;
     getRunStatus();
     getLoadStatus();
+    getDiskStatus();
 
+    function getDiskStatus(){
+        $http.get(apiDisk)
+        .then(
+                function(success)
+                {
+                    var obj = success.data.usage;
+                    var du = 0;
+                    console.log ("DISK:"+JSON.stringify(success));
+                    for (var p in obj)
+                    {
+                        if (obj.hasOwnProperty(p))
+                        {
+                            du += parseFloat(obj[p].space);
+
+                        }
+                    }
+                    $scope.zmDisk=du.toFixed(1).toString()+"G";
+
+                },
+                function (error)
+                {
+                     $scope.zmDisk="unknown";
+                     console.log ("ERROR:"+JSON.stringify(error));
+                }
+            );
+    }
 
     function getRunStatus() {
     $http.get(apiRun)
@@ -180,6 +209,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         console.log("***Pull to Refresh");
         getRunStatus();
         getLoadStatus();
+        getDiskStatus();
         $scope.$broadcast('scroll.refreshComplete');
 
     };
