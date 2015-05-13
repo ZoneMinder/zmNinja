@@ -9,6 +9,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     $scope.zmRun="loading...";
     $scope.zmLoad="loading...";
     $scope.color="";
+    $scope.showDanger=false;
+    $scope.dangerText = ["Show Danger Zone", "Hide Danger Zone"];
+    $scope.dangerButtonColor = ["button-positive", "button-assertive"];
 
     var loginData = ZMDataModel.getLogin();
 

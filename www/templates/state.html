@@ -31,11 +31,11 @@
                 </div>
             </ion-item>
             <ion-item>
-                <button class="button button-full button-assertive">
-                    <i class="ion-alert-circled" "style:font-size:200%;"></i> Danger Zone
+                <button class="button button-full {{dangerButtonColor[showDanger?1:0]}}" ng-click="showDanger=!showDanger">
+                    <i class="ion-alert-circled" "style:font-size:300%;"></i> {{dangerText[showDanger?1:0]}}
                 </button>
 
-                <div class="button-bar">
+                <div class="button-bar" ng-show="showDanger">
                     <a class="button button-outline button-dark " ng-click="controlZM('restart');" href="">Restart</a>
                     <a class="button button-outline  button-dark" href="" ng-click="controlZM('stop');" >Stop</a>
                     <a class="button button-outline button-dark" ng-click="controlZM('start');" href="">Start</a>
