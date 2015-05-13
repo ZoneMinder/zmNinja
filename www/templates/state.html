@@ -13,6 +13,7 @@
             <ion-item>
                 <div class="row">
                     <div class="col">
+                        <i class="ion-home" style="font-size:200%;"></i>&nbsp;
                         ZoneMinder is:
                     </div>
                     <div class="col" style="text-align:right; {{color}}">
@@ -23,6 +24,7 @@
             <ion-item>
                 <div class="row">
                     <div class="col">
+                        <i class="ion-arrow-graph-up-right" style="font-size:200%;"></i>&nbsp;
                         ZoneMinder load:
                     </div>
                     <div class="col" style="text-align:right;">
@@ -30,6 +32,20 @@
                     </div>
                 </div>
             </ion-item>
+
+            <ion-item>
+                <div class="row">
+
+                    <div class="col">
+                        <i class="ion-soup-can" style="font-size:200%;"></i>&nbsp;
+                        Disk Usage:
+                    </div>
+                    <div class="col" style="text-align:right;">
+                        {{zmDisk}}
+                    </div>
+                </div>
+            </ion-item>
+
             <ion-item>
                 <button class="button button-full {{dangerButtonColor[showDanger?1:0]}}" ng-click="showDanger=!showDanger">
                     <i class="ion-alert-circled" "style:font-size:300%;"></i> {{dangerText[showDanger?1:0]}}

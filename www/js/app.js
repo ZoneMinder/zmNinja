@@ -45,6 +45,7 @@ angular.module('zmApp', [
         'request': function (config) {
             if ( !(config.url.indexOf("stop.json") > -1 ||
                 config.url.indexOf("start.json") > -1 ||
+                config.url.indexOf("getDiskPercent.json") > -1 ||
                 config.url.indexOf("restart.json") > -1 ))
             {
                config.timeout = 15000;
