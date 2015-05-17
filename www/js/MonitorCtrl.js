@@ -5,7 +5,7 @@
 // controller for Monitor View
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
-angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http',  function ($ionicPopup,$scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope) {
+angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', function ($ionicPopup, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope) {
 
     $scope.monitors = [];
 
@@ -26,13 +26,142 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         });
     };
 
-    $scope.notSupported = function()
-    {
+
+    $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
+        var checked = "false";
+        console.log("called with " + monitorId + ":" + enabled + ":" + func);
+        if (enabled == '1') checked = "true";
+
+        $scope.monFunctions = [
+            {
+                text: "Modect",
+                value: "Modect"
+            },
+            {
+                text: "Mocord",
+                value: "Mocord"
+            },
+            {
+                text: "Record",
+                value: "Record"
+            },
+            {
+                text: "Nodect",
+                value: "Nodect"
+            },
+            {
+                text: "Monitor",
+                value: "Monitor"
+            },
+            {
+                text: "None",
+                value: "None"
+            }
+  ];
+        //$scope.monFunctions = monFunctions;
+        $scope.monfunc = {
+            myfunc: func,
+            myenabled: checked
+        };
+
+        var getConfig = $ionicPopup.show({
+            scope: $scope,
+            template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="{{monfunc.myenabled}}" toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio>',
+
+
+            title: 'Change Settings for ' + monitorName,
+
+            buttons: [
+                {
+                    text: 'Cancel',
+
+                },
+                {
+                    text: 'Save',
+                    onTap: function (e) {
+                        console.log("YOU SELECTED " + $scope.monfunc.myenabled + $scope.monfunc.myfunc);
+                        var loginData = ZMDataModel.getLogin();
+                        var apiRestart = loginData.apiurl + "/states/change/restart.json";
+                        var apiMon = loginData.apiurl + "/monitors/" + monitorId + ".json";
+
+                        console.log("VARS: " + apiRestart + ">>" + apiMon);
+
+                        var isEnabled = "";
+                        isEnabled = ($scope.monfunc.myenabled == true) ? '1' : '0';
+
+                        $http({
+                            url: apiMon,
+                            method: 'post',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Accept': '*/*',
+                            },
+                            transformRequest: function (obj) {
+                                var str = [];
+                                for (var p in obj)
+                                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                                var foo = str.join("&");
+                                console.log("****RETURNING " + foo);
+                                return foo;
+                            },
+                            data: {
+                                'Monitor[Function]': $scope.monfunc.myfunc,
+                                'Monitor[Enabled]': isEnabled,
+                            }
+
+                        })
+
+                        .success(function () {
+
+                                $ionicLoading.show({
+                                    template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
+                                    noBackdrop: true,
+                                    duration: 60000,
+                                });
+                                $http.post(apiRestart)
+                                    .then(function (success) {
+                                            $ionicLoading.hide();
+                                            var refresh = ZMDataModel.getMonitors(1);
+                                            refresh.then(function (data) {
+                                                $scope.monitors = data;
+                                                $scope.$broadcast('scroll.refreshComplete');
+                                            });
+
+                                        },
+                                        function (error) {
+                                            $ionicLoading.hide();
+
+                                        }
+                                    );
+
+                            })
+                            .error(function (data, status, headers, config) {
+                                $ionicLoading.show({
+                                    template: "Error changing Monitor. Please check ZM logs...",
+                                    noBackdrop: true,
+                                    duration: 3000,
+                                });
+                            });
+
+
+
+
+                    }
+
+
+
+                },
+                ]
+        });
+
+    };
+
+    $scope.notSupported = function () {
 
         $ionicPopup.alert({
-                title: 'In a Galaxy Far Far Away...',
-                template: 'This feature will be supported sometime in the future.'
-            });
+            title: 'In a Galaxy Far Far Away...',
+            template: 'This feature will be supported sometime in the future.'
+        });
     };
 
 
@@ -72,38 +201,38 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     $scope.openModal = function (mid) {
         console.log("Open Monitor Modal");
 
-       $scope.monitorId = mid;
-    $scope.LoginData = ZMDataModel.getLogin();
-    $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        $scope.monitorId = mid;
+        $scope.LoginData = ZMDataModel.getLogin();
+        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
-    // This is a modal to show the monitor footage
-    $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        })
-        .then(function (modal) {
-            $scope.modal = modal;
+        // This is a modal to show the monitor footage
+        $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
 
-            $ionicLoading.show({
-                template: "please wait...",
-                noBackdrop: true,
-                duration: 15000
+                $ionicLoading.show({
+                    template: "please wait...",
+                    noBackdrop: true,
+                    duration: 15000
+                });
+                $scope.modal.show();
             });
-            $scope.modal.show();
-        });
 
     };
 
     $scope.closeModal = function () {
-    console.log("Close & Destroy Monitor Modal");
-    $scope.modal.remove();
+        console.log("Close & Destroy Monitor Modal");
+        $scope.modal.remove();
 
     };
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function () {
-    console.log("Destroy Monitor Modal");
-    $scope.modal.remove();
-});
+        console.log("Destroy Monitor Modal");
+        $scope.modal.remove();
+    });
 
 
 
@@ -112,14 +241,14 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     $scope.monitors = message;
 
     $scope.doRefresh = function () {
-    console.log("***Pull to Refresh");
-    $scope.monitors = [];
+        console.log("***Pull to Refresh");
+        $scope.monitors = [];
 
-    var refresh = ZMDataModel.getMonitors(1);
-    refresh.then(function (data) {
-        $scope.monitors = data;
-        $scope.$broadcast('scroll.refreshComplete');
-    });
+        var refresh = ZMDataModel.getMonitors(1);
+        refresh.then(function (data) {
+            $scope.monitors = data;
+            $scope.$broadcast('scroll.refreshComplete');
+        });
 
     };
 
