@@ -7,77 +7,72 @@
     <!-- I'm calling the same controller function but with different parameters when
             you switch between tabs -->
     <ion-tabs class="tabs-icon-top tabs-stable">
-        <ion-tab title="All" icon="ion-stats-bars" on-select="generateChart('All Events',0)">
+        <ion-tab title="All" icon="ion-stats-bars" on-select="generateTCChart(0,'All Events',0)">
             <ion-nav-view>
                 <ion-content class="has-header">
 
-                    <div google-chart chart="chartObject"></div>
-
-
-                </ion-content>
-            </ion-nav-view>
-        </ion-tab>
-
-        <ion-tab title="Last Hour" icon="ion-stats-bars" on-select="generateChart('Events in the last hour',1)">
-            <ion-nav-view>
-
-                <ion-content>
-                    <span></span>
-                    <div google-chart chart="chartObject"></div>
-
+            <div style="overflow:scroll;">
+                        <canvas  tc-chartjs-bar  chart-data="data" chart-options="options" >
+                        </canvas>
+                    </div>
 
                 </ion-content>
             </ion-nav-view>
         </ion-tab>
 
-        <ion-tab title="Day" icon="ion-stats-bars" on-select="generateChart('Events in the last day',24)">
+
+
+
+        <ion-tab title="Last Hour" icon="ion-stats-bars" on-select="generateTCChart(1,'Events in the last hour',1)">
             <ion-nav-view>
 
                 <ion-content>
                     <span></span>
-                    <div google-chart chart="chartObject"></div>
 
+                    <div style="overflow:scroll;">
+                        <canvas  tc-chartjs-bar  chart-data="data" chart-options="options" >
+                        </canvas>
+                    </div>
+                        </canvas>
+
+                        <!-- <div google-chart chart="chartObject[1]"></div>-->
+                    </div>
 
                 </ion-content>
             </ion-nav-view>
         </ion-tab>
-        <ion-tab title="Week" icon="ion-stats-bars" on-select="generateChart('Events in the last week',168)">
+
+        <ion-tab title="Day" icon="ion-stats-bars" on-select="generateTCChart(2,'Events in the last day',24)">
             <ion-nav-view>
 
                 <ion-content>
                     <span></span>
-                    <div google-chart chart="chartObject"></div>
+                    <div style="overflow:scroll;">
+                        <canvas  tc-chartjs-bar  chart-data="data" chart-options="options" >
+                        </canvas>
+                    </div>
 
+                </ion-content>
+            </ion-nav-view>
+        </ion-tab>
+        <ion-tab title="Week" icon="ion-stats-bars" on-select="generateTCChart(3,'Events in the last week',168)">
+            <ion-nav-view>
 
+                <ion-content>
+                    <span></span>
+                    <!--
+                    <div google-chart chart="chartObject[3]"></div>-->
+                     <div style="overflow:scroll;">
+                        <canvas  tc-chartjs-bar  chart-data="data" chart-options="options" >
+                        </canvas>
+                    </div>
                 </ion-content>
             </ion-nav-view>
         </ion-tab>
 
     </ion-tabs>
 
-    <!--
 
-
-
-    <ion-content>
-        <ion-slide-box>
-            <ion-slide-pager> </ion-slide-pager>
-            <ion-slide>
-                <canvas tc-chartjs chart-type="bar" chart-options="options" chart-data="data" auto-legend></canvas>
-                Slide 1
-            </ion-slide>
-            <ion-slide>
-                <div class="box blue">
-                    <h1>BLUE</h1>
-                </div>
-            </ion-slide>
-            <ion-slide>
-                Slide 3
-            </ion-slide>
-
-        </ion-slide-box>
-    </ion-content>
--->
 
 
 </ion-view>
