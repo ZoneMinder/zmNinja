@@ -4,21 +4,64 @@
 /* global cordova,StatusBar,angular,console */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message','$ionicSideMenuDelegate', '$timeout', '$interval', function ($scope, $rootScope, ZMDataModel, message,$ionicSideMenuDelegate, $timeout, $interval) {
-    
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading) {
+
     var timestamp = new Date().getUTCMilliseconds();
 
 
-// In Android, the app runs full steam while in background mode
-// while in iOS it gets suspended unless you ask for specific resources
-// So while this view, we DON'T want Android to keep sending 1 second
-// refreshes to the server for images we are not seeing!
+    // same logic as EventCtrl.js
+    $scope.finishedLoadingImage = function () {
+        console.log("***Monitor image FINISHED Loading***");
+        $ionicLoading.hide();
+        /* $ionicLoading.show({
+             template: "loading, please wait...",
+             noBackdrop: true,
+         });*/
+    };
 
-function onPause() {
- console.log ("*** Moving to Background ***");   // Handle the pause event
-     console.log ("*** CANCELLING INTERVAL ****");
-         $interval.cancel(intervalHandle);
-}
+
+    $scope.openModal = function (mid) {
+        console.log("Open Monitor Modal");
+
+        $scope.monitorId = mid;
+        $scope.LoginData = ZMDataModel.getLogin();
+        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+
+        // This is a modal to show the monitor footage
+        $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
+
+                $ionicLoading.show({
+                    template: "please wait...",
+                    noBackdrop: true,
+                    duration: 15000
+                });
+                $scope.modal.show();
+            });
+
+    };
+
+    $scope.closeModal = function () {
+        console.log("Close & Destroy Monitor Modal");
+        $scope.modal.remove();
+
+    };
+
+
+    // In Android, the app runs full steam while in background mode
+    // while in iOS it gets suspended unless you ask for specific resources
+    // So while this view, we DON'T want Android to keep sending 1 second
+    // refreshes to the server for images we are not seeing!
+
+    function onPause() {
+        console.log("*** Moving to Background ***"); // Handle the pause event
+        console.log("*** CANCELLING INTERVAL ****");
+        $interval.cancel(intervalHandle);
+    }
 
     document.addEventListener("pause", onPause, false);
 
@@ -32,47 +75,46 @@ function onPause() {
     // load. Will it bonk with many monitors? Who knows. I have tried with 5 and 1280x960@32bpp
 
 
-     this.loadNotifications = function (){
-     // randomval is appended to img src, so after each interval the image reloads
-      $scope.randomval = (new Date()).getTime();
-      //console.log ("**** NOTIFICATION with rand="+$scope.randomval+"*****");
-     };
+    this.loadNotifications = function () {
+        // randomval is appended to img src, so after each interval the image reloads
+        $scope.randomval = (new Date()).getTime();
+        //console.log ("**** NOTIFICATION with rand="+$scope.randomval+"*****");
+    };
 
-    var intervalHandle = $interval(function(){
-      this.loadNotifications();
-   }.bind(this), 1000);
+    var intervalHandle = $interval(function () {
+        this.loadNotifications();
+    }.bind(this), 1000);
 
     this.loadNotifications();
-    
+
     $scope.openMenu = function () {
-    $ionicSideMenuDelegate.toggleLeft();
-  };
+        $ionicSideMenuDelegate.toggleLeft();
+    };
 
-     $scope.$on('$destroy', function () {
-         console.log ("*** CANCELLING INTERVAL ****");
-         $interval.cancel(intervalHandle);
-     });
-
-
-    $scope.$on('$ionicView.loaded', function(){
-    console.log("**VIEW ** Montage Ctrl Loaded");
-  });
-
-    $scope.$on('$ionicView.enter', function(){
-    console.log("**VIEW ** Montage Ctrl Entered");
-  });
-
-      $scope.$on('$ionicView.leave', function(){
-    console.log("**VIEW ** Montage Ctrl Left");
-  });
-
-         $scope.$on('$ionicView.unloaded', function(){
-    console.log("**VIEW ** Montage Ctrl Unloaded");
-  });
+    $scope.$on('$destroy', function () {
+        console.log("*** CANCELLING INTERVAL ****");
+        $interval.cancel(intervalHandle);
+    });
 
 
-    $scope.isSimulated = function ()
-    {
+    $scope.$on('$ionicView.loaded', function () {
+        console.log("**VIEW ** Montage Ctrl Loaded");
+    });
+
+    $scope.$on('$ionicView.enter', function () {
+        console.log("**VIEW ** Montage Ctrl Entered");
+    });
+
+    $scope.$on('$ionicView.leave', function () {
+        console.log("**VIEW ** Montage Ctrl Left");
+    });
+
+    $scope.$on('$ionicView.unloaded', function () {
+        console.log("**VIEW ** Montage Ctrl Unloaded");
+    });
+
+
+    $scope.isSimulated = function () {
         return ZMDataModel.isSimulated();
     };
 
@@ -80,7 +122,7 @@ function onPause() {
 
     $scope.LoginData = ZMDataModel.getLogin();
     $scope.monLimit = $scope.LoginData.maxMontage;
-    console.log("********* Inside Montage Ctrl, MAX LIMIT="+$scope.monLimit);
+    console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
 
     // slider is tied to the view slider for montage
     //Remember not to use a variable. I'm using an object
