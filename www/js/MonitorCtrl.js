@@ -26,6 +26,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         });
     };
 
+// This function takes care of changing function parameters
+// For now, I've only limited it to enable/disable and change monitor mode
 
     $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
         var checked = "false";
@@ -111,6 +113,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
                         })
 
+                        // I am restarting ZM after monitor change
+                        // do I need this? FIXME: Ask Kyle
                         .success(function () {
 
                                 $ionicLoading.show({
@@ -154,14 +158,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                 ]
         });
 
-    };
-
-    $scope.notSupported = function () {
-
-        $ionicPopup.alert({
-            title: 'In a Galaxy Far Far Away...',
-            template: 'This feature will be supported sometime in the future.'
-        });
     };
 
 
