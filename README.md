@@ -86,5 +86,13 @@ Graphs:
 
 ![] (http://www.pbase.com/arjunrc/image/159760956/medium.jpg "Graphs")
 
+Control ZM start/stop/restart:
+
+![] (http://www.pbase.com/arjunrc/image/160096322/medium.jpg "Graphs")
+
+
+Change Monitor Modes:
+
+![] (http://www.pbase.com/arjunrc/image/160096314/medium.jpg "Graphs")
 
 
