@@ -24,36 +24,22 @@ me with my client goals.
 Objective
 ----------
 Frankly, I wanted to learn how to create a full fledged cross platform app for a long time.
-While I am aware of all these technologies theoretically (my day job needs me to be), there
-is a big difference in understanding concepts at a high level vs. being able to create useful stuff.
-
 I used this as an excuse to learn Angular JS, phoneGap and ionic and see if one could
 use these modern tools to build high performance phonegap apps. I was very pleasantly
 surprised -- for a large part, most people who complain about performance  probably
-haven't spent time researching how to optimize. Not that phonegap apps will compare
-or beat native performance for all apps, but that's not to say they can't compare. 
+haven't spent time researching how to optimize. Not that phonegap apps will always compare
+or beat native performance for all apps, but web views have come a long way and while
+coding this app, I realized if you use the right utilities and approaches, you get 
+comparable performance to native code -- it obviously depends on what you are building.
 
 I'll keep refining it over time as I learn more of AngularJS and stuff.
-
-Note that I am only currently testing on iOS as a platform for now
-My plan is to make the iOS version work and then move to other platforms (Android).
-Updated: Works great on Android too - integrated the ultra-fast crosswalk project
-
-as I mentioned, expect to see many many changes over the next few weeks/months
-
-Bugs/Issues
-------------
-* There are several right now, but the app works quite well. Like I said, I'll be working over the next few weeks to clean it up
-* A lot of functionality is still missing - keep a tab
-*  The ZM APIs are not fully functional. I unfortunately need to reply on ZM devs to fix them and that will depend on how soon they can address it. You can track ZM API issues here https://github.com/ZoneMinder/ZoneMinder/issues/799
 
 
 Important Notes
 ---------------
 * You need to have the latest ZM APIs installed. These apis are in the angular-ui branch of ZM.
 * If you don't know what that means, then you will have to wait till ZM folks integrate their APIs
-into the main stream (the current APIs in 1.28 are limited - and will not be sufficient for the client)
-* Alternatively, just download the app and enable simulation mode
+into the main stream (proposed to be part of ZM 1.29)
 
 
 Screenshots:
