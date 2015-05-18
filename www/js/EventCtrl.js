@@ -46,7 +46,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     $scope.$on('$ionicView.unloaded', function () {
         console.log("**VIEW ** Events Ctrl Unloaded");
         console.log("*** MODAL ** Destroying modal too");
-        if ($scope.modal!==undefined) {$scope.modal.remove();}
+        if ($scope.modal !== undefined) {
+            $scope.modal.remove();
+        }
 
     });
 
@@ -65,6 +67,16 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
     var eventsPage = 1;
     var moreEvents = true;
+    $scope.viewTitle = {
+        title: ""
+    };
+
+    // for some reason inifinite scroll is invoked
+    // before I actually load the first page with page count
+    // this makes scrolling stop as eventsPage is still 0
+    // FIXME: This is a hack
+
+    var pageLoaded = false;
 
     // When loading images, it sometimes takes time -  the images can be quite
     // large. What practically was happening was you'd see a blank screen for a few
@@ -134,12 +146,12 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         // If I leave it as JSON, it gets converted to OPTONS due
         // to CORS behaviour and ZM/Apache don't seem to handle it
 
-        console.log ("POST: "+loginData.url +'/index.php');
+        console.log("POST: " + loginData.url + '/index.php');
 
         var req = $http({
             method: 'POST',
             /*timeout: 15000,*/
-            url: loginData.url +'/index.php',
+            url: loginData.url + '/index.php',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 //'Accept': '*/*',
@@ -217,14 +229,18 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     // it on open
     $scope.closeModal = function () {
         console.log("Close & Destroy Modal");
-        if ($scope.modal!==undefined) {$scope.modal.remove();}
+        if ($scope.modal !== undefined) {
+            $scope.modal.remove();
+        }
 
     };
     //Cleanup the modal when we're done with it
     // I Don't think it ever comes here
     $scope.$on('$destroy', function () {
         console.log("Destroy Modal");
-        if ($scope.modal!==undefined) {$scope.modal.remove();}
+        if ($scope.modal !== undefined) {
+            $scope.modal.remove();
+        }
     });
 
     console.log("***CALLING EVENTS FACTORY");
@@ -234,47 +250,79 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     // I am converting monitor ID to monitor Name
     // so I can display it along with Events
     // Is there a better way?
-    console.log("Calling --> EventsPage = " + eventsPage);
-    //$scope.events =
+
     $scope.events = [];
-    ZMDataModel.getEvents($scope.id, eventsPage)
+
+    // First get total pages and then
+    // start from the latest. If this fails, nothing displays
+    // FIXME: clean up error handling
+
+    ZMDataModel.getEventsPages($scope.id)
         .then(function (data) {
-            console.log("EventCtrl Got events");
-            //var events = [];
-            var myevents = data;
-            for (var i = 0; i < myevents.length; i++) {
+            eventsPage = data.pageCount;
+            console.log("TOTAL EVENT PAGES IS " + eventsPage);
+            pageLoaded = true;
+            $scope.viewTitle.title = data.count;
+            ZMDataModel.getEvents($scope.id, eventsPage)
 
-                myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
-            }
+            .then(function (data) {
+                console.log("EventCtrl Got events");
+                //var events = [];
+                var myevents = data;
+                for (var i = 0; i < myevents.length; i++) {
+
+                    myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
+                }
 
 
-            $scope.events = myevents;
+                $scope.events = myevents;
+            });
+
         });
+
+
+
 
     $scope.moreDataCanBeLoaded = function () {
         return moreEvents;
     };
 
     $scope.loadMore = function () {
+
+        // the events API does not return an error for anything
+        // except greater page limits than reported
+
         console.log("***** LOADING MORE INFINITE SCROLL ****");
-        eventsPage++;
-        $scope.$broadcast('scroll.infiniteScrollComplete');
+        eventsPage--;
+        if ((eventsPage <= 0) && (pageLoaded)) {
+            moreEvents = false;
+            console.log("*** At Page " + eventsPage + ", not proceeding");
+            return;
+        }
+
+
+
         ZMDataModel.getEvents($scope.id, eventsPage)
             .then(function (data) {
-                    console.log("Got new page of events");
+                    console.log("Got new page of events with Page=" + eventsPage);
                     var myevents = data;
                     for (var i = 0; i < myevents.length; i++) {
 
                         myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
                     }
                     $scope.events = $scope.events.concat(myevents);
+                    console.log("Got new page of events");
+
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
                 },
 
                 function (error) {
                     console.log("*** No More Events to Load, Stop Infinite Scroll ****");
                     moreEvents = false;
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
 
                 });
+        //  $scope.$broadcast('scroll.infiniteScrollComplete');
 
     };
 
@@ -286,20 +334,28 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
         $scope.events = [];
-        ZMDataModel.getEvents($scope.id, 1)
+
+        ZMDataModel.getEventsPages($scope.id)
             .then(function (data) {
-                console.log("EventCtrl Got events");
-                //var events = [];
-                var myevents = data;
-                for (var i = 0; i < myevents.length; i++) {
+                eventsPage = data.pageCount;
+                console.log("TOTAL EVENT PAGES IS " + eventsPage);
+                pageLoaded = true;
+                $scope.viewTitle.title = data.count;
+                ZMDataModel.getEvents($scope.id, eventsPage)
 
-                    myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
+                .then(function (data) {
+                    console.log("EventCtrl Got events");
+                    //var events = [];
+                    var myevents = data;
+                    for (var i = 0; i < myevents.length; i++) {
 
-                }
+                        myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
+                    }
 
-                moreEvents = true;
-                $scope.events = myevents;
-                $scope.$broadcast('scroll.refreshComplete');
+
+                    $scope.events = myevents;
+                });
+
             });
     }; //dorefresh
 

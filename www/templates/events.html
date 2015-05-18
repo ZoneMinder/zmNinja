@@ -1,4 +1,5 @@
-<ion-view view-title="Events" cache-view="false">
+<ion-view view-title="{{viewTitle.title}} Events" cache-view="false">
+<ion-nav-title>{{viewTitle.title}} Events</ion-nav-title>
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
@@ -24,6 +25,7 @@
                 <div class="col col-left">
                     <!-- this ngswitch displays different icons
                                 depending on the cause of the event -->
+                    {{$index + 1}}
                     <div ng-switch on="event.Event.Cause">
                         <div ng-switch-when="Motion">
                             <i class="ion-android-walk" style="float:left; font-size:200%;"></i>

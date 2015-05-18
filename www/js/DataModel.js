@@ -21,8 +21,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'url': '', // This is the ZM portal path
         'apiurl': '', // This is the API path
         'simulationMode': false, // if true, data will be simulated
-        'maxMontage':"10", //total # of monitors to display in montage
-        'streamingurl':""
+        'maxMontage': "10", //total # of monitors to display in montage
+        'streamingurl': ""
     };
 
     // This is really a test mode. This is how I am validating
@@ -150,10 +150,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             }
 
-             if (window.localStorage.getItem("streamingurl") != undefined) {
+            if (window.localStorage.getItem("streamingurl") != undefined) {
                 loginData.streamingurl =
                     window.localStorage.getItem("streamingurl");
-                 console.log ("STREAMING URL " + loginData.streamingurl);
+                console.log("STREAMING URL " + loginData.streamingurl);
 
             }
 
@@ -187,20 +187,18 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("url", loginData.url);
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("simulationMode", loginData.simulationMode);
-            window.localStorage.setItem("streamingurl",loginData.streamingurl);
+            window.localStorage.setItem("streamingurl", loginData.streamingurl);
 
 
 
-            if (!loginData.maxMontage)
-            {
-                console.log ("INVALID MONTAGE NUM");
-                loginData.maxMontage="10";
+            if (!loginData.maxMontage) {
+                console.log("INVALID MONTAGE NUM");
+                loginData.maxMontage = "10";
             }
 
-            if (parseInt(loginData.maxMontage)<=0)
-            {
-                console.log ("*** TOO LOW ***");
-                loginData.maxMontage=1;
+            if (parseInt(loginData.maxMontage) <= 0) {
+                console.log("*** TOO LOW ***");
+                loginData.maxMontage = 1;
             }
 
 
@@ -279,6 +277,33 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             return oldevents;
         },
 
+        // When I display events in the event controller, this is the first function I call
+        // This returns the total number of pages
+        // I then proceed to display pages in reverse order to display the latest events first
+        // I also reverse sort them in ZMDataModel to sort by date
+        // All this effort because the ZM APIs return events in sorted order, oldest first. Yeesh.
+
+        getEventsPages: function (monitorId) {
+            console.log("********** INSIDE EVENTS PAGES ");
+            var apiurl = loginData.apiurl;
+            var myurl = (monitorId == 0) ? apiurl + "/events.json?page=1" : apiurl + "/events/index/MonitorId:" + monitorId + ".json?page=1";
+            var d = $q.defer();
+            $http.get(myurl)
+                .success(function (data) {
+                    //console.log ("**** EVENTS PAGES I GOT "+JSON.stringify(data));
+                    //console.log("**** PAGE COUNT IS " + data.pagination.pageCount);
+                    d.resolve(data.pagination);
+                    return d.promise;
+                })
+                .error(function (error) {
+                    console.log("*** ERROR GETTING TOTAL PAGES ***");
+                    d.reject(error);
+                    return d.promise;
+                });
+            return d.promise;
+
+        },
+
         // This function returns events for  specific monitor or all monitors
         // You get here by tapping on events in the monitor screen or from
         // the menu events option
@@ -301,19 +326,13 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             var myevents = [];
             var apiurl = loginData.apiurl;
 
-            // FIXME: THIS IS JUST FETCHING PAGE 1 !!
-            // looks like I have more work to do here
-
             var myurl = (monitorId == 0) ? apiurl + "/events.json" : apiurl + "/events/index/MonitorId:" + monitorId + ".json";
             if (pageId) {
-                 myurl = myurl + "?page=" + pageId;
+                myurl = myurl + "?page=" + pageId;
             } else {
                 console.log("**** PAGE WAS " + pageId);
             }
             console.log("Constructed URL is " + myurl);
-            // FIXME: When retrieving lots of events, I really need to do pagination here - more complex
-            // as I have to do that in list scrolling too. For now, I hope your events don't kill the phone
-            // memory
 
             if (loginData.simulationMode == true) {
                 console.log("Events will be simulated");
@@ -326,13 +345,13 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 $http.get(myurl /*,{timeout:15000}*/ )
                     .success(function (data) {
                         $ionicLoading.hide();
-                        myevents = data.events;
-                        //myevents = data.events.reverse();
+                        //myevents = data.events;
+                        myevents = data.events.reverse();
                         if (monitorId == 0) {
                             oldevents = myevents;
                         }
                         //console.log (JSON.stringify(data));
-                        console.log("Returning " + myevents.length + "events");
+                        console.log("DataModel Returning " + myevents.length + "events for page"+pageId);
                         d.resolve(myevents);
                         return d.promise;
 
