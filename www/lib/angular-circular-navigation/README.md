@@ -1,5 +1,7 @@
 # angular-circular-navigation [![Build Status](https://travis-ci.org/maxklenk/angular-circular-navigation.svg?branch=master)](https://travis-ci.org/maxklenk/angular-circular-navigation) [![Coverage Status](https://coveralls.io/repos/maxklenk/angular-circular-navigation/badge.png?branch=master)](https://coveralls.io/r/maxklenk/angular-circular-navigation?branch=master)
 
+**** THE CSS FILE WAS MODIFIED BY PLIABLE PIXELS TO ALLOW FOR PERFECTLY ALIGNED ANGLES FOR PTZ -- PLEASE DON'T REPLACE WITH ORIGINAL LIBRARY ****
+
 angular-circular-navigation is a [AngularJS](https://github.com/angular/angular.js) directive, which is build on top of the Tutorial [Building a circular navigation with css transform](http://tympanus.net/codrops/2013/08/09/building-a-circular-navigation-with-css-transforms/) by [Sara Soueidan](http://sarasoueidan.com/).
 
 
