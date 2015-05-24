@@ -5,6 +5,7 @@
     "ionic": "driftyco/ionic-bower#1.0.0-rc.4"
   },
   "dependencies": {
-    "ng-mfb": "~0.4.0"
+    "ng-mfb": "~0.4.0",
+    "angular-chartist.js": "~3.1.1"
   }
 }

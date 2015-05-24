@@ -6,7 +6,7 @@
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
-                            'zmApp.controllers'
+                            'zmApp.controllers',
 
                         ])
 
@@ -89,7 +89,7 @@ angular.module('zmApp', [
 */
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http) {
 
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
@@ -179,11 +179,55 @@ angular.module('zmApp', [
 
 
     });
+
+
+    // lets POST so we get a session ID right hre
+  //  var loginData = ZMDataModel.getLogin();
+
+    console.log ("*** INIT LOGIN ****");
+    $http({
+        method:'POST',
+        url:loginData.url + '/index.php',
+        headers:{
+            'Content-Type': 'application/x-www-form-urlencoded',
+           'Accept': 'application/json',
+        },
+        transformRequest: function (obj) {
+            var str = [];
+            for (var p in obj)
+                str.push(encodeURIComponent(p) + "=" +
+                    encodeURIComponent(obj[p]));
+            var foo = str.join("&");
+            console.log("****RETURNING " + foo);
+            return foo;
+        },
+
+        data: {
+            username:loginData.username,
+            password:loginData.password,
+            action:"login",
+            view:"console"
+        }
+    })
+    .success(function(data)
+    {
+        console.log ("**** INIT LOGIN OK");
+    })
+    .error(function(error)
+    {
+        console.log ("**** INIT LOGIN FAILED");
+    });
+
+
+
+
+
 })
 
 // My route map connecting menu options to their respective templates and controllers
 .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
-
+    // If you do this, Allow Origin can't be *
+    //$httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
     //$httpProvider.interceptors.push('httpAuthIntercept');
 

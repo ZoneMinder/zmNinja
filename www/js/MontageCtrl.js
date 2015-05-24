@@ -4,9 +4,238 @@
 /* global cordova,StatusBar,angular,console */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http) {
 
     var timestamp = new Date().getUTCMilliseconds();
+
+      $scope.togglePTZ = function () {
+        $scope.showPTZ = !$scope.showPTZ;
+    };
+
+      $scope.radialMenuOptions = {
+        content: '',
+
+        background: '#2F4F4F',
+        isOpen: false,
+        toggleOnClick: false,
+        button: {
+            cssClass: "fa  fa-arrows-alt",
+        },
+        items: [
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    controlPTZ($scope.monitorId, 'Down');
+                }
+    },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    controlPTZ($scope.monitorId, 'DownLeft');
+                }
+    },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+
+                onclick: function () {
+                    controlPTZ($scope.monitorId, 'Left');
+                }
+    },
+            {
+                content: 'D',
+                empty: true,
+
+                onclick: function () {
+                    console.log('About');
+                }
+    },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    controlPTZ($scope.monitorId, 'UpLeft');
+                }
+    },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    controlPTZ($scope.monitorId, 'Up');
+                }
+    },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    controlPTZ($scope.monitorId, 'UpRight');
+                }
+    },
+
+            {
+                content: 'H',
+                empty: true,
+                onclick: function () {
+                    console.log('About');
+                }
+    },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    controlPTZ($scope.monitorId, 'Right');
+                }
+    },
+
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    controlPTZ($scope.monitorId, 'DownRight');
+                }
+    },
+
+            {
+                content: 'K',
+                empty: true,
+                onclick: function () {
+                    console.log('About');
+                }
+    },
+
+
+  ]
+    };
+
+    function controlPTZ(monitorId, cmd) {
+        //    curl -X POST "http://arjunrc.ddns.net:9898/zm/index.php" -d "view=request&request=control&user=admin&passwd=indiglo&id=4&control=moveConLeft"
+
+
+        //curl -X POST "http://server.com/zm/index.php?view=request" -d "request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
+
+        console.log("Command value " + cmd + " with MID=" + monitorId);
+
+        if (ZMDataModel.isSimulated()) {
+            var str = "simulation mode. no action taken";
+            $ionicLoading.show({
+                template: str,
+                noBackdrop: true,
+                duration: 3000
+            });
+            return;
+        }
+
+        $ionicLoading.hide();
+        $ionicLoading.show({
+            template: "please wait...",
+            noBackdrop: true,
+            duration: 15000,
+        });
+
+        var loginData = ZMDataModel.getLogin();
+
+        /*  $http({
+              method:'POST',
+              url:loginData.url + '/index.php',
+              headers:{
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                 'Accept': 'application/json',
+              },
+              transformRequest: function (obj) {
+                  var str = [];
+                  for (var p in obj)
+                      str.push(encodeURIComponent(p) + "=" +
+                          encodeURIComponent(obj[p]));
+                  var foo = str.join("&");
+                  console.log("****RETURNING " + foo);
+                  return foo;
+              },
+
+              data: {
+                  username:loginData.username,
+                  password:loginData.password,
+                  action:"login",
+                  view:"console"
+              }
+          })
+          .success (function(data,status,header,config)
+          {*/
+        $ionicLoading.hide();
+        $ionicLoading.show({
+            template: "Sending PTZ..",
+            noBackdrop: true,
+            duration: 15000,
+        });
+        // console.log ("ANGULAR VERSION: "+JSON.stringify(angular.version));
+
+        // console.log('Set-Cookie'+ header('Set-Cookie')); //
+
+
+        var req = $http({
+            method: 'POST',
+            /*timeout: 15000,*/
+            url: loginData.url + '/index.php',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+            },
+            transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                    str.push(encodeURIComponent(p) + "=" +
+                        encodeURIComponent(obj[p]));
+                var foo = str.join("&");
+                console.log("****RETURNING " + foo);
+                return foo;
+            },
+
+            data: {
+                view: "request",
+                request: "control",
+                id: monitorId,
+                //connkey: $scope.connKey,
+                control: "moveCon" + cmd,
+                xge: "30",
+                yge: "30",
+                //user: loginData.username,
+                //pass: loginData.password
+            }
+
+        });
+
+        req.success(function (resp) {
+            $ionicLoading.hide();
+            console.log("SUCCESS: " + JSON.stringify(resp));
+
+            // $ionicLoading.hide();
+
+        });
+
+        req.error(function (resp) {
+            $ionicLoading.hide();
+            console.log("ERROR: " + JSON.stringify(resp));
+        });
+
+        //});
+    }
+
 
 
     // same logic as EventCtrl.js
@@ -20,7 +249,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     };
 
 
-    $scope.openModal = function (mid) {
+    $scope.openModal = function (mid, controllable) {
         console.log("Open Monitor Modal");
 
         $scope.monitorId = mid;
@@ -40,6 +269,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                     noBackdrop: true,
                     duration: 15000
                 });
+            $scope.isControllable = controllable;
+                $scope.showPTZ = false;
                 $scope.modal.show();
             });
 

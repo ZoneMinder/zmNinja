@@ -27,7 +27,7 @@
                  and auth token mode -->
                 <div ng-if="!isSimulated()">
 
-                    <img  ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps=3&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;" ng-click="openModal(monitor.Monitor.Id)"  />
+                    <img  ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps=3&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable)"  />
 
                    </div>
 

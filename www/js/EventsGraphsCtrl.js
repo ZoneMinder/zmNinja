@@ -53,12 +53,6 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         var monitors = [];
 
 
-     var canvases = document.getElementById('superman');
-        //console.log ("**** FOUND " + canvases.length + "CANVASES");
-       // for (var i = 0; i < canvases.length; i++) {
-      //      console.log ("*** FOUND CANVAS");
-            //context.push(canvases[i].getContext('2d'));
-     //   }
          var dateRange = "";
         var startDate = "";
         var endDate = "";
@@ -84,8 +78,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
           label: '',
            fillColor: 'rgba(151,187,205,0.5)',
           strokeColor: 'rgba(151,187,205,0.8)',
-          highlightFill: 'rgba(151,187,205,0.75)',
-          highlightStroke: 'rgba(151,187,205,1)',
+            highlightFill: 'rgba(0,163,124,0.5)',
+       //   highlightFill: 'rgba(151,187,205,0.75)',
+         // highlightStroke: 'rgba(151,187,205,1)',
           data: []
         },
           ]
@@ -107,6 +102,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                     // I much prefer the old days of passing context data from request to response
 
                     $scope.data.labels.push(monitors[j].Monitor.Name);
+
                    //$scope.chartObject[id].data.push([monitors[j].Monitor.Name,'0','color:#76A7FA','0']);
                     // $scope.chartObject.data[j+1]=([monitors[j].Monitor.Name,'100','color:#76A7FA','0']);
 
@@ -129,6 +125,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
 
 
+
+
                             })
                             .error(function (data) {
                                 // ideally I should be treating it as an error
@@ -138,12 +136,14 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
                              $scope.data.datasets[0].data[j] = 0;
 
+
                             });
                     } // is not simulated
                     else // simulated: grab a random event count
                     {
                         var rndEventCount = Math.floor(Math.random() * (100 - 20 + 1)) + 20;
                          $scope.data.datasets[0].data[j] = rndEventCount;
+
 
                     }
                 })(i); // j
@@ -155,43 +155,26 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
 
 
-         $scope.options =  {
+         $scope.options = {
 
-      // Sets the chart to be responsive
-      responsive: true,
+     responsive: true,
+     scaleBeginAtZero: true,
+     scaleShowGridLines: false,
+     scaleGridLineColor: "rgba(0,0,0,.05)",
+     scaleGridLineWidth: 1,
+     barShowStroke: true,
+     barStrokeWidth: 2,
+     barValueSpacing: 5,
+     barDatasetSpacing: 1,
+     showTooltip: true,
 
-
-      //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-      scaleBeginAtZero : true,
-
-      //Boolean - Whether grid lines are shown across the chart
-      scaleShowGridLines : false,
-
-      //String - Colour of the grid lines
-      scaleGridLineColor : "rgba(0,0,0,.05)",
-
-      //Number - Width of the grid lines
-      scaleGridLineWidth : 1,
-
-      //Boolean - If there is a stroke on each bar
-      barShowStroke : true,
-
-      //Number - Pixel width of the bar stroke
-      barStrokeWidth : 2,
-
-      //Number - Spacing between each of the X value sets
-      barValueSpacing : 5,
-
-      //Number - Spacing between data sets within X values
-      barDatasetSpacing : 1,
-
-      //String - A legend template
-    //  legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
-    };
+     //String - A legend template
+     //  legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
+ };
 
 
 
-    };
+ };
 
 
 
