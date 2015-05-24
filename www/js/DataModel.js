@@ -7,7 +7,7 @@
 // that many other controllers use
 // It's grown over time. I guess I may have to split this into multiple services in the future
 
-angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', function ($http, $q, $ionicLoading) {
+angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', function ($http, $q, $ionicLoading, $ionicBackdrop) {
     // var deferred='';
     var monitorsLoaded = 0;
     var simSize = 30; // how many monitors to simulate
@@ -309,18 +309,28 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         // the menu events option
         // monitorId == 0 means all monitors (ZM starts from 1)
 
-        getEvents: function (monitorId, pageId) {
+        getEvents: function (monitorId, pageId, loadingStr) {
 
             console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
+           if (!loadingStr)
+           {
+               loadingStr = "Loading Events...";
+           }
+            //if (loadingStr) loa
+
+            if (loadingStr != 'none')
+            {
             $ionicLoading.show({
-                template: 'Loading Events...',
+                template: loadingStr,
                 animation: 'fade-in',
                 showBackdrop: true,
                 maxWidth: 200,
                 showDelay: 0,
                 duration: 15000, //specifically for Android - http seems to get stuck at times
             });
+            }
+            //$ionicBackdrop.retain();
 
             var d = $q.defer();
             var myevents = [];
@@ -338,13 +348,13 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 console.log("Events will be simulated");
                 myevents = simulation.fillSimulatedEvents(eventSimSize);
                 d.resolve(myevents);
-                $ionicLoading.hide();
+                if (loadingStr != 'none') $ionicLoading.hide();
                 return d.promise;
             } else { // not simulated
 
                 $http.get(myurl /*,{timeout:15000}*/ )
                     .success(function (data) {
-                        $ionicLoading.hide();
+                        if (loadingStr != 'none') $ionicLoading.hide();
                         //myevents = data.events;
                         myevents = data.events.reverse();
                         if (monitorId == 0) {
@@ -357,7 +367,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
                     })
                     .error(function (err) {
-                        $ionicLoading.hide();
+                        if (loadingStr != 'none') $ionicLoading.hide();
                         console.log("HTTP Events error " + err);
                         // I need to reject this as I have infinite scrolling
                         // implemented in EventCtrl.js --> and if it does not know

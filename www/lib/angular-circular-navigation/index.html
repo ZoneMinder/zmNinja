@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html ng-app="demoApp">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>angular-circular-navigation Demo App</title>
+
+    <link rel="stylesheet" href="demo/bower_components/json-tree/json-tree.css">
+    <link rel="stylesheet" href="angular-circular-navigation.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+
+    <script src="demo/bower_components/angular/angular.js"></script>
+    <script src="demo/bower_components/json-tree/json-tree.js"></script>
+    <script src="angular-circular-navigation.js"></script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+        background: #52be7f;
+        color: #fff;
+      }
+
+      .component {
+        position: relative;
+        margin-bottom: 3em;
+        height: 15em;
+        background: rgba(0,0,0,0.05);
+        font-family: 'Lato', Arial, sans-serif;
+      }
+
+      .component > h2 {
+        overflow: hidden;
+        width: 100%;
+        text-align: center;
+        text-transform: uppercase;
+        white-space: nowrap;
+        font-weight: 300;
+        font-style: italic;
+        font-size: 12em;
+        opacity: 0.1;
+        cursor: default;
+      }
+    </style>
+    <script type="text/javascript">
+      var app = angular.module('demoApp', ['angularCircularNavigation', 'json-tree']);
+
+      app.controller('Controller', function ($scope) {
+        $scope.switchAxis = function (options, clicked) {
+          $scope.options.items[0].isActive = false;
+          $scope.options.items[1].isActive = false;
+          clicked.isActive = true;
+        };
+        $scope.switchColor = function (options, clicked) {
+          $scope.options.items[7].isActive = false;
+          $scope.options.items[8].isActive = false;
+          $scope.options.items[9].isActive = false;
+          clicked.isActive = true;
+          $scope.options.button.background = clicked.background;
+        };
+        $scope.switchType = function (options, clicked) {
+          $scope.options.items[3].isActive = false;
+          $scope.options.items[4].isActive = false;
+          $scope.options.items[5].isActive = false;
+          clicked.isActive = true;
+          $scope.options.button.cssClass = clicked.cssClass;
+        };
+
+        $scope.options = {
+          isOpen: false,
+          toggleOnClick: true,
+          background: 'green',
+          color: 'white',
+          size: '',
+          button: {
+            content: '',
+            cssClass: 'fa fa-bar-chart-o',
+            background: 'red',
+            color: 'white',
+            size: 'small'
+          },
+          items: [{
+            content: 'Y1',
+            isActive: true,
+            onclick: $scope.switchAxis
+          }, {
+            content: 'Y2',
+            onclick: $scope.switchAxis
+          }, {
+            empty: true
+          }, {
+            cssClass: 'fa fa-bar-chart-o',
+            isActive: true,
+            onclick: $scope.switchType
+          }, {
+            cssClass: 'fa fa-camera-retro',
+            onclick: $scope.switchType
+          }, {
+            cssClass: 'fa fa-paper-plane-o',
+            onclick: $scope.switchType
+          }, {
+            empty: true
+          }, {
+            isActive: true,
+            background: 'red',
+            onclick: $scope.switchColor
+          }, {
+            background: 'blue',
+            onclick: $scope.switchColor
+          }, {
+            background: 'yellow',
+            onclick: $scope.switchColor
+          }]
+        };
+      });
+    </script>
+  </head>
+  <body>
+    <a href="https://github.com/maxklenk/angular-circular-navigation"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+    <div ng-controller="Controller">
+
+      <div class="component">
+        <h2>circular</h2>
+
+        <circular options="options"> </circular>
+
+      </div>
+
+      <h2>options:</h2>
+      <json-tree json='options' collapsed-level='3'></json-tree>
+
+    </div>
+  </body>
+</html>

@@ -50,7 +50,8 @@
                             "xml": false,
                             "count": 2
                         }
-                    ]
+                    ],
+                    "QuartzCore.framework": []
                 }
             }
         }

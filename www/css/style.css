@@ -75,4 +75,11 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
   font-size: 8px;
 }
 
+.ptzcentered {
+  position: fixed; /* or absolute */
+  top: 50%;
+  left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 
