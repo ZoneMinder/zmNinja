@@ -82,3 +82,5 @@ Change Monitor Modes:
 ![] (http://www.pbase.com/arjunrc/image/160096314/medium.jpg "Graphs")
 
 
+Pan/Tilt/Zoom Mode:
+![] (http://www.pbase.com/arjunrc/image/160171688/medium.jpg "PTZ")
