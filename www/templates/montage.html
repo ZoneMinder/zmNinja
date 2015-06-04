@@ -32,6 +32,7 @@
                  and auth token mode -->
                 <div ng-if="!isSimulated()">
 
+                    <!-- FIXME: Scale is hard coded to 50 for montage to save resources. Better way? -->
                     <img  ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable)"  />
 
                    </div>
