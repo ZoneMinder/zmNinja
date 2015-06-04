@@ -20,9 +20,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'password': '',
         'url': '', // This is the ZM portal path
         'apiurl': '', // This is the API path
-        'simulationMode': false, // if true, data will be simulated
+        'simulationMode': false, // if true, data will be simulated. Not using this now
         'maxMontage': "10", //total # of monitors to display in montage
-        'streamingurl': ""
+        'streamingurl': "",
+        'maxFPS':"3" // image streaming FPS
     };
 
     // This is really a test mode. This is how I am validating
@@ -157,6 +158,15 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             }
 
+            if (window.localStorage.getItem("maxFPS") != undefined) {
+                loginData.maxFPS =
+                    window.localStorage.getItem("maxFPS");
+                console.log("maxFPS  " + loginData.maxFPS);
+
+            }
+
+
+
             monitorsLoaded = 0;
             console.log("Getting out of ZMDataModel init");
 
@@ -182,12 +192,20 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         },
         setLogin: function (newLogin) {
             loginData = newLogin;
+
             window.localStorage.setItem("username", loginData.username);
             window.localStorage.setItem("password", loginData.password);
             window.localStorage.setItem("url", loginData.url);
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("simulationMode", loginData.simulationMode);
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
+
+            if (loginData.maxFPS >30)
+            {
+                console.log ("MAXFPS Too high, maxing to 30");
+                loginData.maxFPS = "30";
+            }
+            window.localStorage.setItem("maxFPS", loginData.maxFPS);
 
 
 
@@ -197,7 +215,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             }
 
             if (parseInt(loginData.maxMontage) <= 0) {
-                console.log("*** TOO LOW ***");
+                console.log("*** MAXMONTAGE TOO LOW ***");
                 loginData.maxMontage = 1;
             }
 

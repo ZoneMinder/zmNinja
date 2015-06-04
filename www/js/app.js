@@ -308,6 +308,18 @@ angular.module('zmApp', [
         controller: 'zmApp.StateCtrl',
     })
 
+
+    .state('devoptions', {
+        data: {
+            requireLogin: true
+        },
+        url: "/devoptions",
+        templateUrl: "templates/devoptions.html",
+        controller: 'zmApp.DevOptionsCtrl',
+    })
+
+
+
     .state('montage', {
         data: {
             requireLogin: true
