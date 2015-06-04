@@ -7,6 +7,12 @@
 angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http) {
 
     var timestamp = new Date().getUTCMilliseconds();
+    $scope.isMinimal = false;
+
+    $scope.switchMinimal = function()
+    {
+        $scope.minimal = !$scope.minimal;
+    };
 
       $scope.togglePTZ = function () {
         $scope.showPTZ = !$scope.showPTZ;
@@ -125,8 +131,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     };
 
     function controlPTZ(monitorId, cmd) {
-        //    curl -X POST "http://arjunrc.ddns.net:9898/zm/index.php" -d "view=request&request=control&user=admin&passwd=indiglo&id=4&control=moveConLeft"
-
 
         //curl -X POST "http://server.com/zm/index.php?view=request" -d "request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
 
