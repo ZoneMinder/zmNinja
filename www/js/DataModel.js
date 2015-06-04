@@ -23,7 +23,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'simulationMode': false, // if true, data will be simulated. Not using this now
         'maxMontage': "10", //total # of monitors to display in montage
         'streamingurl': "",
-        'maxFPS':"3" // image streaming FPS
+        'maxFPS':"3", // image streaming FPS
+        'montageQuality':"50", // montage streaming quality in %
     };
 
     // This is really a test mode. This is how I am validating
@@ -118,6 +119,14 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     window.localStorage.getItem("username");
 
             }
+
+
+             if (window.localStorage.getItem("montageQuality") != undefined) {
+                loginData.montageQuality =
+                    window.localStorage.getItem("montageQuality");
+
+            }
+
             if (window.localStorage.getItem("password") != undefined) {
                 loginData.password =
                     window.localStorage.getItem("password");
@@ -162,6 +171,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 loginData.maxFPS =
                     window.localStorage.getItem("maxFPS");
                 console.log("maxFPS  " + loginData.maxFPS);
+
+            }
+             if (window.localStorage.getItem("montageQuality") != undefined) {
+                loginData.montageQuality =
+                    window.localStorage.getItem("montageQuality");
+                console.log("montageQuality  " + loginData.montageQuality);
 
             }
 
@@ -222,7 +237,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             window.localStorage.setItem("maxMontage", loginData.maxMontage);
 
-            console.log("********** SIMULATION IS " + loginData.simulationMode);
+             window.localStorage.setItem("montageQuality", loginData.montageQuality);
+
 
         },
 
