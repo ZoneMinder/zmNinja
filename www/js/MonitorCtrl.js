@@ -7,6 +7,10 @@
 
 angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', function ($ionicPopup, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
 
+
+    //FIXME:curl http://server/zm/api/monitors/daemonStatus/id:5/daemon:zmc.json to check if daemon is alive
+    // but reutrns true for pending
+
     $scope.monitors = [];
 
 
