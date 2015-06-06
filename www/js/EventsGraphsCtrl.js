@@ -34,6 +34,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
 
     $scope.navTitle = 'Tab Page';
+   // $scope.chart="";
     $scope.leftButtons = [{
         type: 'button-icon icon ion-navicon',
         tap: function (e) {
@@ -47,6 +48,16 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     angular.element(document).ready(function () {
         console.log('****DOCUMENT READY******');
     });
+
+    // FIXME: No idea why this is not working
+    // it seems it can't get a handle to chart
+    $scope.handleChartClick = function(event)
+    {
+
+        // console.log (JSON.stringify( $scope.chart1.getBarsAtEvent(event)));
+
+    };
+
 
     $scope.generateTCChart = function(id,chartTitle, hrs)
     {

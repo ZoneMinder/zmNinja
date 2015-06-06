@@ -1,17 +1,28 @@
 // Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console */
+/* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams','$ionicHistory',function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http,$state, $stateParams, $ionicHistory) {
 
     var timestamp = new Date().getUTCMilliseconds();
-    $scope.isMinimal = false;
+    $scope.minimal = $stateParams.minimal;
+    $scope.isRefresh = $stateParams.isRefresh;
 
     $scope.switchMinimal = function()
     {
         $scope.minimal = !$scope.minimal;
+        console.log ("Hide Statusbar");
+        ionic.Platform.fullScreen($scope.minimal,!$scope.minimal);
+         $interval.cancel(intervalHandle); //we will renew on reload
+        $ionicHistory.nextViewOptions({
+              disableAnimate: true,
+              disableBack: true
+            });
+      $state.go("montage", {minimal: $scope.minimal,
+                            isRefresh:true});
+      //$state.reload();
     };
 
       $scope.togglePTZ = function () {
@@ -316,8 +327,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         //console.log ("**** NOTIFICATION with rand="+$scope.randomval+"*****");
     };
 
+
     var intervalHandle = $interval(function () {
         this.loadNotifications();
+       //  console.log ("Refreshing Image...");
     }.bind(this), 1000);
 
     this.loadNotifications();

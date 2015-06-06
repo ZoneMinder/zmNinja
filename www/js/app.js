@@ -6,8 +6,7 @@
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
-                            'zmApp.controllers',
-
+                            'zmApp.controllers'
                         ])
 
 
@@ -333,6 +332,7 @@ angular.module('zmApp', [
         url: "/montage",
         templateUrl: "templates/montage.html",
         controller: 'zmApp.MontageCtrl',
+        params: {minimal:false, isRefresh:false}
 
     });
 
