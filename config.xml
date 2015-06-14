@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.zmninja469849" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.pliablepixels.zmninja" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>zmNinja</name>
   <description>
-        An Ionic Framework and Cordova project.
+	High performance ZoneMinder client
     </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+  <author email="pliablepixels@gmail.com" href="http://pliablepixels.us/">
+	Pliable Pixels
     </author>
   <content src="index.html"/>
   <access origin="*" subdomains="true"/>

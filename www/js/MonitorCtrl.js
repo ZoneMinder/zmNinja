@@ -392,10 +392,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     };
 
     function controlPTZ(monitorId, cmd) {
-        //    curl -X POST "http://arjunrc.ddns.net:9898/zm/index.php" -d "view=request&request=control&user=admin&passwd=indiglo&id=4&control=moveConLeft"
-
-
-        //curl -X POST "http://server.com/zm/index.php?view=request" -d "request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
 
         console.log("Command value " + cmd + " with MID=" + monitorId);
 
