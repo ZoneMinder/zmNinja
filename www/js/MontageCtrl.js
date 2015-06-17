@@ -4,18 +4,58 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams','$ionicHistory',function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http,$state, $stateParams, $ionicHistory) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams','$ionicHistory','$ionicScrollDelegate', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http,$state, $stateParams, $ionicHistory,$ionicScrollDelegate) {
 
     var timestamp = new Date().getUTCMilliseconds();
     $scope.minimal = $stateParams.minimal;
     $scope.isRefresh = $stateParams.isRefresh;
 
+    var isLongPressActive = false;
+    var intervalHandleMontage; // will hold image resize timer on long press
+    var montageIndex = 0; // will hold monitor ID to scale in timer
+
+    $scope.monitorSize = []; // array with montage sizes per monitor
+    $scope.direction = []; // 1 = increase -1 = decrease
+
+    $scope.slider = {};
+    $scope.slider.monsize = ZMDataModel.getMontageSize();
+
+     $scope.monitors = [];
+    $scope.monitors = message;
+
+    // Do we have a saved montage array size? No?
+    if (window.localStorage.getItem("montageArraySize") == undefined)
+    {
+        for ( var i = 0; i<$scope.monitors.length; i++)
+        {
+            $scope.monitorSize.push(ZMDataModel.getMontageSize() );
+            $scope.direction.push(1);
+        }
+    }
+    else // recover previous settings
+    {
+        var msize = window.localStorage.getItem("montageArraySize");
+        console.log ("MontageArrayString is=>"+msize);
+        $scope.monitorSize= msize.split(":");
+        var j;
+        for (  j = 0; j<$scope.monitorSize.length; j++)
+        {
+            // convert to number other wise adding to it concatenates :-)
+            $scope.monitorSize[j] = parseInt($scope.monitorSize[j]);
+            console.log ("Montage size for monitor " + j + " is " + $scope.monitorSize[j]);
+
+        }
+
+    }
+
+    // Triggered when you enter/exit full screen
     $scope.switchMinimal = function()
     {
         $scope.minimal = !$scope.minimal;
         console.log ("Hide Statusbar");
         ionic.Platform.fullScreen($scope.minimal,!$scope.minimal);
          $interval.cancel(intervalHandle); //we will renew on reload
+        // We are reloading this view, so we don't want entry animations
         $ionicHistory.nextViewOptions({
               disableAnimate: true,
               disableBack: true
@@ -25,10 +65,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
       //$state.reload();
     };
 
+      // Show/Hide PTZ control
       $scope.togglePTZ = function () {
         $scope.showPTZ = !$scope.showPTZ;
     };
 
+     // This holds the PTZ menu control
+     // Note that I hacked radialMenu
+     // so please don't use the one you get from bower
       $scope.radialMenuOptions = {
         content: '',
 
@@ -141,6 +185,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
   ]
     };
 
+    // Send PTZ command to ZM
+    // FIXME: moveCon is hardcoded - won't work with
+    // cams that don't use moveCon.
+    // Need to grab control ID and then control API
     function controlPTZ(monitorId, cmd) {
 
         //curl -X POST "http://server.com/zm/index.php?view=request" -d "request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
@@ -198,9 +246,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             noBackdrop: true,
             duration: 15000,
         });
-        // console.log ("ANGULAR VERSION: "+JSON.stringify(angular.version));
-
-        // console.log('Set-Cookie'+ header('Set-Cookie')); //
 
 
         var req = $http({
@@ -289,6 +334,43 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 $scope.modal.show();
             });
 
+             // do a post login for PTZ
+        var loginData = ZMDataModel.getLogin();
+        console.log("*** MODAL PORTAL LOGIN ****");
+        $http({
+                method: 'POST',
+                url: loginData.url + '/index.php',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                },
+                transformRequest: function (obj) {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                    var foo = str.join("&");
+                    console.log("****RETURNING " + foo);
+                    return foo;
+                },
+
+                data: {
+                    username: loginData.username,
+                    password: loginData.password,
+                    action: "login",
+                    view: "console"
+                }
+            })
+            .success(function (data) {
+                console.log("**** PORTAL  LOGIN OK");
+            })
+            .error(function (error) {
+                console.log("**** PORTAL LOGIN FAILED");
+            });
+
+
+
+
     };
 
     $scope.closeModal = function () {
@@ -296,6 +378,52 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.modal.remove();
 
     };
+
+    function scaleMontage()
+    {
+        var index = montageIndex;
+        console.log (" MONTAGE INDEX === " + montageIndex);
+        console.log ("Scaling Monitor " + index);
+       if ($scope.monitorSize[index] == 6)
+            $scope.direction[index] = -1;
+
+        if ($scope.monitorSize[index] == 1)
+            $scope.direction[index] = 1;
+
+        $scope.monitorSize[index] += $scope.direction[index] ;
+
+        console.log ("Changed size to "+$scope.monitorSize[index]);
+
+        var monsizestring = "";
+        var i;
+        for ( i = 0; i<$scope.monitors.length; i++)
+        {
+            monsizestring = monsizestring + $scope.monitorSize[i]+':';
+        }
+        monsizestring = monsizestring.slice(0,-1); // kill last :
+        console.log ("Setting monsize string:"+monsizestring);
+        window.localStorage.setItem("montageArraySize", monsizestring);
+    }
+
+    $scope.onHold = function (index)
+    {
+        montageIndex = index;
+        isLongPressActive = true;
+            intervalHandleMontage = $interval(function () {
+            scaleMontage();
+
+        }.bind(this), 200);
+
+    };
+
+    $scope.onRelease = function (index)
+    {
+        console.log ("Press release on " + index);
+        isLongPressActive = false;
+        $interval.cancel(intervalHandleMontage);
+    };
+
+
 
 
     // In Android, the app runs full steam while in background mode
@@ -376,8 +504,29 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //Remember not to use a variable. I'm using an object
     // so it's passed as a reference - otherwise it makes
     // a copy and the value never changes
-    $scope.slider = {};
-    $scope.slider.monsize = ZMDataModel.getMontageSize();
+
+    $scope.sliderChanged = function ()
+    {
+       console.log('Slider has changed');
+        ZMDataModel.setMontageSize($scope.slider.monsize);
+        console.log("Rootscope Montage is " + ZMDataModel.getMontageSize() + " and slider montage is " + $scope.slider.monsize);
+        // Now go ahead and reset sizes of entire monitor array
+        var monsizestring="";
+        var i;
+        for ( i = 0; i<$scope.monitors.length; i++)
+        {
+
+            $scope.monitorSize[i] = parseInt(ZMDataModel.getMontageSize());
+            console.log ("Resetting Monitor "+i+" size to " +$scope.monitorSize[i]);
+            $scope.direction[i] = 1;
+            monsizestring = monsizestring + $scope.monitorSize[i]+':';
+        }
+        monsizestring = monsizestring.slice(0,-1); // kill last :
+        console.log ("Setting monsize string:"+monsizestring);
+        window.localStorage.setItem("montageArraySize", monsizestring);
+
+    };
+
     $scope.$on('$ionicView.afterEnter', function () {
         // This rand is really used to reload the monitor image in img-src so it is not cached
         // I am making sure the image in montage view is always fresh
@@ -385,20 +534,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
     });
 
-    // we are monitoring the slider for movement here
-    // make sure this is an object - so its passed by reference from the template to the controller!
-    $scope.$watch('slider.monsize', function () {
-        console.log('Slider has changed');
-        ZMDataModel.setMontageSize($scope.slider.monsize);
-        console.log("Rootscope Montage is " + ZMDataModel.getMontageSize() + " and slider montage is " + $scope.slider.monsize);
 
-    });
-
-    $scope.monitors = [];
-    console.log("Inside MontageCtrl waiting for monitors to load...");
-
-    $scope.monitors = message;
-    console.log("I have received the monitors inside Montage and there are " + $scope.monitors.length);
 
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");

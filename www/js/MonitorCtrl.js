@@ -312,7 +312,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     });
 
     $scope.openModal = function (mid, controllable) {
-        console.log("Open Monitor Modal with monitod Id=" + mid + " and Controllable:" + controllable);
+        console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable);
 
         $scope.monitorId = mid;
         $scope.LoginData = ZMDataModel.getLogin();
