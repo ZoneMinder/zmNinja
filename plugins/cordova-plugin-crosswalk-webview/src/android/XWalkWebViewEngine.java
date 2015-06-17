@@ -113,17 +113,6 @@ public class XWalkWebViewEngine implements CordovaWebViewEngine {
         webView.addJavascriptInterface(exposedJsApi, "_cordovaNative");
     }
 
-    // TODO(ningxin): XWalkViewUIClient should provide onScrollChanged callback
-    /*
-    public void onScrollChanged(int l, int t, int oldl, int oldt)
-    {
-        super.onScrollChanged(l, t, oldl, oldt);
-        //We should post a message that the scroll changed
-        ScrollEvent myEvent = new ScrollEvent(l, t, oldl, oldt, this);
-        this.postMessage("onScrollChanged", myEvent);
-    }
-    */
-
     @Override
     public boolean canGoBack() {
         return this.webView.getNavigationHistory().canGoBack();

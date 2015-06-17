@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-crosswalk-webview",
-  "version": "1.0.1-dev",
+  "version": "1.2.0",
   "description": "Changes the default WebView to CrossWalk",
   "cordova": {
     "id": "cordova-plugin-crosswalk-webview",

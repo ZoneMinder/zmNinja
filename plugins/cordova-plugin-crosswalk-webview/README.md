@@ -1,69 +1,24 @@
+# cordova-plugin-crosswalk-webview
 
+Makes your Cordova application use the [Crosswalk WebView](https://crosswalk-project.org/)
+instead of the System WebView. Requires cordova-android 4.0 or greater.
 
-Apache Cordova Crosswalk Engine
-===
+### Install
 
-Cordova Crosswalk Engine is a [Crosswalk WebView](https://crosswalk-project.org/) based engine to work with [Apache Cordova](http://cordova.apache.org/) for Android. This currently works with master branch of [Cordova Android](https://github.com/apache/cordova-android) on GitHub, and it will work with Apache Cordova Android 4.0.0 release.
+The following directions are for cordova-cli (most people).  Alternatively you can use the [Android platform scripts workflow](PlatformScriptsWorkflow.md).
 
-### Directions:
-#### Android-only:
-* Pull down the Cordova Android
-```
-$ git clone https://github.com/apache/cordova-android.git
-```
-* Generate a project, e.g creating HelloWorld
-```
-$ /path/to/cordova-android/bin/create hello com.example.hello HelloWorld
-```
-* Navigate to the project folder
-```
-$ cd hello
-```
-* Install Crosswalk engine plugin by plugman (version >= 0.22.17)
-```
-$ plugman install --platform android --plugin https://github.com/MobileChromeApps/cordova-crosswalk-engine.git --project .
-```
-* Build
-```
-$ ./cordova/build
-```
-The build script will automatically fetch the Crosswalk WebView libraries from Crosswalk project download site (https://download.01.org/crosswalk/releases/crosswalk/android/) and build for both X86 and ARM architectures. 
-
-For example, building HelloWorld generates:
+* Open an existing cordova project, with cordova-android 4.0.0+, and using the latest CLI.
+* Add this plugin
 
 ```
-/path/to/hello/build/outputs/apk/hello-x86-debug.apk
-/path/to/hello/build/outputs/apk/hello-armv7-debug.apk
+$ cordova plugin add cordova-plugin-crosswalk-webview
 ```
 
-#### Cordova CLI:
-(It will be updated after cordova-android 4.0.0 release with CLI)
-
-* Install the latest version of the Cordova CLI from npm (version >= 4.2.0)
-```
-$ npm install -g cordova
-```
-* Create a project with cordova create, e.g creating HelloWorld
-```
-$ cordova create hello com.example.hello HelloWorld
-```
-* Navigate to the project folder
-```
-$ cd hello
-```
-* Add the Android platform @4.0.0-dev
-```
-$ cordova platform add https://github.com/apache/cordova-android.git
-```
-* Add the Crosswalk engine plugin
-```
-$ cordova plugin add  https://github.com/MobileChromeApps/cordova-crosswalk-engine.git
-```
 * Build
 ```
 $ cordova build android
 ```
-The build script will automatically fetch the Crosswalk WebView libraries from Crosswalk project download site (https://download.01.org/crosswalk/releases/crosswalk/android/) and build for both X86 and ARM architectures.
+The build script will automatically fetch the Crosswalk WebView libraries from Crosswalk project download site (https://download.01.org/crosswalk/releases/crosswalk/android/maven2/) and build for both X86 and ARM architectures.
 
 For example, building android with Crosswalk generates:
 
@@ -81,3 +36,32 @@ To build Crosswalk-enabled apks, add this plugin and run:
 To build System-webview apk, remove this plugin and run:
 
     $ cordova build --release -- --android-minSdkVersion=21
+
+### Configure
+
+You can try out a different Crosswalk version using a `<preference>` tag within your `config.xml`. Some examples:
+
+    <!-- These are all equivalent -->
+    <preference name="xwalkVersion" value="org.xwalk:xwalk_core_library_beta:13+" />
+    <preference name="xwalkVersion" value="xwalk_core_library_beta:13+" />
+    <preference name="xwalkVersion" value="13+" />
+    <preference name="xwalkVersion" value="13" />
+
+You can set [command-line flags](http://peter.sh/experiments/chromium-command-line-switches/) as well:
+
+    <!-- This is the default -->
+    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
+
+### Release Notes
+
+#### 1.2.0 (April 22, 2015)
+* Made Crosswalk command-line configurable via `<preference name="xwalkCommandLine" value="..." />`
+* Disabled pull-down-to-refresh by default
+
+#### 1.1.0 (April 21, 2015)
+* Based on Crosswalk v13
+* Made Crosswalk version configurable via `<preference name="xwalkVersion" value="..." />`
+
+#### 1.0.0 (Mar 25, 2015)
+* Initial release
+* Based on Crosswalk v11
