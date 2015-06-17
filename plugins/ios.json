@@ -75,9 +75,6 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.ionicframework.zmninja469849"
         },
-        "cordova-plugin-crosswalk-webview": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
-        },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.ionicframework.zmninja469849"
         }

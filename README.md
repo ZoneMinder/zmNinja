@@ -2,13 +2,6 @@
 ZoneMinder is an incredible open source camera monitoring system and is used
 by many for home and commercial security monitoring. http://www.zoneminder.com
 
-The ZoneMinder folks are implementing a new API based system and I decided to contribute
-by developing a client that uses the new APIs. The APIs are evolving along with this client
-so you can expect this to be in alpha/beta stage till the fine folks at ZM release a new
-version with the APIs fully integrated. To that extent, some of the features of the app
-won't work till Kyle Johnson @ ZM finishes his API work. If you are interested, you can track
-https://github.com/ZoneMinder/ZoneMinder/issues/799 to keep a tab of the API status of ZM
-
 Features
 --------
 Please see the [Wiki](https://github.com/arjunroychowdhury/zmNinja/wiki)

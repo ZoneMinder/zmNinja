@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-crosswalk-webview"
-      version="1.0.1-dev">
+      version="1.2.0">
 
     <name>Crosswalk WebView Engine</name>
     <description>Changes the default WebView to CrossWalk</description>
@@ -28,6 +28,6 @@
         <source-file src="src/android/XWalkCordovaView.java" target-dir="src/org/crosswalk/engine" />
         <source-file src="src/android/XWalkCordovaCookieManager.java" target-dir="src/org/crosswalk/engine" />
 
-        <framework src="libs/xwalk_core_library" custom="true" />
+        <framework src="src/android/xwalk.gradle" custom="true" type="gradleReference" />
     </platform>
 </plugin>

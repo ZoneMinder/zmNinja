@@ -13,6 +13,14 @@
                             "count": 1
                         },
                         {
+                            "xml": "<preference name=\"webView\" value=\"org.crosswalk.engine.XWalkWebViewEngine\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"Whitelist\"><param name=\"android-package\" value=\"org.apache.cordova.whitelist.WhitelistPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
@@ -27,14 +35,6 @@
                         {
                             "xml": "<feature name=\"StatusBar\"><param name=\"android-package\" value=\"org.apache.cordova.statusbar.StatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
-                        },
-                        {
-                            "xml": "<preference name=\"webView\" value=\"org.crosswalk.engine.XWalkWebViewEngine\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
-                            "count": 1
                         }
                     ]
                 }
@@ -43,28 +43,28 @@
     },
     "installed_plugins": {
         "com.ionic.keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
-        },
-        "org.apache.cordova.console": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
-        },
-        "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
-        },
-        "org.apache.cordova.splashscreen": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
-        },
-        "org.apache.cordova.statusbar": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-crosswalk-webview": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "com.ionicframework.zmninja469849"
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "org.apache.cordova.console": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "org.apache.cordova.splashscreen": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "org.apache.cordova.statusbar": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
     "dependent_plugins": {}

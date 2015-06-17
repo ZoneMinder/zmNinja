@@ -40,7 +40,7 @@ other URLs, you must add `<allow-navigation>` tags to your `config.xml`:
 
     <!-- Wildcards are allowed for the protocol, as a prefix
          to the host, or as a suffix to the path -->
-    <allow-navigation href="*://*.example.com/*" />
+    <allow-havigation href="*://*.example.com/*" />
 
     <!-- A wildcard can be used to whitelist the entire network,
          over HTTP and HTTPS.
@@ -135,7 +135,7 @@ Here are some example CSP declarations for your `.html` pages:
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' foo.com">
 
     <!-- Enable all requests, inline styles, and eval() -->
-    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src: 'self' 'unsafe-inline' 'unsafe-eval'">
 
     <!-- Allow XHRs via https only -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
