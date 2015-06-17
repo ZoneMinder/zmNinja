@@ -1,55 +1,46 @@
-<ion-view title="Montage View" class="bar-stable" cache-view="false" hide-nav-bar="{{minimal}}">
+<ion-view title="Montage View" cache-view="false" hide-nav-bar="{{minimal}}">
+
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
     </ion-nav-buttons>
+
 
     <ion-nav-buttons side="right">
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()"></button>
     </ion-nav-buttons>
 
-    <ion-content padding="true">
+
+    <ion-content  padding="true" scroll="true" overflow-scroll="true">
 
         <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
-        <!-- Hi:ROOT: {{montageSize}} LOCAL {{slider.monsize}} -->
 
-        <span ng-if="!minimal">
+
+            <span ng-show="!minimal">
         <div class=" range range-positive">
             <i class="icon ion-arrow-shrink"></i>
 
-            <input type="range" ng-model="slider.monsize" min="1" max="6">
+            <input type="range" ng-model="slider.monsize" min="1" max="6" ng-change="sliderChanged()">
             <i class="icon ion-arrow-expand"></i>
 
         </div>
         </span>
-        <!-- Hi:{{slider.monsize}} {{devWidth}} -->
 
-        <div class="wrapper">
-
-
+ <div class="wrapper">
             <span ng-repeat="monitor in monitors| limitTo: monLimit">
-              <span ng-if="!minimal">
-                   <header class="header">&nbsp;<i class="ion-monitor"></i> {{monitor.Monitor.Name}}&nbsp;</header>
-                </span>
+
+            <span ng-show="!minimal">
+                <header class="header">&nbsp;<i class="ion-monitor"></i>
+                    {{monitor.Monitor.Name}}&nbsp;</header>
+
+
+            </span>
             <article class="main">
-                <!-- does not route via APIs. As of today, there is no way to do this via apis.
-                 FIXME: I should probably not pass username and password here - instead go the http interceptor
-                 and auth token mode -->
-                <div ng-if="!isSimulated()">
-
-                    <!-- FIXME: Scale is hard coded to 50 for montage to save resources. Better way? -->
-                    <img ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable)" />
-
-                </div>
-
-                <div ng-if="isSimulated()">
-
-                    <img ng-src="img/demo.gif?rand={{rand}}" width="{{((devWidth-30)/(7-slider.monsize))}}px;" ng-click="openModal(monitor.Monitor.Id)">
-
-                </div>
+                <img ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable)" on-hold="onHold($index)" on-release="onRelease($index)" />
             </article>
 
-            <span ng-if="!minimal">
-               <span style="font-size:10px;">
+            <span ng-show="!minimal">
+
+                <span style="font-size:10px;">
                <footer class="footer">
                   
                    {{monitor.Monitor.Enabled=="1"?"Enabled":"Not Enabled"}}
@@ -62,25 +53,18 @@
             </footer>
             </span>
 
+
             </span>
             </span>
-            <!-- ng repeat-->
 
             <div ng-show="minimal">
                 <br/>
                 <button class="button button-outline button-positive" ng-click="switchMinimal()">
-  exit full screen view
-</button>
-
-
+                    exit full screen view
+                </button>
 
             </div>
-
         </div>
-        <!--wrapper-->
-
-
-
     </ion-content>
 
 </ion-view>
