@@ -14,7 +14,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var intervalHandleMontage; // will hold image resize timer on long press
     var montageIndex = 0; // will hold monitor ID to scale in timer
 
-    $scope.monitorSize = []; // array with montage sizes per monitor
+   // don't init here -will mess up scrolling
+   // $scope.monitorSize = []; // array with montage sizes per monitor
     $scope.direction = []; // 1 = increase -1 = decrease
 
     $scope.slider = {};
