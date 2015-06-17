@@ -6,7 +6,7 @@
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
-                            'zmApp.controllers'
+                            'zmApp.controllers',
                         ])
 
 
@@ -339,7 +339,7 @@ angular.module('zmApp', [
 
 
     // if none of the above states are matched, use this as the fallback
-    var defaultState = "/monitors";
+    var defaultState = "/montage";
     //var defaultState = "/login";
     // as it turns out I can't really inject a factory in config the normal way
     // FIXME: In future, read up http://stackoverflow.com/questions/15937267/inject-service-in-app-config
@@ -353,7 +353,7 @@ angular.module('zmApp', [
 
     $urlRouterProvider.otherwise(function ($injector, $location) {
         var $state = $injector.get("$state");
-        $state.go("monitors");
+        $state.go("montage");
     });
 
 });
