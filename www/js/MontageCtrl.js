@@ -6,48 +6,6 @@
 
 angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams','$ionicHistory','$ionicScrollDelegate', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http,$state, $stateParams, $ionicHistory,$ionicScrollDelegate) {
 
-    var timestamp = new Date().getUTCMilliseconds();
-    $scope.minimal = $stateParams.minimal;
-    $scope.isRefresh = $stateParams.isRefresh;
-
-    var isLongPressActive = false;
-    var intervalHandleMontage; // will hold image resize timer on long press
-    var montageIndex = 0; // will hold monitor ID to scale in timer
-
-   // don't init here -will mess up scrolling
-   // $scope.monitorSize = []; // array with montage sizes per monitor
-    $scope.direction = []; // 1 = increase -1 = decrease
-
-    $scope.slider = {};
-    $scope.slider.monsize = ZMDataModel.getMontageSize();
-
-     $scope.monitors = [];
-    $scope.monitors = message;
-
-    // Do we have a saved montage array size? No?
-    if (window.localStorage.getItem("montageArraySize") == undefined)
-    {
-        for ( var i = 0; i<$scope.monitors.length; i++)
-        {
-            $scope.monitorSize.push(ZMDataModel.getMontageSize() );
-            $scope.direction.push(1);
-        }
-    }
-    else // recover previous settings
-    {
-        var msize = window.localStorage.getItem("montageArraySize");
-        console.log ("MontageArrayString is=>"+msize);
-        $scope.monitorSize= msize.split(":");
-        var j;
-        for (  j = 0; j<$scope.monitorSize.length; j++)
-        {
-            // convert to number other wise adding to it concatenates :-)
-            $scope.monitorSize[j] = parseInt($scope.monitorSize[j]);
-            console.log ("Montage size for monitor " + j + " is " + $scope.monitorSize[j]);
-
-        }
-
-    }
 
     // Triggered when you enter/exit full screen
     $scope.switchMinimal = function()
@@ -369,9 +327,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 console.log("**** PORTAL LOGIN FAILED");
             });
 
-
-
-
     };
 
     $scope.closeModal = function () {
@@ -386,12 +341,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         console.log (" MONTAGE INDEX === " + montageIndex);
         console.log ("Scaling Monitor " + index);
        if ($scope.monitorSize[index] == 6)
-            $scope.direction[index] = -1;
+            $scope.scaleDirection[index] = -1;
 
         if ($scope.monitorSize[index] == 1)
-            $scope.direction[index] = 1;
+            $scope.scaleDirection[index] = 1;
 
-        $scope.monitorSize[index] += $scope.direction[index] ;
+        $scope.monitorSize[index] += $scope.scaleDirection[index] ;
 
         console.log ("Changed size to "+$scope.monitorSize[index]);
 
@@ -457,13 +412,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     };
 
 
-    var intervalHandle = $interval(function () {
-        this.loadNotifications();
-       //  console.log ("Refreshing Image...");
-    }.bind(this), 1000);
-
-    this.loadNotifications();
-
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -497,10 +445,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
 
-    $scope.LoginData = ZMDataModel.getLogin();
-    $scope.monLimit = $scope.LoginData.maxMontage;
-    console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
-
     // slider is tied to the view slider for montage
     //Remember not to use a variable. I'm using an object
     // so it's passed as a reference - otherwise it makes
@@ -519,7 +463,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
             $scope.monitorSize[i] = parseInt(ZMDataModel.getMontageSize());
             console.log ("Resetting Monitor "+i+" size to " +$scope.monitorSize[i]);
-            $scope.direction[i] = 1;
+            $scope.scaleDirection[i] = 1;
             monsizestring = monsizestring + $scope.monitorSize[i]+':';
         }
         monsizestring = monsizestring.slice(0,-1); // kill last :
@@ -548,4 +492,67 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         });
 
     };
+
+    var timestamp = new Date().getUTCMilliseconds();
+    $scope.minimal = $stateParams.minimal;
+    $scope.isRefresh = $stateParams.isRefresh;
+
+    var isLongPressActive = false;
+    var intervalHandleMontage; // will hold image resize timer on long press
+    var montageIndex = 0; // will hold monitor ID to scale in timer
+
+   // don't init here -will mess up scrolling
+   $scope.monitorSize = []; // array with montage sizes per monitor
+   $scope.scaleDirection = []; // 1 = increase -1 = decrease
+
+    $scope.slider = {};
+    $scope.slider.monsize = ZMDataModel.getMontageSize();
+
+     //$scope.monitors = [];
+    console.log ("********  HAVE ALL MONITORS");
+    $scope.monitors = message;
+
+
+    // Do we have a saved montage array size? No?
+    if (window.localStorage.getItem("montageArraySize") == undefined)
+    {
+
+        for ( var i = 0; i<$scope.monitors.length; i++)
+        {
+            $scope.monitorSize.push(ZMDataModel.getMontageSize() );
+           $scope.scaleDirection.push(1);
+        }
+    }
+    else // recover previous settings
+    {
+        var msize = window.localStorage.getItem("montageArraySize");
+        console.log ("MontageArrayString is=>"+msize);
+        $scope.monitorSize= msize.split(":");
+        var j;
+
+        for (  j = 0; j<$scope.monitorSize.length; j++)
+        {
+            // convert to number other wise adding to it concatenates :-)
+            $scope.monitorSize[j] = parseInt($scope.monitorSize[j]);
+            $scope.scaleDirection.push(1);
+            console.log ("Montage size for monitor " + j + " is " + $scope.monitorSize[j]);
+
+        }
+
+    }
+    console.log ("********  SETTING VARS");
+   // $scope.monitorSize = monitorSize;
+   // $scope.scaleDirection = scaleDirection;
+
+    $scope.LoginData = ZMDataModel.getLogin();
+    $scope.monLimit = $scope.LoginData.maxMontage;
+    console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
+
+
+    var intervalHandle = $interval(function () {
+        this.loadNotifications();
+       //  console.log ("Refreshing Image...");
+    }.bind(this), 1000);
+
+    this.loadNotifications();
 }]);
