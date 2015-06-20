@@ -23,13 +23,7 @@
 
                 <!-- <img  imageonload="finishedLoadingImage()" ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps=3&buffer=1000&rand={{rand}}" width="100%" />-->
             </ion-scroll>
-        </div>
-
-        <div ng-if="isSimulated()">
-            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-                <img imageonload="finishedLoadingImage()" ng-src="img/demo.gif" width="100%" />
-            </ion-scroll>
-        </div>
+            </div>
 
     </ion-content>
 
@@ -42,13 +36,7 @@
 
 </div>-->
 
-    <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-        <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView()"></button>
 
-        <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();"></button>
-
-        <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal()"></button>
-    </nav>
 
     <div ng-show="isControllable=='1' && showPTZ">
         <div class="ptzcentered">
@@ -58,4 +46,14 @@
         </div>
     </div>
 
+
+
 </ion-modal-view>
+
+<nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+        <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView()"></button>
+
+        <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();"></button>
+
+        <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal()"></button>
+    </nav>
