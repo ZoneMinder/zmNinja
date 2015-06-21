@@ -7,11 +7,11 @@
     <!-- I'm calling the same controller function but with different parameters when
             you switch between tabs -->
     <ion-tabs class="tabs-icon-top tabs-stable">
-        <ion-tab title="All" icon="ion-stats-bars" on-select="generateTCChart(0,'All Events',0)" >
+        <ion-tab title="All" icon="ion-stats-bars" on-select="generateTCChart(0,'All Events',0)">
             <ion-nav-view>
                 <ion-content class="has-header">
-                        <canvas tc-chartjs-bar chart-data="data" chart-options="options" ng-click="handleChartClick($event)" chart="chart1">
-                        </canvas>
+                    <canvas tc-chartjs-bar chart-data="data" chart-options="options" ng-click="handleChartClick($event)" chart="chart1">
+                    </canvas>
 
 
                 </ion-content>
@@ -31,12 +31,12 @@
 
 
                     <div style="overflow:scroll;">
-                        <canvas  tc-chartjs-bar  chart-data="data" chart-options="options"  ng-click="handleChartClick($event)" chart="chart2">
+                        <canvas tc-chartjs-bar chart-data="data" chart-options="options" ng-click="handleChartClick($event)" chart="chart2">
                         </canvas>
                     </div>
-                        </canvas>
+                    </canvas>
 
-                        <!-- <div google-chart chart="chartObject[1]"></div>-->
+                    <!-- <div google-chart chart="chartObject[1]"></div>-->
                     </div>
 
                 </ion-content>
@@ -49,7 +49,7 @@
                 <ion-content>
                     <span></span>
                     <div style="overflow:scroll;">
-                        <canvas  tc-chartjs-bar  chart-data="data" chart-options="options" chart="chart3" ng-click="handleChartClick($event)">
+                        <canvas tc-chartjs-bar chart-data="data" chart-options="options" chart="chart3" ng-click="handleChartClick($event)">
                         </canvas>
                     </div>
 
@@ -63,8 +63,8 @@
                     <span></span>
                     <!--
                     <div google-chart chart="chartObject[3]"></div>-->
-                     <div style="overflow:scroll;">
-                        <canvas  tc-chartjs-bar  chart-data="data" chart-options="options" chart="chart4" ng-click="handleChartClick($event)">
+                    <div style="overflow:scroll;">
+                        <canvas tc-chartjs-bar chart-data="data" chart-options="options" chart="chart4" ng-click="handleChartClick($event)">
                         </canvas>
                     </div>
                 </ion-content>

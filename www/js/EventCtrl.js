@@ -146,16 +146,6 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     $scope.controlEventStream = function (cmd) {
         console.log("Command value " + cmd);
 
-        if (ZMDataModel.isSimulated()) {
-            var str = "simulation mode. no action taken";
-            $ionicLoading.show({
-                template: str,
-                noBackdrop: true,
-                duration: 3000
-            });
-            return;
-        }
-
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "please wait...",
@@ -421,9 +411,6 @@ $ionicLoading.show({ maxwidth:100, scope:$scope, template: '<button class="butto
 
     };
 
-    $scope.isSimulated = function () {
-        return ZMDataModel.isSimulated();
-    };
 
     // For consistency we are keeping the refresher list
     // but its a dummy. The reason I deviated is because

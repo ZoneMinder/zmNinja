@@ -4,15 +4,15 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'ZMDataModel',  '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams','$ionicHistory','$ionicScrollDelegate', function ($scope, $rootScope, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http,$state, $stateParams, $ionicHistory,$ionicScrollDelegate) {
+angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', function ($scope, $rootScope, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
 
 
-    console.log ("**** INSIDE MODAL CTRL *****");
+    console.log("**** INSIDE MODAL CTRL *****");
 
-     // This holds the PTZ menu control
-     // Note that I hacked radialMenu
-     // so please don't use the one you get from bower
-      $scope.radialMenuOptions = {
+    // This holds the PTZ menu control
+    // Note that I hacked radialMenu
+    // so please don't use the one you get from bower
+    $scope.radialMenuOptions = {
         content: '',
 
         background: '#2F4F4F',
@@ -119,9 +119,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                     console.log('About');
                 }
     },
-
-
-  ]
+ ]
     };
 
     // Send PTZ command to ZM
@@ -133,17 +131,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         //curl -X POST "http://server.com/zm/index.php?view=request" -d "request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
 
         console.log("Command value " + cmd + " with MID=" + monitorId);
-
-        if (ZMDataModel.isSimulated()) {
-            var str = "simulation mode. no action taken";
-            $ionicLoading.show({
-                template: str,
-                noBackdrop: true,
-                duration: 3000
-            });
-            return;
-        }
-
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "please wait...",
@@ -152,33 +139,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         });
 
         var loginData = ZMDataModel.getLogin();
-
-        /*  $http({
-              method:'POST',
-              url:loginData.url + '/index.php',
-              headers:{
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                 'Accept': 'application/json',
-              },
-              transformRequest: function (obj) {
-                  var str = [];
-                  for (var p in obj)
-                      str.push(encodeURIComponent(p) + "=" +
-                          encodeURIComponent(obj[p]));
-                  var foo = str.join("&");
-                  console.log("****RETURNING " + foo);
-                  return foo;
-              },
-
-              data: {
-                  username:loginData.username,
-                  password:loginData.password,
-                  action:"login",
-                  view:"console"
-              }
-          })
-          .success (function(data,status,header,config)
-          {*/
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "Sending PTZ..",
@@ -209,12 +169,9 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 view: "request",
                 request: "control",
                 id: monitorId,
-                //connkey: $scope.connKey,
                 control: "moveCon" + cmd,
                 xge: "30",
                 yge: "30",
-                //user: loginData.username,
-                //pass: loginData.password
             }
 
         });
@@ -231,13 +188,9 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             $ionicLoading.hide();
             console.log("ERROR: " + JSON.stringify(resp));
         });
-
-        //});
     }
 
-
-
-       $scope.finishedLoadingImage = function () {
+    $scope.finishedLoadingImage = function () {
         console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
         /* $ionicLoading.show({
@@ -245,10 +198,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
              noBackdrop: true,
          });*/
     };
-
-
-
-
 
     // In Android, the app runs full steam while in background mode
     // while in iOS it gets suspended unless you ask for specific resources

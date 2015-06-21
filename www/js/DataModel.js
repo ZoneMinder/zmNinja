@@ -10,8 +10,6 @@
 angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', function ($http, $q, $ionicLoading, $ionicBackdrop) {
     // var deferred='';
     var monitorsLoaded = 0;
-    var simSize = 30; // how many monitors to simulate
-    var eventSimSize = 40; // events to simulare per monitor
     var montageSize = 3;
     var monitors = [];
     var oldevents = [];
@@ -20,83 +18,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'password': '',
         'url': '', // This is the ZM portal path
         'apiurl': '', // This is the API path
-        'simulationMode': false, // if true, data will be simulated. Not using this now
         'maxMontage': "10", //total # of monitors to display in montage
         'streamingurl': "",
-        'maxFPS':"3", // image streaming FPS
-        'montageQuality':"50", // montage streaming quality in %
-    };
-
-    // This is really a test mode. This is how I am validating
-    // how my app behaves if you have many monitors. If you set simulationMode to true
-    // then this is the function that getMonitors and getEvents calls
-
-    var simulation = {
-        fillSimulatedMonitors: function (cnt) {
-            var simmonitors = [];
-            console.log("*** SIM MONITORS: Returning " + cnt + " simulated monitors");
-            for (var i = 0; i < cnt; i++) {
-
-
-                simmonitors.push({
-                    "Monitor": {
-                        // Obviously this is dummy data
-                        "Id": i.toString(),
-                        "Name": "Sim-Monitor" + i.toString(),
-                        "Type": "Remote",
-                        "Function": "Modect",
-                        "Enabled": "1",
-                        "Width": "1280",
-                        "Height": "960",
-                        "Colours": "4",
-                        "MaxFPS": "10.00",
-                        "AlarmMaxFPS": "10.00",
-                        "AlarmFrameCount": "10.00"
-                    }
-                });
-
-            }
-            return simmonitors;
-        },
-
-        fillSimulatedEvents: function (cnt) {
-            var simevents = [];
-            if (monitors.length == 0) // we have arrived at events before simulating monitors
-            { // not sure if it will ever happen as I have a route resolve
-                console.log("Monitors have not been simulated yet. Filling them in");
-                monitors = simulation.fillSimulatedMonitors(simSize);
-            }
-            console.log("*** Returning " + cnt + " simulated events Per " + monitors.length + "Monitors");
-            var causes = ["Motion", "Signal", "Something else"];
-            for (var mon = 0; mon < monitors.length; mon++) {
-                console.log("Simulating " + cnt + "events for Monitor " + mon);
-                for (var i = 0; i < cnt; i++) {
-
-
-                    simevents.push({
-                        "Event": {
-                            // Obviously this is dummy data
-                            "Id": Math.floor(Math.random() * (5000 - 100 + 1)) + 1000,
-                            "MonitorId": mon.toString(),
-                            "Cause": causes[Math.floor(Math.random() * (2 - 0 + 1)) + 0],
-                            "Length": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
-                            "Name": "Event Simulation " + i.toString(),
-                            "Frames": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
-                            "AlarmFrames": Math.floor(Math.random() * (700 - 20 + 1)) + 20,
-                            "TotScore": Math.floor(Math.random() * (100 - 2 + 1)) + 2,
-                            "StartTime": "2015-04-24 09:00:00",
-                            "Notes": "This is simulated",
-
-                        }
-                    });
-
-                } // for i
-            } // for mon
-            // console.log ("Simulated: "+JSON.stringify(simmonitors));
-            return simevents;
-        },
-
-
+        'maxFPS': "3", // image streaming FPS
+        'montageQuality': "50", // montage streaming quality in %
     };
 
     return {
@@ -121,7 +46,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             }
 
 
-             if (window.localStorage.getItem("montageQuality") != undefined) {
+            if (window.localStorage.getItem("montageQuality") != undefined) {
                 loginData.montageQuality =
                     window.localStorage.getItem("montageQuality");
 
@@ -145,14 +70,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             }
 
-            if (window.localStorage.getItem("simulationMode") != undefined) {
-                // Remember to convert back to Boolean!
-                var tvar = window.localStorage.getItem("simulationMode");
-                loginData.simulationMode = (tvar === "true");
-                console.log("***** STORED SIMULATION IS " + tvar);
-                console.log("******* BOOLEAN VALUE IS " + loginData.simulationMode);
-
-            }
 
             if (window.localStorage.getItem("maxMontage") != undefined) {
                 loginData.maxMontage =
@@ -173,7 +90,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 console.log("maxFPS  " + loginData.maxFPS);
 
             }
-             if (window.localStorage.getItem("montageQuality") != undefined) {
+            if (window.localStorage.getItem("montageQuality") != undefined) {
                 loginData.montageQuality =
                     window.localStorage.getItem("montageQuality");
                 console.log("montageQuality  " + loginData.montageQuality);
@@ -194,14 +111,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 return 0; {}
         },
 
-        isSimulated: function () {
-            return loginData.simulationMode;
-        },
-
-        setSimulated: function (mode) {
-            loginData.simulationMode = mode;
-        },
-
         getLogin: function () {
             return loginData;
         },
@@ -212,12 +121,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("password", loginData.password);
             window.localStorage.setItem("url", loginData.url);
             window.localStorage.setItem("apiurl", loginData.apiurl);
-            window.localStorage.setItem("simulationMode", loginData.simulationMode);
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
 
-            if (loginData.maxFPS >30)
-            {
-                console.log ("MAXFPS Too high, maxing to 30");
+            if (loginData.maxFPS > 30) {
+                console.log("MAXFPS Too high, maxing to 30");
                 loginData.maxFPS = "30";
             }
             window.localStorage.setItem("maxFPS", loginData.maxFPS);
@@ -237,7 +144,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             window.localStorage.setItem("maxMontage", loginData.maxMontage);
 
-             window.localStorage.setItem("montageQuality", loginData.montageQuality);
+            window.localStorage.setItem("montageQuality", loginData.montageQuality);
 
 
         },
@@ -247,9 +154,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         // if 0. then it will return back the previously loaded monitor list if one exists, else
         // will issue a new HTTP API to get it
 
-        // I've wrapped this function in my own promise even though http returns a promise. This is because
-        // depending on forceReload and simulation mode, http may or may not be called. So I'm promisifying
-        // the non http stuff too to keep it consistent to the calling function.
+        // I've wrapped this function in my own promise even though http returns a promise.
 
         getMonitors: function (forceReload) {
             console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
@@ -262,7 +167,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 showDelay: 0
             });
             var d = $q.defer();
-            if (((monitorsLoaded == 0) || (forceReload == 1)) && (loginData.simulationMode != true)) // monitors are empty or force reload
+            if ((monitorsLoaded == 0) || (forceReload == 1)) // monitors are empty or force reload
             {
                 console.log("ZMDataModel: Invoking HTTP get to load monitors");
                 var apiurl = loginData.apiurl;
@@ -289,10 +194,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             } else // monitors are loaded
             {
-                if (loginData.simulationMode == true) {
-                    monitors = simulation.fillSimulatedMonitors(simSize);
-                    //fillSimulatedMonitors
-                }
                 console.log("Returning pre-loaded list of " + monitors.length + " monitors");
                 d.resolve(monitors);
                 $ionicLoading.hide();
@@ -347,22 +248,20 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
-           if (!loadingStr)
-           {
-               loadingStr = "Loading Events...";
-           }
+            if (!loadingStr) {
+                loadingStr = "Loading Events...";
+            }
             //if (loadingStr) loa
 
-            if (loadingStr != 'none')
-            {
-            $ionicLoading.show({
-                template: loadingStr,
-                animation: 'fade-in',
-                showBackdrop: true,
-                maxWidth: 200,
-                showDelay: 0,
-                duration: 15000, //specifically for Android - http seems to get stuck at times
-            });
+            if (loadingStr != 'none') {
+                $ionicLoading.show({
+                    template: loadingStr,
+                    animation: 'fade-in',
+                    showBackdrop: true,
+                    maxWidth: 200,
+                    showDelay: 0,
+                    duration: 15000, //specifically for Android - http seems to get stuck at times
+                });
             }
             //$ionicBackdrop.retain();
 
@@ -378,46 +277,38 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             }
             console.log("Constructed URL is " + myurl);
 
-            if (loginData.simulationMode == true) {
-                console.log("Events will be simulated");
-                myevents = simulation.fillSimulatedEvents(eventSimSize);
-                d.resolve(myevents);
-                if (loadingStr != 'none') $ionicLoading.hide();
-                return d.promise;
-            } else { // not simulated
 
-                $http.get(myurl /*,{timeout:15000}*/ )
-                    .success(function (data) {
-                        if (loadingStr != 'none') $ionicLoading.hide();
-                        //myevents = data.events;
-                        myevents = data.events.reverse();
-                        if (monitorId == 0) {
-                            oldevents = myevents;
-                        }
-                        //console.log (JSON.stringify(data));
-                        console.log("DataModel Returning " + myevents.length + "events for page"+pageId);
-                        d.resolve(myevents);
-                        return d.promise;
+            $http.get(myurl /*,{timeout:15000}*/ )
+                .success(function (data) {
+                    if (loadingStr != 'none') $ionicLoading.hide();
+                    //myevents = data.events;
+                    myevents = data.events.reverse();
+                    if (monitorId == 0) {
+                        oldevents = myevents;
+                    }
+                    //console.log (JSON.stringify(data));
+                    console.log("DataModel Returning " + myevents.length + "events for page" + pageId);
+                    d.resolve(myevents);
+                    return d.promise;
 
-                    })
-                    .error(function (err) {
-                        if (loadingStr != 'none') $ionicLoading.hide();
-                        console.log("HTTP Events error " + err);
-                        // I need to reject this as I have infinite scrolling
-                        // implemented in EventCtrl.js --> and if it does not know
-                        // it got an error going to the next page, it will get into
-                        // an infinite loop as we are at the bottom of the list always
+                })
+                .error(function (err) {
+                    if (loadingStr != 'none') $ionicLoading.hide();
+                    console.log("HTTP Events error " + err);
+                    // I need to reject this as I have infinite scrolling
+                    // implemented in EventCtrl.js --> and if it does not know
+                    // it got an error going to the next page, it will get into
+                    // an infinite loop as we are at the bottom of the list always
 
-                        d.reject(myevents);
+                    d.reject(myevents);
 
-                        // FIXME: Check what pagination does to this logic
-                        if (monitorId == 0) {
-                            oldevents = [];
-                        }
-                        return d.promise;
-                    });
-                return d.promise;
-            } // not simulated
+                    // FIXME: Check what pagination does to this logic
+                    if (monitorId == 0) {
+                        oldevents = [];
+                    }
+                    return d.promise;
+                });
+            return d.promise;
         },
 
         getMontageSize: function () {

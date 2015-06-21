@@ -34,29 +34,25 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.username = $scope.loginData.username.trim();
         $scope.loginData.streamingurl = $scope.loginData.streamingurl.trim();
 
-        if ($scope.loginData.url.slice(-1) == '/')
-        {
-            $scope.loginData.url = $scope.loginData.url.slice(0,-1);
+        if ($scope.loginData.url.slice(-1) == '/') {
+            $scope.loginData.url = $scope.loginData.url.slice(0, -1);
 
         }
 
-        if ($scope.loginData.apiurl.slice(-1) == '/')
-        {
-            $scope.loginData.apiurl = $scope.loginData.apiurl.slice(0,-1);
+        if ($scope.loginData.apiurl.slice(-1) == '/') {
+            $scope.loginData.apiurl = $scope.loginData.apiurl.slice(0, -1);
 
         }
 
 
-         if ($scope.loginData.streamingurl.slice(-1) == '/')
-        {
-            $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0,-1);
+        if ($scope.loginData.streamingurl.slice(-1) == '/') {
+            $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -1);
 
         }
 
         // strip cgi-bin if it is there but only at the end
-        if ($scope.loginData.streamingurl.slice(-7).toLowerCase() == 'cgi-bin')
-        {
-             $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0,-7);
+        if ($scope.loginData.streamingurl.slice(-7).toLowerCase() == 'cgi-bin') {
+            $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -7);
         }
 
 
@@ -65,22 +61,22 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         var apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
         var portalurl = $scope.loginData.url + '/index.php';
         var streamingurl = $scope.loginData.streamingurl +
-            '/cgi-bin/zms?user='+$scope.loginData.username+"&pass="+$scope.loginData.password;
+            '/cgi-bin/zms?user=' + $scope.loginData.username + "&pass=" + $scope.loginData.password;
 
 
-        console.log("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: "+streamingurl);
+        console.log("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
 
 
         // Let's do a sanity check to see if the URLs are ok
 
         $ionicLoading.show({
-                template: 'Checking data...',
-                animation: 'fade-in',
-                showBackdrop: true,
-                duration: 15000,
-                maxWidth: 200,
-                showDelay: 0
-            });
+            template: 'Checking data...',
+            animation: 'fade-in',
+            showBackdrop: true,
+            duration: 15000,
+            maxWidth: 200,
+            showDelay: 0
+        });
 
 
         $q.all([
@@ -106,11 +102,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                         },
                         {
                             text: 'Details...',
-                            onTap: function (e)
-                            {
+                            onTap: function (e) {
                                 $ionicPopup.alert({
                                     title: 'Error Details',
-                                    template: JSON.stringify(error)});
+                                    template: JSON.stringify(error)
+                                });
                             }
                         }
                     ]

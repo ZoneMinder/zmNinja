@@ -1,41 +1,16 @@
 <ion-modal-view cache="false">
-
-    <!-- <ion-header-bar>
-        <h1 class="title">
-            <span style="float:left">
-                <button class="button  button-clear icon icon-left ion-close" ng-click="closeModal()" >Close</button>
-            </span>
-            <span style="float:right">
-                {{eventName}} (Duration:{{eventDur}}s)
-            </span>
-        </h1>
-    </ion-header-bar> -->
     <ion-content>
         <div ng-controller="ModalCtrl">
 
-        <!-- replay can also be gapless imageonload="finishedLoadingImage()"-->
+            <!-- replay can also be gapless imageonload="finishedLoadingImage()"-->
 
-
-        <div ng-if="!isSimulated()">
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
 
                 <img imageonload="finishedLoadingImage()" ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" width="100%" />
 
-                <!-- <img  imageonload="finishedLoadingImage()" ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps=3&buffer=1000&rand={{rand}}" width="100%" />-->
+
             </ion-scroll>
-            </div>
-
     </ion-content>
-
-    <!--
- <div ng-if="isControllable=='1'">
-    <nav mfb-menu position="bl" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-        <button mfb-button icon="ion-android-arrow-dropleft-circle" label="left" ng-click="controlPTZ('Left',monitorId)"></button>
-        <button mfb-button icon="ion-android-arrow-dropright-circle" label="right" ng-click="controlPTZ('Right',monitorId)"></button>
-    </nav>
-
-</div>-->
-
 
 
     <div ng-show="isControllable=='1' && showPTZ">
@@ -43,17 +18,13 @@
             <circular options="radialMenuOptions">
             </circular>
         </div>
-        </div>
     </div>
-
-
+    </div>
 
 </ion-modal-view>
 
 <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-        <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView()"></button>
-
-        <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();"></button>
-
-        <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal()"></button>
-    </nav>
+    <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView()"></button>
+    <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();"></button>
+    <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal()"></button>
+</nav>

@@ -1,5 +1,6 @@
 /* jshint -W041 */
-/* jshint -W083 */ /*This is for the loop closure I am using in line 143 */
+/* jshint -W083 */
+/*This is for the loop closure I am using in line 143 */
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,moment */
 
@@ -34,7 +35,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
 
     $scope.navTitle = 'Tab Page';
-   // $scope.chart="";
+    // $scope.chart="";
     $scope.leftButtons = [{
         type: 'button-icon icon ion-navicon',
         tap: function (e) {
@@ -42,7 +43,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         }
         }];
 
- //   $scope.chartObject=[{},{},{},{}];
+    //   $scope.chartObject=[{},{},{},{}];
 
 
     angular.element(document).ready(function () {
@@ -51,25 +52,20 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
     // FIXME: No idea why this is not working
     // it seems it can't get a handle to chart
-    $scope.handleChartClick = function(event)
-    {
+    $scope.handleChartClick = function (event) {
 
         // console.log (JSON.stringify( $scope.chart1.getBarsAtEvent(event)));
 
     };
 
-
-    $scope.generateTCChart = function(id,chartTitle, hrs)
-    {
+    $scope.generateTCChart = function (id, chartTitle, hrs) {
         var monitors = [];
-
-
-         var dateRange = "";
+        var dateRange = "";
         var startDate = "";
         var endDate = "";
-        $scope.barHeight=$rootScope.devHeight;
+        $scope.barHeight = $rootScope.devHeight;
 
-         if (hrs) {
+        if (hrs) {
             // Apply a time based filter if I am not watching all events
             var cur = moment();
             endDate = cur.format("YYYY-MM-DD hh:mm:ss");
@@ -79,32 +75,28 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         }
 
         var loginData = ZMDataModel.getLogin();
-
-
-         $scope.data={};
-         $scope.data = {
-      labels: [],
-      datasets: [
-        {
-          label: '',
-           fillColor: 'rgba(151,187,205,0.5)',
-          strokeColor: 'rgba(151,187,205,0.8)',
-            highlightFill: 'rgba(0,163,124,0.5)',
-       //   highlightFill: 'rgba(151,187,205,0.75)',
-         // highlightStroke: 'rgba(151,187,205,1)',
-          data: []
+        $scope.data = {};
+        $scope.data = {
+            labels: [],
+            datasets: [
+                {
+                    label: '',
+                    fillColor: 'rgba(151,187,205,0.5)',
+                    strokeColor: 'rgba(151,187,205,0.8)',
+                    highlightFill: 'rgba(0,163,124,0.5)',
+                    //   highlightFill: 'rgba(151,187,205,0.75)',
+                    // highlightStroke: 'rgba(151,187,205,1)',
+                    data: []
         },
-          ]
-    };
+          ]};
 
-          ZMDataModel.getMonitors(0).then(function (data) {
-
+        ZMDataModel.getMonitors(0).then(function (data) {
             monitors = data;
             var adjustedHeight = monitors.length * 30;
             if (adjustedHeight > $rootScope.devHeight) {
 
-               $scope.barHeight = adjustedHeight;
-                console.log ("********* BAR HEIGHT TO "+$scope.barHeight);
+                $scope.barHeight = adjustedHeight;
+                console.log("********* BAR HEIGHT TO " + $scope.barHeight);
             }
 
             for (var i = 0; i < monitors.length; i++) {
@@ -114,7 +106,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
                     $scope.data.labels.push(monitors[j].Monitor.Name);
 
-                   //$scope.chartObject[id].data.push([monitors[j].Monitor.Name,'0','color:#76A7FA','0']);
+                    //$scope.chartObject[id].data.push([monitors[j].Monitor.Name,'0','color:#76A7FA','0']);
                     // $scope.chartObject.data[j+1]=([monitors[j].Monitor.Name,'100','color:#76A7FA','0']);
 
                     var dateString = "";
@@ -124,70 +116,39 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                     var url = loginData.apiurl +
                         "/events/index/MonitorId:" + monitors[j].Monitor.Id + dateString +
                         ".json?page=1";
-                   // console.log("Monitor event URL:" + url);
-                    if (!ZMDataModel.isSimulated()) {
-                        $http.get(url /*,{timeout:15000}*/ )
-                            .success(function (data) {
-                                console.log("**** EVENT COUNT FOR MONITOR " +
-                                    monitors[j].Monitor.Id + " IS " + data.pagination.count);
+                    // console.log("Monitor event URL:" + url);
 
-
+                    $http.get(url /*,{timeout:15000}*/ )
+                        .success(function (data) {
+                            console.log("**** EVENT COUNT FOR MONITOR " +
+                                monitors[j].Monitor.Id + " IS " + data.pagination.count);
                             $scope.data.datasets[0].data[j] = data.pagination.count;
-
-
-
-
-
-                            })
-                            .error(function (data) {
-                                // ideally I should be treating it as an error
-                                // but what I am really doing now is treating it like no events
-                                // works but TBD: make this into a proper error handler
-
-
-                             $scope.data.datasets[0].data[j] = 0;
-
-
-                            });
-                    } // is not simulated
-                    else // simulated: grab a random event count
-                    {
-                        var rndEventCount = Math.floor(Math.random() * (100 - 20 + 1)) + 20;
-                         $scope.data.datasets[0].data[j] = rndEventCount;
-
-
-                    }
+                        })
+                        .error(function (data) {
+                            // ideally I should be treating it as an error
+                            // but what I am really doing now is treating it like no events
+                            // works but TBD: make this into a proper error handler
+                            $scope.data.datasets[0].data[j] = 0;
+                        });
                 })(i); // j
-
             } //for
-
         });
 
+        $scope.options = {
 
+            responsive: true,
+            scaleBeginAtZero: true,
+            scaleShowGridLines: false,
+            scaleGridLineColor: "rgba(0,0,0,.05)",
+            scaleGridLineWidth: 1,
+            barShowStroke: true,
+            barStrokeWidth: 2,
+            barValueSpacing: 5,
+            barDatasetSpacing: 1,
+            showTooltip: true,
 
-
-         $scope.options = {
-
-     responsive: true,
-     scaleBeginAtZero: true,
-     scaleShowGridLines: false,
-     scaleGridLineColor: "rgba(0,0,0,.05)",
-     scaleGridLineWidth: 1,
-     barShowStroke: true,
-     barStrokeWidth: 2,
-     barValueSpacing: 5,
-     barDatasetSpacing: 1,
-     showTooltip: true,
-
-     //String - A legend template
-     //  legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
- };
-
-
-
- };
-
-
-
-
+            //String - A legend template
+            //  legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
+        };
+    };
 }]);

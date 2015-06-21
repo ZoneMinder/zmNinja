@@ -9,27 +9,24 @@
         <div ng-controller="ModalCtrl">
             <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
             <div class="list card" ng-repeat="monitor in monitors">
-                <!-- <a href="#/app/events" ng-click="toggleLeft()"> -->
+
                 <div class="item" ng-style="{'background-color': monitor.Monitor.Enabled=='1'?'white':'white'}">
                     <div ng-if="monitor.Monitor.Enabled == '1'">
                         <span class='item item-icon-left item-icon-right'>
-                <i class="icon ion-ios-monitor-outline"></i>
-                 <b>{{monitor.Monitor.Name}}</b>
+                            <i class="icon ion-ios-monitor-outline"></i>
+                            <b>{{monitor.Monitor.Name}}</b>
+                            <i class="icon {{monitor.Monitor.char}}" style="color:{{monitor.Monitor.color}};"></i>
 
-
-                <i class="icon {{monitor.Monitor.char}}" style="color:{{monitor.Monitor.color}};"></i>
-
-                </span>
+                        </span>
                     </div>
 
 
                     <div ng-if="monitor.Monitor.Enabled != '1'">
                         <span class='item item-icon-left item-icon-right'>
-                    <i class="icon ion-ios-monitor-outline"></i>
-                     <b>{{monitor.Monitor.Name}}</b>
-                    <i class="icon {{monitor.Monitor.char}}" style="color:grey;"></i>
-                </span>
-
+                        <i class="icon ion-ios-monitor-outline"></i>
+                         <b>{{monitor.Monitor.Name}}</b>
+                        <i class="icon {{monitor.Monitor.char}}" style="color:grey;"></i>
+                    </span>
                     </div>
 
 
@@ -41,7 +38,8 @@
                         <br/> Alarm Max FPS:{{monitor.Monitor.AlarmMaxFPS}}
                         <br/> Alarm Frame Count: {{monitor.Monitor.AlarmFrameCount}}
                         <br/> Status: {{monitor.Monitor.isRunningText}}
-                        <br/><br/>
+                        <br/>
+                        <br/>
                     </p>
 
                     <div style="float:right;">
