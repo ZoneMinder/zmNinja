@@ -12,6 +12,8 @@ angular.module('zmApp', [
 
 
 
+
+
 // this directive will be load any time an image completes loading 
 // via img tags where this directive is added (I am using this in
 // events and mionitor view to show a loader while the image is
@@ -30,6 +32,9 @@ angular.module('zmApp', [
 
     };
 })
+
+
+
 
 // In Android, HTTP requests seem to get stuck once in a while
 // It may be a crosswalk issue.
@@ -61,6 +66,70 @@ angular.module('zmApp', [
     };
 })
 
+.factory('zmAutoLogin', function($interval, ZMDataModel, $http)  {
+    var zmAutoLoginHandle;
+    function doLogin()
+    {
+        console.log ("**** ZM AUTO LOGIN CALLED");
+        var loginData = ZMDataModel.getLogin();
+        $http({
+            method:'POST',
+            url:loginData.url + '/index.php',
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded',
+               'Accept': 'application/json',
+            },
+            transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                    str.push(encodeURIComponent(p) + "=" +
+                        encodeURIComponent(obj[p]));
+                var foo = str.join("&");
+                //console.log("****RETURNING " + foo);
+                return foo;
+            },
+
+            data: {
+                username:loginData.username,
+                password:loginData.password,
+                action:"login",
+                view:"console"
+            }
+        })
+        .success(function(data)
+        {
+            console.log ("**** ZM Login OK");
+        })
+        .error(function(error)
+        {
+            console.log ("**** ZM Login FAILED");
+        });
+    }
+
+    function start()
+    {
+        $interval.cancel(zmAutoLoginHandle);
+        doLogin();
+        zmAutoLoginHandle = $interval(function()
+        {
+            doLogin();
+
+        },5*60*1000); // Auto login every 5 minutes
+                      // PHP timeout is around 10 minutes
+                      // should be ok?
+    }
+    function stop()
+    {
+        $interval.cancel(zmAutoLoginHandle);
+
+    }
+
+    return {
+        start: start,
+        stop: stop
+    };
+})
+
 /* For future use - does not work with img src intercepts
 .factory ('httpAuthIntercept', function ($rootScope, $q)
 {
@@ -88,7 +157,8 @@ angular.module('zmApp', [
 */
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http) {
+
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin) {
 
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
@@ -115,7 +185,7 @@ angular.module('zmApp', [
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
         var requireLogin = toState.data.requireLogin;
 
-        if (ZMDataModel.isLoggedIn() || ZMDataModel.isSimulated()) {
+        if (ZMDataModel.isLoggedIn()) {
             console.log("State transition is authorized");
             return;
         }
@@ -126,7 +196,7 @@ angular.module('zmApp', [
 
             $ionicPopup.alert({
                 title: "Credentials Required",
-                template: "Please provide your ZoneMinder credentials or switch to simulation mode"
+                template: "Please provide your ZoneMinder credentials"
             });
             // for whatever reason, .go was resulting in digest loops.
             // if you don't prevent, states will stack
@@ -165,7 +235,18 @@ angular.module('zmApp', [
             $state.go($state.current, {}, {
                 reload: true
             });
+            zmAutoLogin.start();
         }, false);
+
+
+        document.addEventListener("pause", function () {
+            console.log("****The application is going into  background");
+             zmAutoLogin.stop();
+
+        }, false);
+
+
+
 
 
         if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -183,45 +264,12 @@ angular.module('zmApp', [
     // lets POST so we get a session ID right hre
   //  var loginData = ZMDataModel.getLogin();
 
-    console.log ("*** INIT LOGIN ****");
-    $http({
-        method:'POST',
-        url:loginData.url + '/index.php',
-        headers:{
-            'Content-Type': 'application/x-www-form-urlencoded',
-           'Accept': 'application/json',
-        },
-        transformRequest: function (obj) {
-            var str = [];
-            for (var p in obj)
-                str.push(encodeURIComponent(p) + "=" +
-                    encodeURIComponent(obj[p]));
-            var foo = str.join("&");
-            console.log("****RETURNING " + foo);
-            return foo;
-        },
-
-        data: {
-            username:loginData.username,
-            password:loginData.password,
-            action:"login",
-            view:"console"
-        }
-    })
-    .success(function(data)
-    {
-        console.log ("**** INIT LOGIN OK");
-    })
-    .error(function(error)
-    {
-        console.log ("**** INIT LOGIN FAILED");
-    });
+    console.log ("Setting up POST LOGIN timer");
+    zmAutoLogin.start();
 
 
 
-
-
-})
+}) //run
 
 // My route map connecting menu options to their respective templates and controllers
 .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
