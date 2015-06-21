@@ -7,10 +7,6 @@
 
 angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', function ($ionicPopup, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
 
-
-    //FIXME:curl http://server/zm/api/monitors/daemonStatus/id:5/daemon:zmc.json to check if daemon is alive
-    // but reutrns true for pending
-
     $scope.monitors = [];
 
     $scope.openMenu = function () {
@@ -26,9 +22,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
             duration: 2000
         });
     };
-
-
-
 
     // This function takes care of changing function parameters
     // For now, I've only limited it to enable/disable and change monitor mode
@@ -165,9 +158,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     };
 
 
-    $scope.isSimulated = function () {
-        return ZMDataModel.isSimulated();
-    };
 
     // same logic as EventCtrl.js
     $scope.finishedLoadingImage = function () {
@@ -258,9 +248,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                 console.log("**** PORTAL LOGIN FAILED");
             });
 
-
-
-
     };
 
     $scope.closeModal = function () {
@@ -281,17 +268,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     function controlPTZ(monitorId, cmd) {
 
         console.log("Command value " + cmd + " with MID=" + monitorId);
-
-        if (ZMDataModel.isSimulated()) {
-            var str = "simulation mode. no action taken";
-            $ionicLoading.show({
-                template: str,
-                noBackdrop: true,
-                duration: 3000
-            });
-            return;
-        }
-
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "please wait...",
@@ -300,33 +276,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         });
 
         var loginData = ZMDataModel.getLogin();
-
-        /*  $http({
-              method:'POST',
-              url:loginData.url + '/index.php',
-              headers:{
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                 'Accept': 'application/json',
-              },
-              transformRequest: function (obj) {
-                  var str = [];
-                  for (var p in obj)
-                      str.push(encodeURIComponent(p) + "=" +
-                          encodeURIComponent(obj[p]));
-                  var foo = str.join("&");
-                  console.log("****RETURNING " + foo);
-                  return foo;
-              },
-
-              data: {
-                  username:loginData.username,
-                  password:loginData.password,
-                  action:"login",
-                  view:"console"
-              }
-          })
-          .success (function(data,status,header,config)
-          {*/
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "Sending PTZ..",
@@ -334,11 +283,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
             duration: 15000,
         });
         // console.log ("ANGULAR VERSION: "+JSON.stringify(angular.version));
-
         // console.log('Set-Cookie'+ header('Set-Cookie')); //
 
-        // FIXME: Put  in an interval and do this once every few
-        // minutes so it does not time out
         var req = $http({
             method: 'POST',
             /*timeout: 15000,*/

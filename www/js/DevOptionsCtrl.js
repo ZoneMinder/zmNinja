@@ -29,7 +29,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         }
 
 
-         if ((parseInt($scope.loginData.montageQuality) <10) || (parseInt($scope.loginData.montageQuality)>100))
+         if ((parseInt($scope.loginData.montageQuality) <10) || (parseInt($scope.loginData.montageQuality)>70))
         {
             $scope.loginData.montageQuality='50';
         }

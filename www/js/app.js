@@ -10,10 +10,6 @@ angular.module('zmApp', [
                         ])
 
 
-
-
-
-
 // this directive will be load any time an image completes loading 
 // via img tags where this directive is added (I am using this in
 // events and mionitor view to show a loader while the image is
@@ -32,8 +28,6 @@ angular.module('zmApp', [
 
     };
 })
-
-
 
 
 // In Android, HTTP requests seem to get stuck once in a while
@@ -66,6 +60,7 @@ angular.module('zmApp', [
     };
 })
 
+// This service automatically logs into ZM at periodic intervals
 .factory('zmAutoLogin', function($interval, ZMDataModel, $http)  {
     var zmAutoLoginHandle;
     function doLogin()
@@ -158,7 +153,8 @@ angular.module('zmApp', [
 
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin)
+{
 
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
@@ -168,7 +164,6 @@ angular.module('zmApp', [
         ZMDataModel.getMonitors(0);
 
     }
-
 
     // this works reliably on both Android and iOS. The "onorientation" seems to reverse w/h in Android. Go figure.
     // http://stackoverflow.com/questions/1649086/detect-rotation-of-android-phone-in-the-browser-with-javascript
@@ -246,9 +241,6 @@ angular.module('zmApp', [
         }, false);
 
 
-
-
-
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
@@ -258,16 +250,13 @@ angular.module('zmApp', [
         }
 
 
-    });
+    }); //platformReady
 
 
     // lets POST so we get a session ID right hre
-  //  var loginData = ZMDataModel.getLogin();
 
     console.log ("Setting up POST LOGIN timer");
     zmAutoLogin.start();
-
-
 
 }) //run
 
@@ -287,8 +276,6 @@ angular.module('zmApp', [
             url: "/login",
             templateUrl: "templates/login.html",
             controller: 'zmApp.LoginCtrl',
-
-
         });
 
     $stateProvider
@@ -299,8 +286,6 @@ angular.module('zmApp', [
             url: "/help",
             templateUrl: "templates/help.html",
             controller: 'zmApp.HelpCtrl',
-
-
         })
 
     .state('monitors', {
@@ -319,7 +304,6 @@ angular.module('zmApp', [
 
     })
 
-
     .state('events', {
         data: {
             requireLogin: true
@@ -336,7 +320,6 @@ angular.module('zmApp', [
 
     })
 
-    //n
     .state('events-graphs', {
         data: {
             requireLogin: true
@@ -355,7 +338,6 @@ angular.module('zmApp', [
         controller: 'zmApp.StateCtrl',
     })
 
-
     .state('devoptions', {
         data: {
             requireLogin: true
@@ -364,8 +346,6 @@ angular.module('zmApp', [
         templateUrl: "templates/devoptions.html",
         controller: 'zmApp.DevOptionsCtrl',
     })
-
-
 
     .state('montage', {
         data: {
@@ -383,7 +363,6 @@ angular.module('zmApp', [
         params: {minimal:false, isRefresh:false}
 
     });
-
 
 
     // if none of the above states are matched, use this as the fallback
@@ -404,4 +383,4 @@ angular.module('zmApp', [
         $state.go("montage");
     });
 
-});
+}); //config
