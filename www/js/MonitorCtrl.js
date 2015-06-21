@@ -1,4 +1,4 @@
-/* jshint -W041 */
+/* jshint -W041, -W083 */
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
@@ -12,9 +12,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     // but reutrns true for pending
 
     $scope.monitors = [];
-
-
-
 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
@@ -30,117 +27,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         });
     };
 
-    $scope.radialMenuOptions = {
-        content: '',
 
-        background: '#2F4F4F',
-        isOpen: false,
-        toggleOnClick: false,
-        button: {
-            cssClass: "fa  fa-arrows-alt",
-        },
-        items: [
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, 'Down');
-                }
-    },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, 'DownLeft');
-                }
-    },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-
-                onclick: function () {
-                    controlPTZ($scope.monitorId, 'Left');
-                }
-    },
-            {
-                content: 'D',
-                empty: true,
-
-                onclick: function () {
-                    console.log('About');
-                }
-    },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, 'UpLeft');
-                }
-    },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, 'Up');
-                }
-    },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, 'UpRight');
-                }
-    },
-
-            {
-                content: 'H',
-                empty: true,
-                onclick: function () {
-                    console.log('About');
-                }
-    },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, 'Right');
-                }
-    },
-
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, 'DownRight');
-                }
-    },
-
-            {
-                content: 'K',
-                empty: true,
-                onclick: function () {
-                    console.log('About');
-                }
-    },
-
-
-  ]
-    };
 
 
     // This function takes care of changing function parameters
@@ -450,7 +337,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
         // console.log('Set-Cookie'+ header('Set-Cookie')); //
 
-
+        // FIXME: Put  in an interval and do this once every few
+        // minutes so it does not time out
         var req = $http({
             method: 'POST',
             /*timeout: 15000,*/
@@ -468,6 +356,12 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                 console.log("****RETURNING " + foo);
                 return foo;
             },
+
+            // FIXME: Refer to
+            // zoneminder/skins/mobile/includes/control_functions.php
+            // for move commands
+            // logic - /zm/api/monitors/X.json, read ControlId = Y
+            // then zm/api/controls/Y.json
 
             data: {
                 view: "request",
@@ -505,14 +399,75 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     console.log("***EVENTS: Waiting for Monitors to load before I proceed");
 
     $scope.monitors = message;
+    var loginData = ZMDataModel.getLogin();
+     monitorStateCheck();
 
+    function monitorStateCheck()
+    {
+        var apiMonCheck;
+
+        // The status is provided by zmdc.pl
+        // "not running", "pending", "running since", "Unable to connect"
+
+         for (var i = 0; i < $scope.monitors.length; i++) {
+            (function (j)
+            {
+                $scope.monitors[j].Monitor.isRunningText = "...";
+                $scope.monitors[j].Monitor.isRunning = "...";
+                $scope.monitors[j].Monitor.color = '#1E90FF';
+                $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
+                apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
+                console.log ("**** ZMC CHECK " + apiMonCheck);
+                $http.get(apiMonCheck)
+                .success(function(data)
+                {
+                    if (data.statustext.indexOf("not running")>-1)
+                    {
+                        $scope.monitors[j].Monitor.isRunning = "false" ;
+                        $scope.monitors[j].Monitor.color = 'red';
+                        $scope.monitors[j].Monitor.char = "ion-close-circled";
+                    }
+                    else if (data.statustext.indexOf("pending")>-1)
+                    {
+                        $scope.monitors[j].Monitor.isRunning = "pending" ;
+                        $scope.monitors[j].Monitor.color = 'orange';
+                    }
+                    else if (data.statustext.indexOf("running since")>-1)
+                    {
+                        $scope.monitors[j].Monitor.isRunning = "true" ;
+                        $scope.monitors[j].Monitor.color = 'green';
+                    }
+
+                    else if (data.statustext.indexOf("Unable to connect")>-1)
+                    {
+                        $scope.monitors[j].Monitor.isRunning = "false" ;
+                        $scope.monitors[j].Monitor.color = 'red';
+                        $scope.monitors[j].Monitor.char = "ion-close-circled";
+                    }
+
+
+                    $scope.monitors[j].Monitor.isRunningText = data.statustext;
+                })
+                .error (function (data)
+                {
+                    $scope.monitors[j].Monitor.isRunning = "error";
+                    $scope.monitors[j].Monitor.color = '#800000';
+                     $scope.monitors[j].Monitor.char = "ion-help-circled";
+                });
+
+
+            })(i);
+         }
+    }
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
         $scope.monitors = [];
 
         var refresh = ZMDataModel.getMonitors(1);
+
         refresh.then(function (data) {
             $scope.monitors = data;
+            monitorStateCheck();
             $scope.$broadcast('scroll.refreshComplete');
         });
 
