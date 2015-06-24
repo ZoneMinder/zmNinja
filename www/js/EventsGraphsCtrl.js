@@ -8,9 +8,6 @@
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
 
-// FIXME: I need to clean this up, the animation is stupid because the data loads
-// dynamically. I think I should really be using $q.all to animate after we get everything
-
 angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $element) {
     console.log("Inside Graphs controller");
     $scope.openMenu = function () {
@@ -34,6 +31,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     });
 
 
+    //-------------------------------------------------
+    // Controller main
+    //-------------------------------------------------
+
     $scope.navTitle = 'Tab Page';
     // $scope.chart="";
     $scope.leftButtons = [{
@@ -42,8 +43,6 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             $scope.toggleMenu();
         }
         }];
-
-    //   $scope.chartObject=[{},{},{},{}];
 
 
     angular.element(document).ready(function () {
@@ -58,6 +57,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
     };
 
+    //-------------------------------------------------
+    // Generates a bar graph with data provided
+    //-------------------------------------------------
     $scope.generateTCChart = function (id, chartTitle, hrs) {
         var monitors = [];
         var dateRange = "";
@@ -150,5 +152,5 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             //String - A legend template
             //  legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
         };
-    };
+    }; //generateTCChart
 }]);

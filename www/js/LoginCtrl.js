@@ -9,10 +9,21 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $scope.loginData = ZMDataModel.getLogin();
 
+//-------------------------------------------------------------------------------
+// Adds http to url if not present
+// http://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
+//-------------------------------------------------------------------------------
+function addhttp(url) {
+   if (!/^(f|ht)tps?:\/\//i.test(url)) {
+      url = "http://" + url;
+   }
+   return url;
+}
 
-
+    //-----------------------------------------------------------------------------
     // Perform the login action when the user submits the login form
-    $scope.login = function () {
+    //-----------------------------------------------------------------------------
+    $scope.save = function () {
         console.log('Saving login');
 
         if (parseInt($scope.loginData.maxMontage) > 10) {
@@ -54,6 +65,29 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         if ($scope.loginData.streamingurl.slice(-7).toLowerCase() == 'cgi-bin') {
             $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -7);
         }
+
+        // check for protocol and if not put it in
+
+        $scope.loginData.url = addhttp($scope.loginData.url);
+         $scope.loginData.apiurl = addhttp($scope.loginData.apiurl);
+         $scope.loginData.streamingurl = addhttp($scope.loginData.streamingurl);
+
+        if ($scope.loginData.useSSL)
+        {
+            // replace all http with https
+            $scope.loginData.url = $scope.loginData.url.replace("http:","https:");
+            $scope.loginData.apiurl = $scope.loginData.apiurl.replace("http:","https:");
+            $scope.loginData.streamingurl = $scope.loginData.streamingurl.replace("http:","https:");
+
+        }
+        else
+        {
+            // replace all https with http
+            $scope.loginData.url = $scope.loginData.url.replace("https:","http:");
+            $scope.loginData.apiurl = $scope.loginData.apiurl.replace("https:","http:");
+            $scope.loginData.streamingurl = $scope.loginData.streamingurl.replace("https:","http:");
+        }
+
 
 
         // FIXME:: Do a login id check too

@@ -6,154 +6,9 @@
 
 angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams','$ionicHistory','$ionicScrollDelegate', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http,$state, $stateParams, $ionicHistory,$ionicScrollDelegate) {
 
-
-    // Triggered when you enter/exit full screen
-    $scope.switchMinimal = function()
-    {
-        $scope.minimal = !$scope.minimal;
-        console.log ("Hide Statusbar");
-        ionic.Platform.fullScreen($scope.minimal,!$scope.minimal);
-         $interval.cancel(intervalHandle); //we will renew on reload
-        // We are reloading this view, so we don't want entry animations
-        $ionicHistory.nextViewOptions({
-              disableAnimate: true,
-              disableBack: true
-            });
-      $state.go("montage", {minimal: $scope.minimal,
-                            isRefresh:true});
-      //$state.reload();
-    };
-
-      // Show/Hide PTZ control
-      $scope.togglePTZ = function () {
-        $scope.showPTZ = !$scope.showPTZ;
-    };
-
-
-     $scope.openModal = function (mid, controllable) {
-        console.log("Open Monitor Modal");
-
-        $scope.monitorId = mid;
-        $scope.LoginData = ZMDataModel.getLogin();
-        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-
-        // This is a modal to show the monitor footage
-        $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            })
-            .then(function (modal) {
-                $scope.modal = modal;
-
-                $ionicLoading.show({
-                    template: "please wait...",
-                    noBackdrop: true,
-                    duration: 15000
-                });
-            $scope.isControllable = controllable;
-                $scope.showPTZ = false;
-                $scope.modal.show();
-            });
-
-             // do a post login for PTZ
-        var loginData = ZMDataModel.getLogin();
-        console.log("*** MODAL PORTAL LOGIN ****");
-        $http({
-                method: 'POST',
-                url: loginData.url + '/index.php',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json',
-                },
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" +
-                            encodeURIComponent(obj[p]));
-                    var foo = str.join("&");
-                    console.log("****RETURNING " + foo);
-                    return foo;
-                },
-
-                data: {
-                    username: loginData.username,
-                    password: loginData.password,
-                    action: "login",
-                    view: "console"
-                }
-            })
-            .success(function (data) {
-                console.log("**** PORTAL  LOGIN OK");
-            })
-            .error(function (error) {
-                console.log("**** PORTAL LOGIN FAILED");
-            });
-
-    };
-
-    $scope.closeModal = function () {
-        console.log("Close & Destroy Monitor Modal");
-        $scope.modal.remove();
-
-    };
-
-    function scaleMontage()
-    {
-        var index = montageIndex;
-        console.log (" MONTAGE INDEX === " + montageIndex);
-        console.log ("Scaling Monitor " + index);
-       if ($scope.monitorSize[index] == 6)
-            $scope.scaleDirection[index] = -1;
-
-        if ($scope.monitorSize[index] == 1)
-            $scope.scaleDirection[index] = 1;
-
-        $scope.monitorSize[index] += $scope.scaleDirection[index] ;
-
-        console.log ("Changed size to "+$scope.monitorSize[index]);
-
-        var monsizestring = "";
-        var i;
-        for ( i = 0; i<$scope.monitors.length; i++)
-        {
-            monsizestring = monsizestring + $scope.monitorSize[i]+':';
-        }
-        monsizestring = monsizestring.slice(0,-1); // kill last :
-        console.log ("Setting monsize string:"+monsizestring);
-        window.localStorage.setItem("montageArraySize", monsizestring);
-    }
-
-    $scope.onHold = function (index)
-    {
-        montageIndex = index;
-        isLongPressActive = true;
-            intervalHandleMontage = $interval(function () {
-            scaleMontage();
-
-        }.bind(this), 200);
-
-    };
-
-    $scope.onRelease = function (index)
-    {
-        console.log ("Press release on " + index);
-        isLongPressActive = false;
-        $interval.cancel(intervalHandleMontage);
-    };
-
-
-
-
-    // In Android, the app runs full steam while in background mode
-    // while in iOS it gets suspended unless you ask for specific resources
-    // So while this view, we DON'T want Android to keep sending 1 second
-    // refreshes to the server for images we are not seeing!
-
-    function onPause() {
-        console.log("*** Moving to Background ***"); // Handle the pause event
-        console.log("*** CANCELLING INTERVAL ****");
-        $interval.cancel(intervalHandle);
-    }
+    //---------------------------------------------------------------------
+    // Controller main
+    //---------------------------------------------------------------------
 
     document.addEventListener("pause", onPause, false);
 
@@ -173,88 +28,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         //console.log ("**** NOTIFICATION with rand="+$scope.randomval+"*****");
     };
 
-
-    $scope.openMenu = function () {
-        $ionicSideMenuDelegate.toggleLeft();
-    };
-
-    $scope.$on('$destroy', function () {
-        console.log("*** CANCELLING INTERVAL ****");
-        $interval.cancel(intervalHandle);
-    });
-
-
-    $scope.$on('$ionicView.loaded', function () {
-        console.log("**VIEW ** Montage Ctrl Loaded");
-    });
-
-    $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** Montage Ctrl Entered");
-    });
-
-    $scope.$on('$ionicView.leave', function () {
-        console.log("**VIEW ** Montage Ctrl Left");
-    });
-
-    $scope.$on('$ionicView.unloaded', function () {
-        console.log("**VIEW ** Montage Ctrl Unloaded");
-    });
-
-
-    $scope.isSimulated = function () {
-        return ZMDataModel.isSimulated();
-    };
-
-
-
-    // slider is tied to the view slider for montage
-    //Remember not to use a variable. I'm using an object
-    // so it's passed as a reference - otherwise it makes
-    // a copy and the value never changes
-
-    $scope.sliderChanged = function ()
-    {
-       console.log('Slider has changed');
-        ZMDataModel.setMontageSize($scope.slider.monsize);
-        console.log("Rootscope Montage is " + ZMDataModel.getMontageSize() + " and slider montage is " + $scope.slider.monsize);
-        // Now go ahead and reset sizes of entire monitor array
-        var monsizestring="";
-        var i;
-        for ( i = 0; i<$scope.monitors.length; i++)
-        {
-
-            $scope.monitorSize[i] = parseInt(ZMDataModel.getMontageSize());
-            console.log ("Resetting Monitor "+i+" size to " +$scope.monitorSize[i]);
-            $scope.scaleDirection[i] = 1;
-            monsizestring = monsizestring + $scope.monitorSize[i]+':';
-        }
-        monsizestring = monsizestring.slice(0,-1); // kill last :
-        console.log ("Setting monsize string:"+monsizestring);
-        window.localStorage.setItem("montageArraySize", monsizestring);
-
-    };
-
-    $scope.$on('$ionicView.afterEnter', function () {
-        // This rand is really used to reload the monitor image in img-src so it is not cached
-        // I am making sure the image in montage view is always fresh
-        // I don't think I am using this anymore FIXME: check and delete if needed
-        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-    });
-
-
-
-    $scope.doRefresh = function () {
-        console.log("***Pull to Refresh");
-        $scope.monitors = [];
-
-        var refresh = ZMDataModel.getMonitors(1);
-        refresh.then(function (data) {
-            $scope.monitors = data;
-            $scope.$broadcast('scroll.refreshComplete');
-        });
-
-    };
-
     var timestamp = new Date().getUTCMilliseconds();
     $scope.minimal = $stateParams.minimal;
     $scope.isRefresh = $stateParams.isRefresh;
@@ -263,14 +36,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var intervalHandleMontage; // will hold image resize timer on long press
     var montageIndex = 0; // will hold monitor ID to scale in timer
 
-   // don't init here -will mess up scrolling
-   $scope.monitorSize = []; // array with montage sizes per monitor
-   $scope.scaleDirection = []; // 1 = increase -1 = decrease
+    $scope.monitorSize = []; // array with montage sizes per monitor
+    $scope.scaleDirection = []; // 1 = increase -1 = decrease
 
     $scope.slider = {};
     $scope.slider.monsize = ZMDataModel.getMontageSize();
 
-     //$scope.monitors = [];
     console.log ("********  HAVE ALL MONITORS");
     $scope.monitors = message;
 
@@ -317,4 +88,220 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     }.bind(this), 1000);
 
     this.loadNotifications();
+
+    //---------------------------------------------------------------------
+    // Triggered when you enter/exit full screen
+    //---------------------------------------------------------------------
+    $scope.switchMinimal = function()
+    {
+        $scope.minimal = !$scope.minimal;
+        console.log ("Hide Statusbar");
+        ionic.Platform.fullScreen($scope.minimal,!$scope.minimal);
+         $interval.cancel(intervalHandle); //we will renew on reload
+        // We are reloading this view, so we don't want entry animations
+        $ionicHistory.nextViewOptions({
+              disableAnimate: true,
+              disableBack: true
+            });
+      $state.go("montage", {minimal: $scope.minimal,
+                            isRefresh:true});
+     };
+
+    //---------------------------------------------------------------------
+    // Show/Hide PTZ control in monitor view
+    //---------------------------------------------------------------------
+      $scope.togglePTZ = function () {
+        $scope.showPTZ = !$scope.showPTZ;
+    };
+
+    //---------------------------------------------------------------------
+    // main monitor modal open
+    //---------------------------------------------------------------------
+     $scope.openModal = function (mid, controllable) {
+        console.log("Open Monitor Modal");
+
+        $scope.monitorId = mid;
+        $scope.LoginData = ZMDataModel.getLogin();
+        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+
+        // This is a modal to show the monitor footage
+        $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
+
+                $ionicLoading.show({
+                    template: "please wait...",
+                    noBackdrop: true,
+                    duration: 15000
+                });
+            $scope.isControllable = controllable;
+                $scope.showPTZ = false;
+                $scope.modal.show();
+            });
+
+    };
+
+    //---------------------------------------------------------------------
+    //
+    //---------------------------------------------------------------------
+
+    $scope.closeModal = function () {
+        console.log("Close & Destroy Monitor Modal");
+        $scope.modal.remove();
+
+    };
+
+    //---------------------------------------------------------------------
+    // allows you to resize individual montage windows
+    //---------------------------------------------------------------------
+    function scaleMontage()
+    {
+        var index = montageIndex;
+        console.log (" MONTAGE INDEX === " + montageIndex);
+        console.log ("Scaling Monitor " + index);
+       if ($scope.monitorSize[index] == 6)
+            $scope.scaleDirection[index] = -1;
+
+        if ($scope.monitorSize[index] == 1)
+            $scope.scaleDirection[index] = 1;
+
+        $scope.monitorSize[index] += $scope.scaleDirection[index] ;
+
+        console.log ("Changed size to "+$scope.monitorSize[index]);
+
+        var monsizestring = "";
+        var i;
+        for ( i = 0; i<$scope.monitors.length; i++)
+        {
+            monsizestring = monsizestring + $scope.monitorSize[i]+':';
+        }
+        monsizestring = monsizestring.slice(0,-1); // kill last :
+        console.log ("Setting monsize string:"+monsizestring);
+        window.localStorage.setItem("montageArraySize", monsizestring);
+    }
+
+    //---------------------------------------------------------------------
+    // if you long press on a montage window, it calls scale montage
+    // at a 200ms freq
+    //---------------------------------------------------------------------
+    $scope.onHold = function (index)
+    {
+        montageIndex = index;
+        isLongPressActive = true;
+            intervalHandleMontage = $interval(function () {
+            scaleMontage();
+
+        }.bind(this), 200);
+
+    };
+
+    //---------------------------------------------------------------------
+    // stop scaling montage window on release
+    //---------------------------------------------------------------------
+    $scope.onRelease = function (index)
+    {
+        console.log ("Press release on " + index);
+        isLongPressActive = false;
+        $interval.cancel(intervalHandleMontage);
+    };
+
+
+
+    //---------------------------------------------------------------------
+    // In Android, the app runs full steam while in background mode
+    // while in iOS it gets suspended unless you ask for specific resources
+    // So while this view, we DON'T want Android to keep sending 1 second
+    // refreshes to the server for images we are not seeing
+    //---------------------------------------------------------------------
+
+    function onPause() {
+        console.log("*** Moving to Background ***"); // Handle the pause event
+        console.log("*** CANCELLING INTERVAL ****");
+        $interval.cancel(intervalHandle);
+    }
+
+
+
+    $scope.openMenu = function () {
+        $ionicSideMenuDelegate.toggleLeft();
+    };
+
+    $scope.$on('$destroy', function () {
+        console.log("*** CANCELLING INTERVAL ****");
+        $interval.cancel(intervalHandle);
+    });
+
+
+    $scope.$on('$ionicView.loaded', function () {
+        console.log("**VIEW ** Montage Ctrl Loaded");
+    });
+
+    $scope.$on('$ionicView.enter', function () {
+        console.log("**VIEW ** Montage Ctrl Entered");
+    });
+
+    $scope.$on('$ionicView.leave', function () {
+        console.log("**VIEW ** Montage Ctrl Left");
+    });
+
+    $scope.$on('$ionicView.unloaded', function () {
+        console.log("**VIEW ** Montage Ctrl Unloaded");
+    });
+
+    //---------------------------------------------------------
+    // slider is tied to the view slider for montage
+    //Remember not to use a variable. I'm using an object
+    // so it's passed as a reference - otherwise it makes
+    // a copy and the value never changes
+    //---------------------------------------------------------
+
+    $scope.sliderChanged = function ()
+    {
+       console.log('Slider has changed');
+        ZMDataModel.setMontageSize($scope.slider.monsize);
+        console.log("Rootscope Montage is " + ZMDataModel.getMontageSize() +
+                    " and slider montage is " + $scope.slider.monsize);
+        // Now go ahead and reset sizes of entire monitor array
+        var monsizestring="";
+        var i;
+        for ( i = 0; i<$scope.monitors.length; i++)
+        {
+
+            $scope.monitorSize[i] = parseInt(ZMDataModel.getMontageSize());
+            console.log ("Resetting Monitor "+i+" size to " +$scope.monitorSize[i]);
+            $scope.scaleDirection[i] = 1;
+            monsizestring = monsizestring + $scope.monitorSize[i]+':';
+        }
+        monsizestring = monsizestring.slice(0,-1); // kill last :
+        console.log ("Setting monsize string:"+monsizestring);
+        window.localStorage.setItem("montageArraySize", monsizestring);
+
+    };
+
+    $scope.$on('$ionicView.afterEnter', function () {
+        // This rand is really used to reload the monitor image in img-src so it is not cached
+        // I am making sure the image in montage view is always fresh
+        // I don't think I am using this anymore FIXME: check and delete if needed
+        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+    });
+
+
+
+
+    $scope.doRefresh = function () {
+        console.log("***Pull to Refresh");
+        $scope.monitors = [];
+
+        var refresh = ZMDataModel.getMonitors(1);
+        refresh.then(function (data) {
+            $scope.monitors = data;
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+
+    };
+
+
 }]);

@@ -8,7 +8,7 @@
 // It's grown over time. I guess I may have to split this into multiple services in the future
 
 angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', function ($http, $q, $ionicLoading, $ionicBackdrop) {
-    // var deferred='';
+
     var monitorsLoaded = 0;
     var montageSize = 3;
     var monitors = [];
@@ -22,6 +22,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'streamingurl': "",
         'maxFPS': "3", // image streaming FPS
         'montageQuality': "50", // montage streaming quality in %
+        'useSSL':false // "1" if HTTPS
     };
 
     return {
@@ -37,7 +38,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         init: function () {
             console.log("****** DATAMODEL INIT SERVICE CALLED ********");
-            var montageSize = 2;
 
             if (window.localStorage.getItem("username") != undefined) {
                 loginData.username =
@@ -96,7 +96,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 console.log("montageQuality  " + loginData.montageQuality);
 
             }
+             if (window.localStorage.getItem("useSSL") != undefined) {
+                 var sslvalue =  window.localStorage.getItem("useSSL");
+                loginData.useSSL = (sslvalue == "1") ? true:false;
+                        console.log("useSSL  " + loginData.useSSL);
 
+            }
 
 
             monitorsLoaded = 0;
@@ -122,14 +127,16 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("url", loginData.url);
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
+            window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
+            window.localStorage.setItem("maxMontage", loginData.maxMontage);
+            window.localStorage.setItem("montageQuality", loginData.montageQuality);
+
 
             if (loginData.maxFPS > 30) {
                 console.log("MAXFPS Too high, maxing to 30");
                 loginData.maxFPS = "30";
             }
             window.localStorage.setItem("maxFPS", loginData.maxFPS);
-
-
 
             if (!loginData.maxMontage) {
                 console.log("INVALID MONTAGE NUM");
@@ -140,21 +147,16 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 console.log("*** MAXMONTAGE TOO LOW ***");
                 loginData.maxMontage = 1;
             }
-
-
-            window.localStorage.setItem("maxMontage", loginData.maxMontage);
-
-            window.localStorage.setItem("montageQuality", loginData.montageQuality);
-
-
         },
 
+        //-----------------------------------------------------------------------------
         // This function returns a list of monitors
         // if forceReload == 1 then it will force an HTTP API request to get a list of monitors
         // if 0. then it will return back the previously loaded monitor list if one exists, else
         // will issue a new HTTP API to get it
 
         // I've wrapped this function in my own promise even though http returns a promise.
+        //-----------------------------------------------------------------------------
 
         getMonitors: function (forceReload) {
             console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
@@ -189,6 +191,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                         console.log("promise resolved inside HTTP fail");
                         d.resolve(monitors);
                         $ionicLoading.hide();
+                        monitorsLoaded = 0 ;
                     });
                 return d.promise;
 
@@ -201,22 +204,22 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             }
 
         },
+
+        //-----------------------------------------------------------------------------
+        //
+          //-----------------------------------------------------------------------------
         setMonitors: function (mon) {
             console.log("ZMData setMonitors called with " + mon.length + " monitors");
             monitors = mon;
         },
-        // Not sure if I am using this anymore. I was using this for graphs, but I
-        // don't think I am now
-        getAllPreexistingEvents: function () {
-            console.log("returning " + oldevents.length + " preexisting events");
-            return oldevents;
-        },
 
+        //-----------------------------------------------------------------------------
         // When I display events in the event controller, this is the first function I call
         // This returns the total number of pages
         // I then proceed to display pages in reverse order to display the latest events first
         // I also reverse sort them in ZMDataModel to sort by date
         // All this effort because the ZM APIs return events in sorted order, oldest first. Yeesh.
+        //-----------------------------------------------------------------------------
 
         getEventsPages: function (monitorId) {
             console.log("********** INSIDE EVENTS PAGES ");
@@ -239,10 +242,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         },
 
+        //-----------------------------------------------------------------------------
         // This function returns events for  specific monitor or all monitors
         // You get here by tapping on events in the monitor screen or from
         // the menu events option
         // monitorId == 0 means all monitors (ZM starts from 1)
+        //-----------------------------------------------------------------------------
 
         getEvents: function (monitorId, pageId, loadingStr) {
 
@@ -263,7 +268,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     duration: 15000, //specifically for Android - http seems to get stuck at times
                 });
             }
-            //$ionicBackdrop.retain();
 
             var d = $q.defer();
             var myevents = [];
@@ -311,13 +315,23 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             return d.promise;
         },
 
+        //-----------------------------------------------------------------------------
+        //
+        //-----------------------------------------------------------------------------
         getMontageSize: function () {
             return montageSize;
         },
+
+        //-----------------------------------------------------------------------------
+        //
+        //-----------------------------------------------------------------------------
         setMontageSize: function (montage) {
             montageSize = montage;
         },
 
+        //-----------------------------------------------------------------------------
+        //
+        //-----------------------------------------------------------------------------
         getMonitorsLoaded: function () {
             console.log("**** Inside promise function ");
             var deferred = $q.defer();
@@ -327,13 +341,19 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             return deferred.promise;
         },
+
+        //-----------------------------------------------------------------------------
+        //
+        //-----------------------------------------------------------------------------
         setMonitorsLoaded: function (loaded) {
             console.log("ZMData.setMonitorsLoaded=" + loaded);
             monitorsLoaded = loaded;
         },
 
+        //-----------------------------------------------------------------------------
         // Given a monitor Id it returns the monitor name
         // FIXME: Can I do a better job with associative arrays?
+        //-----------------------------------------------------------------------------
         getMonitorName: function (id) {
             var idnum = parseInt(id);
             for (var i = 0; i < monitors.length; i++) {

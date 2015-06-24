@@ -29,7 +29,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     controlPTZ($scope.monitorId, 'Down');
                 }
-    },
+            },
 
             {
                 content: '',
@@ -38,7 +38,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     controlPTZ($scope.monitorId, 'DownLeft');
                 }
-    },
+            },
 
             {
                 content: '',
@@ -48,7 +48,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     controlPTZ($scope.monitorId, 'Left');
                 }
-    },
+            },
             {
                 content: 'D',
                 empty: true,
@@ -56,7 +56,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     console.log('About');
                 }
-    },
+            },
 
             {
                 content: '',
@@ -65,7 +65,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     controlPTZ($scope.monitorId, 'UpLeft');
                 }
-    },
+            },
 
             {
                 content: '',
@@ -74,7 +74,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     controlPTZ($scope.monitorId, 'Up');
                 }
-    },
+            },
 
             {
                 content: '',
@@ -83,7 +83,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     controlPTZ($scope.monitorId, 'UpRight');
                 }
-    },
+            },
 
             {
                 content: 'H',
@@ -91,7 +91,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     console.log('About');
                 }
-    },
+            },
 
             {
                 content: '',
@@ -100,7 +100,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     controlPTZ($scope.monitorId, 'Right');
                 }
-    },
+            },
 
 
             {
@@ -110,7 +110,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     controlPTZ($scope.monitorId, 'DownRight');
                 }
-    },
+            },
 
             {
                 content: 'K',
@@ -118,17 +118,19 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 onclick: function () {
                     console.log('About');
                 }
-    },
- ]
-    };
+            },
+    ]};
 
+    //-------------------------------------------------------------
     // Send PTZ command to ZM
     // FIXME: moveCon is hardcoded - won't work with
     // cams that don't use moveCon.
     // Need to grab control ID and then control API
+    //-------------------------------------------------------------
     function controlPTZ(monitorId, cmd) {
 
-        //curl -X POST "http://server.com/zm/index.php?view=request" -d "request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
+    //curl -X POST "http://server.com/zm/index.php?view=request" -d
+    //"request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
 
         console.log("Command value " + cmd + " with MID=" + monitorId);
         $ionicLoading.hide();
@@ -193,16 +195,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     $scope.finishedLoadingImage = function () {
         console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
-        /* $ionicLoading.show({
-             template: "loading, please wait...",
-             noBackdrop: true,
-         });*/
-    };
 
-    // In Android, the app runs full steam while in background mode
-    // while in iOS it gets suspended unless you ask for specific resources
-    // So while this view, we DON'T want Android to keep sending 1 second
-    // refreshes to the server for images we are not seeing!
+    };
 
 
 }]);

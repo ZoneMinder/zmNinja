@@ -7,12 +7,27 @@
 
 angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', function ($ionicPopup, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
 
+
+    //-----------------------------------------------------------------------
+    // Controller Main
+    //-----------------------------------------------------------------------
+
+    console.log("***EVENTS: Waiting for Monitors to load before I proceed");
     $scope.monitors = [];
+    $scope.monitors = message;
+    var loginData = ZMDataModel.getLogin();
+    monitorStateCheck();
+
 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
 
+
+    //-----------------------------------------------------------------------
+    // All we do here is create a new random val for the URL so the
+    // image regenerates
+    //-----------------------------------------------------------------------
     $scope.reloadView = function () {
         console.log("*** Refreshing Modal view ***");
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
@@ -23,9 +38,11 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         });
     };
 
-    // This function takes care of changing function parameters
+    //-----------------------------------------------------------------------
+    // This function takes care of changing monitor parameters
     // For now, I've only limited it to enable/disable and change monitor mode
-
+    // and changing monitor function
+    //-----------------------------------------------------------------------
     $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
         var checked = "false";
         console.log("called with " + monitorId + ":" + enabled + ":" + func);
@@ -56,8 +73,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                 text: "None",
                 value: "None"
             }
-  ];
-        //$scope.monFunctions = monFunctions;
+        ];
+
         $scope.monfunc = {
             myfunc: func,
             myenabled: checked
@@ -65,7 +82,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
         var getConfig = $ionicPopup.show({
             scope: $scope,
-            template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="{{monfunc.myenabled}}" toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio>',
+            template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="{{monfunc.myenabled}}"  toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio>',
 
 
             title: 'Change Settings for ' + monitorName,
@@ -98,7 +115,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                             transformRequest: function (obj) {
                                 var str = [];
                                 for (var p in obj)
-                                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                                    str.push(encodeURIComponent(p) + "=" +
+                                             encodeURIComponent(obj[p]));
                                 var foo = str.join("&");
                                 console.log("****RETURNING " + foo);
                                 return foo;
@@ -115,7 +133,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                         .success(function () {
 
                                 $ionicLoading.show({
-                                    template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
+                                    template:
+                                    "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
                                     noBackdrop: true,
                                     duration: 60000,
                                 });
@@ -144,9 +163,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                                 });
                             });
 
-
-
-
                     }
 
 
@@ -163,12 +179,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     $scope.finishedLoadingImage = function () {
         console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
-        /* $ionicLoading.show({
-             template: "loading, please wait...",
-             noBackdrop: true,
-         });*/
     };
-
 
 
     $scope.$on('$ionicView.loaded', function () {
@@ -336,74 +347,53 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
             console.log("ERROR: " + JSON.stringify(resp));
         });
 
-        //});
     }
 
 
-
-
-    console.log("***EVENTS: Waiting for Monitors to load before I proceed");
-
-    $scope.monitors = message;
-    var loginData = ZMDataModel.getLogin();
-     monitorStateCheck();
-
-    function monitorStateCheck()
-    {
+    function monitorStateCheck() {
         var apiMonCheck;
 
         // The status is provided by zmdc.pl
         // "not running", "pending", "running since", "Unable to connect"
 
-         for (var i = 0; i < $scope.monitors.length; i++) {
-            (function (j)
-            {
+        for (var i = 0; i < $scope.monitors.length; i++) {
+            (function (j) {
                 $scope.monitors[j].Monitor.isRunningText = "...";
                 $scope.monitors[j].Monitor.isRunning = "...";
                 $scope.monitors[j].Monitor.color = '#1E90FF';
                 $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
                 apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
-                console.log ("**** ZMC CHECK " + apiMonCheck);
+                console.log("**** ZMC CHECK " + apiMonCheck);
                 $http.get(apiMonCheck)
-                .success(function(data)
-                {
-                    if (data.statustext.indexOf("not running")>-1)
-                    {
-                        $scope.monitors[j].Monitor.isRunning = "false" ;
-                        $scope.monitors[j].Monitor.color = 'red';
-                        $scope.monitors[j].Monitor.char = "ion-close-circled";
-                    }
-                    else if (data.statustext.indexOf("pending")>-1)
-                    {
-                        $scope.monitors[j].Monitor.isRunning = "pending" ;
-                        $scope.monitors[j].Monitor.color = 'orange';
-                    }
-                    else if (data.statustext.indexOf("running since")>-1)
-                    {
-                        $scope.monitors[j].Monitor.isRunning = "true" ;
-                        $scope.monitors[j].Monitor.color = 'green';
-                    }
-
-                    else if (data.statustext.indexOf("Unable to connect")>-1)
-                    {
-                        $scope.monitors[j].Monitor.isRunning = "false" ;
-                        $scope.monitors[j].Monitor.color = 'red';
-                        $scope.monitors[j].Monitor.char = "ion-close-circled";
-                    }
+                    .success(function (data) {
+                        if (data.statustext.indexOf("not running") > -1) {
+                            $scope.monitors[j].Monitor.isRunning = "false";
+                            $scope.monitors[j].Monitor.color = 'red';
+                            $scope.monitors[j].Monitor.char = "ion-close-circled";
+                        } else if (data.statustext.indexOf("pending") > -1) {
+                            $scope.monitors[j].Monitor.isRunning = "pending";
+                            $scope.monitors[j].Monitor.color = 'orange';
+                        } else if (data.statustext.indexOf("running since") > -1) {
+                            $scope.monitors[j].Monitor.isRunning = "true";
+                            $scope.monitors[j].Monitor.color = 'green';
+                        } else if (data.statustext.indexOf("Unable to connect") > -1) {
+                            $scope.monitors[j].Monitor.isRunning = "false";
+                            $scope.monitors[j].Monitor.color = 'red';
+                            $scope.monitors[j].Monitor.char = "ion-close-circled";
+                        }
 
 
-                    $scope.monitors[j].Monitor.isRunningText = data.statustext;
-                })
-                .error (function (data)
-                {
-                    $scope.monitors[j].Monitor.isRunning = "error";
-                    $scope.monitors[j].Monitor.color = '#800000';
-                     $scope.monitors[j].Monitor.char = "ion-help-circled";
-                });
+                        $scope.monitors[j].Monitor.isRunningText = data.statustext;
+                    })
+                    .error(function (data) {
+                        $scope.monitors[j].Monitor.isRunning = "error";
+                        $scope.monitors[j].Monitor.color = '#800000';
+                        $scope.monitors[j].Monitor.char = "ion-help-circled";
+                    });
 
 
             })(i);
-         }
+        }
     }
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
