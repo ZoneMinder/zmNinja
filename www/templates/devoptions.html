@@ -7,37 +7,33 @@
 
     <ion-content class="padding">
         <div class="list list-inset">
-
-            <span style="color:rgb(100,100,100)"><i class="ion-android-settings" style="font-size:150%"></i> Developer Options</span>
+            <span style="color:rgb(100,100,100)">
+                <i class="ion-android-settings" style="font-size:150%"></i> Developer Options
+            </span>
 
             <div class="item item-input-inset">
-
                 Max Monitors in Montage&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="be careful" ng-model="loginData.maxMontage">
                 </label>
-
             </div>
 
             <div class="item item-input-inset">
-
                 Max FPS for streaming&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="max is 30" ng-model="loginData.maxFPS">
                 </label>
-
             </div>
 
             <div class="item item-input-inset">
-
                 Montage Streaming Quality(%)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="max is 70" ng-model="loginData.montageQuality">
                 </label>
             </div>
 
-            <button class="button button-block button-balanced icon ion-locked" ng-click="saveDevOptions()"> Save</button>
-
+            <button class="button button-block button-balanced icon ion-locked"
+                    ng-click="saveDevOptions()"> Save</button>
 
     </ion-content>
 </ion-view>

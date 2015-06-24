@@ -4,15 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-     <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' https://www.google.com 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' https://www.google.com 'unsafe-inline' 'unsafe-eval'">
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="lib/ng-mfb/mfb/src/mfb.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="lib/angular-circular-navigation/angular-circular-navigation.css">
-   <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="lib/angular-circular-navigation/angular-circular-navigation.css">
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
 
 
 
@@ -26,7 +26,7 @@
     <!-- we need the full JQuery for the global img src
     error interceptor in app.js -->
 
-     <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+    <script src="lib/ionic/js/ionic.bundle.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -40,17 +40,17 @@
 
     <script src="js/DataModel.js"></script>
     <script src="js/LoginCtrl.js"></script>
-  <script src="js/ModalCtrl.js"></script>
+    <script src="js/ModalCtrl.js"></script>
     <script src="js/MontageCtrl.js"></script>
     <script src="js/EventCtrl.js"></script>
     <script src="js/EventsGraphsCtrl.js"></script>
     <script src="js/MonitorCtrl.js"></script>
     <script src="js/HelpCtrl.js"></script>
     <script src="js/StateCtrl.js"></script>
-      <script src="js/DevOptionsCtrl.js"></script>
+    <script src="js/DevOptionsCtrl.js"></script>
 
 
-<script src="lib/angular-circular-navigation/angular-circular-navigation.js"></script>
+    <script src="lib/angular-circular-navigation/angular-circular-navigation.js"></script>
 
     <script src="lib/Chart.js/Chart.js"></script>
     <script src="lib/tc-angular-chartjs/dist/tc-angular-chartjs.min.js"></script>
@@ -76,7 +76,8 @@
     <ion-side-menus>
         <ion-pane ion-side-menu-content>
             <ion-nav-bar class="bar-stable nav-title-slide-ios7">
-                <ion-nav-back-button class="button-icon"><span class="icon ion-ios7-arrow-left"></span>
+                <ion-nav-back-button class="button-icon">
+                    <span class="icon ion-ios7-arrow-left"></span>
                 </ion-nav-back-button>
             </ion-nav-bar>
             <ion-nav-view></ion-nav-view>
@@ -88,46 +89,53 @@
             </ion-header-bar>
             <ion-content has-header="true">
                 <ion-list>
-                    <ion-item href="#/monitors" menu-close><span class=" item-icon-left">
-            <i class="icon ion-ios-monitor-outline"></i>
-            </span>Monitors</ion-item>
-                    <ion-item href="#/montage" menu-close><span class=" item-icon-left">
-                
-                <i class="icon ion-ios-eye"></i>
-            </span>Montage View</ion-item>
 
-                    <ion-item href="#/events/0" menu-close><span class=" item-icon-left">
-            <i class="icon ion-ios-calendar-outline"></i>
-            </span>Events</ion-item>
+                    <ion-item href="#/monitors" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-ios-monitor-outline"></i>
+                        </span>Monitors
+                    </ion-item>
 
-                    <ion-item href="#/state" menu-close><span class=" item-icon-left">
-            <i class="icon ion-information-circled"></i>
-            </span>System Status</ion-item>
+                    <ion-item href="#/montage" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-ios-eye"></i>
+                        </span>Montage View
+                    </ion-item>
 
-                    <!-- <ion-item href="#/events-graphs" menu-close>Graphs</ion-item> -->
+                    <ion-item href="#/events/0" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-ios-calendar-outline"></i>
+                        </span>Events
+                    </ion-item>
+
+                    <ion-item href="#/state" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-information-circled"></i>
+                        </span>
+                        System Status
+                    </ion-item>
 
                     <ion-item nav-clear menu-close href="#/login">
                         <span class=" item-icon-left">
-                <i class="icon ion-person"></i>
-            </span> ZM Settings
+                            <i class="icon ion-person"></i>
+                        </span>
+                        ZM Settings
                     </ion-item>
 
-                      <ion-item nav-clear menu-close href="#/devoptions">
+                    <ion-item nav-clear menu-close href="#/devoptions">
                         <span class=" item-icon-left">
-                <i class="icon ion-settings"></i>
-            </span> Developer Settings
+                            <i class="icon ion-settings"></i>
+                        </span> Developer Settings
                     </ion-item>
 
                     <ion-item nav-clear menu-close href="#/help">
                         <span class=" item-icon-left">
-                <i class="icon ion-help"></i>
-            </span> Help
+                            <i class="icon ion-help"></i>
+                        </span> Help
                     </ion-item>
-
                 </ion-list>
             </ion-content>
         </ion-side-menu>
-
     </ion-side-menus>
 
 
@@ -137,7 +145,7 @@
     after the status bar comes on - because the window kicked in before phonegap got ready -->
 
     <script>
-        window.ionic.Platform.ready(function () {
+        window.ionic.Platform.ready(function() {
             console.log("******* PLATFORM READY ****");
             angular.bootstrap(document, ['zmApp']);
         });

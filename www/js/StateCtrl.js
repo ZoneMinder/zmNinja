@@ -6,6 +6,9 @@
 
 angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', function ($ionicPopup, $scope, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope) {
 
+//----------------------------------------------------------------------
+// Controller main
+//----------------------------------------------------------------------
     $scope.zmRun = "loading...";
     $scope.zmLoad = "loading...";
     $scope.zmDisk = "loading...";
@@ -22,11 +25,14 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     var apiExec = loginData.apiurl + "/states/change/";
 
-    var inProgress = 0;
+    var inProgress = 0; // prevents user from another op if one is in progress
     getRunStatus();
     getLoadStatus();
     getDiskStatus();
 
+    //----------------------------------------------------------------------
+    // returns disk space in gigs taken up by events
+    //----------------------------------------------------------------------
     function getDiskStatus() {
         $http.get(apiDisk)
             .then(
@@ -50,6 +56,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             );
     }
 
+    //----------------------------------------------------------------------
+    // returns ZM running status
+    //----------------------------------------------------------------------
     function getRunStatus() {
         $http.get(apiRun)
             .then(
@@ -82,6 +91,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     }
 
 
+    //----------------------------------------------------------------------
+    // gets ZM load - max[0], avg[1], min[2]
+    //----------------------------------------------------------------------
     function getLoadStatus() {
         $http.get(apiLoad)
             .then(
@@ -101,7 +113,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     }
 
 
-
+    //----------------------------------------------------------------------
+    // start/stop/restart ZM
+    //----------------------------------------------------------------------
 
     $scope.controlZM = function (str) {
         if (inProgress) {
@@ -153,31 +167,14 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                                     $scope.zmRun = 'undetermined';
                                     $scope.color = 'color:orange;';
                                     inProgress = 0;
-                                    //   }
-                                    /*else
-                                    {
-                                        switch (str)
-                                        {
-                                            case "stop":$scope.zmRun = 'stopped';
-                                                $scope.color='color:red;'; break;
-                                            case "start":
-                                            case "restart":$scope.zmRun = 'running';
-                                                $scope.color = 'color:green;';break;
 
-                                        }
-                                        inProgress = 0;
-                                    }*/
-
-                                }
-
-                            );
-
+                                }); //incredible nesting below. I make myself proud.
                     }
-                        }
-                    ]
+                }
+            ]
         });
-
     };
+
 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
@@ -186,19 +183,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     $scope.$on('$ionicView.leave', function () {
         console.log("**VIEW ** State Ctrl Left");
         // FIXME not the best way...
+        // If the user exits a view before its complete,
+        // make sure he can come back in and redo
         inProgress = 0;
     });
 
-    $scope.reloadView = function () {
-        console.log("*** Refreshing Modal view ***");
-        inProgress = 0;
-        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-        $ionicLoading.show({
-            template: "refreshed view",
-            noBackdrop: true,
-            duration: 2000
-        });
-    };
 
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");

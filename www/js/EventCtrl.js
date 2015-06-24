@@ -6,10 +6,17 @@
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
 // and whether the new API has a better mechanism
 
-angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatform', '$scope', '$stateParams', 'message', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicModal', '$ionicLoading', '$http', '$state', '$window',function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel, $ionicSideMenuDelegate, $ionicModal, $ionicLoading, $http, $state, $window, $rootScope) {
+angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatform', '$scope', '$stateParams', 'message', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicModal', '$ionicLoading', '$http', '$state', '$window', '$interval', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel, $ionicSideMenuDelegate, $ionicModal, $ionicLoading, $http, $state, $window, $rootScope,$interval) {
+
+    //---------------------------------------------------
+    // Controller main
+    //---------------------------------------------------
+
     console.log("I got STATE PARAM " + $stateParams.id);
     $scope.id = parseInt($stateParams.id, 10);
     $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+
+
     // These are the commands ZM uses to move around
     // in ZMS
     var eventCommands = {
@@ -30,7 +37,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     };
     $scope.search = {text:""};
     $scope.myfilter="";
-
+    $scope.eventCommands = eventCommands;
 
 
     // for some reason inifinite scroll is invoked
@@ -52,12 +59,55 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     // monitor modal is loaded, I show an ionic loading. And then when the first frame
     // finishes loading, I take it away
 
+    console.log("***CALLING EVENTS FACTORY");
+    var lData = ZMDataModel.getLogin();
+    $scope.monitors = message;
+
+    // I am converting monitor ID to monitor Name
+    // so I can display it along with Events
+    // Is there a better way?
+
+    $scope.events = [];
+
+    // First get total pages and then
+    // start from the latest. If this fails, nothing displays
+    // FIXME: clean up error handling
+
+    // FIXME: call loadMore once -- to fill up page. Its possible
+    // last event page only has a few records
+
+    ZMDataModel.getEventsPages($scope.id)
+        .then(function (data) {
+            eventsPage = data.pageCount;
+            console.log("TOTAL EVENT PAGES IS " + eventsPage);
+            pageLoaded = true;
+            $scope.viewTitle.title = data.count;
+            ZMDataModel.getEvents($scope.id, eventsPage,"")
+
+            .then(function (data) {
+                console.log("EventCtrl Got events");
+                //var events = [];
+                var myevents = data;
+                for (var i = 0; i < myevents.length; i++) {
+
+                    myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
+                }
+
+
+                $scope.events = myevents;
+            });
+
+        });
+
 
 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
 
+    //---------------------------------------------------
+    // reload view
+    //---------------------------------------------------
     $scope.reloadView = function () {
         // All we really need to do here is change the random token
         // in the image src and it will refresh. No need to reload the view
@@ -74,6 +124,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
     };
 
+    //---------------------------------------------------
+    // when you tap a list entry - to break search loop
+    //---------------------------------------------------
     $scope.tapped = function()
     {
         console.log ("*** TAPPED ****");
@@ -107,19 +160,25 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
     });
 
-
-
+    //---------------------------------------------------
+    // used to hide loading image toast
+    //---------------------------------------------------
     $scope.finishedLoadingImage = function () {
         console.log("*** Events image FINISHED loading ***");
         $ionicLoading.hide();
     };
 
+    //---------------------------------------------------
+    //
+    //---------------------------------------------------
     $scope.clearSearch = function()
     {
         $scope.search.text="";
-        console.log ("CLEAR");
     };
 
+    //---------------------------------------------------
+    // Called when user toggles search
+    //---------------------------------------------------
     $scope.searchClicked = function()
     {
         $scope.showSearch = !$scope.showSearch;
@@ -136,14 +195,20 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         }
     };
 
+    //--------------------------------------------------------
+    // Not used - plan to use it to show event progress
+    //--------------------------------------------------------
+    this.pollEventsProgress = function()
+    {
+        console.log ("**************");
+    };
 
-    $scope.eventCommands = eventCommands;
-
-
-
+    //--------------------------------------------------------
     // this routine handles skipping through events
     // in different event views
-    $scope.controlEventStream = function (cmd) {
+    //--------------------------------------------------------
+    $scope.controlEventStream = function (cmd)
+    {
         console.log("Command value " + cmd);
 
         $ionicLoading.hide();
@@ -154,7 +219,26 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         });
 
         var loginData = ZMDataModel.getLogin();
-
+        // FIXME: CMD_SLOWFWD CMD_FASTFWD and REVs
+        // Also read up CMD_QUERY as the stream is playing
+        /*
+        var CMD_NONE = 0;
+        var CMD_PAUSE = 1;
+        var CMD_PLAY = 2;
+        var CMD_STOP = 3;
+        var CMD_FASTFWD = 4;
+        var CMD_SLOWFWD = 5;
+        var CMD_SLOWREV = 6;
+        var CMD_FASTREV = 7;
+        var CMD_ZOOMIN = 8;
+        var CMD_ZOOMOUT = 9;
+        var CMD_PAN = 10;
+        var CMD_SCALE = 11;
+        var CMD_PREV = 12;
+        var CMD_NEXT = 13;
+        var CMD_SEEK = 14;
+        var CMD_QUERY = 99;
+        */
         var toast_blurb = "";
         switch (cmd) {
         case "13":
@@ -233,13 +317,15 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         });
     };
 
-    // This is called when we first tap on an event to see
+    //--------------------------------------------------------
+    //This is called when we first tap on an event to see
     // the feed. It's important to instantiate ionicModal here
     // as otherwise you'd instantiate it when the view loads
     // and our "Please wait loading" technique I explained
     //earlier won't work
+    //--------------------------------------------------------
 
-    $scope.openModal = function (eid, ename, edur) {
+    $scope.openModal = function (eid, ename, edur,eframes) {
         console.log("Open Modal");
         $scope.eventName = ename;
         $scope.eventId = eid;
@@ -263,19 +349,26 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
                 $scope.modal.show();
 
             });
-    };
 
-    // We need to destroy because we are instantiating
+           };
+
+    //--------------------------------------------------------
+    //We need to destroy because we are instantiating
     // it on open
+    //--------------------------------------------------------
     $scope.closeModal = function () {
+       // $interval.cancel(eventsInterval);
         console.log("Close & Destroy Modal");
         if ($scope.modal !== undefined) {
             $scope.modal.remove();
         }
 
     };
+
+    //--------------------------------------------------------
     //Cleanup the modal when we're done with it
     // I Don't think it ever comes here
+    //--------------------------------------------------------
     $scope.$on('$destroy', function () {
         console.log("Destroy Modal");
         if ($scope.modal !== undefined) {
@@ -283,53 +376,17 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         }
     });
 
-    console.log("***CALLING EVENTS FACTORY");
-    var lData = ZMDataModel.getLogin();
-    $scope.monitors = message;
-
-    // I am converting monitor ID to monitor Name
-    // so I can display it along with Events
-    // Is there a better way?
-
-    $scope.events = [];
-
-    // First get total pages and then
-    // start from the latest. If this fails, nothing displays
-    // FIXME: clean up error handling
-
-    // FIXME: call loadMore once -- to fill up page. Its possible
-    // last event page only has a few records
-
-    ZMDataModel.getEventsPages($scope.id)
-        .then(function (data) {
-            eventsPage = data.pageCount;
-            console.log("TOTAL EVENT PAGES IS " + eventsPage);
-            pageLoaded = true;
-            $scope.viewTitle.title = data.count;
-            ZMDataModel.getEvents($scope.id, eventsPage,"")
-
-            .then(function (data) {
-                console.log("EventCtrl Got events");
-                //var events = [];
-                var myevents = data;
-                for (var i = 0; i < myevents.length; i++) {
-
-                    myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
-                }
-
-
-                $scope.events = myevents;
-            });
-
-        });
-
-
-
+    //--------------------------------------------------------
+    // used by infinite scrolling to see if we can get more
+    //--------------------------------------------------------
 
     $scope.moreDataCanBeLoaded = function () {
         return moreEvents;
     };
 
+    //--------------------------------------------------------
+    // stop searching for more data
+    //--------------------------------------------------------
      $scope.cancelSearch = function()
         {
             $ionicLoading.hide(); //Or whatever action you want to preform
@@ -347,6 +404,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
         };
 
+    //--------------------------------------------------------
+    // loads next page of events
+    //--------------------------------------------------------
     $scope.loadMore = function () {
 
         // the events API does not return an error for anything
@@ -362,7 +422,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
        if (!enableLoadMore)
        {
-           moreEvents=false; // Dont ion-scroll till enableLoadMore is true;
+           moreEvents=false; // Don't ion-scroll till enableLoadMore is true;
            $scope.$broadcast('scroll.infiniteScrollComplete');
 
            console.log ("**** LOADMORE ARTIFICALLY DISABLED");
@@ -373,16 +433,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         if ($scope.search.text != "")
         {
             var toastStr="Searching page "+eventsPage;
+            $ionicLoading.show({ maxwidth:100, scope:$scope,
+                                template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >'+toastStr+'</button>' });
 
-
-
-$ionicLoading.show({ maxwidth:100, scope:$scope, template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >'+toastStr+'</button>' });
-
-           //  toastr.info(toastStr,{"positionClass": "toast-bottom-full-width",
-            //                       "showMethod": "fadeIn",
-             //                      "hideMethod": "fadeOut",
-            //                       "closeButton": false,
-        //                       });
             loadingStr="none";
         }
         ZMDataModel.getEvents($scope.id, eventsPage,loadingStr)
@@ -397,26 +450,23 @@ $ionicLoading.show({ maxwidth:100, scope:$scope, template: '<button class="butto
                     console.log("Got new page of events");
                     moreEvents = true;
                     $scope.$broadcast('scroll.infiniteScrollComplete');
-            //toastr.clear();
                 },
 
                 function (error) {
                     console.log("*** No More Events to Load, Stop Infinite Scroll ****");
                     moreEvents = false;
                     $scope.$broadcast('scroll.infiniteScrollComplete');
-           // toastr.clear();
 
                 });
-        //  $scope.$broadcast('scroll.infiniteScrollComplete');
-
     };
 
-
+    //--------------------------------------------------------
     // For consistency we are keeping the refresher list
     // but its a dummy. The reason I deviated is because
     // refresh with infinite scroll is a UX problem - its
     // easy to pull to refresh when scrolling up with
     // a large list
+    //--------------------------------------------------------
 
     $scope.dummyDoRefresh= function()
     {
@@ -443,8 +493,6 @@ $ionicLoading.show({ maxwidth:100, scope:$scope, template: '<button class="butto
 
                         myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
                     }
-
-
                     $scope.events = myevents;
                 });
 

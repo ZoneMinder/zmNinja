@@ -1,22 +1,12 @@
 <ion-modal-view cache="false">
-
-    <!-- <ion-header-bar>
-        <h1 class="title">
-            <span style="float:left">
-                <button class="button  button-clear icon icon-left ion-close" ng-click="closeModal()" >Close</button>
-            </span>
-            <span style="float:right">
-                {{eventName}} (Duration:{{eventDur}}s)
-            </span>
-        </h1>
-    </ion-header-bar> -->
     <ion-content>
+        <!-- so I can access my common modal controller
+            which is shared between events and monitors for modal views -->
         <div ng-controller="ModalCtrl">
-
-            <!-- replay can also be gapless -->
-
-            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-                <img imageonload="finishedLoadingImage()" ng-src="{{loginData.streamingurl}}/cgi-bin/zms?source=event&mode=jpeg&event={{eventId}}&frame=1&maxfps={{loginData.maxFPS}}&replay=single&user={{loginData.username}}&pass={{loginData.password}}&connkey={{connKey}}&rand={{rand}}" width="100%" />
+            <ion-scroll has-bouncing=false min-zoom=1 zooming="true"
+                        direction="xy" style="width: 100%; ">
+                <img imageonload="finishedLoadingImage()"
+                     ng-src="{{loginData.streamingurl}}/cgi-bin/zms?source=event&mode=jpeg&event={{eventId}}&frame=1&maxfps={{loginData.maxFPS}}&replay=single&user={{loginData.username}}&pass={{loginData.password}}&connkey={{connKey}}&rand={{rand}}" width="100%" />
             </ion-scroll>
         </div>
     </ion-content>

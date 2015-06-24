@@ -7,13 +7,15 @@
 angular.module('zmApp', [
                             'ionic',
                             'zmApp.controllers',
+                            //'cordovaHTTP'
                         ])
 
-
+//------------------------------------------------------------------
 // this directive will be load any time an image completes loading 
 // via img tags where this directive is added (I am using this in
 // events and mionitor view to show a loader while the image is
 // downloading from ZM
+//------------------------------------------------------------------
 
 .directive('imageonload', function () {
     return {
@@ -29,14 +31,14 @@ angular.module('zmApp', [
     };
 })
 
-
+//------------------------------------------------------------------
 // In Android, HTTP requests seem to get stuck once in a while
 // It may be a crosswalk issue.
 // To tackle this gracefully, I've set up a global interceptor
 // If the HTTP request does not complete in 15 seconds, it cancels
 // That way the user can try again, and won't get stuck
 // Also remember you need to add it to .config
-
+//------------------------------------------------------------------
 .factory('timeoutHttpIntercept', function ($rootScope, $q) {
     //console.log("*** HTTP INTERCEPTOR CALLED ***");
     return {
@@ -60,7 +62,10 @@ angular.module('zmApp', [
     };
 })
 
+//-----------------------------------------------------------------
 // This service automatically logs into ZM at periodic intervals
+//------------------------------------------------------------------
+
 .factory('zmAutoLogin', function($interval, ZMDataModel, $http)  {
     var zmAutoLoginHandle;
     function doLogin()
@@ -151,7 +156,9 @@ angular.module('zmApp', [
 })
 */
 
-
+//------------------------------------------------------------------
+// First run in ionic
+//------------------------------------------------------------------
 
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin)
 {
@@ -259,6 +266,10 @@ angular.module('zmApp', [
     zmAutoLogin.start();
 
 }) //run
+
+//------------------------------------------------------------------
+// Route configuration
+//------------------------------------------------------------------
 
 // My route map connecting menu options to their respective templates and controllers
 .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {

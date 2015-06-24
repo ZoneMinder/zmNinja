@@ -4,7 +4,6 @@
 
 angular.module('zmApp.controllers', ['ionic', 'tc.chartjs', 'ngCordova', 'ng-mfb','angularCircularNavigation' ])
 
-
 .controller('zmApp.AppCtrl', function($scope, $ionicSideMenuDelegate) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
