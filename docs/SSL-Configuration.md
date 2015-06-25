@@ -37,7 +37,7 @@ restart apache
 sudo service apache2 restart
 ```
 
-
+####Install certificates (.cer) file in yout phone
 Then, you need to install zoneminder.crt in your mobile devices so that zmNinja does not reject the certificate as it is self signed.
 The easiest way to do that is simply email it to yourself and open your email in the phone and install the attachment. Works for both
 iOS and Android. Make sure you install it and go through the prompts
