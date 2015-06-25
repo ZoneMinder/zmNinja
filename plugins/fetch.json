@@ -67,15 +67,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "com.synconset.cordovaHTTP": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/wymsee/cordova-HTTP.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "org.apache.cordova.file": {
         "source": {
             "type": "git",

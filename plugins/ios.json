@@ -39,14 +39,6 @@
                         {
                             "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
                             "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"File\"><param name=\"ios-package\" value=\"CDVFile\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"CordovaHttpPlugin\"><param name=\"ios-package\" value=\"CordovaHttpPlugin\" /></feature>",
-                            "count": 1
                         }
                     ]
                 }
@@ -60,30 +52,10 @@
                         }
                     ],
                     "QuartzCore.framework": [],
-                    "AssetsLibrary.framework": [
-                        {
-                            "xml": false,
-                            "count": 1
-                        }
-                    ],
-                    "MobileCoreServices.framework": [
-                        {
-                            "xml": false,
-                            "count": 1
-                        }
-                    ],
-                    "Security.framework": [
-                        {
-                            "xml": false,
-                            "count": 1
-                        }
-                    ],
-                    "SystemConfiguration.framework": [
-                        {
-                            "xml": false,
-                            "count": 1
-                        }
-                    ]
+                    "AssetsLibrary.framework": [],
+                    "MobileCoreServices.framework": [],
+                    "Security.framework": [],
+                    "SystemConfiguration.framework": []
                 }
             }
         }
@@ -109,14 +81,7 @@
         },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.ionicframework.zmninja469849"
-        },
-        "com.synconset.cordovaHTTP": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
-    "dependent_plugins": {
-        "org.apache.cordova.file": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        }
-    }
+    "dependent_plugins": {}
 }
