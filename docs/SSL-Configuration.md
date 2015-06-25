@@ -41,6 +41,7 @@ sudo service apache2 restart
 Then, you need to install zoneminder.crt in your mobile devices so that zmNinja does not reject the certificate as it is self signed.
 The easiest way to do that is simply email it to yourself and open your email in the phone and install the attachment. Works for both
 iOS and Android. Make sure you install it and go through the prompts
+######Note: Just visiting your https site on mobile safari and "accepting the certificate" DOES NOT mean the certificate is installed in your phone. It simply sets up an exclusion on your browser that does not work for the UI webview inside your app
 
 Once you are done with these steps, zmNinja should be able to connect to ZM via SSL. Make sure you select SSL in the settings
 
