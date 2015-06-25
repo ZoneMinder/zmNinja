@@ -3,7 +3,9 @@
 If your Zoneminder instance has SSL configured and you need zmNinja to connect to ZM over SSL you need to:
 
 1) Make sure you generate the certificates correctly
+
 2) Import the certificate into iOS and Android
+
 
 ###Certificate generation
 
