@@ -35,6 +35,10 @@
                         {
                             "xml": "<feature name=\"StatusBar\"><param name=\"android-package\" value=\"org.apache.cordova.statusbar.StatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Insomnia\"><param name=\"android-package\" value=\"nl.xservices.plugins.Insomnia\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -69,6 +73,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "org.apache.cordova.statusbar": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "nl.x-services.plugins.insomnia": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },

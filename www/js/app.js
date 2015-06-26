@@ -216,7 +216,10 @@ angular.module('zmApp', [
 
 
         setTimeout(function () {
-            $cordovaSplashscreen.hide();
+            if (window.cordova)
+            {
+                $cordovaSplashscreen.hide();
+            }
             }, 1500);
 
         var pixelRatio = window.devicePixelRatio || 1;
