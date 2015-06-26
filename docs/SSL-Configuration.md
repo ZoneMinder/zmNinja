@@ -46,7 +46,8 @@ iOS and Android. Make sure you install it and go through the prompts
 ######Note: Just visiting your https site on mobile safari and "accepting the certificate" DOES NOT mean the certificate is installed in your phone. It simply sets up an exclusion on your browser that does not work for the UI webview inside your app
 
 For example, in iOS, when you double tap on the certificate, you get a screen like this - you need to tap on Install on the top right
-![] (http://www.pbase.com/arjunrc/image/160547522/medium.jpg "SSL Cert")
+![] 
+(http://www.pbase.com/arjunrc/image/160547522/medium.jpg "SSL Cert")
 
 On Android, you will get a dialog box prompting you to install the certificate
 
