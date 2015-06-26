@@ -9,20 +9,19 @@
         <div class="list">
 
             <ion-item class="item-text-wrap">
-                <h2><b> What is an API path?</b> </h2> The latest versions of ZoneMinder have an API that is supposed to replace the XML skin. It is only available starting Zoneminder 1.29. If you don't have the API installed the client WILL NOT WORK.
+                <h2><b> What do I enter for ZM Portal URL, Base path to cgi-bin and ZM API URL?</b> </h2>
+                <ul>
 
+                    <li>ZM Portal URL: The URL using which you can access ZM (example http://myserver.ddns.net/zm)</li>
+                <li>CGI base path: The URL using which your cgi-bin directory is accessible (example http://myserver.ddns.net/). You don't have to enter cgi-bin explictly</li>
+                <li>API Url: The URL using which your API directory is accessible (example: http://myserver.ddns.net/zm/api)</li>
+                </ul>
             </ion-item>
 
             <ion-item class="item-text-wrap">
-                <h2><b> What is ZM base URL, portal alias and API path</b> </h2> Okay, there are multiple ways you can install ZoneMinder. For example, let's say you access zoneminder via http://yourserver.com:8000/zm. Then, http://yoursever.com:8000 is the base portal URL and the alias is zm. It's important you get these right, otherwise the app won't be able to display the data.
+                <h2><b>Since when does ZM have an API?</b> </h2> The latest versions of ZoneMinder have an API that is supposed to replace the XML skin. It is only available starting Zoneminder 1.29. If you don't have the API installed the client WILL NOT WORK.
+
             </ion-item>
-
-
-
-            <ion-item class="item-text-wrap">
-                <h2> <b>What should I be entering in the Base URL and API URL?</b></h2> The base url is typically of the format "http://yourserver:port/" (don't specify zm) The API url is typically of the format "http://yourserver:port/zm/api" But it depends on how you've installed ZoneMinder
-            </ion-item>
-
 
             <ion-item class="item-text-wrap">
                 <h2> <b>I do not have authentication enabled but the app keeps asking me to specify authentication</b></h2> If you don't use ZM authentication, just enter an "x" in both user name and password.
@@ -49,6 +48,13 @@
                 <br/>
 
             </ion-item>
+
+
+            <ion-item class="item-text-wrap">
+                <h2> <b>I can't connect using SSL!</b></h2>
+                Configuring SSL requires additional steps. It's not as simple as flipping the switch on in the app. Please read the <a href="#" onclick="window.open('https://github.com/pliablepixels/zmNinja/blob/master/docs/SSL-Configuration.md', '_blank', 'location=yes'); return false;">instructions</a> for more details.
+            </ion-item>
+
 
             <ion-item class="item-text-wrap">
                 <h2><b>I want to contribute!</b></h2> Awesome. <a href="#" onclick="window.open('http://github.com/pliablepixels/zmNinja', '_blank', 'location=yes'); return false;"> Grab</a> the source code!

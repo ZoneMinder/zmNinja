@@ -123,14 +123,23 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     //-------------------------------------------------------------
     // Send PTZ command to ZM
-    // FIXME: moveCon is hardcoded - won't work with
-    // cams that don't use moveCon.
-    // Need to grab control ID and then control API
+    // Note: PTZ fails on desktop, don't bother about it
     //-------------------------------------------------------------
     function controlPTZ(monitorId, cmd) {
 
     //curl -X POST "http://server.com/zm/index.php?view=request" -d
     //"request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
+
+        if (!$scope.ptzMoveCommand)
+        {
+            $ionicLoading.show({
+            template: "Not Ready for PTZ",
+            noBackdrop: true,
+            duration: 2000,
+        });
+            return;
+        }
+
 
         console.log("Command value " + cmd + " with MID=" + monitorId);
         $ionicLoading.hide();
@@ -166,14 +175,19 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 console.log("****RETURNING " + foo);
                 return foo;
             },
+            //FIXME: Refer to
+            // zoneminder/skins/mobile/includes/control_functions.php
+            // for move commands
+            // logic - /zm/api/monitors/X.json, read ControlId = Y
+            // then zm/api/controls/Y.json
 
             data: {
                 view: "request",
                 request: "control",
                 id: monitorId,
-                control: "moveCon" + cmd,
-                xge: "30",
-                yge: "30",
+                control: $scope.ptzMoveCommand + cmd,
+                xge: "30", //wtf
+                yge: "30", //wtf
             }
 
         });

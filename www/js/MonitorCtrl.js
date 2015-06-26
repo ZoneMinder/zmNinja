@@ -208,16 +208,35 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         console.log("**VIEW ** Monitor Ctrl Unloaded");
     });
 
-    $scope.openModal = function (mid, controllable) {
-        console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable);
+    $scope.openModal = function (mid, controllable, controlid) {
+        console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:"+controlid);
 
         $scope.monitorId = mid;
         $scope.LoginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        $scope.ptzMoveCommand = "";
 
         // This is a modal to show the monitor footage
-        // We need to switch to always awake so the feed doesn't get interrupted
+        // We need to switch to always awake if set so the feed doesn't get interrupted
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+
+        // if its controllable, lets get the control command
+        if (controllable == '1')
+        {
+            var apiurl = $scope.LoginData.apiurl;
+            var myurl = apiurl+"/controls/"+controlid+".json";
+            console.log ("getting control details:"+myurl);
+
+            $http.get(myurl)
+            .success(function(data) {
+                $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1')? 'moveCon':'move';
+                console.log("***moveCommand: " +$scope.ptzMoveCommand );
+            })
+            .error(function(data) {
+                console.log ("** Error retrieving move PTZ command");
+            });
+        }
+
 
         $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
                 scope: $scope,
@@ -234,40 +253,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                 $scope.isControllable = controllable;
                 $scope.showPTZ = false;
                 $scope.modal.show();
-            });
-
-        // do a post login for PTZ
-        var loginData = ZMDataModel.getLogin();
-        console.log("*** MODAL PORTAL LOGIN ****");
-        $http({
-                method: 'POST',
-                url: loginData.url + '/index.php',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json',
-                },
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" +
-                            encodeURIComponent(obj[p]));
-                    var foo = str.join("&");
-                    console.log("****RETURNING " + foo);
-                    return foo;
-                },
-
-                data: {
-                    username: loginData.username,
-                    password: loginData.password,
-                    action: "login",
-                    view: "console"
-                }
-            })
-            .success(function (data) {
-                console.log("**** PORTAL  LOGIN OK");
-            })
-            .error(function (error) {
-                console.log("**** PORTAL LOGIN FAILED");
             });
 
     };
@@ -289,78 +274,10 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         $scope.showPTZ = !$scope.showPTZ;
     };
 
-    function controlPTZ(monitorId, cmd) {
 
-        console.log("Command value " + cmd + " with MID=" + monitorId);
-        $ionicLoading.hide();
-        $ionicLoading.show({
-            template: "please wait...",
-            noBackdrop: true,
-            duration: 15000,
-        });
-
-        var loginData = ZMDataModel.getLogin();
-        $ionicLoading.hide();
-        $ionicLoading.show({
-            template: "Sending PTZ..",
-            noBackdrop: true,
-            duration: 15000,
-        });
-        // console.log ("ANGULAR VERSION: "+JSON.stringify(angular.version));
-        // console.log('Set-Cookie'+ header('Set-Cookie')); //
-
-        var req = $http({
-            method: 'POST',
-            /*timeout: 15000,*/
-            url: loginData.url + '/index.php',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json',
-            },
-            transformRequest: function (obj) {
-                var str = [];
-                for (var p in obj)
-                    str.push(encodeURIComponent(p) + "=" +
-                        encodeURIComponent(obj[p]));
-                var foo = str.join("&");
-                console.log("****RETURNING " + foo);
-                return foo;
-            },
-
-            // FIXME: Refer to
-            // zoneminder/skins/mobile/includes/control_functions.php
-            // for move commands
-            // logic - /zm/api/monitors/X.json, read ControlId = Y
-            // then zm/api/controls/Y.json
-
-            data: {
-                view: "request",
-                request: "control",
-                id: monitorId,
-                //connkey: $scope.connKey,
-                control: "moveCon" + cmd,
-                xge: "30",
-                yge: "30",
-                //user: loginData.username,
-                //pass: loginData.password
-            }
-
-        });
-
-        req.success(function (resp) {
-            $ionicLoading.hide();
-            console.log("SUCCESS: " + JSON.stringify(resp));
-
-            // $ionicLoading.hide();
-
-        });
-
-        req.error(function (resp) {
-            $ionicLoading.hide();
-            console.log("ERROR: " + JSON.stringify(resp));
-        });
-
-    }
+    //-----------------------------------------------------------------------
+    // Controller Main
+    //-----------------------------------------------------------------------
 
 
     function monitorStateCheck() {
