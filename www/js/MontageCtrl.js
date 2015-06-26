@@ -121,14 +121,36 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
     // main monitor modal open
     //---------------------------------------------------------------------
-     $scope.openModal = function (mid, controllable) {
-        console.log("Open Monitor Modal");
+     $scope.openModal = function (mid, controllable, controlid) {
+        console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:"+controlid);
 
         // Note: no need to setAwake(true) as its already awake
         // in montage view
         $scope.monitorId = mid;
         $scope.LoginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+         $scope.ptzMoveCommand = "";
+
+        // This is a modal to show the monitor footage
+        // We need to switch to always awake if set so the feed doesn't get interrupted
+        ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+
+         // if its controllable, lets get the control command
+        if (controllable == '1')
+        {
+            var apiurl = $scope.LoginData.apiurl;
+            var myurl = apiurl+"/controls/"+controlid+".json";
+            console.log ("getting control details:"+myurl);
+
+            $http.get(myurl)
+            .success(function(data) {
+                $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1')? 'moveCon':'move';
+                console.log("***moveCommand: " +$scope.ptzMoveCommand );
+            })
+            .error(function(data) {
+                console.log ("** Error retrieving move PTZ command");
+            });
+        }
 
         // This is a modal to show the monitor footage
         $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {

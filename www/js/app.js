@@ -240,6 +240,7 @@ angular.module('zmApp', [
             $state.go($state.current, {}, {
                 reload: true
             });
+            zmAutoLogin.stop(); //safety
             zmAutoLogin.start();
         }, false);
 
@@ -265,7 +266,7 @@ angular.module('zmApp', [
 
     // lets POST so we get a session ID right hre
 
-    console.log ("Setting up POST LOGIN timer");
+    //console.log ("Setting up POST LOGIN timer");
     zmAutoLogin.start();
 
 }) //run
