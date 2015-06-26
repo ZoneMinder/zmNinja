@@ -17,6 +17,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     $scope.monitors = message;
     var loginData = ZMDataModel.getLogin();
     monitorStateCheck();
+    console.log ("Setting Awake to "+ZMDataModel.getKeepAwake());
+    ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
 
     $scope.openMenu = function () {
@@ -186,9 +188,16 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         console.log("**VIEW ** Monitor Ctrl Loaded");
     });
 
+    //-------------------------------------------------------------------------
+    // Lets make sure we set screen dim properly as we enter
+    // The problem is we enter other states before we leave previous states
+    // from a callback perspective in ionic, so we really can't predictably
+    // reset power state on exit as if it is called after we enter another
+    // state, that effectively overwrites current view power management needs
+    //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** Monitor Ctrl Entered");
-
+        ZMDataModel.setAwake(false);
     });
 
     $scope.$on('$ionicView.leave', function () {
@@ -207,6 +216,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
         // This is a modal to show the monitor footage
+        // We need to switch to always awake so the feed doesn't get interrupted
+        ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
         $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
                 scope: $scope,
@@ -263,6 +274,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
     $scope.closeModal = function () {
         console.log("Close & Destroy Monitor Modal");
+        // switch off awake, as liveview is finished
+        ZMDataModel.setAwake(false);
         $scope.modal.remove();
 
     };
@@ -395,6 +408,9 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
             })(i);
         }
     }
+
+
+
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
         $scope.monitors = [];

@@ -6,4 +6,6 @@
 
 angular.module('zmApp.controllers').controller('zmApp.MonitorModalCtrl', ['$ionicPopup', '$scope', 'ZMDataModel',  '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http',  function ($ionicPopup,$scope, ZMDataModel,  $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope) {
 
+
+
 }]);

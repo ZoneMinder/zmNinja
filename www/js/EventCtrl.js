@@ -143,8 +143,16 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         console.log("**VIEW ** Events Ctrl Loaded");
     });
 
+     //-------------------------------------------------------------------------
+    // Lets make sure we set screen dim properly as we enter
+    // The problem is we enter other states before we leave previous states
+    // from a callback perspective in ionic, so we really can't predictably
+    // reset power state on exit as if it is called after we enter another
+    // state, that effectively overwrites current view power management needs
+    //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** Events Ctrl Entered");
+        ZMDataModel.setAwake(false);
     });
 
     $scope.$on('$ionicView.leave', function () {
@@ -333,6 +341,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         $scope.loginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
+        ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+
         $ionicModal.fromTemplateUrl('templates/events-modal.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
@@ -359,6 +369,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     $scope.closeModal = function () {
        // $interval.cancel(eventsInterval);
         console.log("Close & Destroy Modal");
+        ZMDataModel.setAwake(false);
         if ($scope.modal !== undefined) {
             $scope.modal.remove();
         }

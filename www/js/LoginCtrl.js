@@ -9,6 +9,20 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $scope.loginData = ZMDataModel.getLogin();
 
+
+
+     //-------------------------------------------------------------------------
+    // Lets make sure we set screen dim properly as we enter
+    // The problem is we enter other states before we leave previous states
+    // from a callback perspective in ionic, so we really can't predictably
+    // reset power state on exit as if it is called after we enter another
+    // state, that effectively overwrites current view power management needs
+    //------------------------------------------------------------------------
+    $scope.$on('$ionicView.enter', function () {
+        console.log("**VIEW ** LoginCtrl  Entered");
+        ZMDataModel.setAwake(false);
+    });
+
 //-------------------------------------------------------------------------------
 // Adds http to url if not present
 // http://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript

@@ -4,7 +4,7 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams','$ionicHistory','$ionicScrollDelegate', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http,$state, $stateParams, $ionicHistory,$ionicScrollDelegate) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams','$ionicHistory','$ionicScrollDelegate', '$ionicPlatform', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http,$state, $stateParams, $ionicHistory,$ionicScrollDelegate) {
 
     //---------------------------------------------------------------------
     // Controller main
@@ -12,21 +12,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     document.addEventListener("pause", onPause, false);
 
-    // I was facing a lot of problems with Chrome/crosswalk getting stuck with
-    // pending HTTP requests after a while. There is a problem with chrome handling
-    // multiple streams of always open HTTP get's (image streaming). This problem
-    // does not arise when the image is streamed for a single monitor - just multiple
 
-    // To work around this I am taking a single snapshot of ZMS and have implemented a timer
-    // to reload the snapshot every 1 second. Seems to work reliably even thought its a higer
-    // load. Will it bonk with many monitors? Who knows. I have tried with 5 and 1280x960@32bpp
-
-
-    this.loadNotifications = function () {
-        // randomval is appended to img src, so after each interval the image reloads
-        $scope.randomval = (new Date()).getTime();
-        //console.log ("**** NOTIFICATION with rand="+$scope.randomval+"*****");
-    };
 
     var timestamp = new Date().getUTCMilliseconds();
     $scope.minimal = $stateParams.minimal;
@@ -82,12 +68,30 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
 
 
+     // I was facing a lot of problems with Chrome/crosswalk getting stuck with
+    // pending HTTP requests after a while. There is a problem with chrome handling
+    // multiple streams of always open HTTP get's (image streaming). This problem
+    // does not arise when the image is streamed for a single monitor - just multiple
+
+    // To work around this I am taking a single snapshot of ZMS and have implemented a timer
+    // to reload the snapshot every 1 second. Seems to work reliably even thought its a higer
+    // load. Will it bonk with many monitors? Who knows. I have tried with 5 and 1280x960@32bpp
+
+
+    this.loadNotifications = function () {
+        // randomval is appended to img src, so after each interval the image reloads
+        $scope.randomval = (new Date()).getTime();
+        //console.log ("**** NOTIFICATION with rand="+$scope.randomval+"*****");
+    };
+
     var intervalHandle = $interval(function () {
         this.loadNotifications();
        //  console.log ("Refreshing Image...");
     }.bind(this), 1000);
 
     this.loadNotifications();
+
+
 
     //---------------------------------------------------------------------
     // Triggered when you enter/exit full screen
@@ -120,6 +124,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
      $scope.openModal = function (mid, controllable) {
         console.log("Open Monitor Modal");
 
+        // Note: no need to setAwake(true) as its already awake
+        // in montage view
         $scope.monitorId = mid;
         $scope.LoginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
@@ -150,6 +156,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.closeModal = function () {
         console.log("Close & Destroy Monitor Modal");
+        // Note: no need to setAwake(false) as needs to be awake
+        // in montage view
         $scope.modal.remove();
 
     };
@@ -221,6 +229,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         console.log("*** Moving to Background ***"); // Handle the pause event
         console.log("*** CANCELLING INTERVAL ****");
         $interval.cancel(intervalHandle);
+        // FIXME: Do I need to  setAwake(false) here?
     }
 
 
@@ -241,6 +250,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** Montage Ctrl Entered");
+        console.log ("Setting Awake to "+ZMDataModel.getKeepAwake());
+        ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
     });
 
     $scope.$on('$ionicView.leave', function () {

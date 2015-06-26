@@ -22,7 +22,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'streamingurl': "",
         'maxFPS': "3", // image streaming FPS
         'montageQuality': "50", // montage streaming quality in %
-        'useSSL':false // "1" if HTTPS
+        'useSSL':false, // "1" if HTTPS
+        'keepAwake':true // don't dim/dim during live view
     };
 
     return {
@@ -103,6 +104,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             }
 
+            if (window.localStorage.getItem("keepAwake") != undefined) {
+                 var awakevalue =  window.localStorage.getItem("keepAwake");
+                loginData.keepAwake = (awakevalue == "1") ? true:false;
+                        console.log("keepAwake  " + loginData.keepAwake);
+
+            }
 
             monitorsLoaded = 0;
             console.log("Getting out of ZMDataModel init");
@@ -110,15 +117,57 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         },
 
         isLoggedIn: function () {
-            if (loginData.username != "" && loginData.password != "" && loginData.url != "" && loginData.apiurl != "") {
+            if (loginData.username != "" && loginData.password != "" && loginData.url != "" && loginData.apiurl != "")             {
                 return 1;
             } else
                 return 0; {}
         },
 
+
         getLogin: function () {
             return loginData;
         },
+
+        getKeepAwake: function () {
+            return (loginData.keepAwake == '1') ? true:false;
+        },
+
+        //------------------------------------------------------------------
+        // switches screen to 'always on' or 'auto'
+        //------------------------------------------------------------------
+        setAwake: function(val)
+        {
+
+
+            console.log ("**** setAwake called with:" + val);
+            if (val)
+            {
+
+                 if (window.cordova != undefined)
+                 {
+                    window.plugins.insomnia.keepAwake();
+                 }
+                 else
+                 {
+                     console.log ("Skipping insomnia, cordova does not exist");
+                 }
+            }
+            else
+            {
+                if (window.cordova != undefined)
+                 {
+                    window.plugins.insomnia.allowSleepAgain();
+                 }
+                 else
+                 {
+                     console.log ("Skipping insomnia, cordova does not exist");
+                 }
+
+
+            }
+
+        },
+
         setLogin: function (newLogin) {
             loginData = newLogin;
 
@@ -128,6 +177,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
             window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
+            window.localStorage.setItem("keepAwake", loginData.keepAwake?"1":"0");
             window.localStorage.setItem("maxMontage", loginData.maxMontage);
             window.localStorage.setItem("montageQuality", loginData.montageQuality);
 
@@ -349,6 +399,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             console.log("ZMData.setMonitorsLoaded=" + loaded);
             monitorsLoaded = loaded;
         },
+
+
 
         //-----------------------------------------------------------------------------
         // Given a monitor Id it returns the monitor name

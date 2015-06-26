@@ -9,6 +9,18 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         $ionicSideMenuDelegate.toggleLeft();
     };
 
+    //-------------------------------------------------------------------------
+    // Lets make sure we set screen dim properly as we enter
+    // The problem is we enter other states before we leave previous states
+    // from a callback perspective in ionic, so we really can't predictably
+    // reset power state on exit as if it is called after we enter another
+    // state, that effectively overwrites current view power management needs
+    //------------------------------------------------------------------------
+    $scope.$on('$ionicView.enter', function () {
+        console.log("**VIEW ** DevOptions Ctrl Entered");
+        ZMDataModel.setAwake(false);
+    });
+
 //------------------------------------------------------------------
 // Perform the login action when the user submits the login form
 //------------------------------------------------------------------
