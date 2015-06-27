@@ -14,7 +14,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     $scope.sendEmail = function (logstring) {
         $ionicPopup.confirm({
                 title: 'Sensitive Information',
-                template: 'zmNinja tries its best to remove sensitive data like urls and passwords, but it is eventually your responsibility to make sure there is no sensitive data in the logs. If you are not sure, please click Cancel'
+                template: 'zmNinja will modify the logs when creating the email to remove sensitive data like urls and passwords. However it is eventually <b>your responsibility</b> to make sure there is no sensitive data in the logs. Please make sure you review and edit the logs in the next screen before you send.'
             })
             .then(function (res) {
                 if (res) sendEmailReally(logstring);
@@ -46,7 +46,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 logstring = logstring.replace(re3, "<server>");
 
                 var email = {
-                    to: '',
+                    to: 'pliablepixels+zmNinja@gmail.com',
                     subject: 'zmNinja Logs',
                     body: logstring,
                     isHtml: false
