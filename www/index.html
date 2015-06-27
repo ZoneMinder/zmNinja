@@ -27,15 +27,16 @@
     error interceptor in app.js -->
 
     <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
+    <script src="lib/filelogger/dist/filelogger.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
+
 
 
     <!-- your app's js -->
 
-    <script src="js/templates.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
 
@@ -49,6 +50,7 @@
     <script src="js/HelpCtrl.js"></script>
     <script src="js/StateCtrl.js"></script>
     <script src="js/DevOptionsCtrl.js"></script>
+    <script src="js/LogCtrl.js"></script>
 
 
     <script src="lib/angular-circular-navigation/angular-circular-navigation.js"></script>
@@ -134,6 +136,14 @@
                             <i class="icon ion-help"></i>
                         </span> Help
                     </ion-item>
+
+                    <ion-item nav-clear menu-close href="#/log">
+                        <span class=" item-icon-left">
+                            <i class="icon ion-clipboard"></i>
+                        </span> Logs
+                    </ion-item>
+
+
                 </ion-list>
             </ion-content>
         </ion-side-menu>

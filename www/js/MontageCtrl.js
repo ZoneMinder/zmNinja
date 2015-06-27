@@ -146,9 +146,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             .success(function(data) {
                 $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1')? 'moveCon':'move';
                 console.log("***moveCommand: " +$scope.ptzMoveCommand );
+                ZMDataModel.zmLog ("ControlDB reports PTZ command to be " + $scope.ptzMoveCommand );
             })
             .error(function(data) {
                 console.log ("** Error retrieving move PTZ command");
+                ZMDataModel.zmLog ("Error retrieving PTZ command  " + JSON.stringify(data),"error");
             });
         }
 

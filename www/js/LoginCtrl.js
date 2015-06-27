@@ -138,6 +138,7 @@ function addhttp(url) {
             },
             function (error) {
                 $ionicLoading.hide();
+                ZMDataModel.zmLog("Settings check error: " +JSON.stringify(error),"error");
                 //alert("Error string" + JSON.stringify(error));
 
                 $ionicPopup.show({
@@ -155,6 +156,7 @@ function addhttp(url) {
                                     title: 'Error Details',
                                     template: JSON.stringify(error)
                                 });
+
                             }
                         }
                     ]

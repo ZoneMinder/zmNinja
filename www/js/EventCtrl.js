@@ -208,7 +208,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     //--------------------------------------------------------
     this.pollEventsProgress = function()
     {
-        console.log ("**************");
+       // console.log ("**************");
     };
 
     //--------------------------------------------------------
@@ -322,6 +322,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
         req.error(function (resp) {
             console.log("ERROR: " + JSON.stringify(resp));
+            ZMDataModel.zmLog("Error sending event command " +JSON.stringify(resp), "error");
         });
     };
 

@@ -81,6 +81,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             endDate = cur.format("YYYY-MM-DD hh:mm:ss");
             startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD hh:mm:ss");
             console.log("Start and End " + startDate + "==" + endDate);
+            ZMDataModel.zmLog("Generating graph for " + startDate + " to " + endDate);
 
         }
 
@@ -139,6 +140,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                             // but what I am really doing now is treating it like no events
                             // works but TBD: make this into a proper error handler
                             $scope.data.datasets[0].data[j] = 0;
+                            ZMDataModel.zmLog ("Error retrieving events for graph " + JSON.stringify(data), "error");
                         });
                 })(i); // j
             } //for

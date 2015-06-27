@@ -8,6 +8,8 @@ $scope.openMenu = function () {
   };
 
 
+
+
      //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
     // The problem is we enter other states before we leave previous states
@@ -18,6 +20,7 @@ $scope.openMenu = function () {
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** Help Ctrl Entered");
         ZMDataModel.setAwake(false);
+
     });
 
 }]);
