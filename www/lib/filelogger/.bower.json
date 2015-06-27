@@ -1,0 +1,40 @@
+{
+  "name": "filelogger",
+  "version": "1.1.0",
+  "homepage": "https://github.com/pbakondy/filelogger",
+  "authors": [
+    "Peter Bakondy <pbakondy@gmail.com>"
+  ],
+  "description": "Cordova library to log messages to local filesystem",
+  "main": "./dist/filelogger.min.js",
+  "ignore": [
+    "**/.*",
+    "gulpfile.js",
+    "src",
+    "config"
+  ],
+  "dependencies": {
+    "ngCordova": ">= 0.1.14-alpha"
+  },
+  "keywords": [
+    "cordova",
+    "cordova plugin",
+    "ionic",
+    "ionic plugin",
+    "angular module",
+    "log",
+    "logger",
+    "file logger"
+  ],
+  "license": "MIT",
+  "_release": "1.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.0",
+    "commit": "4b5f765cf1737a51cc29bcaeca035d72eb6e8272"
+  },
+  "_source": "git://github.com/pbakondy/filelogger.git",
+  "_target": "~1.1.0",
+  "_originalSource": "filelogger",
+  "_direct": true
+}

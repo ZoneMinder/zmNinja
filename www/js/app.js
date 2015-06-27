@@ -7,6 +7,7 @@
 angular.module('zmApp', [
                             'ionic',
                             'zmApp.controllers',
+                            'fileLogger'
                         ])
 
 //------------------------------------------------------------------
@@ -51,7 +52,7 @@ angular.module('zmApp', [
             }
             else
             {
-                console.log ("HTTP INTERCEPT:Skipping HTTP timeout for "+config.url);
+                //console.log ("HTTP INTERCEPT:Skipping HTTP timeout for "+config.url);
             }
             //console.log("*** HTTP URL INTERCEPTOR CALLED with "+config.url+" ***");
             return config;
@@ -70,6 +71,7 @@ angular.module('zmApp', [
     function doLogin()
     {
         console.log ("**** ZM AUTO LOGIN CALLED");
+        ZMDataModel.zmLog("zmAutologin timer started");
         var loginData = ZMDataModel.getLogin();
         $http({
             method:'POST',
@@ -98,10 +100,12 @@ angular.module('zmApp', [
         .success(function(data)
         {
             console.log ("**** ZM Login OK");
+            ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
         })
         .error(function(error)
         {
             console.log ("**** ZM Login FAILED");
+            ZMDataModel.zmLog ("zmAutologin Error " + JSON.stringify(error), "error");
         });
     }
 
@@ -120,6 +124,7 @@ angular.module('zmApp', [
     function stop()
     {
         $interval.cancel(zmAutoLoginHandle);
+        ZMDataModel.zmLog("Cancelling zmAutologin timer");
 
     }
 
@@ -166,6 +171,7 @@ angular.module('zmApp', [
     var loginData = ZMDataModel.getLogin();
 
     if (ZMDataModel.isLoggedIn()) {
+        ZMDataModel.zmLog ("User is logged in");
         console.log("VALID CREDENTIALS. Grabbing Monitors");
         ZMDataModel.getMonitors(0);
 
@@ -179,6 +185,7 @@ angular.module('zmApp', [
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
         console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+        ZMDataModel.zmLog("Device orientation change: "+$rootScope.devWidth + "*" + $rootScope.devHeight);
     };
 
     window.addEventListener("resize", checkOrientation, false);
@@ -211,7 +218,9 @@ angular.module('zmApp', [
     $ionicPlatform.ready(function () {
 
         // generates and error in desktops but works fine
+        ZMDataModel.zmLog("Device is ready");
         console.log("**** DEVICE READY ***");
+
 
 
         setTimeout(function () {
@@ -234,6 +243,7 @@ angular.module('zmApp', [
         // from foreground to background and back
         document.addEventListener("resume", function () {
             console.log("****The application is resuming from the background");
+            ZMDataModel.zmLog("App is resuming from background");
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             console.log("** generated Random of " + $rootScope.rand);
             $state.go($state.current, {}, {
@@ -246,6 +256,7 @@ angular.module('zmApp', [
 
         document.addEventListener("pause", function () {
             console.log("****The application is going into  background");
+            ZMDataModel.zmLog("App is going into background");
              zmAutoLogin.stop();
 
         }, false);
@@ -359,6 +370,15 @@ angular.module('zmApp', [
         url: "/devoptions",
         templateUrl: "templates/devoptions.html",
         controller: 'zmApp.DevOptionsCtrl',
+    })
+
+    .state('log', {
+        data: {
+            requireLogin: false
+        },
+        url: "/log",
+        templateUrl: "templates/log.html",
+        controller: 'zmApp.LogCtrl',
     })
 
     .state('montage', {

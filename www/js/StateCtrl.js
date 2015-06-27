@@ -64,6 +64,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 function (error) {
                     $scope.zmDisk = "unknown";
                     console.log("ERROR:" + JSON.stringify(error));
+                    ZMDataModel.zmLog("Error retrieving DiskStatus: " + JSON.stringify(error),"error");
                 }
             );
     }
@@ -95,6 +96,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 },
                 function (error) {
                     console.log("ERROR in getRun: " + JSON.stringify(error));
+                      ZMDataModel.zmLog("Error getting RunStatus " + JSON.stringify(error),"error");
                     $scope.color = 'color:red;';
                     $scope.zmRun = 'undetermined';
                 }
@@ -119,6 +121,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 },
                 function (error) {
                     console.log("ERROR in getLoad: " + JSON.stringify(error));
+                      ZMDataModel.zmLog("Error retrieving loadStatus " + JSON.stringify(error),"error");
                     $scope.zmLoad = 'undetermined';
                 }
             );
@@ -176,6 +179,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                                     //if (error.status) // it seems to return error with status 0 if ok
                                     // {
                                     console.log("ERROR in Change State:" + JSON.stringify(error));
+                                    ZMDataModel.zmLog("Error in change run state:"+JSON.stringify(error),"error");
                                     $scope.zmRun = 'undetermined';
                                     $scope.color = 'color:orange;';
                                     inProgress = 0;

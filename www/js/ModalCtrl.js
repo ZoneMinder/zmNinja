@@ -203,6 +203,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         req.error(function (resp) {
             $ionicLoading.hide();
             console.log("ERROR: " + JSON.stringify(resp));
+            ZMDataModel.zmLog("Error sending PTZ:" + JSON.stringify(resp), "error");
         });
     }
 

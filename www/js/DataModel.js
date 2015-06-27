@@ -7,7 +7,7 @@
 // that many other controllers use
 // It's grown over time. I guess I may have to split this into multiple services in the future
 
-angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', function ($http, $q, $ionicLoading, $ionicBackdrop) {
+angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger) {
 
     var monitorsLoaded = 0;
     var montageSize = 3;
@@ -26,7 +26,27 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'keepAwake':true // don't dim/dim during live view
     };
 
+    //--------------------------------------------------------------------------
+    // uses fileLogger to write logs to file for later investigation
+    //--------------------------------------------------------------------------
+    function zmLog(val,logtype)
+    {
+        $fileLogger.log(logtype, val);
+    }
+
     return {
+
+        //-------------------------------------------------------------
+        // used by various controllers to log messages to file
+        //-------------------------------------------------------------
+
+        zmLog: function (val,type) {
+            var logtype = 'info';
+           if (type != undefined)
+                 logtype = type ;
+             zmLog(val,logtype);
+
+        },
 
         // This function is called when the app is ready to run
         // sets up various variables
@@ -36,9 +56,16 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         // the ZM portal authentication, which is pretty messy. But unless
         // the ZM authors fix this and streamline the access of images
         // from APIs, I don't have an option
-
         init: function () {
             console.log("****** DATAMODEL INIT SERVICE CALLED ********");
+
+            zmLog("ZMData init: checking for stored variables & setting up log file");
+
+            $fileLogger.setStorageFilename('zmNinjaLog.txt');
+
+            $fileLogger.deleteLogfile().then(function() {
+                console.log('Logfile deleted');
+            });
 
             if (window.localStorage.getItem("username") != undefined) {
                 loginData.username =
@@ -140,6 +167,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
 
             console.log ("**** setAwake called with:" + val);
+            zmLog("Switching screen always on to " + val);
             if (val)
             {
 
@@ -170,7 +198,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         setLogin: function (newLogin) {
             loginData = newLogin;
-
+            zmLog("Saving all parameters to storage");
             window.localStorage.setItem("username", loginData.username);
             window.localStorage.setItem("password", loginData.password);
             window.localStorage.setItem("url", loginData.url);
@@ -222,6 +250,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             if ((monitorsLoaded == 0) || (forceReload == 1)) // monitors are empty or force reload
             {
                 console.log("ZMDataModel: Invoking HTTP get to load monitors");
+                zmLog ( (forceReload==1)? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + "/monitors.json";
                 $http.get(myurl /*,{timeout:15000}*/ )
@@ -232,9 +261,11 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                         monitorsLoaded = 1;
                         d.resolve(monitors);
                         $ionicLoading.hide();
+                        zmLog ("Monitor load was successful, loaded " + monitors.length + " monitors");
                     })
                     .error(function (err) {
                         console.log("HTTP Error " + err);
+                        zmLog ("Monitor load failed " + JSON.stringify(err), "error");
                         // To keep it simple for now, I'm translating an error
                         // to imply no monitors could be loaded. FIXME: conver to proper error
                         monitors = [];
@@ -248,6 +279,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             } else // monitors are loaded
             {
                 console.log("Returning pre-loaded list of " + monitors.length + " monitors");
+                zmLog("Returning pre-loaded list of " + monitors.length + " monitors");
                 d.resolve(monitors);
                 $ionicLoading.hide();
                 return d.promise;
@@ -285,6 +317,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 })
                 .error(function (error) {
                     console.log("*** ERROR GETTING TOTAL PAGES ***");
+                    zmLog ("Error retrieving page count of events " + JSON.stringify(error), "error");
                     d.reject(error);
                     return d.promise;
                 });
@@ -349,6 +382,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 .error(function (err) {
                     if (loadingStr != 'none') $ionicLoading.hide();
                     console.log("HTTP Events error " + err);
+                    zmLog("Error fetching events for page " + pageId + " Err: " + JSON.stringify(err), "error");
                     // I need to reject this as I have infinite scrolling
                     // implemented in EventCtrl.js --> and if it does not know
                     // it got an error going to the next page, it will get into
@@ -378,6 +412,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         setMontageSize: function (montage) {
             montageSize = montage;
         },
+
+
 
         //-----------------------------------------------------------------------------
         //
