@@ -61,12 +61,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             zmLog("ZMData init: checking for stored variables & setting up log file");
 
-            $fileLogger.setStorageFilename('zmNinjaLog.txt');
-
-            $fileLogger.deleteLogfile().then(function() {
-                console.log('Logfile deleted');
-            });
-
             if (window.localStorage.getItem("username") != undefined) {
                 loginData.username =
                     window.localStorage.getItem("username");
