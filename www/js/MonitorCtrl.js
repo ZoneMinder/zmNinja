@@ -285,8 +285,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
         // The status is provided by zmdc.pl
         // "not running", "pending", "running since", "Unable to connect"
-
-        for (var i = 0; i < $scope.monitors.length; i++) {
+        var i;
+        for ( i = 0; i < $scope.monitors.length; i++) {
             (function (j) {
                 $scope.monitors[j].Monitor.isRunningText = "...";
                 $scope.monitors[j].Monitor.isRunning = "...";
