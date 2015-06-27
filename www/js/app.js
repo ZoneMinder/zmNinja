@@ -164,7 +164,7 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin)
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger)
 {
 
     ZMDataModel.init();
@@ -220,6 +220,11 @@ angular.module('zmApp', [
         // generates and error in desktops but works fine
         ZMDataModel.zmLog("Device is ready");
         console.log("**** DEVICE READY ***");
+
+        $fileLogger.deleteLogfile().then(function() {
+                console.log('Logfile deleted');
+            });
+         $fileLogger.setStorageFilename('zmNinjaLog.txt');
 
 
 

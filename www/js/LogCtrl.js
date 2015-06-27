@@ -2,27 +2,59 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
 
+    //--------------------------------------------------------------------------
+    // Make sure user knows information masking is best effort
+    //--------------------------------------------------------------------------
+
+    $scope.sendEmail = function (logstring) {
+        $ionicPopup.confirm({
+                title: 'Sensitive Information',
+                template: 'zmNinja tries its best to remove sensitive data like urls and passwords, but it is eventually your responsibility to make sure there is no sensitive data in the logs. If you are not sure, please click Cancel'
+            })
+            .then(function (res) {
+                if (res) sendEmailReally(logstring);
+
+            });
+    };
 
     //--------------------------------------------------------------------------
     // Convenience function to send logs via email
     //--------------------------------------------------------------------------
-    $scope.sendEmail = function (logstring) {
+    function sendEmailReally(logstring) {
         if (window.cordova) {
-            // pass= password= should be replaced
-            //logstring = logstring.replace(/password=*?/g, 'password=xxxx'
+
             $cordovaEmailComposer.isAvailable().then(function () {
+
+                // do my best to replace sensitive information
+                var loginData = ZMDataModel.getLogin();
+                var re1 = new RegExp(loginData.password, "g");
+                logstring = logstring.replace(re1, "<deleted>");
+                // keep the protocol, helps to debug
+                var urlNoProtocol = loginData.url.replace(/.*?:\/\//, "");
+                var re2 = new RegExp(urlNoProtocol, "g");
+                // just replacing baseurl - that will take care of
+                // masking api but may not be cgi
+                logstring = logstring.replace(re2, "<server>");
+
+                urlNoProtocol = loginData.streamingurl.replace(/.*?:\/\//, "");
+                var re3 = new RegExp(urlNoProtocol, "g");
+                logstring = logstring.replace(re3, "<server>");
+
                 var email = {
                     to: '',
                     subject: 'zmNinja Logs',
                     body: logstring,
                     isHtml: false
                 };
-                $cordovaEmailComposer.open(email);
+                $cordovaEmailComposer.open(email)
+                    .then(null, function () {
+                        // user cancelled email
+                    });
             }, function () {
                 ZMDataModel.zmLog("Email plugin not found", "error");
             });
@@ -30,7 +62,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             console.log("Skipping email module as cordova does not exist");
         }
 
-    };
+    }
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
