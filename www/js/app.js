@@ -7,7 +7,6 @@
 angular.module('zmApp', [
                             'ionic',
                             'zmApp.controllers',
-                            //'cordovaHTTP'
                         ])
 
 //------------------------------------------------------------------
