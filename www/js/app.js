@@ -164,7 +164,7 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger)
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout)
 {
 
     ZMDataModel.init();
@@ -221,9 +221,25 @@ angular.module('zmApp', [
         ZMDataModel.zmLog("Device is ready");
         console.log("**** DEVICE READY ***");
 
-        $fileLogger.deleteLogfile().then(function() {
+
+              $fileLogger.checkFile().then(function(resp) {
+            if (parseInt(resp.size) > 50000)
+            {
+                console.log ("Deleting old log file as it exceeds 50K bytes");
+                $fileLogger.deleteLogfile().then(function()
+                {
                 console.log('Logfile deleted');
-            });
+                });
+            }
+            else
+            {
+                console.log ("Log file size is " + resp.size + " bytes");
+            }
+
+
+        });
+
+
          $fileLogger.setStorageFilename('zmNinjaLog.txt');
 
 

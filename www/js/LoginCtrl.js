@@ -113,6 +113,7 @@ function addhttp(url) {
 
 
         console.log("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
+        ZMDataModel.zmLog ("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
 
 
         // Let's do a sanity check to see if the URLs are ok
