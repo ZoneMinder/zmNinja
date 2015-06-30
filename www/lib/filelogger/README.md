@@ -12,9 +12,15 @@ When you run your application in browser with „ionic serve” the Logger uses 
 ## Dependencies
 
 - [ngCordova](http://ngcordova.com/) ( required version v0.1.14-alpha )
-- [org.apache.cordova.file](https://github.com/apache/cordova-plugin-file)
+- [cordova-plugin-file](https://github.com/apache/cordova-plugin-file)
 
 ## Installation
+
+Add cordova plugin:
+
+```bash
+$ cordova plugin add cordova-plugin-file
+```
 
 Install manually, or from bower:
 
@@ -35,30 +41,30 @@ Comment: you don't have to use the complete ngCordova package. I suggest to crea
 
 ## Usage
 
-### $fileLogger.log()
+### $fileLogger.log(level, ...message)
 
 General logger method. The first parameter is the log level (debug, info, warn, error). The following parameters are the message parts.
 You can put here any javascript type (string, number, boolean, object, array).
 
 In the logfile every item starts with the current UTC timestamp, followed by the log level and the message.
 
-### $fileLogger.debug()
+### $fileLogger.debug(...message)
 
 Wrapper for $fileLogger.log('debug', ...)
 
-### $fileLogger.info()
+### $fileLogger.info(...message)
 
 Wrapper for $fileLogger.log('info', ...)
 
-### $fileLogger.warn()
+### $fileLogger.warn(...message)
 
 Wrapper for $fileLogger.log('warn', ...)
 
-### $fileLogger.error()
+### $fileLogger.error(...message)
 
 Wrapper for $fileLogger.log('error', ...)
 
-### $fileLogger.setStorageFilename()
+### $fileLogger.setStorageFilename(filename)
 
 You can set the local filename (default messages.log). It requests one parameter, the filename (type string).
 
@@ -70,13 +76,49 @@ You can read the whole logfile from the filestore. This method returns a promise
 
 You can delete the logfile from the filestore. This method returns a promise.
 
+### $fileLogger.checkFile()
 
+Get storage file data. This method returns an object.
+
+```js
+// response on iOS
+{
+  "name": "myLog.txt",
+  "localURL": "cdvfile://localhost/library-nosync/myLog.txt",
+  "type": null,
+  "lastModified": 1435668606000,
+  "lastModifiedDate": 1435668606000,
+  "size": 450,
+  "start": 0,
+  "end": 450
+}
+
+// response on Android
+{
+  "name": "myLog.txt",
+  "localURL": "cdvfile://localhost/files/myLog.txt",
+  "type": "text/plain",
+  "lastModified": 1435669292000,
+  "lastModifiedDate": 1435669292000,
+  "size": 450,
+  "start": 0,
+  "end": 450
+}
+
+// response in Browser
+{
+  "name": "myLog.txt",
+  "localURL": "localStorage://localhost/myLog.txt",
+  "type": "text/plain",
+  "size": 450
+}
+```
 
 ### Example use
 
 ```js
 angular.module('starter', ['ionic', 'fileLogger'])
-  .controller('mainCtrl', ['$scope', '$fileLogger', function($scope, $fileLogger) {
+  .controller('mainCtrl', ['$scope', '$fileLogger', '$timeout', function($scope, $fileLogger, $timeout) {
 
   function testing() {
 
@@ -96,14 +138,25 @@ angular.module('starter', ['ionic', 'fileLogger'])
 
     $fileLogger.log('info', 'message', 123, [1, 2, 3], { a: 1, b: '2' });
 
-    $fileLogger.getLogfile().then(function(l) {
-      console.log('Logfile content');
-      console.log(l);
-    });
+    $timeout(function(){
+      $fileLogger.getLogfile().then(function(l) {
+        console.log('Logfile content');
+        console.log(l);
+      });
+    }, 1000);
 
-    $fileLogger.deleteLogfile().then(function() {
-      console.log('Logfile deleted');
-    });
+    $timeout(function(){
+      $fileLogger.checkFile().then(function(d) {
+        console.log('Logfile data');
+        console.log(JSON.stringify(d));
+      });
+    }, 2000);
+
+    $timeout(function(){
+      $fileLogger.deleteLogfile().then(function() {
+        console.log('Logfile deleted');
+      });
+    }, 3000);
 
   }
 

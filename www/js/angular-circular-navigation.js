@@ -1,3 +1,4 @@
+// PP - Modified to show at right angles
 (function () {
 
   'use strict';

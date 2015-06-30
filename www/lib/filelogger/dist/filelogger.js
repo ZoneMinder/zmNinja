@@ -6,11 +6,13 @@
 (function(){
 /* global angular, console, cordova */
 
-// install   :     cordova plugin add org.apache.cordova.file
+// install   :     cordova plugin add cordova-plugin-file
 
 angular.module('fileLogger', ['ngCordova.plugins.file'])
 
-  .factory('$fileLogger', ['$q', '$window', '$cordovaFile', '$timeout', function ($q, $window, $cordovaFile, $timeout) {
+  .factory('$fileLogger', ['$q', '$window', '$cordovaFile', '$timeout',
+    function ($q, $window, $cordovaFile, $timeout) {
+
     'use strict';
 
 
@@ -41,13 +43,24 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
 
       var messages = Array.prototype.slice.call(arguments, 1);
       var message = [ timestamp, level ];
+      var text;
 
       for (var i = 0; i < messages.length; i++ ) {
         if (angular.isArray(messages[i])) {
-          message.push(JSON.stringify(messages[i]));
+          text = '[Array]';
+          try {
+            // avoid "TypeError: Converting circular structure to JSON"
+            text = JSON.stringify(messages[i]);
+          } catch(e) {}
+          message.push(text);
         }
         else if (angular.isObject(messages[i])) {
-          message.push(JSON.stringify(messages[i]));
+          text = '[Object]';
+          try {
+            // avoid "TypeError: Converting circular structure to JSON"
+            text = JSON.stringify(messages[i]);
+          } catch(e) {}
+          message.push(text);
         }
         else {
           message.push(messages[i]);
@@ -230,6 +243,29 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
     }
 
 
+    function checkFile() {
+      var q = $q.defer();
+
+      if (isBrowser()) {
+
+        q.resolve({
+          'name': storageFilename,
+          'localURL': 'localStorage://localhost/' + storageFilename,
+          'type': 'text/plain',
+          'size': ($window.localStorage[storageFilename] ? $window.localStorage[storageFilename].length : 0)
+        });
+
+      } else {
+
+        $cordovaFile.checkFile(cordova.file.dataDirectory, storageFilename).then(function(fileEntry) {
+          fileEntry.file(q.resolve, q.reject);
+        }, q.reject);
+
+      }
+
+      return q.promise;
+    }
+
     function debug() {
       var args = Array.prototype.slice.call(arguments, 0);
       args.unshift('DEBUG');
@@ -263,6 +299,7 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
       getLogfile: getLogfile,
       deleteLogfile: deleteLogfile,
       setStorageFilename: setStorageFilename,
+      checkFile: checkFile,
       debug: debug,
       info: info,
       warn: warn,
