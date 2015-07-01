@@ -287,15 +287,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     });
 
     //---------------------------------------------------------
-    // slider is tied to the view slider for montage
-    //Remember not to use a variable. I'm using an object
-    // so it's passed as a reference - otherwise it makes
-    // a copy and the value never changes
+    // This function readjusts  montage size
+    //  and stores current size to persistent memory
     //---------------------------------------------------------
 
-    $scope.sliderChanged = function ()
+    function processSliderChanged()
     {
-       console.log('Slider has changed');
+        console.log('Slider has changed');
         ZMDataModel.setMontageSize($scope.slider.monsize);
         console.log("Rootscope Montage is " + ZMDataModel.getMontageSize() +
                     " and slider montage is " + $scope.slider.monsize);
@@ -313,6 +311,31 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         monsizestring = monsizestring.slice(0,-1); // kill last :
         console.log ("Setting monsize string:"+monsizestring);
         window.localStorage.setItem("montageArraySize", monsizestring);
+    }
+
+    //---------------------------------------------------------
+    // In full screen montage view, I call this function
+    // as slider is hidden
+    //---------------------------------------------------------
+
+    $scope.changeSize = function (val)
+    {
+        $scope.slider.monsize += val;
+        if ($scope.slider.monsize < 1) $scope.slider.monsize = 1;
+        if ($scope.slider.monsize > 6) $scope.slider.monsize = 6;
+        processSliderChanged();
+    };
+
+    //---------------------------------------------------------
+    // slider is tied to the view slider for montage
+    //Remember not to use a variable. I'm using an object
+    // so it's passed as a reference - otherwise it makes
+    // a copy and the value never changes
+    //---------------------------------------------------------
+
+    $scope.sliderChanged = function ()
+    {
+       processSliderChanged();
 
     };
 

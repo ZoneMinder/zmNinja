@@ -1,4 +1,8 @@
 // PP - Modified to show at right angles
+/* jshint -W041 */
+/* jslint browser: true*/
+/* global cordova,StatusBar,angular,console */
+
 (function () {
 
   'use strict';
