@@ -10,7 +10,7 @@
     </ion-nav-buttons>
 
 
-    <ion-content padding="true">
+    <ion-content>
         <div ng-controller="ModalCtrl">
             <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
             <span ng-show="!minimal">
@@ -35,7 +35,8 @@
                     <img ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth-30)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" on-hold="onHold($index)" on-release="onRelease($index)" />
                 </article>
 
-                <span ng-show="!minimal">
+
+                <!-- <span ng-show="!minimal">
                     <span style="font-size:10px;">
                         <footer class="footer">
 
@@ -46,21 +47,29 @@
 
                                :{{monitor.Monitor.Function}}
                             </span>
-                </footer>
-                </span>
-                </span>
-                </span>
+                        </footer>
+                    </span>
+                </span>-->
 
-                <div ng-show="minimal">
-                    <br/>
-                    <button class="button button-outline button-positive" ng-click="switchMinimal()">
-                        exit full screen view
-                    </button>
-                </div>
+                </span>
+                <!--ng repeat -->
+
             </div>
         </div>
         <!--ngcontroller -->
 
 
     </ion-content>
+    <div ng-show="minimal">
+
+        <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+            <button mfb-button icon="ion-close" label="exit full screen" ng-click="switchMinimal()"></button>
+             <button mfb-button icon="ion-arrow-expand" label="increase size" ng-click="changeSize(1)"></button>
+            <button mfb-button icon="ion-arrow-shrink" label="decrease size" ng-click="changeSize(-1)"></button>
+        </nav>
+
+
+    </div>
+
+
 </ion-view>

@@ -40,7 +40,6 @@ angular.module('zmApp', [
 // Also remember you need to add it to .config
 //------------------------------------------------------------------
 .factory('timeoutHttpIntercept', function ($rootScope, $q) {
-    //console.log("*** HTTP INTERCEPTOR CALLED ***");
     return {
         'request': function (config) {
             if ( !(config.url.indexOf("stop.json") > -1 ||
@@ -54,7 +53,6 @@ angular.module('zmApp', [
             {
                 //console.log ("HTTP INTERCEPT:Skipping HTTP timeout for "+config.url);
             }
-            //console.log("*** HTTP URL INTERCEPTOR CALLED with "+config.url+" ***");
             return config;
         }
 

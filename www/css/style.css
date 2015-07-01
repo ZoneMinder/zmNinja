@@ -27,24 +27,30 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 }
 
 .wrapper > * {
-    padding: 5px;
+    /*padding: 5px;*/
     /*flex: 1 100%; -- I commented this out - the wrapper was taking up full width in Chrome*/
 }
 
 .header {
     background: #DDDDDD;
+    border-color: #CCCCCC;
+     border-style: solid;
+    border-width:1px;
 }
 
 .footer {
     background: #666666;
+    border-color:#AAAAAA;
     color:#ffffff;
-    padding:2px;
+     border-width:1px;
+    /*padding:2px;*/
 }
 
 .main {
     text-align: center;
     background: #EEEEEE;
-    padding:2px;
+
+    /*padding:2px;*/
 }
 
 .aside-1 {
@@ -55,7 +61,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     background: hotpink;
 }
 
-@media all and (min-width: 600px) {
+/*@media all and (min-width: 600px) {
     .aside { flex: 1 auto; }
 }
 
@@ -65,7 +71,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     .main    { order: 2; }
     .aside-2 { order: 3; }
     .footer  { order: 4; }
-}
+}*/
 
 /* Not using this -eventually. Think notification badges on buttons */
 .notification-badge{
