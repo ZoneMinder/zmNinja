@@ -28,7 +28,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 // http://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
 //-------------------------------------------------------------------------------
 function addhttp(url) {
-   if (!/^(f|ht)tps?:\/\//i.test(url)) {
+
+   if ((!/^(f|ht)tps?:\/\//i.test(url)) && (url !="") ) {
       url = "http://" + url;
    }
    return url;
@@ -135,7 +136,11 @@ function addhttp(url) {
   ]).then(
             function (results) {
                 $ionicLoading.hide();
-                //alert("All good");
+                $ionicPopup.alert({
+                        title: 'Settings Saved',
+                        template: 'Please explore the menu and enjoy zmNinja!'
+                }).then(function(res) { $ionicSideMenuDelegate.toggleLeft();});
+
             },
             function (error) {
                 $ionicLoading.hide();
