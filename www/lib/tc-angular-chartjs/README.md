@@ -31,6 +31,8 @@ Load `Chart.js` and `tc-angular-chartjs` as you would with normal scripts.
 <script type="text/javascript" src="js/tc-angular-chartjs.js"></script>
 ```
 
+Make sure you use `dist/tc-angular-chartjs.js` or `dist/tc-angular-chartjs.min.js`
+
 Require `tc.chartjs` in your application modules where you require `Chart.js`.
 
 ```javascript

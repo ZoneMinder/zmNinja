@@ -2,7 +2,7 @@ var app = angular.module('test-app', ['demo']);
 
 app.value('defaultValues', {
   positions: [{
-    name: 'Position',
+    name: 'Position'
   },{
     value: 'tl',
     name: 'Top left'
@@ -17,9 +17,8 @@ app.value('defaultValues', {
     name: 'Bottom left'
   }],
 
-
   effects: [{
-    name: 'Effect',
+    name: 'Effect'
   },{
     value: 'slidein',
     name: 'Slide in + fade'
@@ -43,5 +42,14 @@ app.value('defaultValues', {
       value: 'hover',
       name: 'Hover'
     }
-  ]
+  ],
+  actions: [{
+      name: 'Fire Main Action?'
+  }, {
+      value: 'fire',
+      name: 'Fire'
+  }, {
+      value: 'nofire',
+      name: 'Don\'t Fire'
+  }]
 });

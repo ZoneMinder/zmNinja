@@ -6,8 +6,10 @@
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
+                            'tc.chartjs',
                             'zmApp.controllers',
-                            'fileLogger'
+                            'fileLogger',
+
                         ])
 
 //------------------------------------------------------------------
