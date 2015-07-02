@@ -24,7 +24,7 @@
         </span>
 
             <div class="wrapper">
-                <span ng-repeat="monitor in monitors| limitTo: monLimit">
+                <span ng-repeat="monitor in monitors| limitTo: monLimit" ng-if="monitor.Monitor.Function!='None'">
 
                 <span ng-show="!minimal">
                     <header class="header">&nbsp;<i class="ion-monitor"></i>
