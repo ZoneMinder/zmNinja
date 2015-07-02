@@ -8,22 +8,27 @@
     <ion-content class="padding">
         <div class="list list-inset">
             <span style="color:rgb(100,100,100)"> <i class="ion-android-home" style="font-size:150%"></i> ZoneMinder Settings</span>
-            <label class="item item-input">
-                <input autocapitalize="none" type="text" placeholder="Username" ng-model="loginData.username">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">username</span>
+                <input autocapitalize="none" type="text" placeholder="username" ng-model="loginData.username">
             </label>
-            <label class="item item-input">
-                <input type="password" placeholder="Password" ng-model="loginData.password">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">password</span>
+                <input type="password" placeholder="password" ng-model="loginData.password">
             </label>
-            <label class="item item-input">
-                <input autocapitalize="none" type="text" placeholder="ZM portal URL " ng-model="loginData.url">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">ZM portal url</span>
+                <input autocapitalize="none" type="text" placeholder="ZM portal url " ng-model="loginData.url">
             </label>
 
-            <label class="item item-input">
-                <input autocapitalize="none" type="text" placeholder="Base path to cgi-bin" ng-model="loginData.streamingurl">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">base path to cgi-bin</span>
+                <input autocapitalize="none" type="text" placeholder="base path to cgi-bin" ng-model="loginData.streamingurl">
             </label>
 
-            <label class="item item-input">
-                <input autocapitalize="none" type="text" placeholder="ZM Api URL" ng-model="loginData.apiurl">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">ZM api url</span>
+                <input autocapitalize="none" type="text" placeholder="ZM api url" ng-model="loginData.apiurl">
             </label>
 
             <label >
