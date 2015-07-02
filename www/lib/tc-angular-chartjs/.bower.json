@@ -1,6 +1,6 @@
 {
   "name": "tc-angular-chartjs",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "Add Chart.js charts to your angular application",
   "homepage": "http://carlcraig.github.io/tc-angular-chartjs/",
   "author": "Carl Craig <carlcraig@3c-studios.com>",
@@ -36,14 +36,14 @@
     "type": "git",
     "url": "https://github.com/carlcraig/tc-angular-chartjs.git"
   },
-  "_release": "1.0.9",
+  "_release": "1.0.11",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.9",
-    "commit": "15269c4370dda4d9570daa10cdaebca7226fb71c"
+    "tag": "v1.0.11",
+    "commit": "b4445bbddf402df9dde7380b1e77e557bd0fbc86"
   },
   "_source": "git://github.com/carlcraig/tc-angular-chartjs.git",
-  "_target": "~1.0.9",
+  "_target": "~1.0.11",
   "_originalSource": "tc-angular-chartjs",
   "_direct": true
 }

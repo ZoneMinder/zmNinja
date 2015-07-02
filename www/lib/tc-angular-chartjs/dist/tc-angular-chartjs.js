@@ -1,6 +1,6 @@
 /**
- * tc-angular-chartjs - v1.0.9 - 2014-10-14
- * Copyright (c) 2014 Carl Craig <carlcraig@3c-studios.com>
+ * tc-angular-chartjs - v1.0.11 - 2015-05-17
+ * Copyright (c) 2015 Carl Craig <carlcraig@3c-studios.com>
  * Dual licensed with the Apache-2.0 or MIT license.
  */
 (function() {
@@ -65,6 +65,11 @@
                         autoLegend = true;
                     }
                 }
+                $scope.$on("$destroy", function() {
+                    if (chartObj) {
+                        chartObj.destroy();
+                    }
+                });
                 $scope.$watch("data", function(value) {
                     if (value) {
                         if (chartObj) {
@@ -90,6 +95,7 @@
                         if (exposeChart) {
                             $scope.chart = chartObj;
                         }
+                        chartObj.resize();
                     }
                 }, true);
             }

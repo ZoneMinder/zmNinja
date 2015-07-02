@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console */
+/* global cordova,StatusBar,angular,console,moment */
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
@@ -472,6 +472,14 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
                 });
     };
 
+    //--------------------------------------
+    // formats events dates in a nice way
+    //---------------------------------------
+
+    $scope.prettify = function(str)
+    {
+        return moment(str).format('h:mm:ssa on MMMM Do YYYY');
+    };
     //--------------------------------------------------------
     // For consistency we are keeping the refresher list
     // but its a dummy. The reason I deviated is because

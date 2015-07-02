@@ -8,7 +8,7 @@
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
 
-angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $element) {
+angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
     console.log("Inside Graphs controller");
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
@@ -43,6 +43,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     // Controller main
     //-------------------------------------------------
 
+   // $scope.chart = "";
     $scope.navTitle = 'Tab Page';
     // $scope.chart="";
     $scope.leftButtons = [{
@@ -53,15 +54,15 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         }];
 
 
-    angular.element(document).ready(function () {
-        console.log('****DOCUMENT READY******');
-    });
 
-    // FIXME: No idea why this is not working
-    // it seems it can't get a handle to chart
+    // -------------------------------------------------
+    // Called when user taps on a bar
+    //---------------------------------------------------
     $scope.handleChartClick = function (event) {
 
-        // console.log (JSON.stringify( $scope.chart1.getBarsAtEvent(event)));
+        console.log (JSON.stringify( $scope.chartwithbars.getBarsAtEvent(event)));
+        //console.log(angular.element[0].getContext('2d'));
+        //console.log (JSON.stringify( $scope.chart));
 
     };
 
@@ -73,7 +74,17 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         var dateRange = "";
         var startDate = "";
         var endDate = "";
-        $scope.barHeight = $rootScope.devHeight;
+
+        $scope.chart = {
+            barHeight:"",
+            data:"",
+            options:""
+
+        };
+
+
+        $scope.chart.barHeight = $rootScope.devHeight;
+
 
         if (hrs) {
             // Apply a time based filter if I am not watching all events
@@ -86,8 +97,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         }
 
         var loginData = ZMDataModel.getLogin();
-        $scope.data = {};
-        $scope.data = {
+        //$scope.chart.data = {};
+        $scope.chart.data = {
             labels: [],
             datasets: [
                 {
@@ -106,8 +117,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             var adjustedHeight = monitors.length * 30;
             if (adjustedHeight > $rootScope.devHeight) {
 
-                $scope.barHeight = adjustedHeight;
-                console.log("********* BAR HEIGHT TO " + $scope.barHeight);
+                $scope.chart.barHeight = adjustedHeight;
+                console.log("********* BAR HEIGHT TO " + $scope.chart.barHeight);
             }
 
             for (var i = 0; i < monitors.length; i++) {
@@ -115,7 +126,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                     // so we need to bind j to i when http returns so its not out of scope. Gak.
                     // I much prefer the old days of passing context data from request to response
 
-                    $scope.data.labels.push(monitors[j].Monitor.Name);
+                    $scope.chart.data.labels.push(monitors[j].Monitor.Name);
 
                     //$scope.chartObject[id].data.push([monitors[j].Monitor.Name,'0','color:#76A7FA','0']);
                     // $scope.chartObject.data[j+1]=([monitors[j].Monitor.Name,'100','color:#76A7FA','0']);
@@ -133,20 +144,20 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                         .success(function (data) {
                             console.log("**** EVENT COUNT FOR MONITOR " +
                                 monitors[j].Monitor.Id + " IS " + data.pagination.count);
-                            $scope.data.datasets[0].data[j] = data.pagination.count;
+                            $scope.chart.data.datasets[0].data[j] = data.pagination.count;
                         })
                         .error(function (data) {
                             // ideally I should be treating it as an error
                             // but what I am really doing now is treating it like no events
                             // works but TBD: make this into a proper error handler
-                            $scope.data.datasets[0].data[j] = 0;
+                            $scope.chart.data.datasets[0].data[j] = 0;
                             ZMDataModel.zmLog ("Error retrieving events for graph " + JSON.stringify(data), "error");
                         });
                 })(i); // j
             } //for
         });
 
-        $scope.options = {
+        $scope.chart.options = {
 
             responsive: true,
             scaleBeginAtZero: true,
@@ -164,3 +175,4 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         };
     }; //generateTCChart
 }]);
+
