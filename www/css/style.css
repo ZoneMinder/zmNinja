@@ -24,6 +24,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     font-weight: normal;
     text-align: left;
     flex-wrap:wrap;
+
 }
 
 .wrapper > * {
@@ -49,7 +50,8 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 .main {
     text-align: center;
     background: #EEEEEE;
-
+    margin: 0px;
+    padding: 0px;
     /*padding:2px;*/
 }
 
