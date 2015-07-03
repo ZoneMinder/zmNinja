@@ -100,7 +100,8 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 {
                     text: 'OK',
                     onTap: function (e) {
-                        controlZM($scope.myopt.selectedState);
+                        if ($scope.myopt.selectedState != "")
+                            controlZM($scope.myopt.selectedState);
                     }
                }
            ]
