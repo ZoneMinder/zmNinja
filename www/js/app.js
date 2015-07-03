@@ -3,6 +3,7 @@
 /* global cordova,StatusBar,angular,console */
 
 
+var appVersion = "0.0.0";
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
@@ -11,6 +12,7 @@ angular.module('zmApp', [
                             'fileLogger',
 
                         ])
+
 
 //------------------------------------------------------------------
 // this directive will be load any time an image completes loading 
@@ -220,6 +222,8 @@ angular.module('zmApp', [
         console.log("**** DEVICE READY ***");
 
 
+
+
               $fileLogger.checkFile().then(function(resp) {
             if (parseInt(resp.size) > 50000)
             {
@@ -240,7 +244,15 @@ angular.module('zmApp', [
 
          $fileLogger.setStorageFilename('zmNinjaLog.txt');
 
+         if (window.cordova)
+         {
+            cordova.getAppVersion(function(version) {
+                appVersion = version;
+                ZMDataModel.zmLog ("zmNinja Version: " + appVersion);
+                ZMDataModel.setAppVersion(appVersion);
+            });
 
+         }
 
         setTimeout(function () {
             if (window.cordova)
@@ -288,6 +300,7 @@ angular.module('zmApp', [
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+
 
 
     }); //platformReady
