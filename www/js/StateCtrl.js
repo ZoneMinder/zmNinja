@@ -6,9 +6,9 @@
 
 angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', function ($ionicPopup, $scope, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope) {
 
-//----------------------------------------------------------------------
-// Controller main
-//----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    // Controller main
+    //----------------------------------------------------------------------
     $scope.zmRun = "loading...";
     $scope.zmLoad = "loading...";
     $scope.zmDisk = "loading...";
@@ -16,12 +16,15 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     $scope.showDanger = false;
     $scope.dangerText = ["Show ZoneMinder Controls", "Hide ZoneMinder Controls"];
     $scope.dangerButtonColor = ["button-positive", "button-assertive"];
+    $scope.customState = "";
+    $scope.allStateNames = [];
 
     var loginData = ZMDataModel.getLogin();
 
     var apiRun = loginData.apiurl + "/host/daemonCheck.json";
     var apiLoad = loginData.apiurl + "/host/getLoad.json";
     var apiDisk = loginData.apiurl + "/host/getDiskPercent.json";
+    var apiCurrentState = loginData.apiurl + "/States.json";
 
     var apiExec = loginData.apiurl + "/states/change/";
 
@@ -29,6 +32,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     getRunStatus();
     getLoadStatus();
     getDiskStatus();
+    getCurrentState();
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
@@ -41,6 +45,68 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         console.log("**VIEW ** Montage Ctrl Entered");
         ZMDataModel.setAwake(false);
     });
+
+    //---------------------------------------------------------
+    // This gets the current run state custom name
+    // if applicable
+    //---------------------------------------------------------
+    function getCurrentState() {
+
+        $http.get(apiCurrentState)
+            .then(
+                function (success) {
+                    var customStateArray = success.data.states;
+                    var i = 0;
+                    var found = false;
+                    $scope.allStateNames = [];
+                    for (i = 0; i < customStateArray.length; i++) {
+                        $scope.allStateNames.push(customStateArray[i].State.Name);
+                        if (customStateArray[i].State.IsActive == '1') {
+                            $scope.customState = customStateArray[i].State.Name;
+                            found = true;
+                        }
+                    }
+                    if (!found) $scope.customState = "";
+
+                },
+                function (error) {
+                    $scope.customState = "";
+
+                }
+            );
+
+    }
+
+    //---------------------------------------------------------
+    // Allows the user to select a custom run state
+    //---------------------------------------------------------
+    $scope.selectCustomState = function () {
+        $scope.myopt = {
+            selectedState: ""
+        };
+        console.log(JSON.stringify($scope.allStateNames));
+        ZMDataModel.zmLog("List of custom states: " + JSON.stringify($scope.allStateNames));
+        var getConfig = $ionicPopup.show({
+            scope: $scope,
+            template: '<ion-radio ng-repeat="item in allStateNames" ng-value="item" ng-model="myopt.selectedState"> {{item}} </ion-radio>',
+
+
+            title: 'Select run state',
+            buttons: [
+                {
+                    text: 'Cancel',
+
+                },
+                {
+                    text: 'OK',
+                    onTap: function (e) {
+                        controlZM($scope.myopt.selectedState);
+                    }
+               }
+           ]
+        });
+    };
+
 
     //----------------------------------------------------------------------
     // returns disk space in gigs taken up by events
@@ -64,7 +130,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 function (error) {
                     $scope.zmDisk = "unknown";
                     console.log("ERROR:" + JSON.stringify(error));
-                    ZMDataModel.zmLog("Error retrieving DiskStatus: " + JSON.stringify(error),"error");
+                    ZMDataModel.zmLog("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
                 }
             );
     }
@@ -77,18 +143,19 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             .then(
                 function (success) {
                     switch (success.data.result) {
-                    case 1:
-                        $scope.zmRun = 'running';
-                        $scope.color = 'color:green;';
-                        break;
-                    case 0:
-                        $scope.zmRun = 'stopped';
-                        $scope.color = 'color:red;';
-                        break;
-                    default:
-                        $scope.zmRun = 'undetermined';
-                        $scope.color = 'color:orange;';
-                        break;
+                        case 1:
+                            $scope.zmRun = 'running';
+                            $scope.color = 'color:green;';
+                            break;
+                        case 0:
+                            $scope.zmRun = 'stopped';
+                            $scope.color = 'color:red;';
+                            break;
+                        default:
+                            $scope.zmRun = 'undetermined';
+                            $scope.color = 'color:orange;';
+
+                            break;
                     }
 
 
@@ -96,7 +163,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 },
                 function (error) {
                     console.log("ERROR in getRun: " + JSON.stringify(error));
-                      ZMDataModel.zmLog("Error getting RunStatus " + JSON.stringify(error),"error");
+                    ZMDataModel.zmLog("Error getting RunStatus " + JSON.stringify(error), "error");
                     $scope.color = 'color:red;';
                     $scope.zmRun = 'undetermined';
                 }
@@ -121,7 +188,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 },
                 function (error) {
                     console.log("ERROR in getLoad: " + JSON.stringify(error));
-                      ZMDataModel.zmLog("Error retrieving loadStatus " + JSON.stringify(error),"error");
+                    ZMDataModel.zmLog("Error retrieving loadStatus " + JSON.stringify(error), "error");
                     $scope.zmLoad = 'undetermined';
                 }
             );
@@ -132,7 +199,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // start/stop/restart ZM
     //----------------------------------------------------------------------
 
-    $scope.controlZM = function (str) {
+    function controlZM(str) {
         if (inProgress) {
             $ionicPopup.alert({
                 title: "Operation in Progress",
@@ -141,36 +208,45 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             return;
         }
 
+        var statesearch = "startstoprestart";
+        var promptstring = 'Are you sure you want to ' + str + ' Zoneminder?';
+
+        if (statesearch.indexOf(str) == -1) {
+            promptstring = "Are you sure you want to change state to " + str;
+        }
+
 
         $ionicPopup.show({
             title: 'Please Confirm',
-            template: 'Are you sure you want to ' + str + ' Zoneminder?',
+            template: promptstring,
             buttons: [
                 {
                     text: 'Cancel',
                     type: 'button-positive'
                         },
                 {
-                    text: 'Yes, ' + str + ' Zoneminder',
+                    text: 'Yes',
                     type: 'button-assertive',
                     onTap: function (e) {
                         $scope.zmRun = "please wait...";
                         $scope.color = 'color:orange;';
+                        $scope.customState = "";
                         console.log("Control command is " + apiExec + str + ".json");
                         inProgress = 1;
                         $http.post(apiExec + str + ".json")
                             .then(
                                 function (success) {
                                     switch (str) {
-                                    case "stop":
-                                        $scope.zmRun = 'stopped';
-                                        $scope.color = 'color:red;';
-                                        break;
-                                    case "start":
-                                    case "restart":
-                                        $scope.zmRun = 'running';
-                                        $scope.color = 'color:green;';
-                                        break;
+                                        case "stop":
+                                            $scope.zmRun = 'stopped';
+                                            $scope.color = 'color:red;';
+                                            break;
+                                        default:
+                                            $scope.zmRun = 'running';
+                                            $scope.color = 'color:green;';
+                                            getCurrentState();
+
+                                            break;
 
                                     }
                                     inProgress = 0;
@@ -179,7 +255,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                                     //if (error.status) // it seems to return error with status 0 if ok
                                     // {
                                     console.log("ERROR in Change State:" + JSON.stringify(error));
-                                    ZMDataModel.zmLog("Error in change run state:"+JSON.stringify(error),"error");
+                                    ZMDataModel.zmLog("Error in change run state:" + JSON.stringify(error), "error");
                                     $scope.zmRun = 'undetermined';
                                     $scope.color = 'color:orange;';
                                     inProgress = 0;
@@ -189,6 +265,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 }
             ]
         });
+    }
+
+    // Binder so template can call controlZM
+    $scope.controlZM = function (str) {
+        controlZM(str);
     };
 
 
@@ -210,6 +291,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         getRunStatus();
         getLoadStatus();
         getDiskStatus();
+        getCurrentState();
         $scope.$broadcast('scroll.refreshComplete');
 
     };
