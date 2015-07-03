@@ -17,6 +17,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
 
+
+
     // These are the commands ZM uses to move around
     // in ZMS
     var eventCommands = {
@@ -26,7 +28,11 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         zoomout: "9",
         stop: "3",
         pause: "1",
-        play: "2"
+        play: "2",
+        fastFwd:"4",
+        slowFwd:"5",
+        fastRev:"7",
+        slowRev:"6"
     };
 
     $scope.showSearch = false;
@@ -269,6 +275,18 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
             break;
         case "1":
             toast_blurb = "pausing playback for ";
+            break;
+        case "4":
+            toast_blurb = "fast forward ";
+            break;
+        case "5":
+            toast_blurb = "slow forward ";
+            break;
+        case "6":
+            toast_blurb = "slow rewind ";
+            break;
+        case "7":
+            toast_blurb = "fast rewind ";
             break;
         }
 
