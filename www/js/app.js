@@ -44,10 +44,8 @@ angular.module('zmApp', [
 .factory('timeoutHttpIntercept', function ($rootScope, $q) {
     return {
         'request': function (config) {
-            if ( !(config.url.indexOf("stop.json") > -1 ||
-                config.url.indexOf("start.json") > -1 ||
-                config.url.indexOf("getDiskPercent.json") > -1 ||
-                config.url.indexOf("restart.json") > -1 ))
+            if ( !(config.url.indexOf("/api/states/change/") > -1 ||
+                config.url.indexOf("getDiskPercent.json") > -1 ))
             {
                config.timeout = 15000;
             }
@@ -185,7 +183,7 @@ angular.module('zmApp', [
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
         console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
-        ZMDataModel.zmLog("Device orientation change: "+$rootScope.devWidth + "*" + $rootScope.devHeight);
+        //ZMDataModel.zmLog("Device orientation change: "+$rootScope.devWidth + "*" + $rootScope.devHeight);
     };
 
     window.addEventListener("resize", checkOrientation, false);

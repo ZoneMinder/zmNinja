@@ -161,7 +161,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
 
             console.log ("**** setAwake called with:" + val);
-            zmLog("Switching screen always on to " + val);
+           // zmLog("Switching screen always on to " + val);
             if (val)
             {
 
