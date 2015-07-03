@@ -1,0 +1,53 @@
+@mixin effects-slidein{
+
+/**
+ * SLIDE IN + FADE
+ * When hovering the main button, the child buttons slide out from beneath
+ * the main button while transitioning from transparent to opaque.
+ *
+ */
+
+  .mfb-component--tl.mfb-slidein,
+  .mfb-component--tr.mfb-slidein{
+    .mfb-component__list li{
+      opacity: 0;
+      transition: all $slide-speed;
+    }
+    &[data-mfb-toggle="hover"]:hover,
+    &[data-mfb-state="open"]{
+      .mfb-component__list{
+        li{
+          opacity: 1;
+        }
+        @for $i from 1 through $number-of-child-buttons {
+          $distance: $button-space * $i;
+          li:nth-child( #{$i} ) {
+            -webkit-transform: translateY( $distance );
+                    transform: translateY( $distance ); }
+        }
+      }
+    }
+  }
+
+  .mfb-component--bl.mfb-slidein,
+  .mfb-component--br.mfb-slidein{
+    .mfb-component__list li{
+      opacity: 0;
+      transition: all $slide-speed;
+    }
+    &[data-mfb-toggle="hover"]:hover,
+    &[data-mfb-state="open"]{
+      .mfb-component__list{
+        li{
+          opacity: 1;
+        }
+        @for $i from 1 through $number-of-child-buttons {
+          $distance: -1 * $button-space * $i;
+          li:nth-child( #{$i} ) { -webkit-transform: translateY( $distance );
+                                         transform: translateY( $distance ); }
+        }
+      }
+    }
+  }
+
+}

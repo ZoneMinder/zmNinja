@@ -93,13 +93,13 @@ $label-hover-on: .3s !default;
 /* SIZES -----------------------------*/
 
 // main button diameter
-$main_button_size: 40px !default;
+$main_button_size: 45px !default;
 // main button diameter
-$child_button_size: 40px !default;
+$child_button_size: 45px !default;
 // the distance of the main button from the closest corners of the screen
-$border-distance: 25px !default;
+$border-distance: 20px !default;
 // font-size for labels
-$labels-font-size: 10px !default;
+$labels-font-size: 12px !default;
 // top & bottom padding for the labels
 $labels-padding-vertical: 4px !default;
 // left & right padding for the labels
@@ -108,7 +108,7 @@ $labels-padding-horizontal: 10px !default;
 /* SPACING ---------------------------*/
 
 // space between buttons
-$button-space: 46px !default;
+$button-space: 50px !default;
 
 // space between button and label
 $button-label-space: 50px !default;
@@ -224,7 +224,7 @@ $number-of-child-buttons: 4 !default;
   position: absolute;
   font-size: 18px;
   text-align: center;
-  line-height: 40px;
+  line-height: 45px;
   width: 100%;
 }
 
