@@ -18,6 +18,7 @@ read -p "Press any key to zipalign... " -n1 -s
 
 ~/Library/Android/sdk/build-tools/22.0.1/zipalign -v 4 android-x86-release-unsigned.apk zmNinja-x86.apk
 ~/Library/Android/sdk/build-tools/22.0.1/zipalign -v 4 android-armv7-release-unsigned.apk zmNinja-arm.apk
+rm -f android-x86-release-unsigned.apk android-armv7-release-unsigned.apk
 
 cd ..
 
