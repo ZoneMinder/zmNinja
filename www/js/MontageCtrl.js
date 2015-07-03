@@ -17,6 +17,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var timestamp = new Date().getUTCMilliseconds();
     $scope.minimal = $stateParams.minimal;
     $scope.isRefresh = $stateParams.isRefresh;
+    var sizeInProgress = false;
 
     var isLongPressActive = false;
     var intervalHandleMontage; // will hold image resize timer on long press
@@ -291,11 +292,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //  and stores current size to persistent memory
     //---------------------------------------------------------
 
-    function processSliderChanged()
+    function processSliderChanged(val)
     {
-        console.log('Slider has changed');
-        ZMDataModel.setMontageSize($scope.slider.monsize);
-        console.log("Rootscope Montage is " + ZMDataModel.getMontageSize() +
+        if (sizeInProgress) return;
+
+        sizeInProgress = true;
+        console.log('Size has changed');
+        ZMDataModel.setMontageSize(val);
+        console.log("ZMData Montage is " + ZMDataModel.getMontageSize() +
                     " and slider montage is " + $scope.slider.monsize);
         // Now go ahead and reset sizes of entire monitor array
         var monsizestring="";
@@ -311,6 +315,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         monsizestring = monsizestring.slice(0,-1); // kill last :
         console.log ("Setting monsize string:"+monsizestring);
         window.localStorage.setItem("montageArraySize", monsizestring);
+        sizeInProgress = false;
     }
 
     //---------------------------------------------------------
@@ -320,10 +325,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.changeSize = function (val)
     {
-        $scope.slider.monsize += val;
-        if ($scope.slider.monsize < 1) $scope.slider.monsize = 1;
-        if ($scope.slider.monsize > 6) $scope.slider.monsize = 6;
-        processSliderChanged();
+            var newSize = parseInt($scope.slider.monsize) + val;
+
+            $scope.slider.monsize = newSize;
+            if ($scope.slider.monsize < "1") $scope.slider.monsize = "1";
+            if ($scope.slider.monsize > "6") $scope.slider.monsize = "6";
+            processSliderChanged($scope.slider.monsize);
+
     };
 
     //---------------------------------------------------------
@@ -335,8 +343,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.sliderChanged = function ()
     {
-       processSliderChanged();
-
+            processSliderChanged($scope.slider.monsize);
     };
 
     $scope.$on('$ionicView.afterEnter', function () {

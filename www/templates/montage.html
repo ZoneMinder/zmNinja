@@ -17,7 +17,7 @@
                 <div class=" range range-positive">
                     <i class="icon ion-arrow-shrink"></i>
 
-                    <input type="range" ng-model="slider.monsize" min="1" max="6" ng-change="sliderChanged()">
+                    <input type="range" ng-model="slider.monsize" min="1" max="6" ng-change="sliderChanged(slider.monsize)">
                     <i class="icon ion-arrow-expand"></i>
 
                 </div>
@@ -32,7 +32,7 @@
                 </span>
                 <article class="main">
                     <!-- FIXME: Scale is 50% hardcoded -->
-                    <img ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth-30)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" on-hold="onHold($index)" on-release="onRelease($index)" />
+                    <img ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" on-hold="onHold($index)" on-release="onRelease($index)" />
                 </article>
 
 
