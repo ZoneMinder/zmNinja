@@ -7,7 +7,10 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         $ionicSideMenuDelegate.toggleLeft();
     };
 
-
+    //---------------------------------------------------------------
+    // Controller main
+    //---------------------------------------------------------------
+    $scope.zmAppVersion = ZMDataModel.getAppVersion();
 
 
     //--------------------------------------------------------------------------

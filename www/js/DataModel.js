@@ -9,6 +9,7 @@
 
 angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger) {
 
+    var zmAppVersion="unknown";
     var monitorsLoaded = 0;
     var montageSize = 3;
     var monitors = [];
@@ -144,7 +145,6 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 return 0; {}
         },
 
-
         getLogin: function () {
             return loginData;
         },
@@ -152,6 +152,16 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         getKeepAwake: function () {
             return (loginData.keepAwake == '1') ? true:false;
         },
+
+        setAppVersion:function(ver) {
+            zmAppVersion = ver;
+        },
+
+        getAppVersion:function() {
+            return(zmAppVersion);
+        },
+
+
 
         //------------------------------------------------------------------
         // switches screen to 'always on' or 'auto'
