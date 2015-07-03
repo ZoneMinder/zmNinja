@@ -1,0 +1,77 @@
+@mixin effects-fountain{
+
+/**
+ * FOUNTAIN
+ * When hovering the main button the child buttons
+ * jump into view from outside the viewport
+ */
+
+  .mfb-component--tl.mfb-fountain,
+  .mfb-component--tr.mfb-fountain{
+    .mfb-component__list{
+      li{
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+      @for $i from 1 through $number-of-child-buttons {
+        $distance: -1 * $button-space * $i;
+        li:nth-child( #{$i} ) {
+          -webkit-transform: translateY($distance) scale(0);
+                  transform: translateY($distance) scale(0);
+          transition: all $slide-speed;
+          // this is the delay at which the buttons start disappearing
+          transition-delay: ( $number-of-child-buttons - $i ) * 0.05s;
+        }
+      }
+    }
+    &[data-mfb-toggle="hover"]:hover,
+    &[data-mfb-state="open"]{
+      .mfb-component__list{
+        @for $i from 1 through $number-of-child-buttons {
+          $distance: $button-space * $i;
+          li:nth-child( #{$i} ) {
+            -webkit-transform: translateY($distance) scale(1);
+                    transform: translateY($distance) scale(1);
+            // this is the delay at which the buttons appear
+            transition-delay: $i * 0.05s;
+          }
+        }
+      }
+    }
+  }
+
+  .mfb-component--bl.mfb-fountain,
+  .mfb-component--br.mfb-fountain{
+    .mfb-component__list{
+      li{
+        -webkit-transform: scale(0);
+                transform: scale(0);
+      }
+      @for $i from 1 through $number-of-child-buttons {
+        $distance: $button-space * $i;
+        li:nth-child( #{$i} ) {
+          -webkit-transform: translateY($distance) scale(0);
+                  transform: translateY($distance) scale(0);
+          transition: all $slide-speed;
+          // this is the delay at which the buttons start disappearing
+          transition-delay: ( $number-of-child-buttons - $i ) * 0.05s;
+        }
+      }
+    }
+    &[data-mfb-toggle="hover"]:hover,
+    &[data-mfb-state="open"]{
+      .mfb-component__list{
+        @for $i from 1 through $number-of-child-buttons {
+          $distance: -1 * $button-space * $i;
+          li:nth-child( #{$i} ) {
+            -webkit-transform: translateY($distance) scale(1);
+                    transform: translateY($distance) scale(1);
+            // this is the delay at which the buttons appear
+            transition-delay: $i * 0.05s;
+          }
+        }
+      }
+    }
+  }
+
+}
