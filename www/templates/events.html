@@ -26,6 +26,7 @@
     <ion-content on-tap="tapped();">
         <ion-refresher pulling-text="Tap the <i class='ion-refresh'></i> icon above to reload ..." spinner="bubbles" on-refresh="dummyDoRefresh();"></ion-refresher>
 
+
         <ion-item collection-repeat="event in events| filter:search.text">
 
             <div class="row">
@@ -81,6 +82,12 @@
             </div>
 
         </ion-item>
+
+        <ion-item ng-show="!events.length">
+        No events found.
+        </ion-item>
+
+
         <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="2%">
         </ion-infinite-scroll>
 

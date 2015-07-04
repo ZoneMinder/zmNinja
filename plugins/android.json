@@ -17,11 +17,23 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"File\"><param name=\"android-package\" value=\"org.apache.cordova.file.FileUtils\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
                             "count": 1
                         },
                         {
                             "xml": "<feature name=\"Whitelist\"><param name=\"android-package\" value=\"org.apache.cordova.whitelist.WhitelistPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"EmailComposer\"><param name=\"android-package\" value=\"de.appplant.cordova.emailcomposer.EmailComposer\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Insomnia\"><param name=\"android-package\" value=\"nl.xservices.plugins.Insomnia\" /></feature>",
                             "count": 1
                         },
                         {
@@ -37,23 +49,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Insomnia\"><param name=\"android-package\" value=\"nl.xservices.plugins.Insomnia\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"File\"><param name=\"android-package\" value=\"org.apache.cordova.file.FileUtils\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"EmailComposer\"><param name=\"android-package\" value=\"de.appplant.cordova.emailcomposer.EmailComposer\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"AppVersion\"><param name=\"android-package\" value=\"uk.co.whiteoctober.cordova.AppVersion\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"ProgressIndicator\"><param name=\"android-package\" value=\"org.apache.cordova.plugin.ProgressIndicator\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -78,10 +74,19 @@
         "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "de.appplant.cordova.plugin.email-composer": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "nl.x-services.plugins.insomnia": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "org.apache.cordova.console": {
@@ -96,19 +101,7 @@
         "org.apache.cordova.statusbar": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "nl.x-services.plugins.insomnia": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "de.appplant.cordova.plugin.email-composer": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
         "uk.co.whiteoctober.cordova.appversion": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "org.pbernasconi.progressindicator": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
