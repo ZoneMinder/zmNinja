@@ -101,5 +101,14 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "org.pbernasconi.progressindicator": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/pbernasconi/cordova-progressIndicator.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

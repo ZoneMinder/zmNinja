@@ -55,6 +55,10 @@
                         {
                             "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ProgressIndicator\"><param name=\"ios-package\" value=\"ProgressIndicator\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -124,6 +128,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "uk.co.whiteoctober.cordova.appversion": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "org.pbernasconi.progressindicator": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
