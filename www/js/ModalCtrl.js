@@ -175,7 +175,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 console.log("****RETURNING " + foo);
                 return foo;
             },
-            //FIXME: Refer to
+            // NOTE: Refer to
             // zoneminder/skins/mobile/includes/control_functions.php
             // for move commands
             // logic - /zm/api/monitors/X.json, read ControlId = Y

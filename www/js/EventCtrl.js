@@ -62,11 +62,6 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
     // FIXME: This is a hack
 
     var pageLoaded = false;
-
-
-    // FIXME: Hack or elegance?
-    // to get rid of  full stack event get on search
-
     var enableLoadMore = true;
 
     // When loading images, it sometimes takes time -  the images can be quite
@@ -87,10 +82,6 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
 
     // First get total pages and then
     // start from the latest. If this fails, nothing displays
-    // FIXME: clean up error handling
-
-    // FIXME: call loadMore once -- to fill up page. Its possible
-    // last event page only has a few records
 
     ZMDataModel.getEventsPages($scope.id)
         .then(function (data) {
@@ -118,6 +109,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
             });
 
         });
+
+    // not explictly handling error --> I have a default "No events found" message
+    // displayed in the template if events list is null
 
 
     $scope.openMenu = function () {
@@ -265,8 +259,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
             });
         }
         var loginData = ZMDataModel.getLogin();
-        // FIXME: CMD_SLOWFWD CMD_FASTFWD and REVs
-        // Also read up CMD_QUERY as the stream is playing
+
         /*
         var CMD_NONE = 0;
         var CMD_PAUSE = 1;

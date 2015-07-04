@@ -439,8 +439,7 @@ angular.module('zmApp', [
     var defaultState = "/montage";
     //var defaultState = "/login";
     // as it turns out I can't really inject a factory in config the normal way
-    // FIXME: In future, read up http://stackoverflow.com/questions/15937267/inject-service-in-app-config
-    //var defaultState = (ZMDataModel.isLoggedIn())?  "/monitors":"/login";
+
 
     //$urlRouterProvider.otherwise(defaultState);
 
