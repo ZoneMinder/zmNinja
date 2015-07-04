@@ -23,6 +23,25 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         ZMDataModel.setAwake(false);
     });
 
+
+    //-------------------------------------------------------------------------------
+    // Makes input easier
+    //-------------------------------------------------------------------------------
+
+    $scope.portalKeypress = function(evt)
+    {
+
+       // if ($scope.loginData.streamingurl.indexOf($scope.loginData.url) !=0)
+                $scope.loginData.streamingurl = $scope.loginData.url;
+
+               if ($scope.loginData.streamingurl.slice(-3).toLowerCase() == '/zm') {
+            $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -3);
+        }
+
+
+      // if ($scope.loginData.apiurl.indexOf($scope.loginData.url) !=0)
+            $scope.loginData.apiurl = $scope.loginData.url+"/api";
+    };
 //-------------------------------------------------------------------------------
 // Adds http to url if not present
 // http://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
