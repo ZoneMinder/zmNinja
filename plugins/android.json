@@ -51,6 +51,10 @@
                         {
                             "xml": "<feature name=\"AppVersion\"><param name=\"android-package\" value=\"uk.co.whiteoctober.cordova.AppVersion\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ProgressIndicator\"><param name=\"android-package\" value=\"org.apache.cordova.plugin.ProgressIndicator\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -102,6 +106,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "uk.co.whiteoctober.cordova.appversion": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "org.pbernasconi.progressindicator": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
