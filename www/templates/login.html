@@ -10,7 +10,7 @@
             <span style="color:rgb(100,100,100)"> <i class="ion-android-home" style="font-size:150%"></i> ZoneMinder Settings</span>
             <label class="item item-input item-floating-label">
                 <span class="input-label">username</span>
-                <input autocapitalize="none" type="text" placeholder="username" ng-model="loginData.username">
+                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="username" ng-model="loginData.username">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">password</span>
@@ -18,17 +18,17 @@
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">ZM portal url</span>
-                <input autocapitalize="none" type="text" placeholder="ZM portal url " ng-model="loginData.url">
+                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="ZM portal url " ng-model="loginData.url" ng-keyup="portalKeypress($event)">
             </label>
 
             <label class="item item-input item-floating-label">
                 <span class="input-label">base path to cgi-bin</span>
-                <input autocapitalize="none" type="text" placeholder="base path to cgi-bin" ng-model="loginData.streamingurl">
+                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="base path to cgi-bin" ng-model="loginData.streamingurl">
             </label>
 
             <label class="item item-input item-floating-label">
                 <span class="input-label">ZM api url</span>
-                <input autocapitalize="none" type="text" placeholder="ZM api url" ng-model="loginData.apiurl">
+                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="ZM api url" ng-model="loginData.apiurl">
             </label>
 
             <label >
