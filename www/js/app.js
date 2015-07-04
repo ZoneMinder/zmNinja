@@ -11,6 +11,7 @@ angular.module('zmApp', [
                             'zmApp.controllers',
                             'fileLogger',
 
+
                         ])
 
 
