@@ -90,4 +90,84 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     transform: translate(-50%, -50%);
 }
 
+.eventprogress
+{
+    position:absolute;
+    -webkit-transform: rotate(-90deg) translateY(-1000%);
+    -webkit-transform-origin: 100% 0%;
+    -moz-transform: rotate(-90deg);
+    top: 50%;
+    margin-top:-50px;
+    left:100%;
+    margin-left:-15px;
+    z-index:10;
+    width:100px;
+
+}
+
+/* Styling of progress bar
+http://www.useragentman.com/blog/2012/01/03/cross-browser-html5-progress-bars-in-depth/
+*/
+
+progress,          /* All HTML5 progress enabled browsers */
+progress[role]     /* polyfill */
+{
+
+	/* Turns off styling - not usually needed, but good to know. */
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+
+	/* gets rid of default border in Firefox and Opera. */
+	border: none;
+
+	/* Needs to be in here for Safari polyfill so background images work as expected. */
+	background-size: auto;
+    height:10px;
+
+}
+
+/* Polyfill */
+progress[role]:after {
+	background-image: none; /* removes default background from polyfill */
+}
+
+/* Ensure fallback text doesn't appear in polyfill */
+progress[role] strong {
+	display: none;
+}
+
+/* ----------------- progress background start ------------------*/
+progress,                          /* Firefox  */
+progress[role][aria-valuenow] {    /* Polyfill */
+   background: #aaaaaa !important; /* !important is needed by the polyfill */
+}
+
+/* Chrome */
+progress::-webkit-progress-bar {
+    background: #aaaaaa;
+}
+/* ----------------- progress background start ------------------*/
+
+/* ----------------- progress bar color start ------------------*/
+/* IE10 */
+progress {
+    color: #f1a165;
+}
+
+/* Firefox */
+progress::-moz-progress-bar {
+    background: #f1a165;
+}
+
+/* Chrome */
+progress::-webkit-progress-value {
+    background: #f1a165;
+}
+
+/* Polyfill */
+progress[aria-valuenow]:before  {
+    background: #f1a165;
+}
+/* ----------------- progress bar color end ------------------*/
 

@@ -6,17 +6,25 @@
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
 // and whether the new API has a better mechanism
 
-angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatform', '$scope', '$stateParams', 'message', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicModal', '$ionicLoading', '$http', '$state', '$window', '$interval', function ($ionicPlatform, $scope, $stateParams, message, ZMDataModel, $ionicSideMenuDelegate, $ionicModal, $ionicLoading, $http, $state, $window, $rootScope,$interval) {
+angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
+
 
     //---------------------------------------------------
     // Controller main
     //---------------------------------------------------
 
+
+    var segmentHandle = 0; // holds timer for progress bar
+    $scope.totalEventTime = 0; // used to display max of progress bar
+    $scope.currentEventTime = 0;
+
+
+
+    document.addEventListener("pause", onPause, false);
     console.log("I got STATE PARAM " + $stateParams.id);
     $scope.id = parseInt($stateParams.id, 10);
     $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-
-
+    //var segmentHandle = 0;
 
 
     // These are the commands ZM uses to move around
@@ -29,10 +37,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         stop: "3",
         pause: "1",
         play: "2",
-        fastFwd:"4",
-        slowFwd:"5",
-        fastRev:"7",
-        slowRev:"6"
+        fastFwd: "4",
+        slowFwd: "5",
+        fastRev: "7",
+        slowRev: "6"
     };
 
     $scope.showSearch = false;
@@ -41,8 +49,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     $scope.viewTitle = {
         title: ""
     };
-    $scope.search = {text:""};
-    $scope.myfilter="";
+    $scope.search = {
+        text: ""
+    };
+    $scope.myfilter = "";
     $scope.eventCommands = eventCommands;
 
 
@@ -88,7 +98,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
             console.log("TOTAL EVENT PAGES IS " + eventsPage);
             pageLoaded = true;
             $scope.viewTitle.title = data.count;
-            ZMDataModel.getEvents($scope.id, eventsPage,"")
+            ZMDataModel.getEvents($scope.id, eventsPage, "")
 
             .then(function (data) {
                 console.log("EventCtrl Got events");
@@ -101,15 +111,26 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
 
                 $scope.events = myevents;
+                // to avoid only few events being displayed
+                // if last page has less events
+                console.log ("**Loading Next Page ***");
+                loadMore();
             });
 
         });
 
 
-
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
+
+
+    function onPause() {
+        console.log("*** Moving to Background ***"); // Handle the pause event
+        console.log("*** CANCELLING INTERVAL ****");
+        $interval.cancel(segmentHandle);
+        // FIXME: Do I need to  setAwake(false) here?
+    }
 
     //---------------------------------------------------
     // reload view
@@ -133,15 +154,13 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     //---------------------------------------------------
     // when you tap a list entry - to break search loop
     //---------------------------------------------------
-    $scope.tapped = function()
-    {
-        console.log ("*** TAPPED ****");
+    $scope.tapped = function () {
+        console.log("*** TAPPED ****");
         // if he tapped, the we are not infinite loading on ion-infinite
-        if (  enableLoadMore == false )
-        {
-            moreEvents=true;
+        if (enableLoadMore == false) {
+            moreEvents = true;
             enableLoadMore = true;
-            console.log ("REMOVING ARTIFICAL LOAD MORE BLOCK");
+            console.log("REMOVING ARTIFICAL LOAD MORE BLOCK");
         }
     };
 
@@ -149,7 +168,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         console.log("**VIEW ** Events Ctrl Loaded");
     });
 
-     //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
     // The problem is we enter other states before we leave previous states
     // from a callback perspective in ionic, so we really can't predictably
@@ -185,53 +204,66 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     //---------------------------------------------------
     //
     //---------------------------------------------------
-    $scope.clearSearch = function()
-    {
-        $scope.search.text="";
+    $scope.clearSearch = function () {
+        $scope.search.text = "";
     };
 
     //---------------------------------------------------
     // Called when user toggles search
     //---------------------------------------------------
-    $scope.searchClicked = function()
-    {
+    $scope.searchClicked = function () {
         $scope.showSearch = !$scope.showSearch;
         // this helps greatly in repeat scroll gets
         if ($scope.showSearch == false)
-                    $scope.search.text="";
+            $scope.search.text = "";
 
-        console.log ("**** Setting search view to "+$scope.showSearch+" ****");
-        if (  enableLoadMore == false && $scope.showSearch == false)
-        {
-            moreEvents=true;
+        console.log("**** Setting search view to " + $scope.showSearch + " ****");
+        if (enableLoadMore == false && $scope.showSearch == false) {
+            moreEvents = true;
             enableLoadMore = true;
-            console.log ("REMOVING ARTIFICAL LOAD MORE BLOCK");
+            console.log("REMOVING ARTIFICAL LOAD MORE BLOCK");
         }
     };
 
     //--------------------------------------------------------
     // Not used - plan to use it to show event progress
     //--------------------------------------------------------
-    this.pollEventsProgress = function()
-    {
-       // console.log ("**************");
-    };
+    function segmentCheck() {
+        if ($scope.totalEventTime == 0) {
+
+            console.log("No events to play");
+            return;
+        }
+        if ($scope.currentEventTime >= $scope.totalEventTime) {
+            console.log("Total event duration reached");
+            $scope.currentEventTime = $scope.totalEventTime;
+            return;
+        }
+
+        // false == don't show ionic loadings, a query is a background job
+        controlEventStream("99", false);
+        //console.log("Duration: " + $scope.currentEventTime + " of " + $scope.totalEventTime);
+
+
+        // ./skins/classic/views/event.php panelSection
+    }
 
     //--------------------------------------------------------
     // this routine handles skipping through events
     // in different event views
     //--------------------------------------------------------
-    $scope.controlEventStream = function (cmd)
-    {
-        console.log("Command value " + cmd);
 
-        $ionicLoading.hide();
-        $ionicLoading.show({
-            template: "please wait...",
-            noBackdrop: true,
-            duration: 15000,
-        });
+    function controlEventStream(cmd, disp) {
+        // console.log("Command value " + cmd);
 
+        if (disp) {
+            $ionicLoading.hide();
+            $ionicLoading.show({
+                template: "please wait...",
+                noBackdrop: true,
+                duration: 15000,
+            });
+        }
         var loginData = ZMDataModel.getLogin();
         // FIXME: CMD_SLOWFWD CMD_FASTFWD and REVs
         // Also read up CMD_QUERY as the stream is playing
@@ -255,39 +287,47 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         */
         var toast_blurb = "";
         switch (cmd) {
-        case "13":
-            toast_blurb = "moving to ";
-            break;
-        case "12":
-            toast_blurb = "moving to ";
-            break;
-        case "8":
-            toast_blurb = "zoomed into ";
-            break;
-        case "9":
-            toast_blurb = "zoomed out of ";
-            break;
-        case "3":
-            toast_blurb = "stopping playback for ";
-            break;
-        case "2":
-            toast_blurb = "resuming playback for ";
-            break;
-        case "1":
-            toast_blurb = "pausing playback for ";
-            break;
-        case "4":
-            toast_blurb = "fast forward ";
-            break;
-        case "5":
-            toast_blurb = "slow forward ";
-            break;
-        case "6":
-            toast_blurb = "slow rewind ";
-            break;
-        case "7":
-            toast_blurb = "fast rewind ";
-            break;
+            case "13":
+                toast_blurb = "moving to ";
+                $scope.totalEventTime = 0;
+
+
+                break;
+            case "12":
+                toast_blurb = "moving to ";
+                $scope.totalEventTime = 0;
+                break;
+            case "8":
+                toast_blurb = "zoomed into ";
+                break;
+            case "9":
+                toast_blurb = "zoomed out of ";
+                break;
+            case "3":
+                toast_blurb = "stopping playback for ";
+
+                break;
+            case "2":
+                toast_blurb = "resuming playback for ";
+
+                break;
+            case "1":
+                toast_blurb = "pausing playback for ";
+
+                break;
+            case "4":
+                toast_blurb = "fast forward ";
+
+                break;
+            case "5":
+                toast_blurb = "slow forward ";
+                break;
+            case "6":
+                toast_blurb = "slow rewind ";
+                break;
+            case "7":
+                toast_blurb = "fast rewind ";
+                break;
         }
 
 
@@ -296,7 +336,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         // If I leave it as JSON, it gets converted to OPTONS due
         // to CORS behaviour and ZM/Apache don't seem to handle it
 
-        console.log("POST: " + loginData.url + '/index.php');
+        //console.log("POST: " + loginData.url + '/index.php');
 
         var req = $http({
             method: 'POST',
@@ -312,7 +352,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
                     str.push(encodeURIComponent(p) + "=" +
                         encodeURIComponent(obj[p]));
                 var foo = str.join("&");
-                console.log("****RETURNING " + foo);
+                // console.log("****RETURNING " + foo);
                 return foo;
             },
 
@@ -329,19 +369,56 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
             console.log("SUCCESS: " + JSON.stringify(resp));
             var str = toast_blurb + "event:" + resp.status.event;
-            console.log(str);
-           // $ionicLoading.hide();
-            $ionicLoading.show({
-                template: str,
-                noBackdrop: true,
-                duration: 2000
-            });
+            // console.log(str);
+            // $ionicLoading.hide();
+
+            if (disp == true) {
+                $ionicLoading.show({
+                    template: str,
+                    noBackdrop: true,
+                    duration: 2000
+                });
+            }
+
+            // 99 is CMD_QUERY its a convenient way to know where I am in the event playback
+            // takes care of speed etc so I don't have to worry about it
+            if (cmd == '99') {
+                $scope.currentEventTime = Math.round(parseFloat(resp.status.progress));
+            }
+
+            if (cmd == '12' || cmd == '13') {
+                console.log("New event, so recomputing");
+                var newevent = resp.status.event;
+                console.log("**** EXTRACTED EVENT ****" + newevent);
+                var ld = ZMDataModel.getLogin();
+                var myurl = ld.apiurl + "/events/" + newevent + ".json";
+                $http.get(myurl)
+                    .success(function (data) {
+                        $scope.totalEventTime = Math.round(parseFloat(data.event.Event.Length)) - 1;
+                        $scope.currentEventTime = 0;
+
+
+
+                    })
+                    .error(function (err) {
+                        console.log("Error : " + JSON.stringify(err));
+                        ZMDataModel.zmLog("Error getting timing info for new event " + newevent + ":" + JSON.stringify(err));
+                        $scope.totalEventTime = 0;
+
+                    });
+            }
+
         });
 
         req.error(function (resp) {
             console.log("ERROR: " + JSON.stringify(resp));
-            ZMDataModel.zmLog("Error sending event command " +JSON.stringify(resp), "error");
+            ZMDataModel.zmLog("Error sending event command " + JSON.stringify(resp), "error");
         });
+    }
+
+
+    $scope.controlEventStream = function (cmd) {
+        controlEventStream(cmd, true);
     };
 
     //--------------------------------------------------------
@@ -352,13 +429,16 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     //earlier won't work
     //--------------------------------------------------------
 
-    $scope.openModal = function (eid, ename, edur,eframes) {
+    $scope.openModal = function (eid, ename, edur, eframes) {
         console.log("Open Modal");
         $scope.eventName = ename;
         $scope.eventId = eid;
         $scope.eventDur = Math.round(edur);
         $scope.loginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+
+        $scope.totalEventTime = Math.round(parseFloat(edur)) - 1;
+        $scope.currentEventTime = 0;
 
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
@@ -377,16 +457,31 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
 
                 $scope.modal.show();
 
+                var ld = ZMDataModel.getLogin();
+
+                // how many seconds this event will take
+                //evtSegments = eframes / ld.maxFPS + 3;
+                //evtCurSegment = 0;
+                // console.log ("**** I SET SEGMENTS TO " + evtSegments);
+
+                // call on progress indicator every 2 seconds
+                segmentHandle = $interval(function () {
+                    segmentCheck();
+                }, 5000);
+                segmentCheck();
+
+
             });
 
-           };
+    };
 
     //--------------------------------------------------------
     //We need to destroy because we are instantiating
     // it on open
     //--------------------------------------------------------
     $scope.closeModal = function () {
-       // $interval.cancel(eventsInterval);
+        // $interval.cancel(eventsInterval);
+        $interval.cancel(segmentHandle);
         console.log("Close & Destroy Modal");
         ZMDataModel.setAwake(false);
         if ($scope.modal !== undefined) {
@@ -404,6 +499,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
         if ($scope.modal !== undefined) {
             $scope.modal.remove();
         }
+        $interval.cancel(segmentHandle);
     });
 
     //--------------------------------------------------------
@@ -417,29 +513,30 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     //--------------------------------------------------------
     // stop searching for more data
     //--------------------------------------------------------
-     $scope.cancelSearch = function()
-        {
-            $ionicLoading.hide(); //Or whatever action you want to preform
-            enableLoadMore = false;
-            console.log ("**** CANCELLED ****");
-          $ionicLoading.show({
-                template: 'Search Cancelled',
-                animation: 'fade-in',
-                showBackdrop: true,
-                duration: 2000,
-                maxWidth: 200,
-                showDelay: 0
-            });
+    $scope.cancelSearch = function () {
+        $ionicLoading.hide(); //Or whatever action you want to preform
+        enableLoadMore = false;
+        console.log("**** CANCELLED ****");
+        $ionicLoading.show({
+            template: 'Search Cancelled',
+            animation: 'fade-in',
+            showBackdrop: true,
+            duration: 2000,
+            maxWidth: 200,
+            showDelay: 0
+        });
 
 
-        };
+    };
 
     //--------------------------------------------------------
     // loads next page of events
     //--------------------------------------------------------
-    $scope.loadMore = function () {
 
-        // the events API does not return an error for anything
+
+    function loadMore()
+    {
+               // the events API does not return an error for anything
         // except greater page limits than reported
 
         console.log("***** LOADING MORE INFINITE SCROLL ****");
@@ -450,25 +547,26 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
             return;
         }
 
-       if (!enableLoadMore)
-       {
-           moreEvents=false; // Don't ion-scroll till enableLoadMore is true;
-           $scope.$broadcast('scroll.infiniteScrollComplete');
+        if (!enableLoadMore) {
+            moreEvents = false; // Don't ion-scroll till enableLoadMore is true;
+            $scope.$broadcast('scroll.infiniteScrollComplete');
 
-           console.log ("**** LOADMORE ARTIFICALLY DISABLED");
-           return;
-       }
-
-        var loadingStr="";
-        if ($scope.search.text != "")
-        {
-            var toastStr="Searching page "+eventsPage;
-            $ionicLoading.show({ maxwidth:100, scope:$scope,
-                                template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >'+toastStr+'</button>' });
-
-            loadingStr="none";
+            console.log("**** LOADMORE ARTIFICALLY DISABLED");
+            return;
         }
-        ZMDataModel.getEvents($scope.id, eventsPage,loadingStr)
+
+        var loadingStr = "";
+        if ($scope.search.text != "") {
+            var toastStr = "Searching page " + eventsPage;
+            $ionicLoading.show({
+                maxwidth: 100,
+                scope: $scope,
+                template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >' + toastStr + '</button>'
+            });
+
+            loadingStr = "none";
+        }
+        ZMDataModel.getEvents($scope.id, eventsPage, loadingStr)
             .then(function (data) {
                     console.log("Got new page of events with Page=" + eventsPage);
                     var myevents = data;
@@ -488,14 +586,18 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
                     $scope.$broadcast('scroll.infiniteScrollComplete');
 
                 });
+    }
+
+    $scope.loadMore = function () {
+        loadMore();
+
     };
 
     //--------------------------------------
     // formats events dates in a nice way
     //---------------------------------------
 
-    $scope.prettify = function(str)
-    {
+    $scope.prettify = function (str) {
         return moment(str).format('h:mm:ssa on MMMM Do YYYY');
     };
     //--------------------------------------------------------
@@ -506,9 +608,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
     // a large list
     //--------------------------------------------------------
 
-    $scope.dummyDoRefresh= function()
-    {
-         $scope.$broadcast('scroll.refreshComplete');
+    $scope.dummyDoRefresh = function () {
+        $scope.$broadcast('scroll.refreshComplete');
     };
 
     $scope.doRefresh = function () {
@@ -521,7 +622,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$ionicPlatfo
                 console.log("TOTAL EVENT PAGES IS " + eventsPage);
                 pageLoaded = true;
                 $scope.viewTitle.title = data.count;
-                ZMDataModel.getEvents($scope.id, eventsPage,"")
+                ZMDataModel.getEvents($scope.id, eventsPage, "")
 
                 .then(function (data) {
                     console.log("EventCtrl Got events");
