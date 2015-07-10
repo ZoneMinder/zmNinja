@@ -64,10 +64,7 @@
                     <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
                     <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
 
-                    <span style="float:right">
-                                <button class="button button-small icon icon-left ion-ios-eye"
-                                        ng-click="openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames)" >View Footage</button>
-                    </span>
+
                 </div>
 
             </div>
@@ -78,8 +75,13 @@
                     <br/>
                     <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
                     <br/>
+
                 </div>
             </div>
+            <span style="float:right">
+                                <button class="button button-small icon icon-left ion-ios-eye"
+                                        ng-click="openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames)" > View Footage</button>
+                    </span>
 
         </ion-item>
 
