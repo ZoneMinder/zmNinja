@@ -263,9 +263,18 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                         monitors = data.monitors;
                         console.log("promise resolved inside HTTP success");
                         monitorsLoaded = 1;
-                        d.resolve(monitors);
                         $ionicLoading.hide();
                         zmLog ("Monitor load was successful, loaded " + monitors.length + " monitors");
+
+                        // FIXME: This really should not be here.
+                        var i;
+
+                        for ( i = 0; i< monitors.length; i++)
+                        {
+                            monitors[i].Monitor.listDisplay='show';
+                           // monitors[i].Monitor.sortOrder=i;
+                        }
+                        d.resolve(monitors);
                     })
                     .error(function (err) {
                         console.log("HTTP Error " + err);
