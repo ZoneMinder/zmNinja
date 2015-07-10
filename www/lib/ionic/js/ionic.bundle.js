@@ -9,7 +9,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-rc.4
+ * Ionic, v1.0.1
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -25,7 +25,7 @@
 // build processes may have already created an ionic obj
 window.ionic = window.ionic || {};
 window.ionic.views = {};
-window.ionic.version = '1.0.0-rc.4';
+window.ionic.version = '1.0.1';
 
 (function (ionic) {
 
@@ -1784,7 +1784,9 @@ window.ionic.version = '1.0.0-rc.4';
         this.preventedFirstMove = false;
 
       } else if (!this.preventedFirstMove && ev.srcEvent.type == 'touchmove') {
-        if (inst.options.prevent_default_directions.indexOf(ev.direction) != -1) {
+        // Prevent gestures that are not intended for this event handler from firing subsequent times
+        if (inst.options.prevent_default_directions.length === 0
+            || inst.options.prevent_default_directions.indexOf(ev.direction) != -1) {
           ev.srcEvent.preventDefault();
         }
         this.preventedFirstMove = true;
@@ -2735,7 +2737,7 @@ ionic.tap = {
 
     ionic.requestAnimationFrame(function() {
       var focusInput = container.querySelector(':focus');
-      if (ionic.tap.isTextInput(focusInput)) {
+      if (ionic.tap.isTextInput(focusInput) && !ionic.tap.isDateInput(focusInput)) {
         var clonedInput = focusInput.cloneNode(true);
 
         clonedInput.value = focusInput.value;
@@ -3485,6 +3487,20 @@ ionic.DomUtil.ready(function() {
  *   <div id="google-map"></div>
  * </div>
  * ```
+ *
+ * Note: For performance reasons, elements will not be hidden for 400ms after the start of the `native.keyboardshow` event
+ * from the Ionic Keyboard plugin. If you would like them to disappear immediately, you could do something
+ * like:
+ *
+ * ```js
+ *   window.addEventListener('native.keyboardshow', function(){
+ *     document.body.classList.add('keyboard-open');
+ *   });
+ * ```
+ * This adds the same `keyboard-open` class that is normally added by Ionic 400ms after the keyboard
+ * opens. However, bear in mind that adding this class to the body immediately may cause jank in any
+ * animations on Android that occur when the keyboard opens (for example, scrolling any obscured inputs into view).
+ *
  * ----------
  *
  * ### Plugin Usage
@@ -3576,6 +3592,16 @@ var KEYBOARD_OPEN_CSS = 'keyboard-open';
 var SCROLL_CONTAINER_CSS = 'scroll-content';
 
 /**
+ * Debounced keyboardFocusIn function
+ */
+var debouncedKeyboardFocusIn = ionic.debounce(keyboardFocusIn, 200, true);
+
+/**
+ * Debounced keyboardNativeShow function
+ */
+var debouncedKeyboardNativeShow = ionic.debounce(keyboardNativeShow, 100, true);
+
+/**
  * Ionic keyboard namespace.
  * @namespace keyboard
  */
@@ -3609,6 +3635,11 @@ ionic.keyboard = {
   isLandscape: false,
 
   /**
+   * Whether the keyboard event listeners have been added or not
+   */
+  isInitialized: false,
+
+  /**
    * Hide the keyboard, if it is open.
    */
   hide: function() {
@@ -3626,6 +3657,38 @@ ionic.keyboard = {
     if (keyboardHasPlugin()) {
       cordova.plugins.Keyboard.show();
     }
+  },
+
+  /**
+   * Remove all keyboard related event listeners, effectively disabling Ionic's
+   * keyboard adjustments.
+   */
+  disable: function() {
+    if (keyboardHasPlugin()) {
+      window.removeEventListener('native.keyboardshow', debouncedKeyboardNativeShow );
+      window.removeEventListener('native.keyboardhide', keyboardFocusOut);
+    } else {
+      document.body.removeEventListener('focusout', keyboardFocusOut);
+    }
+
+    document.body.removeEventListener('ionic.focusin', debouncedKeyboardFocusIn);
+    document.body.removeEventListener('focusin', debouncedKeyboardFocusIn);
+
+    window.removeEventListener('orientationchange', keyboardOrientationChange);
+
+    if ( window.navigator.msPointerEnabled ) {
+      document.removeEventListener("MSPointerDown", keyboardInit);
+    } else {
+      document.removeEventListener('touchstart', keyboardInit);
+    }
+    ionic.keyboard.isInitialized = false;
+  },
+
+  /**
+   * Alias for keyboardInit, initialize all keyboard related event listeners.
+   */
+  enable: function() {
+    keyboardInit();
   }
 };
 
@@ -3639,13 +3702,14 @@ keyboardCurrentViewportHeight = getViewportHeight();
 
 /**
  * Event handler for first touch event, initializes all event listeners
- * for keyboard related events.
+ * for keyboard related events. Also aliased by ionic.keyboard.enable.
  */
 function keyboardInit() {
-  var debouncedKeyboardFocusIn = ionic.debounce(keyboardFocusIn, 200, true);
+
+  if (ionic.keyboard.isInitialized) return;
 
   if (keyboardHasPlugin()) {
-    window.addEventListener('native.keyboardshow', ionic.debounce(keyboardNativeShow, 100, true));
+    window.addEventListener('native.keyboardshow', debouncedKeyboardNativeShow);
     window.addEventListener('native.keyboardhide', keyboardFocusOut);
   } else {
     document.body.addEventListener('focusout', keyboardFocusOut);
@@ -3659,6 +3723,8 @@ function keyboardInit() {
   } else {
     document.removeEventListener('touchstart', keyboardInit);
   }
+
+  ionic.keyboard.isInitialized = true;
 }
 
 /**
@@ -3704,7 +3770,8 @@ function keyboardFocusIn(e) {
   if (!e.target ||
       e.target.readOnly ||
       !ionic.tap.isKeyboardElement(e.target) ||
-      !(scrollView = inputScrollView(e.target))) {
+      !(scrollView = ionic.DomUtil.getParentWithClass(e.target, SCROLL_CONTAINER_CSS))) {
+    keyboardActiveElement = null;
     return;
   }
 
@@ -3712,12 +3779,23 @@ function keyboardFocusIn(e) {
 
   // if using JS scrolling, undo the effects of native overflow scroll so the
   // scroll view is positioned correctly
-  document.body.scrollTop = 0;
-  scrollView.scrollTop = 0;
-  ionic.requestAnimationFrame(function(){
+  if (!scrollView.classList.contains("overflow-scroll")) {
     document.body.scrollTop = 0;
     scrollView.scrollTop = 0;
-  });
+    ionic.requestAnimationFrame(function(){
+      document.body.scrollTop = 0;
+      scrollView.scrollTop = 0;
+    });
+
+    // any showing part of the document that isn't within the scroll the user
+    // could touchmove and cause some ugly changes to the app, so disable
+    // any touchmove events while the keyboard is open using e.preventDefault()
+    if (window.navigator.msPointerEnabled) {
+      document.addEventListener("MSPointerMove", keyboardPreventDefault, false);
+    } else {
+      document.addEventListener('touchmove', keyboardPreventDefault, false);
+    }
+  }
 
   if (!ionic.keyboard.isOpen || ionic.keyboard.isClosing) {
     ionic.keyboard.isOpening = true;
@@ -3729,14 +3807,7 @@ function keyboardFocusIn(e) {
   // keyboard
   document.addEventListener('keydown', keyboardOnKeyDown, false);
 
-  // any showing part of the document that isn't within the scroll the user
-  // could touchmove and cause some ugly changes to the app, so disable
-  // any touchmove events while the keyboard is open using e.preventDefault()
-  if (window.navigator.msPointerEnabled) {
-    document.addEventListener("MSPointerMove", keyboardPreventDefault, false);
-  } else {
-    document.addEventListener('touchmove', keyboardPreventDefault, false);
-  }
+
 
   // if we aren't using the plugin and the keyboard isn't open yet, wait for the
   // window to resize so we can get an accurate estimate of the keyboard size,
@@ -3935,9 +4006,11 @@ function keyboardHide() {
   ionic.keyboard.isOpen = false;
   ionic.keyboard.isClosing = false;
 
-  ionic.trigger('resetScrollView', {
-    target: keyboardActiveElement
-  }, true);
+  if (keyboardActiveElement) {
+    ionic.trigger('resetScrollView', {
+      target: keyboardActiveElement
+    }, true);
+  }
 
   ionic.requestAnimationFrame(function(){
     document.body.classList.remove(KEYBOARD_OPEN_CSS);
@@ -3957,6 +4030,8 @@ function keyboardHide() {
     if (keyboardHasPlugin()) cordova.plugins.Keyboard.close();
     keyboardActiveElement && keyboardActiveElement.blur();
   }
+
+  keyboardActiveElement = null;
 }
 
 /**
@@ -3965,36 +4040,42 @@ function keyboardHide() {
  * the currently focused input into view if necessary.
  */
 function keyboardShow() {
-  var elementBounds = keyboardActiveElement.getBoundingClientRect();
-  var details = {
-    target: keyboardActiveElement,
-    elementTop: Math.round(elementBounds.top),
-    elementBottom: Math.round(elementBounds.bottom),
-    keyboardHeight: keyboardGetHeight(),
-    viewportHeight: keyboardCurrentViewportHeight
-  };
-
-  details.windowHeight = details.viewportHeight - details.keyboardHeight;
-  //console.log("keyboardShow viewportHeight: " + details.viewportHeight +
-  //", windowHeight: " + details.windowHeight +
-  //", keyboardHeight: " + details.keyboardHeight);
-
-  // figure out if the element is under the keyboard
-  details.isElementUnderKeyboard = (details.elementBottom > details.windowHeight);
-  //console.log("isUnderKeyboard: " + details.isElementUnderKeyboard);
-  //console.log("elementBottom: " + details.elementBottom);
 
   ionic.keyboard.isOpen = true;
   ionic.keyboard.isOpening = false;
 
-  // send event so the scroll view adjusts
-  ionic.trigger('scrollChildIntoView', details, true);
+  var details = {
+    keyboardHeight: keyboardGetHeight(),
+    viewportHeight: keyboardCurrentViewportHeight
+  };
+
+  if (keyboardActiveElement) {
+    details.target = keyboardActiveElement;
+
+    var elementBounds = keyboardActiveElement.getBoundingClientRect();
+
+    details.elementTop = Math.round(elementBounds.top);
+    details.elementBottom = Math.round(elementBounds.bottom);
+
+    details.windowHeight = details.viewportHeight - details.keyboardHeight;
+    //console.log("keyboardShow viewportHeight: " + details.viewportHeight +
+    //", windowHeight: " + details.windowHeight +
+    //", keyboardHeight: " + details.keyboardHeight);
+
+    // figure out if the element is under the keyboard
+    details.isElementUnderKeyboard = (details.elementBottom > details.windowHeight);
+    //console.log("isUnderKeyboard: " + details.isElementUnderKeyboard);
+    //console.log("elementBottom: " + details.elementBottom);
+
+    // send event so the scroll view adjusts
+    ionic.trigger('scrollChildIntoView', details, true);
+  }
 
   setTimeout(function(){
     document.body.classList.add(KEYBOARD_OPEN_CSS);
   }, 400);
 
-  return details;
+  return details; //for testing
 }
 
 /* eslint no-unused-vars:0 */
@@ -4062,9 +4143,11 @@ function keyboardUpdateViewportHeight() {
     keyboardPortraitViewportHeight = keyboardCurrentViewportHeight;
   }
 
-  ionic.trigger('resetScrollView', {
-    target: keyboardActiveElement
-  }, true);
+  if (keyboardActiveElement) {
+    ionic.trigger('resetScrollView', {
+      target: keyboardActiveElement
+    }, true);
+  }
 
   if (ionic.keyboard.isOpen && ionic.tap.isTextInput(keyboardActiveElement)) {
     keyboardShow();
@@ -4104,16 +4187,6 @@ function getViewportHeight() {
      return windowHeight + keyboardGetHeight();
   }
   return windowHeight;
-}
-
-function inputScrollView(ele) {
-  while(ele) {
-    if (ele.classList.contains(SCROLL_CONTAINER_CSS)) {
-      return ele;
-    }
-    ele = ele.parentElement;
-  }
-  return null;
 }
 
 function keyboardHasPlugin() {
@@ -5279,7 +5352,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
     container.removeEventListener('touchmove', self.touchMoveBubble);
     document.removeEventListener('touchmove', self.touchMove);
     document.removeEventListener('touchend', self.touchEnd);
-    document.removeEventListener('touchcancel', self.touchCancel);
+    document.removeEventListener('touchcancel', self.touchEnd);
 
     container.removeEventListener("pointerdown", self.touchStart);
     container.removeEventListener("pointermove", self.touchMoveBubble);
@@ -7004,7 +7077,7 @@ ionic.scroll = {
         // scroll animation loop w/ easing
         // credit https://gist.github.com/dezinezync/5487119
         var start = Date.now(),
-          duration = 1000, //milliseconds
+          duration = 250, //milliseconds
           fromY = self.el.scrollTop,
           fromX = self.el.scrollLeft;
 
@@ -7038,6 +7111,7 @@ ionic.scroll = {
 
           } else {
             // done
+            ionic.tap.removeClonedInputs(self.__container, self);
             self.resize();
           }
         }
@@ -7092,28 +7166,144 @@ ionic.scroll = {
 
       // Event Handler
       var container = self.__container;
+      // save height when scroll view is shrunk so we don't need to reflow
+      var scrollViewOffsetHeight;
 
-      // should be unnecessary in native scrolling, but keep in case bugs show up
-      self.scrollChildIntoView = NOOP;
+      /**
+       * Shrink the scroll view when the keyboard is up if necessary and if the
+       * focused input is below the bottom of the shrunk scroll view, scroll it
+       * into view.
+       */
+      self.scrollChildIntoView = function(e) {
+        //console.log("scrollChildIntoView at: " + Date.now());
+
+        // D
+        var scrollBottomOffsetToTop = container.getBoundingClientRect().bottom;
+        // D - A
+        scrollViewOffsetHeight = container.offsetHeight;
+        var alreadyShrunk = self.isShrunkForKeyboard;
+
+        var isModal = container.parentNode.classList.contains('modal');
+        // 680px is when the media query for 60% modal width kicks in
+        var isInsetModal = isModal && window.innerWidth >= 680;
+
+       /*
+        *  _______
+        * |---A---| <- top of scroll view
+        * |       |
+        * |---B---| <- keyboard
+        * |   C   | <- input
+        * |---D---| <- initial bottom of scroll view
+        * |___E___| <- bottom of viewport
+        *
+        *  All commented calculations relative to the top of the viewport (ie E
+        *  is the viewport height, not 0)
+        */
+        if (!alreadyShrunk) {
+          // shrink scrollview so we can actually scroll if the input is hidden
+          // if it isn't shrink so we can scroll to inputs under the keyboard
+          // inset modals won't shrink on Android on their own when the keyboard appears
+          if ( ionic.Platform.isIOS() || ionic.Platform.isFullScreen || isInsetModal ) {
+            // if there are things below the scroll view account for them and
+            // subtract them from the keyboard height when resizing
+            // E - D                         E                         D
+            var scrollBottomOffsetToBottom = e.detail.viewportHeight - scrollBottomOffsetToTop;
+
+            // 0 or D - B if D > B           E - B                     E - D
+            var keyboardOffset = Math.max(0, e.detail.keyboardHeight - scrollBottomOffsetToBottom);
+
+            ionic.requestAnimationFrame(function(){
+              // D - A or B - A if D > B       D - A             max(0, D - B)
+              scrollViewOffsetHeight = scrollViewOffsetHeight - keyboardOffset;
+              container.style.height = scrollViewOffsetHeight + "px";
+
+              //update scroll view
+              self.resize();
+            });
+          }
+
+          self.isShrunkForKeyboard = true;
+        }
+
+        /*
+         *  _______
+         * |---A---| <- top of scroll view
+         * |   *   | <- where we want to scroll to
+         * |--B-D--| <- keyboard, bottom of scroll view
+         * |   C   | <- input
+         * |       |
+         * |___E___| <- bottom of viewport
+         *
+         *  All commented calculations relative to the top of the viewport (ie E
+         *  is the viewport height, not 0)
+         */
+        // if the element is positioned under the keyboard scroll it into view
+        if (e.detail.isElementUnderKeyboard) {
+
+          ionic.requestAnimationFrame(function(){
+            // update D if we shrunk
+            if (self.isShrunkForKeyboard && !alreadyShrunk) {
+              scrollBottomOffsetToTop = container.getBoundingClientRect().bottom;
+            }
+
+            // middle of the scrollview, this is where we want to scroll to
+            // (D - A) / 2
+            var scrollMidpointOffset = scrollViewOffsetHeight * 0.5;
+            //console.log("container.offsetHeight: " + scrollViewOffsetHeight);
+
+            // middle of the input we want to scroll into view
+            // C
+            var inputMidpoint = ((e.detail.elementBottom + e.detail.elementTop) / 2);
+
+            // distance from middle of input to the bottom of the scroll view
+            // C - D                                C               D
+            var inputMidpointOffsetToScrollBottom = inputMidpoint - scrollBottomOffsetToTop;
+
+            //C - D + (D - A)/2          C - D                     (D - A)/ 2
+            var scrollTop = inputMidpointOffsetToScrollBottom + scrollMidpointOffset;
+
+            if ( scrollTop > 0) {
+              if (ionic.Platform.isIOS()) {
+                //just shrank scroll view, give it some breathing room before scrolling
+                setTimeout(function(){
+                  ionic.tap.cloneFocusedInput(container, self);
+                  self.scrollBy(0, scrollTop, true);
+                  self.onScroll();
+                }, 32);
+              } else {
+                self.scrollBy(0, scrollTop, true);
+                self.onScroll();
+              }
+            }
+          });
+        }
+
+        // Only the first scrollView parent of the element that broadcasted this event
+        // (the active element that needs to be shown) should receive this event
+        e.stopPropagation();
+      };
 
       self.resetScrollView = function() {
         //return scrollview to original height once keyboard has hidden
-        if (self.isScrolledIntoView) {
-          self.isScrolledIntoView = false;
+        if (self.isShrunkForKeyboard) {
+          self.isShrunkForKeyboard = false;
           container.style.height = "";
-          container.style.overflow = "";
-          self.resize();
-          ionic.scroll.isScrolling = false;
         }
+        self.resize();
       };
 
-      container.addEventListener('resetScrollView', self.resetScrollView);
       container.addEventListener('scroll', self.onScroll);
 
       //Broadcasted when keyboard is shown on some platforms.
       //See js/utils/keyboard.js
       container.addEventListener('scrollChildIntoView', self.scrollChildIntoView);
-      container.addEventListener('resetScrollView', self.resetScrollView);
+
+      // Listen on document because container may not have had the last
+      // keyboardActiveElement, for example after closing a modal with a focused
+      // input and returning to a previously resized scroll view in an ion-content.
+      // Since we can only resize scroll views that are currently visible, just resize
+      // the current scroll view when the keyboard is closed.
+      document.addEventListener('resetScrollView', self.resetScrollView);
     },
 
     __cleanup: function() {
@@ -7135,6 +7325,7 @@ ionic.scroll = {
       delete self.options.el;
 
       self.resize = self.scrollTo = self.onScroll = self.resetScrollView = NOOP;
+      self.scrollChildIntoView = NOOP;
       container = null;
     }
   });
@@ -8420,7 +8611,7 @@ ionic.views.Slider = ionic.views.View.inherit({
       element.style.left = '';
 
       // reset slides so no refs are held on to
-      slides && (slides.length = 0);
+      slides && (slides = []);
 
       // removed event listeners
       if (browser.addEventListener) {
@@ -41849,7 +42040,7 @@ angular.module('ui.router.state')
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-rc.4
+ * Ionic, v1.0.1
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -42492,7 +42683,7 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
   var DIRECTION_NONE = 'none';
 
   var stateChangeCounter = 0;
-  var lastStateId, nextViewOptions, nextViewExpireTimer, forcedNav;
+  var lastStateId, nextViewOptions, deregisterStateChangeListener, nextViewExpireTimer, forcedNav;
 
   var viewHistory = {
     histories: { root: { historyId: 'root', parentHistoryId: null, stack: [], cursor: -1 } },
@@ -42817,6 +43008,7 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
         hist.stack.push(viewHistory.views[viewId]);
       }
 
+      deregisterStateChangeListener && deregisterStateChangeListener();
       $timeout.cancel(nextViewExpireTimer);
       if (nextViewOptions) {
         if (nextViewOptions.disableAnimate) direction = DIRECTION_NONE;
@@ -43007,9 +43199,45 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
     /**
      * @ngdoc method
      * @name $ionicHistory#goBack
+     * @param {number=} backCount Optional negative integer setting how many views to go
+     * back. By default it'll go back one view by using the value `-1`. To go back two
+     * views you would use `-2`. If the number goes farther back than the number of views
+     * in the current history's stack then it'll go to the first view in the current history's
+     * stack. If the number is zero or greater then it'll do nothing. It also does not
+     * cross history stacks, meaning it can only go as far back as the current history.
      * @description Navigates the app to the back view, if a back view exists.
      */
-    goBack: function() {
+    goBack: function(backCount) {
+      if (isDefined(backCount) && backCount !== -1) {
+        if (backCount > -1) return;
+
+        var currentHistory = viewHistory.histories[this.currentHistoryId()];
+        var newCursor = currentHistory.cursor + backCount + 1;
+        if (newCursor < 1) {
+          newCursor = 1;
+        }
+
+        currentHistory.cursor = newCursor;
+        setNavViews(currentHistory.stack[newCursor].viewId);
+
+        var cursor = newCursor - 1;
+        var clearStateIds = [];
+        var fwdView = getViewById(currentHistory.stack[cursor].forwardViewId);
+        while (fwdView) {
+          clearStateIds.push(fwdView.stateId || fwdView.viewId);
+          cursor++;
+          if (cursor >= currentHistory.stack.length) break;
+          fwdView = getViewById(currentHistory.stack[cursor].forwardViewId);
+        }
+
+        var self = this;
+        if (clearStateIds.length) {
+          $timeout(function() {
+            self.clearCache(clearStateIds);
+          }, 600);
+        }
+      }
+
       viewHistory.backView && viewHistory.backView.go();
     },
 
@@ -43064,10 +43292,10 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
      * @description Removes all cached views within every {@link ionic.directive:ionNavView}.
      * This both removes the view element from the DOM, and destroy it's scope.
      */
-    clearCache: function() {
+    clearCache: function(stateIds) {
       $timeout(function() {
         $ionicNavViewDelegate._instances.forEach(function(instance) {
-          instance.clearCache();
+          instance.clearCache(stateIds);
         });
       });
     },
@@ -43096,6 +43324,7 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
      * ```
      */
     nextViewOptions: function(opts) {
+      deregisterStateChangeListener && deregisterStateChangeListener();
       if (arguments.length) {
         $timeout.cancel(nextViewExpireTimer);
         if (opts === null) {
@@ -43104,9 +43333,11 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
           nextViewOptions = nextViewOptions || {};
           extend(nextViewOptions, opts);
           if (nextViewOptions.expire) {
-            nextViewExpireTimer = $timeout(function() {
-              nextViewOptions = null;
-            }, nextViewOptions.expire);
+              deregisterStateChangeListener = $rootScope.$on('$stateChangeSuccess', function() {
+                nextViewExpireTimer = $timeout(function() {
+                  nextViewOptions = null;
+                  }, nextViewOptions.expire);
+              });
           }
         }
       }
@@ -43226,8 +43457,8 @@ function($rootScope, $state, $location, $document, $ionicPlatform, $ionicHistory
     }
   });
 
-  $rootScope.$ionicGoBack = function() {
-    $ionicHistory.goBack();
+  $rootScope.$ionicGoBack = function(backCount) {
+    $ionicHistory.goBack(backCount);
   };
 
   // Set the document title when a new view is shown
@@ -43350,6 +43581,15 @@ function($rootScope, $state, $location, $document, $ionicPlatform, $ionicHistory
 
 /**
  * @ngdoc method
+ * @name $ionicConfigProvider#scrolling.jsScrolling
+ * @description  Whether to use JS or Native scrolling. Defaults to JS scrolling. Setting this to
+ * `false` has the same effect as setting each `ion-content` to have `overflow-scroll='true'`.
+ * @param {boolean} value Defaults to `true`
+ * @returns {boolean}
+ */
+
+/**
+ * @ngdoc method
  * @name $ionicConfigProvider#backButton.icon
  * @description Back button icon.
  * @param {string} value
@@ -43386,6 +43626,15 @@ function($rootScope, $state, $location, $document, $ionicPlatform, $ionicHistory
  * @name $ionicConfigProvider#form.toggle
  * @description Toggle item style. Android defaults to `small` and iOS defaults to `large`.
  * @param {string} value
+ * @returns {string}
+ */
+
+/**
+ * @ngdoc method
+ * @name $ionicConfigProvider#spinner.icon
+ * @description Default spinner icon to use.
+ * @param {string} value Can be: `android`, `ios`, `ios-small`, `bubbles`, `circles`, `crescent`,
+ * `dots`, `lines`, `ripple`, or `spiral`.
  * @returns {string}
  */
 
@@ -43504,6 +43753,9 @@ IonicModule
     scrolling: {
       jsScrolling: PLATFORM
     },
+    spinner: {
+      icon: PLATFORM
+    },
     tabs: {
       style: PLATFORM,
       position: PLATFORM
@@ -43551,6 +43803,10 @@ IonicModule
       jsScrolling: true
     },
 
+    spinner: {
+      icon: 'ios'
+    },
+
     tabs: {
       style: 'standard',
       position: 'bottom'
@@ -43596,11 +43852,26 @@ IonicModule
       toggle: 'small'
     },
 
+    spinner: {
+      icon: 'android'
+    },
+
     tabs: {
       style: 'striped',
       position: 'top'
     }
 
+  });
+
+  // Windows Phone
+  // -------------------------
+  setPlatformConfig('windowsphone', {
+    //scrolling: {
+    //  jsScrolling: false
+    //}
+    spinner: {
+      icon: 'android'
+    }
   });
 
 
@@ -43651,7 +43922,7 @@ IonicModule
 
     function setStyles(ctrl, opacity, titleX, backTextX) {
       var css = {};
-      css[ionic.CSS.TRANSITION_DURATION] = d.shouldAnimate ? '' : 0;
+      css[ionic.CSS.TRANSITION_DURATION] = d.shouldAnimate ? '' : '0ms';
       css.opacity = opacity === 1 ? '' : opacity;
 
       ctrl.setCss('buttons-left', css);
@@ -43866,7 +44137,14 @@ IonicModule
   provider.$get = function() {
     return provider;
   };
-});
+})
+// Fix for URLs in Cordova apps on Windows Phone
+// http://blogs.msdn.com/b/msdn_answers/archive/2015/02/10/
+// running-cordova-apps-on-windows-and-windows-phone-8-1-using-ionic-angularjs-and-other-frameworks.aspx
+.config(['$compileProvider', function($compileProvider) {
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|tel|ftp|mailto|file|ghttps?|ms-appx|x-wmapp0):/);
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|content|blob|ms-appx|x-wmapp0):|data:image\//);
+}]);
 
 
 var LOADING_TPL =
@@ -44211,7 +44489,9 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
      *  - `{string=}` `animation` The animation to show & hide with.
      *    Default: 'slide-in-up'
      *  - `{boolean=}` `focusFirstInput` Whether to autofocus the first input of
-     *    the modal when shown.  Default: false.
+     *    the modal when shown. Will only show the keyboard on iOS, to force the keyboard to show
+     *    on Android, please use the [Ionic keyboard plugin](https://github.com/driftyco/ionic-plugin-keyboard#keyboardshow).
+     *    Default: false.
      *  - `{boolean=}` `backdropClickToClose` Whether to close the modal on clicking the backdrop.
      *    Default: true.
      *  - `{boolean=}` `hardwareBackButtonClose` Whether the modal can be closed using the hardware
@@ -44235,6 +44515,11 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
         $log.error('Cannot call ' + self.viewType + '.show() after remove(). Please create a new ' + self.viewType + ' instance.');
         return $$q.when();
       }
+
+      // on iOS, clicks will sometimes bleed through/ghost click on underlying
+      // elements
+      $ionicClickBlock.show(600);
+      stack.add(self);
 
       var modalEl = jqLite(self.modalEl);
 
@@ -44264,7 +44549,6 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
         ionic.on('resize', self._onWindowResize, window);
       }
 
-
       modalEl.addClass('ng-enter active')
              .removeClass('ng-leave ng-leave-active');
 
@@ -44289,7 +44573,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
         if (!self._isShown) return;
         //After animating in, allow hide on backdrop click
         self.$el.on('click', function(e) {
-          if (self.backdropClickToClose && e.target === self.el) {
+          if (self.backdropClickToClose && e.target === self.el && stack.isHighest(self)) {
             self.hide();
           }
         });
@@ -44309,6 +44593,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
       // on iOS, clicks will sometimes bleed through/ghost click on underlying
       // elements
       $ionicClickBlock.show(600);
+      stack.remove(self);
 
       self.el.classList.remove('active');
       modalEl.addClass('ng-leave');
@@ -44397,6 +44682,23 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
     return modal;
   };
 
+  var modalStack = [];
+  var stack = {
+    add: function(modal) {
+      modalStack.push(modal);
+    },
+    remove: function(modal) {
+      var index = modalStack.indexOf(modal);
+      if (index > -1 && index < modalStack.length) {
+        modalStack.splice(index, 1);
+      }
+    },
+    isHighest: function(modal) {
+      var index = modalStack.indexOf(modal);
+      return (index > -1 && index === modalStack.length - 1);
+    }
+  };
+
   return {
     /**
      * @ngdoc method
@@ -44432,7 +44734,9 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
         cb && cb(modal);
         return modal;
       });
-    }
+    },
+
+    stack: stack
   };
 }]);
 
@@ -45034,8 +45338,9 @@ IonicModule
   '$ionicBody',
   '$compile',
   '$ionicPlatform',
+  '$ionicModal',
   'IONIC_BACK_PRIORITY',
-function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicBody, $compile, $ionicPlatform, IONIC_BACK_PRIORITY) {
+function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicBody, $compile, $ionicPlatform, $ionicModal, IONIC_BACK_PRIORITY) {
   //TODO allow this to be configured
   var config = {
     stackPushDelay: 75
@@ -45242,6 +45547,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
     self.show = function() {
       if (self.isShown || self.removed) return;
 
+      $ionicModal.stack.add(self);
       self.isShown = true;
       ionic.requestAnimationFrame(function() {
         //if hidden while waiting for raf, don't show
@@ -45257,6 +45563,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
       callback = callback || noop;
       if (!self.isShown) return callback();
 
+      $ionicModal.stack.remove(self);
       self.isShown = false;
       self.element.removeClass('active');
       self.element.addClass('popup-hidden');
@@ -45264,7 +45571,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
     };
 
     self.remove = function() {
-      if (self.removed) return;
+      if (self.removed || !$ionicModal.stack.isHighest(self)) return;
 
       self.hide(function() {
         self.element.remove();
@@ -46487,28 +46794,31 @@ function($timeout, $document, $q, $ionicClickBlock, $ionicConfig, $ionicNavBarDe
         },
 
         emit: function(step, enteringData, leavingData) {
-          var scope = enteringEle.scope();
-          if (scope) {
-            scope.$emit('$ionicView.' + step + 'Enter', enteringData);
-            if (step == 'after') {
-              scope.$emit('$ionicView.enter', enteringData);
+          var enteringScope = enteringEle.scope(),
+            leavingScope = leavingEle && leavingEle.scope();
+
+          if (step == 'after') {
+            if (enteringScope) {
+              enteringScope.$emit('$ionicView.enter', enteringData);
+            }
+
+            if (leavingScope) {
+              leavingScope.$emit('$ionicView.leave', leavingData);
+
+            } else if (enteringScope && leavingData && leavingData.viewId) {
+              enteringScope.$emit('$ionicNavView.leave', leavingData);
             }
           }
 
-          if (leavingEle) {
-            scope = leavingEle.scope();
-            if (scope) {
-              scope.$emit('$ionicView.' + step + 'Leave', leavingData);
-              if (step == 'after') {
-                scope.$emit('$ionicView.leave', leavingData);
-              }
-            }
+          if (enteringScope) {
+            enteringScope.$emit('$ionicView.' + step + 'Enter', enteringData);
+          }
 
-          } else if (scope && leavingData && leavingData.viewId) {
-            scope.$emit('$ionicNavView.' + step + 'Leave', leavingData);
-            if (step == 'after') {
-              scope.$emit('$ionicNavView.leave', leavingData);
-            }
+          if (leavingScope) {
+            leavingScope.$emit('$ionicView.' + step + 'Leave', leavingData);
+
+          } else if (enteringScope && leavingData && leavingData.viewId) {
+            enteringScope.$emit('$ionicNavView.' + step + 'Leave', leavingData);
           }
         },
 
@@ -47145,7 +47455,8 @@ function($scope, $attrs, $element, $timeout) {
     $timeout(function() {
       if (self.jsScrolling) self.scrollView.resize();
       // only check bounds again immediately if the page isn't cached (scroll el has height)
-      if (self.scrollView.__container && self.scrollView.__container.offsetHeight > 0) {
+      if ((self.jsScrolling && self.scrollView.__container && self.scrollView.__container.offsetHeight > 0) ||
+      !self.jsScrolling) {
         self.checkBounds();
       }
     }, 30, false);
@@ -48076,18 +48387,32 @@ function($scope, $element, $attrs, $compile, $controller, $ionicNavBarDelegate, 
   };
 
 
-  self.clearCache = function() {
+  self.clearCache = function(stateIds) {
     var viewElements = $element.children();
-    var viewElement, viewScope;
+    var viewElement, viewScope, x, l, y, eleIdentifier;
 
-    for (var x = 0, l = viewElements.length; x < l; x++) {
+    for (x = 0, l = viewElements.length; x < l; x++) {
       viewElement = viewElements.eq(x);
+
+      if (stateIds) {
+        eleIdentifier = viewElement.data(DATA_ELE_IDENTIFIER);
+
+        for (y = 0; y < stateIds.length; y++) {
+          if (eleIdentifier === stateIds[y]) {
+            $ionicViewSwitcher.destroyViewEle(viewElement);
+          }
+        }
+        continue;
+      }
+
       if (navViewAttr(viewElement) == VIEW_STATUS_CACHED) {
         $ionicViewSwitcher.destroyViewEle(viewElement);
+
       } else if (navViewAttr(viewElement) == VIEW_STATUS_ACTIVE) {
         viewScope = viewElement.scope();
         viewScope && viewScope.$broadcast('$ionicView.clearCache');
       }
+
     }
   };
 
@@ -48819,12 +49144,11 @@ function($scope,
         return;
       }
       var curElm = elm;
-      var scrollLeft = 0, scrollTop = 0, levelsClimbed = 0;
+      var scrollLeft = 0, scrollTop = 0;
       do {
         if (curElm !== null) scrollLeft += curElm.offsetLeft;
         if (curElm !== null) scrollTop += curElm.offsetTop;
         curElm = curElm.offsetParent;
-        levelsClimbed++;
       } while (curElm.attributes != self.element.attributes && curElm.offsetParent);
       scrollView.scrollTo(scrollLeft, scrollTop, !!shouldAnimate);
     });
@@ -48863,7 +49187,8 @@ IonicModule
   '$ionicHistory',
   '$ionicScrollDelegate',
   'IONIC_BACK_PRIORITY',
-function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $ionicHistory, $ionicScrollDelegate, IONIC_BACK_PRIORITY) {
+  '$rootScope',
+function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $ionicHistory, $ionicScrollDelegate, IONIC_BACK_PRIORITY, $rootScope) {
   var self = this;
   var rightShowing, leftShowing, isDragging;
   var startX, lastX, offsetX, isAsideExposed;
@@ -48918,8 +49243,10 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
     self.content.enableAnimation();
     if (!shouldOpen) {
       self.openPercentage(0);
+      $rootScope.$emit('$ionicSideMenuClose', 'left');
     } else {
       self.openPercentage(100);
+      $rootScope.$emit('$ionicSideMenuOpen', 'left');
     }
   };
 
@@ -48935,8 +49262,10 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
     self.content.enableAnimation();
     if (!shouldOpen) {
       self.openPercentage(0);
+      $rootScope.$emit('$ionicSideMenuClose', 'right');
     } else {
       self.openPercentage(-100);
+      $rootScope.$emit('$ionicSideMenuOpen', 'right');
     }
   };
 
@@ -48953,6 +49282,8 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
    */
   self.close = function() {
     self.openPercentage(0);
+    $rootScope.$emit('$ionicSideMenuClose', 'left');
+    $rootScope.$emit('$ionicSideMenuClose', 'right');
   };
 
   /**
@@ -49695,16 +50026,12 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
   .controller('$ionicSpinner', [
     '$element',
     '$attrs',
-  function($element, $attrs) {
-    var spinnerName, spinner;
+    '$ionicConfig',
+  function($element, $attrs, $ionicConfig) {
+    var spinnerName;
 
     this.init = function() {
-      spinnerName = $attrs.icon || ionic.Platform.platform();
-      spinner = spinners[spinnerName];
-      if (!spinner) {
-        spinnerName = 'ios';
-        spinner = spinners.ios;
-      }
+      spinnerName = $attrs.icon || $ionicConfig.spinner.icon();
 
       var container = document.createElement('div');
       createSvgElement('svg', {
@@ -49796,7 +50123,7 @@ function($scope, $element, $ionicHistory) {
       self.deselect(tab);
       //Try to select a new tab if we're removing a tab
       if (self.tabs.length === 1) {
-        //do nothing if there are no other tabs to select
+        //Do nothing if there are no other tabs to select
       } else {
         //Select previous tab if it's the last tab, else select next tab
         var newTabIndex = tabIndex === self.tabs.length - 1 ? tabIndex - 1 : tabIndex + 1;
@@ -50096,7 +50423,9 @@ IonicModule
         'ng-disabled': attr.ngDisabled,
         'ng-true-value': attr.ngTrueValue,
         'ng-false-value': attr.ngFalseValue,
-        'ng-change': attr.ngChange
+        'ng-change': attr.ngChange,
+        'ng-required': attr.ngRequired,
+        'required': attr.required
       }, function(value, name) {
         if (isDefined(value)) {
           input.attr(name, value);
@@ -51122,6 +51451,9 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
  * directive, and infinite scrolling with the {@link ionic.directive:ionInfiniteScroll}
  * directive.
  *
+ * If there is any dynamic content inside the ion-content, be sure to call `.resize()` with {@link ionic.service:$ionicScrollDelegate}
+ * after the content has been added.
+ *
  * Be aware that this directive gets its own child scope. If you do not understand why this
  * is important, you can read [https://docs.angularjs.org/guide/scope](https://docs.angularjs.org/guide/scope).
  *
@@ -51133,7 +51465,7 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
  * of the content.  Defaults to true on iOS, false on Android.
  * @param {boolean=} scroll Whether to allow scrolling of content.  Defaults to true.
  * @param {boolean=} overflow-scroll Whether to use overflow-scrolling instead of
- * Ionic scroll.
+ * Ionic scroll. See {@link ionic.provider:$ionicConfigProvider} to set this as the global default.
  * @param {boolean=} scrollbar-x Whether to show the horizontal scrollbar. Default true.
  * @param {boolean=} scrollbar-y Whether to show the vertical scrollbar. Default true.
  * @param {string=} start-x Initial horizontal scroll position. Default 0.
@@ -51170,6 +51502,13 @@ function($timeout, $controller, $ionicBind, $ionicConfig) {
         element.append(innerElement);
       } else {
         element.addClass('scroll-content-false');
+      }
+
+      var nativeScrolling = attr.overflowScroll === "true" || !$ionicConfig.scrolling.jsScrolling();
+
+      // collection-repeat requires JS scrolling
+      if (nativeScrolling) {
+        nativeScrolling = !element[0].querySelector('[collection-repeat]');
       }
 
       return { pre: prelink };
@@ -51217,7 +51556,8 @@ function($timeout, $controller, $ionicBind, $ionicConfig) {
         } else {
           var scrollViewOptions = {};
 
-          if (attr.overflowScroll === "true" || !$ionicConfig.scrolling.jsScrolling()) {
+          // determined in compile phase above
+          if (nativeScrolling) {
             // use native scrolling
             $element.addClass('overflow-scroll');
 
@@ -51351,7 +51691,7 @@ IonicModule.directive('exposeAsideWhen', ['$window', function($window) {
 }]);
 
 
-var GESTURE_DIRECTIVES = 'onHold onTap onDoubleTap onTouch onRelease onDrag onDragUp onDragRight onDragDown onDragLeft onSwipe onSwipeUp onSwipeRight onSwipeDown onSwipeLeft'.split(' ');
+var GESTURE_DIRECTIVES = 'onHold onTap onDoubleTap onTouch onRelease onDragStart onDrag onDragEnd onDragUp onDragRight onDragDown onDragLeft onSwipe onSwipeUp onSwipeRight onSwipeDown onSwipeLeft'.split(' ');
 
 GESTURE_DIRECTIVES.forEach(function(name) {
   IonicModule.directive(name, gestureDirective(name));
@@ -51439,6 +51779,21 @@ GESTURE_DIRECTIVES.forEach(function(name) {
  * ```
  */
 
+/**
+ * @ngdoc directive
+ * @name onDragStart
+ * @module ionic
+ * @restrict A
+ *
+ * @description
+ * Called when a drag gesture has started.
+ *
+ * @usage
+ * ```html
+ * <button on-drag-start="onDragStart()" class="button">Test</button>
+ * ```
+ */
+
 
 /**
  * @ngdoc directive
@@ -51457,6 +51812,20 @@ GESTURE_DIRECTIVES.forEach(function(name) {
  * ```
  */
 
+/**
+ * @ngdoc directive
+ * @name onDragEnd
+ * @module ionic
+ * @restrict A
+ *
+ * @description
+ * Called when a drag gesture has ended.
+ *
+ * @usage
+ * ```html
+ * <button on-drag-end="onDragEnd()" class="button">Test</button>
+ * ```
+ */
 
 /**
  * @ngdoc directive
@@ -52114,6 +52483,7 @@ var ITEM_TPL_OPTION_BUTTONS =
 * @parent ionic.directive:ionItem
 * @module ionic
 * @restrict E
+* @description
 * Creates an option button inside a list item, that is visible when the item is swiped
 * to the left by the user.  Swiped open option buttons can be hidden with
 * {@link ionic.service:$ionicListDelegate#closeOptionButtons $ionicListDelegate#closeOptionButtons}.
@@ -52586,7 +52956,12 @@ IonicModule
  * ```html
  * <ion-nav-bar>
  *   <ion-nav-buttons side="left">
+ *    <!-- Toggle left side menu -->
  *    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+ *   </ion-nav-buttons>
+ *   <ion-nav-buttons side="right">
+ *    <!-- Toggle right side menu -->
+ *    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
  *   </ion-nav-buttons>
  * </ion-nav-bar>
  * ```
@@ -52724,7 +53099,7 @@ IonicModule
       }
 
       if (!tAttrs.ngClick) {
-        buttonEle.setAttribute('ng-click', '$ionicGoBack($event)');
+        buttonEle.setAttribute('ng-click', '$ionicGoBack()');
       }
 
       buttonEle.className = 'button back-button hide buttons ' + (tElement.attr('class') || '');
@@ -53425,7 +53800,9 @@ IonicModule
           'ng-value': attr.ngValue,
           'ng-model': attr.ngModel,
           'ng-disabled': attr.ngDisabled,
-          'ng-change': attr.ngChange
+          'ng-change': attr.ngChange,
+          'ng-required': attr.ngRequired,
+          'required': attr.required
       }, function(value, name) {
         if (isDefined(value)) {
             input.attr(name, value);
@@ -53981,9 +54358,9 @@ IonicModule
  * - {@link ionic.directive:exposeAsideWhen}
  *
  * @usage
- * To use side menus, add an `<ion-side-menus>` parent element,
- * an `<ion-side-menu-content>` for the center content,
- * and one or more `<ion-side-menu>` directives.
+ * To use side menus, add an `<ion-side-menus>` parent element. This will encompass all pages that have a
+ * side menu, and have at least 2 child elements: 1 `<ion-side-menu-content>` for the center content,
+ * and one or more `<ion-side-menu>` directives for each side menu(left/right) that you wish to place.
  *
  * ```html
  * <ion-side-menus>
@@ -53998,6 +54375,10 @@ IonicModule
  *   <!-- Right menu -->
  *   <ion-side-menu side="right">
  *   </ion-side-menu>
+ *
+ *   <ion-side-menu-content>
+ *   <!-- Main content, usually <ion-nav-view> -->
+ *   </ion-side-menu-content>
  * </ion-side-menus>
  * ```
  * ```js
@@ -54912,7 +55293,9 @@ function($timeout, $ionicConfig) {
         'ng-disabled': attr.ngDisabled,
         'ng-true-value': attr.ngTrueValue,
         'ng-false-value': attr.ngFalseValue,
-        'ng-change': attr.ngChange
+        'ng-change': attr.ngChange,
+        'ng-required': attr.ngRequired,
+        'required': attr.required
       }, function(value, name) {
         if (isDefined(value)) {
           input.attr(name, value);

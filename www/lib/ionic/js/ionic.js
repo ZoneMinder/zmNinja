@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-rc.4
+ * Ionic, v1.0.1
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -18,7 +18,7 @@
 // build processes may have already created an ionic obj
 window.ionic = window.ionic || {};
 window.ionic.views = {};
-window.ionic.version = '1.0.0-rc.4';
+window.ionic.version = '1.0.1';
 
 (function (ionic) {
 
@@ -1777,7 +1777,9 @@ window.ionic.version = '1.0.0-rc.4';
         this.preventedFirstMove = false;
 
       } else if (!this.preventedFirstMove && ev.srcEvent.type == 'touchmove') {
-        if (inst.options.prevent_default_directions.indexOf(ev.direction) != -1) {
+        // Prevent gestures that are not intended for this event handler from firing subsequent times
+        if (inst.options.prevent_default_directions.length === 0
+            || inst.options.prevent_default_directions.indexOf(ev.direction) != -1) {
           ev.srcEvent.preventDefault();
         }
         this.preventedFirstMove = true;
@@ -2728,7 +2730,7 @@ ionic.tap = {
 
     ionic.requestAnimationFrame(function() {
       var focusInput = container.querySelector(':focus');
-      if (ionic.tap.isTextInput(focusInput)) {
+      if (ionic.tap.isTextInput(focusInput) && !ionic.tap.isDateInput(focusInput)) {
         var clonedInput = focusInput.cloneNode(true);
 
         clonedInput.value = focusInput.value;
@@ -3478,6 +3480,20 @@ ionic.DomUtil.ready(function() {
  *   <div id="google-map"></div>
  * </div>
  * ```
+ *
+ * Note: For performance reasons, elements will not be hidden for 400ms after the start of the `native.keyboardshow` event
+ * from the Ionic Keyboard plugin. If you would like them to disappear immediately, you could do something
+ * like:
+ *
+ * ```js
+ *   window.addEventListener('native.keyboardshow', function(){
+ *     document.body.classList.add('keyboard-open');
+ *   });
+ * ```
+ * This adds the same `keyboard-open` class that is normally added by Ionic 400ms after the keyboard
+ * opens. However, bear in mind that adding this class to the body immediately may cause jank in any
+ * animations on Android that occur when the keyboard opens (for example, scrolling any obscured inputs into view).
+ *
  * ----------
  *
  * ### Plugin Usage
@@ -3569,6 +3585,16 @@ var KEYBOARD_OPEN_CSS = 'keyboard-open';
 var SCROLL_CONTAINER_CSS = 'scroll-content';
 
 /**
+ * Debounced keyboardFocusIn function
+ */
+var debouncedKeyboardFocusIn = ionic.debounce(keyboardFocusIn, 200, true);
+
+/**
+ * Debounced keyboardNativeShow function
+ */
+var debouncedKeyboardNativeShow = ionic.debounce(keyboardNativeShow, 100, true);
+
+/**
  * Ionic keyboard namespace.
  * @namespace keyboard
  */
@@ -3602,6 +3628,11 @@ ionic.keyboard = {
   isLandscape: false,
 
   /**
+   * Whether the keyboard event listeners have been added or not
+   */
+  isInitialized: false,
+
+  /**
    * Hide the keyboard, if it is open.
    */
   hide: function() {
@@ -3619,6 +3650,38 @@ ionic.keyboard = {
     if (keyboardHasPlugin()) {
       cordova.plugins.Keyboard.show();
     }
+  },
+
+  /**
+   * Remove all keyboard related event listeners, effectively disabling Ionic's
+   * keyboard adjustments.
+   */
+  disable: function() {
+    if (keyboardHasPlugin()) {
+      window.removeEventListener('native.keyboardshow', debouncedKeyboardNativeShow );
+      window.removeEventListener('native.keyboardhide', keyboardFocusOut);
+    } else {
+      document.body.removeEventListener('focusout', keyboardFocusOut);
+    }
+
+    document.body.removeEventListener('ionic.focusin', debouncedKeyboardFocusIn);
+    document.body.removeEventListener('focusin', debouncedKeyboardFocusIn);
+
+    window.removeEventListener('orientationchange', keyboardOrientationChange);
+
+    if ( window.navigator.msPointerEnabled ) {
+      document.removeEventListener("MSPointerDown", keyboardInit);
+    } else {
+      document.removeEventListener('touchstart', keyboardInit);
+    }
+    ionic.keyboard.isInitialized = false;
+  },
+
+  /**
+   * Alias for keyboardInit, initialize all keyboard related event listeners.
+   */
+  enable: function() {
+    keyboardInit();
   }
 };
 
@@ -3632,13 +3695,14 @@ keyboardCurrentViewportHeight = getViewportHeight();
 
 /**
  * Event handler for first touch event, initializes all event listeners
- * for keyboard related events.
+ * for keyboard related events. Also aliased by ionic.keyboard.enable.
  */
 function keyboardInit() {
-  var debouncedKeyboardFocusIn = ionic.debounce(keyboardFocusIn, 200, true);
+
+  if (ionic.keyboard.isInitialized) return;
 
   if (keyboardHasPlugin()) {
-    window.addEventListener('native.keyboardshow', ionic.debounce(keyboardNativeShow, 100, true));
+    window.addEventListener('native.keyboardshow', debouncedKeyboardNativeShow);
     window.addEventListener('native.keyboardhide', keyboardFocusOut);
   } else {
     document.body.addEventListener('focusout', keyboardFocusOut);
@@ -3652,6 +3716,8 @@ function keyboardInit() {
   } else {
     document.removeEventListener('touchstart', keyboardInit);
   }
+
+  ionic.keyboard.isInitialized = true;
 }
 
 /**
@@ -3697,7 +3763,8 @@ function keyboardFocusIn(e) {
   if (!e.target ||
       e.target.readOnly ||
       !ionic.tap.isKeyboardElement(e.target) ||
-      !(scrollView = inputScrollView(e.target))) {
+      !(scrollView = ionic.DomUtil.getParentWithClass(e.target, SCROLL_CONTAINER_CSS))) {
+    keyboardActiveElement = null;
     return;
   }
 
@@ -3705,12 +3772,23 @@ function keyboardFocusIn(e) {
 
   // if using JS scrolling, undo the effects of native overflow scroll so the
   // scroll view is positioned correctly
-  document.body.scrollTop = 0;
-  scrollView.scrollTop = 0;
-  ionic.requestAnimationFrame(function(){
+  if (!scrollView.classList.contains("overflow-scroll")) {
     document.body.scrollTop = 0;
     scrollView.scrollTop = 0;
-  });
+    ionic.requestAnimationFrame(function(){
+      document.body.scrollTop = 0;
+      scrollView.scrollTop = 0;
+    });
+
+    // any showing part of the document that isn't within the scroll the user
+    // could touchmove and cause some ugly changes to the app, so disable
+    // any touchmove events while the keyboard is open using e.preventDefault()
+    if (window.navigator.msPointerEnabled) {
+      document.addEventListener("MSPointerMove", keyboardPreventDefault, false);
+    } else {
+      document.addEventListener('touchmove', keyboardPreventDefault, false);
+    }
+  }
 
   if (!ionic.keyboard.isOpen || ionic.keyboard.isClosing) {
     ionic.keyboard.isOpening = true;
@@ -3722,14 +3800,7 @@ function keyboardFocusIn(e) {
   // keyboard
   document.addEventListener('keydown', keyboardOnKeyDown, false);
 
-  // any showing part of the document that isn't within the scroll the user
-  // could touchmove and cause some ugly changes to the app, so disable
-  // any touchmove events while the keyboard is open using e.preventDefault()
-  if (window.navigator.msPointerEnabled) {
-    document.addEventListener("MSPointerMove", keyboardPreventDefault, false);
-  } else {
-    document.addEventListener('touchmove', keyboardPreventDefault, false);
-  }
+
 
   // if we aren't using the plugin and the keyboard isn't open yet, wait for the
   // window to resize so we can get an accurate estimate of the keyboard size,
@@ -3928,9 +3999,11 @@ function keyboardHide() {
   ionic.keyboard.isOpen = false;
   ionic.keyboard.isClosing = false;
 
-  ionic.trigger('resetScrollView', {
-    target: keyboardActiveElement
-  }, true);
+  if (keyboardActiveElement) {
+    ionic.trigger('resetScrollView', {
+      target: keyboardActiveElement
+    }, true);
+  }
 
   ionic.requestAnimationFrame(function(){
     document.body.classList.remove(KEYBOARD_OPEN_CSS);
@@ -3950,6 +4023,8 @@ function keyboardHide() {
     if (keyboardHasPlugin()) cordova.plugins.Keyboard.close();
     keyboardActiveElement && keyboardActiveElement.blur();
   }
+
+  keyboardActiveElement = null;
 }
 
 /**
@@ -3958,36 +4033,42 @@ function keyboardHide() {
  * the currently focused input into view if necessary.
  */
 function keyboardShow() {
-  var elementBounds = keyboardActiveElement.getBoundingClientRect();
-  var details = {
-    target: keyboardActiveElement,
-    elementTop: Math.round(elementBounds.top),
-    elementBottom: Math.round(elementBounds.bottom),
-    keyboardHeight: keyboardGetHeight(),
-    viewportHeight: keyboardCurrentViewportHeight
-  };
-
-  details.windowHeight = details.viewportHeight - details.keyboardHeight;
-  //console.log("keyboardShow viewportHeight: " + details.viewportHeight +
-  //", windowHeight: " + details.windowHeight +
-  //", keyboardHeight: " + details.keyboardHeight);
-
-  // figure out if the element is under the keyboard
-  details.isElementUnderKeyboard = (details.elementBottom > details.windowHeight);
-  //console.log("isUnderKeyboard: " + details.isElementUnderKeyboard);
-  //console.log("elementBottom: " + details.elementBottom);
 
   ionic.keyboard.isOpen = true;
   ionic.keyboard.isOpening = false;
 
-  // send event so the scroll view adjusts
-  ionic.trigger('scrollChildIntoView', details, true);
+  var details = {
+    keyboardHeight: keyboardGetHeight(),
+    viewportHeight: keyboardCurrentViewportHeight
+  };
+
+  if (keyboardActiveElement) {
+    details.target = keyboardActiveElement;
+
+    var elementBounds = keyboardActiveElement.getBoundingClientRect();
+
+    details.elementTop = Math.round(elementBounds.top);
+    details.elementBottom = Math.round(elementBounds.bottom);
+
+    details.windowHeight = details.viewportHeight - details.keyboardHeight;
+    //console.log("keyboardShow viewportHeight: " + details.viewportHeight +
+    //", windowHeight: " + details.windowHeight +
+    //", keyboardHeight: " + details.keyboardHeight);
+
+    // figure out if the element is under the keyboard
+    details.isElementUnderKeyboard = (details.elementBottom > details.windowHeight);
+    //console.log("isUnderKeyboard: " + details.isElementUnderKeyboard);
+    //console.log("elementBottom: " + details.elementBottom);
+
+    // send event so the scroll view adjusts
+    ionic.trigger('scrollChildIntoView', details, true);
+  }
 
   setTimeout(function(){
     document.body.classList.add(KEYBOARD_OPEN_CSS);
   }, 400);
 
-  return details;
+  return details; //for testing
 }
 
 /* eslint no-unused-vars:0 */
@@ -4055,9 +4136,11 @@ function keyboardUpdateViewportHeight() {
     keyboardPortraitViewportHeight = keyboardCurrentViewportHeight;
   }
 
-  ionic.trigger('resetScrollView', {
-    target: keyboardActiveElement
-  }, true);
+  if (keyboardActiveElement) {
+    ionic.trigger('resetScrollView', {
+      target: keyboardActiveElement
+    }, true);
+  }
 
   if (ionic.keyboard.isOpen && ionic.tap.isTextInput(keyboardActiveElement)) {
     keyboardShow();
@@ -4097,16 +4180,6 @@ function getViewportHeight() {
      return windowHeight + keyboardGetHeight();
   }
   return windowHeight;
-}
-
-function inputScrollView(ele) {
-  while(ele) {
-    if (ele.classList.contains(SCROLL_CONTAINER_CSS)) {
-      return ele;
-    }
-    ele = ele.parentElement;
-  }
-  return null;
 }
 
 function keyboardHasPlugin() {
@@ -5272,7 +5345,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
     container.removeEventListener('touchmove', self.touchMoveBubble);
     document.removeEventListener('touchmove', self.touchMove);
     document.removeEventListener('touchend', self.touchEnd);
-    document.removeEventListener('touchcancel', self.touchCancel);
+    document.removeEventListener('touchcancel', self.touchEnd);
 
     container.removeEventListener("pointerdown", self.touchStart);
     container.removeEventListener("pointermove", self.touchMoveBubble);
@@ -6997,7 +7070,7 @@ ionic.scroll = {
         // scroll animation loop w/ easing
         // credit https://gist.github.com/dezinezync/5487119
         var start = Date.now(),
-          duration = 1000, //milliseconds
+          duration = 250, //milliseconds
           fromY = self.el.scrollTop,
           fromX = self.el.scrollLeft;
 
@@ -7031,6 +7104,7 @@ ionic.scroll = {
 
           } else {
             // done
+            ionic.tap.removeClonedInputs(self.__container, self);
             self.resize();
           }
         }
@@ -7085,28 +7159,144 @@ ionic.scroll = {
 
       // Event Handler
       var container = self.__container;
+      // save height when scroll view is shrunk so we don't need to reflow
+      var scrollViewOffsetHeight;
 
-      // should be unnecessary in native scrolling, but keep in case bugs show up
-      self.scrollChildIntoView = NOOP;
+      /**
+       * Shrink the scroll view when the keyboard is up if necessary and if the
+       * focused input is below the bottom of the shrunk scroll view, scroll it
+       * into view.
+       */
+      self.scrollChildIntoView = function(e) {
+        //console.log("scrollChildIntoView at: " + Date.now());
+
+        // D
+        var scrollBottomOffsetToTop = container.getBoundingClientRect().bottom;
+        // D - A
+        scrollViewOffsetHeight = container.offsetHeight;
+        var alreadyShrunk = self.isShrunkForKeyboard;
+
+        var isModal = container.parentNode.classList.contains('modal');
+        // 680px is when the media query for 60% modal width kicks in
+        var isInsetModal = isModal && window.innerWidth >= 680;
+
+       /*
+        *  _______
+        * |---A---| <- top of scroll view
+        * |       |
+        * |---B---| <- keyboard
+        * |   C   | <- input
+        * |---D---| <- initial bottom of scroll view
+        * |___E___| <- bottom of viewport
+        *
+        *  All commented calculations relative to the top of the viewport (ie E
+        *  is the viewport height, not 0)
+        */
+        if (!alreadyShrunk) {
+          // shrink scrollview so we can actually scroll if the input is hidden
+          // if it isn't shrink so we can scroll to inputs under the keyboard
+          // inset modals won't shrink on Android on their own when the keyboard appears
+          if ( ionic.Platform.isIOS() || ionic.Platform.isFullScreen || isInsetModal ) {
+            // if there are things below the scroll view account for them and
+            // subtract them from the keyboard height when resizing
+            // E - D                         E                         D
+            var scrollBottomOffsetToBottom = e.detail.viewportHeight - scrollBottomOffsetToTop;
+
+            // 0 or D - B if D > B           E - B                     E - D
+            var keyboardOffset = Math.max(0, e.detail.keyboardHeight - scrollBottomOffsetToBottom);
+
+            ionic.requestAnimationFrame(function(){
+              // D - A or B - A if D > B       D - A             max(0, D - B)
+              scrollViewOffsetHeight = scrollViewOffsetHeight - keyboardOffset;
+              container.style.height = scrollViewOffsetHeight + "px";
+
+              //update scroll view
+              self.resize();
+            });
+          }
+
+          self.isShrunkForKeyboard = true;
+        }
+
+        /*
+         *  _______
+         * |---A---| <- top of scroll view
+         * |   *   | <- where we want to scroll to
+         * |--B-D--| <- keyboard, bottom of scroll view
+         * |   C   | <- input
+         * |       |
+         * |___E___| <- bottom of viewport
+         *
+         *  All commented calculations relative to the top of the viewport (ie E
+         *  is the viewport height, not 0)
+         */
+        // if the element is positioned under the keyboard scroll it into view
+        if (e.detail.isElementUnderKeyboard) {
+
+          ionic.requestAnimationFrame(function(){
+            // update D if we shrunk
+            if (self.isShrunkForKeyboard && !alreadyShrunk) {
+              scrollBottomOffsetToTop = container.getBoundingClientRect().bottom;
+            }
+
+            // middle of the scrollview, this is where we want to scroll to
+            // (D - A) / 2
+            var scrollMidpointOffset = scrollViewOffsetHeight * 0.5;
+            //console.log("container.offsetHeight: " + scrollViewOffsetHeight);
+
+            // middle of the input we want to scroll into view
+            // C
+            var inputMidpoint = ((e.detail.elementBottom + e.detail.elementTop) / 2);
+
+            // distance from middle of input to the bottom of the scroll view
+            // C - D                                C               D
+            var inputMidpointOffsetToScrollBottom = inputMidpoint - scrollBottomOffsetToTop;
+
+            //C - D + (D - A)/2          C - D                     (D - A)/ 2
+            var scrollTop = inputMidpointOffsetToScrollBottom + scrollMidpointOffset;
+
+            if ( scrollTop > 0) {
+              if (ionic.Platform.isIOS()) {
+                //just shrank scroll view, give it some breathing room before scrolling
+                setTimeout(function(){
+                  ionic.tap.cloneFocusedInput(container, self);
+                  self.scrollBy(0, scrollTop, true);
+                  self.onScroll();
+                }, 32);
+              } else {
+                self.scrollBy(0, scrollTop, true);
+                self.onScroll();
+              }
+            }
+          });
+        }
+
+        // Only the first scrollView parent of the element that broadcasted this event
+        // (the active element that needs to be shown) should receive this event
+        e.stopPropagation();
+      };
 
       self.resetScrollView = function() {
         //return scrollview to original height once keyboard has hidden
-        if (self.isScrolledIntoView) {
-          self.isScrolledIntoView = false;
+        if (self.isShrunkForKeyboard) {
+          self.isShrunkForKeyboard = false;
           container.style.height = "";
-          container.style.overflow = "";
-          self.resize();
-          ionic.scroll.isScrolling = false;
         }
+        self.resize();
       };
 
-      container.addEventListener('resetScrollView', self.resetScrollView);
       container.addEventListener('scroll', self.onScroll);
 
       //Broadcasted when keyboard is shown on some platforms.
       //See js/utils/keyboard.js
       container.addEventListener('scrollChildIntoView', self.scrollChildIntoView);
-      container.addEventListener('resetScrollView', self.resetScrollView);
+
+      // Listen on document because container may not have had the last
+      // keyboardActiveElement, for example after closing a modal with a focused
+      // input and returning to a previously resized scroll view in an ion-content.
+      // Since we can only resize scroll views that are currently visible, just resize
+      // the current scroll view when the keyboard is closed.
+      document.addEventListener('resetScrollView', self.resetScrollView);
     },
 
     __cleanup: function() {
@@ -7128,6 +7318,7 @@ ionic.scroll = {
       delete self.options.el;
 
       self.resize = self.scrollTo = self.onScroll = self.resetScrollView = NOOP;
+      self.scrollChildIntoView = NOOP;
       container = null;
     }
   });
@@ -8413,7 +8604,7 @@ ionic.views.Slider = ionic.views.View.inherit({
       element.style.left = '';
 
       // reset slides so no refs are held on to
-      slides && (slides.length = 0);
+      slides && (slides = []);
 
       // removed event listeners
       if (browser.addEventListener) {

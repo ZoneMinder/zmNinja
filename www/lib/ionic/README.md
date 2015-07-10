@@ -10,6 +10,6 @@ Alternatively, include the individual ionic files with the dependencies separate
 
 ### Versions
 
-To install the latest stable version, `bower install driftyco/ionic-bower#v1.0.0-beta.13`
+To install the latest stable version, `bower install driftyco/ionic-bower#v1.0.0`
 
 To install the latest nightly release, `bower install driftyco/ionic-bower#master`
