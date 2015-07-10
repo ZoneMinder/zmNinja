@@ -1,18 +1,34 @@
-<ion-view title="Montage View" cache-view="false" hide-nav-bar="{{minimal}}">
+<ion-view title="Montage" cache-view="false" hide-nav-bar="{{minimal}}">
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
     </ion-nav-buttons>
 
 
+
     <ion-nav-buttons side="right">
+
+
+        <span style="-webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);">
+         <button class="button button-icon button-clear ion-arrow-swap" ng-click="toggleReorder();"></button>
+
+            </span>
+
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()"></button>
+
+
+
+
     </ion-nav-buttons>
 
 
-    <ion-content>
+    <ion-content has-bouncing="false">
         <div ng-controller="ModalCtrl">
-            <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
+           <!-- <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>-->
             <span ng-show="!minimal">
                 <div class=" range range-positive">
                     <i class="icon ion-arrow-shrink"></i>
@@ -23,8 +39,10 @@
                 </div>
         </span>
 
+
             <div class="wrapper">
-                <span ng-repeat="monitor in monitors| limitTo: monLimit" ng-if="monitor.Monitor.Function!='None'">
+                <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow'" >
+
 
                 <span ng-show="!minimal">
                     <header class="header">&nbsp;<i class="ion-monitor"></i>
@@ -32,33 +50,20 @@
                 </span>
                <article class="main">
                     <!-- FIXME: Scale is 50% hardcoded -->
-                    <img ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" on-hold="onHold($index)" on-release="onRelease($index)" style="display:block;"/>
-         </article>
+                    <img ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" on-hold="onHold($index)" on-release="onRelease($index)" style="display:block;" />
 
-
-                <!-- <span ng-show="!minimal">
-                    <span style="font-size:10px;">
-                        <footer class="footer">
-
-                       {{monitor.Monitor.Enabled=="1"?"Enabled":"Not Enabled"}}
-                       &nbsp;
-                           <span style="float:right">
-                               <i class="icon ion-android-alert"></i>
-
-                               :{{monitor.Monitor.Function}}
-                            </span>
-                        </footer>
-                    </span>
-                </span>-->
-
+             </article>
                 </span>
+
                 <!--ng repeat -->
 
             </div>
+
+
         </div>
         <!--ngcontroller -->
 
-         <ion-item ng-show="!monitors.length">
+         <ion-item ng-show="!MontageMonitors.length">
         No monitors found.
         </ion-item>
 
