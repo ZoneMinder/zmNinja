@@ -40,39 +40,45 @@ Screenshots:
 
 Menu:
 
-![](http://www.pbase.com/arjunrc/image/159760951/medium.jpg "Menu")
+![](http://www.pbase.com/arjunrc/image/160697727/medium.jpg "Menu")
 
 Events List:
 
-![](http://www.pbase.com/arjunrc/image/159760954/medium.jpg "Events List")
+![](http://www.pbase.com/arjunrc/image/160697725/medium.jpg "Events List")
 
 Full Screen Events Footage View (with floating buttons)
-![](http://www.pbase.com/arjunrc/image/159892344/medium.jpg "Events View")
+![](http://www.pbase.com/arjunrc/image/160697734/medium.jpg "Events View")
 
 Sliding Montage View 1:
 
-![](http://www.pbase.com/arjunrc/image/159760952/medium.jpg "Sliding Montage View")
+![](http://www.pbase.com/arjunrc/image/160697821/medium.jpg "Sliding Montage View")
 
-Sliding Montage View 2:
+Sliding Montage View 2 (Different sizes):
 
-![] (http://www.pbase.com/arjunrc/image/159760953/medium.jpg "Sliding Montage View again")
+![] (http://www.pbase.com/arjunrc/image/160697822/medium.jpg "Sliding Montage View again")
+
+
+Montage Re-order and show/hide:
+
+![] (http://www.pbase.com/arjunrc/image/160697740/medium.jpg "Montage re-order and hide")
+
 
 Monitor View:
 
-![](http://www.pbase.com/arjunrc/image/159760955/medium.jpg "Monitor View")
+![](http://www.pbase.com/arjunrc/image/160697737/medium.jpg "Monitor View")
 
 Graphs:
 
-![] (http://www.pbase.com/arjunrc/image/159760956/medium.jpg "Graphs")
+![] (http://www.pbase.com/arjunrc/image/160697738/medium.jpg "Graphs")
 
-Control ZM start/stop/restart:
+Control ZM custom states/start/stop/restart:
 
-![] (http://www.pbase.com/arjunrc/image/160096322/medium.jpg "Graphs")
+![] (http://www.pbase.com/arjunrc/image/160697735/medium.jpg "Control ZM")
 
 
 Change Monitor Modes:
 
-![] (http://www.pbase.com/arjunrc/image/160096314/medium.jpg "Graphs")
+![] (http://www.pbase.com/arjunrc/image/160697731/medium.jpg "Monitor Modes")
 
 
 Pan/Tilt/Zoom Mode:

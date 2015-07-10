@@ -67,49 +67,50 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         var myorder = window.localStorage.getItem("montageOrder");
         var myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
 
+
         console.log("Montage order is " + myorder);
         console.log("Hidden order is " + myhiddenorder);
         montageOrder = myorder.split(",");
         hiddenOrder = myhiddenorder.split(",");
 
-        // at this stage, the monitor arrangement is not matching
-        // the montage order. Its in true order. Let us first process the hiddenOrder part
-        // now
+    } // at this stage, the monitor arrangement is not matching
+    // the montage order. Its in true order. Let us first process the hiddenOrder part
+    // now
 
-        for (i = 0; i < montageOrder.length; i++) {
-            montageOrder[i] = parseInt(montageOrder[i]);
-            hiddenOrder[i] = parseInt(hiddenOrder[i]);
-            //  $scope.monitors[i].Monitor.sortOrder = montageOrder[i];
-            // FIXME: This will briefly show and then hide
-            // disabled monitors
-            if (hiddenOrder[i] == 1) {
-                // $scope.monitors[i].Monitor.listDisplay='noshow';
-                $scope.monitors[i].Monitor.listDisplay = 'noshow';
-                ZMDataModel.zmLog("Monitor " + i + " is marked as hidden in montage");
-            } else {
-                $scope.monitors[i].Monitor.listDisplay = 'show';
-            }
+    for (i = 0; i < montageOrder.length; i++) {
+        montageOrder[i] = parseInt(montageOrder[i]);
+        hiddenOrder[i] = parseInt(hiddenOrder[i]);
+        //  $scope.monitors[i].Monitor.sortOrder = montageOrder[i];
+        // FIXME: This will briefly show and then hide
+        // disabled monitors
+        if (hiddenOrder[i] == 1) {
+            // $scope.monitors[i].Monitor.listDisplay='noshow';
+            $scope.monitors[i].Monitor.listDisplay = 'noshow';
+            ZMDataModel.zmLog("Monitor " + i + " is marked as hidden in montage");
+        } else {
+            $scope.monitors[i].Monitor.listDisplay = 'show';
         }
-        // now arrange monitors according to montage order
-        // FIXME: Incredibly horrible logic
-        // I really need to organize this properly into one structure
-
-        // empty out monitors as I'll need to insert them as per montageOrder
-        // remember to assign
-        $scope.MontageMonitors = [];
-
-        for (i = 0; i < montageOrder.length; i++) {
-            for (j = 0; j < montageOrder.length; j++) {
-                if (montageOrder[j] == i) {
-                    $scope.MontageMonitors.push($scope.monitors[j]);
-                }
-            }
-        }
-
-
-        ZMDataModel.zmLog("After reloading saved order, view order is " + montageOrder.toString() + " and hidden order is " + hiddenOrder.toString());
-
     }
+    // now arrange monitors according to montage order
+    // FIXME: Incredibly horrible logic
+    // I really need to organize this properly into one structure
+
+    // empty out monitors as I'll need to insert them as per montageOrder
+    // remember to assign
+    $scope.MontageMonitors = [];
+
+    for (i = 0; i < montageOrder.length; i++) {
+        for (j = 0; j < montageOrder.length; j++) {
+            if (montageOrder[j] == i) {
+                $scope.MontageMonitors.push($scope.monitors[j]);
+            }
+        }
+    }
+
+
+    ZMDataModel.zmLog("view order is " + montageOrder.toString() + " and hidden order is " + hiddenOrder.toString());
+
+
 
 
     // Do we have a saved montage array size? No?
