@@ -293,7 +293,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
             (function (j) {
                 $scope.monitors[j].Monitor.isRunningText = "...";
                 $scope.monitors[j].Monitor.isRunning = "...";
-                $scope.monitors[j].Monitor.color = '#1E90FF';
+                $scope.monitors[j].Monitor.color = '#03A9F4';
                 $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
                 apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
                 console.log("**** ZMC CHECK " + apiMonCheck);
@@ -301,17 +301,17 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                     .success(function (data) {
                         if (data.statustext.indexOf("not running") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "false";
-                            $scope.monitors[j].Monitor.color = 'red';
+                            $scope.monitors[j].Monitor.color = '#F44336';
                             $scope.monitors[j].Monitor.char = "ion-close-circled";
                         } else if (data.statustext.indexOf("pending") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "pending";
-                            $scope.monitors[j].Monitor.color = 'orange';
+                            $scope.monitors[j].Monitor.color = '#FF9800';
                         } else if (data.statustext.indexOf("running since") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "true";
-                            $scope.monitors[j].Monitor.color = 'green';
+                            $scope.monitors[j].Monitor.color = '#4CAF50';
                         } else if (data.statustext.indexOf("Unable to connect") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "false";
-                            $scope.monitors[j].Monitor.color = 'red';
+                            $scope.monitors[j].Monitor.color = '#F44336';
                             $scope.monitors[j].Monitor.char = "ion-close-circled";
                         }
 
@@ -320,7 +320,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                     })
                     .error(function (data) {
                         $scope.monitors[j].Monitor.isRunning = "error";
-                        $scope.monitors[j].Monitor.color = '#800000';
+                        $scope.monitors[j].Monitor.color = '#795548';
                         $scope.monitors[j].Monitor.char = "ion-help-circled";
                     });
 

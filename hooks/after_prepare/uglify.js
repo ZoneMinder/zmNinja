@@ -16,8 +16,8 @@ var platform = process.env.CORDOVA_PLATFORMS;
 var cliCommand = process.env.CORDOVA_CMDLINE;
 
 // hook configuration
-//var isRelease = true; // by default this hook is always enabled, see the line below on how to execute it only for release
-var isRelease = (cliCommand.indexOf('--release') > -1);
+var isRelease = true; // by default this hook is always enabled, see the line below on how to execute it only for release
+//var isRelease = (cliCommand.indexOf('--release') > -1);
 var recursiveFolderSearch = true; // set this to false to manually indicate the folders to process
 var foldersToProcess = [ // add other www folders in here if needed (ex. js/controllers)
     'js',

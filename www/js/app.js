@@ -18,7 +18,7 @@ angular.module('zmApp', [
 //------------------------------------------------------------------
 // this directive will be load any time an image completes loading 
 // via img tags where this directive is added (I am using this in
-// events and mionitor view to show a loader while the image is
+// events and monitor view to show a loader while the image is
 // downloading from ZM
 //------------------------------------------------------------------
 
@@ -242,11 +242,19 @@ angular.module('zmApp', [
 
         });
 
-
+         //fileLogger is an excellent cross platform library
+         // that allows you to manage log files without worrying about
+        // paths etc.https://github.com/pbakondy/filelogger
          $fileLogger.setStorageFilename('zmNinjaLog.txt');
 
          if (window.cordova)
          {
+            // getAppVersion is a handy library
+            // that lets you extract the app version in config.xml
+            // given that you are always changing versions while
+            // uploading to app/play stores, this is very useful
+            // to keep in sync and use within your app
+
             cordova.getAppVersion(function(version) {
                 appVersion = version;
                 ZMDataModel.zmLog ("zmNinja Version: " + appVersion);
