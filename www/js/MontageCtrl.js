@@ -249,6 +249,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                         var refresh = ZMDataModel.getMonitors(1);
                         refresh.then(function (data) {
                             $scope.monitors = data;
+                            $scope.MontageMonitors = data;
                             oldMonitors = angular.copy($scope.monitors);
                             var i;
                             montageOrder = [];
@@ -274,11 +275,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.deleteItem = function (index) {
         var findindex = montageOrder.indexOf(index);
         // $scope.monitors[index].Monitor.Function = 'None';
-        if ($scope.monitors[index].Monitor.listDisplay == 'show') {
-            $scope.monitors[index].Monitor.listDisplay = 'noshow';
+        if ($scope.MontageMonitors[index].Monitor.listDisplay == 'show') {
+            $scope.MontageMonitors[index].Monitor.listDisplay = 'noshow';
             hiddenOrder[findindex] = 1;
         } else {
-            $scope.monitors[index].Monitor.listDisplay = 'show';
+            $scope.MontageMonitors[index].Monitor.listDisplay = 'show';
             // we need to find the index of Montage Order that contains index
             // because remember, hiddenOrder does not change its orders as monitors
             // move
@@ -288,7 +289,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         //window.localStorage.setItem("montageOrder", montageOrder.toString());
         console.log("DELETE: Order Array now is " + montageOrder.toString());
         console.log("DELETE: Hidden Array now is " + hiddenOrder.toString());
-        ZMDataModel.zmLog("Marked monitor " + findindex + " as " + $scope.monitors[index].Monitor.listDisplay + " in montage");
+        ZMDataModel.zmLog("Marked monitor " + findindex + " as " + $scope.MontageMonitors[index].Monitor.listDisplay + " in montage");
 
     };
 
