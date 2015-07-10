@@ -18,6 +18,24 @@ $dark:                            #444 !default;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
+
+$stable:                        #00A0A0 !default;
+$positive:                      #367588 !default;
+$assertive:                     #cd5c5c !default;
+$balanced:                      #66cdaa !default;
+
+
+$button-stable-active-bg:       #00B0B0 !default;
+$button-stable-active-border:   #00B0B0 !default;
+
+$dark:                        #008080 !default;
+$button-stable-text:	      #FFFFFF !default;
+
+$button-border-radius:            15px !default;
+$button-stable-border:            #00A0A0 !default;
+
+$input-color-placeholder:        #BBBBBB !default;
+
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 

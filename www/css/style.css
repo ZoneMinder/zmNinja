@@ -171,3 +171,19 @@ progress[aria-valuenow]:before  {
 }
 /* ----------------- progress bar color end ------------------*/
 
+/*
+[ng-drag].drag-over {
+            border: solid 2px #f88181;
+        }
+[ng-drag].dragging {
+            opacity: 0.5;
+        }
+
+[ng-drop].drag-enter {
+
+            -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+    border: solid 2px #6fde8d;
+        }
+*/

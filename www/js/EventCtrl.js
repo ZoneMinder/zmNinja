@@ -457,7 +457,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
                 //evtCurSegment = 0;
                 // console.log ("**** I SET SEGMENTS TO " + evtSegments);
 
-                // call on progress indicator every 2 seconds
+                // call on progress indicator every 5 seconds
+                // don't want to overload
                 segmentHandle = $interval(function () {
                     segmentCheck();
                 }, 5000);

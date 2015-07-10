@@ -13,6 +13,25 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     $scope.zmAppVersion = ZMDataModel.getAppVersion();
 
 
+    $scope.deleteLogs = function () {
+
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Please Confirm',
+            template: 'Are you sure you want to delete logs?',
+        });
+
+        confirmPopup.then(function (res) {
+            if (res) {
+                $fileLogger.deleteLogfile().then(function () {
+                    console.log('Logfile deleted');
+                    $fileLogger.setStorageFilename('zmNinjaLog.txt');
+                    $scope.zmLog.logString = "";
+                });
+            }
+        });
+    };
+
+
     //--------------------------------------------------------------------------
     // Make sure user knows information masking is best effort
     //--------------------------------------------------------------------------
