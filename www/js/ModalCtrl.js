@@ -9,9 +9,13 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     console.log("**** INSIDE MODAL CTRL *****");
 
+
     // This holds the PTZ menu control
     // Note that I hacked radialMenu
     // so please don't use the one you get from bower
+
+    //var imageStyle=1;
+    //$scope.imageAspect = "max-width: 100%;max-height: 100%;";
     $scope.radialMenuOptions = {
         content: '',
 
@@ -121,6 +125,10 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             },
     ]};
 
+
+
+
+
     //-------------------------------------------------------------
     // Send PTZ command to ZM
     // Note: PTZ fails on desktop, don't bother about it
@@ -212,6 +220,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         $ionicLoading.hide();
 
     };
+
+
 
 
 }]);
