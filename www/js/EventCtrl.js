@@ -17,6 +17,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
     var segmentHandle = 0; // holds timer for progress bar
     $scope.totalEventTime = 0; // used to display max of progress bar
     $scope.currentEventTime = 0;
+    $scope.imageStyle=true;
 
 
 
@@ -136,7 +137,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
         // which is the view - and when you are in the modal it will go away
         console.log("*** Refreshing Modal view ***");
         //$state.go($state.current, {}, {reload: true});
-        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $ionicLoading.show({
             template: "refreshed view",
             noBackdrop: true,
@@ -428,7 +429,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
         $scope.eventId = eid;
         $scope.eventDur = Math.round(edur);
         $scope.loginData = ZMDataModel.getLogin();
-        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
         $scope.totalEventTime = Math.round(parseFloat(edur)) - 1;
         $scope.currentEventTime = 0;
@@ -631,5 +632,11 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
 
             });
     }; //dorefresh
+
+        $scope.scaleImage = function() {
+       console.log ("Switching image style");
+        $scope.imageStyle = !$scope.imageStyle;
+
+    };
 
 }]);

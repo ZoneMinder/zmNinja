@@ -17,6 +17,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.minimal = $stateParams.minimal;
     $scope.isRefresh = $stateParams.isRefresh;
     var sizeInProgress = false;
+    $scope.imageStyle = true;
 
     $ionicSideMenuDelegate.canDragContent(false);
 
@@ -70,8 +71,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         console.log("Montage order is " + myorder);
         console.log("Hidden order is " + myhiddenorder);
-        montageOrder = myorder.split(",");
-        hiddenOrder = myhiddenorder.split(",");
+        if (myorder) montageOrder = myorder.split(",");
+        if (myhiddenorder) hiddenOrder = myhiddenorder.split(",");
 
     } // at this stage, the monitor arrangement is not matching
     // the montage order. Its in true order. Let us first process the hiddenOrder part
@@ -158,7 +159,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     this.loadNotifications = function () {
         // randomval is appended to img src, so after each interval the image reloads
         $scope.randomval = (new Date()).getTime();
-        //console.log ("**** NOTIFICATION with rand="+$scope.randomval+"*****");
     };
 
     var intervalHandle = $interval(function () {
@@ -377,7 +377,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // in montage view
         $scope.monitorId = mid;
         $scope.LoginData = ZMDataModel.getLogin();
-        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $scope.ptzMoveCommand = "";
 
         // This is a modal to show the monitor footage
@@ -604,6 +604,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             $scope.monitors = data;
             $scope.$broadcast('scroll.refreshComplete');
         });
+
+    };
+
+        $scope.scaleImage = function() {
+       console.log ("Switching image style");
+        $scope.imageStyle = !$scope.imageStyle;
 
     };
 
