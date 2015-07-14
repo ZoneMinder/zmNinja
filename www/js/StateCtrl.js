@@ -117,7 +117,16 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             .then(
                 function (success) {
                     var obj = success.data.usage;
-                    var du = 0;
+                    if (obj.Total.space != undefined)
+                    {
+                        $scope.zmDisk = parseFloat(obj.Total.space).toFixed(1).toString()+"G";
+                    }
+                    else
+                    {
+                        $scope.zmDisk = "unknown";
+                        ZMDataModel.zmLog("Error retrieving disk space, API returned null for obj.Total.space");
+                    }
+                   /* var du = 0;
                     console.log("DISK:" + JSON.stringify(success));
                     for (var p in obj) {
                         if (obj.hasOwnProperty(p)) {
@@ -125,7 +134,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
                         }
                     }
-                    $scope.zmDisk = du.toFixed(1).toString() + "G";
+                    $scope.zmDisk = du.toFixed(1).toString() + "G";*/
 
                 },
                 function (error) {
