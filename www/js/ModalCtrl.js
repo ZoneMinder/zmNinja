@@ -7,8 +7,10 @@
 angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', function ($scope, $rootScope, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
 
 
-    console.log("**** INSIDE MODAL CTRL *****");
+    console.log("**** INSIDE MODAL CTRL, recomputing rand *****");
 
+    $scope.rand = Math.floor((Math.random() * 100000) + 1);
+    //$state.go($state.current, {}, {reload: true});
 
     // This holds the PTZ menu control
     // Note that I hacked radialMenu
