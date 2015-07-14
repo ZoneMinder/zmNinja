@@ -165,7 +165,7 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory)
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory, $window)
 {
 
     ZMDataModel.init();
@@ -178,18 +178,17 @@ angular.module('zmApp', [
 
     }
 
-   /* $ionicPlatform.registerBackButtonAction(function (event) {
-        console.log ("STATE NAME IS " + $ionicHistory.currentStateName());
-        $ionicHistory.goBack();
-     /*
-    if($ionicHistory.currentStateName() == "myiew"){
-      $ionicPlatform.exitApp();
-      // or do nothing
-    }
-    else {
-      $ionicHistory.goBack();
-    }
-  }, 100);*/
+    $ionicPlatform.registerBackButtonAction(function (event) {
+        console.log("STATE NAME IS " + $ionicHistory.currentStateName());
+
+        if ($ionicHistory.currentStateName() == "whatd do I put here?") {
+            $ionicPlatform.exitApp();
+
+        } else {
+            // do something else
+
+        }
+}, 100);
 
     // this works reliably on both Android and iOS. The "onorientation" seems to reverse w/h in Android. Go figure.
     // http://stackoverflow.com/questions/1649086/detect-rotation-of-android-phone-in-the-browser-with-javascript
@@ -298,10 +297,20 @@ angular.module('zmApp', [
             console.log("****The application is resuming from the background");
             ZMDataModel.zmLog("App is resuming from background");
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+            //$scope.rand = Math.floor((Math.random() * 100000) + 1);
             console.log("** generated Random of " + $rootScope.rand);
             $state.go($state.current, {}, {
                 reload: true
             });
+            //$window.location.reload(true);
+            //$route.reload();
+
+            // This sort of solves the problem of inactive windows
+            // if you switch the screen off and on
+            // not ideal as reload removes the Modal and shows the view
+            // but better than an inactive/unresponsive screen
+            // FIXME: see if we can get the modal back
+            $window.location.reload();
             zmAutoLogin.stop(); //safety
             zmAutoLogin.start();
         }, false);
