@@ -165,7 +165,7 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout)
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory)
 {
 
     ZMDataModel.init();
@@ -177,6 +177,19 @@ angular.module('zmApp', [
         ZMDataModel.getMonitors(0);
 
     }
+
+   /* $ionicPlatform.registerBackButtonAction(function (event) {
+        console.log ("STATE NAME IS " + $ionicHistory.currentStateName());
+        $ionicHistory.goBack();
+     /*
+    if($ionicHistory.currentStateName() == "myiew"){
+      $ionicPlatform.exitApp();
+      // or do nothing
+    }
+    else {
+      $ionicHistory.goBack();
+    }
+  }, 100);*/
 
     // this works reliably on both Android and iOS. The "onorientation" seems to reverse w/h in Android. Go figure.
     // http://stackoverflow.com/questions/1649086/detect-rotation-of-android-phone-in-the-browser-with-javascript
@@ -356,6 +369,14 @@ angular.module('zmApp', [
             templateUrl: "templates/help.html",
             controller: 'zmApp.HelpCtrl',
         })
+    /*
+    .state('app', {
+      url: '/',
+      abstract: true,
+      templateUrl: 'index.html',
+      //controller: 'AppCtrl'
+    })*/
+
 
     .state('monitors', {
         data: {
