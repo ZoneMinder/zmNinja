@@ -10,7 +10,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     console.log("**** INSIDE MODAL CTRL, recomputing rand *****");
 
     $scope.rand = Math.floor((Math.random() * 100000) + 1);
-    $rootScope.tempmid = $scope.monitorId;
     //$state.go($state.current, {}, {reload: true});
 
     // This holds the PTZ menu control
@@ -225,12 +224,17 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     };
 
 
+    $scope.saveImageToPhone2=function(mid)
+    {
+        console.log ("TEST");
+    };
+
    $scope.onSwipeLeft = function(m,d)
    {
        console.log ("SWIPED LEFT");
        console.log ("Next Monitor ID is " + ZMDataModel.getNextMonitor(m,d));
        $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
-       $rootScope.tempmid = $scope.monitorId; //FIXME: Hack
+
 
         $ionicLoading.hide();
         $ionicLoading.show({
@@ -246,7 +250,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         console.log ("SWIPED RIGHT");
         console.log ("Next Monitor ID is " + ZMDataModel.getNextMonitor(m,d));
         $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
-        $rootScope.tempmid = $scope.monitorId;
 
          $ionicLoading.show({
             template: "please wait...",
@@ -254,6 +257,82 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             duration: zm.loadingTimeout,
         });
    };
+
+    //-----------------------------------------------------------------------
+    // Sucess/Error handlers for saving a snapshot of the
+    // monitor image to phone storage
+    //-----------------------------------------------------------------------
+
+      function SaveSuccess() {
+        $ionicLoading.show({
+            template: "done!",
+            noBackdrop: true,
+            duration: 1000
+        });
+        console.log("***SUCCESS");
+    }
+
+    function SaveError(e) {
+        $ionicLoading.show({
+            template: "error - could not save",
+            noBackdrop: true,
+            duration: 2000
+        });
+        ZMDataModel.zmLog("Error saving image: " + e.message);
+        console.log("***ERROR");
+    }
+
+     //-----------------------------------------------------------------------
+    // Saves a snapshot of the monitor image to phone storage
+    //-----------------------------------------------------------------------
+
+
+    $scope.saveImageToPhone = function (mid) {
+        $ionicLoading.show({
+            template: "saving snapshot..",
+            noBackdrop: true,
+            duration: zm.httpTimeout
+        });
+
+        console.log("IMAGE CAPTURE INSIDE MODAL");
+        var canvas, context, imageDataUrl, imageData;
+        var loginData = ZMDataModel.getLogin();
+        var url = loginData.streamingurl +
+            '/cgi-bin/zms?mode=single&monitor=' + mid +
+            '&user=' + loginData.username +
+            '&pass=' + loginData.password;
+        ZMDataModel.zmLog("SavetoPhone:Trying to save image from " + url);
+
+        var img = new Image();
+        img.onload = function () {
+            canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            context = canvas.getContext('2d');
+            context.drawImage(img, 0, 0);
+            try {
+                imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+                imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+                cordova.exec(
+                    SaveSuccess,
+                    SaveError,
+                    'Canvas2ImagePlugin',
+                    'saveImageDataToLibrary', [imageData]
+                );
+            } catch (e) {
+
+                SaveError(e.message);
+            }
+        };
+        try {
+            img.src = url;
+        } catch (e) {
+            SaveError(e.message);
+
+        }
+    };
+
+
 
 
 }]);
