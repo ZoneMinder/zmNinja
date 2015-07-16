@@ -5,7 +5,7 @@
 // controller for Monitor View
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
-angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopup', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', function ($ionicPopup, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
+angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', function ($ionicPopup, zm, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
 
 
     //-----------------------------------------------------------------------
@@ -17,9 +17,9 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     $scope.monitors = message;
     var loginData = ZMDataModel.getLogin();
     monitorStateCheck();
-    console.log ("Setting Awake to "+ZMDataModel.getKeepAwake());
+    console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
     ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
-    $scope.imageStyle=true;
+    $scope.imageStyle = true;
 
 
 
@@ -122,7 +122,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                                 var str = [];
                                 for (var p in obj)
                                     str.push(encodeURIComponent(p) + "=" +
-                                             encodeURIComponent(obj[p]));
+                                        encodeURIComponent(obj[p]));
                                 var foo = str.join("&");
                                 console.log("****RETURNING " + foo);
                                 return foo;
@@ -139,10 +139,9 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                         .success(function () {
 
                                 $ionicLoading.show({
-                                    template:
-                                    "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
+                                    template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
                                     noBackdrop: true,
-                                    duration: 60000,
+                                    duration: zm.largeHttpTimeout,
                                 });
                                 $http.post(apiRestart)
                                     .then(function (success) {
@@ -213,7 +212,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     });
 
     $scope.openModal = function (mid, controllable, controlid) {
-        console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:"+controlid);
+        console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
 
         $scope.monitorId = mid;
         $scope.LoginData = ZMDataModel.getLogin();
@@ -225,22 +224,21 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
         // if its controllable, lets get the control command
-        if (controllable == '1')
-        {
+        if (controllable == '1') {
             var apiurl = $scope.LoginData.apiurl;
-            var myurl = apiurl+"/controls/"+controlid+".json";
-            console.log ("getting control details:"+myurl);
+            var myurl = apiurl + "/controls/" + controlid + ".json";
+            console.log("getting control details:" + myurl);
 
             $http.get(myurl)
-            .success(function(data) {
-                $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1')? 'moveCon':'move';
-                console.log("***moveCommand: " +$scope.ptzMoveCommand );
-                ZMDataModel.zmLog ("ControlDB reports PTZ command to be " + $scope.ptzMoveCommand );
-            })
-            .error(function(data) {
-                console.log ("** Error retrieving move PTZ command");
-                 ZMDataModel.zmLog ("Error retrieving PTZ command  " + JSON.stringify(data),"error");
-            });
+                .success(function (data) {
+                    $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1') ? 'moveCon' : 'move';
+                    console.log("***moveCommand: " + $scope.ptzMoveCommand);
+                    ZMDataModel.zmLog("ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
+                })
+                .error(function (data) {
+                    console.log("** Error retrieving move PTZ command");
+                    ZMDataModel.zmLog("Error retrieving PTZ command  " + JSON.stringify(data), "error");
+                });
 
         }
 
@@ -255,7 +253,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                 $ionicLoading.show({
                     template: "please wait...",
                     noBackdrop: true,
-                    duration: 15000
+                    duration: zm.loadingTimeout
                 });
                 $scope.isControllable = controllable;
                 $scope.showPTZ = false;
@@ -293,11 +291,11 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         // The status is provided by zmdc.pl
         // "not running", "pending", "running since", "Unable to connect"
         var i;
-        for ( i = 0; i < $scope.monitors.length; i++) {
+        for (i = 0; i < $scope.monitors.length; i++) {
             (function (j) {
                 $scope.monitors[j].Monitor.isRunningText = "...";
                 $scope.monitors[j].Monitor.isRunning = "...";
-                $scope.monitors[j].Monitor.color = '#03A9F4';
+                $scope.monitors[j].Monitor.color = zm.monitorCheckingColor;
                 $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
                 apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
                 console.log("**** ZMC CHECK " + apiMonCheck);
@@ -305,17 +303,17 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                     .success(function (data) {
                         if (data.statustext.indexOf("not running") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "false";
-                            $scope.monitors[j].Monitor.color = '#F44336';
+                            $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
                             $scope.monitors[j].Monitor.char = "ion-close-circled";
                         } else if (data.statustext.indexOf("pending") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "pending";
-                            $scope.monitors[j].Monitor.color = '#FF9800';
+                            $scope.monitors[j].Monitor.color = zm.monitorPendingColor;
                         } else if (data.statustext.indexOf("running since") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "true";
-                            $scope.monitors[j].Monitor.color = '#4CAF50';
+                            $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
                         } else if (data.statustext.indexOf("Unable to connect") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "false";
-                            $scope.monitors[j].Monitor.color = '#F44336';
+                            $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
                             $scope.monitors[j].Monitor.char = "ion-close-circled";
                         }
 
@@ -324,7 +322,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                     })
                     .error(function (data) {
                         $scope.monitors[j].Monitor.isRunning = "error";
-                        $scope.monitors[j].Monitor.color = '#795548';
+                        $scope.monitors[j].Monitor.color = zm.monitorErrorColor;
                         $scope.monitors[j].Monitor.char = "ion-help-circled";
                     });
 
@@ -349,10 +347,82 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
     };
 
-    $scope.scaleImage = function() {
-       console.log ("Switching image style");
+    $scope.scaleImage = function () {
+        console.log("Switching image style");
         $scope.imageStyle = !$scope.imageStyle;
 
     };
+
+    function SaveSuccess() {
+        $ionicLoading.show({
+            template: "done!",
+            noBackdrop: true,
+            duration: 1000
+        });
+        console.log("***SUCCESS");
+    }
+
+
+    function SaveError(e) {
+        $ionicLoading.show({
+            template: "error - could not save",
+            noBackdrop: true,
+            duration: 2000
+        });
+        ZMDataModel.zmLog("Error saving image: " + e.message);
+        console.log("***ERROR");
+    }
+
+    //-----------------------------------------------------------------------
+    // Saves a snapshot of the monitor image to phone storage
+    //-----------------------------------------------------------------------
+
+    //http://stackoverflow.com/questions/11618266/save-a-web-photo-to-camera-roll-in-phonegap
+    $scope.saveImageToPhone = function (mid) {
+        $ionicLoading.show({
+            template: "saving snapshot..",
+            noBackdrop: true,
+            duration: zm.httpTimeout
+        });
+
+        console.log("IMAGE CAPTURE");
+        var canvas, context, imageDataUrl, imageData;
+        var loginData = ZMDataModel.getLogin();
+        var url = loginData.streamingurl +
+            '/cgi-bin/zms?mode=single&monitor=' + $rootScope.tempmid +
+            '&user=' + loginData.username +
+            '&pass=' + loginData.password;
+        ZMDataModel.zmLog("SavetoPhone:Trying to save image from " + url);
+
+        var img = new Image();
+        img.onload = function () {
+            canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            context = canvas.getContext('2d');
+            context.drawImage(img, 0, 0);
+            try {
+                imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+                imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+                cordova.exec(
+                    SaveSuccess,
+                    SaveError,
+                    'Canvas2ImagePlugin',
+                    'saveImageDataToLibrary', [imageData]
+                );
+            } catch (e) {
+
+                SaveError(e.message);
+            }
+        };
+        try {
+            img.src = url;
+        } catch (e) {
+            SaveError(e.message);
+
+        }
+    };
+
+
 
 }]);

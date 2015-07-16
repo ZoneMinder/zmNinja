@@ -4,7 +4,7 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm) {
 
     //---------------------------------------------------------------------
     // Controller main
@@ -376,6 +376,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // Note: no need to setAwake(true) as its already awake
         // in montage view
         $scope.monitorId = mid;
+
         $scope.LoginData = ZMDataModel.getLogin();
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $scope.ptzMoveCommand = "";
@@ -413,7 +414,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 $ionicLoading.show({
                     template: "please wait...",
                     noBackdrop: true,
-                    duration: 15000
+                    duration: zm.loadingTimeout
                 });
                 $scope.isControllable = controllable;
                 $scope.showPTZ = false;
@@ -463,7 +464,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     //---------------------------------------------------------------------
     // if you long press on a montage window, it calls scale montage
-    // at a 200ms freq
+    // at a 300 freq
     //---------------------------------------------------------------------
     $scope.onHold = function (index) {
         montageIndex = index;
@@ -471,8 +472,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         intervalHandleMontage = $interval(function () {
             scaleMontage();
 
-        }.bind(this), 200);
-
+        }.bind(this), zm.montageScaleFrequency);
+        console.log("**************" + zm.montageScaleFrequency);
     };
 
     //---------------------------------------------------------------------
@@ -592,6 +593,76 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
     });
 
+    function SaveSuccess() {
+        $ionicLoading.show({
+            template: "done!",
+            noBackdrop: true,
+            duration: 1000
+        });
+        console.log("***SUCCESS");
+    }
+
+    function SaveError(e) {
+        $ionicLoading.show({
+            template: "error - could not save",
+            noBackdrop: true,
+            duration: 2000
+        });
+        ZMDataModel.zmLog("Error saving image: " + e.message);
+        console.log("***ERROR");
+    }
+
+     //-----------------------------------------------------------------------
+    // Saves a snapshot of the monitor image to phone storage
+    //-----------------------------------------------------------------------
+
+
+    $scope.saveImageToPhone = function (mid) {
+        $ionicLoading.show({
+            template: "saving snapshot..",
+            noBackdrop: true,
+            duration: zm.httpTimeout
+        });
+
+        console.log("IMAGE CAPTURE");
+        var canvas, context, imageDataUrl, imageData;
+        var loginData = ZMDataModel.getLogin();
+        var url = loginData.streamingurl +
+            '/cgi-bin/zms?mode=single&monitor=' + $rootScope.tempmid +
+            '&user=' + loginData.username +
+            '&pass=' + loginData.password;
+        ZMDataModel.zmLog("SavetoPhone:Trying to save image from " + url);
+
+        var img = new Image();
+        img.onload = function () {
+            canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            context = canvas.getContext('2d');
+            context.drawImage(img, 0, 0);
+            try {
+                imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+                imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+                cordova.exec(
+                    SaveSuccess,
+                    SaveError,
+                    'Canvas2ImagePlugin',
+                    'saveImageDataToLibrary', [imageData]
+                );
+            } catch (e) {
+
+                SaveError(e.message);
+            }
+        };
+        try {
+            img.src = url;
+        } catch (e) {
+            SaveError(e.message);
+
+        }
+    };
+
+
 
 
 
@@ -607,8 +678,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     };
 
-        $scope.scaleImage = function() {
-       console.log ("Switching image style");
+    $scope.scaleImage = function () {
+        console.log("Switching image style");
         $scope.imageStyle = !$scope.imageStyle;
 
     };

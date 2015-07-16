@@ -6,11 +6,14 @@
 
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
                 <!-- android needs this 100vh - otherwise max- does not work -->
+
                 <div style="height: 100vh;">
 
                     <img imageonload="finishedLoadingImage()"
-                         ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" ng-class="{'zm-image-fit':imageStyle==true, 'zm-image-crop':imageStyle==false}" />
+                         ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" ng-class="{'zm-image-fit':imageStyle==true, 'zm-image-crop':imageStyle==false}" on-swipe-left="onSwipeLeft(monitorId,-1)" on-swipe-right="onSwipeRight(monitorId,1)" fade-in />
+
                 </div>
+
 
             </ion-scroll>
     </ion-content>
@@ -31,3 +34,10 @@
     <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();"></button>
     <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal();"></button>
 </nav>
+
+<span class="camera-icon">
+    <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(tempmid)"></a>
+</span>
+
+
+
