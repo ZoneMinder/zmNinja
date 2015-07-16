@@ -55,6 +55,10 @@
                         {
                             "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Canvas2ImagePlugin\"><param name=\"ios-package\" value=\"Canvas2ImagePlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -124,6 +128,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "uk.co.whiteoctober.cordova.appversion": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "org.devgeeks.Canvas2ImagePlugin": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
