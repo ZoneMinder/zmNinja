@@ -14,20 +14,25 @@ angular.module('zmApp', [
 
                         ])
 
+// ------------------------------------------
+// Various constants central repository
+// Feel free to change them as you see fit
+//-----------------------------------------------
+
 .constant('zm', {
     httpTimeout:15000,
     largeHttpTimeout:60000,
     logFile:'zmNinjaLog.txt',
     authoremail:'pliablepixels+zmNinja@gmail.com',
-    logFileMaxSize: 50000,
-    loginInterval:300000, //5m*60s*1000
+    logFileMaxSize: 50000, // after this limit log gets reset
+    loginInterval:300000, //5m*60s*1000 - ZM auto login after 5 mins
     loadingTimeout:15000,
     safeMontageLimit:10,
     maxFPS:30,
     defaultFPS:3,
     maxMontageQuality:70,
     defaultMontageQuality:50,
-    progressIntervalCheck:5000,
+    progressIntervalCheck:5000, // used for progress indicator on event playback
     graphFillColor:'rgba(151,187,205,0.5)',
     graphStrokeColor: 'rgba(151,187,205,0.8)',
     graphHighlightFill: 'rgba(0,163,124,0.5)',
@@ -259,10 +264,7 @@ angular.module('zmApp', [
         ZMDataModel.zmLog("Device is ready");
         console.log("**** DEVICE READY ***");
 
-
-
-
-              $fileLogger.checkFile().then(function(resp) {
+        $fileLogger.checkFile().then(function(resp) {
             if (parseInt(resp.size) > zm.logFileMaxSize)
             {
                 console.log ("Deleting old log file as it exceeds 50K bytes");

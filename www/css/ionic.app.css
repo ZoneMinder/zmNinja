@@ -6364,9 +6364,9 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
   .range.range-stable input::-ms-fill-lower {
     background: #00A0A0; }
   .range.range-positive input::-webkit-slider-thumb:before {
-    background: #367588; }
+    background: #00A0A0; }
   .range.range-positive input::-ms-fill-lower {
-    background: #367588; }
+    background: #00A0A0; }
   .range.range-calm input::-webkit-slider-thumb:before {
     background: #11c1f3; }
   .range.range-calm input::-ms-fill-lower {
