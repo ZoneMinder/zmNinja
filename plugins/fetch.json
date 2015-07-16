@@ -110,5 +110,14 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "org.devgeeks.Canvas2ImagePlugin": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/devgeeks/Canvas2ImagePlugin.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
