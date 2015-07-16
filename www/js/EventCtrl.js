@@ -6,7 +6,7 @@
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
 // and whether the new API has a better mechanism
 
-angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
+angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$rootScope','zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', function ($scope, $rootScope, zm,ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
 
 
     //---------------------------------------------------
@@ -256,7 +256,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
             $ionicLoading.show({
                 template: "please wait...",
                 noBackdrop: true,
-                duration: 15000,
+                duration: zm.loadingTimeout,
             });
         }
         var loginData = ZMDataModel.getLogin();
@@ -462,7 +462,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventCtrl', ['$scope', '$r
                 // don't want to overload
                 segmentHandle = $interval(function () {
                     segmentCheck();
-                }, 5000);
+                }, zm.progressIntervalCheck);
                 segmentCheck();
 
 

@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -24,7 +24,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             if (res) {
                 $fileLogger.deleteLogfile().then(function () {
                     console.log('Logfile deleted');
-                    $fileLogger.setStorageFilename('zmNinjaLog.txt');
+                    $fileLogger.setStorageFilename(zm.logFile);
                     $scope.zmLog.logString = "";
                 });
             }
@@ -71,7 +71,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 logstring = logstring.replace(re3, "<server>");
 
                 var email = {
-                    to: 'pliablepixels+zmNinja@gmail.com',
+                    to: zm.authoremail,
                     subject: 'zmNinja Logs',
                     body: logstring,
                     isHtml: false

@@ -105,6 +105,15 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 }
 
+.camera-icon
+{
+    position:absolute;
+    bottom:20px;
+    left:10px;
+    z-index:10;
+    opacity:0.7;
+}
+
 /* Styling of progress bar
 http://www.useragentman.com/blog/2012/01/03/cross-browser-html5-progress-bars-in-depth/
 */
@@ -204,5 +213,7 @@ progress[aria-valuenow]:before  {
 {
     width:100%;
 }
+
+
 
 

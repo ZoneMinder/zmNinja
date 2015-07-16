@@ -8,7 +8,7 @@
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
 
-angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
+angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope','zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, zm,ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
     console.log("Inside Graphs controller");
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
@@ -103,11 +103,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             datasets: [
                 {
                     label: '',
-                    fillColor: 'rgba(151,187,205,0.5)',
-                    strokeColor: 'rgba(151,187,205,0.8)',
-                    highlightFill: 'rgba(0,163,124,0.5)',
-                    //   highlightFill: 'rgba(151,187,205,0.75)',
-                    // highlightStroke: 'rgba(151,187,205,1)',
+                    fillColor: zm.graphFillColor,
+                    strokeColor: zm.graphStrokeColor,
+                    highlightFill: zm.graphHighlightFill,
                     data: []
         },
           ]};

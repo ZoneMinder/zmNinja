@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading) {
+angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal','zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', function ($scope, $rootScope, $ionicModal,zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading) {
 
 
     $scope.openMenu = function () {
@@ -27,7 +27,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     $scope.saveDevOptions = function () {
     console.log('Saving Dev Options');
 
-    if (parseInt($scope.loginData.maxMontage) > 10) {
+    if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
         $ionicPopup.alert({
             title: 'Note',
             template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
@@ -35,13 +35,13 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     }
 
 
-    if ((parseInt($scope.loginData.maxFPS) < 0) || (parseInt($scope.loginData.maxFPS) > 30)) {
-        $scope.loginData.maxFPS = '3';
+    if ((parseInt($scope.loginData.maxFPS) < 0) || (parseInt($scope.loginData.maxFPS) > zm.maxFPS)) {
+        $scope.loginData.maxFPS = zm.defaultFPS.toString();
     }
 
 
-    if ((parseInt($scope.loginData.montageQuality) < 10) || (parseInt($scope.loginData.montageQuality) > 70)) {
-        $scope.loginData.montageQuality = '50';
+    if ((parseInt($scope.loginData.montageQuality) < zm.safeMontageLimit) || (parseInt($scope.loginData.montageQuality) > 70)) {
+        $scope.loginData.montageQuality = zm.defaultMontageQuality.toString();
     }
 
 

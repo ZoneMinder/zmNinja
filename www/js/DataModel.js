@@ -7,7 +7,7 @@
 // that many other controllers use
 // It's grown over time. I guess I may have to split this into multiple services in the future
 
-angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger) {
+angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm',function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,zm) {
 
     var zmAppVersion="unknown";
     var monitorsLoaded = 0;
@@ -139,10 +139,13 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         },
 
         isLoggedIn: function () {
-            if (loginData.username != "" && loginData.password != "" && loginData.url != "" && loginData.apiurl != "")             {
+            if (loginData.username != "" && loginData.password != "" && loginData.url != "" && loginData.apiurl != "")
+            {
                 return 1;
             } else
-                return 0; {}
+            {
+                return 0;
+            }
         },
 
         getLogin: function () {
@@ -246,7 +249,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 template: 'Loading Monitors...',
                 animation: 'fade-in',
                 showBackdrop: true,
-                duration: 15000,
+                duration: zm.loadingTimeout,
                 maxWidth: 200,
                 showDelay: 0
             });
@@ -361,7 +364,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     showBackdrop: true,
                     maxWidth: 200,
                     showDelay: 0,
-                    duration: 15000, //specifically for Android - http seems to get stuck at times
+                    duration: zm.loadingTimeout, //specifically for Android - http seems to get stuck at times
                 });
             }
 
@@ -449,6 +452,37 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             monitorsLoaded = loaded;
         },
 
+        //-----------------------------------------------------------------------------
+        // returns the next monitor ID in the list
+        // used for swipe next
+        //-----------------------------------------------------------------------------
+        getNextMonitor: function(monitorId, direction)
+        {
+             var id = parseInt(monitorId);
+             var foundIndex = -1;
+             for (var i = 0; i < monitors.length; i++) {
+                 if (parseInt(monitors[i].Monitor.Id) == id)
+                 {
+                    foundIndex = i;
+                     break;
+                 }
+             }
+            if (foundIndex != -1)
+            {
+                foundIndex = foundIndex + direction;
+                // wrap around if needed
+                if (foundIndex < 0) foundIndex = monitors.length - 1;
+                if (foundIndex >= monitors.length) foundIndex = 0;
+                return (monitors[foundIndex].Monitor.Id);
+            }
+            else
+            {
+                zmLog("getNextMonitor could not find monitor "+monitorId);
+                return (monitorId);
+            }
+
+
+        },
 
 
         //-----------------------------------------------------------------------------

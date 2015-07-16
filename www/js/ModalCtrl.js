@@ -4,12 +4,13 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', function ($scope, $rootScope, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
+angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm','ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', function ($scope, $rootScope,zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
 
 
     console.log("**** INSIDE MODAL CTRL, recomputing rand *****");
 
     $scope.rand = Math.floor((Math.random() * 100000) + 1);
+    $rootScope.tempmid = $scope.monitorId;
     //$state.go($state.current, {}, {reload: true});
 
     // This holds the PTZ menu control
@@ -156,7 +157,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         $ionicLoading.show({
             template: "please wait...",
             noBackdrop: true,
-            duration: 15000,
+            duration: zm.loadingTimeout,
         });
 
         var loginData = ZMDataModel.getLogin();
@@ -164,7 +165,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         $ionicLoading.show({
             template: "Sending PTZ..",
             noBackdrop: true,
-            duration: 15000,
+            duration: zm.loadingTimeout,
         });
 
 
@@ -224,6 +225,35 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     };
 
 
+   $scope.onSwipeLeft = function(m,d)
+   {
+       console.log ("SWIPED LEFT");
+       console.log ("Next Monitor ID is " + ZMDataModel.getNextMonitor(m,d));
+       $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
+       $rootScope.tempmid = $scope.monitorId; //FIXME: Hack
+
+        $ionicLoading.hide();
+        $ionicLoading.show({
+            template: "please wait...",
+            noBackdrop: true,
+            duration: zm.loadingTimeout,
+        });
+
+   };
+
+    $scope.onSwipeRight = function(m,d)
+   {
+        console.log ("SWIPED RIGHT");
+        console.log ("Next Monitor ID is " + ZMDataModel.getNextMonitor(m,d));
+        $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
+        $rootScope.tempmid = $scope.monitorId;
+
+         $ionicLoading.show({
+            template: "please wait...",
+            noBackdrop: true,
+            duration: zm.loadingTimeout,
+        });
+   };
 
 
 }]);

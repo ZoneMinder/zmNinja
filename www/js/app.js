@@ -14,6 +14,33 @@ angular.module('zmApp', [
 
                         ])
 
+.constant('zm', {
+    httpTimeout:15000,
+    largeHttpTimeout:60000,
+    logFile:'zmNinjaLog.txt',
+    authoremail:'pliablepixels+zmNinja@gmail.com',
+    logFileMaxSize: 50000,
+    loginInterval:300000, //5m*60s*1000
+    loadingTimeout:15000,
+    safeMontageLimit:10,
+    maxFPS:30,
+    defaultFPS:3,
+    maxMontageQuality:70,
+    defaultMontageQuality:50,
+    progressIntervalCheck:5000,
+    graphFillColor:'rgba(151,187,205,0.5)',
+    graphStrokeColor: 'rgba(151,187,205,0.8)',
+    graphHighlightFill: 'rgba(0,163,124,0.5)',
+    monitorCheckingColor:'#03A9F4',
+    monitorNotRunningColor: '#F44336',
+    monitorPendingColor: '#FF9800',
+    monitorRunningColor: '#4CAF50',
+    monitorErrorColor: '#795548',
+    montageScaleFrequency:300
+
+
+
+})
 
 //------------------------------------------------------------------
 // this directive will be load any time an image completes loading 
@@ -36,6 +63,7 @@ angular.module('zmApp', [
     };
 })
 
+
 //------------------------------------------------------------------
 // In Android, HTTP requests seem to get stuck once in a while
 // It may be a crosswalk issue.
@@ -44,7 +72,7 @@ angular.module('zmApp', [
 // That way the user can try again, and won't get stuck
 // Also remember you need to add it to .config
 //------------------------------------------------------------------
-.factory('timeoutHttpIntercept', function ($rootScope, $q) {
+.factory('timeoutHttpIntercept', function ($rootScope, $q,zm) {
     return {
         'request': function (config) {
             if ( !(config.url.indexOf("/api/states/change/") > -1 ||
@@ -67,7 +95,7 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function($interval, ZMDataModel, $http)  {
+.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm)  {
     var zmAutoLoginHandle;
     function doLogin()
     {
@@ -118,7 +146,7 @@ angular.module('zmApp', [
         {
             doLogin();
 
-        },5*60*1000); // Auto login every 5 minutes
+        },zm.loginInterval); // Auto login every 5 minutes
                       // PHP timeout is around 10 minutes
                       // should be ok?
     }
@@ -165,7 +193,7 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory, $window)
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory, $window, $ionicSideMenuDelegate)
 {
 
     ZMDataModel.init();
@@ -178,16 +206,13 @@ angular.module('zmApp', [
 
     }
 
+    // This code takes care of trapping the Android back button
+    // and takes it to the menu. FIXME: For some reason, isOpen of Side
+    // MenuDelegate always returns False, so I don't know
+    // when its on or off, so can't exit the app if its on
+
     $ionicPlatform.registerBackButtonAction(function (event) {
-        console.log("STATE NAME IS " + $ionicHistory.currentStateName());
-
-        if ($ionicHistory.currentStateName() == "whatd do I put here?") {
-            $ionicPlatform.exitApp();
-
-        } else {
-            // do something else
-
-        }
+             $ionicSideMenuDelegate.toggleLeft();
 }, 100);
 
     // this works reliably on both Android and iOS. The "onorientation" seems to reverse w/h in Android. Go figure.
@@ -238,7 +263,7 @@ angular.module('zmApp', [
 
 
               $fileLogger.checkFile().then(function(resp) {
-            if (parseInt(resp.size) > 50000)
+            if (parseInt(resp.size) > zm.logFileMaxSize)
             {
                 console.log ("Deleting old log file as it exceeds 50K bytes");
                 $fileLogger.deleteLogfile().then(function()
@@ -257,7 +282,7 @@ angular.module('zmApp', [
          //fileLogger is an excellent cross platform library
          // that allows you to manage log files without worrying about
         // paths etc.https://github.com/pbakondy/filelogger
-         $fileLogger.setStorageFilename('zmNinjaLog.txt');
+         $fileLogger.setStorageFilename(zm.logFile);
 
          if (window.cordova)
          {
