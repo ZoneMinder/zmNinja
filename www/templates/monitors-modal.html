@@ -1,6 +1,7 @@
-<ion-modal-view cache="false">
+<div ng-controller="ModalCtrl">
+<ion-modal-view cache="false" >
     <ion-content style="background-color:#444444">
-        <div ng-controller="ModalCtrl">
+       <div > <!-- </di> ng-controller="ModalCtrl">-->
 
             <!-- replay can also be gapless imageonload="finishedLoadingImage()"-->
 
@@ -36,8 +37,7 @@
 </nav>
 
 <span class="camera-icon">
-    <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(tempmid)"></a>
+    <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(monitorId)"></a>
 </span>
-
-
+</div>
 
