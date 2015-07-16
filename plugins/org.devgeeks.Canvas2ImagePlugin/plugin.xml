@@ -1,0 +1,70 @@
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="org.devgeeks.Canvas2ImagePlugin"
+    version="0.6.0">
+
+    <name>Canvas 2 Image</name>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+
+    <description>This plugin allows you to save the contents of an HTML canvas tag to the iOS Photo Library, or Android Gallery from your app.</description>
+    <author>Tommy-Carlos Williams - tommy@devgeeks.org</author>
+    <keywords>canvas,image,photo library</keywords>
+
+    <license>MIT</license>
+
+    <js-module src="www/Canvas2ImagePlugin.js" name="Canvas2ImagePlugin">
+        <clobbers target="window.canvas2ImagePlugin" />
+    </js-module>
+
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Canvas2ImagePlugin">
+                <param name="ios-package" value="Canvas2ImagePlugin"/>
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/Canvas2ImagePlugin.h" />
+
+        <source-file src="src/ios/Canvas2ImagePlugin.m"
+            compiler-flags="-fno-objc-arc" />
+    </platform>
+
+    <!-- android -->
+    <platform name="android">
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        </config-file>
+
+        <config-file target="res/xml/config.xml" parent="/*">
+          <feature name="Canvas2ImagePlugin" >
+            <param name="android-package" value="org.devgeeks.Canvas2ImagePlugin.Canvas2ImagePlugin"/>
+          </feature>
+        </config-file>
+
+        <source-file src="src/android/Canvas2ImagePlugin.java"
+            target-dir="src/org/devgeeks/Canvas2ImagePlugin" />
+
+    </platform>
+
+    <!-- wp8 -->
+    <platform name="wp8">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Canvas2ImagePlugin">
+                <param name="wp-package" value="Canvas2ImagePlugin"/>
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+            <Capability Name="ID_CAP_MEDIALIB_PHOTO" />
+        </config-file>
+
+        <source-file src="src/wp8/Canvas2ImagePlugin.cs" />
+    </platform>
+</plugin>
