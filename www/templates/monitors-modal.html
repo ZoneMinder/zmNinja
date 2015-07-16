@@ -1,43 +1,40 @@
 <div ng-controller="ModalCtrl">
-<ion-modal-view cache="false" >
-    <ion-content style="background-color:#444444">
-       <div > <!-- </di> ng-controller="ModalCtrl">-->
+    <ion-modal-view cache="false" >
+        <ion-content style="background-color:#444444">
 
-            <!-- replay can also be gapless imageonload="finishedLoadingImage()"-->
+                <ion-scroll has-bouncing=false min-zoom=1 zooming="true"
+                            direction="xy" style="width: 100%; ">
+                    <!-- android needs this 100vh - otherwise max- does not work -->
 
-            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-                <!-- android needs this 100vh - otherwise max- does not work -->
+                    <div style="height: 100vh;">
+                        <img imageonload="finishedLoadingImage()"
+                             ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" ng-class="{'zm-image-fit':imageStyle==true, 'zm-image-crop':imageStyle==false}" on-swipe-left="onSwipeLeft(monitorId,-1)" on-swipe-right="onSwipeRight(monitorId,1)" />
+                    </div>
+                </ion-scroll>
+        </ion-content>
 
-                <div style="height: 100vh;">
-
-                    <img imageonload="finishedLoadingImage()"
-                         ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" ng-class="{'zm-image-fit':imageStyle==true, 'zm-image-crop':imageStyle==false}" on-swipe-left="onSwipeLeft(monitorId,-1)" on-swipe-right="onSwipeRight(monitorId,1)" fade-in />
-
-                </div>
-
-
-            </ion-scroll>
-    </ion-content>
-
-    <div ng-show="isControllable=='1' && showPTZ">
-        <div class="ptzcentered">
-            <circular options="radialMenuOptions">
-            </circular>
+        <div ng-show="isControllable=='1' && showPTZ">
+            <div class="ptzcentered">
+                <circular options="radialMenuOptions">
+                </circular>
+            </div>
         </div>
-    </div>
-    </div>
 
-</ion-modal-view>
 
-<nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-    <button mfb-button icon="ion-arrow-resize" label="fit image" ng-click="scaleImage();"></button>
-    <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();"></button>
-    <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();"></button>
-    <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal();"></button>
-</nav>
+    </ion-modal-view>
+    <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+        <button mfb-button icon="ion-arrow-resize" label="fit image" ng-click="scaleImage();">
+        </button>
+        <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
+        </button>
+        <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();">
+        </button>
+        <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal();">
+        </button>
+    </nav>
 
-<span class="camera-icon">
-    <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(monitorId)"></a>
-</span>
+    <span class="camera-icon">
+        <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(monitorId)"></a>
+    </span>
 </div>
 

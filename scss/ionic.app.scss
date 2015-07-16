@@ -36,6 +36,10 @@ $button-stable-border:            #00A0A0 !default;
 
 $input-color-placeholder:        #BBBBBB !default;
 
+//$range-slider-box-shadow:   0 0 0px rgba(0,0,0,.3), 0 0px 0px rgba(0,0,0,0.2) !default;
+//$range-slider-border-radius:      10% !default;
+$range-positive-track-bg:  #00A0A0 !default;
+
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 

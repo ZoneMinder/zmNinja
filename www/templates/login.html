@@ -4,45 +4,65 @@
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
     </ion-nav-buttons>
 
-
     <ion-content class="padding">
         <div class="list list-inset">
-            <span style="color:rgb(100,100,100)"> <i class="ion-android-home" style="font-size:150%"></i> ZoneMinder Settings</span>
+            <span style="color:rgb(100,100,100)">
+                <i class="ion-android-home" style="font-size:150%"></i>
+                ZoneMinder Settings
+            </span>
             <label class="item item-input item-floating-label">
                 <span class="input-label">username</span>
-                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="username" ng-model="loginData.username">
+                <input autocapitalize="none" autocomplete="off"
+                       autocorrect="off" type="text"
+                       placeholder="username"
+                       ng-model="loginData.username">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">password</span>
-                <input type="password" placeholder="password" ng-model="loginData.password">
+                <input type="password" placeholder="password"
+                       ng-model="loginData.password">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">ZM portal url</span>
-                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="ZM portal url " ng-model="loginData.url" ng-keyup="portalKeypress($event)">
+                <input autocapitalize="none" autocomplete="off"
+                       autocorrect="off" type="text"
+                       placeholder="ZM portal url "
+                       ng-model="loginData.url" ng-keyup="portalKeypress($event)">
             </label>
 
             <label class="item item-input item-floating-label">
                 <span class="input-label">base path to cgi-bin</span>
-                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="base path to cgi-bin" ng-model="loginData.streamingurl">
+                <input autocapitalize="none" autocomplete="off"
+                       autocorrect="off" type="text"
+                       placeholder="base path to cgi-bin"
+                       ng-model="loginData.streamingurl">
             </label>
 
             <label class="item item-input item-floating-label">
                 <span class="input-label">ZM api url</span>
-                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="ZM api url" ng-model="loginData.apiurl">
+                <input autocapitalize="none"
+                       autocomplete="off" autocorrect="off"
+                       type="text" placeholder="ZM api url"
+                       ng-model="loginData.apiurl">
             </label>
 
-            <label >
-            <ion-toggle ng-model="loginData.useSSL" ng-checked="{{loginData.useSSL}}" toggle-class="toggle-calm">Use SSL</ion-toggle>
+            <label>
+            <ion-toggle ng-model="loginData.useSSL"
+                        ng-checked="{{loginData.useSSL}}"
+                        toggle-class="toggle-calm">Use SSL</ion-toggle>
             </label>
 
-             <label >
+             <label>
 
-            <ion-toggle ng-model="loginData.keepAwake" ng-checked="{{loginData.keepAwake}}" toggle-class="toggle-calm">Keep display on<p>(When viewing footage)</p></ion-toggle>
-
+            <ion-toggle ng-model="loginData.keepAwake"
+                        ng-checked="{{loginData.keepAwake}}"
+                        toggle-class="toggle-calm">Keep display on<p>(When viewing footage)</p>
+            </ion-toggle>
             </label>
-
         </div>
-            <button class="button button-block button-balanced icon ion-locked" ng-click="save()"> Save</button>
+        <button class="button button-block button-balanced icon ion-locked"
+                    ng-click="save()"> Save
+        </button>
 
     </ion-content>
 </ion-view>
