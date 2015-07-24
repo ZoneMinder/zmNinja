@@ -132,6 +132,9 @@
         },
         "org.devgeeks.Canvas2ImagePlugin": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "com.phonegap.plugins.OrientationLock": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
     "dependent_plugins": {}

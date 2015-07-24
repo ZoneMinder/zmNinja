@@ -7,10 +7,15 @@
     <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' https://www.google.com 'unsafe-inline' 'unsafe-eval'">
     <title></title>
 
-    <link href="css/custommfb.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="css/animate.min.css">
     <link rel="stylesheet" href="css/angular-circular-navigation.css">
+    <link rel="stylesheet" href="css/custommfb.css">
     <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/angular-carousel.css">
+
+
+
 
 
     <!-- compiled css output -->
@@ -20,7 +25,10 @@
     <!-- ionic/angularjs js -->
 
 
+
+
     <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
     <script src="lib/filelogger/dist/filelogger.min.js"></script>
 
@@ -47,11 +55,14 @@
     <script src="js/LogCtrl.js"></script>
      <!-- https://github.com/maxklenk/angular-circular-navigation - modified to use right angles -->
 
-    <script src="js/angular-circular-navigation.js"></script>
+    <script src="external/angular-circular-navigation.js"></script>
     <script src="lib/Chart.js/Chart.min.js"></script>
     <script src="lib/tc-angular-chartjs/dist/tc-angular-chartjs.min.js"></script>
     <script src="lib/ng-mfb/src/mfb-directive.js"></script>
     <script src="lib/moment/moment.js"></script>
+
+    <script src="lib/angular-touch/angular-touch.js"></script>
+    <script src="external/angular-carousel.js"></script>
 
 
 
@@ -70,15 +81,15 @@
       in. I'll eventually get to fixing this -->
 
     <!-- This is the Side menu options -->
-    <ion-side-menus>
-        <ion-pane ion-side-menu-content>
+    <ion-side-menus delegate-handle="sideMenu" ng-cloak>
+        <ion-side-menu-content>
             <ion-nav-bar class="bar-stable nav-title-slide-ios7">
                 <ion-nav-back-button class="button-icon">
                     <span class="icon ion-ios7-arrow-left"></span>
                 </ion-nav-back-button>
             </ion-nav-bar>
             <ion-nav-view></ion-nav-view>
-        </ion-pane>
+        </ion-side-menu-content>
 
         <ion-side-menu side="left">
             <ion-header-bar class="bar bar-header bar-dark">
@@ -136,8 +147,6 @@
                             <i class="icon ion-clipboard"></i>
                         </span> Logs
                     </ion-item>
-
-
                 </ion-list>
             </ion-content>
         </ion-side-menu>
