@@ -19,7 +19,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     monitorStateCheck();
     console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
     ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
-    $scope.imageStyle = true;
+
 
 
 
@@ -347,11 +347,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
     };
 
-    $scope.scaleImage = function () {
-        console.log("Switching image style");
-        $scope.imageStyle = !$scope.imageStyle;
-
-    };
 
 
 

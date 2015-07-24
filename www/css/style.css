@@ -1,5 +1,8 @@
-/* Using this for full screen modals for event and monitor mode */
 
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+
+/* Using this for full screen modals for event and monitor mode */
 .modal{
   top: 0 ;
   bottom: 0 ;
@@ -203,5 +206,66 @@ progress[aria-valuenow]:before  {
 }
 
 
+.list .item.item-accordion {
+  line-height: 200px;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: 3s all linear;
+}
+.list .item.item-accordion.ng-hide {
+  line-height: 0px;
+}
+.list .item.item-accordion.ng-hide-add,
+.list .item.item-accordion.ng-hide-remove {
+  display: block !important;
+}
 
+ul[rn-carousel] > li {
+  position: relative;
+  margin-left: -100%;
+}
 
+ul[rn-carousel] > li:first-child {
+  margin-left: 0;
+}
+
+ul[rn-carousel] img {
+  max-width: 100%;
+}
+
+/*
+.bgimage {
+    text-align:right;
+    color:white;
+    background-size:cover;
+    height: 100%;
+    background-position: center center;
+}
+
+ul[rn-carousel] {
+
+    height:190px;
+    width:190px;
+    margin: 0 auto;
+}
+
+.carousel5 li {
+    width:100%;
+    height:100%;
+    font-size:30px;
+    background-color: #ccc;
+}
+
+.carousel-demo {
+    margin-top:20px;
+    display:inline-block;
+    text-align: center;
+}
+.carousel-demo-fullscreen {
+  width:100%;
+  height:100%;
+}
+.carousel-demo-fullscreen ul[rn-carousel] {
+  width:100%;
+  height:100%;
+}*/

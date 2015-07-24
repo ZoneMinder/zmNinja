@@ -18,6 +18,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     //var imageStyle=1;
     //$scope.imageAspect = "max-width: 100%;max-height: 100%;";
+    $scope.imageFit=false;
+
     $scope.radialMenuOptions = {
         content: '',
 
@@ -224,11 +226,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     };
 
 
-    $scope.saveImageToPhone2=function(mid)
-    {
-        console.log ("TEST");
-    };
-
    $scope.onSwipeLeft = function(m,d)
    {
        console.log ("SWIPED LEFT");
@@ -332,7 +329,10 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         }
     };
 
-
+ $scope.scaleImage = function() {
+      console.log ("Switching image style");
+      $scope.imageFit = !$scope.imageFit;
+};
 
 
 }]);

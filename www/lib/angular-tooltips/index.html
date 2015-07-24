@@ -1,0 +1,122 @@
+<!doctype html>
+<html ng-app="720kb">
+<head>
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="http://720kb.github.io/csshelper/assets/ext/src/helper.css">
+  <link rel="stylesheet" type="text/css" href="src/css/angular-tooltips.css">
+  <title>Angularjs Tooltips</title>
+</head>
+<body class="center-content">
+  <div class="separator100"></div>
+
+  <div class="col6 offset-left2">
+   <div>
+    <a class="btn btn-medium bg-info color-white font-bold"
+    tooltip-delay="400"
+    tooltips
+     tooltip-content="Yeo man!"
+     tooltip-view="views/index.html"
+     tooltip-view-ctrl="Ctrl"
+     tooltip-size="small"
+     tooltip-side="left"
+     tooltip-title="hey!" >
+      Small left
+    </a>
+  </div>
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-hide-trigger="click" tooltip-size="medium" tooltip-side="left" title="Title attr" >
+      Medium left
+    </a>
+  </div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="large" tooltip-side="left" >
+      Large left
+    </a>
+  </div>
+
+  <div class="separator100"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="small" tooltip-side="right" >
+      Small right
+    </a>
+  </div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="medium" tooltip-side="right" >
+      Medium right
+    </a>
+  </div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="large" tooltip-side="right" >
+      Large right
+    </a>
+  </div>
+  <div class="separator100"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="small" tooltip-side="top" >
+      Small top
+    </a>
+  </div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="medium" tooltip-side="top" >
+      Medium top
+    </a>
+  </div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="large" tooltip-side="top" >
+      Large top
+    </a>
+  </div>
+  <div class="separator100"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="small" tooltip-side="bottom" >
+      Small bottom
+    </a>
+  </div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="medium" tooltip-side="bottom" >
+      Medium bottom
+    </a>
+  </div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-size="large" tooltip-side="bottom" >
+      Large bottom
+    </a>
+  </div>
+  <div class="separator100"></div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man!" tooltip-show-trigger="mouseover click" tooltip-hide-trigger="click" tooltip-close-button='<button type="button">Close Me!</button>' tooltip-side="top">
+      Close button: hover to open, click to close
+    </a>
+  </div>
+
+  <div class="separator30"></div>
+  <div>
+    <a class="btn btn-medium bg-info color-white font-bold" tooltips tooltip-content="Yeo man! I have some more to say to show the positioning of the close button" tooltip-show-trigger="click" tooltip-hide-trigger="click" tooltip-close-button='<button type="button">Close Me!</button>' tooltip-side="bottom">
+      Close button: click to open and close
+    </a>
+  </div>
+  <div class="separator100"></div>
+</div>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.4/angular.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.4/angular-route.min.js"></script>
+<script type="text/javascript" src="src/js/angular-tooltips.js"></script>
+<script type="text/javascript" src="assets/js/index.js"></script>
+</body>
+</html>

@@ -26,6 +26,9 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'useSSL':false, // "1" if HTTPS
         'keepAwake':true // don't dim/dim during live view
     };
+    var configParams = {
+        'ZM_EVENT_IMAGE_DIGITS':'-1'
+    };
 
     //--------------------------------------------------------------------------
     // uses fileLogger to write logs to file for later investigation
@@ -232,6 +235,43 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 console.log("*** MAXMONTAGE TOO LOW ***");
                 loginData.maxMontage = 1;
             }
+        },
+
+        //-----------------------------------------------------------------------------
+        // This function returns the numdigits for padding capture images
+         //-----------------------------------------------------------------------------
+
+        getKeyConfigParams: function (forceReload) {
+
+            var d = $q.defer();
+
+            if (forceReload ==1 || configParams.ZM_EVENT_IMAGE_DIGITS == '-1')
+            {
+                var apiurl = loginData.apiurl;
+                var myurl = apiurl + '/configs/viewByName/ZM_EVENT_IMAGE_DIGITS.json';
+                console.log ("CONFIG URL IS " + myurl);
+                $http.get(myurl)
+                .success(function(data) {
+                    zmLog ("ZM_EVENT_IMAGE_DIGITS is " + data.config.Value);
+                    configParams.ZM_EVENT_IMAGE_DIGITS = data.config.Value;
+                    d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
+
+                })
+                .error (function(err) {
+                    zmLog ("Error retrieving ZM_EVENT_IMAGE_DIGITS" + JSON.stringify(err));
+                    zmLog ("Taking a guess, setting ZM_EVENT_IMAGE_DIGITS to 5");
+                    // FIXME: take a plunge and keep it at 5?
+                    configParams.ZM_EVENT_IMAGE_DIGITS = 5;
+                    d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
+                });
+            }
+            else
+            {
+                zmLog ("ZM_EVENT_IMAGE_DIGITS is already configured for " + configParams.ZM_EVENT_IMAGE_DIGITS);
+                 d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
+            }
+            return (d.promise);
+
         },
 
         //-----------------------------------------------------------------------------

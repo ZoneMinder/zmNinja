@@ -9,9 +9,7 @@ angular.module('zmApp', [
                             'ionic',
                             'tc.chartjs',
                             'zmApp.controllers',
-                            'fileLogger',
-
-
+                            'fileLogger'
                         ])
 
 // ------------------------------------------
@@ -201,6 +199,8 @@ angular.module('zmApp', [
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory, $window, $ionicSideMenuDelegate)
 {
 
+
+
     ZMDataModel.init();
     var loginData = ZMDataModel.getLogin();
 
@@ -208,6 +208,7 @@ angular.module('zmApp', [
         ZMDataModel.zmLog ("User is logged in");
         console.log("VALID CREDENTIALS. Grabbing Monitors");
         ZMDataModel.getMonitors(0);
+        ZMDataModel.getKeyConfigParams(1);
 
     }
 
@@ -216,9 +217,10 @@ angular.module('zmApp', [
     // MenuDelegate always returns False, so I don't know
     // when its on or off, so can't exit the app if its on
 
-    $ionicPlatform.registerBackButtonAction(function (event) {
-             $ionicSideMenuDelegate.toggleLeft();
-}, 100);
+
+
+
+
 
     // this works reliably on both Android and iOS. The "onorientation" seems to reverse w/h in Android. Go figure.
     // http://stackoverflow.com/questions/1649086/detect-rotation-of-android-phone-in-the-browser-with-javascript
@@ -302,12 +304,18 @@ angular.module('zmApp', [
 
          }
 
-        setTimeout(function () {
+        /*setTimeout(function () {
             if (window.cordova)
             {
                 $cordovaSplashscreen.hide();
             }
-            }, 1500);
+            }, 1500);*/
+
+        if(window.navigator && window.navigator.splashscreen) {
+            window.navigator.splashscreen.hide();
+            console.log ("Unlocking portrait mode after splash");
+            window.plugins.orientationLock.unlock();
+   }
 
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);

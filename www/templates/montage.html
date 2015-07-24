@@ -13,6 +13,7 @@
             <button class="button button-icon button-clear ion-android-contract"
                     ng-click="switchMinimal()">
             </button>
+        <!--<button class="button button-icon ion-ios-help-outline" ng-click="popover.show($event)"></button>-->
         </ion-nav-buttons>
 
     <ion-content has-bouncing="false" style="background-color:#e5e5e5">
@@ -20,6 +21,7 @@
                        spinner="bubbles" on-refresh="doRefresh()">
         </ion-refresher>
 
+        <!--{{stateofSlide}} Status-->
         <span ng-show="!minimal">
                 <div class=" range range-positive">
                     <i class="icon ion-arrow-shrink"></i>
@@ -29,6 +31,7 @@
 
                 </div>
         </span>
+
 
         <div class="wrapper">
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit"
@@ -43,7 +46,7 @@
                          ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)"
                          on-hold="onHold($index)"
                          on-release="onRelease($index)"
-                         style="display:block;" />
+                         style="display:block;"  />
                 </article>
             </span>
         </div>

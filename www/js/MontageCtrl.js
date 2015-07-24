@@ -4,14 +4,31 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm,$ionicPopover,$controller) {
 
+    $controller('zmApp.BaseController', { $scope: $scope });
     //---------------------------------------------------------------------
     // Controller main
     //---------------------------------------------------------------------
 
+   /* console.log ("IMAGES***************");
+    var fooImages = [
+                        {src:'http://www.pbase.com/arjunrc/image/160698184.jpg'},
+                        {src:'http://www.pbase.com/arjunrc/image/160697822.jpg'},
+                        {src:'http://www.pbase.com/arjunrc/image/160697821.jpg'},
+                        {src:'http://www.pbase.com/arjunrc/image/160697740.jpg'}
+    ];
+
+    $scope.fl = fooImages.length;
+    $scope.fooImages = fooImages;*/
+
     document.addEventListener("pause", onPause, false);
 
+    $ionicPopover.fromTemplateUrl('templates/help/montage-help.html', {
+    scope: $scope,
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
 
     var timestamp = new Date().getUTCMilliseconds();
     $scope.minimal = $stateParams.minimal;
@@ -213,7 +230,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                     type: 'button-block icon ion-close-round',
                     onTap: function (e) {
                         // user tapped cancel
-                        var i;
+                        var i,myhiddenorder;
                         if (window.localStorage.getItem("montageOrder") == undefined) {
                             for (i = 0; i < $scope.MontageMonitors.length; i++) {
                                 montageOrder[i] = i;
@@ -221,12 +238,26 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                             }
                             console.log("Order string is " + montageOrder.toString());
                             ZMDataModel.zmLog("User press Cancel. Reset Monitor Order to: " + montageOrder.toString());
-                        } else {
+                        }
+                        else // montageOrder exists
+                        {
                             var myorder = window.localStorage.getItem("montageOrder");
-                            var myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
+
+                            if (window.localStorage.getItem("montageHiddenOrder") == undefined)
+                            {
+                                for (i = 0; i < $scope.MontageMonitors.length; i++) {
+                                    hiddenOrder[i] = 0;
+                                }
+                            }
+                            else
+                            {
+                                myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
+                                hiddenOrder = myhiddenorder.split(",");
+                            }
+
                             console.log("Montage order is " + myorder + " and hidden order is " + myhiddenorder);
                             montageOrder = myorder.split(",");
-                            hiddenOrder = myhiddenorder.split(",");
+
                             for (i = 0; i < montageOrder.length; i++) {
                                 montageOrder[i] = parseInt(montageOrder[i]);
                                 hiddenOrder[i] = parseInt(hiddenOrder[i]);
@@ -505,6 +536,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
     $scope.openMenu = function () {
+        $timeout (function() {
+            $rootScope.stateofSlide = $ionicSideMenuDelegate.isOpen();
+        },500);
+
         $ionicSideMenuDelegate.toggleLeft();
     };
 
@@ -594,6 +629,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
     });
 
+
+
+    $scope.doRefresh = function () {
+        console.log("***Pull to Refresh");
+        $scope.monitors = [];
+
+        var refresh = ZMDataModel.getMonitors(1);
+
+        refresh.then(function (data) {
+            $scope.monitors = data;
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+    };
 
 
 }]);

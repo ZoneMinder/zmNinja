@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		id="com.phonegap.plugins.OrientationLock"
+		version="0.1">
+
+	<name>OrientationLock</name>
+	<author>Emil Varga</author>
+
+	<description>
+		Android Cordova plugin for locking/unlocking the screen orientation from Javascript.
+	</description>
+
+	<license>MIT</license>
+
+	<js-module src="www/orientationLock.js" name="OrientationLock">
+		<clobbers target="OrientationLock" />
+	</js-module>
+
+	<engines>
+		<engine name="cordova" version=">=3.0.0" />
+	</engines>
+
+	<platform name="android">
+
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="OrientationLock" >
+				<param name="android-package" value="com.plugin.phonegap.OrientationLock"/>
+			</feature>
+		</config-file>
+
+		<source-file src="src/com/plugin/phonegap/OrientationLock.java" target-dir="src/com/plugin/phonegap/" />
+
+	</platform>
+</plugin>
