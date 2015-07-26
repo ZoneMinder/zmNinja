@@ -226,7 +226,12 @@ angular.module('zmApp.controllers')
         // This function is called when a user enables or disables
         // scrub view for an event.
         //-------------------------------------------------------------------------
-        $scope.toggleGroup = function (event, ndx, frames) {
+
+        $scope.toggleGroup = function(event,ndx,frames)
+        {
+            toggleGroup(event, ndx, frames);
+        };
+        function toggleGroup(event, ndx, frames) {
 
             // If we are here and there is a record of a previous scroll
             // then we need to scroll back to hide that view
@@ -357,8 +362,17 @@ angular.module('zmApp.controllers')
                 // we are turning off, so scroll by back
             }
 
-        };
+        }
 
+        $scope.closeIfOpen = function(event)
+        {
+            if (event != undefined)
+            {
+                if (event.Event.ShowScrub)
+                        toggleGroup(event);
+
+            }
+        };
 
         $scope.isGroupShown = function (event) {
             //  console.log ("IS SHOW INDEX is " + ndx);

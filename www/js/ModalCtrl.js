@@ -19,6 +19,15 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     //var imageStyle=1;
     //$scope.imageAspect = "max-width: 100%;max-height: 100%;";
     $scope.imageFit=false;
+    // FIXME: This is a hack - for some reason
+    // the custom slider view is messed up till the image loads
+    // in modal view
+    $scope.showModalRangeSider = false;
+
+    $timeout( function() {
+        $scope.showModalRangeSider = true;
+        console.log ("****SHOWING SLIDER");
+    },2000);
 
     $scope.radialMenuOptions = {
         content: '',
