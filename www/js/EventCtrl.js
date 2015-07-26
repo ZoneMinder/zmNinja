@@ -248,6 +248,7 @@ angular.module('zmApp.controllers')
             if (event.Event.ShowScrub==true) // turn on display now
             {
                 //$ionicScrollDelegate.freezeScroll(true);
+                $ionicSideMenuDelegate.canDragContent(false);
                 $scope.slider_options = {
                     from:1,
                     to:event.Event.Frames,
@@ -345,6 +346,7 @@ angular.module('zmApp.controllers')
             else
             {
                // $ionicScrollDelegate.freezeScroll(false);
+                $ionicSideMenuDelegate.canDragContent(true);
                 event.Event.height=zm.eventsListDetailsHeight;
                 $ionicScrollDelegate.resize();
 
