@@ -287,6 +287,11 @@ ul[rn-carousel] img {
     border-radius:2px
 }
 
+
+/*.mySliderClass.jslider.sliderCSS  div.jslider-pointer
+{top:-10px;left:15px;width:60px;height:60px;margin-left:-5px;background-color:silver;background-color:#615959;border-radius:50%
+}*/
+
 /*
 .bgimage {
     text-align:right;
