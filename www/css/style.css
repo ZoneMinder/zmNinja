@@ -273,6 +273,19 @@ ul[rn-carousel] img {
     line-height:5px;*/
 }
 
+.mySliderClass div.jslider-value
+{
+    position:absolute;
+    top:-25px;
+    left:0;padding:1px 2px 0;
+    background:#fff;font-size:9px;
+    line-height:12px;
+    white-space:nowrap;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    -o-border-radius:2px;
+    border-radius:2px
+}
 
 /*
 .bgimage {
