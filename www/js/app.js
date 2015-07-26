@@ -10,6 +10,7 @@ angular.module('zmApp', [
                             'tc.chartjs',
                             'zmApp.controllers',
                             'fileLogger'
+                            //'angularAwesomeSlider'
                         ])
 
 // ------------------------------------------
@@ -39,7 +40,9 @@ angular.module('zmApp', [
     monitorPendingColor: '#FF9800',
     monitorRunningColor: '#4CAF50',
     monitorErrorColor: '#795548',
-    montageScaleFrequency:300
+    montageScaleFrequency:300,
+    eventsListDetailsHeight:200,
+    eventsListScrubHeight:300
 
 
 
@@ -65,6 +68,59 @@ angular.module('zmApp', [
 
     };
 })
+
+
+
+//--------------------------------------------------------------------------------------------
+// This directive is adapted from https://github.com/paveisistemas/ionic-image-lazy-load
+// I've removed lazyLoad and only made it show a spinner when an image is loading
+//--------------------------------------------------------------------------------------------
+.directive('imageSpinnerSrc', ['$document',  '$compile',
+    function ($document , $compile) {
+        return {
+            restrict: 'A',
+            scope: {
+                imageSpinnerBackgroundImage: "@imageSpinnerBackgroundImage"
+            },
+            link: function ($scope, $element, $attributes) {
+
+                if ($attributes.imageSpinnerLoader) {
+                    var loader = $compile('<div class="image-loader-container"><ion-spinner style="position:fixed;top:5%;left:5%" class="image-loader" icon="' + $attributes.imageSpinnerLoader + '"></ion-spinner></div>')($scope);
+                    $element.after(loader);
+                }
+                            loadImage();
+
+                function loadImage() {
+                    $element.bind("load", function (e) {
+                        if ($attributes.imageSpinnerLoader) {
+                            loader.remove();
+                        }
+                    });
+
+                    if ($scope.imageSpinnerBackgroundImage == "true") {
+                        var bgImg = new Image();
+                        bgImg.onload = function () {
+                            if ($attributes.imageSpinnerLoader) {
+                                loader.remove();
+                            }
+                            $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')'; // set style attribute on element (it will load image)
+                        };
+                        bgImg.src = $attributes.imageSpinnerSrc;
+                    } else {
+                        $element[0].src = $attributes.imageSpinnerSrc; // set src attribute on element (it will load image)
+                    }
+                }
+
+                function isInView() {
+		    return true;
+                }
+
+                $element.on('$destroy', function () {
+                });
+
+            }
+        };
+    }])
 
 
 //------------------------------------------------------------------

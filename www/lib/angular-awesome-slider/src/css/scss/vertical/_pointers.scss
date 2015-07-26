@@ -1,0 +1,15 @@
+.vertical {
+  div.jslider-pointer {
+    left: 62%;
+    background-position: (-7px) -1px;
+    &.jslider-pointer-hover {
+      background-position: (-7px) -21px;
+    }
+    &.jslider-pointer-to {
+      left: 62%;
+    }
+    &.jslider-pointer-to.jslider-pointer-hover {
+      background-position: (-7px) -21px;
+    }
+  }
+}

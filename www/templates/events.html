@@ -25,125 +25,136 @@
     </div>
 
 
-    <ion-content on-tap="tapped();" delegate-handle="mainScroll">
+    <ion-content on-tap="tapped();" delegate-handle="mainScroll" lazy-scroll>
         <ion-refresher
-                       pulling-text="Tap the <i class='ion-refresh'></i> icon above to reload ..."
-                       spinner="bubbles" on-refresh="dummyDoRefresh();">
+                pulling-text="Tap the <i class='ion-refresh'></i> icon above to reload ..."
+                spinner="bubbles" on-refresh="dummyDoRefresh();">
         </ion-refresher>
 
-        <div ng-repeat="event in events| filter:search.text" >
-        <ion-item id="item-{{$index}}" ng-click="toggleGroup(event,$index,event.Event.Frames)"
-                    ng-class="{active: isGroupShown(event)}">
-              <i class="icon button-icon" ng-class="isGroupShown(event) ? 'ion-android-arrow-dropup-circle' : 'ion-android-arrow-dropdown-circle'"></i>
+        <!-- lets make sure the events list is not empty as collection repeat needs height -->
+        <div ng-if = "!eventsBeingLoaded">
+            <div class="list">
+                <div class="item" collection-repeat="event in events| filter:search.text"
+                     item-height="event.Event.height" id="item-{{$index}}">
+                    <div class="row">
+                        <div class="col col-left">
+                            <!-- this ngswitch displays different icons
+                                        depending on the cause of the event -->
 
-            <div class="row">
-                <div class="col col-left">
-                    <!-- this ngswitch displays different icons
-                                depending on the cause of the event -->
+                            <div ng-switch on="event.Event.Cause">
+                                <div ng-switch-when="Motion">
 
-                    <div ng-switch on="event.Event.Cause">
-                        <div ng-switch-when="Motion">
+                                    <i class="ion-android-walk" style="float:left; font-size:200%;"></i>
 
-                            <i class="ion-android-walk" style="float:left; font-size:200%;"></i>
+                                    <br/>
+                                </div>
+                                <div ng-switch-when="Signal">
+                                    <i class="ion-wifi" style="float:left; font-size:200%;"></i>
+                                    <br/>
+                                </div>
+                                <div ng-switch-default>
+                                    <i class="ion-ionic" style="float:left; font-size:200%;"></i>
+                                    <br/>
+                                </div>
+                            </div>
+                            <!-- ng switch -->
+                            <!-- {{event.Event.Cause}} -->
 
                             <br/>
+                            <span style="font-size:80%; color:rgb(110,110,110)">
+                                {{event.Event.Length}}s
+                            </span>
                         </div>
-                        <div ng-switch-when="Signal">
-                            <i class="ion-wifi" style="float:left; font-size:200%;"></i>
+                        <!-- col col left-->
+                        <div class="col col-80">
+                            <div class="item-text-wrap">
+                                <i class="ion-monitor"></i>
+                                <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}})
+                            </div>
+
+                            <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
+                            <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
+                            <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
+                        </div>
+                    </div> <!--row-->
+
+                    <div class="row" style="font-size:80%; color:rgb(110,110,110)">
+                        <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp;
+                            {{prettify(event.Event.StartTime)}}
                             <br/>
-                        </div>
-                        <div ng-switch-default>
-                            <i class="ion-ionic" style="float:left; font-size:200%;"></i>
+                            <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
                             <br/>
                         </div>
                     </div>
-                    <!-- ng switch -->
-                    <!-- {{event.Event.Cause}} -->
+                    <span style="float:right">
 
-                    <br/>
-                    <span style="font-size:80%; color:rgb(110,110,110)">
-                        {{event.Event.Length}}s
+                        <button class="button button-small icon icon-left ion-ios-eye"
+                                ng-click="toggleGroup(event,$index,event.Event.Frames)" > Quick Scrub
+                        </button>
+
+
+                        <button class="button button-small icon icon-left ion-ios-eye"
+                                ng-click="openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames, event.Event.BasePath)" > View Footage
+                    </button>
                     </span>
-                </div>
-                <!-- col col left-->
-                <div class="col col-80">
-                    <div class="item-text-wrap">
-                        <i class="ion-monitor"></i>
-                        <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}})
+
+
+                    <!-- this is the event scrub area -->
+                    <div ng-if = "isGroupShown(event)">
+                        <br/>
+                        <br/>
+                        <br/>
+
+                        <div style="width:90%">
+                            <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
+                        </div><br/>
+
+
+                        <!-- <div class="range" style="width:90%">
+                            <span class="events-alarm-line"></span>
+                            <input type="range"  ng-model="ionRange.index"
+                                   min="1"  max="{{event.Event.Frames}}"
+                                   step="1" list="steplist">
+                                <datalist id="steplist">
+                                    <option>0</option>
+                                    <option>10</option>
+                                    <option>15</option>
+                                    <option>20</option>
+                                    <option>25</option>
+                                </datalist>
+
+                        </div>-->
+                        <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
+
+                        <div style="height:190px">
+                            <ul rn-carousel  rn-carousel-buffered
+                                rn-carousel-transition="none" rn-swipe-disabled="true"
+                                rn-carousel-index="mycarousel.index"
+                                rn-carousel-auto-slide="0.3" rn-carousel-pause-on-hover >
+                                <li ng-repeat="slide in slides">
+                                        <img imageonload="finishedLoadingImage($index)"
+                                         image-spinner-src="{{event.Event.BasePath}}{{slide.img}}?rand={{rand}}"
+                                             image-spinner-loader="lines"
+                                             height="190px";/>
+
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
-                    <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
-                    <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
                 </div>
             </div>
-            <!--row-->
-
-            <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-                <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp;
-                    {{prettify(event.Event.StartTime)}}
-                    <br/>
-                    <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
-                    <br/>
-                </div>
-            </div>
-            <span style="float:right">
-                <button class="button button-small icon icon-left ion-ios-eye"
-                        ng-click="openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames)" > View Footage
-                </button>
-                <!--
-                <button class="button button-small icon icon-left ion-ios-eye"
-                        ng-click="openModalForScrub(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames,event.Event.BasePath)" > Scrub Footage
-                </button>-->
-                <!-- <br/>Path: {{event.Event.BasePath}}-->
-</span>
-        </ion-item>
-
-        <div ng-if = "isGroupShown(event)">
-        <ion-item class="item-accordion">
-
-
-                 <div class="range">
-
-                 <input type="range"  ng-model="ionRange.index" min="0"  max="{{event.Event.Frames-1}}">
-            </div>
-             <p>Frame {{mycarousel.index+1}} of {{event.Event.Frames}}</p>
-            <ul rn-carousel  rn-carousel-buffered   rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="0.3" rn-carousel-pause-on-hover >
-
-                <li ng-repeat="slide in slides">
-                        <img imageonload="finishedLoadingImage($index)"
-                         ng-src="{{event.Event.BasePath}}{{slide.img}}?rand={{rand}}" height="190px";/>
-
-                </li>
-            </ul>
-
-
-           <!-- <ion-scroll direction="x">
-            <div style="float:left;display:block;">-->
-           <!--
-           <ion-slide-box nav-clear delegate-handle="eventSlideBox" does-continue="true" slide-interval="500" show-pager="false" auto-play="true" ng-init="disableSlide()" >
-            <ion-slide nav-clear ng-repeat="file in files" >
-           <img imageonload="finishedLoadingImage()"
-                         ng-src="{{event.Event.BasePath}}{{file}}?rand={{rand}}" height="190px";/>
-            </ion-slide>
-
-
-            </ion-slide-box> -->
-
-
-            <!-- </div>
-            </ion-scroll>-->
-          </ion-item>
-            </div>
-
         </div>
 
         <ion-item ng-show="!events.length">
         No events to display.
         </ion-item>
 
-
-        <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="2%">
-        </ion-infinite-scroll>
+        <div ng-if = "!eventsBeingLoaded">
+            <ion-infinite-scroll ng-if="moreDataCanBeLoaded()"
+                                 icon="ion-loading-c"
+                                 on-infinite="loadMore()" distance="2%">
+            </ion-infinite-scroll>
+        </div>
     </ion-content>
 </ion-view>

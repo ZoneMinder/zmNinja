@@ -1,0 +1,18 @@
+.vertical {
+  div.jslider-scale {
+    position: inherit;
+    span {
+      position: absolute;
+      @include size(5px 1px);
+      border-left: none;
+      font-size: 0;
+      border-top: 1px solid #999;
+    }
+    ins {
+      @include position(absolute, 5px null 0 null);
+      font-size: 9px;
+      text-decoration: none;
+      color: $color-scale;
+    }
+  }
+}
