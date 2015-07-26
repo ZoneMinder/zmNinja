@@ -1,0 +1,12 @@
+div.jslider-value {
+  @include position(absolute, -19px null 0 null);
+  padding: 1px 2px 0;
+  // background: white
+  font-size: $font-size-pointers-value;
+  line-height: $line-height-pointers-value;
+  white-space: nowrap;
+  border-radius: 2px;
+  &.jslider-value-to {
+    left: 80%;
+  }
+}

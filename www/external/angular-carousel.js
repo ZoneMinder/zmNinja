@@ -38,24 +38,23 @@ angular.module('angular-carousel')
 	var toggleAutoPlay = function() {
 		if (scope.autoSlider)
 		{
-			scope.rnForceStop = true;
+			scope.rnForceStop = true; //PP
 			console.log ("***RN: Stopping Play");
 			stopAutoPlay();
 		}
 		else
 		{
-			scope.rnForceStop = false;
+			scope.rnForceStop = false; //PP
 			console.log ("***RN: Starting Play");
 			restartTimer();
 		}
 	};
-	scope.rnForceStop = false;
+	scope.rnForceStop = true; // PP
         scope.$watch('carouselIndex', restartTimer);
 
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
 	// PP
-            element.on('touchstart', toggleAutoPlay);
-            //element.on('click', toggleAutoPlay);
+            element.on('touchend', toggleAutoPlay);
             //element.on('mouseenter', stopAutoPlay);
             //element.on('mouseleave', restartTimer);
         }
@@ -488,7 +487,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                     $interval.cancel(scope.autoSlider);
                                     scope.autoSlider = null;
                                 }
-				if (!scope.rnForceStop)
+				if (!scope.rnForceStop) //PP
 				{
                                 	scope.autoSlider = $interval(function() {
                                     	if (!locked && !pressed ) {

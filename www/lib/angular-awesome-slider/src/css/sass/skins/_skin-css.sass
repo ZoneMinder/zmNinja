@@ -1,0 +1,110 @@
+$skin-gray: #777575
+$skin-gray-2: #615959
+
+// Main slider custom overrided js css rules
+
+.sliderCSS
+  div.jslider-bg
+    i
+      &.left
+        left: 0
+        width: 50%
+        background-color: $color-skin-background
+        background-image: none
+
+      &.right
+        width: 50%
+        left: 50%
+        background-color: $color-skin-background
+        background-image: none
+
+      &.before
+        left: 0
+        width: 1px
+        background-color: $color-skin-css-pointers-before-value
+        background-image: none
+
+      &.default
+        left: 0
+        width: 1px
+        z-index: 1
+        background-color: $color-skin-css-pointers-default-value
+        background-image: none
+
+      &.after
+        left: 0
+        background-color: $color-skin-css-pointers-after-value
+        background-image: none
+
+      &.range
+        +position(absolute, 0 null 20% null)
+        +size(60% 5px)
+        background-image: none
+        background-color: $skin-gray
+        z-index: 1
+
+  div.jslider-pointer
+    top: -3px
+    left: 15px
+    +size(10px)
+    background-color: silver
+    background-color: $skin-gray-2
+    border-radius: 50%
+
+  div.jslider-bg i, div.jslider-pointer
+    background: none
+
+  // vertical
+  &.vertical
+    td {
+      height: 100%;
+    }
+    div.jslider-bg
+      i
+        left: 50%
+        width: 5px
+
+        &.left
+          top: 0
+          height: 50%
+          background-color: $color-skin-background
+          background-image: none
+
+        &.right
+          height: 50%
+          top: 50%
+          background-color: $color-skin-background
+          background-image: none
+
+        &.range
+          height: 100%
+          z-index: 1
+          background-color: $skin-gray
+          background-image: none
+
+        &.before
+          background-color: $color-skin-css-pointers-before-value
+          background-image: none
+
+        &.default
+          height: 1px
+          background-color: $color-skin-css-pointers-default-value
+          background-image: none
+          z-index: 2
+
+        &.after
+          background-color: $color-skin-css-pointers-after-value
+          background-image: none
+
+    div.jslider-bg i, div.jslider-pointer
+      background: none
+
+    div.jslider-pointer
+      left: 50%
+      +size(10px)
+      background-color: $skin-gray-2
+      border-radius: 50%
+      margin-left: -3px
+
+      &.jslider-pointer-to
+        left: 50%

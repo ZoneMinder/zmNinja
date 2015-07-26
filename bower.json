@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "ng-mfb": "~0.4.0",
-    "angular-tooltips": "~0.1.14"
+    "angular-tooltips": "~0.1.14",
+    "ion-image-lazy-load": "*"
   }
 }

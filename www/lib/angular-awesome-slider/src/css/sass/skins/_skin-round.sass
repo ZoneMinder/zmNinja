@@ -1,0 +1,56 @@
+// Round Skin
+
+.jslider_round
+	div.jslider-bg i,
+	div.jslider-pointer
+		background: url("../img/jslider.round.png") no-repeat 0 0
+
+	div.jslider-bg
+		i
+			background-position: 0 -20px
+
+			&.default
+				background-color: $gray2
+
+			&.range
+				z-index: 1
+				background-position: 0 -40px
+
+	div.jslider-pointer
+		top: -6px
+		+size(20px 17px)
+		background-position: 0 -60px
+		z-index: 2
+
+	&.vertical
+		div.jslider-bg i,
+		div.jslider-pointer
+			background: url("../img/jslider.round.vertical.png") no-repeat 0 0
+
+		div.jslider-bg
+			i
+				background-position: right 0
+
+				&.range
+					background-position: -37px 0
+
+				&.before,
+				&.after
+					background: none
+
+				&.default
+					background-color: $color-skin-pointers-default-value
+
+		div.jslider-pointer
+			top: -6px
+			+size(20px 17px)
+			background-position: -4px -3px
+
+			&.jslider-pointer-hover
+				background-position: -4px -23px
+
+			&.jslider-value-to
+				left: 80%
+
+		div.jslider-value
+			left: 0

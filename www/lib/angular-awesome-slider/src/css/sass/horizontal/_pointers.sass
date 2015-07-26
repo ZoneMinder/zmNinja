@@ -1,0 +1,21 @@
+// single value hide to
+.jslider-single
+	div.jslider-pointer-to,
+	div.jslider-value-to,
+	div.jslider-bg .v,
+	.jslider-limitless .jslider-label
+		display: none
+
+div.jslider-pointer
+	+position(absolute, -4px null 20% null)
+	+size(15px)
+	background-position: 2px -60px
+	margin-left: -8px
+	cursor: hand
+	z-index: 2
+
+	&.jslider-pointer-to
+		left: 80%
+
+	&.jslider-pointer-hover
+		background-position: -19px -60px

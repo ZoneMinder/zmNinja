@@ -1,32 +1,50 @@
 <div ng-controller="ModalCtrl">
     <ion-modal-view cache="false">
-        <ion-content style="background-color:#444444">
+        <ion-content style="background-color:#444444"  ng-cloak>
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true"
                         direction="xy" style="width: 100%; ">
                 <div style="height: 100vh;">
-                    <img imageonload="finishedLoadingImage()"
-                         ng-src="{{loginData.streamingurl}}/cgi-bin/zms?source=event&mode=jpeg&event={{eventId}}&frame=1&maxfps={{loginData.maxFPS}}&replay=single&user={{loginData.username}}&pass={{loginData.password}}&connkey={{connKey}}&rand={{rand}}"
-                         ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" />
+
+                     <ul rn-carousel  rn-carousel-buffered
+                    rn-carousel-transition="none" rn-swipe-disabled="true"
+                    rn-carousel-index="mycarousel.index"
+                    rn-carousel-auto-slide="0.3" rn-carousel-pause-on-hover >
+
+                    <li ng-repeat="slide in slides">
+
+                            <img imageonload="finishedLoadingImage($index)"
+                                image-spinner-src="{{eventBasePath}}{{slide.img}}?rand={{rand}}"
+                                image-spinner-loader="lines"
+                                ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}";/>
+
+                    </li>
+                </ul>
+
                 </div>
             </ion-scroll>
+
+
+
         </ion-content>
     </ion-modal-view>
 
-    <nav mfb-menu position="br" effect="zoomin" label="collapse"
-         active-icon="ion-chevron-down" resting-icon="ion-chevron-up"
+    <nav mfb-menu position="tr" effect="zoomin" label="collapse"
+         active-icon="ion-chevron-up" resting-icon="ion-chevron-down"
          toggling-method="click">
 
         <a mfb-button icon="ion-arrow-resize" label="fit image"
            ng-click="scaleImage();"></a>
-        <a mfb-button icon="ion-reply" label="previous event"
+        <!--<a mfb-button icon="ion-reply" label="previous event"
            ng-click="controlEventStream(eventCommands.previous)"></a>
         <a mfb-button icon="ion-forward" label="next event"
-           ng-click="controlEventStream(eventCommands.next)"></a>
+           ng-click="controlEventStream(eventCommands.next)"></a>-->
         <a mfb-button icon="ion-close"
                 label="exit event view" ng-click="closeModal()"> </a>
 
     </nav>
 
+
+<!--
     <nav mfb-menu position="bl" effect="zoomin" label="collapse"
          active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
         <a mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView()"></a>
@@ -52,6 +70,15 @@
 
     <progress max="{{totalEventTime}}" value="{{currentEventTime}}"
               class="eventprogress"></progress>
+-->
+    <div class="events-range-modal">
 
+        <div style="width:90%">
+            <input ng-model="ionRange.index" type="text" id="mySlider2" slider options="slider_modal_options" />
+        </div>
 
+      <!-- <div class="range">
+        <input type="range"  ng-model="ionRange.index" min="0"  max="{{eFramesNum-1}}" >
+      </div>-->
+        </div>
 </div>

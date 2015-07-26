@@ -8,7 +8,8 @@
 
                     <div style="height: 100vh;">
                         <img imageonload="finishedLoadingImage()"
-                             ng-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" on-swipe-left="onSwipeLeft(monitorId,-1)" on-swipe-right="onSwipeRight(monitorId,1)" />
+                             image-spinner-loader="lines"
+                             image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{rand}}" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" on-swipe-left="onSwipeLeft(monitorId,-1)" on-swipe-right="onSwipeRight(monitorId,1)" />
                     </div>
                 </ion-scroll>
         </ion-content>

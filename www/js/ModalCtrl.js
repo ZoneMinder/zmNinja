@@ -220,7 +220,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     }
 
     $scope.finishedLoadingImage = function () {
-        console.log("***Monitor image FINISHED Loading***");
+       // console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
 
     };
