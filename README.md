@@ -1,10 +1,10 @@
-![](http://www.pbase.com/arjunrc/image/159870143/original.jpg "icon") zmNinja is a multi platform client for ZoneMinder users.
+![](http://www.pbase.com/arjunrc/image/160698295.jpg "icon") zmNinja is a multi platform client for ZoneMinder users.
 ZoneMinder is an incredible open source camera monitoring system and is used
 by many for home and commercial security monitoring. http://www.zoneminder.com
 
 Features
 --------
-Please see the [Wiki](https://github.com/arjunroychowdhury/zmNinja/wiki)
+Please see the [Wiki](https://github.com/pliablepixels/zmNinja/wiki)
 
 Thanks
 ------
@@ -45,6 +45,12 @@ Menu:
 Events List:
 
 ![](http://www.pbase.com/arjunrc/image/160697725/medium.jpg "Events List")
+
+Event Quick Scrub:
+
+![]
+(http://www.pbase.com/arjunrc/image/160851403/medium.jpg "Events Scrub")
+
 
 Full Screen Events Footage View (with floating buttons)
 ![](http://www.pbase.com/arjunrc/image/160697734/medium.jpg "Events View")
