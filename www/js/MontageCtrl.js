@@ -11,16 +11,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     // Controller main
     //---------------------------------------------------------------------
 
-   /* console.log ("IMAGES***************");
-    var fooImages = [
-                        {src:'http://www.pbase.com/arjunrc/image/160698184.jpg'},
-                        {src:'http://www.pbase.com/arjunrc/image/160697822.jpg'},
-                        {src:'http://www.pbase.com/arjunrc/image/160697821.jpg'},
-                        {src:'http://www.pbase.com/arjunrc/image/160697740.jpg'}
-    ];
 
-    $scope.fl = fooImages.length;
-    $scope.fooImages = fooImages;*/
 
     document.addEventListener("pause", onPause, false);
 
@@ -176,6 +167,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     this.loadNotifications = function () {
         // randomval is appended to img src, so after each interval the image reloads
         $scope.randomval = (new Date()).getTime();
+       // console.log ("New " + $scope.randomval);
     };
 
     var intervalHandle = $interval(function () {
