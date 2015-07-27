@@ -1,4 +1,4 @@
-![](http://www.pbase.com/arjunrc/image/160698295.jpg "icon") zmNinja is a multi platform client for ZoneMinder users.
+![](http://www.pbase.com/arjunrc/image/160855207.jpg "icon") zmNinja is a multi platform client for ZoneMinder users.
 ZoneMinder is an incredible open source camera monitoring system and is used
 by many for home and commercial security monitoring. http://www.zoneminder.com
 
