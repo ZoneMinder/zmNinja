@@ -1,6 +1,7 @@
 <div ng-controller="ModalCtrl">
     <ion-modal-view cache="false">
         <ion-content style="background-color:#444444"  ng-cloak>
+
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true"
                         direction="xy" style="width: 100%; ">
                 <div style="height: 100vh;">
@@ -8,7 +9,7 @@
                      <ul rn-carousel  rn-carousel-buffered
                     rn-carousel-transition="none" rn-swipe-disabled="true"
                     rn-carousel-index="mycarousel.index"
-                    rn-carousel-auto-slide="0.3" rn-carousel-pause-on-hover >
+                    rn-carousel-auto-slide="{{calcMsTimer(eFramesNum, eventDur)/1000.0}}" rn-carousel-pause-on-hover >
 
                     <li ng-repeat="slide in slides">
 

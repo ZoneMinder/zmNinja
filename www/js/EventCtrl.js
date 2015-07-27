@@ -160,6 +160,15 @@ angular.module('zmApp.controllers')
         // not explictly handling error --> I have a default "No events found" message
         // displayed in the template if events list is null
 
+        $scope.calcMsTimer = function(frames,len)
+        {
+            var myframes, mylen;
+             myframes = parseFloat(frames);
+             mylen = parseFloat(len);
+          //  console.log ("frames " + myframes + "length " + mylen);
+          //  console.log ("*** MS COUNT " + (1000.0/(myframes/mylen)));
+            return (Math.round(1000/(myframes/mylen)));
+        };
 
         $scope.openMenu = function () {
             $ionicSideMenuDelegate.toggleLeft();
