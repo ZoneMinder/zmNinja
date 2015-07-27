@@ -17,7 +17,7 @@
   <preference name="BackupWebStorage" value="none"/>
   <preference name="AutoHideSplashScreen" value="true"/>
   <preference name="SplashScreen" value="screen"/>
-  <preference name="deployment-target" value="7.0" />
+  <preference name="deployment-target" value="7.0"/>
   <preference name="SplashScreenDelay" value="3000"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
