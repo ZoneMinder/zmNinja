@@ -101,6 +101,7 @@
 
                     <!-- this is the event scrub area -->
                     <div ng-if = "isGroupShown(event)">
+
                         <br/>
                         <br/>
                         <br/>
@@ -130,7 +131,7 @@
                             <ul rn-carousel  rn-carousel-buffered
                                 rn-carousel-transition="none" rn-swipe-disabled="true"
                                 rn-carousel-index="mycarousel.index"
-                                rn-carousel-auto-slide="0.3" rn-carousel-pause-on-hover >
+                                rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover >
                                 <li ng-repeat="slide in slides">
                                         <img imageonload="finishedLoadingImage($index)"
                                          image-spinner-src="{{event.Event.BasePath}}{{slide.img}}?rand={{rand}}"
