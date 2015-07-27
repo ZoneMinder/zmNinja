@@ -6,14 +6,10 @@ Be nice, please
 
 If you have any questions on licensing feel free to contact me
 
-The application icon and splash image uses the ninja drawing  by Hector Gomez
-and a burglar image by tzunghaor
-https://openclipart.org/detail/63727/ninja
-https://openclipart.org/detail/165656/burglar
+Ninja icon;
+https://openclipart.org/detail/172393/ninja-logo
 License: https://openclipart.org/share
 
-The font used in the icon and splash is Kaneiwa
-http://www.fontspace.com/family-font-mart/kaneiwa
 
 
 
