@@ -89,6 +89,12 @@ angular.module('zmApp', [
                     $element.after(loader);
                 }
                             loadImage();
+                $attributes.$observe('imageSpinnerSrc', function(value){
+                    //console.log ("SOURCE CHANGED");
+                     loadImage();
+                 //deregistration();
+
+                });
 
                 function loadImage() {
                     $element.bind("load", function (e) {
