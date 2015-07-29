@@ -20,10 +20,13 @@ angular.module('angular-carousel', [
 
 angular.module('angular-carousel')
 
-.directive('rnCarouselAutoSlide', ['$interval', function($interval) {
+// PP modified carousel to work in conjunction with lazy loading
+// so slide does not progress if image is not loaded or gets an error
+.directive('rnCarouselAutoSlide', ['$interval','$timeout', 'imageLoadingDataShare', function($interval,$timeout, imageLoadingDataShare) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
+
 
         var stopAutoPlay = function() {
             if (scope.autoSlider) {
@@ -34,7 +37,7 @@ angular.module('angular-carousel')
         var restartTimer = function() {
             scope.autoSlide();
         };
-	//PP
+	//PP - don't auto play if user taps
 	var toggleAutoPlay = function() {
 		if (scope.autoSlider)
 		{
@@ -49,14 +52,16 @@ angular.module('angular-carousel')
 			restartTimer();
 		}
 	};
+
+// start with non-autoplay and require tap to start
 	scope.rnForceStop = true; // PP
         scope.$watch('carouselIndex', restartTimer);
 
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
 	// PP
             element.on('touchend', toggleAutoPlay);
-            //element.on('mouseenter', stopAutoPlay);
-            //element.on('mouseleave', restartTimer);
+            element.on('mouseenter', stopAutoPlay);
+            element.on('mouseleave', restartTimer);
         }
 
         scope.$on('$destroy', function(){
@@ -216,8 +221,8 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
         };
     })
 
-    .directive('rnCarousel', ['$swipe', '$window', '$document', '$parse', '$compile', '$timeout', '$interval', 'computeCarouselSlideStyle', 'createStyleString', 'Tweenable',
-        function($swipe, $window, $document, $parse, $compile, $timeout, $interval, computeCarouselSlideStyle, createStyleString, Tweenable) {
+    .directive('rnCarousel', ['$swipe', '$window', '$document', '$parse', '$compile', '$timeout', '$interval', 'computeCarouselSlideStyle', 'createStyleString', 'Tweenable', 'imageLoadingDataShare',
+        function($swipe, $window, $document, $parse, $compile, $timeout, $interval, computeCarouselSlideStyle, createStyleString, Tweenable, imageLoadingDataShare) {
             // internal ids to allow multiple instances
             var carouselId = 0,
                 // in absolute pixels, at which distance the slide stick to the edge on release
@@ -240,6 +245,8 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
             return {
                 restrict: 'A',
                 scope: true,
+                // PP try and do a link here too
+
                 compile: function(tElement, tAttributes) {
                     // use the compile phase to customize the DOM
                     var firstChild = tElement[0].querySelector('li'),
@@ -347,14 +354,20 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         }
 
                         scope.nextSlide = function(slideOptions) {
+			   if (imageLoadingDataShare.get() == 1)
+			   {
+				console.log ("Image is still loading, not skipping slides");
+				return;
+			   }
                             var index = scope.carouselIndex + 1;
                             if (index > currentSlides.length - 1) {
 //PP
                                 index--;
                             }
-                            if (!locked) {
+                            if (!locked ) {
                                 goToSlide(index, slideOptions);
                             }
+
                         };
 
                         scope.prevSlide = function(slideOptions) {
