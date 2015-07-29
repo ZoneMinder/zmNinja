@@ -9,7 +9,8 @@ angular.module('zmApp', [
                             'ionic',
                             'tc.chartjs',
                             'zmApp.controllers',
-                            'fileLogger'
+                            'fileLogger',
+    'angular-carousel', 'angularAwesomeSlider'
                             //'angularAwesomeSlider'
                         ])
 
@@ -48,6 +49,20 @@ angular.module('zmApp', [
 
 })
 
+.factory('imageLoadingDataShare', function () {
+    var imageLoading = 0; // 0 = not loading, 1 = loading, -1 = error;
+    return {
+        'set': function (val) {
+            imageLoading = val;
+            //console.log ("** IMAGE  LOADING **"+val);
+        },
+        'get': function() {
+
+            return imageLoading;
+        }
+    };
+})
+
 //------------------------------------------------------------------
 // this directive will be load any time an image completes loading 
 // via img tags where this directive is added (I am using this in
@@ -75,8 +90,8 @@ angular.module('zmApp', [
 // This directive is adapted from https://github.com/paveisistemas/ionic-image-lazy-load
 // I've removed lazyLoad and only made it show a spinner when an image is loading
 //--------------------------------------------------------------------------------------------
-.directive('imageSpinnerSrc', ['$document',  '$compile',
-    function ($document , $compile) {
+.directive('imageSpinnerSrc', ['$document',  '$compile','imageLoadingDataShare',
+    function ($document , $compile, imageLoadingDataShare) {
         return {
             restrict: 'A',
             scope: {
@@ -88,9 +103,11 @@ angular.module('zmApp', [
                     var loader = $compile('<div class="image-loader-container"><ion-spinner style="position:fixed;top:5%;left:5%" class="image-loader" icon="' + $attributes.imageSpinnerLoader + '"></ion-spinner></div>')($scope);
                     $element.after(loader);
                 }
+                            imageLoadingDataShare.set(1);
                             loadImage();
                 $attributes.$observe('imageSpinnerSrc', function(value){
                     //console.log ("SOURCE CHANGED");
+                    imageLoadingDataShare.set(1);
                      loadImage();
                  //deregistration();
 
@@ -100,8 +117,16 @@ angular.module('zmApp', [
                     $element.bind("load", function (e) {
                         if ($attributes.imageSpinnerLoader) {
                             loader.remove();
+                            imageLoadingDataShare.set(0);
                         }
                     });
+                    //PP
+                     $element.bind('error', function(){
+                                loader.remove();
+                         imageLoadingDataShare.set(0);
+                    });
+
+
 
                     if ($scope.imageSpinnerBackgroundImage == "true") {
                         var bgImg = new Image();

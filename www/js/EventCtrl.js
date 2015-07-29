@@ -320,7 +320,7 @@ angular.module('zmApp.controllers')
                         if (data.event.Frame[i].Type=="Alarm")
                         {
                             //⬤
-                            console.log ("**ALARM AT " + i);
+                            //console.log ("**ALARM AT " + i);
                            $scope.slider_options.scale.push({val:i+1,label:' '});
                         }
                         else
@@ -737,6 +737,7 @@ angular.module('zmApp.controllers')
                         img: fname
                     });
                 }
+
 
                    // now get event details to show alarm frames
                 var loginData=ZMDataModel.getLogin();

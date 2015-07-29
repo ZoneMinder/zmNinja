@@ -13,7 +13,7 @@
 
                     <li ng-repeat="slide in slides">
 
-                            <img imageonload="finishedLoadingImage($index)"
+                            <img id="hello" imageonload="finishedLoadingImage($index)"
                                 image-spinner-src="{{eventBasePath}}{{slide.img}}?rand={{rand}}"
                                 image-spinner-loader="lines"
                                 ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}";/>
