@@ -10,7 +10,8 @@ angular.module('zmApp', [
                             'tc.chartjs',
                             'zmApp.controllers',
                             'fileLogger',
-    'angular-carousel', 'angularAwesomeSlider'
+                            'angular-carousel',
+                            'angularAwesomeSlider'
                             //'angularAwesomeSlider'
                         ])
 
@@ -289,6 +290,8 @@ angular.module('zmApp', [
 
 
     ZMDataModel.init();
+
+
     var loginData = ZMDataModel.getLogin();
 
     if (ZMDataModel.isLoggedIn()) {
@@ -300,10 +303,18 @@ angular.module('zmApp', [
     }
 
     // This code takes care of trapping the Android back button
-    // and takes it to the menu. FIXME: For some reason, isOpen of Side
-    // MenuDelegate always returns False, so I don't know
-    // when its on or off, so can't exit the app if its on
+    // and takes it to the menu.
 
+
+    $ionicPlatform.registerBackButtonAction(function(e) {
+        e.preventDefault();
+        if (!$ionicSideMenuDelegate.isOpenLeft()) {
+            $ionicSideMenuDelegate.toggleLeft();
+            console.log ("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
+        } else {
+            navigator.app.exitApp();
+        }
+    }, 1000);
 
 
 
