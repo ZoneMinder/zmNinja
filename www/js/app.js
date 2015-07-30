@@ -402,12 +402,12 @@ angular.module('zmApp', [
 
          }
 
-        /*setTimeout(function () {
+        setTimeout(function () {
             if (window.cordova)
             {
                 $cordovaSplashscreen.hide();
             }
-            }, 1500);*/
+            }, 1500);
 
         if(window.navigator && window.navigator.splashscreen) {
             window.navigator.splashscreen.hide();
