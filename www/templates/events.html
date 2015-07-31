@@ -94,7 +94,7 @@
 
 
                         <button class="button button-small icon icon-left ion-ios-eye"
-                                ng-click="closeIfOpen(event);openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames, event.Event.BasePath)" > View Footage
+                                ng-click="closeIfOpen(event);openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames, event.Event.BasePath, event.Event.relativePath)" > View Footage
                     </button>
                     </span>
 
@@ -133,10 +133,22 @@
                                 rn-carousel-index="mycarousel.index"
                                 rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover >
                                 <li ng-repeat="slide in slides">
-                                        <img imageonload="finishedLoadingImage($index)"
-                                         image-spinner-src="{{event.Event.BasePath}}{{slide.img}}?rand={{rand}}"
+
+                                     <img imageonload="finishedLoadingImage($index)"
+                                         image-spinner-src="{{loginData.url}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}"
                                              image-spinner-loader="lines"
                                              height="190px";/>
+                                    <br/>
+
+
+                                     <!-- <img image-spinner-src="{{loginData.url}}cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&scale=100&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}" height="190px;"
+                           image-spinner-loader="lines"
+                         />-->
+
+                                        <!--<img imageonload="finishedLoadingImage($index)"
+                                         image-spinner-src="{{event.Event.BasePath}}{{slide.img}}?rand={{rand}}"
+                                             image-spinner-loader="lines"
+                                             height="190px";/>-->
 
                                 </li>
                             </ul>

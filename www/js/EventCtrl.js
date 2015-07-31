@@ -140,6 +140,14 @@ angular.module('zmApp.controllers')
                                 min + "/" +
                                 sec + "/";
 
+                            myevents[i].Event.relativePath =
+ myevents[i].Event.MonitorId + "/" +
+                                yy + "/" +
+                                mm + "/" +
+                                dd + "/" +
+                                hh + "/" +
+                                min + "/" +
+                                sec + "/";
 
                         }
 
@@ -687,7 +695,7 @@ angular.module('zmApp.controllers')
         //earlier won't work
         //--------------------------------------------------------
 
-        $scope.openModal = function (eid, ename, edur, eframes, basepath) {
+        $scope.openModal = function (eid, ename, edur, eframes, basepath, relativepath) {
             console.log("Open Modal with Base path " + basepath);
             $scope.eventName = ename;
             $scope.eventId = eid;
@@ -695,6 +703,7 @@ angular.module('zmApp.controllers')
             $scope.eventDur = Math.round(edur);
             $scope.loginData = ZMDataModel.getLogin();
             $scope.eventBasePath = basepath;
+            $scope.relativePath = relativepath;
             $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
             $scope.slider_modal_options = {
@@ -924,6 +933,14 @@ angular.module('zmApp.controllers')
 
                             myevents[i].Event.BasePath = loginData.url + "/events/" +
                                 myevents[i].Event.MonitorId + "/" +
+                                yy + "/" +
+                                mm + "/" +
+                                dd + "/" +
+                                hh + "/" +
+                                min + "/" +
+                                sec + "/";
+
+                            myevents[i].Event.relativePath = myevents[i].Event.MonitorId + "/" +
                                 yy + "/" +
                                 mm + "/" +
                                 dd + "/" +

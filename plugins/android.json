@@ -41,10 +41,6 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"StatusBar\"><param name=\"android-package\" value=\"org.apache.cordova.statusbar.StatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
@@ -58,6 +54,10 @@
                         },
                         {
                             "xml": "<feature name=\"OrientationLock\"><param name=\"android-package\" value=\"com.plugin.phonegap.OrientationLock\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -103,9 +103,6 @@
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "org.apache.cordova.splashscreen": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
         "org.apache.cordova.statusbar": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
@@ -116,6 +113,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "com.phonegap.plugins.OrientationLock": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
