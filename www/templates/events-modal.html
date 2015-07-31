@@ -13,10 +13,15 @@
 
                     <li ng-repeat="slide in slides">
 
-                            <img id="hello" imageonload="finishedLoadingImage($index)"
+                         <img imageonload="finishedLoadingImage($index)"
+                                         image-spinner-src="{{loginData.url}}/index.php?view=image&path={{relativePath}}{{slide.img}}"
+                                             image-spinner-loader="lines"
+                                             ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}"/>
+
+                            <!--<img id="hello" imageonload="finishedLoadingImage($index)"
                                 image-spinner-src="{{eventBasePath}}{{slide.img}}?rand={{rand}}"
                                 image-spinner-loader="lines"
-                                ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}";/>
+                                ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}";/>-->
 
                     </li>
                 </ul>

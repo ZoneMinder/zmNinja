@@ -19,14 +19,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "org.apache.cordova.splashscreen": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.splashscreen"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "org.apache.cordova.statusbar": {
         "source": {
             "type": "registry",
@@ -55,14 +47,6 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-crosswalk-webview"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-splashscreen": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-splashscreen"
         },
         "is_top_level": true,
         "variables": {}
@@ -125,6 +109,14 @@
             "type": "git",
             "url": "https://github.com/cogitor/PhoneGap-OrientationLock.git",
             "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-splashscreen": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-splashscreen"
         },
         "is_top_level": true,
         "variables": {}

@@ -1,4 +1,6 @@
+/* jshint ignore:start */
 /**
+
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
  * @version v0.3.12 - 2015-06-11
  * @link http://revolunet.github.com/angular-carousel
@@ -13,6 +15,9 @@ http://github.com/revolunet/angular-carousel
 
 */
 
+// Modified by PP for mobile friendly touch, start without auto slide but enabled it if tapped
+// and logic to wait for an image to load before it slides to the next one
+
 angular.module('angular-carousel', [
     'ngTouch',
     'angular-carousel.shifty'
@@ -22,6 +27,8 @@ angular.module('angular-carousel')
 
 // PP modified carousel to work in conjunction with lazy loading
 // so slide does not progress if image is not loaded or gets an error
+// imageLoadingDataShare is the factory that has a value
+// of 0 if no image is being loaded, -1 if there was an error and 1 if an image is currently being loaded
 .directive('rnCarouselAutoSlide', ['$interval','$timeout', 'imageLoadingDataShare', function($interval,$timeout, imageLoadingDataShare) {
   return {
     restrict: 'A',
@@ -41,6 +48,7 @@ angular.module('angular-carousel')
 	var toggleAutoPlay = function() {
 		if (scope.autoSlider)
 		{
+            // PP - If autoslide was on and we tapped, stop auto slide
 			scope.rnForceStop = true; //PP
 			console.log ("***RN: Stopping Play");
 			stopAutoPlay();
@@ -58,7 +66,7 @@ angular.module('angular-carousel')
         scope.$watch('carouselIndex', restartTimer);
 
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
-	// PP
+	// PP - added touchend to make it react to touch devices
             element.on('touchend', toggleAutoPlay);
             element.on('mouseenter', stopAutoPlay);
             element.on('mouseleave', restartTimer);
@@ -68,6 +76,7 @@ angular.module('angular-carousel')
             stopAutoPlay();
             element.off('mouseenter', stopAutoPlay);
             element.off('mouseleave', restartTimer);
+            element.off('touchend', toggleAutoPlay); // PP - remove touchend too
         });
     }
   };
@@ -245,7 +254,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
             return {
                 restrict: 'A',
                 scope: true,
-                // PP try and do a link here too
+
 
                 compile: function(tElement, tAttributes) {
                     // use the compile phase to customize the DOM
@@ -354,7 +363,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         }
 
                         scope.nextSlide = function(slideOptions) {
-			   if (imageLoadingDataShare.get() == 1)
+			   if (imageLoadingDataShare.get() == 1) // PP- If the image is still being loaded, hold on, don't change
 			   {
 				console.log ("Image is still loading, not skipping slides");
 				return;
@@ -494,13 +503,14 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         }
 
                         if (iAttributes.rnCarouselAutoSlide!==undefined) {
+                            // PP was parseInt, changed to parseFloat so I can specify fractions of seconds
                             var duration = parseFloat(iAttributes.rnCarouselAutoSlide, 10) || options.autoSlideDuration;
                             scope.autoSlide = function() {
                                 if (scope.autoSlider) {
                                     $interval.cancel(scope.autoSlider);
                                     scope.autoSlider = null;
                                 }
-				if (!scope.rnForceStop) //PP
+				if (!scope.rnForceStop) //PP - don't move slide if this variable is set
 				{
                                 	scope.autoSlider = $interval(function() {
                                     	if (!locked && !pressed ) {
@@ -2144,3 +2154,4 @@ angular.module('angular-carousel.shifty', [])
     });
 
 })();
+/* jshint ignore:end */

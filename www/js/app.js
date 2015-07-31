@@ -4,6 +4,7 @@
 
 
 var appVersion = "0.0.0";
+
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
@@ -12,7 +13,7 @@ angular.module('zmApp', [
                             'fileLogger',
                             'angular-carousel',
                             'angularAwesomeSlider'
-                            //'angularAwesomeSlider'
+
                         ])
 
 // ------------------------------------------
@@ -163,9 +164,17 @@ angular.module('zmApp', [
 // That way the user can try again, and won't get stuck
 // Also remember you need to add it to .config
 //------------------------------------------------------------------
-.factory('timeoutHttpIntercept', function ($rootScope, $q,zm) {
+.factory('timeoutHttpIntercept', function ($rootScope, $q,zm, $cookieStore) {
+    var zmCookie = "";
+
     return {
         'request': function (config) {
+           // config.withCredentials = true;
+            if (zmCookie)
+            {
+               // console.log ("** ADDING COOKIE TO REQUEST "+zmCookie);
+               config.headers.Cookie = "ZMSESSID="+zmCookie;
+            }
             if ( !(config.url.indexOf("/api/states/change/") > -1 ||
                 config.url.indexOf("getDiskPercent.json") > -1 ))
             {
@@ -176,6 +185,21 @@ angular.module('zmApp', [
                 //console.log ("HTTP INTERCEPT:Skipping HTTP timeout for "+config.url);
             }
             return config;
+        },
+
+        'response': function (response)
+        {
+            //console.log ("******** WHOA RESPONSE CAUGHT ************");
+            var cookies = response.headers("Set-Cookie");
+            if (cookies !=null)
+            {
+
+                var zmSess=cookies.match("ZMSESSID=(.*?);");
+                console.log ("***RESPONSE HEADER COOKIE " + zmSess[1]);
+                console.log ("WHOLE STRING " + cookies);
+                zmCookie=zmSess[1];
+            }
+            return response;
         }
 
 
@@ -186,7 +210,7 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm)  {
+.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm, $browser,$timeout)  {
     var zmAutoLoginHandle;
     function doLogin()
     {
@@ -195,6 +219,7 @@ angular.module('zmApp', [
         var loginData = ZMDataModel.getLogin();
         $http({
             method:'POST',
+             //withCredentials: true,
             url:loginData.url + '/index.php',
             headers:{
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -217,10 +242,14 @@ angular.module('zmApp', [
                 view:"console"
             }
         })
-        .success(function(data)
+        .success(function(data,status,headers)
         {
             console.log ("**** ZM Login OK");
             ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
+            //$cookies.myFavorite = 'oatmeal';
+            $timeout( function() {console.log ("***** ALL COOKIES:" + JSON.stringify(  $browser.cookies()));},1000);
+            console.log ("***** ALL HEADERS:" + headers('cookie'));
+
         })
         .error(function(error)
         {
@@ -287,7 +316,7 @@ angular.module('zmApp', [
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory, $window, $ionicSideMenuDelegate)
 {
 
-
+ $rootScope.zmGlobalCookie="";
 
     ZMDataModel.init();
 
@@ -407,13 +436,13 @@ angular.module('zmApp', [
             {
                 $cordovaSplashscreen.hide();
             }
-            }, 1500);
+            }, 2000);
 
-        if(window.navigator && window.navigator.splashscreen) {
+        /*if(window.navigator && window.navigator.splashscreen) {
             window.navigator.splashscreen.hide();
             console.log ("Unlocking portrait mode after splash");
             window.plugins.orientationLock.unlock();
-   }
+        }*/
 
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
