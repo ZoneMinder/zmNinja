@@ -6299,7 +6299,7 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
     height: 28px;
     border-radius: 50%;
     background-color: #fff;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0.3), 0 0px 0px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     -webkit-appearance: none;
     border: 0; }
@@ -6331,7 +6331,7 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
     border-radius: 50%;
     background-color: #fff;
     border-color: #fff;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0.3), 0 0px 0px rgba(0, 0, 0, 0.2);
     margin-left: 1px;
     margin-right: 1px;
     outline: none; }

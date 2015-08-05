@@ -16,18 +16,18 @@
         <!--<button class="button button-icon ion-ios-help-outline" ng-click="popover.show($event)"></button>-->
         </ion-nav-buttons>
 
-    <ion-content has-bouncing="false" style="background-color:#e5e5e5">
+    <ion-content has-bouncing="false" style="background-color:#444444">
         <ion-refresher pulling-text="Pull to reload Monitors..."
                        spinner="bubbles" on-refresh="doRefresh()">
         </ion-refresher>
 
         <!--{{stateofSlide}} Status-->
         <span ng-show="!minimal">
-                <div class=" range range-positive">
-                    <i class="icon ion-arrow-shrink"></i>
+                <div class="range range-positive">
+                    <i style="color:#bbbbbb" class="icon ion-arrow-shrink"></i>
                     <input type="range" ng-model="slider.monsize" min="1"
                            max="6" ng-change="sliderChanged(slider.monsize)">
-                    <i class="icon ion-arrow-expand"></i>
+                    <i style="color:#bbbbbb" class="icon ion-arrow-expand"></i>
 
                 </div>
         </span>

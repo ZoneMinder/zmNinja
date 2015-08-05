@@ -14,6 +14,8 @@ angular.module('zmApp', [
                             'angular-carousel',
                             'angularAwesomeSlider'
 
+
+
                         ])
 
 // ------------------------------------------
@@ -164,7 +166,7 @@ angular.module('zmApp', [
 // That way the user can try again, and won't get stuck
 // Also remember you need to add it to .config
 //------------------------------------------------------------------
-.factory('timeoutHttpIntercept', function ($rootScope, $q,zm, $cookieStore) {
+.factory('timeoutHttpIntercept', function ($rootScope, $q,zm) {
     var zmCookie = "";
 
     return {
@@ -195,9 +197,12 @@ angular.module('zmApp', [
             {
 
                 var zmSess=cookies.match("ZMSESSID=(.*?);");
-                console.log ("***RESPONSE HEADER COOKIE " + zmSess[1]);
-                console.log ("WHOLE STRING " + cookies);
-                zmCookie=zmSess[1];
+                if (zmSess[1])
+                {
+                    console.log ("***RESPONSE HEADER COOKIE " + zmSess[1]);
+                    console.log ("WHOLE STRING " + cookies);
+                    zmCookie=zmSess[1];
+                }
             }
             return response;
         }
@@ -313,13 +318,23 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory, $window, $ionicSideMenuDelegate)
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory, $window, $ionicSideMenuDelegate)
 {
 
  $rootScope.zmGlobalCookie="";
+ $rootScope.isEventFilterOn = false;
+    $rootScope.fromDate = "";
+    $rootScope.fromTime= "";
+    $rootScope.toDate = "";
+    $rootScope.toTime="";
+    $rootScope.fromString="";
+    $rootScope.toString="";
 
     ZMDataModel.init();
-
+    // for making sure we canuse $state.go with ng-click
+    // needed for views that use popovers
+$rootScope.$state = $state;
+  $rootScope.$stateParams = $stateParams;
 
     var loginData = ZMDataModel.getLogin();
 
@@ -461,9 +476,18 @@ angular.module('zmApp', [
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             //$scope.rand = Math.floor((Math.random() * 100000) + 1);
             console.log("** generated Random of " + $rootScope.rand);
-            $state.go($state.current, {}, {
-                reload: true
-            });
+            //console.log ("*******************************CURRENT STATE: " + JSON.stringify($state.current));
+            if ($state.current.url == "/timeline")
+            {
+                ZMDataModel.zmLog("Skipping state refresh for Timeline");
+            }
+            else
+            {
+                ZMDataModel.zmLog ("Reloading screen for state " + $state.current.url);
+                $state.go($state.current, {}, {
+                    reload: true
+                });
+            }
             //$window.location.reload(true);
             //$route.reload();
 
@@ -590,6 +614,16 @@ angular.module('zmApp', [
         controller: 'zmApp.EventsGraphsCtrl',
     })
 
+
+     .state('events-date-time-filter', {
+        data: {
+            requireLogin: true
+        },
+        url: "/events-date-time-filter",
+        templateUrl: "templates/events-date-time-filter.html",
+        controller: 'zmApp.EventDateTimeFilterCtrl',
+    })
+
     .state('state', {
         data: {
             requireLogin: true
@@ -607,6 +641,22 @@ angular.module('zmApp', [
         templateUrl: "templates/devoptions.html",
         controller: 'zmApp.DevOptionsCtrl',
     })
+
+        .state('timeline', {
+        data: {
+            requireLogin: true
+        },
+        resolve: {
+            message: function (ZMDataModel) {
+                console.log("Inside app.events resolve");
+                return ZMDataModel.getMonitors(0);
+            }
+        },
+        url: "/timeline",
+        templateUrl: "templates/timeline.html",
+        controller: 'zmApp.TimelineCtrl',
+    })
+
 
     .state('log', {
         data: {

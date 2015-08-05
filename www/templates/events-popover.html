@@ -1,0 +1,15 @@
+<ion-popover-view class="fit">
+        <ion-content>
+          <div class="list" ng-click="popover.hide()">
+            <a class="item" ng-href="" ng-click="popover.hide();$state.go('events-date-time-filter');">Filter by Date/Time</a>
+
+            <a class="item" ng-href="" ng-click=" popover.hide();$state.go('events-graphs');" >
+              Event Graphs
+            </a>
+            <a class="item" ng-href="" ng-click="popover.hide();doRefresh();">
+              Refresh
+            </a>
+          </div>
+        </ion-content>
+      </ion-popover-view>
+

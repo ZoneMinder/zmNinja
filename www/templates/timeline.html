@@ -1,17 +1,27 @@
 <meta name="format-detection" content="telephone=no" />
-<ion-view title="Timeline" cache-view="false">
+<ion-view title="" cache-view="false">
     <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>&nbsp;
+         <button class="button button-icon button-clear ion-arrow-left-c" ng-click="move(0.2)"></button>
+        <button class="button button-icon button-clear ion-arrow-right-c" ng-click="move(-0.2)"></button>
+
+
+
+
     </ion-nav-buttons>
 
 <ion-nav-buttons side="right">
-        <a style="" class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)";> </a>
 
+    <button class="button button-icon button-clear ion-arrow-shrink" ng-click="fit()"></button>
+ <button class="button button-icon button-clear ion-log-in" ng-click="zoom(-0.2)"></button>
+        <button class="button button-icon button-clear ion-log-out" ng-click="zoom(0.2)"></button>&nbsp;
+     <a style="" class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)";> </a>
     </ion-nav-buttons>
     <!--<ion-content data-tap-disabled="true">-->
     <ion-content>
         <div style="padding-left:15px; font-size:10px; color:grey">
 
+        Latest {{maxItems}} events between:
         {{prettify(fromDate)}} - {{prettify(toDate)}}
             </div>
        <!-- <div style="float:left">
@@ -41,11 +51,6 @@
             <div id="visualization"></div>
         </div>
         <br/>
-        <center>
-        <button class="button button-small button-dark" ng-click="fit()">
-  Fit data to screen
-</button>
-            </center>
 
     </ion-content>
 </ion-view>

@@ -20,7 +20,10 @@ Then add a `<script>` to your `index.html`:
 <script src="/node_modules/angular/angular.js"></script>
 ```
 
-Or `require('angular')` from your code.
+Note that this package is not in CommonJS format, so doing `require('angular')` will return `undefined`.
+If you're using [Browserify](https://github.com/substack/node-browserify), you can use
+[exposify](https://github.com/thlorenz/exposify) to have `require('angular')` return the `angular`
+global.
 
 ### bower
 
@@ -43,7 +46,7 @@ Documentation is available on the
 
 The MIT License
 
-Copyright (c) 2010-2015 Google, Inc. http://angularjs.org
+Copyright (c) 2010-2012 Google, Inc. http://angularjs.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,0 +1,38 @@
+<ion-view view-title="Filter Events">
+
+
+
+    <ion-content>
+        <label class="item item-input">
+            <span class="input-label">From Date:</span>
+            <input type="date" ng-model="$root.fromDate">
+        </label>
+        <label class="item item-input">
+                   <span class="input-label">From Time:</span>
+                    <input type="time" ng-model="$root.fromTime">
+        </label>
+        <label class="item item-input">
+                    <span class="input-label">To Date</span>
+                    <input type="date" ng-model="$root.toDate">
+        </label>
+        <label class="item item-input">
+                    <span class="input-label">To Time</span>
+                    <input type="time" ng-model="$root.toTime">
+         </label>
+
+        <br/>
+        <center>
+              <button class="button"
+                                ng-click="saveFilters();" > Save
+                        </button>
+        <button class="button"
+                                ng-click="removeFilters();" > Reset
+                        </button>
+
+
+
+</center>
+
+    </ion-content>
+
+</ion-view>
