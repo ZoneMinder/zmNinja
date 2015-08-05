@@ -1,0 +1,51 @@
+<meta name="format-detection" content="telephone=no" />
+<ion-view title="Timeline" cache-view="false">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+
+<ion-nav-buttons side="right">
+        <a style="" class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)";> </a>
+
+    </ion-nav-buttons>
+    <!--<ion-content data-tap-disabled="true">-->
+    <ion-content>
+        <div style="padding-left:15px; font-size:10px; color:grey">
+
+        {{prettify(fromDate)}} - {{prettify(toDate)}}
+            </div>
+       <!-- <div style="float:left">
+            <ti-segmented-control on-select="buttonClicked($index)" style="width: 360px;">
+                <ti-segmented-control-button class="button-positive" title="'Month'">
+                </ti-segmented-control-button>
+
+                <ti-segmented-control-button class="button-positive" title="'Week'">
+                </ti-segmented-control-button>
+
+
+                    <ti-segmented-control-button class="button-positive" title="'Day'">
+                    </ti-segmented-control-button>
+
+                    <ti-segmented-control-button class="button-positive" title="'Custom'">
+                    </ti-segmented-control-button>
+
+
+
+
+
+            </ti-segmented-control>
+        </div>-->
+
+
+        <div style="padding-left:15px; padding-right:15px;">
+            <div id="visualization"></div>
+        </div>
+        <br/>
+        <center>
+        <button class="button button-small button-dark" ng-click="fit()">
+  Fit data to screen
+</button>
+            </center>
+
+    </ion-content>
+</ion-view>
