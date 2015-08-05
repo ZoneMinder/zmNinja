@@ -7,8 +7,10 @@
 // and whether the new API has a better mechanism
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition) {
+    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover) {
 
+        // events in last 5 minutes
+        // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
 
         //---------------------------------------------------
         // Controller main
@@ -29,6 +31,14 @@ angular.module('zmApp.controllers')
         $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         //var segmentHandle = 0;
 
+
+
+
+$ionicPopover.fromTemplateUrl('templates/events-popover.html', {
+            scope: $scope,
+          }).then(function(popover) {
+            $scope.popover = popover;
+          });
 
         // These are the commands ZM uses to move around
         // in ZMS
@@ -103,13 +113,13 @@ angular.module('zmApp.controllers')
         // First get total pages and then
         // start from the latest. If this fails, nothing displays
 
-        ZMDataModel.getEventsPages($scope.id)
+        ZMDataModel.getEventsPages($scope.id, $rootScope.fromString, $rootScope.toString)
             .then(function (data) {
                 eventsPage = data.pageCount;
                 console.log("TOTAL EVENT PAGES IS " + eventsPage);
                 pageLoaded = true;
                 $scope.viewTitle.title = data.count;
-                ZMDataModel.getEvents($scope.id, eventsPage, "")
+                ZMDataModel.getEvents($scope.id, eventsPage, "",$rootScope.fromString, $rootScope.toString)
                     .then(function (data) {
                         console.log("EventCtrl Got events");
                         //var events = [];
@@ -180,6 +190,20 @@ angular.module('zmApp.controllers')
 
         $scope.openMenu = function () {
             $ionicSideMenuDelegate.toggleLeft();
+        };
+
+        $scope.scrollPosition= function() {
+            var scrl = parseFloat( $ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
+            var item = Math.round(scrl/200.0);
+            if ($scope.events[item] == undefined)
+            {
+                return "";
+            }
+            else
+            {
+                return prettifyDate($scope.events[item].Event.StartTime);
+            }
+            //return Math.random();
         };
 
         //-------------------------------------------------------------------------
@@ -912,7 +936,7 @@ angular.module('zmApp.controllers')
                 loadingStr = "none";
             }
 
-            ZMDataModel.getEvents($scope.id, eventsPage, loadingStr)
+            ZMDataModel.getEvents($scope.id, eventsPage, loadingStr,$rootScope.fromString, $rootScope.toString)
                 .then(function (data) {
                         var loginData = ZMDataModel.getLogin();
                         console.log("Got new page of events with Page=" + eventsPage);
@@ -969,9 +993,30 @@ angular.module('zmApp.controllers')
 
         };
 
+
+
+
+
+
+
+
         //--------------------------------------
         // formats events dates in a nice way
         //---------------------------------------
+
+        $scope.prettifyDate = function (str) {
+            return moment(str).format('MMM Do');
+        };
+
+        function prettifyDate (str)
+        {
+            return moment(str).format('MMM Do');
+        }
+
+         $scope.prettifyTime = function (str) {
+            return moment(str).format('h:mm:ssa');
+        };
+
 
         $scope.prettify = function (str) {
             return moment(str).format('h:mm:ssa on MMMM Do YYYY');
@@ -992,13 +1037,13 @@ angular.module('zmApp.controllers')
             console.log("***Pull to Refresh");
             $scope.events = [];
             moreEvents = true;
-            ZMDataModel.getEventsPages($scope.id)
+            ZMDataModel.getEventsPages($scope.id, $rootScope.fromString, $rootScope.toString)
                 .then(function (data) {
                     eventsPage = data.pageCount;
                     console.log("TOTAL EVENT PAGES IS " + eventsPage);
                     pageLoaded = true;
                     $scope.viewTitle.title = data.count;
-                    ZMDataModel.getEvents($scope.id, eventsPage, "")
+                    ZMDataModel.getEvents($scope.id, eventsPage, "",$rootScope.fromString, $rootScope.toString)
 
                     .then(function (data) {
                         console.log("EventCtrl Got events");
@@ -1007,10 +1052,41 @@ angular.module('zmApp.controllers')
                         for (var i = 0; i < myevents.length; i++) {
 
                             myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
-                        }
+
+                        // now construct base path
+
+                            var str = myevents[i].Event.StartTime;
+                            //var yy =  moment(str).format('h:mm:ssa on MMMM Do YYYY');
+                            var yy = moment(str).format('YY');
+                            var mm = moment(str).format('MM');
+                            var dd = moment(str).format('DD');
+                            var hh = moment(str).format('HH');
+                            var min = moment(str).format('mm');
+                            var sec = moment(str).format('ss');
+                            var loginData = ZMDataModel.getLogin();
+                            myevents[i].Event.BasePath = loginData.url + "/events/" +
+                                myevents[i].Event.MonitorId + "/" +
+                                yy + "/" +
+                                mm + "/" +
+                                dd + "/" +
+                                hh + "/" +
+                                min + "/" +
+                                sec + "/";
+
+                            myevents[i].Event.relativePath =
+ myevents[i].Event.MonitorId + "/" +
+                                yy + "/" +
+                                mm + "/" +
+                                dd + "/" +
+                                hh + "/" +
+                                min + "/" +
+                                sec + "/";
+
                         myevents[i].Event.ShowScrub = false;
                         myevents[i].Event.height = zm.eventsListDetailsHeight;
+                        }
                         $scope.events = myevents;
+                        loadMore();
                     });
 
                 });

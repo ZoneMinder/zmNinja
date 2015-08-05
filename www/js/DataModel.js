@@ -359,10 +359,21 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         // All this effort because the ZM APIs return events in sorted order, oldest first. Yeesh.
         //-----------------------------------------------------------------------------
 
-        getEventsPages: function (monitorId) {
+        getEventsPages: function (monitorId,startTime, endTime) {
             console.log("********** INSIDE EVENTS PAGES ");
             var apiurl = loginData.apiurl;
-            var myurl = (monitorId == 0) ? apiurl + "/events.json?page=1" : apiurl + "/events/index/MonitorId:" + monitorId + ".json?page=1";
+
+            var myurl = apiurl + "/events/index";
+            if (monitorId!=0)
+                myurl = myurl + "/MonitorId:" + monitorId;
+            if (startTime)
+                myurl = myurl + "/StartTime >=:"+startTime;
+            if (endTime)
+                myurl = myurl + "/EndTime <=:"+endTime;
+            myurl = myurl + ".json";
+            console.log (">>>>>Constructed URL " + myurl);
+
+            //var myurl = (monitorId == 0) ? apiurl + "/events.json?page=1" : apiurl + "/events/index/MonitorId:" + monitorId + ".json?page=1";
             var d = $q.defer();
             $http.get(myurl)
                 .success(function (data) {
@@ -388,7 +399,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         // monitorId == 0 means all monitors (ZM starts from 1)
         //-----------------------------------------------------------------------------
 
-        getEvents: function (monitorId, pageId, loadingStr) {
+        getEvents: function (monitorId, pageId, loadingStr, startTime, endTime) {
 
             console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
@@ -412,13 +423,22 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             var myevents = [];
             var apiurl = loginData.apiurl;
 
-            var myurl = (monitorId == 0) ? apiurl + "/events.json" : apiurl + "/events/index/MonitorId:" + monitorId + ".json";
+           var myurl = apiurl + "/events/index";
+            if (monitorId!=0)
+                myurl = myurl + "/MonitorId:" + monitorId;
+            if (startTime)
+                myurl = myurl + "/StartTime >=:"+startTime;
+            if (endTime)
+                myurl = myurl + "/EndTime <=:"+endTime;
+            myurl = myurl + ".json";
+
+
             if (pageId) {
                 myurl = myurl + "?page=" + pageId;
             } else {
                 console.log("**** PAGE WAS " + pageId);
             }
-            console.log("Constructed URL is " + myurl);
+            console.log (">>>>>Constructed URL " + myurl);
 
 
             $http.get(myurl /*,{timeout:15000}*/ )

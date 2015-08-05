@@ -1,4 +1,5 @@
-<ion-view view-title="" cache-view="false">
+<ion-view  cache-view="false">
+    <ion-nav-title>{{scrollPosition();}}</ion-nav-title>
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon"
                 ng-click="openMenu()">
@@ -6,16 +7,22 @@
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
+        <a style="" class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)";> </a>
+        <!--
         <a style="" class="button button-icon icon ion-stats-bars"
            ng-href="#events-graphs"> </a>
         <a style="" class="button button-icon icon ion-refresh" ng-href=""
-           ng-click="doRefresh();"> </a>
+           ng-click="doRefresh();"> </a>-->
         <a style="" class="button button-icon icon ion-search" ng-href=""
            ng-click="searchClicked();"> </a>
     </ion-nav-buttons>
 
+
+
+
     <div ng-if="showSearch">
         <ion-header-bar class="bar bar-subheader item-input-inset">
+
             <label class="item-input-wrapper">
                 <i class="icon ion-ios7-search placeholder-icon"></i>
                 <input type="search" placeholder="Search"
@@ -25,9 +32,9 @@
     </div>
 
 
-    <ion-content on-tap="tapped();" delegate-handle="mainScroll" lazy-scroll>
+    <ion-content on-tap="tapped();" delegate-handle="mainScroll" lazy-scroll has-subheader="true">
         <ion-refresher
-                pulling-text="Tap the <i class='ion-refresh'></i> icon above to reload ..."
+                       pulling-text="Tap <i class='ion-android-more-vertical'></i> and <i class='ion-refresh'></i> to refresh"
                 spinner="bubbles" on-refresh="dummyDoRefresh();">
         </ion-refresher>
 
@@ -36,6 +43,14 @@
             <div class="list">
                 <div class="item" collection-repeat="event in events| filter:search.text"
                      item-height="event.Event.height" id="item-{{$index}}">
+
+                    <!--<span class="events-filter-on" ng-if="isEventFilterOn">Filter</span>-->
+
+                    <span style="float:right;margin-top:-18px;background-color:#6d0909;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}</span>
+
+                    <span style="float:left;margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}}</span>
+
+
                     <div class="row">
                         <div class="col col-left">
                             <!-- this ngswitch displays different icons
@@ -170,4 +185,9 @@
             </ion-infinite-scroll>
         </div>
     </ion-content>
+    <div  class="events-float-filter" ng-if="isEventFilterOn">Filter On</div>
 </ion-view>
+
+
+
+

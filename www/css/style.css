@@ -1,5 +1,28 @@
+.vis-time-axis .grid.vis-odd {
+    background: #f5f5f5;
+  }
 
+.my-vis-font
+{
+    font-size:10px;
+}
 
+ion-popover-view.fit {
+  height: auto;
+}
+
+ion-popover-view.fit ion-content {
+  position: relative;
+}
+
+.platform-android ion-popover-view.fit {
+  margin-top: 10px;
+}
+
+.platform-ios ion-popover-view.fit {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 
 /* Using this for full screen modals for event and monitor mode */
 .modal{
@@ -35,10 +58,12 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 }
 
 .header {
-    background: #DDDDDD;
-    border-color: #CCCCCC;
+    background: #333333;
+    color:#cccccc;
+    border-color: #444444;
      border-style: solid;
     border-width:1px;
+    opactity:80%;
 }
 
 .footer {
@@ -51,7 +76,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 .main {
     text-align: center;
-    background: #EEEEEE;
+    background: #5a5a5a;
     margin: 0px;
     padding: 0px;
     /*padding:2px;*/
@@ -146,6 +171,48 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     left: 0px;
     width: 100%;
     border-top: 1px solid black;
+
+}
+
+.events-float-filter
+{
+    position: absolute;
+    top: 50%;
+    right:-12px;
+
+    color:#fff;
+    background-color:#b47226;
+    border-radius: 0px 0px 5px 5px;
+    font-size:11px;
+
+    padding-left:3px;
+    padding-right:3px;
+    opacity:0.7;
+
+
+   z-index:99999;
+
+     -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.events-filter-on
+{
+  position: absolute;
+  left: 50%;
+
+  transform: translate(-50%, 0);
+  opacity:0.7;
+  border-radius: 0px 0px 5px 5px;
+  margin-top:-18px;
+  background-color:#b47226;
+  padding-left:6px;
+  padding-right:6px;
+  color:#fff;
+ font-size:11px;
 
 }
 
@@ -297,6 +364,13 @@ margin-left:-3px}
     border-radius:2px
 }
 
+
+input[type=range]::-webkit-slider-thumb {
+
+
+  background: #007272;
+
+}
 
 /*.mySliderClass.jslider.sliderCSS  div.jslider-pointer
 {top:-10px;left:15px;width:60px;height:60px;margin-left:-5px;background-color:silver;background-color:#615959;border-radius:50%

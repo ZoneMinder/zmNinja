@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/angular-carousel.css">
    <link rel="stylesheet" href="lib/angular-awesome-slider/dist/css/angular-awesome-slider.min.css">
+    <link rel="stylesheet" href="lib/vis/dist/vis.min.css">
+
+
 
 
 
@@ -56,8 +59,10 @@
     <script src="js/StateCtrl.js"></script>
     <script src="js/DevOptionsCtrl.js"></script>
     <script src="js/LogCtrl.js"></script>
+    <script src="js/EventDateTimeFilterCtrl.js"></script>
+    <script src="js/TimelineCtrl.js"></script>
+    <script src="lib/vis/dist/vis.min.js"></script>
 
-    <script src="js/ng.js"></script>
      <!-- https://github.com/maxklenk/angular-circular-navigation - modified to use right angles -->
 
     <script src="external/angular-circular-navigation.js"></script>
@@ -68,6 +73,10 @@
 
     <script src="lib/angular-touch/angular-touch.js"></script>
     <script src="external/angular-carousel.js"></script>
+
+
+
+
 
 
 
@@ -108,6 +117,12 @@
                         <span class=" item-icon-left">
                             <i class="icon ion-ios-eye"></i>
                         </span>Montage View
+                    </ion-item>
+
+                    <ion-item href="#/timeline" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-android-time"></i>
+                        </span>Timeline
                     </ion-item>
 
                     <ion-item href="#/events/0" menu-close>
