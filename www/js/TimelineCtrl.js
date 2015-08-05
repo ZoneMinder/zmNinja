@@ -161,7 +161,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 var i;
                 for (i = 0; i < data.event.Frame.length; i++) {
                     if (data.event.Frame[i].Type == "Alarm") {
-                        //⬤
+
                         // console.log ("**ALARM AT " + i);
                         $scope.slider_modal_options.scale.push({
                             val: i + 1,
