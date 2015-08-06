@@ -1,6 +1,6 @@
 /**
- * @license AngularJS v1.3.17
- * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.4.3
+ * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
 (function(window, angular, undefined) {'use strict';
@@ -105,7 +105,8 @@ ngTouch.factory('$swipe', [function() {
      * `$swipe` will listen for `mouse` and `touch` events.
      *
      * The four events are `start`, `move`, `end`, and `cancel`. `start`, `move`, and `end`
-     * receive as a parameter a coordinates object of the form `{ x: 150, y: 310 }`.
+     * receive as a parameter a coordinates object of the form `{ x: 150, y: 310 }` and the raw
+     * `event`. `cancel` receives the raw `event` as its single parameter.
      *
      * `start` is called on either `mousedown` or `touchstart`. After this event, `$swipe` is
      * watching for `touchmove` or `mousemove` events. These events are ignored until the total
@@ -263,7 +264,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
   // double-tapping, and then fire a click event.
   //
   // This delay sucks and makes mobile apps feel unresponsive.
-  // So we detect touchstart, touchmove, touchcancel and touchend ourselves and determine when
+  // So we detect touchstart, touchcancel and touchend ourselves and determine when
   // the user has tapped on something.
   //
   // What happens when the browser then generates a click event?
@@ -275,7 +276,7 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
   // So the sequence for a tap is:
   // - global touchstart: Sets an "allowable region" at the point touched.
   // - element's touchstart: Starts a touch
-  // (- touchmove or touchcancel ends the touch, no click follows)
+  // (- touchcancel ends the touch, no click follows)
   // - element's touchend: Determines if the tap is valid (didn't move too far away, didn't hold
   //   too long) and fires the user's tap handler. The touchend also calls preventGhostClick().
   // - preventGhostClick() removes the allowable region the global touchstart created.
@@ -424,10 +425,6 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
       var e = touches[0];
       touchStartX = e.clientX;
       touchStartY = e.clientY;
-    });
-
-    element.on('touchmove', function(event) {
-      resetState();
     });
 
     element.on('touchcancel', function(event) {

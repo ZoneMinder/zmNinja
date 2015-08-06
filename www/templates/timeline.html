@@ -14,7 +14,6 @@
 
 <ion-nav-buttons side="right">
 
-    <button class="button button-icon button-clear ion-arrow-shrink" ng-click="fit()"></button>
 
     <button class="button button-icon button-clear ion-arrow-move" ng-click="toggleNav();"></button>
     <!--
@@ -26,8 +25,7 @@
     <ion-content>
         <div style="padding-left:15px; font-size:10px; color:grey">
 
-        Latest {{maxItems}} events between:
-        {{prettify(fromDate)}} - {{prettify(toDate)}}
+        {{prettify(fromDate)}} - {{prettify(toDate)}} (only displaying last {{maxItems}} events)
             </div>
 
 
@@ -43,7 +41,7 @@
     </ion-content>
 
 </ion-view>
-<div class="timelinebuttons" >
+<div class="timelinebuttons" ng-if="graphLoaded">
                 <circular id ="timeline-ctrl" options="radialMenuOptions" class="animated bounceInRight">
                 </circular>
 </div>

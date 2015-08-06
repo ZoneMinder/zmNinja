@@ -30,7 +30,17 @@
           function ($scope, $element, $attrs) {
 
             $scope.toggleMenu = function () {
-              $scope.options.isOpen = !$scope.options.isOpen;
+	     //PP
+	      if (typeof $scope.options.button.onclick === 'function')
+	      {
+	//	console.log ("FUNCTION");
+		$scope.options.button.onclick();
+	      }
+	      else
+	      {
+	//	console.log ("NO FUNCTION");
+              	$scope.options.isOpen = !$scope.options.isOpen;
+	      }
             };
 
             $scope.perform = function (options, item) {
