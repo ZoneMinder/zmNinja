@@ -5,9 +5,6 @@
     "ionic": "driftyco/ionic-bower#1.0.1"
   },
   "dependencies": {
-    "ng-mfb": "~0.4.0",
-    "angular-tooltips": "~0.1.14",
-    "ion-image-lazy-load": "*",
-    "ionic-datepicker": "~0.6.0"
+    "ng-mfb": "~0.4.0"
   }
 }

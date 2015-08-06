@@ -348,6 +348,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     var maxItems = 200; // THAT magic # --> 300 and ZM on my m/c cries
     $scope.maxItems = maxItems;
+    $scope.graphLoaded = false;
 
     //flat colors for graph - https://flatuicolors.com http://www.flatuicolorpicker.com
     var colors = ['#3498db', '#D2527F',  '#f39c12', '#9b59b6', '#e74c3c','#7A942E',];
@@ -459,6 +460,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             duration: zm.loadingTimeout, //specifically for Android - http seems to get stuck at times
         });
 
+        $scope.graphLoaded = false;
+
         if (timeline) timeline.destroy();
 
 
@@ -564,6 +567,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                         timeline.setGroups(groups);
                         timeline.fit();
                         $ionicLoading.hide();
+                    $scope.graphLoaded = true;
+                    navControls = true;
                         timeline.on('select', function (properties) {
                             if (properties.items && !isNaN(properties.items[0])) {
                                 console.log("You clicked on item " + properties.items);
@@ -598,13 +603,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         isOpen: true,
         toggleOnClick: false,
         button: {
-            cssClass: "fa  fa-arrows-alt",
+            cssClass: "fa  fa-compress fa-2x",
             size:"small",
+            onclick: function() { timeline.fit();}
         },
         items: [
             {
                 content: '',
-                cssClass: 'fa fa-chevron-circle-up',
+                cssClass: 'fa fa-minus-circle',
                 empty: false,
                 onclick: function () {
                     zoom(0.2);
@@ -651,7 +657,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
             {
                 content: '',
-                cssClass: 'fa fa-chevron-circle-up',
+                cssClass: 'fa fa-plus-circle',
                 empty: false,
                 onclick: function () {
                     //controlPTZ($scope.monitorId, 'Up');
