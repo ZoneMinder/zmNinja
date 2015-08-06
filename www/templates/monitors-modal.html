@@ -1,6 +1,10 @@
+
 <div ng-controller="ModalCtrl">
-    <ion-modal-view cache="false" >
-        <ion-content style="background-color:#444444">
+
+   <!--style="background-color:#444444;width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
+
+    <ion-modal-view cache="false"  >
+        <ion-content >
 
                 <ion-scroll has-bouncing=false min-zoom=1 zooming="true"
                             direction="xy" style="width: 100%; ">
@@ -22,8 +26,10 @@
         </div>
 
 
+    </span>
+
     </ion-modal-view>
-    <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+ <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
         <button mfb-button icon="ion-arrow-resize" label="fit image" ng-click="scaleImage();">
         </button>
         <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
@@ -36,6 +42,6 @@
 
     <span class="camera-icon">
         <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(monitorId)"></a>
-    </span>
+
 </div>
 

@@ -12,7 +12,7 @@ angular.module('zmApp', [
                             'zmApp.controllers',
                             'fileLogger',
                             'angular-carousel',
-                            'angularAwesomeSlider'
+                            'angularAwesomeSlider',
 
 
 
