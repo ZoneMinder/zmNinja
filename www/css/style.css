@@ -7,6 +7,14 @@
     font-size:10px;
 }
 
+.my-vis-buttons {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 10px;
+            z-index: 9999;
+        }
+
 ion-popover-view.fit {
   height: auto;
 }
@@ -30,7 +38,7 @@ ion-popover-view.fit ion-content {
   bottom: 0 ;
   left: 0 ;
   right: 0 ;
-  width: 100% ;
+  width: 100%
 }
 /* I am using flexboxes to dynamicall adapt content
 in montage view.
@@ -115,6 +123,14 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
   top: 50%;
   left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.timelinebuttons {
+  position: fixed; /* or absolute */
+  bottom:100px;
+  left: 50%;
+    transform: translate(-50%, -50%);
+    z-index:9999;
 }
 
 .eventprogress

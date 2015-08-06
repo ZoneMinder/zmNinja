@@ -1,5 +1,6 @@
 <div ng-controller="ModalCtrl">
-    <ion-modal-view cache="false">
+    <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
+    <ion-modal-view cache="false" >
         <ion-content style="background-color:#444444"  ng-cloak>
 
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true"
@@ -32,9 +33,17 @@
 
 
         </ion-content>
+
+
+      <!-- <div class="range">
+        <input type="range"  ng-model="ionRange.index" min="0"  max="{{eFramesNum-1}}" >
+      </div>-->
+        </div>
+
     </ion-modal-view>
 
-    <nav mfb-menu position="tr" effect="zoomin" label="collapse"
+
+<nav mfb-menu position="tr" effect="zoomin" label="collapse"
          active-icon="ion-chevron-up" resting-icon="ion-chevron-down"
          toggling-method="click">
 
@@ -49,6 +58,11 @@
 
     </nav>
 
+         <div class="events-range-modal" >
+
+        <div style="width:90%">
+            <input ng-model="ionRange.index" type="text" id="mySlider2" slider options="slider_modal_options" />
+        </div>
 
 <!--
     <nav mfb-menu position="bl" effect="zoomin" label="collapse"
@@ -77,14 +91,5 @@
     <progress max="{{totalEventTime}}" value="{{currentEventTime}}"
               class="eventprogress"></progress>
 -->
-    <div class="events-range-modal" >
 
-        <div style="width:90%">
-            <input ng-model="ionRange.index" type="text" id="mySlider2" slider options="slider_modal_options" />
-        </div>
-
-      <!-- <div class="range">
-        <input type="range"  ng-model="ionRange.index" min="0"  max="{{eFramesNum-1}}" >
-      </div>-->
-        </div>
 </div>

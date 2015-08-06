@@ -37,18 +37,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         return (Math.round(1000 / (myframes / mylen)));
     };
 
-
-    $scope.move = function (percentage) {
-        var range = timeline.getWindow();
+    function move(percentage)
+    {
+         var range = timeline.getWindow();
         var interval = range.end - range.start;
 
         timeline.setWindow({
             start: range.start.valueOf() - interval * percentage,
             end: range.end.valueOf() - interval * percentage
         });
-    };
+    }
 
-    $scope.zoom = function (percentage) {
+    function zoom (percentage)
+    {
         var range = timeline.getWindow();
         var interval = range.end - range.start;
 
@@ -56,6 +57,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             start: range.start.valueOf() - interval * percentage,
             end: range.end.valueOf() + interval * percentage
         });
+    }
+
+    $scope.move = function (percentage) {
+        move(percentage);
+
+    };
+
+    $scope.zoom = function (percentage) {
+        zoom(percentage);
+
     };
 
 
@@ -338,14 +349,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var maxItems = 200; // THAT magic # --> 300 and ZM on my m/c cries
     $scope.maxItems = maxItems;
 
-    //flat colors for graph - https://flatuicolors.com
-    var colors = ['#3498db', '#83adb5', '#c7bbc9', '#f39c12', '#bfb5b2', '#e74c3c'];
+    //flat colors for graph - https://flatuicolors.com http://www.flatuicolorpicker.com
+    var colors = ['#3498db', '#D2527F',  '#f39c12', '#9b59b6', '#e74c3c','#7A942E',];
 
     var container;
     container = angular.element(document.getElementById('visualization'));
     var timeline = "";
 
     $scope.monitors = message;
+    var navControls = true;
 
     $ionicPopover.fromTemplateUrl('templates/timeline-popover.html', {
         scope: $scope,
@@ -363,6 +375,24 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
     $scope.fit = function () {
         timeline.fit();
+    };
+
+    $scope.toggleNav = function()
+    {
+        navControls=!navControls;
+        var element = angular.element(document.getElementById("timeline-ctrl"));
+
+        if (navControls)
+        {
+         element.removeClass("animated bounceOutLeft");
+         element.addClass("animated bounceInRight");
+        }
+        else
+        {
+            element.removeClass("animated bounceInRight");
+            element.addClass("animated bounceOutLeft");
+        }
+
     };
 
     //-------------------------------------------------
@@ -558,6 +588,124 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                     }); // get Events
             });
     }
+
+
+        $scope.radialMenuOptions = {
+        content: '',
+        size:"small",
+
+        background: '#982112',
+        isOpen: true,
+        toggleOnClick: false,
+        button: {
+            cssClass: "fa  fa-arrows-alt",
+            size:"small",
+        },
+        items: [
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    zoom(0.2);
+                }
+            },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: true,
+                onclick: function () {
+                   // controlPTZ($scope.monitorId, 'DownLeft');
+                }
+            },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+
+                onclick: function () {
+                    //controlPTZ($scope.monitorId, 'Left');
+                    move(0.2);
+                }
+            },
+            {
+                content: 'D',
+                empty: true,
+
+                onclick: function () {
+                    console.log('About');
+                }
+            },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: true,
+                onclick: function () {
+                    //controlPTZ($scope.monitorId, 'UpLeft');
+
+                }
+            },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    //controlPTZ($scope.monitorId, 'Up');
+                    zoom(-0.2);
+                }
+            },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: true,
+                onclick: function () {
+                    //controlPTZ($scope.monitorId, 'UpRight');
+
+                }
+            },
+
+            {
+                content: 'H',
+                empty: true,
+                onclick: function () {
+                    console.log('About');
+                }
+            },
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: false,
+                onclick: function () {
+                    //controlPTZ($scope.monitorId, 'Right');
+                    move(-0.2);
+                }
+            },
+
+
+            {
+                content: '',
+                cssClass: 'fa fa-chevron-circle-up',
+                empty: true,
+                onclick: function () {
+                    //controlPTZ($scope.monitorId, 'DownRight');
+                }
+            },
+
+            {
+                content: 'K',
+                empty: true,
+                onclick: function () {
+                    console.log('About');
+                }
+            },
+    ]};
+
 
 
 
