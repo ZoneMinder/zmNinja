@@ -12,6 +12,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     // Controller Main
     //-----------------------------------------------------------------------
 
+   // var isModalOpen = false;
+
     console.log("***EVENTS: Waiting for Monitors to load before I proceed");
     $scope.monitors = [];
     $scope.monitors = message;
@@ -34,6 +36,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     //-----------------------------------------------------------------------
     $scope.reloadView = function () {
         console.log("*** Refreshing Modal view ***");
+        $rootScope.rand =Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $ionicLoading.show({
             template: "refreshed view",
@@ -191,6 +194,10 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
         console.log("**VIEW ** Monitor Ctrl Loaded");
     });
 
+
+
+
+
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
     // The problem is we enter other states before we leave previous states
@@ -214,9 +221,12 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     $scope.openModal = function (mid, controllable, controlid) {
         console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
 
+
         $scope.monitorId = mid;
         $scope.LoginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+          $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+
         $scope.ptzMoveCommand = "";
 
         // This is a modal to show the monitor footage

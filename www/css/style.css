@@ -127,10 +127,10 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 .timelinebuttons {
   position: fixed; /* or absolute */
-  bottom:100px;
+  bottom:130px;
   left: 50%;
-    transform: translate(-50%, -50%);
-    z-index:9999;
+   transform: translate(-50%, -50%);
+    z-index:10;
 }
 
 .eventprogress
