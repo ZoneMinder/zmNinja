@@ -43,7 +43,7 @@
                 <article class="main">
                     <!-- back to ng-src. spinner was not updating when rand changes-->
                     <!-- FIXME: Scale is 50% hardcoded -->
-                    <img image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{randomval}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;"
+                    <img image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{$root.rand}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;"
                          ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)"
                          on-hold="onHold($index)"
                          on-release="onRelease($index)"

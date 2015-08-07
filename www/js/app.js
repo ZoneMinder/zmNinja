@@ -28,7 +28,7 @@ angular.module('zmApp', [
     largeHttpTimeout:60000,
     logFile:'zmNinjaLog.txt',
     authoremail:'pliablepixels+zmNinja@gmail.com',
-    logFileMaxSize: 50000, // after this limit log gets reset
+    logFileMaxSize: 10000, // after this limit log gets reset
     loginInterval:300000, //5m*60s*1000 - ZM auto login after 5 mins
     loadingTimeout:15000,
     safeMontageLimit:10,
@@ -53,6 +53,10 @@ angular.module('zmApp', [
 
 })
 
+//------------------------------------------------------------------
+// I use this factory to share data between carousel and lazy load
+// carousel will not progress autoslide till imageLoading is 0 or -1
+//-------------------------------------------------------------------
 .factory('imageLoadingDataShare', function () {
     var imageLoading = 0; // 0 = not loading, 1 = loading, -1 = error;
     return {
@@ -107,9 +111,9 @@ angular.module('zmApp', [
                     var loader = $compile('<div class="image-loader-container"><ion-spinner style="position:fixed;top:5%;left:5%" class="image-loader" icon="' + $attributes.imageSpinnerLoader + '"></ion-spinner></div>')($scope);
                     $element.after(loader);
                 }
-                            imageLoadingDataShare.set(1);
-                            loadImage();
-                $attributes.$observe('imageSpinnerSrc', function(value){
+                    imageLoadingDataShare.set(1);
+                    loadImage();
+                    $attributes.$observe('imageSpinnerSrc', function(value){
                     //console.log ("SOURCE CHANGED");
                     imageLoadingDataShare.set(1);
                      loadImage();
@@ -321,8 +325,8 @@ angular.module('zmApp', [
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger,$timeout, $ionicHistory, $window, $ionicSideMenuDelegate)
 {
 
- $rootScope.zmGlobalCookie="";
- $rootScope.isEventFilterOn = false;
+    $rootScope.zmGlobalCookie="";
+    $rootScope.isEventFilterOn = false;
     $rootScope.fromDate = "";
     $rootScope.fromTime= "";
     $rootScope.toDate = "";
@@ -333,8 +337,8 @@ angular.module('zmApp', [
     ZMDataModel.init();
     // for making sure we canuse $state.go with ng-click
     // needed for views that use popovers
-$rootScope.$state = $state;
-  $rootScope.$stateParams = $stateParams;
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
 
     var loginData = ZMDataModel.getLogin();
 
@@ -348,8 +352,6 @@ $rootScope.$state = $state;
 
     // This code takes care of trapping the Android back button
     // and takes it to the menu.
-
-
     $ionicPlatform.registerBackButtonAction(function(e) {
         e.preventDefault();
         if (!$ionicSideMenuDelegate.isOpenLeft()) {
@@ -361,9 +363,6 @@ $rootScope.$state = $state;
     }, 1000);
 
 
-
-
-
     // this works reliably on both Android and iOS. The "onorientation" seems to reverse w/h in Android. Go figure.
     // http://stackoverflow.com/questions/1649086/detect-rotation-of-android-phone-in-the-browser-with-javascript
 
@@ -372,6 +371,10 @@ $rootScope.$state = $state;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
         console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+
+
+
+
         //ZMDataModel.zmLog("Device orientation change: "+$rootScope.devWidth + "*" + $rootScope.devHeight);
     };
 
@@ -411,7 +414,7 @@ $rootScope.$state = $state;
         $fileLogger.checkFile().then(function(resp) {
             if (parseInt(resp.size) > zm.logFileMaxSize)
             {
-                console.log ("Deleting old log file as it exceeds 50K bytes");
+                console.log ("Deleting old log file as it exceeds " + zm.logFileMaxSize+" bytes");
                 $fileLogger.deleteLogfile().then(function()
                 {
                 console.log('Logfile deleted');
@@ -476,29 +479,10 @@ $rootScope.$state = $state;
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             //$scope.rand = Math.floor((Math.random() * 100000) + 1);
             console.log("** generated Random of " + $rootScope.rand);
-            //console.log ("*******************************CURRENT STATE: " + JSON.stringify($state.current));
-            if ($state.current.url == "/timeline")
-            {
-                ZMDataModel.zmLog("Skipping state refresh for Timeline");
-            }
-            else
-            {
-                ZMDataModel.zmLog ("Reloading screen for state " + $state.current.url);
-                $state.go($state.current, {}, {
-                    reload: true
-                });
-            }
-            //$window.location.reload(true);
-            //$route.reload();
-
-            // This sort of solves the problem of inactive windows
-            // if you switch the screen off and on
-            // not ideal as reload removes the Modal and shows the view
-            // but better than an inactive/unresponsive screen
-            // FIXME: see if we can get the modal back
-            $window.location.reload();
             zmAutoLogin.stop(); //safety
             zmAutoLogin.start();
+
+
         }, false);
 
 
@@ -564,13 +548,14 @@ $rootScope.$state = $state;
             templateUrl: "templates/help.html",
             controller: 'zmApp.HelpCtrl',
         })
-    /*
+
     .state('app', {
       url: '/',
       abstract: true,
       templateUrl: 'index.html',
+        cache:false,
       //controller: 'AppCtrl'
-    })*/
+    })
 
 
     .state('monitors', {

@@ -14,6 +14,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
     document.addEventListener("pause", onPause, false);
+    document.addEventListener("resume", onResume, false);
 
     $ionicPopover.fromTemplateUrl('templates/help/montage-help.html', {
     scope: $scope,
@@ -164,18 +165,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     // load. Will it bonk with many monitors? Who knows. I have tried with 5 and 1280x960@32bpp
 
 
-    this.loadNotifications = function () {
+    function loadNotifications() {
         // randomval is appended to img src, so after each interval the image reloads
         $scope.randomval = (new Date()).getTime();
+        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+       // console.log ("*** Montage timer");
        // console.log ("New " + $scope.randomval);
-    };
+    }
 
-    var intervalHandle = $interval(function () {
-        this.loadNotifications();
-        //  console.log ("Refreshing Image...");
-    }.bind(this), 1000);
+    var intervalHandle ;
 
-    this.loadNotifications();
+
 
     //-------------------------------------------------------------
     // Called when user taps on the reorder button
@@ -398,6 +398,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         // Note: no need to setAwake(true) as its already awake
         // in montage view
+
+        $interval.cancel(intervalHandle);
         $scope.monitorId = mid;
 
         $scope.LoginData = ZMDataModel.getLogin();
@@ -456,6 +458,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // Note: no need to setAwake(false) as needs to be awake
         // in montage view
         $scope.modal.remove();
+        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+
+        console.log ("Restarting montage timer...");
+
+        intervalHandle= $interval(function () {
+         loadNotifications();
+        //  console.log ("Refreshing Image...");
+    }.bind(this), 1000);
 
     };
 
@@ -497,7 +507,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             scaleMontage();
 
         }.bind(this), zm.montageScaleFrequency);
-        console.log("**************" + zm.montageScaleFrequency);
+        console.log("****Interval handle started **********" + zm.montageScaleFrequency);
     };
 
     //---------------------------------------------------------------------
@@ -526,6 +536,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     }
 
 
+    function onResume()
+    {
+            console.log ("Restarting montage timer on resume");
+            $interval.cancel(intervalHandle);
+             intervalHandle= $interval(function () {
+             loadNotifications();
+            //  console.log ("Refreshing Image...");
+        }.bind(this), 1000);
+
+    }
 
     $scope.openMenu = function () {
         $timeout (function() {
@@ -549,6 +569,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         console.log("**VIEW ** Montage Ctrl Entered");
         console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+
+        $interval.cancel(intervalHandle);
+         intervalHandle= $interval(function () {
+         loadNotifications();
+        //  console.log ("Refreshing Image...");
+    }.bind(this), 1000);
+
+    loadNotifications();
     });
 
     $scope.$on('$ionicView.leave', function () {
