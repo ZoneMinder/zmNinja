@@ -9,7 +9,7 @@
 // I've disabled pan and zoom and used buttons instead
 // also limits # of items to maxItems (currently 200)
 
-angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal) {
+angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout) {
 
     console.log("Inside Timeline controller");
     $scope.openMenu = function () {
@@ -358,7 +358,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var timeline = "";
 
     $scope.monitors = message;
-    var navControls = true;
+    $scope.navControls = false;
+    var navControls = false;
 
     $ionicPopover.fromTemplateUrl('templates/timeline-popover.html', {
         scope: $scope,
@@ -380,7 +381,20 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     $scope.toggleNav = function()
     {
-        navControls=!navControls;
+        if (navControls == true)
+        {
+            navControls=!navControls;
+            // give out animation time
+            $timeout ( function()
+            {
+                $scope.navControls = navControls;
+            },2000);
+        }
+        else
+        {
+            navControls=!navControls;
+            $scope.navControls = navControls;
+        }
         var element = angular.element(document.getElementById("timeline-ctrl"));
 
         if (navControls)
@@ -473,8 +487,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         var options = {
 
             editable: false,
-            moveable: false,
-            zoomable: false,
+            throttleRedraw:100,
+            moveable: true,
+            zoomable: true,
             selectable: true,
             start: fromDate,
             end: toDate,
@@ -563,12 +578,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                         }
 
                         timeline = new vis.Timeline(container[0], null, options);
+
                         timeline.setItems(graphData);
                         timeline.setGroups(groups);
                         timeline.fit();
+
                         $ionicLoading.hide();
                     $scope.graphLoaded = true;
-                    navControls = true;
+                    $scope.navControls = false;
                         timeline.on('select', function (properties) {
                             if (properties.items && !isNaN(properties.items[0])) {
                                 console.log("You clicked on item " + properties.items);
