@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -137,7 +137,7 @@ function addhttp(url) {
 
 
         // Let's do a sanity check to see if the URLs are ok
-
+/*
         $ionicLoading.show({
             template: 'Checking data...',
             animation: 'fade-in',
@@ -145,16 +145,26 @@ function addhttp(url) {
             duration: zm.loadingTimeout,
             maxWidth: 200,
             showDelay: 0
-        });
+        });*/
 
-
+/*
+    FIXME: REDO this 
         $q.all([
-    $http.get(apiurl),
+  //  $http.get(apiurl),
     $http.get(portalurl),
     //$http.get(streamingurl),
   ]).then(
             function (results) {
                 $ionicLoading.hide();
+                $http.get(apiurl)
+                .then (function (data)
+                       {
+                },
+                    function (err)
+                           {
+                    });
+                
+                
                 $ionicPopup.alert({
                         title: 'Settings Saved',
                         template: 'Please explore the menu and enjoy zmNinja!'
@@ -189,8 +199,19 @@ function addhttp(url) {
 
             }
 
-        );
+        );*/
         ZMDataModel.setLogin($scope.loginData);
+        zmAutoLogin.doLogin("Logging into ZoneMinder")
+        .then( function(data)
+        {
+        
+            console.log ("THE DATA WAS " + data);
+            $ionicPopup.alert({
+                            title: 'Settings Saved',
+                            template: 'Please explore the menu and enjoy zmNinja!'
+                    }).then(function(res) { $ionicSideMenuDelegate.toggleLeft();});
+        });
+
     };
 
 

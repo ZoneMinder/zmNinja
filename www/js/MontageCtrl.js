@@ -11,7 +11,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     // Controller main
     //---------------------------------------------------------------------
 
-
+ console.log("********  HAVE ALL MONITORS");
+    $scope.monitors = message;
 
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
@@ -41,8 +42,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.slider = {};
     $scope.slider.monsize = ZMDataModel.getMontageSize();
 
-    console.log("********  HAVE ALL MONITORS");
-    $scope.monitors = message;
+   
 
     // The difference between old and original is this:
     // old will have a copy of the last re-arranged monitor list
@@ -86,7 +86,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     } // at this stage, the monitor arrangement is not matching
     // the montage order. Its in true order. Let us first process the hiddenOrder part
     // now
-
+    
     for (i = 0; i < montageOrder.length; i++) {
         montageOrder[i] = parseInt(montageOrder[i]);
         hiddenOrder[i] = parseInt(hiddenOrder[i]);
@@ -95,9 +95,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // disabled monitors
         if (hiddenOrder[i] == 1) {
             // $scope.monitors[i].Monitor.listDisplay='noshow';
+            
+            if ($scope.monitors[i] !== undefined) 
             $scope.monitors[i].Monitor.listDisplay = 'noshow';
             ZMDataModel.zmLog("Monitor " + i + " is marked as hidden in montage");
         } else {
+            if ($scope.monitors[i] !== undefined) 
             $scope.monitors[i].Monitor.listDisplay = 'show';
         }
     }
