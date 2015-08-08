@@ -295,7 +295,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     $scope.saveImageToPhone = function (mid) {
         $ionicLoading.show({
-            template: "saving snapshot..",
+            template: "saving snapshot...",
             noBackdrop: true,
             duration: zm.httpTimeout
         });
