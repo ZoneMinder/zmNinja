@@ -229,9 +229,10 @@ angular.module('zmApp', [
 
 .factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm, $browser,$timeout,$q, $rootScope, $ionicLoading)  {
     var zmAutoLoginHandle;
-    var d = $q.defer();
+   
     function doLogin(str)
     {
+         var d = $q.defer();
        /* if ($rootScope.loggedIntoZm == 1)
         {
             d.resolve("Already logged in");
@@ -283,10 +284,11 @@ angular.module('zmApp', [
             $rootScope.loggedIntoZm = 1;
             console.log ("**** ZM Login OK");
             ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
-            //$cookies.myFavorite = 'oatmeal';
+          
             //$timeout( function() {console.log ("***** ALL COOKIES:" + JSON.stringify(  $browser.cookies()));},1000);
-            console.log ("***** ALL HEADERS:" + headers('cookie'));
+           
             d.resolve("Login Success");
+            console.log ("THIS IS WHERE I RETURN LOGIN SUCCESS DUDE");
             return (d.promise);
             
         })
