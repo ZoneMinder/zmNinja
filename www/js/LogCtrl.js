@@ -105,7 +105,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         };
         $fileLogger.getLogfile().then(function (l) {
 
-                $scope.zmLog.logString = l;
+                $scope.zmLog.logString = l.split('\n').reverse().join('\n');
+            
                 //console.log ("LOGS" + logstring);
             },
             function (error) {
