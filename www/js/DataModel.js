@@ -285,6 +285,9 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         getMonitors: function (forceReload) {
             console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
+            
+            
+            
             $ionicLoading.show({
                 template: 'Loading Monitors...',
                 animation: 'fade-in',

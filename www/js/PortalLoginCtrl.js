@@ -21,7 +21,6 @@ console.log ("***** INSIDE LOGIN CONTROLLER");
         zmAutoLogin.doLogin("Logging into ZoneMinder...")
         .then (function(data)
                {
-               
                  ZMDataModel.getKeyConfigParams(1);
                 $state.go('montage');
         });

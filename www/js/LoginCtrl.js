@@ -206,6 +206,7 @@ function addhttp(url) {
         {
         
             console.log ("THE DATA WAS " + data);
+            console.log ("SHOWING POPUP ");
             $ionicPopup.alert({
                             title: 'Settings Saved',
                             template: 'Please explore the menu and enjoy zmNinja!'
