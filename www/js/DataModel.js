@@ -7,7 +7,7 @@
 // that many other controllers use
 // It's grown over time. I guess I may have to split this into multiple services in the future
 
-angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm',function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,zm) {
+angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope',function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,zm, $rootScope) {
 
     var zmAppVersion="unknown";
     var monitorsLoaded = 0;
@@ -293,6 +293,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 maxWidth: 200,
                 showDelay: 0
             });
+            
+        
+                
+            
             var d = $q.defer();
             if ((monitorsLoaded == 0) || (forceReload == 1)) // monitors are empty or force reload
             {

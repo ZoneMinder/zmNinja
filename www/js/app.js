@@ -201,11 +201,19 @@ angular.module('zmApp', [
             {
 
                 var zmSess=cookies.match("ZMSESSID=(.*?);");
-                if (zmSess[1])
+                
+                if (zmSess)
                 {
-                    console.log ("***RESPONSE HEADER COOKIE " + zmSess[1]);
-                    console.log ("WHOLE STRING " + cookies);
-                    zmCookie=zmSess[1];
+                    if (zmSess[1])
+                    {
+                        //console.log ("***RESPONSE HEADER COOKIE " + zmSess[1]);
+                        console.log ("WHOLE STRING " + cookies);
+                        zmCookie=zmSess[1];
+                    }
+                }
+                else
+                {
+                     console.log ("WHOLE STRING " + cookies);
                 }
             }
             return response;
@@ -219,12 +227,29 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm, $browser,$timeout)  {
+.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm, $browser,$timeout,$q, $rootScope, $ionicLoading)  {
     var zmAutoLoginHandle;
-    function doLogin()
+    var d = $q.defer();
+    function doLogin(str)
     {
+       /* if ($rootScope.loggedIntoZm == 1)
+        {
+            d.resolve("Already logged in");
+            return (d.promise);
+        }*/
         console.log ("**** ZM AUTO LOGIN CALLED");
-        ZMDataModel.zmLog("zmAutologin timer started");
+        ZMDataModel.zmLog("zmAutologin called");
+        
+        if (str)
+        {
+             $ionicLoading.show({
+                template: str,
+                noBackdrop: true,
+                duration: zm.httpTimeout
+            });
+        }
+        
+        
         var loginData = ZMDataModel.getLogin();
         $http({
             method:'POST',
@@ -253,27 +278,39 @@ angular.module('zmApp', [
         })
         .success(function(data,status,headers)
         {
+            $ionicLoading.hide();
+            
+            $rootScope.loggedIntoZm = 1;
             console.log ("**** ZM Login OK");
             ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
             //$cookies.myFavorite = 'oatmeal';
-            $timeout( function() {console.log ("***** ALL COOKIES:" + JSON.stringify(  $browser.cookies()));},1000);
+            //$timeout( function() {console.log ("***** ALL COOKIES:" + JSON.stringify(  $browser.cookies()));},1000);
             console.log ("***** ALL HEADERS:" + headers('cookie'));
-
+            d.resolve("Login Success");
+            return (d.promise);
+            
         })
         .error(function(error)
         {
+            $ionicLoading.hide();
+             $rootScope.loggedIntoZm = -1;
             console.log ("**** ZM Login FAILED");
             ZMDataModel.zmLog ("zmAutologin Error " + JSON.stringify(error), "error");
+            d.resolve("Login Error");
+            return d.promise;
         });
+        return d.promise;
+        
     }
 
     function start()
     {
+        $rootScope.loggedIntoZm = 0;
         $interval.cancel(zmAutoLoginHandle);
-        doLogin();
+        //doLogin();
         zmAutoLoginHandle = $interval(function()
         {
-            doLogin();
+            doLogin("");
 
         },zm.loginInterval); // Auto login every 5 minutes
                       // PHP timeout is around 10 minutes
@@ -282,13 +319,15 @@ angular.module('zmApp', [
     function stop()
     {
         $interval.cancel(zmAutoLoginHandle);
+        $rootScope.loggedIntoZm = 0;
         ZMDataModel.zmLog("Cancelling zmAutologin timer");
 
     }
 
     return {
         start: start,
-        stop: stop
+        stop: stop,
+        doLogin: doLogin
     };
 })
 
@@ -333,6 +372,7 @@ angular.module('zmApp', [
     $rootScope.toTime="";
     $rootScope.fromString="";
     $rootScope.toString="";
+    $rootScope.loggedIntoZm = 0;
 
     ZMDataModel.init();
     // for making sure we canuse $state.go with ng-click
@@ -342,13 +382,7 @@ angular.module('zmApp', [
 
     var loginData = ZMDataModel.getLogin();
 
-    if (ZMDataModel.isLoggedIn()) {
-        ZMDataModel.zmLog ("User is logged in");
-        console.log("VALID CREDENTIALS. Grabbing Monitors");
-        ZMDataModel.getMonitors(0);
-        ZMDataModel.getKeyConfigParams(1);
-
-    }
+    
 
     // This code takes care of trapping the Android back button
     // and takes it to the menu.
@@ -512,7 +546,7 @@ angular.module('zmApp', [
 
     // lets POST so we get a session ID right hre
 
-    //console.log ("Setting up POST LOGIN timer");
+    console.log ("Setting up POST LOGIN timer");
     zmAutoLogin.start();
 
 }) //run
@@ -651,16 +685,26 @@ angular.module('zmApp', [
         templateUrl: "templates/log.html",
         controller: 'zmApp.LogCtrl',
     })
+    
+     .state('zm-portal-login', {
+        data: {
+            requireLogin: false
+        },
+        url: "/zm-portal-login",
+        templateUrl: "templates/zm-portal-login.html",
+        controller: 'zmApp.PortalLoginCtrl',
+    })
 
     .state('montage', {
         data: {
             requireLogin: true
         },
         resolve: {
-            message: function (ZMDataModel) {
-                console.log("Inside app.montage resolve");
+                message: function (ZMDataModel) {
+                console.log("Inside app.events resolve");
                 return ZMDataModel.getMonitors(0);
-            }
+                }
+            
         },
         url: "/montage",
         templateUrl: "templates/montage.html",
@@ -671,7 +715,7 @@ angular.module('zmApp', [
 
 
     // if none of the above states are matched, use this as the fallback
-    var defaultState = "/montage";
+    var defaultState = "/zm-portal-login";
     //var defaultState = "/login";
     // as it turns out I can't really inject a factory in config the normal way
 
@@ -684,7 +728,8 @@ angular.module('zmApp', [
 
     $urlRouterProvider.otherwise(function ($injector, $location) {
         var $state = $injector.get("$state");
-        $state.go("montage");
+        console.log ("** PORTAL LOGIN STATE");
+        $state.go("zm-portal-login");
     });
 
 }); //config
