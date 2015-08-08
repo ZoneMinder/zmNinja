@@ -288,7 +288,10 @@ angular.module('zmApp', [
             //$timeout( function() {console.log ("***** ALL COOKIES:" + JSON.stringify(  $browser.cookies()));},1000);
            
             d.resolve("Login Success");
-            console.log ("THIS IS WHERE I RETURN LOGIN SUCCESS DUDE");
+            
+              $rootScope.$broadcast('event:auth-login-success', data);
+            $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+            
             return (d.promise);
             
         })
@@ -299,6 +302,7 @@ angular.module('zmApp', [
             console.log ("**** ZM Login FAILED");
             ZMDataModel.zmLog ("zmAutologin Error " + JSON.stringify(error), "error");
             d.resolve("Login Error");
+            $rootScope.$broadcast('event:auth-login-failed', error);
             return d.promise;
         });
         return d.promise;
@@ -517,6 +521,7 @@ angular.module('zmApp', [
             console.log("** generated Random of " + $rootScope.rand);
             zmAutoLogin.stop(); //safety
             zmAutoLogin.start();
+            zmAutoLogin.doLogin("authenticating ...");
 
 
         }, false);
