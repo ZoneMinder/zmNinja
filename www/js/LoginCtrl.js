@@ -8,7 +8,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     };
 
     $scope.loginData = ZMDataModel.getLogin();
+    
+   $scope.auth={isUseAuth:""};
+    $scope.auth.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true:false;
 
+    
 
 
      //-------------------------------------------------------------------------
@@ -78,6 +82,8 @@ function addhttp(url) {
         $scope.loginData.apiurl = $scope.loginData.apiurl.trim();
         $scope.loginData.username = $scope.loginData.username.trim();
         $scope.loginData.streamingurl = $scope.loginData.streamingurl.trim();
+        
+        $scope.loginData.isUseAuth = ($scope.auth.isUseAuth) ? "1": "0";
 
         if ($scope.loginData.url.slice(-1) == '/') {
             $scope.loginData.url = $scope.loginData.url.slice(0, -1);
@@ -121,10 +127,6 @@ function addhttp(url) {
             $scope.loginData.apiurl = $scope.loginData.apiurl.replace("https:","http:");
             $scope.loginData.streamingurl = $scope.loginData.streamingurl.replace("https:","http:");
         }
-
-
-
-        // FIXME:: Do a login id check too
 
         var apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
         var portalurl = $scope.loginData.url + '/index.php';
@@ -200,15 +202,31 @@ function addhttp(url) {
             }
 
         );*/
+        
+        // Check if isUseAuth is set make sure u/p have a dummy value
+        if ($scope.isUseAuth)
+        {
+            if (!$scope.loginData.username) $scope.loginData.username="x";
+            if (!$scope.loginData.password) $scope.loginData.password="x";
+            ZMDataModel.zmLog("Authentication is disabled, setting dummy user & pass");
+        }
+        
         ZMDataModel.setLogin($scope.loginData);
-        zmAutoLogin.doLogin("Logging into ZoneMinder")
+        zmAutoLogin.doLogin("authenticating...")
+        // Do the happy menu only if authentication works
+        // if it does not work, there is an emitter for auth
+        // fail in app.js that will be called to show an error
+        // box
+        
+        // Note that API auth ties into ZM Auth, so in one fell
+        // swoop we've just validated both. Happy?
         .then( function(data)
         {
         
             console.log ("THE DATA WAS " + data);
             console.log ("SHOWING POPUP ");
             $ionicPopup.alert({
-                            title: 'Settings Saved',
+                            title: 'Login validated',
                             template: 'Please explore the menu and enjoy zmNinja!'
                     }).then(function(res) { $ionicSideMenuDelegate.toggleLeft();});
         });

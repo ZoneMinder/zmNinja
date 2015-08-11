@@ -24,7 +24,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'maxFPS': "3", // image streaming FPS
         'montageQuality': "50", // montage streaming quality in %
         'useSSL':false, // "1" if HTTPS
-        'keepAwake':true // don't dim/dim during live view
+        'keepAwake':true, // don't dim/dim during live view
+        'isUseAuth':true // true if user wants ZM auth
     };
     var configParams = {
         'ZM_EVENT_IMAGE_DIGITS':'-1'
@@ -64,6 +65,19 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             console.log("****** DATAMODEL INIT SERVICE CALLED ********");
 
             zmLog("ZMData init: checking for stored variables & setting up log file");
+           
+            if (window.localStorage.getItem("isUseAuth") != undefined) {
+                loginData.isUseAuth =
+                    window.localStorage.getItem("isUseAuth");
+
+            }
+            else
+            {
+                loginData.isUseAuth = "1"; // lets assume there is auth
+                zmLog("I did not find isUseAuth. Older version of app, maybe.");
+            }
+            
+            
 
             if (window.localStorage.getItem("username") != undefined) {
                 loginData.username =
@@ -142,7 +156,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         },
 
         isLoggedIn: function () {
-            if (loginData.username != "" && loginData.password != "" && loginData.url != "" && loginData.apiurl != "")
+            if ( (loginData.username != "" && loginData.password != "" && loginData.url != "" && loginData.apiurl != "") || (loginData.isUseAuth == '0'))
             {
                 return 1;
             } else
@@ -218,6 +232,9 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("keepAwake", loginData.keepAwake?"1":"0");
             window.localStorage.setItem("maxMontage", loginData.maxMontage);
             window.localStorage.setItem("montageQuality", loginData.montageQuality);
+            window.localStorage.setItem("isUseAuth", loginData.isUseAuth);
+            
+            console.log ("***** SETTING ISUSEAUTH TO " + loginData.isUseAuth);
 
 
             if (loginData.maxFPS > 30) {

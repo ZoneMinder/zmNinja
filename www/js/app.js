@@ -47,7 +47,8 @@ angular.module('zmApp', [
     monitorErrorColor: '#795548',
     montageScaleFrequency:300,
     eventsListDetailsHeight:200,
-    eventsListScrubHeight:300
+    eventsListScrubHeight:300,
+    loginScreenString:"var currentView = 'login'" // oh shit. Isn't there a better way?
 
 
 
@@ -227,12 +228,59 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm, $browser,$timeout,$q, $rootScope, $ionicLoading)  {
+.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm, $browser,$timeout,$q, $rootScope, $ionicLoading, $ionicPopup, $state)  {
     var zmAutoLoginHandle;
-   
+    
+//------------------------------------------------------------------
+// doLogin() emits this when there is an auth error in the portal
+//------------------------------------------------------------------
+    
+    $rootScope.$on ("auth-error", function()
+    {
+        console.log ("**** ZM LOGIN ERROR INTERCEPT");
+        
+        var alertPopup = $ionicPopup.alert(
+            {
+                title: 'Zoneminder authentication failed',
+                template: 'This might be a temporary situation and may result in zmNinja not working properly. Please try to log in again.'
+            }); 
+        alertPopup.then (function(data){
+            //$state.transitionTo('login');
+        });
+        
+        
+    });
+    
+//------------------------------------------------------------------
+// doLogin() emits this when our auth credentials work
+//------------------------------------------------------------------
+    
+
+     $rootScope.$on ("auth-success", function()
+     {
+        console.log ("**** ZM LOGIN SUCCESS INTERCEPT");
+    });
+    
+    
+//------------------------------------------------------------------
+// doLogin() is the function that tries to login to ZM
+// it also makes sure we are not back to the same page
+// which actually means auth failed, but ZM treats it as a success
+//------------------------------------------------------------------
+    
     function doLogin(str)
     {
-         var d = $q.defer();
+        var d = $q.defer();
+        var ld = ZMDataModel.getLogin();
+        if (ld.isUseAuth == "0")
+        {
+            $ionicLoading.hide();
+            ZMDataModel.zmLog ("Authentication is disabled. Skipping login");
+            d.resolve("Login success - no auth");
+            return d.promise;
+        }
+        
+        
        /* if ($rootScope.loggedIntoZm == 1)
         {
             d.resolve("Already logged in");
@@ -281,16 +329,39 @@ angular.module('zmApp', [
         {
             $ionicLoading.hide();
             
-            $rootScope.loggedIntoZm = 1;
-            console.log ("**** ZM Login OK");
-            ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
+            // Coming here does not mean success
+            // it could also be a bad login, but
+            // ZM returns you to login.php and returns 200 OK
+            // so we will check if the data has
+            // <title>ZM - Login</title> -- it it does then its the login page
+            
+            
+            if (data.indexOf(zm.loginScreenString) == -1 )
+            {
+            
+                $rootScope.loggedIntoZm = 1;
+                console.log ("**** ZM Login OK");
+                ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
+            
+                d.resolve("Login Success");
+            
+                $rootScope.$emit('auth-success', data);
+                $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+            }
+            else    //  this means login error
+            {
+                  $rootScope.loggedIntoZm = -1;
+                  console.log ("**** ZM Login FAILED");
+                ZMDataModel.zmLog ("zmAutologin Error: Bad Credentials ", "error");
+                $rootScope.$emit('auth-error', "incorrect credentials");
+ 
+                d.reject("Login Error");
+            }
+            
           
             //$timeout( function() {console.log ("***** ALL COOKIES:" + JSON.stringify(  $browser.cookies()));},1000);
            
-            d.resolve("Login Success");
             
-              $rootScope.$broadcast('event:auth-login-success', data);
-            $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             
             return (d.promise);
             
@@ -301,8 +372,9 @@ angular.module('zmApp', [
              $rootScope.loggedIntoZm = -1;
             console.log ("**** ZM Login FAILED");
             ZMDataModel.zmLog ("zmAutologin Error " + JSON.stringify(error), "error");
-            d.resolve("Login Error");
-            $rootScope.$broadcast('event:auth-login-failed', error);
+            $rootScope.$emit('auth-error', error);
+ 
+            d.reject("Login Error");
             return d.promise;
         });
         return d.promise;
@@ -311,23 +383,38 @@ angular.module('zmApp', [
 
     function start()
     {
-        $rootScope.loggedIntoZm = 0;
-        $interval.cancel(zmAutoLoginHandle);
-        //doLogin();
-        zmAutoLoginHandle = $interval(function()
+        var ld = ZMDataModel.getLogin();
+        if (ld.isUseAuth == '1')
         {
-            doLogin("");
+            $rootScope.loggedIntoZm = 0;
+            $interval.cancel(zmAutoLoginHandle);
+            //doLogin();
+            zmAutoLoginHandle = $interval(function()
+            {
+                doLogin("");
 
-        },zm.loginInterval); // Auto login every 5 minutes
-                      // PHP timeout is around 10 minutes
-                      // should be ok?
+            },zm.loginInterval); // Auto login every 5 minutes
+                          // PHP timeout is around 10 minutes
+                          // should be ok?
+        }
+        else
+        {
+            ZMDataModel.zmLog ("Authentication not enabled. Skipping Timer");
+        }
     }
     function stop()
     {
-        $interval.cancel(zmAutoLoginHandle);
-        $rootScope.loggedIntoZm = 0;
-        ZMDataModel.zmLog("Cancelling zmAutologin timer");
-
+        var ld = ZMDataModel.getLogin();
+        if (ld.isUseAuth == '1')
+        {
+            $interval.cancel(zmAutoLoginHandle);
+            $rootScope.loggedIntoZm = 0;
+            ZMDataModel.zmLog("Cancelling zmAutologin timer");
+        }
+        else
+        {
+            ZMDataModel.zmLog ("No need to cancel zmAutologin timer. Auth is off");
+        }
     }
 
     return {
@@ -336,6 +423,13 @@ angular.module('zmApp', [
         doLogin: doLogin
     };
 })
+
+
+
+             
+             
+
+
 
 /* For future use - does not work with img src intercepts
 .factory ('httpAuthIntercept', function ($rootScope, $q)
@@ -445,6 +539,8 @@ angular.module('zmApp', [
     });
 
 
+    
+    
     $ionicPlatform.ready(function () {
 
         // generates and error in desktops but works fine
@@ -472,6 +568,8 @@ angular.module('zmApp', [
          // that allows you to manage log files without worrying about
         // paths etc.https://github.com/pbakondy/filelogger
          $fileLogger.setStorageFilename(zm.logFile);
+        // easier tz reading
+        $fileLogger.setTimestampFormat('medium');
 
          if (window.cordova)
          {

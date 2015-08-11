@@ -6,12 +6,13 @@
 (function(){
 /* global angular, console, cordova */
 
-// install   :     cordova plugin add cordova-plugin-file
+// install    : cordova plugin add cordova-plugin-file
+// date format: https://docs.angularjs.org/api/ng/filter/date
 
 angular.module('fileLogger', ['ngCordova.plugins.file'])
 
-  .factory('$fileLogger', ['$q', '$window', '$cordovaFile', '$timeout',
-    function ($q, $window, $cordovaFile, $timeout) {
+  .factory('$fileLogger', ['$q', '$window', '$cordovaFile', '$timeout', '$filter',
+    function ($q, $window, $cordovaFile, $timeout, $filter) {
 
     'use strict';
 
@@ -21,6 +22,9 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
     var levels = ['DEBUG', 'INFO', 'WARN', 'ERROR'];
 
     var storageFilename = 'messages.log';
+
+    var dateFormat;
+    var dateTimezone;
 
 
     function isBrowser() {
@@ -39,7 +43,9 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
         level = 'INFO';
       }
 
-      var timestamp = (new Date()).toJSON();
+      var now = new Date();
+      var timestamp = dateFormat ?
+        $filter('date')(now, dateFormat, dateTimezone) : now.toJSON();
 
       var messages = Array.prototype.slice.call(arguments, 1);
       var message = [ timestamp, level ];
@@ -243,6 +249,19 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
     }
 
 
+    function setTimestampFormat(format, timezone) {
+      if (!(angular.isUndefined(format) || angular.isString(format))) {
+        throw new TypeError('format parameter must be a string or undefined');
+      }
+      if (!(angular.isUndefined(timezone) || angular.isString(timezone))) {
+        throw new TypeError('timezone parameter must be a string or undefined');
+      }
+
+      dateFormat = format;
+      dateTimezone = timezone;
+    }
+
+
     function checkFile() {
       var q = $q.defer();
 
@@ -299,6 +318,7 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
       getLogfile: getLogfile,
       deleteLogfile: deleteLogfile,
       setStorageFilename: setStorageFilename,
+      setTimestampFormat: setTimestampFormat,
       checkFile: checkFile,
       debug: debug,
       info: info,

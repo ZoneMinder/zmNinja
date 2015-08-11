@@ -10,20 +10,28 @@
                 <i class="ion-android-home" style="font-size:150%"></i>
                 ZoneMinder Settings
             </span>
+            
+            <div class="item">
+            <ion-checkbox ng-model="auth.isUseAuth">use authentication</ion-checkbox>
+            
+            <div ng-if = "auth.isUseAuth" >
+                
+                <label class="item item-input item-floating-label" >
+                    <span class="input-label">username</span>
+                    <input autocapitalize="none" autocomplete="off"
+                           autocorrect="off" type="text"
+                           placeholder="username"
+                           ng-model="loginData.username">
+                </label>
 
-            <label class="item item-input item-floating-label" >
-                <span class="input-label">username</span>
-                <input autocapitalize="none" autocomplete="off"
-                       autocorrect="off" type="text"
-                       placeholder="username"
-                       ng-model="loginData.username">
-            </label>
-
-            <label class="item item-input item-floating-label" >
-                <span class="input-label">password</span>
-                <input type="password" placeholder="password"
-                       ng-model="loginData.password">
-            </label>
+                <label class="item item-input item-floating-label" >
+                    <span class="input-label">password</span>
+                    <input type="password" placeholder="password"
+                           ng-model="loginData.password">
+                </label>
+            </div>
+                
+                </div>
             <label class="item item-input item-floating-label" >
                 <span class="input-label">ZM portal url</span>
                 <input autocapitalize="none" autocomplete="off"
@@ -63,7 +71,7 @@
             </label>
         </div>
         <button class="button button-block button-balanced icon ion-locked"
-                    ng-click="save()"> Save
+                    ng-click="save()"> Login
         </button>
 
     </ion-content>
