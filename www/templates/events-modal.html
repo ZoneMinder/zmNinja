@@ -15,7 +15,7 @@
                     <li ng-repeat="slide in slides">
 
                          <img imageonload="finishedLoadingImage($index)"
-                                         image-spinner-src="{{loginData.url}}/index.php?view=image&&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}"
+                                         image-spinner-src="{{loginData.url}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale=100"
                                              image-spinner-loader="lines"
                                              ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}"/>
 

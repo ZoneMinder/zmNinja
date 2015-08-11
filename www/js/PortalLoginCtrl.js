@@ -18,12 +18,21 @@ console.log ("***** INSIDE LOGIN CONTROLLER");
     if (ZMDataModel.isLoggedIn()) {
       ZMDataModel.zmLog ("User credentials are provided");
       // console.log("VALID CREDENTIALS. Grabbing Monitors");
-        zmAutoLogin.doLogin("Logging into ZoneMinder...")
-        .then (function(data)
+        zmAutoLogin.doLogin("authenticating...")
+        .then (function(data) // success
                {
                  ZMDataModel.getKeyConfigParams(1);
                 $state.go('montage');
-        });
+        },
+               // coming here means auth error
+               // so go back to login
+               function (error)
+               {
+                    $state.go('login');
+        }
+              
+              
+              );
     }
     else
     {

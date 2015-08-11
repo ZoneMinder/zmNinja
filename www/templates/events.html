@@ -148,9 +148,9 @@
                                 rn-carousel-index="mycarousel.index"
                                 rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover >
                                 <li ng-repeat="slide in slides">
-
-                                     <img imageonload="finishedLoadingImage($index)"
-                                         image-spinner-src="{{loginData.url}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}"
+                                    <!-- Linwood scaling -->
+                                     <img imageonload="finishedLoadingImage($index)"  
+                                         image-spinner-src="{{loginData.url}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380"
                                              image-spinner-loader="lines"
                                              height="190px";/>
                                     <br/>

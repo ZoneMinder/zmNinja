@@ -68,6 +68,14 @@ Wrapper for $fileLogger.log('error', ...)
 
 You can set the local filename (default messages.log). It requests one parameter, the filename (type string).
 
+### $fileLogger.setTimestampFormat(format, timezone)
+
+You can customize the timestamp format using [Angular <code>date</code> filter](https://docs.angularjs.org/api/ng/filter/date). See formatting parameters on the linked Angular docs page. Example:
+
+```js
+$fileLogger.setTimestampFormat('medium');
+```
+
 ### $fileLogger.getLogfile()
 
 You can read the whole logfile from the filestore. This method returns a promise.
