@@ -17,6 +17,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
 
+   $scope.showSizeButtons = false;
     $ionicPopover.fromTemplateUrl('templates/help/montage-help.html', {
     scope: $scope,
   }).then(function(popover) {
@@ -294,7 +295,21 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 ]
         });
     };
-
+    
+    $scope.onSwipeLeft = function ($index)
+    {
+        $scope.showSizeButtons = true;
+    };
+    
+      $scope.onSwipeRight= function ($index)
+    {
+          $timeout( function()
+                   {
+              $scope.showSizeButtons=false;
+          },1000);
+          
+    };
+    
     //---------------------------------------------------------------------
     // This marks a monitor as hidden in montage view
     //---------------------------------------------------------------------
