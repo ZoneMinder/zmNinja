@@ -275,7 +275,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
                 })
                 .error (function(err) {
-                    zmLog ("Error retrieving ZM_EVENT_IMAGE_DIGITS" + JSON.stringify(err));
+                    zmLog ("Error retrieving ZM_EVENT_IMAGE_DIGITS" + JSON.stringify(err), "error");
                     zmLog ("Taking a guess, setting ZM_EVENT_IMAGE_DIGITS to 5");
                     // FIXME: take a plunge and keep it at 5?
                     configParams.ZM_EVENT_IMAGE_DIGITS = 5;
@@ -396,17 +396,29 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 myurl = myurl + "/EndTime <=:"+endTime;
             myurl = myurl + ".json";
             console.log (">>>>>Constructed URL " + myurl);
+            
+            $ionicLoading.show({
+                template: 'calculating events list size...',
+                animation: 'fade-in',
+                showBackdrop: true,
+                duration: zm.loadingTimeout,
+                maxWidth: 200,
+                showDelay: 0
+            });
+            
 
             //var myurl = (monitorId == 0) ? apiurl + "/events.json?page=1" : apiurl + "/events/index/MonitorId:" + monitorId + ".json?page=1";
             var d = $q.defer();
             $http.get(myurl)
                 .success(function (data) {
+                    $ionicLoading.hide();
                     //console.log ("**** EVENTS PAGES I GOT "+JSON.stringify(data));
                     //console.log("**** PAGE COUNT IS " + data.pagination.pageCount);
                     d.resolve(data.pagination);
                     return d.promise;
                 })
                 .error(function (error) {
+                    $ionicLoading.hide();
                     console.log("*** ERROR GETTING TOTAL PAGES ***");
                     zmLog ("Error retrieving page count of events " + JSON.stringify(error), "error");
                     d.reject(error);
