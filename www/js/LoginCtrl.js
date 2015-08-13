@@ -138,70 +138,7 @@ function addhttp(url) {
         ZMDataModel.zmLog ("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
 
 
-        // Let's do a sanity check to see if the URLs are ok
-/*
-        $ionicLoading.show({
-            template: 'Checking data...',
-            animation: 'fade-in',
-            showBackdrop: true,
-            duration: zm.loadingTimeout,
-            maxWidth: 200,
-            showDelay: 0
-        });*/
-
-/*
-    FIXME: REDO this 
-        $q.all([
-  //  $http.get(apiurl),
-    $http.get(portalurl),
-    //$http.get(streamingurl),
-  ]).then(
-            function (results) {
-                $ionicLoading.hide();
-                $http.get(apiurl)
-                .then (function (data)
-                       {
-                },
-                    function (err)
-                           {
-                    });
-                
-                
-                $ionicPopup.alert({
-                        title: 'Settings Saved',
-                        template: 'Please explore the menu and enjoy zmNinja!'
-                }).then(function(res) { $ionicSideMenuDelegate.toggleLeft();});
-
-            },
-            function (error) {
-                $ionicLoading.hide();
-                ZMDataModel.zmLog("Settings check error: " +JSON.stringify(error),"error");
-                //alert("Error string" + JSON.stringify(error));
-
-                $ionicPopup.show({
-                    title: 'Please Check your settings',
-                    template: 'I tried reaching out using the data you provided and failed. This may also be because ZoneMinder is currently not reachable.',
-                    buttons: [
-                        {
-                            text: 'Ok',
-                            type: 'button-positive'
-                        },
-                        {
-                            text: 'Details...',
-                            onTap: function (e) {
-                                $ionicPopup.alert({
-                                    title: 'Error Details',
-                                    template: JSON.stringify(error)
-                                });
-
-                            }
-                        }
-                    ]
-                });
-
-            }
-
-        );*/
+  
         
         // Check if isUseAuth is set make sure u/p have a dummy value
         if ($scope.isUseAuth)
@@ -223,8 +160,8 @@ function addhttp(url) {
         .then( function(data)
         {
         
-            console.log ("THE DATA WAS " + data);
-            console.log ("SHOWING POPUP ");
+            //console.log ("THE DATA WAS " + data);
+            //console.log ("SHOWING POPUP ");
             $ionicPopup.alert({
                             title: 'Login validated',
                             template: 'Please explore the menu and enjoy zmNinja!'
