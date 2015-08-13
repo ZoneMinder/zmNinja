@@ -244,10 +244,14 @@ angular.module('zmApp', [
                 title: 'Zoneminder authentication failed',
                 template: 'This might be a temporary situation and may result in zmNinja not working properly. Please try to log in again.'
             }); 
-        alertPopup.then (function(data){
-            //$state.transitionTo('login');
-        });
         
+        // close it after 5 seconds
+        $timeout(function() {
+            ZMDataModel.zmLog("Hiding auth error dialog box");
+            alertPopup.close();
+        },5000);
+
+            
         
     });
     
@@ -279,13 +283,7 @@ angular.module('zmApp', [
             d.resolve("Login success - no auth");
             return d.promise;
         }
-        
-        
-       /* if ($rootScope.loggedIntoZm == 1)
-        {
-            d.resolve("Already logged in");
-            return (d.promise);
-        }*/
+
         console.log ("**** ZM AUTO LOGIN CALLED");
         ZMDataModel.zmLog("zmAutologin called");
         
@@ -371,8 +369,10 @@ angular.module('zmApp', [
             $ionicLoading.hide();
              $rootScope.loggedIntoZm = -1;
             console.log ("**** ZM Login FAILED");
-            ZMDataModel.zmLog ("zmAutologin Error " + JSON.stringify(error), "error");
-            $rootScope.$emit('auth-error', error);
+            ZMDataModel.zmLog ("zmAutologin Error " + JSON.stringify(error), "error, but not calling auth-error emit");
+            // FIXME should I really emit here? This usually does not mean bad login
+            // that is handled in success
+           // $rootScope.$emit('auth-error', error);
  
             d.reject("Login Error");
             return d.promise;
