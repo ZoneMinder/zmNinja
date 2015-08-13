@@ -96,11 +96,11 @@
 
     <!-- For some reason - which I haven't debugged yet, when I was using the ionic side menu template
       I was having problems with tabs/sliders in views, I think its to do with controls being alive in
-      the menu. this approach puts controls in each page and that works well, except that it looks lie
-      parts of this body are rendered upon index.html load result in a few odd icons before angular kicks
-      in. I'll eventually get to fixing this -->
+      the menu. this approach puts controls in each page and that works well -->
 
     <!-- This is the Side menu options -->
+    <!-- ng-cloak makes sure no HTML items load up before Angular is initialized -->
+    <!-- This avoids sudden flashes of odd/mis-aligned icons-->
     <ion-side-menus delegate-handle="sideMenu" ng-cloak>
         <ion-side-menu-content>
             <ion-nav-bar class="bar-stable nav-title-slide-ios7">
