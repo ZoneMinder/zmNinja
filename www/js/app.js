@@ -114,6 +114,7 @@ angular.module('zmApp', [
                 }
                     imageLoadingDataShare.set(1);
                     loadImage();
+                
                     $attributes.$observe('imageSpinnerSrc', function(value){
                     //console.log ("SOURCE CHANGED");
                     imageLoadingDataShare.set(1);
@@ -121,6 +122,22 @@ angular.module('zmApp', [
                  //deregistration();
 
                 });
+                
+
+                     // show an image-missing image FIXME: never seems to get called
+                $element.bind('error',function () {
+console.log ("***** IMAGE ELEMENT ERROR CALLED " + w + "x" + h);
+                    var w = $element.width();
+                    var h = $element.height();
+                    
+                    // using 20 here because it seems even a missing image will have ~18px width 
+                    // after this error function has been called
+                    //if (w <= 20) { w = 100; }
+                    //if (h <= 20) { h = 100; }
+                    var url = 'img/novideo.png';
+                    $element.prop('src', url);
+                    //$element.css('border', 'double 3px #cccccc');
+            });
 
                 function loadImage() {
                     $element.bind("load", function (e) {
