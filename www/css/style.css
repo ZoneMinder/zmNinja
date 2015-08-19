@@ -84,7 +84,8 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 .main {
     text-align: center;
-    background: #5a5a5a;
+    /*background: #5a5a5a;*/
+    background: #1f1e1e;
     margin: 0px;
     padding: 0px;
     /*padding:2px;*/

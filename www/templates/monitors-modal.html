@@ -10,10 +10,10 @@
                             direction="xy" style="width: 100%; ">
                     <!-- android needs this 100vh - otherwise max- does not work -->
 
-                    <div style="height: 100vh;">
+                    <div style="height: 100vh;" class="main">
                         <img imageonload="finishedLoadingImage()"
                              image-spinner-loader="lines"
-                             image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=jpeg&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&buffer=1000&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{$root.rand}}" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" on-swipe-left="onSwipeLeft(monitorId,-1)" on-swipe-right="onSwipeRight(monitorId,1)" />
+                             image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/zms?mode=single&amp;monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}&user={{LoginData.username}}&pass={{LoginData.password}}&rand={{$root.modalRand}}" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" on-swipe-left="onSwipeLeft(monitorId,-1)" on-swipe-right="onSwipeRight(monitorId,1)" />
                     </div>
                 </ion-scroll>
         </ion-content>
