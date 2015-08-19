@@ -109,6 +109,7 @@ angular.module('zmApp', [
             link: function ($scope, $element, $attributes) {
 
                 if ($attributes.imageSpinnerLoader) {
+                   // console.log ("DIRECTIVE: IMAGE SPINNER");
                     var loader = $compile('<div class="image-loader-container"><ion-spinner style="position:fixed;top:5%;left:5%" class="image-loader" icon="' + $attributes.imageSpinnerLoader + '"></ion-spinner></div>')($scope);
                     $element.after(loader);
                 }
@@ -116,7 +117,7 @@ angular.module('zmApp', [
                     loadImage();
                 
                     $attributes.$observe('imageSpinnerSrc', function(value){
-                    //console.log ("SOURCE CHANGED");
+                    //console.log ("DIRECTIVE SOURCE CHANGED");
                     imageLoadingDataShare.set(1);
                      loadImage();
                  //deregistration();
@@ -126,6 +127,7 @@ angular.module('zmApp', [
 
                      // show an image-missing image 
                 $element.bind('error',function () {
+                   // console.log ("DIRECTIVE: IMAGE ERROR");
                     loader.remove();
                          imageLoadingDataShare.set(0);
   
@@ -136,6 +138,7 @@ angular.module('zmApp', [
                 function loadImage() {
                     $element.bind("load", function (e) {
                         if ($attributes.imageSpinnerLoader) {
+                        // console.log ("DIRECTIVE: IMAGE LOADED");
                             loader.remove();
                             imageLoadingDataShare.set(0);
                         }
@@ -153,8 +156,10 @@ angular.module('zmApp', [
                             $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')'; // set style attribute on element (it will load image)
                         };
                         bgImg.src = $attributes.imageSpinnerSrc;
+                       //console.log ("DIRECTIVE: BGIMAGE SRC SET TO " + $attributes.imageSpinnerSrc);
                     } else {
                         $element[0].src = $attributes.imageSpinnerSrc; // set src attribute on element (it will load image)
+                        //console.log ("DIRECTIVE: IMAGE SRC SET TO "+$attributes.imageSpinnerSrc);
                     }
                 }
 
@@ -163,7 +168,9 @@ angular.module('zmApp', [
                 }
 
                 $element.on('$destroy', function () {
+                   // console.log ("**************** DIRECTIVE DESTROY IMAGE: " + $element[0].src);
                 });
+                $element[0].src="img/novideo.png";
 
             }
         };
@@ -215,13 +222,13 @@ angular.module('zmApp', [
                     if (zmSess[1])
                     {
                         //console.log ("***RESPONSE HEADER COOKIE " + zmSess[1]);
-                        console.log ("WHOLE STRING " + cookies);
+                       // console.log ("WHOLE STRING " + cookies);
                         zmCookie=zmSess[1];
                     }
                 }
                 else
                 {
-                     console.log ("WHOLE STRING " + cookies);
+                   //  console.log ("WHOLE STRING " + cookies);
                 }
             }
             return response;

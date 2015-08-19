@@ -30,21 +30,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     };
 
 
-    //-----------------------------------------------------------------------
-    // All we do here is create a new random val for the URL so the
-    // image regenerates
-    //-----------------------------------------------------------------------
-    $scope.reloadView = function () {
-        console.log("*** Refreshing Modal view ***");
-        $rootScope.rand =Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-        $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-        $ionicLoading.show({
-            template: "refreshed view",
-            noBackdrop: true,
-            duration: 2000
-        });
-    };
-
+  
 
 
     //-----------------------------------------------------------------------
