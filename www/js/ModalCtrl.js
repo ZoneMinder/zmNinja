@@ -10,6 +10,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     console.log("**** INSIDE MODAL CTRL, recomputing rand *****");
 
     $scope.rand = Math.floor((Math.random() * 100000) + 1);
+    $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
     //$state.go($state.current, {}, {reload: true});
 
     // This holds the PTZ menu control
@@ -28,7 +29,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         $scope.showModalRangeSider = true;
         console.log ("****SHOWING SLIDER");
     },2000);
-
+    
+ 
     $scope.radialMenuOptions = {
         content: '',
 
@@ -337,6 +339,12 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
         }
     };
+    
+$scope.reloadView = function()
+{
+    ZMDataModel.zmLog ("Reloading view for modal view, recomputing rand");
+    $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+};
 
  $scope.scaleImage = function() {
       console.log ("Switching image style");

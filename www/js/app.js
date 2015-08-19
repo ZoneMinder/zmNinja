@@ -124,9 +124,8 @@ angular.module('zmApp', [
                 });
                 
 
-                     // show an image-missing image FIXME: never seems to get called
+                     // show an image-missing image 
                 $element.bind('error',function () {
-
                     loader.remove();
                          imageLoadingDataShare.set(0);
   
