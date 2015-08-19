@@ -4,7 +4,7 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm,$ionicPopover,$controller, imageLoadingDataShare) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm,$ionicPopover,$controller, imageLoadingDataShare, $window) {
 
     $controller('zmApp.BaseController', { $scope: $scope });
     //---------------------------------------------------------------------
@@ -170,28 +170,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
     function loadNotifications() {
-        // randomval is appended to img src, so after each interval the image reloads
-        // let's make sure no image is loading
-        //if (imageLoadingDataShare.get() == 0)
-       // {
-            //$scope.randomval = (new Date()).getTime();
-        
+            
+          $rootScope.rand =  Math.floor((Math.random() * 100000) + 1);
+        console.log ("Inside Montage timer...");
        
-            $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-            console.log ("Montage Random....");
-       
-        //}
-        //else
-        //{
-        //    console.log ("Not generating rand as image is loading");
-    //    }
-        
-         //   console.log ("*** REMOVE ME Montage timer: "+$rootScope.rand);
-       // console.log ("New " + $scope.randomval);
     }
 
     var intervalHandle ;
-    var isModalActive  = false;
+    $scope.isModalActive  = false;
     var modalIntervalHandle;
     
 
@@ -430,13 +416,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
     $scope.openModal = function (mid, controllable, controlid) {
         console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
-        isModalActive = true;
+       // $scope.isModalActive = true;
         // Note: no need to setAwake(true) as its already awake
         // in montage view
 
         ZMDataModel.zmLog("Cancelling montage timer, opening Modal");
         // ZMDataModel.zmLog("Starting Modal timer");
-       $interval.cancel(intervalHandle);
+        $interval.cancel(intervalHandle);
         
         // let's start modal timer
      //   modalIntervalHandle= $interval(function () {
@@ -488,7 +474,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 });
                 $scope.isControllable = controllable;
                 $scope.showPTZ = false;
-                $scope.modal.show();
+                
+                $scope.isModalActive = true;
+            
+              
+            $scope.modal.show();
+            
             });
 
     };
@@ -499,15 +490,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.closeModal = function () {
         console.log("Close & Destroy Monitor Modal");
-        isModalActive = false;
+       // $scope.isModalActive = false;
         // Note: no need to setAwake(false) as needs to be awake
         // in montage view
         $scope.modal.remove();
+        
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+         $scope.isModalActive = false;
 
         ZMDataModel.zmLog("Restarting montage timer, closing Modal...");
         
-        $interval.cancel(intervalHandle);
+       $interval.cancel(intervalHandle);
          intervalHandle= $interval(function () {
          loadNotifications();
         //  console.log ("Refreshing Image...");
@@ -590,12 +583,23 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     function onResume()
     {
-            console.log ("Restarting montage timer on resume");
+        if (!$scope.isModalActive)
+        {
+            ZMDataModel.zmLog ("Restarting montage timer on resume");
+            $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             $interval.cancel(intervalHandle);
              intervalHandle= $interval(function () {
              loadNotifications();
             //  console.log ("Refreshing Image...");
-        }.bind(this), 1000);
+             }.bind(this), 1000);
+        }
+        else // modal is active
+        {
+            $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+        }
+        
+        
+         
 
     }
 
@@ -636,7 +640,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     });
 
     $scope.$on('$ionicView.unloaded', function () {
-        console.log("**VIEW ** Montage Ctrl Unloaded");
+       // console.log("**************** CLOSING WINDOW ***************************");
+      //  $window.close();
     });
 
     //---------------------------------------------------------
@@ -698,7 +703,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // This rand is really used to reload the monitor image in img-src so it is not cached
         // I am making sure the image in montage view is always fresh
         // I don't think I am using this anymore FIXME: check and delete if needed
-        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+       // $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
     });
 
 

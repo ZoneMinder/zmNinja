@@ -9,8 +9,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     console.log("**** INSIDE MODAL CTRL, recomputing rand *****");
 
-    $scope.rand = Math.floor((Math.random() * 100000) + 1);
-    $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+   // $scope.rand = Math.floor((Math.random() * 100000) + 1);
+   // $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
     //$state.go($state.current, {}, {reload: true});
 
     // This holds the PTZ menu control
@@ -24,11 +24,15 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     // the custom slider view is messed up till the image loads
     // in modal view
     $scope.showModalRangeSider = false;
+         $scope.isModalActive = true;
 
     $timeout( function() {
         $scope.showModalRangeSider = true;
-        console.log ("****SHOWING SLIDER");
+       // console.log ("****SHOWING SLIDER");
     },2000);
+    
+      document.addEventListener("pause", onPause, false);
+    document.addEventListener("resume", onResume, false);
     
  
     $scope.radialMenuOptions = {
@@ -139,8 +143,57 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 }
             },
     ]};
+    
+      $interval.cancel(intervalModalHandle);
+         intervalModalHandle= $interval(function () {
+         loadModalNotifications();
+        //  console.log ("Refreshing Image...");
+    }.bind(this), 1000);
+
+    loadModalNotifications();
+    
+    
+    function onPause() {
+        console.log("*** Modal: Moving to Background ***"); // Handle the pause event
+        console.log("*** MODAL: CANCELLING INTERVAL ****");
+        $interval.cancel(intervalModalHandle);
+       // $interval.cancel(modalIntervalHandle);
+   
+        // FIXME: Do I need to  setAwake(false) here?
+    }
 
 
+    function onResume()
+    {
+     
+        if ($scope.isModalActive)
+        {
+            ZMDataModel.zmLog ("MODAL: Restarting Modal timer on resume");
+            
+            $interval.cancel(intervalModalHandle);
+             intervalModalHandle= $interval(function () {
+             loadModalNotifications();
+            //  console.log ("Refreshing Image...");
+             }.bind(this), 1000);
+        
+       
+            $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+       
+        }
+        
+         
+
+    }
+
+
+function loadModalNotifications() {
+            
+    console.log ("Inside Modal timer...");
+          $rootScope.modalRand =  Math.floor((Math.random() * 100000) + 1);
+       
+    }
+
+    var intervalModalHandle ;
 
 
 
@@ -343,7 +396,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 $scope.reloadView = function()
 {
     ZMDataModel.zmLog ("Reloading view for modal view, recomputing rand");
-    $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+    $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+     $scope.isModalActive = true;
 };
 
  $scope.scaleImage = function() {
@@ -351,5 +405,33 @@ $scope.reloadView = function()
       $scope.imageFit = !$scope.imageFit;
 };
 
+    $scope.$on ('$ionicView.enter', function() {
+        
+      
+        
+    });
+    
+     $scope.$on('$ionicView.leave', function () {
+        console.log("**MODAL: Stopping modal timer");
+         $scope.isModalActive = false;
+         $interval.cancel(intervalModalHandle);
+    });
+
+    $scope.$on('$ionicView.unloaded', function () {
+        $scope.isModalActive = false;
+          console.log("**MODAL UNLOADED: Stopping modal timer");
+          $interval.cancel(intervalModalHandle);
+        
+     //   console.log("Modal monitor left");
+    });
+    
+    $scope.$on('modal.removed', function() {
+        $scope.isModalActive = false;
+          console.log("**MODAL REMOVED: Stopping modal timer");
+          $interval.cancel(intervalModalHandle);
+        
+    // Execute action
+  });
+    
 
 }]);
