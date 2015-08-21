@@ -4,6 +4,10 @@ zmNinja is a multi platform client for ZoneMinder users.
 ZoneMinder is an incredible open source camera monitoring system and is used
 by many for home and commercial security monitoring. http://www.zoneminder.com
 
+Video Demo
+-------------
+Check out a video demo of zmNinja here: https://www.youtube.com/watch?v=sSIMic2V6Jo&feature=youtu.be
+
 Features
 --------
 Please see the [Wiki](https://github.com/pliablepixels/zmNinja/wiki)
