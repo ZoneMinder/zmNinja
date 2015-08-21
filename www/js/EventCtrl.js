@@ -366,6 +366,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                 })
                 .error(function(err) {
                     ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
+                ZMDataModel.displayBanner ('error', ['could not retrieve frame details', 'please try again']);
                 });
 
 
@@ -803,6 +804,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                 })
                 .error(function(err) {
                     ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
+                    ZMDataModel.displayBanner ('error', ['could not retrieve frame details', 'please try again']);
                 });
 
             $scope.totalEventTime = Math.round(parseFloat(edur)) - 1;

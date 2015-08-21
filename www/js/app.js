@@ -242,7 +242,7 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm, $browser,$timeout,$q, $rootScope, $ionicLoading, $ionicPopup, $state)  {
+.factory('zmAutoLogin', function($interval, ZMDataModel, $http,zm, $browser,$timeout,$q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner)  {
     var zmAutoLoginHandle;
     
 //------------------------------------------------------------------
@@ -253,7 +253,19 @@ angular.module('zmApp', [
     {
         console.log ("**** ZM LOGIN ERROR INTERCEPT");
         
-        var alertPopup = $ionicPopup.alert(
+        var contentBannerInstance = $ionicContentBanner.show({
+          text: ['ZoneMinder authentication failed', 'Please check settings'],
+          interval: 2000,
+          type: 'error',
+          transition: 'vertical'
+        });
+        
+        $timeout (function() {
+            contentBannerInstance();
+        },6000);
+                  
+        
+        /*var alertPopup = $ionicPopup.alert(
             {
                 title: 'Zoneminder authentication failed',
                 template: 'This might be a temporary situation and may result in zmNinja not working properly. Please try to log in again.'
@@ -263,7 +275,7 @@ angular.module('zmApp', [
         $timeout(function() {
             ZMDataModel.zmLog("Hiding auth error dialog box");
             alertPopup.close();
-        },5000);
+        },5000);*/
 
             
         
@@ -276,6 +288,16 @@ angular.module('zmApp', [
 
      $rootScope.$on ("auth-success", function()
      {
+         var contentBannerInstance = $ionicContentBanner.show({
+          text: ['ZoneMinder authentication success'],
+          interval: 2000,
+          type: 'info',
+          transition: 'vertical'
+        });
+        
+        $timeout (function() {
+            contentBannerInstance();
+        },2000);
         console.log ("**** ZM LOGIN SUCCESS INTERCEPT");
     });
     
@@ -385,8 +407,8 @@ angular.module('zmApp', [
             console.log ("**** ZM Login FAILED");
             ZMDataModel.zmLog ("zmAutologin Error " + JSON.stringify(error), "error, but not calling auth-error emit");
             // FIXME should I really emit here? This usually does not mean bad login
-            // that is handled in success
-           // $rootScope.$emit('auth-error', error);
+            // that is handled in success. But looks like bad urls etc come here
+           $rootScope.$emit('auth-error', error);
  
             d.reject("Login Error");
             return d.promise;
