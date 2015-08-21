@@ -7,7 +7,7 @@
 // that many other controllers use
 // It's grown over time. I guess I may have to split this into multiple services in the future
 
-angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope',function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,zm, $rootScope) {
+angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout',function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,zm, $rootScope,$ionicContentBanner, $timeout) {
 
     var zmAppVersion="unknown";
     var monitorsLoaded = 0;
@@ -38,6 +38,21 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
     {
         $fileLogger.log(logtype, val);
     }
+    
+     function displayBanner (mytype, mytext, myinterval, mytimer)
+        {
+            var contentBannerInstance = $ionicContentBanner.show({
+              text: mytext || 'no text',
+              interval: myinterval || 2000,
+              type: mytype || 'info',
+              transition: 'vertical'
+            });
+
+            $timeout (function() {
+                contentBannerInstance();
+            },mytimer || 6000);
+    }
+        
 
     return {
 
@@ -253,7 +268,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 loginData.maxMontage = 1;
             }
         },
-
+        
+       
+        displayBanner: function (mytype, mytext, myinterval, mytimer)
+        {
+            displayBanner (mytype, mytext, myinterval, mytimer);
+        },
         //-----------------------------------------------------------------------------
         // This function returns the numdigits for padding capture images
          //-----------------------------------------------------------------------------
@@ -350,6 +370,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                         // to imply no monitors could be loaded. FIXME: conver to proper error
                         monitors = [];
                         console.log("promise resolved inside HTTP fail");
+                        displayBanner ('error', ['error retrieving monitor list', 'please try again']);
                         d.resolve(monitors);
                         $ionicLoading.hide();
                         monitorsLoaded = 0 ;
@@ -421,6 +442,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     $ionicLoading.hide();
                     console.log("*** ERROR GETTING TOTAL PAGES ***");
                     zmLog ("Error retrieving page count of events " + JSON.stringify(error), "error");
+                    displayBanner ('error', ['error retrieving event page count', 'please try again']);
+                
                     d.reject(error);
                     return d.promise;
                 });
@@ -493,6 +516,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 })
                 .error(function (err) {
                     if (loadingStr != 'none') $ionicLoading.hide();
+                   displayBanner ('error', ['error retrieving event list', 'please try again']);
                     console.log("HTTP Events error " + err);
                     zmLog("Error fetching events for page " + pageId + " Err: " + JSON.stringify(err), "error");
                     // I need to reject this as I have infinite scrolling

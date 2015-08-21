@@ -57,7 +57,7 @@
                         </div>
                     
                         <div ng-if="isModalActive">
-                            <img id="img-$index" ng-src="img/novideo.png" style="display:block;" width="{{((devWidth)/(7-monitorSize[$index]))}}px;"/>
+                            <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" width="{{((devWidth)/(7-monitorSize[$index]))}}px;"/>
                         </div>
                     
                 
@@ -75,14 +75,17 @@
     <div ng-show="minimal">
         <nav mfb-menu position="br" effect="zoomin" label="collapse"
              active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-            <button mfb-button icon="ion-close" label="exit full screen"
-                    ng-click="switchMinimal()">
-            </button>
+            
             <button mfb-button icon="ion-arrow-expand" label="increase size"
                     ng-click="changeSize(1)">
             </button>
             <button mfb-button icon="ion-arrow-shrink" label="decrease size"
                     ng-click="changeSize(-1)">
+            </button>
+            <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
+        </button>
+            <button mfb-button icon="ion-close" label="exit full screen"
+                    ng-click="switchMinimal()">
             </button>
         </nav>
     </div>

@@ -13,6 +13,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
  console.log("********  HAVE ALL MONITORS");
     $scope.monitors = message;
+    ZMDataModel.zmLog ("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
 
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
@@ -595,7 +596,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         }
         else // modal is active
         {
-            $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+           // $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
         }
         
         
@@ -706,9 +707,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
        // $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
     });
 
-
+   $scope.reloadView = function()
+   {
+       $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+       ZMDataModel.zmLog ("User action: image reload " + $rootScope.rand);
+   };
 
     $scope.doRefresh = function () {
+        
+       
+        
         console.log("***Pull to Refresh, recomputing Rand");
         ZMDataModel.zmLog ("Reloading view for montage view, recomputing rand");
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);

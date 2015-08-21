@@ -9,7 +9,7 @@
 // I've disabled pan and zoom and used buttons instead
 // also limits # of items to maxItems (currently 200)
 
-angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout) {
+angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner) {
 
     console.log("Inside Timeline controller");
     $scope.openMenu = function () {
@@ -188,6 +188,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             })
             .error(function (err) {
                 ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
+            ZMDataModel.displayBanner ('error', ['error retrieving event details', 'please try again']);
             });
 
         $scope.totalEventTime = Math.round(parseFloat(edur)) - 1;
@@ -607,7 +608,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             }
 
                         });
-                    }); // get Events
+                    },
+                    function (error) {
+                    ZMDataModel.displayBanner ('error', 'Timeline error', 'Please try again');
+                    
+                }
+                         
+                         
+                         ); // get Events
             });
     }
 
