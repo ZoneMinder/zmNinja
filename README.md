@@ -8,9 +8,6 @@ Video Demo
 -------------
 Check out a video demo of zmNinja here: https://www.youtube.com/watch?v=sSIMic2V6Jo&feature=youtu.be
 
-Features
---------
-Please see the [Wiki](https://github.com/pliablepixels/zmNinja/wiki)
 
 Thanks
 ------
@@ -19,6 +16,9 @@ But specifically, [Andrew Bauer](https://github.com/knnniggett) (knnniggett) - h
 helped me significantly in getting into ZoneMinder and also continues to help
 me with my client goals. 
 
+Important Notes
+---------------
+* zmNinja needs APIs enabled in ZoneMinder. See https://github.com/pliablepixels/zmNinja/wiki/Configuring-ZoneMinder-with-API
 
 Objective
 ----------
@@ -26,19 +26,11 @@ Frankly, I wanted to learn how to create a full fledged cross platform app for a
 I used this as an excuse to learn Angular JS, phoneGap and ionic and see if one could
 use these modern tools to build high performance phonegap apps. I was very pleasantly
 surprised -- for a large part, most people who complain about performance  probably
-haven't spent time researching how to optimize. Not that phonegap apps will always compare
-or beat native performance for all apps, but web views have come a long way and while
-coding this app, I realized if you use the right utilities and approaches, you get 
-comparable performance to native code -- it obviously depends on what you are building.
+haven't spent time researching how to optimize. 
 
 I'll keep refining it over time as I learn more of AngularJS and stuff.
 
 
-Important Notes
----------------
-* You need to have the latest ZM APIs installed. These apis are in the angular-ui branch of ZM.
-* If you don't know what that means, then you will have to wait till ZM folks integrate their APIs
-into the main stream (proposed to be part of ZM 1.29)
 
 
 Screenshots:
