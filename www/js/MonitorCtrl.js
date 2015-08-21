@@ -227,13 +227,25 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
             $http.get(myurl)
                 .success(function (data) {
-                    $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1') ? 'moveCon' : 'move';
+                
+                    $scope.ptzMoveCommand = "move"; // start with as move;
+                    
+                    if (data.control.Control.CanMoveRel == '1')    
+                            $scope.ptzMoveCommand = "moveRel";
+                
+                // Prefer con over rel if both enabled
+                // I've tested con
+                    if (data.control.Control.CanMoveCon == '1')    
+                            $scope.ptzMoveCommand = "moveCon";
+
                     console.log("***moveCommand: " + $scope.ptzMoveCommand);
                     ZMDataModel.zmLog("ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
                 })
                 .error(function (data) {
                     console.log("** Error retrieving move PTZ command");
                     ZMDataModel.zmLog("Error retrieving PTZ command  " + JSON.stringify(data), "error");
+                ZMDataModel.displayBanner ('error', 'did not get a valid PTZ response', 'Please try again');
+                
                 });
 
         }
@@ -317,6 +329,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                         $scope.monitors[j].Monitor.isRunningText = data.statustext;
                     })
                     .error(function (data) {
+                        ZMDataModel.displayBanner ('error', 'error retrieving state', 'Please try again');
                         $scope.monitors[j].Monitor.isRunning = "error";
                         $scope.monitors[j].Monitor.color = zm.monitorErrorColor;
                         $scope.monitors[j].Monitor.char = "ion-help-circled";
