@@ -1,0 +1,71 @@
+// Content Banner
+
+// Variables
+//-----------------------------------
+
+$content-banner-height: 30px    !default;
+$content-banner-opacity: .7     !default;
+$content-banner-error-bg: red   !default;
+$content-banner-info-bg: #333   !default;
+
+// Styles
+//-----------------------------------
+
+.content-banner {
+  width: 100%;
+  color: white;
+  height: $content-banner-height;
+  line-height: $content-banner-height;
+  position: absolute;
+  top: 0;
+  opacity: $content-banner-opacity;
+
+  &.error {
+    background-color: $content-banner-error-bg;
+  }
+  &.info {
+    background-color: $content-banner-info-bg;
+  }
+  .content-banner-text {
+    @include transition(opacity 500ms linear) ;
+    position: absolute;
+    top: 0;
+    right: ($button-padding * 2) + 5px + 12px;
+    left: ($button-padding * 2) + 5px + 12px;
+    text-align: center;
+    &.active {
+      opacity: 1;
+    }
+    &:not(.active){
+      opacity: 0;
+    }
+  }
+  .content-banner-close {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    padding: 0 $button-padding;
+    height: 100%;
+    line-height: $content-banner-height;
+    min-height: 0;
+    color: white;
+    &:before {
+      line-height: $content-banner-height;
+    }
+  }
+}
+
+.content-banner-transition-vertical {
+  @include transition-transform(linear 250ms);
+  @include translate3d(0, -100%, 0);
+}
+
+.content-banner-transition-fade {
+  @include transition(opacity 400ms linear) ;
+  opacity: 0;
+}
+
+.content-banner-in {
+  @include translate3d(0, 0, 0);
+  opacity: $content-banner-opacity;
+}
