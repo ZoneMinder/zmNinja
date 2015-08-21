@@ -343,9 +343,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var toDate = moment().endOf('day').format("YYYY-MM-DD HH:mm:ss");
 
 
-
+  //Simulated data
+    /*
+    fromDate = "2015-08-18 00:00:00";
+    toDate = "2015-08-18 23:59:59";
+    */
+    
     $scope.fromDate = fromDate;
     $scope.toDate = toDate;
+    
+  
 
     var maxItems = 200; // THAT magic # --> 300 and ZM on my m/c cries
     $scope.maxItems = maxItems;
@@ -544,17 +551,34 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 $q.all(promises)
                     .then(function (data) {
 
-
+                        graphIndex = 0;
                         // create groups
-                        for (var g = 0; g < $scope.monitors.length; g++) {
+                         for (var g = 0; g < $scope.monitors.length; g++) {
                             groups.add({
                                 id: $scope.monitors[g].Monitor.Id,
                                 content: ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id)
                             });
                         }
+                    
+                    //REMOVE
+                    
+                    /*for (var g = 1; g <= 7; g++) {
+                            groups.add({
+                                id: g.toString(),
+                                content: "Monitor " + g
+                            });
+                        }
+                    */
+                    
                         for (var j = 0; j < data.length; j++) {
                             var myevents = data[j];
-
+                            
+                             if (graphIndex > 200)
+                                {
+                                    ZMDataModel.zmLog ("Exiting page count graph - reached 200");
+                                    break;
+                                    
+                                }
 
                             for (var i = 0; i < myevents.length; i++) {
 
@@ -572,8 +596,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     myename: myevents[i].Event.Name,
 
                                 });
+                                console.log ("Added: Monitor:"+myevents[i].Event.MonitorId +
+                                             " Start:" + myevents[i].Event.StartTime +
+                                             " Stop:"+myevents[i].Event.EndTime);
 
                                 graphIndex++;
+                                
+                                if (graphIndex > 200)
+                                {
+                                    ZMDataModel.zmLog ("Exiting event graph - reached 200");
+                                    break;
+                                    
+                                }
 
                             }
                         }
