@@ -22,26 +22,24 @@ angular.module('zmApp.controllers')
         $scope.currentEventTime = 0;
         var oldEvent = ""; // will hold previous event that had showScrub = true
         var scrollbynumber = 0;
-        $scope.eventsBeingLoaded =  true;
-        $scope.FrameArray=[]; // will hold frame info from detailed Events API
+        $scope.eventsBeingLoaded = true;
+        $scope.FrameArray = []; // will hold frame info from detailed Events API
 
         document.addEventListener("pause", onPause, false);
         console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
         $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-        //var segmentHandle = 0;
+       
 
-
-
-
-$ionicPopover.fromTemplateUrl('templates/events-popover.html', {
+        $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
             scope: $scope,
-          }).then(function(popover) {
+        }).then(function (popover) {
             $scope.popover = popover;
-          });
+        });
 
         // These are the commands ZM uses to move around
-        // in ZMS
+        // in ZMS - not used anymore as I am doing direct
+        // image access via image.php
         var eventCommands = {
             next: "13",
             previous: "12",
@@ -61,7 +59,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
             .then(function (data) {
                 //console.log ("***GETKEY: " + JSON.stringify(data));
                 eventImageDigits = parseInt(data);
-                ZMDataModel.zmLog ("Image padding digits reported as " + eventImageDigits);
+                ZMDataModel.zmLog("Image padding digits reported as " + eventImageDigits);
             });
 
 
@@ -119,7 +117,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                 console.log("TOTAL EVENT PAGES IS " + eventsPage);
                 pageLoaded = true;
                 $scope.viewTitle.title = data.count;
-                ZMDataModel.getEvents($scope.id, eventsPage, "",$rootScope.fromString, $rootScope.toString)
+                ZMDataModel.getEvents($scope.id, eventsPage, "", $rootScope.fromString, $rootScope.toString)
                     .then(function (data) {
                         console.log("EventCtrl Got events");
                         //var events = [];
@@ -151,7 +149,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                                 sec + "/";
 
                             myevents[i].Event.relativePath =
- myevents[i].Event.MonitorId + "/" +
+                                myevents[i].Event.MonitorId + "/" +
                                 yy + "/" +
                                 mm + "/" +
                                 dd + "/" +
@@ -178,29 +176,25 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
         // not explictly handling error --> I have a default "No events found" message
         // displayed in the template if events list is null
 
-        $scope.calcMsTimer = function(frames,len)
-        {
+        $scope.calcMsTimer = function (frames, len) {
             var myframes, mylen;
-             myframes = parseFloat(frames);
-             mylen = parseFloat(len);
-          //  console.log ("frames " + myframes + "length " + mylen);
-          //  console.log ("*** MS COUNT " + (1000.0/(myframes/mylen)));
-            return (Math.round(1000/(myframes/mylen)));
+            myframes = parseFloat(frames);
+            mylen = parseFloat(len);
+            //  console.log ("frames " + myframes + "length " + mylen);
+            //  console.log ("*** MS COUNT " + (1000.0/(myframes/mylen)));
+            return (Math.round(1000 / (myframes / mylen)));
         };
 
         $scope.openMenu = function () {
             $ionicSideMenuDelegate.toggleLeft();
         };
 
-        $scope.scrollPosition= function() {
-            var scrl = parseFloat( $ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
-            var item = Math.round(scrl/200.0);
-            if ($scope.events[item] == undefined)
-            {
+        $scope.scrollPosition = function () {
+            var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
+            var item = Math.round(scrl / 200.0);
+            if ($scope.events[item] == undefined) {
                 return "";
-            }
-            else
-            {
+            } else {
                 return prettifyDate($scope.events[item].Event.StartTime);
             }
             //return Math.random();
@@ -252,14 +246,14 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
         // them in sync while doing format conversion.
         //-------------------------------------------------------------------------
         $scope.$watch('ionRange.index', function () {
-           // console.log ("***ION RANGE CHANGED");
+            // console.log ("***ION RANGE CHANGED");
 
-            $scope.mycarousel.index = parseInt($scope.ionRange.index)-1;
+            $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
         });
 
         $scope.$watch('mycarousel.index', function () {
 
-            $scope.ionRange.index = ($scope.mycarousel.index+1).toString();
+            $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
         });
 
 
@@ -268,10 +262,10 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
         // scrub view for an event.
         //-------------------------------------------------------------------------
 
-        $scope.toggleGroup = function(event,ndx,frames)
-        {
+        $scope.toggleGroup = function (event, ndx, frames) {
             toggleGroup(event, ndx, frames);
         };
+
         function toggleGroup(event, ndx, frames) {
 
             // If we are here and there is a record of a previous scroll
@@ -281,27 +275,27 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                 scrollbynumber = 0;
             }
 
-            if (oldEvent && event !=oldEvent) {
+            if (oldEvent && event != oldEvent) {
                 console.log("SWITCHING OLD EVENT OFF");
                 oldEvent.Event.ShowScrub = false;
                 oldEvent.Event.height = zm.eventsListDetailsHeight;
                 oldEvent = "";
             }
 
-             event.Event.ShowScrub = !event.Event.ShowScrub;
-               // $ionicScrollDelegate.resize();
+            event.Event.ShowScrub = !event.Event.ShowScrub;
+            // $ionicScrollDelegate.resize();
 
-            if (event.Event.ShowScrub==true) // turn on display now
+            if (event.Event.ShowScrub == true) // turn on display now
             {
                 //$ionicScrollDelegate.freezeScroll(true);
                 $ionicSideMenuDelegate.canDragContent(false);
                 $scope.slider_options = {
-                    from:1,
-                    to:event.Event.Frames,
-                    realtime:true,
-                    step:1,
-                    className:"mySliderClass",
-                    callback: function(value, released) {
+                    from: 1,
+                    to: event.Event.Frames,
+                    realtime: true,
+                    step: 1,
+                    className: "mySliderClass",
+                    callback: function (value, released) {
                         //console.log("CALLBACK"+value+released);
                         $ionicScrollDelegate.freezeScroll(!released);
 
@@ -309,18 +303,30 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                     },
                     //modelLabels:function(val) {return "";},
                     css: {
-                    background: {"background-color": "silver"},
-                    before: {"background-color": "purple"},
-                    default: {"background-color": "white"}, // default value: 1px
-                    after: {"background-color": "green"},  // zone after default value
-                    pointer: {"background-color": "red"},   // circle pointer
-                    range: {"background-color": "red"} // use it if double value
+                        background: {
+                            "background-color": "silver"
+                        },
+                        before: {
+                            "background-color": "purple"
+                        },
+                        default: {
+                            "background-color": "white"
+                        }, // default value: 1px
+                        after: {
+                            "background-color": "green"
+                        }, // zone after default value
+                        pointer: {
+                            "background-color": "red"
+                        }, // circle pointer
+                        range: {
+                            "background-color": "red"
+                        } // use it if double value
                     },
-                    scale:[]
+                    scale: []
 
                 };
 
-                event.Event.height=zm.eventsListDetailsHeight + zm.eventsListScrubHeight;
+                event.Event.height = zm.eventsListDetailsHeight + zm.eventsListScrubHeight;
                 $ionicScrollDelegate.resize();
                 $scope.mycarousel.index = 0;
                 $scope.ionRange.index = 1;
@@ -336,38 +342,37 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
 
                 }
                 // now get event details to show alarm frames
-                var loginData=ZMDataModel.getLogin();
-                var myurl = loginData.apiurl+'/events/'+event.Event.Id+".json";
+                var loginData = ZMDataModel.getLogin();
+                var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
                 ZMDataModel.zmLog("*** Constructed API for detailed events: " + myurl);
                 $http.get(myurl)
-                .success(function(data){
-                    $scope.FrameArray = data.event.Frame;
-                  //  $scope.slider_options.scale=[];
-                    $scope.slider_options.scale=[];
-                    //$scope.slider_options.modelLabels={2:'X'};
-                    //$scope.slider_options.dimension="arjun";
-                    var i;
-                    for (i=0; i<data.event.Frame.length; i++)
-                    {
-                        if (data.event.Frame[i].Type=="Alarm")
-                        {
-                            //⬤
-                            //console.log ("**ALARM AT " + i);
-                           $scope.slider_options.scale.push({val:i+1,label:' '});
-                        }
-                        else
-                        {
-                            //$scope.slider_options.scale.push(' ');
+                    .success(function (data) {
+                        $scope.FrameArray = data.event.Frame;
+                        //  $scope.slider_options.scale=[];
+                        $scope.slider_options.scale = [];
+                        //$scope.slider_options.modelLabels={2:'X'};
+                        //$scope.slider_options.dimension="arjun";
+                        var i;
+                        for (i = 0; i < data.event.Frame.length; i++) {
+                            if (data.event.Frame[i].Type == "Alarm") {
+                                
+                                //console.log ("**ALARM AT " + i);
+                                $scope.slider_options.scale.push({
+                                    val: i + 1,
+                                    label: ' '
+                                });
+                            } else {
+                                //$scope.slider_options.scale.push(' ');
+                            }
+
                         }
 
-                    }
-
-                    //console.log (JSON.stringify(data));
-                })
-                .error(function(err) {
-                    ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
-                ZMDataModel.displayBanner ('error', ['could not retrieve frame details', 'please try again']);
-                });
+                        //console.log (JSON.stringify(data));
+                    })
+                    .error(function (err) {
+                        ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
+                        ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+                    });
 
 
                 oldEvent = event;
@@ -389,12 +394,10 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                     // we need to scroll up to make space
                 }
 
-            }
-            else
-            {
-               // $ionicScrollDelegate.freezeScroll(false);
+            } else {
+                // $ionicScrollDelegate.freezeScroll(false);
                 $ionicSideMenuDelegate.canDragContent(true);
-                event.Event.height=zm.eventsListDetailsHeight;
+                event.Event.height = zm.eventsListDetailsHeight;
                 $ionicScrollDelegate.resize();
 
                 if (scrollbynumber) {
@@ -406,12 +409,10 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
 
         }
 
-        $scope.closeIfOpen = function(event)
-        {
-            if (event != undefined)
-            {
+        $scope.closeIfOpen = function (event) {
+            if (event != undefined) {
                 if (event.Event.ShowScrub)
-                        toggleGroup(event);
+                    toggleGroup(event);
 
             }
         };
@@ -420,7 +421,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
             //  console.log ("IS SHOW INDEX is " + ndx);
             //console.log ("SHOW GROUP IS " + showGroup);
 
-            return (event==undefined)?false:event.Event.ShowScrub;
+            return (event == undefined) ? false : event.Event.ShowScrub;
 
         };
 
@@ -732,69 +733,80 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
             $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
             $scope.slider_modal_options = {
-                    from:1,
-                    to:eframes,
-                    realtime:true,
-                    step:1,
-                    className:"mySliderClass",
-                     callback: function(value, released) {
-                        //console.log("CALLBACK"+value+released);
-                        $ionicScrollDelegate.freezeScroll(!released);
+                from: 1,
+                to: eframes,
+                realtime: true,
+                step: 1,
+                className: "mySliderClass",
+                callback: function (value, released) {
+                    //console.log("CALLBACK"+value+released);
+                    $ionicScrollDelegate.freezeScroll(!released);
 
 
+                },
+                //modelLabels:function(val) {return "";},
+                smooth: false,
+                css: {
+                    background: {
+                        "background-color": "silver"
                     },
-                    //modelLabels:function(val) {return "";},
-                    smooth: false,
-                    css: {
-                    background: {"background-color": "silver"},
-                    before: {"background-color": "purple"},
-                    default: {"background-color": "white"}, // default value: 1px
-                    after: {"background-color": "green"},  // zone after default value
-                    pointer: {"background-color": "red"},   // circle pointer
-                    range: {"background-color": "red"} // use it if double value
+                    before: {
+                        "background-color": "purple"
                     },
-                    scale:[]
+                    default: {
+                        "background-color": "white"
+                    }, // default value: 1px
+                    after: {
+                        "background-color": "green"
+                    }, // zone after default value
+                    pointer: {
+                        "background-color": "red"
+                    }, // circle pointer
+                    range: {
+                        "background-color": "red"
+                    } // use it if double value
+                },
+                scale: []
 
-                };
-
-
-                $scope.mycarousel.index = 0;
-                $scope.ionRange.index = 1;
-                //console.log("**Resetting range");
-                $scope.slides = [];
-                var i;
-                for (i = 1; i <= eframes; i++) {
-                    var fname = padToN(i, eventImageDigits) + "-capture.jpg";
-                   // console.log ("Building " + fname);
-                    $scope.slides.push({
-                        id: i,
-                        img: fname
-                    });
-                }
+            };
 
 
-                   // now get event details to show alarm frames
-                var loginData=ZMDataModel.getLogin();
-                var myurl = loginData.apiurl+'/events/'+eid+".json";
-                ZMDataModel.zmLog("*** Constructed API for detailed events: " + myurl);
-                $http.get(myurl)
-                .success(function(data){
+            $scope.mycarousel.index = 0;
+            $scope.ionRange.index = 1;
+            //console.log("**Resetting range");
+            $scope.slides = [];
+            var i;
+            for (i = 1; i <= eframes; i++) {
+                var fname = padToN(i, eventImageDigits) + "-capture.jpg";
+                // console.log ("Building " + fname);
+                $scope.slides.push({
+                    id: i,
+                    img: fname
+                });
+            }
+
+
+            // now get event details to show alarm frames
+            var loginData = ZMDataModel.getLogin();
+            var myurl = loginData.apiurl + '/events/' + eid + ".json";
+            ZMDataModel.zmLog("*** Constructed API for detailed events: " + myurl);
+            $http.get(myurl)
+                .success(function (data) {
                     $scope.FrameArray = data.event.Frame;
-                  //  $scope.slider_options.scale=[];
-                    $scope.slider_modal_options.scale=[];
+                    //  $scope.slider_options.scale=[];
+                    $scope.slider_modal_options.scale = [];
                     //$scope.slider_options.modelLabels={2:'X'};
                     //$scope.slider_options.dimension="arjun";
                     var i;
-                    for (i=0; i<data.event.Frame.length; i++)
-                    {
-                        if (data.event.Frame[i].Type=="Alarm")
-                        {
+                    for (i = 0; i < data.event.Frame.length; i++) {
+                        if (data.event.Frame[i].Type == "Alarm") {
                             //⬤
-                           // console.log ("**ALARM AT " + i);
-                           $scope.slider_modal_options.scale.push({val:i+1,label:' '});
-                        }
-                        else
-                        {
+                            // console.log ("**ALARM AT " + i);
+                            $scope.slider_modal_options.scale.push({
+                                val: i + 1,
+                                label: ' '
+                            });
+                        } else {
                             //$scope.slider_options.scale.push(' ');
                         }
 
@@ -802,9 +814,9 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
 
                     //console.log (JSON.stringify(data));
                 })
-                .error(function(err) {
+                .error(function (err) {
                     ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
-                    ZMDataModel.displayBanner ('error', ['could not retrieve frame details', 'please try again']);
+                    ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
                 });
 
             $scope.totalEventTime = Math.round(parseFloat(edur)) - 1;
@@ -836,11 +848,11 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
 
                     // call on progress indicator every 5 seconds
                     // don't want to overload
-                /*
-                    segmentHandle = $interval(function () {
-                        segmentCheck();
-                    }, zm.progressIntervalCheck);
-                    segmentCheck();*/
+                    /*
+                        segmentHandle = $interval(function () {
+                            segmentCheck();
+                        }, zm.progressIntervalCheck);
+                        segmentCheck();*/
 
 
                 });
@@ -938,7 +950,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                 loadingStr = "none";
             }
 
-            ZMDataModel.getEvents($scope.id, eventsPage, loadingStr,$rootScope.fromString, $rootScope.toString)
+            ZMDataModel.getEvents($scope.id, eventsPage, loadingStr, $rootScope.fromString, $rootScope.toString)
                 .then(function (data) {
                         var loginData = ZMDataModel.getLogin();
                         console.log("Got new page of events with Page=" + eventsPage);
@@ -1010,12 +1022,11 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
             return moment(str).format('MMM Do');
         };
 
-        function prettifyDate (str)
-        {
+        function prettifyDate(str) {
             return moment(str).format('MMM Do');
         }
 
-         $scope.prettifyTime = function (str) {
+        $scope.prettifyTime = function (str) {
             return moment(str).format('h:mm:ssa');
         };
 
@@ -1045,7 +1056,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                     console.log("TOTAL EVENT PAGES IS " + eventsPage);
                     pageLoaded = true;
                     $scope.viewTitle.title = data.count;
-                    ZMDataModel.getEvents($scope.id, eventsPage, "",$rootScope.fromString, $rootScope.toString)
+                    ZMDataModel.getEvents($scope.id, eventsPage, "", $rootScope.fromString, $rootScope.toString)
 
                     .then(function (data) {
                         console.log("EventCtrl Got events");
@@ -1055,7 +1066,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
 
                             myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
 
-                        // now construct base path
+                            // now construct base path
 
                             var str = myevents[i].Event.StartTime;
                             //var yy =  moment(str).format('h:mm:ssa on MMMM Do YYYY');
@@ -1076,7 +1087,7 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                                 sec + "/";
 
                             myevents[i].Event.relativePath =
- myevents[i].Event.MonitorId + "/" +
+                                myevents[i].Event.MonitorId + "/" +
                                 yy + "/" +
                                 mm + "/" +
                                 dd + "/" +
@@ -1084,8 +1095,8 @@ $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
                                 min + "/" +
                                 sec + "/";
 
-                        myevents[i].Event.ShowScrub = false;
-                        myevents[i].Event.height = zm.eventsListDetailsHeight;
+                            myevents[i].Event.ShowScrub = false;
+                            myevents[i].Event.height = zm.eventsListDetailsHeight;
                         }
                         $scope.events = myevents;
                         loadMore();

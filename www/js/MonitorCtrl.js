@@ -30,9 +30,6 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     };
 
 
-  
-
-
     //-----------------------------------------------------------------------
     // This function takes care of changing monitor parameters
     // For now, I've only limited it to enable/disable and change monitor mode
