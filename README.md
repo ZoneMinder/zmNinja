@@ -22,7 +22,7 @@ Important Notes
 
 Objective
 ----------
-Frankly, I wanted to learn how to create a full fledged cross platform app for a long time.
+I wanted to learn how to create a full fledged cross platform app for a long time.
 I used this as an excuse to learn Angular JS, phoneGap and ionic and see if one could
 use these modern tools to build high performance phonegap apps. I was very pleasantly
 surprised -- for a large part, most people who complain about performance  probably
