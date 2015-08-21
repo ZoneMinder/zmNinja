@@ -355,6 +355,7 @@ ul[rn-carousel] img {
 left:50%;
 width:30px;
 height:30px;
+opacity:0.5;
 background-color:#615959;
 border-radius:50%;
 margin-left:-3px}
