@@ -39,6 +39,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         $fileLogger.log(logtype, val);
     }
     
+   
+    //--------------------------------------------------------------------------
+    // Banner display of messages
+    //--------------------------------------------------------------------------
      function displayBanner (mytype, mytext, myinterval, mytimer)
         {
             var contentBannerInstance = $ionicContentBanner.show({
@@ -390,7 +394,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
         //-----------------------------------------------------------------------------
         //
-          //-----------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------
         setMonitors: function (mon) {
             console.log("ZMData setMonitors called with " + mon.length + " monitors");
             monitors = mon;
