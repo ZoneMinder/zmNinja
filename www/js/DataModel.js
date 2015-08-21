@@ -501,7 +501,14 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             } else {
                 console.log("**** PAGE WAS " + pageId);
             }
+            
+            // Simulated data
+            
+            // myurl = "https://api.myjson.com/bins/4jx44.json";
+            
             console.log (">>>>>Constructed URL " + myurl);
+            
+            
 
 
             $http.get(myurl /*,{timeout:15000}*/ )
