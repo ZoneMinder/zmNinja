@@ -1,6 +1,6 @@
 {
   "name": "ionic-content-banner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A content banner directive for Ionic apps that animates in on the active ion-content",
   "author": "Devin Jett <djett41@gmail.com> (https://github.com/djett41)",
   "main": [
@@ -25,7 +25,7 @@
   "dependencies": {},
   "devDependencies": {
     "ionic": "^1.0.0-rc.0",
-    "angular-mocks": "1.3.13"
+    "angular-mocks": "1.4.3"
   },
   "keywords": [
     "mobile",
@@ -42,14 +42,14 @@
   "license": "MIT",
   "private": false,
   "homepage": "https://github.com/djett41/ionic-content-banner",
-  "_release": "1.0.0",
+  "_release": "1.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0",
-    "commit": "08f9779e742299e7dbe17e8481450f2763a1f6f5"
+    "tag": "v1.0.1",
+    "commit": "79ce49f1df0b70079424f07e3c9940262cfe8123"
   },
   "_source": "git://github.com/djett41/ionic-content-banner.git",
-  "_target": "~1.0.0",
+  "_target": "~1.0.1",
   "_originalSource": "ionic-content-banner",
   "_direct": true
 }

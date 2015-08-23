@@ -354,7 +354,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     
   
 
-    var maxItems = 200; // THAT magic # --> 300 and ZM on my m/c cries
+    var maxItems = zm.graphItemMax; // THAT magic # --> 300 and ZM on my m/c cries
     $scope.maxItems = maxItems;
     $scope.graphLoaded = false;
 
@@ -575,7 +575,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             
                              if (graphIndex > 200)
                                 {
-                                    ZMDataModel.zmLog ("Exiting page count graph - reached 200");
+                                    ZMDataModel.zmLog ("Exiting page count graph - reached limit of " + zm.graphItemMax);
                                     break;
                                     
                                 }
@@ -596,15 +596,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     myename: myevents[i].Event.Name,
 
                                 });
-                                console.log ("Added: Monitor:"+myevents[i].Event.MonitorId +
-                                             " Start:" + myevents[i].Event.StartTime +
-                                             " Stop:"+myevents[i].Event.EndTime);
+                                //console.log ("Added: Monitor:"+myevents[i].Event.MonitorId +
+                                          //   " Start:" + myevents[i].Event.StartTime +
+                                         //    " Stop:"+myevents[i].Event.EndTime);
 
                                 graphIndex++;
                                 
-                                if (graphIndex > 200)
+                                if (graphIndex > zm.graphItemMax)
                                 {
-                                    ZMDataModel.zmLog ("Exiting event graph - reached 200");
+                                    ZMDataModel.zmLog ("Exiting event graph - reached limit of " + zm.graphItemMax);
                                     break;
                                     
                                 }

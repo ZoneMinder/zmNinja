@@ -57,6 +57,36 @@ angular.module('jett.ionic.content.banner', ['ionic']);
       '$ionicPlatform',
       function ($document, $rootScope, $compile, $timeout, $ionicPlatform) {
 
+        function isActiveView (node) {
+          // walk up the child-parent node chain until we get to the root or the BODY
+          while (node !== null && node.nodeName !== 'BODY') {
+            var navView = node.getAttribute("nav-view");
+
+            // as soon as we encounter a cached (parent) view then we know the view can't be active
+            if (navView !== null && navView === 'cached') {
+              return false;
+            }
+            node = node.parentNode;
+          }
+          // no cached parent seen, the view must be really active
+          return true;
+        }
+
+        function getActiveView (body) {
+          // get the candidate active views
+          var views = body.querySelectorAll('ion-view[nav-view="active"]');
+
+          // only one candidate, so we just take it
+          if (views.length === 1) {
+            return views[0];
+          }
+
+          // convert the NodeList to an array, filter it using 'isActiveView' and return the first element
+          return Array.prototype.slice.call(views).filter(function (view) {
+            return isActiveView(view);
+          })[0];
+        }
+
         /**
          * @ngdoc method
          * @name $ionicContentBanner#show
@@ -72,7 +102,8 @@ angular.module('jett.ionic.content.banner', ['ionic']);
             interval: 7000,
             type: 'info',
             $deregisterBackButton: angular.noop,
-            closeOnStateChange: true
+            closeOnStateChange: true,
+            autoClose: null
           }, opts);
 
           // Compile the template
@@ -115,11 +146,17 @@ angular.module('jett.ionic.content.banner', ['ionic']);
               return;
             }
 
-            body.querySelector('ion-view[nav-view="active"] .scroll-content').appendChild(element[0]);
+            getActiveView(body).querySelector('.scroll-content').appendChild(element[0]);
 
             ionic.requestAnimationFrame(function () {
               $timeout(function () {
                 element.addClass('content-banner-in');
+                //automatically close if autoClose is configured
+                if (scope.autoClose) {
+                  $timeout(function () {
+                    scope.close();
+                  }, scope.autoClose, false);
+                }
               }, 20, false);
             });
           };

@@ -40,6 +40,7 @@ angular.module('zmApp', [
     graphFillColor: 'rgba(151,187,205,0.5)',
     graphStrokeColor: 'rgba(151,187,205,0.8)',
     graphHighlightFill: 'rgba(0,163,124,0.5)',
+    graphItemMax: 200,
     monitorCheckingColor: '#03A9F4',
     monitorNotRunningColor: '#F44336',
     monitorPendingColor: '#FF9800',
@@ -245,17 +246,10 @@ angular.module('zmApp', [
 
     $rootScope.$on("auth-error", function () {
         console.log("**** ZM LOGIN ERROR INTERCEPT");
-
-        var contentBannerInstance = $ionicContentBanner.show({
-            text: ['ZoneMinder authentication failed', 'Please check settings'],
-            interval: 2000,
-            type: 'error',
-            transition: 'vertical'
-        });
-
-        $timeout(function () {
-            contentBannerInstance();
-        }, 6000);
+        
+        ZMDataModel.displayBanner ('error',['ZoneMinder authentication failed', 'Please check settings']);
+        
+       
 
 
         /*var alertPopup = $ionicPopup.alert(

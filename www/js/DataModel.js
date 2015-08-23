@@ -48,13 +48,15 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             var contentBannerInstance = $ionicContentBanner.show({
               text: mytext || 'no text',
               interval: myinterval || 2000,
+              autoClose: mytimer || 6000,
               type: mytype || 'info',
-              transition: 'vertical'
+              transition: 'vertical',
+              cancelOnStateChange: false
             });
 
-            $timeout (function() {
+            /*$timeout (function() {
                 contentBannerInstance();
-            },mytimer || 6000);
+            },mytimer || 6000);*/
     }
         
 
@@ -330,7 +332,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             
             
             $ionicLoading.show({
-                template: 'Loading Monitors...',
+                template: 'loading monitors...',
                 animation: 'fade-in',
                 showBackdrop: true,
                 duration: zm.loadingTimeout,
@@ -467,7 +469,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
             if (!loadingStr) {
-                loadingStr = "Loading Events...";
+                loadingStr = "loading events...";
             }
             //if (loadingStr) loa
 
