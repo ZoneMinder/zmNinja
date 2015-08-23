@@ -350,6 +350,10 @@ ul[rn-carousel] img {
 }
 
 
+.content-banner .content-banner-close
+{
+    margin-top:-5px;
+}
 
 .mySliderClass.jslider.sliderCSS div.jslider-pointer{
 left:50%;
