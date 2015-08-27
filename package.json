@@ -3,17 +3,22 @@
   "version": "1.0.0",
   "description": "zmNinja: An Ionic project",
   "dependencies": {
+    "async": "^1.4.2",
     "gulp": "^3.5.6",
-    "gulp-sass": "^1.3.3",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
-    "gulp-rename": "^1.2.0"
+    "gulp-rename": "^1.2.0",
+    "gulp-sass": "^1.3.3"
   },
   "devDependencies": {
     "bower": "^1.3.3",
+    "clean-css": "^3.4.0",
     "gulp-angular-templatecache": "^1.6.0",
     "gulp-util": "^2.2.14",
-    "shelljs": "^0.3.0"
+    "shelljs": "^0.3.0",
+    "jshint": "^2.8.0",
+    "ng-annotate": "^1.0.2",
+    "uglify-js": "^2.4.24"
   },
   "cordovaPlugins": [
     "org.apache.cordova.splashscreen",
