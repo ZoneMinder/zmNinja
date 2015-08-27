@@ -155,17 +155,31 @@ function addhttp(url) {
         // fail in app.js that will be called to show an error
         // box
         
-        // Note that API auth ties into ZM Auth, so in one fell
-        // swoop we've just validated both. Happy?
         .then( function(data)
         {
         
-            //console.log ("THE DATA WAS " + data);
-            //console.log ("SHOWING POPUP ");
-            $ionicPopup.alert({
+            // Now let's validate if the API works
+            // https://github.com/pliablepixels/zmNinja/issues/25
+            ZMDataModel.zmLog ("Validating APIs at " + apiurl);
+            $http.get(apiurl)
+            .success (function (data) {
+                            $ionicPopup.alert({
                             title: 'Login validated',
                             template: 'Please explore the menu and enjoy zmNinja!'
                     }).then(function(res) { $ionicSideMenuDelegate.toggleLeft();});
+                
+            })
+            .error (function (error) {
+                ZMDataModel.displayBanner ('error',['ZoneMinder API check failed', 'Please check API settings']);
+                ZMDataModel.zmLog ("API login error " + JSON.stringify(error));
+                $ionicPopup.alert({
+                            title: 'Login validated but API failed',
+                            template: 'Please check your API settings'
+                    });
+            });
+            
+            
+
         });
 
     };
