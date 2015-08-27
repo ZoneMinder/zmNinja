@@ -159,7 +159,7 @@ function addhttp(url) {
         {
         
             // Now let's validate if the API works
-            // https://github.com/pliablepixels/zmNinja/issues/25
+        
             ZMDataModel.zmLog ("Validating APIs at " + apiurl);
             $http.get(apiurl)
             .success (function (data) {
