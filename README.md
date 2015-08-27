@@ -30,7 +30,38 @@ haven't spent time researching how to optimize.
 
 I'll keep refining it over time as I learn more of AngularJS and stuff.
 
+Building
+--------
 
+zmNinja uses the [Ionic Framework](http://ionicframework.com/).  To install Ionic, follow their easy [Getting Started instructions](http://ionicframework.com/getting-started/).
+
+With Ionic installed, you will need to install the build dependencies:
+
+```bash
+$ cd zmNinja  # make sure you are in the directory where the project is checked out
+$ npm install
+```
+
+Next, build the application. You will need to specify the appropriate target, either `ios` or `android`:
+
+```bash
+$ ionic build ios
+# - OR -
+$ ionic build android
+```
+
+If you want to run zmNinja in an emulator, you will need to install the appropriate emulator tools.
+
+* For iOS, you will need the latest version of XCode (available in the App Store) as well as the npm package `ios-sim`: `npm install -g ios-sim`
+* For Android, you will need the latest [Android Studio](https://developer.android.com/sdk/index.html)
+
+Now, you can launch the emulator:
+
+```bash
+$ ionic emulate ios
+# - OR -
+$ ionic emulate android
+```
 
 
 Screenshots:
