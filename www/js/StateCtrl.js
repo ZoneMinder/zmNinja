@@ -92,6 +92,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
 
             title: 'Select run state',
+            subTitle: 'current state:'+$scope.customState ? ("current state: " + $scope.customState):"",
             buttons: [
                 {
                     text: 'Cancel',
