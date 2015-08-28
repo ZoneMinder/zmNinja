@@ -34,6 +34,34 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
       document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
     
+     $rootScope.authSession = "undefined";
+     $ionicLoading.show({
+                template: 'negotiating stream authentication...',
+                animation: 'fade-in',
+                showBackdrop: true,
+                duration: zm.loadingTimeout,
+                maxWidth: 300,
+                showDelay: 0
+            });
+    var ld = ZMDataModel.getLogin();
+    ZMDataModel.getAuthKey()
+    .then(function(success)
+          {
+            $ionicLoading.hide();
+            $rootScope.authSession = success;
+            ZMDataModel.zmLog ("Modal: Stream authentication construction: " + $rootScope.authSession);
+            
+    },
+          function (error)
+          {
+           
+            $ionicLoading.hide();
+            console.log (error);
+            //$rootScope.authSession="";
+            ZMDataModel.zmLog ("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+    });
+    
+    
  
     $scope.radialMenuOptions = {
         content: '',

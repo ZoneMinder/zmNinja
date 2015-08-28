@@ -370,6 +370,26 @@ angular.module('zmApp', [
 
                     d.reject("Login Error");
                 }
+            
+                // Now go ahead and re-get auth key 
+                $rootScope.authSession="undefined";
+                var ld = ZMDataModel.getLogin();
+                ZMDataModel.getAuthKey()
+                .then(function(success)
+                      {
+                        
+                        console.log (success);
+                        $rootScope.authSession = success;
+                        ZMDataModel.zmLog ("Stream authentication construction: " +
+                                           $rootScope.authSession);
+
+                },
+                      function (error)
+                      {
+                            console.log (error);
+                                        //$rootScope.authSession="";
+                            ZMDataModel.zmLog ("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                        });
 
 
                 return (d.promise);

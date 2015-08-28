@@ -158,6 +158,38 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.LoginData = ZMDataModel.getLogin();
     $scope.monLimit = $scope.LoginData.maxMontage;
     console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
+    
+    
+    $rootScope.authSession = "undefined";
+     $ionicLoading.show({
+                template: 'negotiating stream authentication...',
+                animation: 'fade-in',
+                showBackdrop: true,
+                duration: zm.loadingTimeout,
+                maxWidth: 300,
+                showDelay: 0
+            });
+    
+    
+     var ld = ZMDataModel.getLogin();
+    ZMDataModel.getAuthKey()
+    .then(function(success)
+          {
+            $ionicLoading.hide();
+            console.log (success);
+            $rootScope.authSession =success;
+            ZMDataModel.zmLog ("Stream authentication construction: " +
+                               $rootScope.authSession);
+            
+    },
+          function (error)
+          {
+           
+            $ionicLoading.hide();
+            console.log (error);
+           //$rootScope.authSession="";
+            ZMDataModel.zmLog ("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+    });
 
 
     // I was facing a lot of problems with Chrome/crosswalk getting stuck with
