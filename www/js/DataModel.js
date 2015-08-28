@@ -280,6 +280,56 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         {
             displayBanner (mytype, mytext, myinterval, mytimer);
         },
+        
+        //-----------------------------------------------------------------------------
+        // Grabs the computed auth key for streaming
+        // FIXME: Currently a hack - does a screen parse - convert to API based support
+         //-----------------------------------------------------------------------------
+
+        getAuthKey: function ()
+        {
+            var d=$q.defer();
+            // Skipping monitor number as I only need an auth key
+            // so no need to generate an image
+            var myurl =loginData.url+"/index.php?view=watch";
+            console.log ("Getting auth from " + myurl);
+            $http.get (myurl)
+            .then (function (success) {
+               // console.log ("**** RESULT IS " + JSON.stringify(success));
+                // Look for auth=
+                var auth = success.data.match ("auth=(.*?)&");
+                if (auth && (auth[1] != null))
+                {
+                    zmLog ("DataModel: Extracted a stream authentication key of: " + auth[1]);
+                    d.resolve("&auth="+auth[1]);
+                }
+                else
+                {
+                    zmLog ("DataModel: Did not find a stream auth key, looking for user=");
+                    auth = success.data.match ("user=(.*?)&");
+                    if (auth && (auth[1] != null))
+                    {
+                        zmLog ("DataModel: Found simple stream auth mode (user=)");
+                        d.resolve("&user="+loginData.username+"&pass="+loginData.password);
+                    }
+                    else
+                    {
+                        zmLog ("Data Model: Did not find any  stream mode of auth");
+                        d.resolve("");
+                    }
+                    return (d.promise);
+                }
+                
+            },
+            function (error) {
+                zmLog ("DataModel: Error resolving auth key " + JSON.stringify(error));
+                d.resolve ("");
+                return (d.promise);
+            });
+            return (d.promise);
+            
+        },
+        
         //-----------------------------------------------------------------------------
         // This function returns the numdigits for padding capture images
          //-----------------------------------------------------------------------------
@@ -298,6 +348,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     zmLog ("ZM_EVENT_IMAGE_DIGITS is " + data.config.Value);
                     configParams.ZM_EVENT_IMAGE_DIGITS = data.config.Value;
                     d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
+                    return (d.promise);
 
                 })
                 .error (function(err) {
@@ -306,6 +357,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                     // FIXME: take a plunge and keep it at 5?
                     configParams.ZM_EVENT_IMAGE_DIGITS = 5;
                     d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
+                    return (d.promise);
                 });
             }
             else
