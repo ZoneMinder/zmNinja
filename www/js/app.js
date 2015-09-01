@@ -314,7 +314,31 @@ angular.module('zmApp', [
             });
         }
 
+        ZMDataModel.isReCaptcha()
+        .then (function(result) {
+            if (result == true) 
+            {
+                $ionicLoading.hide();
+                ZMDataModel.displayBanner ('error', 
+                                           ['reCaptcha must be disabled', 
+                                        ],"",8000);
+                var alertPopup = $ionicPopup.alert(
+                    {
+                        title: 'reCaptcha enabled',
+                        template: 'Looks like you have enabled reCaptcha. It needs to be turned off for zmNinja to work'
+                    }); 
 
+                // close it after 5 seconds
+                $timeout(function() {
+                    
+                    alertPopup.close();
+                },5000);
+            }
+                
+            });
+ 
+
+        
         var loginData = ZMDataModel.getLogin();
         $http({
                 method: 'POST',

@@ -281,6 +281,33 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             displayBanner (mytype, mytext, myinterval, mytimer);
         },
         
+        isReCaptcha: function()
+        {
+            var d=$q.defer();
+            var myurl =loginData.url;
+            zmLog ("Checking of reCaptcha is enabled in ZM...");
+            $http.get(myurl)
+            .then (function (success) {
+                if (success.data.search("g-recaptcha") != -1 )
+                {
+                    // recaptcha enable. zmNinja won't work
+                    zmLog ("ZM has recaptcha enabled", "error");
+                    displayBanner ('error', ['Recaptcha must be disabled in Zoneminder', 'zmNinja will not work with recaptcha'],"",8000);
+                    d.resolve(true);
+                    return (d.promise);
+                    
+                    
+                }
+                else
+                {
+                    d.resolve(false);
+                    zmLog ("ZM has recaptcha disabled - good");
+                    return (d.promise);
+                }
+            });
+            return (d.promise);
+        },
+        
         //-----------------------------------------------------------------------------
         // Grabs the computed auth key for streaming
         // FIXME: Currently a hack - does a screen parse - convert to API based support
