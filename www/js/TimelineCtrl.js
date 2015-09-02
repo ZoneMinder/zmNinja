@@ -552,6 +552,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                     .then(function (data) {
 
                         graphIndex = 0;
+                        ZMDataModel.zmLog ("Creating " + $scope.monitors.length + " groups for the graph");
                         // create groups
                          for (var g = 0; g < $scope.monitors.length; g++) {
                             groups.add({

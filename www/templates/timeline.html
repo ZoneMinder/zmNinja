@@ -28,7 +28,13 @@
         {{prettify(fromDate)}} - {{prettify(toDate)}} (only displaying last {{maxItems}} events)
             </div>
 
-
+        <div ng-if="!graphLoaded">
+            <br/><br/>
+            <center>
+                <p>working on graph data...</p>
+            </center>
+        </div>
+        
         <div style="padding-left:15px; padding-right:15px;">
             <div id="visualization">
 
