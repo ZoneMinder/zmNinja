@@ -25,7 +25,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'montageQuality': "50", // montage streaming quality in %
         'useSSL':false, // "1" if HTTPS
         'keepAwake':true, // don't dim/dim during live view
-        'isUseAuth':true // true if user wants ZM auth
+        'isUseAuth':true, // true if user wants ZM auth
+        'refreshSec':"1", // timer value for frame change in sec
     };
     var configParams = {
         'ZM_EVENT_IMAGE_DIGITS':'-1'
@@ -104,6 +105,17 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                 loginData.username =
                     window.localStorage.getItem("username");
 
+            }
+            
+            
+            if (window.localStorage.getItem("refreshSec") != undefined) {
+                loginData.refreshSec =
+                    parseInt(window.localStorage.getItem("refreshSec"));
+                    zmLog ("Refresh in seconds is " + loginData.refreshSec);
+
+            }
+            else{
+                zmLog ("Refresh is not defined, using " + loginData.refreshSec);
             }
 
 
@@ -244,6 +256,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         setLogin: function (newLogin) {
             loginData = newLogin;
             zmLog("Saving all parameters to storage");
+            
             window.localStorage.setItem("username", loginData.username);
             window.localStorage.setItem("password", loginData.password);
             window.localStorage.setItem("url", loginData.url);
@@ -253,6 +266,9 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("keepAwake", loginData.keepAwake?"1":"0");
             window.localStorage.setItem("maxMontage", loginData.maxMontage);
             window.localStorage.setItem("montageQuality", loginData.montageQuality);
+            window.localStorage.setItem("refreshSec", loginData.refreshSec);
+            
+            
             window.localStorage.setItem("isUseAuth", loginData.isUseAuth);
             
             console.log ("***** SETTING ISUSEAUTH TO " + loginData.isUseAuth);

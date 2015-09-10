@@ -172,11 +172,12 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             },
     ]};
     
+    
       $interval.cancel(intervalModalHandle);
          intervalModalHandle= $interval(function () {
          loadModalNotifications();
         //  console.log ("Refreshing Image...");
-    }.bind(this), 1000);
+    }.bind(this), ld.refreshSec * 1000);
 
     loadModalNotifications();
     
@@ -202,7 +203,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
              intervalModalHandle= $interval(function () {
              loadModalNotifications();
             //  console.log ("Refreshing Image...");
-             }.bind(this), 1000);
+             }.bind(this), ld.refreshSec*1000);
         
        
             $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);

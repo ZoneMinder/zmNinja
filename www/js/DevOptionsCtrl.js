@@ -38,6 +38,11 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     if ((parseInt($scope.loginData.maxFPS) < 0) || (parseInt($scope.loginData.maxFPS) > zm.maxFPS)) {
         $scope.loginData.maxFPS = zm.defaultFPS.toString();
     }
+        
+    if (parseInt($scope.loginData.refeshSec) <=0)
+    {
+        $scope.loginData.refreshSec=1;
+    }
 
 
     if ((parseInt($scope.loginData.montageQuality) < zm.safeMontageLimit) || (parseInt($scope.loginData.montageQuality) > 70)) {

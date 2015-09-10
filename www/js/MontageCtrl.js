@@ -205,7 +205,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     function loadNotifications() {
             
           $rootScope.rand =  Math.floor((Math.random() * 100000) + 1);
-       // console.log ("Inside Montage timer...");
+       console.log ("Inside Montage timer...");
        
     }
 
@@ -532,12 +532,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
          $scope.isModalActive = false;
 
         ZMDataModel.zmLog("Restarting montage timer, closing Modal...");
-        
+        var ld = ZMDataModel.getLogin();
        $interval.cancel(intervalHandle);
          intervalHandle= $interval(function () {
          loadNotifications();
         //  console.log ("Refreshing Image...");
-    }.bind(this), 1000);
+    }.bind(this), ld.refreshSec*1000);
         
        //$interval.cancel(modalIntervalHandle);
 
@@ -618,13 +618,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     {
         if (!$scope.isModalActive)
         {
+            var ld = ZMDataModel.getLogin();
             ZMDataModel.zmLog ("Restarting montage timer on resume");
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             $interval.cancel(intervalHandle);
              intervalHandle= $interval(function () {
              loadNotifications();
             //  console.log ("Refreshing Image...");
-             }.bind(this), 1000);
+             }.bind(this), ld.refreshSec*1000);
         }
         else // modal is active
         {
@@ -656,6 +657,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** Montage Ctrl Entered, Starting loadNotifications");
+        var ld = ZMDataModel.getLogin();
         console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
@@ -663,7 +665,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
          intervalHandle= $interval(function () {
          loadNotifications();
         //  console.log ("Refreshing Image...");
-    }.bind(this), 1000);
+    }.bind(this), ld.refreshSec*1000);
 
     loadNotifications();
     });
