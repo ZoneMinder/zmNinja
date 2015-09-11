@@ -31,7 +31,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
        // console.log ("****SHOWING SLIDER");
     },2000);
     
-      document.addEventListener("pause", onPause, false);
+    document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
     
      $rootScope.authSession = "undefined";
@@ -56,7 +56,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
           {
            
             $ionicLoading.hide();
-            console.log (error);
+            ZMDataModel.zmDebug ("ModalCtrl: Error details of stream auth:" + error);
             //$rootScope.authSession="";
             ZMDataModel.zmLog ("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
     });
@@ -183,8 +183,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     
     
     function onPause() {
-        console.log("*** Modal: Moving to Background ***"); // Handle the pause event
-        console.log("*** MODAL: CANCELLING INTERVAL ****");
+          ZMDataModel.zmDebug ("ModalCtrl: onpause called");
         $interval.cancel(intervalModalHandle);
        // $interval.cancel(modalIntervalHandle);
    
@@ -194,10 +193,10 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     function onResume()
     {
-     
+        ZMDataModel.zmDebug("ModalCtrl: Modal resume called");
         if ($scope.isModalActive)
         {
-            ZMDataModel.zmLog ("MODAL: Restarting Modal timer on resume");
+            ZMDataModel.zmLog ("ModalCtrl: Restarting Modal timer on resume");
             
             $interval.cancel(intervalModalHandle);
              intervalModalHandle= $interval(function () {
@@ -321,9 +320,8 @@ function loadModalNotifications() {
 
    $scope.onSwipeLeft = function(m,d)
    {
-       console.log ("SWIPED LEFT");
-       console.log ("Next Monitor ID is " + ZMDataModel.getNextMonitor(m,d));
-       $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
+        ZMDataModel.zmDebug ("ModalCtrl:Left swipe detected, moving to "+ ZMDataModel.getNextMonitor(m,d));
+        $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
 
 
         $ionicLoading.hide();
@@ -337,8 +335,7 @@ function loadModalNotifications() {
 
     $scope.onSwipeRight = function(m,d)
    {
-        console.log ("SWIPED RIGHT");
-        console.log ("Next Monitor ID is " + ZMDataModel.getNextMonitor(m,d));
+        ZMDataModel.zmDebug ("ModalCtrl:Right swipe detected, moving to "+ ZMDataModel.getNextMonitor(m,d));
         $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
 
          $ionicLoading.show({
@@ -359,7 +356,7 @@ function loadModalNotifications() {
             noBackdrop: true,
             duration: 1000
         });
-        console.log("***SUCCESS");
+        ZMDataModel.zmDebug ("ModalCtrl:Photo saved successfuly");
     }
 
     function SaveError(e) {
@@ -384,7 +381,7 @@ function loadModalNotifications() {
             duration: zm.httpTimeout
         });
 
-        console.log("IMAGE CAPTURE INSIDE MODAL");
+        ZMDataModel.zmDebug ("ModalCtrl: SaveImageToPhone called");
         var canvas, context, imageDataUrl, imageData;
         var loginData = ZMDataModel.getLogin();
         var url = loginData.streamingurl +

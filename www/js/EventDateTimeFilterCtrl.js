@@ -5,7 +5,7 @@
 
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventDateTimeFilterCtrl', ['$scope',  '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', function ($scope, $ionicScrollDelegate,$ionicSideMenuDelegate, $rootScope, $ionicHistory) {
+    .controller('zmApp.EventDateTimeFilterCtrl', ['$scope',  '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', 'ZMDataModel', function ($scope, $ionicScrollDelegate,$ionicSideMenuDelegate, $rootScope, $ionicHistory, ZMDataModel) {
 
 $scope.removeFilters = function()
 {
@@ -25,18 +25,21 @@ $scope.saveFilters  = function()
     {
          console.log ("RESET fromDate");
         $rootScope.fromDate = new Date();
+        ZMDataModel.zmDebug ("DateTimeFilter: resetting from date");
     }
 
     if (!$rootScope.toDate)
     {
         console.log ("RESET toDate");
         $rootScope.toDate = new Date();
+        ZMDataModel.zmDebug ("DateTimeFilter: resetting to date");
     }
 
     if (!$rootScope.fromTime)
     {
          console.log ("RESET fromTime");
         $rootScope.fromTime = new Date(99,5,24,0,0,0,0); //moment().format("hh:mm:ss");
+    ZMDataModel.zmDebug ("DateTimeFilter: resetting from time");
     }
 
 
@@ -45,6 +48,7 @@ $scope.saveFilters  = function()
          console.log ("RESET toTime");
         $rootScope.toTime =new Date(99,5,24,23,59,59,0);
         //$rootScope.toTime = "01:01:02"; //moment().format("hh:mm:ss");
+          ZMDataModel.zmDebug ("DateTimeFilter: resetting to time");
     }
 
 
@@ -56,7 +60,7 @@ $scope.saveFilters  = function()
     //console.log("CONCAT DATES " + temp);
        //
        // var startDate = moment(temp).format("YYYY-MM-DD hh:mm:ss");
-        console.log (" DATE IS " + $rootScope.fromString + " AND " +$rootScope.toString);
+        ZMDataModel.zmDebug ("DateTimeFilter: From/To is now: " + $rootScope.fromString + " & " +$rootScope.toString);
         $ionicHistory.goBack();
 };
 

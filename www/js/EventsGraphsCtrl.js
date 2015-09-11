@@ -149,11 +149,11 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                         "/events/index/MonitorId:" + monitors[j].Monitor.Id + dateString +
                         ".json?page=1";
                     // console.log("Monitor event URL:" + url);
-
+                      ZMDataModel.zmLog ("EventGraph: composed url is " + url);
                     $http.get(url /*,{timeout:15000}*/ )
                         .success(function (data) {
-                            console.log("**** EVENT COUNT FOR MONITOR " +
-                                monitors[j].Monitor.Id + " IS " + data.pagination.count);
+                            ZMDataModel.zmDebug("Event count for monitor" +
+                                monitors[j].Monitor.Id + " is " + data.pagination.count);
                             $scope.chart.data.datasets[0].data[j] = data.pagination.count;
                         })
                         .error(function (data) {

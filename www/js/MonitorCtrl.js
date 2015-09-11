@@ -87,12 +87,13 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                 {
                     text: 'Save',
                     onTap: function (e) {
-                        console.log("YOU SELECTED " + $scope.monfunc.myenabled + $scope.monfunc.myfunc);
+                        
+                        ZMDataModel.zmDebug("MonitorCtrl:changeConfig selection:" + $scope.monfunc.myenabled + $scope.monfunc.myfunc);
                         var loginData = ZMDataModel.getLogin();
                         var apiRestart = loginData.apiurl + "/states/change/restart.json";
                         var apiMon = loginData.apiurl + "/monitors/" + monitorId + ".json";
 
-                        console.log("VARS: " + apiRestart + ">>" + apiMon);
+                        ZMDataModel.zmDebug("MonitorCtrl: URLs for changeConfig save:" + apiRestart + ">>" + apiMon);
 
                         var isEnabled = "";
                         isEnabled = ($scope.monfunc.myenabled == true) ? '1' : '0';
@@ -110,7 +111,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                                     str.push(encodeURIComponent(p) + "=" +
                                         encodeURIComponent(obj[p]));
                                 var foo = str.join("&");
-                                console.log("****RETURNING " + foo);
+                               // console.log("****RETURNING " + foo);
+                                ZMDataModel.zmDebug ("MonitorCtrl: parmeters constructed: "  + foo);
                                 return foo;
                             },
                             data: {
@@ -123,7 +125,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                         // I am restarting ZM after monitor change
                         // do I need this? FIXME: Ask Kyle
                         .success(function () {
-
+                                ZMDataModel.zmDebug ("MonitorCtrl: Restarting ZM");
                                 $ionicLoading.show({
                                     template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
                                     noBackdrop: true,
@@ -147,6 +149,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
                             })
                             .error(function (data, status, headers, config) {
+                                ZMDataModel.zmDebug ("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
                                 $ionicLoading.show({
                                     template: "Error changing Monitor. Please check ZM logs...",
                                     noBackdrop: true,
@@ -202,7 +205,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     });
 
     $scope.openModal = function (mid, controllable, controlid) {
-        console.log("Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
+        ZMDataModel.zmDebug("MonitorCtrl:Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
 
 
         $scope.monitorId = mid;
@@ -303,9 +306,11 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                 $scope.monitors[j].Monitor.color = zm.monitorCheckingColor;
                 $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
                 apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
-                console.log("**** ZMC CHECK " + apiMonCheck);
+                ZMDataModel.zmDebug ("MonitorCtrl:monitorStateCheck: " + apiMonCheck);
+                //console.log("**** ZMC CHECK " + apiMonCheck);
                 $http.get(apiMonCheck)
                     .success(function (data) {
+                         ZMDataModel.zmDebug ("MonitorCtrl: monitor check state returned: " + JSON.stringify(data));
                         if (data.statustext.indexOf("not running") > -1) {
                             $scope.monitors[j].Monitor.isRunning = "false";
                             $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
@@ -326,6 +331,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                         $scope.monitors[j].Monitor.isRunningText = data.statustext;
                     })
                     .error(function (data) {
+                        ZMDataModel.zmDebug ("MonitorCtrl: Error->monitor check state returned: " + JSON.stringify(data));
                         ZMDataModel.displayBanner ('error', 'error retrieving state', 'Please try again');
                         $scope.monitors[j].Monitor.isRunning = "error";
                         $scope.monitors[j].Monitor.color = zm.monitorErrorColor;

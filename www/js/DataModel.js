@@ -27,17 +27,25 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'keepAwake':true, // don't dim/dim during live view
         'isUseAuth':true, // true if user wants ZM auth
         'refreshSec':"1", // timer value for frame change in sec
+        'enableDebug':false, // if enabled with log messages with "debug"
     };
     var configParams = {
         'ZM_EVENT_IMAGE_DIGITS':'-1'
     };
 
     //--------------------------------------------------------------------------
-    // uses fileLogger to write logs to file for later investigation
+    // uses fileLogger  to write logs to file for later investigation
     //--------------------------------------------------------------------------
     function zmLog(val,logtype)
     {
         $fileLogger.log(logtype, val);
+    }
+    
+    // separate out a debug so we don't do this if comparison for normal logs
+    function zmDebug(val)
+    {
+        if (loginData.enableDebug)
+            $fileLogger.debug(val);
     }
     
    
@@ -74,6 +82,12 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
              zmLog(val,logtype);
 
         },
+        
+        zmDebug: function (val)
+        {
+            
+                zmDebug(val);
+        },
 
         // This function is called when the app is ready to run
         // sets up various variables
@@ -87,10 +101,21 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             console.log("****** DATAMODEL INIT SERVICE CALLED ********");
 
             zmLog("ZMData init: checking for stored variables & setting up log file");
-           
+            
+            if (window.localStorage.getItem("enableDebug") != undefined) {
+                 var dbgvalue =  window.localStorage.getItem("enableDebug");
+                loginData.enableDebug = (dbgvalue == "1") ? true:false;
+                zmLog("enableDebug is ON");
+
+            }
+            else   
+            {
+                zmLog ("enableDebug is OFF");
+            }
             if (window.localStorage.getItem("isUseAuth") != undefined) {
                 loginData.isUseAuth =
                     window.localStorage.getItem("isUseAuth");
+                
 
             }
             else
@@ -175,6 +200,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
                         console.log("useSSL  " + loginData.useSSL);
 
             }
+            
+            
 
             if (window.localStorage.getItem("keepAwake") != undefined) {
                  var awakevalue =  window.localStorage.getItem("keepAwake");
@@ -185,6 +212,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
 
             monitorsLoaded = 0;
             console.log("Getting out of ZMDataModel init");
+            zmDebug ( "loginData structure values: " + JSON.stringify(loginData));
 
         },
 
@@ -256,6 +284,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         setLogin: function (newLogin) {
             loginData = newLogin;
             zmLog("Saving all parameters to storage");
+            zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
             
             window.localStorage.setItem("username", loginData.username);
             window.localStorage.setItem("password", loginData.password);
@@ -263,6 +292,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
             window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
+            window.localStorage.setItem("enableDebug", loginData.enableDebug?"1":"0");
             window.localStorage.setItem("keepAwake", loginData.keepAwake?"1":"0");
             window.localStorage.setItem("maxMontage", loginData.maxMontage);
             window.localStorage.setItem("montageQuality", loginData.montageQuality);
@@ -335,7 +365,7 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             // Skipping monitor number as I only need an auth key
             // so no need to generate an image
             var myurl =loginData.url+"/index.php?view=watch";
-            console.log ("Getting auth from " + myurl);
+            zmDebug ("DataModel: Getting auth from " + myurl);
             $http.get (myurl)
             .then (function (success) {
                // console.log ("**** RESULT IS " + JSON.stringify(success));

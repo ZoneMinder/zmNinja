@@ -51,7 +51,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // if applicable
     //---------------------------------------------------------
     function getCurrentState() {
-
+        ZMDataModel.zmDebug("StateCtrl: getting state using " + apiCurrentState);
         $http.get(apiCurrentState)
             .then(
                 function (success) {
@@ -70,6 +70,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
                 },
                 function (error) {
+                    ZMDataModel.zmDebug("StateCtrl: Error retrieving state list " + JSON.stringify(error));
                     $scope.customState = "";
 
                 }
@@ -114,9 +115,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // returns disk space in gigs taken up by events
     //----------------------------------------------------------------------
     function getDiskStatus() {
+        ZMDataModel.zmDebug("StateCtrl/getDiskStatus: " + apiDisk);
         $http.get(apiDisk)
             .then(
                 function (success) {
+                     ZMDataModel.zmDebug("StateCtrl/getDiskStatus: success");
                     var obj = success.data.usage;
                     if (obj.Total.space != undefined)
                     {
@@ -150,9 +153,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // returns ZM running status
     //----------------------------------------------------------------------
     function getRunStatus() {
+         ZMDataModel.zmDebug("StateCtrl/getRunStatus: " + apiRun); 
         $http.get(apiRun)
             .then(
                 function (success) {
+                     ZMDataModel.zmDebug("StateCtrl/getRunStatus: success"); 
                     switch (success.data.result) {
                         case 1:
                             $scope.zmRun = 'running';
@@ -173,7 +178,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     // console.log("X"+success.data.result+"X");
                 },
                 function (error) {
-                    console.log("ERROR in getRun: " + JSON.stringify(error));
+                    //console.log("ERROR in getRun: " + JSON.stringify(error));
                     ZMDataModel.zmLog("Error getting RunStatus " + JSON.stringify(error), "error");
                     $scope.color = 'color:red;';
                     $scope.zmRun = 'undetermined';
@@ -187,18 +192,20 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // gets ZM load - max[0], avg[1], min[2]
     //----------------------------------------------------------------------
     function getLoadStatus() {
+         ZMDataModel.zmDebug("StateCtrl/getLoadStatus: " + apiLoad);
         $http.get(apiLoad)
             .then(
                 function (success) {
                     //console.log(JSON.stringify(success));
                     // load returns 3 params - one in the middle is avg.
+                     ZMDataModel.zmDebug("StateCtrl/getLoadStatus: success");
                     $scope.zmLoad = success.data.load[1];
 
 
                     // console.log("X"+success.data.result+"X");
                 },
                 function (error) {
-                    console.log("ERROR in getLoad: " + JSON.stringify(error));
+                    //console.log("ERROR in getLoad: " + JSON.stringify(error));
                     ZMDataModel.zmLog("Error retrieving loadStatus " + JSON.stringify(error), "error");
                     $scope.zmLoad = 'undetermined';
                 }
@@ -212,6 +219,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     function controlZM(str) {
         if (inProgress) {
+            ZMDataModel.zmDebug("StateCtrl/controlZM: operation in progress");
             $ionicPopup.alert({
                 title: "Operation in Progress",
                 template: "The previous operation is still in progress. Please wait..."
@@ -242,11 +250,12 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                         $scope.zmRun = "please wait...";
                         $scope.color = 'color:orange;';
                         $scope.customState = "";
-                        console.log("Control command is " + apiExec + str + ".json");
+                        ZMDataModel.zmDebug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
                         inProgress = 1;
                         $http.post(apiExec + str + ".json")
                             .then(
                                 function (success) {
+                                    ZMDataModel.zmDebug("StateCtrl/controlZM: returned success");
                                     switch (str) {
                                         case "stop":
                                             $scope.zmRun = 'stopped';
@@ -265,7 +274,8 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                                 function (error) {
                                     //if (error.status) // it seems to return error with status 0 if ok
                                     // {
-                                    console.log("ERROR in Change State:" + JSON.stringify(error));
+                                    //console.log("ERROR in Change State:" + JSON.stringify(error));
+                                    ZMDataModel.zmDebug("StateCtrl/controlZM: returned error");
                                     ZMDataModel.zmLog("Error in change run state:" + JSON.stringify(error), "error");
                                     $scope.zmRun = 'undetermined';
                                     $scope.color = 'color:orange;';
@@ -299,6 +309,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
+         ZMDataModel.zmDebug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
         getRunStatus();
         getLoadStatus();
         getDiskStatus();
