@@ -134,8 +134,8 @@ function addhttp(url) {
             '/cgi-bin/zms?user=' + $scope.loginData.username + "&pass=" + $scope.loginData.password;
 
 
-        console.log("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
-        ZMDataModel.zmLog ("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
+        //console.log("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
+        ZMDataModel.zmLog ("LoginCtrl: API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
 
 
   

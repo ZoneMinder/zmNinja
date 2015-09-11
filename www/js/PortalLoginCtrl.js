@@ -7,7 +7,6 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     
     // Main
     
-console.log ("***** INSIDE LOGIN CONTROLLER");
     
     $ionicHistory.nextViewOptions({
     disableBack: true
@@ -18,17 +17,20 @@ console.log ("***** INSIDE LOGIN CONTROLLER");
     if (ZMDataModel.isLoggedIn()) {
       ZMDataModel.zmLog ("User credentials are provided");
       // console.log("VALID CREDENTIALS. Grabbing Monitors");
+        ZMDataModel.zmDebug("PortalLogin: Authenticating");
         zmAutoLogin.doLogin("authenticating...")
         .then (function(data) // success
                {
+                 ZMDataModel.zmDebug("PortalLogin: auth success");
                  ZMDataModel.getKeyConfigParams(1);
                 $state.go('montage');
         },
                // coming here means auth error
                // so go back to login
-               function (error)
-               {
-                    $state.go('login');
+        function (error)
+        {
+                ZMDataModel.zmDebug("PortalLogin: error authenticating " + JSON.stringify(error));
+                $state.go('login');
         }
               
               
@@ -36,6 +38,7 @@ console.log ("***** INSIDE LOGIN CONTROLLER");
     }
     else
     {
+        ZMDataModel.zmDebug("PortalLogin: Not logged in, so going to login");
         $state.go('login');
         
     }

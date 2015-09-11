@@ -25,13 +25,14 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 // Perform the login action when the user submits the login form
 //------------------------------------------------------------------
     $scope.saveDevOptions = function () {
-    console.log('Saving Dev Options');
+    ZMDataModel.zmDebug ("SaveDevOptions: called");
 
     if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
         $ionicPopup.alert({
             title: 'Note',
             template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
         });
+        ZMDataModel.zmDebug ("SaveDevOptions: " + $scope.loginData.maxMontage + " monitors for montage");
     }
 
 
@@ -41,7 +42,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         
     if (parseInt($scope.loginData.refeshSec) <=0)
     {
+        ZMDataModel.zmDebug ("SaveDevOptions: refresh sec was too low at " + $scope.loginData.refreshSec+ " reset to 1");
         $scope.loginData.refreshSec=1;
+        
     }
 
 
@@ -50,7 +53,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     }
 
 
-
+    ZMDataModel.zmDebug ("SaveDevOptions: Saving to disk");
     ZMDataModel.setLogin($scope.loginData);
 
         $ionicPopup.alert({

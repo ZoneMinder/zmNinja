@@ -28,7 +28,7 @@ angular.module('zmApp', [
     largeHttpTimeout: 60000,
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
-    logFileMaxSize: 10000, // after this limit log gets reset
+    logFileMaxSize: 50000, // after this limit log gets reset
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
     loadingTimeout: 15000,
     safeMontageLimit: 10,
@@ -47,12 +47,9 @@ angular.module('zmApp', [
     monitorRunningColor: '#4CAF50',
     monitorErrorColor: '#795548',
     montageScaleFrequency: 300,
-    eventsListDetailsHeight: 200,
+    eventsListDetailsHeight: 200.0,
     eventsListScrubHeight: 300,
     loginScreenString: "var currentView = 'login'" // oh shit. Isn't there a better way?
-
-
-
 })
 
 //------------------------------------------------------------------
@@ -204,6 +201,7 @@ angular.module('zmApp', [
             {
                 // these can take time, so lets bump up timeout
                 config.timeout = zm.largeHttpTimeout;
+               // ZMDataModel.zmDebug("timeoutHttpIntercept: HTTP request with long response time. Timeout set to "+config.timeout);
                 
             } else {
                 config.timeout = zm.httpTimeout;
@@ -245,8 +243,8 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     $rootScope.$on("auth-error", function () {
-        console.log("**** ZM LOGIN ERROR INTERCEPT");
         
+        ZMDataModel.zmDebug ("zmAutoLogin: Inside auth-error emit");
         ZMDataModel.displayBanner ('error',['ZoneMinder authentication failed', 'Please check settings']);
         
        
@@ -283,7 +281,8 @@ angular.module('zmApp', [
         $timeout(function () {
             contentBannerInstance();
         }, 2000);
-        console.log("**** ZM LOGIN SUCCESS INTERCEPT");
+        ZMDataModel.zmDebug ("auth-success emit:Successfull");
+        //console.log("**** ZM LOGIN SUCCESS INTERCEPT");
     });
 
 
@@ -303,7 +302,6 @@ angular.module('zmApp', [
             return d.promise;
         }
 
-        console.log("**** ZM AUTO LOGIN CALLED");
         ZMDataModel.zmLog("zmAutologin called");
 
         if (str) {
@@ -353,9 +351,8 @@ angular.module('zmApp', [
                     for (var p in obj)
                         str.push(encodeURIComponent(p) + "=" +
                             encodeURIComponent(obj[p]));
-                    var foo = str.join("&");
-                    //console.log("****RETURNING " + foo);
-                    return foo;
+                    var params = str.join("&");
+                    return params;
                 },
 
                 data: {
@@ -378,7 +375,7 @@ angular.module('zmApp', [
                 if (data.indexOf(zm.loginScreenString) == -1) {
 
                     $rootScope.loggedIntoZm = 1;
-                    console.log("**** ZM Login OK");
+                    
                     ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
 
                     d.resolve("Login Success");
@@ -486,6 +483,7 @@ angular.module('zmApp', [
         $rootScope.toString = "";
         $rootScope.loggedIntoZm = 0;
 
+        console.log ("HERE");
         ZMDataModel.init();
         // for making sure we canuse $state.go with ng-click
         // needed for views that use popovers

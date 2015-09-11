@@ -37,6 +37,12 @@
                     <input type="tel" placeholder="max is 70" ng-model="loginData.montageQuality">
                 </label>
             </div>
+            
+            <label>
+            <ion-toggle ng-model="loginData.enableDebug"
+                        ng-checked="{{loginData.enableDebug}}"
+                        toggle-class="toggle-calm">Enable Debug Logs</ion-toggle>
+            </label>
 
             <button class="button button-block button-balanced icon ion-locked"
                     ng-click="saveDevOptions()"> Save

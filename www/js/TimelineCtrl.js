@@ -94,7 +94,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // FIXME : code repeat from Events
     //--------------------------------------------------------
     function openModal(eid, ename, edur, eframes, basepath, relativepath) {
-        console.log("Open Modal with Base path " + basepath);
+        ZMDataModel.zmDebug("TimelineCtrl: Open Modal with path " + relativepath);
         $scope.eventName = ename;
         $scope.eventId = eid;
         $scope.eFramesNum = eframes;
@@ -224,7 +224,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.closeModal = function () {
         // $interval.cancel(eventsInterval);
         //$interval.cancel(segmentHandle);
-        console.log("Close & Destroy Modal");
+        ZMDataModel.zmDebug("TimelineCtrl:Close & Destroy Modal");
         ZMDataModel.setAwake(false);
         if ($scope.modal !== undefined) {
             $scope.modal.remove();
@@ -239,7 +239,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //--------------------------------------------------------
 
     function showEvent(start, mid, edur, eframes, eid, ename) {
-        console.log("Event STARTED WITH " + start);
+        ZMDataModel.zmDebug ("TimelineCtrl/showevent called with start:" +
+                            start + " monitorId:" + mid + " dur:" + edur + " frames:" + eframes + 
+                             " eventId:" + eid + " eventName:" +ename);
+        //console.log("Event STARTED WITH " + start);
         var str = start;
         var yy = moment(str).format('YY');
         var mm = moment(str).format('MM');
@@ -357,6 +360,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var maxItems = zm.graphItemMax; // THAT magic # --> 300 and ZM on my m/c cries
     $scope.maxItems = maxItems;
     $scope.graphLoaded = false;
+    ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
 
     //flat colors for graph - https://flatuicolors.com http://www.flatuicolorpicker.com
     var colors = ['#3498db', '#D2527F',  '#f39c12', '#9b59b6', '#e74c3c','#7A942E',];
@@ -482,9 +486,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             duration: zm.loadingTimeout, //specifically for Android - http seems to get stuck at times
         });
 
+        ZMDataModel.zmLog ("TimelineCtrl/drawgraph: from->"+fromDate+" to->"+toDate+" count:"+count);
         $scope.graphLoaded = false;
+        ZMDataModel.zmDebug ("TimelineCtrl/drawgraph: graphLoaded:"+$scope.graphLoaded);
 
-        if (timeline) timeline.destroy();
+        if (timeline) 
+        {
+            ZMDataModel.zmDebug("TimelineCtrl/drawgraph: destroying timeline as it exists");
+            timeline.destroy();
+        }
 
 
         var groups = new vis.DataSet();
@@ -534,7 +544,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 // and divide the # of items I want (currently 200) with # of items per page
                 // So iterCount is the # of HTTP calls I need to make
                 iterCount = Math.round(count / itemsPerPage);
-                console.log("I will make " + iterCount + " HTTP Requests ");
+                ZMDataModel.zmDebug("TimelineCtrl/drawGraph: pages of data: " + pages + " items per page: " + itemsPerPage);
+                ZMDataModel.zmDebug("TimelineCtrl/drawGraph: I will make " + iterCount + " HTTP Requests to get all graph data");
 
                 // I've restructured this part. I was initially using vis DataSets
                 // for dynamic binding which was easier, but due to performance reasons
@@ -550,7 +561,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                 $q.all(promises)
                     .then(function (data) {
-
+                         ZMDataModel.zmDebug ("TimelineCtrl/drawgraph: all pages of graph data received");
                         graphIndex = 0;
                         ZMDataModel.zmLog ("Creating " + $scope.monitors.length + " groups for the graph");
                         // create groups
@@ -559,22 +570,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                 id: $scope.monitors[g].Monitor.Id,
                                 content: ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id)
                             });
+                              ZMDataModel.zmDebug ("TimelineCtrl/drawgraph:Adding group " +
+                                                   ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id));
                         }
                     
-                    //REMOVE
-                    
-                    /*for (var g = 1; g <= 7; g++) {
-                            groups.add({
-                                id: g.toString(),
-                                content: "Monitor " + g
-                            });
-                        }
-                    */
+                
                     
                         for (var j = 0; j < data.length; j++) {
                             var myevents = data[j];
                             
-                             if (graphIndex > 200)
+                             if (graphIndex > zm.graphItemMax)
                                 {
                                     ZMDataModel.zmLog ("Exiting page count graph - reached limit of " + zm.graphItemMax);
                                     break;
@@ -620,13 +625,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                         timeline.fit();
 
                         $ionicLoading.hide();
-                    $scope.graphLoaded = true;
-                    $scope.navControls = false;
+                        $scope.graphLoaded = true;
+                        ZMDataModel.zmDebug ("graph loaded: " + $scope.graphLoaded);
+                        $scope.navControls = false;
                         timeline.on('select', function (properties) {
                             if (properties.items && !isNaN(properties.items[0])) {
-                                console.log("You clicked on item " + properties.items);
+                                ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + properties.items);
                                 var item = graphData.get(properties.items);
-                                console.log("ITEM = " + JSON.stringify(item));
+                                ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
                                 showEvent(item[0].start, item[0].group, item[0].mydur, item[0].myframes, item[0].myeid, item[0].myename);
 
 

@@ -12,7 +12,7 @@ angular.module('zmApp.controllers', ['ionic', 'ngCordova', 'ng-mfb','angularCirc
   };
 
      $ionicPlatform.registerBackButtonAction(function (event) {
-     console.log ("ANDROID BACK");
+     
      $ionicSideMenuDelegate.toggleLeft();
      $timeout (function() {
             $rootScope.stateofSlide = $ionicSideMenuDelegate.isOpen() + new Date();
