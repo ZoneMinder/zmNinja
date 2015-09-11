@@ -57,19 +57,27 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
                 // do my best to replace sensitive information
                 var loginData = ZMDataModel.getLogin();
-                var re1 = new RegExp(loginData.password, "g");
-                logstring = logstring.replace(re1, "<deleted>");
+                // if its null you will see deleted everywhere
+                if (loginData.password !="")
+                {
+                    var re1 = new RegExp(loginData.password, "g");
+                    logstring = logstring.replace(re1, "<deleted>");
+                }
                 // keep the protocol, helps to debug
                 var urlNoProtocol = loginData.url.replace(/.*?:\/\//, "");
-                var re2 = new RegExp(urlNoProtocol, "g");
-                // just replacing baseurl - that will take care of
-                // masking api but may not be cgi
-                logstring = logstring.replace(re2, "<server>");
-
+                if (urlNoProtocol != "")
+                {
+                    var re2 = new RegExp(urlNoProtocol, "g");
+                    // just replacing baseurl - that will take care of
+                    // masking api but may not be cgi
+                    logstring = logstring.replace(re2, "<server>");
+                }
                 urlNoProtocol = loginData.streamingurl.replace(/.*?:\/\//, "");
-                var re3 = new RegExp(urlNoProtocol, "g");
-                logstring = logstring.replace(re3, "<server>");
-
+                if (urlNoProtocol != "")
+                {
+                    var re3 = new RegExp(urlNoProtocol, "g");
+                    logstring = logstring.replace(re3, "<server>");
+                }
                 var email = {
                     to: zm.authoremail,
                     subject: 'zmNinja Logs',
