@@ -225,7 +225,18 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             $scope.monitors[i].Monitor.listDisplay="show";
         }*/
 
-        ZMDataModel.zmDebug ("MontageCtrl: constructing re-order list using " + JSON.stringify($scope.MontageMonitors));
+        ld = ZMDataModel.getLogin();
+        if (ld.enableDebug)
+        {
+            // Lets show the re-order list
+            for (i=0; i < $scope.MontageMonitors.length; i++)
+            {
+                ZMDataModel.zmDebug ("Montage reorder list: " + $scope.MontageMonitors[i].Monitor.Name +
+                                     ":listdisplay->"+$scope.MontageMonitors[i].Monitor.listDisplay);
+                                     
+            }
+        }
+        
         var getConfig = $ionicPopup.show({
             scope: $scope,
             template: '<ion-scroll><ion-list show-delete="true" show-reorder="true">' +
