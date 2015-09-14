@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -12,6 +12,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
    $scope.auth={isUseAuth:""};
     $scope.auth.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true:false;
 
+    
     
 
 
@@ -27,6 +28,58 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         ZMDataModel.setAwake(false);
     });
 
+    
+    $scope.pinPrompt = function(evt)
+    {
+      ZMDataModel.zmLog ("Password prompt");
+      if ($scope.loginData.usePin)
+      {
+           $scope.loginData.pinCode="";
+          $cordovaPinDialog.prompt('Enter PIN', 'PIN Protect').then (
+              function(result1) {
+                  
+                 // console.log (JSON.stringify(result1));
+                  if (result1.input1 && result1.buttonIndex==1)
+                  {
+                      $cordovaPinDialog.prompt('Reconfirm PIN', 'PIN Protect')
+                      .then(function(result2)
+                      {
+                          if (result1.input1 == result2.input1)
+                          {
+                              ZMDataModel.zmLog("Pin code match");
+                              $scope.loginData.pinCode=result1.input1;
+                          }
+                          else
+                          {
+                              ZMDataModel.zmLog("Pin code mismatch");
+                              $scope.loginData.usePin = false;
+                              ZMDataModel.displayBanner ('error', ['Pin code mismatch']);
+                          }
+                      },
+                      function(error)
+                        {
+                          console.log ("Error inside");
+                          $scope.loginData.usePin = false;
+                      });
+                  }
+                  else
+                  {
+                      $scope.loginData.usePin = false;
+                  }
+              },
+              function (error)
+              {
+                  console.log ("Error outside");
+                  $scope.loginData.usePin = false;
+              });
+      
+          
+          
+      }
+      else {
+        ZMDataModel.zmDebug("Password disabled");
+      }
+    };
 
     //-------------------------------------------------------------------------------
     // Makes input easier

@@ -57,6 +57,12 @@
             </label>
 
             <label>
+            <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();"
+                        ng-checked="{{loginData.usePin}}"
+                        toggle-class="toggle-calm">Password protect</ion-toggle>
+            </label>
+            
+            <label>
             <ion-toggle ng-model="loginData.useSSL"
                         ng-checked="{{loginData.useSSL}}"
                         toggle-class="toggle-calm">Use SSL</ion-toggle>
@@ -71,7 +77,7 @@
             </label>
         </div>
         <button class="button button-block button-balanced icon ion-locked"
-                    ng-click="save()"> Login
+                    ng-click="save()"> Save
         </button>
 
     </ion-content>

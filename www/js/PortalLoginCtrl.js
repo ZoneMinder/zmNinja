@@ -15,26 +15,29 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     var loginData = ZMDataModel.getLogin();
 
     if (ZMDataModel.isLoggedIn()) {
-      ZMDataModel.zmLog ("User credentials are provided");
-      // console.log("VALID CREDENTIALS. Grabbing Monitors");
-        ZMDataModel.zmDebug("PortalLogin: Authenticating");
-        zmAutoLogin.doLogin("authenticating...")
-        .then (function(data) // success
-               {
-                 ZMDataModel.zmDebug("PortalLogin: auth success");
-                 ZMDataModel.getKeyConfigParams(1);
-                $state.go('montage');
-        },
-               // coming here means auth error
-               // so go back to login
-        function (error)
-        {
-                ZMDataModel.zmDebug("PortalLogin: error authenticating " + JSON.stringify(error));
-                $state.go('login');
-        }
+        ZMDataModel.zmLog ("User credentials are provided");
+        ZMDataModel.validatePin()
+        .then( function (data) {
+        
               
-              
-              );
+              // console.log("VALID CREDENTIALS. Grabbing Monitors");
+                ZMDataModel.zmDebug("PortalLogin: Authenticating");
+                zmAutoLogin.doLogin("authenticating...")
+                .then (function(data) // success
+                       {
+                         ZMDataModel.zmDebug("PortalLogin: auth success");
+                         ZMDataModel.getKeyConfigParams(1);
+                        $state.go('montage');
+                },
+                       // coming here means auth error
+                       // so go back to login
+                function (error)
+                {
+                        ZMDataModel.zmDebug("PortalLogin: error authenticating " +
+                                            JSON.stringify(error));
+                        $state.go('login');
+                });
+        });
     }
     else
     {

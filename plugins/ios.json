@@ -21,6 +21,10 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"SplashScreen\"><param name=\"ios-package\" value=\"CDVSplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"EmailComposer\"><param name=\"ios-package\" value=\"APPEmailComposer\" /></feature>",
                             "count": 1
                         },
@@ -49,15 +53,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"Canvas2ImagePlugin\"><param name=\"ios-package\" value=\"Canvas2ImagePlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"SplashScreen\"><param name=\"ios-package\" value=\"CDVSplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -80,7 +80,7 @@
                     "CoreGraphics.framework": [
                         {
                             "xml": false,
-                            "count": 1
+                            "count": 2
                         }
                     ],
                     "MessageUI.framework": [
@@ -97,6 +97,9 @@
         "com.ionic.keyboard": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
+        "com.phonegap.plugins.OrientationLock": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
         "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
@@ -104,6 +107,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-whitelist": {
@@ -124,16 +130,10 @@
         "org.apache.cordova.statusbar": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "uk.co.whiteoctober.cordova.appversion": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
         "org.devgeeks.Canvas2ImagePlugin": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "com.phonegap.plugins.OrientationLock": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "cordova-plugin-splashscreen": {
+        "uk.co.whiteoctober.cordova.appversion": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },

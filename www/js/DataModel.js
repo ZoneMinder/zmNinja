@@ -1,5 +1,6 @@
 /* jshint -W041 */
 
+
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
@@ -7,7 +8,12 @@
 // that many other controllers use
 // It's grown over time. I guess I may have to split this into multiple services in the future
 
-angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout',function ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,zm, $rootScope,$ionicContentBanner, $timeout) {
+angular.module('zmApp.controllers').service('ZMDataModel', 
+['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout','$cordovaPinDialog', '$ionicPopup', 
+ function 
+ ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,
+  zm, $rootScope,$ionicContentBanner, $timeout, $cordovaPinDialog, 
+   $ionicPopup) {
 
     var zmAppVersion="unknown";
     var monitorsLoaded = 0;
@@ -28,6 +34,8 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         'isUseAuth':true, // true if user wants ZM auth
         'refreshSec':"1", // timer value for frame change in sec
         'enableDebug':false, // if enabled with log messages with "debug"
+        'usePin':false,
+        'pinCode':'',
     };
     var configParams = {
         'ZM_EVENT_IMAGE_DIGITS':'-1'
@@ -202,6 +210,18 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             }
             
             
+            if (window.localStorage.getItem("usePin") != undefined) {
+                 var pinValue =  window.localStorage.getItem("usePin");
+                loginData.usePin = (pinValue == "1") ? true:false;
+                        console.log("usePin  " + loginData.usePin);
+
+            }
+            
+            if (window.localStorage.getItem("pinCode") != undefined) {
+                loginData.pinCode =
+                    window.localStorage.getItem("pinCode");
+
+            }
 
             if (window.localStorage.getItem("keepAwake") != undefined) {
                  var awakevalue =  window.localStorage.getItem("keepAwake");
@@ -292,6 +312,10 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
             window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
+            window.localStorage.setItem("usePin", loginData.usePin?"1":"0");
+            window.localStorage.setItem("pinCode", loginData.pinCode);
+            
+            
             window.localStorage.setItem("enableDebug", loginData.enableDebug?"1":"0");
             window.localStorage.setItem("keepAwake", loginData.keepAwake?"1":"0");
             window.localStorage.setItem("maxMontage", loginData.maxMontage);
@@ -358,7 +382,77 @@ angular.module('zmApp.controllers').service('ZMDataModel', ['$http', '$q', '$ion
         // Grabs the computed auth key for streaming
         // FIXME: Currently a hack - does a screen parse - convert to API based support
          //-----------------------------------------------------------------------------
+        validatePin: function()
+        {
+            
+            var d=$q.defer();
+            if (loginData.usePin)
+            {
+                zmDebug("Validating PIN...");
+                var pinMatch = false;
+                
+                    //<input type="number" pattern="[0-9]*">
+                    $rootScope.pindata={};
+                    var pinPrompt = $ionicPopup.show({
+                        template: '<input type="number" pattern="[0-9]*" ng-model="$root.pindata.pin">',
+                        title: 'PIN validation',
+                        subtitle: 'Please confirm your PIN',
+                        scope: $rootScope,
+                        buttons: [
+                            {
+                                text: 'Ok',
+                                type:'button-positive',
+                                onTap: function(e)
+                                {
+                                    if ($rootScope.pindata.pin != loginData.pinCode)
+                                    {
+                                        displayBanner("error",["Invalid PIN. Please try again"]);
+                                        zmLog("Invalid PIN entered ");
+                                        e.preventDefault();
+                                        $rootScope.pindata.pin="";
+                                    }
+                                    else
+                                    {
+                                        zmLog("PIN was correct");
+                                        d.resolve(true);
+                                    }
+                        
+                                }
+                            },
+                        ]});
+                        return (d.promise);
+                    /*$cordovaPinDialog.prompt ('Enter PIN', 'PIN Confirm', ["OK"])
+                    .then( function (result)
+                    {
+                        if (result.input1 != loginData.pinCode)
+                        {
+                            displayBanner("error",["Invalid PIN. Please try again"]);
+                            zmLog("Invalid PIN entered, looping...");
+                            d.resolve(false);
+                        }
+                        else
+                        {
+                            pinMatch = true;
+                            zmLog("Valid PIN entered");
+                            d.resolve(true);
+                        }
+                    },
 
+                        function (error)
+                        {
+                            zmLog("PIN error handler. Should not come here");
+                            d.resolve(false);
+                    });*/
+                
+                
+                
+            }
+            else
+            {
+                zmDebug("No PIN set, skipping");
+            }
+        },
+        
         getAuthKey: function ()
         {
             var d=$q.defer();
