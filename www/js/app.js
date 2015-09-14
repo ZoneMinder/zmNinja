@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console */
+/* global cordova,StatusBar,angular,console,alert */
 
 
 var appVersion = "0.0.0";
@@ -285,6 +285,8 @@ angular.module('zmApp', [
         //console.log("**** ZM LOGIN SUCCESS INTERCEPT");
     });
 
+    
+    
 
     //------------------------------------------------------------------
     // doLogin() is the function that tries to login to ZM
@@ -483,7 +485,7 @@ angular.module('zmApp', [
         $rootScope.toString = "";
         $rootScope.loggedIntoZm = 0;
 
-        console.log ("HERE");
+        //console.log ("HERE");
         ZMDataModel.init();
         // for making sure we canuse $state.go with ng-click
         // needed for views that use popovers
@@ -546,7 +548,7 @@ angular.module('zmApp', [
 
 
         $ionicPlatform.ready(function () {
-
+ console.log("**** DEVICE READY ***");
             // generates and error in desktops but works fine
             ZMDataModel.zmLog("Device is ready");
             console.log("**** DEVICE READY ***");
@@ -563,6 +565,8 @@ angular.module('zmApp', [
 
 
             });
+            
+        
 
             //fileLogger is an excellent cross platform library
             // that allows you to manage log files without worrying about
@@ -610,14 +614,25 @@ angular.module('zmApp', [
             // so as a global hack I'm just reloading the current state if you switch
             // from foreground to background and back
             document.addEventListener("resume", function () {
-                console.log("****The application is resuming from the background");
-                ZMDataModel.zmLog("App is resuming from background");
-                $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-                //$scope.rand = Math.floor((Math.random() * 100000) + 1);
-                console.log("** generated Random of " + $rootScope.rand);
-                zmAutoLogin.stop(); //safety
-                zmAutoLogin.start();
-                zmAutoLogin.doLogin("authenticating ...");
+               ZMDataModel.zmLog("App is resuming from background");
+                         
+                 $ionicSideMenuDelegate.toggleLeft(false);
+                ZMDataModel.validatePin()
+                .then ( function(data)
+                {
+                     $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+                    //$scope.rand = Math.floor((Math.random() * 100000) + 1);
+                    console.log("** generated Random of " + $rootScope.rand);
+                    zmAutoLogin.stop(); //safety
+                    zmAutoLogin.start();
+                    zmAutoLogin.doLogin("authenticating ...");
+                    
+                });
+                
+             
+                
+                
+               
 
 
             }, false);
