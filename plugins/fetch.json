@@ -120,5 +120,14 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "hu.dpal.phonegap.plugins.PinDialog": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Paldom/PinDialog.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

@@ -41,6 +41,10 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"PinDialog\"><param name=\"android-package\" value=\"hu.dpal.phonegap.plugins.PinDialog\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"Insomnia\"><param name=\"android-package\" value=\"nl.xservices.plugins.Insomnia\" /></feature>",
                             "count": 1
                         },
@@ -98,6 +102,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "de.appplant.cordova.plugin.email-composer": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "hu.dpal.phonegap.plugins.PinDialog": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "nl.x-services.plugins.insomnia": {
