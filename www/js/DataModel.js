@@ -32,7 +32,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         'useSSL':false, // "1" if HTTPS
         'keepAwake':true, // don't dim/dim during live view
         'isUseAuth':true, // true if user wants ZM auth
-        'refreshSec':"1", // timer value for frame change in sec
+        'refreshSec':"2", // timer value for frame change in sec
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,
         'pinCode':'',
