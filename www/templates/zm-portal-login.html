@@ -1,4 +1,21 @@
-<ion-view view-title="" style="background-color:#444444">
-    <ion-content style="background-color:#444444">
+<ion-view view-title="zmNinja" hide-back-button="true" cache-view="false">
+    <ion-content class="padding">
+
+        <div ng-if="pinPrompt">
+            <div style="margin-left:10px; margin-right:10px">
+                <center>
+                    <h4>Enter PIN</h4>
+                    <div class="pinCode">
+                        <input type="number" pattern="[0-9]*" ng-model="pindata.pin" ng-keyup="pinChange()" />
+                    </div>
+                    <br/> {{pindata.status}}
+                    <br/>
+                    <button class="button button-block button-stable icon ion-unlocked" ng-click="unlock()"> Unlock
+                    </button>
+                </center>
+            </div>
+
+        </div>
+
     </ion-content>
-    </ion-view>
+</ion-view>

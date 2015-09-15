@@ -41,6 +41,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         'ZM_EVENT_IMAGE_DIGITS':'-1'
     };
 
+
     //--------------------------------------------------------------------------
     // uses fileLogger  to write logs to file for later investigation
     //--------------------------------------------------------------------------
@@ -382,79 +383,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         // Grabs the computed auth key for streaming
         // FIXME: Currently a hack - does a screen parse - convert to API based support
          //-----------------------------------------------------------------------------
-        validatePin: function()
-        {
-            
-            var d=$q.defer();
-            if (loginData.usePin)
-            {
-                zmDebug("Validating PIN...");
-                var pinMatch = false;
-                
-                    //<input type="number" pattern="[0-9]*">
-                    $rootScope.pindata={};
-                    var pinPrompt = $ionicPopup.show({
-                        template: '<input type="number" pattern="[0-9]*" ng-model="$root.pindata.pin">',
-                        title: 'PIN validation',
-                        subtitle: 'Please confirm your PIN',
-                        scope: $rootScope,
-                        buttons: [
-                            {
-                                text: 'Ok',
-                                type:'button-positive',
-                                onTap: function(e)
-                                {
-                                    if ($rootScope.pindata.pin != loginData.pinCode)
-                                    {
-                                        displayBanner("error",["Invalid PIN. Please try again"]);
-                                        zmLog("Invalid PIN entered ");
-                                        e.preventDefault();
-                                        $rootScope.pindata.pin="";
-                                    }
-                                    else
-                                    {
-                                        zmLog("PIN was correct");
-                                        d.resolve(true);
-                                    }
-                        
-                                }
-                            },
-                        ]});
-                        return (d.promise);
-                    /*$cordovaPinDialog.prompt ('Enter PIN', 'PIN Confirm', ["OK"])
-                    .then( function (result)
-                    {
-                        if (result.input1 != loginData.pinCode)
-                        {
-                            displayBanner("error",["Invalid PIN. Please try again"]);
-                            zmLog("Invalid PIN entered, looping...");
-                            d.resolve(false);
-                        }
-                        else
-                        {
-                            pinMatch = true;
-                            zmLog("Valid PIN entered");
-                            d.resolve(true);
-                        }
-                    },
-
-                        function (error)
-                        {
-                            zmLog("PIN error handler. Should not come here");
-                            d.resolve(false);
-                    });*/
-                
-                
-                
-            }
-            else
-            {
-                zmDebug("No PIN set, skipping");
-                d.resolve(true);
-                return (d.promise);
-                
-            }
-        },
+        
         
         getAuthKey: function ()
         {

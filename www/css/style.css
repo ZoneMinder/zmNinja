@@ -395,10 +395,18 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 /* this is for input = password and dialog = text */
-input[type=number] {
+.pinCode input[type=number] {
     -webkit-text-security: disc;
 }
 
+
+.pinCode input[type=number]{
+    height: 50px;
+    width:200px;
+    text-align: center;
+    font-size: 2em;
+    border: 1px solid #000;
+} 
 /*.mySliderClass.jslider.sliderCSS  div.jslider-pointer
 {top:-10px;left:15px;width:60px;height:60px;margin-left:-5px;background-color:silver;background-color:#615959;border-radius:50%
 }*/
