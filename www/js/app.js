@@ -615,32 +615,18 @@ angular.module('zmApp', [
             // from foreground to background and back
             document.addEventListener("resume", function () {
                ZMDataModel.zmLog("App is resuming from background");
+                $state.go("zm-portal-login");
                          
-                 $ionicSideMenuDelegate.toggleLeft(false);
-                ZMDataModel.validatePin()
-                .then ( function(data)
-                {
-                     $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-                    //$scope.rand = Math.floor((Math.random() * 100000) + 1);
-                    console.log("** generated Random of " + $rootScope.rand);
-                    zmAutoLogin.stop(); //safety
-                    zmAutoLogin.start();
-                    zmAutoLogin.doLogin("authenticating ...");
-                    
-                });
-                
+                 //$ionicSideMenuDelegate.toggleLeft(false);
+                //ZMDataModel.validatePin()
              
-                
-                
-               
-
-
             }, false);
 
 
             document.addEventListener("pause", function () {
                 console.log("****The application is going into  background");
                 ZMDataModel.zmLog("App is going into background");
+            
                 zmAutoLogin.stop();
 
             }, false);
