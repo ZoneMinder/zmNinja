@@ -117,12 +117,12 @@ function addhttp(url) {
     $scope.save = function () {
         console.log('Saving login');
 
-        if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
+        /*if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
             $ionicPopup.alert({
                 title: 'Note',
                 template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
             });
-        }
+        }*/
 
         // lets so some basic sanitization of the data
         // I am already adding "/" so lets remove spurious ones
@@ -216,6 +216,7 @@ function addhttp(url) {
             ZMDataModel.zmLog ("Validating APIs at " + apiurl);
             $http.get(apiurl)
             .success (function (data) {
+                
                             $ionicPopup.alert({
                             title: 'Login validated',
                             template: 'Please explore the menu and enjoy zmNinja!'

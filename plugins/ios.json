@@ -29,6 +29,10 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"PinDialog\"><param name=\"ios-package\" value=\"CDVPinDialog\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"Insomnia\"><param name=\"ios-package\" value=\"Insomnia\" /></feature>",
                             "count": 1
                         },
@@ -116,6 +120,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "de.appplant.cordova.plugin.email-composer": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "hu.dpal.phonegap.plugins.PinDialog": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "nl.x-services.plugins.insomnia": {
