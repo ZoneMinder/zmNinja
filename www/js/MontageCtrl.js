@@ -84,6 +84,26 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         ZMDataModel.zmDebug("MontageCtrl: Hidden order is " + myhiddenorder);
         if (myorder) montageOrder = myorder.split(",");
         if (myhiddenorder) hiddenOrder = myhiddenorder.split(",");
+        
+        //  handle add/delete monitors after the array has been 
+        // saved
+        
+        if ($scope.monitors.length != montageOrder.length)
+        {
+            ZMDataModel.zmLog("Monitors array length different from stored hidden/order array. It's possible monitors were added/removed. Resetting...");
+            montageOrder = [];
+            hiddenOrder = [];
+            for (i = 0; i < $scope.monitors.length; i++) {
+                montageOrder[i] = i; // order to show is order ZM returns
+                hiddenOrder[i] = 0; // don't hide them
+            }
+            window.localStorage.setItem("montageOrder",
+                                        montageOrder.toString());
+                        window.localStorage.setItem("montageHiddenOrder",
+                                                    hiddenOrder.toString());
+            
+            
+        }
 
     } // at this stage, the monitor arrangement is not matching
     // the montage order. Its in true order. Let us first process the hiddenOrder part
@@ -208,65 +228,68 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var modalIntervalHandle;
     
 
+    $scope.closeReorderModal = function () {
+        console.log("Close & Destroy Monitor Modal");
+        // switch off awake, as liveview is finished
+        //ZMDataModel.setAwake(false);
+        $scope.modal.remove();
 
+    };
 
 
     //-------------------------------------------------------------
     // Called when user taps on the reorder button
     //-------------------------------------------------------------
 
-    $scope.toggleReorder = function () {
-        $scope.isReorder = !$scope.isReorder;
+    $scope.reorderList = function()
+    {
+        console.log ("REORDER");
+        $scope.data.showDelete = false; 
+        $scope.data.showReorder = !$scope.data.showReorder;
+    };
+    
+    $scope.deleteList = function()
+    {
+        console.log ("DELETE");
+        $scope.data.showDelete = !$scope.data.showDelete; 
+        $scope.data.showReorder = false;
+    };
+    
+    $scope.reloadReorder = function()
+    {
+                var refresh = ZMDataModel.getMonitors(1);
+                        refresh.then(function (data) {
+                            $scope.monitors = data;
+                            $scope.MontageMonitors = data;
+                            oldMonitors = angular.copy($scope.monitors);
+                            var i;
+                            montageOrder = [];
+                            for (i = 0; i < $scope.monitors.length; i++) {
+                                montageOrder[i] = i;
+                                hiddenOrder[i] = 0;
+                            }
+                            window.localStorage.setItem("montageOrder", montageOrder.toString());
+                            window.localStorage.setItem("montageHiddenOrder", hiddenOrder.toString());
+                            ZMDataModel.zmLog("Montage order saved on refresh: " + montageOrder.toString() + " and hidden order: " + hiddenOrder.toString());
 
-        var i;
-        oldMonitors = angular.copy($scope.monitors);
-        /*for (i=0; i<$scope.monitors.length; i++)
-        {
-            $scope.monitors[i].Monitor.listDisplay="show";
-        }*/
-
-        ld = ZMDataModel.getLogin();
-        if (ld.enableDebug)
-        {
-            // Lets show the re-order list
-            for (i=0; i < $scope.MontageMonitors.length; i++)
-            {
-                ZMDataModel.zmDebug ("Montage reorder list: " + $scope.MontageMonitors[i].Monitor.Name +
-                                     ":listdisplay->"+$scope.MontageMonitors[i].Monitor.listDisplay);
-                                     
-            }
-        }
-        
-        var getConfig = $ionicPopup.show({
-            scope: $scope,
-            template: '<ion-scroll><ion-list show-delete="true" show-reorder="true">' +
-                '<ion-item class="item-remove-animate" ng-repeat="item in MontageMonitors"> ' +
-                '{{item.Monitor.Name}}' +
-                '<ion-delete-button ng-class="' +
-                '{\'ion-eye\':item.Monitor.listDisplay==\'show\',' +
-                '\'ion-eye-disabled\':item.Monitor.listDisplay!=\'show\'}"' +
-                'ng-click="deleteItem($index)">' +
-                '</ion-delete-button>' +
-                '<ion-reorder-button class="ion-navicon" ' +
-                'on-reorder="reorderItem(item, $fromIndex, $toIndex)">' +
-                '</ion-reorder-button></ion-item></ion-list></ion-scroll>',
-
-            title: "Edit Montage",
-            buttons: [
-                {
-                    // user tapped Ok
-                    type: 'button-block icon ion-checkmark-round',
-                    onTap: function (e) {
-                        window.localStorage.setItem("montageOrder", montageOrder.toString());
-                        window.localStorage.setItem("montageHiddenOrder", hiddenOrder.toString());
+                        });
+    };
+    
+    $scope.saveReorder = function()
+    {
+        window.localStorage.setItem("montageOrder", montageOrder.toString());
+                        window.localStorage.setItem("montageHiddenOrder", 
+                                                    hiddenOrder.toString());
                         console.log("Saved " + montageOrder.toString());
-                        ZMDataModel.zmLog("User press OK. Saved Monitor Order as: " + montageOrder.toString() + " and hidden order as " + hiddenOrder.toString());
-                    }
-                    },
-                {
-                    type: 'button-block icon ion-close-round',
-                    onTap: function (e) {
-                        // user tapped cancel
+                        ZMDataModel.zmLog("User press OK. Saved Monitor Order as: " +
+                                          montageOrder.toString() +
+                                          " and hidden order as " + hiddenOrder.toString());
+        $scope.modal.remove();
+    };
+    
+    $scope.cancelReorder = function()
+    {
+                             // user tapped cancel
                         var i,myhiddenorder;
                         if (window.localStorage.getItem("montageOrder") == undefined) {
                             for (i = 0; i < $scope.MontageMonitors.length; i++) {
@@ -304,37 +327,45 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                             ZMDataModel.zmLog("User press Cancel. Restored Monitor Order as: " + montageOrder.toString() + " and hidden order as: " + hiddenOrder.toString());
 
                         }
+                        $scope.modal.remove();
+    };
+    
+    $scope.toggleReorder = function () {
+        $scope.isReorder = !$scope.isReorder;
+        $scope.data={};
+        $scope.data.showDelete = false;
+        $scope.data.showReorder = false;
 
-                    }
-                    },
-                {
-                    type: 'button-block icon ion-loop',
-                    onTap: function (e) {
-                        // user tapped refresh, so don't close this dialog
-                        e.preventDefault();
+        var i;
+        oldMonitors = angular.copy($scope.monitors);
+        /*for (i=0; i<$scope.monitors.length; i++)
+        {
+            $scope.monitors[i].Monitor.listDisplay="show";
+        }*/
 
-                        // FIXME: list visually expands then resets
-                        // why?
-                        var refresh = ZMDataModel.getMonitors(1);
-                        refresh.then(function (data) {
-                            $scope.monitors = data;
-                            $scope.MontageMonitors = data;
-                            oldMonitors = angular.copy($scope.monitors);
-                            var i;
-                            montageOrder = [];
-                            for (i = 0; i < $scope.monitors.length; i++) {
-                                montageOrder[i] = i;
-                                hiddenOrder[i] = 0;
-                            }
-                            window.localStorage.setItem("montageOrder", montageOrder.toString());
-                            window.localStorage.setItem("montageHiddenOrder", hiddenOrder.toString());
-                            ZMDataModel.zmLog("Montage order saved on refresh: " + montageOrder.toString() + " and hidden order: " + hiddenOrder.toString());
-
-                        });
-                    }
-                    }
-                ]
+        ld = ZMDataModel.getLogin();
+        if (ld.enableDebug)
+        {
+            // Lets show the re-order list
+            for (i=0; i < $scope.MontageMonitors.length; i++)
+            {
+                ZMDataModel.zmDebug ("Montage reorder list: " + $scope.MontageMonitors[i].Monitor.Name +
+                                     ":listdisplay->"+$scope.MontageMonitors[i].Monitor.listDisplay);
+                                     
+            }
+        }
+        
+        $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
+            scope:$scope,
+            animation: 'slide-in-up'
+        })
+        .then (function(modal) {
+            $scope.modal = modal;
+            $scope.modal.show();
         });
+    
+       
+        
     };
     
     $scope.onSwipeLeft = function ($index)

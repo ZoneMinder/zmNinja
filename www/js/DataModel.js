@@ -450,6 +450,9 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             else
             {
                 zmDebug("No PIN set, skipping");
+                d.resolve(true);
+                return (d.promise);
+                
             }
         },
         

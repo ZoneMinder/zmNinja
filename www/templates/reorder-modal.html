@@ -1,0 +1,44 @@
+
+    <ion-modal-view cache-view="false"  >
+        
+    <ion-header-bar class="bar-positive">
+      <div class="buttons">
+        <button class="button button-icon icon ion-ios-minus-outline"
+          ng-click="deleteList();"></button>
+          <button class="button button-icon icon ion-ios-drag" ng-click="reorderList();">
+            
+        </button>
+      </div>
+        
+      <h1 class="title">Edit</h1>
+      <div class="buttons">
+        
+          <button class="button button-icon icon ion-ios-refresh-empty" ng-click="reloadReorder()"></button>
+          
+          <button class="button button-icon icon ion-ios-checkmark-empty" ng-click="saveReorder()"></button>
+          
+                  <button class="button button-icon icon ion-ios-close-empty" ng-click="cancelReorder()"></button>
+          
+      </div>
+    </ion-header-bar>
+        
+        
+        <ion-content >
+            <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
+                <ion-item  ng-repeat="item in MontageMonitors">
+                    {{item.Monitor.Name}}<ion-delete-button ng-class="{'ion-eye':item.Monitor.listDisplay=='show','ion-eye-disabled':item.Monitor.listDisplay!='show'}" ng-click="deleteItem($index)"></ion-delete-button>
+                    
+                    <ion-reorder-button class="ion-navicon" on-reorder="reorderItem(item,$fromIndex, $toIndex)"></ion-reorder-button>
+                </ion-item>
+            </ion-list>
+            
+ 
+        </ion-content>
+  
+    </ion-modal-view>
+
+
+ 
+
+
+
