@@ -31,6 +31,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     {
                         ZMDataModel.zmDebug("PortalLogin: auth success");
                         ZMDataModel.getKeyConfigParams(1);
+                        ZMDataModel.zmDebug("Transitioning state to: " + $rootScope.lastState? $rootScope.lastState:'montage');
                         $state.go($rootScope.lastState? $rootScope.lastState:'montage', $rootScope.lastStateParam);
                     },
                     // coming here means auth error
@@ -93,6 +94,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     {
                         ZMDataModel.zmDebug("PortalLogin: auth success");
                         ZMDataModel.getKeyConfigParams(1);
+                        ZMDataModel.zmDebug("Transitioning state to: " + $rootScope.lastState? $rootScope.lastState:'montage');
+                
                         $state.go($rootScope.lastState? $rootScope.lastState:'montage',$rootScope.lastStateParam);
                     },
                     // coming here means auth error
