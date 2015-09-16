@@ -412,8 +412,18 @@ input[type=range]::-webkit-slider-thumb {
 
 .pin-background.scroll-content
  {
-    background: url('../img/background.png') no-repeat;
+    background: url('../img/background.png') no-repeat center center fixed;
     background-size: cover;
+    
+}
+
+#responsive-image{
+  width: 65%;
+  margin: 0 auto;
+}
+#responsive-image img{
+  width: 100%
+    
 }
 
 /*.mySliderClass.jslider.sliderCSS  div.jslider-pointer
