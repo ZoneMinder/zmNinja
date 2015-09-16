@@ -95,7 +95,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             // default in packages instead of /cgi-bin
             //if ($scope.loginData.streamingurl.slice(-3).toLowerCase() == '/zm') {
             //$scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -3);
-        }
+        //}
 
 
       // if ($scope.loginData.apiurl.indexOf($scope.loginData.url) !=0)

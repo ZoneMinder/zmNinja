@@ -620,8 +620,24 @@ angular.module('zmApp', [
                       disableAnimate: true,
                       disableBack: true
                     });
-                $state.go("zm-portal-login");
-                         
+                
+                // remember the last state so we can 
+                // go back there after auth
+                if ($ionicHistory.currentView)
+                {
+                    $rootScope.lastState = $ionicHistory.currentView().stateName;
+                    $rootScope.lastStateParam =
+                        $ionicHistory.currentView().stateParams;
+                    ZMDataModel.zmDebug ("Last State recorded:" +   
+                                         JSON.stringify($ionicHistory.currentView()));
+                    
+                    $state.go("zm-portal-login");
+                }
+                else
+                {
+                    $rootScope.lastState = "";
+                    $rootScope.lastStateParam = "";
+                }
                  //$ionicSideMenuDelegate.toggleLeft(false);
                 //ZMDataModel.validatePin()
              
