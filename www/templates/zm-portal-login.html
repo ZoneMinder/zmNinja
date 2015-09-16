@@ -1,20 +1,24 @@
-<ion-view view-title="zmNinja" hide-back-button="true" cache-view="false">
+<ion-view view-title="zmNinja" hide-nav-bar="true" hide-back-button="true" cache-view="false">
     <ion-content class="pin-background" scroll="false">
+        <div style="margin-left:20px; margin-right:20px">
+            <center>
+                <br/>
+                <br/>
+                <div id="responsive-image">
+                    <img src="img/authlogo.png">
+                </div>
 
-        <div ng-if="pinPrompt">
-            <div style="margin-left:10px; margin-right:10px">
-                <center><br/><br/>
+                <div ng-if="pinPrompt">
                     <span style="color:white">Enter PIN</span>
-                    <div  class="pinCode">
+                    <div class="pinCode">
                         <input id="pin-box" type="number" pattern="[0-9]*" ng-model="pindata.pin" ng-keyup="pinChange()" />
                     </div>
                     <br/> <span style="color:white">{{pindata.status}}</span>
                     <br/>
                     <button class="button button-block button-dark icon ion-unlocked" ng-click="unlock()"> Unlock
                     </button>
-                </center>
-            </div>
-
+                </div>
+            </center>
         </div>
 
     </ion-content>
