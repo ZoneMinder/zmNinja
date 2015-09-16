@@ -38,7 +38,8 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         'pinCode':'',
     };
     var configParams = {
-        'ZM_EVENT_IMAGE_DIGITS':'-1'
+        'ZM_EVENT_IMAGE_DIGITS':'-1',
+        'ZM_PATH_ZMS':''
     };
 
 
@@ -356,7 +357,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         {
             var d=$q.defer();
             var myurl =loginData.url;
-            zmLog ("Checking of reCaptcha is enabled in ZM...");
+            zmLog ("Checking if reCaptcha is enabled in ZM...");
             $http.get(myurl)
             .then (function (success) {
                 if (success.data.search("g-recaptcha") != -1 )
@@ -441,7 +442,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             {
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + '/configs/viewByName/ZM_EVENT_IMAGE_DIGITS.json';
-                console.log ("CONFIG URL IS " + myurl);
+                zmDebug ("Config URL for digits is:" + myurl);
                 $http.get(myurl)
                 .success(function(data) {
                     zmLog ("ZM_EVENT_IMAGE_DIGITS is " + data.config.Value);
@@ -461,11 +462,34 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             }
             else
             {
-                zmLog ("ZM_EVENT_IMAGE_DIGITS is already configured for " + configParams.ZM_EVENT_IMAGE_DIGITS);
+                zmLog ("ZM_EVENT_IMAGE_DIGITS is already configured for " +
+                       configParams.ZM_EVENT_IMAGE_DIGITS);
                  d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
             }
             return (d.promise);
 
+        },
+        
+        getPathZms: function()
+        {
+            var d = $q.defer();
+            var apiurl = loginData.apiurl;
+            var myurl = apiurl + '/configs/viewByName/ZM_PATH_ZMS.json';
+            zmDebug ("Config URL for ZMS PATH is:" + myurl);
+            $http.get(myurl)
+            .success(function(data) {
+                configParams.ZM_PATH_ZMS = data.config.Value;
+                d.resolve(configParams.ZM_PATH_ZMS);
+                return (d.promise);
+            })
+            .error (function(error) {
+                zmLog("Error retrieving ZM_PATH_ZMS: " + JSON.stringify(error));
+                d.resolve("");
+                return (d.promise);
+            });
+            return (d.promise);
+                    
+            
         },
 
         //-----------------------------------------------------------------------------
