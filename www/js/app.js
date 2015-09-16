@@ -281,7 +281,7 @@ angular.module('zmApp', [
         $timeout(function () {
             contentBannerInstance();
         }, 2000);
-        ZMDataModel.zmDebug ("auth-success emit:Successfull");
+        ZMDataModel.zmDebug ("auth-success emit:Successful");
         //console.log("**** ZM LOGIN SUCCESS INTERCEPT");
     });
 
@@ -615,6 +615,11 @@ angular.module('zmApp', [
             // from foreground to background and back
             document.addEventListener("resume", function () {
                ZMDataModel.zmLog("App is resuming from background");
+                // don't animate
+                $ionicHistory.nextViewOptions({
+                      disableAnimate: true,
+                      disableBack: true
+                    });
                 $state.go("zm-portal-login");
                          
                  //$ionicSideMenuDelegate.toggleLeft(false);
