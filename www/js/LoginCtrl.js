@@ -91,8 +91,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
        // if ($scope.loginData.streamingurl.indexOf($scope.loginData.url) !=0)
                 $scope.loginData.streamingurl = $scope.loginData.url;
 
-               if ($scope.loginData.streamingurl.slice(-3).toLowerCase() == '/zm') {
-            $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -3);
+            // Changed Sep 16 2015: Seems cgi-bin will now have /zm/cgi-bin by
+            // default in packages instead of /cgi-bin
+            //if ($scope.loginData.streamingurl.slice(-3).toLowerCase() == '/zm') {
+            //$scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -3);
         }
 
 
@@ -183,15 +185,8 @@ function addhttp(url) {
 
         var apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
         var portalurl = $scope.loginData.url + '/index.php';
-        var streamingurl = $scope.loginData.streamingurl +
-            '/cgi-bin/zms?user=' + $scope.loginData.username + "&pass=" + $scope.loginData.password;
-
-
-        //console.log("Checking API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
-        ZMDataModel.zmLog ("LoginCtrl: API: " + apiurl + " PORTAL: " + portalurl + " CGI-BIN: " + streamingurl);
-
-
-  
+        
+         
         
         // Check if isUseAuth is set make sure u/p have a dummy value
         if ($scope.isUseAuth)
@@ -202,6 +197,19 @@ function addhttp(url) {
         }
         
         ZMDataModel.setLogin($scope.loginData);
+        
+        // now grab and report PATH_ZMS
+        ZMDataModel.getPathZms()
+        .then (function(data) {
+            var ld = ZMDataModel.getLogin();
+            ZMDataModel.zmLog ("PATH_ZMS:"+data+" ,Path ZmNinja will use:"+ld.streamingurl+"/cgi-bin/nph-zms");
+            ZMDataModel.zmLog ("If live streams are not working, make sure you check these values");
+            
+           
+            
+        });
+        
+        
         zmAutoLogin.doLogin("authenticating...")
         // Do the happy menu only if authentication works
         // if it does not work, there is an emitter for auth
