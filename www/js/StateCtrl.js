@@ -90,7 +90,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         ZMDataModel.zmLog("List of custom states: " + JSON.stringify($scope.allStateNames));
         var getConfig = $ionicPopup.show({
             scope: $scope,
-            template: '<ion-radio ng-repeat="item in allStateNames" ng-value="item" ng-model="myopt.selectedState"> {{item}} </ion-radio>',
+            template: '<ion-radio-fix ng-repeat="item in allStateNames" ng-value="item" ng-model="myopt.selectedState"> {{item}} </ion-radio-fix>',
 
 
             title: 'Select run state',
