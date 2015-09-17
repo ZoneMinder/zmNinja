@@ -711,7 +711,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.$on('$ionicView.leave', function () {
         console.log("**VIEW ** Montage Ctrl Left, force removing modal");
-        $scope.modal.remove();
+        if ($scope.modal) $scope.modal.remove();
     });
 
     $scope.$on('$ionicView.unloaded', function () {
