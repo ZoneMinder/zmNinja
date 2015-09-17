@@ -129,5 +129,14 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-touchid": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/leecrossley/cordova-plugin-touchid.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

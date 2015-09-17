@@ -1,0 +1,39 @@
+{
+  "name": "cordova-plugin-touchid",
+  "version": "0.3.0",
+  "author": "Lee Crossley <leee@hotmail.co.uk> (http://ilee.co.uk/)",
+  "description": "Cordova Plugin to leverage the iOS local authentication framework to allow in-app user authentication using Touch ID.",
+  "cordova": {
+    "id": "cordova-plugin-touchid",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leecrossley/cordova-plugin-touchid.git"
+  },
+  "keywords": [
+    "cordova",
+    "touch id",
+    "touchid",
+    "authentication",
+    "fingerprint",
+    "id",
+    "login",
+    "passcode",
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leecrossley/cordova-plugin-touchid/issues"
+  },
+  "homepage": "https://github.com/leecrossley/cordova-plugin-touchid#readme"
+}
