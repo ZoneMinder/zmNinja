@@ -55,6 +55,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         $http.get(apiCurrentState)
             .then(
                 function (success) {
+                    ZMDataModel.zmDebug("State results: " + JSON.stringify(success));
                     var customStateArray = success.data.states;
                     var i = 0;
                     var found = false;
@@ -120,6 +121,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             .then(
                 function (success) {
                      ZMDataModel.zmDebug("StateCtrl/getDiskStatus: success");
+                    ZMDataModel.zmDebug("Disk results: " + JSON.stringify(success));
                     var obj = success.data.usage;
                     if (obj.Total.space != undefined)
                     {
@@ -158,6 +160,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             .then(
                 function (success) {
                      ZMDataModel.zmDebug("StateCtrl/getRunStatus: success"); 
+                     ZMDataModel.zmDebug("Run results: " + JSON.stringify(success));
                     switch (success.data.result) {
                         case 1:
                             $scope.zmRun = 'running';
@@ -196,6 +199,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         $http.get(apiLoad)
             .then(
                 function (success) {
+                    ZMDataModel.zmDebug("Load results: " + JSON.stringify(success));
                     //console.log(JSON.stringify(success));
                     // load returns 3 params - one in the middle is avg.
                      ZMDataModel.zmDebug("StateCtrl/getLoadStatus: success");

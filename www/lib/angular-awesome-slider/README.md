@@ -1,4 +1,4 @@
-angular-awesome-slider [![NPM version](https://badge.fury.io/js/angular-awesome-slider.png)](http://badge.fury.io/js/angular-awesome-slider) [![Build Status](https://travis-ci.org/darul75/angular-awesome-slider.png?branch=master)](https://travis-ci.org/darul75/angular-awesome-slider) [![Total views](https://sourcegraph.com/api/repos/github.com/darul75/angular-awesome-slider/counters/views.png)](https://sourcegraph.com/github.com/darul75/angular-awesome-slider) [![Join the chat at https://gitter.im/darul75/angular-awesome-slider](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/darul75/angular-awesome-slider?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+angular-awesome-slider [![NPM version](https://badge.fury.io/js/angular-awesome-slider.png)](http://badge.fury.io/js/angular-awesome-slider) [![Build Status](https://travis-ci.org/darul75/angular-awesome-slider.png?branch=master)](https://travis-ci.org/darul75/angular-awesome-slider) [![Join the chat at https://gitter.im/darul75/angular-awesome-slider](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/darul75/angular-awesome-slider?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 =====================
 
 Angular directive slider control.
@@ -92,7 +92,7 @@ Options for your slider in json format {from:.....}
 * `limits`: true/false; toggles bounds labels visibility
 * `modelLabels`: custom model for pointers labels based on pointer value
 * `watchOptions`: default is 'true', watch this options changes by [equals](https://docs.angularjs.org/api/ng/function/angular.equals)
-* `heterogeneity: array [percentage of point on slider]/[value in that point]
+* `heterogeneity`: array [percentage of point on slider]/[value in that point]
 
 ![angular slider css](http://darul75.github.io/angular-awesome-slider/images/slider2.png "angular slider css explained")
 ```
@@ -162,6 +162,8 @@ bower install angular-awesome-slider
 RELEASE
 -------------
 
+* 2.4.2: update angular version + fix for programmatic movement of slider (double value)
+* 2.4.1: non-minified version added + bower update
 * 2.4.0: fix while updating both range values from code
 * 2.3.9: callback not fired in case slider is on threshold values
 * 2.3.8: bind to touch AND non touch events

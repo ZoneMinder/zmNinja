@@ -71,20 +71,30 @@ module.exports = function(grunt) {
              '* License: MIT \n**/\n'
          },
          files: {
-             'dist/angular-awesome-slider.min.js': [
-              'src/core/index.js',
-              'src/core/config/constants.js',
-              'src/core/utils/utils.factory.js',
-              'src/core/model/draggable.factory.js',
-              'src/core/model/pointer.factory.js',
-              'src/core/model/slider.factory.js',
-              'src/core/template/slider.tmpl.js'
-              ]
+             'dist/angular-awesome-slider.min.js': ['dist/angular-awesome-slider.js']
              /*'dist/ng-slider.tmpl.min.js': ['src/ng-slider.tmpl.js']*/
          }
        }
      },
-     // MINIFY CSS
+    // CONCAT FILES
+    concat: {
+      options: {
+        separator: ';'
+      },
+      dist: {
+        src: [
+          'src/core/index.js',
+          'src/core/config/constants.js',
+          'src/core/utils/utils.factory.js',
+          'src/core/model/draggable.factory.js',
+          'src/core/model/pointer.factory.js',
+          'src/core/model/slider.factory.js',
+          'src/core/template/slider.tmpl.js'
+        ],
+        dest: 'dist/angular-awesome-slider.js'
+      }
+    },
+    // MINIFY CSS
     cssmin: {
       options: {
         keepSpecialComments: false,
@@ -112,6 +122,7 @@ module.exports = function(grunt) {
   // LOAD PLUGINS
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -120,6 +131,6 @@ module.exports = function(grunt) {
 
   // TASK REGISTER
   //grunt.registerTask('default', ['jshint', 'cssmin', 'uglify:task1', 'karma']);
-  grunt.registerTask('default', ['bower', 'copy', 'less', 'cssmin', 'jshint', 'uglify:task1']);
+  grunt.registerTask('default', ['bower', 'copy', 'concat', 'less', 'cssmin', 'jshint', 'uglify:task1']);
   grunt.registerTask('test-continuous', ['jshint', 'bower', 'karma:unit']);
 };
