@@ -362,7 +362,9 @@ height:30px;
 opacity:0.5;
 background-color:#615959;
 border-radius:50%;
-margin-left:-3px}
+margin-left:-3px;
+margin-top:-8px;
+}
 
 .mySliderClass div.jslider-scale ins
 {
