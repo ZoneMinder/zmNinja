@@ -197,7 +197,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
     });
 
     $scope.$on('$ionicView.leave', function () {
-        console.log("**VIEW ** Monitor Ctrl Left");
+        console.log("**VIEW ** Monitor Ctrl Left, force removing modal");
+        $scope.modal.remove();
     });
 
     $scope.$on('$ionicView.unloaded', function () {
