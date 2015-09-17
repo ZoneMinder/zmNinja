@@ -124,6 +124,9 @@
         },
         "uk.co.whiteoctober.cordova.appversion": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-touchid": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
     "dependent_plugins": {}

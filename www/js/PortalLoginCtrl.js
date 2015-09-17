@@ -3,7 +3,7 @@
 /*This is for the loop closure I am using in line 143 */
 /* jslint browser: true*/
 /* global vis,cordova,StatusBar,angular,console,moment */
-angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory) {
+angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', '$cordovaTouchID', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, $cordovaTouchID) {
 
    
     //-------------------------------------------------------------------------------
@@ -20,7 +20,12 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     // unlock app if PIN is correct
     //-------------------------------------------------------------------------------
     $scope.unlock = function () {
-        ZMDataModel.zmDebug("Trying to unlock PIN");
+        unlock();
+    };
+    
+    function unlock()
+    {
+                ZMDataModel.zmDebug("Trying to unlock PIN");
         if ($scope.pindata.pin == loginData.pinCode) {
             ZMDataModel.zmDebug("PIN code entered is correct");
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
@@ -53,8 +58,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     element.removeClass("animated shake");
                     });
         }
-    };
-    
+    }
      
     //-------------------------------------------------------------------------------
     // Controller Main
@@ -76,8 +80,26 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
     if (ZMDataModel.isLoggedIn()) {
         ZMDataModel.zmLog("User credentials are provided");
+        
+        // You can login either via touch ID or typing in your code
+        $cordovaTouchID.checkSupport()
+            .then(function () {
+        // success, TouchID supported
+            $cordovaTouchID.authenticate("")
+                .then(function() {
+                    ZMDataModel.zmLog("Touch Success");
+                    $scope.pindata.pin = loginData.pinCode;
+                    unlock();
 
-        if (loginData.usePin) {
+                }, 
+                function () {
+                    ZMDataModel.zmLog("Touch Failed");
+            });
+        }, function (error) {
+            ZMDataModel.zmLog("TouchID not supported");
+        });
+        
+        if (loginData.usePin ) {
             $scope.pinPrompt = true;
 
 
