@@ -8,6 +8,7 @@ var appVersion = "0.0.0";
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
+                            'ngIOS9UIWebViewPatch',
                             'tc.chartjs',
                             'zmApp.controllers',
                             'fileLogger',

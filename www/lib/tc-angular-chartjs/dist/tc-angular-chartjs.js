@@ -1,6 +1,6 @@
 /**
- * tc-angular-chartjs - v1.0.11 - 2015-05-17
- * Copyright (c) 2015 Carl Craig <carlcraig@3c-studios.com>
+ * tc-angular-chartjs - v1.0.12 - 2015-07-08
+ * Copyright (c) 2015 Carl Craig <carlcraig.threeceestudios@gmail.com>
  * Dual licensed with the Apache-2.0 or MIT license.
  */
 (function() {
@@ -36,7 +36,7 @@
     TcChartjsDoughnut.$inject = [ "TcChartjsFactory" ];
     function TcChartjsFactory() {
         return function(chartType) {
-            var directive = {
+            return {
                 restrict: "A",
                 scope: {
                     data: "=chartData",
@@ -47,7 +47,6 @@
                 },
                 link: link
             };
-            return directive;
             function link($scope, $elem, $attrs) {
                 var ctx = $elem[0].getContext("2d");
                 var chart = new Chart(ctx);
@@ -127,14 +126,13 @@
         };
     }
     function TcChartjsLegend() {
-        var directive = {
+        return {
             restrict: "A",
             scope: {
                 legend: "=chartLegend"
             },
             link: link
         };
-        return directive;
         function link($scope, $elem) {
             $scope.$watch("legend", function(value) {
                 if (value) {

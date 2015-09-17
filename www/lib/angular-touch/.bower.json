@@ -1,17 +1,17 @@
 {
   "name": "angular-touch",
-  "version": "1.4.3",
+  "version": "1.4.6",
   "main": "./angular-touch.js",
   "ignore": [],
   "dependencies": {
-    "angular": "1.4.3"
+    "angular": "1.4.6"
   },
   "homepage": "https://github.com/angular/bower-angular-touch",
-  "_release": "1.4.3",
+  "_release": "1.4.6",
   "_resolution": {
     "type": "version",
-    "tag": "v1.4.3",
-    "commit": "01227e095f879a01d410ed2fff478fd26eb2cc17"
+    "tag": "v1.4.6",
+    "commit": "802652a4b88b77ba4291aecbfa992e92953c8e38"
   },
   "_source": "git://github.com/angular/bower-angular-touch.git",
   "_target": ">=1.2.10",

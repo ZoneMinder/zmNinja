@@ -16,6 +16,8 @@
   <script type="text/javascript" src="core/utils/utils.factory.js"></script>
   <script type="text/javascript" src="core/template/slider.tmpl.js"></script>
 
+  <!--<script type="text/javascript" src="../dist/angular-awesome-slider.js"></script>-->
+
 
 <!--
   <script type="text/javascript" src="../dist/angular-awesome-slider.min.js"></script>
@@ -132,7 +134,7 @@
       $scope.id2 = "bob";
       $scope.value = "10;20";
       $scope.value2 = "12;15";
-      $scope.value3 = "7;20";
+      $scope.value3 = {value:"7;20"};
       $scope.value3bis = "8";
       $scope.value4 = "999;1700";
       $scope.value5 = "10;20";
@@ -366,7 +368,7 @@
             step: 1,
             dimension: ""
         };
-        //$scope.value3 = "10;50";
+        $scope.value3 = {value:"10;50"};
       };
 
 
@@ -377,7 +379,7 @@
     app.directive('sliderRangeFilter', [function() {
       return {
         restrict: 'A',
-        template: '<div id="searchBySliderFilter" class="filter-slider"><input ng-model="value3"  type="text" id="mySlider1" slider options="options" /></div><div>Current value is: {{value3}}</div>',
+        template: '<div id="searchBySliderFilter" class="filter-slider"><input ng-model="value3.value"  type="text" id="mySlider1" slider options="options" /></div><div>Current value is: {{value3.value}}</div>',
         link: function($scope, element, attrs) {
         }
 

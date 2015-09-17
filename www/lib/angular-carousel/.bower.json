@@ -1,7 +1,7 @@
 {
   "name": "angular-carousel",
   "description": "Angular Carousel - Mobile friendly touch carousel for AngularJS",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "homepage": "http://revolunet.github.com/angular-carousel",
   "author": "Julien Bouquillon <julien@revolunet.com>",
   "repository": {
@@ -23,14 +23,13 @@
     "angular-mocks": ">=1.2.10",
     "requirejs": ">=2.1.0"
   },
-  "_release": "0.3.12",
+  "_release": "0.3.13",
   "_resolution": {
     "type": "version",
-    "tag": "0.3.12",
-    "commit": "12f28ed1de9d78b4c1f9cf58ca71cdf4a8452643"
+    "tag": "0.3.13",
+    "commit": "13007fbc99d2fcf05159a4d92b11c427a7ff8b35"
   },
   "_source": "git://github.com/revolunet/angular-carousel.git",
   "_target": "~0.3.12",
-  "_originalSource": "angular-carousel",
-  "_direct": true
+  "_originalSource": "angular-carousel"
 }

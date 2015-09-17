@@ -8,7 +8,7 @@
         step: 1,
         smooth: true,
         limits: false,
-        round: false,
+        round: false,	
         value: "3",
         dimension: "",
         vertical: false,
@@ -25,7 +25,7 @@
       }
     },
     EVENTS: {
-
+      
     }
   });
 

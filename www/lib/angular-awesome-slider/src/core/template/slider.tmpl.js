@@ -13,7 +13,7 @@
           '<i class="before"></i>'+
           '<i class="default"></i>'+
           '<i class="default"></i>'+
-          '<i class="after"></i>'+
+          '<i class="after"></i>'+          
         '</div>' +
         '<div class="jslider-pointer"></div>' +
         '<div class="jslider-pointer jslider-pointer-to"></div>' +

@@ -70,7 +70,7 @@
       if( this.supportTouches_ ){
         ptr[0].addEventListener( this.events_[ eventType ].touch, handler, false );
       }
-
+      
       ptr.bind( this.events_[ eventType ].nonTouch, handler );
     };
 
@@ -88,13 +88,13 @@
 
       var documentElt = angular.element(window.document);
 
-      this._bindEvent(documentElt, 'move', function(event) {
+      this._bindEvent(documentElt, 'move', function(event) {        
         if(self.is.drag) {
           event.stopPropagation();
           event.preventDefault();
           if (!self.parent.disabled) {
-            self._mousemove(event);
-          }
+            self._mousemove(event);            
+          }  
         }
       });
       this._bindEvent(documentElt, 'down', function(event) {
@@ -103,8 +103,8 @@
           event.preventDefault();
         }
       });
-      this._bindEvent(documentElt, 'up', function(event) {
-        self._mouseup(event);
+      this._bindEvent(documentElt, 'up', function(event) {        
+        self._mouseup(event);        
       });
 
       this._bindEvent( this.ptr, 'down', function(event) {
@@ -113,8 +113,8 @@
       });
       this._bindEvent( this.ptr, 'up', function(event) {
         self._mouseup( event );
-      });
-
+      });      
+     
       // TODO see if needed
       this.events();
     };
@@ -122,13 +122,13 @@
     Draggable.prototype._mousedown = function( evt ){
       this.is.drag = true;
       this.is.clicked = false;
-      this.is.mouseup = false;
+      this.is.mouseup = false;   
 
       var coords = this._getPageCoords( evt );
       this.cx = coords.x - this.ptr[0].offsetLeft;
       this.cy = coords.y - this.ptr[0].offsetTop;
 
-      angular.extend(this.d, {
+      angular.extend(this.d, {        
         left: coords.x,
         top: coords.y,
         width: this.ptr[0].clientWidth,
@@ -146,7 +146,7 @@
       this.is.toclick = false;
       var coords = this._getPageCoords( evt );
       this.onmousemove( evt, coords.x - this.cx, coords.y - this.cy );
-    };
+    };    
 
     Draggable.prototype._mouseup = function( evt ){
       var oThis = this;
@@ -171,7 +171,7 @@
           // } else {
           //   this.outer.css({ height: "auto" });
           // }
-
+          
         }
 
         this.onmouseup( evt );
