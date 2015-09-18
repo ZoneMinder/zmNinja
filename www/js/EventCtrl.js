@@ -15,7 +15,12 @@ angular.module('zmApp.controllers')
         //---------------------------------------------------
         // Controller main
         //---------------------------------------------------
-
+        
+        $scope.hours = [];
+        $scope.days = [];
+        $scope.weeks = [];
+        $scope.months = [];
+        
         $scope.slides = []; // will hold scrub frames
         var segmentHandle = 0; // holds timer for progress bar
         $scope.totalEventTime = 0; // used to display max of progress bar
@@ -190,6 +195,94 @@ angular.module('zmApp.controllers')
 
         // not explictly handling error --> I have a default "No events found" message
         // displayed in the template if events list is null
+        
+        
+        $scope.footerExpand = function()
+        {
+            //https://server/zm/api/events/consoleEvents/5%20minute.json
+            var ld = ZMDataModel.getLogin();
+            
+            var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour.json";
+            $http.get(apiurl)
+            .success(function(data) {
+                ZMDataModel.zmDebug(JSON.stringify(data));
+                $scope.hours = [];
+                var p = data.results;
+                for (var key in data.results)
+                {
+                    if (p.hasOwnProperty(key)) {
+                        //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                        $scope.hours.push(
+                            {monitor:ZMDataModel.getMonitorName(key),
+                             events:p[key]});
+                        
+                    }
+                }
+            });
+            
+            
+            apiurl = ld.apiurl + "/events/consoleEvents/1%20day.json";
+            $http.get(apiurl)
+            .success(function(data) {
+                ZMDataModel.zmDebug(JSON.stringify(data));
+                $scope.days = [];
+                var p = data.results;
+                for (var key in data.results)
+                {
+                    if (p.hasOwnProperty(key)) {
+                        //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                        $scope.days.push(
+                            {monitor:ZMDataModel.getMonitorName(key),
+                             events:p[key]});
+                        
+                    }
+                }
+            });
+
+            
+            
+             apiurl = ld.apiurl + "/events/consoleEvents/1%20week.json";
+            $http.get(apiurl)
+            .success(function(data) {
+                ZMDataModel.zmDebug(JSON.stringify(data));
+                $scope.weeks = [];
+                var p = data.results;
+                for (var key in data.results)
+                {
+                    if (p.hasOwnProperty(key)) {
+                        //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                        $scope.weeks.push(
+                            {monitor:ZMDataModel.getMonitorName(key),
+                             events:p[key]});
+                        
+                    }
+                }
+            });
+            
+            
+            apiurl = ld.apiurl + "/events/consoleEvents/1%20month.json";
+            $http.get(apiurl)
+            .success(function(data) {
+                ZMDataModel.zmDebug(JSON.stringify(data));
+                $scope.months = [];
+                var p = data.results;
+                for (var key in data.results)
+                {
+                    if (p.hasOwnProperty(key)) {
+                        //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                        $scope.months.push(
+                            {monitor:ZMDataModel.getMonitorName(key),
+                             events:p[key]});
+                        
+                    }
+                }
+            });
+            
+            
+            
+            
+            
+        };
 
         $scope.calcMsTimer = function (frames, len) {
             var myframes, mylen;
