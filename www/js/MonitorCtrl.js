@@ -74,7 +74,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
 
         var getConfig = $ionicPopup.show({
             scope: $scope,
-            template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="{{monfunc.myenabled}}"  toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio>',
+            template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="{{monfunc.myenabled}}"  toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
 
 
             title: 'Change Settings for ' + monitorName,
