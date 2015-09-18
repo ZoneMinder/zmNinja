@@ -186,6 +186,71 @@
         </div>
     </ion-content>
     <div  class="events-float-filter" ng-if="isEventFilterOn">Filter On</div>
+    
+    <ion-pull-up-footer class="bar-energized" on-expand="footerExpand()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand">
+
+        <ion-pull-up-handle width="100" height="25" toggle="ion-chevron-up ion-chevron-down" style="border-radius: 25px 25px 0 0">
+            <i class="icon ion-chevron-up"></i>
+        </ion-pull-up-handle>
+        <ion-pull-up-bar>
+            <h1 class="title" ion-pull-up-trigger>Latest Events</h1>
+        </ion-pull-up-bar>
+        <ion-pull-up-content scroll="true">
+            
+            <div class="list card">
+                <div class="item item-divider">1 hour summary</div>
+                <div class="item item-body" ng-repeat="hour in hours"
+                      id="hour-{{$index}}">
+                        
+                    <div>
+                        <b>{{hour.monitor}}</b> {{hour.events}} events
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="list card">
+                <div class="item item-divider">1 day summary</div>
+                <div class="item item-body" ng-repeat="day in days"
+                      id="day-{{$index}}">
+                        
+                    <div>
+                        <b>{{day.monitor}}</b> {{day.events}} events
+                    </div>
+                
+                </div>
+            </div>
+            
+            
+            <div class="list card">
+                <div class="item item-divider">1 week summary</div>
+                <div class="item item-body" ng-repeat="week in weeks"
+                      id="week-{{$index}}">
+                        
+                    <div>
+                        <b>{{week.monitor}}</b> {{week.events}} events
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="list card">
+                <div class="item item-divider">1 month summary</div>
+                <div class="item item-body" ng-repeat="month in months"
+                      id="month-{{$index}}">
+                        
+                    <div>
+                        <b>{{month.monitor}}</b> {{month.events}} events
+                    </div>
+                
+                </div>
+            </div>
+            
+            
+        </ion-pull-up-content>
+    </ion-pull-up-footer>
+    
+    
 </ion-view>
 
 
