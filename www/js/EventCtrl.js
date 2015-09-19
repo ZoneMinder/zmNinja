@@ -197,6 +197,45 @@ angular.module('zmApp.controllers')
         // displayed in the template if events list is null
         
         
+        $scope.showEvents = function(val,unit,monitorId)
+        {
+            ZMDataModel.zmDebug("ShowEvents called with val:"+val+" unit:"+unit+" for Monitor:"+monitorId);
+                                
+             $ionicHistory.nextViewOptions({
+        disableBack: true
+    });
+            
+        var mToDate = moment();
+        
+        var mFromDate = moment().subtract(parseInt(val),unit);
+        
+        console.log ("Moment Dates:" + mFromDate.format() + " TO  " + mToDate.format());
+            
+        $rootScope.fromTime = mFromDate.toDate();
+        $rootScope.toTime =mToDate.toDate();
+        $rootScope.fromDate = $rootScope.fromTime;
+        $rootScope.toDate = $rootScope.toTime;
+            
+        ZMDataModel.zmDebug ("From: " + $rootScope.fromTime);
+        ZMDataModel.zmDebug ("To: " + $rootScope.toTime);
+            
+        //$rootScope.fromDate = fromDate.toDate();
+        //$rootScope.toDate = toDate.toDate();
+        $rootScope.isEventFilterOn = true;
+       $rootScope.fromString = mFromDate
+           .format("YYYY-MM-DD") + " " + mFromDate.format ("HH:mm:ss");
+
+     $rootScope.toString = mToDate
+         .format("YYYY-MM-DD") + " " + mToDate
+         .format ("HH:mm:ss");
+
+            
+            console.log ("**************From String: " + $rootScope.fromString);
+            console.log ("**************To String: " + $rootScope.toString);
+            
+            $state.go("events", {"id":monitorId});
+        };
+        
         $scope.footerExpand = function()
         {
             //https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -214,7 +253,7 @@ angular.module('zmApp.controllers')
                         //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
                         $scope.hours.push(
                             {monitor:ZMDataModel.getMonitorName(key),
-                             events:p[key]});
+                             events:p[key], mid:key});
                         
                     }
                 }
@@ -233,7 +272,7 @@ angular.module('zmApp.controllers')
                         //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
                         $scope.days.push(
                             {monitor:ZMDataModel.getMonitorName(key),
-                             events:p[key]});
+                             events:p[key],mid:key});
                         
                     }
                 }
@@ -253,7 +292,7 @@ angular.module('zmApp.controllers')
                         //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
                         $scope.weeks.push(
                             {monitor:ZMDataModel.getMonitorName(key),
-                             events:p[key]});
+                             events:p[key],mid:key});
                         
                     }
                 }
@@ -272,7 +311,7 @@ angular.module('zmApp.controllers')
                         //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
                         $scope.months.push(
                             {monitor:ZMDataModel.getMonitorName(key),
-                             events:p[key]});
+                             events:p[key],mid:key});
                         
                     }
                 }

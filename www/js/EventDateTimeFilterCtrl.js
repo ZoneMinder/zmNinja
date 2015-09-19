@@ -5,7 +5,7 @@
 
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventDateTimeFilterCtrl', ['$scope',  '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', 'ZMDataModel', function ($scope, $ionicScrollDelegate,$ionicSideMenuDelegate, $rootScope, $ionicHistory, ZMDataModel) {
+    .controller('zmApp.EventDateTimeFilterCtrl', ['$scope',  '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', 'ZMDataModel', '$state', function ($scope, $ionicScrollDelegate,$ionicSideMenuDelegate, $rootScope, $ionicHistory, ZMDataModel, $state) {
 
 $scope.removeFilters = function()
 {
@@ -16,7 +16,17 @@ $scope.removeFilters = function()
     $rootScope.toTime="";
     $rootScope.fromString="";
     $rootScope.toString="";
-    $ionicHistory.goBack();
+    
+    // if you come here via the events pullup
+    // you are looking at a specific monitor ID
+    // going back will only retain that monitor ID
+    // so lets reload with all monitors
+    $ionicHistory.nextViewOptions({
+        disableBack: true
+    });
+    $state.go("events", {"id":0});
+            
+    //$ionicHistory.goBack();
 };
 
 $scope.saveFilters  = function()
