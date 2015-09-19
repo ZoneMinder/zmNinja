@@ -187,7 +187,7 @@
     </ion-content>
     <div  class="events-float-filter" ng-if="isEventFilterOn">Filter On</div>
     
-    <ion-pull-up-footer class="bar-energized" on-expand="footerExpand()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand">
+    <ion-pull-up-footer class="bar-energized" on-expand="footerExpand()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand" >
 
         <ion-pull-up-handle width="100" height="25" toggle="ion-chevron-up ion-chevron-down" style="border-radius: 25px 25px 0 0">
             <i class="icon ion-chevron-up"></i>
@@ -197,54 +197,72 @@
         </ion-pull-up-bar>
         <ion-pull-up-content scroll="true">
             
-            <div class="list card">
+            <div class="list list-inset">
                 <div class="item item-divider">1 hour summary</div>
-                <div class="item item-body" ng-repeat="hour in hours"
+                <div  ng-repeat="hour in hours"
                       id="hour-{{$index}}">
-                        
-                    <div>
+                    
+                    <span style="color:black">
+                    <a class="item item-icon-right" href="#" 
+                       ng-click="showEvents('1', 'hour',hour.mid);">
                         <b>{{hour.monitor}}</b> {{hour.events}} events
-                    </div>
+                        <i class="icon ion-android-arrow-dropright"></i>
+                    </a>
+                    </span>
                 
                 </div>
             </div>
             
-            <div class="list card">
+            <div class="list list-inset">
                 <div class="item item-divider">1 day summary</div>
-                <div class="item item-body" ng-repeat="day in days"
+                <div  ng-repeat="day in days"
                       id="day-{{$index}}">
-                        
-                    <div>
+                    
+                    <span style="color:black">
+                    <a class="item item-icon-right" href="#" 
+                       ng-click="showEvents('1', 'day',day.mid);">
                         <b>{{day.monitor}}</b> {{day.events}} events
-                    </div>
+                        <i class="icon ion-android-arrow-dropright"></i>
+                    </a>
+                    </span>
                 
                 </div>
             </div>
             
             
-            <div class="list card">
+            <div class="list list-inset">
                 <div class="item item-divider">1 week summary</div>
-                <div class="item item-body" ng-repeat="week in weeks"
+                <div  ng-repeat="week in weeks"
                       id="week-{{$index}}">
-                        
-                    <div>
+                    
+                    <span style="color:black">
+                    <a class="item item-icon-right" href="#" 
+                       ng-click="showEvents('1', 'week',week.mid);">
                         <b>{{week.monitor}}</b> {{week.events}} events
-                    </div>
+                        <i class="icon ion-android-arrow-dropright"></i>
+                    </a>
+                    </span>
                 
                 </div>
             </div>
             
-            <div class="list card">
+            <div class="list list-inset">
                 <div class="item item-divider">1 month summary</div>
-                <div class="item item-body" ng-repeat="month in months"
+                <div  ng-repeat="month in months"
                       id="month-{{$index}}">
-                        
-                    <div>
+                    
+                    <span style="color:black">
+                    <a class="item item-icon-right" href="#" 
+                       ng-click="showEvents('1', 'months',month.mid);">
                         <b>{{month.monitor}}</b> {{month.events}} events
-                    </div>
+                        <i class="icon ion-android-arrow-dropright"></i>
+                    </a>
+                    </span>
                 
                 </div>
             </div>
+  
+
             
             
         </ion-pull-up-content>

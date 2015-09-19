@@ -44,7 +44,7 @@ angular.module('ionic-pullup', [])
               }
 
               function computeHeights() {
-		// PP
+		// PP -20 added
                   footer.height = footer.maxHeight > 0 ? footer.maxHeight : $window.innerHeight - headerHeight - handleHeight - tabsHeight -20;
                   $element.css({'height': footer.height + 'px'});
 
