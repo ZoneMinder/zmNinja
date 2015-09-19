@@ -28,23 +28,30 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     if (ZMDataModel.isLoggedIn()) {
         ZMDataModel.zmLog("User credentials are provided");
         
-        // You can login either via touch ID or typing in your code
-        $cordovaTouchID.checkSupport()
-            .then(function () {
-        // success, TouchID supported
-            $cordovaTouchID.authenticate("")
-                .then(function() {
-                    ZMDataModel.zmLog("Touch Success");
-                    $scope.pindata.pin = loginData.pinCode;
-                    unlock();
+        // You can login either via touch ID or typing in your code     
+        if ( $ionicPlatform.is('ios'))
+        {
+            $cordovaTouchID.checkSupport()
+                .then(function () {
+            // success, TouchID supported
+                $cordovaTouchID.authenticate("")
+                    .then(function() {
+                        ZMDataModel.zmLog("Touch Success");
+                        // Don't assign pin as it may be alphanum
+                        unlock(true);
 
-                }, 
-                function () {
-                    ZMDataModel.zmLog("Touch Failed");
+                    }, 
+                    function () {
+                        ZMDataModel.zmLog("Touch Failed");
+                });
+            }, function (error) {
+                ZMDataModel.zmLog("TouchID not supported");
             });
-        }, function (error) {
-            ZMDataModel.zmLog("TouchID not supported");
-        });
+        }
+        else
+        {
+            ZMDataModel.zmLog("Not iOS, not checking for touchID");
+        }
         
         if (loginData.usePin ) {
             $scope.pinPrompt = true;
@@ -105,13 +112,13 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     // unlock app if PIN is correct
     //-------------------------------------------------------------------------------
     $scope.unlock = function () {
-        unlock();
+        unlock(false);
     };
     
-    function unlock()
+    function unlock(touchVerified)
     {
                 ZMDataModel.zmDebug("Trying to unlock PIN");
-        if ($scope.pindata.pin == loginData.pinCode) {
+        if (touchVerified || ($scope.pindata.pin == loginData.pinCode) ) {
             ZMDataModel.zmDebug("PIN code entered is correct");
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             zmAutoLogin.stop(); //safety
