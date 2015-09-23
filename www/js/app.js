@@ -202,7 +202,7 @@ angular.module('zmApp', [
             {
                 // these can take time, so lets bump up timeout
                 config.timeout = zm.largeHttpTimeout;
-               // ZMDataModel.zmDebug("timeoutHttpIntercept: HTTP request with long response time. Timeout set to "+config.timeout);
+                //ZMDataModel.zmDebug("timeoutHttpIntercept: HTTP request with long response time. Timeout set to "+config.timeout);
                 
             } else {
                 config.timeout = zm.httpTimeout;
@@ -855,7 +855,6 @@ angular.module('zmApp', [
 
     $urlRouterProvider.otherwise(function ($injector, $location) {
         var $state = $injector.get("$state");
-        console.log("** PORTAL LOGIN STATE");
         $state.go("zm-portal-login");
     });
 

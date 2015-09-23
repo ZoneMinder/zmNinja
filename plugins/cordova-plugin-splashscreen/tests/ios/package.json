@@ -9,5 +9,5 @@
     },
     "scripts": {
         "test": "xcodebuild test -workspace CDVSplashScreenTest.xcworkspace -scheme CDVSplashScreenLibTests -destination 'platform=iOS Simulator,name=iPhone 5' CONFIGURATION_BUILD_DIR='/tmp'"
-    }
+    }    
 }

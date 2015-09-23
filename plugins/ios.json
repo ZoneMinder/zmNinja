@@ -67,6 +67,10 @@
                         {
                             "xml": "<feature name=\"TouchID\"><param name=\"ios-package\" value=\"TouchID\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"LongPressFix\"><param name=\"ios-package\" value=\"LongPressFix\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -120,9 +124,6 @@
         "com.phonegap.plugins.OrientationLock": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "cordova-plugin-crosswalk-webview": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
         "cordova-plugin-file": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
@@ -160,6 +161,12 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-touchid": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-crosswalk-webview": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-ios-longpress-fix": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },

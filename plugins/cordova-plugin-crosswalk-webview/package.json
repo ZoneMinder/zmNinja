@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-crosswalk-webview",
-  "version": "1.2.0",
+  "version": "1.3.1",
   "description": "Changes the default WebView to CrossWalk",
   "cordova": {
     "id": "cordova-plugin-crosswalk-webview",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MobileChromeApps/cordova-crosswalk-engine.git"
+    "url": "https://github.com/crosswalk-project/cordova-plugin-crosswalk-webview.git"
   },
   "keywords": [
     "cordova",
@@ -34,7 +34,7 @@
   "author": "",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/MobileChromeApps/cordova-crosswalk-engine/issues"
+    "url": "https://crosswalk-project.org/jira"
   },
-  "homepage": "https://github.com/MobileChromeApps/cordova-crosswalk-engine"
+  "homepage": "https://github.com/crosswalk-project/cordova-plugin-crosswalk-webview"
 }

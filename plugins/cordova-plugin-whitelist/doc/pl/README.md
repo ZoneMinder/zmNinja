@@ -19,108 +19,112 @@
 
 # cordova-plugin-whitelist
 
-This plugin implements a whitelist policy for navigating the application webview on Cordova 4.0
+Ten plugin wdraża polityki białej nawigacja widoku sieci Web aplikacji na Cordova 4.0
 
-## Supported Cordova Platforms
+## Cordova obsługiwanych platform
 
-* Android 4.0.0 or above
-* iOS 4.0.0 or above
+  * Android 4.0.0 lub powyżej
+  * iOS 4.0.0 lub powyżej
 
-## Navigation Whitelist
-Controls which URLs the WebView itself can be navigated to. Applies to
-top-level navigations only.
+## Biała lista nawigacji
 
-Quirks: on Android it also applies to iframes for non-http(s) schemes.
+Kontroluje, których adresy URL widoku sieci Web, samej można nawigować do. Dotyczy tylko najwyższego poziomu nawigacje.
 
-By default, navigations only to `file://` URLs, are allowed. To allow other
-other URLs, you must add `<allow-navigation>` tags to your `config.xml`:
+Dziwactwa: na Android to dotyczy także IFRAME do nie-http (s) systemów.
+
+Domyślnie, nawigacje tylko do URLi `file://` , są dozwolone. Aby zezwolić na inne adresy URL, należy dodać Tagi `< allow-navigation >` do pliku `config.xml`:
 
     <!-- Allow links to example.com -->
     <allow-navigation href="http://example.com/*" />
-
+    
     <!-- Wildcards are allowed for the protocol, as a prefix
          to the host, or as a suffix to the path -->
     <allow-navigation href="*://*.example.com/*" />
-
+    
     <!-- A wildcard can be used to whitelist the entire network,
          over HTTP and HTTPS.
          *NOT RECOMMENDED* -->
     <allow-navigation href="*" />
-
+    
     <!-- The above is equivalent to these three declarations -->
     <allow-navigation href="http://*/*" />
     <allow-navigation href="https://*/*" />
     <allow-navigation href="data:*" />
+    
 
-## Intent Whitelist
-Controls which URLs the app is allowed to ask the system to open.
-By default, no external URLs are allowed.
+## Zamiarem biała
 
-On Android, this equates to sending an intent of type BROWSEABLE.
+Kontroluje, których adresy URL aplikacji jest możliwość zapytać systemem otwierania. Domyślnie nie ma zewnętrznych adresów URL są dozwolone.
 
-This whitelist does not apply to plugins, only hyperlinks and calls to `window.open()`.
+Na Android to przyrównuje do wysyłania zamiarem typu BROWSEABLE.
 
-In `config.xml`, add `<allow-intent>` tags, like this:
+Ta biała nie ma zastosowania do pluginów, tylko hiperłącza i wywołania `window.open()`.
+
+W `pliku config.xml`dodawanie tagów `< allow-intent >` , jak to:
 
     <!-- Allow links to web pages to open in a browser -->
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-
+    
     <!-- Allow links to example.com to open in a browser -->
     <allow-intent href="http://example.com/*" />
-
+    
     <!-- Wildcards are allowed for the protocol, as a prefix
          to the host, or as a suffix to the path -->
     <allow-intent href="*://*.example.com/*" />
-
+    
     <!-- Allow SMS links to open messaging app -->
     <allow-intent href="sms:*" />
-
+    
     <!-- Allow tel: links to open the dialer -->
     <allow-intent href="tel:*" />
-
+    
     <!-- Allow geo: links to open maps -->
     <allow-intent href="geo:*" />
-
+    
     <!-- Allow all unrecognized URLs to open installed apps
          *NOT RECOMMENDED* -->
     <allow-intent href="*" />
+    
 
-## Network Request Whitelist
-Controls which network requests (images, XHRs, etc) are allowed to be made (via cordova native hooks).
+## Sieci wniosek biała
 
-Note: We suggest you use a Content Security Policy (see below), which is more secure.  This whitelist is mostly historical for webviews which do not support CSP.
+Formanty, które sieci żądań (obrazy, XHRs, itp.) mogą być wykonane (za pośrednictwem cordova rodzimych haki).
 
-In `config.xml`, add `<access>` tags, like this:
+Uwaga: Zalecamy, że używasz treści polityki bezpieczeństwa (patrz poniżej), który jest bardziej bezpieczne. Ta Biała jest głównie historyczne dla webviews, które nie obsługują CSP.
+
+W `pliku config.xml`dodawanie tagów `< access >` , jak to:
 
     <!-- Allow images, xhrs, etc. to google.com -->
     <access origin="http://google.com" />
     <access origin="https://google.com" />
-
+    
     <!-- Access to the subdomain maps.google.com -->
     <access origin="http://maps.google.com" />
-
+    
     <!-- Access to all the subdomains on google.com -->
     <access origin="http://*.google.com" />
-
+    
     <!-- Enable requests to content: URLs -->
     <access origin="content:///*" />
-
+    
     <!-- Don't block any requests -->
     <access origin="*" />
+    
 
-Without any `<access>` tags, only requests to `file://` URLs are allowed. However, the default Cordova application includes `<access origin="*">` by default.
+Bez żadnych tagów `< access >` dozwolone są tylko żądania do URLi `file://` . Jednak domyślnie Cordova aplikacja zawiera `< access origin = "*" >` domyślnie.
 
-Quirk: Android also allows requests to https://ssl.gstatic.com/accessibility/javascript/android/ by default, since this is required for TalkBack to function properly.
+Cokół: Android pozwala również żądania do https://ssl.gstatic.com/accessibility/javascript/android/ domyślnie, ponieważ jest to wymagane dla TalkBack wobec funkcja poprawnie.
 
-### Content Security Policy
-Controls which network requests (images, XHRs, etc) are allowed to be made (via webview directly).
+### Zasady zabezpieczeń zawartości
 
-On Android and iOS, the network request whitelist (see above) is not able to filter all types of requests (e.g. `<video>` & WebSockets are not blocked). So, in addition to the whitelist, you should use a [Content Security Policy](http://content-security-policy.com/) `<meta>` tag on all of your pages.
+Formanty, które sieci żądań (obrazy, XHRs, itp.) mogą być wykonane (za pomocą widoku sieci Web bezpośrednio).
 
-On Android, support for CSP within the system webview starts with KitKat (but is available on all versions using Crosswalk WebView).
+Na Androida i iOS biała żądanie sieci (patrz wyżej) nie jest w stanie filtrować wszystkie rodzaje wniosków (np. `< video >` & WebSockets nie są zablokowane). Tak oprócz białej listy, należy użyć tagu `< meta >` [Treści polityki bezpieczeństwa](http://content-security-policy.com/) na wszystkich stronach.
 
-Here are some example CSP declarations for your `.html` pages:
+Na Android wsparcie dla CSP w ramach systemu widoku sieci Web zaczyna KitKat (ale jest dostępne we wszystkich wersjach przy użyciu widoku sieci Web przejście dla pieszych).
+
+Oto niektóre przykład CSP deklaracje dla strony `HTML` :
 
     <!-- Good default declaration:
         * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
@@ -130,15 +134,15 @@ Here are some example CSP declarations for your `.html` pages:
             * Enable eval(): add 'unsafe-eval' to default-src
     -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
-
+    
     <!-- Allow requests to foo.com -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' foo.com">
-
+    
     <!-- Enable all requests, inline styles, and eval() -->
     <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
-
+    
     <!-- Allow XHRs via https only -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
-
+    
     <!-- Allow iframe to https://cordova.apache.org/ -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://cordova.apache.org">

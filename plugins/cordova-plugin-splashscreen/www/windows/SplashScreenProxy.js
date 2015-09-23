@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,7 +26,7 @@ var cordova = require('cordova'),
     channel = require('cordova/channel');
 
 var isPhone = (cordova.platformId == "windows") && WinJS.Utilities.isPhone;
-var localSplash = null;
+var localSplash = null; 
 var bgColor = "#464646"; // default backgrond color; TDOO - read it from .appxmanifest
 var splashImageSrc = isPhone ? "ms-appx:///images/splashscreenphone.png" : "ms-appx:///images/splashscreen.png";
 
