@@ -35,9 +35,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
     
     // Let's stagger this by 500ms each to see if Chrome lets these through
     
-    $timeout( function() {getLoadStatus();},500);
-    $timeout( function() {getDiskStatus();},1000);
-    $timeout( function() {getCurrentState();},1500);
+    $timeout( function() {ZMDataModel.zmDebug("invoking LoadStatus...");getLoadStatus();},500);
+    $timeout( function() {ZMDataModel.zmDebug("invoking DiskStatus...");getDiskStatus();},1000);
+    $timeout( function() {ZMDataModel.zmDebug("invoking CurrentState...");getCurrentState();},1500);
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
