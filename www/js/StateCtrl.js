@@ -4,7 +4,9 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$timeout',function ($ionicPopup, $scope,zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', 
+                                               ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope','$timeout',function (
+                                                $ionicPopup,    $scope,   zm,   ZMDataModel,  $ionicSideMenuDelegate,  $ionicLoading,     $ionicModal,   $state,   $http,   $rootScope,  $timeout) {
 
     //----------------------------------------------------------------------
     // Controller main
