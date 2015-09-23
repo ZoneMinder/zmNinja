@@ -16,7 +16,6 @@ $dark:                            #444 !default;
 */
 
 // The path for our ionicons font files, relative to the built CSS in www/css
-// FIXME: figure out what went wrong with SCSS
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 
@@ -34,6 +33,8 @@ $button-stable-text:	      #FFFFFF !default;
 
 $button-border-radius:            15px !default;
 $button-stable-border:            #00A0A0 !default;
+$button-dark-border:		#008080 !default;
+$button-dark-active-border:		#008080 !default;
 
 $input-color-placeholder:        #BBBBBB !default;
 
