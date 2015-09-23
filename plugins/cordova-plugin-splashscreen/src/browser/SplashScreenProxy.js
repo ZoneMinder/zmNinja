@@ -21,7 +21,7 @@
 // Default parameter values including image size can be changed in `config.xml`
 var splashImageWidth = 170;
 var splashImageHeight = 200;
-var position = { x: 0, y: 0, width: splashImageWidth, height: splashImageHeight };
+var position = { x: 0, y: 0, width: splashImageWidth, height: splashImageHeight }; 
 var splash = null; //
 var localSplash; // the image to display
 var localSplashImage;

@@ -21,12 +21,12 @@ namespace WPCordovaClassLib.Cordova.Commands
     public enum Resolutions { WVGA, WXGA, HD };
 
     public static class ResolutionHelper
-    {
+    { 
        public static Resolutions CurrentResolution
         {
             get
             {
-                switch (Application.Current.Host.Content.ScaleFactor)
+                switch (Application.Current.Host.Content.ScaleFactor) 
                 {
                     case 100: return Resolutions.WVGA;
                     case 160: return Resolutions.WXGA;

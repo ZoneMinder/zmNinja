@@ -27,7 +27,7 @@ typedef struct {
     BOOL iPhone6;
     BOOL iPhone6Plus;
     BOOL retina;
-
+    
 } CDV_iOSDevice;
 
 @interface CDVSplashScreen : CDVPlugin {

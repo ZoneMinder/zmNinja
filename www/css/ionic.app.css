@@ -3149,14 +3149,14 @@ a.subdued {
     .bar.bar-royal.bar-footer {
       background-image: linear-gradient(180deg, #6b46e5, #6b46e5 50%, transparent 50%); }
   .bar.bar-dark {
-    border-color: #111;
+    border-color: #008080;
     background-color: teal;
-    background-image: linear-gradient(0deg, #111, #111 50%, transparent 50%);
+    background-image: linear-gradient(0deg, #008080, #008080 50%, transparent 50%);
     color: #fff; }
     .bar.bar-dark .title {
       color: #fff; }
     .bar.bar-dark.bar-footer {
-      background-image: linear-gradient(180deg, #111, #111 50%, transparent 50%); }
+      background-image: linear-gradient(180deg, #008080, #008080 50%, transparent 50%); }
   .bar .title {
     position: absolute;
     top: 0;
@@ -3412,14 +3412,14 @@ a.subdued {
     background: none; }
 
 .bar-dark .button {
-  border-color: #111;
+  border-color: #008080;
   background-color: teal;
   color: #fff; }
   .bar-dark .button:hover {
     color: #fff;
     text-decoration: none; }
   .bar-dark .button.active, .bar-dark .button.activated {
-    border-color: #000;
+    border-color: #008080;
     background-color: #262626;
     box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1); }
   .bar-dark .button.button-clear {
@@ -3603,9 +3603,9 @@ a.subdued {
     color: #886aea; }
 
 .tabs-dark > .tabs, .tabs.tabs-dark {
-  border-color: #111;
+  border-color: #008080;
   background-color: #008080;
-  background-image: linear-gradient(0deg, #111, #111 50%, transparent 50%);
+  background-image: linear-gradient(0deg, #008080, #008080 50%, transparent 50%);
   color: #fff; }
   .tabs-dark > .tabs .tab-item .badge, .tabs.tabs-dark .tab-item .badge {
     background-color: #fff;
@@ -3947,8 +3947,8 @@ a.subdued {
 
 .tabs-background-dark .tabs, .tabs-background-dark > .tabs {
   background-color: #008080;
-  background-image: linear-gradient(0deg, #111, #111 50%, transparent 50%);
-  border-color: #111; }
+  background-image: linear-gradient(0deg, #008080, #008080 50%, transparent 50%);
+  border-color: #008080; }
 
 .tabs-color-light .tab-item {
   color: rgba(255, 255, 255, 0.4);
@@ -4238,6 +4238,12 @@ ion-tabs.tabs-color-active-dark .tab-item {
   cursor: default;
   pointer-events: none; }
 
+.nav-bar-tabs-top.hide ~ .view-container .tabs-top .tabs {
+  top: 0; }
+
+.pane[hide-nav-bar="true"] .has-tabs-top {
+  top: 49px; }
+
 /**
  * Menus
  * --------------------------------------------------
@@ -4264,7 +4270,8 @@ ion-tabs.tabs-color-active-dark .tab-item {
   box-shadow: -1px 0px 2px rgba(0, 0, 0, 0.2), 1px 0px 2px rgba(0, 0, 0, 0.2); }
 
 .menu-open .menu-content .pane, .menu-open .menu-content .scroll-content {
-  pointer-events: none; }
+  pointer-events: none;
+  overflow: hidden; }
 
 .grade-b .menu-content, .grade-c .menu-content {
   -webkit-box-sizing: content-box;
@@ -4728,7 +4735,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
     background-color: #886aea;
     color: #fff; }
   .item.item-dark {
-    border-color: #111;
+    border-color: #008080;
     background-color: #008080;
     color: #fff; }
   .item[ng-click]:hover {
@@ -4765,7 +4772,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
     border-color: #6b46e5;
     background-color: #6b46e5; }
   .item.active.item-dark, .item.activated.item-dark, .item-complex.active .item-content.item-dark, .item-complex.activated .item-content.item-dark, .item .item-content.active.item-dark, .item .item-content.activated.item-dark {
-    border-color: #000;
+    border-color: #008080;
     background-color: #262626; }
 
 .item, .item h1, .item h2, .item h3, .item h4, .item h5, .item h6, .item p, .item-content, .item-content h1, .item-content h2, .item-content h3, .item-content h4, .item-content h5, .item-content h6, .item-content p {
@@ -4868,11 +4875,11 @@ a.item-content {
     border-color: #6b46e5;
     background-color: #6b46e5; }
 .item-complex.item-dark > .item-content {
-  border-color: #111;
+  border-color: #008080;
   background-color: #008080;
   color: #fff; }
   .item-complex.item-dark > .item-content.active, .item-complex.item-dark > .item-content:active {
-    border-color: #000;
+    border-color: #008080;
     background-color: #262626; }
 
 /**
@@ -6449,7 +6456,7 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
     top: 0;
     bottom: 0;
     right: 0;
-    padding: 14px 48px 16px 16px;
+    padding: 0 48px 0 16px;
     max-width: 65%;
     border: none;
     background: #fff;
@@ -6816,7 +6823,7 @@ progress {
       text-decoration: none; }
     .button.button-dark.active, .button.button-dark.activated {
       border-color: #008080;
-      background-color: #008080;
+      background-color: #262626;
       box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1); }
     .button.button-dark.button-clear {
       border-color: transparent;
@@ -7492,7 +7499,7 @@ a.button {
   background-color: #008080; }
 
 .dark-border {
-  border-color: #111; }
+  border-color: #008080; }
 
 [collection-repeat] {
   /* Position is set by transforms */
