@@ -4,7 +4,7 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', function ($ionicPopup, $scope,zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$timeout',function ($ionicPopup, $scope,zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
 
     //----------------------------------------------------------------------
     // Controller main
@@ -30,9 +30,12 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     var inProgress = 0; // prevents user from another op if one is in progress
     getRunStatus();
-    getLoadStatus();
-    getDiskStatus();
-    getCurrentState();
+    
+    // Let's stagger this by 500ms each to see if Chrome lets these through
+    
+    $timeout( function() {getLoadStatus();},500);
+    $timeout( function() {getDiskStatus();},1000);
+    $timeout( function() {getCurrentState();},1500);
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
