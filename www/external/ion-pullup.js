@@ -18,12 +18,7 @@ angular.module('ionic-pullup', [])
           },
           controller: ['$scope', '$element', '$attrs', 'ionPullUpFooterState', 'ionPullUpFooterBehavior', function($scope, $element, $attrs, FooterState, FooterBehavior) {
               var
-                tabs = document.querySelector('.tabs'),
-                hasBottomTabs = document.querySelector('.tabs-bottom'),
-                header = document.querySelector('.bar-header'),
-                tabsHeight = tabs ? tabs.offsetHeight : 0,
-                headerHeight = header ? header.offsetHeight : 0,
-                handleHeight = 0,
+                tabs, hasBottomTabs, header, tabsHeight, headerHeight, handleHeight = 0,
                 footer = {
                     height: 0,
                     posY: 0,
@@ -36,13 +31,20 @@ angular.module('ionic-pullup', [])
                 };
 
               function init() {
-                  $element.css({ '-webkit-backface-visibility': 'hidden', 
-				'backface-visibility': 'hidden', 
-				'transition': '300ms ease-in-out', 
-				'padding': 0});
+                  computeDefaultHeights();
+
+                  $element.css({'transition': '300ms ease-in-out', 'padding': 0});
                   if (tabs && hasBottomTabs) {
                       $element.css('bottom', tabs.offsetHeight + 'px');
                   }
+              }
+
+              function computeDefaultHeights() {
+                  tabs = document.querySelector('.tabs');
+                  hasBottomTabs = document.querySelector('.tabs-bottom');
+                  header = document.querySelector('.bar-header');
+                  tabsHeight = tabs ? tabs.offsetHeight : 0;
+                  headerHeight = header ? header.offsetHeight : 0;
               }
 
               function computeHeights() {
@@ -62,23 +64,16 @@ angular.module('ionic-pullup', [])
                   }, 300);
               }
 
-	     function recomputeAllHeights()
-	     {
-		// PP - Just in time recomputation
-		tabs = document.querySelector('.tabs');
-                hasBottomTabs = document.querySelector('.tabs-bottom');
-                header = document.querySelector('.bar-header');
-                tabsHeight = tabs ? tabs.offsetHeight : 0;
-                headerHeight = header ? header.offsetHeight : 0;
-                footer.height = footer.maxHeight > 0 ? footer.maxHeight : $window.innerHeight - headerHeight - handleHeight - tabsHeight;
-		
-	     }
+              function recomputeAllHeights() {
+                  computeDefaultHeights();
+                  footer.height = footer.maxHeight > 0 ? footer.maxHeight : $window.innerHeight - headerHeight - handleHeight - tabsHeight;
+                }
 
               function expand() {
-		  //PP - lets recompute height right here to make sure we have the latest
-		  recomputeAllHeights();
+                  // recompute height right here to make sure we have the latest
+                  recomputeAllHeights();
                   footer.lastPosY = 0;
-		  //PP - lets adjust CSS values with new heights incase they changed
+                  // adjust CSS values with new heights in case they changed
                   $element.css({'height':footer.height + 'px',  '-webkit-transform': 'translate3d(0, 0, 0)', 'transform': 'translate3d(0, 0, 0)'});
                   $scope.onExpand();
                   footer.state = FooterState.EXPANDED;
@@ -157,12 +152,13 @@ angular.module('ionic-pullup', [])
                   }
               };
 
+              init();
+
               $ionicPlatform.ready(function() {
                   $window.addEventListener('orientationchange', updateUI);
                   $ionicPlatform.on("resume", updateUI);
               });
 
-              init();
           }],
           compile: function(element, attrs) {
               attrs.defaultHeight && element.css('height', parseInt(attrs.defaultHeight, 10) + 'px');
@@ -227,8 +223,7 @@ angular.module('ionic-pullup', [])
                   left: (($window.innerWidth - width) / 2) + 'px',
                   height: height + 'px',
                   width: width + 'px',
-                  'text-align': 'center',
-
+                  'text-align': 'center'
                   });
 
               // add gesture
