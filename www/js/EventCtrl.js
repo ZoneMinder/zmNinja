@@ -7,7 +7,7 @@
 // and whether the new API has a better mechanism
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover) {
+    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup',function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup) {
 
         // events in last 5 minutes
         // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -234,6 +234,39 @@ angular.module('zmApp.controllers')
             console.log ("**************To String: " + $rootScope.toString);
             
             $state.go("events", {"id":monitorId});
+        };
+        
+        //------------------------------------------------
+        // Tapping on the filter sign lets you reset it
+        //-------------------------------------------------
+        
+        $scope.filterTapped = function()
+        {
+            console.log ("FILTER TAPPED");
+            
+               var confirmPopup = $ionicPopup.confirm({
+                 title: 'Filter settings',
+                 template: 'You are viewing Events between:<br/> ' + $rootScope.fromString + " to " + $rootScope.toString +'<br/>Do you want me to reset this filter?'
+               });
+               confirmPopup.then(function(res) {
+                 if(res) {
+                   ZMDataModel.zmLog("Filter reset requested in popup");
+                    $rootScope.isEventFilterOn = false;
+                    $rootScope.fromDate = "";
+                    $rootScope.fromTime= "";
+                    $rootScope.toDate = "";
+                    $rootScope.toTime="";
+                    $rootScope.fromString="";
+                    $rootScope.toString="";
+                   $ionicHistory.nextViewOptions({
+                                disableBack: true
+                            });
+                    $state.go("events", {"id":0});
+                 } else {
+                   ZMDataModel.zmLog("Filter reset cancelled in popup");
+                 }
+               });
+
         };
         
         $scope.footerExpand = function()
@@ -1199,6 +1232,11 @@ angular.module('zmApp.controllers')
         };
 
         $scope.doRefresh = function () {
+            doRefresh();
+        }; //dorefresh
+        
+        function doRefresh()
+        {
             console.log("***Pull to Refresh");
             $scope.events = [];
             moreEvents = true;
@@ -1255,6 +1293,6 @@ angular.module('zmApp.controllers')
                     });
 
                 });
-        }; //dorefresh
+        }
 
 }]);
