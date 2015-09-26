@@ -25,11 +25,11 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     
     $scope.pinPrompt = false; // if true, then PIN is displayed else skip 
 
-    if (ZMDataModel.isLoggedIn()) {
+    if (ZMDataModel.isLoggedIn() ) {
         ZMDataModel.zmLog("User credentials are provided");
         
         // You can login either via touch ID or typing in your code     
-        if ( $ionicPlatform.is('ios'))
+        if ( $ionicPlatform.is('ios')  && loginData.usePin)
         {
             $cordovaTouchID.checkSupport()
                 .then(function () {
