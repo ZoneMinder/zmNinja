@@ -5,8 +5,8 @@
 // controller for State View
 
 angular.module('zmApp.controllers').controller('zmApp.StateCtrl', 
-                                               ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope','$timeout',function (
-                                                $ionicPopup,    $scope,   zm,   ZMDataModel,  $ionicSideMenuDelegate,  $ionicLoading,     $ionicModal,   $state,   $http,   $rootScope,  $timeout) {
+        ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope','$timeout',function (
+        $ionicPopup,    $scope,   zm,   ZMDataModel,  $ionicSideMenuDelegate,  $ionicLoading,     $ionicModal,   $state,   $http,   $rootScope,  $timeout) {
 
     //----------------------------------------------------------------------
     // Controller main
@@ -34,6 +34,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
     getRunStatus();
     
     // Let's stagger this by 500ms each to see if Chrome lets these through
+    // This may also help if your Apache is not configured to let multiple connections through
     
     $timeout( function() {ZMDataModel.zmDebug("invoking LoadStatus...");getLoadStatus();},500);
     $timeout( function() {ZMDataModel.zmDebug("invoking DiskStatus...");getDiskStatus();},1000);
