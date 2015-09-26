@@ -185,7 +185,7 @@
             </ion-infinite-scroll>
         </div>
     </ion-content>
-    <div  class="events-float-filter" ng-if="isEventFilterOn">Filter On</div>
+    <div  class="events-float-filter" ng-if="isEventFilterOn" on-tap="filterTapped();">Filter On</div>
 
     <ion-pull-up-footer class="bar-energized" on-expand="footerExpand()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand" >
 
