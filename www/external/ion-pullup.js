@@ -52,6 +52,7 @@ angular.module('ionic-pullup', [])
                   $element.css({'height': footer.height + 'px'});
 
                   if (footer.initialState == FooterState.MINIMIZED) {
+		
                       minimize();
                   }  else {
                       collapse();
@@ -62,6 +63,7 @@ angular.module('ionic-pullup', [])
                   $timeout(function() {
                       computeHeights();
                   }, 300);
+                  $element.css({'transition': 'none', 'padding': 0});
               }
 
               function recomputeAllHeights() {
@@ -75,6 +77,7 @@ angular.module('ionic-pullup', [])
                   footer.lastPosY = 0;
                   // adjust CSS values with new heights in case they changed
                   $element.css({'height':footer.height + 'px',  '-webkit-transform': 'translate3d(0, 0, 0)', 'transform': 'translate3d(0, 0, 0)'});
+                  $element.css({'transition': '300ms ease-in-out', 'padding': 0});
                   $scope.onExpand();
                   footer.state = FooterState.EXPANDED;
               }
@@ -235,9 +238,8 @@ angular.module('ionic-pullup', [])
               });
 
               function updateUI() {
-                  $timeout(function() {
-                      element.css('left', (($window.innerWidth - width) / 2) + 'px');
-                  }, 300);
+		      $timeout ( function() {
+                      	element.css('left', (($window.innerWidth - width) / 2) + 'px');},300);
               }
 
               $ionicPlatform.ready(function() {
