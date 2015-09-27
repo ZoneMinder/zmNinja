@@ -231,6 +231,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         }
 
     };
+    
+    
+           //-------------------------------------------------------------------------
+        // called when user switches to background
+        //-------------------------------------------------------------------------
+        function onPause() {
+            ZMDataModel.zmDebug ("TimelineCtrl:onpause called");
+            console.log("*** Moving to Background ***"); // Handle the pause event
+            
+            if ($scope.popover) $scope.popover.remove();
+    
+        }
 
 
     //--------------------------------------------------------
@@ -310,6 +322,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // Make sure sliding for menu is disabled so it
     // does not interfere with graph panning
     $ionicSideMenuDelegate.canDragContent(false);
+    
+     document.addEventListener("pause", onPause, false);
 
     // FIXME: Timeline awake to avoid graph redrawing
      ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
