@@ -243,10 +243,12 @@ angular.module('zmApp.controllers')
         $scope.filterTapped = function()
         {
             console.log ("FILTER TAPPED");
+            var myFrom = moment($rootScope.fromString).format("MMM/DD/YYYY hh:mm a").toString();
+            var toString = moment($rootScope.toString).format("MMM/DD/YYYY hh:mm a").toString();
             
                var confirmPopup = $ionicPopup.confirm({
                  title: 'Filter settings',
-                 template: 'You are viewing Events between:<br/> ' + $rootScope.fromString + " to " + $rootScope.toString +'<br/>Do you want me to reset this filter?'
+                 template: 'You are viewing Events between:<br/> <b>' + myFrom + "</b> to <b>" + toString +'</b><br/>Do you want to delete this filter?'
                });
                confirmPopup.then(function(res) {
                  if(res) {
@@ -387,6 +389,7 @@ angular.module('zmApp.controllers')
             ZMDataModel.zmDebug ("EventCtrl:onpause called");
             console.log("*** Moving to Background ***"); // Handle the pause event
             console.log("*** CANCELLING INTERVAL ****");
+            if ($scope.popover) $scope.popover.remove();
             $interval.cancel(segmentHandle);
             // FIXME: Do I need to  setAwake(false) here?
         }
@@ -1068,6 +1071,8 @@ angular.module('zmApp.controllers')
             if ($scope.modal !== undefined) {
                 $scope.modal.remove();
             }
+            if ($scope.popover !== undefined)
+                $scope.popover.remove();
             $interval.cancel(segmentHandle);
         });
 
