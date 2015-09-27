@@ -430,8 +430,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         }
         else
         {
-            element.removeClass("animated bounceInRight");
-            element.addClass("animated bounceOutLeft");
+           element.removeClass("animated bounceInRight");
+           element.addClass("animated bounceOutLeft");
         }
 
     };
@@ -677,15 +677,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         $scope.radialMenuOptions = {
         content: '',
-        size:"small",
+        size:'small',
 
         background: '#982112',
-        isOpen: true,
+        isOpen: false,
         toggleOnClick: false,
         button: {
-            cssClass: "fa  fa-compress fa-2x",
-            size:"small",
-            onclick: function() { timeline.fit();}
+            cssClass: 'fa  fa-compress fa-2x',
+            size:'small',
+            onclick: function() { console.log ("fitting");timeline.fit();}
         },
         items: [
             {
@@ -791,7 +791,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 }
             },
     ]};
-
+    
+   
 
 
 
