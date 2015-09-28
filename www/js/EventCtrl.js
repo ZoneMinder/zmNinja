@@ -21,6 +21,8 @@ angular.module('zmApp.controllers')
         $scope.weeks = [];
         $scope.months = [];
         
+        $scope.eventList = {showDelete:false};
+        
         $scope.slides = []; // will hold scrub frames
         var segmentHandle = 0; // holds timer for progress bar
         $scope.totalEventTime = 0; // used to display max of progress bar
@@ -235,6 +237,44 @@ angular.module('zmApp.controllers')
             
             $state.go("events", {"id":monitorId});
         };
+        
+        
+        $scope.deleteEvent = function (id, itemid)
+    {
+            //$scope.eventList.showDelete = false;
+        //curl -XDELETE http://server/zm/api/events/1.json
+        var loginData = ZMDataModel.getLogin();
+        var apiDelete =  loginData.apiurl + "/events/" + id + ".json";
+        ZMDataModel.zmDebug("DeleteEvent: ID="+id+" item="+itemid);
+         ZMDataModel.zmLog("Delete event " + apiDelete);
+         $http.delete(apiDelete)
+         .success(function(data)
+         {
+             ZMDataModel.zmDebug ("delete success: " + JSON.stringify(data));
+             ZMDataModel.displayBanner ('info', ['deleted event'],2000,2000);
+             
+             
+             /*var element = angular.element(document.getElementById("item-"+itemid));
+              element.addClass("eventDeleteSpeed animated  slideOutLeft")
+              .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', 
+                   
+                    function () {
+                       // element.removeClass("animated slideOutLeft");
+                    });
+             $ionicScrollDelegate.$getByHandle("mainScroll").resize();*/
+           
+                            $scope.events.splice(itemid, 1);
+                            //doRefresh();
+                            
+         })
+         .error (function (data)
+         {
+             ZMDataModel.zmDebug ("delete error: " + JSON.stringify(data));
+             ZMDataModel.displayBanner ('error', ['could not delete event', 'please check logs']);
+         });
+        
+        
+    };
         
         //------------------------------------------------
         // Tapping on the filter sign lets you reset it

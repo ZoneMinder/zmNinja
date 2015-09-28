@@ -4,6 +4,9 @@
         <button class="button button-icon button-clear ion-navicon"
                 ng-click="openMenu()">
         </button>
+        
+        <button class="button button-icon icon ion-ios-minus-outline" 
+          ng-click="eventList.showDelete = !eventList.showDelete;"></button>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
@@ -40,10 +43,10 @@
 
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
         <div ng-if = "!eventsBeingLoaded">
-            <div class="list">
-                <div class="item" collection-repeat="event in events| filter:search.text"
-                     item-height="event.Event.height" id="item-{{$index}}">
-
+            <ion-list show-delete="eventList.showDelete" >
+                <ion-item  collection-repeat="event in events| filter:search.text"
+                     item-height="event.Event.height"  id="item-{{$index}}" >
+                    <div  >
                     <!--<span class="events-filter-on" ng-if="isEventFilterOn">Filter</span>-->
 
                     <span style="float:right;margin-top:-18px;background-color:#6d0909;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}</span>
@@ -112,6 +115,8 @@
                                 ng-click="closeIfOpen(event);openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames, event.Event.BasePath, event.Event.relativePath)" > View Footage
                     </button>
                     </span>
+                    
+                    
 
 
                     <!-- this is the event scrub area -->
@@ -169,9 +174,19 @@
                             </ul>
                         </div>
                     </div>
-
-                </div>
-            </div>
+                        
+                        <ion-delete-button class="ion-minus-circled" 
+                             ng-click="deleteEvent(event.Event.Id, $index)">
+          </ion-delete-button>
+                       <!-- 
+                    <ion-option-button class="button-assertive"
+                       ng-click="deleteEvent(event.Event.Id, $index)">
+      &nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;
+    </ion-option-button>-->
+                    
+                    </div>
+                </ion-item>
+            </ion-list>
         </div>
 
         <ion-item ng-show="!events.length">
