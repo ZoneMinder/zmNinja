@@ -93,7 +93,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                         var apiRestart = loginData.apiurl + "/states/change/restart.json";
                         var apiMon = loginData.apiurl + "/monitors/" + monitorId + ".json";
 
-                        ZMDataModel.zmDebug("MonitorCtrl: URLs for changeConfig save:" + apiRestart + ">>" + apiMon);
+                        ZMDataModel.zmDebug("MonitorCtrl: URLs for changeConfig save:" + apiMon);
 
                         var isEnabled = "";
                         isEnabled = ($scope.monfunc.myenabled == true) ? '1' : '0';
@@ -125,7 +125,8 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                         // I am restarting ZM after monitor change
                         // do I need this? FIXME: Ask Kyle
                         .success(function () {
-                                ZMDataModel.zmDebug ("MonitorCtrl: Restarting ZM");
+                                ZMDataModel.zmDebug ("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
+                               /* ZMDataModel.zmDebug ("MonitorCtrl: Restarting ZM");
                                 $ionicLoading.show({
                                     template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
                                     noBackdrop: true,
@@ -145,7 +146,7 @@ angular.module('zmApp.controllers').controller('zmApp.MonitorCtrl', ['$ionicPopu
                                             $ionicLoading.hide();
 
                                         }
-                                    );
+                                    );*/
 
                             })
                             .error(function (data, status, headers, config) {
