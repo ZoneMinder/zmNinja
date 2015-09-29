@@ -7,7 +7,7 @@
 // and whether the new API has a better mechanism
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup',function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup) {
+    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup) {
 
         // events in last 5 minutes
         // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -15,14 +15,16 @@ angular.module('zmApp.controllers')
         //---------------------------------------------------
         // Controller main
         //---------------------------------------------------
-        
+
         $scope.hours = [];
         $scope.days = [];
         $scope.weeks = [];
         $scope.months = [];
-        
-        $scope.eventList = {showDelete:false};
-        
+
+        $scope.eventList = {
+            showDelete: false
+        };
+
         $scope.slides = []; // will hold scrub frames
         var segmentHandle = 0; // holds timer for progress bar
         $scope.totalEventTime = 0; // used to display max of progress bar
@@ -36,7 +38,7 @@ angular.module('zmApp.controllers')
         console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
         $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-       
+
 
         $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
             scope: $scope,
@@ -117,24 +119,24 @@ angular.module('zmApp.controllers')
 
         // First get total pages and then
         // start from the latest. If this fails, nothing displays
-        
-        ZMDataModel.zmDebug ("EventCtrl: grabbing # of event pages");
+
+        ZMDataModel.zmDebug("EventCtrl: grabbing # of event pages");
         ZMDataModel.getEventsPages($scope.id, $rootScope.fromString, $rootScope.toString)
             .then(function (data) {
                 eventsPage = data.pageCount;
-                ZMDataModel.zmDebug ("EventCtrl: found " + eventsPage + " pages of events");
+                ZMDataModel.zmDebug("EventCtrl: found " + eventsPage + " pages of events");
                 //console.log("TOTAL EVENT PAGES IS " + eventsPage);
                 pageLoaded = true;
                 $scope.viewTitle.title = data.count;
-                ZMDataModel.zmDebug ("EventCtrl: grabbing events for: id="+$scope.id+" Date/Time:" + $rootScope.fromString +
-                                     "-" + $rootScope.toString);
+                ZMDataModel.zmDebug("EventCtrl: grabbing events for: id=" + $scope.id + " Date/Time:" + $rootScope.fromString +
+                    "-" + $rootScope.toString);
                 ZMDataModel.getEvents($scope.id, eventsPage, "", $rootScope.fromString, $rootScope.toString)
                     .then(function (data) {
                         console.log("EventCtrl Got events");
                         //var events = [];
-                        
+
                         var myevents = data;
-                        ZMDataModel.zmDebug ("EventCtrl: success, got " + myevents.length + " events");
+                        ZMDataModel.zmDebug("EventCtrl: success, got " + myevents.length + " events");
                         var loginData = ZMDataModel.getLogin();
                         for (var i = 0; i < myevents.length; i++) {
 
@@ -169,15 +171,15 @@ angular.module('zmApp.controllers')
                                 hh + "/" +
                                 min + "/" +
                                 sec + "/";
-                            
-                            if (i==0) // just for debug sampling to see what we are getting
+
+                            if (i == 0) // just for debug sampling to see what we are getting
                             {
-                                ZMDataModel.zmDebug ("EventCtrl: Sample data from first event: " + JSON.stringify(myevents[i]));
+                                ZMDataModel.zmDebug("EventCtrl: Sample data from first event: " + JSON.stringify(myevents[i]));
                             }
 
                         } //for
 
-                        
+
                         $scope.events = myevents;
                         // we only need to stop the template from loading when the list is empty
                         // so this can be false once we have _some_ content
@@ -186,8 +188,7 @@ angular.module('zmApp.controllers')
                         // to avoid only few events being displayed
                         // if last page has less events
                         //console.log("**Loading Next Page ***");
-                        if (myevents.length < 50) 
-                        {
+                        if (myevents.length < 50) {
                             ZMDataModel.zmDebug("EventCtrl:loading one more page just in case we don't have enough to display");
                             loadMore();
                         }
@@ -197,222 +198,224 @@ angular.module('zmApp.controllers')
 
         // not explictly handling error --> I have a default "No events found" message
         // displayed in the template if events list is null
-        
-        
-        $scope.showEvents = function(val,unit,monitorId)
-        {
-            ZMDataModel.zmDebug("ShowEvents called with val:"+val+" unit:"+unit+" for Monitor:"+monitorId);
-                                
-             $ionicHistory.nextViewOptions({
-        disableBack: true
-    });
-            
-        var mToDate = moment();
-        
-        var mFromDate = moment().subtract(parseInt(val),unit);
-        
-        console.log ("Moment Dates:" + mFromDate.format() + " TO  " + mToDate.format());
-            
-        $rootScope.fromTime = mFromDate.toDate();
-        $rootScope.toTime =mToDate.toDate();
-        $rootScope.fromDate = $rootScope.fromTime;
-        $rootScope.toDate = $rootScope.toTime;
-            
-        ZMDataModel.zmDebug ("From: " + $rootScope.fromTime);
-        ZMDataModel.zmDebug ("To: " + $rootScope.toTime);
-            
-        //$rootScope.fromDate = fromDate.toDate();
-        //$rootScope.toDate = toDate.toDate();
-        $rootScope.isEventFilterOn = true;
-       $rootScope.fromString = mFromDate
-           .format("YYYY-MM-DD") + " " + mFromDate.format ("HH:mm:ss");
 
-     $rootScope.toString = mToDate
-         .format("YYYY-MM-DD") + " " + mToDate
-         .format ("HH:mm:ss");
+        //--------------------------------------------------------------------------
+        // This is what the pullup bar calls depending on what range is specified
+        //--------------------------------------------------------------------------
+        $scope.showEvents = function (val, unit, monitorId) {
+            ZMDataModel.zmDebug("ShowEvents called with val:" + val + " unit:" + unit + " for Monitor:" + monitorId);
 
-            
-            console.log ("**************From String: " + $rootScope.fromString);
-            console.log ("**************To String: " + $rootScope.toString);
-            
-            $state.go("events", {"id":monitorId});
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+
+            var mToDate = moment();
+
+            var mFromDate = moment().subtract(parseInt(val), unit);
+
+            console.log("Moment Dates:" + mFromDate.format() + " TO  " + mToDate.format());
+
+            $rootScope.fromTime = mFromDate.toDate();
+            $rootScope.toTime = mToDate.toDate();
+            $rootScope.fromDate = $rootScope.fromTime;
+            $rootScope.toDate = $rootScope.toTime;
+
+            ZMDataModel.zmDebug("From: " + $rootScope.fromTime);
+            ZMDataModel.zmDebug("To: " + $rootScope.toTime);
+
+            //$rootScope.fromDate = fromDate.toDate();
+            //$rootScope.toDate = toDate.toDate();
+            $rootScope.isEventFilterOn = true;
+            $rootScope.fromString = mFromDate
+                .format("YYYY-MM-DD") + " " + mFromDate.format("HH:mm:ss");
+
+            $rootScope.toString = mToDate
+                .format("YYYY-MM-DD") + " " + mToDate
+                .format("HH:mm:ss");
+
+
+            console.log("**************From String: " + $rootScope.fromString);
+            console.log("**************To String: " + $rootScope.toString);
+
+            $state.go("events", {
+                "id": monitorId
+            });
         };
-        
-        
-        $scope.deleteEvent = function (id, itemid)
-    {
+
+        //--------------------------------------------------------------------------
+        // Takes care of deleting individual events
+        //--------------------------------------------------------------------------
+        $scope.deleteEvent = function (id, itemid) {
             //$scope.eventList.showDelete = false;
-        //curl -XDELETE http://server/zm/api/events/1.json
-        var loginData = ZMDataModel.getLogin();
-        var apiDelete =  loginData.apiurl + "/events/" + id + ".json";
-        ZMDataModel.zmDebug("DeleteEvent: ID="+id+" item="+itemid);
-         ZMDataModel.zmLog("Delete event " + apiDelete);
-            
-        $ionicLoading.show({
+            //curl -XDELETE http://server/zm/api/events/1.json
+            var loginData = ZMDataModel.getLogin();
+            var apiDelete = loginData.apiurl + "/events/" + id + ".json";
+            ZMDataModel.zmDebug("DeleteEvent: ID=" + id + " item=" + itemid);
+            ZMDataModel.zmLog("Delete event " + apiDelete);
+
+            $ionicLoading.show({
                 template: "deleting event...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
             });
-            
-         $http.delete(apiDelete)
-         .success(function(data)
-         {
-             $ionicLoading.hide();
-             ZMDataModel.zmDebug ("delete success: " + JSON.stringify(data));
-             ZMDataModel.displayBanner ('info', ['deleted event'],2000,2000);
-             
-             
-             /*var element = angular.element(document.getElementById("item-"+itemid));
-              element.addClass("eventDeleteSpeed animated  slideOutLeft")
-              .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', 
-                   
-                    function () {
-                       // element.removeClass("animated slideOutLeft");
-                    });
-             $ionicScrollDelegate.$getByHandle("mainScroll").resize();*/
-           
-                            $scope.events.splice(itemid, 1);
-                            //doRefresh();
-                            
-         })
-         .error (function (data)
-         {
-             $ionicLoading.hide();
-             ZMDataModel.zmDebug ("delete error: " + JSON.stringify(data));
-             ZMDataModel.displayBanner ('error', ['could not delete event', 'please check logs']);
-         });
-        
-        
-    };
-        
+
+            $http.delete(apiDelete)
+                .success(function (data) {
+                    $ionicLoading.hide();
+                    ZMDataModel.zmDebug("delete success: " + JSON.stringify(data));
+                    ZMDataModel.displayBanner('info', ['deleted event'], 2000, 2000);
+
+                    $scope.events.splice(itemid, 1);
+                    //doRefresh();
+
+                })
+                .error(function (data) {
+                    $ionicLoading.hide();
+                    ZMDataModel.zmDebug("delete error: " + JSON.stringify(data));
+                    ZMDataModel.displayBanner('error', ['could not delete event', 'please check logs']);
+                });
+
+
+        };
+
         //------------------------------------------------
         // Tapping on the filter sign lets you reset it
         //-------------------------------------------------
-        
-        $scope.filterTapped = function()
-        {
-            console.log ("FILTER TAPPED");
+
+        $scope.filterTapped = function () {
+            console.log("FILTER TAPPED");
             var myFrom = moment($rootScope.fromString).format("MMM/DD/YYYY hh:mm a").toString();
             var toString = moment($rootScope.toString).format("MMM/DD/YYYY hh:mm a").toString();
-            
-               var confirmPopup = $ionicPopup.confirm({
-                 title: 'Filter settings',
-                 template: 'You are viewing Events between:<br/> <b>' + myFrom + "</b> to <b>" + toString +'</b><br/>Do you want to delete this filter?'
-               });
-               confirmPopup.then(function(res) {
-                 if(res) {
-                   ZMDataModel.zmLog("Filter reset requested in popup");
+
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Filter settings',
+                template: 'You are viewing Events between:<br/> <b>' + myFrom + "</b> to <b>" + toString + '</b><br/>Do you want to delete this filter?'
+            });
+            confirmPopup.then(function (res) {
+                if (res) {
+                    ZMDataModel.zmLog("Filter reset requested in popup");
                     $rootScope.isEventFilterOn = false;
                     $rootScope.fromDate = "";
-                    $rootScope.fromTime= "";
+                    $rootScope.fromTime = "";
                     $rootScope.toDate = "";
-                    $rootScope.toTime="";
-                    $rootScope.fromString="";
-                    $rootScope.toString="";
-                   $ionicHistory.nextViewOptions({
-                                disableBack: true
-                            });
-                    $state.go("events", {"id":0});
-                 } else {
-                   ZMDataModel.zmLog("Filter reset cancelled in popup");
-                 }
-               });
+                    $rootScope.toTime = "";
+                    $rootScope.fromString = "";
+                    $rootScope.toString = "";
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true
+                    });
+                    $state.go("events", {
+                        "id": 0
+                    });
+                } else {
+                    ZMDataModel.zmLog("Filter reset cancelled in popup");
+                }
+            });
 
         };
-        
-        $scope.footerExpand = function()
-        {
+
+        //--------------------------------------------------------------------------
+        // When the user pulls the pullup bar we call this to get the latest
+        // data for events ranges summaries using the consolveEvents facility of ZM
+        //--------------------------------------------------------------------------
+
+        $scope.footerExpand = function () {
             //https://server/zm/api/events/consoleEvents/5%20minute.json
             var ld = ZMDataModel.getLogin();
-            
+
             var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour.json";
             $http.get(apiurl)
-            .success(function(data) {
-                ZMDataModel.zmDebug(JSON.stringify(data));
-                $scope.hours = [];
-                var p = data.results;
-                for (var key in data.results)
-                {
-                    if (p.hasOwnProperty(key)) {
-                        //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
-                        $scope.hours.push(
-                            {monitor:ZMDataModel.getMonitorName(key),
-                             events:p[key], mid:key});
-                        
+                .success(function (data) {
+                    ZMDataModel.zmDebug(JSON.stringify(data));
+                    $scope.hours = [];
+                    var p = data.results;
+                    for (var key in data.results) {
+                        if (p.hasOwnProperty(key)) {
+                            //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                            $scope.hours.push({
+                                monitor: ZMDataModel.getMonitorName(key),
+                                events: p[key],
+                                mid: key
+                            });
+
+                        }
                     }
-                }
-            });
-            
-            
+                });
+
+
             apiurl = ld.apiurl + "/events/consoleEvents/1%20day.json";
             $http.get(apiurl)
-            .success(function(data) {
-                ZMDataModel.zmDebug(JSON.stringify(data));
-                $scope.days = [];
-                var p = data.results;
-                for (var key in data.results)
-                {
-                    if (p.hasOwnProperty(key)) {
-                        //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
-                        $scope.days.push(
-                            {monitor:ZMDataModel.getMonitorName(key),
-                             events:p[key],mid:key});
-                        
-                    }
-                }
-            });
+                .success(function (data) {
+                    ZMDataModel.zmDebug(JSON.stringify(data));
+                    $scope.days = [];
+                    var p = data.results;
+                    for (var key in data.results) {
+                        if (p.hasOwnProperty(key)) {
+                            //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                            $scope.days.push({
+                                monitor: ZMDataModel.getMonitorName(key),
+                                events: p[key],
+                                mid: key
+                            });
 
-            
-            
-             apiurl = ld.apiurl + "/events/consoleEvents/1%20week.json";
-            $http.get(apiurl)
-            .success(function(data) {
-                ZMDataModel.zmDebug(JSON.stringify(data));
-                $scope.weeks = [];
-                var p = data.results;
-                for (var key in data.results)
-                {
-                    if (p.hasOwnProperty(key)) {
-                        //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
-                        $scope.weeks.push(
-                            {monitor:ZMDataModel.getMonitorName(key),
-                             events:p[key],mid:key});
-                        
+                        }
                     }
-                }
-            });
-            
-            
+                });
+
+
+
+            apiurl = ld.apiurl + "/events/consoleEvents/1%20week.json";
+            $http.get(apiurl)
+                .success(function (data) {
+                    ZMDataModel.zmDebug(JSON.stringify(data));
+                    $scope.weeks = [];
+                    var p = data.results;
+                    for (var key in data.results) {
+                        if (p.hasOwnProperty(key)) {
+                            //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                            $scope.weeks.push({
+                                monitor: ZMDataModel.getMonitorName(key),
+                                events: p[key],
+                                mid: key
+                            });
+
+                        }
+                    }
+                });
+
+
             apiurl = ld.apiurl + "/events/consoleEvents/1%20month.json";
             $http.get(apiurl)
-            .success(function(data) {
-                ZMDataModel.zmDebug(JSON.stringify(data));
-                $scope.months = [];
-                var p = data.results;
-                for (var key in data.results)
-                {
-                    if (p.hasOwnProperty(key)) {
-                        //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
-                        $scope.months.push(
-                            {monitor:ZMDataModel.getMonitorName(key),
-                             events:p[key],mid:key});
-                        
+                .success(function (data) {
+                    ZMDataModel.zmDebug(JSON.stringify(data));
+                    $scope.months = [];
+                    var p = data.results;
+                    for (var key in data.results) {
+                        if (p.hasOwnProperty(key)) {
+                            //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                            $scope.months.push({
+                                monitor: ZMDataModel.getMonitorName(key),
+                                events: p[key],
+                                mid: key
+                            });
+
+                        }
                     }
-                }
-            });
-            
-            
-            
-            
-            
+                });
+
+
         };
+
+        //--------------------------------------------------------------------------
+        // This is used to compute automatic playback speed for event playback
+        // and scrub
+        //--------------------------------------------------------------------------
 
         $scope.calcMsTimer = function (frames, len) {
             var myframes, mylen;
             myframes = parseFloat(frames);
             mylen = parseFloat(len);
-            //  console.log ("frames " + myframes + "length " + mylen);
-            //  console.log ("*** MS COUNT " + (1000.0/(myframes/mylen)));
+
             return (Math.round(1000 / (myframes / mylen)));
         };
 
@@ -435,7 +438,7 @@ angular.module('zmApp.controllers')
         // called when user switches to background
         //-------------------------------------------------------------------------
         function onPause() {
-            ZMDataModel.zmDebug ("EventCtrl:onpause called");
+            ZMDataModel.zmDebug("EventCtrl:onpause called");
             console.log("*** Moving to Background ***"); // Handle the pause event
             console.log("*** CANCELLING INTERVAL ****");
             if ($scope.popover) $scope.popover.remove();
@@ -468,7 +471,7 @@ angular.module('zmApp.controllers')
         // FIXME: Are we using this?
         //-------------------------------------------------------------------------
         $scope.disableSlide = function () {
-            ZMDataModel.zmDebug ("EventCtrl:DisableSlide called");
+            ZMDataModel.zmDebug("EventCtrl:DisableSlide called");
             $ionicSlideBoxDelegate.$getByHandle("eventSlideBox").enableSlide(false);
         };
 
@@ -510,7 +513,7 @@ angular.module('zmApp.controllers')
 
             if (oldEvent && event != oldEvent) {
                 console.log("SWITCHING OLD EVENT OFF");
-                ZMDataModel.zmDebug ("EventCtrl:Old event scrub will hide now");
+                ZMDataModel.zmDebug("EventCtrl:Old event scrub will hide now");
                 oldEvent.Event.ShowScrub = false;
                 oldEvent.Event.height = zm.eventsListDetailsHeight;
                 oldEvent = "";
@@ -521,7 +524,7 @@ angular.module('zmApp.controllers')
 
             if (event.Event.ShowScrub == true) // turn on display now
             {
-                ZMDataModel.zmDebug ("EventCtrl: Scrubbing will turn on now");
+                ZMDataModel.zmDebug("EventCtrl: Scrubbing will turn on now");
                 //$ionicScrollDelegate.freezeScroll(true);
                 $ionicSideMenuDelegate.canDragContent(false);
                 $scope.slider_options = {
@@ -533,7 +536,7 @@ angular.module('zmApp.controllers')
                     callback: function (value, released) {
                         //console.log("CALLBACK"+value+released);
                         $ionicScrollDelegate.freezeScroll(!released);
-                        ZMDataModel.zmDebug ("EventCtrl: freezeScroll called with " + !released);
+                        ZMDataModel.zmDebug("EventCtrl: freezeScroll called with " + !released);
 
 
                     },
@@ -569,7 +572,7 @@ angular.module('zmApp.controllers')
                 //console.log("**Resetting range");
                 $scope.slides = [];
                 var i;
-                ZMDataModel.zmDebug ("EventCtrl: found " + frames + " frames to scrub");
+                ZMDataModel.zmDebug("EventCtrl: found " + frames + " frames to scrub");
                 for (i = 1; i <= frames; i++) {
                     var fname = padToN(i, eventImageDigits) + "-capture.jpg";
                     $scope.slides.push({
@@ -592,7 +595,7 @@ angular.module('zmApp.controllers')
                         var i;
                         for (i = 0; i < data.event.Frame.length; i++) {
                             if (data.event.Frame[i].Type == "Alarm") {
-                                
+
                                 //console.log ("**ALARM AT " + i);
                                 $scope.slider_options.scale.push({
                                     val: i + 1,
@@ -1288,9 +1291,8 @@ angular.module('zmApp.controllers')
         $scope.doRefresh = function () {
             doRefresh();
         }; //dorefresh
-        
-        function doRefresh()
-        {
+
+        function doRefresh() {
             console.log("***Pull to Refresh");
             $scope.events = [];
             moreEvents = true;

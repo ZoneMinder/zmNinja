@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal','zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', function ($scope, $rootScope, $ionicModal,zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading) {
+angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', function ($scope, $rootScope, $ionicModal, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading) {
 
 
     $scope.openMenu = function () {
@@ -21,47 +21,51 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         ZMDataModel.setAwake(false);
     });
 
-//------------------------------------------------------------------
-// Perform the login action when the user submits the login form
-//------------------------------------------------------------------
+    //------------------------------------------------------------------
+    // Perform the login action when the user submits the login form
+    //------------------------------------------------------------------
     $scope.saveDevOptions = function () {
-    ZMDataModel.zmDebug ("SaveDevOptions: called");
+        ZMDataModel.zmDebug("SaveDevOptions: called");
 
-    if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
+        if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
+            $ionicPopup.alert({
+                title: 'Note',
+                template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
+            });
+            ZMDataModel.zmDebug("SaveDevOptions: " + $scope.loginData.maxMontage +
+                " monitors for montage");
+        }
+
+
+        if ((parseInt($scope.loginData.maxFPS) < 0) || (parseInt($scope.loginData.maxFPS) > zm.maxFPS)) {
+            $scope.loginData.maxFPS = zm.defaultFPS.toString();
+        }
+
+        if (parseInt($scope.loginData.refeshSec) <= 0) {
+            ZMDataModel.zmDebug("SaveDevOptions: refresh sec was too low at " + 
+                                $scope.loginData.refreshSec + " reset to 1");
+            $scope.loginData.refreshSec = 1;
+
+        }
+
+
+        if ((parseInt($scope.loginData.montageQuality) < zm.safeMontageLimit) ||
+            (parseInt($scope.loginData.montageQuality) > 70)) {
+            $scope.loginData.montageQuality = zm.defaultMontageQuality.toString();
+        }
+
+
+        ZMDataModel.zmDebug("SaveDevOptions: Saving to disk");
+        ZMDataModel.setLogin($scope.loginData);
+
         $ionicPopup.alert({
-            title: 'Note',
-            template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
+            title: 'Settings Saved',
+            template: 'Please explore the menu and enjoy zmNinja!'
+        }).then(function (res) {
+            $ionicSideMenuDelegate.toggleLeft();
         });
-        ZMDataModel.zmDebug ("SaveDevOptions: " + $scope.loginData.maxMontage + " monitors for montage");
-    }
-
-
-    if ((parseInt($scope.loginData.maxFPS) < 0) || (parseInt($scope.loginData.maxFPS) > zm.maxFPS)) {
-        $scope.loginData.maxFPS = zm.defaultFPS.toString();
-    }
-        
-    if (parseInt($scope.loginData.refeshSec) <=0)
-    {
-        ZMDataModel.zmDebug ("SaveDevOptions: refresh sec was too low at " + $scope.loginData.refreshSec+ " reset to 1");
-        $scope.loginData.refreshSec=1;
-        
-    }
-
-
-    if ((parseInt($scope.loginData.montageQuality) < zm.safeMontageLimit) || (parseInt($scope.loginData.montageQuality) > 70)) {
-        $scope.loginData.montageQuality = zm.defaultMontageQuality.toString();
-    }
-
-
-    ZMDataModel.zmDebug ("SaveDevOptions: Saving to disk");
-    ZMDataModel.setLogin($scope.loginData);
-
-        $ionicPopup.alert({
-                        title: 'Settings Saved',
-                        template: 'Please explore the menu and enjoy zmNinja!'
-                }).then(function(res) { $ionicSideMenuDelegate.toggleLeft();});
-};
-     //------------------------------------------------------------------
+    };
+    //------------------------------------------------------------------
     // controller main
     //------------------------------------------------------------------
 

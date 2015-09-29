@@ -23,11 +23,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         }
         }];
 
+    //-----------------------------------------------------------
+    // Used to display date range for timeline
+    //-----------------------------------------------------------
     $scope.prettify = function (str) {
         return moment(str).format('MMMM Do YYYY, h:mm:ssa');
     };
 
-
+    //-----------------------------------------------------------
+    // used for playback when you tap on a timeline event
+    //-----------------------------------------------------------
     $scope.calcMsTimer = function (frames, len) {
         var myframes, mylen;
         myframes = parseFloat(frames);
@@ -37,9 +42,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         return (Math.round(1000 / (myframes / mylen)));
     };
 
-    function move(percentage)
-    {
-         var range = timeline.getWindow();
+    //-----------------------------------------------------------
+    // Move/Zoom are used to move the timeline around
+    //-----------------------------------------------------------
+    function move(percentage) {
+        var range = timeline.getWindow();
         var interval = range.end - range.start;
 
         timeline.setWindow({
@@ -48,8 +55,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         });
     }
 
-    function zoom (percentage)
-    {
+    function zoom(percentage) {
         var range = timeline.getWindow();
         var interval = range.end - range.start;
 
@@ -142,7 +148,6 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         };
 
-
         $scope.mycarousel.index = 0;
         $scope.ionRange.index = 1;
         //console.log("**Resetting range");
@@ -156,7 +161,6 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 img: fname
             });
         }
-
 
         // now get event details to show alarm frames
         var loginData = ZMDataModel.getLogin();
@@ -184,11 +188,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                 }
 
-                //console.log (JSON.stringify(data));
             })
             .error(function (err) {
                 ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
-            ZMDataModel.displayBanner ('error', ['error retrieving event details', 'please try again']);
+                ZMDataModel.displayBanner('error', ['error retrieving event details', 'please try again']);
             });
 
         $scope.totalEventTime = Math.round(parseFloat(edur)) - 1;
@@ -231,18 +234,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         }
 
     };
-    
-    
-           //-------------------------------------------------------------------------
-        // called when user switches to background
-        //-------------------------------------------------------------------------
-        function onPause() {
-            ZMDataModel.zmDebug ("TimelineCtrl:onpause called");
-            console.log("*** Moving to Background ***"); // Handle the pause event
-            
-            if ($scope.popover) $scope.popover.remove();
-    
-        }
+
+
+    //-------------------------------------------------------------------------
+    // called when user switches to background
+    //-------------------------------------------------------------------------
+    function onPause() {
+        ZMDataModel.zmDebug("TimelineCtrl:onpause called");
+        console.log("*** Moving to Background ***"); // Handle the pause event
+
+        if ($scope.popover) $scope.popover.remove();
+
+    }
 
 
     //--------------------------------------------------------
@@ -251,9 +254,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //--------------------------------------------------------
 
     function showEvent(start, mid, edur, eframes, eid, ename) {
-        ZMDataModel.zmDebug ("TimelineCtrl/showevent called with start:" +
-                            start + " monitorId:" + mid + " dur:" + edur + " frames:" + eframes + 
-                             " eventId:" + eid + " eventName:" +ename);
+        ZMDataModel.zmDebug("TimelineCtrl/showevent called with start:" +
+            start + " monitorId:" + mid + " dur:" + edur + " frames:" + eframes +
+            " eventId:" + eid + " eventName:" + ename);
         //console.log("Event STARTED WITH " + start);
         var str = start;
         var yy = moment(str).format('YY');
@@ -322,11 +325,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // Make sure sliding for menu is disabled so it
     // does not interfere with graph panning
     $ionicSideMenuDelegate.canDragContent(false);
-    
-     document.addEventListener("pause", onPause, false);
+
+    document.addEventListener("pause", onPause, false);
 
     // FIXME: Timeline awake to avoid graph redrawing
-     ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+    ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
     $scope.$watch('ionRange.index', function () {
         // console.log ("***ION RANGE CHANGED");
@@ -360,16 +363,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var toDate = moment().endOf('day').format("YYYY-MM-DD HH:mm:ss");
 
 
-  //Simulated data
+    //Simulated data
     /*
     fromDate = "2015-08-18 00:00:00";
     toDate = "2015-08-18 23:59:59";
     */
-    
+
     $scope.fromDate = fromDate;
     $scope.toDate = toDate;
-    
-  
+
+
 
     var maxItems = zm.graphItemMax; // THAT magic # --> 300 and ZM on my m/c cries
     $scope.maxItems = maxItems;
@@ -377,7 +380,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
 
     //flat colors for graph - https://flatuicolors.com http://www.flatuicolorpicker.com
-    var colors = ['#3498db', '#D2527F',  '#f39c12', '#9b59b6', '#e74c3c','#7A942E',];
+    var colors = ['#3498db', '#D2527F', '#f39c12', '#9b59b6', '#e74c3c', '#7A942E', ];
 
     var container;
     container = angular.element(document.getElementById('visualization'));
@@ -405,33 +408,25 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         timeline.fit();
     };
 
-    $scope.toggleNav = function()
-    {
-        if (navControls == true)
-        {
-            navControls=!navControls;
+    $scope.toggleNav = function () {
+        if (navControls == true) {
+            navControls = !navControls;
             // give out animation time
-            $timeout ( function()
-            {
+            $timeout(function () {
                 $scope.navControls = navControls;
-            },2000);
-        }
-        else
-        {
-            navControls=!navControls;
+            }, 2000);
+        } else {
+            navControls = !navControls;
             $scope.navControls = navControls;
         }
         var element = angular.element(document.getElementById("timeline-ctrl"));
 
-        if (navControls)
-        {
-         element.removeClass("animated bounceOutLeft");
-         element.addClass("animated bounceInRight");
-        }
-        else
-        {
-           element.removeClass("animated bounceInRight");
-           element.addClass("animated bounceOutLeft");
+        if (navControls) {
+            element.removeClass("animated bounceOutLeft");
+            element.addClass("animated bounceInRight");
+        } else {
+            element.removeClass("animated bounceInRight");
+            element.addClass("animated bounceOutLeft");
         }
 
     };
@@ -500,12 +495,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             duration: zm.loadingTimeout, //specifically for Android - http seems to get stuck at times
         });
 
-        ZMDataModel.zmLog ("TimelineCtrl/drawgraph: from->"+fromDate+" to->"+toDate+" count:"+count);
+        ZMDataModel.zmLog("TimelineCtrl/drawgraph: from->" + fromDate + " to->" + toDate + " count:" + count);
         $scope.graphLoaded = false;
-        ZMDataModel.zmDebug ("TimelineCtrl/drawgraph: graphLoaded:"+$scope.graphLoaded);
+        ZMDataModel.zmDebug("TimelineCtrl/drawgraph: graphLoaded:" + $scope.graphLoaded);
 
-        if (timeline) 
-        {
+        if (timeline) {
             ZMDataModel.zmDebug("TimelineCtrl/drawgraph: destroying timeline as it exists");
             timeline.destroy();
         }
@@ -519,7 +513,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         var options = {
 
             editable: false,
-            throttleRedraw:100,
+            throttleRedraw: 100,
             moveable: true,
             zoomable: true,
             selectable: true,
@@ -575,117 +569,114 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                 $q.all(promises)
                     .then(function (data) {
-                         ZMDataModel.zmDebug ("TimelineCtrl/drawgraph: all pages of graph data received");
-                        graphIndex = 0;
-                        ZMDataModel.zmLog ("Creating " + $scope.monitors.length + " groups for the graph");
-                        // create groups
-                         for (var g = 0; g < $scope.monitors.length; g++) {
-                            groups.add({
-                                id: $scope.monitors[g].Monitor.Id,
-                                content: ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id)
-                            });
-                              ZMDataModel.zmDebug ("TimelineCtrl/drawgraph:Adding group " +
-                                                   ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id));
-                        }
-                    
-                
-                    
-                        for (var j = 0; j < data.length; j++) {
-                            var myevents = data[j];
-                            
-                             if (graphIndex > zm.graphItemMax)
-                                {
-                                    ZMDataModel.zmLog ("Exiting page count graph - reached limit of " + zm.graphItemMax);
-                                    break;
-                                    
-                                }
-
-                            for (var i = 0; i < myevents.length; i++) {
-
-                                graphData.add({
-                                    id: graphIndex,
-                                    content: "<span class='my-vis-font'>"+ myevents[i].Event.Notes + "</span>",
-                                    start: myevents[i].Event.StartTime,
-                                    end: myevents[i].Event.EndTime,
-                                    group: myevents[i].Event.MonitorId,
-                                    //type: "range",
-                                    style: "background-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length] + ";border-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length],
-                                    myframes: myevents[i].Event.Frames,
-                                    mydur: myevents[i].Event.Length,
-                                    myeid: myevents[i].Event.Id,
-                                    myename: myevents[i].Event.Name,
-
+                            ZMDataModel.zmDebug("TimelineCtrl/drawgraph: all pages of graph data received");
+                            graphIndex = 0;
+                            ZMDataModel.zmLog("Creating " + $scope.monitors.length + " groups for the graph");
+                            // create groups
+                            for (var g = 0; g < $scope.monitors.length; g++) {
+                                groups.add({
+                                    id: $scope.monitors[g].Monitor.Id,
+                                    content: ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id)
                                 });
-                                //console.log ("Added: Monitor:"+myevents[i].Event.MonitorId +
-                                          //   " Start:" + myevents[i].Event.StartTime +
-                                         //    " Stop:"+myevents[i].Event.EndTime);
+                                ZMDataModel.zmDebug("TimelineCtrl/drawgraph:Adding group " +
+                                    ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id));
+                            }
 
-                                graphIndex++;
-                                
-                                if (graphIndex > zm.graphItemMax)
-                                {
-                                    ZMDataModel.zmLog ("Exiting event graph - reached limit of " + zm.graphItemMax);
+
+
+                            for (var j = 0; j < data.length; j++) {
+                                var myevents = data[j];
+
+                                if (graphIndex > zm.graphItemMax) {
+                                    ZMDataModel.zmLog("Exiting page count graph - reached limit of " + zm.graphItemMax);
                                     break;
-                                    
+
                                 }
 
+                                for (var i = 0; i < myevents.length; i++) {
+
+                                    graphData.add({
+                                        id: graphIndex,
+                                        content: "<span class='my-vis-font'>" + myevents[i].Event.Notes + "</span>",
+                                        start: myevents[i].Event.StartTime,
+                                        end: myevents[i].Event.EndTime,
+                                        group: myevents[i].Event.MonitorId,
+                                        //type: "range",
+                                        style: "background-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length] +
+                                        ";border-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length],
+                                        myframes: myevents[i].Event.Frames,
+                                        mydur: myevents[i].Event.Length,
+                                        myeid: myevents[i].Event.Id,
+                                        myename: myevents[i].Event.Name,
+
+                                    });
+                                   
+                                    graphIndex++;
+
+                                    if (graphIndex > zm.graphItemMax) {
+                                        ZMDataModel.zmLog("Exiting event graph - reached limit of " + zm.graphItemMax);
+                                        break;
+
+                                    }
+
+                                }
                             }
+
+                            timeline = new vis.Timeline(container[0], null, options);
+                            timeline.setItems(graphData);
+                            timeline.setGroups(groups);
+                            timeline.fit();
+
+                            $ionicLoading.hide();
+                            $scope.graphLoaded = true;
+                            ZMDataModel.zmDebug("graph loaded: " + $scope.graphLoaded);
+                            $scope.navControls = false;
+                            timeline.on('select', function (properties) {
+                                if (properties.items && !isNaN(properties.items[0])) {
+                                    ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + properties.items);
+                                    var item = graphData.get(properties.items);
+                                    ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
+                                    showEvent(item[0].start, item[0].group, item[0].mydur, item[0].myframes, item[0].myeid, item[0].myename);
+
+
+                                } else {
+                                    $ionicLoading.show({
+                                        template: "Zoom in more to scrub events...",
+                                        animation: 'fade-in',
+                                        showBackdrop: true,
+                                        maxWidth: 200,
+                                        showDelay: 0,
+                                        duration: 1500,
+                                    });
+                                    console.log("Zoomed out too far to playback events");
+                                }
+
+                            });
+                        },
+                        function (error) {
+                            ZMDataModel.displayBanner('error', 'Timeline error', 'Please try again');
+
                         }
 
-                        timeline = new vis.Timeline(container[0], null, options);
-
-                        timeline.setItems(graphData);
-                        timeline.setGroups(groups);
-                        timeline.fit();
-
-                        $ionicLoading.hide();
-                        $scope.graphLoaded = true;
-                        ZMDataModel.zmDebug ("graph loaded: " + $scope.graphLoaded);
-                        $scope.navControls = false;
-                        timeline.on('select', function (properties) {
-                            if (properties.items && !isNaN(properties.items[0])) {
-                                ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + properties.items);
-                                var item = graphData.get(properties.items);
-                                ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
-                                showEvent(item[0].start, item[0].group, item[0].mydur, item[0].myframes, item[0].myeid, item[0].myename);
-
-
-                            } else {
-                                  $ionicLoading.show({
-                                    template: "Zoom in more to scrub events...",
-                                    animation: 'fade-in',
-                                    showBackdrop: true,
-                                    maxWidth: 200,
-                                    showDelay: 0,
-                                    duration: 1500,
-        });
-                                console.log("Zoomed out too far to playback events");
-                            }
-
-                        });
-                    },
-                    function (error) {
-                    ZMDataModel.displayBanner ('error', 'Timeline error', 'Please try again');
-                    
-                }
-                         
-                         
-                         ); // get Events
+                    ); // get Events
             });
     }
 
 
-        $scope.radialMenuOptions = {
+    $scope.radialMenuOptions = {
         content: '',
-        size:'small',
+        size: 'small',
 
         background: '#982112',
         isOpen: false,
         toggleOnClick: false,
         button: {
             cssClass: 'fa  fa-compress fa-2x',
-            size:'small',
-            onclick: function() { console.log ("fitting");timeline.fit();}
+            size: 'small',
+            onclick: function () {
+                console.log("fitting");
+                timeline.fit();
+            }
         },
         items: [
             {
@@ -702,7 +693,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
                 onclick: function () {
-                   // controlPTZ($scope.monitorId, 'DownLeft');
+                    
                 }
             },
 
@@ -712,7 +703,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 empty: false,
 
                 onclick: function () {
-                    //controlPTZ($scope.monitorId, 'Left');
+                   
                     move(0.2);
                 }
             },
@@ -730,8 +721,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
                 onclick: function () {
-                    //controlPTZ($scope.monitorId, 'UpLeft');
-
+                    
                 }
             },
 
@@ -740,7 +730,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-plus-circle',
                 empty: false,
                 onclick: function () {
-                    //controlPTZ($scope.monitorId, 'Up');
+                   
                     zoom(-0.2);
                 }
             },
@@ -750,8 +740,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
                 onclick: function () {
-                    //controlPTZ($scope.monitorId, 'UpRight');
-
+                    
                 }
             },
 
@@ -768,7 +757,6 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    //controlPTZ($scope.monitorId, 'Right');
                     move(-0.2);
                 }
             },
@@ -779,7 +767,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
                 onclick: function () {
-                    //controlPTZ($scope.monitorId, 'DownRight');
+                    
                 }
             },
 
@@ -790,9 +778,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                     console.log('About');
                 }
             },
-    ]};
-    
-   
+    ]
+    };
+
+
 
 
 
