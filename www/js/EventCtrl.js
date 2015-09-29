@@ -247,9 +247,17 @@ angular.module('zmApp.controllers')
         var apiDelete =  loginData.apiurl + "/events/" + id + ".json";
         ZMDataModel.zmDebug("DeleteEvent: ID="+id+" item="+itemid);
          ZMDataModel.zmLog("Delete event " + apiDelete);
+            
+        $ionicLoading.show({
+                template: "deleting event...",
+                noBackdrop: true,
+                duration: zm.httpTimeout
+            });
+            
          $http.delete(apiDelete)
          .success(function(data)
          {
+             $ionicLoading.hide();
              ZMDataModel.zmDebug ("delete success: " + JSON.stringify(data));
              ZMDataModel.displayBanner ('info', ['deleted event'],2000,2000);
              
@@ -269,6 +277,7 @@ angular.module('zmApp.controllers')
          })
          .error (function (data)
          {
+             $ionicLoading.hide();
              ZMDataModel.zmDebug ("delete error: " + JSON.stringify(data));
              ZMDataModel.displayBanner ('error', ['could not delete event', 'please check logs']);
          });
