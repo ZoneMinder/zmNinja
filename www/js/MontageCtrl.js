@@ -4,26 +4,28 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm,$ionicPopover,$controller, imageLoadingDataShare, $window) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window) {
 
-    $controller('zmApp.BaseController', { $scope: $scope });
+    $controller('zmApp.BaseController', {
+        $scope: $scope
+    });
     //---------------------------------------------------------------------
     // Controller main
     //---------------------------------------------------------------------
 
- console.log("********  HAVE ALL MONITORS");
+    console.log("********  HAVE ALL MONITORS");
     $scope.monitors = message;
-    ZMDataModel.zmLog ("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
+    ZMDataModel.zmLog("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
 
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
 
-   $scope.showSizeButtons = false;
+    $scope.showSizeButtons = false;
     $ionicPopover.fromTemplateUrl('templates/help/montage-help.html', {
-    scope: $scope,
-  }).then(function(popover) {
-    $scope.popover = popover;
-  });
+        scope: $scope,
+    }).then(function (popover) {
+        $scope.popover = popover;
+    });
 
     var timestamp = new Date().getUTCMilliseconds();
     $scope.minimal = $stateParams.minimal;
@@ -43,8 +45,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.slider = {};
     $scope.slider.monsize = ZMDataModel.getMontageSize();
-
-   
 
     // The difference between old and original is this:
     // old will have a copy of the last re-arranged monitor list
@@ -84,12 +84,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         ZMDataModel.zmDebug("MontageCtrl: Hidden order is " + myhiddenorder);
         if (myorder) montageOrder = myorder.split(",");
         if (myhiddenorder) hiddenOrder = myhiddenorder.split(",");
-        
+
         //  handle add/delete monitors after the array has been 
         // saved
-        
-        if ($scope.monitors.length != montageOrder.length)
-        {
+
+        if ($scope.monitors.length != montageOrder.length) {
             ZMDataModel.zmLog("Monitors array length different from stored hidden/order array. It's possible monitors were added/removed. Resetting...");
             montageOrder = [];
             hiddenOrder = [];
@@ -98,17 +97,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 hiddenOrder[i] = 0; // don't hide them
             }
             window.localStorage.setItem("montageOrder",
-                                        montageOrder.toString());
-                        window.localStorage.setItem("montageHiddenOrder",
-                                                    hiddenOrder.toString());
-            
-            
+                montageOrder.toString());
+            window.localStorage.setItem("montageHiddenOrder",
+                hiddenOrder.toString());
+
+
         }
 
     } // at this stage, the monitor arrangement is not matching
     // the montage order. Its in true order. Let us first process the hiddenOrder part
     // now
-    
+
     for (i = 0; i < montageOrder.length; i++) {
         montageOrder[i] = parseInt(montageOrder[i]);
         hiddenOrder[i] = parseInt(hiddenOrder[i]);
@@ -117,13 +116,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // disabled monitors
         if (hiddenOrder[i] == 1) {
             // $scope.monitors[i].Monitor.listDisplay='noshow';
-            
-            if ($scope.monitors[i] !== undefined) 
-            $scope.monitors[i].Monitor.listDisplay = 'noshow';
+
+            if ($scope.monitors[i] !== undefined)
+                $scope.monitors[i].Monitor.listDisplay = 'noshow';
             ZMDataModel.zmLog("Monitor " + i + " is marked as hidden in montage");
         } else {
-            if ($scope.monitors[i] !== undefined) 
-            $scope.monitors[i].Monitor.listDisplay = 'show';
+            if ($scope.monitors[i] !== undefined)
+                $scope.monitors[i].Monitor.listDisplay = 'show';
         }
     }
     // now arrange monitors according to montage order
@@ -172,38 +171,36 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.LoginData = ZMDataModel.getLogin();
     $scope.monLimit = $scope.LoginData.maxMontage;
     console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
-    
-    
+
+
     $rootScope.authSession = "undefined";
-     $ionicLoading.show({
-                template: 'negotiating stream authentication...',
-                animation: 'fade-in',
-                showBackdrop: true,
-                duration: zm.loadingTimeout,
-                maxWidth: 300,
-                showDelay: 0
-            });
-    
-    
-     var ld = ZMDataModel.getLogin();
-    ZMDataModel.getAuthKey()
-    .then(function(success)
-          {
-            $ionicLoading.hide();
-            console.log (success);
-            $rootScope.authSession =success;
-            ZMDataModel.zmLog ("Stream authentication construction: " +
-                               $rootScope.authSession);
-            
-    },
-          function (error)
-          {
-           
-            $ionicLoading.hide();
-            ZMDataModel.zmDebug("MontageCtrl: Error in authkey retrieval " + error);
-           //$rootScope.authSession="";
-            ZMDataModel.zmLog ("MontageCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+    $ionicLoading.show({
+        template: 'negotiating stream authentication...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        duration: zm.loadingTimeout,
+        maxWidth: 300,
+        showDelay: 0
     });
+
+
+    var ld = ZMDataModel.getLogin();
+    ZMDataModel.getAuthKey()
+        .then(function (success) {
+                $ionicLoading.hide();
+                console.log(success);
+                $rootScope.authSession = success;
+                ZMDataModel.zmLog("Stream authentication construction: " +
+                    $rootScope.authSession);
+
+            },
+            function (error) {
+
+                $ionicLoading.hide();
+                ZMDataModel.zmDebug("MontageCtrl: Error in authkey retrieval " + error);
+                //$rootScope.authSession="";
+                ZMDataModel.zmLog("MontageCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+            });
 
 
     // I was facing a lot of problems with Chrome/crosswalk getting stuck with
@@ -217,16 +214,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
     function loadNotifications() {
-            
-          $rootScope.rand =  Math.floor((Math.random() * 100000) + 1);
-      // console.log ("Inside Montage timer...");
-       
+
+        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+        // console.log ("Inside Montage timer...");
+
     }
 
-    var intervalHandle ;
-    $scope.isModalActive  = false;
+    var intervalHandle;
+    $scope.isModalActive = false;
     var modalIntervalHandle;
-    
+
 
     $scope.closeReorderModal = function () {
         console.log("Close & Destroy Monitor Modal");
@@ -241,98 +238,89 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     // Called when user taps on the reorder button
     //-------------------------------------------------------------
 
-    $scope.reorderList = function()
-    {
-        console.log ("REORDER");
-        $scope.data.showDelete = false; 
+    $scope.reorderList = function () {
+        console.log("REORDER");
+        $scope.data.showDelete = false;
         $scope.data.showReorder = !$scope.data.showReorder;
     };
-    
-    $scope.deleteList = function()
-    {
-        console.log ("DELETE");
-        $scope.data.showDelete = !$scope.data.showDelete; 
+
+    $scope.deleteList = function () {
+        console.log("DELETE");
+        $scope.data.showDelete = !$scope.data.showDelete;
         $scope.data.showReorder = false;
     };
-    
-    $scope.reloadReorder = function()
-    {
-                var refresh = ZMDataModel.getMonitors(1);
-                        refresh.then(function (data) {
-                            $scope.monitors = data;
-                            $scope.MontageMonitors = data;
-                            oldMonitors = angular.copy($scope.monitors);
-                            var i;
-                            montageOrder = [];
-                            for (i = 0; i < $scope.monitors.length; i++) {
-                                montageOrder[i] = i;
-                                hiddenOrder[i] = 0;
-                            }
-                            window.localStorage.setItem("montageOrder", montageOrder.toString());
-                            window.localStorage.setItem("montageHiddenOrder", hiddenOrder.toString());
-                            ZMDataModel.zmLog("Montage order saved on refresh: " + montageOrder.toString() + " and hidden order: " + hiddenOrder.toString());
 
-                        });
+    $scope.reloadReorder = function () {
+        var refresh = ZMDataModel.getMonitors(1);
+        refresh.then(function (data) {
+            $scope.monitors = data;
+            $scope.MontageMonitors = data;
+            oldMonitors = angular.copy($scope.monitors);
+            var i;
+            montageOrder = [];
+            for (i = 0; i < $scope.monitors.length; i++) {
+                montageOrder[i] = i;
+                hiddenOrder[i] = 0;
+            }
+            window.localStorage.setItem("montageOrder", montageOrder.toString());
+            window.localStorage.setItem("montageHiddenOrder", hiddenOrder.toString());
+            ZMDataModel.zmLog("Montage order saved on refresh: " + montageOrder.toString() + " and hidden order: " + hiddenOrder.toString());
+
+        });
     };
-    
-    $scope.saveReorder = function()
-    {
+
+    $scope.saveReorder = function () {
         window.localStorage.setItem("montageOrder", montageOrder.toString());
-                        window.localStorage.setItem("montageHiddenOrder", 
-                                                    hiddenOrder.toString());
-                        console.log("Saved " + montageOrder.toString());
-                        ZMDataModel.zmLog("User press OK. Saved Monitor Order as: " +
-                                          montageOrder.toString() +
-                                          " and hidden order as " + hiddenOrder.toString());
+        window.localStorage.setItem("montageHiddenOrder",
+            hiddenOrder.toString());
+        console.log("Saved " + montageOrder.toString());
+        ZMDataModel.zmLog("User press OK. Saved Monitor Order as: " +
+            montageOrder.toString() +
+            " and hidden order as " + hiddenOrder.toString());
         $scope.modal.remove();
     };
-    
-    $scope.cancelReorder = function()
-    {
-                             // user tapped cancel
-                        var i,myhiddenorder;
-                        if (window.localStorage.getItem("montageOrder") == undefined) {
-                            for (i = 0; i < $scope.MontageMonitors.length; i++) {
-                                montageOrder[i] = i;
-                                hiddenOrder[i] = 0;
-                            }
-                            console.log("Order string is " + montageOrder.toString());
-                            ZMDataModel.zmLog("User press Cancel. Reset Monitor Order to: " + montageOrder.toString());
-                        }
-                        else // montageOrder exists
-                        {
-                            var myorder = window.localStorage.getItem("montageOrder");
 
-                            if (window.localStorage.getItem("montageHiddenOrder") == undefined)
-                            {
-                                for (i = 0; i < $scope.MontageMonitors.length; i++) {
-                                    hiddenOrder[i] = 0;
-                                }
-                            }
-                            else
-                            {
-                                myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
-                                hiddenOrder = myhiddenorder.split(",");
-                            }
+    $scope.cancelReorder = function () {
+        // user tapped cancel
+        var i, myhiddenorder;
+        if (window.localStorage.getItem("montageOrder") == undefined) {
+            for (i = 0; i < $scope.MontageMonitors.length; i++) {
+                montageOrder[i] = i;
+                hiddenOrder[i] = 0;
+            }
+            console.log("Order string is " + montageOrder.toString());
+            ZMDataModel.zmLog("User press Cancel. Reset Monitor Order to: " + montageOrder.toString());
+        } else // montageOrder exists
+        {
+            var myorder = window.localStorage.getItem("montageOrder");
 
-                            console.log("Montage order is " + myorder + " and hidden order is " + myhiddenorder);
-                            montageOrder = myorder.split(",");
+            if (window.localStorage.getItem("montageHiddenOrder") == undefined) {
+                for (i = 0; i < $scope.MontageMonitors.length; i++) {
+                    hiddenOrder[i] = 0;
+                }
+            } else {
+                myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
+                hiddenOrder = myhiddenorder.split(",");
+            }
 
-                            for (i = 0; i < montageOrder.length; i++) {
-                                montageOrder[i] = parseInt(montageOrder[i]);
-                                hiddenOrder[i] = parseInt(hiddenOrder[i]);
-                            }
+            console.log("Montage order is " + myorder + " and hidden order is " + myhiddenorder);
+            montageOrder = myorder.split(",");
 
-                            $scope.MontageMonitors = oldMonitors;
-                            ZMDataModel.zmLog("User press Cancel. Restored Monitor Order as: " + montageOrder.toString() + " and hidden order as: " + hiddenOrder.toString());
+            for (i = 0; i < montageOrder.length; i++) {
+                montageOrder[i] = parseInt(montageOrder[i]);
+                hiddenOrder[i] = parseInt(hiddenOrder[i]);
+            }
 
-                        }
-                        $scope.modal.remove();
+            $scope.MontageMonitors = oldMonitors;
+            ZMDataModel.zmLog("User press Cancel. Restored Monitor Order as: " + montageOrder.toString() + " and hidden order as: " + hiddenOrder.toString());
+
+        }
+        $scope.modal.remove();
     };
-    
+
     $scope.toggleReorder = function () {
         $scope.isReorder = !$scope.isReorder;
-        $scope.data={};
+        $scope.data = {};
         $scope.data.showDelete = false;
         $scope.data.showReorder = false;
 
@@ -344,44 +332,39 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         }*/
 
         ld = ZMDataModel.getLogin();
-        if (ld.enableDebug)
-        {
+        if (ld.enableDebug) {
             // Lets show the re-order list
-            for (i=0; i < $scope.MontageMonitors.length; i++)
-            {
-                ZMDataModel.zmDebug ("Montage reorder list: " + $scope.MontageMonitors[i].Monitor.Name +
-                                     ":listdisplay->"+$scope.MontageMonitors[i].Monitor.listDisplay);
-                                     
+            for (i = 0; i < $scope.MontageMonitors.length; i++) {
+                ZMDataModel.zmDebug("Montage reorder list: " + $scope.MontageMonitors[i].Monitor.Name +
+                    ":listdisplay->" + $scope.MontageMonitors[i].Monitor.listDisplay);
+
             }
         }
-        
+
         $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
-            scope:$scope,
-            animation: 'slide-in-up'
-        })
-        .then (function(modal) {
-            $scope.modal = modal;
-            $scope.modal.show();
-        });
-    
-       
-        
+                scope: $scope,
+                animation: 'slide-in-up'
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
+                $scope.modal.show();
+            });
+
+
+
     };
-    
-    $scope.onSwipeLeft = function ($index)
-    {
+
+    $scope.onSwipeLeft = function ($index) {
         $scope.showSizeButtons = true;
     };
-    
-      $scope.onSwipeRight= function ($index)
-    {
-          $timeout( function()
-                   {
-              $scope.showSizeButtons=false;
-          },1000);
-          
+
+    $scope.onSwipeRight = function ($index) {
+        $timeout(function () {
+            $scope.showSizeButtons = false;
+        }, 1000);
+
     };
-    
+
     //---------------------------------------------------------------------
     // This marks a monitor as hidden in montage view
     //---------------------------------------------------------------------
@@ -445,7 +428,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
     $scope.switchMinimal = function () {
         $scope.minimal = !$scope.minimal;
-        ZMDataModel.zmDebug ("MontageCtrl: switch minimal is " + $scope.minimal); 
+        ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
         console.log("Hide Statusbar");
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
         $interval.cancel(intervalHandle); //we will renew on reload
@@ -486,20 +469,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
     $scope.openModal = function (mid, controllable, controlid) {
         ZMDataModel.zmDebug("MontageCtrl: Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
-       // $scope.isModalActive = true;
+        // $scope.isModalActive = true;
         // Note: no need to setAwake(true) as its already awake
         // in montage view
 
         ZMDataModel.zmLog("Cancelling montage timer, opening Modal");
         // ZMDataModel.zmLog("Starting Modal timer");
         $interval.cancel(intervalHandle);
-        
+
         // let's start modal timer
-     //   modalIntervalHandle= $interval(function () {
-     //    modalLoadNotifications();
+        //   modalIntervalHandle= $interval(function () {
+        //    modalLoadNotifications();
         //  console.log ("Refreshing Image...");
-  //  }.bind(this), 1000);
-        
+        //  }.bind(this), 1000);
+
         $scope.monitorId = mid;
 
         $scope.LoginData = ZMDataModel.getLogin();
@@ -512,10 +495,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         // if its controllable, lets get the control command
         if (controllable == '1') {
-            ZMDataModel.zmDebug ("MontageCtrl: getting controllable data " + myurl); 
+            ZMDataModel.zmDebug("MontageCtrl: getting controllable data " + myurl);
             var apiurl = $scope.LoginData.apiurl;
             var myurl = apiurl + "/controls/" + controlid + ".json";
-             ZMDataModel.zmDebug ("MontageCtrl: getting controllable data " + myurl); 
+            ZMDataModel.zmDebug("MontageCtrl: getting controllable data " + myurl);
 
             $http.get(myurl)
                 .success(function (data) {
@@ -546,12 +529,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 });
                 $scope.isControllable = controllable;
                 $scope.showPTZ = false;
-                
+
                 $scope.isModalActive = true;
-            
-              
-            $scope.modal.show();
-            
+
+
+                $scope.modal.show();
+
             });
 
     };
@@ -562,25 +545,25 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.closeModal = function () {
         ZMDataModel.zmDebug("MontageCtrl: Close & Destroy Monitor Modal");
-       // $scope.isModalActive = false;
+        // $scope.isModalActive = false;
         // Note: no need to setAwake(false) as needs to be awake
         // in montage view
         $scope.modal.remove();
-        
+
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-         $scope.isModalActive = false;
+        $scope.isModalActive = false;
 
         ZMDataModel.zmLog("Restarting montage timer, closing Modal...");
         var ld = ZMDataModel.getLogin();
-       $interval.cancel(intervalHandle);
-         intervalHandle= $interval(function () {
-         loadNotifications();
-        //  console.log ("Refreshing Image...");
-    }.bind(this), ld.refreshSec*1000);
-        
-       //$interval.cancel(modalIntervalHandle);
+        $interval.cancel(intervalHandle);
+        intervalHandle = $interval(function () {
+            loadNotifications();
+            //  console.log ("Refreshing Image...");
+        }.bind(this), ld.refreshSec * 1000);
 
-        
+        //$interval.cancel(modalIntervalHandle);
+
+
 
     };
 
@@ -644,42 +627,39 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
 
     function onPause() {
-        ZMDataModel.zmDebug ("MontageCtrl: onpause called"); 
+        ZMDataModel.zmDebug("MontageCtrl: onpause called");
         $interval.cancel(intervalHandle);
-       // $interval.cancel(modalIntervalHandle);
-   
+        // $interval.cancel(modalIntervalHandle);
+
         // FIXME: Do I need to  setAwake(false) here?
     }
 
 
-    function onResume()
-    {
-        if (!$scope.isModalActive)
-        {
+    function onResume() {
+        if (!$scope.isModalActive) {
             var ld = ZMDataModel.getLogin();
-            ZMDataModel.zmDebug ("MontageCtrl: onresume called"); 
-            ZMDataModel.zmLog ("Restarting montage timer on resume");
+            ZMDataModel.zmDebug("MontageCtrl: onresume called");
+            ZMDataModel.zmLog("Restarting montage timer on resume");
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             $interval.cancel(intervalHandle);
-             intervalHandle= $interval(function () {
-             loadNotifications();
-            //  console.log ("Refreshing Image...");
-             }.bind(this), ld.refreshSec*1000);
-        }
-        else // modal is active
+            intervalHandle = $interval(function () {
+                loadNotifications();
+                //  console.log ("Refreshing Image...");
+            }.bind(this), ld.refreshSec * 1000);
+        } else // modal is active
         {
-           // $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+            // $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
         }
-        
-        
-         
+
+
+
 
     }
 
     $scope.openMenu = function () {
-        $timeout (function() {
+        $timeout(function () {
             $rootScope.stateofSlide = $ionicSideMenuDelegate.isOpen();
-        },500);
+        }, 500);
 
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -701,12 +681,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
         $interval.cancel(intervalHandle);
-         intervalHandle= $interval(function () {
-         loadNotifications();
-        //  console.log ("Refreshing Image...");
-    }.bind(this), ld.refreshSec*1000);
+        intervalHandle = $interval(function () {
+            loadNotifications();
+            //  console.log ("Refreshing Image...");
+        }.bind(this), ld.refreshSec * 1000);
 
-    loadNotifications();
+        loadNotifications();
     });
 
     $scope.$on('$ionicView.leave', function () {
@@ -715,8 +695,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     });
 
     $scope.$on('$ionicView.unloaded', function () {
-       // console.log("**************** CLOSING WINDOW ***************************");
-      //  $window.close();
+        // console.log("**************** CLOSING WINDOW ***************************");
+        //  $window.close();
     });
 
     //---------------------------------------------------------
@@ -778,21 +758,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // This rand is really used to reload the monitor image in img-src so it is not cached
         // I am making sure the image in montage view is always fresh
         // I don't think I am using this anymore FIXME: check and delete if needed
-       // $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+        // $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
     });
 
-   $scope.reloadView = function()
-   {
-       $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-       ZMDataModel.zmLog ("User action: image reload " + $rootScope.rand);
-   };
+    $scope.reloadView = function () {
+        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+        ZMDataModel.zmLog("User action: image reload " + $rootScope.rand);
+    };
 
     $scope.doRefresh = function () {
-        
-       
-        
+
+
+
         console.log("***Pull to Refresh, recomputing Rand");
-        ZMDataModel.zmLog ("Reloading view for montage view, recomputing rand");
+        ZMDataModel.zmLog("Reloading view for montage view, recomputing rand");
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $scope.monitors = [];
         imageLoadingDataShare.set(0);

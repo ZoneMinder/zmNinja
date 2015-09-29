@@ -4,9 +4,8 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', 
-        ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope','$timeout',function (
-        $ionicPopup,    $scope,   zm,   ZMDataModel,  $ionicSideMenuDelegate,  $ionicLoading,     $ionicModal,   $state,   $http,   $rootScope,  $timeout) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', function (
+    $ionicPopup, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
 
     //----------------------------------------------------------------------
     // Controller main
@@ -32,13 +31,22 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
 
     var inProgress = 0; // prevents user from another op if one is in progress
     getRunStatus();
-    
+
     // Let's stagger this by 500ms each to see if Chrome lets these through
     // This may also help if your Apache is not configured to let multiple connections through
-    
-    $timeout( function() {ZMDataModel.zmDebug("invoking LoadStatus...");getLoadStatus();},500);
-    $timeout( function() {ZMDataModel.zmDebug("invoking DiskStatus...");getDiskStatus();},1000);
-    $timeout( function() {ZMDataModel.zmDebug("invoking CurrentState...");getCurrentState();},1500);
+
+    $timeout(function () {
+        ZMDataModel.zmDebug("invoking LoadStatus...");
+        getLoadStatus();
+    }, 500);
+    $timeout(function () {
+        ZMDataModel.zmDebug("invoking DiskStatus...");
+        getDiskStatus();
+    }, 1000);
+    $timeout(function () {
+        ZMDataModel.zmDebug("invoking CurrentState...");
+        getCurrentState();
+    }, 1500);
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
@@ -100,12 +108,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
 
 
             title: 'Select run state',
-            subTitle: 'current state:'+$scope.customState ? ("current state: " + $scope.customState):"",
+            subTitle: 'current state:' + $scope.customState ? ("current state: " + $scope.customState) : "",
             buttons: [
                 {
                     text: 'Cancel',
-                    onTap: function(e)
-                    {
+                    onTap: function (e) {
                         return "CANCEL";
                     }
 
@@ -114,16 +121,17 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
                     text: 'OK',
                     onTap: function (e) {
                         return "OK";
-                        
+
                     }
                }
            ]
         });
-        
-        getConfig.then(function(res) {
-            console.log ("GOT : " + JSON.stringify(res));
-            if (res == "OK")
-            {
+
+        // It seems invoking a popup within a popup handler
+        // causes issues. Doing this outside due to that reason
+        getConfig.then(function (res) {
+            console.log("GOT : " + JSON.stringify(res));
+            if (res == "OK") {
                 if ($scope.myopt.selectedState != "")
                     controlZM($scope.myopt.selectedState);
             }
@@ -139,28 +147,16 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
         $http.get(apiDisk)
             .then(
                 function (success) {
-                     ZMDataModel.zmDebug("StateCtrl/getDiskStatus: success");
+                    ZMDataModel.zmDebug("StateCtrl/getDiskStatus: success");
                     ZMDataModel.zmDebug("Disk results: " + JSON.stringify(success));
                     var obj = success.data.usage;
-                    if (obj.Total.space != undefined)
-                    {
-                        $scope.zmDisk = parseFloat(obj.Total.space).toFixed(1).toString()+"G";
-                    }
-                    else
-                    {
+                    if (obj.Total.space != undefined) {
+                        $scope.zmDisk = parseFloat(obj.Total.space).toFixed(1).toString() + "G";
+                    } else {
                         $scope.zmDisk = "unknown";
                         ZMDataModel.zmLog("Error retrieving disk space, API returned null for obj.Total.space");
                     }
-                   /* var du = 0;
-                    console.log("DISK:" + JSON.stringify(success));
-                    for (var p in obj) {
-                        if (obj.hasOwnProperty(p)) {
-                            du += parseFloat(obj[p].space);
-
-                        }
-                    }
-                    $scope.zmDisk = du.toFixed(1).toString() + "G";*/
-
+                    
                 },
                 function (error) {
                     $scope.zmDisk = "unknown";
@@ -174,12 +170,12 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
     // returns ZM running status
     //----------------------------------------------------------------------
     function getRunStatus() {
-         ZMDataModel.zmDebug("StateCtrl/getRunStatus: " + apiRun); 
+        ZMDataModel.zmDebug("StateCtrl/getRunStatus: " + apiRun);
         $http.get(apiRun)
             .then(
                 function (success) {
-                     ZMDataModel.zmDebug("StateCtrl/getRunStatus: success"); 
-                     ZMDataModel.zmDebug("Run results: " + JSON.stringify(success));
+                    ZMDataModel.zmDebug("StateCtrl/getRunStatus: success");
+                    ZMDataModel.zmDebug("Run results: " + JSON.stringify(success));
                     switch (success.data.result) {
                         case 1:
                             $scope.zmRun = 'running';
@@ -214,14 +210,14 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
     // gets ZM load - max[0], avg[1], min[2]
     //----------------------------------------------------------------------
     function getLoadStatus() {
-         ZMDataModel.zmDebug("StateCtrl/getLoadStatus: " + apiLoad);
+        ZMDataModel.zmDebug("StateCtrl/getLoadStatus: " + apiLoad);
         $http.get(apiLoad)
             .then(
                 function (success) {
                     ZMDataModel.zmDebug("Load results: " + JSON.stringify(success));
                     //console.log(JSON.stringify(success));
                     // load returns 3 params - one in the middle is avg.
-                     ZMDataModel.zmDebug("StateCtrl/getLoadStatus: success");
+                    ZMDataModel.zmDebug("StateCtrl/getLoadStatus: success");
                     $scope.zmLoad = success.data.load[1];
 
 
@@ -240,53 +236,50 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
     // start/stop/restart ZM
     //----------------------------------------------------------------------
 
-    function performZMoperation(str)
-    {
-     
-       
-            ZMDataModel.zmDebug ("inside performZMoperation with " + str);
-        
-        
-            $scope.zmRun = "please wait...";
-                        $scope.color = 'color:orange;';
-                        $scope.customState = "";
-                        ZMDataModel.zmDebug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
-                        inProgress = 1;
-                        $http.post(apiExec + str + ".json")
-                            .then(
-                                function (success) {
-                                    ZMDataModel.zmDebug("StateCtrl/controlZM: returned success");
-                                    inProgress = 0;
-                                    switch (str) {
-                                        case "stop":
-                                            $scope.zmRun = 'stopped';
-                                            $scope.color = 'color:red;';
-                                            break;
-                                        default:
-                                            $scope.zmRun = 'running';
-                                            $scope.color = 'color:green;';
-                                            getCurrentState();
-                                            break;
-                                        
-                                    }
-                                    
-                                },
-                                function (error) {
-                                    //if (error.status) // it seems to return error with status 0 if ok
-                                    // {
-                                    //console.log("ERROR in Change State:" + JSON.stringify(error));
-                                    ZMDataModel.zmDebug("StateCtrl/controlZM: returned error");
-                                    ZMDataModel.zmLog("Error in change run state:" + JSON.stringify(error), "error");
-                                    $scope.zmRun = 'undetermined';
-                                    $scope.color = 'color:orange;';
-                                    inProgress = 0;
-
-                                }); //incredible nesting below. I make myself proud.
+    function performZMoperation(str) {
 
 
+        ZMDataModel.zmDebug("inside performZMoperation with " + str);
+
+
+        $scope.zmRun = "please wait...";
+        $scope.color = 'color:orange;';
+        $scope.customState = "";
+        ZMDataModel.zmDebug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
+        inProgress = 1;
+        $http.post(apiExec + str + ".json")
+            .then(
+                function (success) {
+                    ZMDataModel.zmDebug("StateCtrl/controlZM: returned success");
+                    inProgress = 0;
+                    switch (str) {
+                        case "stop":
+                            $scope.zmRun = 'stopped';
+                            $scope.color = 'color:red;';
+                            break;
+                        default:
+                            $scope.zmRun = 'running';
+                            $scope.color = 'color:green;';
+                            getCurrentState();
+                            break;
+
+                    }
+
+                },
+                function (error) {
+                    //if (error.status) // it seems to return error with status 0 if ok
+                    // {
+                    //console.log("ERROR in Change State:" + JSON.stringify(error));
+                    ZMDataModel.zmDebug("StateCtrl/controlZM: returned error");
+                    ZMDataModel.zmLog("Error in change run state:" + JSON.stringify(error), "error");
+                    $scope.zmRun = 'undetermined';
+                    $scope.color = 'color:orange;';
+                    inProgress = 0;
+
+                });
     }
-            
-            
+
+
     function controlZM(str) {
         if (inProgress) {
             ZMDataModel.zmDebug("StateCtrl/controlZM: operation in progress");
@@ -296,16 +289,16 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
             });
             return;
         }
-        
-         var statesearch = "startstoprestart";
-        
-         var promptstring = 'Are you sure you want to ' + str + ' Zoneminder?';
+
+        var statesearch = "startstoprestart";
+
+        var promptstring = 'Are you sure you want to ' + str + ' Zoneminder?';
         if (statesearch.indexOf(str) == -1) {
             promptstring = "Are you sure you want to change state to " + str;
         }
-        
-        
-            $ionicPopup.show({
+
+
+        $ionicPopup.show({
             title: 'Please Confirm',
             template: promptstring,
             buttons: [
@@ -317,15 +310,13 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
                     text: 'Yes',
                     type: 'button-assertive',
                     onTap: function (e) {
-                         performZMoperation(str);
+                        performZMoperation(str);
                     }
                 }
             ]
-        });   
-        
-       
+        });
 
-       
+
     }
 
     // Binder so template can call controlZM
@@ -349,7 +340,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
 
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
-         ZMDataModel.zmDebug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
+        ZMDataModel.zmDebug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
         getRunStatus();
         getLoadStatus();
         getDiskStatus();

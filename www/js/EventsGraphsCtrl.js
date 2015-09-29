@@ -8,7 +8,7 @@
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
 
-angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope','zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http',function ($ionicPlatform, $scope, zm,ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
+angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
     console.log("Inside Graphs controller");
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
@@ -43,7 +43,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     // Controller main
     //-------------------------------------------------
 
-   // $scope.chart = "";
+    // $scope.chart = "";
     $scope.navTitle = 'Tab Page';
     // $scope.chart="";
     $scope.leftButtons = [{
@@ -55,24 +55,49 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
 
     var container = angular.element(document.getElementById('visualization'));
-    console.log (JSON.stringify(container));
-  var data = [
-    {id: 1, content: 'item 1', start: '2013-04-20'},
-    {id: 2, content: 'item 2', start: '2013-04-14'},
-    {id: 3, content: 'item 3', start: '2013-04-18'},
-    {id: 4, content: 'item 4', start: '2013-04-16', end: '2013-04-19'},
-    {id: 5, content: 'item 5', start: '2013-04-25'},
-    {id: 6, content: 'item 6', start: '2013-04-27'}
+    console.log(JSON.stringify(container));
+    var data = [
+        {
+            id: 1,
+            content: 'item 1',
+            start: '2013-04-20'
+        },
+        {
+            id: 2,
+            content: 'item 2',
+            start: '2013-04-14'
+        },
+        {
+            id: 3,
+            content: 'item 3',
+            start: '2013-04-18'
+        },
+        {
+            id: 4,
+            content: 'item 4',
+            start: '2013-04-16',
+            end: '2013-04-19'
+        },
+        {
+            id: 5,
+            content: 'item 5',
+            start: '2013-04-25'
+        },
+        {
+            id: 6,
+            content: 'item 6',
+            start: '2013-04-27'
+        }
   ];
-  var options = {};
-  //var timeline = new vis.Timeline(container[0], data, options);
+    var options = {};
+    //var timeline = new vis.Timeline(container[0], data, options);
 
     // -------------------------------------------------
     // Called when user taps on a bar
     //---------------------------------------------------
     $scope.handleChartClick = function (event) {
 
-        console.log (JSON.stringify( $scope.chartwithbars.getBarsAtEvent(event)));
+        console.log(JSON.stringify($scope.chartwithbars.getBarsAtEvent(event)));
         //console.log(angular.element[0].getContext('2d'));
         //console.log (JSON.stringify( $scope.chart));
 
@@ -88,9 +113,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         var endDate = "";
 
         $scope.chart = {
-            barHeight:"",
-            data:"",
-            options:""
+            barHeight: "",
+            data: "",
+            options: ""
 
         };
 
@@ -120,7 +145,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                     highlightFill: zm.graphHighlightFill,
                     data: []
         },
-          ]};
+          ]
+        };
 
         ZMDataModel.getMonitors(0).then(function (data) {
             monitors = data;
@@ -149,7 +175,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                         "/events/index/MonitorId:" + monitors[j].Monitor.Id + dateString +
                         ".json?page=1";
                     // console.log("Monitor event URL:" + url);
-                      ZMDataModel.zmLog ("EventGraph: composed url is " + url);
+                    ZMDataModel.zmLog("EventGraph: composed url is " + url);
                     $http.get(url /*,{timeout:15000}*/ )
                         .success(function (data) {
                             ZMDataModel.zmDebug("Event count for monitor" +
@@ -161,7 +187,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                             // but what I am really doing now is treating it like no events
                             // works but TBD: make this into a proper error handler
                             $scope.chart.data.datasets[0].data[j] = 0;
-                            ZMDataModel.zmLog ("Error retrieving events for graph " + JSON.stringify(data), "error");
+                            ZMDataModel.zmLog("Error retrieving events for graph " + JSON.stringify(data), "error");
                         });
                 })(i); // j
             } //for
@@ -185,4 +211,3 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         };
     }; //generateTCChart
 }]);
-

@@ -4,65 +4,53 @@
 /* global cordova,StatusBar,angular,console,ionic */
 
 
-angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm','ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', function ($scope, $rootScope,zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
+angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
 
 
     console.log("**** INSIDE MODAL CTRL, recomputing rand *****");
 
-   // $scope.rand = Math.floor((Math.random() * 100000) + 1);
-   // $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-    //$state.go($state.current, {}, {reload: true});
-
-    // This holds the PTZ menu control
-    // Note that I hacked radialMenu
-    // so please don't use the one you get from bower
-
-    //var imageStyle=1;
-    //$scope.imageAspect = "max-width: 100%;max-height: 100%;";
-    $scope.imageFit=false;
+    $scope.imageFit = false;
     // FIXME: This is a hack - for some reason
     // the custom slider view is messed up till the image loads
     // in modal view
     $scope.showModalRangeSider = false;
-         $scope.isModalActive = true;
+    $scope.isModalActive = true;
 
-    $timeout( function() {
+    $timeout(function () {
         $scope.showModalRangeSider = true;
-       // console.log ("****SHOWING SLIDER");
-    },2000);
-    
+
+    }, 2000);
+
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
-    
-     $rootScope.authSession = "undefined";
-     $ionicLoading.show({
-                template: 'negotiating stream authentication...',
-                animation: 'fade-in',
-                showBackdrop: true,
-                duration: zm.loadingTimeout,
-                maxWidth: 300,
-                showDelay: 0
-            });
+
+    $rootScope.authSession = "undefined";
+    $ionicLoading.show({
+        template: 'negotiating stream authentication...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        duration: zm.loadingTimeout,
+        maxWidth: 300,
+        showDelay: 0
+    });
     var ld = ZMDataModel.getLogin();
     ZMDataModel.getAuthKey()
-    .then(function(success)
-          {
-            $ionicLoading.hide();
-            $rootScope.authSession = success;
-            ZMDataModel.zmLog ("Modal: Stream authentication construction: " + $rootScope.authSession);
-            
-    },
-          function (error)
-          {
-           
-            $ionicLoading.hide();
-            ZMDataModel.zmDebug ("ModalCtrl: Error details of stream auth:" + error);
-            //$rootScope.authSession="";
-            ZMDataModel.zmLog ("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-    });
-    
-    
- 
+        .then(function (success) {
+                $ionicLoading.hide();
+                $rootScope.authSession = success;
+                ZMDataModel.zmLog("Modal: Stream authentication construction: " + $rootScope.authSession);
+
+            },
+            function (error) {
+
+                $ionicLoading.hide();
+                ZMDataModel.zmDebug("ModalCtrl: Error details of stream auth:" + error);
+                //$rootScope.authSession="";
+                ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+            });
+
+
+
     $scope.radialMenuOptions = {
         content: '',
 
@@ -170,58 +158,57 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                     console.log('About');
                 }
             },
-    ]};
-    
-    
-      $interval.cancel(intervalModalHandle);
-         intervalModalHandle= $interval(function () {
-         loadModalNotifications();
+    ]
+    };
+
+
+    $interval.cancel(intervalModalHandle);
+    intervalModalHandle = $interval(function () {
+        loadModalNotifications();
         //  console.log ("Refreshing Image...");
     }.bind(this), ld.refreshSec * 1000);
 
     loadModalNotifications();
-    
-    
+
+
     function onPause() {
-          ZMDataModel.zmDebug ("ModalCtrl: onpause called");
+        ZMDataModel.zmDebug("ModalCtrl: onpause called");
         $interval.cancel(intervalModalHandle);
-       // $interval.cancel(modalIntervalHandle);
-   
+        // $interval.cancel(modalIntervalHandle);
+
         // FIXME: Do I need to  setAwake(false) here?
     }
 
 
-    function onResume()
-    {
+    function onResume() {
         ZMDataModel.zmDebug("ModalCtrl: Modal resume called");
-        if ($scope.isModalActive)
-        {
-            ZMDataModel.zmLog ("ModalCtrl: Restarting Modal timer on resume");
-            
+        if ($scope.isModalActive) {
+            ZMDataModel.zmLog("ModalCtrl: Restarting Modal timer on resume");
+
             $interval.cancel(intervalModalHandle);
-             intervalModalHandle= $interval(function () {
-             loadModalNotifications();
-            //  console.log ("Refreshing Image...");
-             }.bind(this), ld.refreshSec*1000);
-        
-       
+            intervalModalHandle = $interval(function () {
+                loadModalNotifications();
+                //  console.log ("Refreshing Image...");
+            }.bind(this), ld.refreshSec * 1000);
+
+
             $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-       
+
         }
-        
-         
+
+
 
     }
 
 
-function loadModalNotifications() {
-            
-    //console.log ("Inside Modal timer...");
-          $rootScope.modalRand =  Math.floor((Math.random() * 100000) + 1);
-       
+    function loadModalNotifications() {
+
+        //console.log ("Inside Modal timer...");
+        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+
     }
 
-    var intervalModalHandle ;
+    var intervalModalHandle;
 
 
 
@@ -231,16 +218,15 @@ function loadModalNotifications() {
     //-------------------------------------------------------------
     function controlPTZ(monitorId, cmd) {
 
-    //curl -X POST "http://server.com/zm/index.php?view=request" -d
-    //"request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
+        //curl -X POST "http://server.com/zm/index.php?view=request" -d
+        //"request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
 
-        if (!$scope.ptzMoveCommand)
-        {
+        if (!$scope.ptzMoveCommand) {
             $ionicLoading.show({
-            template: "Not Ready for PTZ",
-            noBackdrop: true,
-            duration: 2000,
-        });
+                template: "Not Ready for PTZ",
+                noBackdrop: true,
+                duration: 2000,
+            });
             return;
         }
 
@@ -312,16 +298,15 @@ function loadModalNotifications() {
     }
 
     $scope.finishedLoadingImage = function () {
-       // console.log("***Monitor image FINISHED Loading***");
+        // console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
 
     };
 
-
-   $scope.onSwipeLeft = function(m,d)
-   {
-        ZMDataModel.zmDebug ("ModalCtrl:Left swipe detected, moving to "+ ZMDataModel.getNextMonitor(m,d));
-        $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
+    // not being used anymore - using a dedicated menu instead
+    $scope.onSwipeLeft = function (m, d) {
+        ZMDataModel.zmDebug("ModalCtrl:Left swipe detected, moving to " + ZMDataModel.getNextMonitor(m, d));
+        $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
 
 
         $ionicLoading.hide();
@@ -331,32 +316,32 @@ function loadModalNotifications() {
             duration: zm.loadingTimeout,
         });
 
-   };
+    };
+    
+   // not being used anymore - using a dedicated menu instead
+    $scope.onSwipeRight = function (m, d) {
+        ZMDataModel.zmDebug("ModalCtrl:Right swipe detected, moving to " + ZMDataModel.getNextMonitor(m, d));
+        $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
 
-    $scope.onSwipeRight = function(m,d)
-   {
-        ZMDataModel.zmDebug ("ModalCtrl:Right swipe detected, moving to "+ ZMDataModel.getNextMonitor(m,d));
-        $scope.monitorId = ZMDataModel.getNextMonitor(m,d);
-
-         $ionicLoading.show({
+        $ionicLoading.show({
             template: "please wait...",
             noBackdrop: true,
             duration: zm.loadingTimeout,
         });
-   };
+    };
 
     //-----------------------------------------------------------------------
     // Sucess/Error handlers for saving a snapshot of the
     // monitor image to phone storage
     //-----------------------------------------------------------------------
 
-      function SaveSuccess() {
+    function SaveSuccess() {
         $ionicLoading.show({
             template: "done!",
             noBackdrop: true,
             duration: 1000
         });
-        ZMDataModel.zmDebug ("ModalCtrl:Photo saved successfuly");
+        ZMDataModel.zmDebug("ModalCtrl:Photo saved successfuly");
     }
 
     function SaveError(e) {
@@ -369,7 +354,7 @@ function loadModalNotifications() {
         console.log("***ERROR");
     }
 
-     //-----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
@@ -381,7 +366,7 @@ function loadModalNotifications() {
             duration: zm.httpTimeout
         });
 
-        ZMDataModel.zmDebug ("ModalCtrl: SaveImageToPhone called");
+        ZMDataModel.zmDebug("ModalCtrl: SaveImageToPhone called");
         var canvas, context, imageDataUrl, imageData;
         var loginData = ZMDataModel.getLogin();
         var url = loginData.streamingurl +
@@ -418,46 +403,45 @@ function loadModalNotifications() {
 
         }
     };
-    
-$scope.reloadView = function()
-{
-    ZMDataModel.zmLog ("Reloading view for modal view, recomputing rand");
-    $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-     $scope.isModalActive = true;
-};
 
- $scope.scaleImage = function() {
-      console.log ("Switching image style");
-      $scope.imageFit = !$scope.imageFit;
-};
+    $scope.reloadView = function () {
+        ZMDataModel.zmLog("Reloading view for modal view, recomputing rand");
+        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+        $scope.isModalActive = true;
+    };
 
-    $scope.$on ('$ionicView.enter', function() {
-        
-      
-        
+    $scope.scaleImage = function () {
+        console.log("Switching image style");
+        $scope.imageFit = !$scope.imageFit;
+    };
+
+    $scope.$on('$ionicView.enter', function () {
+
+
+
     });
-    
-     $scope.$on('$ionicView.leave', function () {
+
+    $scope.$on('$ionicView.leave', function () {
         console.log("**MODAL: Stopping modal timer");
-         $scope.isModalActive = false;
-         $interval.cancel(intervalModalHandle);
+        $scope.isModalActive = false;
+        $interval.cancel(intervalModalHandle);
     });
 
     $scope.$on('$ionicView.unloaded', function () {
         $scope.isModalActive = false;
-          console.log("**MODAL UNLOADED: Stopping modal timer");
-          $interval.cancel(intervalModalHandle);
-        
-     //   console.log("Modal monitor left");
+        console.log("**MODAL UNLOADED: Stopping modal timer");
+        $interval.cancel(intervalModalHandle);
+
+        //   console.log("Modal monitor left");
     });
-    
-    $scope.$on('modal.removed', function() {
+
+    $scope.$on('modal.removed', function () {
         $scope.isModalActive = false;
-          console.log("**MODAL REMOVED: Stopping modal timer");
-          $interval.cancel(intervalModalHandle);
-        
-    // Execute action
-  });
-    
+        console.log("**MODAL REMOVED: Stopping modal timer");
+        $interval.cancel(intervalModalHandle);
+
+        // Execute action
+    });
+
 
 }]);

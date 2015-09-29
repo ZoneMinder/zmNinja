@@ -152,7 +152,8 @@ angular.module('zmApp', [
                             if ($attributes.imageSpinnerLoader) {
                                 loader.remove();
                             }
-                            $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')'; // set style attribute on element (it will load image)
+                            // set style attribute on element (it will load image)
+                            $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')';
                         };
                         bgImg.src = $attributes.imageSpinnerSrc;
                         //console.log ("DIRECTIVE: BGIMAGE SRC SET TO " + $attributes.imageSpinnerSrc);
@@ -169,7 +170,7 @@ angular.module('zmApp', [
                 $element.on('$destroy', function () {
                     // console.log ("**************** DIRECTIVE DESTROY IMAGE: " + $element[0].src);
                 });
-               // $element[0].src = "img/novideo.png";
+                // $element[0].src = "img/novideo.png";
 
             }
         };
@@ -191,19 +192,19 @@ angular.module('zmApp', [
         'request': function (config) {
             // config.withCredentials = true;
             if (zmCookie) {
-              config.headers.Cookie = "ZMSESSID=" + zmCookie;
+                config.headers.Cookie = "ZMSESSID=" + zmCookie;
             }
-            if ((config.url.indexOf("/api/states/change/") > -1)  ||
+            if ((config.url.indexOf("/api/states/change/") > -1) ||
                 (config.url.indexOf("getDiskPercent.json") > -1) ||
-                (config.url.indexOf("daemonCheck.json") > -1)    ||
-                (config.url.indexOf("getLoad.json") > -1 ))
-                
-                
+                (config.url.indexOf("daemonCheck.json") > -1) ||
+                (config.url.indexOf("getLoad.json") > -1))
+
+
             {
                 // these can take time, so lets bump up timeout
                 config.timeout = zm.largeHttpTimeout;
                 //ZMDataModel.zmDebug("timeoutHttpIntercept: HTTP request with long response time. Timeout set to "+config.timeout);
-                
+
             } else {
                 config.timeout = zm.httpTimeout;
             }
@@ -244,25 +245,9 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     $rootScope.$on("auth-error", function () {
-        
-        ZMDataModel.zmDebug ("zmAutoLogin: Inside auth-error emit");
-        ZMDataModel.displayBanner ('error',['ZoneMinder authentication failed', 'Please check settings']);
-        
-       
 
-
-        /*var alertPopup = $ionicPopup.alert(
-            {
-                title: 'Zoneminder authentication failed',
-                template: 'This might be a temporary situation and may result in zmNinja not working properly. Please try to log in again.'
-            }); 
-        
-        // close it after 5 seconds
-        $timeout(function() {
-            ZMDataModel.zmLog("Hiding auth error dialog box");
-            alertPopup.close();
-        },5000);*/
-
+        ZMDataModel.zmDebug("zmAutoLogin: Inside auth-error emit");
+        ZMDataModel.displayBanner('error', ['ZoneMinder authentication failed', 'Please check settings']);
 
     });
 
@@ -282,12 +267,11 @@ angular.module('zmApp', [
         $timeout(function () {
             contentBannerInstance();
         }, 2000);
-        ZMDataModel.zmDebug ("auth-success emit:Successful");
-        //console.log("**** ZM LOGIN SUCCESS INTERCEPT");
-    });
+        ZMDataModel.zmDebug("auth-success emit:Successful");
+      });
 
-    
-    
+
+
 
     //------------------------------------------------------------------
     // doLogin() is the function that tries to login to ZM
@@ -316,30 +300,27 @@ angular.module('zmApp', [
         }
 
         ZMDataModel.isReCaptcha()
-        .then (function(result) {
-            if (result == true) 
-            {
-                $ionicLoading.hide();
-                ZMDataModel.displayBanner ('error', 
-                                           ['reCaptcha must be disabled', 
-                                        ],"",8000);
-                var alertPopup = $ionicPopup.alert(
-                    {
+            .then(function (result) {
+                if (result == true) {
+                    $ionicLoading.hide();
+                    ZMDataModel.displayBanner('error', ['reCaptcha must be disabled',
+                                        ], "", 8000);
+                    var alertPopup = $ionicPopup.alert({
                         title: 'reCaptcha enabled',
                         template: 'Looks like you have enabled reCaptcha. It needs to be turned off for zmNinja to work'
-                    }); 
+                    });
 
-                // close it after 5 seconds
-                $timeout(function() {
-                    
-                    alertPopup.close();
-                },5000);
-            }
-                
+                    // close it after 5 seconds
+                    $timeout(function () {
+
+                        alertPopup.close();
+                    }, 5000);
+                }
+
             });
- 
 
-        
+
+
         var loginData = ZMDataModel.getLogin();
         $http({
                 method: 'POST',
@@ -378,7 +359,7 @@ angular.module('zmApp', [
                 if (data.indexOf(zm.loginScreenString) == -1) {
 
                     $rootScope.loggedIntoZm = 1;
-                    
+
                     ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
 
                     d.resolve("Login Success");
@@ -394,27 +375,24 @@ angular.module('zmApp', [
 
                     d.reject("Login Error");
                 }
-            
+
                 // Now go ahead and re-get auth key 
-                $rootScope.authSession="undefined";
+                $rootScope.authSession = "undefined";
                 var ld = ZMDataModel.getLogin();
                 ZMDataModel.getAuthKey()
-                .then(function(success)
-                      {
-                        
-                        console.log (success);
-                        $rootScope.authSession = success;
-                        ZMDataModel.zmLog ("Stream authentication construction: " +
-                                           $rootScope.authSession);
+                    .then(function (success) {
 
-                },
-                      function (error)
-                      {
-                            console.log (error);
-                                        //$rootScope.authSession="";
-                            ZMDataModel.zmLog ("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                            console.log(success);
+                            $rootScope.authSession = success;
+                            ZMDataModel.zmLog("Stream authentication construction: " +
+                                $rootScope.authSession);
+
+                        },
+                        function (error) {
+                            console.log(error);
+                            
+                            ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
                         });
-
 
                 return (d.promise);
 
@@ -423,8 +401,9 @@ angular.module('zmApp', [
                 $ionicLoading.hide();
                 $rootScope.loggedIntoZm = -1;
                 console.log("**** ZM Login FAILED");
-                ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error), "error, but not calling auth-error emit");
-               // bad urls etc come here
+                ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error), 
+                                  "error, but not calling auth-error emit");
+                // bad urls etc come here
                 $rootScope.$emit('auth-error', error);
 
                 d.reject("Login Error");
@@ -520,7 +499,7 @@ angular.module('zmApp', [
             console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
 
 
-    };
+        };
 
         window.addEventListener("resize", checkOrientation, false);
 
@@ -549,7 +528,7 @@ angular.module('zmApp', [
 
 
         $ionicPlatform.ready(function () {
- console.log("**** DEVICE READY ***");
+            console.log("**** DEVICE READY ***");
             // generates and error in desktops but works fine
             ZMDataModel.zmLog("Device is ready");
             console.log("**** DEVICE READY ***");
@@ -566,8 +545,8 @@ angular.module('zmApp', [
 
 
             });
-            
-        
+
+
 
             //fileLogger is an excellent cross platform library
             // that allows you to manage log files without worrying about
@@ -615,40 +594,37 @@ angular.module('zmApp', [
             // so as a global hack I'm just reloading the current state if you switch
             // from foreground to background and back
             document.addEventListener("resume", function () {
-               ZMDataModel.zmLog("App is resuming from background");
+                ZMDataModel.zmLog("App is resuming from background");
                 // don't animate
                 $ionicHistory.nextViewOptions({
-                      disableAnimate: true,
-                      disableBack: true
-                    });
-                
+                    disableAnimate: true,
+                    disableBack: true
+                });
+
                 // remember the last state so we can 
                 // go back there after auth
-                if ($ionicHistory.currentView)
-                {
+                if ($ionicHistory.currentView) {
                     $rootScope.lastState = $ionicHistory.currentView().stateName;
                     $rootScope.lastStateParam =
                         $ionicHistory.currentView().stateParams;
-                    ZMDataModel.zmDebug ("Last State recorded:" +   
-                                         JSON.stringify($ionicHistory.currentView()));
-                    
+                    ZMDataModel.zmDebug("Last State recorded:" +
+                        JSON.stringify($ionicHistory.currentView()));
+
                     $state.go("zm-portal-login");
-                }
-                else
-                {
+                } else {
                     $rootScope.lastState = "";
                     $rootScope.lastStateParam = "";
                 }
-                 //$ionicSideMenuDelegate.toggleLeft(false);
+                //$ionicSideMenuDelegate.toggleLeft(false);
                 //ZMDataModel.validatePin()
-             
+
             }, false);
 
 
             document.addEventListener("pause", function () {
                 console.log("****The application is going into  background");
                 ZMDataModel.zmLog("App is going into background");
-            
+
                 zmAutoLogin.stop();
 
             }, false);
