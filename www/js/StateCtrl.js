@@ -104,16 +104,29 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
             buttons: [
                 {
                     text: 'Cancel',
+                    onTap: function(e)
+                    {
+                        return "CANCEL";
+                    }
 
                 },
                 {
                     text: 'OK',
                     onTap: function (e) {
-                        if ($scope.myopt.selectedState != "")
-                            controlZM($scope.myopt.selectedState);
+                        return "OK";
+                        
                     }
                }
            ]
+        });
+        
+        getConfig.then(function(res) {
+            console.log ("GOT : " + JSON.stringify(res));
+            if (res == "OK")
+            {
+                if ($scope.myopt.selectedState != "")
+                    controlZM($scope.myopt.selectedState);
+            }
         });
     };
 
@@ -227,37 +240,14 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
     // start/stop/restart ZM
     //----------------------------------------------------------------------
 
-    function controlZM(str) {
-        if (inProgress) {
-            ZMDataModel.zmDebug("StateCtrl/controlZM: operation in progress");
-            $ionicPopup.alert({
-                title: "Operation in Progress",
-                template: "The previous operation is still in progress. Please wait..."
-            });
-            return;
-        }
-
-        var statesearch = "startstoprestart";
-        var promptstring = 'Are you sure you want to ' + str + ' Zoneminder?';
-
-        if (statesearch.indexOf(str) == -1) {
-            promptstring = "Are you sure you want to change state to " + str;
-        }
-
-
-        $ionicPopup.show({
-            title: 'Please Confirm',
-            template: promptstring,
-            buttons: [
-                {
-                    text: 'Cancel',
-                    type: 'button-positive'
-                        },
-                {
-                    text: 'Yes',
-                    type: 'button-assertive',
-                    onTap: function (e) {
-                        $scope.zmRun = "please wait...";
+    function performZMoperation(str)
+    {
+     
+       
+            ZMDataModel.zmDebug ("inside performZMoperation with " + str);
+        
+        
+            $scope.zmRun = "please wait...";
                         $scope.color = 'color:orange;';
                         $scope.customState = "";
                         ZMDataModel.zmDebug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
@@ -266,6 +256,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
                             .then(
                                 function (success) {
                                     ZMDataModel.zmDebug("StateCtrl/controlZM: returned success");
+                                    inProgress = 0;
                                     switch (str) {
                                         case "stop":
                                             $scope.zmRun = 'stopped';
@@ -275,11 +266,10 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
                                             $scope.zmRun = 'running';
                                             $scope.color = 'color:green;';
                                             getCurrentState();
-
                                             break;
-
+                                        
                                     }
-                                    inProgress = 0;
+                                    
                                 },
                                 function (error) {
                                     //if (error.status) // it seems to return error with status 0 if ok
@@ -292,10 +282,50 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl',
                                     inProgress = 0;
 
                                 }); //incredible nesting below. I make myself proud.
+
+
+    }
+            
+            
+    function controlZM(str) {
+        if (inProgress) {
+            ZMDataModel.zmDebug("StateCtrl/controlZM: operation in progress");
+            $ionicPopup.alert({
+                title: "Operation in Progress",
+                template: "The previous operation is still in progress. Please wait..."
+            });
+            return;
+        }
+        
+         var statesearch = "startstoprestart";
+        
+         var promptstring = 'Are you sure you want to ' + str + ' Zoneminder?';
+        if (statesearch.indexOf(str) == -1) {
+            promptstring = "Are you sure you want to change state to " + str;
+        }
+        
+        
+            $ionicPopup.show({
+            title: 'Please Confirm',
+            template: promptstring,
+            buttons: [
+                {
+                    text: 'Cancel',
+                    type: 'button-positive'
+                        },
+                {
+                    text: 'Yes',
+                    type: 'button-assertive',
+                    onTap: function (e) {
+                         performZMoperation(str);
                     }
                 }
             ]
-        });
+        });   
+        
+       
+
+       
     }
 
     // Binder so template can call controlZM
