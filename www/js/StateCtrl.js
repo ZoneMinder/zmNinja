@@ -19,6 +19,10 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     $scope.dangerButtonColor = ["button-positive", "button-assertive"];
     $scope.customState = "";
     $scope.allStateNames = [];
+        
+    $rootScope.zmPopup = "";
+        
+    
 
     var loginData = ZMDataModel.getLogin();
 
@@ -92,6 +96,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             );
 
     }
+        
+   
+        
 
     //---------------------------------------------------------
     // Allows the user to select a custom run state
@@ -102,7 +109,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         };
         console.log(JSON.stringify($scope.allStateNames));
         ZMDataModel.zmLog("List of custom states: " + JSON.stringify($scope.allStateNames));
-        var getConfig = $ionicPopup.show({
+        $rootScope.zmPopup = $ionicPopup.show({
             scope: $scope,
             template: '<ion-radio-fix ng-repeat="item in allStateNames" ng-value="item" ng-model="myopt.selectedState"> {{item}} </ion-radio-fix>',
 
@@ -129,7 +136,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
         // It seems invoking a popup within a popup handler
         // causes issues. Doing this outside due to that reason
-        getConfig.then(function (res) {
+        $rootScope.zmPopup.then(function (res) {
             console.log("GOT : " + JSON.stringify(res));
             if (res == "OK") {
                 if ($scope.myopt.selectedState != "")
@@ -298,7 +305,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         }
 
 
-        $ionicPopup.show({
+        $rootScope.zmPopup = $ionicPopup.show({
             title: 'Please Confirm',
             template: promptstring,
             buttons: [
