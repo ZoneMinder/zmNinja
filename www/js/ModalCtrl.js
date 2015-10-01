@@ -358,7 +358,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
-
     $scope.saveImageToPhone = function (mid) {
         $ionicLoading.show({
             template: "saving snapshot...",

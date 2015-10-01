@@ -626,6 +626,9 @@ angular.module('zmApp', [
                 ZMDataModel.zmLog("App is going into background");
 
                 zmAutoLogin.stop();
+                if ($rootScope.zmPopup)
+                        $rootScope.zmPopup.close();
+                //$ionicPopup.close();
 
             }, false);
 

@@ -15,12 +15,12 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
     $scope.deleteLogs = function () {
 
-        var confirmPopup = $ionicPopup.confirm({
+        $rootScope.zmPopup = $ionicPopup.confirm({
             title: 'Please Confirm',
             template: 'Are you sure you want to delete logs?',
         });
 
-        confirmPopup.then(function (res) {
+        $rootScope.zmPopup.then(function (res) {
             if (res) {
                 $fileLogger.deleteLogfile().then(function () {
                     console.log('Logfile deleted');
