@@ -237,9 +237,11 @@ angular.module('zmApp.controllers')
             console.log("**************From String: " + $rootScope.fromString);
             console.log("**************To String: " + $rootScope.toString);
 
+            // reloading - may solve https://github.com/pliablepixels/zmNinja/issues/36
+            // if you are in the same mid event page $state.go won't work
             $state.go("events", {
                 "id": monitorId
-            });
+            }, { reload: true });
         };
 
         //--------------------------------------------------------------------------
@@ -287,11 +289,11 @@ angular.module('zmApp.controllers')
             var myFrom = moment($rootScope.fromString).format("MMM/DD/YYYY hh:mm a").toString();
             var toString = moment($rootScope.toString).format("MMM/DD/YYYY hh:mm a").toString();
 
-            var confirmPopup = $ionicPopup.confirm({
+            $rootScope.zmPopup = $ionicPopup.confirm({
                 title: 'Filter settings',
                 template: 'You are viewing Events between:<br/> <b>' + myFrom + "</b> to <b>" + toString + '</b><br/>Do you want to delete this filter?'
             });
-            confirmPopup.then(function (res) {
+            $rootScope.zmPopup.then(function (res) {
                 if (res) {
                     ZMDataModel.zmLog("Filter reset requested in popup");
                     $rootScope.isEventFilterOn = false;
@@ -1288,67 +1290,78 @@ angular.module('zmApp.controllers')
             $scope.$broadcast('scroll.refreshComplete');
         };
 
+
+
         $scope.doRefresh = function () {
             doRefresh();
         }; //dorefresh
 
         function doRefresh() {
             console.log("***Pull to Refresh");
-            $scope.events = [];
-            moreEvents = true;
-            ZMDataModel.getEventsPages($scope.id, $rootScope.fromString, $rootScope.toString)
-                .then(function (data) {
-                    eventsPage = data.pageCount;
-                    console.log("TOTAL EVENT PAGES IS " + eventsPage);
-                    pageLoaded = true;
-                    $scope.viewTitle.title = data.count;
-                    ZMDataModel.getEvents($scope.id, eventsPage, "", $rootScope.fromString, $rootScope.toString)
 
+            ZMDataModel.zmDebug ("Reloading monitors");
+            var refresh = ZMDataModel.getMonitors(1);
+            refresh.then(function (data) {
+                $scope.monitors = data;
+
+
+                $scope.events = [];
+                moreEvents = true;
+                ZMDataModel.getEventsPages($scope.id, $rootScope.fromString, $rootScope.toString)
                     .then(function (data) {
-                        console.log("EventCtrl Got events");
-                        //var events = [];
-                        var myevents = data;
-                        for (var i = 0; i < myevents.length; i++) {
+                        eventsPage = data.pageCount;
+                        console.log("TOTAL EVENT PAGES IS " + eventsPage);
+                        pageLoaded = true;
+                        $scope.viewTitle.title = data.count;
+                        ZMDataModel.getEvents($scope.id, eventsPage, "", $rootScope.fromString, $rootScope.toString)
 
-                            myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
+                        .then(function (data) {
+                            console.log("EventCtrl Got events");
+                            //var events = [];
+                            var myevents = data;
+                            for (var i = 0; i < myevents.length; i++) {
 
-                            // now construct base path
+                                myevents[i].Event.MonitorName =
+                                    ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
 
-                            var str = myevents[i].Event.StartTime;
-                            //var yy =  moment(str).format('h:mm:ssa on MMMM Do YYYY');
-                            var yy = moment(str).format('YY');
-                            var mm = moment(str).format('MM');
-                            var dd = moment(str).format('DD');
-                            var hh = moment(str).format('HH');
-                            var min = moment(str).format('mm');
-                            var sec = moment(str).format('ss');
-                            var loginData = ZMDataModel.getLogin();
-                            myevents[i].Event.BasePath = loginData.url + "/events/" +
-                                myevents[i].Event.MonitorId + "/" +
-                                yy + "/" +
-                                mm + "/" +
-                                dd + "/" +
-                                hh + "/" +
-                                min + "/" +
-                                sec + "/";
+                                // now construct base path
 
-                            myevents[i].Event.relativePath =
-                                myevents[i].Event.MonitorId + "/" +
-                                yy + "/" +
-                                mm + "/" +
-                                dd + "/" +
-                                hh + "/" +
-                                min + "/" +
-                                sec + "/";
+                                var str = myevents[i].Event.StartTime;
+                                //var yy =  moment(str).format('h:mm:ssa on MMMM Do YYYY');
+                                var yy = moment(str).format('YY');
+                                var mm = moment(str).format('MM');
+                                var dd = moment(str).format('DD');
+                                var hh = moment(str).format('HH');
+                                var min = moment(str).format('mm');
+                                var sec = moment(str).format('ss');
+                                var loginData = ZMDataModel.getLogin();
+                                myevents[i].Event.BasePath = loginData.url + "/events/" +
+                                    myevents[i].Event.MonitorId + "/" +
+                                    yy + "/" +
+                                    mm + "/" +
+                                    dd + "/" +
+                                    hh + "/" +
+                                    min + "/" +
+                                    sec + "/";
 
-                            myevents[i].Event.ShowScrub = false;
-                            myevents[i].Event.height = zm.eventsListDetailsHeight;
-                        }
-                        $scope.events = myevents;
-                        loadMore();
+                                myevents[i].Event.relativePath =
+                                    myevents[i].Event.MonitorId + "/" +
+                                    yy + "/" +
+                                    mm + "/" +
+                                    dd + "/" +
+                                    hh + "/" +
+                                    min + "/" +
+                                    sec + "/";
+
+                                myevents[i].Event.ShowScrub = false;
+                                myevents[i].Event.height = zm.eventsListDetailsHeight;
+                            }
+                            $scope.events = myevents;
+                            loadMore();
+                        });
+
                     });
-
-                });
+            });
         }
 
 }]);
