@@ -347,6 +347,36 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             }
         },
         
+        //-------------------------------------------------------
+        // returns API version or none 
+        //-------------------------------------------------------
+        getAPIversion: function()
+        {
+            zmDebug("getAPIversion called");
+            var d=$q.defer();
+            var apiurl = loginData.apiurl + '/host/getVersion.json';
+            $http.get(apiurl)
+            .then (function(success){
+                if (success.data.version)
+                {
+                    d.resolve(success.data.version);
+                }
+                else
+                {
+                    d.resolve("0.0.0");
+                }
+                return (d.promise);
+               
+            },
+            function(error){
+                zmDebug("getAPIversion error handler " + JSON.stringify(error));
+                d.resolve("0.0.0");
+                return (d.promise);
+            });
+            return (d.promise);
+               
+            
+        },
        
         displayBanner: function (mytype, mytext, myinterval, mytimer)
         {

@@ -25,6 +25,7 @@ angular.module('zmApp', [
 //-----------------------------------------------
 
 .constant('zm', {
+    minAppVersion: '1.28.107',
     httpTimeout: 15000,
     largeHttpTimeout: 60000,
     logFile: 'zmNinjaLog.txt',
@@ -727,6 +728,19 @@ angular.module('zmApp', [
 
     })
 
+    .state('lowversion', {
+        data: {
+            requireLogin: false
+        },
+        
+        url: "/lowversion/:ver",
+        templateUrl: "templates/lowversion.html",
+        controller: 'zmApp.LowVersionCtrl',
+
+    })
+
+    
+    
     .state('events-graphs', {
         data: {
             requireLogin: true
