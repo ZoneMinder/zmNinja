@@ -27,6 +27,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
             if (ZMDataModel.isLoggedIn()) {
                 ZMDataModel.zmLog("User credentials are provided");
+                
+                
 
                 // You can login either via touch ID or typing in your code     
                 if ($ionicPlatform.is('ios') && loginData.usePin) {
@@ -72,7 +74,18 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             {
                                 ZMDataModel.zmDebug("PortalLogin: auth success");
                                 ZMDataModel.getKeyConfigParams(1);
-                                ZMDataModel.zmDebug("Transitioning state to: " + $rootScope.lastState ? $rootScope.lastState : 'montage');
+                                ZMDataModel.zmDebug("Transitioning state to: " + 
+                                                    $rootScope.lastState ? $rootScope.lastState : 'montage');
+                        
+                                ZMDataModel.getAPIversion()
+                                .then (function(data) {
+                                    ZMDataModel.zmLog("Got API version: " + data);
+                                    if (versionCompare(data,zm.minAppVersion))
+                                    {
+                                        
+                                        $state.go('lowversion', {"ver":data});
+                                    }
+                                });
 
                                 $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
                             },
@@ -109,6 +122,27 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     $scope.unlock = function () {
         unlock(false);
     };
+    
+    //credit: https://gist.github.com/alexey-bass/1115557
+    function versionCompare(left, right) {
+        if (typeof left + typeof right != 'stringstring')
+            return false;
+
+        var a = left.split('.');
+        var  b = right.split('.');
+        var i = 0;
+        var len = Math.max(a.length, b.length);
+
+        for (; i < len; i++) {
+            if ((a[i] && !b[i] && parseInt(a[i]) > 0) || (parseInt(a[i]) > parseInt(b[i]))) {
+                return 1;
+            } else if ((b[i] && !a[i] && parseInt(b[i]) > 0) || (parseInt(a[i]) < parseInt(b[i]))) {
+                return -1;
+            }
+        }
+
+        return 0;
+}
 
     function unlock(touchVerified) {
         ZMDataModel.zmDebug("Trying to unlock PIN");
@@ -127,6 +161,17 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             $rootScope.lastState = "montage";
                         }
                         ZMDataModel.zmDebug("PortalLogin: auth success");
+                          ZMDataModel.getAPIversion()
+                                .then (function(data) {
+                                    ZMDataModel.zmLog("Got API version: " + data);
+                                    if (versionCompare(data,zm.minAppVersion))
+                                    {
+                                        
+                                        $state.go('lowversion', {"ver":data});
+                                    }
+                                    
+                              
+                                });
                         ZMDataModel.getKeyConfigParams(1);
                         ZMDataModel.zmDebug("Transitioning state to: " + $rootScope.lastState ? $rootScope.lastState : 'montage');
                         $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
@@ -157,6 +202,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     //-------------------------------------------------------------------------------
     console.log("************* ENTERING PORTAL MAIN ");
     var loginData = ZMDataModel.getLogin();
+     $ionicSideMenuDelegate.canDragContent(false);
 
 
 
