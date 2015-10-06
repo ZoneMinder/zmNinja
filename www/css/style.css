@@ -438,6 +438,13 @@ input[type=range]::-webkit-slider-thumb {
     -webkit-animation-duration: 300ms;
 }
 
+.content-banner.alarm
+{
+    background-color: forestgreen;
+    color:white;
+    opacity:1;
+}
+
 /*.mySliderClass.jslider.sliderCSS  div.jslider-pointer
 {top:-10px;left:15px;width:60px;height:60px;margin-left:-5px;background-color:silver;background-color:#615959;border-radius:50%
 }*/
