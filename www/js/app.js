@@ -14,6 +14,7 @@ angular.module('zmApp', [
                             'fileLogger',
                             'angular-carousel',
                             'angularAwesomeSlider',
+    
 
 
 
@@ -25,7 +26,7 @@ angular.module('zmApp', [
 //-----------------------------------------------
 
 .constant('zm', {
-    minAppVersion: '1.28.107',
+    minAppVersion: '1.28.105',
     httpTimeout: 15000,
     largeHttpTimeout: 60000,
     logFile: 'zmNinjaLog.txt',
@@ -178,6 +179,9 @@ angular.module('zmApp', [
     }])
 
 
+
+    
+
 //------------------------------------------------------------------
 // In Android, HTTP requests seem to get stuck once in a while
 // It may be a crosswalk issue.
@@ -238,7 +242,7 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function ($interval, ZMDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner) {
+.factory('zmAutoLogin', function ($interval, ZMDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer) {
     var zmAutoLoginHandle;
 
     //------------------------------------------------------------------
@@ -356,11 +360,11 @@ angular.module('zmApp', [
                 // so we will check if the data has
                 // <title>ZM - Login</title> -- it it does then its the login page
 
-
+                
                 if (data.indexOf(zm.loginScreenString) == -1) {
-
+                     //eventServer.start();
                     $rootScope.loggedIntoZm = 1;
-
+                   
                     ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
 
                     d.resolve("Login Success");
@@ -454,7 +458,7 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $websocket) {
 
         $rootScope.zmGlobalCookie = "";
         $rootScope.isEventFilterOn = false;
@@ -465,6 +469,7 @@ angular.module('zmApp', [
         $rootScope.fromString = "";
         $rootScope.toString = "";
         $rootScope.loggedIntoZm = 0;
+        $rootScope.websocketActive = 0;
 
         //console.log ("HERE");
         ZMDataModel.init();
@@ -475,7 +480,7 @@ angular.module('zmApp', [
 
         var loginData = ZMDataModel.getLogin();
 
-
+       
 
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
@@ -654,6 +659,8 @@ angular.module('zmApp', [
 
         console.log("Setting up POST LOGIN timer");
         zmAutoLogin.start();
+    
+        
 
     }) //run
 

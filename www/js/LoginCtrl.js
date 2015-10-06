@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -105,6 +105,15 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
         return url;
     }
+    
+    
+    function addWsOrWss(url) {
+
+        if ((!/^wss?:\/\//i.test(url)) && (url != "")) {
+            url = "ws://" + url;
+        }
+        return url;
+    }
 
     //-----------------------------------------------------------------------------
     // Perform the login action when the user submits the login form
@@ -130,6 +139,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.apiurl = $scope.loginData.apiurl.trim();
         $scope.loginData.username = $scope.loginData.username.trim();
         $scope.loginData.streamingurl = $scope.loginData.streamingurl.trim();
+        $scope.loginData.eventServer = $scope.loginData.eventServer.trim();
 
         $scope.loginData.isUseAuth = ($scope.auth.isUseAuth) ? "1" : "0";
 
@@ -149,6 +159,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         }
 
+        if ($scope.loginData.eventServer.slice(-1) == '/') {
+            $scope.loginData.eventServer = $scope.loginData.eventServer.slice(0, -1);
+
+        }
         // strip cgi-bin if it is there but only at the end
         if ($scope.loginData.streamingurl.slice(-7).toLowerCase() == 'cgi-bin') {
             $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -7);
@@ -159,18 +173,22 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.url = addhttp($scope.loginData.url);
         $scope.loginData.apiurl = addhttp($scope.loginData.apiurl);
         $scope.loginData.streamingurl = addhttp($scope.loginData.streamingurl);
+        $scope.loginData.eventServer = addWsOrWss($scope.loginData.eventServer);
 
         if ($scope.loginData.useSSL) {
             // replace all http with https
             $scope.loginData.url = $scope.loginData.url.replace("http:", "https:");
             $scope.loginData.apiurl = $scope.loginData.apiurl.replace("http:", "https:");
             $scope.loginData.streamingurl = $scope.loginData.streamingurl.replace("http:", "https:");
+             $scope.loginData.eventServer = $scope.loginData.eventServer.replace("ws:", "wss:");
+            
 
         } else {
             // replace all https with http
             $scope.loginData.url = $scope.loginData.url.replace("https:", "http:");
             $scope.loginData.apiurl = $scope.loginData.apiurl.replace("https:", "http:");
             $scope.loginData.streamingurl = $scope.loginData.streamingurl.replace("https:", "http:");
+            // don't do it for WSS - lets mandate that
         }
 
         var apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
@@ -212,6 +230,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             ZMDataModel.zmLog("Validating APIs at " + apiurl);
             $http.get(apiurl)
                 .success(function (data) {
+                
+                    EventServer.start();
 
                     $ionicPopup.alert({
                         title: 'Login validated',

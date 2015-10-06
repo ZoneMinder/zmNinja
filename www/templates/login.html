@@ -55,6 +55,14 @@
                        type="text" placeholder="ZM api url"
                        ng-model="loginData.apiurl">
             </label>
+            
+            <label class="item item-input item-floating-label" >
+                <span class="input-label">Event Server</span>
+                <input autocapitalize="none"
+                       autocomplete="off" autocorrect="off"
+                       type="text" placeholder="Event notification url"
+                       ng-model="loginData.eventServer">
+            </label>
 
             <label>
             <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();"
