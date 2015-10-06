@@ -25,6 +25,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         'password': '',
         'url': '', // This is the ZM portal path
         'apiurl': '', // This is the API path
+        'eventServer':'', //experimental Event server address
         'maxMontage': "10", //total # of monitors to display in montage
         'streamingurl': "",
         'maxFPS': "3", // image streaming FPS
@@ -84,7 +85,8 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         //-------------------------------------------------------------
         // used by various controllers to log messages to file
         //-------------------------------------------------------------
-
+        
+                
         zmLog: function (val,type) {
             var logtype = 'info';
            if (type != undefined)
@@ -169,6 +171,12 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             if (window.localStorage.getItem("url") != undefined) {
                 loginData.url =
                     window.localStorage.getItem("url");
+
+            }
+            
+            if (window.localStorage.getItem("eventServer") != undefined) {
+                loginData.eventServer =
+                    window.localStorage.getItem("eventServer");
 
             }
 
@@ -313,6 +321,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             window.localStorage.setItem("url", loginData.url);
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
+            window.localStorage.setItem("eventServer", loginData.eventServer);
             window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
             window.localStorage.setItem("usePin", loginData.usePin?"1":"0");
             window.localStorage.setItem("pinCode", loginData.pinCode);
