@@ -1,0 +1,31 @@
+{
+  "name": "ngWebSocket",
+  "version": "0.0.0",
+  "description": "AngularJS WebSocket wrapper",
+  "main": "ng-websocket.js",
+  "scripts": {
+    "postinstall": "bower install",
+    "test": "node_modules/gulp/bin/gulp.js test"
+  },
+  "repository": "",
+  "keywords": [
+    "angular",
+    "websocket",
+    "angularjs",
+    "hmlt5",
+    "ng"
+  ],
+  "author": "Vincenzo (Wilk) Ferrari <wilk3ert@gmail.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "3bb59ef67d27eff0e88e637d0999b3e2141ef398",
+  "devDependencies": {
+    "ws": "~0.4.32",
+    "karma": "~0.12.22",
+    "karma-jasmine": "~0.2.0",
+    "karma-mocha-reporter": "~0.3.1",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "gulp-karma": "0.0.4",
+    "gulp": "~3.8.7"
+  }
+}
