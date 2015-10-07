@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="cordova-plugin-websocket"
+  version="0.11.0">
+  <name>WebSocket for Android</name>
+  <description>Cordova WebSocket Plugin for Android</description>
+  <license>Apache 2.0</license>
+  <keywords>cordova,phonegap,websocket,android</keywords>
+
+  <engines>
+    <engine name="cordova" version=">=3.0.0" />
+  </engines>
+
+  <platform name="android">
+    <js-module src="www/websocket.js" name="websocket">
+      <clobbers target="WebSocket" />
+    </js-module>
+
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="WebSocket">
+        <param name="android-package" value="com.knowledgecode.cordova.websocket.WebSocket" />
+      </feature>
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/*">
+      <uses-permission android:name="android.permission.INTERNET" />
+    </config-file>
+
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/ConnectionTask.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/DestroyTask.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/DisconnectionTask.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/ResetTask.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/SendingTask.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/TaskBean.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/TaskRunner.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/WebSocket.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/com/knowledgecode/cordova/websocket/WebSocketGenerator.java" target-dir="src/com/knowledgecode/cordova/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/http/HttpException.java" target-dir="src/org/eclipse/jetty/http" />
+    <source-file src="src/android/org/eclipse/jetty/http/HttpHeaders.java" target-dir="src/org/eclipse/jetty/http" />
+    <source-file src="src/android/org/eclipse/jetty/http/HttpHeaderValues.java" target-dir="src/org/eclipse/jetty/http" />
+    <source-file src="src/android/org/eclipse/jetty/http/HttpMethods.java" target-dir="src/org/eclipse/jetty/http" />
+    <source-file src="src/android/org/eclipse/jetty/http/HttpParser.java" target-dir="src/org/eclipse/jetty/http" />
+    <source-file src="src/android/org/eclipse/jetty/http/HttpVersions.java" target-dir="src/org/eclipse/jetty/http" />
+    <source-file src="src/android/org/eclipse/jetty/http/Parser.java" target-dir="src/org/eclipse/jetty/http" />
+    <source-file src="src/android/org/eclipse/jetty/io/AbstractBuffer.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/AbstractBuffers.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/AbstractConnection.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/AsyncEndPoint.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/Buffer.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/BufferCache.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/Buffers.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/BufferUtil.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/ByteArrayBuffer.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/ConnectedEndPoint.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/Connection.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/EndPoint.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/EofException.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/SimpleBuffers.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/ThreadLocalBuffers.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/View.java" target-dir="src/org/eclipse/jetty/io" />
+    <source-file src="src/android/org/eclipse/jetty/io/nio/AsyncConnection.java" target-dir="src/org/eclipse/jetty/io/nio" />
+    <source-file src="src/android/org/eclipse/jetty/io/nio/ChannelEndPoint.java" target-dir="src/org/eclipse/jetty/io/nio" />
+    <source-file src="src/android/org/eclipse/jetty/io/nio/DirectNIOBuffer.java" target-dir="src/org/eclipse/jetty/io/nio" />
+    <source-file src="src/android/org/eclipse/jetty/io/nio/IndirectNIOBuffer.java" target-dir="src/org/eclipse/jetty/io/nio" />
+    <source-file src="src/android/org/eclipse/jetty/io/nio/NIOBuffer.java" target-dir="src/org/eclipse/jetty/io/nio" />
+    <source-file src="src/android/org/eclipse/jetty/io/nio/SelectChannelEndPoint.java" target-dir="src/org/eclipse/jetty/io/nio" />
+    <source-file src="src/android/org/eclipse/jetty/io/nio/SelectorManager.java" target-dir="src/org/eclipse/jetty/io/nio" />
+    <source-file src="src/android/org/eclipse/jetty/io/nio/SslConnection.java" target-dir="src/org/eclipse/jetty/io/nio" />
+    <source-file src="src/android/org/eclipse/jetty/util/BlockingArrayQueue.java" target-dir="src/org/eclipse/jetty/util" />
+    <source-file src="src/android/org/eclipse/jetty/util/ConcurrentHashSet.java" target-dir="src/org/eclipse/jetty/util" />
+    <source-file src="src/android/org/eclipse/jetty/util/IO.java" target-dir="src/org/eclipse/jetty/util" />
+    <source-file src="src/android/org/eclipse/jetty/util/QuotedStringTokenizer.java" target-dir="src/org/eclipse/jetty/util" />
+    <source-file src="src/android/org/eclipse/jetty/util/StringMap.java" target-dir="src/org/eclipse/jetty/util" />
+    <source-file src="src/android/org/eclipse/jetty/util/thread/QueuedThreadPool.java" target-dir="src/org/eclipse/jetty/util/thread" />
+    <source-file src="src/android/org/eclipse/jetty/util/thread/ThreadPool.java" target-dir="src/org/eclipse/jetty/util/thread" />
+    <source-file src="src/android/org/eclipse/jetty/util/thread/Timeout.java" target-dir="src/org/eclipse/jetty/util/thread" />
+    <source-file src="src/android/org/eclipse/jetty/util/TypeUtil.java" target-dir="src/org/eclipse/jetty/util" />
+    <source-file src="src/android/org/eclipse/jetty/util/component/AbstractLifeCycle.java" target-dir="src/org/eclipse/jetty/util/component" />
+    <source-file src="src/android/org/eclipse/jetty/util/component/AggregateLifeCycle.java" target-dir="src/org/eclipse/jetty/util/component" />
+    <source-file src="src/android/org/eclipse/jetty/util/component/Dumpable.java" target-dir="src/org/eclipse/jetty/util/component" />
+    <source-file src="src/android/org/eclipse/jetty/util/component/LifeCycle.java" target-dir="src/org/eclipse/jetty/util/component" />
+    <!-- <source-file src="src/android/org/eclipse/jetty/util/log/AndroidLogger.java" target-dir="src/org/eclipse/jetty/util/log" /> -->
+    <source-file src="src/android/org/eclipse/jetty/util/log/Log.java" target-dir="src/org/eclipse/jetty/util/log" />
+    <source-file src="src/android/org/eclipse/jetty/util/log/Logger.java" target-dir="src/org/eclipse/jetty/util/log" />
+    <source-file src="src/android/org/eclipse/jetty/util/resource/Resource.java" target-dir="src/org/eclipse/jetty/util/resource" />
+    <source-file src="src/android/org/eclipse/jetty/util/resource/URLResource.java" target-dir="src/org/eclipse/jetty/util/resource" />
+    <source-file src="src/android/org/eclipse/jetty/util/security/CertificateUtils.java" target-dir="src/org/eclipse/jetty/util/security" />
+    <source-file src="src/android/org/eclipse/jetty/util/security/CertificateValidator.java" target-dir="src/org/eclipse/jetty/util/security" />
+    <source-file src="src/android/org/eclipse/jetty/util/security/Password.java" target-dir="src/org/eclipse/jetty/util/security" />
+    <source-file src="src/android/org/eclipse/jetty/util/ssl/AliasedX509ExtendedKeyManager.java" target-dir="src/org/eclipse/jetty/util/ssl" />
+    <source-file src="src/android/org/eclipse/jetty/util/ssl/SslContextFactory.java" target-dir="src/org/eclipse/jetty/util/ssl" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/Extension.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/MaskGen.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/PerMessageDeflateExtension.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/RandomMaskGen.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocket.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketBuffer.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketBuffers.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketClient.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketClientFactory.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketConnection.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketConnectionRFC6455.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketGenerator.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketGeneratorRFC6455.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketParser.java" target-dir="src/org/eclipse/jetty/websocket" />
+    <source-file src="src/android/org/eclipse/jetty/websocket/WebSocketParserRFC6455.java" target-dir="src/org/eclipse/jetty/websocket" />
+  </platform>
+
+</plugin>
+

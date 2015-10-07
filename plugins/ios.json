@@ -168,6 +168,9 @@
         },
         "cordova-plugin-ios-longpress-fix": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-websocket": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
     "dependent_plugins": {}

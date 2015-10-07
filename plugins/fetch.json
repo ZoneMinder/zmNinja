@@ -146,5 +146,13 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-websocket": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-websocket"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

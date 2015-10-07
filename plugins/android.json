@@ -75,6 +75,10 @@
                         {
                             "xml": "<preference default=\"embedded\" name=\"xwalkMode\" />",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"WebSocket\"><param name=\"android-package\" value=\"com.knowledgecode.cordova.websocket.WebSocket\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -92,6 +96,10 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
                             "count": 1
                         }
                     ]
@@ -149,6 +157,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-ios-longpress-fix": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-websocket": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },

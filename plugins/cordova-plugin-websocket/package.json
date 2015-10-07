@@ -1,0 +1,35 @@
+{
+  "name": "cordova-plugin-websocket",
+  "version": "0.11.0",
+  "description": "Cordova WebSocket Plugin for Android",
+  "cordova": {
+    "id": "cordova-plugin-websocket",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knowledgecode/WebSocket-for-Android.git"
+  },
+  "keywords": [
+    "cordova",
+    "phonegap",
+    "websocket",
+    "android",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "KNOWLEDGECODE",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/knowledgecode/WebSocket-for-Android/issues"
+  },
+  "homepage": "https://github.com/knowledgecode/WebSocket-for-Android#readme"
+}
