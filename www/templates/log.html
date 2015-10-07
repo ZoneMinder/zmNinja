@@ -2,6 +2,11 @@
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        
+        <button class="animated infinite tada button button-icon button-clear ion-ios-bell" ng-click="$root.isAlarm=!$root.isAlarm;" ng-if="$root.isAlarm"></button>
+        
+<button class="animated infinite tada button button-icon button-clear ion-ios-bell" ng-click="$root.isAlarm=!$root.isAlarm;" ng-if="$root.isAlarm"></button>
+        
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
