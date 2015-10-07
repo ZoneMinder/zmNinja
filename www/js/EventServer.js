@@ -17,6 +17,13 @@ angular.module('zmApp.controllers')
      var webSocketBadAuth = 0;
      var ws;
      
+     
+     // FIXME: needs cleaninup up
+     // on iOS this socket will die after switching to background (eventually)
+     // on Android it will keep running
+     // on Android  I need to see why websockets are getting duplicated on server
+     // disconnect
+     
      function start()
      {
          if (websocketActive == 1)
