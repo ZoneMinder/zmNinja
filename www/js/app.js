@@ -470,6 +470,7 @@ angular.module('zmApp', [
         $rootScope.toString = "";
         $rootScope.loggedIntoZm = 0;
         $rootScope.websocketActive = 0;
+       
 
         //console.log ("HERE");
         ZMDataModel.init();
@@ -479,9 +480,8 @@ angular.module('zmApp', [
         $rootScope.$stateParams = $stateParams;
 
         var loginData = ZMDataModel.getLogin();
-
+    
        
-
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
         $ionicPlatform.registerBackButtonAction(function (e) {
