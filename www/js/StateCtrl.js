@@ -4,8 +4,8 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', function (
-    $ionicPopup, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', function (
+    $ionicPopup, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout,$ionicHistory) {
 
     //----------------------------------------------------------------------
     // Controller main
@@ -98,7 +98,19 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     }
         
    
-        
+    //----------------------------------------------------------------
+    // Alarm notification handling
+    //----------------------------------------------------------------
+    $scope.handleAlarms = function()
+    {
+        $rootScope.isAlarm=!$rootScope.isAlarm;
+        if (!$rootScope.isAlarm)
+        {
+            $rootScope.alarmCount="0";
+            $ionicHistory.nextViewOptions({disableBack: true});		
+            $state.go("events", {"id": 0}, { reload: true });
+        }
+    };    
 
     //---------------------------------------------------------
     // Allows the user to select a custom run state

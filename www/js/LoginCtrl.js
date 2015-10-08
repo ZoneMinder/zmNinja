@@ -2,9 +2,23 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
+    };
+    
+    //----------------------------------------------------------------
+    // Alarm notification handling
+    //----------------------------------------------------------------
+    $scope.handleAlarms = function()
+    {
+        $rootScope.isAlarm=!$rootScope.isAlarm;
+        if (!$rootScope.isAlarm)
+        {
+            $rootScope.alarmCount="0";
+            $ionicHistory.nextViewOptions({disableBack: true});		
+            $state.go("events", {"id": 0}, { reload: true });
+        }
     };
 
     $scope.loginData = ZMDataModel.getLogin();

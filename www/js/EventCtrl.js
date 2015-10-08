@@ -22,19 +22,7 @@ angular.module('zmApp.controllers')
         
         //EventServer.start();
         var loginData = ZMDataModel.getLogin();
-       // console.log ("********************EVENT SERVER LOCAL");
-      //var dataStream = $websocket('wss://arjunrc.ddns.net:9000/?user='+loginData.username+'&passwd='+loginData.password,null, {reconnectIfNotNormalClose: true});
-
-      
-
-            
-            /*dataStream.onMessage = function(message) {
-                console.log("CONTROLLER GOT WEBSOCKET MESSAGE:" + message.data);
-            };*/
-
-        
-        //$scope.MyData = EventServer;
-        
+       
 
         $scope.hours = [];
         $scope.days = [];
@@ -263,6 +251,20 @@ angular.module('zmApp.controllers')
                 "id": monitorId
             }, { reload: true });
         };
+        
+    //----------------------------------------------------------------
+    // Alarm notification handling
+    //----------------------------------------------------------------
+    $scope.handleAlarms = function()
+    {
+        $rootScope.isAlarm=!$rootScope.isAlarm;
+        if (!$rootScope.isAlarm)
+        {
+            $rootScope.alarmCount="0";
+            $ionicHistory.nextViewOptions({disableBack: true});		
+            $state.go("events", {"id": 0}, { reload: true });
+        }
+    };
 
         //--------------------------------------------------------------------------
         // Takes care of deleting individual events
@@ -612,8 +614,7 @@ angular.module('zmApp.controllers')
                         $scope.FrameArray = data.event.Frame;
                         //  $scope.slider_options.scale=[];
                         $scope.slider_options.scale = [];
-                        //$scope.slider_options.modelLabels={2:'X'};
-                        //$scope.slider_options.dimension="arjun";
+                    
                         var i;
                         for (i = 0; i < data.event.Frame.length; i++) {
                             if (data.event.Frame[i].Type == "Alarm") {
@@ -1057,8 +1058,7 @@ angular.module('zmApp.controllers')
                     $scope.FrameArray = data.event.Frame;
                     //  $scope.slider_options.scale=[];
                     $scope.slider_modal_options.scale = [];
-                    //$scope.slider_options.modelLabels={2:'X'};
-                    //$scope.slider_options.dimension="arjun";
+                
                     var i;
                     for (i = 0; i < data.event.Frame.length; i++) {
                         if (data.event.Frame[i].Type == "Alarm") {

@@ -8,7 +8,7 @@
         <button class="button button-icon icon ion-ios-minus-outline" 
           ng-click="eventList.showDelete = !eventList.showDelete;"></button>
         
-        <button class="animated infinite tada button button-icon button-clear ion-ios-bell" ng-click="$root.isAlarm=!$root.isAlarm;" ng-if="$root.isAlarm"></button>
+      <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
         
     </ion-nav-buttons>
 
