@@ -246,6 +246,23 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             $state.go("events", {"id": 0}, { reload: true });
         }
     };
+    
+    $scope.handleAlarmsWhileMinimized = function()
+    {
+        $rootScope.isAlarm=!$rootScope.isAlarm;
+        
+         $scope.minimal = !$scope.minimal;
+        ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
+        ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
+        $interval.cancel(intervalHandle);
+        
+        if (!$rootScope.isAlarm)
+        {
+            $rootScope.alarmCount="0";
+            $ionicHistory.nextViewOptions({disableBack: true});		
+            $state.go("events", {"id": 0}, { reload: true });
+        }
+    };
 
     //-------------------------------------------------------------
     // Called when user taps on the reorder button

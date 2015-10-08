@@ -59,6 +59,12 @@
 
     <span class="camera-icon">
         <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(monitorId)"></a>
+    </span>
+        
+        <span class="modal-alarm-badge">
+            <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon button-clear ion-ios-bell notification-badge" 
+                    ng-click="handleAlarms();" ng-if="$root.isAlarm"></a>
+        </span>
 
 </div>
 

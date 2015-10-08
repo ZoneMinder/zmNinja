@@ -97,6 +97,12 @@
                     ng-click="switchMinimal()">
             </button>
         </nav>
+        
+          <span class="modal-alarm-badge">
+            <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon button-clear ion-ios-bell notification-badge" 
+                    ng-click="handleAlarmsWhileMinimized();" ng-if="$root.isAlarm"></a>
+        </span>
+        
     </div>
 </ion-view>
 
