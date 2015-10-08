@@ -7,6 +7,20 @@
 angular.module('zmApp.controllers')
     .controller('zmApp.EventDateTimeFilterCtrl', ['$scope', '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', 'ZMDataModel', '$state', function ($scope, $ionicScrollDelegate, $ionicSideMenuDelegate, $rootScope, $ionicHistory, ZMDataModel, $state) {
         
+    //----------------------------------------------------------------
+    // Alarm notification handling
+    //----------------------------------------------------------------
+    $scope.handleAlarms = function()
+    {
+        $rootScope.isAlarm=!$rootScope.isAlarm;
+        if (!$rootScope.isAlarm)
+        {
+            $rootScope.alarmCount="0";
+            $ionicHistory.nextViewOptions({disableBack: true});		
+            $state.go("events", {"id": 0}, { reload: true });
+        }
+    };
+        
     //--------------------------------------------------------------------------
     // Clears filters 
     //--------------------------------------------------------------------------

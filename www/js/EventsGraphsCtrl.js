@@ -8,7 +8,7 @@
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
 
-angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http) {
+angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$ionicHistory', '$state', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $ionicHistory, $state) {
     console.log("Inside Graphs controller");
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
@@ -17,6 +17,21 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     $scope.$on('$ionicView.loaded', function () {
         console.log("**VIEW ** Graph Ctrl Loaded");
     });
+    
+    
+    //----------------------------------------------------------------
+    // Alarm notification handling
+    //----------------------------------------------------------------
+    $scope.handleAlarms = function()
+    {
+        $rootScope.isAlarm=!$rootScope.isAlarm;
+        if (!$rootScope.isAlarm)
+        {
+            $rootScope.alarmCount="0";
+            $ionicHistory.nextViewOptions({disableBack: true});		
+            $state.go("events", {"id": 0}, { reload: true });
+        }
+    };
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter

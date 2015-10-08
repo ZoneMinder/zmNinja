@@ -17,6 +17,9 @@ angular.module('zmApp.controllers')
 
      function init()
      {
+         $rootScope.isAlarm = 0;
+         $rootScope.alarmCount="0";
+         
          var loginData = ZMDataModel.getLogin();
          if (loginData.eventServer)
          {
@@ -68,8 +71,21 @@ angular.module('zmApp.controllers')
                      }
                      // lets stack the display so they don't overwrite
                      if (eventsToDisplay.length > 0)
+                     {
                         ZMDataModel.displayBanner('alarm', eventsToDisplay, 5000, 5000*eventsToDisplay.length);
-                     $rootScope.isAlarm = 1;
+                       
+                     }
+                      $rootScope.isAlarm = 1;
+                     
+                     if ($rootScope.alarmCount == "99")
+                     {
+                         $rootScope.alarmCount="99+";
+                     }
+                     if ($rootScope.alarmCount != "99+")
+                     {
+                        $rootScope.alarmCount = (parseInt($rootScope.alarmCount)+1).toString();
+                     }
+                     
                  }
                  
                  

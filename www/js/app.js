@@ -469,7 +469,7 @@ angular.module('zmApp', [
         $rootScope.fromString = "";
         $rootScope.toString = "";
         $rootScope.loggedIntoZm = 0;
-        $rootScope.websocketActive = 0;
+    
        
 
         //console.log ("HERE");
