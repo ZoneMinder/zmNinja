@@ -38,9 +38,9 @@ angular.module('zmApp.controllers')
     // and changing monitor function
     //-----------------------------------------------------------------------
     $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
-        var checked = "false";
+        var checked = false;
         console.log("called with " + monitorId + ":" + enabled + ":" + func);
-        if (enabled == '1') checked = "true";
+        if (enabled == '1') checked = true;
 
         $scope.monFunctions = [
             {
@@ -76,7 +76,7 @@ angular.module('zmApp.controllers')
 
         $rootScope.zmPopup = $ionicPopup.show({
             scope: $scope,
-            template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="{{monfunc.myenabled}}"  toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
+            template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="monfunc.myenabled"  toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
 
 
             title: 'Change Settings for ' + monitorName,
