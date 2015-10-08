@@ -474,6 +474,7 @@ angular.module('zmApp', [
 
         //console.log ("HERE");
         ZMDataModel.init();
+        EventServer.init();
         // for making sure we canuse $state.go with ng-click
         // needed for views that use popovers
         $rootScope.$state = $state;

@@ -86,7 +86,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         $state.go('lowversion', {"ver":data});
                                     }
                                 });
-                                initWebSocket();
+                                EventServer.refresh();
                                 $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
                             },
                             // coming here means auth error
@@ -144,17 +144,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
         return 0;
 }
     
-    function initWebSocket()
-    {
-        var loginData = ZMDataModel.getLogin();
-        
-        
-        ZMDataModel.zmLog (" webSocketStart: attempting to start a WSS connection");
-        EventServer.start();
-        $rootScope.websocketActive = 1;
-        
-         
-    }
+    
 
     function unlock(touchVerified) {
         ZMDataModel.zmDebug("Trying to unlock PIN");
@@ -166,7 +156,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
             zmAutoLogin.doLogin("authenticating...")
                 .then(function (data) // success
                     {
-                        initWebSocket();
+                        EventServer.refresh();
                         // don't get stuck in this state
                         // will happen if you switch to background in portal state
                         if ($rootScope.lastState == "zm-portal-login") {

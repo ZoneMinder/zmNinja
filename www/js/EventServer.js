@@ -13,65 +13,39 @@ angular.module('zmApp.controllers')
  (  ZMDataModel, $rootScope, $websocket, $ionicPopup) {
      
      
-     var websocketActive = 0;
-     var webSocketBadAuth = 0;
-     var ws;
-     
-     
-     // FIXME: needs cleaninup up
-     // on iOS this socket will die after switching to background (eventually)
-     // on Android it will keep running
-     // on Android  I need to see why websockets are getting duplicated on server
-     // disconnect
-     
-     function start()
+    var ws;
+
+     function init()
      {
-         if (websocketActive == 1)
-            {
-                ZMDataModel.zmDebug ("Connection established. Not doing WebSocketInit again...");
-                return;
-            }
-         
-         if (webSocketBadAuth == 1)
-         {
-             webSocketBadAuth = 0;
-             ZMDataModel.zmLog("Retrying websocket auth");
-             ws.$open();
-             return;
-         }
          var loginData = ZMDataModel.getLogin();
-         
-      
          if (loginData.eventServer)
          {
-             var evtsvrUrl=loginData.eventServer;
-            // if (ws) ws.$close();
-             
-             if (typeof ws === 'undefined' || ws.$status == ws.$CLOSED ) 
-             {
-                 ZMDataModel.zmLog ("%%%%%%%%%%%%%%%%%%%%%% NEW WEBSOCKET %%%%%%%%%%");
-                 //console.log (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ws.$status());
-                 ZMDataModel.zmLog("Event Server URL constructed as " + evtsvrUrl);
-                    ws = $websocket.$new ({
-                      url:evtsvrUrl,
+           ZMDataModel.zmLog("Initializing Websocket with URL " + 
+                             loginData.eventServer+" , will connect later...");
+           ws = $websocket.$new ({
+                      url:loginData.eventServer,
                       reconnect:true,
-                      reconnectInterval:5000
+                      reconnectInterval:5000,
+                      lazy:true
                   });
-             }
-
+         }
+         else
+         {
+             ZMDataModel.zmLog("No Event Server configured. Skipping initialization");
+         }
+         
+                           
             ws.$on ('$open', function() {
                 ZMDataModel.zmLog("Websocket open");
                  ws.$emit('auth',
                           {user:loginData.username,
                            password:loginData.password});
-                // we will retry on resume of app
-                // but since we called close, it won't retry on its own
-                websocketActive=0;
+              
             });
 
            ws.$on ('$close', function() {
                ZMDataModel.zmLog ("Websocket closed");
-                websocketActive = 0;
+               
             });
 
              ws.$on ('$message', function(str) {
@@ -80,7 +54,6 @@ angular.module('zmApp.controllers')
                  {
                      ZMDataModel.zmLog ("Event Error: " + JSON.stringify(str));
                      ws.$close();
-                     webSocketBadAuth = 1;
                      ZMDataModel.displayBanner('error',['Event server rejected credentials', 'Please re-check credentials'],2000,6000);
                     
                  }
@@ -104,17 +77,49 @@ angular.module('zmApp.controllers')
                  
                  
             });
-
-         }
-         else
+         
+         
+     }
+     
+     // FIXME: needs cleaninup up
+     // on iOS this socket will die after switching to background (eventually)
+     // on Android it will keep running
+     // on Android  I need to see why websockets are getting duplicated on server
+     // disconnect
+     
+     function refresh()
+     {
+          var loginData = ZMDataModel.getLogin();
+         
+         if (!loginData.eventServer)
          {
-             ZMDataModel.zmLog("No Event Server configured, skipping");
+             ZMDataModel.zmLog("No Event Server configured, skipping refresh");
+             return;
          }
+         
+         
+         // refresh is called when 
+         // The following situations will close the socket
+         // a) In iOS the client went to background -- we should reconnect
+         // b) The Event Server died 
+         // c) The network died
+         // Seems to me in all cases we should give re-open a shot
+        
+     
+         if (ws.$status() == ws.$CLOSED)
+         {
+             ZMDataModel.zmLog("Websocket was closed, trying to re-open");
+             ws.$open();
+         }
+         
+               
+
     
      }
      
      return {
-         start:start
+         refresh:refresh,
+         init:init
      };
         
 
