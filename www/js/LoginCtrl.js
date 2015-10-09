@@ -23,10 +23,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $scope.loginData = ZMDataModel.getLogin();
 
-    $scope.auth = {
-        isUseAuth: ""
+    $scope.check = {
+        isUseAuth: "",
+        isUseEventServer: ""
     };
-    $scope.auth.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
+    $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
+    $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
 
 
 
@@ -155,7 +157,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.streamingurl = $scope.loginData.streamingurl.trim();
         $scope.loginData.eventServer = $scope.loginData.eventServer.trim();
 
-        $scope.loginData.isUseAuth = ($scope.auth.isUseAuth) ? "1" : "0";
+        $scope.loginData.isUseAuth = ($scope.check.isUseAuth) ? "1" : "0";
+         $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
 
         if ($scope.loginData.url.slice(-1) == '/') {
             $scope.loginData.url = $scope.loginData.url.slice(0, -1);
@@ -211,7 +214,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
 
         // Check if isUseAuth is set make sure u/p have a dummy value
-        if ($scope.isUseAuth) {
+        if ($scope.check.isUseAuth) {
             if (!$scope.loginData.username) $scope.loginData.username = "x";
             if (!$scope.loginData.password) $scope.loginData.password = "x";
             ZMDataModel.zmLog("Authentication is disabled, setting dummy user & pass");

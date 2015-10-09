@@ -33,6 +33,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         'useSSL':false, // "1" if HTTPS
         'keepAwake':true, // don't dim/dim during live view
         'isUseAuth':true, // true if user wants ZM auth
+        'isUseEventServer':false, // true if you configure the websocket event server
         'refreshSec':"2", // timer value for frame change in sec
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,
@@ -135,6 +136,20 @@ angular.module('zmApp.controllers').service('ZMDataModel',
                 loginData.isUseAuth = "1"; // lets assume there is auth
                 zmLog("I did not find isUseAuth. Older version of app, maybe.");
             }
+            
+            
+            if (window.localStorage.getItem("isUseEventServer") != undefined) {
+                loginData.isUseEventServer =
+                    window.localStorage.getItem("isUseEventServer");
+                
+
+            }
+            else
+            {
+                loginData.isUseEventServer = "0"; 
+               
+            }
+            
             
             
 
@@ -335,6 +350,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             
             
             window.localStorage.setItem("isUseAuth", loginData.isUseAuth);
+              window.localStorage.setItem("isUseEventServer", loginData.isUseEventServer);
             
             console.log ("***** SETTING ISUSEAUTH TO " + loginData.isUseAuth);
 

@@ -13,9 +13,9 @@
             </span>
             
             <div class="item">
-            <ion-checkbox ng-model="auth.isUseAuth">use authentication</ion-checkbox>
+            <ion-checkbox ng-model="check.isUseAuth">use authentication</ion-checkbox>
             
-            <div ng-if = "auth.isUseAuth" >
+            <div ng-if = "check.isUseAuth" >
                 
                 <label class="item item-input item-floating-label" >
                     <span class="input-label">username</span>
@@ -57,12 +57,16 @@
                        ng-model="loginData.apiurl">
             </label>
             
-            <label class="item item-input item-floating-label" >
+            <ion-checkbox ng-model="check.isUseEventServer">use event server</ion-checkbox>
+           
+            <label class="item item-input item-floating-label" ng-if="check.isUseEventServer">
                 <span class="input-label">Event Server</span>
                 <input autocapitalize="none"
                        autocomplete="off" autocorrect="off"
                        type="text" placeholder="Event notification url"
                        ng-model="loginData.eventServer">
+
+               
             </label>
 
             <label>

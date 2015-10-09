@@ -21,9 +21,15 @@ angular.module('zmApp.controllers')
          $rootScope.alarmCount="0";
          
          var loginData = ZMDataModel.getLogin();
-         if (loginData.eventServer)
+         
+         if (loginData.isUseEventServer =='0' || !loginData.eventServer)
          {
-           ZMDataModel.zmLog("Initializing Websocket with URL " + 
+             ZMDataModel.zmLog("No Event Server present. Not initializing");
+             return;
+         }
+         
+         
+        ZMDataModel.zmLog("Initializing Websocket with URL " + 
                              loginData.eventServer+" , will connect later...");
            ws = $websocket.$new ({
                       url:loginData.eventServer,
@@ -31,11 +37,7 @@ angular.module('zmApp.controllers')
                       reconnectInterval:5000,
                       lazy:true
                   });
-         }
-         else
-         {
-             ZMDataModel.zmLog("No Event Server configured. Skipping initialization");
-         }
+ 
          
                            
             ws.$on ('$open', function() {
@@ -96,23 +98,36 @@ angular.module('zmApp.controllers')
          
          
      }
-     
-     // FIXME: needs cleaninup up
-     // on iOS this socket will die after switching to background (eventually)
-     // on Android it will keep running
-     // on Android  I need to see why websockets are getting duplicated on server
-     // disconnect
+    
      
      function refresh()
      {
           var loginData = ZMDataModel.getLogin();
          
-         if (!loginData.eventServer)
+         if ((!loginData.eventServer) || (loginData.isUseEventServer=="0"))
          {
              ZMDataModel.zmLog("No Event Server configured, skipping refresh");
+             
+             // Let's also make sure that if the socket was open 
+             // we close it - this may happen if you disable it after using it
+             
+             if (typeof ws !== 'undefined')
+             {
+                 if (ws.$status() != ws.$CLOSED)
+                 {
+                        ZMDataModel.zmDebug("Closing open websocket as event server was disabled");
+                        ws.$close();
+                 }
+             }
+             
              return;
          }
          
+         if (typeof ws === 'undefined')
+         {
+             ZMDataModel.zmDebug ("Calling websocket init");
+             init();
+         }
          
          // refresh is called when 
          // The following situations will close the socket
