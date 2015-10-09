@@ -22,7 +22,8 @@
   },
   "cordovaPlugins": [
     "org.apache.cordova.splashscreen",
-    "org.apache.cordova.inappbrowser"
+    "org.apache.cordova.inappbrowser",
+    "phonegap-plugin-push"
   ],
   "cordovaPlatforms": [
     "ios",

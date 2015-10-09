@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -10,8 +10,31 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     //---------------------------------------------------------------
     // Controller main
     //---------------------------------------------------------------
-    $scope.zmAppVersion = ZMDataModel.getAppVersion();
-
+    
+   var intervalLogUpdateHandle;
+    
+     document.addEventListener("pause", onPause, false);
+    document.addEventListener("resume", onResume, false);
+    
+    function onPause()
+    {
+        ZMDataModel.zmDebug("LogCtrl: pause called, killing log timer");
+         $interval.cancel(intervalLogUpdateHandle);
+    }
+    
+    
+    function onResume()
+    {
+        ZMDataModel.zmDebug("LogCtrl: resume called, starting log timer");
+           intervalLogUpdateHandle = $interval(function ()
+        {
+            loadLogs();
+        
+        }.bind(this), 3000);
+    
+        loadLogs();
+    }
+    
 
     $scope.deleteLogs = function () {
 
@@ -109,6 +132,22 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         }
 
     }
+    
+    function loadLogs()
+    {
+        //console.log ("GETTING LOGS");
+        $fileLogger.getLogfile().then(function (l) {
+
+                
+                $scope.zmLog.logString = l.split('\n').reverse().join('\n');
+                //$scope.zmLog.logString = Math.random() + $scope.zmLog.logString;
+           // console.log ("UPDATING LOGS");
+                //console.log ("LOGS" + logstring);
+            },
+            function (error) {
+                $scope.zmLog.logString = "Error getting log: " + JSON.stringify(error);
+            });
+    }
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
@@ -124,17 +163,25 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         $scope.zmLog = {
             logString: ""
         };
-        $fileLogger.getLogfile().then(function (l) {
+        
+        $scope.zmAppVersion = ZMDataModel.getAppVersion();
 
-                $scope.zmLog.logString = l.split('\n').reverse().join('\n');
-            
-                //console.log ("LOGS" + logstring);
-            },
-            function (error) {
-                $scope.zmLog.logString = "Error getting log: " + JSON.stringify(error);
-            });
+         intervalLogUpdateHandle = $interval(function ()
+        {
+            loadLogs();
+        
+        }.bind(this), 3000);
+    
+        loadLogs();
+ 
 
 
+    });
+    
+    $scope.$on('$ionicView.leave', function ()
+    {
+        console.log ("Deleting Log interval...");
+        $interval.cancel(intervalLogUpdateHandle);
     });
 
 }]);

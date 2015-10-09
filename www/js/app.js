@@ -14,6 +14,7 @@ angular.module('zmApp', [
                             'fileLogger',
                             'angular-carousel',
                             'angularAwesomeSlider',
+                            
     
 
 
@@ -535,6 +536,7 @@ angular.module('zmApp', [
 
 
         $ionicPlatform.ready(function () {
+            
             console.log("**** DEVICE READY ***");
             // generates and error in desktops but works fine
             ZMDataModel.zmLog("Device is ready");
@@ -549,7 +551,31 @@ angular.module('zmApp', [
                 } else {
                     console.log("Log file size is " + resp.size + " bytes");
                 }
-
+                
+                ZMDataModel.zmLog ("Setting up zmNinja for push notifications");
+                
+               /* $ionicPush.init({
+                      "debug": true,
+                      "onNotification": function(notification) {
+                        var payload = notification.payload;
+                        console.log("************PUSH PAYLOAD************" + notification, payload);
+                      },
+                      "onRegister": function(data) {
+                        console.log("**********  PUSH REGISTER *************" + data.token);
+                      },
+                    "pluginConfig": {
+                        "ios": {
+                          "badge": true,
+                          "sound": true
+                         },
+                         "android": {
+                           "iconColor": "#343434"
+                         }
+                    }
+                    
+                });
+                
+                $ionicPush.register();*/
 
             });
 
