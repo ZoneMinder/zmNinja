@@ -102,7 +102,9 @@
                             "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
                             "count": 1
                         }
-                    ]
+                    ],
+                    "/manifest": [],
+                    "/manifest/application": []
                 }
             }
         }

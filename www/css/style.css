@@ -188,8 +188,9 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     position:absolute;
     bottom:20px;
     left: 100px;
+    
     z-index:10;
-    opacity:1;
+    opacity:0.7;
 }
 
 

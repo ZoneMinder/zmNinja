@@ -560,7 +560,7 @@ angular.module('zmApp.controllers')
                     callback: function (value, released) {
                         //console.log("CALLBACK"+value+released);
                         $ionicScrollDelegate.freezeScroll(!released);
-                        ZMDataModel.zmDebug("EventCtrl: freezeScroll called with " + !released);
+                        //ZMDataModel.zmDebug("EventCtrl: freezeScroll called with " + !released);
 
 
                     },

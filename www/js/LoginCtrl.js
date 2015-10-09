@@ -245,7 +245,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             $http.get(apiurl)
                 .success(function (data) {
                 
-                    EventServer.start();
+                    EventServer.refresh();
 
                     $ionicPopup.alert({
                         title: 'Login validated',
