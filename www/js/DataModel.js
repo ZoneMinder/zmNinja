@@ -16,6 +16,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
    $ionicPopup) {
 
     var zmAppVersion="unknown";
+    var isBackground = false;
     var monitorsLoaded = 0;
     var montageSize = 3;
     var monitors = [];
@@ -285,6 +286,14 @@ angular.module('zmApp.controllers').service('ZMDataModel',
 
         getAppVersion:function() {
             return(zmAppVersion);
+        },
+        
+        setBackground:function(val) {
+            isBackground = val;
+        },
+        
+        isBackground: function() {
+            return isBackground;
         },
 
 

@@ -9,11 +9,12 @@
 angular.module('zmApp.controllers')
     
 .factory('EventServer', 
-[  'ZMDataModel', '$rootScope','$websocket', '$ionicPopup', function 
- (  ZMDataModel, $rootScope, $websocket, $ionicPopup) {
+[  'ZMDataModel', '$rootScope','$websocket', '$ionicPopup', '$cordovaLocalNotification', '$cordovaBadge', function 
+ (  ZMDataModel, $rootScope, $websocket, $ionicPopup,$cordovaLocalNotification, $cordovaBadge) {
      
      
     var ws;
+    var localNotificationId=5;
 
      function init()
      {
@@ -62,21 +63,75 @@ angular.module('zmApp.controllers')
                      ZMDataModel.displayBanner('error',['Event server rejected credentials', 'Please re-check credentials'],2000,6000);
                     
                  }
+                 
+                 var localNotText = "New Alarms:";
                  if (str.status == 'Success' && str.events) // new events
                  {
                      var eventsToDisplay=[];
                      for (var iter=0; iter<str.events.length; iter++)
                      {
                          eventsToDisplay.push(str.events[iter].Name+": new event ("+str.events[iter].EventId+")");
+                         localNotText = localNotText + str.events[iter].Name+",";
                          
                          
                      }
+                     localNotText = localNotText.substring(0, localNotText.length - 1);
                      // lets stack the display so they don't overwrite
-                     if (eventsToDisplay.length > 0)
+                     
+                     if (!ZMDataModel.isBackground())
                      {
-                        ZMDataModel.displayBanner('alarm', eventsToDisplay, 5000, 5000*eventsToDisplay.length);
-                       
+                         ZMDataModel.zmDebug("App is in foreground, displaying banner");
+                         if (eventsToDisplay.length > 0)
+                         {
+
+                            ZMDataModel.displayBanner('alarm', eventsToDisplay, 5000, 5000*eventsToDisplay.length);
+
+                         }
                      }
+                     else
+                     {
+                         ZMDataModel.zmDebug("App is in background, displaying localNotification");
+                        localNotificationId--;
+                         
+                         if ( localNotificationId == 0) // only slow last 5
+                         {
+                             localNotificationId = 5;
+                             
+                         }
+                         
+                         if ($cordovaLocalNotification.isPresent(localNotificationId))
+                         {
+                             $cordovaLocalNotification.clear(localNotificationId);
+                         }
+                         
+                        $cordovaLocalNotification.schedule({
+                            id: localNotificationId,
+                            title: 'ZoneMinder Alarms',
+                            text: localNotText,
+                            sound:"file://sounds/blop.mp3"
+                            
+                          }).then(function (result) {
+                            // do nothing for now
+                          });
+                         
+                    
+                     }
+                           // lets set badge of app irrespective of background or foreground
+                           $cordovaBadge.hasPermission().then(function(yes) {
+
+                             $cordovaBadge.set($rootScope.alarmCount).then(function() {
+                                // You have permission, badge set.
+                              }, function(err) {
+                                // You do not have permission.
+                              });
+
+                             
+                            // You have permission
+                          }, function(no) {
+                             ZMDataModel.zmDebug("zmNinja does not have badge permissions. Please check your phone notification settings");
+                          });
+                     
+                     
                       $rootScope.isAlarm = 1;
                      
                      if ($rootScope.alarmCount == "99")

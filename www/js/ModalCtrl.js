@@ -203,7 +203,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     function loadModalNotifications() {
 
-        console.log ("Inside Modal timer...");
+        //console.log ("Inside Modal timer...");
         $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
 
     }
