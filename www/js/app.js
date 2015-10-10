@@ -5,6 +5,7 @@
 
 var appVersion = "0.0.0";
 
+
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
@@ -459,7 +460,7 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $cordovaLocalNotification) {
 
         $rootScope.zmGlobalCookie = "";
         $rootScope.isEventFilterOn = false;
@@ -541,6 +542,13 @@ angular.module('zmApp', [
             // generates and error in desktops but works fine
             ZMDataModel.zmLog("Device is ready");
             console.log("**** DEVICE READY ***");
+            
+            if (!$cordovaLocalNotification.hasPermission())
+            {
+                ZMDataModel.zmDebug("Prompting for pushnotification permission");
+                $cordovaLocalNotification.registerPermission();
+            }
+            
 
             $fileLogger.checkFile().then(function (resp) {
                 if (parseInt(resp.size) > zm.logFileMaxSize) {
@@ -628,6 +636,7 @@ angular.module('zmApp', [
             // from foreground to background and back
             document.addEventListener("resume", function () {
                 ZMDataModel.zmLog("App is resuming from background");
+                ZMDataModel.setBackground(false);
                 // don't animate
                 $ionicHistory.nextViewOptions({
                     disableAnimate: true,
@@ -657,6 +666,7 @@ angular.module('zmApp', [
             document.addEventListener("pause", function () {
                 console.log("****The application is going into  background");
                 ZMDataModel.zmLog("App is going into background");
+                ZMDataModel.setBackground(true);
 
                 zmAutoLogin.stop();
                 if ($rootScope.zmPopup)
