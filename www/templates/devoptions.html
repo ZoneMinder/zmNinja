@@ -46,6 +46,11 @@
                         ng-checked="{{loginData.enableDebug}}"
                         toggle-class="toggle-calm">Enable Debug Logs</ion-toggle>
             </label>
+            
+            <ion-toggle ng-model="loginData.canSwipeMonitors"
+                        ng-checked="{{loginData.canSwipeMonitors}}"
+                        toggle-class="toggle-calm">Swipe to change monitors</ion-toggle>
+            </label>
 
             <button class="button button-block button-balanced icon ion-locked"
                     ng-click="saveDevOptions()"> Save

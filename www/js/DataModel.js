@@ -39,6 +39,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,
         'pinCode':'',
+        'canSwipeMonitors':true
     };
     var configParams = {
         'ZM_EVENT_IMAGE_DIGITS':'-1',
@@ -153,6 +154,8 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             
             
             
+            
+            
 
             if (window.localStorage.getItem("username") != undefined) {
                 loginData.username =
@@ -233,6 +236,12 @@ angular.module('zmApp.controllers').service('ZMDataModel',
                 loginData.useSSL = (sslvalue == "1") ? true:false;
                         console.log("useSSL  " + loginData.useSSL);
 
+            }
+            
+            
+            if (window.localStorage.getItem("canSwipeMonitors") != undefined) {
+                var canSwipeValue = window.localStorage.getItem("canSwipeMonitors");
+                loginData.canSwipeMonitors = (canSwipeValue == "1") ? true:false;
             }
             
             
@@ -348,6 +357,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             window.localStorage.setItem("eventServer", loginData.eventServer);
             window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
             window.localStorage.setItem("usePin", loginData.usePin?"1":"0");
+            window.localStorage.setItem("canSwipeMonitors", loginData.canSwipeMonitors?"1":"0");
             window.localStorage.setItem("pinCode", loginData.pinCode);
             
             

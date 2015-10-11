@@ -14,7 +14,9 @@
                            <div ng-if="$root.authSession!='undefined'">
                             <img imageonload="finishedLoadingImage()"
                                  image-spinner-loader="lines"
-                                 image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}"  />
+                                 image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&monitor={{monitorId}}&maxfps={{LoginData.maxFPS}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" 
+                                 on-swipe-left="onSwipeLeft(monitorId,-1)" 
+                                 on-swipe-right="onSwipeRight(monitorId,1)"/>
     <!-- on-swipe-left="onSwipeLeft(monitorId,-1)" on-swipe-right="onSwipeRight(monitorId,1)"-->
                         </div>
                         <div ng-if="$root.authSession=='undefined'">
@@ -50,9 +52,9 @@
     </nav>
 
 <nav mfb-menu position="tr" effect="zoomin" label="collapse" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
-        <button mfb-button icon="ion-android-arrow-back" label="previous monitor" ng-click="onSwipeLeft(monitorId,-1);">
+        <button mfb-button icon="ion-android-arrow-back" label="previous monitor" ng-click="onTapLeft(monitorId,-1);">
         </button>
-        <button mfb-button icon="ion-android-arrow-forward" label="next monitor" ng-click="onSwipeRight(monitorId,1);">
+        <button mfb-button icon="ion-android-arrow-forward" label="next monitor" ng-click="onTapRight(monitorId,1);">
         </button>
         
     </nav>
