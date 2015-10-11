@@ -64,7 +64,7 @@ angular.module('zmApp.controllers')
                     
                  }
                  
-                 var localNotText = "New Alarms:";
+                 var localNotText = "New Alarms: ";
                  if (str.status == 'Success' && str.events) // new events
                  {
                      var eventsToDisplay=[];
@@ -93,7 +93,7 @@ angular.module('zmApp.controllers')
                          ZMDataModel.zmDebug("App is in background, displaying localNotification");
                         localNotificationId--;
                          
-                         if ( localNotificationId == 0) // only slow last 5
+                         if ( localNotificationId == 0) // only show last 5
                          {
                              localNotificationId = 5;
                              
@@ -101,9 +101,11 @@ angular.module('zmApp.controllers')
                          
                          if ($cordovaLocalNotification.isPresent(localNotificationId))
                          {
-                             $cordovaLocalNotification.clear(localNotificationId);
+                             ZMDataModel.zmDebug("Cancelling notification ID " + localNotificationId);
+                             $cordovaLocalNotification.cancel(localNotificationId);
                          }
-                         
+                        
+                         ZMDataModel.zmDebug("Creating notification ID " + localNotificationId + " with " +localNotText);
                         $cordovaLocalNotification.schedule({
                             id: localNotificationId,
                             title: 'ZoneMinder Alarms',
@@ -118,11 +120,13 @@ angular.module('zmApp.controllers')
                      }
                            // lets set badge of app irrespective of background or foreground
                            $cordovaBadge.hasPermission().then(function(yes) {
-
+                            
                              $cordovaBadge.set($rootScope.alarmCount).then(function() {
                                 // You have permission, badge set.
+                                 ZMDataModel.zmDebug("Setting badge to " + $rootScope.alarmCount);
                               }, function(err) {
                                 // You do not have permission.
+                                 ZMDataModel.zmDebug("Error Setting badge to " + $rootScope.alarmCount);
                               });
 
                              
