@@ -303,8 +303,24 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     };
 
-    // not being used anymore - using a dedicated menu instead
+    $scope.onTapLeft = function (m,d)
+    {
+        ZMDataModel.zmDebug("ModalCtrl:Left tap detected, moving to " + ZMDataModel.getNextMonitor(m, d));
+        $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
+
+
+        $ionicLoading.hide();
+        $ionicLoading.show({
+            template: "please wait...",
+            noBackdrop: true,
+            duration: zm.loadingTimeout,
+        });
+    };
+    
     $scope.onSwipeLeft = function (m, d) {
+        var ld = ZMDataModel.getLogin();
+       if (!ld.canSwipeMonitors) return;
+        
         ZMDataModel.zmDebug("ModalCtrl:Left swipe detected, moving to " + ZMDataModel.getNextMonitor(m, d));
         $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
 
@@ -315,11 +331,24 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             noBackdrop: true,
             duration: zm.loadingTimeout,
         });
+        
+        
 
     };
     
-   // not being used anymore - using a dedicated menu instead
+    $scope.onTapRight = function (m,d)
+    {
+         ZMDataModel.zmDebug("ModalCtrl:Right tap detected, moving to " + ZMDataModel.getNextMonitor(m, d));
+        $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
+
+        $ionicLoading.show({
+            template: "please wait...",
+            noBackdrop: true,
+            duration: zm.loadingTimeout,
+        });
+    };
     $scope.onSwipeRight = function (m, d) {
+        if (!ld.canSwipeMonitors) return;
         ZMDataModel.zmDebug("ModalCtrl:Right swipe detected, moving to " + ZMDataModel.getNextMonitor(m, d));
         $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
 
