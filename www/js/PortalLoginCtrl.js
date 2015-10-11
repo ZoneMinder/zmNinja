@@ -166,8 +166,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         ZMDataModel.zmDebug("PortalLogin: auth success");
                           ZMDataModel.getAPIversion()
                                 .then (function(data) {
+                                    var ld = ZMDataModel.getLogin();
                                     ZMDataModel.zmLog("Got API version: " + data);
-                                    if (versionCompare(data,zm.minAppVersion))
+                                    if (versionCompare(data,zm.minAppVersion) && (ld.url.indexOf("arjunrc.") == -1) && data !="0.0.0")
                                     {
                                         
                                         $state.go('lowversion', {"ver":data});
