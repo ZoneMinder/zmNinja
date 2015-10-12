@@ -316,6 +316,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.$on('$ionicView.afterEnter', function () {
         console.log("***AFTER ENTER");
 
+        var tempMon = message;
+        var ld = ZMDataModel.getLogin();
+        
+        if (ld.persistMontageOrder)
+        {
+            var iMon = ZMDataModel.applyMontageMonitorPrefs (tempMon, 2);
+            $scope.monitors = iMon[0];
+        }
+        else
+            $scope.monitors = message;
         if ($rootScope.customTimelineRange) {
             console.log("***** CUSTOM RANGE");
             if (moment($rootScope.fromString).isValid() &&
@@ -329,6 +339,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             } else {
                 console.log("FROM & TO IS CUSTOM INVALID");
             }
+        }
+        else
+        {
+            drawGraph(fromDate, toDate, maxItems);
         }
     });
 
@@ -387,6 +401,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.toDate = toDate;
 
 
+    console.log ("*********************** TIMELINE MAIN ");
 
     var maxItems = zm.graphItemMax; // THAT magic # --> 300 and ZM on my m/c cries
     $scope.maxItems = maxItems;
@@ -400,7 +415,13 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     container = angular.element(document.getElementById('visualization'));
     var timeline = "";
 
-    $scope.monitors = message;
+    
+    
+    //console.log ("RETURNING MONITORS " + JSON.stringify($scope.monitors));
+    //$scope.monitors = message;
+    
+    //console.log ("MONITOR DATA AFTER APPLYING : " + JSON.stringify($scope.monitors));
+    
     $scope.navControls = false;
     var navControls = false;
 
@@ -411,7 +432,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     });
 
 
-    drawGraph(fromDate, toDate, maxItems);
+    //drawGraph(fromDate, toDate, maxItems);
     //dummyDrawGraph(fromDate, toDate,maxItems);
 
     //-------------------------------------------------
@@ -608,7 +629,29 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                 }
 
                                 for (var i = 0; i < myevents.length; i++) {
+                                    
+                                    // make sure group id exists before adding
+                                    var idfound=true;
+                                    var ld = ZMDataModel.getLogin();
+                                    
+                                    if (ld.persistMontageOrder)
+                                    {
+                                
+                                        idfound = false;
+                                        for (var ii=0; ii< $scope.monitors.length; ii++)
+                                        {
+                                            if ($scope.monitors[ii].Monitor.Id ==  myevents[i].Event.MonitorId)
+                                            {
+                                                idfound = true;
+                                                //console.log ("****************** ID MATCH " + graphIndex);
 
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (idfound)
+                                    {
                                     graphData.add({
                                         id: graphIndex,
                                         content: "<span class='my-vis-font'>" + myevents[i].Event.Notes + "</span>",
@@ -624,8 +667,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         myename: myevents[i].Event.Name,
 
                                     });
+                                        graphIndex++;
+                                    }
+                                    else
+                                    {
+                                        //console.log ("SKIPPED GRAPH ID " + graphIndex);
+                                    }
                                    
-                                    graphIndex++;
+                                    
 
                                     if (graphIndex > zm.graphItemMax) {
                                         ZMDataModel.zmLog("Exiting event graph - reached limit of " + zm.graphItemMax);
@@ -637,8 +686,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             }
 
                             timeline = new vis.Timeline(container[0], null, options);
+                           // console.log ("GRAPH DATA");
                             timeline.setItems(graphData);
+                         //   console.log ("GROUPS");
                             timeline.setGroups(groups);
+                            
                             timeline.fit();
 
                             $ionicLoading.hide();
