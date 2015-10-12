@@ -117,7 +117,17 @@ angular.module('zmApp.controllers')
 
         console.log("***CALLING EVENTS FACTORY");
         var lData = ZMDataModel.getLogin();
-        $scope.monitors = message;
+        
+        if (lData.persistMontageOrder)
+        {
+            var tempMon = message;    
+            $scope.monitors = ZMDataModel.applyMontageMonitorPrefs (tempMon, 2)[0];
+        }
+        else    
+            $scope.monitors = message;
+        console.log ("********** GOT MONITORS " + JSON.stringify($scope.monitors));
+        
+        //$scope.monitors = message;
 
         // I am converting monitor ID to monitor Name
         // so I can display it along with Events
@@ -147,7 +157,24 @@ angular.module('zmApp.controllers')
                         ZMDataModel.zmDebug("EventCtrl: success, got " + myevents.length + " events");
                         var loginData = ZMDataModel.getLogin();
                         for (var i = 0; i < myevents.length; i++) {
+                            
+                            var idfound = true;
+                            if (loginData.persistMontageOrder)
+                            {
+                                idfound = false;
+                                for (var ii=0; ii < $scope.monitors.length; ii++)
+                                {
+                                     if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId)
+                                    {
 
+                                        //console.log ( $scope.monitors[ii].Monitor.Id + " MATCHES " + myevents[i].Event.MonitorId);
+                                        idfound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            
                             myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
                             myevents[i].Event.ShowScrub = false;
                             myevents[i].Event.height = zm.eventsListDetailsHeight;
@@ -179,16 +206,19 @@ angular.module('zmApp.controllers')
                                 hh + "/" +
                                 min + "/" +
                                 sec + "/";
-
-                            if (i == 0) // just for debug sampling to see what we are getting
+                        
+                            if (idfound)
                             {
-                                ZMDataModel.zmDebug("EventCtrl: Sample data from first event: " + JSON.stringify(myevents[i]));
+                                $scope.events.push(myevents[i]);
                             }
-
+                            else{
+                                //console.log ("Skipping Event MID = " + myevents[i].Event.MonitorId);
+                            }
+                        
                         } //for
 
-
-                        $scope.events = myevents;
+                        
+                        //$scope.events = myevents;
                         // we only need to stop the template from loading when the list is empty
                         // so this can be false once we have _some_ content
                         // FIXME: check reload
@@ -354,8 +384,26 @@ angular.module('zmApp.controllers')
                     $scope.hours = [];
                     var p = data.results;
                     for (var key in data.results) {
+                        
+                        
+                        
                         if (p.hasOwnProperty(key)) {
+                            
+                            var idfound = true;
+                            if (ld.persistMontageOrder)
+                            {
+                                idfound = false;
+                                for (var ii=0; ii<$scope.monitors.length; ii++)
+                                {
+                                    if ($scope.monitors[ii].Monitor.Id == key)
+                                    {
+                                        idfound = true;
+                                        break;
+                                    }
+                                }
+                            }
                             //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                            if (idfound)
                             $scope.hours.push({
                                 monitor: ZMDataModel.getMonitorName(key),
                                 events: p[key],
@@ -375,6 +423,21 @@ angular.module('zmApp.controllers')
                     var p = data.results;
                     for (var key in data.results) {
                         if (p.hasOwnProperty(key)) {
+                            var idfound = true;
+                            if (ld.persistMontageOrder)
+                            {
+                                idfound = false;
+                                for (var ii=0; ii<$scope.monitors.length; ii++)
+                                {
+                                    if ($scope.monitors[ii].Monitor.Id == key)
+                                    {
+                                        idfound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                            if (idfound)
                             //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
                             $scope.days.push({
                                 monitor: ZMDataModel.getMonitorName(key),
@@ -396,6 +459,22 @@ angular.module('zmApp.controllers')
                     var p = data.results;
                     for (var key in data.results) {
                         if (p.hasOwnProperty(key)) {
+                            
+                            var idfound = true;
+                            if (ld.persistMontageOrder)
+                            {
+                                idfound = false;
+                                for (var ii=0; ii<$scope.monitors.length; ii++)
+                                {
+                                    if ($scope.monitors[ii].Monitor.Id == key)
+                                    {
+                                        idfound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                            if (idfound)
                             //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
                             $scope.weeks.push({
                                 monitor: ZMDataModel.getMonitorName(key),
@@ -416,6 +495,23 @@ angular.module('zmApp.controllers')
                     var p = data.results;
                     for (var key in data.results) {
                         if (p.hasOwnProperty(key)) {
+                            
+                            var idfound = true;
+                            var ld = ZMDataModel.getLogin();
+                            if (ld.persistMontageOrder)
+                            {
+                                idfound = false;
+                                for (var ii=0; ii<$scope.monitors.length; ii++)
+                                {
+                                    if ($scope.monitors[ii].Monitor.Id == key)
+                                    {
+                                        idfound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
+                            if (idfound)
                             //console.log(ZMDataModel.getMonitorName(key) + " -> " + p[key]);
                             $scope.months.push({
                                 monitor: ZMDataModel.getMonitorName(key),
@@ -1229,7 +1325,27 @@ angular.module('zmApp.controllers')
                         var loginData = ZMDataModel.getLogin();
                         console.log("Got new page of events with Page=" + eventsPage);
                         var myevents = data;
+                
                         for (var i = 0; i < myevents.length; i++) {
+                            
+                            var idfound = true;
+                            var ld = ZMDataModel.getLogin();
+                            
+                            if (ld.persistMontageOrder)
+                            {
+                                idfound = false;
+                                for (var ii=0; ii < $scope.monitors.length; ii++)
+                                {
+                                     if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId)
+                                    {
+
+                                        //console.log ( $scope.monitors[ii].Monitor.Id + " MATCHES " + myevents[i].Event.MonitorId);
+                                        idfound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            
 
                             myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
                             // now construct base path
@@ -1260,9 +1376,9 @@ angular.module('zmApp.controllers')
                                 min + "/" +
                                 sec + "/";
                             myevents[i].Event.height = zm.eventsListDetailsHeight;
-
+                        if (idfound) $scope.events = $scope.events.concat(myevents[i]);
                         }
-                        $scope.events = $scope.events.concat(myevents);
+                        
                         console.log("Got new page of events");
                         moreEvents = true;
                         $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -1332,7 +1448,17 @@ angular.module('zmApp.controllers')
             ZMDataModel.zmDebug ("Reloading monitors");
             var refresh = ZMDataModel.getMonitors(1);
             refresh.then(function (data) {
-                $scope.monitors = data;
+                
+                   var ld = ZMDataModel.getLogin();
+                   if (ld.persistMontageOrder)
+                   {
+                        var tempMon = data;    
+                        $scope.monitors = ZMDataModel.applyMontageMonitorPrefs (tempMon, 2)[0];
+                   }
+                   else
+                   {
+                    $scope.monitors = data;
+                   }
 
 
                 $scope.events = [];
@@ -1350,6 +1476,25 @@ angular.module('zmApp.controllers')
                             //var events = [];
                             var myevents = data;
                             for (var i = 0; i < myevents.length; i++) {
+                                
+                                 var idfound = true;
+                                
+                                var ld = ZMDataModel.getLogin();
+                                if (ld.persistMontageOrder)
+                                {
+                                    idfound = false;
+                            
+                                    for (var ii=0; ii < $scope.monitors.length; ii++)
+                                    {
+                                         if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId)
+                                        {
+
+                                            //console.log ( $scope.monitors[ii].Monitor.Id + " MATCHES " + myevents[i].Event.MonitorId);
+                                            idfound = true;
+                                            break;
+                                        }
+                                    }
+                                }
 
                                 myevents[i].Event.MonitorName =
                                     ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
@@ -1385,8 +1530,13 @@ angular.module('zmApp.controllers')
 
                                 myevents[i].Event.ShowScrub = false;
                                 myevents[i].Event.height = zm.eventsListDetailsHeight;
+                                
+                                if (idfound)
+                                {
+                                    $scope.events.push(myevents);
+                                }
                             }
-                            $scope.events = myevents;
+                           // $scope.events = myevents;
                             loadMore();
                         });
 

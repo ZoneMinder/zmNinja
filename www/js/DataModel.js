@@ -39,7 +39,8 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,
         'pinCode':'',
-        'canSwipeMonitors':true
+        'canSwipeMonitors':true,
+        'persistMontageOrder':false,
     };
     var configParams = {
         'ZM_EVENT_IMAGE_DIGITS':'-1',
@@ -244,6 +245,11 @@ angular.module('zmApp.controllers').service('ZMDataModel',
                 loginData.canSwipeMonitors = (canSwipeValue == "1") ? true:false;
             }
             
+            if (window.localStorage.getItem("persistMontageOrder") != undefined) {
+                var persistMontageOrder = window.localStorage.getItem("persistMontageOrder");
+                loginData.persistMontageOrder = (persistMontageOrder == "1") ? true:false;
+            }
+            
             
             if (window.localStorage.getItem("usePin") != undefined) {
                  var pinValue =  window.localStorage.getItem("usePin");
@@ -272,7 +278,8 @@ angular.module('zmApp.controllers').service('ZMDataModel',
         },
 
         isLoggedIn: function () {
-            if ( (loginData.username != "" && loginData.password != "" && loginData.url != "" && loginData.apiurl != "") || (loginData.isUseAuth == '0'))
+            if ( (loginData.username != "" && loginData.password != "" && loginData.url != "" &&
+                  loginData.apiurl != "") || (loginData.isUseAuth == '0'))
             {
                 return 1;
             } else
@@ -358,6 +365,7 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
             window.localStorage.setItem("usePin", loginData.usePin?"1":"0");
             window.localStorage.setItem("canSwipeMonitors", loginData.canSwipeMonitors?"1":"0");
+            window.localStorage.setItem("persistMontageOrder", loginData.persistMontageOrder?"1":"0");
             window.localStorage.setItem("pinCode", loginData.pinCode);
             
             
@@ -564,6 +572,110 @@ angular.module('zmApp.controllers').service('ZMDataModel',
             return (d.promise);
                     
             
+        },
+        
+        applyMontageMonitorPrefs: function (mon, doOrder)
+        {
+            var montageOrder = []; // This array will keep the ordering in montage view
+            var hiddenOrder = []; // 1 = hide, 0 = don't hide
+            var monitors = mon;
+            var orderedMonitors = [];
+
+
+            // First let's check if the user already has a saved monitor order
+            var i;
+            if (window.localStorage.getItem("montageOrder") == undefined) {
+
+                for (i = 0; i < monitors.length; i++) {
+                    montageOrder[i] = i; // order to show is order ZM returns
+                    hiddenOrder[i] = 0; // don't hide them
+                }
+                console.log("Order string is " + montageOrder.toString());
+                console.log("Hiddent string is " + hiddenOrder.toString());
+
+                zmLog("Stored montage order does not exist");
+            } else
+            // there is a saved order
+            {
+                var myorder = window.localStorage.getItem("montageOrder");
+                var myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
+
+
+                zmDebug("MontageCtrl: Montage order is " + myorder);
+                zmDebug("MontageCtrl: Hidden order is " + myhiddenorder);
+                if (myorder) montageOrder = myorder.split(",");
+                if (myhiddenorder) hiddenOrder = myhiddenorder.split(",");
+
+                //  handle add/delete monitors after the array has been 
+                // saved
+
+                if (monitors.length != montageOrder.length) {
+                    zmLog("Monitors array length different from stored hidden/order array. It's possible monitors were added/removed. Resetting...");
+                    montageOrder = [];
+                    hiddenOrder = [];
+                    for (i = 0; i < monitors.length; i++) {
+                        montageOrder[i] = i; // order to show is order ZM returns
+                        hiddenOrder[i] = 0; // don't hide them
+                    }
+                    window.localStorage.setItem("montageOrder",
+                        montageOrder.toString());
+                    window.localStorage.setItem("montageHiddenOrder",
+                        hiddenOrder.toString());
+
+
+                }
+
+            } // at this stage, the monitor arrangement is not matching
+            // the montage order. Its in true order. Let us first process the hiddenOrder part
+            // now
+
+            for (i = 0; i < montageOrder.length; i++) {
+                    montageOrder[i] = parseInt(montageOrder[i]);
+                    hiddenOrder[i] = parseInt(hiddenOrder[i]);
+                    //  $scope.monitors[i].Monitor.sortOrder = montageOrder[i];
+                    // FIXME: This will briefly show and then hide
+                    // disabled monitors
+                    if (hiddenOrder[i] == 1) {
+                        // $scope.monitors[i].Monitor.listDisplay='noshow';
+
+                        if (monitors[i] !== undefined)
+                            monitors[i].Monitor.listDisplay = 'noshow';
+                        zmLog("Monitor " + i + " is marked as hidden in montage");
+                    } 
+                    else 
+                    {
+                        if (monitors[i] !== undefined)
+                            monitors[i].Monitor.listDisplay = 'show';
+                    }
+            }
+            
+            
+            if (doOrder)
+            {
+               for (i = 0; i < montageOrder.length; i++) {
+                    for (var j = 0; j < montageOrder.length; j++) {
+                        if (montageOrder[j] == i) {
+                            // if 2 is passed, hidden elements are not recorded
+                            if (doOrder == 2)
+                            {
+                                if (monitors[j].Monitor.listDisplay != 'noshow')
+                                    orderedMonitors.push(monitors[j]);
+                            }
+                            else 
+                                orderedMonitors.push(monitors[j]);
+                        }   
+                    }
+                }
+            }
+            else
+            {
+                orderedMonitors = monitors;
+            }
+            
+            
+
+            return ([orderedMonitors,montageOrder, hiddenOrder]);
+
         },
 
         //-----------------------------------------------------------------------------

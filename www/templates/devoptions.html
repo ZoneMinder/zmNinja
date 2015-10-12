@@ -47,9 +47,16 @@
                         toggle-class="toggle-calm">Enable Debug Logs</ion-toggle>
             </label>
             
+            <label>
             <ion-toggle ng-model="loginData.canSwipeMonitors"
                         ng-checked="{{loginData.canSwipeMonitors}}"
                         toggle-class="toggle-calm">Swipe to change monitors</ion-toggle>
+            </label>
+            
+            <label>
+            <ion-toggle ng-model="loginData.persistMontageOrder"
+                        ng-checked="{{loginData.persistMontageOrder}}"
+                        toggle-class="toggle-calm">Persist hidden monitors</ion-toggle>
             </label>
 
             <button class="button button-block button-balanced icon ion-locked"

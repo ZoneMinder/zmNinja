@@ -14,28 +14,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
 
     console.log("********  HAVE ALL MONITORS");
-    $scope.monitors = message;
-    ZMDataModel.zmLog("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
-
-    document.addEventListener("pause", onPause, false);
-    document.addEventListener("resume", onResume, false);
-
-    $scope.showSizeButtons = false;
-    $ionicPopover.fromTemplateUrl('templates/help/montage-help.html', {
-        scope: $scope,
-    }).then(function (popover) {
-        $scope.popover = popover;
-    });
-
-    var timestamp = new Date().getUTCMilliseconds();
-    $scope.minimal = $stateParams.minimal;
-    $scope.isRefresh = $stateParams.isRefresh;
-    var sizeInProgress = false;
-    $scope.imageStyle = true;
-
-    $ionicSideMenuDelegate.canDragContent(false);
-
-    var isLongPressActive = false;
+    
+      var isLongPressActive = false;
     $scope.isReorder = false;
     var intervalHandleMontage; // will hold image resize timer on long press
     var montageIndex = 0; // will hold monitor ID to scale in timer
@@ -59,8 +39,42 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     var montageOrder = []; // This array will keep the ordering in montage view
     var hiddenOrder = []; // 1 = hide, 0 = don't hide
+    
+    var tempMonitors = message;
+    var tempResponse = ZMDataModel.applyMontageMonitorPrefs(message, 0);
+    $scope.monitors = tempResponse[0];
+    montageOrder = tempResponse[1];
+    hiddenOrder = tempResponse[2];
+    
+    ZMDataModel.zmLog("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
+
+    $scope.MontageMonitors = ZMDataModel.applyMontageMonitorPrefs (message, 1)[0];
+    
+    
 
 
+    document.addEventListener("pause", onPause, false);
+    document.addEventListener("resume", onResume, false);
+
+    $scope.showSizeButtons = false;
+    $ionicPopover.fromTemplateUrl('templates/help/montage-help.html', {
+        scope: $scope,
+    }).then(function (popover) {
+        $scope.popover = popover;
+    });
+
+    var timestamp = new Date().getUTCMilliseconds();
+    $scope.minimal = $stateParams.minimal;
+    $scope.isRefresh = $stateParams.isRefresh;
+    var sizeInProgress = false;
+    $scope.imageStyle = true;
+
+    $ionicSideMenuDelegate.canDragContent(false);
+
+  
+
+    /*
+    
     // First let's check if the user already has a saved monitor order
     var i;
     if (window.localStorage.getItem("montageOrder") == undefined) {
@@ -124,28 +138,26 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             if ($scope.monitors[i] !== undefined)
                 $scope.monitors[i].Monitor.listDisplay = 'show';
         }
-    }
+    } */
+    
+    
+    
     // now arrange monitors according to montage order
     // FIXME: Incredibly horrible logic
     // I really need to organize this properly into one structure
 
     // empty out monitors as I'll need to insert them as per montageOrder
     // remember to assign
-    $scope.MontageMonitors = [];
+    
 
-    for (i = 0; i < montageOrder.length; i++) {
-        for (j = 0; j < montageOrder.length; j++) {
-            if (montageOrder[j] == i) {
-                $scope.MontageMonitors.push($scope.monitors[j]);
-            }
-        }
-    }
+    
+    
 
 
     // Do we have a saved montage array size? No?
     if (window.localStorage.getItem("montageArraySize") == undefined) {
 
-        for (i = 0; i < $scope.monitors.length; i++) {
+        for (var i = 0; i < $scope.monitors.length; i++) {
             $scope.monitorSize.push(ZMDataModel.getMontageSize());
             $scope.scaleDirection.push(1);
         }
