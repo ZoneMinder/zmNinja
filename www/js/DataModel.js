@@ -8,7 +8,9 @@
 // that many other controllers use
 // It's grown over time. I guess I may have to split this into multiple services in the future
 
-angular.module('zmApp.controllers').service('ZMDataModel', 
+angular.module('zmApp.controllers')
+    
+.service('ZMDataModel', 
 ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout','$cordovaPinDialog', '$ionicPopup', 
  function 
  ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,
