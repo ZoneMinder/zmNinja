@@ -28,7 +28,7 @@ angular.module('zmApp', [
 //-----------------------------------------------
 
 .constant('zm', {
-    minAppVersion: '1.28.107',
+    minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     httpTimeout: 15000,
     largeHttpTimeout: 60000,
     logFile: 'zmNinjaLog.txt',
@@ -54,7 +54,7 @@ angular.module('zmApp', [
     montageScaleFrequency: 300,
     eventsListDetailsHeight: 200.0,
     eventsListScrubHeight: 300,
-    loginScreenString: "var currentView = 'login'" // oh shit. Isn't there a better way?
+    loginScreenString: "var currentView = 'login'" // Isn't there a better way?
 })
 
 //------------------------------------------------------------------
@@ -210,8 +210,7 @@ angular.module('zmApp', [
             {
                 // these can take time, so lets bump up timeout
                 config.timeout = zm.largeHttpTimeout;
-                //ZMDataModel.zmDebug("timeoutHttpIntercept: HTTP request with long response time. Timeout set to "+config.timeout);
-
+                
             } else {
                 config.timeout = zm.httpTimeout;
             }
@@ -565,7 +564,7 @@ angular.module('zmApp', [
                     console.log("Log file size is " + resp.size + " bytes");
                 }
                 
-                ZMDataModel.zmLog ("Setting up zmNinja for push notifications");
+               // ZMDataModel.zmLog ("Setting up zmNinja for push notifications");
                 
                /* $ionicPush.init({
                       "debug": true,
@@ -713,6 +712,10 @@ angular.module('zmApp', [
 // My route map connecting menu options to their respective templates and controllers
 .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide) {
     
+    
+    // This is an exception interceptor so it can show up in app logs 
+    // if they occur. I suspect digest and other errors will be useful
+    // for me to see
     
      $provide.decorator("$exceptionHandler", ['$delegate','$injector', function($delegate, $injector) {
         return function(exception, cause) {

@@ -115,6 +115,9 @@ angular.module('zmApp.controllers')
         // the ZM portal authentication, which is pretty messy. But unless
         // the ZM authors fix this and streamline the access of images
         // from APIs, I don't have an option
+        
+        // FIXME: Move all of this into a neat JSON object 
+        
         init: function () {
             console.log("****** DATAMODEL INIT SERVICE CALLED ********");
 
@@ -156,10 +159,6 @@ angular.module('zmApp.controllers')
             }
             
             
-            
-            
-            
-
             if (window.localStorage.getItem("username") != undefined) {
                 loginData.username =
                     window.localStorage.getItem("username");
@@ -353,6 +352,10 @@ angular.module('zmApp.controllers')
 
         },
 
+    //--------------------------------------------------------------------------
+    // writes all params to local storage. FIXME: Move all of this into a JSON 
+    // object
+    //--------------------------------------------------------------------------
         setLogin: function (newLogin) {
             loginData = newLogin;
             zmLog("Saving all parameters to storage");
@@ -554,6 +557,10 @@ angular.module('zmApp.controllers')
 
         },
         
+    //--------------------------------------------------------------------------
+    // Useful to know what ZMS is using as its cgi-bin. If people misconfigure
+    // the setting in the app, they can check their logs
+    //--------------------------------------------------------------------------
         getPathZms: function()
         {
             var d = $q.defer();
@@ -576,6 +583,12 @@ angular.module('zmApp.controllers')
             
         },
         
+    //--------------------------------------------------------------------------
+    // This is really a hack for now & is very ugly. I need to clean this up a lot
+    // it re-arranges monitors based on montage and hidden order so that 
+    // I can reuse this from events and timeline view if persist monitor states
+    // is on
+    //--------------------------------------------------------------------------
         applyMontageMonitorPrefs: function (mon, doOrder)
         {
             var montageOrder = []; // This array will keep the ordering in montage view

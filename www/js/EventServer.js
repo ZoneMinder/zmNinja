@@ -4,7 +4,10 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-// Websockets
+    //--------------------------------------------------------------------------
+    // This factory interacts with the ZM Event Server
+    // over websockets and is responsible for rendering real time notifications
+    //--------------------------------------------------------------------------
 
 angular.module('zmApp.controllers')
     
@@ -14,8 +17,12 @@ angular.module('zmApp.controllers')
      
      
     var ws;
+     // Display a max of 5 local notifications
     var localNotificationId=5;
 
+    //--------------------------------------------------------------------------
+    // Called once at app start. Does a lazy definition of websockets open
+    //--------------------------------------------------------------------------
      function init()
      {
          $rootScope.isAlarm = 0;
@@ -40,7 +47,7 @@ angular.module('zmApp.controllers')
                   });
  
          
-                           
+            // Transmit auth information to server              
             ws.$on ('$open', function() {
                 ZMDataModel.zmLog("Websocket open");
                  ws.$emit('auth',
@@ -54,6 +61,7 @@ angular.module('zmApp.controllers')
                
             });
 
+            // Handles responses back from ZM ES
              ws.$on ('$message', function(str) {
                  ZMDataModel.zmLog("Real-time event: " + JSON.stringify(str));
                  if (str.status != 'Success')
@@ -70,14 +78,15 @@ angular.module('zmApp.controllers')
                      var eventsToDisplay=[];
                      for (var iter=0; iter<str.events.length; iter++)
                      {
+                           // lets stack the display so they don't overwrite
                          eventsToDisplay.push(str.events[iter].Name+": new event ("+str.events[iter].EventId+")");
                          localNotText = localNotText + str.events[iter].Name+",";
                          
                          
                      }
                      localNotText = localNotText.substring(0, localNotText.length - 1);
-                     // lets stack the display so they don't overwrite
-                     
+                   
+                     // if we are in background, do a local notification, else do an in app display
                      if (!ZMDataModel.isBackground())
                      {
                          ZMDataModel.zmDebug("App is in foreground, displaying banner");
@@ -98,7 +107,8 @@ angular.module('zmApp.controllers')
                              localNotificationId = 5;
                              
                          }
-                         
+                         // This is how I am reusing local notifications
+                         // I really don't want to stack local notififcations beyond 5
                          if ($cordovaLocalNotification.isPresent(localNotificationId))
                          {
                              ZMDataModel.zmDebug("Cancelling notification ID " + localNotificationId);
@@ -138,6 +148,8 @@ angular.module('zmApp.controllers')
                      
                       $rootScope.isAlarm = 1;
                      
+                     // Show upto a max of 99 when it comes to display
+                     // so aesthetics are maintained
                      if ($rootScope.alarmCount == "99")
                      {
                          $rootScope.alarmCount="99+";
@@ -158,7 +170,9 @@ angular.module('zmApp.controllers')
          
      }
     
-     
+     //--------------------------------------------------------------------------
+    // Called each time we resume 
+    //--------------------------------------------------------------------------
      function refresh()
      {
           var loginData = ZMDataModel.getLogin();
