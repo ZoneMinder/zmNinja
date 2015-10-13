@@ -80,7 +80,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 ZMDataModel.getAPIversion()
                                 .then (function(data) {
                                     ZMDataModel.zmLog("Got API version: " + data);
-                                    if (versionCompare(data,zm.minAppVersion))
+                                    var ld = ZMDataModel.getLogin();
+                                     if (versionCompare(data,zm.minAppVersion) && (ld.url.indexOf("arjunrc.") == -1) && data !="0.0.0")
+                                    //if (versionCompare(data,zm.minAppVersion))
                                     {
                                         
                                         $state.go('lowversion', {"ver":data});
@@ -170,14 +172,17 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     ZMDataModel.zmLog("Got API version: " + data);
                                     if (versionCompare(data,zm.minAppVersion) && (ld.url.indexOf("arjunrc.") == -1) && data !="0.0.0")
                                     {
-                                        
+                                       
+                                      
                                         $state.go('lowversion', {"ver":data});
                                     }
                                     
                               
                                 });
                         ZMDataModel.getKeyConfigParams(1);
+                        if ($rootScope.lastState == 'lowversion') $rootScope.lastState = 'montage';
                         ZMDataModel.zmDebug("Transitioning state to: " + $rootScope.lastState ? $rootScope.lastState : 'montage');
+                        console.log ("*********** GOING TO " + $rootScope.lastState);
                         $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
                     },
                     // coming here means auth error
