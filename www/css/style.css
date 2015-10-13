@@ -156,7 +156,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
   bottom:130px;
   left: 50%;
    transform: translate(-50%, -50%);
-    z-index:10;
+    z-index:99999;
 }
 
 .eventprogress

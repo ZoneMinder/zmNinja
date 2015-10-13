@@ -125,7 +125,7 @@ angular.module('zmApp.controllers')
         }
         else    
             $scope.monitors = message;
-        console.log ("********** GOT MONITORS " + JSON.stringify($scope.monitors));
+       // console.log ("********** GOT MONITORS " + JSON.stringify($scope.monitors));
         
         //$scope.monitors = message;
 
