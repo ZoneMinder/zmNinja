@@ -35,7 +35,7 @@
 	      if (typeof $scope.options.button.onclick === 'function')
 	      {
 		// PP - console.log ("FUNCTION");
-              	$scope.options.isOpen = !$scope.options.isOpen;
+              	//$scope.options.isOpen = !$scope.options.isOpen;
 		$scope.options.button.onclick();
 	      }
 	      else

@@ -446,6 +446,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.toggleNav = function () {
         if (navControls == true) {
             navControls = !navControls;
+           // $scope.navControls = navControls;
             // give out animation time
             $timeout(function () {
                 $scope.navControls = navControls;
@@ -734,7 +735,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         size: 'small',
 
         background: '#982112',
-        isOpen: false,
+        isOpen: true,
         toggleOnClick: false,
         button: {
             cssClass: 'fa  fa-compress fa-2x',
