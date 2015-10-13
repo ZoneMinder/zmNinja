@@ -6,7 +6,7 @@ by many for home and commercial security monitoring. http://www.zoneminder.com
 
 Video Demo
 -------------
-Check out a video demo of zmNinja here: https://www.youtube.com/watch?v=sSIMic2V6Jo&feature=youtu.be
+Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 
 
 Thanks
