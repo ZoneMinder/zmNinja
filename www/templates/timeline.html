@@ -14,12 +14,13 @@
 
 <ion-nav-buttons side="right">
 
-
+<button class="button button-icon button-clear ion-android-more-vertical" ng-click="popover.show($event); ">&nbsp;&nbsp;&nbsp;</button>
+    
     <button class="button button-icon button-clear ion-arrow-move" ng-click="toggleNav();"></button>
     <!--
  <button class="button button-icon button-clear ion-log-in" ng-click="zoom(-0.2)"></button>
         <button class="button button-icon button-clear ion-log-out" ng-click="zoom(0.2)"></button>&nbsp;-->
-     <a style="" class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)";> </a>
+     
     </ion-nav-buttons>
     <!--<ion-content data-tap-disabled="true">-->
     <ion-content>
@@ -47,8 +48,12 @@
     </ion-content>
 
 </ion-view>
-<div class="timelinebuttons" ng-if="graphLoaded && navControls">
-                <circular id ="timeline-ctrl" options="radialMenuOptions"  class="animated bounceInRight">
-                </circular>
-    <!-- -->
+
+<div ng-show="graphLoaded && navControls">
+    <div class="timelinebuttons">
+        <circular id="timeline-ctrl" options="radialMenuOptions" class="animated bounceInRight">
+            <!---->
+        </circular>
+        <!-- -->
+    </div>
 </div>
