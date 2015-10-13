@@ -55,7 +55,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         content: '',
 
         background: '#2F4F4F',
-        isOpen: false,
+        isOpen: true,
         toggleOnClick: false,
         button: {
             cssClass: "fa  fa-arrows-alt",

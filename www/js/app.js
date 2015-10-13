@@ -484,6 +484,11 @@ angular.module('zmApp', [
 
         var loginData = ZMDataModel.getLogin();
     
+    //$rootScope.exceptionMessage({reason:exception, cause:cause});
+        $rootScope.exceptionMessage = function(error)
+        {
+            ZMDataModel.zmDebug("**EXCEPTION**"+error.reason+" caused by " + error.cause);
+        };
        
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
@@ -706,7 +711,21 @@ angular.module('zmApp', [
 //------------------------------------------------------------------
 
 // My route map connecting menu options to their respective templates and controllers
-.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide) {
+    
+    
+     $provide.decorator("$exceptionHandler", ['$delegate','$injector', function($delegate, $injector) {
+        return function(exception, cause) {
+           
+        
+             var $rootScope = $injector.get("$rootScope");
+            $rootScope.exceptionMessage({reason:exception, cause:cause});
+            
+            $delegate(exception, cause);
+            
+        };
+    }]);
+    
     // If you do this, Allow Origin can't be *
     //$httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
