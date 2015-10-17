@@ -114,6 +114,14 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                     var re3 = new RegExp(urlNoProtocol, "g");
                     logstring = logstring.replace(re3, "<server>");
                 }
+                
+                urlNoProtocol = loginData.eventServer.replace(/.*?:\/\//, "");
+                if (urlNoProtocol != "")
+                {
+                    var re4 = new RegExp(urlNoProtocol, "g");
+                    logstring = logstring.replace(re4, "<server>");
+                }
+                
                 var email = {
                     to: zm.authoremail,
                     subject: 'zmNinja Logs',
