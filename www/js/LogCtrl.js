@@ -19,18 +19,18 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     function onPause()
     {
         ZMDataModel.zmDebug("LogCtrl: pause called, killing log timer");
-         $interval.cancel(intervalLogUpdateHandle);
+        // $interval.cancel(intervalLogUpdateHandle);
     }
     
     
     function onResume()
     {
         ZMDataModel.zmDebug("LogCtrl: resume called, starting log timer");
-           intervalLogUpdateHandle = $interval(function ()
+         /*  intervalLogUpdateHandle = $interval(function ()
         {
             loadLogs();
         
-        }.bind(this), 3000);
+        }.bind(this), 3000);*/
     
         loadLogs();
     }
@@ -144,6 +144,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     function loadLogs()
     {
         //console.log ("GETTING LOGS");
+        
+        
         $fileLogger.getLogfile().then(function (l) {
 
                 
@@ -173,12 +175,13 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         };
         
         $scope.zmAppVersion = ZMDataModel.getAppVersion();
-
-         intervalLogUpdateHandle = $interval(function ()
+        
+        
+        /* intervalLogUpdateHandle = $interval(function ()
         {
             loadLogs();
         
-        }.bind(this), 3000);
+        }.bind(this), 3000);*/
     
         loadLogs();
  
@@ -189,7 +192,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     $scope.$on('$ionicView.leave', function ()
     {
         console.log ("Deleting Log interval...");
-        $interval.cancel(intervalLogUpdateHandle);
+       // $interval.cancel(intervalLogUpdateHandle);
     });
 
 }]);
