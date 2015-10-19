@@ -180,7 +180,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 .then (function(data) {
                                     var ld = ZMDataModel.getLogin();
                                     ZMDataModel.zmLog("Got API version: " + data);
-                                    if (versionCompare(data,zm.minAppVersion) && (ld.url.indexOf("arjunrc.") == -1) && data !="0.0.0")
+                                    if ((versionCompare(data,zm.minAppVersion)==-1) && (ld.url.indexOf("arjunrc.") == -1) && data !="0.0.0")
                                     {
                                        
                                       
