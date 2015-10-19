@@ -23,7 +23,9 @@ angular.module('zmApp.controllers')
     var montageSize = 3;
     var monitors = [];
     var oldevents = [];
-    var loginData = {
+     
+    
+     var loginData = {
         'username': '',
         'password': '',
         'url': '', // This is the ZM portal path
@@ -37,13 +39,19 @@ angular.module('zmApp.controllers')
         'keepAwake':true, // don't dim/dim during live view
         'isUseAuth':true, // true if user wants ZM auth
         'isUseEventServer':false, // true if you configure the websocket event server
+         'eventServerMonitors':'',
+        'eventServerInterval':0,
         'refreshSec':"2", // timer value for frame change in sec
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,
         'pinCode':'',
         'canSwipeMonitors':true,
         'persistMontageOrder':false,
+        
     };
+     
+     
+     
     var configParams = {
         'ZM_EVENT_IMAGE_DIGITS':'-1',
         'ZM_PATH_ZMS':''
@@ -71,18 +79,22 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
      function displayBanner (mytype, mytext, myinterval, mytimer)
         {
-            var contentBannerInstance = $ionicContentBanner.show({
+            
+            console.log ("FACTORY DISPLAY: " + JSON.stringify(mytext));
+            console.log ("FACTTORY DISPLAY: interval:" + myinterval + " timer:" + mytimer);
+            var contentBannerInstance =
+            $ionicContentBanner.show({
               text: mytext || 'no text',
               interval: myinterval || 2000,
-              autoClose: mytimer || 6000,
+              //autoClose: mytimer || 6000,
               type: mytype || 'info',
               transition: 'vertical',
-              cancelOnStateChange: false
+              //cancelOnStateChange: false
             });
 
-            /*$timeout (function() {
+            $timeout (function() {
                 contentBannerInstance();
-            },mytimer || 6000);*/
+            },mytimer || 6000);
     }
         
 
@@ -199,6 +211,18 @@ angular.module('zmApp.controllers')
                 loginData.eventServer =
                     window.localStorage.getItem("eventServer");
 
+            }
+            
+        
+            
+            if (window.localStorage.getItem("eventServerMonitors") != undefined) {
+                loginData.eventServerMonitors =
+                     window.localStorage.getItem("eventServerMonitors");
+            }
+            
+            if (window.localStorage.getItem("eventServerInterval") != undefined) {
+                loginData.eventServerInterval =
+                     window.localStorage.getItem("eventServerInterval");
             }
 
             if (window.localStorage.getItem("apiurl") != undefined) {
@@ -367,6 +391,12 @@ angular.module('zmApp.controllers')
             window.localStorage.setItem("apiurl", loginData.apiurl);
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
             window.localStorage.setItem("eventServer", loginData.eventServer);
+            window.localStorage.setItem("eventServerMonitors", loginData.eventServerMonitors);
+                window.localStorage.setItem("eventServerInterval", loginData.eventServerInterval);
+            
+            
+            
+            
             window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
             window.localStorage.setItem("usePin", loginData.usePin?"1":"0");
             window.localStorage.setItem("canSwipeMonitors", loginData.canSwipeMonitors?"1":"0");
