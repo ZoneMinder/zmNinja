@@ -12,14 +12,56 @@
 angular.module('zmApp.controllers')
     
 .factory('EventServer', 
-[  'ZMDataModel', '$rootScope','$websocket', '$ionicPopup', '$cordovaLocalNotification', '$cordovaBadge', function 
- (  ZMDataModel, $rootScope, $websocket, $ionicPopup,$cordovaLocalNotification, $cordovaBadge) {
+[  'ZMDataModel', '$rootScope','$websocket', '$ionicPopup', '$cordovaLocalNotification', '$cordovaBadge', '$timeout', '$q',function 
+ (  ZMDataModel, $rootScope, $websocket, $ionicPopup,$cordovaLocalNotification, $cordovaBadge, $timeout, $q) {
      
      
     var ws;
-     // Display a max of 5 local notifications
-    var localNotificationId=5;
-
+     
+    var localNotificationId=0;
+     
+    var eventReportingSettings = 
+        {
+            monitors:"",
+            minInterval:0,
+        };
+  
+  
+     function getSettings()
+     {
+         return eventReportingSettings;
+     }
+     
+     function setSettings(obj)
+     {
+         eventReportingSettings = obj;
+     }
+     
+     function openHandshake()
+         {
+             var loginData = ZMDataModel.getLogin();
+             if (loginData.isUseEventServer=="0" || loginData.eventServer=="")
+             {
+                 ZMDataModel.zmLog ("openHandShake: no event server");
+                 return;
+             }
+             
+             ZMDataModel.zmLog("openHandshake: Websocket open");
+                 ws.$emit('auth',
+                          {user:loginData.username,
+                           password:loginData.password});
+                
+                if ($rootScope.apnsToken !='')
+                {
+                    ws.$emit ('push',
+                              {
+                               type:'token', 
+                               platform:'ios',                             
+                               token:$rootScope.apnsToken});
+                }
+                
+         }
+         
     //--------------------------------------------------------------------------
     // Called once at app start. Does a lazy definition of websockets open
     //--------------------------------------------------------------------------
@@ -28,12 +70,23 @@ angular.module('zmApp.controllers')
          $rootScope.isAlarm = 0;
          $rootScope.alarmCount="0";
          
+         var d = $q.defer();
+         
          var loginData = ZMDataModel.getLogin();
          
          if (loginData.isUseEventServer =='0' || !loginData.eventServer)
          {
              ZMDataModel.zmLog("No Event Server present. Not initializing");
-             return;
+             d.reject ("false");
+             return d.promise;
+         }
+         
+         
+         if (typeof ws !== 'undefined')
+         {
+             ZMDataModel.zmDebug ("Event server already initialized");
+             d.resolve ("true");
+             return d.promise;
          }
          
          
@@ -47,14 +100,9 @@ angular.module('zmApp.controllers')
                   });
  
          
+         
             // Transmit auth information to server              
-            ws.$on ('$open', function() {
-                ZMDataModel.zmLog("Websocket open");
-                 ws.$emit('auth',
-                          {user:loginData.username,
-                           password:loginData.password});
-              
-            });
+            ws.$on ('$open', openHandshake);
 
            ws.$on ('$close', function() {
                ZMDataModel.zmLog ("Websocket closed");
@@ -67,19 +115,38 @@ angular.module('zmApp.controllers')
                  if (str.status != 'Success')
                  {
                      ZMDataModel.zmLog ("Event Error: " + JSON.stringify(str));
-                     ws.$close();
-                     ZMDataModel.displayBanner('error',['Event server rejected credentials', 'Please re-check credentials'],2000,6000);
+                     
+                     if (str.reason == 'APNSDISABLED')
+                     {
+                        ws.$close();
+                        ZMDataModel.displayBanner('error',['Event Server: APNS disabled'],2000,6000);
+                         $rootScope.apnsToken="";
+                     }
                     
                  }
                  
-                 var localNotText = "New Alarms: ";
-                 if (str.status == 'Success' && str.events) // new events
+                 var localNotText = "Latest Alarms: ";
+                 if (str.status == 'Success' && str.event == 'alarm') // new events
                  {
+                     $rootScope.isAlarm = 1;
+                     
+                     // Show upto a max of 99 when it comes to display
+                     // so aesthetics are maintained
+                     if ($rootScope.alarmCount == "99")
+                     {
+                         $rootScope.alarmCount="99+";
+                     }
+                     if ($rootScope.alarmCount != "99+")
+                     {
+                        $rootScope.alarmCount = (parseInt($rootScope.alarmCount)+1).toString();
+                     }
+                     
+                     
                      var eventsToDisplay=[];
                      for (var iter=0; iter<str.events.length; iter++)
                      {
                            // lets stack the display so they don't overwrite
-                         eventsToDisplay.push(str.events[iter].Name+": new event ("+str.events[iter].EventId+")");
+                         eventsToDisplay.push(str.events[iter].Name+": latest new alarm ("+str.events[iter].EventId+")");
                          localNotText = localNotText + str.events[iter].Name+",";
                          
                          
@@ -93,39 +160,50 @@ angular.module('zmApp.controllers')
                          if (eventsToDisplay.length > 0)
                          {
 
-                            ZMDataModel.displayBanner('alarm', eventsToDisplay, 5000, 5000*eventsToDisplay.length);
+                                if (eventsToDisplay.length == 1)
+                                 {
+                                     console.log ("Single Display: " + eventsToDisplay[0]);
+                                     ZMDataModel.displayBanner('alarm', [eventsToDisplay[0]], 5000, 5000);
+                                 }
+                                 else
+                                 {
+                                    ZMDataModel.displayBanner('alarm', eventsToDisplay, 5000, 5000*eventsToDisplay.length);
+                                 }
 
                          }
                      }
                      else
                      {
                          ZMDataModel.zmDebug("App is in background, displaying localNotification");
-                        localNotificationId--;
-                         
-                         if ( localNotificationId == 0) // only show last 5
-                         {
-                             localNotificationId = 5;
-                             
-                         }
-                         // This is how I am reusing local notifications
-                         // I really don't want to stack local notififcations beyond 5
-                         if ($cordovaLocalNotification.isPresent(localNotificationId))
-                         {
-                             ZMDataModel.zmDebug("Cancelling notification ID " + localNotificationId);
-                             $cordovaLocalNotification.cancel(localNotificationId);
-                         }
                         
-                         ZMDataModel.zmDebug("Creating notification ID " + localNotificationId + " with " +localNotText);
-                        $cordovaLocalNotification.schedule({
-                            id: localNotificationId,
-                            title: 'ZoneMinder Alarms',
-                            text: localNotText,
-                            sound:"file://sounds/blop.mp3"
-                            
-                          }).then(function (result) {
-                            // do nothing for now
-                          });
                          
+                         if (localNotificationId == 0)
+                         {
+                            localNotificationId = 1;
+                             ZMDataModel.zmDebug("Creating notification ID " + localNotificationId + " with " +localNotText);
+                            $cordovaLocalNotification.schedule({
+                                id: 1,
+                                title: $rootScope.alarmCount + ' new ZoneMinder Alarms',
+                                text: localNotText,
+                                sound:"file://sounds/blop.mp3"
+
+                              }).then(function (result) {
+                                // do nothing for now
+                              });
+                        }
+                         
+                        else
+                        {
+                             ZMDataModel.zmDebug("Updating notification ID " + localNotificationId + " with " +localNotText);
+                            $cordovaLocalNotification.update({
+                                id: 1,
+                                title: $rootScope.alarmCount + ' new ZoneMinder Alarms',
+                                text: localNotText,
+                                
+                              }).then(function (result) {
+                                // do nothing for now
+                              });
+                        }
                     
                      }
                            // lets set badge of app irrespective of background or foreground
@@ -146,18 +224,7 @@ angular.module('zmApp.controllers')
                           });
                      
                      
-                      $rootScope.isAlarm = 1;
-                     
-                     // Show upto a max of 99 when it comes to display
-                     // so aesthetics are maintained
-                     if ($rootScope.alarmCount == "99")
-                     {
-                         $rootScope.alarmCount="99+";
-                     }
-                     if ($rootScope.alarmCount != "99+")
-                     {
-                        $rootScope.alarmCount = (parseInt($rootScope.alarmCount)+1).toString();
-                     }
+                      
                      
                  }
                  
@@ -166,6 +233,64 @@ angular.module('zmApp.controllers')
                  
                  
             });
+         d.resolve("true");
+            return (d.promise);
+         
+     }
+     
+     //--------------------------------------------------------------------------
+    // Send an arbitrary object to the Event Serve
+    // currently planned to use it for device token
+    //--------------------------------------------------------------------------
+     function sendMessage(type, obj)
+     {
+         var ld = ZMDataModel.getLogin();
+         if (ld.isUseEventServer=="0")
+         {
+             ZMDataModel.zmDebug ("Not sending WSS message as event server is off");
+             return;
+         }
+         
+         
+          if (typeof ws === 'undefined')
+         {
+             ZMDataModel.zmDebug ("Event server not initalized, not sending message");
+             return;
+         }
+         
+         
+         if (ws.$status() == ws.$CLOSED)
+         {
+             ZMDataModel.zmLog("Websocket was closed, trying to re-open");
+             ws.$un('$open');
+             //ws.$on ('$open', openHandshake);
+             ws.$open();
+              
+             
+             ws.$on ('$open', openHandshake, function() {
+                 
+                 console.log (" sending " + type + " " +
+                              JSON.stringify(obj));
+                 ws.$emit(type, obj);
+                 
+                   ws.$un('$open');
+                    ws.$on ('$open', openHandshake);
+                 
+                 
+             });
+             
+            
+         }
+         else
+         {
+             ws.$emit(type, obj);
+             console.log ("sending " + type + " " + JSON.stringify(obj));
+         }
+         
+         
+        
+         
+         
          
          
      }
@@ -223,7 +348,10 @@ angular.module('zmApp.controllers')
      
      return {
          refresh:refresh,
-         init:init
+         init:init,
+         sendMessage:sendMessage,
+         getSettings:getSettings,
+         setSettings:setSettings
      };
         
 
