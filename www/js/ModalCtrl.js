@@ -305,9 +305,34 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     $scope.onTapLeft = function (m,d)
     {
-        ZMDataModel.zmDebug("ModalCtrl:Left tap detected, moving to " + ZMDataModel.getNextMonitor(m, d));
-        $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
+        
+        var curstate =  $ionicHistory.currentStateName();
+        var found=0;    
+        var mid;
+          mid = ZMDataModel.getNextMonitor(m, d);
+        if (curstate != "monitors")
+        {
+            do
+            {
+                 mid = ZMDataModel.getNextMonitor(m, d);
+                m = mid;
+                found = 0;
+                for (var i = 0 ; i< $scope.monitors.length; i++)
+                {
+                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow')
+                    {
+                        found = 1;
+                        ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " +   mid); 
+                        break;
+                    }
+                }
 
+
+            }
+            while (found !=1);
+        }
+        
+        $scope.monitorId = mid;
 
         $ionicLoading.hide();
         $ionicLoading.show({
@@ -321,8 +346,39 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         var ld = ZMDataModel.getLogin();
        if (!ld.canSwipeMonitors) return;
         
-        ZMDataModel.zmDebug("ModalCtrl:Left swipe detected, moving to " + ZMDataModel.getNextMonitor(m, d));
-        $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
+        var curstate =  $ionicHistory.currentStateName();
+        var found=0;    
+        var mid;
+        mid = ZMDataModel.getNextMonitor(m, d);
+        
+        if (curstate != "monitors")
+        {
+        
+            do
+            {
+                mid = ZMDataModel.getNextMonitor(m, d);
+                m = mid;
+                console.log ("Next Monitor is "+m);
+
+
+                    found = 0;
+                    for (var i = 0 ; i< $scope.monitors.length; i++)
+                    {
+                        if ($scope.monitors[i].Monitor.Id == mid  && $scope.monitors[i].Monitor.listDisplay != 'noshow')
+                        {
+                            found = 1;
+                            console.log (mid + "is part of the monitor list");
+                            ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " +   mid); 
+                            break;
+                        }
+                    }
+
+
+            }
+            while (found !=1);
+        }
+        
+        $scope.monitorId = mid;
 
 
         $ionicLoading.hide();
@@ -338,8 +394,35 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     
     $scope.onTapRight = function (m,d)
     {
-         ZMDataModel.zmDebug("ModalCtrl:Right tap detected, moving to " + ZMDataModel.getNextMonitor(m, d));
-        $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
+         //ZMDataModel.zmDebug("ModalCtrl:Right tap detected, moving to " + ZMDataModel.getNextMonitor(m, d));
+      var found=0;    
+        var mid;
+        var curstate =  $ionicHistory.currentStateName();
+        mid = ZMDataModel.getNextMonitor(m, d);
+        if (curstate != "monitors")
+        {
+            do
+            {
+
+                 mid = ZMDataModel.getNextMonitor(m, d);
+                m = mid;
+                found = 0;
+                for (var i = 0 ; i< $scope.monitors.length; i++)
+                {
+                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow' )
+                    {
+                        found = 1;
+                        ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " +   mid); 
+                        break;
+                    }
+                }
+
+
+            }
+            while (found !=1);
+        }
+        
+        $scope.monitorId = mid;
 
         $ionicLoading.show({
             template: "please wait...",
@@ -349,9 +432,33 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     };
     $scope.onSwipeRight = function (m, d) {
         if (!ld.canSwipeMonitors) return;
-        ZMDataModel.zmDebug("ModalCtrl:Right swipe detected, moving to " + ZMDataModel.getNextMonitor(m, d));
-        $scope.monitorId = ZMDataModel.getNextMonitor(m, d);
+        var found=0;    
+        var mid;
+        var curstate =  $ionicHistory.currentStateName();
+        mid = ZMDataModel.getNextMonitor(m, d);
+        if (curstate != "monitors")
+        {
+            do
+            {
+                 mid = ZMDataModel.getNextMonitor(m, d);
+                m = mid;
+                found = 0;
+                for (var i = 0 ; i< $scope.monitors.length; i++)
+                {
+                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow')
+                    {
+                        found = 1;
+                        ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " +   mid); 
+                        break;
+                    }
+                }
 
+
+            }
+            while (found !=1);
+        }
+        
+        $scope.monitorId = mid;
         $ionicLoading.show({
             template: "please wait...",
             noBackdrop: true,
