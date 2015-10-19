@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert */
+/* global cordova,StatusBar,angular,console,alert,PushNotification */
 
 
 var appVersion = "0.0.0";
@@ -15,6 +15,7 @@ angular.module('zmApp', [
                             'fileLogger',
                             'angular-carousel',
                             'angularAwesomeSlider',
+                           
                             
     
 
@@ -459,7 +460,9 @@ angular.module('zmApp', [
 // First run in ionic
 //------------------------------------------------------------------
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $cordovaLocalNotification) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $cordovaLocalNotification,$ionicContentBanner) {
+    
+    //$cordovaPush
 
         $rootScope.zmGlobalCookie = "";
         $rootScope.isEventFilterOn = false;
@@ -470,7 +473,9 @@ angular.module('zmApp', [
         $rootScope.fromString = "";
         $rootScope.toString = "";
         $rootScope.loggedIntoZm = 0;
-    
+        $rootScope.apnsToken = '';
+        $rootScope.tappedNotification = 0;
+         var eventsToDisplay=[];
        
 
         //console.log ("HERE");
@@ -542,10 +547,9 @@ angular.module('zmApp', [
 
         $ionicPlatform.ready(function () {
             
-            console.log("**** DEVICE READY ***");
-            // generates and error in desktops but works fine
+         
             ZMDataModel.zmLog("Device is ready");
-            console.log("**** DEVICE READY ***");
+            var ld = ZMDataModel.getLogin();
             
             if (!$cordovaLocalNotification.hasPermission())
             {
@@ -553,6 +557,174 @@ angular.module('zmApp', [
                 $cordovaLocalNotification.registerPermission();
             }
             
+            
+            
+            if ($ionicPlatform.is('ios') ) 
+            {
+                ZMDataModel.zmLog ("iOS detected. Setting up APNS...");
+            
+                
+                
+                var push = PushNotification.init(
+                    { "ios": 
+                     {"alert": "true", 
+                      "badge": "true", 
+                      "sound": "true"}
+                    }  
+                );
+
+                push.on('registration', function(data) {
+                    ZMDataModel.zmDebug("Push Notification registration ID received: "  + JSON.stringify(data));
+                    $rootScope.apnsToken = data.registrationId;
+                    
+            
+                    
+                    EventServer.sendMessage('push', 
+                                            {
+                                             type:'token',
+                                             platform:'ios', 
+                                             token:$rootScope.apnsToken});
+                    
+       
+                });
+                
+                
+                 push.on('notification', function(data) {
+                     
+                     var ld = ZMDataModel.getLogin();
+                     if (ld.isUseEventServer=="0")
+                     {
+                         ZMDataModel.zmDebug("received push notification, but event server disabled. Not acting on it");
+                         return;
+                     }
+                     console.log ("************* PUSH RECEIVED ******************");
+                    // console.log (JSON.stringify(data));
+                     
+                    // data.message,
+                    // data.title,
+                    // data.count,
+                    // data.sound,
+                    // data.image,
+                    // data.additionalData
+                     
+                     if (data.additionalData.foreground == false)
+                     {
+                         // This means push notification tap in background
+                         
+                         ZMDataModel.zmDebug("**** NOTIFICATION TAPPED SETTING TAPPED TO 1 ****");
+                        $rootScope.alarmCount="0";
+                        $rootScope.isAlarm = 0;
+                        $rootScope.tappedNotification = 1;
+                     }
+                     else
+                     {
+                         // alarm received in foregroun
+                         var str=data.additionalData.alarm_details;
+                       // console.log ("***STRING: " + str + " " +str.status);
+                         eventsToDisplay=[];
+
+                         console.log ("PUSH IS " + JSON.stringify(str.events));
+                         var alarmtext = "";
+                         for (var iter=0; iter<str.events.length; iter++)
+                         {
+                               // lets stack the display so they don't overwrite
+                             console.log ("PUSHING " + str.events[iter].Name+": new event ("+str.events[iter].EventId+")"); 
+                             
+                             var evtstr  = str.events[iter].Name+": new event ("+str.events[iter].EventId+")";
+                            eventsToDisplay.push(evtstr);
+                              //eventsToDisplay.push(evtstr);
+                            
+                             
+                              
+
+
+                         }
+                         
+          /* var contentBannerInstance =
+            $ionicContentBanner.show({
+              text: eventsToDisplay,
+              //interval: 5000,
+              autoClose: 5000*eventsToDisplay.length,
+              type: 'error',
+              transition: 'vertical',
+              //cancelOnStateChange: false
+            });*/
+                            ZMDataModel.displayBanner('alarm', eventsToDisplay, 0, 5000*eventsToDisplay.length);
+                        
+
+                         $rootScope.isAlarm = 1;
+
+                         // Show upto a max of 99 when it comes to display
+                         // so aesthetics are maintained
+                         if ($rootScope.alarmCount == "99")
+                         {
+                             $rootScope.alarmCount="99+";
+                         }
+                         if ($rootScope.alarmCount != "99+")
+                         {
+                            $rootScope.alarmCount = (parseInt($rootScope.alarmCount)+1).toString();
+                         }
+                     }
+                });
+
+                push.on('error', function(e) {
+                     console.log ("************* PUSH ERROR ******************");
+                });
+                    
+               
+
+                 /*
+                $cordovaPush.register(iosConfig).then(function(deviceToken) {
+                  // Success -- send deviceToken to server, and store for future use
+                  ZMDataModel.zmDebug("APNS deviceToken: " + deviceToken);
+                  $rootScope.apnsToken = deviceToken;
+                    
+            
+                    
+                    EventServer.sendMessage('push', 
+                                            {
+                                             type:'token',
+                                             platform:'ios', 
+                                             token:$rootScope.apnsToken});
+                                                    
+                    
+                    
+                    
+                  //$http.post("http://server.co/", {user: "Bob", tokenID: deviceToken});
+                }, function(err) {
+                  ZMDataModel.zmLog("APNS registration error: " + err);
+                });
+                
+                console.log ("************ REGISTERING PUSH HANDLER NOTIFICATION RECEIVED");
+                $rootScope.$on('$cordovaPush:notificationReceived', 
+                               function(event, notification) {
+                    console.log ("&&&&&&&&&&&&&&&&&&& INSIDE BROADCAST ");
+                    var str=notification.alarm_details;
+                    console.log ("***STRING: " + str + " " +str.status);
+                    var eventsToDisplay=[];
+                     for (var iter=0; iter<str.events.length; iter++)
+                     {
+                           // lets stack the display so they don't overwrite
+                         eventsToDisplay.push(str.events[iter].Name+": new event ("+str.events[iter].EventId+")");
+                         ZMDataModel.displayBanner('alarm', eventsToDisplay, 5000, 5000*eventsToDisplay.length);
+                         
+                         
+                     }
+                        
+                });*/
+
+            } // iOS
+            
+            
+             $rootScope.$on('$cordovaLocalNotification:click', function(event, notification, state) 
+                {
+                    ZMDataModel.zmDebug("**** NOTIFICATION TAPPED SETTING TAPPED TO 1 ****");
+                    $rootScope.alarmCount="0";
+                    $rootScope.isAlarm = 0;
+                    $rootScope.tappedNotification = 1;
+                
+                });
+
 
             $fileLogger.checkFile().then(function (resp) {
                 if (parseInt(resp.size) > zm.logFileMaxSize) {
@@ -640,6 +812,13 @@ angular.module('zmApp', [
             // from foreground to background and back
             document.addEventListener("resume", function () {
                 ZMDataModel.zmLog("App is resuming from background");
+                var ld = ZMDataModel.getLogin();
+                if ($rootScope.apnsToken && ld.isUseEventServer =="1")
+                {
+                   // ZMDataModel.zmDebug("sending enable push to Event Server");
+                   // EventServer.sendMessage('push', {type:'control', enablepush:'0'});
+                }
+                
                 ZMDataModel.setBackground(false);
                 // don't animate
                 $ionicHistory.nextViewOptions({
@@ -670,6 +849,13 @@ angular.module('zmApp', [
             document.addEventListener("pause", function () {
                 console.log("****The application is going into  background");
                 ZMDataModel.zmLog("App is going into background");
+                
+                var ld = ZMDataModel.getLogin();
+                if ($rootScope.apnsToken && ld.isUseEventServer == "1")
+                {
+                  //  ZMDataModel.zmDebug("sending enable push to Event Server");
+                    //EventServer.sendMessage('push', {type:'control',enablepush:'1'});
+                }
                 ZMDataModel.setBackground(true);
 
                 zmAutoLogin.stop();
@@ -860,6 +1046,19 @@ angular.module('zmApp', [
         controller: 'zmApp.TimelineCtrl',
     })
 
+     .state('eventserversettings', {
+        data: {
+            requireLogin: true
+        },
+        resolve: {
+            message: function (ZMDataModel) {
+                return ZMDataModel.getMonitors(0);
+            }
+        },
+        url: "/eventserversettings",
+        templateUrl: "templates/eventserversettings.html",
+        controller: 'zmApp.EventServerSettingsCtrl',
+    })
 
     .state('log', {
         data: {
@@ -869,6 +1068,8 @@ angular.module('zmApp', [
         templateUrl: "templates/log.html",
         controller: 'zmApp.LogCtrl',
     })
+    
+   
 
     .state('zm-portal-login', {
         data: {
