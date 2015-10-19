@@ -49,7 +49,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             ZMDataModel.zmLog("TouchID not supported");
                         });
                 } else {
-                    ZMDataModel.zmLog("Not iOS, not checking for touchID");
+                    ZMDataModel.zmLog("not checking for touchID");
                 }
 
                 if (loginData.usePin) {
@@ -89,6 +89,16 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     }
                                 });
                                 EventServer.refresh();
+                        
+                        if ($rootScope.tappedNotification)
+                        {
+                            console.log ("***** NOTIFICATION TAPPED GOING TO EVENTS ");
+                            $rootScope.tappedNotification = 0;
+                            $ionicHistory.nextViewOptions({disableBack: true});		
+                            $state.go("events", {"id": 0}, { reload: true });
+                            return;
+                        }
+                        
                                 $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
                             },
                             // coming here means auth error
@@ -180,6 +190,17 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                               
                                 });
                         ZMDataModel.getKeyConfigParams(1);
+                
+                        if ($rootScope.tappedNotification)
+                        {
+                            $rootScope.tappedNotification = 0;
+                            $ionicHistory.nextViewOptions({disableBack: true});		
+                               console.log ("***** NOTIFICATION TAPPED GOING TO EVENTS ");
+                            $state.go("events", {"id": 0}, { reload: true });
+                            return;
+                            
+                        }
+                
                         if ($rootScope.lastState == 'lowversion') $rootScope.lastState = 'montage';
                         ZMDataModel.zmDebug("Transitioning state to: " + $rootScope.lastState ? $rootScope.lastState : 'montage');
                         console.log ("*********** GOING TO " + $rootScope.lastState);
