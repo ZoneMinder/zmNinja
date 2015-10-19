@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-whitelist",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Cordova Whitelist Plugin",
   "cordova": {
     "platforms": [
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/apache/cordova-plugin-whitelist"
+    "url": "https://git-wip-us.apache.org/repos/asf/cordova-plugin-whitelist.git"
   },
   "keywords": [
     "cordova",

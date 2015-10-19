@@ -87,6 +87,10 @@
                         {
                             "xml": "<feature name=\"Badge\"><param name=\"android-package\" value=\"de.appplant.cordova.plugin.badge.Badge\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"PushNotification\"><param name=\"android-package\" value=\"com.adobe.phonegap.push.PushPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -118,6 +122,30 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.VIBRATE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.google.android.c2dm.permission.RECEIVE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<permission android:name=\"com.pliablepixels.zmninja.permission.C2D_MESSAGE\" android:protectionLevel=\"signature\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.pliablepixels.zmninja.permission.C2D_MESSAGE\" />",
                             "count": 1
                         }
                     ],
@@ -152,6 +180,18 @@
                         },
                         {
                             "xml": "<activity android:exported=\"false\" android:launchMode=\"singleInstance\" android:name=\"de.appplant.cordova.plugin.badge.LaunchActivity\" android:theme=\"@android:style/Theme.Black.NoTitleBar\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<activity android:exported=\"true\" android:name=\"com.adobe.phonegap.push.PushHandlerActivity\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<receiver android:name=\"com.adobe.phonegap.push.CordovaGCMBroadcastReceiver\" android:permission=\"com.google.android.c2dm.permission.SEND\"><intent-filter><action android:name=\"com.google.android.c2dm.intent.RECEIVE\" /><action android:name=\"com.google.android.c2dm.intent.REGISTRATION\" /><category android:name=\"com.pliablepixels.zmninja\" /></intent-filter></receiver>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<service android:name=\"com.adobe.phonegap.push.GCMIntentService\" />",
                             "count": 1
                         }
                     ]
@@ -218,6 +258,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "de.appplant.cordova.plugin.badge": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "phonegap-plugin-push": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },

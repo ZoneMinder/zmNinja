@@ -1,20 +1,20 @@
-<!--
-# license: Licensed to the Apache Software Foundation (ASF) under one
-#         or more contributor license agreements.  See the NOTICE file
-#         distributed with this work for additional information
-#         regarding copyright ownership.  The ASF licenses this file
-#         to you under the Apache License, Version 2.0 (the
-#         "License"); you may not use this file except in compliance
-#         with the License.  You may obtain a copy of the License at
-#
-#           http://www.apache.org/licenses/LICENSE-2.0
-#
-#         Unless required by applicable law or agreed to in writing,
-#         software distributed under the License is distributed on an
-#         "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-#         KIND, either express or implied.  See the License for the
-#         specific language governing permissions and limitations
-#         under the License.
+<!---
+ license: Licensed to the Apache Software Foundation (ASF) under one
+         or more contributor license agreements.  See the NOTICE file
+         distributed with this work for additional information
+         regarding copyright ownership.  The ASF licenses this file
+         to you under the Apache License, Version 2.0 (the
+         "License"); you may not use this file except in compliance
+         with the License.  You may obtain a copy of the License at
+
+           http://www.apache.org/licenses/LICENSE-2.0
+
+         Unless required by applicable law or agreed to in writing,
+         software distributed under the License is distributed on an
+         "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+         KIND, either express or implied.  See the License for the
+         specific language governing permissions and limitations
+         under the License.
 -->
 
 # cordova-plugin-whitelist
@@ -40,7 +40,7 @@ other URLs, you must add `<allow-navigation>` tags to your `config.xml`:
 
     <!-- Wildcards are allowed for the protocol, as a prefix
          to the host, or as a suffix to the path -->
-    <allow-navigation href="*://*.example.com/*" />
+    <allow-havigation href="*://*.example.com/*" />
 
     <!-- A wildcard can be used to whitelist the entire network,
          over HTTP and HTTPS.
@@ -135,7 +135,7 @@ Here are some example CSP declarations for your `.html` pages:
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' foo.com">
 
     <!-- Enable all requests, inline styles, and eval() -->
-    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src: 'self' 'unsafe-inline' 'unsafe-eval'">
 
     <!-- Allow XHRs via https only -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
