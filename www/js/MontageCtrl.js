@@ -396,6 +396,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     };
 
+    /*
     $scope.onSwipeLeft = function ($index) {
         $scope.showSizeButtons = true;
     };
@@ -405,7 +406,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             $scope.showSizeButtons = false;
         }, 1000);
 
-    };
+    };*/
 
     //---------------------------------------------------------------------
     // This marks a monitor as hidden in montage view
