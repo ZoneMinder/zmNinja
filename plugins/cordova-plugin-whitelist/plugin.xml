@@ -20,7 +20,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-whitelist"
-      version="1.1.0">
+      version="1.0.0">
     <name>Whitelist</name>
     <description>Cordova Network Whitelist Plugin</description>
     <license>Apache 2.0</license>
@@ -28,7 +28,6 @@
 
     <engines>
       <engine name="cordova-android" version=">=4.0.0-dev" />
-      <engine name="cordova-ios" version=">=4.0.0-dev" />
     </engines>
 
     <platform name="android">
@@ -45,20 +44,4 @@
             <runs />
         </js-module>
     </platform>
-
-    <platform name="ios">
-        <config-file target="config.xml" parent="/*">
-            <feature name="Whitelist">
-                <param name="ios-package" value="CDVNavigationWhitelistPlugin" /> 
-                <param name="onload" value="true" />
-            </feature>
-        </config-file>
-        <header-file src="src/ios/CDVNavigationWhitelistPlugin.h"  />
-        <source-file src="src/ios/CDVNavigationWhitelistPlugin.m" />
-
-        <js-module src="whitelist.js" name="whitelist">
-            <runs />
-        </js-module>
-    </platform>
-
 </plugin>

@@ -21,11 +21,31 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"LongPressFix\"><param name=\"ios-package\" value=\"LongPressFix\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"SplashScreen\"><param name=\"ios-package\" value=\"CDVSplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"TouchID\"><param name=\"ios-package\" value=\"TouchID\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Badge\"><param name=\"ios-package\" value=\"APPBadge\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"EmailComposer\"><param name=\"ios-package\" value=\"APPEmailComposer\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"LocalNotification\"><param name=\"ios-package\" onload=\"true\" value=\"APPLocalNotification\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
                         {
@@ -38,10 +58,6 @@
                         },
                         {
                             "xml": "<feature name=\"Console\"><param name=\"ios-package\" value=\"CDVLogger\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
                             "count": 1
                         },
                         {
@@ -65,19 +81,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"TouchID\"><param name=\"ios-package\" value=\"TouchID\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"LongPressFix\"><param name=\"ios-package\" value=\"LongPressFix\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"LocalNotification\"><param name=\"ios-package\" onload=\"true\" value=\"APPLocalNotification\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"Badge\"><param name=\"ios-package\" value=\"APPBadge\" /></feature>",
+                            "xml": "<feature name=\"PushNotification\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -103,12 +107,6 @@
                             "count": 2
                         }
                     ],
-                    "MessageUI.framework": [
-                        {
-                            "xml": true,
-                            "count": 1
-                        }
-                    ],
                     "LocalAuthentication.framework": [
                         {
                             "xml": false,
@@ -118,6 +116,12 @@
                     "Security.framework": [
                         {
                             "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "MessageUI.framework": [
+                        {
+                            "xml": true,
                             "count": 1
                         }
                     ]
@@ -132,19 +136,40 @@
         "com.phonegap.plugins.OrientationLock": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
+        "cordova-plugin-crosswalk-webview": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
         "cordova-plugin-file": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
+        "cordova-plugin-ios-longpress-fix": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
         "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-touchid": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "cordova-plugin-websocket": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
+        "de.appplant.cordova.common.registerusernotificationsettings": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "de.appplant.cordova.plugin.badge": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
         "de.appplant.cordova.plugin.email-composer": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "de.appplant.cordova.plugin.local-notification": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "hu.dpal.phonegap.plugins.PinDialog": {
@@ -156,9 +181,6 @@
         "org.apache.cordova.console": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
         "org.apache.cordova.statusbar": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
@@ -168,27 +190,12 @@
         "uk.co.whiteoctober.cordova.appversion": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "cordova-plugin-touchid": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "cordova-plugin-crosswalk-webview": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "cordova-plugin-ios-longpress-fix": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "cordova-plugin-websocket": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "de.appplant.cordova.plugin.local-notification": {
-            "PACKAGE_NAME": "com.pliablepixels.zmninja"
-        },
-        "de.appplant.cordova.plugin.badge": {
+        "phonegap-plugin-push": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
     "dependent_plugins": {
-        "de.appplant.cordova.common.registerusernotificationsettings": {
+        "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     }
