@@ -1,0 +1,34 @@
+<ion-view view-title="Event Server" cache-view="false">
+
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        
+        <ion-checkbox ng-model="check.isUseEventServer">use event server</ion-checkbox>
+           
+            <label class="item item-input item-floating-label" ng-if="check.isUseEventServer">
+                <span class="input-label">Event Server</span>
+                <input autocapitalize="none"
+                       autocomplete="off" autocorrect="off"
+                       type="text" placeholder="Event notification url"
+                       ng-model="loginData.eventServer">
+
+               
+            </label>
+        
+        <ul class="list" >
+
+  <li class="item item-checkbox" ng-repeat= "monitor in monitors" >
+     <label class="checkbox">
+       <input type="checkbox" ng-model ="monitor.Monitor.isChecked" ng-checked="monitor.Monitor.isChecked">
+     </label>
+     {{monitor.Monitor.Name}}
+  </li>
+
+
+</ul>
+        
+    </ion-content>
+</ion-view>
