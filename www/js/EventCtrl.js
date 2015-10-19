@@ -113,7 +113,10 @@ angular.module('zmApp.controllers')
         console.log("***CALLING EVENTS FACTORY");
         var lData = ZMDataModel.getLogin();
         
-        if (lData.persistMontageOrder)
+        var stackState  = $ionicHistory.backTitle();
+        
+        // If you came from Monitors, disregard hidden monitors in montage
+        if (lData.persistMontageOrder && stackState != "Monitors")
         {
             var tempMon = message;    
             $scope.monitors = ZMDataModel.applyMontageMonitorPrefs (tempMon, 2)[0];
@@ -825,6 +828,14 @@ angular.module('zmApp.controllers')
         $scope.$on('$ionicView.enter', function () {
             console.log("**VIEW ** Events Ctrl Entered");
             ZMDataModel.setAwake(false);
+            
+            EventServer.sendMessage('push', 
+                                            {
+                                             type:'badge',
+                                             badge:0, 
+                                            });
+            
+            
             //reset badge count
              $cordovaBadge.set(0).then(function() {
                                 // You have permission, badge set.
@@ -1527,7 +1538,8 @@ angular.module('zmApp.controllers')
                                 
                                 if (idfound)
                                 {
-                                    $scope.events.push(myevents);
+                                    //console.log ("***********************PUSHING RELOAD EVENT " + JSON.stringify(myevents));
+                                    $scope.events.push(myevents[i]);
                                 }
                             }
                            // $scope.events = myevents;
