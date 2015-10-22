@@ -50,6 +50,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             });
 
 
+    
+    
 
     $scope.radialMenuOptions = {
         content: '',
@@ -170,6 +172,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     loadModalNotifications();
 
+    
+    
 
     function onPause() {
         ZMDataModel.zmDebug("ModalCtrl: onpause called");
@@ -580,3 +584,5 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
 }]);
+
+
