@@ -39,8 +39,8 @@ angular.module('zmApp.controllers')
         'keepAwake':true, // don't dim/dim during live view
         'isUseAuth':true, // true if user wants ZM auth
         'isUseEventServer':false, // true if you configure the websocket event server
-         'eventServerMonitors':'',
-        'eventServerInterval':0,
+         'eventServerMonitors':'', // list of monitors to notify from ES
+        'eventServerInterval':'', // list of intervals for all monitors
         'refreshSec':"2", // timer value for frame change in sec
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,

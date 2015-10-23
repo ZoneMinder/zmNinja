@@ -20,9 +20,6 @@ angular.module('zmApp.controllers')
         var localNotificationId = 0;
 
        
-
-        
-        
         //--------------------------------------------------------------------------
         // used to compare versions of event server 
         //--------------------------------------------------------------------------

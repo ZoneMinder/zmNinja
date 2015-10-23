@@ -4,6 +4,12 @@
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
+    
+    
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" ng-click="saveItems()">Save</button>
+    </ion-nav-buttons>
+    
     <ion-content>
 
         <ion-checkbox ng-model="check.isUseEventServer">use event server</ion-checkbox>
@@ -14,18 +20,72 @@
 
 
         </label>
+        
+        <ion-list>
+            <div ng-repeat="monitor in monitors">
+            
+                <ion-item class="custom-list"
+                    ng-click="toggleGroup(monitor)"
+                    ng-class="{active: isGroupShown(monitor)}">
+              <i class="icon" ng-class="isGroupShown(monitor) ? 'ion-minus' : 'ion-plus'"></i>
+            &nbsp;
 
-        <ul class="list" ng-if="check.isUseEventServer">
+             {{monitor.Monitor.Name}}
+          </ion-item>
+                
+                <ion-item class="item-accordion"
+                      ng-show="isGroupShown(monitor)">
+                <span class="item-checkbox">
+                
+                    report events
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="monitor.Monitor.isChecked" ng-checked="monitor.Monitor.isChecked">
+                    </label>
+                    </span>
+                </ion-item>
+                
+            <ion-item class="item-accordion"
+                      ng-show="isGroupShown(monitor)">
+                <div class=" item-input-inset">
+                      <label class="item-input-wrapper">
+                        <input type="tel" placeholder="sec." ng-model="monitor.Monitor.reportingInterval">
+                    </label>
+                    &nbsp;min. reporting interval
+                  
+                    
+                </div>
+                </ion-item>
+                
+        
+            </div>
+        
+        </ion-list>
+        
+        
 
-            <li class="item item-checkbox" ng-repeat="monitor in monitors">
-                <label class="checkbox">
-                    <input type="checkbox" ng-model="monitor.Monitor.isChecked" ng-checked="monitor.Monitor.isChecked">
-                </label>
-                {{monitor.Monitor.Name}}
-            </li>
+       <!-- <ul class="list" ng-if="check.isUseEventServer">
+http://codepen.io/anon/pen/QbVveV
+            <div class="item-icon-right">
+                <li class="item item-checkbox" ng-repeat="monitor in monitors">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="monitor.Monitor.isChecked" ng-checked="monitor.Monitor.isChecked">
+                    </label>
+                    {{monitor.Monitor.Name}}
+
+                    <i class="icon ion-ios-arrow-down"></i>
+                </li>
+            </div>
 
 
-        </ul>
+        </ul>-->
 
     </ion-content>
 </ion-view>
+
+
+
+<!--
+ <label class="checkbox">
+                    <input type="checkbox" ng-model="monitor.Monitor.isChecked" ng-checked="monitor.Monitor.isChecked">
+                </label>
+                {{monitor.Monitor.Name}}-->
