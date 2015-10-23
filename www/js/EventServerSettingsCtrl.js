@@ -76,7 +76,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
             }
             if ($scope.monitors[i].Monitor.isChecked) {
                 monstring = monstring + $scope.monitors[i].Monitor.Id + ",";
-                var tint = isNaN($scope.monitors[i].Monitor.reportingInterval) ? 0 : parseInt($scope.monitors[i].Monitor.reportingInterval);
+                var tint =  parseInt($scope.monitors[i].Monitor.reportingInterval);
+                if (isNaN(tint)) tint = 0;
                 intervalstring = intervalstring + tint + ",";
             }
 
@@ -104,7 +105,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
                     EventServer.sendMessage("control", {
                         type: 'filter',
                         monlist: monstring,
-                        intervalist: intervalstring
+                        intlist: intervalstring
                     });
                 });
         }
