@@ -102,6 +102,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
             EventServer.init()
                 .then(function (data) {
                     console.log("Sending control filter");
+                    ZMDataModel.zmDebug("Sending Control message 'filter' with monlist="+monstring+" and interval="+intervalstring);
                     EventServer.sendMessage("control", {
                         type: 'filter',
                         monlist: monstring,
@@ -109,6 +110,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
                     });
                 });
         }
+        ZMDataModel.displayBanner('info', ['settings saved']);
     }
 
    
