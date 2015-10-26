@@ -1,9 +1,13 @@
-<ion-view view-title="Developer Settings">
+<ion-view view-title="Dev. Settings">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
         
+    </ion-nav-buttons>
+    
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" ng-click="saveDevOptions()">Save</button>
     </ion-nav-buttons>
 
 
@@ -59,9 +63,7 @@
                         toggle-class="toggle-calm">Persist hidden monitors</ion-toggle>
             </label>
 
-            <button class="button button-block button-balanced icon ion-locked"
-                    ng-click="saveDevOptions()"> Save
-            </button>
+            
         </div>
     </ion-content>
 </ion-view>

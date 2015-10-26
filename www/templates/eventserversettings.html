@@ -10,8 +10,11 @@
         <button class="button button-clear" ng-click="saveItems()">Save</button>
     </ion-nav-buttons>
     
-    <ion-content>
-
+    <ion-content padding="true">
+        
+         <div class="list list-inset">
+        Please make sure your ZM settings are configured and saved before you configure the event server
+        </div>
         <ion-checkbox ng-model="check.isUseEventServer">use event server</ion-checkbox>
 
         <label class="item item-input item-floating-label" ng-if="check.isUseEventServer">

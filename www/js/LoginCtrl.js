@@ -31,8 +31,20 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
 
 
+    
+
+    //----------------------------------------------------------------
+    // Save anyway when you exit
+    //----------------------------------------------------------------
+    
+     $scope.$on('$ionicView.beforeLeave', function () {
+         // Don't do this -- it will try to login to ZM
+         // and go back to the menu
+        //saveItems();
 
 
+    });
+    
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
@@ -134,8 +146,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //-----------------------------------------------------------------------------
     // Perform the login action when the user submits the login form
     //-----------------------------------------------------------------------------
-    $scope.save = function () {
-        console.log('Saving login');
+    
+    function saveItems()
+    {
+                console.log('Saving login');
 
         /*if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
             $ionicPopup.alert({
@@ -270,6 +284,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
 
         });
+    }
+    
+    $scope.saveItems = function () {
+        saveItems();
 
     };
 

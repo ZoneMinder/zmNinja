@@ -24,6 +24,17 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
             $state.go("events", {"id": 0}, { reload: true });
         }
     };
+    
+    
+    //----------------------------------------------------------------
+    // Save anyway when you exit
+    //----------------------------------------------------------------
+    
+     $scope.$on('$ionicView.beforeLeave', function () {
+       saveDevOptions();
+
+
+    });
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
@@ -40,7 +51,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     //------------------------------------------------------------------
     // Perform the login action when the user submits the login form
     //------------------------------------------------------------------
-    $scope.saveDevOptions = function () {
+    
+    function saveDevOptions()
+    {
         ZMDataModel.zmDebug("SaveDevOptions: called");
 
         if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
@@ -80,6 +93,11 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         }).then(function (res) {
             $ionicSideMenuDelegate.toggleLeft();
         });
+    }
+    
+    $scope.saveDevOptions = function () {
+            saveDevOptions();
+        
     };
     //------------------------------------------------------------------
     // controller main
