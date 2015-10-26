@@ -113,7 +113,27 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         ZMDataModel.displayBanner('info', ['settings saved']);
     }
 
-   
+    //----------------------------------------------------------------
+    // returns domain name in string - 
+    // http://stackoverflow.com/questions/8498592/extract-root-domain-name-from-string
+    //----------------------------------------------------------------
+    function extractDomain(url) {
+    var domain;
+    //find & remove protocol (http, ftp, etc.) and get domain
+    if (url.indexOf("://") > -1) {
+        domain = url.split('/')[2];
+    }
+    else {
+        domain = url.split('/')[0];
+    }
+
+    //find & remove port number
+    domain = domain.split(':')[0];
+
+    return domain;
+}
+
+    
     //----------------------------------------------------------------
     // returns reporting interval for monitor ID
     //----------------------------------------------------------------
@@ -157,6 +177,12 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
     $scope.monitors = message;
 
     $scope.loginData = ZMDataModel.getLogin();
+    
+    if ($scope.loginData.eventServer == "")
+    {
+        $scope.loginData.eventServer = "wss://"+extractDomain($scope.loginData.url)+":9000";
+    }
+    
 
     $scope.check = {
         isUseEventServer: ""
