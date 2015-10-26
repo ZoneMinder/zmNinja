@@ -331,7 +331,9 @@ angular.module('zmApp.controllers')
         ZMDataModel.zmLog ("Setting up push registration");
                  var push = PushNotification.init(
                     { "android": 
-                     {"senderID":zm.gcmSenderId}
+                     {"senderID":zm.gcmSenderId,
+                      "icon":"ic_stat_notification"
+                     }
                     },
                      
                      { "ios": 
