@@ -77,11 +77,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
+                            "xml": "<feature name=\"PushNotification\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"PushNotification\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
+                            "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -187,10 +187,10 @@
         "org.devgeeks.Canvas2ImagePlugin": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "uk.co.whiteoctober.cordova.appversion": {
+        "phonegap-plugin-push": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
-        "phonegap-plugin-push": {
+        "uk.co.whiteoctober.cordova.appversion": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
