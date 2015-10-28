@@ -92,11 +92,25 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         
                         if ($rootScope.tappedNotification)
                         {
-                            console.log ("***** NOTIFICATION TAPPED GOING TO EVENTS ");
+                            var ld = ZMDataModel.getLogin();
+                            
+                            console.log ("***** NOTIFICATION TAPPED  ");
                             $rootScope.tappedNotification = 0;
-                            $ionicHistory.nextViewOptions({disableBack: true});		
-                            $state.go("events", {"id": 0}, { reload: true });
-                            return;
+                            $ionicHistory.nextViewOptions({disableBack: true});	
+                            
+                            if (ld.onTapScreen == 'montage' )
+                            {
+                                ZMDataModel.zmDebug("Going to montage");
+                                $state.go("montage", {}, { reload: true });
+                                
+                                return;
+                            }
+                            else
+                            {
+                                ZMDataModel.zmDebug("Going to events");
+                                $state.go("events", {"id": 0}, { reload: true });
+                                return;
+                            }
                         }
                         
                                 $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);

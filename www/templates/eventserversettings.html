@@ -18,12 +18,13 @@
         <ion-checkbox ng-model="check.isUseEventServer">use event server</ion-checkbox>
         
         
-        
+        <ion-item  ng-href="#" ng-click="selectScreen()">
+            on tap, navigate to: {{defScreen}}
+        </ion-item>
 
         <label class="item item-input item-floating-label" ng-if="check.isUseEventServer">
             <span class="input-label">Event Server</span>
             <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="Event notification url" ng-model="loginData.eventServer">
-
 
         </label>
         
