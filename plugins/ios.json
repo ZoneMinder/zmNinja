@@ -83,6 +83,10 @@
                         {
                             "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Media\"><param name=\"ios-package\" value=\"CDVSound\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -191,6 +195,9 @@
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         },
         "uk.co.whiteoctober.cordova.appversion": {
+            "PACKAGE_NAME": "com.pliablepixels.zmninja"
+        },
+        "org.apache.cordova.media": {
             "PACKAGE_NAME": "com.pliablepixels.zmninja"
         }
     },
