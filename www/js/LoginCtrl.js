@@ -109,6 +109,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $scope.portalKeypress = function (evt) {
 
+        if (/^https:\/\//i.test($scope.loginData.url)) {
+            $scope.loginData.useSSL = true;
+        }
         // if ($scope.loginData.streamingurl.indexOf($scope.loginData.url) !=0)
         $scope.loginData.streamingurl = $scope.loginData.url;
 
