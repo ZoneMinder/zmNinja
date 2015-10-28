@@ -1,8 +1,7 @@
 # Change Log
 
-## [Unreleased](https://github.com/pliablepixels/zmNinja/tree/HEAD)
-
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.84...HEAD)
+## [v0.84](https://github.com/pliablepixels/zmNinja/tree/v0.84) (2015-10-28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.83...v0.84)
 
 **Implemented enhancements:**
 
@@ -11,14 +10,8 @@
 
 **Fixed bugs:**
 
-- Swiping to the left should reveal next monitor, not prev monitor \(seen on iOS 9\) [\#51](https://github.com/pliablepixels/zmNinja/issues/51)
-
-## [v0.84](https://github.com/pliablepixels/zmNinja/tree/v0.84) (2015-10-28)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.83...v0.84)
-
-**Fixed bugs:**
-
 - Ssl toggle and https in login [\#52](https://github.com/pliablepixels/zmNinja/issues/52)
+- Swiping to the left should reveal next monitor, not prev monitor \(seen on iOS 9\) [\#51](https://github.com/pliablepixels/zmNinja/issues/51)
 - rev 0.83, event icon is a solid block [\#50](https://github.com/pliablepixels/zmNinja/issues/50)
 - Monitor view: events not showing for deselected monitors \(and should since the goal in monitor view is to see all monitors which would include their events\). 	 	 [\#46](https://github.com/pliablepixels/zmNinja/issues/46)
 - Montage view: swipe shows deselected monitors \(and should not\). [\#45](https://github.com/pliablepixels/zmNinja/issues/45)
