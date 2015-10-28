@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel) {
+angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', '$ionicPlatform', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel, $ionicPlatform) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -70,6 +70,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         ZMDataModel.zmDebug("Saving Event Server data");
         var monstring = "";
         var intervalstring = "";
+        var plat = $ionicPlatform.is('ios') ? 'ios':'android';
         for (var i = 0; i < $scope.monitors.length; i++) {
             if (isNaN($scope.monitors[i].Monitor.reportingInterval)) {
                 $scope.monitors[i].Monitor.reportingInterval = 0;
@@ -93,10 +94,16 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         $scope.loginData.eventServerInterval = intervalstring;
 
         $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
+        $scope.loginData.disablePush = ($scope.check.disablePush) ? "1" : "0";
 
         ZMDataModel.setLogin($scope.loginData);
         console.log("**** EVENT MONSTRING " + monstring);
         console.log("**** EVENT INTERVALSTRING " + intervalstring);
+        
+        
+                    var pushstate  = "enabled";
+                    if ($scope.loginData.disablePush == "1")
+                            pushstate  = "disabled";
 
         if ($scope.loginData.isUseEventServer) {
             EventServer.init()
@@ -108,6 +115,25 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
                         monlist: monstring,
                         intlist: intervalstring
                     });
+                
+                    if ($rootScope.apnsToken !="")
+                    // if its defined then this is post init work
+                    // so lets transmit state here 
+                    
+                    {
+                        // we need to disable the token
+                        ZMDataModel.zmDebug("Sending token state "+pushstate);
+                        EventServer.sendMessage('push', 
+                                            {
+                                             type:'token',
+                                             platform:plat, 
+                                             token:$rootScope.apnsToken,
+                                             state:pushstate
+                        });
+                  
+                    }
+                    
+                
                 });
         }
         ZMDataModel.displayBanner('info', ['settings saved']);
@@ -185,9 +211,12 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
     
 
     $scope.check = {
-        isUseEventServer: ""
+        isUseEventServer: "",
+        disablePush:false,
     };
     $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
+    
+    $scope.check.disablePush = ($scope.loginData.disablePush == '1') ? true : false;
 
     var res = $scope.loginData.eventServerMonitors.split(",");
     var minterval = $scope.loginData.eventServerInterval.split(",");
