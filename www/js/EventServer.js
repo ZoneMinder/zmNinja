@@ -336,16 +336,19 @@ angular.module('zmApp.controllers')
     {
         ZMDataModel.zmLog ("Setting up push registration");
         var push;
-        
-        var src = "sounds/blop.mp3";
-        var media = $cordovaMedia.newMedia(src);
+        var mediasrc;
+        var media;
         
         
         var plat = $ionicPlatform.is('ios') ? 'ios':'android';
         
         
+        
+         
+        
         if (plat == 'ios')
         {
+            mediasrc = "sounds/blop.mp3";
             push = PushNotification.init(
                     
                      { "ios": 
@@ -359,6 +362,7 @@ angular.module('zmApp.controllers')
         }
         else
         {
+            mediasrc = "/android_asset/www/sounds/blop.mp3";
             push = PushNotification.init(
                     
                     { "android": 
@@ -371,7 +375,7 @@ angular.module('zmApp.controllers')
            
         }
 
-        
+        media = $cordovaMedia.newMedia(mediasrc);
        /* var push = PushNotification.init(
                     { "android": 
                      {"senderID":zm.gcmSenderId,

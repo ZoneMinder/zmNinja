@@ -1,5 +1,18 @@
 # Change Log
 
+## [Unreleased](https://github.com/pliablepixels/zmNinja/tree/HEAD)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.84...HEAD)
+
+**Implemented enhancements:**
+
+- offer an option to force web sockets even if push is supported [\#53](https://github.com/pliablepixels/zmNinja/issues/53)
+- customize screen to load on push notification tap [\#47](https://github.com/pliablepixels/zmNinja/issues/47)
+
+**Fixed bugs:**
+
+- Swiping to the left should reveal next monitor, not prev monitor \(seen on iOS 9\) [\#51](https://github.com/pliablepixels/zmNinja/issues/51)
+
 ## [v0.84](https://github.com/pliablepixels/zmNinja/tree/v0.84) (2015-10-28)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.83...v0.84)
 
