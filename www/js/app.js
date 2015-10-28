@@ -30,7 +30,7 @@ angular.module('zmApp', [
 
 .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
-    minEventServerVersion: '0.3',
+    minEventServerVersion: '0.4',
     gcmSenderId:'710936220256',
     httpTimeout: 15000,
     largeHttpTimeout: 60000,
