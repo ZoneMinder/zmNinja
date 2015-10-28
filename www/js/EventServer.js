@@ -11,8 +11,8 @@
 
 angular.module('zmApp.controllers')
 
-.factory('EventServer', ['ZMDataModel', '$rootScope', '$websocket', '$ionicPopup', '$timeout', '$q', 'zm', '$ionicPlatform', function
-    (ZMDataModel, $rootScope, $websocket, $ionicPopup, $timeout, $q, zm, $ionicPlatform, $cordovaBadge) {
+.factory('EventServer', ['ZMDataModel', '$rootScope', '$websocket', '$ionicPopup', '$timeout', '$q', 'zm', '$ionicPlatform', '$cordovaMedia', function
+    (ZMDataModel, $rootScope, $websocket, $ionicPopup, $timeout, $q, zm, $ionicPlatform, $cordovaMedia) {
 
 
         var ws;
@@ -65,11 +65,17 @@ angular.module('zmApp.controllers')
 
             if ($rootScope.apnsToken != '') {
                 var plat = $ionicPlatform.is('ios') ? 'ios':'android';
+                var ld = ZMDataModel.getLogin();
+                var pushstate  = "enabled";
+                if (ld.disablePush=="1")
+                        pushstate = "disabled";
                 
+                ZMDataModel.zmDebug("openHandShake: state of push is " + pushstate);
                 ws.$emit('push', {
                     type: 'token',
                     platform: plat,
-                    token: $rootScope.apnsToken
+                    token: $rootScope.apnsToken,
+                    state: pushstate
                 });
             }
 
@@ -329,7 +335,44 @@ angular.module('zmApp.controllers')
     function pushInit()
     {
         ZMDataModel.zmLog ("Setting up push registration");
-                 var push = PushNotification.init(
+        var push;
+        
+        var src = "sounds/blop.mp3";
+        var media = $cordovaMedia.newMedia(src);
+        
+        
+        var plat = $ionicPlatform.is('ios') ? 'ios':'android';
+        
+        
+        if (plat == 'ios')
+        {
+            push = PushNotification.init(
+                    
+                     { "ios": 
+                     {"alert": "true", 
+                      "badge": "true", 
+                      "sound": "true"}
+                    }  
+                     
+                );
+           
+        }
+        else
+        {
+            push = PushNotification.init(
+                    
+                    { "android": 
+                     {"senderID":zm.gcmSenderId,
+                      "icon":"ic_stat_notification"
+                     }
+                    }
+                     
+                );
+           
+        }
+
+        
+       /* var push = PushNotification.init(
                     { "android": 
                      {"senderID":zm.gcmSenderId,
                       "icon":"ic_stat_notification"
@@ -342,21 +385,29 @@ angular.module('zmApp.controllers')
                       "sound": "true"}
                     }  
                      
-                );
+                );*/
+        
+        
+         
            
-            
     
                 push.on('registration', function(data) {
                     ZMDataModel.zmDebug("Push Notification registration ID received: "  + JSON.stringify(data));
                     $rootScope.apnsToken = data.registrationId;
                     
                     var plat = $ionicPlatform.is('ios') ? 'ios':'android';
+                    var ld  = ZMDataModel.getLogin();
+                    var pushstate  = "enabled";
+                    if (ld.disablePush == '1')
+                            pushstate  = "disabled";
                     
                     sendMessage('push', 
                                             {
                                              type:'token',
                                              platform:plat, 
-                                             token:$rootScope.apnsToken});
+                                             token:$rootScope.apnsToken,
+                                             state:pushstate
+                    });
                     
        
                 });
@@ -379,6 +430,8 @@ angular.module('zmApp.controllers')
                     // data.sound,
                     // data.image,
                     // data.additionalData
+                     
+                      media.play();
                      
                      if (data.additionalData.foreground == false)
                      {
