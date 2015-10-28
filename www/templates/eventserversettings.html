@@ -16,6 +16,9 @@
         Please make sure your ZM settings are configured and saved before you configure the event server
         </div>
         <ion-checkbox ng-model="check.isUseEventServer">use event server</ion-checkbox>
+        
+        
+        
 
         <label class="item item-input item-floating-label" ng-if="check.isUseEventServer">
             <span class="input-label">Event Server</span>
@@ -24,6 +27,7 @@
 
         </label>
         
+            <ion-toggle ng-if="check.isUseEventServer" ng-model="check.disablePush" toggle-class="toggle-calm" class="item-text-wrap">only use websockets<br/><p>disables APNS/GCM</p></ion-toggle>
         <ion-list>
             <div ng-repeat="monitor in monitors">
             
