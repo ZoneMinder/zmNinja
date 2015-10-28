@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', '$ionicPlatform', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel, $ionicPlatform) {
+angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', '$ionicPlatform','$ionicPopup', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel, $ionicPlatform, $ionicPopup) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -11,8 +11,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
-
-
+    
+    
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
@@ -42,6 +42,62 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
 
 
     });
+    
+    //--------------------------------------------------
+    // notification tap action
+    //--------------------------------------------------
+   
+       
+    
+    $scope.selectScreen = function () {
+       
+          var  ld = ZMDataModel.getLogin();
+        
+        $scope.myopt = {
+            selectedState: ld.onTapScreen
+        };
+        
+   
+        
+        $rootScope.zmPopup = $ionicPopup.show({
+            scope: $scope,
+            template: '<ion-radio-fix ng-model="myopt.selectedState" ng-value="\'events\'"> Event view </ion-radio-fix><ion-radio-fix ng-model="myopt.selectedState" ng-value="\'montage\'"> Montage view </ion-radio-fix>',
+
+
+            title: 'View to navigate to:',
+            subTitle: 'currently set to: ' + ld.onTapScreen,
+            buttons: [
+                {
+                    text: 'Cancel',
+                    onTap: function (e) {
+                        return "CANCEL";
+                    }
+
+                },
+                {
+                    text: 'OK',
+                    onTap: function (e) {
+                        return "OK";
+
+                    }
+               }
+           ]
+        });
+
+        // It seems invoking a popup within a popup handler
+        // causes issues. Doing this outside due to that reason
+        $rootScope.zmPopup.then(function (res) {
+            
+            if (res == "OK") {
+                ld.onTapScreen = $scope.myopt.selectedState;
+                ZMDataModel.zmDebug("Setting new onTap State:");
+                ZMDataModel.setLogin(ld);
+                $scope.defScreen = $scope.myopt.selectedState;
+               // if ($scope.myopt.selectedState != "")
+                   // controlZM($scope.myopt.selectedState);
+            }
+        });
+    };
     
     //----------------------------------------------------------------
     // Accordion list show/hide
@@ -201,8 +257,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
     //------------------------------------------------------------------------
     $scope.monitors = [];
     $scope.monitors = message;
+    
 
     $scope.loginData = ZMDataModel.getLogin();
+    $scope.defScreen = $scope.loginData.onTapScreen;
     
     if ($scope.loginData.eventServer == "")
     {

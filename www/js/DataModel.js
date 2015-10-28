@@ -48,6 +48,7 @@ angular.module('zmApp.controllers')
         'pinCode':'',
         'canSwipeMonitors':true,
         'persistMontageOrder':false,
+         'onTapScreen':'events',
         
     };
      
@@ -217,6 +218,12 @@ angular.module('zmApp.controllers')
             if (window.localStorage.getItem("url") != undefined) {
                 loginData.url =
                     window.localStorage.getItem("url");
+
+            }
+            
+             if (window.localStorage.getItem("onTapScreen") != undefined) {
+                loginData.onTapScreen =
+                    window.localStorage.getItem("onTapScreen");
 
             }
             
@@ -427,6 +434,8 @@ angular.module('zmApp.controllers')
             window.localStorage.setItem("isUseAuth", loginData.isUseAuth);
             window.localStorage.setItem("isUseEventServer", loginData.isUseEventServer);
             window.localStorage.setItem("disablePush", loginData.disablePush);
+            window.localStorage.setItem("onTapScreen", loginData.onTapScreen);
+            
             
             console.log ("***** SETTING ISUSEAUTH TO " + loginData.isUseAuth);
 

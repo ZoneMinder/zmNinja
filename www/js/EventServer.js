@@ -431,7 +431,7 @@ angular.module('zmApp.controllers')
                     // data.image,
                     // data.additionalData
                      
-                      media.play();
+                      
                      
                      if (data.additionalData.foreground == false)
                      {
@@ -446,6 +446,7 @@ angular.module('zmApp.controllers')
                      {
                          // alarm received in foregroun
                          //var str=data.additionalData.alarm_details;
+                         media.play();
                          var str = data.message;
                        // console.log ("***STRING: " + str + " " +str.status);
                          var eventsToDisplay=[];
