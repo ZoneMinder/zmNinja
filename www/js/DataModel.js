@@ -39,6 +39,7 @@ angular.module('zmApp.controllers')
         'keepAwake':true, // don't dim/dim during live view
         'isUseAuth':true, // true if user wants ZM auth
         'isUseEventServer':false, // true if you configure the websocket event server
+         'disablePush':false, // true if only websocket mode is desired
          'eventServerMonitors':'', // list of monitors to notify from ES
         'eventServerInterval':'', // list of intervals for all monitors
         'refreshSec':"2", // timer value for frame change in sec
@@ -167,6 +168,18 @@ angular.module('zmApp.controllers')
             else
             {
                 loginData.isUseEventServer = "0"; 
+               
+            }
+            
+            if (window.localStorage.getItem("disablePush") != undefined) {
+                loginData.disablePush =
+                    window.localStorage.getItem("disablePush");
+                
+
+            }
+            else
+            {
+                loginData.disablePush = "0"; 
                
             }
             
@@ -412,7 +425,8 @@ angular.module('zmApp.controllers')
             
             
             window.localStorage.setItem("isUseAuth", loginData.isUseAuth);
-              window.localStorage.setItem("isUseEventServer", loginData.isUseEventServer);
+            window.localStorage.setItem("isUseEventServer", loginData.isUseEventServer);
+            window.localStorage.setItem("disablePush", loginData.disablePush);
             
             console.log ("***** SETTING ISUSEAUTH TO " + loginData.isUseAuth);
 
