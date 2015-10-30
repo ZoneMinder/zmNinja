@@ -19,13 +19,13 @@ angular.module('zmApp.controllers')
 
         var localNotificationId = 0;
 
-       
+
         //--------------------------------------------------------------------------
         // used to compare versions of event server 
         //--------------------------------------------------------------------------
-        
+
         //credit: https://gist.github.com/alexey-bass/1115557
-        
+
         function versionCompare(left, right) {
             if (typeof left + typeof right != 'stringstring')
                 return false;
@@ -46,7 +46,7 @@ angular.module('zmApp.controllers')
             return 0;
         }
 
-       
+
         //--------------------------------------------------------------------------
         // called when the websocket is opened
         //--------------------------------------------------------------------------
@@ -64,12 +64,12 @@ angular.module('zmApp.controllers')
             });
 
             if ($rootScope.apnsToken != '') {
-                var plat = $ionicPlatform.is('ios') ? 'ios':'android';
+                var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
                 var ld = ZMDataModel.getLogin();
-                var pushstate  = "enabled";
-                if (ld.disablePush=="1")
-                        pushstate = "disabled";
-                
+                var pushstate = "enabled";
+                if (ld.disablePush == "1")
+                    pushstate = "disabled";
+
                 ZMDataModel.zmDebug("openHandShake: state of push is " + pushstate);
                 ws.$emit('push', {
                     type: 'token',
@@ -80,9 +80,9 @@ angular.module('zmApp.controllers')
             }
 
         }
-        
-        
-        
+
+
+
 
 
 
@@ -103,12 +103,12 @@ angular.module('zmApp.controllers')
                 d.reject("false");
                 return d.promise;
             }
-            
+
             if (!$rootScope.apnsToken)
                 pushInit();
 
 
-            
+
             if (typeof ws !== 'undefined') {
                 ZMDataModel.zmDebug("Event server already initialized");
                 d.resolve("true");
@@ -159,7 +159,7 @@ angular.module('zmApp.controllers')
                         $ionicPopup.alert({
                             title: 'Event Server version not supported',
                             template: 'You are running version ' + str.version + ". Please upgrade to " +
-                            zm.minEventServerVersion
+                                zm.minEventServerVersion
                         });
                     }
 
@@ -206,29 +206,29 @@ angular.module('zmApp.controllers')
                             }
 
                         }
-                    } 
-                    
-                   /* if (!$ionicPlatform.is('ios') ) 
-                    {
-                        // this is only used for local notifications which is not
-                        // used for iOS
-                        // lets set badge of app irrespective of background or foreground
-                        $cordovaBadge.hasPermission().then(function (yes) {
+                    }
 
-                            $cordovaBadge.set($rootScope.alarmCount).then(function () {
-                                // You have permission, badge set.
-                                ZMDataModel.zmDebug("Setting badge to " + $rootScope.alarmCount);
-                            }, function (err) {
-                                // You do not have permission.
-                                ZMDataModel.zmDebug("Error Setting badge to " + $rootScope.alarmCount);
-                            });
+                    /* if (!$ionicPlatform.is('ios') ) 
+                     {
+                         // this is only used for local notifications which is not
+                         // used for iOS
+                         // lets set badge of app irrespective of background or foreground
+                         $cordovaBadge.hasPermission().then(function (yes) {
+
+                             $cordovaBadge.set($rootScope.alarmCount).then(function () {
+                                 // You have permission, badge set.
+                                 ZMDataModel.zmDebug("Setting badge to " + $rootScope.alarmCount);
+                             }, function (err) {
+                                 // You do not have permission.
+                                 ZMDataModel.zmDebug("Error Setting badge to " + $rootScope.alarmCount);
+                             });
 
 
-                            // You have permission
-                        }, function (no) {
-                            ZMDataModel.zmDebug("zmNinja does not have badge permissions. Please check your phone notification settings");
-                        });
-                    }*/
+                             // You have permission
+                         }, function (no) {
+                             ZMDataModel.zmDebug("zmNinja does not have badge permissions. Please check your phone notification settings");
+                         });
+                     }*/
 
                 } //end of success handler
 
@@ -331,174 +331,171 @@ angular.module('zmApp.controllers')
 
 
         }
-        
-    function pushInit()
-    {
-        ZMDataModel.zmLog ("Setting up push registration");
-        var push;
-        var mediasrc;
-        var media;
-        
-        
-        var plat = $ionicPlatform.is('ios') ? 'ios':'android';
-        
-        
-        
-         
-        
-        if (plat == 'ios')
-        {
-            mediasrc = "sounds/blop.mp3";
-            push = PushNotification.init(
-                    
-                     { "ios": 
-                     {"alert": "true", 
-                      "badge": "true", 
-                      "sound": "true"}
-                    }  
-                     
-                );
-           
-        }
-        else
-        {
-            mediasrc = "/android_asset/www/sounds/blop.mp3";
-            push = PushNotification.init(
-                    
-                    { "android": 
-                     {"senderID":zm.gcmSenderId,
-                      "icon":"ic_stat_notification"
-                     }
+
+        function pushInit() {
+            ZMDataModel.zmLog("Setting up push registration");
+            var push;
+            var mediasrc;
+            var media;
+
+
+            var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
+
+
+            if ($rootScope.platformOS == 'unknown')
+            {
+                ZMDataModel.zmLog ("Desktop instance, not setting up push. Websockets only, I hope");
+                return;
+            }
+
+
+
+            if (plat == 'ios') {
+                mediasrc = "sounds/blop.mp3";
+                push = PushNotification.init(
+
+                    {
+                        "ios": {
+                            "alert": "true",
+                            "badge": "true",
+                            "sound": "true"
+                        }
                     }
-                     
+
                 );
-           
-        }
 
-        console.log ("*********** MEDIA BLOG IS "+mediasrc);
-        media = $cordovaMedia.newMedia(mediasrc);
-       /* var push = PushNotification.init(
-                    { "android": 
-                     {"senderID":zm.gcmSenderId,
-                      "icon":"ic_stat_notification"
-                     }
-                    },
-                     
-                     { "ios": 
-                     {"alert": "true", 
-                      "badge": "true", 
-                      "sound": "true"}
-                    }  
-                     
-                );*/
-        
-        
-         
-           
-    
-                push.on('registration', function(data) {
-                    ZMDataModel.zmDebug("Push Notification registration ID received: "  + JSON.stringify(data));
-                    $rootScope.apnsToken = data.registrationId;
-                    
-                    var plat = $ionicPlatform.is('ios') ? 'ios':'android';
-                    var ld  = ZMDataModel.getLogin();
-                    var pushstate  = "enabled";
-                    if (ld.disablePush == '1')
-                            pushstate  = "disabled";
-                    
-                    sendMessage('push', 
-                                            {
-                                             type:'token',
-                                             platform:plat, 
-                                             token:$rootScope.apnsToken,
-                                             state:pushstate
-                    });
-                    
-       
+            } else {
+                mediasrc = "/android_asset/www/sounds/blop.mp3";
+                push = PushNotification.init(
+
+                    {
+                        "android": {
+                            "senderID": zm.gcmSenderId,
+                            "icon": "ic_stat_notification"
+                        }
+                    }
+
+                );
+
+            }
+
+            console.log("*********** MEDIA BLOG IS " + mediasrc);
+            media = $cordovaMedia.newMedia(mediasrc);
+            /* var push = PushNotification.init(
+                         { "android": 
+                          {"senderID":zm.gcmSenderId,
+                           "icon":"ic_stat_notification"
+                          }
+                         },
+                          
+                          { "ios": 
+                          {"alert": "true", 
+                           "badge": "true", 
+                           "sound": "true"}
+                         }  
+                          
+                     );*/
+
+
+
+
+
+            push.on('registration', function (data) {
+                ZMDataModel.zmDebug("Push Notification registration ID received: " + JSON.stringify(data));
+                $rootScope.apnsToken = data.registrationId;
+
+                var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
+                var ld = ZMDataModel.getLogin();
+                var pushstate = "enabled";
+                if (ld.disablePush == '1')
+                    pushstate = "disabled";
+
+                sendMessage('push', {
+                    type: 'token',
+                    platform: plat,
+                    token: $rootScope.apnsToken,
+                    state: pushstate
                 });
-                
-                
-                 push.on('notification', function(data) {
-                     
-                     var ld = ZMDataModel.getLogin();
-                     if (ld.isUseEventServer=="0")
-                     {
-                         ZMDataModel.zmDebug("received push notification, but event server disabled. Not acting on it");
-                         return;
-                     }
-                     console.log ("************* PUSH RECEIVED ******************");
-                    console.log (JSON.stringify(data));
-                     
-                    // data.message,
-                    // data.title,
-                    // data.count,
-                    // data.sound,
-                    // data.image,
-                    // data.additionalData
-                     
-                      
-                     
-                     if (data.additionalData.foreground == false)
-                     {
-                         // This means push notification tap in background
-                         
-                         ZMDataModel.zmDebug("**** NOTIFICATION TAPPED SETTING TAPPED TO 1 ****");
-                        $rootScope.alarmCount="0";
-                        $rootScope.isAlarm = 0;
-                        $rootScope.tappedNotification = 1;
-                     }
-                     else
-                     {
-                         // alarm received in foregroun
-                         //var str=data.additionalData.alarm_details;
-                         console.log ("PLAYING MEDIA");
-                         media.play();
-                         var str = data.message;
-                       // console.log ("***STRING: " + str + " " +str.status);
-                         var eventsToDisplay=[];
 
-                         /*console.log ("PUSH IS " + JSON.stringify(str.events));
-                         var alarmtext = "";
-                         for (var iter=0; iter<str.events.length; iter++)
-                         {
-                               // lets stack the display so they don't overwrite
-                             console.log ("PUSHING " + str.events[iter].Name+": new event ("+str.events[iter].EventId+")"); 
-                             
-                             var evtstr  = str.events[iter].Name+": new event ("+str.events[iter].EventId+")";
-                            eventsToDisplay.push(evtstr);
-                             
-                         }*/
-                         
-       
-                            ZMDataModel.displayBanner('alarm', [str], 0, 5000*eventsToDisplay.length);
+
+            });
+
+
+            push.on('notification', function (data) {
+
+                var ld = ZMDataModel.getLogin();
+                if (ld.isUseEventServer == "0") {
+                    ZMDataModel.zmDebug("received push notification, but event server disabled. Not acting on it");
+                    return;
+                }
+                console.log("************* PUSH RECEIVED ******************");
+                console.log(JSON.stringify(data));
+
+                // data.message,
+                // data.title,
+                // data.count,
+                // data.sound,
+                // data.image,
+                // data.additionalData
+
+
+
+                if (data.additionalData.foreground == false) {
+                    // This means push notification tap in background
+
+                    ZMDataModel.zmDebug("**** NOTIFICATION TAPPED SETTING TAPPED TO 1 ****");
+                    $rootScope.alarmCount = "0";
+                    $rootScope.isAlarm = 0;
+                    $rootScope.tappedNotification = 1;
+                } else {
+                    // alarm received in foregroun
+                    //var str=data.additionalData.alarm_details;
+                    console.log("PLAYING MEDIA");
+                    media.play();
+                    var str = data.message;
+                    // console.log ("***STRING: " + str + " " +str.status);
+                    var eventsToDisplay = [];
+
+                    /*console.log ("PUSH IS " + JSON.stringify(str.events));
+                    var alarmtext = "";
+                    for (var iter=0; iter<str.events.length; iter++)
+                    {
+                          // lets stack the display so they don't overwrite
+                        console.log ("PUSHING " + str.events[iter].Name+": new event ("+str.events[iter].EventId+")"); 
                         
+                        var evtstr  = str.events[iter].Name+": new event ("+str.events[iter].EventId+")";
+                       eventsToDisplay.push(evtstr);
+                        
+                    }*/
 
-                         $rootScope.isAlarm = 1;
 
-                         // Show upto a max of 99 when it comes to display
-                         // so aesthetics are maintained
-                         if ($rootScope.alarmCount == "99")
-                         {
-                             $rootScope.alarmCount="99+";
-                         }
-                         if ($rootScope.alarmCount != "99+")
-                         {
-                            $rootScope.alarmCount = (parseInt($rootScope.alarmCount)+1).toString();
-                         }
-                     }
-                });
+                    ZMDataModel.displayBanner('alarm', [str], 0, 5000 * eventsToDisplay.length);
 
-                push.on('error', function(e) {
-                     console.log ("************* PUSH ERROR ******************");
-                });
-    }
+
+                    $rootScope.isAlarm = 1;
+
+                    // Show upto a max of 99 when it comes to display
+                    // so aesthetics are maintained
+                    if ($rootScope.alarmCount == "99") {
+                        $rootScope.alarmCount = "99+";
+                    }
+                    if ($rootScope.alarmCount != "99+") {
+                        $rootScope.alarmCount = (parseInt($rootScope.alarmCount) + 1).toString();
+                    }
+                }
+            });
+
+            push.on('error', function (e) {
+                console.log("************* PUSH ERROR ******************");
+            });
+        }
 
         return {
             refresh: refresh,
             init: init,
             sendMessage: sendMessage,
-            pushInit:pushInit
-            
+            pushInit: pushInit
+
         };
 
 

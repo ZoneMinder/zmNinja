@@ -837,6 +837,7 @@ angular.module('zmApp.controllers')
             
             
             //reset badge count
+             if (window.cordova && window.cordova.plugins.notification) {
              $cordovaBadge.set(0).then(function() {
                                 // You have permission, badge set.
                               }, function(err) {
@@ -845,6 +846,7 @@ angular.module('zmApp.controllers')
                               });
             
             $cordovaLocalNotification.clearAll();
+             }
             
         });
 
