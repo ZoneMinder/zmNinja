@@ -8,6 +8,22 @@ Video Demo
 -------------
 Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 
+Key Features (just watch the video already)
+--------------------------------------------
+* Receive real time push notifications for alarms as they happen. You need to install my [Event Server](https://github.com/pliablepixels/zmeventserver) for this. You can even control monitors you want to be notified of and reporting intervals (if you defined your zones loosely you don't want pings every second, do you?)
+
+* View live monitors and events 
+
+* High speed event scrubbing and control
+
+* Pullup handy views of activities based on time 
+
+* Incredible zoom/pan timeline of alarms
+
+* Control Zoneminder - restart, change states
+
+* Swipe/pan between monitors
+
 
 Thanks
 ------
