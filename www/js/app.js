@@ -479,9 +479,18 @@ angular.module('zmApp', [
         $rootScope.tappedNotification = 0;
          //var eventsToDisplay=[];
         $rootScope.alarmCount="0";
+        $rootScope.platformOS="unknown";
        
 
         //console.log ("HERE");
+    
+        if  ($ionicPlatform.is('ios'))
+            $rootScope.platformOS = "ios";
+    
+    
+    if  ($ionicPlatform.is('android'))
+            $rootScope.platformOS = "android";
+        
         ZMDataModel.init();
         EventServer.init();
         // for making sure we canuse $state.go with ng-click
