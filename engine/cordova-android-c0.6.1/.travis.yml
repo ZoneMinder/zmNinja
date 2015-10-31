@@ -1,6 +1,0 @@
-language: android
-sudo: false
-install: npm install
-script:
-    - npm test
-    - npm run test-build
