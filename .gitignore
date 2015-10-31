@@ -4,5 +4,6 @@
 node_modules/
 platforms/
 release_files/
-plugins/
+plugins/*
+!plugins/fetch.json
 engine/
