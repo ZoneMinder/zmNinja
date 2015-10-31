@@ -68,15 +68,17 @@ angular.module('angular-carousel')
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
 	// PP - added touchend to make it react to touch devices
             element.on('touchend', toggleAutoPlay);
-            element.on('mouseenter', stopAutoPlay);
-            element.on('mouseleave', restartTimer);
+            element.on('click', toggleAutoPlay); // PP for  desktop
+            //element.on('mouseenter', stopAutoPlay);
+            //element.on('mouseleave', restartTimer);
         }
 
         scope.$on('$destroy', function(){
             stopAutoPlay();
-            element.off('mouseenter', stopAutoPlay);
-            element.off('mouseleave', restartTimer);
+            //element.off('mouseenter', stopAutoPlay);
+            //element.off('mouseleave', restartTimer);
             element.off('touchend', toggleAutoPlay); // PP - remove touchend too
+            element.off('click', toggleAutoPlay); // PP - remove mouse click for desktop
         });
     }
   };
