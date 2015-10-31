@@ -29,7 +29,7 @@ angular.module('zmApp', [
 //-----------------------------------------------
 
 .constant('zm', {
-    minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
+    minAppVersion: '1.28.105', // if ZM is less than this, the app won't work
     minEventServerVersion: '0.4',
     gcmSenderId:'710936220256',
     httpTimeout: 15000,
@@ -57,7 +57,9 @@ angular.module('zmApp', [
     montageScaleFrequency: 300,
     eventsListDetailsHeight: 200.0,
     eventsListScrubHeight: 300,
-    loginScreenString: "var currentView = 'login'" // Isn't there a better way?
+    loginScreenString: "var currentView = 'login'", // Isn't there a better way?
+    desktopUrl:"/zm",
+    desktopApiUrl: "/api/zm"
 })
 
 //------------------------------------------------------------------
@@ -195,11 +197,33 @@ angular.module('zmApp', [
 // That way the user can try again, and won't get stuck
 // Also remember you need to add it to .config
 //------------------------------------------------------------------
-.factory('timeoutHttpIntercept', function ($rootScope, $q, zm) {
+.factory('timeoutHttpIntercept', [  '$rootScope', '$q', 'zm', '$injector', function ( $rootScope, $q, zm, $injector) {
     var zmCookie = "";
 
     return {
         'request': function (config) {
+            
+            
+            if ($rootScope.platformOS == "unknown")
+            {
+                var zmD = $injector.get('ZMDataModel');
+                var ld = zmD.getLogin();
+                
+                // This takes care of url and apiurl as they have
+                // the same base
+                if (config.url.indexOf(ld.url) > -1)
+                {
+                    zmD.zmDebug("Running in desktop, removing URLs for proxy");
+                    zmD.zmDebug ("OLD URL " + config.url);
+                    config.url = config.url.replace(ld.url,zm.desktopUrl);
+                     zmD.zmDebug ("NEW URL " + config.url);
+                }
+                
+                
+                
+            }
+            
+            
             // config.withCredentials = true;
             if (zmCookie) {
                 config.headers.Cookie = "ZMSESSID=" + zmCookie;
@@ -240,7 +264,7 @@ angular.module('zmApp', [
 
 
     };
-})
+}])
 
 //-----------------------------------------------------------------
 // This service automatically logs into ZM at periodic intervals
@@ -328,9 +352,10 @@ angular.module('zmApp', [
 
             });
 
-
+        
 
         var loginData = ZMDataModel.getLogin();
+        //ZMDataModel.zmDebug ("*** AUTH LOGIN URL IS " + loginData.url);
         $http({
                 method: 'POST',
                 //withCredentials: true,
@@ -969,6 +994,8 @@ angular.module('zmApp', [
 
     $urlRouterProvider.otherwise(function ($injector, $location) {
         var $state = $injector.get("$state");
+        //console.log ("******************* OTHERWISE PROBLEM");
+        var $rootScope = $injector.get('$rootScope');
         $state.go("zm-portal-login");
     });
 

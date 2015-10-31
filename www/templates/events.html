@@ -158,7 +158,7 @@
                                 <li ng-repeat="slide in slides">
                                     <!-- Linwood scaling -->
                                      <img imageonload="finishedLoadingImage($index)"  
-                                         image-spinner-src="{{loginData.url}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380"
+                                         image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380"
                                              image-spinner-loader="lines"
                                              height="190px";/>
                                     <br/>
@@ -221,7 +221,7 @@
                       id="hour-{{$index}}">
                     
                     <span style="color:black">
-                    <a class="item item-icon-right" href="#" 
+                    <a class="item item-icon-right" href="" 
                        ng-click="showEvents('1', 'hour',hour.mid);">
                         <b>{{hour.monitor}}</b> {{hour.events}} events
                         <i class="icon ion-android-arrow-dropright"></i>
@@ -237,7 +237,7 @@
                       id="day-{{$index}}">
                     
                     <span style="color:black">
-                    <a class="item item-icon-right" href="#" 
+                    <a class="item item-icon-right" href="" 
                        ng-click="showEvents('1', 'day',day.mid);">
                         <b>{{day.monitor}}</b> {{day.events}} events
                         <i class="icon ion-android-arrow-dropright"></i>
@@ -254,7 +254,7 @@
                       id="week-{{$index}}">
                     
                     <span style="color:black">
-                    <a class="item item-icon-right" href="#" 
+                    <a class="item item-icon-right" href="" 
                        ng-click="showEvents('1', 'week',week.mid);">
                         <b>{{week.monitor}}</b> {{week.events}} events
                         <i class="icon ion-android-arrow-dropright"></i>
@@ -270,7 +270,7 @@
                       id="month-{{$index}}">
                     
                     <span style="color:black">
-                    <a class="item item-icon-right" href="#" 
+                    <a class="item item-icon-right" href="" 
                        ng-click="showEvents('1', 'months',month.mid);">
                         <b>{{month.monitor}}</b> {{month.events}} events
                         <i class="icon ion-android-arrow-dropright"></i>
