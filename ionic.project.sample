@@ -1,0 +1,25 @@
+{
+  "name": "zmNinja",
+  "app_id": "8f73ad5f",
+  "proxies": [
+    {
+      "path": "/zm",
+      "proxyUrl": "http://server/zm", 
+      "rejectUnauthorized" : false
+    }],
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
+  ],
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
+}
