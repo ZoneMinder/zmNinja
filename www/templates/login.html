@@ -71,17 +71,19 @@
             
             
             
+            <div ng-if="$root.platformOS != 'unknown'">
+                <label>
 
-            <label>
-            <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();"
-                        ng-checked="{{loginData.usePin}}"
-                        toggle-class="toggle-calm">Password protect</ion-toggle>
-            </label>
+                <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();"
+                            ng-checked="{{loginData.usePin}}"
+                            toggle-class="toggle-calm">Password protect</ion-toggle>
+                </label>
+            </div>
             
             <label>
             <ion-toggle ng-model="loginData.useSSL"
                         ng-checked="{{loginData.useSSL}}"
-                        toggle-class="toggle-calm">Use SSL <span ng-if="$root.platformOS == 'unknown'">(does not work in desktop)</span></ion-toggle>
+                        toggle-class="toggle-calm">Use SSL</ion-toggle>
             </label>
 
             <div ng-if="$root.platformOS != 'unknown'">
