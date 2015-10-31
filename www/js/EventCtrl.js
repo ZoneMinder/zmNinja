@@ -17,7 +17,8 @@ angular.module('zmApp.controllers')
         //---------------------------------------------------
     
         var loginData = ZMDataModel.getLogin();
-       
+        
+        
 
         $scope.hours = [];
         $scope.days = [];
@@ -87,6 +88,11 @@ angular.module('zmApp.controllers')
         $scope.myfilter = "";
         $scope.eventCommands = eventCommands;
         $scope.loginData = ZMDataModel.getLogin();
+        $scope.playbackURL = $scope.loginData.url;
+        if ($rootScope.platformOS == "unknown")
+        {
+           $scope.playbackURL = zm.desktopUrl;
+        }
 
         $scope.mycarousel = {
             index: 0
@@ -1105,6 +1111,15 @@ angular.module('zmApp.controllers')
             $scope.eFramesNum = eframes;
             $scope.eventDur = Math.round(edur);
             $scope.loginData = ZMDataModel.getLogin();
+            
+            $scope.playbackURL = $scope.loginData.url;
+        if ($rootScope.platformOS == "unknown")
+        {
+           $scope.playbackURL = zm.desktopUrl;
+        }
+            
+            
+            
             $scope.eventBasePath = basepath;
             $scope.relativePath = relativepath;
             $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
