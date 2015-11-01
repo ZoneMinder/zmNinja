@@ -54,22 +54,22 @@
                                     <div ng-switch-when="Motion">
 
                                         <i class="ion-android-walk" style="float:left; font-size:200%;"></i>
-                                        <div ng-if="event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px; font-size:200%;"></i>
+                                        <div ng-if="event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
+                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px; font-size:100%;"></i>
                                         </div>
                                         <br/>
                                     </div>
                                     <div ng-switch-when="Signal">
                                         <i class="ion-wifi" style="float:left; font-size:200%;"></i>
-                                        <div ng-if="event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:200%;"></i>
+                                        <div ng-if=" event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
+                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:100%;"></i>
                                         </div>
                                         <br/>
                                     </div>
                                     <div ng-switch-default>
                                         <i class="ion-ionic" style="float:left; font-size:200%;"></i>
-                                        <div ng-if="event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:200%;"></i>
+                                        <div ng-if= "event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
+                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:100%;"></i>
                                         </div>
                                         <br/>
                                     </div>

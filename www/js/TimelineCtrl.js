@@ -679,6 +679,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                     if (idfound)
                                     {
+                                        
+                                        if  (typeof myevents[i].Event.DefaultVideo === 'undefined')
+                myevents[i].Event.DefaultVideo="";
                                     graphData.add({
                                         id: graphIndex,
                                         content: "<span class='my-vis-font'>" + myevents[i].Event.Notes + "</span>",
