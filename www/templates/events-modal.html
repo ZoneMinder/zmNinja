@@ -8,7 +8,7 @@
 
 
                     <div ng-if="defaultVideo=='' || loginData.enableh264==false">
-                        <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{calcMsTimer(eFramesNum, eventDur)/1000.0}}" rn-carousel-pause-on-hover>
+                        <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{calcMsTimer(eFramesNum, eventDur)/1000.0}}" rn-carousel-pause-on-hover  rn-platform="$root.platformOS">
 
                             <li ng-repeat="slide in slides">
 
