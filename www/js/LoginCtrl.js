@@ -173,6 +173,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.username = $scope.loginData.username.trim();
         $scope.loginData.streamingurl = $scope.loginData.streamingurl.trim();
         $scope.loginData.eventServer = $scope.loginData.eventServer.trim();
+        
+        
 
         $scope.loginData.isUseAuth = ($scope.check.isUseAuth) ? "1" : "0";
          $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
