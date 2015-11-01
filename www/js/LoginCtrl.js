@@ -272,6 +272,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                         template: 'Please explore the menu and enjoy zmNinja!'
                     }).then(function (res) {
                         $ionicSideMenuDelegate.toggleLeft();
+                        ZMDataModel.zmDebug ("Force reloading monitors...");
+        var refresh = ZMDataModel.getMonitors(1);
                     });
 
                 })
@@ -291,6 +293,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     
     $scope.saveItems = function () {
         saveItems();
+        
 
     };
 
