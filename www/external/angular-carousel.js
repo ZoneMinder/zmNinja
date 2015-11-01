@@ -29,7 +29,7 @@ angular.module('angular-carousel')
 // so slide does not progress if image is not loaded or gets an error
 // imageLoadingDataShare is the factory that has a value
 // of 0 if no image is being loaded, -1 if there was an error and 1 if an image is currently being loaded
-.directive('rnCarouselAutoSlide', ['$interval','$timeout', 'imageLoadingDataShare', function($interval,$timeout, imageLoadingDataShare) {
+.directive('rnCarouselAutoSlide', ['$interval','$timeout', 'imageLoadingDataShare', function($interval,$timeout, imageLoadingDataShare ) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
@@ -67,8 +67,20 @@ angular.module('angular-carousel')
 
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
 	// PP - added touchend to make it react to touch devices
+           if (attrs.hasOwnProperty('rnPlatform') && attrs.rnPlatform == 'unknown')
+	   {
+		 console.log ("Desktop, de-registering any old click");
+            	element.off('click', toggleAutoPlay); // PP - remove mouse click for desktop
+           	 element.on('click', toggleAutoPlay); // PP for  desktop
+		 console.log ("Desktop, registering click");
+	   }
+	  else
+	  {
+	    console.log ("Device, de-registering any old touch");
+            element.off('touchend', toggleAutoPlay); // PP - remove touchend too
             element.on('touchend', toggleAutoPlay);
-            element.on('click', toggleAutoPlay); // PP for  desktop
+	    console.log ("Device, registering touch");
+	  }
             //element.on('mouseenter', stopAutoPlay);
             //element.on('mouseleave', restartTimer);
         }
@@ -367,7 +379,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         scope.nextSlide = function(slideOptions) {
 			   if (imageLoadingDataShare.get() == 1) // PP- If the image is still being loaded, hold on, don't change
 			   {
-				console.log ("Image is still loading, not skipping slides");
+				//console.log ("Image is still loading, not skipping slides");
 				return;
 			   }
                             var index = scope.carouselIndex + 1;
