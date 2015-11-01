@@ -698,7 +698,8 @@ angular.module('zmApp.controllers')
                 // now get event details to show alarm frames
                 var loginData = ZMDataModel.getLogin();
 
-
+                if  (typeof event.Event.DefaultVideo === 'undefined')
+                event.Event.DefaultVideo="";
                 // grab video details
                 event.Event.video = {};
                 var videoURL = loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
@@ -1122,8 +1123,12 @@ angular.module('zmApp.controllers')
             $scope.eFramesNum = eframes;
             $scope.eventDur = Math.round(edur);
             $scope.loginData = ZMDataModel.getLogin();
+            if  (typeof event.Event.DefaultVideo === 'undefined')
+                event.Event.DefaultVideo="";
+            
             $scope.defaultVideo = event.Event.DefaultVideo;
 
+        
 
             event.Event.video = {};
             var videoURL = $scope.loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
