@@ -138,7 +138,7 @@
                                 <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
 
                                 <div style="height:190px">
-                                    <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover>
+                                    <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover rn-platform="$root.platformOS">
                                         <li ng-repeat="slide in slides">
                                             <!-- Linwood scaling -->
                                             <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
