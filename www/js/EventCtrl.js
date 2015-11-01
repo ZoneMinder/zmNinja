@@ -7,7 +7,7 @@
 // and whether the new API has a better mechanism
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$cordovaBadge', '$cordovaLocalNotification', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $cordovaBadge, $cordovaLocalNotification) {
+    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification) {
 
         // events in last 5 minutes
         // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -15,6 +15,17 @@ angular.module('zmApp.controllers')
         //---------------------------------------------------
         // Controller main
         //---------------------------------------------------
+        
+        $scope.video={};
+        $scope.video.config = {
+				sources: [
+					{src: $sce.trustAsResourceUrl("http://173.228.105.6/zm/events/2/15/11/01/01/54/03/754-video.mp4"), type: "video/mp4"}
+					
+				],
+				
+            theme: "lib/videogular-themes-default/videogular.css",
+				
+			};
     
         var loginData = ZMDataModel.getLogin();
         
@@ -705,8 +716,30 @@ angular.module('zmApp.controllers')
                     });
 
                 }
+                
+                
+                
                 // now get event details to show alarm frames
                 var loginData = ZMDataModel.getLogin();
+                
+                
+                // grab video details
+                  event.Event.video={};
+                  var videoURL = loginData.url+"/events/"+event.Event.relativePath+event.Event.DefaultVideo;
+                
+                console.log ("************** VIDEO IS " + videoURL);
+                  event.Event.video.config = {
+				sources: [
+					{src:
+                     $sce.trustAsResourceUrl(videoURL), type: "video/mp4"}
+					
+				],
+				
+            theme: "lib/videogular-themes-default/videogular.css",
+				
+			};
+                
+                
                 var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
                 ZMDataModel.zmLog("API for event details" + myurl);
                 $http.get(myurl)

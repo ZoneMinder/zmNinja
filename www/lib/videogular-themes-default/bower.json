@@ -1,0 +1,11 @@
+{
+  "name": "videogular-themes-default",
+  "version": "1.3.2",
+  "main": [
+    "./videogular.css",
+    "./fonts/*"
+  ],
+  "dependencies": {
+    "videogular": "~1.3.2"
+  }
+}

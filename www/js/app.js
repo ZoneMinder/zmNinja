@@ -15,6 +15,9 @@ angular.module('zmApp', [
                             'fileLogger',
                             'angular-carousel',
                             'angularAwesomeSlider',
+                            'com.2fdevs.videogular',
+			                 'com.2fdevs.videogular.plugins.controls',
+                            'com.2fdevs.videogular.plugins.overlayplay'
                            
                             
     
