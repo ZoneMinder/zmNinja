@@ -10,7 +10,12 @@ Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 
 Key Features (just watch the video already)
 --------------------------------------------
+* H264 video branch support - if you are using the zoneminder video branch and have recorded videos they will automatically be used (you candisable it in developer settings)
+
 * Receive real time push notifications for alarms as they happen. You need to install my [Event Server](https://github.com/pliablepixels/zmeventserver) for this. You can even control monitors you want to be notified of and reporting intervals (if you defined your zones loosely you don't want pings every second, do you?)
+
+* Runs on Android/iOS and now desktops too - in a browser 
+
 
 * View live monitors and events 
 
@@ -46,25 +51,10 @@ haven't spent time researching how to optimize.
 
 I'll keep refining it over time as I learn more of AngularJS and stuff.
 
-Building
---------
+Running from source
+----------------------
 
-zmNinja uses the [Ionic Framework](http://ionicframework.com/).  To install Ionic, follow their easy [Getting Started instructions](http://ionicframework.com/getting-started/).
-
-With Ionic installed, you will need to install the build dependencies:
-
-```bash
-$ cd zmNinja  # make sure you are in the directory where the project is checked out
-$ npm install
-```
-
-Next, build the application. You will need to specify the appropriate target, either `ios` or `android`:
-
-```bash
-$ ionic build ios
-# - OR -
-$ ionic build android
-```
+Please follow [these](https://github.com/pliablepixels/zmNinja/wiki/Running-zmNinja-from-Source) instructions.
 
 If you want to run zmNinja in an emulator, you will need to install the appropriate emulator tools.
 
