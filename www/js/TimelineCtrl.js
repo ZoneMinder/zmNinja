@@ -9,7 +9,7 @@
 // I've disabled pan and zoom and used buttons instead
 // also limits # of items to maxItems (currently 200)
 
-angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory) {
+angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory','$sce', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce) {
 
     console.log("Inside Timeline controller");
     $scope.openMenu = function () {
@@ -113,7 +113,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // To show a modal dialog with the event tapped on in timeline
     // FIXME : code repeat from Events
     //--------------------------------------------------------
-    function openModal(eid, ename, edur, eframes, basepath, relativepath) {
+    function openModal(eid, ename, edur, eframes, basepath, relativepath, evideo) {
         ZMDataModel.zmDebug("TimelineCtrl: Open Modal with path " + relativepath);
         $scope.eventName = ename;
         $scope.eventId = eid;
@@ -123,6 +123,32 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         $scope.eventBasePath = basepath;
         $scope.relativePath = relativepath;
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        console.log ("**** defaultVideo is " + evideo);
+        
+        $scope.playbackURL = $scope.loginData.url;
+            if ($rootScope.platformOS == "unknown") {
+                $scope.playbackURL = zm.desktopUrl;
+            }
+
+        
+        $scope.defaultVideo = evideo;
+        $scope.videoObject = {};
+        var videoURL = $scope.loginData.url + "/events/" + relativepath + evideo;
+        console.log ("Video path in openModal: " + videoURL);
+        $scope.videoObject.config = {
+                autoPlay: true,
+                sources: [
+                    {
+                        src: $sce.trustAsResourceUrl(videoURL),
+                        type: "video/mp4"
+                    }
+
+				],
+
+                theme: "lib/videogular-themes-default/videogular.css",
+
+            };
+
 
         $scope.slider_modal_options = {
             from: 1,
@@ -267,10 +293,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // which in turn calls openModal
     //--------------------------------------------------------
 
-    function showEvent(start, mid, edur, eframes, eid, ename) {
+    function showEvent(start, mid, edur, eframes, eid, ename, evideo) {
         ZMDataModel.zmDebug("TimelineCtrl/showevent called with start:" +
             start + " monitorId:" + mid + " dur:" + edur + " frames:" + eframes +
-            " eventId:" + eid + " eventName:" + ename);
+            " eventId:" + eid + " eventName:" + ename + "video:"+evideo);
         //console.log("Event STARTED WITH " + start);
         var str = start;
         var yy = moment(str).format('YY');
@@ -289,7 +315,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             sec + "/";
         console.log("PATH IS " + relativepath);
 
-        openModal(eid, ename, edur, eframes, "", relativepath);
+        openModal(eid, ename, edur, eframes, "", relativepath, evideo);
 
     }
 
@@ -666,6 +692,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         mydur: myevents[i].Event.Length,
                                         myeid: myevents[i].Event.Id,
                                         myename: myevents[i].Event.Name,
+                                        myvideo: myevents[i].Event.DefaultVideo
 
                                     });
                                         graphIndex++;
@@ -703,7 +730,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + properties.items);
                                     var item = graphData.get(properties.items);
                                     ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
-                                    showEvent(item[0].start, item[0].group, item[0].mydur, item[0].myframes, item[0].myeid, item[0].myename);
+                                    showEvent(item[0].start, item[0].group, item[0].mydur, item[0].myframes, item[0].myeid, item[0].myename, item[0].myvideo);
 
 
                                 } else {
