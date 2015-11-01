@@ -12,11 +12,7 @@
 
     <ion-nav-buttons side="right">
         <a style="" class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)" ;>&nbsp;&nbsp;&nbsp;</a>
-        <!--
-        <a style="" class="button button-icon icon ion-stats-bars"
-           ng-href="#events-graphs"> </a>
-        <a style="" class="button button-icon icon ion-refresh" ng-href=""
-           ng-click="doRefresh();"> </a>-->
+        
         <a style="" class="button button-icon icon ion-search" ng-href="" ng-click="searchClicked();"> </a>
     </ion-nav-buttons>
 
@@ -35,10 +31,7 @@
 
 
     <ion-content on-tap="tapped();" delegate-handle="mainScroll" lazy-scroll has-subheader="true">
-        <!--<ion-refresher
-                       pulling-text="Tap <i class='ion-android-more-vertical'></i> and <i class='ion-refresh'></i> to refresh"
-                spinner="bubbles" on-refresh="dummyDoRefresh();">
-        </ion-refresher>-->
+     
 
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
         <div ng-if="!eventsBeingLoaded">
@@ -62,21 +55,21 @@
 
                                         <i class="ion-android-walk" style="float:left; font-size:200%;"></i>
                                         <div ng-if="event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam"  style="float:left; padding-left:5px; font-size:200%;"></i>
+                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px; font-size:200%;"></i>
                                         </div>
                                         <br/>
                                     </div>
                                     <div ng-switch-when="Signal">
                                         <i class="ion-wifi" style="float:left; font-size:200%;"></i>
                                         <div ng-if="event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam"  style="float:left; padding-left:5px;font-size:200%;"></i>
+                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:200%;"></i>
                                         </div>
                                         <br/>
                                     </div>
                                     <div ng-switch-default>
                                         <i class="ion-ionic" style="float:left; font-size:200%;"></i>
                                         <div ng-if="event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam"  style="float:left; padding-left:5px;font-size:200%;"></i>
+                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:200%;"></i>
                                         </div>
                                         <br/>
                                     </div>
@@ -107,7 +100,7 @@
                             <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp; {{prettify(event.Event.StartTime)}}
                                 <br/>
                                 <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
-                               <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
+                                <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
                             </div>
                         </div>
                         <span style="float:right">
@@ -118,7 +111,7 @@
 
 
                         <button class="button button-small icon icon-left ion-ios-eye"
-                                ng-click="closeIfOpen(event);openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames, event.Event.BasePath, event.Event.relativePath)" > View Footage
+                                ng-click="closeIfOpen(event);openModal(event.Event.Id, event.Event.Name, event.Event.Length,event.Event.Frames, event.Event.BasePath, event.Event.relativePath, event)" > View Footage
                     </button>
                     </span>
 
@@ -127,83 +120,58 @@
 
                         <!-- this is the event scrub area -->
                         <div ng-if="isGroupShown(event)">
-                           
+
                             <div ng-if="event.Event.DefaultVideo==''">
-                        
-
-                            <br/>
-                            <br/>
-                            <br/>
-
-                            <div style="width:90%">
-                                <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
-                            </div>
-                            <br/>
 
 
-                            <!-- <div class="range" style="width:90%">
-                            <span class="events-alarm-line"></span>
-                            <input type="range"  ng-model="ionRange.index"
-                                   min="1"  max="{{event.Event.Frames}}"
-                                   step="1" list="steplist">
-                                <datalist id="steplist">
-                                    <option>0</option>
-                                    <option>10</option>
-                                    <option>15</option>
-                                    <option>20</option>
-                                    <option>25</option>
-                                </datalist>
+                                <br/>
+                                <br/>
+                                <br/>
 
-                        </div>-->
-                            <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
-
-                            <div style="height:190px">
-                                <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover>
-                                    <li ng-repeat="slide in slides">
-                                        <!-- Linwood scaling -->
-                                        <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
-                                        <br/>
+                                <div style="width:90%">
+                                    <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
+                                </div>
+                                <br/>
 
 
-                                        <!-- <img image-spinner-src="{{loginData.url}}cgi-bin/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&scale=100&rate=100&maxfps=5&replay=single&user={{loginData.username}}&pass={{loginData.password}}" height="190px;"
-                           image-spinner-loader="lines"
-                         />-->
-
-                                        <!--<img imageonload="finishedLoadingImage($index)"
-                                         image-spinner-src="{{event.Event.BasePath}}{{slide.img}}?rand={{rand}}"
-                                             image-spinner-loader="lines"
-                                             height="190px";/>-->
-
-                                    </li>
-                                </ul>
-                            </div>
-                            </div> <!-- no DefaultVideo -->
-                            
-                        
-                            <div ng-if="event.Event.DefaultVideo!=''">
-                                <!--<br/>events/{{event.Event.relativePath}}{{event.Event.DefaultVideo}}<br/>-->
-                                
-                              <!--  <video controls="controls" preload="metadata" autoplay="autoplay" webkit-playsinline="webkit-playsinline" class="videoPlayer"><source src="http://173.228.105.6/zm/events/2/15/11/01/01/54/03/754-video.mp4" type="video/mp4"/></video>-->
-                                <br/><br/><br/>
-                                <div class="videogular-container">
-                                <videogular vg-theme="event.Event.video.config.theme">
-		<vg-media vg-src="event.Event.video.config.sources"
-				  
-				  vg-native-controls="true">
-		</vg-media>
-	</videogular>
-                                    </div>
                                
-                            </div> <!-- DefaultVideo -->
-                        </div> <!-- isGroupShown -->
+                                <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
+
+                                <div style="height:190px">
+                                    <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover>
+                                        <li ng-repeat="slide in slides">
+                                            <!-- Linwood scaling -->
+                                            <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
+                                            <br/>
+
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- no DefaultVideo -->
+
+
+                            <div ng-if="event.Event.DefaultVideo!=''">
+                                
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div class="videogular-container">
+                                    <videogular vg-theme="event.Event.video.config.theme">
+                                        <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="true">
+                                        </vg-media>
+                                    </videogular>
+                                </div>
+
+                            </div>
+                            <!-- DefaultVideo -->
+                        </div>
+                        <!-- isGroupShown -->
 
                         <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
                         </ion-delete-button>
-                        <!-- 
-                    <ion-option-button class="button-assertive"
-                       ng-click="deleteEvent(event.Event.Id, $index)">
-      &nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;
-    </ion-option-button>-->
+                        
 
                     </div>
                 </ion-item>
