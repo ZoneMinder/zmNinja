@@ -330,13 +330,18 @@ angular.module('zmApp.controllers')
         },
 
         isLoggedIn: function () {
+            
             if ( (loginData.username != "" && loginData.password != "" && loginData.url != "" &&
-                  loginData.apiurl != "") || (loginData.isUseAuth == '0'))
+                  loginData.apiurl != "") || (loginData.isUseAuth !='1'))
             {
                 return 1;
-            } else
+            } 
+            else
             {
-                return 0;
+                
+               
+                    return 0;
+               
             }
         },
 

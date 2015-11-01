@@ -566,7 +566,13 @@ angular.module('zmApp', [
 
             if (ZMDataModel.isLoggedIn()) {
                 console.log("State transition is authorized");
+                
                 return;
+            }
+            else
+            {
+            
+                
             }
 
             if (requireLogin) {
