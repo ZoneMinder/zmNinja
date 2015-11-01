@@ -16,17 +16,7 @@ angular.module('zmApp.controllers')
         // Controller main
         //---------------------------------------------------
         
-        $scope.video={};
-        $scope.video.config = {
-				sources: [
-					{src: $sce.trustAsResourceUrl("http://173.228.105.6/zm/events/2/15/11/01/01/54/03/754-video.mp4"), type: "video/mp4"}
-					
-				],
-				
-            theme: "lib/videogular-themes-default/videogular.css",
-				
-			};
-    
+       
         var loginData = ZMDataModel.getLogin();
         
         
