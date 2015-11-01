@@ -121,7 +121,7 @@
                         <!-- this is the event scrub area -->
                         <div ng-if="isGroupShown(event)">
 
-                            <div ng-if="event.Event.DefaultVideo==''">
+                            <div ng-if="event.Event.DefaultVideo=='' || loginData.enableh264==false">
 
 
                                 <br/>
@@ -152,7 +152,7 @@
                             <!-- no DefaultVideo -->
 
 
-                            <div ng-if="event.Event.DefaultVideo!=''">
+                            <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
                                 
                                 <br/>
                                 <br/>

@@ -49,6 +49,7 @@ angular.module('zmApp.controllers')
         'canSwipeMonitors':true,
         'persistMontageOrder':false,
          'onTapScreen':'events',
+         'enableh264':true,
         
     };
      
@@ -296,6 +297,12 @@ angular.module('zmApp.controllers')
             }
             
             
+            if (window.localStorage.getItem("enableh264") != undefined) {
+                var enableh264 = window.localStorage.getItem("enableh264");
+                loginData.enableh264 = (enableh264 == "1") ? true:false;
+            }
+            
+            
             if (window.localStorage.getItem("usePin") != undefined) {
                  var pinValue =  window.localStorage.getItem("usePin");
                 loginData.usePin = (pinValue == "1") ? true:false;
@@ -423,6 +430,9 @@ angular.module('zmApp.controllers')
             window.localStorage.setItem("usePin", loginData.usePin?"1":"0");
             window.localStorage.setItem("canSwipeMonitors", loginData.canSwipeMonitors?"1":"0");
             window.localStorage.setItem("persistMontageOrder", loginData.persistMontageOrder?"1":"0");
+            
+             window.localStorage.setItem("enableh264", loginData.enableh264?"1":"0");
+            
             window.localStorage.setItem("pinCode", loginData.pinCode);
             
             
@@ -437,7 +447,7 @@ angular.module('zmApp.controllers')
             window.localStorage.setItem("isUseEventServer", loginData.isUseEventServer);
             window.localStorage.setItem("disablePush", loginData.disablePush);
             window.localStorage.setItem("onTapScreen", loginData.onTapScreen);
-            
+              
             
             console.log ("***** SETTING ISUSEAUTH TO " + loginData.isUseAuth);
 
