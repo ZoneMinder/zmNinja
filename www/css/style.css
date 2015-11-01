@@ -515,8 +515,8 @@ input[type=range]::-webkit-slider-thumb {
 
 
 .videogular-container {
-	height: 190px;
-    width:300px;
+	height: 260px;
+    
 	margin: auto;
 	overflow: hidden;
     float:left;
