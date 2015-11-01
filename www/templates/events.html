@@ -12,7 +12,7 @@
 
     <ion-nav-buttons side="right">
         <a style="" class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)" ;>&nbsp;&nbsp;&nbsp;</a>
-        
+
         <a style="" class="button button-icon icon ion-search" ng-href="" ng-click="searchClicked();"> </a>
     </ion-nav-buttons>
 
@@ -31,7 +31,7 @@
 
 
     <ion-content on-tap="tapped();" delegate-handle="mainScroll" lazy-scroll has-subheader="true">
-     
+
 
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
         <div ng-if="!eventsBeingLoaded">
@@ -68,7 +68,7 @@
                                     </div>
                                     <div ng-switch-default>
                                         <i class="ion-ionic" style="float:left; font-size:200%;"></i>
-                                        <div ng-if= "event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
+                                        <div ng-if="event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
                                             <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:100%;"></i>
                                         </div>
                                         <br/>
@@ -134,7 +134,7 @@
                                 <br/>
 
 
-                               
+
                                 <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
 
                                 <div style="height:190px">
@@ -153,13 +153,27 @@
 
 
                             <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
-                                
+
                                 <br/>
                                 <br/>
                                 <br/>
+
+
                                 <div class="videogular-container">
-                                    <videogular vg-theme="event.Event.video.config.theme">
-                                        <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="true">
+                                    <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'" vg-responsive="true">
+                                        <vg-controls>
+                                            <vg-play-pause-button></vg-play-pause-button>
+                                            <vg-scrub-bar>
+                                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                            </vg-scrub-bar>
+                                            <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                                            <vg-fullscreen-button></vg-fullscreen-button>
+                                            <vg-volume>
+                                                <vg-mute-button></vg-mute-button>
+                                            </vg-volume>
+                                        </vg-controls>
+
+                                        <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="false">
                                         </vg-media>
                                     </videogular>
                                 </div>
@@ -171,7 +185,7 @@
 
                         <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
                         </ion-delete-button>
-                        
+
 
                     </div>
                 </ion-item>
