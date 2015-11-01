@@ -87,16 +87,18 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         ZMDataModel.zmDebug("SaveDevOptions: Saving to disk");
         ZMDataModel.setLogin($scope.loginData);
 
+        
+    }
+    
+    $scope.saveDevOptions = function () {
+            
+            saveDevOptions();
         $ionicPopup.alert({
             title: 'Settings Saved',
             template: 'Please explore the menu and enjoy zmNinja!'
         }).then(function (res) {
             $ionicSideMenuDelegate.toggleLeft();
         });
-    }
-    
-    $scope.saveDevOptions = function () {
-            saveDevOptions();
         
     };
     //------------------------------------------------------------------
