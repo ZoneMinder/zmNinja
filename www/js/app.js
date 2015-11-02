@@ -318,10 +318,25 @@ angular.module('zmApp', [
     function doLogin(str) {
         var d = $q.defer();
         var ld = ZMDataModel.getLogin();
-        if (ld.isUseAuth == "0") {
+        if (ld.isUseAuth != "1") {
             $ionicLoading.hide();
             ZMDataModel.zmLog("Authentication is disabled. Skipping login");
-            d.resolve("Login success - no auth");
+            ZMDataModel.zmLog ("However, still doing a reachability check...");
+            
+            $http.get(ld.url)
+            .then (function(success) {
+                    ZMDataModel.zmLog(ld.url + " is reachable.");
+                    d.resolve("Login success - no auth");
+                    return d.promise;
+                    
+                   },
+                   function (error) {
+                    ZMDataModel.zmLog(ld.url + " is NOT reachable.");
+                    d.reject("Login Error - not reachable");
+                    $rootScope.$emit('auth-error', "not reachable");
+                    return d.promise;
+            });
+         
             return d.promise;
         }
 
