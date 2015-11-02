@@ -69,6 +69,7 @@ angular.module('angular-carousel')
 	// PP - added touchend to make it react to touch devices
            if (attrs.hasOwnProperty('rnPlatform') && attrs.rnPlatform == 'unknown')
 	   {
+		console.log ("ranPlatform is " + attrs.rnPlatform);
 		 console.log ("Desktop, de-registering any old click");
             	element.off('click', toggleAutoPlay); // PP - remove mouse click for desktop
            	 element.on('click', toggleAutoPlay); // PP for  desktop
@@ -76,6 +77,7 @@ angular.module('angular-carousel')
 	   }
 	  else
 	  {
+		console.log ("ranPlatform is " + attrs.rnPlatform);
 	    console.log ("Device, de-registering any old touch");
             element.off('touchend', toggleAutoPlay); // PP - remove touchend too
             element.on('touchend', toggleAutoPlay);
