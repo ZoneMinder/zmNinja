@@ -586,7 +586,10 @@ angular.module('zmApp', [
             }
             else
             {
-            
+                console.log ("Not logged in, requested to go to " + JSON.stringify(toState));
+                // event.preventDefault();
+               // $state.transitionTo('login');
+                
                 
             }
 
@@ -601,6 +604,8 @@ angular.module('zmApp', [
                 event.preventDefault();
                 $state.transitionTo('login');
             }
+            console.log ("IN RETURN");
+            return;
 
         });
     
@@ -1019,8 +1024,9 @@ angular.module('zmApp', [
     $urlRouterProvider.otherwise(function ($injector, $location) {
         var $state = $injector.get("$state");
         //console.log ("******************* OTHERWISE PROBLEM");
-        var $rootScope = $injector.get('$rootScope');
+       // var $rootScope = $injector.get('$rootScope');
         $state.go("zm-portal-login");
+        //$state.transitionTo('zm-portal-login');
     });
 
 }); //config
