@@ -1,19 +1,12 @@
 # Change Log
 
-## [Unreleased](https://github.com/pliablepixels/zmNinja/tree/HEAD)
-
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.85...HEAD)
-
-**Implemented enhancements:**
-
-- video branch support for zmNinja  [\#60](https://github.com/pliablepixels/zmNinja/issues/60)
-- ability to run all screens of zmNinja on a desktop without console errors [\#59](https://github.com/pliablepixels/zmNinja/issues/59)
-
 ## [v0.85](https://github.com/pliablepixels/zmNinja/tree/v0.85) (2015-11-01)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.84...v0.85)
 
 **Implemented enhancements:**
 
+- video branch support for zmNinja  [\#60](https://github.com/pliablepixels/zmNinja/issues/60)
+- ability to run all screens of zmNinja on a desktop without console errors [\#59](https://github.com/pliablepixels/zmNinja/issues/59)
 - changing servers requires reload of monitors - should be automatically done [\#58](https://github.com/pliablepixels/zmNinja/issues/58)
 
 **Fixed bugs:**
