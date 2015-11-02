@@ -10,7 +10,7 @@ Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 
 Key Features (just watch the video already)
 --------------------------------------------
-* H264 video branch support - if you are using the zoneminder video branch and have recorded videos they will automatically be used (you candisable it in developer settings)
+* H264 video branch support - if you are using the zoneminder video branch and have recorded videos they will automatically be used (you can disable it in developer settings). If an event has a recorded video, you will see a small video icon at the top of that event entry in events view
 
 * Receive real time push notifications for alarms as they happen. You need to install my [Event Server](https://github.com/pliablepixels/zmeventserver) for this. You can even control monitors you want to be notified of and reporting intervals (if you defined your zones loosely you don't want pings every second, do you?)
 
