@@ -50,7 +50,7 @@
                     <div ng-if="!isModalActive">
                         
                         <div ng-if="$root.authSession!='undefined'">
-                            <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&maxfps={{LoginData.maxFPS}}&scale=50{{$root.authSession}}&rand={{$root.rand}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;"
+                            <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;"
                                  ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)"
                                  
                                  style="display:block;"  image-spinner-loader="lines"
