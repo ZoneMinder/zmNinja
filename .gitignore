@@ -8,3 +8,4 @@ release_files/
 plugins/*
 !plugins/fetch.json
 engine/
+/ionic.project
