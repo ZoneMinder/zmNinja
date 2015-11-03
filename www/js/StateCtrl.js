@@ -48,10 +48,13 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         ZMDataModel.zmDebug("invoking CurrentState...");
         getCurrentState();
     }, 4000);
-$timeout(function () {
-        ZMDataModel.zmDebug("invoking DiskStatus...");
-        getDiskStatus();
-    }, 6000);
+        
+    /*
+    $timeout(function () {
+            ZMDataModel.zmDebug("invoking DiskStatus...");
+            getDiskStatus();
+        }, 6000);
+    */
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
     // The problem is we enter other states before we leave previous states
@@ -363,7 +366,7 @@ $timeout(function () {
         getRunStatus();
         $timeout (getLoadStatus,2000);
         $timeout (getCurrentState,4000);
-        $timeout (getDiskStatus,6000);
+        //$timeout (getDiskStatus,6000);
         $scope.$broadcast('scroll.refreshComplete');
 
     };
