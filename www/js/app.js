@@ -207,15 +207,15 @@ angular.module('zmApp', [
         'request': function (config) {
             
             
-            if ($rootScope.platformOS == "unknown")
+            if ($rootScope.platformOS == "desktop")
             {
                 var zmD = $injector.get('ZMDataModel');
                 var ld = zmD.getLogin();
-                
                 // This takes care of url and apiurl as they have
                 // the same base
-                if (config.url.indexOf(ld.url) > -1)
+                if (ld.url !="" && config.url.indexOf(ld.url) > -1)
                 {
+                    
                     zmD.zmDebug("Running in desktop, removing URLs for proxy");
                     zmD.zmDebug ("OLD URL " + config.url);
                     config.url = config.url.replace(ld.url,zm.desktopUrl);
@@ -507,7 +507,7 @@ angular.module('zmApp', [
 
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer,$ionicContentBanner) {
     
-    //$cordovaPush
+    
 
         $rootScope.zmGlobalCookie = "";
         $rootScope.isEventFilterOn = false;
@@ -522,33 +522,16 @@ angular.module('zmApp', [
         $rootScope.tappedNotification = 0;
          //var eventsToDisplay=[];
         $rootScope.alarmCount="0";
-        $rootScope.platformOS="unknown";
+        $rootScope.platformOS="desktop";
        
 
-        //console.log ("HERE");
     
-        if  ($ionicPlatform.is('ios'))
-            $rootScope.platformOS = "ios";
-    
-    
-    if  ($ionicPlatform.is('android'))
-            $rootScope.platformOS = "android";
-        
-        ZMDataModel.init();
-        EventServer.init();
-        // for making sure we canuse $state.go with ng-click
-        // needed for views that use popovers
-        $rootScope.$state = $state;
-        $rootScope.$stateParams = $stateParams;
-
-        var loginData = ZMDataModel.getLogin();
-    
-    //$rootScope.exceptionMessage({reason:exception, cause:cause});
         $rootScope.exceptionMessage = function(error)
         {
             ZMDataModel.zmDebug("**EXCEPTION**"+error.reason+" caused by " + error.cause);
         };
        
+    
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
         $ionicPlatform.registerBackButtonAction(function (e) {
@@ -575,6 +558,10 @@ angular.module('zmApp', [
         };
 
         window.addEventListener("resize", checkOrientation, false);
+    
+        //---------------------------------------------------------------------------
+        // authorize state transitions
+        //----------------------------------------------------------------------------
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var requireLogin = toState.data.requireLogin;
@@ -609,28 +596,35 @@ angular.module('zmApp', [
 
         });
     
-    /*
-    function successHandler(result) {
-  console.log("**************   Token: " + result.gcm);
-}
-                function errorHandler(error) {
-  console.log("**************   Error: " + error);
-}
 
-    
-    
-    window.onNotification = function(notification)
-    {
-        console.log ("******** HOLY GOT MESSAGE " + JSON.stringify(notification));
-    };
-*/
+        //---------------------------------------------------------------------
+        // called when device is ready
+        //---------------------------------------------------------------------
 
         $ionicPlatform.ready(function () {
-            
+              $rootScope.platformOS = "desktop";
          
             ZMDataModel.zmLog("Device is ready");
             var ld = ZMDataModel.getLogin();
             
+            if  ($ionicPlatform.is('ios'))
+            $rootScope.platformOS = "ios";
+    
+    
+            if  ($ionicPlatform.is('android'))
+                    $rootScope.platformOS = "android";
+            
+            console.log ("**** You are running on " + $rootScope.platformOS);
+
+            ZMDataModel.init();
+            EventServer.init();
+            // for making sure we canuse $state.go with ng-click
+            // needed for views that use popovers
+            $rootScope.$state = $state;
+            $rootScope.$stateParams = $stateParams;
+
+           // var loginData = ZMDataModel.getLogin();
+
             
           
             $fileLogger.checkFile().then(function (resp) {
@@ -643,31 +637,7 @@ angular.module('zmApp', [
                     console.log("Log file size is " + resp.size + " bytes");
                 }
                 
-               // ZMDataModel.zmLog ("Setting up zmNinja for push notifications");
-                
-               /* $ionicPush.init({
-                      "debug": true,
-                      "onNotification": function(notification) {
-                        var payload = notification.payload;
-                        console.log("************PUSH PAYLOAD************" + notification, payload);
-                      },
-                      "onRegister": function(data) {
-                        console.log("**********  PUSH REGISTER *************" + data.token);
-                      },
-                    "pluginConfig": {
-                        "ios": {
-                          "badge": true,
-                          "sound": true
-                         },
-                         "android": {
-                           "iconColor": "#343434"
-                         }
-                    }
-                    
-                });
-                
-                $ionicPush.register();*/
-
+               
             });
 
 
@@ -710,7 +680,8 @@ angular.module('zmApp', [
             $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
             $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
 
-            console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+            console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" +
+                        $rootScope.devHeight);
 
             // What I noticed is when I moved the app to the device
             // the montage screens were not redrawn after resuming from background mode
@@ -784,16 +755,16 @@ angular.module('zmApp', [
                 StatusBar.styleDefault();
             }
 
-
-
-        }); //platformReady
-
-
         // lets POST so we get a session ID right hre
 
         console.log("Setting up POST LOGIN timer");
         zmAutoLogin.start();
     
+
+        }); //platformReady
+
+
+        
         
 
     }) //run
