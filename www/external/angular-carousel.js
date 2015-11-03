@@ -67,7 +67,7 @@ angular.module('angular-carousel')
 
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
 	// PP - added touchend to make it react to touch devices
-           if (attrs.hasOwnProperty('rnPlatform') && attrs.rnPlatform == 'unknown')
+           if (attrs.hasOwnProperty('rnPlatform') && attrs.rnPlatform == 'desktop')
 	   {
 		console.log ("ranPlatform is " + attrs.rnPlatform);
 		 console.log ("Desktop, de-registering any old click");

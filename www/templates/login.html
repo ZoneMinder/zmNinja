@@ -71,7 +71,7 @@
             
             
             
-            <div ng-if="$root.platformOS != 'unknown'">
+            <div ng-if="$root.platformOS != 'desktop'">
                 <label>
 
                 <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();"
@@ -86,7 +86,7 @@
                         toggle-class="toggle-calm">Use SSL</ion-toggle>
             </label>
 
-            <div ng-if="$root.platformOS != 'unknown'">
+            <div ng-if="$root.platformOS != 'desktop'">
              <label>
             
             <ion-toggle ng-model="loginData.keepAwake"

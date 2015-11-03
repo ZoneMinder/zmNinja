@@ -90,7 +90,7 @@ angular.module('zmApp.controllers')
         $scope.eventCommands = eventCommands;
         $scope.loginData = ZMDataModel.getLogin();
         $scope.playbackURL = $scope.loginData.url;
-        if ($rootScope.platformOS == "unknown") {
+        if ($rootScope.platformOS == "desktop") {
             $scope.playbackURL = zm.desktopUrl;
         }
 
@@ -1151,7 +1151,7 @@ angular.module('zmApp.controllers')
             $scope.videoObject = event.Event.video;
 
             $scope.playbackURL = $scope.loginData.url;
-            if ($rootScope.platformOS == "unknown") {
+            if ($rootScope.platformOS == "desktop") {
                 $scope.playbackURL = zm.desktopUrl;
             }
 
