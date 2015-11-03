@@ -4,7 +4,7 @@
         <ion-content style="background-color:#444444" ng-cloak>
 
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-                <div style="height: 100vh;">
+                <div id="full-screen-event" style="height: 100vh;">
 
 
                     <div ng-if="defaultVideo=='' || loginData.enableh264==false">
@@ -12,7 +12,7 @@
 
                             <li ng-repeat="slide in slides">
 
-                                <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale=100" image-spinner-loader="lines" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" />
+                                <img  imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale=100" image-spinner-loader="lines" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" />
 
                                 <!--<img id="hello" imageonload="finishedLoadingImage($index)"
                                 image-spinner-src="{{eventBasePath}}{{slide.img}}?rand={{rand}}"
@@ -31,7 +31,7 @@
                                 </vg-media>
                             </videogular>
                         </div>
-
+                      
                     </div>
 
 
@@ -54,15 +54,14 @@
 
 <nav mfb-menu position="tr" effect="zoomin" label="collapse" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
 
+    <a mfb-button icon="ion-arrow-right-c" label="next event" ng-click="jumpToEvent(nextId,1);"></a>
+    <a mfb-button icon="ion-arrow-left-c" label="prev. event" ng-click="jumpToEvent(prevId,-1);"></a>
     <a mfb-button icon="ion-arrow-resize" label="fit image" ng-click="scaleImage();"></a>
-    <!--<a mfb-button icon="ion-reply" label="previous event"
-           ng-click="controlEventStream(eventCommands.previous)"></a>
-        <a mfb-button icon="ion-forward" label="next event"
-           ng-click="controlEventStream(eventCommands.next)"></a>-->
+    
     <a mfb-button icon="ion-close" label="exit event view" ng-click="closeModal()"> </a>
 
 </nav>
-<div class="events-range-modal-text">playing event: {{eventId}}</div>
+<div class="events-range-modal-text">playing event: {{eventId}}, next:{{nextId}}, prev:{{prevId}}</div>
 <div class="events-range-modal" ng-if="defaultVideo==''">
 
     <div style="width:90%">
