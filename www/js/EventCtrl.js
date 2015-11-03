@@ -7,7 +7,7 @@
 // and whether the new API has a better mechanism
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification) {
+    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q) {
 
         // events in last 5 minutes
         // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -18,8 +18,6 @@ angular.module('zmApp.controllers')
 
 
         var loginData = ZMDataModel.getLogin();
-
-
 
         $scope.hours = [];
         $scope.days = [];
@@ -698,8 +696,8 @@ angular.module('zmApp.controllers')
                 // now get event details to show alarm frames
                 var loginData = ZMDataModel.getLogin();
 
-                if  (typeof event.Event.DefaultVideo === 'undefined')
-                event.Event.DefaultVideo="";
+                if (typeof event.Event.DefaultVideo === 'undefined')
+                    event.Event.DefaultVideo = "";
                 // grab video details
                 event.Event.video = {};
                 var videoURL = loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
@@ -938,7 +936,8 @@ angular.module('zmApp.controllers')
 
         //--------------------------------------------------------
         // this routine handles skipping through events
-        // in different event views
+        // in different event views. NOT used as a I stopped using
+        // zms for this
         //--------------------------------------------------------
 
         function controlEventStream(cmd, disp) {
@@ -1108,6 +1107,293 @@ angular.module('zmApp.controllers')
             controlEventStream(cmd, true);
         };
 
+        // This function returns neighbor events if applicable
+        function neighborEvents(eid) {
+            var d = $q.defer();
+            // now get event details to show alarm frames
+            var loginData = ZMDataModel.getLogin();
+            var myurl = loginData.apiurl + '/events/' + eid + ".json";
+            var neighbors = {
+                prev: "",
+                next: ""
+            };
+            $http.get(myurl)
+                .success(function (data) {
+                    neighbors.prev = data.event.Event.Prev ? data.event.Event.Prev : "";
+                    neighbors.next = data.event.Event.Next ? data.event.Event.Next : "";
+                    ZMDataModel.zmDebug("Neighbor events of " + eid + "are Prev:" +
+                        neighbors.prev + " and Next:" + neighbors.next);
+
+                    d.resolve(neighbors);
+                    return (d.promise);
+                })
+                .error(function (err) {
+                    ZMDataModel.zmLog("Error retrieving neighbors" + JSON.stringify(err));
+                    d.reject(neighbors);
+                    return (d.promise);
+
+
+                });
+            return (d.promise);
+
+        }
+
+
+        //--------------------------------------------------------
+        //Navigate to next/prev event in full screen mode
+        //--------------------------------------------------------
+
+        $scope.jumpToEvent = function (eid, dirn) {
+            ZMDataModel.zmLog("Event jump called with:" + eid);
+            if (eid == "") {
+                $ionicLoading.show({
+                    template: "no more events",
+                    noBackdrop: true,
+                    duration: 2000
+                });
+
+                return;
+            }
+            
+            var slidein;
+            var slideout;
+            if (dirn==1)
+            {
+                slideout = "animated slideOutLeft";
+                slidein = "animated slideInRight";
+            }
+            else
+            {
+                slideout = "animated slideOutRight";
+                slidein = "animated slideInLeft";
+            }
+            var element = angular.element(document.getElementById("full-screen-event"));
+            element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {element.removeClass(slideout);prepareModalEvent(eid); element.addClass(slidein); });
+            
+
+
+        };
+
+        
+        //--------------------------------------------------------
+        // utility function
+        //--------------------------------------------------------
+
+        function computeRelativePath(event) {
+            var relativePath = "";
+            var loginData = ZMDataModel.getLogin();
+            var str = event.Event.StartTime;
+            var yy = moment(str).format('YY');
+            var mm = moment(str).format('MM');
+            var dd = moment(str).format('DD');
+            var hh = moment(str).format('HH');
+            var min = moment(str).format('mm');
+            var sec = moment(str).format('ss');
+            relativePath = event.Event.MonitorId + "/" +
+                yy + "/" +
+                mm + "/" +
+                dd + "/" +
+                hh + "/" +
+                min + "/" +
+                sec + "/";
+            return relativePath;
+
+        }
+        
+        //--------------------------------------------------------
+        // utility function
+        //--------------------------------------------------------
+
+        function computeBasePath(event) {
+            var basePath = "";
+            var loginData = ZMDataModel.getLogin();
+            var str = event.Event.StartTime;
+            var yy = moment(str).format('YY');
+            var mm = moment(str).format('MM');
+            var dd = moment(str).format('DD');
+            var hh = moment(str).format('HH');
+            var min = moment(str).format('mm');
+            var sec = moment(str).format('ss');
+
+            basePath = loginData.url + "/events/" +
+                event.Event.MonitorId + "/" +
+                yy + "/" +
+                mm + "/" +
+                dd + "/" +
+                hh + "/" +
+                min + "/" +
+                sec + "/";
+            return basePath;
+        }
+
+        //--------------------------------------------------------
+        // Called by openModal as well as jump to event
+        // what it basically does is get a detailed event API
+        // for an event ID and constructs required playback
+        // parameters
+        // Note that openModal is called with the top level event
+        // API. Some parameters are repeated across both
+        //--------------------------------------------------------
+
+
+        function prepareModalEvent(eid) {
+
+            // Lets get the detailed event API
+            var loginData = ZMDataModel.getLogin();
+            var myurl = loginData.apiurl + '/events/' + eid + ".json";
+            ZMDataModel.zmLog("*** Constructed API for detailed events: " + myurl);
+            $http.get(myurl)
+                .then(function (success) {
+
+
+
+                        var event = success.data.event;
+
+                        event.Event.BasePath = computeBasePath(event);
+                        event.Event.relativePath = computeRelativePath(event);
+
+
+                        //console.log (JSON.stringify( success));
+                        $scope.eventName = event.Event.Name;
+                        $scope.eventId = event.Event.Id;
+                        $scope.eFramesNum = event.Event.Frames;
+                        $scope.eventDur = Math.round(event.Event.Length);
+                        $scope.loginData = ZMDataModel.getLogin();
+
+                        console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
+                        if (typeof event.Event.DefaultVideo === 'undefined')
+                            event.Event.DefaultVideo = "";
+
+                        $scope.defaultVideo = event.Event.DefaultVideo;
+
+                        neighborEvents(event.Event.Id)
+                            .then(function (success) {
+                                    $scope.nextId = success.next;
+                                    $scope.prevId = success.prev;
+                                },
+                                function (error) {
+                                    console.log(JSON.stringify(error));
+                                });
+
+                        $scope.nextId = "...";
+                        $scope.prevId = "...";
+
+
+
+
+                        event.Event.video = {};
+                        var videoURL = $scope.loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
+
+                        //console.log("************** VIDEO IS " + videoURL);
+                        event.Event.video.config = {
+                            autoPlay: true,
+                            sources: [
+                                {
+                                    src: $sce.trustAsResourceUrl(videoURL),
+                                    type: "video/mp4"
+                        }
+
+                    ],
+
+                            theme: "lib/videogular-themes-default/videogular.css",
+
+                        };
+
+                        $scope.videoObject = event.Event.video;
+
+                        $scope.playbackURL = $scope.loginData.url;
+                        if ($rootScope.platformOS == "desktop") {
+                            $scope.playbackURL = zm.desktopUrl;
+                        }
+
+                        $scope.eventBasePath = event.Event.BasePath;
+                        $scope.relativePath = event.Event.relativePath;
+                        $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+
+                        $scope.slider_modal_options = {
+                            from: 1,
+                            to: event.Event.Frames,
+                            realtime: true,
+                            step: 1,
+                            className: "mySliderClass",
+                            callback: function (value, released) {
+                                //console.log("CALLBACK"+value+released);
+                                $ionicScrollDelegate.freezeScroll(!released);
+
+
+                            },
+                            //modelLabels:function(val) {return "";},
+                            smooth: false,
+                            css: {
+                                background: {
+                                    "background-color": "silver"
+                                },
+                                before: {
+                                    "background-color": "purple"
+                                },
+                                default: {
+                                    "background-color": "white"
+                                }, // default value: 1px
+                                after: {
+                                    "background-color": "green"
+                                }, // zone after default value
+                                pointer: {
+                                    "background-color": "red"
+                                }, // circle pointer
+                                range: {
+                                    "background-color": "red"
+                                } // use it if double value
+                            },
+                            scale: []
+
+                        };
+
+
+                        $scope.mycarousel.index = 0;
+                        $scope.ionRange.index = 1;
+                        //console.log("**Resetting range");
+                        $scope.slides = [];
+                        var i;
+                        for (i = 1; i <= event.Event.Frames; i++) {
+                            var fname = padToN(i, eventImageDigits) + "-capture.jpg";
+                            // console.log ("Building " + fname);
+                            $scope.slides.push({
+                                id: i,
+                                img: fname
+                            });
+                        }
+
+
+                        // now get event details to show alarm frames
+
+                        $scope.FrameArray = event.Frame;
+                        //  $scope.slider_options.scale=[];
+                        $scope.slider_modal_options.scale = [];
+
+
+                        for (i = 0; i < event.Frame.length; i++) {
+                            if (event.Frame[i].Type == "Alarm") {
+
+                                $scope.slider_modal_options.scale.push({
+                                    val: i + 1,
+                                    label: ' '
+                                });
+                            } else {
+                                //$scope.slider_options.scale.push(' ');
+                            }
+
+                        }
+                        $scope.totalEventTime = Math.round(parseFloat(event.Event.Length)) - 1;
+                        $scope.currentEventTime = 0;
+                    },
+                    function (err) {
+                        ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
+                        ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+                    });
+
+
+        }
+
         //--------------------------------------------------------
         //This is called when we first tap on an event to see
         // the feed. It's important to instantiate ionicModal here
@@ -1116,145 +1402,13 @@ angular.module('zmApp.controllers')
         //earlier won't work
         //--------------------------------------------------------
 
-        $scope.openModal = function (eid, ename, edur, eframes, basepath, relativepath, event) {
-            ZMDataModel.zmDebug("EventCtrl: Open Modal with Base path " + relativepath);
-            $scope.eventName = ename;
-            $scope.eventId = eid;
-            $scope.eFramesNum = eframes;
-            $scope.eventDur = Math.round(edur);
-            $scope.loginData = ZMDataModel.getLogin();
-            if  (typeof event.Event.DefaultVideo === 'undefined')
-                event.Event.DefaultVideo="";
-            
-            $scope.defaultVideo = event.Event.DefaultVideo;
+        $scope.openModal = function (event) {
+            //ZMDataModel.zmDebug("EventCtrl: Open Modal with Base path " + relativepath);
 
-        
-
-            event.Event.video = {};
-            var videoURL = $scope.loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
-
-            console.log("************** VIDEO IS " + videoURL);
-            event.Event.video.config = {
-                autoPlay: true,
-                sources: [
-                    {
-                        src: $sce.trustAsResourceUrl(videoURL),
-                        type: "video/mp4"
-                    }
-
-				],
-
-                theme: "lib/videogular-themes-default/videogular.css",
-
-            };
-
-            $scope.videoObject = event.Event.video;
-
-            $scope.playbackURL = $scope.loginData.url;
-            if ($rootScope.platformOS == "desktop") {
-                $scope.playbackURL = zm.desktopUrl;
-            }
-
-
-
-
-
-            $scope.eventBasePath = basepath;
-            $scope.relativePath = relativepath;
-            $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-
-
-
-
-            $scope.slider_modal_options = {
-                from: 1,
-                to: eframes,
-                realtime: true,
-                step: 1,
-                className: "mySliderClass",
-                callback: function (value, released) {
-                    //console.log("CALLBACK"+value+released);
-                    $ionicScrollDelegate.freezeScroll(!released);
-
-
-                },
-                //modelLabels:function(val) {return "";},
-                smooth: false,
-                css: {
-                    background: {
-                        "background-color": "silver"
-                    },
-                    before: {
-                        "background-color": "purple"
-                    },
-                    default: {
-                        "background-color": "white"
-                    }, // default value: 1px
-                    after: {
-                        "background-color": "green"
-                    }, // zone after default value
-                    pointer: {
-                        "background-color": "red"
-                    }, // circle pointer
-                    range: {
-                        "background-color": "red"
-                    } // use it if double value
-                },
-                scale: []
-
-            };
-
-
-            $scope.mycarousel.index = 0;
-            $scope.ionRange.index = 1;
-            //console.log("**Resetting range");
-            $scope.slides = [];
-            var i;
-            for (i = 1; i <= eframes; i++) {
-                var fname = padToN(i, eventImageDigits) + "-capture.jpg";
-                // console.log ("Building " + fname);
-                $scope.slides.push({
-                    id: i,
-                    img: fname
-                });
-            }
-
-
-            // now get event details to show alarm frames
-            var loginData = ZMDataModel.getLogin();
-            var myurl = loginData.apiurl + '/events/' + eid + ".json";
-            ZMDataModel.zmLog("*** Constructed API for detailed events: " + myurl);
-            $http.get(myurl)
-                .success(function (data) {
-                    $scope.FrameArray = data.event.Frame;
-                    //  $scope.slider_options.scale=[];
-                    $scope.slider_modal_options.scale = [];
-
-                    var i;
-                    for (i = 0; i < data.event.Frame.length; i++) {
-                        if (data.event.Frame[i].Type == "Alarm") {
-
-                            $scope.slider_modal_options.scale.push({
-                                val: i + 1,
-                                label: ' '
-                            });
-                        } else {
-                            //$scope.slider_options.scale.push(' ');
-                        }
-
-                    }
-
-                    //console.log (JSON.stringify(data));
-                })
-                .error(function (err) {
-                    ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
-                    ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
-                });
-
-            $scope.totalEventTime = Math.round(parseFloat(edur)) - 1;
-            $scope.currentEventTime = 0;
 
             ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+
+            prepareModalEvent(event.Event.Id);
 
             $ionicModal.fromTemplateUrl('templates/events-modal.html', {
                     scope: $scope,
@@ -1273,19 +1427,7 @@ angular.module('zmApp.controllers')
 
                     var ld = ZMDataModel.getLogin();
 
-                    // how many seconds this event will take
-                    //evtSegments = eframes / ld.maxFPS + 3;
-                    //evtCurSegment = 0;
-                    // console.log ("**** I SET SEGMENTS TO " + evtSegments);
-
-                    // call on progress indicator every 5 seconds
-                    // don't want to overload
-                    /*
-                        segmentHandle = $interval(function () {
-                            segmentCheck();
-                        }, zm.progressIntervalCheck);
-                        segmentCheck();*/
-
+                    
 
                 });
 
@@ -1420,22 +1562,8 @@ angular.module('zmApp.controllers')
                             var min = moment(str).format('mm');
                             var sec = moment(str).format('ss');
 
-                            myevents[i].Event.BasePath = loginData.url + "/events/" +
-                                myevents[i].Event.MonitorId + "/" +
-                                yy + "/" +
-                                mm + "/" +
-                                dd + "/" +
-                                hh + "/" +
-                                min + "/" +
-                                sec + "/";
-
-                            myevents[i].Event.relativePath = myevents[i].Event.MonitorId + "/" +
-                                yy + "/" +
-                                mm + "/" +
-                                dd + "/" +
-                                hh + "/" +
-                                min + "/" +
-                                sec + "/";
+                            myevents[i].Event.BasePath = computeBasePath(myevents[i]);
+                            myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
                             myevents[i].Event.height = zm.eventsListDetailsHeight;
                             if (idfound) $scope.events = $scope.events.concat(myevents[i]);
                         }
@@ -1457,12 +1585,6 @@ angular.module('zmApp.controllers')
             loadMore();
 
         };
-
-
-
-
-
-
 
 
         //--------------------------------------
@@ -1496,7 +1618,6 @@ angular.module('zmApp.controllers')
         $scope.dummyDoRefresh = function () {
             $scope.$broadcast('scroll.refreshComplete');
         };
-
 
 
         $scope.doRefresh = function () {
@@ -1553,36 +1674,9 @@ angular.module('zmApp.controllers')
 
                                 myevents[i].Event.MonitorName =
                                     ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
-
-                                // now construct base path
-
-                                var str = myevents[i].Event.StartTime;
-                                //var yy =  moment(str).format('h:mm:ssa on MMMM Do YYYY');
-                                var yy = moment(str).format('YY');
-                                var mm = moment(str).format('MM');
-                                var dd = moment(str).format('DD');
-                                var hh = moment(str).format('HH');
-                                var min = moment(str).format('mm');
-                                var sec = moment(str).format('ss');
-                                var loginData = ZMDataModel.getLogin();
-                                myevents[i].Event.BasePath = loginData.url + "/events/" +
-                                    myevents[i].Event.MonitorId + "/" +
-                                    yy + "/" +
-                                    mm + "/" +
-                                    dd + "/" +
-                                    hh + "/" +
-                                    min + "/" +
-                                    sec + "/";
-
-                                myevents[i].Event.relativePath =
-                                    myevents[i].Event.MonitorId + "/" +
-                                    yy + "/" +
-                                    mm + "/" +
-                                    dd + "/" +
-                                    hh + "/" +
-                                    min + "/" +
-                                    sec + "/";
-
+                                myevents[i].Event.BasePath = computeBasePath(myevents[i]);
+                                myevents[i].Event.relativePath = computeRelativePath (myevents[i]);
+                                  
                                 myevents[i].Event.ShowScrub = false;
                                 myevents[i].Event.height = zm.eventsListDetailsHeight;
 
