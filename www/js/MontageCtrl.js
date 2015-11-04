@@ -558,6 +558,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         //  }.bind(this), 1000);
 
         $scope.monitorId = mid;
+        $scope.monitorName = ZMDataModel.getMonitorName(mid);
 
         $scope.LoginData = ZMDataModel.getLogin();
         $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;

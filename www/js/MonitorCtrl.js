@@ -270,6 +270,7 @@ angular.module('zmApp.controllers')
 
 
         $scope.monitorId = mid;
+        $scope.monitorName = ZMDataModel.getMonitorName(mid);
         $scope.LoginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
