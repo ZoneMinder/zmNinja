@@ -37,6 +37,8 @@ angular.module('zmApp.controllers')
         $scope.eventsBeingLoaded = true;
         $scope.FrameArray = []; // will hold frame info from detailed Events API
         
+        var currentEvent = "";
+        
         
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
@@ -629,13 +631,48 @@ angular.module('zmApp.controllers')
             // console.log ("***ION RANGE CHANGED");
 
             $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
+            
         });
 
         $scope.$watch('mycarousel.index', function () {
 
             $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
+            //console.log ("Carousel index is " + $scope.ionRange.index);
+            if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames))
+            {
+                playbackFinished();
+            }
         });
+        
+        //-------------------------------------------------------------------------
+        // Called when rncarousel or video player finished playing event
+        //-------------------------------------------------------------------------     
+        
+       $scope.playbackFinished = function()
+       {
+           playbackFinished();
+       };
 
+        function playbackFinished()
+        {
+            // currentEvent is updated with the currently playing event in prepareModalEvent()
+            ZMDataModel.zmLog ("Playback of event " + currentEvent.Event.Id + " is finished");
+            neighborEvents(currentEvent.Event.Id)
+                            .then(function (success) {
+                
+                                    // lets give a second before gapless transition to the next event
+                                    $timeout ( function() {
+                                    $scope.nextId = success.next;
+                                    $scope.prevId = success.prev;
+                                    ZMDataModel.zmDebug ("Gapless move to event " + $scope.nextId);
+                                    jumpToEvent($scope.nextId, 1);
+                                    },1000);
+                                },
+                                function (error) {
+                                    ZMDataModel.zmDebug("Error in neighbor call " + JSON.stringify(error));
+                                });
+            
+        }
 
         //-------------------------------------------------------------------------
         // This function is called when a user enables or disables
@@ -647,6 +684,8 @@ angular.module('zmApp.controllers')
         };
 
         function toggleGroup(event, ndx, frames) {
+            
+            console.log ("*** TOGGLE: " + event.Event.DefaultVideo);
 
             // If we are here and there is a record of a previous scroll
             // then we need to scroll back to hide that view
@@ -669,6 +708,7 @@ angular.module('zmApp.controllers')
             if (event.Event.ShowScrub == true) // turn on display now
             {
                 ZMDataModel.zmDebug("EventCtrl: Scrubbing will turn on now");
+                currentEvent = "";
                 //$ionicScrollDelegate.freezeScroll(true);
                 $ionicSideMenuDelegate.canDragContent(false);
                 $scope.slider_options = {
@@ -1141,6 +1181,8 @@ angular.module('zmApp.controllers')
         $scope.controlEventStream = function (cmd) {
             controlEventStream(cmd, true);
         };
+        
+        
 
         // This function returns neighbor events if applicable
         function neighborEvents(eid) {
@@ -1190,6 +1232,13 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------
 
         $scope.jumpToEvent = function (eid, dirn) {
+            
+            jumpToEvent(eid, dirn);
+
+        };
+        
+        function jumpToEvent (eid, dirn)
+        {
             ZMDataModel.zmLog("Event jump called with:" + eid);
             if (eid == "") {
                 $ionicLoading.show({
@@ -1232,8 +1281,7 @@ angular.module('zmApp.controllers')
                 $scope.animationInProgress = false;
             }
 
-
-        };
+        }
         
         //--------------------------------------------------------
         // utility function
@@ -1308,6 +1356,7 @@ angular.module('zmApp.controllers')
 
 
                         var event = success.data.event;
+                        currentEvent = event;
 
                         event.Event.BasePath = computeBasePath(event);
                         event.Event.relativePath = computeRelativePath(event);
@@ -1320,11 +1369,12 @@ angular.module('zmApp.controllers')
                         $scope.eventDur = Math.round(event.Event.Length);
                         $scope.loginData = ZMDataModel.getLogin();
 
-                        console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
+                        //console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
                         if (typeof event.Event.DefaultVideo === 'undefined')
                             event.Event.DefaultVideo = "";
 
                         $scope.defaultVideo = event.Event.DefaultVideo;
+                        
 
                         neighborEvents(event.Event.Id)
                             .then(function (success) {
@@ -1467,6 +1517,8 @@ angular.module('zmApp.controllers')
 
 
             ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+            
+            currentEvent = event;
 
             prepareModalEvent(event.Event.Id);
 
