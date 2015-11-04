@@ -1168,11 +1168,26 @@ angular.module('zmApp.controllers')
                 slidein = "animated slideInLeft";
             }
             var element = angular.element(document.getElementById("full-screen-event"));
-            element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {element.removeClass(slideout);prepareModalEvent(eid); element.addClass(slidein); });
+            element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
             
+            function outWithOld()
+            {
+                element.removeClass(slideout);
+                prepareModalEvent(eid);
+                element.addClass(slidein).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew );
+            }
+            
+            function inWithNew()
+            {
+                element.removeClass(slidein);
+            }
 
 
         };
+        
+        
+        
+        
 
         
         //--------------------------------------------------------
