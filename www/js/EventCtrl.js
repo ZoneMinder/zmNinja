@@ -1154,10 +1154,21 @@ angular.module('zmApp.controllers')
             };
             $http.get(myurl)
                 .success(function (data) {
-                    neighbors.prev = data.event.Event.Prev ? data.event.Event.Prev : "";
-                    neighbors.next = data.event.Event.Next ? data.event.Event.Next : "";
+                
+                    if ($stateParams.id != "0") // we are viewing only one monitor
+                    {
+                        ZMDataModel.zmDebug ("Getting next event for monitor Id " + $stateParams.id);
+                        neighbors.prev = data.event.Event.PrevOfMonitor ? data.event.Event.PrevOfMonitor : "";
+                        neighbors.next = data.event.Event.NextOfMonitor ? data.event.Event.NextOfMonitor : "";
+                    }
+                    else
+                    {
+                        neighbors.prev = data.event.Event.Prev ? data.event.Event.Prev : "";
+                        neighbors.next = data.event.Event.Next ? data.event.Event.Next : "";
+                    }
                     ZMDataModel.zmDebug("Neighbor events of " + eid + "are Prev:" +
                         neighbors.prev + " and Next:" + neighbors.next);
+                    
 
                     d.resolve(neighbors);
                     return (d.promise);
