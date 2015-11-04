@@ -37,8 +37,19 @@
 
                     <div ng-if="defaultVideo!='' && loginData.enableh264 == true">
                         <div>
-                            <videogular vg-theme="videoObject.config.theme">
-                                <vg-media vg-src="videoObject.config.sources" vg-native-controls="true">
+                            <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()">
+                                     <vg-controls>
+                                            <vg-play-pause-button></vg-play-pause-button>
+                                            <vg-scrub-bar>
+                                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                            </vg-scrub-bar>
+                                            <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                                            <vg-fullscreen-button></vg-fullscreen-button>
+                                            <vg-volume>
+                                                <vg-mute-button></vg-mute-button>
+                                            </vg-volume>
+                                        </vg-controls>
+                                <vg-media vg-src="videoObject.config.sources" vg-native-controls="false">
                                 </vg-media>
                             </videogular>
                         </div>
