@@ -4,7 +4,7 @@
         <ion-content style="background-color:#444444" ng-cloak>
 
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
-                <div id="full-screen-event" style="height: 100vh;">
+                <div  style="height: 100vh;">
 
 
                     <div ng-if="defaultVideo=='' || loginData.enableh264==false">
@@ -61,7 +61,7 @@
     <a mfb-button icon="ion-close" label="exit event view" ng-click="closeModal()"> </a>
 
 </nav>
-<div class="events-range-modal-text">playing event: {{eventId}}, next:{{nextId}}, prev:{{prevId}}</div>
+<div class="events-range-modal-text" id="full-screen-event">playing event: {{eventId}}</div>
 <div class="events-range-modal" ng-if="defaultVideo==''">
 
     <div style="width:90%">
