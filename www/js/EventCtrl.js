@@ -36,6 +36,38 @@ angular.module('zmApp.controllers')
         var scrollbynumber = 0;
         $scope.eventsBeingLoaded = true;
         $scope.FrameArray = []; // will hold frame info from detailed Events API
+        
+        
+    // --------------------------------------------------------
+    // Handling of back button in case modal is open should
+    // close the modal
+    // --------------------------------------------------------                               
+    
+    $ionicPlatform.registerBackButtonAction(function (e) {
+            e.preventDefault();
+            if ($scope.modal.isShown())
+            {
+                // switch off awake, as liveview is finished
+                ZMDataModel.zmDebug("Modal is open, closing it");
+                ZMDataModel.setAwake(false);
+                $scope.modal.remove();
+            }
+            else
+            {
+                ZMDataModel.zmDebug("Modal is closed, so toggling or exiting");
+                if (!$ionicSideMenuDelegate.isOpenLeft()) 
+                {
+                    $ionicSideMenuDelegate.toggleLeft();
+                   
+                } 
+                else 
+                {
+                    navigator.app.exitApp();
+                }
+            
+            }
+            
+        }, 1000);
 
         document.addEventListener("pause", onPause, false);
         console.log("I got STATE PARAM " + $stateParams.id);
@@ -228,6 +260,9 @@ angular.module('zmApp.controllers')
                     });
 
             });
+        
+        
+    
 
         // not explictly handling error --> I have a default "No events found" message
         // displayed in the template if events list is null

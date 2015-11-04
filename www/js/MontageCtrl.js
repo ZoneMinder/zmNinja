@@ -51,6 +51,37 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.MontageMonitors = ZMDataModel.applyMontageMonitorPrefs (message, 1)[0];
     
     
+    // --------------------------------------------------------
+    // Handling of back button in case modal is open should
+    // close the modal
+    // --------------------------------------------------------                               
+    
+    $ionicPlatform.registerBackButtonAction(function (e) {
+            e.preventDefault();
+            if ($scope.modal && $scope.modal.isShown())
+            {
+                // switch off awake, as liveview is finished
+                ZMDataModel.zmDebug("Modal is open, closing it");
+                ZMDataModel.setAwake(false);
+                $scope.modal.remove();
+                $scope.isModalActive = false;
+            }
+            else
+            {
+                ZMDataModel.zmDebug("Modal is closed, so toggling or exiting");
+                if (!$ionicSideMenuDelegate.isOpenLeft()) 
+                {
+                    $ionicSideMenuDelegate.toggleLeft();
+                   
+                } 
+                else 
+                {
+                    navigator.app.exitApp();
+                }
+            
+            }
+            
+        }, 1000);
 
 
     document.addEventListener("pause", onPause, false);

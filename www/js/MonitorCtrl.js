@@ -6,8 +6,8 @@
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout','$ionicHistory',
-                               function ($ionicPopup, zm, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory) {
+    .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout','$ionicHistory', '$ionicPlatform',
+                               function ($ionicPopup, zm, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform) {
 
 
     //-----------------------------------------------------------------------
@@ -24,8 +24,39 @@ angular.module('zmApp.controllers')
     console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
     ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
-
-
+    // --------------------------------------------------------
+    // Handling of back button in case modal is open should
+    // close the modal
+    // --------------------------------------------------------                               
+    
+    $ionicPlatform.registerBackButtonAction(function (e) {
+            e.preventDefault();
+            if ($scope.modal.isShown())
+            {
+                // switch off awake, as liveview is finished
+                ZMDataModel.zmDebug("Modal is open, closing it");
+                ZMDataModel.setAwake(false);
+                $scope.modal.remove();
+            }
+            else
+            {
+                ZMDataModel.zmDebug("Modal is closed, so toggling or exiting");
+                if (!$ionicSideMenuDelegate.isOpenLeft()) 
+                {
+                    $ionicSideMenuDelegate.toggleLeft();
+                   
+                } 
+                else 
+                {
+                    navigator.app.exitApp();
+                }
+            
+            }
+            
+        }, 1000);
+        
+                                   
+                                   
 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
