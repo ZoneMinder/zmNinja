@@ -240,6 +240,24 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     
 }
 
+
+.monitor-modal-text 
+{
+    position:absolute;
+    bottom:30px;
+    
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index:10;
+    opacity:0.7;
+    color:white;
+    background-color: black;
+    border-radius: 5px 5px 5px 5px;
+    padding-left:3px;
+    padding-right:3px;
+    
+}
+
 .events-alarm-line
 {
 

@@ -337,6 +337,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         }
         
         $scope.monitorId = mid;
+        $scope.monitorName = ZMDataModel.getMonitorName(mid);
 
         $ionicLoading.hide();
         $ionicLoading.show({
@@ -383,6 +384,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         }
         
         $scope.monitorId = mid;
+        $scope.monitorName = ZMDataModel.getMonitorName(mid);
 
 
         $ionicLoading.hide();
@@ -427,6 +429,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         }
         
         $scope.monitorId = mid;
+        $scope.monitorName = ZMDataModel.getMonitorName(mid);
 
         $ionicLoading.show({
             template: "please wait...",
@@ -463,6 +466,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         }
         
         $scope.monitorId = mid;
+        $scope.monitorName = ZMDataModel.getMonitorName(mid);
         $ionicLoading.show({
             template: "please wait...",
             noBackdrop: true,
