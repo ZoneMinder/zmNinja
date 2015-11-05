@@ -1247,6 +1247,14 @@ angular.module('zmApp.controllers')
         //Navigate to next/prev event in full screen mode
         //--------------------------------------------------------
 
+        $scope.onSwipe = function(eid,dirn)
+        {
+            var ld = ZMDataModel.getLogin();
+            if (!ld.canSwipeMonitors) return;
+            jumpToEvent(eid,dirn);
+            
+        };
+        
         $scope.jumpToEvent = function (eid, dirn) {
             
             jumpToEvent(eid, dirn);

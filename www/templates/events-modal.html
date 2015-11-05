@@ -15,7 +15,10 @@
                                     <img  imageonload="finishedLoadingImage($index)" 
                                          image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale={{loginData.singleImageQuality}}" 
                                          image-spinner-loader="lines" 
-                                         ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" />
+                                         ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}"
+                                         on-swipe-left="onSwipe(nextId,1)"
+                                         on-swipe-right="onSwipe(prevId,-1)"
+                                         />
                                 </div>
                                 <div ng-if="animationInProgress">
                                     <img  imageonload="finishedLoadingImage($index)" 
@@ -25,10 +28,7 @@
                                 </div>
                                 
 
-                                <!--<img id="hello" imageonload="finishedLoadingImage($index)"
-                                image-spinner-src="{{eventBasePath}}{{slide.img}}?rand={{rand}}"
-                                image-spinner-loader="lines"
-                                ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}";/>-->
+                                
 
                             </li>
                         </ul>
@@ -103,7 +103,7 @@
 
 <span class="events-modal-gapless-icon">
         <a ng-class="loginData.gapless? 'button button-small button-stable' : 'button button-small button-assertive' " href="" ng-click="toggleGapless()">gapless: {{loginData.gapless?"on":"off"}}</a>
-    </span>
+</span>
 
 <!--
     <nav mfb-menu position="bl" effect="zoomin" label="collapse"
