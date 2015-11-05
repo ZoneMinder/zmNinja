@@ -657,21 +657,30 @@ angular.module('zmApp.controllers')
         {
             // currentEvent is updated with the currently playing event in prepareModalEvent()
             ZMDataModel.zmLog ("Playback of event " + currentEvent.Event.Id + " is finished");
-            neighborEvents(currentEvent.Event.Id)
-                            .then(function (success) {
-                
-                                    // lets give a second before gapless transition to the next event
-                                    $timeout ( function() {
-                                    $scope.nextId = success.next;
-                                    $scope.prevId = success.prev;
-                                    ZMDataModel.zmDebug ("Gapless move to event " + $scope.nextId);
-                                    jumpToEvent($scope.nextId, 1);
-                                    },1000);
-                                },
-                                function (error) {
-                                    ZMDataModel.zmDebug("Error in neighbor call " + JSON.stringify(error));
-                                });
             
+            if ($scope.loginData.gapless)
+            {
+            
+                neighborEvents(currentEvent.Event.Id)
+                                .then(function (success) {
+
+                                        // lets give a second before gapless transition to the next event
+                                        $timeout ( function() {
+                                        $scope.nextId = success.next;
+                                        $scope.prevId = success.prev;
+                                        ZMDataModel.zmDebug ("Gapless move to event " + $scope.nextId);
+                                        jumpToEvent($scope.nextId, 1);
+                                        },1000);
+                                    },
+                                    function (error) {
+                                        ZMDataModel.zmDebug("Error in neighbor call " +
+                                                            JSON.stringify(error));
+                                    });
+            }
+            else
+            {
+                ZMDataModel.zmDebug ("not going to next event, gapless is off");
+            }
         }
 
         //-------------------------------------------------------------------------
@@ -1226,7 +1235,14 @@ angular.module('zmApp.controllers')
 
         }
 
-
+        $scope.toggleGapless = function()
+        {
+            
+            $scope.loginData.gapless = !$scope.loginData.gapless;
+            ZMDataModel.setLogin($scope.loginData);
+            
+        };
+        
         //--------------------------------------------------------
         //Navigate to next/prev event in full screen mode
         //--------------------------------------------------------

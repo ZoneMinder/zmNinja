@@ -82,6 +82,12 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
             (parseInt($scope.loginData.montageQuality) > 70)) {
             $scope.loginData.montageQuality = zm.defaultMontageQuality.toString();
         }
+        
+        
+        if ((parseInt($scope.loginData.singleImageQuality) < zm.safeImageQuality) ||
+            (parseInt($scope.loginData.singleImageQuality) > 100)) {
+            $scope.loginData.singleImageQuality = zm.safeImageQuality.toString();
+        }
 
 
         ZMDataModel.zmDebug("SaveDevOptions: Saving to disk");

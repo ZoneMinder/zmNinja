@@ -13,7 +13,7 @@
                             <li ng-repeat="slide in slides">
                                 <div ng-if="!animationInProgress">
                                     <img  imageonload="finishedLoadingImage($index)" 
-                                         image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale=100" 
+                                         image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale={{loginData.singleImageQuality}}" 
                                          image-spinner-loader="lines" 
                                          ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" />
                                 </div>
@@ -93,12 +93,17 @@
 
 </div>
 
-<div class="events-range-modal-text" >playing event: {{eventId}}</div>
+<div class="events-range-modal-text" >showing event: {{eventId}}</div>
 
 <span class="event-modal-alarm-badge">
             <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive" 
                     ng-click="handleAlarms();" ng-if="$root.isAlarm" ></a>
-        </span>
+</span>
+
+
+<span class="events-modal-gapless-icon">
+        <a ng-class="loginData.gapless? 'button button-small button-stable' : 'button button-small button-assertive' " href="" ng-click="toggleGapless()">gapless: {{loginData.gapless?"on":"off"}}</a>
+    </span>
 
 <!--
     <nav mfb-menu position="bl" effect="zoomin" label="collapse"
