@@ -1251,6 +1251,14 @@ angular.module('zmApp.controllers')
         {
             var ld = ZMDataModel.getLogin();
             if (!ld.canSwipeMonitors) return;
+            
+            if 
+   ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom!=1)
+   {
+       console.log("Image is zoomed in - not honoring swipe");
+       return;
+   }
+            
             jumpToEvent(eid,dirn);
             
         };

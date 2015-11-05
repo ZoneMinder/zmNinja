@@ -347,9 +347,25 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         });
     };
     
+    
+    $scope.getZoomLevel = function()
+    {
+        console.log ("ON RELEASE");
+        var zl = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition();
+        console.log (JSON.stringify(zl));
+    };
+    
     $scope.onSwipeLeft = function (m, d) {
         var ld = ZMDataModel.getLogin();
        if (!ld.canSwipeMonitors) return;
+        
+   if 
+   ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom!=1)
+   {
+       console.log("Image is zoomed in - not honoring swipe");
+       return;
+   }
+        
         
         var curstate =  $ionicHistory.currentStateName();
         var found=0;    
@@ -439,6 +455,14 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     };
     $scope.onSwipeRight = function (m, d) {
         if (!ld.canSwipeMonitors) return;
+        
+        if 
+   ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom!=1)
+   {
+       console.log("Image is zoomed in - not honoring swipe");
+       return;
+   }
+        
         var found=0;    
         var mid;
         var curstate =  $ionicHistory.currentStateName();
