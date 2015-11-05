@@ -9,6 +9,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     console.log("**** INSIDE MODAL CTRL, recomputing rand *****");
 
+    $scope.animationInProgress = false;
     $scope.imageFit = false;
     // FIXME: This is a hack - for some reason
     // the custom slider view is messed up till the image loads
@@ -301,72 +302,48 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         });
     }
 
+    
     $scope.finishedLoadingImage = function () {
         // console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
 
     };
-
-    $scope.onTapLeft = function (m,d)
-    {
-        
-        var curstate =  $ionicHistory.currentStateName();
-        var found=0;    
-        var mid;
-          mid = ZMDataModel.getNextMonitor(m, d);
-        if (curstate != "monitors")
-        {
-            do
-            {
-                 mid = ZMDataModel.getNextMonitor(m, d);
-                m = mid;
-                found = 0;
-                for (var i = 0 ; i< $scope.monitors.length; i++)
-                {
-                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow')
-                    {
-                        found = 1;
-                        ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " +   mid); 
-                        break;
-                    }
-                }
-
-
-            }
-            while (found !=1);
-        }
-        
-        $scope.monitorId = mid;
-        $scope.monitorName = ZMDataModel.getMonitorName(mid);
-
-        $ionicLoading.hide();
-        $ionicLoading.show({
-            template: "please wait...",
-            noBackdrop: true,
-            duration: zm.loadingTimeout,
-        });
-    };
-    
     
     $scope.getZoomLevel = function()
     {
         console.log ("ON RELEASE");
         var zl = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition();
         console.log (JSON.stringify(zl));
+    };    
+
+    $scope.onTap = function (m,d)
+    {
+        
+        moveToMonitor(m,d);
     };
     
-    $scope.onSwipeLeft = function (m, d) {
+    
+    
+    
+    $scope.onSwipe = function (m, d) 
+    {
         var ld = ZMDataModel.getLogin();
        if (!ld.canSwipeMonitors) return;
         
-   if 
-   ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom!=1)
-   {
-       console.log("Image is zoomed in - not honoring swipe");
-       return;
-   }
+       if 
+       ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom!=1)
+       {
+           console.log("Image is zoomed in - not honoring swipe");
+           return;
+       }
+       moveToMonitor(m,d);
         
         
+
+    };
+    
+    function moveToMonitor(m,d)
+    {
         var curstate =  $ionicHistory.currentStateName();
         var found=0;    
         var mid;
@@ -399,10 +376,48 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             while (found !=1);
         }
         
-        $scope.monitorId = mid;
-        $scope.monitorName = ZMDataModel.getMonitorName(mid);
+        var slidein;
+        var slideout;
+        var dirn=d;
+        if (dirn==1)
+        {
+            slideout = "animated slideOutLeft";
+            slidein = "animated slideInRight";
+        }
+        else
+        {
+            slideout = "animated slideOutRight";
+            slidein = "animated slideInLeft";
+        }
+         
+        var element = angular.element(document.getElementById("monitorimage"));
+        element.addClass(slideout)
+            .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
+        
 
 
+        function outWithOld()
+        {
+             
+            element.removeClass(slideout);
+            $scope.rand = Math.floor((Math.random() * 100000) + 1);
+            $scope.animationInProgress = true;  
+            
+            element.addClass(slidein)
+                .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew );
+            $scope.monitorId = mid;
+            $scope.monitorName = ZMDataModel.getMonitorName(mid);
+        }
+
+        function inWithNew()
+        {
+         
+           element.removeClass(slidein);
+           $scope.animationInProgress = false;
+      
+        }
+
+        
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "please wait...",
@@ -411,92 +426,9 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         });
         
         
-
-    };
+    }
     
-    $scope.onTapRight = function (m,d)
-    {
-         //ZMDataModel.zmDebug("ModalCtrl:Right tap detected, moving to " + ZMDataModel.getNextMonitor(m, d));
-      var found=0;    
-        var mid;
-        var curstate =  $ionicHistory.currentStateName();
-        mid = ZMDataModel.getNextMonitor(m, d);
-        if (curstate != "monitors")
-        {
-            do
-            {
-
-                 mid = ZMDataModel.getNextMonitor(m, d);
-                m = mid;
-                found = 0;
-                for (var i = 0 ; i< $scope.monitors.length; i++)
-                {
-                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow' )
-                    {
-                        found = 1;
-                        ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " +   mid); 
-                        break;
-                    }
-                }
-
-
-            }
-            while (found !=1);
-        }
-        
-        $scope.monitorId = mid;
-        $scope.monitorName = ZMDataModel.getMonitorName(mid);
-
-        $ionicLoading.show({
-            template: "please wait...",
-            noBackdrop: true,
-            duration: zm.loadingTimeout,
-        });
-    };
-    $scope.onSwipeRight = function (m, d) {
-        if (!ld.canSwipeMonitors) return;
-        
-        if 
-   ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom!=1)
-   {
-       console.log("Image is zoomed in - not honoring swipe");
-       return;
-   }
-        
-        var found=0;    
-        var mid;
-        var curstate =  $ionicHistory.currentStateName();
-        mid = ZMDataModel.getNextMonitor(m, d);
-        if (curstate != "monitors")
-        {
-            do
-            {
-                 mid = ZMDataModel.getNextMonitor(m, d);
-                m = mid;
-                found = 0;
-                for (var i = 0 ; i< $scope.monitors.length; i++)
-                {
-                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow')
-                    {
-                        found = 1;
-                        ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " +   mid); 
-                        break;
-                    }
-                }
-
-
-            }
-            while (found !=1);
-        }
-        
-        $scope.monitorId = mid;
-        $scope.monitorName = ZMDataModel.getMonitorName(mid);
-        $ionicLoading.show({
-            template: "please wait...",
-            noBackdrop: true,
-            duration: zm.loadingTimeout,
-        });
-    };
+   
 
     //-----------------------------------------------------------------------
     // Sucess/Error handlers for saving a snapshot of the

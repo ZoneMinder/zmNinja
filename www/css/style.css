@@ -567,4 +567,10 @@ input[type=range]::-webkit-slider-thumb {
   
 }
 
+#monitorimage
+{
+     -webkit-animation-duration: 200ms;
+}
+
+
 

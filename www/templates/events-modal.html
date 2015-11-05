@@ -3,7 +3,8 @@
     <ion-modal-view cache-view="false">
         <ion-content style="background-color:#444444" ng-cloak>
 
-            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; " delegate-handle="imgscroll">
+            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; " delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)"
+                                         on-swipe-right="onSwipeEvent(prevId,-1)">
                 <div  id="full-screen-event" style="height: 100vh;">
 
 
@@ -16,8 +17,7 @@
                                          image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale={{loginData.singleImageQuality}}" 
                                          image-spinner-loader="lines" 
                                          ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}"
-                                         on-swipe-left="onSwipe(nextId,1)"
-                                         on-swipe-right="onSwipe(prevId,-1)"
+                                         
                                          />
                                 </div>
                                 <div ng-if="animationInProgress">

@@ -1247,8 +1247,9 @@ angular.module('zmApp.controllers')
         //Navigate to next/prev event in full screen mode
         //--------------------------------------------------------
 
-        $scope.onSwipe = function(eid,dirn)
+        $scope.onSwipeEvent = function(eid,dirn)
         {
+            console.log ("HERE");
             var ld = ZMDataModel.getLogin();
             if (!ld.canSwipeMonitors) return;
             
@@ -1258,7 +1259,7 @@ angular.module('zmApp.controllers')
        console.log("Image is zoomed in - not honoring swipe");
        return;
    }
-            
+            console.log ("JUMPING");
             jumpToEvent(eid,dirn);
             
         };
