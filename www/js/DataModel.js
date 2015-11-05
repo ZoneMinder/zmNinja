@@ -35,6 +35,7 @@ angular.module('zmApp.controllers')
         'streamingurl': "",
         'maxFPS': "3", // image streaming FPS
         'montageQuality': "50", // montage streaming quality in %
+        'singleImageQuality': "50", // single streaming quality in %
         'useSSL':false, // "1" if HTTPS
         'keepAwake':true, // don't dim/dim during live view
         'isUseAuth':true, // true if user wants ZM auth
@@ -50,6 +51,7 @@ angular.module('zmApp.controllers')
         'persistMontageOrder':false,
          'onTapScreen':'events',
          'enableh264':true,
+         'gapless':false,
         
     };
      
@@ -209,6 +211,12 @@ angular.module('zmApp.controllers')
                     window.localStorage.getItem("montageQuality");
 
             }
+            
+            if (window.localStorage.getItem("singleImageQuality") != undefined) {
+                loginData.singleImageQuality =
+                    window.localStorage.getItem("singleImageQuality");
+
+            }
 
             if (window.localStorage.getItem("password") != undefined) {
                 loginData.password =
@@ -278,6 +286,14 @@ angular.module('zmApp.controllers')
                 console.log("montageQuality  " + loginData.montageQuality);
 
             }
+            
+            if (window.localStorage.getItem("singleImageQuality") != undefined) {
+                loginData.singleImageQuality =
+                    window.localStorage.getItem("singleImageQuality");
+               
+
+            }
+            
              if (window.localStorage.getItem("useSSL") != undefined) {
                  var sslvalue =  window.localStorage.getItem("useSSL");
                 loginData.useSSL = (sslvalue == "1") ? true:false;
@@ -302,6 +318,10 @@ angular.module('zmApp.controllers')
                 loginData.enableh264 = (enableh264 == "1") ? true:false;
             }
             
+            if (window.localStorage.getItem("gapless") != undefined) {
+                var gapless = window.localStorage.getItem("gapless");
+                loginData.gapless = (gapless == "1") ? true:false;
+            }
             
             if (window.localStorage.getItem("usePin") != undefined) {
                  var pinValue =  window.localStorage.getItem("usePin");
@@ -436,7 +456,8 @@ angular.module('zmApp.controllers')
             window.localStorage.setItem("canSwipeMonitors", loginData.canSwipeMonitors?"1":"0");
             window.localStorage.setItem("persistMontageOrder", loginData.persistMontageOrder?"1":"0");
             
-             window.localStorage.setItem("enableh264", loginData.enableh264?"1":"0");
+            window.localStorage.setItem("enableh264", loginData.enableh264?"1":"0");
+            window.localStorage.setItem("gapless", loginData.gapless?"1":"0");
             
             window.localStorage.setItem("pinCode", loginData.pinCode);
             
@@ -445,6 +466,7 @@ angular.module('zmApp.controllers')
             window.localStorage.setItem("keepAwake", loginData.keepAwake?"1":"0");
             window.localStorage.setItem("maxMontage", loginData.maxMontage);
             window.localStorage.setItem("montageQuality", loginData.montageQuality);
+              window.localStorage.setItem("singleImageQuality", loginData.singleImageQuality);
             window.localStorage.setItem("refreshSec", loginData.refreshSec);
             
             

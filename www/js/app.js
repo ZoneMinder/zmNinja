@@ -43,6 +43,7 @@ angular.module('zmApp', [
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
     loadingTimeout: 15000,
     safeMontageLimit: 10,
+    safeImageQuality:10,
     maxFPS: 30,
     defaultFPS: 3,
     maxMontageQuality: 70,
