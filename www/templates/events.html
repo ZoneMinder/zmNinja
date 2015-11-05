@@ -105,7 +105,7 @@
                         </div>
                             
                             <span style="float:right">
-                                <div ng-if="event.Event.Frames">
+                                <div ng-if="event.Event.EndTime">
                                     <button class="button button-small icon icon-left ion-ios-eye"
                                             ng-click="toggleGroup(event,$index,event.Event.Frames)" > Quick Scrub
                                     </button>
@@ -115,7 +115,8 @@
                                             ng-click="closeIfOpen(event);openModal(event)" > View Footage
                                     </button>
                                 </div>
-                                <div ng-if="!event.Event.Frames || event.Event.Frames == undefined">
+                              
+                                <div ng-if="!event.Event.EndTime">
                                     <p>recording in progress</p>
                                 </div>
                             </span>
