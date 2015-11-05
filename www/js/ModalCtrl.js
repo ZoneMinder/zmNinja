@@ -399,14 +399,18 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         function outWithOld()
         {
              
-            element.removeClass(slideout);
+            
             $scope.rand = Math.floor((Math.random() * 100000) + 1);
             $scope.animationInProgress = true;  
             
-            element.addClass(slidein)
+            $timeout (function()
+            {
+                element.removeClass(slideout);
+                element.addClass(slidein)
                 .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew );
-            $scope.monitorId = mid;
-            $scope.monitorName = ZMDataModel.getMonitorName(mid);
+                $scope.monitorId = mid;
+                $scope.monitorName = ZMDataModel.getMonitorName(mid);
+            },200);
         }
 
         function inWithNew()

@@ -1302,10 +1302,18 @@ angular.module('zmApp.controllers')
             
             function outWithOld()
             {
-                element.removeClass(slideout);
-                prepareModalEvent(eid);
+                
+                
                 $scope.animationInProgress = true;
-                element.addClass(slidein).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew );
+                // give digest time for image to swap
+                // 100 should be enough
+                $timeout(function()
+                {
+                    element.removeClass(slideout);
+                    element.addClass(slidein)
+                        .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew );
+                    prepareModalEvent(eid);
+                },200);
             }
             
             function inWithNew()
