@@ -1,3 +1,6 @@
+
+
+
 .vis-time-axis .grid.vis-odd {
     background: #f5f5f5;
   }
@@ -99,17 +102,8 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     background: hotpink;
 }
 
-/*@media all and (min-width: 600px) {
-    .aside { flex: 1 auto; }
-}
 
-@media all and (min-width: 800px) {
-    .main    { flex: 3 0px; }
-    .aside-1 { order: 1; }
-    .main    { order: 2; }
-    .aside-2 { order: 3; }
-    .footer  { order: 4; }
-}*/
+
 
 /* modified from:
 http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
@@ -211,7 +205,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     bottom:120px;
     left:20px;
     z-index:10;
-    opacity:0.7;
+    opacity:0.5;
 }
 
 .events-range
@@ -535,7 +529,7 @@ input[type=range]::-webkit-slider-thumb {
    
 }
 
-/*
+/* This accordion list is used for event server monitor filter
  * http://docs.angularjs.org/api/ng/directive/ngShow#usage_animations
  */
 .list .item.item-accordion {
@@ -557,6 +551,8 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 
+
+/* This is for quick scrub for H264 */
 .videogular-container {
 	height: 260px;
     
@@ -571,43 +567,4 @@ input[type=range]::-webkit-slider-thumb {
   
 }
 
-/*.mySliderClass.jslider.sliderCSS  div.jslider-pointer
-{top:-10px;left:15px;width:60px;height:60px;margin-left:-5px;background-color:silver;background-color:#615959;border-radius:50%
-}*/
 
-/*
-.bgimage {
-    text-align:right;
-    color:white;
-    background-size:cover;
-    height: 100%;
-    background-position: center center;
-}
-
-ul[rn-carousel] {
-
-    height:190px;
-    width:190px;
-    margin: 0 auto;
-}
-
-.carousel5 li {
-    width:100%;
-    height:100%;
-    font-size:30px;
-    background-color: #ccc;
-}
-
-.carousel-demo {
-    margin-top:20px;
-    display:inline-block;
-    text-align: center;
-}
-.carousel-demo-fullscreen {
-  width:100%;
-  height:100%;
-}
-.carousel-demo-fullscreen ul[rn-carousel] {
-  width:100%;
-  height:100%;
-}*/
