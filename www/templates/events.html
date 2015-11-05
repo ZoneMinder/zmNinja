@@ -103,17 +103,24 @@
                                 <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
                             </div>
                         </div>
-                        <span style="float:right">
+                            
+                            <span style="float:right">
+                                <div ng-if="event.Event.Frames">
+                                    <button class="button button-small icon icon-left ion-ios-eye"
+                                            ng-click="toggleGroup(event,$index,event.Event.Frames)" > Quick Scrub
+                                    </button>
 
-                        <button class="button button-small icon icon-left ion-ios-eye"
-                                ng-click="toggleGroup(event,$index,event.Event.Frames)" > Quick Scrub
-                        </button>
 
-
-                        <button class="button button-small icon icon-left ion-ios-eye"
-                                ng-click="closeIfOpen(event);openModal(event)" > View Footage
-                    </button>
-                    </span>
+                                    <button class="button button-small icon icon-left ion-ios-eye"
+                                            ng-click="closeIfOpen(event);openModal(event)" > View Footage
+                                    </button>
+                                </div>
+                                <div ng-if="!event.Event.Frames || event.Event.Frames == undefined">
+                                    <p>recording in progress</p>
+                                </div>
+                            </span>
+                            
+                            
 
 
 
@@ -160,7 +167,7 @@
 
 
                                 <div class="videogular-container">
-                                    <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'" vg-responsive="true" >
+                                    <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'" vg-responsive="true">
                                         <vg-controls>
                                             <vg-play-pause-button></vg-play-pause-button>
                                             <vg-scrub-bar>
