@@ -1,11 +1,12 @@
 # Change Log
 
-## [Unreleased](https://github.com/pliablepixels/zmNinja/tree/HEAD)
-
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.86...HEAD)
+## [v0.86](https://github.com/pliablepixels/zmNinja/tree/v0.86) (2015-11-06)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.85...v0.86)
 
 **Implemented enhancements:**
 
+- Make Back button to exit from live view [\#61](https://github.com/pliablepixels/zmNinja/issues/61)
+- ability to run all screens of zmNinja on a desktop without console errors [\#59](https://github.com/pliablepixels/zmNinja/issues/59)
 - In playback mode, add the ability to swipe to the next event of whichever monitor has the next event and/or initiate gapless playback of same. [\#49](https://github.com/pliablepixels/zmNinja/issues/49)
 - In playback mode, add the ability to swipe to the next event of the same monitor and/or initiate gapless playback. [\#48](https://github.com/pliablepixels/zmNinja/issues/48)
 
@@ -16,17 +17,6 @@
 **Closed issues:**
 
 - If swiping is enabled, don't swipe if image is zoomed in -- causes pan/zoom conflicts [\#66](https://github.com/pliablepixels/zmNinja/issues/66)
-
-## [v0.86](https://github.com/pliablepixels/zmNinja/tree/v0.86) (2015-11-06)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.85...v0.86)
-
-**Implemented enhancements:**
-
-- Make Back button to exit from live view [\#61](https://github.com/pliablepixels/zmNinja/issues/61)
-- ability to run all screens of zmNinja on a desktop without console errors [\#59](https://github.com/pliablepixels/zmNinja/issues/59)
-
-**Closed issues:**
-
 - getDiskStatus seems to be a performance bottleneck - disable for now in System State screen [\#65](https://github.com/pliablepixels/zmNinja/issues/65)
 - clean up non-reachable code during portal check [\#64](https://github.com/pliablepixels/zmNinja/issues/64)
 
