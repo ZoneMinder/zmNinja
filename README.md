@@ -11,7 +11,7 @@ Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 Status for Mobile Platforms
 ---------------------------
 zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
-It also runs on the desktop today and soon, I plan to use Electron to make a desktop app out of it.
+It also runs on the desktop (see below)
 
 I have active testers today for both Android and iOS. If you want to test, please follow the instructions
 [here](https://forums.zoneminder.com/viewtopic.php?f=33&t=23073) and send me an [email](mailto:pliablepixels@gmail.com) with your details.
