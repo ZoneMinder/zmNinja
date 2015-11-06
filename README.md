@@ -29,7 +29,9 @@ That's all
 It may/will contain bugs. Plus email logs to me won't work in the desktop versions.
 
 Windows: [Download] (https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-win.zip?raw=true)
+
 Linux: [Download] (https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-linux.zip?raw=true)
+
 Mac: [Download] (https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-mac.zip?raw=true)
 
 
