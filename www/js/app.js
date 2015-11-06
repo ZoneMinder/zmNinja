@@ -208,6 +208,7 @@ angular.module('zmApp', [
         'request': function (config) {
             
             
+            /* - we don't need this with electron 
             if ($rootScope.platformOS == "desktop")
             {
                 var zmD = $injector.get('ZMDataModel');
@@ -226,7 +227,7 @@ angular.module('zmApp', [
                 
                 
             }
-            
+            */
             
             // config.withCredentials = true;
             if (zmCookie) {

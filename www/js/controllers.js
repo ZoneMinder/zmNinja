@@ -20,5 +20,11 @@ angular.module('zmApp.controllers', ['ionic', 'ngCordova', 'ng-mfb','angularCirc
 
         
 }, 100);
+
+    // Added for electron build to stop title propagation
+    $scope.$on('$ionicView.afterEnter', function(ev, data) { 
+      ev.stopPropagation();
+  });
+
 });
 

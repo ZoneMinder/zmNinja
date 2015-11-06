@@ -122,10 +122,12 @@ angular.module('zmApp.controllers')
         $scope.eventCommands = eventCommands;
         $scope.loginData = ZMDataModel.getLogin();
         $scope.playbackURL = $scope.loginData.url;
+        /* not needed for electron
         if ($rootScope.platformOS == "desktop") {
             $scope.playbackURL = zm.desktopUrl;
         }
-
+        */
+        
         $scope.mycarousel = {
             index: 0
         };
@@ -1453,9 +1455,11 @@ angular.module('zmApp.controllers')
                         $scope.videoObject = event.Event.video;
 
                         $scope.playbackURL = $scope.loginData.url;
+                
+                        /* we don't need this for electron
                         if ($rootScope.platformOS == "desktop") {
                             $scope.playbackURL = zm.desktopUrl;
-                        }
+                        } */
 
                         $scope.eventBasePath = event.Event.BasePath;
                         $scope.relativePath = event.Event.relativePath;
