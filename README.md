@@ -8,6 +8,19 @@ Video Demo
 -------------
 Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 
+Status
+-------
+zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
+It also runs on the desktop today and soon, I plan to use Electron to make a desktop app out of it.
+
+I have active testers today for both Android and iOS. If you want to test, please follow the instructions
+[here](https://forums.zoneminder.com/viewtopic.php?f=33&t=23073) and send me an [email](mailto:pliablepixels@gmail.com) with your details.
+You'll have zmNinja running right in your phone without compiling anything.
+
+I can release it to App/Play Store but I'd rather wait for ZM 1.29 to be released so people don't make
+my life miserable about missing APIs etc.
+
+
 Key Features (just watch the video already)
 --------------------------------------------
 * H264 video branch support - if you are using the zoneminder video branch and have recorded videos they will automatically be used (you can disable it in developer settings). If an event has a recorded video, you will see a small video icon at the top of that event entry in events view
