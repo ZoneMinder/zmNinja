@@ -1,6 +1,6 @@
 ![](http://www.pbase.com/arjunrc/image/160855207.jpg "icon") 
 
-zmNinja is a multi platform client for ZoneMinder users.
+zmNinja is a multi platform (iOS, Android, Windows Desktop, Mac Desktop, Linux Desktop) client for ZoneMinder users.
 ZoneMinder is an incredible open source camera monitoring system and is used
 by many for home and commercial security monitoring. http://www.zoneminder.com
 
@@ -8,8 +8,8 @@ Video Demo
 -------------
 Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 
-Status
--------
+Status for Mobile Platforms
+---------------------------
 zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
 It also runs on the desktop today and soon, I plan to use Electron to make a desktop app out of it.
 
@@ -19,6 +19,18 @@ You'll have zmNinja running right in your phone without compiling anything.
 
 I can release it to App/Play Store but I'd rather wait for ZM 1.29 to be released so people don't make
 my life miserable about missing APIs etc.
+
+
+Desktop Platforms
+-----------------
+This is alpha now - I've not done any optimization yet. Just made the first builds. Grab the ZIP files, unzip, and execute zmNinja.
+That's all
+
+It may/will contain bugs. Plus email logs to me won't work in the desktop versions.
+
+Windows: (Download) [https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-win.zip]
+Linux: (Download) [https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-linux.zip]
+Mac: (Download) [https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-mac.zip]
 
 
 Key Features (just watch the video already)
