@@ -36,75 +36,75 @@
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
         <div ng-if="!eventsBeingLoaded">
             <ion-list show-delete="eventList.showDelete">
-                <ion-item collection-repeat="event in events| filter:search.text" item-height="event.Event.height" id="item-{{$index}}">
-                    <div>
-                        <!--<span class="events-filter-on" ng-if="isEventFilterOn">Filter</span>-->
+                <ion-item repeat="event in events| filter:search.text" item-height="event.Event.height" id="item-{{$index}}" overflow-scroll="true">
 
-                        <span style="float:right;margin-top:-18px;background-color:#6d0909;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}</span>
+                    <!--<span class="events-filter-on" ng-if="isEventFilterOn">Filter</span>-->
 
-                        <span style="float:left;margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}}</span>
+                    <span style="float:right;margin-top:-18px;background-color:#6d0909;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}</span>
+
+                    <span style="float:left;margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}}</span>
 
 
-                        <div class="row">
-                            <div class="col col-left">
-                                <!-- this ngswitch displays different icons
+                    <div class="row">
+                        <div class="col col-left">
+                            <!-- this ngswitch displays different icons
                                         depending on the cause of the event -->
 
-                                <div ng-switch on="event.Event.Cause">
-                                    <div ng-switch-when="Motion">
+                            <div ng-switch on="event.Event.Cause">
+                                <div ng-switch-when="Motion">
 
-                                        <i class="ion-android-walk" style="float:left; font-size:200%;"></i>
-                                        <div ng-if="event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px; font-size:100%;"></i>
-                                        </div>
-                                        <br/>
+                                    <i class="ion-android-walk" style="float:left; font-size:200%;"></i>
+                                    <div ng-if="event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
+                                        <i class="ion-ios-videocam" style="float:left; padding-left:5px; font-size:100%;"></i>
                                     </div>
-                                    <div ng-switch-when="Signal">
-                                        <i class="ion-wifi" style="float:left; font-size:200%;"></i>
-                                        <div ng-if=" event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:100%;"></i>
-                                        </div>
-                                        <br/>
-                                    </div>
-                                    <div ng-switch-default>
-                                        <i class="ion-ionic" style="float:left; font-size:200%;"></i>
-                                        <div ng-if="event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
-                                            <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:100%;"></i>
-                                        </div>
-                                        <br/>
-                                    </div>
+                                    <br/>
                                 </div>
-                                <!-- ng switch -->
-                                <!-- {{event.Event.Cause}} -->
+                                <div ng-switch-when="Signal">
+                                    <i class="ion-wifi" style="float:left; font-size:200%;"></i>
+                                    <div ng-if=" event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
+                                        <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:100%;"></i>
+                                    </div>
+                                    <br/>
+                                </div>
+                                <div ng-switch-default>
+                                    <i class="ion-ionic" style="float:left; font-size:200%;"></i>
+                                    <div ng-if="event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!=''">
+                                        <i class="ion-ios-videocam" style="float:left; padding-left:5px;font-size:100%;"></i>
+                                    </div>
+                                    <br/>
+                                </div>
+                            </div>
+                            <!-- ng switch -->
+                            <!-- {{event.Event.Cause}} -->
 
-                                <br/>
-                                <span style="font-size:80%; color:rgb(110,110,110)">
+                            <br/>
+                            <span style="font-size:80%; color:rgb(110,110,110)">
                                 {{event.Event.Length}}s
                             </span>
-                            </div>
-                            <!-- col col left-->
-                            <div class="col col-80">
-                                <div class="item-text-wrap">
-                                    <i class="ion-monitor"></i>
-                                    <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}})
-                                </div>
-
-                                <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
-                                <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
-                                <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
-                            </div>
                         </div>
-                        <!--row-->
-
-                        <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-                            <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp; {{prettify(event.Event.StartTime)}}
-                                <br/>
-                                <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
-                                <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
+                        <!-- col col left-->
+                        <div class="col col-80">
+                            <div class="item-text-wrap">
+                                <i class="ion-monitor"></i>
+                                <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}})
                             </div>
+
+                            <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
+                            <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
+                            <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
                         </div>
-                            
-                            <span style="float:right">
+                    </div>
+                    <!--row-->
+
+                    <div class="row" style="font-size:80%; color:rgb(110,110,110)">
+                        <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp; {{prettify(event.Event.StartTime)}}
+                            <br/>
+                            <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
+                            <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
+                        </div>
+                    </div>
+
+                    <span style="float:right">
                                 <div ng-if="event.Event.EndTime">
                                     <button class="button button-small icon icon-left ion-ios-eye"
                                             ng-click="toggleGroup(event,$index,event.Event.Frames)" > Quick Scrub
@@ -119,83 +119,79 @@
                                 <div ng-if="!event.Event.EndTime">
                                     <p>recording in progress</p>
                                 </div>
-                            </span>
-                            
-                            
+                    </span>
 
 
+                    <!-- this is the event scrub area -->
+                    <div ng-if="isGroupShown(event)">
+
+                        <div ng-if="event.Event.DefaultVideo=='' || loginData.enableh264==false">
 
 
-                        <!-- this is the event scrub area -->
-                        <div ng-if="isGroupShown(event)">
+                            <br/>
+                            <br/>
+                            <br/>
 
-                            <div ng-if="event.Event.DefaultVideo=='' || loginData.enableh264==false">
-
-
-                                <br/>
-                                <br/>
-                                <br/>
-
-                                <div style="width:90%">
-                                    <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
-                                </div>
-                                <br/>
-
-
-
-                                <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
-
-                                <div style="height:190px">
-                                    <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover rn-platform="{{$root.platformOS}}">
-                                        <li ng-repeat="slide in slides">
-                                            <!-- Linwood scaling -->
-                                            <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
-                                            <br/>
-
-
-                                        </li>
-                                    </ul>
-                                </div>
+                            <div style="width:90%">
+                                <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
                             </div>
-                            <!-- no DefaultVideo -->
+                            <br/>
 
 
-                            <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
 
-                                <br/>
-                                <br/>
-                                <br/>
+                            <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
+
+                            <div style="height:190px">
+                                <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{calcMsTimer(event.Event.Frames, event.Event.Length)/1000.0}}" rn-carousel-pause-on-hover rn-platform="{{$root.platformOS}}">
+                                    <li ng-repeat="slide in slides">
+                                        <!-- Linwood scaling -->
+                                        <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
+                                        <br/>
 
 
-                                <div class="videogular-container">
-                                    <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'" vg-responsive="true">
-                                        <vg-controls>
-                                            <vg-play-pause-button></vg-play-pause-button>
-                                            <vg-scrub-bar>
-                                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                            </vg-scrub-bar>
-                                            <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
-                                            <vg-fullscreen-button></vg-fullscreen-button>
-                                            <vg-volume>
-                                                <vg-mute-button></vg-mute-button>
-                                            </vg-volume>
-                                        </vg-controls>
-
-                                        <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="false">
-                                        </vg-media>
-                                    </videogular>
-                                </div>
-
+                                    </li>
+                                </ul>
                             </div>
-                            <!-- DefaultVideo -->
                         </div>
-                        <!-- isGroupShown -->
-
-                        <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
-                        </ion-delete-button>
+                        <!-- no DefaultVideo -->
 
 
+                        <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
+
+                            <br/>
+                            <br/>
+                            <br/>
+
+
+                            <div class="videogular-container">
+                                <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'" vg-responsive="true">
+                                    <vg-controls>
+                                        <vg-play-pause-button></vg-play-pause-button>
+                                        <vg-scrub-bar>
+                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                        </vg-scrub-bar>
+                                        <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                                        <vg-fullscreen-button></vg-fullscreen-button>
+                                        <vg-volume>
+                                            <vg-mute-button></vg-mute-button>
+                                        </vg-volume>
+                                    </vg-controls>
+
+                                    <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="false">
+                                    </vg-media>
+                                </videogular>
+                            </div>
+
+                        </div>
+                        <!-- DefaultVideo -->
                     </div>
+                    <!-- isGroupShown -->
+
+                    <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
+                    </ion-delete-button>
+
+
+
                 </ion-item>
             </ion-list>
         </div>
