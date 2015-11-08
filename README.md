@@ -26,7 +26,9 @@ Desktop Platforms
 This is alpha now - I've not done any optimization yet. Just made the first builds. Grab the ZIP files, unzip, and execute zmNinja.
 That's all
 
-It may/will contain bugs. Plus email logs to me won't work in the desktop versions.
+It may/will contain bugs. 
+
+These files are hosted on Google Drive - when you click on them, look for the "download" button at the top so you download the ZIP
 
 Windows: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltWDllSEdTUl9sNFk/view?usp=sharing)
 
