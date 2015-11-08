@@ -28,11 +28,11 @@ That's all
 
 It may/will contain bugs. Plus email logs to me won't work in the desktop versions.
 
-Windows: [Download] (https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-win.zip?raw=true)
+Windows: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltWDllSEdTUl9sNFk/view?usp=sharing)
 
-Linux: [Download] (https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-linux.zip?raw=true)
+Linux: [Download] (https://drive.google.com/open?id=0B3iQz0D8vxlteEg1M2VvelcyRWM)
 
-Mac: [Download] (https://github.com/pliablepixels/zmNinja/blob/master/desktop_binaries/zmNinja-mac.zip?raw=true)
+Mac: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltQkRvbmp6ZlVfZUU/view?usp=sharing)
 
 
 Key Features (just watch the video already)
