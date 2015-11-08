@@ -61,8 +61,8 @@ angular.module('angular-carousel')
 		}
 	};
 
-// start with non-autoplay and require tap to start
-	scope.rnForceStop = true; // PP
+// start with autoplay and require tap to stop
+	scope.rnForceStop = false; // PP
         scope.$watch('carouselIndex', restartTimer);
 
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
