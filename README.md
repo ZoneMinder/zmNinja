@@ -23,7 +23,7 @@ my life miserable about missing APIs etc.
 
 Desktop Platforms
 -----------------
-Treat this as Alpha. I'm using the awesome [Electron] (http://electron.atom.io) to auto-package my ionic apps to executables.
+Treat this as Alpha. I'm using the awesome [Electron] packager (http://electron.atom.io) to auto-package my ionic apps to executables.
 
 It may contain bugs. 
 
