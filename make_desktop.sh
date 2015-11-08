@@ -28,8 +28,8 @@ if [ -d "$i" ]; then
 	
 	
 	rm -fr app.asar
-#	exe asar pack app app.asar
-#	exe rm -fr app
+	exe asar pack app app.asar
+	exe rm -fr app
 	exe cd - 
 	echo "Done!"
 	
