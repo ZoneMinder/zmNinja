@@ -1,7 +1,7 @@
 // Common Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,ionic */
+/* global saveAs, cordova,StatusBar,angular,console,ionic, moment */
 
 
 angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate) {
@@ -51,8 +51,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             });
 
 
-    
-    
+
+
 
     $scope.radialMenuOptions = {
         content: '',
@@ -173,8 +173,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     loadModalNotifications();
 
-    
-    
+
+
 
     function onPause() {
         ZMDataModel.zmDebug("ModalCtrl: onpause called");
@@ -302,137 +302,121 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         });
     }
 
-    
+
     $scope.finishedLoadingImage = function () {
         // console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
 
     };
-    
-    $scope.getZoomLevel = function()
-    {
-        console.log ("ON RELEASE");
+
+    $scope.getZoomLevel = function () {
+        console.log("ON RELEASE");
         var zl = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition();
-        console.log (JSON.stringify(zl));
-    };    
-
-    $scope.onTap = function (m,d)
-    {
-        
-        moveToMonitor(m,d);
+        console.log(JSON.stringify(zl));
     };
-    
-    
-    
-    
-    $scope.onSwipe = function (m, d) 
-    {
+
+    $scope.onTap = function (m, d) {
+
+        moveToMonitor(m, d);
+    };
+
+
+
+
+    $scope.onSwipe = function (m, d) {
         var ld = ZMDataModel.getLogin();
-       if (!ld.canSwipeMonitors) return;
-        
-       if 
-       ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom!=1)
-       {
-           console.log("Image is zoomed in - not honoring swipe");
-           return;
-       }
-       moveToMonitor(m,d);
-        
-        
+        if (!ld.canSwipeMonitors) return;
+
+        if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1) {
+            console.log("Image is zoomed in - not honoring swipe");
+            return;
+        }
+        moveToMonitor(m, d);
+
+
 
     };
-    
-    function moveToMonitor(m,d)
-    {
-        var curstate =  $ionicHistory.currentStateName();
-        var found=0;    
+
+    function moveToMonitor(m, d) {
+        var curstate = $ionicHistory.currentStateName();
+        var found = 0;
         var mid;
         mid = ZMDataModel.getNextMonitor(m, d);
-        
-        if (curstate != "monitors")
-        {
-        
-            do
-            {
+
+        if (curstate != "monitors") {
+
+            do {
                 mid = ZMDataModel.getNextMonitor(m, d);
                 m = mid;
-                console.log ("Next Monitor is "+m);
+                console.log("Next Monitor is " + m);
 
 
-                    found = 0;
-                    for (var i = 0 ; i< $scope.monitors.length; i++)
-                    {
-                        if ($scope.monitors[i].Monitor.Id == mid  && $scope.monitors[i].Monitor.listDisplay != 'noshow')
-                        {
-                            found = 1;
-                            console.log (mid + "is part of the monitor list");
-                            ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " +   mid); 
-                            break;
-                        }
+                found = 0;
+                for (var i = 0; i < $scope.monitors.length; i++) {
+                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow') {
+                        found = 1;
+                        console.log(mid + "is part of the monitor list");
+                        ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " + mid);
+                        break;
                     }
+                }
 
 
             }
-            while (found !=1);
+            while (found != 1);
         }
-        
+
         var slidein;
         var slideout;
-        var dirn=d;
-        if (dirn==1)
-        {
+        var dirn = d;
+        if (dirn == 1) {
             slideout = "animated slideOutLeft";
             slidein = "animated slideInRight";
-        }
-        else
-        {
+        } else {
             slideout = "animated slideOutRight";
             slidein = "animated slideInLeft";
         }
-         
+
         var element = angular.element(document.getElementById("monitorimage"));
         element.addClass(slideout)
             .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
-        
 
 
-        function outWithOld()
-        {
-             
-            
+
+        function outWithOld() {
+
+
             $scope.rand = Math.floor((Math.random() * 100000) + 1);
-            $scope.animationInProgress = true;  
-            
-            $timeout (function()
-            {
+            $scope.animationInProgress = true;
+
+            $timeout(function () {
                 element.removeClass(slideout);
                 element.addClass(slidein)
-                .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew );
+                    .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
                 $scope.monitorId = mid;
                 $scope.monitorName = ZMDataModel.getMonitorName(mid);
-            },200);
+            }, 200);
         }
 
-        function inWithNew()
-        {
-         
-           element.removeClass(slidein);
-           $scope.animationInProgress = false;
-      
+        function inWithNew() {
+
+            element.removeClass(slidein);
+            $scope.animationInProgress = false;
+
         }
 
-        
+
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "please wait...",
             noBackdrop: true,
             duration: zm.loadingTimeout,
         });
-        
-        
+
+
     }
-    
-   
+
+
 
     //-----------------------------------------------------------------------
     // Sucess/Error handlers for saving a snapshot of the
@@ -474,29 +458,42 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         var loginData = ZMDataModel.getLogin();
         var url = loginData.streamingurl +
             '/cgi-bin/zms?mode=single&monitor=' + mid +
-            '&user=' + loginData.username +
-            '&pass=' + loginData.password;
+            $rootScope.authSession;
         ZMDataModel.zmLog("SavetoPhone:Trying to save image from " + url);
 
         var img = new Image();
         img.onload = function () {
+            console.log("********* ONLOAD");
             canvas = document.createElement('canvas');
             canvas.width = img.width;
             canvas.height = img.height;
             context = canvas.getContext('2d');
             context.drawImage(img, 0, 0);
-            try {
-                imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-                imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
-                cordova.exec(
-                    SaveSuccess,
-                    SaveError,
-                    'Canvas2ImagePlugin',
-                    'saveImageDataToLibrary', [imageData]
-                );
-            } catch (e) {
 
-                SaveError(e.message);
+            imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+            imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+
+            if ($rootScope.platformOS != "desktop") {
+                try {
+
+                    cordova.exec(
+                        SaveSuccess,
+                        SaveError,
+                        'Canvas2ImagePlugin',
+                        'saveImageDataToLibrary', [imageData]
+                    );
+                } catch (e) {
+
+                    SaveError(e.message);
+                }
+            } else {
+
+
+                var fname = $scope.monitorName + "-" + 
+                    moment().format('MMM-DD-YY_HH-mm-ss') + ".png";
+                canvas.toBlob(function (blob) {
+                    saveAs(blob, fname);
+                });
             }
         };
         try {
@@ -548,5 +545,3 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
 }]);
-
-
