@@ -136,7 +136,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 ZMDataModel.zmLog("Email plugin not found", "error");
             });
         } else {
-            console.log("Skipping email module as cordova does not exist");
+            console.log("Using default email client to send data");
+            window.open('mailto:'+encodeURIComponent(zm.authoremail)+'?subject=zmNinja%20Logs&body='+encodeURIComponent(logstring));
         }
 
     }
