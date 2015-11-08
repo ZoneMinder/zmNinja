@@ -2,7 +2,6 @@
 
 exe() { echo "\$ $@" ; "$@" ; }
 
-# Custom stuff I need to do for zmNinja
 echo ----------------------------------------------------
 echo Pliable Pixels Desktop build process
 echo ----------------------------------------------------
@@ -14,6 +13,8 @@ declare -a app_ports=("../zmNinja-mac.app/Contents/Resources" "../zmNinja-linux/
 for i in "${app_ports[@]}"
 do
 if [ -d "$i" ]; then
+	DIRNAME=`expr "$i" : '\.\./\(.*\)/'`
+	ZIPNAME=$DIRNAME".zip"
 	echo "------------------------------------------------------------------------"
 	echo "Working on packaging $i"
 	echo "------------------------------------------------------------------------"
@@ -31,6 +32,8 @@ if [ -d "$i" ]; then
 	exe asar pack app app.asar
 	exe rm -fr app
 	exe cd - 
+	#echo "creating build ZIP"
+	#exe zip -r ../$ZIPNAME ../$DIRNAME
 	echo "Done!"
 	
 else
