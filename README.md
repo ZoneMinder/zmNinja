@@ -27,7 +27,7 @@ Treat this as Beta. I'm using the awesome [Electron packager] (http://electron.a
 
 It may contain bugs. 
 
-These files are hosted on Google Drive - when you click on them, look for the "download" button at the top so you download the ZIP
+These files are hosted on Google Drive - when you click on them, look for the download button (down arrow icon) at the top so you download the ZIP
 
 Windows: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltWDllSEdTUl9sNFk/view?usp=sharing)
 
