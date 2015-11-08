@@ -342,7 +342,7 @@ angular.module('zmApp.controllers')
             var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
 
 
-            if ($rootScope.platformOS == 'unknown')
+            if ($rootScope.platformOS == 'desktop')
             {
                 ZMDataModel.zmLog ("Desktop instance, not setting up push. Websockets only, I hope");
                 return;
