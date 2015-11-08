@@ -8,7 +8,7 @@ Video Demo
 -------------
 Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 
-Status for Mobile Platforms
+Mobile Platforms
 ---------------------------
 zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
 It also runs on the desktop (see below)
@@ -23,10 +23,9 @@ my life miserable about missing APIs etc.
 
 Desktop Platforms
 -----------------
-This is alpha now - I've not done any optimization yet. Just made the first builds. Grab the ZIP files, unzip, and execute zmNinja.
-That's all
+Treat this as Alpha. I'm using the awesome [Electron] (http://electron.atom.io) to auto-package my ionic apps to executables.
 
-It may/will contain bugs. 
+It may contain bugs. 
 
 These files are hosted on Google Drive - when you click on them, look for the "download" button at the top so you download the ZIP
 
