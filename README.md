@@ -29,7 +29,7 @@ It may contain bugs.
 
 These files are hosted on Google Drive - when you click on them, look for the download button (down arrow icon) at the top so you download the ZIP
 
-Windows: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltWDllSEdTUl9sNFk/view?usp=sharing)
+Windows 7 or above: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltWDllSEdTUl9sNFk/view?usp=sharing)
 
 Linux: [Download] (https://drive.google.com/open?id=0B3iQz0D8vxlteEg1M2VvelcyRWM)
 
