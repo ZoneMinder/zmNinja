@@ -139,6 +139,7 @@ angular.module('zmApp.controllers')
 
             ws.$on('$message', function (str) {
                 ZMDataModel.zmLog("Real-time event: " + JSON.stringify(str));
+                
 
                 // Error messages
                 if (str.status != 'Success') {
@@ -170,6 +171,7 @@ angular.module('zmApp.controllers')
 
                 if (str.status == 'Success' && str.event == 'alarm') // new events
                 {
+                    new Audio('sounds/blop.mp3').play();
                     var localNotText = "Latest Alarms: ";
                     $rootScope.isAlarm = 1;
 
@@ -448,10 +450,12 @@ angular.module('zmApp.controllers')
                     $rootScope.isAlarm = 0;
                     $rootScope.tappedNotification = 1;
                 } else {
-                    // alarm received in foregroun
+                    // alarm received in foreground
                     //var str=data.additionalData.alarm_details;
                     console.log("PLAYING MEDIA");
                     media.play();
+                    
+    
                     var str = data.message;
                     // console.log ("***STRING: " + str + " " +str.status);
                     var eventsToDisplay = [];
