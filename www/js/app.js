@@ -981,6 +981,15 @@ angular.module('zmApp', [
         templateUrl: "templates/zm-portal-login.html",
         controller: 'zmApp.PortalLoginCtrl',
     })
+    
+    .state('first-use', {
+        data: {
+            requireLogin: false
+        },
+        url: "/first-use",
+        templateUrl: "templates/first-use.html",
+        controller: 'zmApp.FirstUseCtrl',
+    })
 
     .state('montage', {
         data: {
