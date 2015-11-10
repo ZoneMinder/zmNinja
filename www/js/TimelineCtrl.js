@@ -126,9 +126,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         console.log ("**** defaultVideo is " + evideo);
         
         $scope.playbackURL = $scope.loginData.url;
-            if ($rootScope.platformOS == "desktop") {
+           /* if ($rootScope.platformOS == "desktop") {
                 $scope.playbackURL = zm.desktopUrl;
-            }
+            }*/
 
         
         $scope.defaultVideo = evideo;
