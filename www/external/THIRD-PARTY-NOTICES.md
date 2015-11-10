@@ -12,7 +12,7 @@ Think of this particular directory as a "dirty hack" that was not done the right
 * ion-pullup.js - modified version of http://arielfaur.github.io/ionic-pullup/
 
 In addition to this, these files are patches published by the ionic community for IOS9 WebView patches. You can read about them here:
-http://blog.ionic.io/ios-9-potential-breaking-change/
+http://blog.ionic.io/ios-9-potential-breaking-change/ - there are no explicit licenses for these files, I assume they follow ionic's MIT license
 
 * angular-ios9-uiwebview.patch.js
 * ionRadio.js
