@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console */
+/* global saveAs, cordova,StatusBar,angular,console */
 
 angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval) {
     $scope.openMenu = function () {
@@ -137,7 +137,13 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             });
         } else {
             console.log("Using default email client to send data");
-            window.open('mailto:'+encodeURIComponent(zm.authoremail)+'?subject=zmNinja%20Logs&body='+encodeURIComponent(logstring));
+            //window.open('mailto:'+encodeURIComponent(zm.authoremail)+'?subject=zmNinja%20Logs&body='+encodeURIComponent(logstring));
+            var fname = "zmNinja-logs-" + 
+                    moment().format('MMM-DD-YY_HH-mm-ss') + ".txt";
+            
+            var dlogstring = "version:"+$scope.zmAppVersion + "\n" + logstring;
+            var blob = new Blob([dlogstring], {type: "text/plain;charset=utf-8"});
+saveAs(blob, fname);
         }
 
     }
