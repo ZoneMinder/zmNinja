@@ -572,5 +572,9 @@ input[type=range]::-webkit-slider-thumb {
      -webkit-animation-duration: 200ms;
 }
 
+#firstuse
+{
+    -webkit-animation-delay: 1s;
+}
 
 
