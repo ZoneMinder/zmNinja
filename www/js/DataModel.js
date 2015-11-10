@@ -390,6 +390,19 @@ angular.module('zmApp.controllers')
         isBackground: function() {
             return isBackground;
         },
+        
+        isFirstUse: function() {
+            return ((window.localStorage.getItem("isFirstUse")==undefined)?true:false);
+            
+        },
+        
+        //-----------------------------------------------------------------
+        // Allow the option to reset first use if I need it in future
+        //-----------------------------------------------------------------
+        setFirstUse: function(val) {
+             window.localStorage.setItem("isFirstUse",val?"1":"0");
+            
+        },
 
 
 
