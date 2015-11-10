@@ -9,3 +9,4 @@ plugins/*
 !plugins/fetch.json
 engine/
 /ionic.project
+.DS_Store
