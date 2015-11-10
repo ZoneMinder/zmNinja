@@ -153,6 +153,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     function saveItems()
     {
                 console.log('Saving login');
+                ZMDataModel.setFirstUse(false);
 
         /*if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
             $ionicPopup.alert({

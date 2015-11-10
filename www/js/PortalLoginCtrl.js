@@ -126,8 +126,15 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
             } else {
                 ZMDataModel.zmDebug("PortalLogin: Not logged in, so going to login");
-                $state.go('login');
-
+                if (ZMDataModel.isFirstUse())
+                {
+                    ZMDataModel.zmDebug ("First use, showing warm and fuzzy...");
+                    $state.go('first-use');
+                }
+                else
+                {
+                    $state.go('login');
+                }
             }
 
         });
