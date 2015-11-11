@@ -13,9 +13,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     // Controller main
     //---------------------------------------------------------------------
 
-    console.log("********  HAVE ALL MONITORS");
     
-      var isLongPressActive = false;
+    var isLongPressActive = false;
     $scope.isReorder = false;
     var intervalHandleMontage; // will hold image resize timer on long press
     var montageIndex = 0; // will hold monitor ID to scale in timer
@@ -50,6 +49,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.MontageMonitors = ZMDataModel.applyMontageMonitorPrefs (message, 1)[0];
     
+    var loginData = ZMDataModel.getLogin();
     
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
@@ -104,89 +104,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
   
 
-    /*
-    
-    // First let's check if the user already has a saved monitor order
-    var i;
-    if (window.localStorage.getItem("montageOrder") == undefined) {
-
-        for (i = 0; i < $scope.monitors.length; i++) {
-            montageOrder[i] = i; // order to show is order ZM returns
-            hiddenOrder[i] = 0; // don't hide them
-        }
-        console.log("Order string is " + montageOrder.toString());
-        console.log("Hiddent string is " + hiddenOrder.toString());
-
-        ZMDataModel.zmLog("Stored montage order does not exist");
-    } else
-    // there is a saved order
-    {
-        var myorder = window.localStorage.getItem("montageOrder");
-        var myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
-
-
-        ZMDataModel.zmDebug("MontageCtrl: Montage order is " + myorder);
-        ZMDataModel.zmDebug("MontageCtrl: Hidden order is " + myhiddenorder);
-        if (myorder) montageOrder = myorder.split(",");
-        if (myhiddenorder) hiddenOrder = myhiddenorder.split(",");
-
-        //  handle add/delete monitors after the array has been 
-        // saved
-
-        if ($scope.monitors.length != montageOrder.length) {
-            ZMDataModel.zmLog("Monitors array length different from stored hidden/order array. It's possible monitors were added/removed. Resetting...");
-            montageOrder = [];
-            hiddenOrder = [];
-            for (i = 0; i < $scope.monitors.length; i++) {
-                montageOrder[i] = i; // order to show is order ZM returns
-                hiddenOrder[i] = 0; // don't hide them
-            }
-            window.localStorage.setItem("montageOrder",
-                montageOrder.toString());
-            window.localStorage.setItem("montageHiddenOrder",
-                hiddenOrder.toString());
-
-
-        }
-
-    } // at this stage, the monitor arrangement is not matching
-    // the montage order. Its in true order. Let us first process the hiddenOrder part
-    // now
-
-    for (i = 0; i < montageOrder.length; i++) {
-        montageOrder[i] = parseInt(montageOrder[i]);
-        hiddenOrder[i] = parseInt(hiddenOrder[i]);
-        //  $scope.monitors[i].Monitor.sortOrder = montageOrder[i];
-        // FIXME: This will briefly show and then hide
-        // disabled monitors
-        if (hiddenOrder[i] == 1) {
-            // $scope.monitors[i].Monitor.listDisplay='noshow';
-
-            if ($scope.monitors[i] !== undefined)
-                $scope.monitors[i].Monitor.listDisplay = 'noshow';
-            ZMDataModel.zmLog("Monitor " + i + " is marked as hidden in montage");
-        } else {
-            if ($scope.monitors[i] !== undefined)
-                $scope.monitors[i].Monitor.listDisplay = 'show';
-        }
-    } */
-    
-    
-    
-    // now arrange monitors according to montage order
-    // FIXME: Incredibly horrible logic
-    // I really need to organize this properly into one structure
-
-    // empty out monitors as I'll need to insert them as per montageOrder
-    // remember to assign
-    
-
     
     
 
 
     // Do we have a saved montage array size? No?
-    if (window.localStorage.getItem("montageArraySize") == undefined) {
+   // if (window.localStorage.getItem("montageArraySize") == undefined) {
+    if (loginData.montageArraySize == '0') {
 
         for (var i = 0; i < $scope.monitors.length; i++) {
             $scope.monitorSize.push(ZMDataModel.getMontageSize());
@@ -194,7 +118,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         }
     } else // recover previous settings
     {
-        var msize = window.localStorage.getItem("montageArraySize");
+        var msize = loginData.montageArraySize;
         console.log("MontageArrayString is=>" + msize);
         $scope.monitorSize = msize.split(":");
         var j;
@@ -325,6 +249,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.reloadReorder = function () {
         var refresh = ZMDataModel.getMonitors(1);
+        
         refresh.then(function (data) {
             $scope.monitors = data;
             $scope.MontageMonitors = data;
@@ -335,17 +260,24 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 montageOrder[i] = i;
                 hiddenOrder[i] = 0;
             }
-            window.localStorage.setItem("montageOrder", montageOrder.toString());
-            window.localStorage.setItem("montageHiddenOrder", hiddenOrder.toString());
+            
+            loginData.montageOrder = montageOrder.toString();
+            loginData.montageHiddenOrder = hiddenOrder.toString();
+            ZMDataModel.setLogin(loginData);
+            //window.localStorage.setItem("montageOrder", montageOrder.toString());
+            //window.localStorage.setItem("montageHiddenOrder", hiddenOrder.toString());
             ZMDataModel.zmLog("Montage order saved on refresh: " + montageOrder.toString() + " and hidden order: " + hiddenOrder.toString());
 
         });
     };
 
     $scope.saveReorder = function () {
-        window.localStorage.setItem("montageOrder", montageOrder.toString());
-        window.localStorage.setItem("montageHiddenOrder",
-            hiddenOrder.toString());
+        loginData.montageOrder = montageOrder.toString();
+        loginData.montageHiddenOrder = hiddenOrder.toString();
+        ZMDataModel.setLogin(loginData);
+        //window.localStorage.setItem("montageOrder", montageOrder.toString());
+       // window.localStorage.setItem("montageHiddenOrder",
+        //    hiddenOrder.toString());
         console.log("Saved " + montageOrder.toString());
         ZMDataModel.zmLog("User press OK. Saved Monitor Order as: " +
             montageOrder.toString() +
@@ -356,7 +288,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.cancelReorder = function () {
         // user tapped cancel
         var i, myhiddenorder;
-        if (window.localStorage.getItem("montageOrder") == undefined) {
+        if (loginData.montageOrder == '') {
+        //if (window.localStorage.getItem("montageOrder") == undefined) {
             for (i = 0; i < $scope.MontageMonitors.length; i++) {
                 montageOrder[i] = i;
                 hiddenOrder[i] = 0;
@@ -365,14 +298,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             ZMDataModel.zmLog("User press Cancel. Reset Monitor Order to: " + montageOrder.toString());
         } else // montageOrder exists
         {
-            var myorder = window.localStorage.getItem("montageOrder");
+            var myorder = loginData.montageOrder;
 
-            if (window.localStorage.getItem("montageHiddenOrder") == undefined) {
+            if (loginData.montageHiddenOrder=='') {
                 for (i = 0; i < $scope.MontageMonitors.length; i++) {
                     hiddenOrder[i] = 0;
                 }
             } else {
-                myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
+                myhiddenorder = loginData.montageHiddenOrder;
                 hiddenOrder = myhiddenorder.split(",");
             }
 
@@ -666,7 +599,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         }
         monsizestring = monsizestring.slice(0, -1); // kill last :
         console.log("Setting monsize string:" + monsizestring);
-        window.localStorage.setItem("montageArraySize", monsizestring);
+        loginData.montageArraySize = monsizestring;
+        ZMDataModel.setLogin(loginData);
+        //window.localStorage.setItem("montageArraySize", monsizestring);
     }
 
     //---------------------------------------------------------------------
@@ -799,7 +734,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         }
         monsizestring = monsizestring.slice(0, -1); // kill last :
         console.log("Setting monsize string:" + monsizestring);
-        window.localStorage.setItem("montageArraySize", monsizestring);
+        loginData.montageArraySize = monsizestring;
+        ZMDataModel.setLogin(loginData);
+        //window.localStorage.setItem("montageArraySize", monsizestring);
         sizeInProgress = false;
     }
 

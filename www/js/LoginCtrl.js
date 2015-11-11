@@ -239,6 +239,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             if (!$scope.loginData.password) $scope.loginData.password = "x";
             ZMDataModel.zmLog("Authentication is disabled, setting dummy user & pass");
         }
+        
+        if (parseInt($scope.loginData.maxMontage) <=0)
+        {
+            $scope.loginData.maxMontage ="10";
+        }
 
         ZMDataModel.setLogin($scope.loginData);
 
