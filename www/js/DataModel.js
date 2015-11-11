@@ -11,11 +11,11 @@
 angular.module('zmApp.controllers')
     
 .service('ZMDataModel', 
-['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout','$cordovaPinDialog', '$ionicPopup', 
+['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout','$cordovaPinDialog', '$ionicPopup', '$localstorage',
  function 
  ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,
   zm, $rootScope,$ionicContentBanner, $timeout, $cordovaPinDialog, 
-   $ionicPopup) {
+   $ionicPopup, $localstorage) {
 
     var zmAppVersion="unknown";
     var isBackground = false;
@@ -451,6 +451,10 @@ angular.module('zmApp.controllers')
             loginData = newLogin;
             zmLog("Saving all parameters to storage");
             zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
+            
+            $localstorage.setObject('myserver', newLogin);
+            
+            
             
             window.localStorage.setItem("username", loginData.username);
             window.localStorage.setItem("password", loginData.password);

@@ -107,7 +107,7 @@ angular.module('zmApp', [
 })
 
 //------------------------------------------------------------------
-// this directive will be load any time an image completes loading 
+// this directive will be called any time an image completes loading 
 // via img tags where this directive is added (I am using this in
 // events and monitor view to show a loader while the image is
 // downloading from ZM
@@ -191,10 +191,10 @@ angular.module('zmApp', [
                             $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')';
                         };
                         bgImg.src = $attributes.imageSpinnerSrc;
-                        //console.log ("DIRECTIVE: BGIMAGE SRC SET TO " + $attributes.imageSpinnerSrc);
+                        
                     } else {
                         $element[0].src = $attributes.imageSpinnerSrc; // set src attribute on element (it will load image)
-                        //console.log ("DIRECTIVE: IMAGE SRC SET TO "+$attributes.imageSpinnerSrc);
+                        
                     }
                 }
 
@@ -203,17 +203,15 @@ angular.module('zmApp', [
                 }
 
                 $element.on('$destroy', function () {
-                    // console.log ("**************** DIRECTIVE DESTROY IMAGE: " + $element[0].src);
+                    
                 });
-                // $element[0].src = "img/novideo.png";
+                
 
             }
         };
     }])
 
 
-
-    
 
 //------------------------------------------------------------------
 // In Android, HTTP requests seem to get stuck once in a while
@@ -282,9 +280,7 @@ angular.module('zmApp', [
 
                         zmCookie = zmSess[1];
                     }
-                } else {
-                    //  console.log ("WHOLE STRING " + cookies);
-                }
+                } 
             }
             return response;
         }
@@ -525,9 +521,10 @@ angular.module('zmApp', [
 })
 
 
-//------------------------------------------------------------------
+//====================================================================
 // First run in ionic
-//------------------------------------------------------------------
+//====================================================================
+
 
 .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer,$ionicContentBanner) {
     
@@ -549,7 +546,7 @@ angular.module('zmApp', [
         $rootScope.platformOS="desktop";
        
 
-    
+        // This is a global exception interceptor
         $rootScope.exceptionMessage = function(error)
         {
             ZMDataModel.zmDebug("**EXCEPTION**"+error.reason+" caused by " + error.cause);
@@ -615,7 +612,7 @@ angular.module('zmApp', [
                 event.preventDefault();
                 $state.transitionTo('login');
             }
-            console.log ("IN RETURN");
+        
             return;
 
         });
@@ -786,10 +783,6 @@ angular.module('zmApp', [
     
 
         }); //platformReady
-
-
-        
-        
 
     }) //run
 
@@ -1027,10 +1020,9 @@ angular.module('zmApp', [
 
     $urlRouterProvider.otherwise(function ($injector, $location) {
         var $state = $injector.get("$state");
-        //console.log ("******************* OTHERWISE PROBLEM");
-       // var $rootScope = $injector.get('$rootScope');
+        
         $state.go("zm-portal-login");
-        //$state.transitionTo('zm-portal-login');
+       
     });
 
 }); //config
