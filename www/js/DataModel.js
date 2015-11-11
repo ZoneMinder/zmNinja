@@ -52,6 +52,10 @@ angular.module('zmApp.controllers')
          'onTapScreen':'events',
          'enableh264':true,
          'gapless':false,
+         'montageOrder':'',
+         'montageHiddenOrder':'',
+         'montageArraySize':'0',
+         
         
     };
      
@@ -62,6 +66,25 @@ angular.module('zmApp.controllers')
         'ZM_PATH_ZMS':''
     };
 
+    function isEmpty(obj) {
+
+        // null and undefined are "empty"
+        if (obj == null) return true;
+
+        // Assume if it has a length property with a non-zero value
+        // that that property is correct.
+        if (obj.length > 0)    return false;
+        if (obj.length === 0)  return true;
+
+        // Otherwise, does it have any properties of its own?
+        // Note that this doesn't handle
+        // toString and valueOf enumeration bugs in IE < 9
+        for (var key in obj) {
+            if (hasOwnProperty.call(obj, key)) return false;
+        }
+
+        return true;
+    }
 
     //--------------------------------------------------------------------------
     // uses fileLogger  to write logs to file for later investigation
@@ -70,6 +93,18 @@ angular.module('zmApp.controllers')
     {
         $fileLogger.log(logtype, val);
     }
+     
+    
+     function setLogin(newLogin)
+     {
+         loginData = newLogin;
+            
+          
+            zmLog("Saving all parameters to storage");
+            zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
+            
+            $localstorage.setObject('defaultServer', loginData);
+     }
     
     // separate out a debug so we don't do this if comparison for normal logs
     function zmDebug(val)
@@ -139,6 +174,19 @@ angular.module('zmApp.controllers')
             console.log("****** DATAMODEL INIT SERVICE CALLED ********");
 
             zmLog("ZMData init: checking for stored variables & setting up log file");
+            
+            var loadedData = $localstorage.getObject('defaultServer');
+            if (!isEmpty(loadedData))
+            {  
+                loginData =  loadedData;
+                zmLog ("DataModel init recovered this loginData as " + JSON.stringify(loginData));
+            }
+            else
+            {
+                zmLog ("defaultServer configuration NOT found. Keeping login at defaults");
+            }
+            
+            /*
             
             if (window.localStorage.getItem("enableDebug") != undefined) {
                  var dbgvalue =  window.localStorage.getItem("enableDebug");
@@ -341,7 +389,7 @@ angular.module('zmApp.controllers')
                 loginData.keepAwake = (awakevalue == "1") ? true:false;
                         console.log("keepAwake  " + loginData.keepAwake);
 
-            }
+            } */
 
             monitorsLoaded = 0;
             console.log("Getting out of ZMDataModel init");
@@ -441,21 +489,18 @@ angular.module('zmApp.controllers')
 
             }
 
-        },
+        }, 
 
     //--------------------------------------------------------------------------
     // writes all params to local storage. FIXME: Move all of this into a JSON 
     // object
     //--------------------------------------------------------------------------
         setLogin: function (newLogin) {
-            loginData = newLogin;
-            zmLog("Saving all parameters to storage");
-            zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
             
-            $localstorage.setObject('myserver', newLogin);
+            setLogin(newLogin);
             
             
-            
+            /*
             window.localStorage.setItem("username", loginData.username);
             window.localStorage.setItem("password", loginData.password);
             window.localStorage.setItem("url", loginData.url);
@@ -463,8 +508,8 @@ angular.module('zmApp.controllers')
             window.localStorage.setItem("streamingurl", loginData.streamingurl);
             window.localStorage.setItem("eventServer", loginData.eventServer);
             window.localStorage.setItem("eventServerMonitors", loginData.eventServerMonitors);
-                window.localStorage.setItem("eventServerInterval", loginData.eventServerInterval);
-            
+            window.localStorage.setItem("eventServerInterval", loginData.eventServerInterval);
+             window.localStorage.setItem("maxFPS", loginData.maxFPS);
             
             
             
@@ -494,23 +539,9 @@ angular.module('zmApp.controllers')
               
             
             console.log ("***** SETTING ISUSEAUTH TO " + loginData.isUseAuth);
+            */
 
-
-            if (loginData.maxFPS > 30) {
-                console.log("MAXFPS Too high, maxing to 30");
-                loginData.maxFPS = "30";
-            }
-            window.localStorage.setItem("maxFPS", loginData.maxFPS);
-
-            if (!loginData.maxMontage) {
-                console.log("INVALID MONTAGE NUM");
-                loginData.maxMontage = "10";
-            }
-
-            if (parseInt(loginData.maxMontage) <= 0) {
-                console.log("*** MAXMONTAGE TOO LOW ***");
-                loginData.maxMontage = 1;
-            }
+            
         },
         
         //-------------------------------------------------------
@@ -708,7 +739,8 @@ angular.module('zmApp.controllers')
 
             // First let's check if the user already has a saved monitor order
             var i;
-            if (window.localStorage.getItem("montageOrder") == undefined) {
+            if (loginData.montageOrder == '') {
+            //if (window.localStorage.getItem("montageOrder") == undefined) {
 
                 for (i = 0; i < monitors.length; i++) {
                     montageOrder[i] = i; // order to show is order ZM returns
@@ -721,8 +753,8 @@ angular.module('zmApp.controllers')
             } else
             // there is a saved order
             {
-                var myorder = window.localStorage.getItem("montageOrder");
-                var myhiddenorder = window.localStorage.getItem("montageHiddenOrder");
+                var myorder = loginData.montageOrder;
+                var myhiddenorder = loginData.montageHiddenOrder;
 
 
                 zmDebug("MontageCtrl: Montage order is " + myorder);
@@ -741,10 +773,14 @@ angular.module('zmApp.controllers')
                         montageOrder[i] = i; // order to show is order ZM returns
                         hiddenOrder[i] = 0; // don't hide them
                     }
-                    window.localStorage.setItem("montageOrder",
-                        montageOrder.toString());
-                    window.localStorage.setItem("montageHiddenOrder",
-                        hiddenOrder.toString());
+                    
+                    loginData.montageOrder = montageOrder.toString();
+                    loginData.montageHiddenOrder = hiddenOrder.toString();
+                    setLogin(loginData);
+                    //window.localStorage.setItem("montageOrder",
+                     //   montageOrder.toString());
+                  //  window.localStorage.setItem("montageHiddenOrder",
+                   //     hiddenOrder.toString());
 
 
                 }
