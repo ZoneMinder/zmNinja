@@ -6,6 +6,7 @@ echo ----------------------------------------------------
 echo Pliable Pixels Desktop build process
 echo ----------------------------------------------------
 APPVER=`cat config.xml | grep "widget id=" | sed 's/.* version=\"\([^\"]*\)\" xmlns.*/\1/'`
+APPVER+="D"
 echo "Application version:$APPVER"
 
 declare -a app_ports=("../zmNinja-mac.app/Contents/Resources" "../zmNinja-linux/resources" "../zmNinja-win/resources")
