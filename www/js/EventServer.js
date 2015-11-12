@@ -83,10 +83,6 @@ angular.module('zmApp.controllers')
 
 
 
-
-
-
-
         //--------------------------------------------------------------------------
         // Called once at app start. Does a lazy definition of websockets open
         //--------------------------------------------------------------------------
@@ -171,6 +167,8 @@ angular.module('zmApp.controllers')
 
                 if (str.status == 'Success' && str.event == 'alarm') // new events
                 {
+                    
+                    
                     new Audio('sounds/blop.mp3').play();
                     var localNotText = "Latest Alarms: ";
                     $rootScope.isAlarm = 1;
@@ -186,10 +184,12 @@ angular.module('zmApp.controllers')
 
 
                     var eventsToDisplay = [];
+                    var listOfMonitors=[];
                     for (var iter = 0; iter < str.events.length; iter++) {
                         // lets stack the display so they don't overwrite
                         eventsToDisplay.push(str.events[iter].Name + ": latest new alarm (" + str.events[iter].EventId + ")");
                         localNotText = localNotText + str.events[iter].Name + ",";
+                        listOfMonitors.push(str.events[iter].MonitorId);
 
 
                     }
@@ -197,6 +197,9 @@ angular.module('zmApp.controllers')
 
                     // if we are in background, do a local notification, else do an in app display
                     if (!ZMDataModel.isBackground()) {
+                        
+                        //emit alarm details - this is when received over websockets
+                        $rootScope.$emit('alarm',{message:listOfMonitors});
                         ZMDataModel.zmDebug("App is in foreground, displaying banner");
                         if (eventsToDisplay.length > 0) {
 

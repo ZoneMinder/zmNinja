@@ -38,8 +38,18 @@
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit"
                   ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow'">
                 <span ng-show="!minimal">
-                    <header class="header">&nbsp;<i class="ion-monitor"></i>
-                        {{monitor.Monitor.Name}}&nbsp;</header>
+                    <div ng-if="monitor.Monitor.isAlarmed=='true'">
+                        <header class="alarmed-header animated infinite flash">&nbsp;<i class="ion-monitor"></i>
+                            {{monitor.Monitor.Name}}&nbsp;
+                        </header>
+                    </div>
+                    
+                    <div ng-if="monitor.Monitor.isAlarmed!='true'">
+                        <header class="header">&nbsp;<i class="ion-monitor"></i>
+                            {{monitor.Monitor.Name}}&nbsp;
+                        </header>
+                    </div>
+                    
                 </span>
                 <article class="main">
                    

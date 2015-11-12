@@ -199,6 +199,33 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.modal.remove();
 
     };
+    
+    
+    //----------------------------------------------------------------
+    // Alarm emit handling
+    //----------------------------------------------------------------
+    $rootScope.$on("alarm", function (event, args) {
+        console.log ("***EVENT TRAP***");
+        var alarmMonitors = args.message;
+        for (var i=0; i< alarmMonitors.length; i++)
+        {
+            console.log ("**** TRAPPED EVENT: "+alarmMonitors[i]);
+            
+            for (var j=0; i<$scope.monitors.length; i++)
+            {
+                if ($scope.monitors[j].Monitor.Id == alarmMonitors[i])
+                {
+                    $scope.monitors[j].Monitor.isAlarmed="true";
+                }
+            }
+            
+        }
+        
+        
+        
+        
+        
+    });
 
     //----------------------------------------------------------------
     // Alarm notification handling

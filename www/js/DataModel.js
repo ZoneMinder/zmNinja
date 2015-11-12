@@ -66,6 +66,7 @@ angular.module('zmApp.controllers')
         'ZM_PATH_ZMS':''
     };
 
+     // credit: http://stackoverflow.com/questions/4994201/is-object-empty
     function isEmpty(obj) {
 
         // null and undefined are "empty"
@@ -98,7 +99,8 @@ angular.module('zmApp.controllers')
      function setLogin(newLogin)
      {
          loginData = newLogin;
-            
+         
+         
           
             zmLog("Saving all parameters to storage");
             zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
@@ -120,8 +122,6 @@ angular.module('zmApp.controllers')
      function displayBanner (mytype, mytext, myinterval, mytimer)
         {
             
-            console.log ("FACTORY DISPLAY: " + JSON.stringify(mytext));
-            console.log ("FACTTORY DISPLAY: interval:" + myinterval + " timer:" + mytimer);
             var contentBannerInstance =
             $ionicContentBanner.show({
               text: mytext || 'no text',
@@ -886,6 +886,7 @@ angular.module('zmApp.controllers')
                         for ( i = 0; i< monitors.length; i++)
                         {
                             monitors[i].Monitor.listDisplay='show';
+                            monitors[i].Monitor.isAlarmed = 'false';
                            // monitors[i].Monitor.sortOrder=i;
                         }
                         d.resolve(monitors);
