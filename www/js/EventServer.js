@@ -168,21 +168,28 @@ angular.module('zmApp.controllers')
                 if (str.status == 'Success' && str.event == 'alarm') // new events
                 {
                     
-                    
-                    new Audio('sounds/blop.mp3').play();
-                    var localNotText = "Latest Alarms: ";
-                    $rootScope.isAlarm = 1;
+                    var localNotText;
+                    // ZMN specific hack for Event Server
+                    if (str.supplementary != 'true')
+                    {
+                        new Audio('sounds/blop.mp3').play();
+                        localNotText = "Latest Alarms: ";
+                        $rootScope.isAlarm = 1;
 
-                    // Show upto a max of 99 when it comes to display
-                    // so aesthetics are maintained
-                    if ($rootScope.alarmCount == "99") {
-                        $rootScope.alarmCount = "99+";
+                        // Show upto a max of 99 when it comes to display
+                        // so aesthetics are maintained
+                        if ($rootScope.alarmCount == "99") {
+                            $rootScope.alarmCount = "99+";
+                        }
+                        if ($rootScope.alarmCount != "99+") {
+                            $rootScope.alarmCount = (parseInt($rootScope.alarmCount) + 1).toString();
+                        }
+
                     }
-                    if ($rootScope.alarmCount != "99+") {
-                        $rootScope.alarmCount = (parseInt($rootScope.alarmCount) + 1).toString();
+                    else
+                    {
+                        ZMDataModel.zmDebug("received supplementary event information over websockets");
                     }
-
-
                     var eventsToDisplay = [];
                     var listOfMonitors=[];
                     for (var iter = 0; iter < str.events.length; iter++) {
@@ -200,40 +207,26 @@ angular.module('zmApp.controllers')
                         
                         //emit alarm details - this is when received over websockets
                         $rootScope.$emit('alarm',{message:listOfMonitors});
-                        ZMDataModel.zmDebug("App is in foreground, displaying banner");
-                        if (eventsToDisplay.length > 0) {
+                        
+                        if (str.supplementary != 'true')
+                        {
+                        
+                            ZMDataModel.zmDebug("App is in foreground, displaying banner");
+                            if (eventsToDisplay.length > 0) {
 
-                            if (eventsToDisplay.length == 1) {
-                                console.log("Single Display: " + eventsToDisplay[0]);
-                                ZMDataModel.displayBanner('alarm', [eventsToDisplay[0]], 5000, 5000);
-                            } else {
-                                ZMDataModel.displayBanner('alarm', eventsToDisplay, 5000, 5000 * eventsToDisplay.length);
+                                if (eventsToDisplay.length == 1) {
+                                    console.log("Single Display: " + eventsToDisplay[0]);
+                                    ZMDataModel.displayBanner('alarm', [eventsToDisplay[0]], 5000, 5000);
+                                } else {
+                                    ZMDataModel.displayBanner('alarm', eventsToDisplay, 
+                                                              5000, 5000 * eventsToDisplay.length);
+                                }
+
                             }
-
                         }
                     }
 
-                    /* if (!$ionicPlatform.is('ios') ) 
-                     {
-                         // this is only used for local notifications which is not
-                         // used for iOS
-                         // lets set badge of app irrespective of background or foreground
-                         $cordovaBadge.hasPermission().then(function (yes) {
-
-                             $cordovaBadge.set($rootScope.alarmCount).then(function () {
-                                 // You have permission, badge set.
-                                 ZMDataModel.zmDebug("Setting badge to " + $rootScope.alarmCount);
-                             }, function (err) {
-                                 // You do not have permission.
-                                 ZMDataModel.zmDebug("Error Setting badge to " + $rootScope.alarmCount);
-                             });
-
-
-                             // You have permission
-                         }, function (no) {
-                             ZMDataModel.zmDebug("zmNinja does not have badge permissions. Please check your phone notification settings");
-                         });
-                     }*/
+                    
 
                 } //end of success handler
 

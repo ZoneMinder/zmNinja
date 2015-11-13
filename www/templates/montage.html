@@ -22,7 +22,6 @@
         </ion-refresher>
 
         
-        <!--{{stateofSlide}} Status-->
         <span ng-show="!minimal">
                 <div class="range range-positive">
                     <i style="color:#bbbbbb" class="icon ion-arrow-shrink"></i>
@@ -36,42 +35,37 @@
 
         <div class="wrapper">
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow'">
-                <span ng-show="!minimal">
-                    <div ng-if="monitor.Monitor.isAlarmed=='true'">
-                        <header class="alarmed-header animated infinite flash">&nbsp;<i class="ion-monitor"></i>
-                            {{monitor.Monitor.Name}}&nbsp;
-                        </header>
-                    </div>
+                
+                <div ng-class="monitor.Monitor.isAlarmed=='true'? 'animated infinite flash':''">
                     
-                    <div ng-if="monitor.Monitor.isAlarmed!='true'">
-                        <header class="header">&nbsp;<i class="ion-monitor"></i>
-                            {{monitor.Monitor.Name}}&nbsp;
+                    <span ng-show="!minimal">
+                        <header ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-header':'header'">&nbsp;<i class="ion-monitor"></i>
+                                {{monitor.Monitor.Name}}&nbsp;
                         </header>
-                    </div>
-                </span>
-                <article class="main">
+                    </span>
+                    
+                    <article class="main">
 
-                    <!-- back to ng-src. spinner was not updating when rand changes-->
-                    <!-- moving to single so I can rely on rand for reloads -->
+                        <!-- back to ng-src. spinner was not updating when rand changes-->
+                        <!-- moving to single so I can rely on rand for reloads -->
 
-                    <div ng-if="!isModalActive">
-                        <div ng-if="$root.authSession!='undefined'">
-                            <img ng-class="monitor.Monitor.isAlarmed=='true'? 'animated infinite flash':''" id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" style="display:block;" image-spinner-loader="lines" />
+                        <div ng-if="!isModalActive">
+                            <div ng-if="$root.authSession!='undefined'">
+                                <img  id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" style="display:block;" image-spinner-loader="lines" />
+
+                            </div>
+
+                            <div ng-if="!$root.authSession=='undefined'">
+                                <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
+                            </div>
 
                         </div>
-                        
-                        <div ng-if="!$root.authSession=='undefined'">
+                        <div ng-if="isModalActive">
                             <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
                         </div>
-                        
-                    </div>
-                    <div ng-if="isModalActive">
-                        <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
-                    </div>
 
-
-
-                </article>
+                    </article>
+                </div> <!-- alarm flash -->
 
             </span> <!-- ngrepeat -->
         </div> <!--wrapper-->
