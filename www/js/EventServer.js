@@ -446,10 +446,10 @@ angular.module('zmApp.controllers')
                     $rootScope.isAlarm = 0;
                     $rootScope.tappedNotification = 1;
                 } else {
-                    // alarm received in foreground
-                    //var str=data.additionalData.alarm_details;
-                    console.log("PLAYING MEDIA");
-                    media.play();
+                    
+                    // this flag honors the HW mute button. Go figure
+                    // http://ilee.co.uk/phonegap-plays-sound-on-mute/
+                    media.play({ playAudioWhenScreenIsLocked : false });
                     
     
                     var str = data.message;
