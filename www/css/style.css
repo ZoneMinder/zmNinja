@@ -84,11 +84,17 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
      border-style: solid;
     border-width:1px;
     opactity:80%;
+    
 }
 
-.footer {
-    background: #666666;
-    border-color:#AAAAAA;
+.alarmed-body {
+    border-left: thick solid #ba3e3e;
+    
+}
+
+.alarmed-footer {
+    background: #ba3e3e;
+    border-color:#ba3e3e;
     color:#ffffff;
      border-width:1px;
     /*padding:2px;*/

@@ -211,21 +211,28 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         {
             console.log ("**** TRAPPED EVENT: "+alarmMonitors[i]);
             
-            for (var j=0; i<$scope.monitors.length; i++)
+            for (var j=0; i<$scope.monitors.length; j++)
             {
                 if ($scope.monitors[j].Monitor.Id == alarmMonitors[i])
                 {
                     $scope.monitors[j].Monitor.isAlarmed="true";
+                    scheduleRemoveFlash(j);
                 }
             }
             
         }
-        
-        
-        
-        
+      
         
     });
+    
+    function scheduleRemoveFlash(id)
+    {
+        ZMDataModel.zmDebug ("Scheduled a 10 sec timer for dis-alarming monitor ID="+id);
+        $timeout( function() {
+            $scope.monitors[id].Monitor.isAlarmed = 'false';
+            ZMDataModel.zmDebug ("dis-alarming monitor ID="+id);
+        },zm.alarmFlashTimer);
+    }
 
     //----------------------------------------------------------------
     // Alarm notification handling
