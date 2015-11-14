@@ -36,10 +36,10 @@
         <div class="wrapper">
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow'">
                 
-                <div ng-class="monitor.Monitor.isAlarmed=='true'? 'animated infinite flash':''">
+                <div  style="position:relative" >
                     
                     <span ng-show="!minimal">
-                        <header ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-header':'header'">&nbsp;<i class="ion-monitor"></i>
+                        <header id = "slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-header animated infinite flash':'header'">&nbsp;<i class="ion-monitor"></i>
                                 {{monitor.Monitor.Name}}&nbsp;
                         </header>
                     </span>
@@ -65,6 +65,9 @@
                         </div>
 
                     </article>
+                    
+                    <div id = "slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'minimized-alarmed-header animated infinite flash':''" ng-if="minimal"></div>
+                    
                 </div> <!-- alarm flash -->
 
             </span> <!-- ngrepeat -->
