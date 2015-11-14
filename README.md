@@ -32,7 +32,11 @@ These files are hosted on Google Drive - when you click on them, look for the do
 **Latest version:** 0.86.1D
 **Last uploaded:** Nov 13, 2015
 
-Windows 7 or above: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltWDllSEdTUl9sNFk/view?usp=sharing)
+Windows 7 or above: 
+[32-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltR0VzRHpqUTlUbEk/view?usp=sharing)
+[64-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltbXNPMlh5TWdmRDg/view?usp=sharing)
+
+
 
 Linux: [Download] (https://drive.google.com/open?id=0B3iQz0D8vxlteEg1M2VvelcyRWM)
 Note that only standard Desktop distributions are supported - if you are using a server edition or an optimized distribution, its likely the app won't work.
