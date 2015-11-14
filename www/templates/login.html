@@ -14,10 +14,18 @@
     </ion-nav-buttons>
 
     <ion-content padding="true" >
+        
+         <div class="item item-input-inset">
+                Server Name:&nbsp;
+                <label class="item-input-wrapper">
+                    <input type="text" placeholder="eg. My House" ng-model="loginData.serverName">
+                </label>
+        </div>
+        
         <div class="list list-inset">
             <span style="color:rgb(100,100,100)">
                 <i class="ion-android-home" style="font-size:150%"></i>
-                ZoneMinder Settings for {{$root.currentServerGroup}}
+                ZoneMinder Settings for {{loginData.serverName || "(unknown)"}}
             </span>
             
             <div class="item">
