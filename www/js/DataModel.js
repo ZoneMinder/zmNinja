@@ -103,16 +103,23 @@ angular.module('zmApp.controllers')
          loginData = newLogin;
          
          
+         
+         
           
             zmLog("Saving all parameters to storage");
             zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
             
             //$localstorage.setObject($rootScope.currentServerGroup, loginData);
-            serverGroupList[loginData.serverName]=loginData;
-            console.log (JSON.stringify(serverGroupList));
+            console.log ("Saving For " + loginData.serverName);
+            console.log ("SERVER GROUP BEFORE IS "  + JSON.stringify(serverGroupList));
+            serverGroupList[loginData.serverName]=angular.copy(loginData);
+         
+            console.log ("SERVER GROUP AFTER IS "  + JSON.stringify(serverGroupList));
+            //console.log (JSON.stringify(serverGroupList));
             $localstorage.setObject("serverGroupList", serverGroupList);
             $localstorage.set("defaultServerName",loginData.serverName);
-           
+        // console.log ("SAVING " + loginData.serverName);
+        // console.log ("DATA IS " + JSON.stringify(loginData));
          
      }
     
@@ -432,6 +439,10 @@ angular.module('zmApp.controllers')
             
             
             return loginData;
+        },
+        
+        getServerGroups: function() {
+            return serverGroupList;
         },
 
         getKeepAwake: function () {
