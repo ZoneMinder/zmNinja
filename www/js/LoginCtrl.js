@@ -7,6 +7,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $ionicSideMenuDelegate.toggleLeft();
     };
     
+    
+    var serverbuttons = [];
+    var availableServers;
+    
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
@@ -27,50 +31,24 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         isUseAuth: "",
         isUseEventServer: ""
     };
+    
     $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
     $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
-
+    
+    console.log ("*************************************************");
+    
+    
+    availableServers = Object.keys(ZMDataModel.getServerGroups());
+    serverbuttons = [];
+    for (var servIter=0; servIter<availableServers.length; servIter++)
+    {
+        serverbuttons.push({text: availableServers[servIter]});
+        console.log ("ADDING : "+availableServers[servIter]);
+    }
 
     $scope.serverActionSheet = function () {
         var hideSheet = $ionicActionSheet.show({
-            buttons: [
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                {
-                    text: 'New Group...'
-                },
-                
-                {
-                    text: 'Rename'
-                },
-                
-                
-            ],
+            buttons: serverbuttons,
             destructiveText: 'Delete',
             titleText: 'Manage Server Groups',
             cancelText: 'Cancel',
@@ -78,6 +56,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 // add cancel code..
             },
             buttonClicked: function (index) {
+                console.log ("YOU WANT " + serverbuttons[index].text + " INDEX " + index);
+                var zmServers = ZMDataModel.getServerGroups();
+                $scope.loginData = zmServers[serverbuttons[index].text];
+                
                 return true;
             }
         });
@@ -107,6 +89,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** LoginCtrl  Entered");
         ZMDataModel.setAwake(false);
+        
+        
+        
     });
 
 
@@ -366,6 +351,14 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         else
         {
             saveItems();
+            availableServers = Object.keys(ZMDataModel.getServerGroups());
+            serverbuttons = [];
+            for (var servIter=0; servIter<availableServers.length; servIter++)
+            {
+                serverbuttons.push({text: availableServers[servIter]});
+                console.log ("ADDING : "+availableServers[servIter]);
+            }
+            
         }
         
 
