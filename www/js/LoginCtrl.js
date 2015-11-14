@@ -176,6 +176,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     
     function saveItems()
     {
+        
+                
                 console.log('Saving login');
                 ZMDataModel.setFirstUse(false);
 
@@ -324,7 +326,20 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     }
     
     $scope.saveItems = function () {
-        saveItems();
+        
+        if (!$scope.loginData.serverName)
+        {
+            $ionicPopup.alert({
+                title:'Error',
+                template: 'Server Name cannot be empty',
+            })
+            .then(function(res)
+                  {return;});
+        }
+        else
+        {
+            saveItems();
+        }
         
 
     };

@@ -27,6 +27,7 @@ angular.module('zmApp.controllers')
      var serverGroupList={};
      
      var loginData = {
+        'serverName':'',
         'username': '',
         'password': '',
         'url': '', // This is the ZM portal path
@@ -107,7 +108,7 @@ angular.module('zmApp.controllers')
             zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
             
             $localstorage.setObject($rootScope.currentServerGroup, loginData);
-            serverGroupList[$rootScope.currentServerGroup]=loginData;
+            serverGroupList[loginData.serverName]=loginData;
             console.log (JSON.stringify(serverGroupList));
             $localstorage.setObject("serverlist", serverGroupList);
            
