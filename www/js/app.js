@@ -545,6 +545,7 @@ angular.module('zmApp', [
          //var eventsToDisplay=[];
         $rootScope.alarmCount="0";
         $rootScope.platformOS="desktop";
+        $rootScope.currentServerGroup = "defaultServer";
        
 
         // This is a global exception interceptor

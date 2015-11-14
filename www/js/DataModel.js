@@ -24,7 +24,8 @@ angular.module('zmApp.controllers')
     var monitors = [];
     var oldevents = [];
      
-    
+     var serverGroupList={};
+     
      var loginData = {
         'username': '',
         'password': '',
@@ -105,7 +106,12 @@ angular.module('zmApp.controllers')
             zmLog("Saving all parameters to storage");
             zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
             
-            $localstorage.setObject('defaultServer', loginData);
+            $localstorage.setObject($rootScope.currentServerGroup, loginData);
+            serverGroupList[$rootScope.currentServerGroup]=loginData;
+            console.log (JSON.stringify(serverGroupList));
+            $localstorage.setObject("serverlist", serverGroupList);
+           
+         
      }
     
     // separate out a debug so we don't do this if comparison for normal logs
@@ -175,7 +181,7 @@ angular.module('zmApp.controllers')
 
             zmLog("ZMData init: checking for stored variables & setting up log file");
             
-            var loadedData = $localstorage.getObject('defaultServer');
+            var loadedData = $localstorage.getObject($rootScope.currentServerGroup);
             if (!isEmpty(loadedData))
             {  
                 loginData =  loadedData;
