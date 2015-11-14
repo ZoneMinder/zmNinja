@@ -34,7 +34,7 @@ These files are hosted on Google Drive - when you click on them, look for the do
 
 Windows 7 or above: 
 [32-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltR0VzRHpqUTlUbEk/view?usp=sharing)
-[64-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltbXNPMlh5TWdmRDg/view?usp=sharing)
+/ [64-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltbXNPMlh5TWdmRDg/view?usp=sharing)
 
 
 
