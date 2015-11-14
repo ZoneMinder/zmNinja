@@ -37,6 +37,33 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 {
                     text: 'New Group...'
                 },
+                {
+                    text: 'New Group...'
+                },
+                {
+                    text: 'New Group...'
+                },
+                {
+                    text: 'New Group...'
+                },
+                {
+                    text: 'New Group...'
+                },
+                {
+                    text: 'New Group...'
+                },
+                {
+                    text: 'New Group...'
+                },
+                {
+                    text: 'New Group...'
+                },
+                {
+                    text: 'New Group...'
+                },
+                {
+                    text: 'New Group...'
+                },
                 
                 {
                     text: 'Rename'

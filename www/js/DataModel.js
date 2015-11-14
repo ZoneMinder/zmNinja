@@ -107,10 +107,11 @@ angular.module('zmApp.controllers')
             zmLog("Saving all parameters to storage");
             zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
             
-            $localstorage.setObject($rootScope.currentServerGroup, loginData);
+            //$localstorage.setObject($rootScope.currentServerGroup, loginData);
             serverGroupList[loginData.serverName]=loginData;
             console.log (JSON.stringify(serverGroupList));
-            $localstorage.setObject("serverlist", serverGroupList);
+            $localstorage.setObject("serverGroupList", serverGroupList);
+            $localstorage.set("defaultServerName",loginData.serverName);
            
          
      }
@@ -178,11 +179,18 @@ angular.module('zmApp.controllers')
         // FIXME: Move all of this into a neat JSON object 
         
         init: function () {
-            console.log("****** DATAMODEL INIT SERVICE CALLED ********");
+           // console.log("****** DATAMODEL INIT SERVICE CALLED ********");
 
             zmLog("ZMData init: checking for stored variables & setting up log file");
             
-            var loadedData = $localstorage.getObject($rootScope.currentServerGroup);
+            serverGroupList = $localstorage.getObject("serverGroupList");
+            
+            console.log ("!!!!!!!!!!!!!!!!!serverGroupList is " + JSON.stringify(serverGroupList));
+            var sname = 
+                $localstorage.get("defaultServerName");
+            console.log ("!!!!!!!!!!!!!!!!!!default server name is  "  + sname);
+            
+            var loadedData = serverGroupList[sname];
             if (!isEmpty(loadedData))
             {  
                 loginData =  loadedData;
