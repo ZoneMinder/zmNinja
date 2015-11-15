@@ -214,7 +214,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         {
             console.log ("**** TRAPPED EVENT: "+alarmMonitors[i]);
             
-            for (var j=0; i<$scope.monitors.length; j++)
+            for (var j=0; j<$scope.monitors.length; j++)
             {
                 if ($scope.monitors[j].Monitor.Id == alarmMonitors[i])
                 {
