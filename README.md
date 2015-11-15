@@ -29,16 +29,16 @@ It may contain bugs.
 
 These files are hosted on Google Drive - when you click on them, look for the download button (down arrow icon) at the top so you download the ZIP
 
-**Latest version:** 0.86.1D
-**Last uploaded:** Nov 13, 2015
+**Latest version:** 0.87D
+**Last uploaded:** Nov 15, 2015
 
 Windows 7 or above: 
 [32-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltR0VzRHpqUTlUbEk/view?usp=sharing)
 / [64-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltbXNPMlh5TWdmRDg/view?usp=sharing)
 
-
-
-Linux: [64-bit Download] (https://drive.google.com/open?id=0B3iQz0D8vxlteEg1M2VvelcyRWM)
+Linux: 
+[32-bit-download] (https://drive.google.com/file/d/0B3iQz0D8vxltNHBLcWYtMW03TnM/view?usp=sharing)
+[64-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltbVRrVWxLRHpxS1E/view?usp=sharing)
 Note that only standard Desktop distributions are supported - if you are using a server edition or an optimized distribution, its likely the app won't work.
 
 Mac: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltQkRvbmp6ZlVfZUU/view?usp=sharing)
