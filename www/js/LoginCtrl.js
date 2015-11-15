@@ -61,11 +61,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 $scope.loginData = zmServers[serverbuttons[index].text];
                 $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
                 $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
-                if (!$scope.check.isUseEventServer)
-                        $rootScope.isAlarm = 0;
                 
-                if ($scope.check.isUseEventServer)
-                    EventServer.init();
                 return true;
             },
             
@@ -242,6 +238,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 
                 console.log('Saving login');
                 ZMDataModel.setFirstUse(false);
+        
+        
+       
 
         /*if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
             $ionicPopup.alert({
@@ -333,7 +332,47 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             $scope.loginData.maxMontage ="10";
         }
 
+        
+        // do this before setLogin so message is sent
+        
+         if (!$scope.check.isUseEventServer)
+        {
+                $rootScope.isAlarm = 0;
+                if ($rootScope.apnsToken)
+                {
+                    ZMDataModel.zmLog ("Making sure we don't get push notifications");
+                     EventServer.sendMessage('push', {
+                        type: 'token',
+                        platform: $rootScope.platformOS,
+                        token: $rootScope.apnsToken,
+                        state: "disabled"
+                    });
+                }
+        }
+        
         ZMDataModel.setLogin($scope.loginData);
+                
+        if ($scope.check.isUseEventServer)
+        {
+            EventServer.init();
+            if ($rootScope.apnsToken && $scope.loginData.disablePush != '1')
+            {
+                ZMDataModel.zmLog ("Making sure we get push notifications");
+                 EventServer.sendMessage('push', {
+                    type: 'token',
+                    platform: $rootScope.platformOS,
+                    token: $rootScope.apnsToken,
+                    state: "enabled"
+                });
+            }
+            EventServer.sendMessage("control", {
+                type: 'filter',
+                monlist: $scope.loginData.eventServerMonitors,
+                intlist: $scope.loginData.eventServerInterval
+            });
+
+        }
+        
 
         // now grab and report PATH_ZMS
         ZMDataModel.getPathZms()
@@ -406,7 +445,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             for (var servIter=0; servIter<availableServers.length; servIter++)
             {
                 serverbuttons.push({text: availableServers[servIter]});
-                console.log ("ADDING : "+availableServers[servIter]);
+               // console.log ("ADDING : "+availableServers[servIter]);
             }
             
         }
