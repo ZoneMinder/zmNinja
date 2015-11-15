@@ -1,4 +1,4 @@
-<ion-view view-title="Event Server" cache-view="false">
+<ion-view view-title="Event Server/{{loginData.serverName}}" cache-view="false">
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
@@ -18,7 +18,7 @@
         <ion-checkbox ng-model="check.isUseEventServer">use event server</ion-checkbox>
         
         
-        <ion-item  ng-href="#" ng-click="selectScreen()">
+        <ion-item  ng-href="" ng-click="selectScreen()">
             on tap, navigate to: {{defScreen}}
         </ion-item>
 

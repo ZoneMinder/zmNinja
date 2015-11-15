@@ -192,6 +192,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
                 
                 });
         }
+        else
+        {
+            EventServer.disconnect();
+        }
         ZMDataModel.displayBanner('info', ['settings saved']);
     }
 
@@ -286,10 +290,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         if (!isEnabled($scope.monitors[i].Monitor.Id)) {
             // if the filter list has IDs and this is not part of it, uncheck it
             $scope.monitors[i].Monitor.isChecked = false;
-            console.log("Marking false");
+            //console.log("Marking false");
             $scope.monitors[i].Monitor.reportingInterval = 0;
         } else {
-            console.log("Marking true");
+           // console.log("Marking true");
             $scope.monitors[i].Monitor.isChecked = true;
             $scope.monitors[i].Monitor.reportingInterval = getInterval($scope.monitors[i].Monitor.Id);
         }

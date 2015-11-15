@@ -56,16 +56,54 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 // add cancel code..
             },
             buttonClicked: function (index) {
-                console.log ("YOU WANT " + serverbuttons[index].text + " INDEX " + index);
+               // console.log ("YOU WANT " + serverbuttons[index].text + " INDEX " + index);
                 var zmServers = ZMDataModel.getServerGroups();
                 $scope.loginData = zmServers[serverbuttons[index].text];
+                $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
+    $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
                 
                 return true;
+            },
+            
+            destructiveButtonClicked: function ()
+            {
+                var zmServers = ZMDataModel.getServerGroups();
+                //console.log ("YOU WANT TO DELETE " + $scope.loginData.serverName);
+                //console.log ("LENGTH OF SERVERS IS " + Object.keys(zmServers).length);
+                if (Object.keys(zmServers).length > 1)
+                {
+                    ZMDataModel.zmLog ("Deleting " + $scope.loginData.serverName);
+                    delete zmServers[$scope.loginData.serverName];
+                    ZMDataModel.setServerGroups(zmServers);
+                    // point to first element
+                    // better than nothing
+                    // note this is actually unordered
+                    $scope.loginData = zmServers[Object.keys(zmServers)[0]];
+                    ZMDataModel.setLogin($scope.loginData);
+                    
+                }
+                else
+                {
+                    ZMDataModel.displayBanner('error', ['Cannot delete, need at least one']);
+                }
+                return true;
             }
+            
+            
         });
     };
     
 
+    
+    $scope.eventServerSettings = function()
+    {
+        ZMDataModel.zmDebug("Saving settings before going to Event Server settings");
+        //console.log ( "My loginData saved " + JSON.stringify($scope.loginData));
+        ZMDataModel.setLogin ($scope.loginData);
+        $state.go("eventserversettings");
+        
+    };
+    
     //----------------------------------------------------------------
     // Save anyway when you exit
     //----------------------------------------------------------------
