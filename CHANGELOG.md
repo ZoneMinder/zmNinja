@@ -1,5 +1,35 @@
 # Change Log
 
+## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-15)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.86...v0.87)
+
+**Implemented enhancements:**
+
+- Ability to specify multiple ZM servers and switch between them [\#83](https://github.com/pliablepixels/zmNinja/issues/83)
+- add per monitor 'alarmed' status indicator to montage view [\#82](https://github.com/pliablepixels/zmNinja/issues/82)
+
+**Fixed bugs:**
+
+- desktop app no video from timeline [\#70](https://github.com/pliablepixels/zmNinja/issues/70)
+
+**Closed issues:**
+
+- Clean up persistent data storage mechanism [\#81](https://github.com/pliablepixels/zmNinja/issues/81)
+- Remove external deps from codebase [\#80](https://github.com/pliablepixels/zmNinja/issues/80)
+- Update .gitignore to support osx [\#78](https://github.com/pliablepixels/zmNinja/issues/78)
+- Welcome message on first start [\#76](https://github.com/pliablepixels/zmNinja/issues/76)
+- add contributing guidelines [\#74](https://github.com/pliablepixels/zmNinja/issues/74)
+- Add License [\#73](https://github.com/pliablepixels/zmNinja/issues/73)
+- desktop app, can't export logs [\#71](https://github.com/pliablepixels/zmNinja/issues/71)
+- make email logs work in desktop mode by opening default client [\#69](https://github.com/pliablepixels/zmNinja/issues/69)
+- in quick scrub/footage mode - start playing without waiting for a tap [\#68](https://github.com/pliablepixels/zmNinja/issues/68)
+- make mouse wheel work in desktop mode [\#67](https://github.com/pliablepixels/zmNinja/issues/67)
+
+**Merged pull requests:**
+
+- prevents checkin of unessicary file from osx [\#79](https://github.com/pliablepixels/zmNinja/pull/79) ([jsloyer](https://github.com/jsloyer))
+- move license file to correct filename [\#77](https://github.com/pliablepixels/zmNinja/pull/77) ([jsloyer](https://github.com/jsloyer))
+
 ## [v0.86](https://github.com/pliablepixels/zmNinja/tree/v0.86) (2015-11-06)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.85...v0.86)
 
