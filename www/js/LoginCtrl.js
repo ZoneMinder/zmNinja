@@ -60,8 +60,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 var zmServers = ZMDataModel.getServerGroups();
                 $scope.loginData = zmServers[serverbuttons[index].text];
                 $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
-    $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
+                $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
+                if (!$scope.check.isUseEventServer)
+                        $rootScope.isAlarm = 0;
                 
+                if ($scope.check.isUseEventServer)
+                    EventServer.init();
                 return true;
             },
             
@@ -80,6 +84,14 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     // note this is actually unordered
                     $scope.loginData = zmServers[Object.keys(zmServers)[0]];
                     ZMDataModel.setLogin($scope.loginData);
+                    
+                    availableServers = Object.keys(ZMDataModel.getServerGroups());
+                    serverbuttons = [];
+                    for (var servIter=0; servIter<availableServers.length; servIter++)
+                    {
+                        serverbuttons.push({text: availableServers[servIter]});
+                        console.log ("ADDING : "+availableServers[servIter]);
+                    }
                     
                 }
                 else

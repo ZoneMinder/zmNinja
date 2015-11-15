@@ -243,6 +243,10 @@ angular.module('zmApp.controllers')
         function disconnect()
         {
             ZMDataModel.zmLog("Disconnecting and deleting Event Server socket...");
+            
+             if (typeof ws === 'undefined') 
+                 return;
+             
             ws.$close();
             ws.$un('open');
             ws.$un('close');

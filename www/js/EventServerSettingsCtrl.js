@@ -153,15 +153,15 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         $scope.loginData.disablePush = ($scope.check.disablePush) ? "1" : "0";
 
         ZMDataModel.setLogin($scope.loginData);
-        console.log("**** EVENT MONSTRING " + monstring);
-        console.log("**** EVENT INTERVALSTRING " + intervalstring);
+        //console.log("**** EVENT MONSTRING " + monstring);
+        //console.log("**** EVENT INTERVALSTRING " + intervalstring);
         
         
                     var pushstate  = "enabled";
                     if ($scope.loginData.disablePush == "1")
                             pushstate  = "disabled";
 
-        if ($scope.loginData.isUseEventServer) {
+        if ($scope.loginData.isUseEventServer=="1") {
             EventServer.init()
                 .then(function (data) {
                     console.log("Sending control filter");
