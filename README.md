@@ -38,7 +38,7 @@ Windows 7 or above:
 
 Linux: 
 [32-bit-download] (https://drive.google.com/file/d/0B3iQz0D8vxltNHBLcWYtMW03TnM/view?usp=sharing)
-[64-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltbVRrVWxLRHpxS1E/view?usp=sharing)
+/ [64-bit Download] (https://drive.google.com/file/d/0B3iQz0D8vxltbVRrVWxLRHpxS1E/view?usp=sharing)
 Note that only standard Desktop distributions are supported - if you are using a server edition or an optimized distribution, its likely the app won't work.
 
 Mac: [Download] (https://drive.google.com/file/d/0B3iQz0D8vxltQkRvbmp6ZlVfZUU/view?usp=sharing)
