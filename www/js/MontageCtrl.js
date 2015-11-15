@@ -205,6 +205,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     // Alarm emit handling
     //----------------------------------------------------------------
     $rootScope.$on("alarm", function (event, args) {
+        // FIXME: I should probably unregister this instead
+        if (typeof $scope.monitors === undefined)
+            return;
         console.log ("***EVENT TRAP***");
         var alarmMonitors = args.message;
         for (var i=0; i< alarmMonitors.length; i++)

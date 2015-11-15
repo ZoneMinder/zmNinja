@@ -239,6 +239,17 @@ angular.module('zmApp.controllers')
             return (d.promise);
 
         }
+        
+        function disconnect()
+        {
+            ZMDataModel.zmLog("Disconnecting and deleting Event Server socket...");
+            ws.$close();
+            ws.$un('open');
+            ws.$un('close');
+            ws.$un('message');
+            ws = undefined;
+            
+        }
 
         //--------------------------------------------------------------------------
         // Send an arbitrary object to the Event Serve
@@ -494,7 +505,8 @@ angular.module('zmApp.controllers')
             refresh: refresh,
             init: init,
             sendMessage: sendMessage,
-            pushInit: pushInit
+            pushInit: pushInit,
+            disconnect: disconnect
 
         };
 
