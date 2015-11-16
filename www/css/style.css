@@ -43,6 +43,8 @@ ion-popover-view.fit ion-content {
   right: 0 ;
   width: 100%
 }
+
+
 /* I am using flexboxes to dynamicall adapt content
 in montage view.
 Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
