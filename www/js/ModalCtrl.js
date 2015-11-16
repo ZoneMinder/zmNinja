@@ -441,6 +441,9 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         ZMDataModel.zmLog("Error saving image: " + e.message);
         console.log("***ERROR");
     }
+    
+    
+     
 
     //-----------------------------------------------------------------------
     // Saves a snapshot of the monitor image to phone storage

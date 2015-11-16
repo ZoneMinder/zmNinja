@@ -1237,13 +1237,14 @@ angular.module('zmApp.controllers')
 
         }
 
-        $scope.toggleGapless = function()
+         $scope.toggleGapless = function()
         {
-            
+            console.log ("GAPLESS TOGGLE");
             $scope.loginData.gapless = !$scope.loginData.gapless;
             ZMDataModel.setLogin($scope.loginData);
             
         };
+      
         
         //--------------------------------------------------------
         //Navigate to next/prev event in full screen mode
