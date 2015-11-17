@@ -7,8 +7,6 @@
 angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce',function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce) {
 
 
-    console.log("**** INSIDE MODAL CTRL, recomputing rand *****");
-
     // from parent scope
     var currentEvent=$scope.currentEvent;
     
@@ -54,7 +52,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         showDelay: 0
     });
     var ld = ZMDataModel.getLogin();
-    ZMDataModel.getAuthKey()
+    $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
+    ZMDataModel.getAuthKey($rootScope.validMonitorId)
         .then(function (success) {
                 $ionicLoading.hide();
                 $rootScope.authSession = success;
