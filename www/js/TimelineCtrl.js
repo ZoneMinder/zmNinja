@@ -276,6 +276,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     console.log ("*********************** TIMELINE MAIN ");
 
+    // maxItems will be ignored during timeline draw if its desktop
     var maxItems = zm.graphItemMax; // THAT magic # --> 300 and ZM on my m/c cries
     $scope.maxItems = maxItems;
     $scope.graphLoaded = false;
@@ -496,7 +497,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             for (var j = 0; j < data.length; j++) {
                                 var myevents = data[j];
 
-                                if (graphIndex > zm.graphItemMax) {
+                                if (graphIndex > zm.graphItemMax && $rootScope.platformOS != "desktop") {
                                     ZMDataModel.zmLog("Exiting page count graph - reached limit of " + zm.graphItemMax);
                                     break;
 
@@ -555,7 +556,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                    
                                     
 
-                                    if (graphIndex > zm.graphItemMax) {
+                                    if (graphIndex > zm.graphItemMax && $rootScope.platformOS != "desktop") {
                                         ZMDataModel.zmLog("Exiting event graph - reached limit of " + zm.graphItemMax);
                                         break;
 
