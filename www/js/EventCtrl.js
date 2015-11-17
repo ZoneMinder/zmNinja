@@ -163,6 +163,21 @@ angular.module('zmApp.controllers')
             $scope.monitors = ZMDataModel.applyMontageMonitorPrefs(tempMon, 2)[0];
         } else
             $scope.monitors = message;
+        
+        
+        if ($scope.monitors.length == 0)
+        {
+            $ionicPopup.alert({
+                        title: "No Monitors found",
+                        template: "Please check your credentials"
+            });
+            $ionicHistory.nextViewOptions({
+                        disableBack: true
+            });
+            $state.go("login");
+            return;
+        }
+    
         // console.log ("********** GOT MONITORS " + JSON.stringify($scope.monitors));
 
         //$scope.monitors = message;
