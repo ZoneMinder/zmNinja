@@ -54,6 +54,7 @@ angular.module('zmApp', [
     graphStrokeColor: 'rgba(151,187,205,0.8)',
     graphHighlightFill: 'rgba(0,163,124,0.5)',
     graphItemMax: 200,
+    graphDesktopItemMax:2000,
     monitorCheckingColor: '#03A9F4',
     monitorNotRunningColor: '#F44336',
     monitorPendingColor: '#FF9800',
@@ -64,7 +65,8 @@ angular.module('zmApp', [
     eventsListScrubHeight: 300,
     loginScreenString: "var currentView = 'login'", // Isn't there a better way?
     desktopUrl:"/zm",
-    desktopApiUrl: "/api/zm"
+    desktopApiUrl: "/api/zm",
+    latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest"
 })
 
 
@@ -452,7 +454,7 @@ angular.module('zmApp', [
                 // Now go ahead and re-get auth key 
                 $rootScope.authSession = "undefined";
                 var ld = ZMDataModel.getLogin();
-                ZMDataModel.getAuthKey()
+                ZMDataModel.getAuthKey($rootScope.validMonitorId)
                     .then(function (success) {
 
                             console.log(success);
@@ -546,6 +548,7 @@ angular.module('zmApp', [
         $rootScope.alarmCount="0";
         $rootScope.platformOS="desktop";
         $rootScope.currentServerGroup = "defaultServer";
+        $rootScope.validMonitorId = "";
        
 
         // This is a global exception interceptor
