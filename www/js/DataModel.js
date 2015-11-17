@@ -643,14 +643,23 @@ angular.module('zmApp.controllers')
         // FIXME: Currently a hack - does a screen parse - convert to API based support
          //-----------------------------------------------------------------------------
         
-        
-        getAuthKey: function ()
+        // need a mid as restricted users won't be able to get
+        // auth with just &watch
+        getAuthKey: function (mid)
         {
             var d=$q.defer();
+            
+            if (!mid)
+            {
+                zmLog ("Deferring auth key, as monitorId unknown");
+                d.resolve("");
+                return(d.promise);
+            }
+            
             // Skipping monitor number as I only need an auth key
             // so no need to generate an image
-            var myurl =loginData.url+"/index.php?view=watch";
-            zmDebug ("DataModel: Getting auth from " + myurl);
+            var myurl =loginData.url+"/index.php?view=watch&mid="+mid;
+            zmDebug ("DataModel: Getting auth from " + myurl + " with mid="+mid);
             $http.get (myurl)
             .then (function (success) {
                // console.log ("**** RESULT IS " + JSON.stringify(success));
@@ -902,9 +911,10 @@ angular.module('zmApp.controllers')
                 zmLog ( (forceReload==1)? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + "/monitors.json";
+                console.log ("API:"+myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
                     .success(function (data) {
-                        //console.log("HTTP success got " + JSON.stringify(data.monitors));
+                        console.log("HTTP success got " + JSON.stringify(data.monitors));
                         monitors = data.monitors;
                         console.log("promise resolved inside HTTP success");
                         monitorsLoaded = 1;
