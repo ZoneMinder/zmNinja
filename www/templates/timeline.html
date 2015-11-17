@@ -26,8 +26,7 @@
     <ion-content>
         <div style="padding-left:15px; font-size:10px; color:grey">
 
-        {{prettify(fromDate)}} - {{prettify(toDate)}} 
-            <span ng-show="$root.platformOS!='desktop'">(only displaying last {{maxItems}} events)</span> 
+        {{prettify(fromDate)}} - {{prettify(toDate)}} (only displaying last {{maxItems}} events) 
             </div>
 
         <div ng-if="!graphLoaded">

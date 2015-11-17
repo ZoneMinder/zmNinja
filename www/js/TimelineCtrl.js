@@ -7,7 +7,7 @@
 // This controller creates a timeline
 // It uses the visjs library, but due to performance reasons
 // I've disabled pan and zoom and used buttons instead
-// also limits # of items to maxItems (currently 200)
+// also limits # of items to maxItems 
 
 
 // FIXME: too much redundant code between EventCtrl and Timeline 
@@ -277,7 +277,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     console.log ("*********************** TIMELINE MAIN ");
 
     // maxItems will be ignored during timeline draw if its desktop
-    var maxItems = zm.graphItemMax; // THAT magic # --> 300 and ZM on my m/c cries
+    var maxItems = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
+    
     $scope.maxItems = maxItems;
     $scope.graphLoaded = false;
     ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
@@ -497,8 +498,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             for (var j = 0; j < data.length; j++) {
                                 var myevents = data[j];
 
-                                if (graphIndex > zm.graphItemMax && $rootScope.platformOS != "desktop") {
-                                    ZMDataModel.zmLog("Exiting page count graph - reached limit of " + zm.graphItemMax);
+                                if (graphIndex > count) {
+                                    ZMDataModel.zmLog("Exiting page count graph - reached limit of " + count);
                                     break;
 
                                 }
@@ -556,8 +557,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                    
                                     
 
-                                    if (graphIndex > zm.graphItemMax && $rootScope.platformOS != "desktop") {
-                                        ZMDataModel.zmLog("Exiting event graph - reached limit of " + zm.graphItemMax);
+                                    if (graphIndex > count) {
+                                        ZMDataModel.zmLog("Exiting event graph - reached limit of " + count);
                                         break;
 
                                     }
