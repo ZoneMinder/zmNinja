@@ -19,6 +19,21 @@ angular.module('zmApp.controllers')
     console.log("***EVENTS: Waiting for Monitors to load before I proceed");
     $scope.monitors = [];
     $scope.monitors = message;
+                                   
+                                   
+    if ($scope.monitors.length == 0)
+    {
+        $ionicPopup.alert({
+                    title: "No Monitors found",
+                    template: "Please check your credentials"
+        });
+        $ionicHistory.nextViewOptions({
+                    disableBack: true
+        });
+        $state.go("login");
+        return;
+    }
+    
     var loginData = ZMDataModel.getLogin();
     monitorStateCheck();
     console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
