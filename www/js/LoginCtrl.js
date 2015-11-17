@@ -288,9 +288,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         }
         // strip cgi-bin if it is there but only at the end
-        if ($scope.loginData.streamingurl.slice(-7).toLowerCase() == 'cgi-bin') {
+        // Nov 17 Don't mess with this path. centos uses zm-cgi-bin of all things
+
+        /*if ($scope.loginData.streamingurl.slice(-7).toLowerCase() == 'cgi-bin') {
             $scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -7);
-        }
+        }*/
 
         // check for protocol and if not put it in
 
@@ -378,7 +380,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         ZMDataModel.getPathZms()
             .then(function (data) {
                 var ld = ZMDataModel.getLogin();
-                ZMDataModel.zmLog("PATH_ZMS:" + data + " ,Path ZmNinja will use:" + ld.streamingurl + "/cgi-bin/nph-zms");
+                ZMDataModel.zmLog("PATH_ZMS:" + data + ", Path ZmNinja will use:" + ld.streamingurl + "/nph-zms");
                 ZMDataModel.zmLog("If live streams are not working, make sure you check these values");
 
 

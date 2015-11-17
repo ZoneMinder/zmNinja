@@ -20,7 +20,7 @@
                             <div ng-if="!animationInProgress">
                                 <img  imageonload="finishedLoadingImage()"
                                      image-spinner-loader="lines"
-                                     image-spinner-src="{{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" 
+                                     image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" 
                                      on-swipe-left="onSwipe(monitorId,1)" 
                                      on-swipe-right="onSwipe(monitorId,-1)" />
         

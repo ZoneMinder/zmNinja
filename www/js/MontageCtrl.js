@@ -40,6 +40,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var hiddenOrder = []; // 1 = hide, 0 = don't hide
     
     var tempMonitors = message;
+    console.log ("TEMP MONITORS IS " + JSON.stringify(tempMonitors));
     var tempResponse = ZMDataModel.applyMontageMonitorPrefs(message, 0);
     $scope.monitors = tempResponse[0];
     montageOrder = tempResponse[1];
@@ -152,7 +153,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
     var ld = ZMDataModel.getLogin();
-    ZMDataModel.getAuthKey()
+    
+    console.log ("MONITORS " + JSON.stringify($scope.monitors));
+    $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
+    ZMDataModel.getAuthKey($rootScope.validMonitorId)
         .then(function (success) {
                 $ionicLoading.hide();
                 console.log(success);
