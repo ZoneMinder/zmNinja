@@ -40,6 +40,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var hiddenOrder = []; // 1 = hide, 0 = don't hide
     
     var tempMonitors = message;
+    if (tempMonitors.length == 0)
+    {
+        $ionicPopup.alert({
+                    title: "No Monitors found",
+                    template: "Please check your credentials"
+        });
+        $ionicHistory.nextViewOptions({
+                    disableBack: true
+        });
+        $state.go("login");
+        return;
+    }
+    
     console.log ("TEMP MONITORS IS " + JSON.stringify(tempMonitors));
     var tempResponse = ZMDataModel.applyMontageMonitorPrefs(message, 0);
     $scope.monitors = tempResponse[0];
