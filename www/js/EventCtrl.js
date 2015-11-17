@@ -23,6 +23,8 @@ angular.module('zmApp.controllers')
         $scope.days = [];
         $scope.weeks = [];
         $scope.months = [];
+        
+        $scope.minAlarmCount = "1";
 
         $scope.eventList = {
             showDelete: false
@@ -1381,6 +1383,11 @@ angular.module('zmApp.controllers')
         $scope.loadMore = function () {
             loadMore();
 
+        };
+        
+        $scope.toggleMinAlarmFrameCount = function () {
+            console.log ("Toggling");
+            $scope.minAlarmCount = ($scope.minAlarmCount == '0') ? '1':'0';
         };
 
 
