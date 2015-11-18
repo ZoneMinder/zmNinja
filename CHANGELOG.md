@@ -3,6 +3,10 @@
 ## [0.87.1](https://github.com/pliablepixels/zmNinja/tree/0.87.1) (2015-11-18)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...0.87.1)
 
+**Zoneminder specific notes for this release:**
+
+(https://github.com/pliablepixels/zmNinja/issues/96)
+
 **Implemented enhancements:**
 
 - Event page is overcrowded for mocord users - add option to show only alarmed frames [\#89](https://github.com/pliablepixels/zmNinja/issues/89)
@@ -14,7 +18,6 @@
 
 **Closed issues:**
 
-- Zoneminder specific notes for this release  [\#96](https://github.com/pliablepixels/zmNinja/issues/96)
 - Increase desktop limit of timeline to 2000 events instead of 200 [\#95](https://github.com/pliablepixels/zmNinja/issues/95)
 - Implement daily version check for Desktop versions [\#94](https://github.com/pliablepixels/zmNinja/issues/94)
 - eliminate duplicate code between timeline and event control for footage mode [\#87](https://github.com/pliablepixels/zmNinja/issues/87)
