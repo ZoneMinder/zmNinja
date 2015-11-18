@@ -167,7 +167,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     var ld = ZMDataModel.getLogin();
     
-    console.log ("MONITORS " + JSON.stringify($scope.monitors));
+    //console.log ("MONITORS " + JSON.stringify($scope.monitors));
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
     ZMDataModel.getAuthKey($rootScope.validMonitorId)
         .then(function (success) {
