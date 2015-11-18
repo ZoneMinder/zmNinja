@@ -14,6 +14,7 @@
 
 **Closed issues:**
 
+- Zoneminder specific notes for this release  [\#96](https://github.com/pliablepixels/zmNinja/issues/96)
 - Increase desktop limit of timeline to 2000 events instead of 200 [\#95](https://github.com/pliablepixels/zmNinja/issues/95)
 - Implement daily version check for Desktop versions [\#94](https://github.com/pliablepixels/zmNinja/issues/94)
 - eliminate duplicate code between timeline and event control for footage mode [\#87](https://github.com/pliablepixels/zmNinja/issues/87)
