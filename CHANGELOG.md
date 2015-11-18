@@ -1,5 +1,24 @@
 # Change Log
 
+## [0.87.1](https://github.com/pliablepixels/zmNinja/tree/0.87.1) (2015-11-18)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...0.87.1)
+
+**Implemented enhancements:**
+
+- Event page is overcrowded for mocord users - add option to show only alarmed frames [\#89](https://github.com/pliablepixels/zmNinja/issues/89)
+
+**Fixed bugs:**
+
+- zmNinja adds cgi-bin on its own to cgi path. This is a problem for Centos  [\#92](https://github.com/pliablepixels/zmNinja/issues/92)
+- Can't toggle gapless playback when viewing timeline events  [\#85](https://github.com/pliablepixels/zmNinja/issues/85)
+
+**Closed issues:**
+
+- Increase desktop limit of timeline to 2000 events instead of 200 [\#95](https://github.com/pliablepixels/zmNinja/issues/95)
+- Implement daily version check for Desktop versions [\#94](https://github.com/pliablepixels/zmNinja/issues/94)
+- eliminate duplicate code between timeline and event control for footage mode [\#87](https://github.com/pliablepixels/zmNinja/issues/87)
+- Non-persisted monitors showing in timeline, events views [\#84](https://github.com/pliablepixels/zmNinja/issues/84)
+
 ## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-15)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.86...v0.87)
 
