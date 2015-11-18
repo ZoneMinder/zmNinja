@@ -37,7 +37,7 @@
       
         <div ng-if="!eventsBeingLoaded">
             <ion-list show-delete="eventList.showDelete">
-                <ion-item repeat="event in events| filter:search.text" item-height="event.Event.height" id="item-{{$index}}" overflow-scroll="true" ng-if="event.Event.AlarmFrames >= minAlarmCount">
+                <ion-item repeat="event in events| filter:search.text" item-height="event.Event.height" id="item-{{$index}}" overflow-scroll="true" ng-show="event.Event.AlarmFrames >= minAlarmCount">
 
                     <!--<span class="events-filter-on" ng-if="isEventFilterOn">Filter</span>-->
 
