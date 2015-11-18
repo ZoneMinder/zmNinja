@@ -4,7 +4,7 @@
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...0.87.1)
 
 
-** Important Notes **
+**Important Notes**
 - Breaking changes for this release: [\#97](https://github.com/pliablepixels/zmNinja/issues/97)
 - Zoneminder specific notes for this release  [\#96](https://github.com/pliablepixels/zmNinja/issues/96)
 
