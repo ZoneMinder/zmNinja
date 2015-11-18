@@ -1,1 +1,1 @@
-include-labels = bug,enhancement,zoneminder
+include-labels = zoneminder,breaking,bug,enhancement
