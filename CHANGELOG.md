@@ -5,7 +5,7 @@
 
 **Zoneminder specific notes for this release:**
 
-(https://github.com/pliablepixels/zmNinja/issues/96)
+https://github.com/pliablepixels/zmNinja/issues/96
 
 **Implemented enhancements:**
 
