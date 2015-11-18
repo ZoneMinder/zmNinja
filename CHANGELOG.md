@@ -3,9 +3,11 @@
 ## [0.87.1](https://github.com/pliablepixels/zmNinja/tree/0.87.1) (2015-11-18)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...0.87.1)
 
-**Zoneminder specific notes for this release:**
 
-https://github.com/pliablepixels/zmNinja/issues/96
+** Important Notes **
+- Breaking changes for this release: [\#97](https://github.com/pliablepixels/zmNinja/issues/97)
+- Zoneminder specific notes for this release  [\#96](https://github.com/pliablepixels/zmNinja/issues/96)
+
 
 **Implemented enhancements:**
 
