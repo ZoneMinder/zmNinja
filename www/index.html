@@ -194,6 +194,16 @@
                             <i class="icon ion-clipboard"></i>
                         </span> Logs
                     </ion-item>
+                    
+                    
+                    <div ng-if="$root.newVersionAvailable">
+                        <ion-item nav-clear menu-close href="">
+                            <span class=" item-icon-left" >
+                                <i class="icon ion-email-unread"></i>
+                            </span> <span style="color:#268d3a;">{{$root.newVersionAvailable}}</span>
+                        </ion-item>
+                    </div>
+                    
                 </ion-list>
             </ion-content>
         </ion-side-menu>

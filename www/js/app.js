@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification */
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment */
 
 
 var appVersion = "0.0.0";
@@ -42,6 +42,7 @@ angular.module('zmApp', [
     authoremail: 'pliablepixels+zmNinja@gmail.com',
     logFileMaxSize: 50000, // after this limit log gets reset
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
+    updateCheckInterval:  86400000, // 24 hrs
     loadingTimeout: 15000,
     safeMontageLimit: 10,
     safeImageQuality:10,
@@ -292,6 +293,92 @@ angular.module('zmApp', [
     };
 }])
 
+
+//-----------------------------------------------------------------
+// This service automatically checks for new versions every 24 hrs
+//------------------------------------------------------------------
+.factory ('zmCheckUpdates', function($interval, $http, zm, $timeout, $localstorage, ZMDataModel, $rootScope) {
+    var zmUpdateHandle;
+    var zmUpdateVersion ="";
+    
+    function start()
+    {
+        checkUpdate();
+        $interval.cancel(zmUpdateHandle);     
+        zmUpdateHandle = $interval(function () {
+                    checkUpdate();
+
+                }, zm.updateCheckInterval);
+
+
+        function checkUpdate()
+        {
+            var lastdateString = $localstorage.get ("lastUpdateCheck");
+            var lastdate;
+            if (!lastdateString)
+            {
+                
+                lastdate = moment().subtract (2,'day');
+                
+            }
+            else
+            {
+                lastdate = moment(lastdateString);
+            }
+            var timdiff =  moment().diff(lastdate,'hours');
+            if (timdiff < 24 )
+            {
+                ZMDataModel.zmLog ("Checked for update " + timdiff + " hours ago. Not checking again");
+                
+                return;   
+            }
+            ZMDataModel.zmLog ("Checking for new version updates...");
+            
+            
+            $http.get (zm.latestRelease)
+            .then (function(success) {
+                
+                            
+                $localstorage.set ("lastUpdateCheck", moment().toString());
+                //console.log ("FULL STRING " + success.data.tag_name);
+                var res = success.data.tag_name.match("v(.*)");
+                zmUpdateVersion = res[1];
+                var currentVersion = ZMDataModel.getAppVersion();
+                if ($rootScope.platformOS == "desktop")
+                {
+                    zmUpdateVersion = zmUpdateVersion+"D";
+                }
+                if (ZMDataModel.getAppVersion() != zmUpdateVersion)
+                {
+                    $rootScope.newVersionAvailable = "v" + zmUpdateVersion + " available";
+                }
+                else
+                {
+                    $rootScope.newVersionAvailable = "";
+                }
+                //console.log ("UPDATE " + zmVersion);
+            });
+
+        }
+    }
+    
+    function getLatestUpdateVersion()
+    {
+        return (zmUpdateVersion == "")? "(unknown)" : zmUpdateVersion;
+    }
+    
+    return {
+        start: start,
+        getLatestUpdateVersion: getLatestUpdateVersion
+        //stop: stop,
+        
+    };
+    
+    
+})
+          
+        
+
 //-----------------------------------------------------------------
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
@@ -529,7 +616,7 @@ angular.module('zmApp', [
 //====================================================================
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer,$ionicContentBanner) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer,$ionicContentBanner) {
     
     
 
@@ -549,6 +636,8 @@ angular.module('zmApp', [
         $rootScope.platformOS="desktop";
         $rootScope.currentServerGroup = "defaultServer";
         $rootScope.validMonitorId = "";
+        $rootScope.newVersionAvailable = "";
+    
        
 
         // This is a global exception interceptor
@@ -578,7 +667,7 @@ angular.module('zmApp', [
             var pixelRatio = window.devicePixelRatio || 1;
             $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
             $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
-            console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+            //console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
 
 
         };
@@ -644,6 +733,8 @@ angular.module('zmApp', [
 
             ZMDataModel.init();
             EventServer.init();
+            if ($rootScope.platformOS == "desktop")
+                zmCheckUpdates.start();
             // for making sure we canuse $state.go with ng-click
             // needed for views that use popovers
             $rootScope.$state = $state;
@@ -694,7 +785,7 @@ angular.module('zmApp', [
                 if (window.cordova) {
                     $cordovaSplashscreen.hide();
                 }
-            }, 2000);
+            }, 1500);
 
             /*if(window.navigator && window.navigator.splashscreen) {
                 window.navigator.splashscreen.hide();
