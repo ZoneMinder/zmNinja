@@ -192,10 +192,10 @@ angular.module('zmApp.controllers')
             
             serverGroupList = $localstorage.getObject("serverGroupList");
             
-            console.log ("!!!!!!!!!!!!!!!!!serverGroupList is " + JSON.stringify(serverGroupList));
+            //console.log ("!!!!!!!!!!!!!!!!!serverGroupList is " + JSON.stringify(serverGroupList));
             var sname = 
                 $localstorage.get("defaultServerName");
-            console.log ("!!!!!!!!!!!!!!!!!!default server name is  "  + sname);
+            //console.log ("!!!!!!!!!!!!!!!!!!default server name is  "  + sname);
             
             var loadedData = serverGroupList[sname];
             if (!isEmpty(loadedData))
