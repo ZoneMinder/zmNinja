@@ -950,17 +950,19 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                         //  $scope.slider_options.scale=[];
                         $scope.slider_modal_options.scale = [];
 
-
+                        
                         for (i = 0; i < event.Frame.length; i++) {
+                            
                             if (event.Frame[i].Type == "Alarm") {
 
                                 $scope.slider_modal_options.scale.push({
-                                    val: i + 1,
+                                    val: event.Event.FrameId,
                                     label: ' '
                                 });
                             } else {
                                 //$scope.slider_options.scale.push(' ');
                             }
+                            
 
                         }
                         $scope.totalEventTime = Math.round(parseFloat(event.Event.Length)) - 1;
