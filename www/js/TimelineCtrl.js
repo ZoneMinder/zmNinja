@@ -209,6 +209,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         console.log("***AFTER ENTER");
 
         var tempMon = message;
+        
+        //console.log ("TIMELINE MONITORS: " + JSON.stringify(message));
         var ld = ZMDataModel.getLogin();
         
         if (ld.persistMontageOrder)
@@ -487,7 +489,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             for (var g = 0; g < $scope.monitors.length; g++) {
                                 groups.add({
                                     id: $scope.monitors[g].Monitor.Id,
-                                    content: ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id)
+                                   //mid: $scope.monitors[g].Monitor.Id,
+                                    content: ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id),
+                                    order: $scope.monitors[g].Monitor.Sequence
                                 });
                                 ZMDataModel.zmDebug("TimelineCtrl/drawgraph:Adding group " +
                                     ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id));
