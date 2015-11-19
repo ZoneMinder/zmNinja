@@ -956,7 +956,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                             if (event.Frame[i].Type == "Alarm") {
 
                                 $scope.slider_modal_options.scale.push({
-                                    val: event.Event.FrameId,
+                                    val: event.Frame[i].FrameId,
                                     label: ' '
                                 });
                             } else {
