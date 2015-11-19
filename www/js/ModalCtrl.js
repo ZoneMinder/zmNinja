@@ -478,13 +478,13 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         var canvas, context, imageDataUrl, imageData;
         var loginData = ZMDataModel.getLogin();
         var url = loginData.streamingurl +
-            '/cgi-bin/zms?mode=single&monitor=' + mid +
+            '/zms?mode=single&monitor=' + mid +
             $rootScope.authSession;
         ZMDataModel.zmLog("SavetoPhone:Trying to save image from " + url);
 
         var img = new Image();
         img.onload = function () {
-            console.log("********* ONLOAD");
+           // console.log("********* ONLOAD");
             canvas = document.createElement('canvas');
             canvas.width = img.width;
             canvas.height = img.height;
@@ -496,7 +496,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
             if ($rootScope.platformOS != "desktop") {
                 try {
-
+                   
                     cordova.exec(
                         SaveSuccess,
                         SaveError,
@@ -519,6 +519,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         };
         try {
             img.src = url;
+           // console.log ("SAVING IMAGE SOURCE");
         } catch (e) {
             SaveError(e.message);
 
@@ -1011,7 +1012,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 $scope.$on('modal.shown', function() {
   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Modal is shown!');
     currentEvent=$scope.currentEvent;
-    prepareModalEvent(currentEvent.Event.Id);
+    if (currentEvent && currentEvent.Event)
+        prepareModalEvent(currentEvent.Event.Id);
 });
 
 }]);
