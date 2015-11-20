@@ -537,8 +537,9 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     };
 
     $scope.scaleImage = function () {
-        console.log("Switching image style");
+        
         $scope.imageFit = !$scope.imageFit;
+        console.log("Switching image style to " + $scope.imageFit);
     };
 
     $scope.$on('$ionicView.enter', function () {
