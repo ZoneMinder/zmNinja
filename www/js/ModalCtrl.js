@@ -27,7 +27,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         });
     
     $scope.animationInProgress = false;
-    $scope.imageFit = false;
+    $scope.imageFit = true;
     // FIXME: This is a hack - for some reason
     // the custom slider view is messed up till the image loads
     // in modal view

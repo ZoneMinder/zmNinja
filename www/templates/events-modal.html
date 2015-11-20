@@ -78,7 +78,7 @@
 
     <a mfb-button icon="ion-arrow-right-c" label="next event" ng-click="jumpToEvent(nextId,1);"></a>
     <a mfb-button icon="ion-arrow-left-c" label="prev. event" ng-click="jumpToEvent(prevId,-1);"></a>
-    <a mfb-button icon="ion-arrow-resize" label="fit image" ng-click="scaleImage();"></a>
+    <a mfb-button icon="ion-arrow-resize" label="{{imageFit?'fill screen':'fit screen'}}" ng-click="scaleImage();"></a>
     
     <a mfb-button icon="ion-close" label="exit event view" ng-click="closeModal()"> </a>
 
