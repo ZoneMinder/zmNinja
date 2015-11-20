@@ -279,7 +279,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     console.log ("*********************** TIMELINE MAIN ");
 
     // maxItems will be ignored during timeline draw if its desktop
-    var maxItems = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
+   // var maxItems = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
+    var ld = ZMDataModel.getLogin();
+    var maxItems = ld.graphSize || 200;
     
     $scope.maxItems = maxItems;
     $scope.graphLoaded = false;
