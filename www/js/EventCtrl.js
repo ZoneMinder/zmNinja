@@ -24,7 +24,7 @@ angular.module('zmApp.controllers')
         $scope.weeks = [];
         $scope.months = [];
         
-        $scope.minAlarmCount = "1";
+        
 
         $scope.eventList = {
             showDelete: false
@@ -946,11 +946,11 @@ angular.module('zmApp.controllers')
             if ($scope.showSearch == false)
                 $scope.search.text = "";
 
-            console.log("**** Setting search view to " + $scope.showSearch + " ****");
+            //console.log("**** Setting search view to " + $scope.showSearch + " ****");
             if (enableLoadMore == false && $scope.showSearch == false) {
                 moreEvents = true;
                 enableLoadMore = true;
-                console.log("REMOVING ARTIFICAL LOAD MORE BLOCK");
+                //console.log("REMOVING ARTIFICAL LOAD MORE BLOCK");
             }
         };
 
@@ -1402,7 +1402,8 @@ angular.module('zmApp.controllers')
         
         $scope.toggleMinAlarmFrameCount = function () {
             console.log ("Toggling");
-            $scope.minAlarmCount = ($scope.minAlarmCount == '0') ? '1':'0';
+            $rootScope.minAlarmCount = ($rootScope.minAlarmCount == '0') ? '1':'0';
+            doRefresh();
         };
 
 

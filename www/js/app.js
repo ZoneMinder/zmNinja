@@ -531,7 +531,7 @@ angular.module('zmApp', [
                 } else //  this means login error
                 {
                     $rootScope.loggedIntoZm = -1;
-                    console.log("**** ZM Login FAILED");
+                    //console.log("**** ZM Login FAILED");
                     ZMDataModel.zmLog("zmAutologin Error: Bad Credentials ", "error");
                     $rootScope.$emit('auth-error', "incorrect credentials");
 
@@ -544,16 +544,17 @@ angular.module('zmApp', [
                 ZMDataModel.getAuthKey($rootScope.validMonitorId)
                     .then(function (success) {
 
-                            console.log(success);
+                            //console.log(success);
                             $rootScope.authSession = success;
                             ZMDataModel.zmLog("Stream authentication construction: " +
                                 $rootScope.authSession);
 
                         },
                         function (error) {
-                            console.log(error);
+                            //console.log(error);
                             
                             ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                        ZMDataModel.zmDebug("Error was: " + JSON.stringify(error));
                         });
 
                 return (d.promise);
@@ -637,6 +638,7 @@ angular.module('zmApp', [
         $rootScope.currentServerGroup = "defaultServer";
         $rootScope.validMonitorId = "";
         $rootScope.newVersionAvailable = "";
+        $rootScope.minAlarmCount = "1";
     
        
 
