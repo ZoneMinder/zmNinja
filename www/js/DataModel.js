@@ -57,6 +57,7 @@ angular.module('zmApp.controllers')
          'montageOrder':'',
          'montageHiddenOrder':'',
          'montageArraySize':'0',
+         'graphSize':200,
          
         
     };
