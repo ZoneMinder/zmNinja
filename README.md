@@ -29,8 +29,8 @@ It may contain bugs.
 
 These files are hosted on Google Drive - when you click on them, look for the download button (down arrow icon) at the top so you download the ZIP
 
-**Latest version:** 0.87.1D
-**Last uploaded:** Nov 18, 2015
+**Latest version:** 0.87.2D
+**Last uploaded:** Nov 20, 2015
 
 Please download binaries for Win 7, Linux or Mac from [here](https://github.com/pliablepixels/zmNinja/releases). 
 
