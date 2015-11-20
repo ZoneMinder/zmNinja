@@ -26,16 +26,16 @@
         
                             </div>
                             <div ng-if="animationInProgress">
-                                    <img 
+                                    <img style="width:100vw; height:100vh"
                                      
-                                     ng-src="img/pausevideo.png" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"  
+                                     ng-src="img/pausevideo.png" class="object-fit_contain"  
                                       />
                             </div>
                         
                         
                         </div>
                         <div ng-if="$root.authSession=='undefined'">
-                            <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" 
+                            <img id="img-$index" ng-src="img/pausevideo.png" style="width:100vw; height:100vh; display:block;" class="object-fit_contain" 
                                  width="{{((devWidth)/(7-monitorSize[$index]))}}px;"/>
                         </div>
                     </div>

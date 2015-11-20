@@ -21,10 +21,10 @@
                                          />
                                 </div>
                                 <div ng-if="animationInProgress">
-                                    <img   imageonload="finishedLoadingImage($index)" 
+                                    <img   style="width:100vw; height:100vh" imageonload="finishedLoadingImage($index)" 
                                          image-spinner-src="img/pausevideo.png" 
                                          image-spinner-loader="lines" 
-                                         ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"  />
+                                         class="object-fit_contain"  />
                                 </div>
                                 
 
