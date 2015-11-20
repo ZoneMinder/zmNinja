@@ -986,6 +986,10 @@ angular.module('zmApp.controllers')
                 myurl = myurl + "/StartTime >=:"+startTime;
             if (endTime)
                 myurl = myurl + "/EndTime <=:"+endTime;
+            
+            myurl = myurl + "/AlarmFrames >=:" + $rootScope.minAlarmCount;
+            
+            
             myurl = myurl + ".json";
             console.log (">>>>>Constructed URL " + myurl);
             
@@ -1060,6 +1064,8 @@ angular.module('zmApp.controllers')
                 myurl = myurl + "/StartTime >=:"+startTime;
             if (endTime)
                 myurl = myurl + "/EndTime <=:"+endTime;
+            
+            myurl = myurl + "/AlarmFrames >=:" + $rootScope.minAlarmCount;
             myurl = myurl + ".json";
 
 
