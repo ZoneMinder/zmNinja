@@ -439,6 +439,16 @@ progress[aria-valuenow]:before  {
 }
 
 
+/*
+
+.object-fit_cover { object-fit: cover; width:100%; height:auto;}
+.object-fit_contain { object-fit: contain; max-width:100%; height:auto; }
+*/
+
+
+.object-fit_cover { object-fit: cover; width:100%; height:auto;}
+.object-fit_contain { object-fit: contain; max-width:100%; max-height:100%; }
+
 .list .item.item-accordion {
   line-height: 200px;
   padding-top: 0;

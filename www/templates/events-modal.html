@@ -13,18 +13,18 @@
 
                             <li ng-repeat="slide in slides">
                                 <div ng-if="!animationInProgress">
-                                    <img  imageonload="finishedLoadingImage($index)" 
+                                    <img  style="width:100vw; height:100vh" imageonload="finishedLoadingImage($index)" 
                                          image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale={{loginData.singleImageQuality}}" 
                                          image-spinner-loader="lines" 
-                                         ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}"
+                                         ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" 
                                          
                                          />
                                 </div>
                                 <div ng-if="animationInProgress">
-                                    <img  imageonload="finishedLoadingImage($index)" 
+                                    <img   imageonload="finishedLoadingImage($index)" 
                                          image-spinner-src="img/pausevideo.png" 
                                          image-spinner-loader="lines" 
-                                         ng-class="{'zm-image-fit':imageFit==true, 'zm-image-crop':imageFit==false}" />
+                                         ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"  />
                                 </div>
                                 
 
