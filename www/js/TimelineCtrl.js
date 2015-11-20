@@ -466,7 +466,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 // I figure out how many items the server returns per API page
                 // and divide the # of items I want (currently 200) with # of items per page
                 // So iterCount is the # of HTTP calls I need to make
-                iterCount = Math.round(count / itemsPerPage);
+                iterCount =  Math.max(Math.round(count / itemsPerPage),1);
                 ZMDataModel.zmDebug("TimelineCtrl/drawGraph: pages of data: " + pages + " items per page: " + itemsPerPage);
                 ZMDataModel.zmDebug("TimelineCtrl/drawGraph: I will make " + iterCount + " HTTP Requests to get all graph data");
 
