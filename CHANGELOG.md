@@ -1,13 +1,23 @@
 # Change Log
 
-## [0.87.1](https://github.com/pliablepixels/zmNinja/tree/0.87.1) (2015-11-18)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...0.87.1)
+## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
 
+**Fixed bugs:**
 
-**Important Notes**
-- Breaking changes for this release: [\#97](https://github.com/pliablepixels/zmNinja/issues/97)
-- Zoneminder specific notes for this release  [\#96](https://github.com/pliablepixels/zmNinja/issues/96)
+- Tap to load events on push notification is broken [\#103](https://github.com/pliablepixels/zmNinja/issues/103)
+- Monitors in zmNinja should respect sequence of monitors in Zoneminder [\#100](https://github.com/pliablepixels/zmNinja/issues/100)
+- SavetoPhone not working [\#99](https://github.com/pliablepixels/zmNinja/issues/99)
+- 0.87.1 broke quick scrub thumbnail [\#98](https://github.com/pliablepixels/zmNinja/issues/98)
+- \[DESKTOP\] Image scaling issues [\#90](https://github.com/pliablepixels/zmNinja/issues/90)
 
+**Closed issues:**
+
+- \[DESKTOP\] Timeline is UTC [\#101](https://github.com/pliablepixels/zmNinja/issues/101)
+- \[DESKTOP\] Lift 200 last entries limit for timeline [\#88](https://github.com/pliablepixels/zmNinja/issues/88)
+
+## [v0.87.1](https://github.com/pliablepixels/zmNinja/tree/v0.87.1) (2015-11-18)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.1)
 
 **Implemented enhancements:**
 
@@ -20,6 +30,8 @@
 
 **Closed issues:**
 
+- Breaking changes for this release: [\#97](https://github.com/pliablepixels/zmNinja/issues/97)
+- Zoneminder specific notes for this release  [\#96](https://github.com/pliablepixels/zmNinja/issues/96)
 - Increase desktop limit of timeline to 2000 events instead of 200 [\#95](https://github.com/pliablepixels/zmNinja/issues/95)
 - Implement daily version check for Desktop versions [\#94](https://github.com/pliablepixels/zmNinja/issues/94)
 - eliminate duplicate code between timeline and event control for footage mode [\#87](https://github.com/pliablepixels/zmNinja/issues/87)
