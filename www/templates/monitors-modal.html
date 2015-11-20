@@ -56,7 +56,7 @@
 
     </ion-modal-view>
  <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-        <button mfb-button icon="ion-arrow-resize" label="fit image" ng-click="scaleImage();">
+        <button mfb-button icon="ion-arrow-resize" label="{{imageFit?'fill screen':'fit screen'}}" ng-click="scaleImage();">
         </button>
         <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
         </button>
