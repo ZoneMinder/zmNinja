@@ -10,12 +10,12 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     // from parent scope
     var currentEvent=$scope.currentEvent;
     
-    $scope.mycarousel = {
+   /* $scope.mycarousel = {
         index: 0
     };
     $scope.ionRange = {
         index: 1
-    };
+    };*/
     
     
     var eventImageDigits = 5; // failsafe
