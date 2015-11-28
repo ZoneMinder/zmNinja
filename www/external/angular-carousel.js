@@ -37,6 +37,7 @@ angular.module('angular-carousel')
 
         var stopAutoPlay = function() {
             if (scope.autoSlider) {
+		console.log ("Cancelling timer");
                 $interval.cancel(scope.autoSlider);
                 scope.autoSlider = null;
             }

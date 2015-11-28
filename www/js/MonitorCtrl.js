@@ -38,6 +38,10 @@ angular.module('zmApp.controllers')
     monitorStateCheck();
     console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
     ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+                 
+    // FIXME: need this as modalctrl uses it. Not needed for monitor
+    // mode
+    
 
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
@@ -291,6 +295,7 @@ angular.module('zmApp.controllers')
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
         $scope.ptzMoveCommand = "";
+        
 
         // This is a modal to show the monitor footage
         // We need to switch to always awake if set so the feed doesn't get interrupted
@@ -298,6 +303,7 @@ angular.module('zmApp.controllers')
 
         // if its controllable, lets get the control command
         if (controllable == '1') {
+            
             var apiurl = $scope.LoginData.apiurl;
             var myurl = apiurl + "/controls/" + controlid + ".json";
             console.log("getting control details:" + myurl);
@@ -306,6 +312,7 @@ angular.module('zmApp.controllers')
                 .success(function (data) {
 
                     $scope.ptzMoveCommand = "move"; // start with as move;
+
 
                     if (data.control.Control.CanMoveRel == '1')
                         $scope.ptzMoveCommand = "moveRel";
@@ -322,10 +329,13 @@ angular.module('zmApp.controllers')
                     console.log("** Error retrieving move PTZ command");
                     ZMDataModel.zmLog("Error retrieving PTZ command  " + JSON.stringify(data), "error");
                     ZMDataModel.displayBanner('error', ['did not get a valid PTZ response', 'Please try again']);
+                    $scope.isControllable = '0';
 
                 });
 
         }
+        
+        
 
 
         $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
@@ -360,9 +370,7 @@ angular.module('zmApp.controllers')
         $scope.modal.remove();
     });
 
-    $scope.togglePTZ = function () {
-        $scope.showPTZ = !$scope.showPTZ;
-    };
+
 
 
     //-----------------------------------------------------------------------

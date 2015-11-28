@@ -19,11 +19,7 @@ angular.module('zmApp', [
 			                 'com.2fdevs.videogular.plugins.controls',
                             'com.2fdevs.videogular.plugins.overlayplay'
                            
-                            
-    
-
-
-
+ 
                         ])
 
 // ------------------------------------------
@@ -67,7 +63,8 @@ angular.module('zmApp', [
     loginScreenString: "var currentView = 'login'", // Isn't there a better way?
     desktopUrl:"/zm",
     desktopApiUrl: "/api/zm",
-    latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest"
+    latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
+    
 })
 
 
@@ -147,7 +144,6 @@ angular.module('zmApp', [
             link: function ($scope, $element, $attributes) {
 
                 if ($attributes.imageSpinnerLoader) {
-                    // console.log ("DIRECTIVE: IMAGE SPINNER");
                     var loader = $compile('<div class="image-loader-container"><ion-spinner style="position:fixed;top:5%;left:5%" class="image-loader" icon="' + $attributes.imageSpinnerLoader + '"></ion-spinner></div>')($scope);
                     $element.after(loader);
                 }
@@ -232,28 +228,6 @@ angular.module('zmApp', [
         'request': function (config) {
             
             
-            /* - we don't need this with electron 
-            if ($rootScope.platformOS == "desktop")
-            {
-                var zmD = $injector.get('ZMDataModel');
-                var ld = zmD.getLogin();
-                // This takes care of url and apiurl as they have
-                // the same base
-                if (ld.url !="" && config.url.indexOf(ld.url) > -1)
-                {
-                    
-                    zmD.zmDebug("Running in desktop, removing URLs for proxy");
-                    zmD.zmDebug ("OLD URL " + config.url);
-                    config.url = config.url.replace(ld.url,zm.desktopUrl);
-                     zmD.zmDebug ("NEW URL " + config.url);
-                }
-                
-                
-                
-            }
-            */
-            
-            // config.withCredentials = true;
             if (zmCookie) {
                 config.headers.Cookie = "ZMSESSID=" + zmCookie;
             }
