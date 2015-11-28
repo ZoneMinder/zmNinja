@@ -10,14 +10,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     // from parent scope
     var currentEvent=$scope.currentEvent;
     
-   /* $scope.mycarousel = {
-        index: 0
-    };
-    $scope.ionRange = {
-        index: 1
-    };*/
-    
-    
+  
     var eventImageDigits = 5; // failsafe
     ZMDataModel.getKeyConfigParams(0)
         .then(function (data) {
@@ -69,7 +62,27 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             });
 
 
-
+    $scope.togglePTZ = function () {
+        
+        console.log ("PTZ");
+        
+        if ($scope.isControllable=='1')
+        {
+            //console.log ("iscontrollable is true");
+            $scope.showPTZ = !$scope.showPTZ;
+        }
+        else
+        {
+             $ionicLoading.show({
+                            template: "PTZ not configured for this monitor",
+                            noBackdrop: true,
+                            duration: 3000,
+                        });
+        }
+        
+        
+        
+    };
 
 
     $scope.radialMenuOptions = {
@@ -978,21 +991,27 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         }
     
     
-     $scope.$watch('ionRange.index', function () {
-        // console.log ("***ION RANGE CHANGED");
+    if (typeof $scope.ionRange !== 'undefined')
+    {
+         $scope.$watch('ionRange.index', function () {
+            // console.log ("***ION RANGE CHANGED");
 
-        $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
-    });
+            $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
+        });
+    }
+    
+    if (typeof $scope.mycarousel !== 'undefined')
+    {
+        $scope.$watch('mycarousel.index', function () {
 
-    $scope.$watch('mycarousel.index', function () {
+            $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
 
-        $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
-        
-        if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames))
-            {
-                playbackFinished();
-            }
-    });
+            if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames))
+                {
+                    playbackFinished();
+                }
+        });
+    }
 
     function padToN(number, digits) {
 
@@ -1013,7 +1032,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     }
     
 $scope.$on('modal.shown', function() {
-  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Modal is shown!');
     currentEvent=$scope.currentEvent;
     if (currentEvent && currentEvent.Event)
         prepareModalEvent(currentEvent.Event.Id);
