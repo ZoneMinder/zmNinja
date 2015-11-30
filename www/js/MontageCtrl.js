@@ -53,7 +53,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         return;
     }
     
-    console.log ("TEMP MONITORS IS " + JSON.stringify(tempMonitors));
+   // console.log ("TEMP MONITORS IS " + JSON.stringify(tempMonitors));
     var tempResponse = ZMDataModel.applyMontageMonitorPrefs(message, 0);
     $scope.monitors = tempResponse[0];
     montageOrder = tempResponse[1];

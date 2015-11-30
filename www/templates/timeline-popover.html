@@ -1,6 +1,11 @@
 <ion-popover-view class="fit">
         <ion-content>
           <div class="list" ng-click="popover.hide()">
+              
+            <a class="item" ng-href="" ng-click="popover.hide();toggleMinAlarmFrameCount();" ng-if="loginData.minAlarmCount=='1'">Show all events</a>
+             <a class="item" ng-href="" ng-click="popover.hide();toggleMinAlarmFrameCount();" ng-if="loginData.minAlarmCount=='0'"> Show alarmed events</a>  
+              
+              
             <a class="item" ng-href="" ng-click="popover.hide();buttonClicked(0);">Month</a>
 
             <a class="item" ng-href="" ng-click=" popover.hide();buttonClicked(1);" >
@@ -14,6 +19,7 @@
               Custom Range
             </a>
 
+              
           </div>
         </ion-content>
       </ion-popover-view>

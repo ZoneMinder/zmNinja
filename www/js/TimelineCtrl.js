@@ -59,6 +59,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         //  console.log ("*** MS COUNT " + (1000.0/(myframes/mylen)));
         return (Math.round(1000 / (myframes / mylen)));
     };
+    
+    
+    $scope.toggleMinAlarmFrameCount = function () {
+            console.log ("Toggling");
+        
+        var ld = ZMDataModel.getLogin();
+            ld.minAlarmCount = ld.minAlarmCount=="0"? "1":"0";
+            ZMDataModel.setLogin(ld);
+        
+        
+        drawGraph(curFromDate, curToDate, curCount);
+           
+        };
 
     //-----------------------------------------------------------
     // Move/Zoom are used to move the timeline around
@@ -212,6 +225,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         
         //console.log ("TIMELINE MONITORS: " + JSON.stringify(message));
         var ld = ZMDataModel.getLogin();
+        $scope.loginData = ZMDataModel.getLogin();
         
         if (ld.persistMontageOrder)
         {
@@ -245,6 +259,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
     
     //var currentEvent="";
+    
+    // keep a record for redraw 
+    var curFromDate, curToDate, curCount;
 
     // Make sure sliding for menu is disabled so it
     // does not interfere with graph panning
@@ -400,6 +417,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
 
     function drawGraph(fromDate, toDate, count) {
+        
+        
+        curFromDate = fromDate;
+        curToDate = toDate;
+        curCount = count;
 
         $ionicLoading.show({
             template: "Loading graph...",

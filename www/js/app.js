@@ -612,7 +612,7 @@ angular.module('zmApp', [
         $rootScope.currentServerGroup = "defaultServer";
         $rootScope.validMonitorId = "";
         $rootScope.newVersionAvailable = "";
-        $rootScope.minAlarmCount = "1";
+        //$rootScope.minAlarmCount = "1";
     
        
 

@@ -62,6 +62,15 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
                 $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
                 
+                ZMDataModel.zmDebug ("Retrieved state for this profile:" + JSON.stringify($scope.loginData));
+                
+                // lets make sure Event Server is loaded 
+                // correctly
+                
+                // FIXME: But what happens if you don't save?
+                // loginData gets written but auth is not done
+                ZMDataModel.setLogin($scope.loginData);
+                
                 return true;
             },
             
