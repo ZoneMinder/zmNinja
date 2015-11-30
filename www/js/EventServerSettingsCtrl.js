@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', '$ionicPlatform','$ionicPopup', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel, $ionicPlatform, $ionicPopup) {
+angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', '$ionicPlatform','$ionicPopup', '$timeout', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel, $ionicPlatform, $ionicPopup, $timeout) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -151,14 +151,17 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
 
         $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
         $scope.loginData.disablePush = ($scope.check.disablePush) ? "1" : "0";
+        
+        
+        
 
-        ZMDataModel.setLogin($scope.loginData);
+        
         //console.log("**** EVENT MONSTRING " + monstring);
         //console.log("**** EVENT INTERVALSTRING " + intervalstring);
         
         
                     var pushstate  = "enabled";
-                    if ($scope.loginData.disablePush == "1")
+                    if ($scope.loginData.disablePush == "1" || $scope.loginData.isUseEventServer=="0")
                             pushstate  = "disabled";
 
         if ($scope.loginData.isUseEventServer=="1") {
@@ -194,8 +197,29 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         }
         else
         {
-            EventServer.disconnect();
+            if ($rootScope.apnsToken !="")
+                    // if its defined then this is post init work
+                    // so lets transmit state here 
+                    
+            {
+                // we need to disable the token
+                ZMDataModel.zmDebug("Sending token state "+pushstate);
+                EventServer.sendMessage('push', 
+                                    {
+                                     type:'token',
+                                     platform:plat, 
+                                     token:$rootScope.apnsToken,
+                                     state:pushstate
+                },1);
+
+            }
+            // Give the above some time to transmit
+            $timeout (function() {
+                EventServer.disconnect();ZMDataModel.setLogin($scope.loginData);},3000);
         }
+        
+        
+        
         ZMDataModel.displayBanner('info', ['settings saved']);
     }
 
