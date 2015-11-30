@@ -58,6 +58,7 @@ angular.module('zmApp.controllers')
          'montageHiddenOrder':'',
          'montageArraySize':'0',
          'graphSize':200,
+         'minAlarmCount':'1',
          
         
     };
@@ -201,6 +202,15 @@ angular.module('zmApp.controllers')
             if (!isEmpty(loadedData))
             {  
                 loginData =  loadedData;
+                
+                // old version hacks for new variables
+                
+                if (typeof loginData.minAlarmCount === 'undefined')
+                {
+                    console.log ("MIN ALARM");
+                    loginData.minAlarmCount  = '1';
+                }
+                
                 zmLog ("DataModel init recovered this loginData as " + JSON.stringify(loginData));
             }
             else
@@ -783,7 +793,7 @@ angular.module('zmApp.controllers')
             if (endTime)
                 myurl = myurl + "/EndTime <=:"+endTime;
             
-            myurl = myurl + "/AlarmFrames >=:" + $rootScope.minAlarmCount;
+            myurl = myurl + "/AlarmFrames >=:" + loginData.minAlarmCount;
             
             
             myurl = myurl + ".json";
@@ -861,7 +871,7 @@ angular.module('zmApp.controllers')
             if (endTime)
                 myurl = myurl + "/EndTime <=:"+endTime;
             
-            myurl = myurl + "/AlarmFrames >=:" + $rootScope.minAlarmCount;
+            myurl = myurl + "/AlarmFrames >=:" + loginData.minAlarmCount;
             myurl = myurl + ".json";
 
 

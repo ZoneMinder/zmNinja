@@ -1402,7 +1402,10 @@ angular.module('zmApp.controllers')
         
         $scope.toggleMinAlarmFrameCount = function () {
             console.log ("Toggling");
-            $rootScope.minAlarmCount = ($rootScope.minAlarmCount == '0') ? '1':'0';
+            
+            var ld = ZMDataModel.getLogin();
+            ld.minAlarmCount = ld.minAlarmCount=='0'?'1':'0';
+            ZMDataModel.setLogin(ld);
             doRefresh();
         };
 

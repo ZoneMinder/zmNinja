@@ -273,7 +273,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         for (var i = 0; i < res.length; i++) {
             if (res[i] == id) {
                 isThere = true;
-                console.log("isRes found: " + id);
+                //console.log("isRes found: " + id);
                 break;
             }
         }
