@@ -259,9 +259,9 @@ angular.module('zmApp.controllers')
         // Send an arbitrary object to the Event Serve
         // currently planned to use it for device token
         //--------------------------------------------------------------------------
-        function sendMessage(type, obj) {
+        function sendMessage(type, obj, isForce) {
             var ld = ZMDataModel.getLogin();
-            if (ld.isUseEventServer == "0") {
+            if (ld.isUseEventServer == "0" && isForce!=1) {
                 ZMDataModel.zmDebug("Not sending WSS message as event server is off");
                 return;
             }
