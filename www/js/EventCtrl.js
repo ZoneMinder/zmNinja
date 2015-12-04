@@ -571,19 +571,7 @@ angular.module('zmApp.controllers')
 
         };
 
-        //--------------------------------------------------------------------------
-        // This is used to compute automatic playback speed for event playback
-        // and scrub
-        //--------------------------------------------------------------------------
-
-        $scope.calcMsTimer = function (frames, len) {
-            var myframes, mylen;
-            myframes = parseFloat(frames);
-            mylen = parseFloat(len);
-
-            return (Math.round(1000 / (myframes / mylen)));
-        };
-
+ 
         $scope.openMenu = function () {
             $ionicSideMenuDelegate.toggleLeft();
         };
