@@ -57,7 +57,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         ZMDataModel.zmDebug("SaveDevOptions: called");
 
         if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
-            $ionicPopup.alert({
+            $rootScope.zmPopup= $ionicPopup.alert({
                 title: 'Note',
                 template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
             });
@@ -99,7 +99,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     $scope.saveDevOptions = function () {
             
             saveDevOptions();
-        $ionicPopup.alert({
+        $rootScope.zmPopup= $ionicPopup.alert({
             title: 'Settings Saved',
             template: 'Please explore the menu and enjoy zmNinja!'
         }).then(function (res) {

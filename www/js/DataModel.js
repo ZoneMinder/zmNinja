@@ -207,7 +207,7 @@ angular.module('zmApp.controllers')
                 
                 if (typeof loginData.minAlarmCount === 'undefined')
                 {
-                    console.log ("MIN ALARM");
+                    zmDebug ("minAlarmCount does not exist, setting to 1");
                     loginData.minAlarmCount  = '1';
                 }
                 
@@ -720,7 +720,7 @@ angular.module('zmApp.controllers')
                 console.log ("API:"+myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
                     .success(function (data) {
-                        console.log("HTTP success got " + JSON.stringify(data.monitors));
+                        //console.log("HTTP success got " + JSON.stringify(data.monitors));
                         monitors = data.monitors;
                         monitors.sort(function(a,b) 
                                       {return parseInt(a.Monitor.Sequence)-parseInt(b.Monitor.Sequence);});

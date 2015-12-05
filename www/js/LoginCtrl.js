@@ -420,7 +420,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                 .success(function (data) {
                                     ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
                                     loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path";
-                                    $ionicPopup.alert({
+                                    $rootScope.zmPopup = $ionicPopup.alert({
                                         title: 'Login validated',
                                         template: loginStatus
                                     }).then(function (res) {
@@ -437,7 +437,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                         loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path.";
                                     }
 
-                                    $ionicPopup.alert({
+                                    $rootScope.zmPopup = $ionicPopup.alert({
                                         title: 'Login validated',
                                         template: loginStatus
                                     }).then(function (res) {
@@ -456,7 +456,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 .error(function (error) {
                     ZMDataModel.displayBanner('error', ['ZoneMinder API check failed', 'Please check API settings']);
                     ZMDataModel.zmLog("API login error " + JSON.stringify(error));
-                    $ionicPopup.alert({
+                    $rootScope.zmPopup= $ionicPopup.alert({
                         title: 'Login validated but API failed',
                         template: 'Please check your API settings'
                     });
@@ -470,7 +470,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.saveItems = function () {
 
         if (!$scope.loginData.serverName) {
-            $ionicPopup.alert({
+            $rootScope.zmPopup = $ionicPopup.alert({
                     title: 'Error',
                     template: 'Server Name cannot be empty',
                 })
