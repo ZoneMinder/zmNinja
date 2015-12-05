@@ -252,6 +252,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         {
             drawGraph(fromDate, toDate, maxItems);
         }
+        
+        $ionicPopover.fromTemplateUrl('templates/timeline-popover.html', {
+        scope: $scope,
+    }).then(function (popover) {
+        $scope.popover = popover;
+    });
+
+        
     });
 
     //-------------------------------------------------
@@ -321,12 +329,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.navControls = false;
     var navControls = false;
 
-    $ionicPopover.fromTemplateUrl('templates/timeline-popover.html', {
-        scope: $scope,
-    }).then(function (popover) {
-        $scope.popover = popover;
-    });
-
+    
 
     //drawGraph(fromDate, toDate, maxItems);
     //dummyDrawGraph(fromDate, toDate,maxItems);
