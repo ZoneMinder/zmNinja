@@ -23,7 +23,7 @@ angular.module('zmApp.controllers')
                                    
     if ($scope.monitors.length == 0)
     {
-        $ionicPopup.alert({
+        $rootScope.zmPopup= $ionicPopup.alert({
                     title: "No Monitors found",
                     template: "Please check your credentials"
         });

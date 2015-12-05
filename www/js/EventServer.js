@@ -153,7 +153,7 @@ angular.module('zmApp.controllers')
                     if (str.version == undefined)
                         str.version = "0.1";
                     if (versionCompare(str.version, zm.minEventServerVersion) == -1) {
-                        $ionicPopup.alert({
+                        $rootScope.zmPopup= $ionicPopup.alert({
                             title: 'Event Server version not supported',
                             template: 'You are running version ' + str.version + ". Please upgrade to " +
                                 zm.minEventServerVersion
