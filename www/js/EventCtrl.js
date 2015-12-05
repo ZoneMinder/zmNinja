@@ -79,12 +79,7 @@ angular.module('zmApp.controllers')
         $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
 
-        $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
-            scope: $scope,
-        }).then(function (popover) {
-            $scope.popover = popover;
-        });
-
+        
         // These are the commands ZM uses to move around
         // in ZMS - not used anymore as I am doing direct
         // image access via image.php
@@ -882,6 +877,11 @@ angular.module('zmApp.controllers')
                 badge: 0,
             });
 
+            $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
+                scope: $scope,
+            }).then(function (popover) {
+                $scope.popover = popover;
+            });
 
             //reset badge count
             if (window.cordova && window.cordova.plugins.notification) {
