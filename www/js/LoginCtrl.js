@@ -6,22 +6,26 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
-    
-    
+
+
     var serverbuttons = [];
     var availableServers;
-    
+
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
-    $scope.handleAlarms = function()
-    {
-        $rootScope.isAlarm=!$rootScope.isAlarm;
-        if (!$rootScope.isAlarm)
-        {
-            $rootScope.alarmCount="0";
-            $ionicHistory.nextViewOptions({disableBack: true});		
-            $state.go("events", {"id": 0}, { reload: true });
+    $scope.handleAlarms = function () {
+        $rootScope.isAlarm = !$rootScope.isAlarm;
+        if (!$rootScope.isAlarm) {
+            $rootScope.alarmCount = "0";
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+            $state.go("events", {
+                "id": 0
+            }, {
+                reload: true
+            });
         }
     };
 
@@ -31,19 +35,20 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         isUseAuth: "",
         isUseEventServer: ""
     };
-    
+
     $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
     $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
-    
-    console.log ("*************************************************");
-    
-    
+
+    console.log("*************************************************");
+
+
     availableServers = Object.keys(ZMDataModel.getServerGroups());
     serverbuttons = [];
-    for (var servIter=0; servIter<availableServers.length; servIter++)
-    {
-        serverbuttons.push({text: availableServers[servIter]});
-        console.log ("ADDING : "+availableServers[servIter]);
+    for (var servIter = 0; servIter < availableServers.length; servIter++) {
+        serverbuttons.push({
+            text: availableServers[servIter]
+        });
+        console.log("ADDING : " + availableServers[servIter]);
     }
 
     $scope.serverActionSheet = function () {
@@ -56,32 +61,30 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 // add cancel code..
             },
             buttonClicked: function (index) {
-               // console.log ("YOU WANT " + serverbuttons[index].text + " INDEX " + index);
+                // console.log ("YOU WANT " + serverbuttons[index].text + " INDEX " + index);
                 var zmServers = ZMDataModel.getServerGroups();
                 $scope.loginData = zmServers[serverbuttons[index].text];
                 $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
                 $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
-                
-                ZMDataModel.zmDebug ("Retrieved state for this profile:" + JSON.stringify($scope.loginData));
-                
+
+                ZMDataModel.zmDebug("Retrieved state for this profile:" + JSON.stringify($scope.loginData));
+
                 // lets make sure Event Server is loaded 
                 // correctly
-                
+
                 // FIXME: But what happens if you don't save?
                 // loginData gets written but auth is not done
                 ZMDataModel.setLogin($scope.loginData);
-                
+
                 return true;
             },
-            
-            destructiveButtonClicked: function ()
-            {
+
+            destructiveButtonClicked: function () {
                 var zmServers = ZMDataModel.getServerGroups();
                 //console.log ("YOU WANT TO DELETE " + $scope.loginData.serverName);
                 //console.log ("LENGTH OF SERVERS IS " + Object.keys(zmServers).length);
-                if (Object.keys(zmServers).length > 1)
-                {
-                    ZMDataModel.zmLog ("Deleting " + $scope.loginData.serverName);
+                if (Object.keys(zmServers).length > 1) {
+                    ZMDataModel.zmLog("Deleting " + $scope.loginData.serverName);
                     delete zmServers[$scope.loginData.serverName];
                     ZMDataModel.setServerGroups(zmServers);
                     // point to first element
@@ -89,50 +92,48 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     // note this is actually unordered
                     $scope.loginData = zmServers[Object.keys(zmServers)[0]];
                     ZMDataModel.setLogin($scope.loginData);
-                    
+
                     availableServers = Object.keys(ZMDataModel.getServerGroups());
                     serverbuttons = [];
-                    for (var servIter=0; servIter<availableServers.length; servIter++)
-                    {
-                        serverbuttons.push({text: availableServers[servIter]});
-                        console.log ("ADDING : "+availableServers[servIter]);
+                    for (var servIter = 0; servIter < availableServers.length; servIter++) {
+                        serverbuttons.push({
+                            text: availableServers[servIter]
+                        });
+                        console.log("ADDING : " + availableServers[servIter]);
                     }
-                    
-                }
-                else
-                {
+
+                } else {
                     ZMDataModel.displayBanner('error', ['Cannot delete, need at least one']);
                 }
                 return true;
             }
-            
-            
+
+
         });
     };
-    
 
-    
-    $scope.eventServerSettings = function()
-    {
+
+
+    $scope.eventServerSettings = function () {
         ZMDataModel.zmDebug("Saving settings before going to Event Server settings");
         //console.log ( "My loginData saved " + JSON.stringify($scope.loginData));
-        ZMDataModel.setLogin ($scope.loginData);
+        ZMDataModel.setLogin($scope.loginData);
         $state.go("eventserversettings");
-        
+
     };
-    
+
     //----------------------------------------------------------------
     // Save anyway when you exit
     //----------------------------------------------------------------
-    
-     $scope.$on('$ionicView.beforeLeave', function () {
-         // Don't do this -- it will try to login to ZM
-         // and go back to the menu
+
+    $scope.$on('$ionicView.beforeLeave', function () {
+        // Don't do this -- it will try to login to ZM
+        // and go back to the menu
         //saveItems();
 
 
     });
-    
+
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
@@ -144,9 +145,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** LoginCtrl  Entered");
         ZMDataModel.setAwake(false);
-        
-        
-        
+
+
+
     });
 
 
@@ -227,8 +228,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
         return url;
     }
-    
-    
+
+
     function addWsOrWss(url) {
 
         if ((!/^wss?:\/\//i.test(url)) && (url != "")) {
@@ -237,19 +238,23 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         return url;
     }
 
+
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+
     //-----------------------------------------------------------------------------
     // Perform the login action when the user submits the login form
     //-----------------------------------------------------------------------------
-    
-    function saveItems()
-    {
-        
-                
-                console.log('Saving login');
-                ZMDataModel.setFirstUse(false);
-        
-        
-       
+
+    function saveItems() {
+
+
+        console.log('Saving login');
+        ZMDataModel.setFirstUse(false);
+
+
+
 
         /*if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
             $ionicPopup.alert({
@@ -270,11 +275,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.username = $scope.loginData.username.trim();
         $scope.loginData.streamingurl = $scope.loginData.streamingurl.trim();
         $scope.loginData.eventServer = $scope.loginData.eventServer.trim();
-        
-        
+
+
 
         $scope.loginData.isUseAuth = ($scope.check.isUseAuth) ? "1" : "0";
-         $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
+        $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
 
         if ($scope.loginData.url.slice(-1) == '/') {
             $scope.loginData.url = $scope.loginData.url.slice(0, -1);
@@ -315,8 +320,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             $scope.loginData.url = $scope.loginData.url.replace("http:", "https:");
             $scope.loginData.apiurl = $scope.loginData.apiurl.replace("http:", "https:");
             $scope.loginData.streamingurl = $scope.loginData.streamingurl.replace("http:", "https:");
-             $scope.loginData.eventServer = $scope.loginData.eventServer.replace("ws:", "wss:");
-            
+            $scope.loginData.eventServer = $scope.loginData.eventServer.replace("ws:", "wss:");
+
 
         } else {
             // replace all https with http
@@ -337,39 +342,34 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             if (!$scope.loginData.password) $scope.loginData.password = "x";
             ZMDataModel.zmLog("Authentication is disabled, setting dummy user & pass");
         }
-        
-        if (parseInt($scope.loginData.maxMontage) <=0)
-        {
-            $scope.loginData.maxMontage ="10";
+
+        if (parseInt($scope.loginData.maxMontage) <= 0) {
+            $scope.loginData.maxMontage = "10";
         }
 
-        
+
         // do this before setLogin so message is sent
-        
-         if (!$scope.check.isUseEventServer)
-        {
-                $rootScope.isAlarm = 0;
-                if ($rootScope.apnsToken)
-                {
-                    ZMDataModel.zmLog ("Making sure we don't get push notifications");
-                     EventServer.sendMessage('push', {
-                        type: 'token',
-                        platform: $rootScope.platformOS,
-                        token: $rootScope.apnsToken,
-                        state: "disabled"
-                    });
-                }
+
+        if (!$scope.check.isUseEventServer) {
+            $rootScope.isAlarm = 0;
+            if ($rootScope.apnsToken) {
+                ZMDataModel.zmLog("Making sure we don't get push notifications");
+                EventServer.sendMessage('push', {
+                    type: 'token',
+                    platform: $rootScope.platformOS,
+                    token: $rootScope.apnsToken,
+                    state: "disabled"
+                });
+            }
         }
-        
+
         ZMDataModel.setLogin($scope.loginData);
-                
-        if ($scope.check.isUseEventServer)
-        {
+
+        if ($scope.check.isUseEventServer) {
             EventServer.init();
-            if ($rootScope.apnsToken && $scope.loginData.disablePush != '1')
-            {
-                ZMDataModel.zmLog ("Making sure we get push notifications");
-                 EventServer.sendMessage('push', {
+            if ($rootScope.apnsToken && $scope.loginData.disablePush != '1') {
+                ZMDataModel.zmLog("Making sure we get push notifications");
+                EventServer.sendMessage('push', {
                     type: 'token',
                     platform: $rootScope.platformOS,
                     token: $rootScope.apnsToken,
@@ -383,18 +383,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             });
 
         }
-        
-
-        // now grab and report PATH_ZMS
-        ZMDataModel.getPathZms()
-            .then(function (data) {
-                var ld = ZMDataModel.getLogin();
-                ZMDataModel.zmLog("PATH_ZMS:" + data + ", Path ZmNinja will use:" + ld.streamingurl + "/nph-zms");
-                ZMDataModel.zmLog("If live streams are not working, make sure you check these values");
 
 
 
-            });
 
 
         zmAutoLogin.doLogin("authenticating...")
@@ -410,17 +401,56 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             ZMDataModel.zmLog("Validating APIs at " + apiurl);
             $http.get(apiurl)
                 .success(function (data) {
-                
+
+                    var loginStatus = "Please explore the menu and enjoy zmNinja!";
                     EventServer.refresh();
 
-                    $ionicPopup.alert({
-                        title: 'Login validated',
-                        template: 'Please explore the menu and enjoy zmNinja!'
-                    }).then(function (res) {
-                        $ionicSideMenuDelegate.toggleLeft();
-                        ZMDataModel.zmDebug ("Force reloading monitors...");
-        var refresh = ZMDataModel.getMonitors(1);
-                    });
+
+
+                    // now grab and report PATH_ZMS
+                    ZMDataModel.getPathZms()
+                        .then(function (data) {
+                            var ld = ZMDataModel.getLogin();
+                            var zm_cgi = data.toLowerCase();
+
+                            var user_cgi = (ld.streamingurl).toLowerCase();
+                            ZMDataModel.zmLog("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
+
+                            $http.get(ld.streamingurl + "/zms")
+                                .success(function (data) {
+                                    ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
+                                    loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path";
+                                    $ionicPopup.alert({
+                                        title: 'Login validated',
+                                        template: loginStatus
+                                    }).then(function (res) {
+                                        $ionicSideMenuDelegate.toggleLeft();
+                                        ZMDataModel.zmDebug("Force reloading monitors...");
+                                        var refresh = ZMDataModel.getMonitors(1);
+                                    });
+                                })
+                                .error(function (error, status) {
+                                    // If its 5xx, then the cgi-bin path is valid
+                                    // if its 4xx then the cgi-bin path is not valid
+
+                                    if (status < 500) {
+                                        loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path.";
+                                    }
+
+                                    $ionicPopup.alert({
+                                        title: 'Login validated',
+                                        template: loginStatus
+                                    }).then(function (res) {
+                                        $ionicSideMenuDelegate.toggleLeft();
+                                        ZMDataModel.zmDebug("Force reloading monitors...");
+                                        var refresh = ZMDataModel.getMonitors(1);
+                                    });
+
+
+                                });
+                        });
+
+
 
                 })
                 .error(function (error) {
@@ -436,31 +466,30 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         });
     }
-    
+
     $scope.saveItems = function () {
-        
-        if (!$scope.loginData.serverName)
-        {
+
+        if (!$scope.loginData.serverName) {
             $ionicPopup.alert({
-                title:'Error',
-                template: 'Server Name cannot be empty',
-            })
-            .then(function(res)
-                  {return;});
-        }
-        else
-        {
+                    title: 'Error',
+                    template: 'Server Name cannot be empty',
+                })
+                .then(function (res) {
+                    return;
+                });
+        } else {
             saveItems();
             availableServers = Object.keys(ZMDataModel.getServerGroups());
             serverbuttons = [];
-            for (var servIter=0; servIter<availableServers.length; servIter++)
-            {
-                serverbuttons.push({text: availableServers[servIter]});
-               // console.log ("ADDING : "+availableServers[servIter]);
+            for (var servIter = 0; servIter < availableServers.length; servIter++) {
+                serverbuttons.push({
+                    text: availableServers[servIter]
+                });
+                // console.log ("ADDING : "+availableServers[servIter]);
             }
-            
+
         }
-        
+
 
     };
 
