@@ -29,7 +29,7 @@ angular.module('angular-carousel')
 // so slide does not progress if image is not loaded or gets an error
 // imageLoadingDataShare is the factory that has a value
 // of 0 if no image is being loaded, -1 if there was an error and 1 if an image is currently being loaded
-.directive('rnCarouselAutoSlide', ['$interval','$timeout', 'imageLoadingDataShare', function($interval,$timeout, imageLoadingDataShare ) {
+.directive('rnCarouselAutoSlide', ['$interval','$timeout', 'imageLoadingDataShare', 'stopOrPlay', function($interval,$timeout, imageLoadingDataShare, stopOrPlay ) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
@@ -37,33 +37,45 @@ angular.module('angular-carousel')
 
         var stopAutoPlay = function() {
             if (scope.autoSlider) {
-		console.log ("Cancelling timer");
+		//console.log ("Cancelling timer");
                 $interval.cancel(scope.autoSlider);
                 scope.autoSlider = null;
             }
         };
         var restartTimer = function() {
-            scope.autoSlide();
+	    if (stopOrPlay.isStopped() == false)
+	    {
+	    	//console.log ("Timer restart rnForceStop "+ stopOrPlay.get());
+            	scope.autoSlide();
+	    }
+	    else {console.log ("Not sliding as stop=true");}
         };
 	//PP - don't auto play if user taps
 	var toggleAutoPlay = function() {
+		//scope.rnForceStop = !scope.rnForceStop;
+		stopOrPlay.set(!stopOrPlay.get());
+		//console.log ("Autoplay is " + stopOrPlay.get());
 		if (scope.autoSlider)
 		{
             // PP - If autoslide was on and we tapped, stop auto slide
-			scope.rnForceStop = true; //PP
-			console.log ("***RN: Stopping Play");
+			//scope.rnForceStop = true; //PP
+			stopOrPlay.set (true);
+			console.log ("***RN: Stopping Play rnForceStop is "+stopOrPlay.get());
 			stopAutoPlay();
 		}
 		else
 		{
-			scope.rnForceStop = false; //PP
-			console.log ("***RN: Starting Play");
+			//scope.rnForceStop = false; //PP
+			stopOrPlay.set (false);
+			console.log ("***RN: Starting Play rnForceStop is "+stopOrPlay.get());
 			restartTimer();
 		}
 	};
 
 // start with autoplay and require tap to stop
-	scope.rnForceStop = false; // PP
+	console.log ("*** Setting rnForceStop to false and watching");
+	//scope.rnForceStop = false; // PP
+	stopOrPlay.set (false);
         scope.$watch('carouselIndex', restartTimer);
 
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
@@ -237,6 +249,30 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
         };
     }])
 
+    //PP
+    .factory ('stopOrPlay', function() {
+	var stoporplay = false;
+	return {
+		set: function(val)
+		{
+			stoporplay = val;
+		},
+		get: function()
+		{
+			return stoporplay;
+		},
+		isStopped: function()
+		{
+			return stoporplay;
+		},
+		hello: function()
+		{
+			console.log ("Hello from stopOrPlay");
+		}
+
+	}
+    })
+
     .service('createStyleString', function() {
         return function(object) {
             var styles = [];
@@ -247,8 +283,8 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
         };
     })
 
-    .directive('rnCarousel', ['$swipe', '$window', '$document', '$parse', '$compile', '$timeout', '$interval', 'computeCarouselSlideStyle', 'createStyleString', 'Tweenable', 'imageLoadingDataShare',
-        function($swipe, $window, $document, $parse, $compile, $timeout, $interval, computeCarouselSlideStyle, createStyleString, Tweenable, imageLoadingDataShare) {
+    .directive('rnCarousel', ['$swipe', '$window', '$document', '$parse', '$compile', '$timeout', '$interval', 'computeCarouselSlideStyle', 'createStyleString', 'Tweenable', 'imageLoadingDataShare', 'stopOrPlay',
+        function($swipe, $window, $document, $parse, $compile, $timeout, $interval, computeCarouselSlideStyle, createStyleString, Tweenable, imageLoadingDataShare, stopOrPlay) {
             // internal ids to allow multiple instances
             var carouselId = 0,
                 // in absolute pixels, at which distance the slide stick to the edge on release
@@ -380,6 +416,8 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         }
 
                         scope.nextSlide = function(slideOptions) {
+			   if (stopOrPlay.isStopped()==true)
+				return;
 			   if (imageLoadingDataShare.get() == 1) // PP- If the image is still being loaded, hold on, don't change
 			   {
 				//console.log ("Image is still loading, not skipping slides");
@@ -527,8 +565,9 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                     $interval.cancel(scope.autoSlider);
                                     scope.autoSlider = null;
                                 }
-				if (!scope.rnForceStop) //PP - don't move slide if this variable is set
+				if (stopOrPlay.isStopped() == false) //PP - don't move slide if this variable is set
 				{
+					//console.log ("Setting next slide duration at " + duration *1000);
                                 	scope.autoSlider = $interval(function() {
                                     	if (!locked && !pressed ) {
                                       	  scope.nextSlide();
@@ -550,13 +589,15 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 				 if (value < 0) {
                                     return;
                                 }
+				//console.log ("Still indexing");
                                 indexModel.assign(scope.$parent, value);
                             };
                             var indexModel = $parse(iAttributes.rnCarouselIndex);
                             if (angular.isFunction(indexModel.assign)) {
                                 /* check if this property is assignable then watch it */
                                 scope.$watch('carouselIndex', function(newValue) {
-                                    updateParentIndex(newValue);
+				    if (stopOrPlay.isStopped() == false)
+                                    	updateParentIndex(newValue);
                                 });
 				scope.$parent.$watch(function () {
                                     return indexModel(scope.$parent);
