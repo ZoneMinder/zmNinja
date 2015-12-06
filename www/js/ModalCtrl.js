@@ -4,7 +4,7 @@
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment */
 
 
-angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce',function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce) {
+angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'stopOrPlay', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, stopOrPlay) {
 
 
     // from parent scope
@@ -994,22 +994,46 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     if (typeof $scope.ionRange !== 'undefined')
     {
          $scope.$watch('ionRange.index', function () {
-            // console.log ("***ION RANGE CHANGED");
-
+          //  
+            if (stopOrPlay.get() == true)
+                    return;
             $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
+             console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
         });
     }
     
     if (typeof $scope.mycarousel !== 'undefined')
     {
         $scope.$watch('mycarousel.index', function () {
-
-            $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
-
+            
+            console.log ("***ION MYCAROUSEL CHANGED");
+            
             if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames))
+            {
+                playbackFinished();
+            }
+            // end of playback from quick scrub
+            // so ignore gapless
+            
+            
+            
+            if ($scope.event && $scope.ionRange.index == parseInt($scope.event.Event.Frames)-1 )
                 {
-                    playbackFinished();
+                    if (!$scope.modal ||  $scope.modal.isShown()==false)
+                    {
+                        console.log ("quick scrub playback over");
+                        stopOrPlay.set(true);
+                        $scope.ionRange.index = 0;
+                        $scope.mycarousel.index = 1;
+                    }
+                   
                 }
+            if (stopOrPlay.get() == true)
+                    return;
+            $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
+           // console.log ("***IONRANGE RANGE CHANGED TO " + $scope.ionRange.index);
+
+          
         });
     }
 

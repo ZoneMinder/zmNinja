@@ -660,6 +660,7 @@ angular.module('zmApp.controllers')
             {
                 ZMDataModel.zmDebug("EventCtrl: Scrubbing will turn on now");
                 $scope.currentEvent = "";
+                $scope.event = event;
                 //$ionicScrollDelegate.freezeScroll(true);
                 $ionicSideMenuDelegate.canDragContent(false);
                 $scope.slider_options = {
@@ -1204,7 +1205,7 @@ angular.module('zmApp.controllers')
         $scope.openModal = function (event) {
             //ZMDataModel.zmDebug("EventCtrl: Open Modal with Base path " + relativepath);
 
-
+            $scope.event = event;
             ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
             
             $scope.currentEvent = event;
