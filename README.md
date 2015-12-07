@@ -13,9 +13,13 @@ Mobile Platforms
 zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
 It also runs on the desktop (see below)
 
-I have active testers today for both Android and iOS. If you want to test, please follow the instructions
-[here](https://forums.zoneminder.com/viewtopic.php?f=33&t=23073) and send me an [email](mailto:pliablepixels@gmail.com) with your details.
-You'll have zmNinja running right in your phone without compiling anything.
+I have active testers today for both Android and iOS. If you want to test:
+
+For Android, you can just download the app [here](https://play.google.com/apps/testing/com.pliablepixels.zmninja). It's in open beta. I'd appreciate if you drop me an email if you download the app so I know who you are.
+
+For iOS, you need to send me an [email](mailto:pliablepixels@gmail.com) with your details.
+
+Note that you should read [this](https://forums.zoneminder.com/viewtopic.php?f=33&t=23073) to understand which version of ZM you need for zmNinja to work.
 
 I can release it to App/Play Store but I'd rather wait for ZM 1.29 to be released so people don't make
 my life miserable about missing APIs etc.
