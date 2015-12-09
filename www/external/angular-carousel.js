@@ -55,7 +55,7 @@ angular.module('angular-carousel')
 		//scope.rnForceStop = !scope.rnForceStop;
 		stopOrPlay.set(!stopOrPlay.get());
 		//console.log ("Autoplay is " + stopOrPlay.get());
-		if (scope.autoSlider)
+		if (scope.autoSlider )
 		{
             // PP - If autoslide was on and we tapped, stop auto slide
 			//scope.rnForceStop = true; //PP
