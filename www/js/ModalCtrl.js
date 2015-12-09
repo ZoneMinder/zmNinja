@@ -998,7 +998,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             if (stopOrPlay.get() == true)
                     return;
             $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
-             console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
+           //  console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
         });
     }
     
@@ -1006,7 +1006,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     {
         $scope.$watch('mycarousel.index', function () {
             
-            console.log ("***ION MYCAROUSEL CHANGED");
+            //console.log ("***ION MYCAROUSEL CHANGED");
             
             if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames))
             {
