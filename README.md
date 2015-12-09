@@ -4,6 +4,8 @@ zmNinja is a multi platform (iOS, Android, Windows Desktop, Mac Desktop, Linux D
 ZoneMinder is an incredible open source camera monitoring system and is used
 by many for home and commercial security monitoring. http://www.zoneminder.com
 
+**Problems running zmNinja? Check out the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ)**
+
 Video Demo
 -------------
 Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
