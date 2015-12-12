@@ -173,7 +173,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
                         type: 'filter',
                         monlist: monstring,
                         intlist: intervalstring
-                    });
+                    },1);
                 
                     if ($rootScope.apnsToken !="")
                     // if its defined then this is post init work
