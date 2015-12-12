@@ -205,7 +205,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             $scope.loginData.useSSL = true;
         }
         // if ($scope.loginData.streamingurl.indexOf($scope.loginData.url) !=0)
-        $scope.loginData.streamingurl = $scope.loginData.url;
+        $scope.loginData.streamingurl = $scope.loginData.url + "/cgi-bin";
 
         // Changed Sep 16 2015: Seems cgi-bin will now have /zm/cgi-bin by
         // default in packages instead of /cgi-bin
