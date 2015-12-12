@@ -10,24 +10,33 @@
 
     <ion-content class="padding">
         <div class="list">
+            
+            <ion-item class="item-text-wrap">
+                <h2><b>Is there an official FAQ?</b> </h2>There sure is. Always check <a href="#" onclick="window.open('https://github.com/pliablepixels/zmNinja/wiki/FAQ', '_blank', 'location=yes'); return false;">here</a> for the most updated help
+            </ion-item>
 
             <ion-item class="item-text-wrap">
                 <h2><b> What do I enter for ZM Portal URL, Base path to cgi-bin and ZM API URL?</b> </h2>
                 <ul>
 
                     <li><i class="ion-android-arrow-dropright"></i> ZM Portal URL: The URL using which you can access ZM <p>(example http://myserver.ddns.net/zm)</p></li>
-                    <li><i class="ion-android-arrow-dropright"></i> CGI base path: The URL using which your cgi-bin path is accessible<p>(example http://myserver.ddns.net/).</p></li>
+                    <li><i class="ion-android-arrow-dropright"></i> CGI  path: The URL using which your cgi-bin path is accessible<p>(example http://myserver.ddns.net/zm/cgi-bin).</p></li>
                     <li><i class="ion-android-arrow-dropright"></i> API Url: The URL using which your API path is accessible <p>(example:http://myserver.ddns.net/zm/api)</p></li>
                 </ul>
             </ion-item>
 
             <ion-item class="item-text-wrap">
-                <h2><b>Since when does ZM have an API?</b> </h2> The latest versions of ZoneMinder have an API that is supposed to replace the XML skin. It is only available starting Zoneminder 1.29. If you don't have the API installed the client will not work.
+                <h2><b>Since when does ZM have an API?</b> </h2> The latest versions of ZoneMinder have an API that is supposed to replace the XML skin. It is only available starting Zoneminder 1.28.107. If you don't have the API installed the client will not work.
 
             </ion-item>
 
             <ion-item class="item-text-wrap">
                 <h2> <b>I do not have authentication enabled but the app keeps asking me to specify authentication</b></h2> If you don't use ZM authentication, just enter an "x" in both user name and password.
+            </ion-item>
+
+            
+            <ion-item class="item-text-wrap">
+                <h2> <b>Everything works! but live streaming does not </b></h2> Check if streaming works in the web interface. If it does not work, zmNinja won't work either. Fix ZM first. If streaming in ZM works, go to zmNinja settings and fix your cgi-bin path. the automatic path that is filled in won't work. Here is a hint, go to zoneminder->options->paths and check the value of the cgi-bin path - your zmNinja path will be "base path of your server" + cgi-bin path.
             </ion-item>
 
 
