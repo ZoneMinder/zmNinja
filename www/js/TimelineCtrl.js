@@ -119,6 +119,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             
             // pass this event to ModalCtrl
             $scope.currentEvent = event;
+            $scope.event = event;
             // in Timeline view, make sure events stick to same monitor
             $scope.followSameMonitor="1";
 
@@ -266,6 +267,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // Controller main
     //-------------------------------------------------
     
+    $scope.mycarousel = {
+            index: 0
+        };
+        $scope.ionRange = {
+            index: 1
+        };
     //var currentEvent="";
     
     // keep a record for redraw 
