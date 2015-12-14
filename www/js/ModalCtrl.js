@@ -584,7 +584,49 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     });
     
     
+    // Playback speed adjuster
+    $scope.adjustSpeed = function (val)
+    {
+        switch(val) {
+        
+            case "super":
+                $scope.eventSpeed = 20/$scope.event.Event.Frames;
+                stopOrPlay.setDuration($scope.eventSpeed);
+                break;
+            case "normal":
+               $scope.eventSpeed = $scope.event.Event.Length/$scope.event.Event.Frames;
+                //$scope.eventSpeed = 5;
+                stopOrPlay.setDuration($scope.eventSpeed);
+                
+                break;
+            case "faster":
+                $scope.eventSpeed = $scope.eventSpeed / 2;
+                if ($scope.eventSpeed <20/$scope.event.Event.Frames)
+                        $scope.eventSpeed = 10/$scope.event.Event.Frames;
+                stopOrPlay.setDuration($scope.eventSpeed);
+                break;
+            case "slower":
+                 $scope.eventSpeed = $scope.eventSpeed * 2;
+                 stopOrPlay.setDuration($scope.eventSpeed);
+                
+                break;
+            default:
     
+                
+        }
+        ZMDataModel.zmDebug("Set playback speed to "+$scope.eventSpeed);
+        
+        $ionicLoading.show({
+        template: 'playback interval: '+$scope.eventSpeed.toFixed(3)+"ms",
+        animation: 'fade-in',
+        showBackdrop: false,
+        duration: 1500,
+        maxWidth: 300,
+        showDelay: 0
+    });
+        
+        
+    };
     
     
     $scope.toggleGapless = function()
@@ -945,6 +987,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
                         $scope.mycarousel.index = 0;
                         $scope.ionRange.index = 1;
+                        $scope.eventSpeed = $scope.event.Event.Length/$scope.event.Event.Frames;
+                
                         //console.log("**Resetting range");
                         $scope.slides = [];
                         var i;
