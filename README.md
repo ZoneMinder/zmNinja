@@ -1,5 +1,7 @@
 ![](http://www.pbase.com/arjunrc/image/160855207.jpg "icon") 
 
+<a href="https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro&hl=en&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" /></a>
+
 zmNinja is a multi platform (iOS, Android, Windows Desktop, Mac Desktop, Linux Desktop) client for ZoneMinder users.
 ZoneMinder is an incredible open source camera monitoring system and is used
 by many for home and commercial security monitoring. http://www.zoneminder.com
