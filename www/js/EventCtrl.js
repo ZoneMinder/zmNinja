@@ -15,7 +15,15 @@ angular.module('zmApp.controllers')
         //---------------------------------------------------
         // Controller main
         //---------------------------------------------------
-
+        
+        
+        $scope.mycarousel = {
+            index: 0
+        };
+        $scope.ionRange = {
+            index: 1
+        };
+        
         $scope.animationInProgress = false;
         var loginData = ZMDataModel.getLogin();
 
@@ -125,12 +133,7 @@ angular.module('zmApp.controllers')
         }
         */
         
-        $scope.mycarousel = {
-            index: 0
-        };
-        $scope.ionRange = {
-            index: 1
-        };
+        
 
 
         // for some reason inifinite scroll is invoked
