@@ -252,7 +252,20 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
     //PP
     .factory ('stopOrPlay', function() {
 	var stoporplay = false;
+	var duration = 0;
 	return {
+
+		setDuration: function (val)
+		{
+			duration = val;
+			console.log (">>>>>>>>>>>>>>>> DURATION SET TO " + duration);
+		},
+
+		getDuration: function ()
+		{
+			return duration;
+		},
+		
 		set: function(val)
 		{
 			stoporplay = val;
@@ -272,6 +285,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 
 	}
     })
+
 
     .service('createStyleString', function() {
         return function(object) {
@@ -418,20 +432,35 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         scope.nextSlide = function(slideOptions) {
 			   if (stopOrPlay.isStopped()==true)
 				return;
-			   if (imageLoadingDataShare.get() == 1) // PP- If the image is still being loaded, hold on, don't change
-			   {
-				//console.log ("Image is still loading, not skipping slides");
-				return;
-			   }
+			   
                             var index = scope.carouselIndex + 1;
                             if (index > currentSlides.length - 1) {
 //PP
                                 index--;
                             }
-                            if (!locked ) {
-                                goToSlide(index, slideOptions);
-                            }
+			    //console.log ("inside next slide with index = " + index);
+			// PP - we keep moving the index but don't load so it looks nicer
+			// and we don't mess up the rate
+                          if (imageLoadingDataShare.get() != 1) // PP- If the image is still being loaded, hold on, don't change
+			   {
+				//if (!locked ) {
+				if (1 ) {
+                               		 goToSlide(index, slideOptions);
+                            	}
+			//	console.log ("loaded carousel is " + scope.carouselIndex);
+			//console.log ("Image is still loading, not skipping slides");
 
+			   }  
+			   else
+			   {
+				// lets move the index along - PP
+				// so playback total time is not affected
+			
+                                scope.carouselIndex = index;
+                                updateBufferIndex();
+				//console.log ("NOT LOADED but advancing carousel to " + scope.carouselIndex);
+			   }
+			   
                         };
 
                         scope.prevSlide = function(slideOptions) {
@@ -454,6 +483,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                 locked = false;
                                 offset = index * -100;
                                 scope.carouselIndex = index;
+				//console.log ("inside goToSlide: updating carousel index to " + scope.carouselIndex);
                                 updateBufferIndex();
                                 return;
                             }
@@ -560,6 +590,8 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         if (iAttributes.rnCarouselAutoSlide!==undefined) {
                             // PP was parseInt, changed to parseFloat so I can specify fractions of seconds
                             var duration = parseFloat(iAttributes.rnCarouselAutoSlide, 10) || options.autoSlideDuration;
+			    stopOrPlay.setDuration(duration);
+			    console.log ("Setting duration - should only happen once");
                             scope.autoSlide = function() {
                                 if (scope.autoSlider) {
                                     $interval.cancel(scope.autoSlider);
@@ -567,12 +599,25 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                 }
 				if (stopOrPlay.isStopped() == false) //PP - don't move slide if this variable is set
 				{
-					//console.log ("Setting next slide duration at " + duration *1000);
+					var mydur = stopOrPlay.getDuration();
+
+					// what happens if mydur needs to be less than a millisecond?
+					var mydurms = mydur * 1000.0;
+					
+					if (mydurms < 5)
+					{
+						console.log ("duration is too small at "+mydurms+" making it to 5");	
+						mydurms = 5;
+						
+					}
+					//console.log ("Setting next slide duration at " + mydur *1000);
                                 	scope.autoSlider = $interval(function() {
-                                    	if (!locked && !pressed ) {
+					//console.log ("setting time to " + mydurms);
+                                    	//if (!locked && !pressed ) {
+                                    	if (1 ) {
                                       	  scope.nextSlide();
                                     	}
-                                	}, duration * 1000);
+                                	}, mydurms);
 				}
                             };
                         }
