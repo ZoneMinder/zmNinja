@@ -10,7 +10,12 @@
 
                     <div ng-if="defaultVideo=='' || loginData.enableh264==false">
                         
-                        <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover  rn-platform="{{$root.platformOS}}">
+                        <!--<ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover  rn-platform="{{$root.platformOS}}">-->
+                            
+                            
+<!--Speed:{{eventSpeed}}-->
+<ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{eventSpeed}}" rn-carousel-pause-on-hover  rn-platform="{{$root.platformOS}}" rn-carousel-buffered>
+    
 
                             <li ng-repeat="slide in slides">
                                 <div ng-if="!animationInProgress">
@@ -84,6 +89,18 @@
     <a mfb-button icon="ion-close" label="exit event view" ng-click="closeModal()"> </a>
 
 </nav>
+    
+    
+<nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+
+    <a mfb-button icon="icon-super-speed" label="super speed" ng-click="adjustSpeed('super');"></a>
+    <a mfb-button icon="icon-normal-speed" label="normal speed" ng-click="adjustSpeed('normal');"></a>
+    <a mfb-button icon="icon-faster" label="faster" ng-click="adjustSpeed('faster');"></a>
+    
+    <a mfb-button icon="icon-slower" label="slower" ng-click="adjustSpeed('slower');"> </a>
+
+</nav>
+    
 
 <div class="events-range-modal" ng-if="defaultVideo==''">
 
@@ -97,7 +114,7 @@
 <div class="events-range-modal-text" >showing event: {{eventId}}</div>
 
 <span class="event-modal-alarm-badge">
-            <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive" 
+            <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive button-small" 
                     ng-click="handleAlarms();" ng-if="$root.isAlarm" ></a>
 </span>
 
