@@ -1,5 +1,26 @@
 # Change Log
 
+## [0.87.3](https://github.com/pliablepixels/zmNinja/tree/0.87.3) (2015-12-14)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...0.87.3)
+
+**Implemented enhancements:**
+
+- Add ability to detect cgi-bin configuration issues \(experimental\) [\#110](https://github.com/pliablepixels/zmNinja/issues/110)
+- Allow 'show all/show alarmed' events to persist and show menu option in both Events and Timeline Views [\#108](https://github.com/pliablepixels/zmNinja/issues/108)
+- Make timeline items configurable instead of forcing 200 [\#104](https://github.com/pliablepixels/zmNinja/issues/104)
+
+**Fixed bugs:**
+
+- popover "..." menu in event and timeline does not show in certain scenarios - so no menu [\#109](https://github.com/pliablepixels/zmNinja/issues/109)
+- Disabling event server does not disable push notifications via APNS/GCM [\#107](https://github.com/pliablepixels/zmNinja/issues/107)
+- Quick scrub on devices \(atleast iOS\) does not stop if you tap [\#106](https://github.com/pliablepixels/zmNinja/issues/106)
+- Bulk frames are causing problems with the scrub bar positioning of alarmed frames [\#102](https://github.com/pliablepixels/zmNinja/issues/102)
+- Gapless playback showing events from non-persisted monitors [\#86](https://github.com/pliablepixels/zmNinja/issues/86)
+
+**Closed issues:**
+
+- Timeline on v0.87.2 shows only motion events [\#105](https://github.com/pliablepixels/zmNinja/issues/105)
+
 ## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
 
