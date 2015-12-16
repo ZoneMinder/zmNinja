@@ -69,8 +69,8 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         if ((parseInt($scope.loginData.maxFPS) < 0) || (parseInt($scope.loginData.maxFPS) > zm.maxFPS)) {
             $scope.loginData.maxFPS = zm.defaultFPS.toString();
         }
-
-        if (parseInt($scope.loginData.refeshSec) <= 0) {
+        
+        if (parseInt($scope.loginData.refreshSec) <= 0) {
             ZMDataModel.zmDebug("SaveDevOptions: refresh sec was too low at " + 
                                 $scope.loginData.refreshSec + " reset to 1");
             $scope.loginData.refreshSec = 1;
