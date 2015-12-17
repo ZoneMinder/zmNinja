@@ -45,7 +45,7 @@ angular.module('zmApp.controllers')
          'disablePush':false, // true if only websocket mode is desired
          'eventServerMonitors':'', // list of monitors to notify from ES
         'eventServerInterval':'', // list of intervals for all monitors
-        'refreshSec':"2", // timer value for frame change in sec
+        'refreshSec':'2', // timer value for frame change in sec
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,
         'pinCode':'',
