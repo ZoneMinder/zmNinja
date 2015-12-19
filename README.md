@@ -6,14 +6,11 @@ zmNinja is a multi platform (iOS, Android, Windows Desktop, Mac Desktop, Linux D
 ZoneMinder is an incredible open source camera monitoring system and is used
 by many for home and commercial security monitoring. http://www.zoneminder.com
 
+
+<a href="https://itunes.apple.com/us/app/zmninja-pro/id1067914954?mt=8"><img src="http://www.pbase.com/arjunrc/image/162132546/original.jpg" width="200px" alt="Get in on App Store"></a>
+<a href="https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro&hl=en&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" width="200px"/></a>
+
 **Problems running zmNinja? Check out the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ)**
-
-
-Android version of zmNinja: buy [here](https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro)
-
-iOS version of zmNinja: (pending approval)
-
-Desktop Versions: free - see below
 
 
 Video Demo
@@ -24,12 +21,7 @@ Mobile Platforms
 ---------------------------
 zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
 
-iOS version of zmNinja: [here] (https://itunes.apple.com/us/app/zmninja-pro/id1067914954?mt=8)
-
-
-Android version of zmNinja: [here](https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro)
-
-
+See links above to get them on play store (Android) and app store (iOS)
 
 
 It also runs on the desktop (see below)
