@@ -23,9 +23,13 @@ Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 Mobile Platforms
 ---------------------------
 zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
-Android version of zmNinja: buy [here](https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro)
 
-iOS version of zmNinja: (pending approval)
+iOS version of zmNinja: [here] (https://itunes.apple.com/us/app/zmninja-pro/id1067914954?mt=8)
+
+
+Android version of zmNinja: [here](https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro)
+
+
 
 
 It also runs on the desktop (see below)
