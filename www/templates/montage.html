@@ -10,7 +10,7 @@
                 <button class="button button-icon button-clear ion-arrow-swap"
                         ng-click="toggleReorder();">
                 </button>
-            </span>
+        </span>
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
         </button>
         <!--<button class="button button-icon ion-ios-help-outline" ng-click="popover.show($event)"></button>-->
@@ -24,72 +24,86 @@
 
         <span ng-show="!minimal">
                 <div class="range range-positive">
-                    <i style="color:#bbbbbb" class="icon ion-arrow-shrink"></i>
+                    <i style="color:#bbbbbb" class="icon ion-image"></i>
                     <input type="range" ng-model="slider.monsize" min="1"
-                           max="6" ng-change="sliderChanged(slider.monsize)">
-                    <i style="color:#bbbbbb" class="icon ion-arrow-expand"></i>
+                           max="10" ng-change="sliderChanged(slider.monsize)">
+                    <i style="color:#bbbbbb" class="icon ion-grid"></i>
 
                 </div>
         </span>
 
-
-        <div class="wrapper">
+        <div style="-webkit-column-count:{{slider.monsize}};-webkit-column-gap:0px;line-height:0px;">
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow'">
+     
+            <!-- back to ng-src. spinner was not updating when rand changes-->
+            <!-- moving to single so I can rely on rand for reloads -->
                 
-                <div  style="position:relative" >
-                    
-                   <span ng-show="!minimal">
-                        <div style="width:{{((devWidth)/(7-monitorSize[$index]))}}px;white-space:nowrap;overflow:hidden; text-overflow:ellipsis">
-                            <header id = "slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-header animated infinite flash':'header'">&nbsp;<i class="ion-monitor"></i>
+                <div style="position: relative;width:{{devWidth/slider.monsize}}px;float:left; ">
+                    <div ng-if="!isModalActive">
+                        <span ng-show="!minimal">
+
+                            <div id = "slowpulse"  style="position:absolute; top:0px; left:0px;width:100%;white-space:nowrap;overflow:hidden;" 
+                                 ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-header animated infinite flash':'header'">
+                                &nbsp;<i class="ion-monitor"></i>
                                {{monitor.Monitor.Name}}&nbsp;
-                            </header>
+                            </div>
+                        </span>
+
+                        <div ng-if="$root.authSession!='undefined'">
+                            <div ng-if = "!minimal">
+                                <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" image-spinner-loader="lines" style="margin-top:15px;
+        width: 100% !important;
+        height: auto !important;" />
+                            </div>
+                            
+                            <div ng-if = "minimal">
+                                <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" image-spinner-loader="lines" style="margin-top:0px;
+        width: 100% !important;
+        height: auto !important;" />
+                            </div>
+                            
+
                         </div>
-                    </span>
 
-            <article class="main">
-
-                <!-- back to ng-src. spinner was not updating when rand changes-->
-                <!-- moving to single so I can rely on rand for reloads -->
-
-                <div ng-if="!isModalActive">
-                    <div ng-if="$root.authSession!='undefined'">
-                        <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" style="display:block;" image-spinner-loader="lines" />
+                        <div ng-if="!$root.authSession=='undefined'">
+                            <img id="img-$index" ng-src="img/pausevideo.png" style="width: 100% !important;
+  height: auto !important;" />
+                        </div>
 
                     </div>
-
-                    <div ng-if="!$root.authSession=='undefined'">
-                        <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
-                    </div>
-
-                </div>
-                <div ng-if="isModalActive">
-                    <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
                 </div>
 
-            </article>
+
+            <div ng-if="isModalActive">
+                <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" />
+            </div>
+
 
             <div id="slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'minimized-alarmed-header animated infinite flash':''" ng-if="minimal"></div>
 
-        </div>
-        <!-- alarm flash -->
 
-        </span>
-        <!-- ngrepeat -->
+            <!-- alarm flash -->
+
+            </span>
+            <!-- ngrepeat -->
+
         </div>
-        <!--wrapper-->
 
 
         <ion-item ng-show="!MontageMonitors.length">
             No monitors to display.
         </ion-item>
+
+
+
     </ion-content>
 
     <div ng-show="minimal">
         <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
 
-            <button mfb-button icon="ion-arrow-expand" label="increase size" ng-click="changeSize(1)">
+            <button mfb-button icon="ion-arrow-expand" label="increase size" ng-click="changeSize(-1)">
             </button>
-            <button mfb-button icon="ion-arrow-shrink" label="decrease size" ng-click="changeSize(-1)">
+            <button mfb-button icon="ion-arrow-shrink" label="decrease size" ng-click="changeSize(1)">
             </button>
             <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
             </button>
@@ -104,4 +118,5 @@
 
     </div>
     <br/>
+
 </ion-view>

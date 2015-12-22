@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
     var zmAppVersion="unknown";
     var isBackground = false;
     var monitorsLoaded = 0;
-    var montageSize = 3;
+    //var montageSize = 3;
     var monitors = [];
     var oldevents = [];
      
@@ -57,8 +57,10 @@ angular.module('zmApp.controllers')
          'montageOrder':'',
          'montageHiddenOrder':'',
          'montageArraySize':'0',
+         
          'graphSize':200,
          'minAlarmCount':'1',
+         'montageSize':'10',
          
         
     };
@@ -210,6 +212,14 @@ angular.module('zmApp.controllers')
                     zmDebug ("minAlarmCount does not exist, setting to 1");
                     loginData.minAlarmCount  = '1';
                 }
+                
+                
+                if (typeof loginData.montageSize == 'undefined')
+                {
+                    zmDebug ("montageSize does not exist, setting to 18 (2 per col)");
+                    loginData.montageSize  = 18;
+                }
+                
                 
                 zmLog ("DataModel init recovered this loginData as " + JSON.stringify(loginData));
             }
@@ -929,14 +939,14 @@ angular.module('zmApp.controllers')
         //
         //-----------------------------------------------------------------------------
         getMontageSize: function () {
-            return montageSize;
+            return loginData.montageSize;
         },
 
         //-----------------------------------------------------------------------------
         //
         //-----------------------------------------------------------------------------
         setMontageSize: function (montage) {
-            montageSize = montage;
+            loginData.montageSize = montage;
         },
 
 

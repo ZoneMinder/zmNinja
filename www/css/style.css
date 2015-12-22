@@ -655,4 +655,16 @@ input[type=range]::-webkit-slider-thumb {
     -webkit-animation-delay: 1s;
 }
 
+.montage_image
+{
+    margin-top:15px;
+    width: 100% !important;
+    height: auto !important;
+}
 
+.montage_image_full_screen
+{
+    margin-top:0px;
+    width: 100% !important;
+    height: auto !important;
+}

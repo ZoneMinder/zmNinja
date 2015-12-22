@@ -23,7 +23,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.scaleDirection = []; // 1 = increase -1 = decrease
 
     $scope.slider = {};
+    
+    console.log ("************ GETTIGN SLIDER AS " + ZMDataModel.getMontageSize());
     $scope.slider.monsize = ZMDataModel.getMontageSize();
+    $scope.revMonSize = 11 - parseInt($scope.slider.monsize);
 
     // The difference between old and original is this:
     // old will have a copy of the last re-arranged monitor list
@@ -110,6 +113,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     var timestamp = new Date().getUTCMilliseconds();
     $scope.minimal = $stateParams.minimal;
+    $scope.zmMarginTop = $scope.minimal ? 0:15;
+    console.log ("********* MARGIN IS " + $scope.zmMarginTop);
+    
     $scope.isRefresh = $stateParams.isRefresh;
     var sizeInProgress = false;
     $scope.imageStyle = true;
@@ -793,6 +799,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         //window.localStorage.setItem("montageArraySize", monsizestring);
         sizeInProgress = false;
     }
+    
+ 
 
     //---------------------------------------------------------
     // In full screen montage view, I call this function
@@ -804,7 +812,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         $scope.slider.monsize = newSize;
         if ($scope.slider.monsize < "1") $scope.slider.monsize = "1";
-        if ($scope.slider.monsize > "6") $scope.slider.monsize = "6";
+        if ($scope.slider.monsize > "10") $scope.slider.monsize = "10";
         processSliderChanged($scope.slider.monsize);
 
     };
@@ -818,7 +826,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.sliderChanged = function () {
         processSliderChanged($scope.slider.monsize);
+        
+        
     };
+    
+        
 
     $scope.$on('$ionicView.afterEnter', function () {
         // This rand is really used to reload the monitor image in img-src so it is not cached
