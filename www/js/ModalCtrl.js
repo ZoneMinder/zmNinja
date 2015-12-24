@@ -100,7 +100,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, 'Down');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'Down');
                 }
             },
 
@@ -109,7 +109,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, 'DownLeft');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'DownLeft');
                 }
             },
 
@@ -119,7 +119,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 empty: false,
 
                 onclick: function () {
-                    controlPTZ($scope.monitorId, 'Left');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'Left');
                 }
             },
             {
@@ -136,7 +136,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, 'UpLeft');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'UpLeft');
                 }
             },
 
@@ -145,7 +145,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, 'Up');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'Up');
                 }
             },
 
@@ -154,7 +154,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, 'UpRight');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'UpRight');
                 }
             },
 
@@ -171,7 +171,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, 'Right');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'Right');
                 }
             },
 
@@ -181,7 +181,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, 'DownRight');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'DownRight');
                 }
             },
 
@@ -252,6 +252,10 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     // Send PTZ command to ZM
     // Note: PTZ fails on desktop, don't bother about it
     //-------------------------------------------------------------
+    $scope.controlPTZ = function (monitorId, cmd)
+    {
+        controlPTZ(monitorId, cmd);
+    };
     function controlPTZ(monitorId, cmd) {
 
         //curl -X POST "http://server.com/zm/index.php?view=request" -d
@@ -311,7 +315,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 view: "request",
                 request: "control",
                 id: monitorId,
-                control: $scope.ptzMoveCommand + cmd,
+                control: cmd,
                 xge: "30", //wtf
                 yge: "30", //wtf
             }

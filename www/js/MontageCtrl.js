@@ -556,6 +556,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.LoginData = ZMDataModel.getLogin();
         $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $scope.ptzMoveCommand = "";
+        $scope.ptzStopCommand = "";
 
         // This is a modal to show the monitor footage
         // We need to switch to always awake if set so the feed doesn't get interrupted
@@ -572,6 +573,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 .success(function (data) {
                     ZMDataModel.zmDebug("MontageCtrl: control data returned " + JSON.stringify(data));
                     $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1') ? 'moveCon' : 'move';
+                    $scope.ptzStopCommand = "moveStop";
                     console.log("***moveCommand: " + $scope.ptzMoveCommand);
                     ZMDataModel.zmLog("ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
                 })
