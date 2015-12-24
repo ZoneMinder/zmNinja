@@ -69,7 +69,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
                     zmAutoLogin.stop(); //safety
                     zmAutoLogin.start();
-                    zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i></button>authenticating...")
+                    zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;authenticating...</button>")
                         .then(function (data) // success
                             {
                                 ZMDataModel.zmDebug("PortalLogin: auth success");
@@ -214,7 +214,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             zmAutoLogin.stop(); //safety
             zmAutoLogin.start();
-            zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i></button>authenticating...")
+            zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;authenticating...</button>")
                 .then(function (data) // success
                     {
                         EventServer.refresh();
