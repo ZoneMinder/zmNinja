@@ -38,20 +38,13 @@
             <!-- back to ng-src. spinner was not updating when rand changes-->
             <!-- moving to single so I can rely on rand for reloads -->
                 
-                <div style="position: relative;width:{{devWidth/slider.monsize}}px;float:left; ">
+                <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
                     <div ng-if="!isModalActive">
-                        <span ng-show="!minimal">
-
-                            <div id = "slowpulse"  style="position:absolute; top:0px; left:0px;width:100%;white-space:nowrap;overflow:hidden;" 
-                                 ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-header animated infinite flash':'header'">
-                                &nbsp;<i class="ion-monitor"></i>
-                               {{monitor.Monitor.Name}}&nbsp;
-                            </div>
-                        </span>
+                        
 
                         <div ng-if="$root.authSession!='undefined'">
                             <div ng-if = "!minimal">
-                                <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" image-spinner-loader="lines" style="margin-top:15px;
+                                <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" image-spinner-loader="lines" style="
         width: 100% !important;
         height: auto !important;" />
                             </div>
@@ -69,6 +62,15 @@
                             <img id="img-$index" ng-src="img/pausevideo.png" style="width: 100% !important;
   height: auto !important;" />
                         </div>
+                        
+                        <span ng-show="!minimal">
+
+                            <div id = "slowpulse"  style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
+                                 ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-header animated infinite flash':'header'">
+                                &nbsp;<i class="ion-monitor"></i>
+                               {{monitor.Monitor.Name}}&nbsp;
+                            </div>
+                        </span>
 
                     </div>
                 </div>
