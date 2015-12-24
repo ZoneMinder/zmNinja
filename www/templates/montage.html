@@ -71,20 +71,21 @@
                                {{monitor.Monitor.Name}}&nbsp;
                             </div>
                         </span>
+                        
+                        <div id="slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'minimized-alarmed-header animated infinite flash':''" ng-if="minimal"></div>
+
 
                     </div>
                 </div>
 
 
             <div ng-if="isModalActive">
-                <img id="img-$index" ng-src="img/pausevideo.png" style="display:block;" />
+                <img id="img-$index" ng-src="img/pausevideo.png" style="margin-top:0px;
+        width: 100% !important;
+        height: auto !important;" />
             </div>
 
 
-            <div id="slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'minimized-alarmed-header animated infinite flash':''" ng-if="minimal"></div>
-
-
-            <!-- alarm flash -->
 
             </span>
             <!-- ngrepeat -->
