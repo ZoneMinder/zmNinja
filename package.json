@@ -57,7 +57,6 @@
       "locator": "https://github.com/leecrossley/cordova-plugin-touchid.git",
       "id": "cordova-plugin-touchid"
     },
-    "cordova-plugin-crosswalk-webview",
     "cordova-plugin-ios-longpress-fix",
     "cordova-plugin-websocket",
     {
@@ -73,15 +72,21 @@
     {
       "locator": "https://github.com/pliablepixels/cordova-plugin-media.git",
       "id": "org.apache.cordova.media"
-    }
+    },
+    "cordova-plugin-crosswalk-webview"
   ],
   "cordovaPlatforms": [
     "ios",
-    "android",
     {
       "platform": "ios",
       "version": "",
       "locator": "ios"
+    },
+    "android",
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
     }
   ]
 }
