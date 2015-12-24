@@ -69,7 +69,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
                     zmAutoLogin.stop(); //safety
                     zmAutoLogin.start();
-                    zmAutoLogin.doLogin("authenticating...")
+                    zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i></button>authenticating...")
                         .then(function (data) // success
                             {
                                 ZMDataModel.zmDebug("PortalLogin: auth success");
@@ -120,7 +120,19 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             function (error) {
                                 ZMDataModel.zmDebug("PortalLogin: error authenticating " +
                                     JSON.stringify(error));
-                                $state.go('login');
+                                if (!$rootScope.userCancelledAuth)
+                                {
+                                        $ionicHistory.nextViewOptions({
+                                            disableAnimate: true,
+                                        disableBack: true
+                                        });
+                                        $state.go('login');
+                                }
+                                else   
+                                {
+                                    // do this only once - rest for next time
+                                    $rootScope.userCancelledAuth = false;
+                                }
                             });
                 }
 
@@ -129,11 +141,27 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 if (ZMDataModel.isFirstUse())
                 {
                     ZMDataModel.zmDebug ("First use, showing warm and fuzzy...");
+                    $ionicHistory.nextViewOptions({
+                        disableAnimate: true,
+                        disableBack: true
+                    });
                     $state.go('first-use');
                 }
                 else
                 {
-                    $state.go('login');
+                    if (!$rootScope.userCancelledAuth)
+                    {
+                            $ionicHistory.nextViewOptions({
+                                disableAnimate: true,
+                            disableBack: true
+                            });
+                            $state.go('login');
+                    }
+                    else   
+                    {
+                        // do this only once - rest for next time
+                        $rootScope.userCancelledAuth = false;
+                    }
                 }
             }
 
@@ -186,7 +214,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
             zmAutoLogin.stop(); //safety
             zmAutoLogin.start();
-            zmAutoLogin.doLogin("authenticating...")
+            zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i></button>authenticating...")
                 .then(function (data) // success
                     {
                         EventServer.refresh();
@@ -232,7 +260,19 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     function (error) {
                         ZMDataModel.zmDebug("PortalLogin: error authenticating " +
                             JSON.stringify(error));
-                        $state.go('login');
+                        if (!$rootScope.userCancelledAuth)
+                        {
+                                $ionicHistory.nextViewOptions({
+                                    disableAnimate: true,
+                                disableBack: true
+                                });
+                                $state.go('login');
+                        }
+                        else   
+                        {
+                            // do this only once - rest for next time
+                            $rootScope.userCancelledAuth = false;
+                        }
                     });
         } else {
             $scope.pindata.status = "Invalid PIN";

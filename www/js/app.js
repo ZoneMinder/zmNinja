@@ -89,6 +89,7 @@ angular.module('zmApp', [
 })
 
 
+
 //------------------------------------------------------------------
 // I use this factory to share data between carousel and lazy load
 // carousel will not progress autoslide till imageLoading is 0 or -1
@@ -591,7 +592,7 @@ angular.module('zmApp', [
 //====================================================================
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer,$ionicContentBanner) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer,$ionicContentBanner, $ionicLoading) {
     
     
 
@@ -612,6 +613,7 @@ angular.module('zmApp', [
         $rootScope.currentServerGroup = "defaultServer";
         $rootScope.validMonitorId = "";
         $rootScope.newVersionAvailable = "";
+    $rootScope.userCancelledAuth = false;
         //$rootScope.minAlarmCount = "1";
     
        
@@ -649,6 +651,22 @@ angular.module('zmApp', [
         };
 
         window.addEventListener("resize", checkOrientation, false);
+    
+
+    // we come here when a user forcibly cancels portal auth
+    // useful when you know your auth won't succeed and you need to 
+    // switch to another server
+    $rootScope.cancelAuth = function()
+    {
+        $ionicLoading.hide();
+        ZMDataModel.zmLog("User cancelled login");
+        $ionicHistory.nextViewOptions({
+                        disableAnimate: true,
+                        disableBack: true
+                    });
+        $state.go("login");
+        $rootScope.userCancelledAuth = true;
+    };
     
         //---------------------------------------------------------------------------
         // authorize state transitions
@@ -694,6 +712,9 @@ angular.module('zmApp', [
 
         $ionicPlatform.ready(function () {
               $rootScope.platformOS = "desktop";
+            
+            
+            
          
             ZMDataModel.zmLog("Device is ready");
             var ld = ZMDataModel.getLogin();
