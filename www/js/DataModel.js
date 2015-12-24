@@ -430,6 +430,7 @@ angular.module('zmApp.controllers')
         isReCaptcha: function()
         {
             var d=$q.defer();
+            
             var myurl =loginData.url;
             zmLog ("Checking if reCaptcha is enabled in ZM...");
             $http.get(myurl)
