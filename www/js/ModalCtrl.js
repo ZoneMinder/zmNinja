@@ -45,6 +45,11 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         showDelay: 0
     });
     var ld = ZMDataModel.getLogin();
+    
+    $scope.streamMode = ld.useNphZms ? "jpeg":"single";
+    ZMDataModel.zmDebug ("Setting playback to " + $scope.streamMode);
+    
+    
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
     ZMDataModel.getAuthKey($rootScope.validMonitorId)
         .then(function (success) {
@@ -197,12 +202,20 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
     $interval.cancel(intervalModalHandle);
-    intervalModalHandle = $interval(function () {
-        loadModalNotifications();
-        //  console.log ("Refreshing Image...");
-    }.bind(this), ld.refreshSec * 1000);
+    
+    if (ld.useNphZms == false )
+    {
+        intervalModalHandle = $interval(function () {
+            loadModalNotifications();
+            //  console.log ("Refreshing Image...");
+        }.bind(this), ld.refreshSec * 1000);
 
-    loadModalNotifications();
+        loadModalNotifications();
+    }
+    else
+    {
+        ZMDataModel.zmLog("Using nph-zms, no timer needed");
+    }
 
 
 
@@ -222,11 +235,19 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             ZMDataModel.zmLog("ModalCtrl: Restarting Modal timer on resume");
 
             $interval.cancel(intervalModalHandle);
-            intervalModalHandle = $interval(function () {
-                loadModalNotifications();
-                //  console.log ("Refreshing Image...");
-            }.bind(this), ld.refreshSec * 1000);
-
+            
+            var ld = ZMDataModel.getLogin();
+            if (ld.useNphZms == false)
+            {
+                intervalModalHandle = $interval(function () {
+                    loadModalNotifications();
+                    //  console.log ("Refreshing Image...");
+                }.bind(this), ld.refreshSec * 1000);
+            }
+            else
+            {
+                ZMDataModel.zmLog("using nph - no timers needed");
+            }
 
             $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
 
