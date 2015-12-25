@@ -664,8 +664,9 @@ angular.module('zmApp', [
                         disableAnimate: true,
                         disableBack: true
                     });
-        $state.go("login");
         $rootScope.userCancelledAuth = true;
+        $state.go("login");
+        
     };
     
         //---------------------------------------------------------------------------
