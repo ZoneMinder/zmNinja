@@ -36,7 +36,7 @@ angular.module('zmApp', [
     largeHttpTimeout: 60000,
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
-    logFileMaxSize: 50000, // after this limit log gets reset
+    logFileMaxSize: 10000, // after this limit log gets reset
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
     updateCheckInterval:  86400000, // 24 hrs
     loadingTimeout: 15000,
@@ -744,9 +744,10 @@ angular.module('zmApp', [
           
             $fileLogger.checkFile().then(function (resp) {
                 if (parseInt(resp.size) > zm.logFileMaxSize) {
-                    console.log("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
+                    
                     $fileLogger.deleteLogfile().then(function () {
                         console.log('Logfile deleted');
+                        
                     });
                 } else {
                     console.log("Log file size is " + resp.size + " bytes");
@@ -763,7 +764,9 @@ angular.module('zmApp', [
             $fileLogger.setStorageFilename(zm.logFile);
             // easier tz reading
             $fileLogger.setTimestampFormat('medium');
-
+            
+            ZMDataModel.zmLog("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
+            
             if (window.cordova) {
                 // getAppVersion is a handy library
                 // that lets you extract the app version in config.xml
