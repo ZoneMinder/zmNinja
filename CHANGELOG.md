@@ -1,7 +1,27 @@
 # Change Log
 
-## [0.87.3](https://github.com/pliablepixels/zmNinja/tree/0.87.3) (2015-12-14)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...0.87.3)
+## [1.0.1](https://github.com/pliablepixels/zmNinja/tree/1.0.1) (2015-12-27)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.3...1.0.1)
+
+**Implemented enhancements:**
+
+- Add an option to play at real FPS in single monitor view [\#123](https://github.com/pliablepixels/zmNinja/issues/123)
+- Offer a server selection menu on app launch [\#122](https://github.com/pliablepixels/zmNinja/issues/122)
+- Add a stop button to PTZ [\#121](https://github.com/pliablepixels/zmNinja/issues/121)
+- Pack in the montage view better [\#119](https://github.com/pliablepixels/zmNinja/issues/119)
+- Truncate monitor name in montage if size of image is less [\#117](https://github.com/pliablepixels/zmNinja/issues/117)
+
+**Fixed bugs:**
+
+- Developer setting for Frame Update allows decimals  [\#114](https://github.com/pliablepixels/zmNinja/issues/114)
+
+**Closed issues:**
+
+- HTTP Basic authentication [\#120](https://github.com/pliablepixels/zmNinja/issues/120)
+- Cannot get video [\#115](https://github.com/pliablepixels/zmNinja/issues/115)
+
+## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
 
 **Implemented enhancements:**
 
