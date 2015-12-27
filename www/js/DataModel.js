@@ -61,7 +61,7 @@ angular.module('zmApp.controllers')
          'graphSize':200,
          'minAlarmCount':'1',
          'montageSize':'10',
-         'useNphZms':false,
+         'useNphZms':true,
          
         
     };
@@ -224,7 +224,7 @@ angular.module('zmApp.controllers')
                 if (typeof loginData.useNphZms == 'undefined')
                 {
                     zmDebug ("useNphZms does not exist. Setting to false");
-                    loginData.useNphZms  = false;
+                    loginData.useNphZms  = true;
                 }
                 
                 zmLog ("DataModel init recovered this loginData as " + JSON.stringify(loginData));
