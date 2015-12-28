@@ -1,7 +1,14 @@
 # Change Log
 
-## [1.0.1](https://github.com/pliablepixels/zmNinja/tree/1.0.1) (2015-12-27)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.3...1.0.1)
+## [1.0.2](https://github.com/pliablepixels/zmNinja/tree/1.0.2) (2015-12-28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.1...1.0.2)
+
+**Implemented enhancements:**
+
+- Implement a way to only play alarmed frames [\#118](https://github.com/pliablepixels/zmNinja/issues/118)
+
+## [v1.0.1](https://github.com/pliablepixels/zmNinja/tree/v1.0.1) (2015-12-27)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.3...v1.0.1)
 
 **Implemented enhancements:**
 
