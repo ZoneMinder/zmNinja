@@ -633,14 +633,21 @@ angular.module('zmApp.controllers')
         // scrub view for an event.
         //-------------------------------------------------------------------------
 
-        $scope.toggleGroup = function (event, ndx, frames) {
-            toggleGroup(event, ndx, frames);
+        $scope.toggleGroupScrub = function (event, ndx, frames) {
+            $scope.groupType = "scrub";
+            toggleGroup(event, ndx, frames,$scope.groupType);
+        };
+        
+        $scope.toggleGroupAlarms = function (event, ndx, frames) {
+            $scope.groupType = "alarms";
+            toggleGroup(event, ndx, frames,$scope.groupType);
         };
 
-        function toggleGroup(event, ndx, frames) {
+        function toggleGroup(event, ndx, frames, groupType) {
             
-            console.log ("*** TOGGLE: " + event.Event.DefaultVideo);
-
+            console.log ("*** video: " + event.Event.DefaultVideo);
+            
+            
             // If we are here and there is a record of a previous scroll
             // then we need to scroll back to hide that view
             if (scrollbynumber) {
@@ -659,159 +666,209 @@ angular.module('zmApp.controllers')
             event.Event.ShowScrub = !event.Event.ShowScrub;
             // $ionicScrollDelegate.resize();
 
-            if (event.Event.ShowScrub == true) // turn on display now
-            {
-                ZMDataModel.zmDebug("EventCtrl: Scrubbing will turn on now");
-                $scope.currentEvent = "";
-                $scope.event = event;
-                //$ionicScrollDelegate.freezeScroll(true);
-                $ionicSideMenuDelegate.canDragContent(false);
-                $scope.slider_options = {
-                    from: 1,
-                    to: event.Event.Frames,
-                    realtime: true,
-                    step: 1,
-                    className: "mySliderClass",
-                    callback: function (value, released) {
-                        //console.log("CALLBACK"+value+released);
-                        $ionicScrollDelegate.freezeScroll(!released);
-                        //ZMDataModel.zmDebug("EventCtrl: freezeScroll called with " + !released);
+            console.log ("GROUP TYPE IS " + groupType);
+            
+             if (event.Event.ShowScrub == true)  // turn on display now
+             {
+                 if (groupType == 'alarms')
+                 {
+                    $scope.alarm_images=[];
+                     event.Event.height = zm.eventsListDetailsHeight + zm.eventsListScrubHeight;
+                    $ionicScrollDelegate.resize();
+                    var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
+                    ZMDataModel.zmLog("API for event details" + myurl);
+                    $http.get(myurl)
+                        .success(function (data) {
+                            $scope.FrameArray = data.event.Frame;
+                            //  $scope.slider_options.scale=[];
 
+                            //$scope.slider_options.scale = [];
 
-                    },
-                    //modelLabels:function(val) {return "";},
-                    css: {
-                        background: {
-                            "background-color": "silver"
-                        },
-                        before: {
-                            "background-color": "purple"
-                        },
-                        default: {
-                            "background-color": "white"
-                        }, // default value: 1px
-                        after: {
-                            "background-color": "green"
-                        }, // zone after default value
-                        pointer: {
-                            "background-color": "red"
-                        }, // circle pointer
-                        range: {
-                            "background-color": "red"
-                        } // use it if double value
-                    },
-                    scale: []
+                            var i;
+                            for (i = 0; i < data.event.Frame.length; i++) {
+                                if (data.event.Frame[i].Type == "Alarm") {
 
-                };
+                                    //console.log ("**ONLY ALARM AT " + i + "of " + data.event.Frame.length);
+                                    $scope.alarm_images.push({
+                                        id: data.event.Frame[i].FrameId,
+                                        score: data.event.Frame[i].Score,
+                                        fname: padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg"
+                                    });
+                                } 
 
-                event.Event.height = zm.eventsListDetailsHeight + zm.eventsListScrubHeight;
-                $ionicScrollDelegate.resize();
-                $scope.mycarousel.index = 0;
-                $scope.ionRange.index = 1;
-                //console.log("**Resetting range");
-                $scope.slides = [];
-                var i;
-                ZMDataModel.zmDebug("EventCtrl: found " + frames + " frames to scrub");
-                for (i = 1; i <= frames; i++) {
-                    var fname = padToN(i, eventImageDigits) + "-capture.jpg";
-                    $scope.slides.push({
-                        id: i,
-                        img: fname
-                    });
-
-                }
-
-
-
-                // now get event details to show alarm frames
-                var loginData = ZMDataModel.getLogin();
-
-                if (typeof event.Event.DefaultVideo === 'undefined')
-                    event.Event.DefaultVideo = "";
-                // grab video details
-                event.Event.video = {};
-                var videoURL = loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
-
-                console.log("************** VIDEO IS " + videoURL);
-                event.Event.video.config = {
-                    autoPlay: true,
-                    sources: [
-                        {
-                            src: $sce.trustAsResourceUrl(videoURL),
-                            type: "video/mp4"
-                        }
-
-				],
-
-                    theme: "lib/videogular-themes-default/videogular.css",
-
-                };
-
-
-                var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
-                ZMDataModel.zmLog("API for event details" + myurl);
-                $http.get(myurl)
-                    .success(function (data) {
-                        $scope.FrameArray = data.event.Frame;
-                        //  $scope.slider_options.scale=[];
-                        $scope.slider_options.scale = [];
-
-                        var i;
-                        for (i = 0; i < data.event.Frame.length; i++) {
-                            if (data.event.Frame[i].Type == "Alarm") {
-
-                                //console.log ("**ALARM AT " + i);
-                                $scope.slider_options.scale.push({
-                                    val: i + 1,
-                                    label: ' '
-                                });
-                            } else {
-                                //$scope.slider_options.scale.push(' ');
                             }
 
-                        }
-
-                        //console.log (JSON.stringify(data));
-                    })
-                    .error(function (err) {
-                        ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
-                        ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
-                    });
-
-
-                oldEvent = event;
-                $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-                var elem = angular.element(document.getElementById("item-" + ndx));
-                var locobject = $ionicPosition.offset(elem);
-                //console.log(JSON.stringify(locobject));
-                var toplocation = parseInt(locobject.top);
-                var objheight = parseInt(locobject.height);
-                console.log("top location is " + toplocation);
-                var distdiff = parseInt($rootScope.devHeight) - toplocation - objheight;
-                console.log("*****Space at  bottom is " + distdiff);
-
-                if (distdiff < zm.eventsListScrubHeight) // size of the scroller with bars
+                            //console.log (JSON.stringify(data));
+                        })
+                        .error(function (err) {
+                            ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
+                            ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+                        });
+            
+                } // end of groupType == alarms
+                else // groupType == scrub
                 {
-                    scrollbynumber = zm.eventsListScrubHeight - distdiff;
-                    $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, scrollbynumber, true);
 
-                    // we need to scroll up to make space
-                }
+                    ZMDataModel.zmDebug("EventCtrl: Scrubbing will turn on now");
+                    $scope.currentEvent = "";
+                    $scope.event = event;
+                    //$ionicScrollDelegate.freezeScroll(true);
+                    $ionicSideMenuDelegate.canDragContent(false);
+                    $scope.slider_options = {
+                        from: 1,
+                        to: event.Event.Frames,
+                        realtime: true,
+                        step: 1,
+                        className: "mySliderClass",
+                        callback: function (value, released) {
+                            //console.log("CALLBACK"+value+released);
+                            $ionicScrollDelegate.freezeScroll(!released);
+                            //ZMDataModel.zmDebug("EventCtrl: freezeScroll called with " + !released);
 
-            } else {
-                // $ionicScrollDelegate.freezeScroll(false);
-                $ionicSideMenuDelegate.canDragContent(true);
-                event.Event.height = zm.eventsListDetailsHeight;
-                $ionicScrollDelegate.resize();
 
-                if (scrollbynumber) {
-                    $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, -1 * scrollbynumber, true);
-                    scrollbynumber = 0;
-                }
-                // we are turning off, so scroll by back
+                        },
+                        //modelLabels:function(val) {return "";},
+                        css: {
+                            background: {
+                                "background-color": "silver"
+                            },
+                            before: {
+                                "background-color": "purple"
+                            },
+                            default: {
+                                "background-color": "white"
+                            }, // default value: 1px
+                            after: {
+                                "background-color": "green"
+                            }, // zone after default value
+                            pointer: {
+                                "background-color": "red"
+                            }, // circle pointer
+                            range: {
+                                "background-color": "red"
+                            } // use it if double value
+                        },
+                        scale: []
+
+                    };
+
+                    event.Event.height = zm.eventsListDetailsHeight + zm.eventsListScrubHeight;
+                    $ionicScrollDelegate.resize();
+                    $scope.mycarousel.index = 0;
+                    $scope.ionRange.index = 1;
+                    //console.log("**Resetting range");
+                    $scope.slides = [];
+                    var i;
+                    ZMDataModel.zmDebug("EventCtrl: found " + frames + " frames to scrub");
+
+
+
+                    for (i = 1; i <= frames; i++) {
+                        var fname = padToN(i, eventImageDigits) + "-capture.jpg";
+
+
+
+                            $scope.slides.push({
+                                id: i,
+                                img: fname
+                            });
+
+
+                    }
+
+
+
+                    // now get event details to show alarm frames
+                     loginData = ZMDataModel.getLogin();
+
+                    if (typeof event.Event.DefaultVideo === 'undefined')
+                        event.Event.DefaultVideo = "";
+                    // grab video details
+                    event.Event.video = {};
+                    var videoURL = loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
+
+                    console.log("************** VIDEO IS " + videoURL);
+                    event.Event.video.config = {
+                        autoPlay: true,
+                        sources: [
+                            {
+                                src: $sce.trustAsResourceUrl(videoURL),
+                                type: "video/mp4"
+                            }
+
+                    ],
+
+                        theme: "lib/videogular-themes-default/videogular.css",
+
+                    };
+
+
+                    var myurl2 = loginData.apiurl + '/events/' + event.Event.Id + ".json";
+                    ZMDataModel.zmLog("API for event details" + myurl2);
+                    $http.get(myurl2)
+                        .success(function (data) {
+                            $scope.FrameArray = data.event.Frame;
+                            //  $scope.slider_options.scale=[];
+                            $scope.slider_options.scale = [];
+
+                            var i;
+                            for (i = 0; i < data.event.Frame.length; i++) {
+                                if (data.event.Frame[i].Type == "Alarm") {
+
+                                    //console.log ("**ALARM AT " + i + "of " + data.event.Frame.length);
+                                    $scope.slider_options.scale.push({
+                                        val: data.event.Frame[i].FrameId,
+                                        label: ' '
+                                    });
+                                } else {
+                                    //$scope.slider_options.scale.push(' ');
+                                }
+
+                            }
+
+                            //console.log (JSON.stringify(data));
+                        })
+                        .error(function (err) {
+                            ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
+                            ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+                        });
+
+
+                    oldEvent = event;
+                    $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+                    var elem = angular.element(document.getElementById("item-" + ndx));
+                    var locobject = $ionicPosition.offset(elem);
+                    //console.log(JSON.stringify(locobject));
+                    var toplocation = parseInt(locobject.top);
+                    var objheight = parseInt(locobject.height);
+                    console.log("top location is " + toplocation);
+                    var distdiff = parseInt($rootScope.devHeight) - toplocation - objheight;
+                    console.log("*****Space at  bottom is " + distdiff);
+
+                    if (distdiff < zm.eventsListScrubHeight) // size of the scroller with bars
+                    {
+                        scrollbynumber = zm.eventsListScrubHeight - distdiff;
+                        $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, scrollbynumber, true);
+
+                        // we need to scroll up to make space
+                    }
+
+                } // end of groupType == scrub 
+             } // end of ShowScrub == true
+            else {
+            // $ionicScrollDelegate.freezeScroll(false);
+            $ionicSideMenuDelegate.canDragContent(true);
+            event.Event.height = zm.eventsListDetailsHeight;
+            $ionicScrollDelegate.resize();
+
+            if (scrollbynumber) {
+                $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, -1 * scrollbynumber, true);
+                scrollbynumber = 0;
             }
-
+                // we are turning off, so scroll by back
         }
+
+     }
 
         $scope.closeIfOpen = function (event) {
             if (event != undefined) {
