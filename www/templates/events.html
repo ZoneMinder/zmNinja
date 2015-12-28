@@ -108,12 +108,16 @@
                     <span style="float:right">
                                 <div ng-if="event.Event.EndTime">
                                     <button class="button button-small icon icon-left ion-ios-eye"
-                                            ng-click="toggleGroup(event,$index,event.Event.Frames)" > Quick Scrub
+                                            ng-click="toggleGroupScrub(event,$index,event.Event.Frames)" >  Scrub
+                                    </button>
+                                    
+                                    <button ng-if="event.Event.AlarmFrames > 0" class="button button-small icon icon-left ion-ios-bell"
+                                            ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)" >  alarms
                                     </button>
 
 
                                     <button class="button button-small icon icon-left ion-ios-eye"
-                                            ng-click="closeIfOpen(event);openModal(event)" > View Footage
+                                            ng-click="closeIfOpen(event);openModal(event)" > Footage
                                     </button>
                                 </div>
                               
@@ -123,70 +127,99 @@
                     </span>
 
 
-                    <!-- this is the event scrub area -->
+                    <!-- this is the event scrub/alarm frames area -->
                     <div ng-if="isGroupShown(event)">
-
-                        <div ng-if="event.Event.DefaultVideo=='' || loginData.enableh264==false">
-
-
+                        
+                        
+                        
+                        <div ng-if="groupType=='alarms'">
                             <br/>
-                            <br/>
-                            <br/>
-                            <div style="width:90%">
-                                <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
-                            </div>
-                            
-                            <br/>
-
-
-
-                            <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
-
+                          
                             <div style="height:190px">
-       
-                                
-                                <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover rn-platform="{{$root.platformOS}}">
-                                    <li ng-repeat="slide in slides">
-                                        <!-- Linwood scaling -->
-                                        <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
-                                        <br/>
-
-
-                                    </li>
-                                </ul>
+                                <p>scroll <i class="icon ion-arrow-left-c"></i>
+                                <i class="icon ion-arrow-right-c"></i></p>
+                                <ion-scroll direction="x" >
+                                    
+                                        <span ng-repeat="alarm in alarm_images">
+                                                 
+                                            <figure style="display:inline-block">
+                                                <figcaption><p>frame:{{alarm.id}} score:{{alarm.score}}</p></figcaption>       
+                                                  <img  ng-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"  height="170px" />
+                                                  
+                                                
+                                                </figure>
+                                          
+                                        </span>
+                                    
+                                </ion-scroll>
                             </div>
                         </div>
-                        <!-- no DefaultVideo -->
+                        <div ng-if="groupType=='scrub'">    
+                            <div ng-if="event.Event.DefaultVideo=='' || loginData.enableh264==false">
 
 
-                        <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div style="width:90%">
+                                    <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
+                                </div>
 
-                            <br/>
-                            <br/>
-                            <br/>
+                                <br/>
 
 
-                            <div class="videogular-container">
-                                <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'" vg-responsive="true">
-                                    <vg-controls>
-                                        <vg-play-pause-button></vg-play-pause-button>
-                                        <vg-scrub-bar>
-                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                        </vg-scrub-bar>
-                                        <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
-                                        <vg-fullscreen-button></vg-fullscreen-button>
-                                        <vg-volume>
-                                            <vg-mute-button></vg-mute-button>
-                                        </vg-volume>
-                                    </vg-controls>
 
-                                    <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="false">
-                                    </vg-media>
-                                </videogular>
+                                <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
+
+                                <div style="height:190px">
+
+
+                                    <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover rn-platform="{{$root.platformOS}}">
+                                        <li ng-repeat="slide in slides">
+                                            <!-- Linwood scaling -->
+                                            
+                                            
+                                            <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
+                                            <br/>
+
+
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
+                            <!-- no DefaultVideo -->
 
-                        </div>
-                        <!-- DefaultVideo -->
+
+                            <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
+
+                                <br/>
+                                <br/>
+                                <br/>
+
+
+                                <div class="videogular-container">
+                                    <videogular vg-theme="event.Event.video.config.theme" 
+                                                vg-plays-inline="'true'" vg-auto-play="'true'" vg-responsive="true">
+                                        <vg-controls>
+                                            <vg-play-pause-button></vg-play-pause-button>
+                                            <vg-scrub-bar>
+                                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                            </vg-scrub-bar>
+                                            <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                                            <vg-fullscreen-button></vg-fullscreen-button>
+                                            <vg-volume>
+                                                <vg-mute-button></vg-mute-button>
+                                            </vg-volume>
+                                        </vg-controls>
+
+                                        <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="false">
+                                        </vg-media>
+                                    </videogular>
+                                </div>
+
+                            </div>
+                            <!-- DefaultVideo -->
+                        </div> <!-- type = scrub -->
                     </div>
                     <!-- isGroupShown -->
 
