@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment */
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic */
 
 
 var appVersion = "0.0.0";
@@ -135,8 +135,8 @@ angular.module('zmApp', [
 // This directive is adapted from https://github.com/paveisistemas/ionic-image-lazy-load
 // I've removed lazyLoad and only made it show a spinner when an image is loading
 //--------------------------------------------------------------------------------------------
-.directive('imageSpinnerSrc', ['$document', '$compile', 'imageLoadingDataShare',
-    function ($document, $compile, imageLoadingDataShare) {
+.directive('imageSpinnerSrc', ['$document', '$compile', 'imageLoadingDataShare', '$timeout',
+    function ($document, $compile, imageLoadingDataShare, $timeout) {
         return {
             restrict: 'A',
             scope: {
@@ -164,22 +164,40 @@ angular.module('zmApp', [
                 $element.bind('error', function () {
                     // console.log ("DIRECTIVE: IMAGE ERROR");
                     loader.remove();
-                    imageLoadingDataShare.set(0);
+                    
 
                     var url = 'img/novideo.png';
                     $element.prop('src', url);
+                    imageLoadingDataShare.set(0);
                 });
+                
+                function waitForFrame1()
+                    {
+                        ionic.DomUtil.requestAnimationFrame (
+                            function () {imageLoadingDataShare.set(0); 
+                                         //console.log ("IMAGE LOADED");
+                                        });
+                        
+                    }
 
                 function loadImage() {
                     $element.bind("load", function (e) {
                         if ($attributes.imageSpinnerLoader) {
-                            // console.log ("DIRECTIVE: IMAGE LOADED");
+                            //console.log ("DIRECTIVE: IMAGE LOADED");
                             loader.remove();
-                            imageLoadingDataShare.set(0);
+                            //imageLoadingDataShare.set(0);
+                            //console.log ("rendered");
+                            
+                            // lets wait for 2 frames for animation
+                            // to render - hoping this will improve tear 
+                            // of images
+                           ionic.DomUtil.requestAnimationFrame (
+                               function () {waitForFrame1();});
+                            
                         }
                     });
 
-
+                    
 
 
                     if ($scope.imageSpinnerBackgroundImage == "true") {
@@ -189,7 +207,9 @@ angular.module('zmApp', [
                                 loader.remove();
                             }
                             // set style attribute on element (it will load image)
-                            $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')';
+                              if (imageLoadingDataShare.get() != 1) 
+                              
+                                $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')';
                         };
                         bgImg.src = $attributes.imageSpinnerSrc;
                         
