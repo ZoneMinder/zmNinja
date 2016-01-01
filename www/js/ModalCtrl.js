@@ -4,7 +4,7 @@
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment */
 
 
-angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'stopOrPlay', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, stopOrPlay) {
+angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils) {
 
 
     // from parent scope
@@ -616,23 +616,23 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         
             case "super":
                 $scope.eventSpeed = 20/$scope.event.Event.Frames;
-                stopOrPlay.setDuration($scope.eventSpeed);
+                carouselUtils.setDuration($scope.eventSpeed);
                 break;
             case "normal":
                $scope.eventSpeed = $scope.event.Event.Length/$scope.event.Event.Frames;
                 //$scope.eventSpeed = 5;
-                stopOrPlay.setDuration($scope.eventSpeed);
+                carouselUtils.setDuration($scope.eventSpeed);
                 
                 break;
             case "faster":
                 $scope.eventSpeed = $scope.eventSpeed / 2;
                 if ($scope.eventSpeed <20/$scope.event.Event.Frames)
                         $scope.eventSpeed = 10/$scope.event.Event.Frames;
-                stopOrPlay.setDuration($scope.eventSpeed);
+                carouselUtils.setDuration($scope.eventSpeed);
                 break;
             case "slower":
                  $scope.eventSpeed = $scope.eventSpeed * 2;
-                 stopOrPlay.setDuration($scope.eventSpeed);
+                 carouselUtils.setDuration($scope.eventSpeed);
                 
                 break;
             default:
@@ -1064,7 +1064,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     {
          $scope.$watch('ionRange.index', function () {
           //  
-            if (stopOrPlay.get() == true)
+            if (carouselUtils.getStop() == true)
                     return;
             $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
            //  console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
@@ -1091,13 +1091,13 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                     if (!$scope.modal ||  $scope.modal.isShown()==false)
                     {
                         console.log ("quick scrub playback over");
-                        stopOrPlay.set(true);
+                        carouselUtils.setStop(true);
                         $scope.ionRange.index = 0;
                         $scope.mycarousel.index = 1;
                     }
                    
                 }
-            if (stopOrPlay.get() == true)
+            if (carouselUtils.getStop() == true)
                     return;
             $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
            // console.log ("***IONRANGE RANGE CHANGED TO " + $scope.ionRange.index);

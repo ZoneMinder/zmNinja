@@ -29,7 +29,7 @@ angular.module('angular-carousel')
 // so slide does not progress if image is not loaded or gets an error
 // imageLoadingDataShare is the factory that has a value
 // of 0 if no image is being loaded, -1 if there was an error and 1 if an image is currently being loaded
-.directive('rnCarouselAutoSlide', ['$interval','$timeout', 'imageLoadingDataShare', 'stopOrPlay', function($interval,$timeout, imageLoadingDataShare, stopOrPlay ) {
+.directive('rnCarouselAutoSlide', ['$interval','$timeout', 'imageLoadingDataShare', 'carouselUtils', function($interval,$timeout, imageLoadingDataShare, carouselUtils ) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
@@ -38,14 +38,16 @@ angular.module('angular-carousel')
         var stopAutoPlay = function() {
             if (scope.autoSlider) {
 		//console.log ("Cancelling timer");
-                $interval.cancel(scope.autoSlider);
+                //$interval.cancel(scope.autoSlider);
                 scope.autoSlider = null;
             }
         };
         var restartTimer = function() {
-	    if (stopOrPlay.isStopped() == false)
+	    //console.log ("restart timer");
+	    if (carouselUtils.isStopped() == false)
 	    {
-	    	//console.log ("Timer restart rnForceStop "+ stopOrPlay.get());
+	    	//console.log ("Timer restart rnForceStop "+ carouselUtils.get());
+		//console.log ("Calling autoslide because isStopped is false");
             	scope.autoSlide();
 	    }
 	    else {console.log ("Not sliding as stop=true");}
@@ -53,21 +55,21 @@ angular.module('angular-carousel')
 	//PP - don't auto play if user taps
 	var toggleAutoPlay = function() {
 		//scope.rnForceStop = !scope.rnForceStop;
-		stopOrPlay.set(!stopOrPlay.get());
-		//console.log ("Autoplay is " + stopOrPlay.get());
+		carouselUtils.setStop(!carouselUtils.getStop());
+		//console.log ("Autoplay is " + carouselUtils.get());
 		if (scope.autoSlider )
 		{
             // PP - If autoslide was on and we tapped, stop auto slide
 			//scope.rnForceStop = true; //PP
-			stopOrPlay.set (true);
-			console.log ("***RN: Stopping Play rnForceStop is "+stopOrPlay.get());
+			carouselUtils.setStop (true);
+			console.log ("***RN: Stopping Play rnForceStop is "+carouselUtils.getStop());
 			stopAutoPlay();
 		}
 		else
 		{
 			//scope.rnForceStop = false; //PP
-			stopOrPlay.set (false);
-			console.log ("***RN: Starting Play rnForceStop is "+stopOrPlay.get());
+			carouselUtils.setStop (false);
+			console.log ("***RN: Starting Play rnForceStop is "+carouselUtils.getStop());
 			restartTimer();
 		}
 	};
@@ -75,7 +77,7 @@ angular.module('angular-carousel')
 // start with autoplay and require tap to stop
 	console.log ("*** Setting rnForceStop to false and watching");
 	//scope.rnForceStop = false; // PP
-	stopOrPlay.set (false);
+	carouselUtils.setStop (false);
         scope.$watch('carouselIndex', restartTimer);
 
         if (attrs.hasOwnProperty('rnCarouselPauseOnHover') && attrs.rnCarouselPauseOnHover !== 'false'){
@@ -250,15 +252,15 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
     }])
 
     //PP
-    .factory ('stopOrPlay', function() {
-	var stoporplay = false;
+    .factory ('carouselUtils', function() {
+	var isstopped = false;
 	var duration = 0;
 	return {
 
 		setDuration: function (val)
 		{
 			duration = val;
-			console.log (">>>>>>>>>>>>>>>> DURATION SET TO " + duration);
+			console.log (">>>>>>>>>>>>>>>> DURATION SET TO (secs) " + duration);
 		},
 
 		getDuration: function ()
@@ -266,21 +268,21 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 			return duration;
 		},
 		
-		set: function(val)
+		setStop: function(val)
 		{
-			stoporplay = val;
+			isstopped = val;
 		},
-		get: function()
+		getStop: function()
 		{
-			return stoporplay;
+			return isstopped;
 		},
 		isStopped: function()
 		{
-			return stoporplay;
+			return isstopped;
 		},
 		hello: function()
 		{
-			console.log ("Hello from stopOrPlay");
+			console.log ("Hello from carouselUtils");
 		}
 
 	}
@@ -297,8 +299,8 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
         };
     })
 
-    .directive('rnCarousel', ['$swipe', '$window', '$document', '$parse', '$compile', '$timeout', '$interval', 'computeCarouselSlideStyle', 'createStyleString', 'Tweenable', 'imageLoadingDataShare', 'stopOrPlay',
-        function($swipe, $window, $document, $parse, $compile, $timeout, $interval, computeCarouselSlideStyle, createStyleString, Tweenable, imageLoadingDataShare, stopOrPlay) {
+    .directive('rnCarousel', ['$swipe', '$window', '$document', '$parse', '$compile', '$timeout', '$interval', 'computeCarouselSlideStyle', 'createStyleString', 'Tweenable', 'imageLoadingDataShare', 'carouselUtils',
+        function($swipe, $window, $document, $parse, $compile, $timeout, $interval, computeCarouselSlideStyle, createStyleString, Tweenable, imageLoadingDataShare, carouselUtils) {
             // internal ids to allow multiple instances
             var carouselId = 0,
                 // in absolute pixels, at which distance the slide stick to the edge on release
@@ -430,7 +432,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         }
 
                         scope.nextSlide = function(slideOptions) {
-			   if (stopOrPlay.isStopped()==true)
+			   if (carouselUtils.isStopped()==true)
 				return;
 			   
                             var index = scope.carouselIndex + 1;
@@ -443,12 +445,8 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 			// and we don't mess up the rate
                           if (imageLoadingDataShare.get() != 1) // PP- If the image is still being loaded, hold on, don't change
 			   {
-				//if (!locked ) {
-				if (1 ) {
-                               		 goToSlide(index, slideOptions);
-                            	}
+                               	goToSlide(index, slideOptions);
 			//	console.log ("loaded carousel is " + scope.carouselIndex);
-			//console.log ("Image is still loading, not skipping slides");
 
 			   }  
 			   else
@@ -457,9 +455,11 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 				// so playback total time is not affected
 			
                                 scope.carouselIndex = index;
+				//console.log ("Image is still loading, not skipping slides, index at "+index);
                                 updateBufferIndex();
 				//console.log ("NOT LOADED but advancing carousel to " + scope.carouselIndex);
-			   }
+			   	
+}
 			   
                         };
 
@@ -590,16 +590,17 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         if (iAttributes.rnCarouselAutoSlide!==undefined) {
                             // PP was parseInt, changed to parseFloat so I can specify fractions of seconds
                             var duration = parseFloat(iAttributes.rnCarouselAutoSlide, 10) || options.autoSlideDuration;
-			    stopOrPlay.setDuration(duration);
+			    carouselUtils.setDuration(duration);
 			    console.log ("Setting duration - should only happen once");
                             scope.autoSlide = function() {
+				//console.log ("Inside autoslide");
                                 if (scope.autoSlider) {
-                                    $interval.cancel(scope.autoSlider);
+                                    //$interval.cancel(scope.autoSlider);
                                     scope.autoSlider = null;
                                 }
-				if (stopOrPlay.isStopped() == false) //PP - don't move slide if this variable is set
+				if (carouselUtils.isStopped() == false) //PP - don't move slide if this variable is set
 				{
-					var mydur = stopOrPlay.getDuration();
+					var mydur = carouselUtils.getDuration();
 
 					// what happens if mydur needs to be less than a millisecond?
 					var mydurms = mydur * 1000.0;
@@ -611,7 +612,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 						
 					}
 					//console.log ("Setting next slide duration at " + mydur *1000);
-                                	scope.autoSlider = $interval(function() {
+                                	scope.autoSlider = $timeout(function() {
 					//console.log ("setting time to " + mydurms);
                                     	//if (!locked && !pressed ) {
                                     	if (1 ) {
@@ -641,7 +642,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                             if (angular.isFunction(indexModel.assign)) {
                                 /* check if this property is assignable then watch it */
                                 scope.$watch('carouselIndex', function(newValue) {
-				    if (stopOrPlay.isStopped() == false)
+				    if (carouselUtils.isStopped() == false)
                                     	updateParentIndex(newValue);
                                 });
 				scope.$parent.$watch(function () {
