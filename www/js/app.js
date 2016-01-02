@@ -210,7 +210,12 @@ angular.module('zmApp', [
                               if (imageLoadingDataShare.get() != 1) 
                               
                                 $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')';
+                            
+                            //$element[0].style.backgroundImage = 'url(' + 'img/novideo.png'+ ')';
+                            
                         };
+                        
+                    
                         bgImg.src = $attributes.imageSpinnerSrc;
                         
                     } else {
@@ -633,7 +638,8 @@ angular.module('zmApp', [
         $rootScope.currentServerGroup = "defaultServer";
         $rootScope.validMonitorId = "";
         $rootScope.newVersionAvailable = "";
-    $rootScope.userCancelledAuth = false;
+        $rootScope.userCancelledAuth = false;
+        $rootScope.online = true;
         //$rootScope.minAlarmCount = "1";
     
        
@@ -644,7 +650,22 @@ angular.module('zmApp', [
             ZMDataModel.zmDebug("**EXCEPTION**"+error.reason+" caused by " + error.cause);
         };
        
-    
+        // register callbacks for online/offline
+        // lets see if it really works
+        $rootScope.online = navigator.onLine;
+          $window.addEventListener("offline", function () {
+            $rootScope.$apply(function() {
+              $rootScope.online = false;
+                ZMDataModel.zmLog ("Your network went offline");
+            });
+          }, false);
+          $window.addEventListener("online", function () {
+            $rootScope.$apply(function() {
+              $rootScope.online = true;
+            ZMDataModel.zmLog ("Your network is online");
+            });
+          }, false);
+
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
         $ionicPlatform.registerBackButtonAction(function (e) {
