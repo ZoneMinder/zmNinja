@@ -270,11 +270,13 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         // the reason the login data is not working is because
         // the app is adding multiple "/" characters
 
-        $scope.loginData.url = $scope.loginData.url.trim();
-        $scope.loginData.apiurl = $scope.loginData.apiurl.trim();
+        $scope.loginData.url = $scope.loginData.url.replace(/\s/g, "");
+        $scope.loginData.apiurl = $scope.loginData.apiurl.replace(/\s/g, "");
+        $scope.loginData.streamingurl = $scope.loginData.streamingurl.replace(/\s/g, "");
+        $scope.loginData.eventServer = $scope.loginData.eventServer.replace(/\s/g, "");
+        
         $scope.loginData.username = $scope.loginData.username.trim();
-        $scope.loginData.streamingurl = $scope.loginData.streamingurl.trim();
-        $scope.loginData.eventServer = $scope.loginData.eventServer.trim();
+       
 
 
 
