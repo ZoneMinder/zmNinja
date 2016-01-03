@@ -642,6 +642,13 @@ angular.module('zmApp', [
         $rootScope.online = true;
         //$rootScope.minAlarmCount = "1";
     
+    
+        // only for android
+        $rootScope.exitApp = function()
+        {
+            ZMDataModel.zmLog ("user exited app");
+            ionic.Platform.exitApp();
+        };
        
 
         // This is a global exception interceptor
