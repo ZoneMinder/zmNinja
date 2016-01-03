@@ -71,69 +71,69 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     zmAutoLogin.start();
                     zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;authenticating...</button>")
                         .then(function (data) // success
-                            {
-                                ZMDataModel.zmDebug("PortalLogin: auth success");
-                                ZMDataModel.getKeyConfigParams(1);
-                                ZMDataModel.zmDebug("Transitioning state to: " + 
-                                                    $rootScope.lastState ? $rootScope.lastState : 'montage');
-                        
-                                ZMDataModel.getAPIversion()
-                                .then (function(data) {
-                                    ZMDataModel.zmLog("Got API version: " + data);
-                                    var ld = ZMDataModel.getLogin();
-                                     if (versionCompare(data,zm.minAppVersion)==-1 && (ld.url.indexOf("arjunrc.") == -1) && data !="0.0.0")
-                                    //if (versionCompare(data,zm.minAppVersion))
-                                    {
-                                        
-                                        $state.go('lowversion', {"ver":data});
-                                    }
-                                });
-                                EventServer.refresh();
-                        
-                        if ($rootScope.tappedNotification)
                         {
-                            var ld = ZMDataModel.getLogin();
-                            
-                            console.log ("***** NOTIFICATION TAPPED  ");
-                            $rootScope.tappedNotification = 0;
-                            $ionicHistory.nextViewOptions({disableBack: true});	
-                            
-                            if (ld.onTapScreen == 'montage' )
-                            {
-                                ZMDataModel.zmDebug("Going to montage");
-                                $state.go("montage", {}, { reload: true });
-                                
-                                return;
-                            }
-                            else
-                            {
-                                ZMDataModel.zmDebug("Going to events");
-                                $state.go("events", {"id": 0}, { reload: true });
-                                return;
-                            }
-                        }
-                        
-                                $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
-                            },
-                            // coming here means auth error
-                            // so go back to login
-                            function (error) {
-                                ZMDataModel.zmDebug("PortalLogin: error authenticating " +
-                                    JSON.stringify(error));
-                                if (!$rootScope.userCancelledAuth)
+                            ZMDataModel.zmDebug("PortalLogin: auth success");
+                            ZMDataModel.getKeyConfigParams(1);
+                            ZMDataModel.zmDebug("Transitioning state to: " + 
+                                                $rootScope.lastState ? $rootScope.lastState : 'montage');
+
+                            ZMDataModel.getAPIversion()
+                            .then (function(data) {
+                                ZMDataModel.zmLog("Got API version: " + data);
+                                var ld = ZMDataModel.getLogin();
+                                 if (versionCompare(data,zm.minAppVersion)==-1 && (ld.url.indexOf("arjunrc.") == -1) && data !="0.0.0")
+                                //if (versionCompare(data,zm.minAppVersion))
                                 {
-                                        $ionicHistory.nextViewOptions({
-                                            disableAnimate: true,
-                                        disableBack: true
-                                        });
-                                        $state.go('login');
-                                }
-                                else   
-                                {
-                                    // do this only once - rest for next time
-                                    $rootScope.userCancelledAuth = false;
+
+                                    $state.go('lowversion', {"ver":data});
                                 }
                             });
+                            EventServer.refresh();
+
+                            if ($rootScope.tappedNotification)
+                            {
+                                var ld = ZMDataModel.getLogin();
+
+                                console.log ("***** NOTIFICATION TAPPED  ");
+                                $rootScope.tappedNotification = 0;
+                                $ionicHistory.nextViewOptions({disableBack: true});	
+
+                                if (ld.onTapScreen == 'montage' )
+                                {
+                                    ZMDataModel.zmDebug("Going to montage");
+                                    $state.go("montage", {}, { reload: true });
+
+                                    return;
+                                }
+                                else
+                                {
+                                    ZMDataModel.zmDebug("Going to events");
+                                    $state.go("events", {"id": 0}, { reload: true });
+                                    return;
+                                }
+                            }
+
+                                $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
+                        },
+                            // coming here means auth error
+                            // so go back to login
+                        function (error) {
+                            ZMDataModel.zmDebug("PortalLogin: error authenticating " +
+                                JSON.stringify(error));
+                            if (!$rootScope.userCancelledAuth)
+                            {
+                                    $ionicHistory.nextViewOptions({
+                                        disableAnimate: true,
+                                    disableBack: true
+                                    });
+                                    $state.go('login');
+                            }
+                            else   
+                            {
+                                // do this only once - rest for next time
+                                $rootScope.userCancelledAuth = false;
+                            }
+                        });
                 }
 
             } else {
