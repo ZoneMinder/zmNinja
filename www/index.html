@@ -204,6 +204,16 @@
                         </ion-item>
                     </div>
                     
+                    <div ng-if="$root.platformOS=='android'">
+                        <ion-item  ng-click="$root.exitApp();">
+                        <span class=" item-icon-left">
+                            <i class="icon ion-close-circled"></i>
+                        </span> Exit
+                    </ion-item>
+                    
+                    </div>
+                    
+                    
                 </ion-list>
             </ion-content>
         </ion-side-menu>
