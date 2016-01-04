@@ -4,11 +4,11 @@
  *
  * A dynamic, browser-based visualization library.
  *
- * @version 4.7.0
- * @date    2015-07-27
+ * @version 4.11.0
+ * @date    2015-12-18
  *
  * @license
- * Copyright (C) 2011-2014 Almende B.V, http://almende.com
+ * Copyright (C) 2011-2015 Almende B.V, http://almende.com
  *
  * Vis.js is dual licensed under both
  *
@@ -29,7 +29,7 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define(factory);
+		define([], factory);
 	else if(typeof exports === 'object')
 		exports["vis"] = factory();
 	else
@@ -84,52 +84,53 @@ return /******/ (function(modules) { // webpackBootstrap
   // utils
   'use strict';
 
-  exports.util = __webpack_require__(7);
-  exports.DOMutil = __webpack_require__(13);
+  exports.util = __webpack_require__(1);
+  exports.DOMutil = __webpack_require__(7);
 
   // data
-  exports.DataSet = __webpack_require__(14);
-  exports.DataView = __webpack_require__(16);
-  exports.Queue = __webpack_require__(15);
+  exports.DataSet = __webpack_require__(8);
+  exports.DataView = __webpack_require__(10);
+  exports.Queue = __webpack_require__(9);
 
   // Graph3d
-  exports.Graph3d = __webpack_require__(17);
+  exports.Graph3d = __webpack_require__(11);
   exports.graph3d = {
-    Camera: __webpack_require__(21),
-    Filter: __webpack_require__(22),
-    Point2d: __webpack_require__(18),
-    Point3d: __webpack_require__(20),
-    Slider: __webpack_require__(23),
-    StepNumber: __webpack_require__(24)
+    Camera: __webpack_require__(15),
+    Filter: __webpack_require__(16),
+    Point2d: __webpack_require__(14),
+    Point3d: __webpack_require__(13),
+    Slider: __webpack_require__(17),
+    StepNumber: __webpack_require__(18)
   };
 
   // Timeline
-  exports.Timeline = __webpack_require__(25);
+  exports.Timeline = __webpack_require__(19);
   exports.Graph2d = __webpack_require__(49);
   exports.timeline = {
-    DateUtil: __webpack_require__(29),
+    Core: __webpack_require__(28),
     DataStep: __webpack_require__(52),
-    Range: __webpack_require__(26),
-    stack: __webpack_require__(33),
-    TimeStep: __webpack_require__(35),
+    DateUtil: __webpack_require__(27),
+    Range: __webpack_require__(24),
+    stack: __webpack_require__(32),
+    TimeStep: __webpack_require__(30),
 
     components: {
       items: {
-        Item: __webpack_require__(2),
+        Item: __webpack_require__(34),
         BackgroundItem: __webpack_require__(38),
-        BoxItem: __webpack_require__(37),
-        PointItem: __webpack_require__(1),
-        RangeItem: __webpack_require__(34)
+        BoxItem: __webpack_require__(36),
+        PointItem: __webpack_require__(37),
+        RangeItem: __webpack_require__(33)
       },
 
-      Component: __webpack_require__(28),
+      BackgroundGroup: __webpack_require__(35),
+      Component: __webpack_require__(26),
       CurrentTime: __webpack_require__(44),
       CustomTime: __webpack_require__(42),
       DataAxis: __webpack_require__(51),
       GraphGroup: __webpack_require__(53),
-      Group: __webpack_require__(32),
-      BackgroundGroup: __webpack_require__(36),
-      ItemSet: __webpack_require__(31),
+      Group: __webpack_require__(31),
+      ItemSet: __webpack_require__(29),
       Legend: __webpack_require__(57),
       LineGraph: __webpack_require__(50),
       TimeAxis: __webpack_require__(39)
@@ -139,10 +140,10 @@ return /******/ (function(modules) { // webpackBootstrap
   // Network
   exports.Network = __webpack_require__(59);
   exports.network = {
-    Images: __webpack_require__(114),
-    dotparser: __webpack_require__(112),
-    gephiParser: __webpack_require__(113),
-    allOptions: __webpack_require__(110)
+    Images: __webpack_require__(117),
+    dotparser: __webpack_require__(115),
+    gephiParser: __webpack_require__(116),
+    allOptions: __webpack_require__(111)
   };
   exports.network.convertDot = function (input) {
     return exports.network.dotparser.DOTToGraph(input);
@@ -151,3243 +152,13 @@ return /******/ (function(modules) { // webpackBootstrap
     return exports.network.gephiParser.parseGephi(input, options);
   };
 
-  // Deprecated since v3.0.0
-  exports.Graph = function () {
-    throw new Error('Graph is renamed to Network. Please create a graph as new vis.Network(...)');
-  };
-
   // bundled external libraries
-  exports.moment = __webpack_require__(8);
-  exports.hammer = __webpack_require__(3); // TODO: deprecate exports.hammer some day
-  exports.Hammer = __webpack_require__(3);
+  exports.moment = __webpack_require__(2);
+  exports.Hammer = __webpack_require__(20);
   exports.keycharm = __webpack_require__(41);
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-  'use strict';
-
-  var Item = __webpack_require__(2);
-
-  /**
-   * @constructor PointItem
-   * @extends Item
-   * @param {Object} data             Object containing parameters start
-   *                                  content, className.
-   * @param {{toScreen: function, toTime: function}} conversion
-   *                                  Conversion functions from time to screen and vice versa
-   * @param {Object} [options]        Configuration options
-   *                                  // TODO: describe available options
-   */
-  function PointItem(data, conversion, options) {
-    this.props = {
-      dot: {
-        top: 0,
-        width: 0,
-        height: 0
-      },
-      content: {
-        height: 0,
-        marginLeft: 0
-      }
-    };
-
-    // validate data
-    if (data) {
-      if (data.start == undefined) {
-        throw new Error('Property "start" missing in item ' + data);
-      }
-    }
-
-    Item.call(this, data, conversion, options);
-  }
-
-  PointItem.prototype = new Item(null, null, null);
-
-  /**
-   * Check whether this item is visible inside given range
-   * @returns {{start: Number, end: Number}} range with a timestamp for start and end
-   * @returns {boolean} True if visible
-   */
-  PointItem.prototype.isVisible = function (range) {
-    // determine visibility
-    // TODO: account for the real width of the item. Right now we just add 1/4 to the window
-    var interval = (range.end - range.start) / 4;
-    return this.data.start > range.start - interval && this.data.start < range.end + interval;
-  };
-
-  /**
-   * Repaint the item
-   */
-  PointItem.prototype.redraw = function () {
-    var dom = this.dom;
-    if (!dom) {
-      // create DOM
-      this.dom = {};
-      dom = this.dom;
-
-      // background box
-      dom.point = document.createElement('div');
-      // className is updated in redraw()
-
-      // contents box, right from the dot
-      dom.content = document.createElement('div');
-      dom.content.className = 'vis-item-content';
-      dom.point.appendChild(dom.content);
-
-      // dot at start
-      dom.dot = document.createElement('div');
-      dom.point.appendChild(dom.dot);
-
-      // attach this item as attribute
-      dom.point['timeline-item'] = this;
-
-      this.dirty = true;
-    }
-
-    // append DOM to parent DOM
-    if (!this.parent) {
-      throw new Error('Cannot redraw item: no parent attached');
-    }
-    if (!dom.point.parentNode) {
-      var foreground = this.parent.dom.foreground;
-      if (!foreground) {
-        throw new Error('Cannot redraw item: parent has no foreground container element');
-      }
-      foreground.appendChild(dom.point);
-    }
-    this.displayed = true;
-
-    // Update DOM when item is marked dirty. An item is marked dirty when:
-    // - the item is not yet rendered
-    // - the item's data is changed
-    // - the item is selected/deselected
-    if (this.dirty) {
-      this._updateContents(this.dom.content);
-      this._updateTitle(this.dom.point);
-      this._updateDataAttributes(this.dom.point);
-      this._updateStyle(this.dom.point);
-
-      var editable = (this.options.editable.updateTime || this.options.editable.updateGroup || this.editable === true) && this.editable !== false;
-
-      // update class
-      var className = (this.data.className ? ' ' + this.data.className : '') + (this.selected ? ' vis-selected' : '') + (editable ? ' vis-editable' : ' vis-readonly');
-      dom.point.className = 'vis-item vis-point' + className;
-      dom.dot.className = 'vis-item vis-dot' + className;
-
-      // recalculate size of dot and contents
-      this.props.dot.width = dom.dot.offsetWidth;
-      this.props.dot.height = dom.dot.offsetHeight;
-      this.props.content.height = dom.content.offsetHeight;
-
-      // resize contents
-      dom.content.style.marginLeft = 2 * this.props.dot.width + 'px';
-      //dom.content.style.marginRight = ... + 'px'; // TODO: margin right
-
-      dom.dot.style.top = (this.height - this.props.dot.height) / 2 + 'px';
-      dom.dot.style.left = this.props.dot.width / 2 + 'px';
-
-      // recalculate size
-      this.width = dom.point.offsetWidth;
-      this.height = dom.point.offsetHeight;
-
-      this.dirty = false;
-    }
-
-    this._repaintDeleteButton(dom.point);
-  };
-
-  /**
-   * Show the item in the DOM (when not already visible). The items DOM will
-   * be created when needed.
-   */
-  PointItem.prototype.show = function () {
-    if (!this.displayed) {
-      this.redraw();
-    }
-  };
-
-  /**
-   * Hide the item from the DOM (when visible)
-   */
-  PointItem.prototype.hide = function () {
-    if (this.displayed) {
-      if (this.dom.point.parentNode) {
-        this.dom.point.parentNode.removeChild(this.dom.point);
-      }
-
-      this.displayed = false;
-    }
-  };
-
-  /**
-   * Reposition the item horizontally
-   * @Override
-   */
-  PointItem.prototype.repositionX = function () {
-    var start = this.conversion.toScreen(this.data.start);
-
-    this.left = start - this.props.dot.width;
-
-    // reposition point
-    this.dom.point.style.left = this.left + 'px';
-  };
-
-  /**
-   * Reposition the item vertically
-   * @Override
-   */
-  PointItem.prototype.repositionY = function () {
-    var orientation = this.options.orientation.item;
-    var point = this.dom.point;
-
-    if (orientation == 'top') {
-      point.style.top = this.top + 'px';
-    } else {
-      point.style.top = this.parent.height - this.top - this.height + 'px';
-    }
-  };
-
-  /**
-   * Return the width of the item left from its start date
-   * @return {number}
-   */
-  PointItem.prototype.getWidthLeft = function () {
-    return this.props.dot.width;
-  };
-
-  /**
-   * Return the width of the item right from  its start date
-   * @return {number}
-   */
-  PointItem.prototype.getWidthRight = function () {
-    return this.width - this.props.dot.width;
-  };
-
-  module.exports = PointItem;
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-  'use strict';
-
-  var Hammer = __webpack_require__(3);
-  var util = __webpack_require__(7);
-
-  /**
-   * @constructor Item
-   * @param {Object} data             Object containing (optional) parameters type,
-   *                                  start, end, content, group, className.
-   * @param {{toScreen: function, toTime: function}} conversion
-   *                                  Conversion functions from time to screen and vice versa
-   * @param {Object} options          Configuration options
-   *                                  // TODO: describe available options
-   */
-  function Item(data, conversion, options) {
-    this.id = null;
-    this.parent = null;
-    this.data = data;
-    this.dom = null;
-    this.conversion = conversion || {};
-    this.options = options || {};
-
-    this.selected = false;
-    this.displayed = false;
-    this.dirty = true;
-
-    this.top = null;
-    this.left = null;
-    this.width = null;
-    this.height = null;
-
-    this.editable = null;
-    if (this.data && this.data.hasOwnProperty('editable') && typeof this.data.editable === 'boolean') {
-      this.editable = data.editable;
-    }
-  }
-
-  Item.prototype.stack = true;
-
-  /**
-   * Select current item
-   */
-  Item.prototype.select = function () {
-    this.selected = true;
-    this.dirty = true;
-    if (this.displayed) this.redraw();
-  };
-
-  /**
-   * Unselect current item
-   */
-  Item.prototype.unselect = function () {
-    this.selected = false;
-    this.dirty = true;
-    if (this.displayed) this.redraw();
-  };
-
-  /**
-   * Set data for the item. Existing data will be updated. The id should not
-   * be changed. When the item is displayed, it will be redrawn immediately.
-   * @param {Object} data
-   */
-  Item.prototype.setData = function (data) {
-    var groupChanged = data.group != undefined && this.data.group != data.group;
-    if (groupChanged) {
-      this.parent.itemSet._moveToGroup(this, data.group);
-    }
-
-    if (data.hasOwnProperty('editable') && typeof data.editable === 'boolean') {
-      this.editable = data.editable;
-    }
-
-    this.data = data;
-    this.dirty = true;
-    if (this.displayed) this.redraw();
-  };
-
-  /**
-   * Set a parent for the item
-   * @param {ItemSet | Group} parent
-   */
-  Item.prototype.setParent = function (parent) {
-    if (this.displayed) {
-      this.hide();
-      this.parent = parent;
-      if (this.parent) {
-        this.show();
-      }
-    } else {
-      this.parent = parent;
-    }
-  };
-
-  /**
-   * Check whether this item is visible inside given range
-   * @returns {{start: Number, end: Number}} range with a timestamp for start and end
-   * @returns {boolean} True if visible
-   */
-  Item.prototype.isVisible = function (range) {
-    // Should be implemented by Item implementations
-    return false;
-  };
-
-  /**
-   * Show the Item in the DOM (when not already visible)
-   * @return {Boolean} changed
-   */
-  Item.prototype.show = function () {
-    return false;
-  };
-
-  /**
-   * Hide the Item from the DOM (when visible)
-   * @return {Boolean} changed
-   */
-  Item.prototype.hide = function () {
-    return false;
-  };
-
-  /**
-   * Repaint the item
-   */
-  Item.prototype.redraw = function () {};
-
-  /**
-   * Reposition the Item horizontally
-   */
-  Item.prototype.repositionX = function () {};
-
-  /**
-   * Reposition the Item vertically
-   */
-  Item.prototype.repositionY = function () {};
-
-  /**
-   * Repaint a delete button on the top right of the item when the item is selected
-   * @param {HTMLElement} anchor
-   * @protected
-   */
-  Item.prototype._repaintDeleteButton = function (anchor) {
-    var editable = (this.options.editable.remove || this.data.editable === true) && this.data.editable !== false;
-
-    if (this.selected && editable && !this.dom.deleteButton) {
-      // create and show button
-      var me = this;
-
-      var deleteButton = document.createElement('div');
-      deleteButton.className = 'vis-delete';
-      deleteButton.title = 'Delete this item';
-
-      // TODO: be able to destroy the delete button
-      new Hammer(deleteButton).on('tap', function (event) {
-        event.stopPropagation();
-        me.parent.removeFromDataSet(me);
-      });
-
-      anchor.appendChild(deleteButton);
-      this.dom.deleteButton = deleteButton;
-    } else if (!this.selected && this.dom.deleteButton) {
-      // remove button
-      if (this.dom.deleteButton.parentNode) {
-        this.dom.deleteButton.parentNode.removeChild(this.dom.deleteButton);
-      }
-      this.dom.deleteButton = null;
-    }
-  };
-
-  /**
-   * Set HTML contents for the item
-   * @param {Element} element   HTML element to fill with the contents
-   * @private
-   */
-  Item.prototype._updateContents = function (element) {
-    var content;
-    if (this.options.template) {
-      var itemData = this.parent.itemSet.itemsData.get(this.id); // get a clone of the data from the dataset
-      content = this.options.template(itemData);
-    } else {
-      content = this.data.content;
-    }
-
-    var changed = this._contentToString(this.content) !== this._contentToString(content);
-    if (changed) {
-      // only replace the content when changed
-      if (content instanceof Element) {
-        element.innerHTML = '';
-        element.appendChild(content);
-      } else if (content != undefined) {
-        element.innerHTML = content;
-      } else {
-        if (!(this.data.type == 'background' && this.data.content === undefined)) {
-          throw new Error('Property "content" missing in item ' + this.id);
-        }
-      }
-
-      this.content = content;
-    }
-  };
-
-  /**
-   * Set HTML contents for the item
-   * @param {Element} element   HTML element to fill with the contents
-   * @private
-   */
-  Item.prototype._updateTitle = function (element) {
-    if (this.data.title != null) {
-      element.title = this.data.title || '';
-    } else {
-      element.removeAttribute('vis-title');
-    }
-  };
-
-  /**
-   * Process dataAttributes timeline option and set as data- attributes on dom.content
-   * @param {Element} element   HTML element to which the attributes will be attached
-   * @private
-   */
-  Item.prototype._updateDataAttributes = function (element) {
-    if (this.options.dataAttributes && this.options.dataAttributes.length > 0) {
-      var attributes = [];
-
-      if (Array.isArray(this.options.dataAttributes)) {
-        attributes = this.options.dataAttributes;
-      } else if (this.options.dataAttributes == 'all') {
-        attributes = Object.keys(this.data);
-      } else {
-        return;
-      }
-
-      for (var i = 0; i < attributes.length; i++) {
-        var name = attributes[i];
-        var value = this.data[name];
-
-        if (value != null) {
-          element.setAttribute('data-' + name, value);
-        } else {
-          element.removeAttribute('data-' + name);
-        }
-      }
-    }
-  };
-
-  /**
-   * Update custom styles of the element
-   * @param element
-   * @private
-   */
-  Item.prototype._updateStyle = function (element) {
-    // remove old styles
-    if (this.style) {
-      util.removeCssText(element, this.style);
-      this.style = null;
-    }
-
-    // append new styles
-    if (this.data.style) {
-      util.addCssText(element, this.data.style);
-      this.style = this.data.style;
-    }
-  };
-
-  /**
-   * Stringify the items contents
-   * @param {string | Element | undefined} content
-   * @returns {string | undefined}
-   * @private
-   */
-  Item.prototype._contentToString = function (content) {
-    if (typeof content === 'string') return content;
-    if (content && 'outerHTML' in content) return content.outerHTML;
-    return content;
-  };
-
-  /**
-   * Return the width of the item left from its start date
-   * @return {number}
-   */
-  Item.prototype.getWidthLeft = function () {
-    return 0;
-  };
-
-  /**
-   * Return the width of the item right from the max of its start and end date
-   * @return {number}
-   */
-  Item.prototype.getWidthRight = function () {
-    return 0;
-  };
-
-  module.exports = Item;
-
-  // should be implemented by the item
-
-  // should be implemented by the item
-
-  // should be implemented by the item
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-  // Only load hammer.js when in a browser environment
-  // (loading hammer.js in a node.js environment gives errors)
-  'use strict';
-
-  if (typeof window !== 'undefined') {
-    var propagating = __webpack_require__(4);
-    var Hammer = window['Hammer'] || __webpack_require__(5);
-    module.exports = propagating(Hammer, {
-      preventDefault: 'mouse'
-    });
-  } else {
-    module.exports = function () {
-      throw Error('hammer.js is only available in a browser, not in node.js.');
-    };
-  }
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-  var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
-
-  (function (factory) {
-    if (true) {
-      // AMD. Register as an anonymous module.
-      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports === 'object') {
-      // Node. Does not work with strict CommonJS, but
-      // only CommonJS-like environments that support module.exports,
-      // like Node.
-      module.exports = factory();
-    } else {
-      // Browser globals (root is window)
-      window.propagating = factory();
-    }
-  }(function () {
-    var _firstTarget = null; // singleton, will contain the target element where the touch event started
-    var _processing = false; // singleton, true when a touch event is being handled
-
-    /**
-     * Extend an Hammer.js instance with event propagation.
-     *
-     * Features:
-     * - Events emitted by hammer will propagate in order from child to parent
-     *   elements.
-     * - Events are extended with a function `event.stopPropagation()` to stop
-     *   propagation to parent elements.
-     * - An option `preventDefault` to stop all default browser behavior.
-     *
-     * Usage:
-     *   var hammer = propagatingHammer(new Hammer(element));
-     *   var hammer = propagatingHammer(new Hammer(element), {preventDefault: true});
-     *
-     * @param {Hammer.Manager} hammer   An hammer instance.
-     * @param {Object} [options]        Available options:
-     *                                  - `preventDefault: true | 'mouse' | 'touch' | 'pen'`.
-     *                                    Enforce preventing the default browser behavior.
-     *                                    Cannot be set to `false`.
-     * @return {Hammer.Manager} Returns the same hammer instance with extended
-     *                          functionality
-     */
-    return function propagating(hammer, options) {
-      var _options = options || {
-        preventDefault: false
-      };
-
-      if (hammer.Manager) {
-        // This looks like the Hammer constructor.
-        // Overload the constructors with our own.
-        var Hammer = hammer;
-
-        var PropagatingHammer = function(element, options) {
-          var o = Object.create(_options);
-          if (options) Hammer.extend(o, options);
-          return propagating(new Hammer(element, o), o);
-        };
-        Hammer.extend(PropagatingHammer, Hammer);
-
-        PropagatingHammer.Manager = function (element, options) {
-          var o = Object.create(_options);
-          if (options) Hammer.extend(o, options);
-          return propagating(new Hammer.Manager(element, o), o);
-        };
-
-        return PropagatingHammer;
-      }
-
-      // create a wrapper object which will override the functions
-      // `on`, `off`, `destroy`, and `emit` of the hammer instance
-      var wrapper = Object.create(hammer);
-
-      // attach to DOM element
-      var element = hammer.element;
-      element.hammer = wrapper;
-
-      // register an event to catch the start of a gesture and store the
-      // target in a singleton
-      hammer.on('hammer.input', function (event) {
-        if (_options.preventDefault === true || (_options.preventDefault === event.pointerType)) {
-          event.preventDefault();
-        }
-        if (event.isFirst) {
-          _firstTarget = event.target;
-        }
-      });
-
-      /** @type {Object.<String, Array.<function>>} */
-      wrapper._handlers = {};
-
-      /**
-       * Register a handler for one or multiple events
-       * @param {String} events    A space separated string with events
-       * @param {function} handler A callback function, called as handler(event)
-       * @returns {Hammer.Manager} Returns the hammer instance
-       */
-      wrapper.on = function (events, handler) {
-        // register the handler
-        split(events).forEach(function (event) {
-          var _handlers = wrapper._handlers[event];
-          if (!_handlers) {
-            wrapper._handlers[event] = _handlers = [];
-
-            // register the static, propagated handler
-            hammer.on(event, propagatedHandler);
-          }
-          _handlers.push(handler);
-        });
-
-        return wrapper;
-      };
-
-      /**
-       * Unregister a handler for one or multiple events
-       * @param {String} events      A space separated string with events
-       * @param {function} [handler] Optional. The registered handler. If not
-       *                             provided, all handlers for given events
-       *                             are removed.
-       * @returns {Hammer.Manager}   Returns the hammer instance
-       */
-      wrapper.off = function (events, handler) {
-        // unregister the handler
-        split(events).forEach(function (event) {
-          var _handlers = wrapper._handlers[event];
-          if (_handlers) {
-            _handlers = handler ? _handlers.filter(function (h) {
-              return h !== handler;
-            }) : [];
-
-            if (_handlers.length > 0) {
-              wrapper._handlers[event] = _handlers;
-            }
-            else {
-              // remove static, propagated handler
-              hammer.off(event, propagatedHandler);
-              delete wrapper._handlers[event];
-            }
-          }
-        });
-
-        return wrapper;
-      };
-
-      /**
-       * Emit to the event listeners
-       * @param {string} eventType
-       * @param {Event} event
-       */
-      wrapper.emit = function(eventType, event) {
-        _firstTarget = event.target;
-        hammer.emit(eventType, event);
-      };
-
-      wrapper.destroy = function () {
-        // Detach from DOM element
-        delete hammer.element.hammer;
-
-        // clear all handlers
-        wrapper._handlers = {};
-
-        // call original hammer destroy
-        hammer.destroy();
-      };
-
-      // split a string with space separated words
-      function split(events) {
-        return events.match(/[^ ]+/g);
-      }
-
-      /**
-       * A static event handler, applying event propagation.
-       * @param {Object} event
-       */
-      function propagatedHandler(event) {
-        // let only a single hammer instance handle this event
-        if (event.type !== 'hammer.input') {
-          // it is possible that the same srcEvent is used with multiple hammer events,
-          // we keep track on which events are handled in an object _handled
-          if (!event.srcEvent._handled) {
-            event.srcEvent._handled = {};
-          }
-
-          if (event.srcEvent._handled[event.type]) {
-            return;
-          }
-          else {
-            event.srcEvent._handled[event.type] = true;
-          }
-        }
-
-        // attach a stopPropagation function to the event
-        var stopped = false;
-        event.stopPropagation = function () {
-          stopped = true;
-        };
-
-        // attach firstTarget property to the event
-        event.firstTarget = _firstTarget;
-
-        // propagate over all elements (until stopped)
-        var elem = _firstTarget;
-        while (elem && !stopped) {
-          var _handlers = elem.hammer && elem.hammer._handlers[event.type];
-          if (_handlers) {
-            for (var i = 0; i < _handlers.length && !stopped; i++) {
-              _handlers[i](event);
-            }
-          }
-
-          elem = elem.parentNode;
-        }
-      }
-
-      return wrapper;
-    };
-  }));
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-  var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.4 - 2014-09-28
-   * http://hammerjs.github.io/
-   *
-   * Copyright (c) 2014 Jorik Tangelder;
-   * Licensed under the MIT license */
-  (function(window, document, exportName, undefined) {
-    'use strict';
-
-  var VENDOR_PREFIXES = ['', 'webkit', 'moz', 'MS', 'ms', 'o'];
-  var TEST_ELEMENT = document.createElement('div');
-
-  var TYPE_FUNCTION = 'function';
-
-  var round = Math.round;
-  var abs = Math.abs;
-  var now = Date.now;
-
-  /**
-   * set a timeout with a given scope
-   * @param {Function} fn
-   * @param {Number} timeout
-   * @param {Object} context
-   * @returns {number}
-   */
-  function setTimeoutContext(fn, timeout, context) {
-      return setTimeout(bindFn(fn, context), timeout);
-  }
-
-  /**
-   * if the argument is an array, we want to execute the fn on each entry
-   * if it aint an array we don't want to do a thing.
-   * this is used by all the methods that accept a single and array argument.
-   * @param {*|Array} arg
-   * @param {String} fn
-   * @param {Object} [context]
-   * @returns {Boolean}
-   */
-  function invokeArrayArg(arg, fn, context) {
-      if (Array.isArray(arg)) {
-          each(arg, context[fn], context);
-          return true;
-      }
-      return false;
-  }
-
-  /**
-   * walk objects and arrays
-   * @param {Object} obj
-   * @param {Function} iterator
-   * @param {Object} context
-   */
-  function each(obj, iterator, context) {
-      var i;
-
-      if (!obj) {
-          return;
-      }
-
-      if (obj.forEach) {
-          obj.forEach(iterator, context);
-      } else if (obj.length !== undefined) {
-          i = 0;
-          while (i < obj.length) {
-              iterator.call(context, obj[i], i, obj);
-              i++;
-          }
-      } else {
-          for (i in obj) {
-              obj.hasOwnProperty(i) && iterator.call(context, obj[i], i, obj);
-          }
-      }
-  }
-
-  /**
-   * extend object.
-   * means that properties in dest will be overwritten by the ones in src.
-   * @param {Object} dest
-   * @param {Object} src
-   * @param {Boolean} [merge]
-   * @returns {Object} dest
-   */
-  function extend(dest, src, merge) {
-      var keys = Object.keys(src);
-      var i = 0;
-      while (i < keys.length) {
-          if (!merge || (merge && dest[keys[i]] === undefined)) {
-              dest[keys[i]] = src[keys[i]];
-          }
-          i++;
-      }
-      return dest;
-  }
-
-  /**
-   * merge the values from src in the dest.
-   * means that properties that exist in dest will not be overwritten by src
-   * @param {Object} dest
-   * @param {Object} src
-   * @returns {Object} dest
-   */
-  function merge(dest, src) {
-      return extend(dest, src, true);
-  }
-
-  /**
-   * simple class inheritance
-   * @param {Function} child
-   * @param {Function} base
-   * @param {Object} [properties]
-   */
-  function inherit(child, base, properties) {
-      var baseP = base.prototype,
-          childP;
-
-      childP = child.prototype = Object.create(baseP);
-      childP.constructor = child;
-      childP._super = baseP;
-
-      if (properties) {
-          extend(childP, properties);
-      }
-  }
-
-  /**
-   * simple function bind
-   * @param {Function} fn
-   * @param {Object} context
-   * @returns {Function}
-   */
-  function bindFn(fn, context) {
-      return function boundFn() {
-          return fn.apply(context, arguments);
-      };
-  }
-
-  /**
-   * let a boolean value also be a function that must return a boolean
-   * this first item in args will be used as the context
-   * @param {Boolean|Function} val
-   * @param {Array} [args]
-   * @returns {Boolean}
-   */
-  function boolOrFn(val, args) {
-      if (typeof val == TYPE_FUNCTION) {
-          return val.apply(args ? args[0] || undefined : undefined, args);
-      }
-      return val;
-  }
-
-  /**
-   * use the val2 when val1 is undefined
-   * @param {*} val1
-   * @param {*} val2
-   * @returns {*}
-   */
-  function ifUndefined(val1, val2) {
-      return (val1 === undefined) ? val2 : val1;
-  }
-
-  /**
-   * addEventListener with multiple events at once
-   * @param {EventTarget} target
-   * @param {String} types
-   * @param {Function} handler
-   */
-  function addEventListeners(target, types, handler) {
-      each(splitStr(types), function(type) {
-          target.addEventListener(type, handler, false);
-      });
-  }
-
-  /**
-   * removeEventListener with multiple events at once
-   * @param {EventTarget} target
-   * @param {String} types
-   * @param {Function} handler
-   */
-  function removeEventListeners(target, types, handler) {
-      each(splitStr(types), function(type) {
-          target.removeEventListener(type, handler, false);
-      });
-  }
-
-  /**
-   * find if a node is in the given parent
-   * @method hasParent
-   * @param {HTMLElement} node
-   * @param {HTMLElement} parent
-   * @return {Boolean} found
-   */
-  function hasParent(node, parent) {
-      while (node) {
-          if (node == parent) {
-              return true;
-          }
-          node = node.parentNode;
-      }
-      return false;
-  }
-
-  /**
-   * small indexOf wrapper
-   * @param {String} str
-   * @param {String} find
-   * @returns {Boolean} found
-   */
-  function inStr(str, find) {
-      return str.indexOf(find) > -1;
-  }
-
-  /**
-   * split string on whitespace
-   * @param {String} str
-   * @returns {Array} words
-   */
-  function splitStr(str) {
-      return str.trim().split(/\s+/g);
-  }
-
-  /**
-   * find if a array contains the object using indexOf or a simple polyFill
-   * @param {Array} src
-   * @param {String} find
-   * @param {String} [findByKey]
-   * @return {Boolean|Number} false when not found, or the index
-   */
-  function inArray(src, find, findByKey) {
-      if (src.indexOf && !findByKey) {
-          return src.indexOf(find);
-      } else {
-          var i = 0;
-          while (i < src.length) {
-              if ((findByKey && src[i][findByKey] == find) || (!findByKey && src[i] === find)) {
-                  return i;
-              }
-              i++;
-          }
-          return -1;
-      }
-  }
-
-  /**
-   * convert array-like objects to real arrays
-   * @param {Object} obj
-   * @returns {Array}
-   */
-  function toArray(obj) {
-      return Array.prototype.slice.call(obj, 0);
-  }
-
-  /**
-   * unique array with objects based on a key (like 'id') or just by the array's value
-   * @param {Array} src [{id:1},{id:2},{id:1}]
-   * @param {String} [key]
-   * @param {Boolean} [sort=False]
-   * @returns {Array} [{id:1},{id:2}]
-   */
-  function uniqueArray(src, key, sort) {
-      var results = [];
-      var values = [];
-      var i = 0;
-
-      while (i < src.length) {
-          var val = key ? src[i][key] : src[i];
-          if (inArray(values, val) < 0) {
-              results.push(src[i]);
-          }
-          values[i] = val;
-          i++;
-      }
-
-      if (sort) {
-          if (!key) {
-              results = results.sort();
-          } else {
-              results = results.sort(function sortUniqueArray(a, b) {
-                  return a[key] > b[key];
-              });
-          }
-      }
-
-      return results;
-  }
-
-  /**
-   * get the prefixed property
-   * @param {Object} obj
-   * @param {String} property
-   * @returns {String|Undefined} prefixed
-   */
-  function prefixed(obj, property) {
-      var prefix, prop;
-      var camelProp = property[0].toUpperCase() + property.slice(1);
-
-      var i = 0;
-      while (i < VENDOR_PREFIXES.length) {
-          prefix = VENDOR_PREFIXES[i];
-          prop = (prefix) ? prefix + camelProp : property;
-
-          if (prop in obj) {
-              return prop;
-          }
-          i++;
-      }
-      return undefined;
-  }
-
-  /**
-   * get a unique id
-   * @returns {number} uniqueId
-   */
-  var _uniqueId = 1;
-  function uniqueId() {
-      return _uniqueId++;
-  }
-
-  /**
-   * get the window object of an element
-   * @param {HTMLElement} element
-   * @returns {DocumentView|Window}
-   */
-  function getWindowForElement(element) {
-      var doc = element.ownerDocument;
-      return (doc.defaultView || doc.parentWindow);
-  }
-
-  var MOBILE_REGEX = /mobile|tablet|ip(ad|hone|od)|android/i;
-
-  var SUPPORT_TOUCH = ('ontouchstart' in window);
-  var SUPPORT_POINTER_EVENTS = prefixed(window, 'PointerEvent') !== undefined;
-  var SUPPORT_ONLY_TOUCH = SUPPORT_TOUCH && MOBILE_REGEX.test(navigator.userAgent);
-
-  var INPUT_TYPE_TOUCH = 'touch';
-  var INPUT_TYPE_PEN = 'pen';
-  var INPUT_TYPE_MOUSE = 'mouse';
-  var INPUT_TYPE_KINECT = 'kinect';
-
-  var COMPUTE_INTERVAL = 25;
-
-  var INPUT_START = 1;
-  var INPUT_MOVE = 2;
-  var INPUT_END = 4;
-  var INPUT_CANCEL = 8;
-
-  var DIRECTION_NONE = 1;
-  var DIRECTION_LEFT = 2;
-  var DIRECTION_RIGHT = 4;
-  var DIRECTION_UP = 8;
-  var DIRECTION_DOWN = 16;
-
-  var DIRECTION_HORIZONTAL = DIRECTION_LEFT | DIRECTION_RIGHT;
-  var DIRECTION_VERTICAL = DIRECTION_UP | DIRECTION_DOWN;
-  var DIRECTION_ALL = DIRECTION_HORIZONTAL | DIRECTION_VERTICAL;
-
-  var PROPS_XY = ['x', 'y'];
-  var PROPS_CLIENT_XY = ['clientX', 'clientY'];
-
-  /**
-   * create new input type manager
-   * @param {Manager} manager
-   * @param {Function} callback
-   * @returns {Input}
-   * @constructor
-   */
-  function Input(manager, callback) {
-      var self = this;
-      this.manager = manager;
-      this.callback = callback;
-      this.element = manager.element;
-      this.target = manager.options.inputTarget;
-
-      // smaller wrapper around the handler, for the scope and the enabled state of the manager,
-      // so when disabled the input events are completely bypassed.
-      this.domHandler = function(ev) {
-          if (boolOrFn(manager.options.enable, [manager])) {
-              self.handler(ev);
-          }
-      };
-
-      this.init();
-
-  }
-
-  Input.prototype = {
-      /**
-       * should handle the inputEvent data and trigger the callback
-       * @virtual
-       */
-      handler: function() { },
-
-      /**
-       * bind the events
-       */
-      init: function() {
-          this.evEl && addEventListeners(this.element, this.evEl, this.domHandler);
-          this.evTarget && addEventListeners(this.target, this.evTarget, this.domHandler);
-          this.evWin && addEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
-      },
-
-      /**
-       * unbind the events
-       */
-      destroy: function() {
-          this.evEl && removeEventListeners(this.element, this.evEl, this.domHandler);
-          this.evTarget && removeEventListeners(this.target, this.evTarget, this.domHandler);
-          this.evWin && removeEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
-      }
-  };
-
-  /**
-   * create new input type manager
-   * called by the Manager constructor
-   * @param {Hammer} manager
-   * @returns {Input}
-   */
-  function createInputInstance(manager) {
-      var Type;
-      var inputClass = manager.options.inputClass;
-
-      if (inputClass) {
-          Type = inputClass;
-      } else if (SUPPORT_POINTER_EVENTS) {
-          Type = PointerEventInput;
-      } else if (SUPPORT_ONLY_TOUCH) {
-          Type = TouchInput;
-      } else if (!SUPPORT_TOUCH) {
-          Type = MouseInput;
-      } else {
-          Type = TouchMouseInput;
-      }
-      return new (Type)(manager, inputHandler);
-  }
-
-  /**
-   * handle input events
-   * @param {Manager} manager
-   * @param {String} eventType
-   * @param {Object} input
-   */
-  function inputHandler(manager, eventType, input) {
-      var pointersLen = input.pointers.length;
-      var changedPointersLen = input.changedPointers.length;
-      var isFirst = (eventType & INPUT_START && (pointersLen - changedPointersLen === 0));
-      var isFinal = (eventType & (INPUT_END | INPUT_CANCEL) && (pointersLen - changedPointersLen === 0));
-
-      input.isFirst = !!isFirst;
-      input.isFinal = !!isFinal;
-
-      if (isFirst) {
-          manager.session = {};
-      }
-
-      // source event is the normalized value of the domEvents
-      // like 'touchstart, mouseup, pointerdown'
-      input.eventType = eventType;
-
-      // compute scale, rotation etc
-      computeInputData(manager, input);
-
-      // emit secret event
-      manager.emit('hammer.input', input);
-
-      manager.recognize(input);
-      manager.session.prevInput = input;
-  }
-
-  /**
-   * extend the data with some usable properties like scale, rotate, velocity etc
-   * @param {Object} manager
-   * @param {Object} input
-   */
-  function computeInputData(manager, input) {
-      var session = manager.session;
-      var pointers = input.pointers;
-      var pointersLength = pointers.length;
-
-      // store the first input to calculate the distance and direction
-      if (!session.firstInput) {
-          session.firstInput = simpleCloneInputData(input);
-      }
-
-      // to compute scale and rotation we need to store the multiple touches
-      if (pointersLength > 1 && !session.firstMultiple) {
-          session.firstMultiple = simpleCloneInputData(input);
-      } else if (pointersLength === 1) {
-          session.firstMultiple = false;
-      }
-
-      var firstInput = session.firstInput;
-      var firstMultiple = session.firstMultiple;
-      var offsetCenter = firstMultiple ? firstMultiple.center : firstInput.center;
-
-      var center = input.center = getCenter(pointers);
-      input.timeStamp = now();
-      input.deltaTime = input.timeStamp - firstInput.timeStamp;
-
-      input.angle = getAngle(offsetCenter, center);
-      input.distance = getDistance(offsetCenter, center);
-
-      computeDeltaXY(session, input);
-      input.offsetDirection = getDirection(input.deltaX, input.deltaY);
-
-      input.scale = firstMultiple ? getScale(firstMultiple.pointers, pointers) : 1;
-      input.rotation = firstMultiple ? getRotation(firstMultiple.pointers, pointers) : 0;
-
-      computeIntervalInputData(session, input);
-
-      // find the correct target
-      var target = manager.element;
-      if (hasParent(input.srcEvent.target, target)) {
-          target = input.srcEvent.target;
-      }
-      input.target = target;
-  }
-
-  function computeDeltaXY(session, input) {
-      var center = input.center;
-      var offset = session.offsetDelta || {};
-      var prevDelta = session.prevDelta || {};
-      var prevInput = session.prevInput || {};
-
-      if (input.eventType === INPUT_START || prevInput.eventType === INPUT_END) {
-          prevDelta = session.prevDelta = {
-              x: prevInput.deltaX || 0,
-              y: prevInput.deltaY || 0
-          };
-
-          offset = session.offsetDelta = {
-              x: center.x,
-              y: center.y
-          };
-      }
-
-      input.deltaX = prevDelta.x + (center.x - offset.x);
-      input.deltaY = prevDelta.y + (center.y - offset.y);
-  }
-
-  /**
-   * velocity is calculated every x ms
-   * @param {Object} session
-   * @param {Object} input
-   */
-  function computeIntervalInputData(session, input) {
-      var last = session.lastInterval || input,
-          deltaTime = input.timeStamp - last.timeStamp,
-          velocity, velocityX, velocityY, direction;
-
-      if (input.eventType != INPUT_CANCEL && (deltaTime > COMPUTE_INTERVAL || last.velocity === undefined)) {
-          var deltaX = last.deltaX - input.deltaX;
-          var deltaY = last.deltaY - input.deltaY;
-
-          var v = getVelocity(deltaTime, deltaX, deltaY);
-          velocityX = v.x;
-          velocityY = v.y;
-          velocity = (abs(v.x) > abs(v.y)) ? v.x : v.y;
-          direction = getDirection(deltaX, deltaY);
-
-          session.lastInterval = input;
-      } else {
-          // use latest velocity info if it doesn't overtake a minimum period
-          velocity = last.velocity;
-          velocityX = last.velocityX;
-          velocityY = last.velocityY;
-          direction = last.direction;
-      }
-
-      input.velocity = velocity;
-      input.velocityX = velocityX;
-      input.velocityY = velocityY;
-      input.direction = direction;
-  }
-
-  /**
-   * create a simple clone from the input used for storage of firstInput and firstMultiple
-   * @param {Object} input
-   * @returns {Object} clonedInputData
-   */
-  function simpleCloneInputData(input) {
-      // make a simple copy of the pointers because we will get a reference if we don't
-      // we only need clientXY for the calculations
-      var pointers = [];
-      var i = 0;
-      while (i < input.pointers.length) {
-          pointers[i] = {
-              clientX: round(input.pointers[i].clientX),
-              clientY: round(input.pointers[i].clientY)
-          };
-          i++;
-      }
-
-      return {
-          timeStamp: now(),
-          pointers: pointers,
-          center: getCenter(pointers),
-          deltaX: input.deltaX,
-          deltaY: input.deltaY
-      };
-  }
-
-  /**
-   * get the center of all the pointers
-   * @param {Array} pointers
-   * @return {Object} center contains `x` and `y` properties
-   */
-  function getCenter(pointers) {
-      var pointersLength = pointers.length;
-
-      // no need to loop when only one touch
-      if (pointersLength === 1) {
-          return {
-              x: round(pointers[0].clientX),
-              y: round(pointers[0].clientY)
-          };
-      }
-
-      var x = 0, y = 0, i = 0;
-      while (i < pointersLength) {
-          x += pointers[i].clientX;
-          y += pointers[i].clientY;
-          i++;
-      }
-
-      return {
-          x: round(x / pointersLength),
-          y: round(y / pointersLength)
-      };
-  }
-
-  /**
-   * calculate the velocity between two points. unit is in px per ms.
-   * @param {Number} deltaTime
-   * @param {Number} x
-   * @param {Number} y
-   * @return {Object} velocity `x` and `y`
-   */
-  function getVelocity(deltaTime, x, y) {
-      return {
-          x: x / deltaTime || 0,
-          y: y / deltaTime || 0
-      };
-  }
-
-  /**
-   * get the direction between two points
-   * @param {Number} x
-   * @param {Number} y
-   * @return {Number} direction
-   */
-  function getDirection(x, y) {
-      if (x === y) {
-          return DIRECTION_NONE;
-      }
-
-      if (abs(x) >= abs(y)) {
-          return x > 0 ? DIRECTION_LEFT : DIRECTION_RIGHT;
-      }
-      return y > 0 ? DIRECTION_UP : DIRECTION_DOWN;
-  }
-
-  /**
-   * calculate the absolute distance between two points
-   * @param {Object} p1 {x, y}
-   * @param {Object} p2 {x, y}
-   * @param {Array} [props] containing x and y keys
-   * @return {Number} distance
-   */
-  function getDistance(p1, p2, props) {
-      if (!props) {
-          props = PROPS_XY;
-      }
-      var x = p2[props[0]] - p1[props[0]],
-          y = p2[props[1]] - p1[props[1]];
-
-      return Math.sqrt((x * x) + (y * y));
-  }
-
-  /**
-   * calculate the angle between two coordinates
-   * @param {Object} p1
-   * @param {Object} p2
-   * @param {Array} [props] containing x and y keys
-   * @return {Number} angle
-   */
-  function getAngle(p1, p2, props) {
-      if (!props) {
-          props = PROPS_XY;
-      }
-      var x = p2[props[0]] - p1[props[0]],
-          y = p2[props[1]] - p1[props[1]];
-      return Math.atan2(y, x) * 180 / Math.PI;
-  }
-
-  /**
-   * calculate the rotation degrees between two pointersets
-   * @param {Array} start array of pointers
-   * @param {Array} end array of pointers
-   * @return {Number} rotation
-   */
-  function getRotation(start, end) {
-      return getAngle(end[1], end[0], PROPS_CLIENT_XY) - getAngle(start[1], start[0], PROPS_CLIENT_XY);
-  }
-
-  /**
-   * calculate the scale factor between two pointersets
-   * no scale is 1, and goes down to 0 when pinched together, and bigger when pinched out
-   * @param {Array} start array of pointers
-   * @param {Array} end array of pointers
-   * @return {Number} scale
-   */
-  function getScale(start, end) {
-      return getDistance(end[0], end[1], PROPS_CLIENT_XY) / getDistance(start[0], start[1], PROPS_CLIENT_XY);
-  }
-
-  var MOUSE_INPUT_MAP = {
-      mousedown: INPUT_START,
-      mousemove: INPUT_MOVE,
-      mouseup: INPUT_END
-  };
-
-  var MOUSE_ELEMENT_EVENTS = 'mousedown';
-  var MOUSE_WINDOW_EVENTS = 'mousemove mouseup';
-
-  /**
-   * Mouse events input
-   * @constructor
-   * @extends Input
-   */
-  function MouseInput() {
-      this.evEl = MOUSE_ELEMENT_EVENTS;
-      this.evWin = MOUSE_WINDOW_EVENTS;
-
-      this.allow = true; // used by Input.TouchMouse to disable mouse events
-      this.pressed = false; // mousedown state
-
-      Input.apply(this, arguments);
-  }
-
-  inherit(MouseInput, Input, {
-      /**
-       * handle mouse events
-       * @param {Object} ev
-       */
-      handler: function MEhandler(ev) {
-          var eventType = MOUSE_INPUT_MAP[ev.type];
-
-          // on start we want to have the left mouse button down
-          if (eventType & INPUT_START && ev.button === 0) {
-              this.pressed = true;
-          }
-
-          if (eventType & INPUT_MOVE && ev.which !== 1) {
-              eventType = INPUT_END;
-          }
-
-          // mouse must be down, and mouse events are allowed (see the TouchMouse input)
-          if (!this.pressed || !this.allow) {
-              return;
-          }
-
-          if (eventType & INPUT_END) {
-              this.pressed = false;
-          }
-
-          this.callback(this.manager, eventType, {
-              pointers: [ev],
-              changedPointers: [ev],
-              pointerType: INPUT_TYPE_MOUSE,
-              srcEvent: ev
-          });
-      }
-  });
-
-  var POINTER_INPUT_MAP = {
-      pointerdown: INPUT_START,
-      pointermove: INPUT_MOVE,
-      pointerup: INPUT_END,
-      pointercancel: INPUT_CANCEL,
-      pointerout: INPUT_CANCEL
-  };
-
-  // in IE10 the pointer types is defined as an enum
-  var IE10_POINTER_TYPE_ENUM = {
-      2: INPUT_TYPE_TOUCH,
-      3: INPUT_TYPE_PEN,
-      4: INPUT_TYPE_MOUSE,
-      5: INPUT_TYPE_KINECT // see https://twitter.com/jacobrossi/status/480596438489890816
-  };
-
-  var POINTER_ELEMENT_EVENTS = 'pointerdown';
-  var POINTER_WINDOW_EVENTS = 'pointermove pointerup pointercancel';
-
-  // IE10 has prefixed support, and case-sensitive
-  if (window.MSPointerEvent) {
-      POINTER_ELEMENT_EVENTS = 'MSPointerDown';
-      POINTER_WINDOW_EVENTS = 'MSPointerMove MSPointerUp MSPointerCancel';
-  }
-
-  /**
-   * Pointer events input
-   * @constructor
-   * @extends Input
-   */
-  function PointerEventInput() {
-      this.evEl = POINTER_ELEMENT_EVENTS;
-      this.evWin = POINTER_WINDOW_EVENTS;
-
-      Input.apply(this, arguments);
-
-      this.store = (this.manager.session.pointerEvents = []);
-  }
-
-  inherit(PointerEventInput, Input, {
-      /**
-       * handle mouse events
-       * @param {Object} ev
-       */
-      handler: function PEhandler(ev) {
-          var store = this.store;
-          var removePointer = false;
-
-          var eventTypeNormalized = ev.type.toLowerCase().replace('ms', '');
-          var eventType = POINTER_INPUT_MAP[eventTypeNormalized];
-          var pointerType = IE10_POINTER_TYPE_ENUM[ev.pointerType] || ev.pointerType;
-
-          var isTouch = (pointerType == INPUT_TYPE_TOUCH);
-
-          // get index of the event in the store
-          var storeIndex = inArray(store, ev.pointerId, 'pointerId');
-
-          // start and mouse must be down
-          if (eventType & INPUT_START && (ev.button === 0 || isTouch)) {
-              if (storeIndex < 0) {
-                  store.push(ev);
-                  storeIndex = store.length - 1;
-              }
-          } else if (eventType & (INPUT_END | INPUT_CANCEL)) {
-              removePointer = true;
-          }
-
-          // it not found, so the pointer hasn't been down (so it's probably a hover)
-          if (storeIndex < 0) {
-              return;
-          }
-
-          // update the event in the store
-          store[storeIndex] = ev;
-
-          this.callback(this.manager, eventType, {
-              pointers: store,
-              changedPointers: [ev],
-              pointerType: pointerType,
-              srcEvent: ev
-          });
-
-          if (removePointer) {
-              // remove from the store
-              store.splice(storeIndex, 1);
-          }
-      }
-  });
-
-  var SINGLE_TOUCH_INPUT_MAP = {
-      touchstart: INPUT_START,
-      touchmove: INPUT_MOVE,
-      touchend: INPUT_END,
-      touchcancel: INPUT_CANCEL
-  };
-
-  var SINGLE_TOUCH_TARGET_EVENTS = 'touchstart';
-  var SINGLE_TOUCH_WINDOW_EVENTS = 'touchstart touchmove touchend touchcancel';
-
-  /**
-   * Touch events input
-   * @constructor
-   * @extends Input
-   */
-  function SingleTouchInput() {
-      this.evTarget = SINGLE_TOUCH_TARGET_EVENTS;
-      this.evWin = SINGLE_TOUCH_WINDOW_EVENTS;
-      this.started = false;
-
-      Input.apply(this, arguments);
-  }
-
-  inherit(SingleTouchInput, Input, {
-      handler: function TEhandler(ev) {
-          var type = SINGLE_TOUCH_INPUT_MAP[ev.type];
-
-          // should we handle the touch events?
-          if (type === INPUT_START) {
-              this.started = true;
-          }
-
-          if (!this.started) {
-              return;
-          }
-
-          var touches = normalizeSingleTouches.call(this, ev, type);
-
-          // when done, reset the started state
-          if (type & (INPUT_END | INPUT_CANCEL) && touches[0].length - touches[1].length === 0) {
-              this.started = false;
-          }
-
-          this.callback(this.manager, type, {
-              pointers: touches[0],
-              changedPointers: touches[1],
-              pointerType: INPUT_TYPE_TOUCH,
-              srcEvent: ev
-          });
-      }
-  });
-
-  /**
-   * @this {TouchInput}
-   * @param {Object} ev
-   * @param {Number} type flag
-   * @returns {undefined|Array} [all, changed]
-   */
-  function normalizeSingleTouches(ev, type) {
-      var all = toArray(ev.touches);
-      var changed = toArray(ev.changedTouches);
-
-      if (type & (INPUT_END | INPUT_CANCEL)) {
-          all = uniqueArray(all.concat(changed), 'identifier', true);
-      }
-
-      return [all, changed];
-  }
-
-  var TOUCH_INPUT_MAP = {
-      touchstart: INPUT_START,
-      touchmove: INPUT_MOVE,
-      touchend: INPUT_END,
-      touchcancel: INPUT_CANCEL
-  };
-
-  var TOUCH_TARGET_EVENTS = 'touchstart touchmove touchend touchcancel';
-
-  /**
-   * Multi-user touch events input
-   * @constructor
-   * @extends Input
-   */
-  function TouchInput() {
-      this.evTarget = TOUCH_TARGET_EVENTS;
-      this.targetIds = {};
-
-      Input.apply(this, arguments);
-  }
-
-  inherit(TouchInput, Input, {
-      handler: function MTEhandler(ev) {
-          var type = TOUCH_INPUT_MAP[ev.type];
-          var touches = getTouches.call(this, ev, type);
-          if (!touches) {
-              return;
-          }
-
-          this.callback(this.manager, type, {
-              pointers: touches[0],
-              changedPointers: touches[1],
-              pointerType: INPUT_TYPE_TOUCH,
-              srcEvent: ev
-          });
-      }
-  });
-
-  /**
-   * @this {TouchInput}
-   * @param {Object} ev
-   * @param {Number} type flag
-   * @returns {undefined|Array} [all, changed]
-   */
-  function getTouches(ev, type) {
-      var allTouches = toArray(ev.touches);
-      var targetIds = this.targetIds;
-
-      // when there is only one touch, the process can be simplified
-      if (type & (INPUT_START | INPUT_MOVE) && allTouches.length === 1) {
-          targetIds[allTouches[0].identifier] = true;
-          return [allTouches, allTouches];
-      }
-
-      var i,
-          targetTouches,
-          changedTouches = toArray(ev.changedTouches),
-          changedTargetTouches = [],
-          target = this.target;
-
-      // get target touches from touches
-      targetTouches = allTouches.filter(function(touch) {
-          return hasParent(touch.target, target);
-      });
-
-      // collect touches
-      if (type === INPUT_START) {
-          i = 0;
-          while (i < targetTouches.length) {
-              targetIds[targetTouches[i].identifier] = true;
-              i++;
-          }
-      }
-
-      // filter changed touches to only contain touches that exist in the collected target ids
-      i = 0;
-      while (i < changedTouches.length) {
-          if (targetIds[changedTouches[i].identifier]) {
-              changedTargetTouches.push(changedTouches[i]);
-          }
-
-          // cleanup removed touches
-          if (type & (INPUT_END | INPUT_CANCEL)) {
-              delete targetIds[changedTouches[i].identifier];
-          }
-          i++;
-      }
-
-      if (!changedTargetTouches.length) {
-          return;
-      }
-
-      return [
-          // merge targetTouches with changedTargetTouches so it contains ALL touches, including 'end' and 'cancel'
-          uniqueArray(targetTouches.concat(changedTargetTouches), 'identifier', true),
-          changedTargetTouches
-      ];
-  }
-
-  /**
-   * Combined touch and mouse input
-   *
-   * Touch has a higher priority then mouse, and while touching no mouse events are allowed.
-   * This because touch devices also emit mouse events while doing a touch.
-   *
-   * @constructor
-   * @extends Input
-   */
-  function TouchMouseInput() {
-      Input.apply(this, arguments);
-
-      var handler = bindFn(this.handler, this);
-      this.touch = new TouchInput(this.manager, handler);
-      this.mouse = new MouseInput(this.manager, handler);
-  }
-
-  inherit(TouchMouseInput, Input, {
-      /**
-       * handle mouse and touch events
-       * @param {Hammer} manager
-       * @param {String} inputEvent
-       * @param {Object} inputData
-       */
-      handler: function TMEhandler(manager, inputEvent, inputData) {
-          var isTouch = (inputData.pointerType == INPUT_TYPE_TOUCH),
-              isMouse = (inputData.pointerType == INPUT_TYPE_MOUSE);
-
-          // when we're in a touch event, so  block all upcoming mouse events
-          // most mobile browser also emit mouseevents, right after touchstart
-          if (isTouch) {
-              this.mouse.allow = false;
-          } else if (isMouse && !this.mouse.allow) {
-              return;
-          }
-
-          // reset the allowMouse when we're done
-          if (inputEvent & (INPUT_END | INPUT_CANCEL)) {
-              this.mouse.allow = true;
-          }
-
-          this.callback(manager, inputEvent, inputData);
-      },
-
-      /**
-       * remove the event listeners
-       */
-      destroy: function destroy() {
-          this.touch.destroy();
-          this.mouse.destroy();
-      }
-  });
-
-  var PREFIXED_TOUCH_ACTION = prefixed(TEST_ELEMENT.style, 'touchAction');
-  var NATIVE_TOUCH_ACTION = PREFIXED_TOUCH_ACTION !== undefined;
-
-  // magical touchAction value
-  var TOUCH_ACTION_COMPUTE = 'compute';
-  var TOUCH_ACTION_AUTO = 'auto';
-  var TOUCH_ACTION_MANIPULATION = 'manipulation'; // not implemented
-  var TOUCH_ACTION_NONE = 'none';
-  var TOUCH_ACTION_PAN_X = 'pan-x';
-  var TOUCH_ACTION_PAN_Y = 'pan-y';
-
-  /**
-   * Touch Action
-   * sets the touchAction property or uses the js alternative
-   * @param {Manager} manager
-   * @param {String} value
-   * @constructor
-   */
-  function TouchAction(manager, value) {
-      this.manager = manager;
-      this.set(value);
-  }
-
-  TouchAction.prototype = {
-      /**
-       * set the touchAction value on the element or enable the polyfill
-       * @param {String} value
-       */
-      set: function(value) {
-          // find out the touch-action by the event handlers
-          if (value == TOUCH_ACTION_COMPUTE) {
-              value = this.compute();
-          }
-
-          if (NATIVE_TOUCH_ACTION) {
-              this.manager.element.style[PREFIXED_TOUCH_ACTION] = value;
-          }
-          this.actions = value.toLowerCase().trim();
-      },
-
-      /**
-       * just re-set the touchAction value
-       */
-      update: function() {
-          this.set(this.manager.options.touchAction);
-      },
-
-      /**
-       * compute the value for the touchAction property based on the recognizer's settings
-       * @returns {String} value
-       */
-      compute: function() {
-          var actions = [];
-          each(this.manager.recognizers, function(recognizer) {
-              if (boolOrFn(recognizer.options.enable, [recognizer])) {
-                  actions = actions.concat(recognizer.getTouchAction());
-              }
-          });
-          return cleanTouchActions(actions.join(' '));
-      },
-
-      /**
-       * this method is called on each input cycle and provides the preventing of the browser behavior
-       * @param {Object} input
-       */
-      preventDefaults: function(input) {
-          // not needed with native support for the touchAction property
-          if (NATIVE_TOUCH_ACTION) {
-              return;
-          }
-
-          var srcEvent = input.srcEvent;
-          var direction = input.offsetDirection;
-
-          // if the touch action did prevented once this session
-          if (this.manager.session.prevented) {
-              srcEvent.preventDefault();
-              return;
-          }
-
-          var actions = this.actions;
-          var hasNone = inStr(actions, TOUCH_ACTION_NONE);
-          var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y);
-          var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X);
-
-          if (hasNone ||
-              (hasPanY && direction & DIRECTION_HORIZONTAL) ||
-              (hasPanX && direction & DIRECTION_VERTICAL)) {
-              return this.preventSrc(srcEvent);
-          }
-      },
-
-      /**
-       * call preventDefault to prevent the browser's default behavior (scrolling in most cases)
-       * @param {Object} srcEvent
-       */
-      preventSrc: function(srcEvent) {
-          this.manager.session.prevented = true;
-          srcEvent.preventDefault();
-      }
-  };
-
-  /**
-   * when the touchActions are collected they are not a valid value, so we need to clean things up. *
-   * @param {String} actions
-   * @returns {*}
-   */
-  function cleanTouchActions(actions) {
-      // none
-      if (inStr(actions, TOUCH_ACTION_NONE)) {
-          return TOUCH_ACTION_NONE;
-      }
-
-      var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X);
-      var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y);
-
-      // pan-x and pan-y can be combined
-      if (hasPanX && hasPanY) {
-          return TOUCH_ACTION_PAN_X + ' ' + TOUCH_ACTION_PAN_Y;
-      }
-
-      // pan-x OR pan-y
-      if (hasPanX || hasPanY) {
-          return hasPanX ? TOUCH_ACTION_PAN_X : TOUCH_ACTION_PAN_Y;
-      }
-
-      // manipulation
-      if (inStr(actions, TOUCH_ACTION_MANIPULATION)) {
-          return TOUCH_ACTION_MANIPULATION;
-      }
-
-      return TOUCH_ACTION_AUTO;
-  }
-
-  /**
-   * Recognizer flow explained; *
-   * All recognizers have the initial state of POSSIBLE when a input session starts.
-   * The definition of a input session is from the first input until the last input, with all it's movement in it. *
-   * Example session for mouse-input: mousedown -> mousemove -> mouseup
-   *
-   * On each recognizing cycle (see Manager.recognize) the .recognize() method is executed
-   * which determines with state it should be.
-   *
-   * If the recognizer has the state FAILED, CANCELLED or RECOGNIZED (equals ENDED), it is reset to
-   * POSSIBLE to give it another change on the next cycle.
-   *
-   *               Possible
-   *                  |
-   *            +-----+---------------+
-   *            |                     |
-   *      +-----+-----+               |
-   *      |           |               |
-   *   Failed      Cancelled          |
-   *                          +-------+------+
-   *                          |              |
-   *                      Recognized       Began
-   *                                         |
-   *                                      Changed
-   *                                         |
-   *                                  Ended/Recognized
-   */
-  var STATE_POSSIBLE = 1;
-  var STATE_BEGAN = 2;
-  var STATE_CHANGED = 4;
-  var STATE_ENDED = 8;
-  var STATE_RECOGNIZED = STATE_ENDED;
-  var STATE_CANCELLED = 16;
-  var STATE_FAILED = 32;
-
-  /**
-   * Recognizer
-   * Every recognizer needs to extend from this class.
-   * @constructor
-   * @param {Object} options
-   */
-  function Recognizer(options) {
-      this.id = uniqueId();
-
-      this.manager = null;
-      this.options = merge(options || {}, this.defaults);
-
-      // default is enable true
-      this.options.enable = ifUndefined(this.options.enable, true);
-
-      this.state = STATE_POSSIBLE;
-
-      this.simultaneous = {};
-      this.requireFail = [];
-  }
-
-  Recognizer.prototype = {
-      /**
-       * @virtual
-       * @type {Object}
-       */
-      defaults: {},
-
-      /**
-       * set options
-       * @param {Object} options
-       * @return {Recognizer}
-       */
-      set: function(options) {
-          extend(this.options, options);
-
-          // also update the touchAction, in case something changed about the directions/enabled state
-          this.manager && this.manager.touchAction.update();
-          return this;
-      },
-
-      /**
-       * recognize simultaneous with an other recognizer.
-       * @param {Recognizer} otherRecognizer
-       * @returns {Recognizer} this
-       */
-      recognizeWith: function(otherRecognizer) {
-          if (invokeArrayArg(otherRecognizer, 'recognizeWith', this)) {
-              return this;
-          }
-
-          var simultaneous = this.simultaneous;
-          otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
-          if (!simultaneous[otherRecognizer.id]) {
-              simultaneous[otherRecognizer.id] = otherRecognizer;
-              otherRecognizer.recognizeWith(this);
-          }
-          return this;
-      },
-
-      /**
-       * drop the simultaneous link. it doesnt remove the link on the other recognizer.
-       * @param {Recognizer} otherRecognizer
-       * @returns {Recognizer} this
-       */
-      dropRecognizeWith: function(otherRecognizer) {
-          if (invokeArrayArg(otherRecognizer, 'dropRecognizeWith', this)) {
-              return this;
-          }
-
-          otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
-          delete this.simultaneous[otherRecognizer.id];
-          return this;
-      },
-
-      /**
-       * recognizer can only run when an other is failing
-       * @param {Recognizer} otherRecognizer
-       * @returns {Recognizer} this
-       */
-      requireFailure: function(otherRecognizer) {
-          if (invokeArrayArg(otherRecognizer, 'requireFailure', this)) {
-              return this;
-          }
-
-          var requireFail = this.requireFail;
-          otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
-          if (inArray(requireFail, otherRecognizer) === -1) {
-              requireFail.push(otherRecognizer);
-              otherRecognizer.requireFailure(this);
-          }
-          return this;
-      },
-
-      /**
-       * drop the requireFailure link. it does not remove the link on the other recognizer.
-       * @param {Recognizer} otherRecognizer
-       * @returns {Recognizer} this
-       */
-      dropRequireFailure: function(otherRecognizer) {
-          if (invokeArrayArg(otherRecognizer, 'dropRequireFailure', this)) {
-              return this;
-          }
-
-          otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
-          var index = inArray(this.requireFail, otherRecognizer);
-          if (index > -1) {
-              this.requireFail.splice(index, 1);
-          }
-          return this;
-      },
-
-      /**
-       * has require failures boolean
-       * @returns {boolean}
-       */
-      hasRequireFailures: function() {
-          return this.requireFail.length > 0;
-      },
-
-      /**
-       * if the recognizer can recognize simultaneous with an other recognizer
-       * @param {Recognizer} otherRecognizer
-       * @returns {Boolean}
-       */
-      canRecognizeWith: function(otherRecognizer) {
-          return !!this.simultaneous[otherRecognizer.id];
-      },
-
-      /**
-       * You should use `tryEmit` instead of `emit` directly to check
-       * that all the needed recognizers has failed before emitting.
-       * @param {Object} input
-       */
-      emit: function(input) {
-          var self = this;
-          var state = this.state;
-
-          function emit(withState) {
-              self.manager.emit(self.options.event + (withState ? stateStr(state) : ''), input);
-          }
-
-          // 'panstart' and 'panmove'
-          if (state < STATE_ENDED) {
-              emit(true);
-          }
-
-          emit(); // simple 'eventName' events
-
-          // panend and pancancel
-          if (state >= STATE_ENDED) {
-              emit(true);
-          }
-      },
-
-      /**
-       * Check that all the require failure recognizers has failed,
-       * if true, it emits a gesture event,
-       * otherwise, setup the state to FAILED.
-       * @param {Object} input
-       */
-      tryEmit: function(input) {
-          if (this.canEmit()) {
-              return this.emit(input);
-          }
-          // it's failing anyway
-          this.state = STATE_FAILED;
-      },
-
-      /**
-       * can we emit?
-       * @returns {boolean}
-       */
-      canEmit: function() {
-          var i = 0;
-          while (i < this.requireFail.length) {
-              if (!(this.requireFail[i].state & (STATE_FAILED | STATE_POSSIBLE))) {
-                  return false;
-              }
-              i++;
-          }
-          return true;
-      },
-
-      /**
-       * update the recognizer
-       * @param {Object} inputData
-       */
-      recognize: function(inputData) {
-          // make a new copy of the inputData
-          // so we can change the inputData without messing up the other recognizers
-          var inputDataClone = extend({}, inputData);
-
-          // is is enabled and allow recognizing?
-          if (!boolOrFn(this.options.enable, [this, inputDataClone])) {
-              this.reset();
-              this.state = STATE_FAILED;
-              return;
-          }
-
-          // reset when we've reached the end
-          if (this.state & (STATE_RECOGNIZED | STATE_CANCELLED | STATE_FAILED)) {
-              this.state = STATE_POSSIBLE;
-          }
-
-          this.state = this.process(inputDataClone);
-
-          // the recognizer has recognized a gesture
-          // so trigger an event
-          if (this.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED | STATE_CANCELLED)) {
-              this.tryEmit(inputDataClone);
-          }
-      },
-
-      /**
-       * return the state of the recognizer
-       * the actual recognizing happens in this method
-       * @virtual
-       * @param {Object} inputData
-       * @returns {Const} STATE
-       */
-      process: function(inputData) { }, // jshint ignore:line
-
-      /**
-       * return the preferred touch-action
-       * @virtual
-       * @returns {Array}
-       */
-      getTouchAction: function() { },
-
-      /**
-       * called when the gesture isn't allowed to recognize
-       * like when another is being recognized or it is disabled
-       * @virtual
-       */
-      reset: function() { }
-  };
-
-  /**
-   * get a usable string, used as event postfix
-   * @param {Const} state
-   * @returns {String} state
-   */
-  function stateStr(state) {
-      if (state & STATE_CANCELLED) {
-          return 'cancel';
-      } else if (state & STATE_ENDED) {
-          return 'end';
-      } else if (state & STATE_CHANGED) {
-          return 'move';
-      } else if (state & STATE_BEGAN) {
-          return 'start';
-      }
-      return '';
-  }
-
-  /**
-   * direction cons to string
-   * @param {Const} direction
-   * @returns {String}
-   */
-  function directionStr(direction) {
-      if (direction == DIRECTION_DOWN) {
-          return 'down';
-      } else if (direction == DIRECTION_UP) {
-          return 'up';
-      } else if (direction == DIRECTION_LEFT) {
-          return 'left';
-      } else if (direction == DIRECTION_RIGHT) {
-          return 'right';
-      }
-      return '';
-  }
-
-  /**
-   * get a recognizer by name if it is bound to a manager
-   * @param {Recognizer|String} otherRecognizer
-   * @param {Recognizer} recognizer
-   * @returns {Recognizer}
-   */
-  function getRecognizerByNameIfManager(otherRecognizer, recognizer) {
-      var manager = recognizer.manager;
-      if (manager) {
-          return manager.get(otherRecognizer);
-      }
-      return otherRecognizer;
-  }
-
-  /**
-   * This recognizer is just used as a base for the simple attribute recognizers.
-   * @constructor
-   * @extends Recognizer
-   */
-  function AttrRecognizer() {
-      Recognizer.apply(this, arguments);
-  }
-
-  inherit(AttrRecognizer, Recognizer, {
-      /**
-       * @namespace
-       * @memberof AttrRecognizer
-       */
-      defaults: {
-          /**
-           * @type {Number}
-           * @default 1
-           */
-          pointers: 1
-      },
-
-      /**
-       * Used to check if it the recognizer receives valid input, like input.distance > 10.
-       * @memberof AttrRecognizer
-       * @param {Object} input
-       * @returns {Boolean} recognized
-       */
-      attrTest: function(input) {
-          var optionPointers = this.options.pointers;
-          return optionPointers === 0 || input.pointers.length === optionPointers;
-      },
-
-      /**
-       * Process the input and return the state for the recognizer
-       * @memberof AttrRecognizer
-       * @param {Object} input
-       * @returns {*} State
-       */
-      process: function(input) {
-          var state = this.state;
-          var eventType = input.eventType;
-
-          var isRecognized = state & (STATE_BEGAN | STATE_CHANGED);
-          var isValid = this.attrTest(input);
-
-          // on cancel input and we've recognized before, return STATE_CANCELLED
-          if (isRecognized && (eventType & INPUT_CANCEL || !isValid)) {
-              return state | STATE_CANCELLED;
-          } else if (isRecognized || isValid) {
-              if (eventType & INPUT_END) {
-                  return state | STATE_ENDED;
-              } else if (!(state & STATE_BEGAN)) {
-                  return STATE_BEGAN;
-              }
-              return state | STATE_CHANGED;
-          }
-          return STATE_FAILED;
-      }
-  });
-
-  /**
-   * Pan
-   * Recognized when the pointer is down and moved in the allowed direction.
-   * @constructor
-   * @extends AttrRecognizer
-   */
-  function PanRecognizer() {
-      AttrRecognizer.apply(this, arguments);
-
-      this.pX = null;
-      this.pY = null;
-  }
-
-  inherit(PanRecognizer, AttrRecognizer, {
-      /**
-       * @namespace
-       * @memberof PanRecognizer
-       */
-      defaults: {
-          event: 'pan',
-          threshold: 10,
-          pointers: 1,
-          direction: DIRECTION_ALL
-      },
-
-      getTouchAction: function() {
-          var direction = this.options.direction;
-          var actions = [];
-          if (direction & DIRECTION_HORIZONTAL) {
-              actions.push(TOUCH_ACTION_PAN_Y);
-          }
-          if (direction & DIRECTION_VERTICAL) {
-              actions.push(TOUCH_ACTION_PAN_X);
-          }
-          return actions;
-      },
-
-      directionTest: function(input) {
-          var options = this.options;
-          var hasMoved = true;
-          var distance = input.distance;
-          var direction = input.direction;
-          var x = input.deltaX;
-          var y = input.deltaY;
-
-          // lock to axis?
-          if (!(direction & options.direction)) {
-              if (options.direction & DIRECTION_HORIZONTAL) {
-                  direction = (x === 0) ? DIRECTION_NONE : (x < 0) ? DIRECTION_LEFT : DIRECTION_RIGHT;
-                  hasMoved = x != this.pX;
-                  distance = Math.abs(input.deltaX);
-              } else {
-                  direction = (y === 0) ? DIRECTION_NONE : (y < 0) ? DIRECTION_UP : DIRECTION_DOWN;
-                  hasMoved = y != this.pY;
-                  distance = Math.abs(input.deltaY);
-              }
-          }
-          input.direction = direction;
-          return hasMoved && distance > options.threshold && direction & options.direction;
-      },
-
-      attrTest: function(input) {
-          return AttrRecognizer.prototype.attrTest.call(this, input) &&
-              (this.state & STATE_BEGAN || (!(this.state & STATE_BEGAN) && this.directionTest(input)));
-      },
-
-      emit: function(input) {
-          this.pX = input.deltaX;
-          this.pY = input.deltaY;
-
-          var direction = directionStr(input.direction);
-          if (direction) {
-              this.manager.emit(this.options.event + direction, input);
-          }
-
-          this._super.emit.call(this, input);
-      }
-  });
-
-  /**
-   * Pinch
-   * Recognized when two or more pointers are moving toward (zoom-in) or away from each other (zoom-out).
-   * @constructor
-   * @extends AttrRecognizer
-   */
-  function PinchRecognizer() {
-      AttrRecognizer.apply(this, arguments);
-  }
-
-  inherit(PinchRecognizer, AttrRecognizer, {
-      /**
-       * @namespace
-       * @memberof PinchRecognizer
-       */
-      defaults: {
-          event: 'pinch',
-          threshold: 0,
-          pointers: 2
-      },
-
-      getTouchAction: function() {
-          return [TOUCH_ACTION_NONE];
-      },
-
-      attrTest: function(input) {
-          return this._super.attrTest.call(this, input) &&
-              (Math.abs(input.scale - 1) > this.options.threshold || this.state & STATE_BEGAN);
-      },
-
-      emit: function(input) {
-          this._super.emit.call(this, input);
-          if (input.scale !== 1) {
-              var inOut = input.scale < 1 ? 'in' : 'out';
-              this.manager.emit(this.options.event + inOut, input);
-          }
-      }
-  });
-
-  /**
-   * Press
-   * Recognized when the pointer is down for x ms without any movement.
-   * @constructor
-   * @extends Recognizer
-   */
-  function PressRecognizer() {
-      Recognizer.apply(this, arguments);
-
-      this._timer = null;
-      this._input = null;
-  }
-
-  inherit(PressRecognizer, Recognizer, {
-      /**
-       * @namespace
-       * @memberof PressRecognizer
-       */
-      defaults: {
-          event: 'press',
-          pointers: 1,
-          time: 500, // minimal time of the pointer to be pressed
-          threshold: 5 // a minimal movement is ok, but keep it low
-      },
-
-      getTouchAction: function() {
-          return [TOUCH_ACTION_AUTO];
-      },
-
-      process: function(input) {
-          var options = this.options;
-          var validPointers = input.pointers.length === options.pointers;
-          var validMovement = input.distance < options.threshold;
-          var validTime = input.deltaTime > options.time;
-
-          this._input = input;
-
-          // we only allow little movement
-          // and we've reached an end event, so a tap is possible
-          if (!validMovement || !validPointers || (input.eventType & (INPUT_END | INPUT_CANCEL) && !validTime)) {
-              this.reset();
-          } else if (input.eventType & INPUT_START) {
-              this.reset();
-              this._timer = setTimeoutContext(function() {
-                  this.state = STATE_RECOGNIZED;
-                  this.tryEmit();
-              }, options.time, this);
-          } else if (input.eventType & INPUT_END) {
-              return STATE_RECOGNIZED;
-          }
-          return STATE_FAILED;
-      },
-
-      reset: function() {
-          clearTimeout(this._timer);
-      },
-
-      emit: function(input) {
-          if (this.state !== STATE_RECOGNIZED) {
-              return;
-          }
-
-          if (input && (input.eventType & INPUT_END)) {
-              this.manager.emit(this.options.event + 'up', input);
-          } else {
-              this._input.timeStamp = now();
-              this.manager.emit(this.options.event, this._input);
-          }
-      }
-  });
-
-  /**
-   * Rotate
-   * Recognized when two or more pointer are moving in a circular motion.
-   * @constructor
-   * @extends AttrRecognizer
-   */
-  function RotateRecognizer() {
-      AttrRecognizer.apply(this, arguments);
-  }
-
-  inherit(RotateRecognizer, AttrRecognizer, {
-      /**
-       * @namespace
-       * @memberof RotateRecognizer
-       */
-      defaults: {
-          event: 'rotate',
-          threshold: 0,
-          pointers: 2
-      },
-
-      getTouchAction: function() {
-          return [TOUCH_ACTION_NONE];
-      },
-
-      attrTest: function(input) {
-          return this._super.attrTest.call(this, input) &&
-              (Math.abs(input.rotation) > this.options.threshold || this.state & STATE_BEGAN);
-      }
-  });
-
-  /**
-   * Swipe
-   * Recognized when the pointer is moving fast (velocity), with enough distance in the allowed direction.
-   * @constructor
-   * @extends AttrRecognizer
-   */
-  function SwipeRecognizer() {
-      AttrRecognizer.apply(this, arguments);
-  }
-
-  inherit(SwipeRecognizer, AttrRecognizer, {
-      /**
-       * @namespace
-       * @memberof SwipeRecognizer
-       */
-      defaults: {
-          event: 'swipe',
-          threshold: 10,
-          velocity: 0.65,
-          direction: DIRECTION_HORIZONTAL | DIRECTION_VERTICAL,
-          pointers: 1
-      },
-
-      getTouchAction: function() {
-          return PanRecognizer.prototype.getTouchAction.call(this);
-      },
-
-      attrTest: function(input) {
-          var direction = this.options.direction;
-          var velocity;
-
-          if (direction & (DIRECTION_HORIZONTAL | DIRECTION_VERTICAL)) {
-              velocity = input.velocity;
-          } else if (direction & DIRECTION_HORIZONTAL) {
-              velocity = input.velocityX;
-          } else if (direction & DIRECTION_VERTICAL) {
-              velocity = input.velocityY;
-          }
-
-          return this._super.attrTest.call(this, input) &&
-              direction & input.direction &&
-              input.distance > this.options.threshold &&
-              abs(velocity) > this.options.velocity && input.eventType & INPUT_END;
-      },
-
-      emit: function(input) {
-          var direction = directionStr(input.direction);
-          if (direction) {
-              this.manager.emit(this.options.event + direction, input);
-          }
-
-          this.manager.emit(this.options.event, input);
-      }
-  });
-
-  /**
-   * A tap is ecognized when the pointer is doing a small tap/click. Multiple taps are recognized if they occur
-   * between the given interval and position. The delay option can be used to recognize multi-taps without firing
-   * a single tap.
-   *
-   * The eventData from the emitted event contains the property `tapCount`, which contains the amount of
-   * multi-taps being recognized.
-   * @constructor
-   * @extends Recognizer
-   */
-  function TapRecognizer() {
-      Recognizer.apply(this, arguments);
-
-      // previous time and center,
-      // used for tap counting
-      this.pTime = false;
-      this.pCenter = false;
-
-      this._timer = null;
-      this._input = null;
-      this.count = 0;
-  }
-
-  inherit(TapRecognizer, Recognizer, {
-      /**
-       * @namespace
-       * @memberof PinchRecognizer
-       */
-      defaults: {
-          event: 'tap',
-          pointers: 1,
-          taps: 1,
-          interval: 300, // max time between the multi-tap taps
-          time: 250, // max time of the pointer to be down (like finger on the screen)
-          threshold: 2, // a minimal movement is ok, but keep it low
-          posThreshold: 10 // a multi-tap can be a bit off the initial position
-      },
-
-      getTouchAction: function() {
-          return [TOUCH_ACTION_MANIPULATION];
-      },
-
-      process: function(input) {
-          var options = this.options;
-
-          var validPointers = input.pointers.length === options.pointers;
-          var validMovement = input.distance < options.threshold;
-          var validTouchTime = input.deltaTime < options.time;
-
-          this.reset();
-
-          if ((input.eventType & INPUT_START) && (this.count === 0)) {
-              return this.failTimeout();
-          }
-
-          // we only allow little movement
-          // and we've reached an end event, so a tap is possible
-          if (validMovement && validTouchTime && validPointers) {
-              if (input.eventType != INPUT_END) {
-                  return this.failTimeout();
-              }
-
-              var validInterval = this.pTime ? (input.timeStamp - this.pTime < options.interval) : true;
-              var validMultiTap = !this.pCenter || getDistance(this.pCenter, input.center) < options.posThreshold;
-
-              this.pTime = input.timeStamp;
-              this.pCenter = input.center;
-
-              if (!validMultiTap || !validInterval) {
-                  this.count = 1;
-              } else {
-                  this.count += 1;
-              }
-
-              this._input = input;
-
-              // if tap count matches we have recognized it,
-              // else it has began recognizing...
-              var tapCount = this.count % options.taps;
-              if (tapCount === 0) {
-                  // no failing requirements, immediately trigger the tap event
-                  // or wait as long as the multitap interval to trigger
-                  if (!this.hasRequireFailures()) {
-                      return STATE_RECOGNIZED;
-                  } else {
-                      this._timer = setTimeoutContext(function() {
-                          this.state = STATE_RECOGNIZED;
-                          this.tryEmit();
-                      }, options.interval, this);
-                      return STATE_BEGAN;
-                  }
-              }
-          }
-          return STATE_FAILED;
-      },
-
-      failTimeout: function() {
-          this._timer = setTimeoutContext(function() {
-              this.state = STATE_FAILED;
-          }, this.options.interval, this);
-          return STATE_FAILED;
-      },
-
-      reset: function() {
-          clearTimeout(this._timer);
-      },
-
-      emit: function() {
-          if (this.state == STATE_RECOGNIZED ) {
-              this._input.tapCount = this.count;
-              this.manager.emit(this.options.event, this._input);
-          }
-      }
-  });
-
-  /**
-   * Simple way to create an manager with a default set of recognizers.
-   * @param {HTMLElement} element
-   * @param {Object} [options]
-   * @constructor
-   */
-  function Hammer(element, options) {
-      options = options || {};
-      options.recognizers = ifUndefined(options.recognizers, Hammer.defaults.preset);
-      return new Manager(element, options);
-  }
-
-  /**
-   * @const {string}
-   */
-  Hammer.VERSION = '2.0.4';
-
-  /**
-   * default settings
-   * @namespace
-   */
-  Hammer.defaults = {
-      /**
-       * set if DOM events are being triggered.
-       * But this is slower and unused by simple implementations, so disabled by default.
-       * @type {Boolean}
-       * @default false
-       */
-      domEvents: false,
-
-      /**
-       * The value for the touchAction property/fallback.
-       * When set to `compute` it will magically set the correct value based on the added recognizers.
-       * @type {String}
-       * @default compute
-       */
-      touchAction: TOUCH_ACTION_COMPUTE,
-
-      /**
-       * @type {Boolean}
-       * @default true
-       */
-      enable: true,
-
-      /**
-       * EXPERIMENTAL FEATURE -- can be removed/changed
-       * Change the parent input target element.
-       * If Null, then it is being set the to main element.
-       * @type {Null|EventTarget}
-       * @default null
-       */
-      inputTarget: null,
-
-      /**
-       * force an input class
-       * @type {Null|Function}
-       * @default null
-       */
-      inputClass: null,
-
-      /**
-       * Default recognizer setup when calling `Hammer()`
-       * When creating a new Manager these will be skipped.
-       * @type {Array}
-       */
-      preset: [
-          // RecognizerClass, options, [recognizeWith, ...], [requireFailure, ...]
-          [RotateRecognizer, { enable: false }],
-          [PinchRecognizer, { enable: false }, ['rotate']],
-          [SwipeRecognizer,{ direction: DIRECTION_HORIZONTAL }],
-          [PanRecognizer, { direction: DIRECTION_HORIZONTAL }, ['swipe']],
-          [TapRecognizer],
-          [TapRecognizer, { event: 'doubletap', taps: 2 }, ['tap']],
-          [PressRecognizer]
-      ],
-
-      /**
-       * Some CSS properties can be used to improve the working of Hammer.
-       * Add them to this method and they will be set when creating a new Manager.
-       * @namespace
-       */
-      cssProps: {
-          /**
-           * Disables text selection to improve the dragging gesture. Mainly for desktop browsers.
-           * @type {String}
-           * @default 'none'
-           */
-          userSelect: 'none',
-
-          /**
-           * Disable the Windows Phone grippers when pressing an element.
-           * @type {String}
-           * @default 'none'
-           */
-          touchSelect: 'none',
-
-          /**
-           * Disables the default callout shown when you touch and hold a touch target.
-           * On iOS, when you touch and hold a touch target such as a link, Safari displays
-           * a callout containing information about the link. This property allows you to disable that callout.
-           * @type {String}
-           * @default 'none'
-           */
-          touchCallout: 'none',
-
-          /**
-           * Specifies whether zooming is enabled. Used by IE10>
-           * @type {String}
-           * @default 'none'
-           */
-          contentZooming: 'none',
-
-          /**
-           * Specifies that an entire element should be draggable instead of its contents. Mainly for desktop browsers.
-           * @type {String}
-           * @default 'none'
-           */
-          userDrag: 'none',
-
-          /**
-           * Overrides the highlight color shown when the user taps a link or a JavaScript
-           * clickable element in iOS. This property obeys the alpha value, if specified.
-           * @type {String}
-           * @default 'rgba(0,0,0,0)'
-           */
-          tapHighlightColor: 'rgba(0,0,0,0)'
-      }
-  };
-
-  var STOP = 1;
-  var FORCED_STOP = 2;
-
-  /**
-   * Manager
-   * @param {HTMLElement} element
-   * @param {Object} [options]
-   * @constructor
-   */
-  function Manager(element, options) {
-      options = options || {};
-
-      this.options = merge(options, Hammer.defaults);
-      this.options.inputTarget = this.options.inputTarget || element;
-
-      this.handlers = {};
-      this.session = {};
-      this.recognizers = [];
-
-      this.element = element;
-      this.input = createInputInstance(this);
-      this.touchAction = new TouchAction(this, this.options.touchAction);
-
-      toggleCssProps(this, true);
-
-      each(options.recognizers, function(item) {
-          var recognizer = this.add(new (item[0])(item[1]));
-          item[2] && recognizer.recognizeWith(item[2]);
-          item[3] && recognizer.requireFailure(item[3]);
-      }, this);
-  }
-
-  Manager.prototype = {
-      /**
-       * set options
-       * @param {Object} options
-       * @returns {Manager}
-       */
-      set: function(options) {
-          extend(this.options, options);
-
-          // Options that need a little more setup
-          if (options.touchAction) {
-              this.touchAction.update();
-          }
-          if (options.inputTarget) {
-              // Clean up existing event listeners and reinitialize
-              this.input.destroy();
-              this.input.target = options.inputTarget;
-              this.input.init();
-          }
-          return this;
-      },
-
-      /**
-       * stop recognizing for this session.
-       * This session will be discarded, when a new [input]start event is fired.
-       * When forced, the recognizer cycle is stopped immediately.
-       * @param {Boolean} [force]
-       */
-      stop: function(force) {
-          this.session.stopped = force ? FORCED_STOP : STOP;
-      },
-
-      /**
-       * run the recognizers!
-       * called by the inputHandler function on every movement of the pointers (touches)
-       * it walks through all the recognizers and tries to detect the gesture that is being made
-       * @param {Object} inputData
-       */
-      recognize: function(inputData) {
-          var session = this.session;
-          if (session.stopped) {
-              return;
-          }
-
-          // run the touch-action polyfill
-          this.touchAction.preventDefaults(inputData);
-
-          var recognizer;
-          var recognizers = this.recognizers;
-
-          // this holds the recognizer that is being recognized.
-          // so the recognizer's state needs to be BEGAN, CHANGED, ENDED or RECOGNIZED
-          // if no recognizer is detecting a thing, it is set to `null`
-          var curRecognizer = session.curRecognizer;
-
-          // reset when the last recognizer is recognized
-          // or when we're in a new session
-          if (!curRecognizer || (curRecognizer && curRecognizer.state & STATE_RECOGNIZED)) {
-              curRecognizer = session.curRecognizer = null;
-          }
-
-          var i = 0;
-          while (i < recognizers.length) {
-              recognizer = recognizers[i];
-
-              // find out if we are allowed try to recognize the input for this one.
-              // 1.   allow if the session is NOT forced stopped (see the .stop() method)
-              // 2.   allow if we still haven't recognized a gesture in this session, or the this recognizer is the one
-              //      that is being recognized.
-              // 3.   allow if the recognizer is allowed to run simultaneous with the current recognized recognizer.
-              //      this can be setup with the `recognizeWith()` method on the recognizer.
-              if (session.stopped !== FORCED_STOP && ( // 1
-                      !curRecognizer || recognizer == curRecognizer || // 2
-                      recognizer.canRecognizeWith(curRecognizer))) { // 3
-                  recognizer.recognize(inputData);
-              } else {
-                  recognizer.reset();
-              }
-
-              // if the recognizer has been recognizing the input as a valid gesture, we want to store this one as the
-              // current active recognizer. but only if we don't already have an active recognizer
-              if (!curRecognizer && recognizer.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED)) {
-                  curRecognizer = session.curRecognizer = recognizer;
-              }
-              i++;
-          }
-      },
-
-      /**
-       * get a recognizer by its event name.
-       * @param {Recognizer|String} recognizer
-       * @returns {Recognizer|Null}
-       */
-      get: function(recognizer) {
-          if (recognizer instanceof Recognizer) {
-              return recognizer;
-          }
-
-          var recognizers = this.recognizers;
-          for (var i = 0; i < recognizers.length; i++) {
-              if (recognizers[i].options.event == recognizer) {
-                  return recognizers[i];
-              }
-          }
-          return null;
-      },
-
-      /**
-       * add a recognizer to the manager
-       * existing recognizers with the same event name will be removed
-       * @param {Recognizer} recognizer
-       * @returns {Recognizer|Manager}
-       */
-      add: function(recognizer) {
-          if (invokeArrayArg(recognizer, 'add', this)) {
-              return this;
-          }
-
-          // remove existing
-          var existing = this.get(recognizer.options.event);
-          if (existing) {
-              this.remove(existing);
-          }
-
-          this.recognizers.push(recognizer);
-          recognizer.manager = this;
-
-          this.touchAction.update();
-          return recognizer;
-      },
-
-      /**
-       * remove a recognizer by name or instance
-       * @param {Recognizer|String} recognizer
-       * @returns {Manager}
-       */
-      remove: function(recognizer) {
-          if (invokeArrayArg(recognizer, 'remove', this)) {
-              return this;
-          }
-
-          var recognizers = this.recognizers;
-          recognizer = this.get(recognizer);
-          recognizers.splice(inArray(recognizers, recognizer), 1);
-
-          this.touchAction.update();
-          return this;
-      },
-
-      /**
-       * bind event
-       * @param {String} events
-       * @param {Function} handler
-       * @returns {EventEmitter} this
-       */
-      on: function(events, handler) {
-          var handlers = this.handlers;
-          each(splitStr(events), function(event) {
-              handlers[event] = handlers[event] || [];
-              handlers[event].push(handler);
-          });
-          return this;
-      },
-
-      /**
-       * unbind event, leave emit blank to remove all handlers
-       * @param {String} events
-       * @param {Function} [handler]
-       * @returns {EventEmitter} this
-       */
-      off: function(events, handler) {
-          var handlers = this.handlers;
-          each(splitStr(events), function(event) {
-              if (!handler) {
-                  delete handlers[event];
-              } else {
-                  handlers[event].splice(inArray(handlers[event], handler), 1);
-              }
-          });
-          return this;
-      },
-
-      /**
-       * emit event to the listeners
-       * @param {String} event
-       * @param {Object} data
-       */
-      emit: function(event, data) {
-          // we also want to trigger dom events
-          if (this.options.domEvents) {
-              triggerDomEvent(event, data);
-          }
-
-          // no handlers, so skip it all
-          var handlers = this.handlers[event] && this.handlers[event].slice();
-          if (!handlers || !handlers.length) {
-              return;
-          }
-
-          data.type = event;
-          data.preventDefault = function() {
-              data.srcEvent.preventDefault();
-          };
-
-          var i = 0;
-          while (i < handlers.length) {
-              handlers[i](data);
-              i++;
-          }
-      },
-
-      /**
-       * destroy the manager and unbinds all events
-       * it doesn't unbind dom events, that is the user own responsibility
-       */
-      destroy: function() {
-          this.element && toggleCssProps(this, false);
-
-          this.handlers = {};
-          this.session = {};
-          this.input.destroy();
-          this.element = null;
-      }
-  };
-
-  /**
-   * add/remove the css properties as defined in manager.options.cssProps
-   * @param {Manager} manager
-   * @param {Boolean} add
-   */
-  function toggleCssProps(manager, add) {
-      var element = manager.element;
-      each(manager.options.cssProps, function(value, name) {
-          element.style[prefixed(element.style, name)] = add ? value : '';
-      });
-  }
-
-  /**
-   * trigger dom event
-   * @param {String} event
-   * @param {Object} data
-   */
-  function triggerDomEvent(event, data) {
-      var gestureEvent = document.createEvent('Event');
-      gestureEvent.initEvent(event, true, true);
-      gestureEvent.gesture = data;
-      data.target.dispatchEvent(gestureEvent);
-  }
-
-  extend(Hammer, {
-      INPUT_START: INPUT_START,
-      INPUT_MOVE: INPUT_MOVE,
-      INPUT_END: INPUT_END,
-      INPUT_CANCEL: INPUT_CANCEL,
-
-      STATE_POSSIBLE: STATE_POSSIBLE,
-      STATE_BEGAN: STATE_BEGAN,
-      STATE_CHANGED: STATE_CHANGED,
-      STATE_ENDED: STATE_ENDED,
-      STATE_RECOGNIZED: STATE_RECOGNIZED,
-      STATE_CANCELLED: STATE_CANCELLED,
-      STATE_FAILED: STATE_FAILED,
-
-      DIRECTION_NONE: DIRECTION_NONE,
-      DIRECTION_LEFT: DIRECTION_LEFT,
-      DIRECTION_RIGHT: DIRECTION_RIGHT,
-      DIRECTION_UP: DIRECTION_UP,
-      DIRECTION_DOWN: DIRECTION_DOWN,
-      DIRECTION_HORIZONTAL: DIRECTION_HORIZONTAL,
-      DIRECTION_VERTICAL: DIRECTION_VERTICAL,
-      DIRECTION_ALL: DIRECTION_ALL,
-
-      Manager: Manager,
-      Input: Input,
-      TouchAction: TouchAction,
-
-      TouchInput: TouchInput,
-      MouseInput: MouseInput,
-      PointerEventInput: PointerEventInput,
-      TouchMouseInput: TouchMouseInput,
-      SingleTouchInput: SingleTouchInput,
-
-      Recognizer: Recognizer,
-      AttrRecognizer: AttrRecognizer,
-      Tap: TapRecognizer,
-      Pan: PanRecognizer,
-      Swipe: SwipeRecognizer,
-      Pinch: PinchRecognizer,
-      Rotate: RotateRecognizer,
-      Press: PressRecognizer,
-
-      on: addEventListeners,
-      off: removeEventListeners,
-      each: each,
-      merge: merge,
-      extend: extend,
-      inherit: inherit,
-      bindFn: bindFn,
-      prefixed: prefixed
-  });
-
-  if ("function" == TYPE_FUNCTION && __webpack_require__(6)) {
-      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
-          return Hammer;
-      }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else if (typeof module != 'undefined' && module.exports) {
-      module.exports = Hammer;
-  } else {
-      window[exportName] = Hammer;
-  }
-
-  })(window, document, 'Hammer');
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-  /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
-
-  /* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ },
-/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
   // utility functions
@@ -3397,8 +168,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var moment = __webpack_require__(8);
-  var uuid = __webpack_require__(12);
+  var moment = __webpack_require__(2);
+  var uuid = __webpack_require__(6);
 
   /**
    * Test whether given object is a number
@@ -3618,7 +389,11 @@ return /******/ (function(modules) { // webpackBootstrap
           } else if (Array.isArray(b[prop])) {
             throw new TypeError('Arrays are not supported by deepExtend');
           } else {
-            a[prop] = b[prop];
+            if (b[prop] === null && a[prop] !== undefined && allowDeletion === true) {
+              delete a[prop];
+            } else {
+              a[prop] = b[prop];
+            }
           }
         }
       }
@@ -3663,7 +438,11 @@ return /******/ (function(modules) { // webpackBootstrap
               a[prop].push(b[prop][i]);
             }
           } else {
-            a[prop] = b[prop];
+            if (b[prop] === null && a[prop] !== undefined && allowDeletion === true) {
+              delete a[prop];
+            } else {
+              a[prop] = b[prop];
+            }
           }
         }
       }
@@ -3702,7 +481,11 @@ return /******/ (function(modules) { // webpackBootstrap
             a[prop].push(b[prop][i]);
           }
         } else {
-          a[prop] = b[prop];
+          if (b[prop] === null && a[prop] !== undefined && allowDeletion === true) {
+            delete a[prop];
+          } else {
+            a[prop] = b[prop];
+          }
         }
       }
     }
@@ -3781,11 +564,11 @@ return /******/ (function(modules) { // webpackBootstrap
             // object is an ASP date
             return new Date(Number(match[1])); // parse number
           } else {
-            return moment(object).toDate(); // parse string
-          }
+              return moment(object).toDate(); // parse string
+            }
         } else {
-          throw new Error('Cannot convert object of type ' + exports.getType(object) + ' to type Date');
-        }
+            throw new Error('Cannot convert object of type ' + exports.getType(object) + ' to type Date');
+          }
 
       case 'Moment':
         if (exports.isNumber(object)) {
@@ -3802,11 +585,11 @@ return /******/ (function(modules) { // webpackBootstrap
             // object is an ASP date
             return moment(Number(match[1])); // parse number
           } else {
-            return moment(object); // parse string
-          }
+              return moment(object); // parse string
+            }
         } else {
-          throw new Error('Cannot convert object of type ' + exports.getType(object) + ' to type Date');
-        }
+            throw new Error('Cannot convert object of type ' + exports.getType(object) + ' to type Date');
+          }
 
       case 'ISODate':
         if (exports.isNumber(object)) {
@@ -3821,11 +604,11 @@ return /******/ (function(modules) { // webpackBootstrap
             // object is an ASP date
             return new Date(Number(match[1])).toISOString(); // parse number
           } else {
-            return new Date(object).toISOString(); // parse string
-          }
+              return new Date(object).toISOString(); // parse string
+            }
         } else {
-          throw new Error('Cannot convert object of type ' + exports.getType(object) + ' to type ISODate');
-        }
+            throw new Error('Cannot convert object of type ' + exports.getType(object) + ' to type ISODate');
+          }
 
       case 'ASPDate':
         if (exports.isNumber(object)) {
@@ -3839,8 +622,8 @@ return /******/ (function(modules) { // webpackBootstrap
             // object is an ASP date
             value = new Date(Number(match[1])).valueOf(); // parse number
           } else {
-            value = new Date(object).valueOf(); // parse string
-          }
+              value = new Date(object).valueOf(); // parse string
+            }
           return '/Date(' + value + ')/';
         } else {
           throw new Error('Cannot convert object of type ' + exports.getType(object) + ' to type ASPDate');
@@ -4034,6 +817,33 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
+   * Throttle the given function to be only executed once every `wait` milliseconds
+   * @param {function} fn
+   * @param {number} wait    Time in milliseconds
+   * @returns {function} Returns the throttled function
+   */
+  exports.throttle = function (fn, wait) {
+    var timeout = null;
+    var needExecution = false;
+
+    return function throttled() {
+      if (!timeout) {
+        needExecution = false;
+        fn();
+
+        timeout = setTimeout(function () {
+          timeout = null;
+          if (needExecution) {
+            throttled();
+          }
+        }, wait);
+      } else {
+        needExecution = true;
+      }
+    };
+  };
+
+  /**
    * Add and event listener. Works for all browsers
    * @param {Element}     element    An html element
    * @param {string}      action     The action, for example "click",
@@ -4045,13 +855,13 @@ return /******/ (function(modules) { // webpackBootstrap
     if (element.addEventListener) {
       if (useCapture === undefined) useCapture = false;
 
-      if (action === 'mousewheel' && navigator.userAgent.indexOf('Firefox') >= 0) {
-        action = 'DOMMouseScroll'; // For Firefox
+      if (action === "mousewheel" && navigator.userAgent.indexOf("Firefox") >= 0) {
+        action = "DOMMouseScroll"; // For Firefox
       }
 
       element.addEventListener(action, listener, useCapture);
     } else {
-      element.attachEvent('on' + action, listener); // IE browsers
+      element.attachEvent("on" + action, listener); // IE browsers
     }
   };
 
@@ -4067,14 +877,14 @@ return /******/ (function(modules) { // webpackBootstrap
       // non-IE browsers
       if (useCapture === undefined) useCapture = false;
 
-      if (action === 'mousewheel' && navigator.userAgent.indexOf('Firefox') >= 0) {
-        action = 'DOMMouseScroll'; // For Firefox
+      if (action === "mousewheel" && navigator.userAgent.indexOf("Firefox") >= 0) {
+        action = "DOMMouseScroll"; // For Firefox
       }
 
       element.removeEventListener(action, listener, useCapture);
     } else {
       // IE browsers
-      element.detachEvent('on' + action, listener);
+      element.detachEvent("on" + action, listener);
     }
   };
 
@@ -4087,8 +897,8 @@ return /******/ (function(modules) { // webpackBootstrap
     if (event.preventDefault) {
       event.preventDefault(); // non-IE browsers
     } else {
-      event.returnValue = false; // IE browsers
-    }
+        event.returnValue = false; // IE browsers
+      }
   };
 
   /**
@@ -4253,17 +1063,17 @@ return /******/ (function(modules) { // webpackBootstrap
    * @returns {*}
    */
   exports.overrideOpacity = function (color, opacity) {
-    if (color.indexOf('rgba') != -1) {
+    if (color.indexOf("rgba") != -1) {
       return color;
-    } else if (color.indexOf('rgb') != -1) {
-      var rgb = color.substr(color.indexOf('(') + 1).replace(')', '').split(',');
-      return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + opacity + ')';
+    } else if (color.indexOf("rgb") != -1) {
+      var rgb = color.substr(color.indexOf("(") + 1).replace(")", "").split(",");
+      return "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + opacity + ")";
     } else {
       var rgb = exports.hexToRGB(color);
       if (rgb == null) {
         return color;
       } else {
-        return 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + opacity + ')';
+        return "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + opacity + ")";
       }
     }
   };
@@ -4277,7 +1087,7 @@ return /******/ (function(modules) { // webpackBootstrap
    * @constructor
    */
   exports.RGBToHex = function (red, green, blue) {
-    return '#' + ((1 << 24) + (red << 16) + (green << 8) + blue).toString(16).slice(1);
+    return "#" + ((1 << 24) + (red << 16) + (green << 8) + blue).toString(16).slice(1);
   };
 
   /**
@@ -4493,12 +1303,12 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   exports.isValidRGB = function (rgb) {
-    rgb = rgb.replace(' ', '');
+    rgb = rgb.replace(" ", "");
     var isOk = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/i.test(rgb);
     return isOk;
   };
   exports.isValidRGBA = function (rgba) {
-    rgba = rgba.replace(' ', '');
+    rgba = rgba.replace(" ", "");
     var isOk = /rgba\((\d{1,3}),(\d{1,3}),(\d{1,3}),(.{1,3})\)/i.test(rgba);
     return isOk;
   };
@@ -4511,11 +1321,11 @@ return /******/ (function(modules) { // webpackBootstrap
    * @returns {*}
    */
   exports.selectiveBridgeObject = function (fields, referenceObject) {
-    if (typeof referenceObject == 'object') {
+    if (typeof referenceObject == "object") {
       var objectTo = Object.create(referenceObject);
       for (var i = 0; i < fields.length; i++) {
         if (referenceObject.hasOwnProperty(fields[i])) {
-          if (typeof referenceObject[fields[i]] == 'object') {
+          if (typeof referenceObject[fields[i]] == "object") {
             objectTo[fields[i]] = exports.bridgeObject(referenceObject[fields[i]]);
           }
         }
@@ -4534,11 +1344,11 @@ return /******/ (function(modules) { // webpackBootstrap
    * @returns {*}
    */
   exports.bridgeObject = function (referenceObject) {
-    if (typeof referenceObject == 'object') {
+    if (typeof referenceObject == "object") {
       var objectTo = Object.create(referenceObject);
       for (var i in referenceObject) {
         if (referenceObject.hasOwnProperty(i)) {
-          if (typeof referenceObject[i] == 'object') {
+          if (typeof referenceObject[i] == "object") {
             objectTo[i] = exports.bridgeObject(referenceObject[i]);
           }
         }
@@ -4547,6 +1357,24 @@ return /******/ (function(modules) { // webpackBootstrap
     } else {
       return null;
     }
+  };
+
+  /**
+   * This method provides a stable sort implementation, very fast for presorted data
+   *
+   * @param a the array
+   * @param a order comparator
+   * @returns {the array}
+   */
+  exports.insertSort = function (a, compare) {
+    for (var i = 0; i < a.length; i++) {
+      var k = a[i];
+      for (var j = i; j > 0 && compare(k, a[j - 1]) < 0; j--) {
+        a[j] = a[j - 1];
+      }
+      a[j] = k;
+    }
+    return a;
   };
 
   /**
@@ -4560,10 +1388,10 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   exports.mergeOptions = function (mergeTarget, options, option) {
     var allowDeletion = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+    var globalOptions = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
 
     if (options[option] === null) {
-      mergeTarget[option] = undefined;
-      delete mergeTarget[option];
+      mergeTarget[option] = Object.create(globalOptions[option]);
     } else {
       if (options[option] !== undefined) {
         if (typeof options[option] === 'boolean') {
@@ -4736,21 +1564,21 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
 /***/ },
-/* 8 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
   // first check if moment.js is already loaded in the browser window, if so,
   // use this instance. Else, load via commonjs.
   'use strict';
 
-  module.exports = typeof window !== 'undefined' && window['moment'] || __webpack_require__(9);
+  module.exports = typeof window !== 'undefined' && window['moment'] || __webpack_require__(3);
 
 /***/ },
-/* 9 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
   /* WEBPACK VAR INJECTION */(function(module) {//! moment.js
-  //! version : 2.10.5
+  //! version : 2.10.6
   //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
   //! license : MIT
   //! momentjs.com
@@ -4926,7 +1754,7 @@ return /******/ (function(modules) { // webpackBootstrap
       // Moment prototype object
       function Moment(config) {
           copyConfig(this, config);
-          this._d = new Date(config._d.getTime());
+          this._d = new Date(config._d != null ? config._d.getTime() : NaN);
           // Prevent infinite loop in case updateOffset creates new moment
           // objects.
           if (updateInProgress === false) {
@@ -7913,7 +4741,7 @@ return /******/ (function(modules) { // webpackBootstrap
       // Side effect imports
 
 
-      utils_hooks__hooks.version = '2.10.5';
+      utils_hooks__hooks.version = '2.10.6';
 
       setHookCallback(local__createLocal);
 
@@ -7944,10 +4772,10 @@ return /******/ (function(modules) { // webpackBootstrap
       return _moment;
 
   }));
-  /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module)))
+  /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 10 */
+/* 4 */
 /***/ function(module, exports) {
 
   module.exports = function(module) {
@@ -7963,7 +4791,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 5 */
 /***/ function(module, exports) {
 
   function webpackContext(req) {
@@ -7972,11 +4800,11 @@ return /******/ (function(modules) { // webpackBootstrap
   webpackContext.keys = function() { return []; };
   webpackContext.resolve = webpackContext;
   module.exports = webpackContext;
-  webpackContext.id = 11;
+  webpackContext.id = 5;
 
 
 /***/ },
-/* 12 */
+/* 6 */
 /***/ function(module, exports) {
 
   /* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -8192,7 +5020,7 @@ return /******/ (function(modules) { // webpackBootstrap
   /* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 13 */
+/* 7 */
 /***/ function(module, exports) {
 
   // DOM utility methods
@@ -8233,6 +5061,16 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       }
     }
+  };
+
+  /**
+   * Ensures that all elements are removed first up so they can be recreated cleanly
+   * @param JSONcontainer
+   */
+  exports.resetElements = function (JSONcontainer) {
+    exports.prepareElements(JSONcontainer);
+    exports.cleanupElements(JSONcontainer);
+    exports.prepareElements(JSONcontainer);
   };
 
   /**
@@ -8328,21 +5166,21 @@ return /******/ (function(modules) { // webpackBootstrap
     var point;
     if (groupTemplate.style == 'circle') {
       point = exports.getSVGElement('circle', JSONcontainer, svgContainer);
-      point.setAttributeNS(null, 'cx', x);
-      point.setAttributeNS(null, 'cy', y);
-      point.setAttributeNS(null, 'r', 0.5 * groupTemplate.size);
+      point.setAttributeNS(null, "cx", x);
+      point.setAttributeNS(null, "cy", y);
+      point.setAttributeNS(null, "r", 0.5 * groupTemplate.size);
     } else {
       point = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-      point.setAttributeNS(null, 'x', x - 0.5 * groupTemplate.size);
-      point.setAttributeNS(null, 'y', y - 0.5 * groupTemplate.size);
-      point.setAttributeNS(null, 'width', groupTemplate.size);
-      point.setAttributeNS(null, 'height', groupTemplate.size);
+      point.setAttributeNS(null, "x", x - 0.5 * groupTemplate.size);
+      point.setAttributeNS(null, "y", y - 0.5 * groupTemplate.size);
+      point.setAttributeNS(null, "width", groupTemplate.size);
+      point.setAttributeNS(null, "height", groupTemplate.size);
     }
 
-    if (groupTemplate.style !== undefined) {
-      point.setAttributeNS(null, 'style', groupTemplate.style);
+    if (groupTemplate.styles !== undefined) {
+      point.setAttributeNS(null, "style", groupTemplate.styles);
     }
-    point.setAttributeNS(null, 'class', groupTemplate.className + ' vis-point');
+    point.setAttributeNS(null, "class", groupTemplate.className + " vis-point");
     //handle label
 
     if (labelObj) {
@@ -8359,10 +5197,10 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       if (labelObj.className) {
-        label.setAttributeNS(null, 'class', labelObj.className + ' vis-label');
+        label.setAttributeNS(null, "class", labelObj.className + " vis-label");
       }
-      label.setAttributeNS(null, 'x', x);
-      label.setAttributeNS(null, 'y', y);
+      label.setAttributeNS(null, "x", x);
+      label.setAttributeNS(null, "y", y);
     }
 
     return point;
@@ -8382,25 +5220,25 @@ return /******/ (function(modules) { // webpackBootstrap
         y -= height;
       }
       var rect = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-      rect.setAttributeNS(null, 'x', x - 0.5 * width);
-      rect.setAttributeNS(null, 'y', y);
-      rect.setAttributeNS(null, 'width', width);
-      rect.setAttributeNS(null, 'height', height);
-      rect.setAttributeNS(null, 'class', className);
+      rect.setAttributeNS(null, "x", x - 0.5 * width);
+      rect.setAttributeNS(null, "y", y);
+      rect.setAttributeNS(null, "width", width);
+      rect.setAttributeNS(null, "height", height);
+      rect.setAttributeNS(null, "class", className);
       if (style) {
-        rect.setAttributeNS(null, 'style', style);
+        rect.setAttributeNS(null, "style", style);
       }
     }
   };
 
 /***/ },
-/* 14 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var Queue = __webpack_require__(15);
+  var util = __webpack_require__(1);
+  var Queue = __webpack_require__(9);
 
   /**
    * DataSet
@@ -8461,14 +5299,14 @@ return /******/ (function(modules) { // webpackBootstrap
     // all variants of a Date are internally stored as Date, so we can convert
     // from everything to everything (also from ISODate to Number for example)
     if (this._options.type) {
-      for (var field in this._options.type) {
-        if (this._options.type.hasOwnProperty(field)) {
-          var value = this._options.type[field];
-          if (value == 'Date' || value == 'ISODate' || value == 'ASPDate') {
-            this._type[field] = 'Date';
-          } else {
-            this._type[field] = value;
-          }
+      var fields = Object.keys(this._options.type);
+      for (var i = 0, len = fields.length; i < len; i++) {
+        var field = fields[i];
+        var value = this._options.type[field];
+        if (value == 'Date' || value == 'ISODate' || value == 'ASPDate') {
+          this._type[field] = 'Date';
+        } else {
+          this._type[field] = value;
         }
       }
     }
@@ -8585,7 +5423,7 @@ return /******/ (function(modules) { // webpackBootstrap
       subscribers = subscribers.concat(this._subscribers['*']);
     }
 
-    for (var i = 0; i < subscribers.length; i++) {
+    for (var i = 0, len = subscribers.length; i < len; i++) {
       var subscriber = subscribers[i];
       if (subscriber.callback) {
         subscriber.callback(event, params, senderId || null);
@@ -8635,6 +5473,7 @@ return /******/ (function(modules) { // webpackBootstrap
   DataSet.prototype.update = function (data, senderId) {
     var addedIds = [];
     var updatedIds = [];
+    var oldData = [];
     var updatedData = [];
     var me = this;
     var fieldId = me._fieldId;
@@ -8642,10 +5481,12 @@ return /******/ (function(modules) { // webpackBootstrap
     var addOrUpdate = function addOrUpdate(item) {
       var id = item[fieldId];
       if (me._data[id]) {
+        var oldItem = util.extend({}, me._data[id]);
         // update item
         id = me._updateItem(item);
         updatedIds.push(id);
         updatedData.push(item);
+        oldData.push(oldItem);
       } else {
         // add new item
         id = me._addItem(item);
@@ -8656,7 +5497,11 @@ return /******/ (function(modules) { // webpackBootstrap
     if (Array.isArray(data)) {
       // Array
       for (var i = 0, len = data.length; i < len; i++) {
-        addOrUpdate(data[i]);
+        if (data[i] instanceof Object) {
+          addOrUpdate(data[i]);
+        } else {
+          console.warn("Ignoring input item, which is not an object at index" + i);
+        }
       }
     } else if (data instanceof Object) {
       // Single item
@@ -8669,7 +5514,15 @@ return /******/ (function(modules) { // webpackBootstrap
       this._trigger('add', { items: addedIds }, senderId);
     }
     if (updatedIds.length) {
-      this._trigger('update', { items: updatedIds, data: updatedData }, senderId);
+      var props = { items: updatedIds, oldData: oldData, data: updatedData };
+      // TODO: remove deprecated property 'data' some day
+      //Object.defineProperty(props, 'data', {
+      //  'get': (function() {
+      //    console.warn('Property data is deprecated. Use DataSet.get(ids) to retrieve the new data, use the oldData property on this object to get the old data');
+      //    return updatedData;
+      //  }).bind(this)
+      //});
+      this._trigger('update', props, senderId);
     }
 
     return addedIds.concat(updatedIds);
@@ -8735,6 +5588,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var filter = options && options.filter;
     var items = [],
         item,
+        itemIds,
         itemId,
         i,
         len;
@@ -8743,7 +5597,7 @@ return /******/ (function(modules) { // webpackBootstrap
     if (id != undefined) {
       // return a single item
       item = me._getItem(id, type);
-      if (filter && !filter(item)) {
+      if (item && filter && !filter(item)) {
         item = null;
       }
     } else if (ids != undefined) {
@@ -8756,12 +5610,12 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     } else {
       // return all items
-      for (itemId in this._data) {
-        if (this._data.hasOwnProperty(itemId)) {
-          item = me._getItem(itemId, type);
-          if (!filter || filter(item)) {
-            items.push(item);
-          }
+      itemIds = Object.keys(this._data);
+      for (i = 0, len = itemIds.length; i < len; i++) {
+        itemId = itemIds[i];
+        item = me._getItem(itemId, type);
+        if (!filter || filter(item)) {
+          items.push(item);
         }
       }
     }
@@ -8785,9 +5639,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // return the results
     if (returnType == 'Object') {
-      var result = {};
-      for (i = 0; i < items.length; i++) {
-        result[items[i].id] = items[i];
+      var result = {},
+          resultant;
+      for (i = 0, len = items.length; i < len; i++) {
+        resultant = items[i];
+        result[resultant.id] = resultant;
       }
       return result;
     } else {
@@ -8814,6 +5670,7 @@ return /******/ (function(modules) { // webpackBootstrap
         filter = options && options.filter,
         order = options && options.order,
         type = options && options.type || this._options.type,
+        itemIds = Object.keys(data),
         i,
         len,
         id,
@@ -8826,28 +5683,26 @@ return /******/ (function(modules) { // webpackBootstrap
       if (order) {
         // create ordered list
         items = [];
-        for (id in data) {
-          if (data.hasOwnProperty(id)) {
-            item = this._getItem(id, type);
-            if (filter(item)) {
-              items.push(item);
-            }
+        for (i = 0, len = itemIds.length; i < len; i++) {
+          id = itemIds[i];
+          item = this._getItem(id, type);
+          if (filter(item)) {
+            items.push(item);
           }
         }
 
         this._sort(items, order);
 
         for (i = 0, len = items.length; i < len; i++) {
-          ids[i] = items[i][this._fieldId];
+          ids.push(items[i][this._fieldId]);
         }
       } else {
         // create unordered list
-        for (id in data) {
-          if (data.hasOwnProperty(id)) {
-            item = this._getItem(id, type);
-            if (filter(item)) {
-              ids.push(item[this._fieldId]);
-            }
+        for (i = 0, len = itemIds.length; i < len; i++) {
+          id = itemIds[i];
+          item = this._getItem(id, type);
+          if (filter(item)) {
+            ids.push(item[this._fieldId]);
           }
         }
       }
@@ -8856,24 +5711,22 @@ return /******/ (function(modules) { // webpackBootstrap
       if (order) {
         // create an ordered list
         items = [];
-        for (id in data) {
-          if (data.hasOwnProperty(id)) {
-            items.push(data[id]);
-          }
+        for (i = 0, len = itemIds.length; i < len; i++) {
+          id = itemIds[i];
+          items.push(data[id]);
         }
 
         this._sort(items, order);
 
         for (i = 0, len = items.length; i < len; i++) {
-          ids[i] = items[i][this._fieldId];
+          ids.push(items[i][this._fieldId]);
         }
       } else {
         // create unordered list
-        for (id in data) {
-          if (data.hasOwnProperty(id)) {
-            item = data[id];
-            ids.push(item[this._fieldId]);
-          }
+        for (i = 0, len = itemIds.length; i < len; i++) {
+          id = itemIds[i];
+          item = data[id];
+          ids.push(item[this._fieldId]);
         }
       }
     }
@@ -8903,6 +5756,9 @@ return /******/ (function(modules) { // webpackBootstrap
     var filter = options && options.filter,
         type = options && options.type || this._options.type,
         data = this._data,
+        itemIds = Object.keys(data),
+        i,
+        len,
         item,
         id;
 
@@ -8910,19 +5766,18 @@ return /******/ (function(modules) { // webpackBootstrap
       // execute forEach on ordered list
       var items = this.get(options);
 
-      for (var i = 0, len = items.length; i < len; i++) {
+      for (i = 0, len = items.length; i < len; i++) {
         item = items[i];
         id = item[this._fieldId];
         callback(item, id);
       }
     } else {
       // unordered
-      for (id in data) {
-        if (data.hasOwnProperty(id)) {
-          item = this._getItem(id, type);
-          if (!filter || filter(item)) {
-            callback(item, id);
-          }
+      for (i = 0, len = itemIds.length; i < len; i++) {
+        id = itemIds[i];
+        item = this._getItem(id, type);
+        if (!filter || filter(item)) {
+          callback(item, id);
         }
       }
     }
@@ -8944,15 +5799,18 @@ return /******/ (function(modules) { // webpackBootstrap
         type = options && options.type || this._options.type,
         mappedItems = [],
         data = this._data,
+        itemIds = Object.keys(data),
+        i,
+        len,
+        id,
         item;
 
     // convert and filter items
-    for (var id in data) {
-      if (data.hasOwnProperty(id)) {
-        item = this._getItem(id, type);
-        if (!filter || filter(item)) {
-          mappedItems.push(callback(item, id));
-        }
+    for (i = 0, len = itemIds.length; i < len; i++) {
+      id = itemIds[i];
+      item = this._getItem(id, type);
+      if (!filter || filter(item)) {
+        mappedItems.push(callback(item, id));
       }
     }
 
@@ -8977,17 +5835,23 @@ return /******/ (function(modules) { // webpackBootstrap
       return item;
     }
 
-    var filteredItem = {};
+    var filteredItem = {},
+        itemFields = Object.keys(item),
+        len = itemFields.length,
+        i,
+        field;
 
     if (Array.isArray(fields)) {
-      for (var field in item) {
-        if (item.hasOwnProperty(field) && fields.indexOf(field) != -1) {
+      for (i = 0; i < len; i++) {
+        field = itemFields[i];
+        if (fields.indexOf(field) != -1) {
           filteredItem[field] = item[field];
         }
       }
     } else {
-      for (var field in item) {
-        if (item.hasOwnProperty(field) && fields.hasOwnProperty(field)) {
+      for (i = 0; i < len; i++) {
+        field = itemFields[i];
+        if (fields.hasOwnProperty(field)) {
           filteredItem[fields[field]] = item[field];
         }
       }
@@ -9018,8 +5882,8 @@ return /******/ (function(modules) { // webpackBootstrap
     // TODO: extend order by an Object {field:String, direction:String}
     //       where direction can be 'asc' or 'desc'
     else {
-      throw new TypeError('Order must be a function or a string');
-    }
+        throw new TypeError('Order must be a function or a string');
+      }
   };
 
   /**
@@ -9071,7 +5935,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     } else if (id instanceof Object) {
       var itemId = id[this._fieldId];
-      if (itemId && this._data[itemId]) {
+      if (itemId !== undefined && this._data[itemId]) {
         delete this._data[itemId];
         this.length--;
         return itemId;
@@ -9103,17 +5967,19 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   DataSet.prototype.max = function (field) {
     var data = this._data,
+        itemIds = Object.keys(data),
         max = null,
-        maxField = null;
+        maxField = null,
+        i,
+        len;
 
-    for (var id in data) {
-      if (data.hasOwnProperty(id)) {
-        var item = data[id];
-        var itemField = item[field];
-        if (itemField != null && (!max || itemField > maxField)) {
-          max = item;
-          maxField = itemField;
-        }
+    for (i = 0, len = itemIds.length; i < len; i++) {
+      var id = itemIds[i];
+      var item = data[id];
+      var itemField = item[field];
+      if (itemField != null && (!max || itemField > maxField)) {
+        max = item;
+        maxField = itemField;
       }
     }
 
@@ -9127,17 +5993,19 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   DataSet.prototype.min = function (field) {
     var data = this._data,
+        itemIds = Object.keys(data),
         min = null,
-        minField = null;
+        minField = null,
+        i,
+        len;
 
-    for (var id in data) {
-      if (data.hasOwnProperty(id)) {
-        var item = data[id];
-        var itemField = item[field];
-        if (itemField != null && (!min || itemField < minField)) {
-          min = item;
-          minField = itemField;
-        }
+    for (i = 0, len = itemIds.length; i < len; i++) {
+      var id = itemIds[i];
+      var item = data[id];
+      var itemField = item[field];
+      if (itemField != null && (!min || itemField < minField)) {
+        min = item;
+        minField = itemField;
       }
     }
 
@@ -9153,31 +6021,31 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   DataSet.prototype.distinct = function (field) {
     var data = this._data;
+    var itemIds = Object.keys(data);
     var values = [];
     var fieldType = this._options.type && this._options.type[field] || null;
     var count = 0;
-    var i;
+    var i, j, len;
 
-    for (var prop in data) {
-      if (data.hasOwnProperty(prop)) {
-        var item = data[prop];
-        var value = item[field];
-        var exists = false;
-        for (i = 0; i < count; i++) {
-          if (values[i] == value) {
-            exists = true;
-            break;
-          }
+    for (i = 0, len = itemIds.length; i < len; i++) {
+      var id = itemIds[i];
+      var item = data[id];
+      var value = item[field];
+      var exists = false;
+      for (j = 0; j < count; j++) {
+        if (values[j] == value) {
+          exists = true;
+          break;
         }
-        if (!exists && value !== undefined) {
-          values[count] = value;
-          count++;
-        }
+      }
+      if (!exists && value !== undefined) {
+        values[count] = value;
+        count++;
       }
     }
 
     if (fieldType) {
-      for (i = 0; i < values.length; i++) {
+      for (i = 0, len = values.length; i < len; i++) {
         values[i] = util.convert(values[i], fieldType);
       }
     }
@@ -9206,12 +6074,14 @@ return /******/ (function(modules) { // webpackBootstrap
       item[this._fieldId] = id;
     }
 
-    var d = {};
-    for (var field in item) {
-      if (item.hasOwnProperty(field)) {
-        var fieldType = this._type[field]; // type may be undefined
-        d[field] = util.convert(item[field], fieldType);
-      }
+    var d = {},
+        fields = Object.keys(item),
+        i,
+        len;
+    for (i = 0, len = fields.length; i < len; i++) {
+      var field = fields[i];
+      var fieldType = this._type[field]; // type may be undefined
+      d[field] = util.convert(item[field], fieldType);
     }
     this._data[id] = d;
     this.length++;
@@ -9227,7 +6097,7 @@ return /******/ (function(modules) { // webpackBootstrap
    * @private
    */
   DataSet.prototype._getItem = function (id, types) {
-    var field, value;
+    var field, value, i, len;
 
     // get the item from the dataset
     var raw = this._data[id];
@@ -9236,21 +6106,21 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     // convert the items field types
-    var converted = {};
+    var converted = {},
+        fields = Object.keys(raw);
+
     if (types) {
-      for (field in raw) {
-        if (raw.hasOwnProperty(field)) {
-          value = raw[field];
-          converted[field] = util.convert(value, types[field]);
-        }
+      for (i = 0, len = fields.length; i < len; i++) {
+        field = fields[i];
+        value = raw[field];
+        converted[field] = util.convert(value, types[field]);
       }
     } else {
       // no field types specified, no converting needed
-      for (field in raw) {
-        if (raw.hasOwnProperty(field)) {
-          value = raw[field];
-          converted[field] = value;
-        }
+      for (i = 0, len = fields.length; i < len; i++) {
+        field = fields[i];
+        value = raw[field];
+        converted[field] = value;
       }
     }
     return converted;
@@ -9276,11 +6146,11 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     // merge with current item
-    for (var field in item) {
-      if (item.hasOwnProperty(field)) {
-        var fieldType = this._type[field]; // type may be undefined
-        d[field] = util.convert(item[field], fieldType);
-      }
+    var fields = Object.keys(item);
+    for (var i = 0, len = fields.length; i < len; i++) {
+      var field = fields[i];
+      var fieldType = this._type[field]; // type may be undefined
+      d[field] = util.convert(item[field], fieldType);
     }
 
     return id;
@@ -9289,7 +6159,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = DataSet;
 
 /***/ },
-/* 15 */
+/* 9 */
 /***/ function(module, exports) {
 
   /**
@@ -9494,13 +6364,13 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Queue;
 
 /***/ },
-/* 16 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var DataSet = __webpack_require__(14);
+  var util = __webpack_require__(1);
+  var DataSet = __webpack_require__(8);
 
   /**
    * DataView
@@ -9536,7 +6406,7 @@ return /******/ (function(modules) { // webpackBootstrap
    * @param {DataSet | DataView} data
    */
   DataView.prototype.setData = function (data) {
-    var ids, i, len;
+    var ids, id, i, len;
 
     if (this._data) {
       // unsubscribe from current dataset
@@ -9545,12 +6415,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       // trigger a remove of all items in memory
-      ids = [];
-      for (var id in this._ids) {
-        if (this._ids.hasOwnProperty(id)) {
-          ids.push(id);
-        }
-      }
+      ids = Object.keys(this._ids);
       this._ids = {};
       this.length = 0;
       this._trigger('remove', { items: ids });
@@ -9583,33 +6448,33 @@ return /******/ (function(modules) { // webpackBootstrap
    * containing a variable parameter.
    */
   DataView.prototype.refresh = function () {
-    var id;
+    var id, i, len;
     var ids = this._data.getIds({ filter: this._options && this._options.filter });
+    var oldIds = Object.keys(this._ids);
     var newIds = {};
     var added = [];
     var removed = [];
 
     // check for additions
-    for (var i = 0; i < ids.length; i++) {
+    for (i = 0, len = ids.length; i < len; i++) {
       id = ids[i];
       newIds[id] = true;
       if (!this._ids[id]) {
         added.push(id);
         this._ids[id] = true;
-        this.length++;
       }
     }
 
     // check for removals
-    for (id in this._ids) {
-      if (this._ids.hasOwnProperty(id)) {
-        if (!newIds[id]) {
-          removed.push(id);
-          delete this._ids[id];
-          this.length--;
-        }
+    for (i = 0, len = oldIds.length; i < len; i++) {
+      id = oldIds[i];
+      if (!newIds[id]) {
+        removed.push(id);
+        delete this._ids[id];
       }
     }
+
+    this.length += added.length - removed.length;
 
     // trigger events
     if (added.length) {
@@ -9731,6 +6596,46 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
+   * Map every item in the dataset.
+   * @param {function} callback
+   * @param {Object} [options]    Available options:
+   *                              {Object.<String, String>} [type]
+   *                              {String[]} [fields] filter fields
+   *                              {function} [filter] filter items
+   *                              {String | function} [order] Order the items by
+   *                                  a field name or custom sort function.
+   * @return {Object[]} mappedItems
+   */
+  DataView.prototype.map = function (callback, options) {
+    var mappedItems = [];
+    if (this._data) {
+      var defaultFilter = this._options.filter;
+      var filter;
+
+      if (options && options.filter) {
+        if (defaultFilter) {
+          filter = function (item) {
+            return defaultFilter(item) && options.filter(item);
+          };
+        } else {
+          filter = options.filter;
+        }
+      } else {
+        filter = defaultFilter;
+      }
+
+      mappedItems = this._data.map(callback, {
+        filter: filter,
+        order: options && options.order
+      });
+    } else {
+      mappedItems = [];
+    }
+
+    return mappedItems;
+  };
+
+  /**
    * Get the DataSet to which this DataView is connected. In case there is a chain
    * of multiple DataViews, the root DataSet of this chain is returned.
    * @return {DataSet} dataSet
@@ -9795,7 +6700,9 @@ return /******/ (function(modules) { // webpackBootstrap
               if (this._ids[id]) {
                 delete this._ids[id];
                 removed.push(id);
-              } else {}
+              } else {
+                // nothing interesting for me :-(
+              }
             }
           }
 
@@ -9839,24 +6746,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
   module.exports = DataView;
 
-  // nothing interesting for me :-(
-
 /***/ },
-/* 17 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Emitter = __webpack_require__(19);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
-  var util = __webpack_require__(7);
-  var Point3d = __webpack_require__(20);
-  var Point2d = __webpack_require__(18);
-  var Camera = __webpack_require__(21);
-  var Filter = __webpack_require__(22);
-  var Slider = __webpack_require__(23);
-  var StepNumber = __webpack_require__(24);
+  var Emitter = __webpack_require__(12);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
+  var util = __webpack_require__(1);
+  var Point3d = __webpack_require__(13);
+  var Point2d = __webpack_require__(14);
+  var Camera = __webpack_require__(15);
+  var Filter = __webpack_require__(16);
+  var Slider = __webpack_require__(17);
+  var StepNumber = __webpack_require__(18);
 
   /**
    * @constructor Graph3d
@@ -10084,9 +6989,11 @@ return /******/ (function(modules) { // webpackBootstrap
       if (backgroundColor.fill !== undefined) fill = backgroundColor.fill;
       if (backgroundColor.stroke !== undefined) stroke = backgroundColor.stroke;
       if (backgroundColor.strokeWidth !== undefined) strokeWidth = backgroundColor.strokeWidth;
-    } else if (backgroundColor === undefined) {} else {
-      throw 'Unsupported type of backgroundColor';
-    }
+    } else if (backgroundColor === undefined) {
+      // use use defaults
+    } else {
+        throw 'Unsupported type of backgroundColor';
+      }
 
     this.frame.style.backgroundColor = fill;
     this.frame.style.borderColor = stroke;
@@ -10792,9 +7699,9 @@ return /******/ (function(modules) { // webpackBootstrap
         widthMin = dotSize / 2; // px
         widthMax = dotSize / 2 + dotSize * 2; // Todo: put this in one function
       } else {
-        widthMin = 20; // px
-        widthMax = 20; // px
-      }
+          widthMin = 20; // px
+          widthMax = 20; // px
+        }
 
       var height = Math.max(this.frame.clientHeight * 0.25, 100);
       var top = this.margin;
@@ -11330,9 +8237,9 @@ return /******/ (function(modules) { // webpackBootstrap
               strokeStyle = this.axisColor; // TODO: should be customizable
             }
           } else {
-            fillStyle = 'gray';
-            strokeStyle = this.axisColor;
-          }
+              fillStyle = 'gray';
+              strokeStyle = this.axisColor;
+            }
 
           ctx.lineWidth = this._getStrokeWidth(point);
           ctx.fillStyle = fillStyle;
@@ -11348,39 +8255,39 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       }
     } else {
-      // grid style
-      for (i = 0; i < this.dataPoints.length; i++) {
-        point = this.dataPoints[i];
-        right = this.dataPoints[i].pointRight;
-        top = this.dataPoints[i].pointTop;
+        // grid style
+        for (i = 0; i < this.dataPoints.length; i++) {
+          point = this.dataPoints[i];
+          right = this.dataPoints[i].pointRight;
+          top = this.dataPoints[i].pointTop;
 
-        if (point !== undefined && right !== undefined) {
-          // calculate Hue from the current value. At zMin the hue is 240, at zMax the hue is 0
-          zAvg = (point.point.z + right.point.z) / 2;
-          h = (1 - (zAvg - this.zMin) * this.scale.z / this.verticalRatio) * 240;
+          if (point !== undefined && right !== undefined) {
+            // calculate Hue from the current value. At zMin the hue is 240, at zMax the hue is 0
+            zAvg = (point.point.z + right.point.z) / 2;
+            h = (1 - (zAvg - this.zMin) * this.scale.z / this.verticalRatio) * 240;
 
-          ctx.lineWidth = this._getStrokeWidth(point) * 2;
-          ctx.strokeStyle = this._hsv2rgb(h, 1, 1);
-          ctx.beginPath();
-          ctx.moveTo(point.screen.x, point.screen.y);
-          ctx.lineTo(right.screen.x, right.screen.y);
-          ctx.stroke();
-        }
+            ctx.lineWidth = this._getStrokeWidth(point) * 2;
+            ctx.strokeStyle = this._hsv2rgb(h, 1, 1);
+            ctx.beginPath();
+            ctx.moveTo(point.screen.x, point.screen.y);
+            ctx.lineTo(right.screen.x, right.screen.y);
+            ctx.stroke();
+          }
 
-        if (point !== undefined && top !== undefined) {
-          // calculate Hue from the current value. At zMin the hue is 240, at zMax the hue is 0
-          zAvg = (point.point.z + top.point.z) / 2;
-          h = (1 - (zAvg - this.zMin) * this.scale.z / this.verticalRatio) * 240;
+          if (point !== undefined && top !== undefined) {
+            // calculate Hue from the current value. At zMin the hue is 240, at zMax the hue is 0
+            zAvg = (point.point.z + top.point.z) / 2;
+            h = (1 - (zAvg - this.zMin) * this.scale.z / this.verticalRatio) * 240;
 
-          ctx.lineWidth = this._getStrokeWidth(point) * 2;
-          ctx.strokeStyle = this._hsv2rgb(h, 1, 1);
-          ctx.beginPath();
-          ctx.moveTo(point.screen.x, point.screen.y);
-          ctx.lineTo(top.screen.x, top.screen.y);
-          ctx.stroke();
+            ctx.lineWidth = this._getStrokeWidth(point) * 2;
+            ctx.strokeStyle = this._hsv2rgb(h, 1, 1);
+            ctx.beginPath();
+            ctx.moveTo(point.screen.x, point.screen.y);
+            ctx.lineTo(top.screen.x, top.screen.y);
+            ctx.stroke();
+          }
         }
       }
-    }
   };
 
   Graph3d.prototype._getStrokeWidth = function (point) {
@@ -12087,31 +8994,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   module.exports = Graph3d;
 
-  // use use defaults
-
 /***/ },
-/* 18 */
+/* 12 */
 /***/ function(module, exports) {
 
-  /**
-   * @prototype Point2d
-   * @param {Number} [x]
-   * @param {Number} [y]
-   */
-  "use strict";
-
-  function Point2d(x, y) {
-    this.x = x !== undefined ? x : 0;
-    this.y = y !== undefined ? y : 0;
-  }
-
-  module.exports = Point2d;
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-
+  
   /**
    * Expose `Emitter`.
    */
@@ -12278,7 +9165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 20 */
+/* 13 */
 /***/ function(module, exports) {
 
   /**
@@ -12361,12 +9248,30 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Point3d;
 
 /***/ },
-/* 21 */
+/* 14 */
+/***/ function(module, exports) {
+
+  /**
+   * @prototype Point2d
+   * @param {Number} [x]
+   * @param {Number} [y]
+   */
+  "use strict";
+
+  function Point2d(x, y) {
+    this.x = x !== undefined ? x : 0;
+    this.y = y !== undefined ? y : 0;
+  }
+
+  module.exports = Point2d;
+
+/***/ },
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Point3d = __webpack_require__(20);
+  var Point3d = __webpack_require__(13);
 
   /**
    * @class Camera
@@ -12502,12 +9407,12 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Camera;
 
 /***/ },
-/* 22 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var DataView = __webpack_require__(16);
+  var DataView = __webpack_require__(10);
 
   /**
    * @class Filter
@@ -12713,12 +9618,12 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Filter;
 
 /***/ },
-/* 23 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   /**
    * @constructor Slider
@@ -13061,7 +9966,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Slider;
 
 /***/ },
-/* 24 */
+/* 18 */
 /***/ function(module, exports) {
 
   /**
@@ -13205,23 +10110,23 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = StepNumber;
 
 /***/ },
-/* 25 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Emitter = __webpack_require__(19);
-  var Hammer = __webpack_require__(3);
-  var moment = __webpack_require__(8);
-  var util = __webpack_require__(7);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
-  var Range = __webpack_require__(26);
-  var Core = __webpack_require__(30);
+  var Emitter = __webpack_require__(12);
+  var Hammer = __webpack_require__(20);
+  var moment = __webpack_require__(2);
+  var util = __webpack_require__(1);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
+  var Range = __webpack_require__(24);
+  var Core = __webpack_require__(28);
   var TimeAxis = __webpack_require__(39);
   var CurrentTime = __webpack_require__(44);
   var CustomTime = __webpack_require__(42);
-  var ItemSet = __webpack_require__(31);
+  var ItemSet = __webpack_require__(29);
 
   var Configurator = __webpack_require__(45);
   var Validator = __webpack_require__(47)['default'];
@@ -13256,6 +10161,7 @@ return /******/ (function(modules) { // webpackBootstrap
       end: null,
 
       autoResize: true,
+      throttleRedraw: 0, // ms
 
       orientation: {
         axis: 'bottom', // axis orientation: 'bottom', 'top', or 'both'
@@ -13366,6 +10272,8 @@ return /******/ (function(modules) { // webpackBootstrap
    * Force a redraw. The size of all items will be recalculated.
    * Can be useful to manually redraw when option autoResize=false and the window
    * has been resized, or when the items CSS has been changed.
+   *
+   * Note: this function will be overridden on construction with a trottled version
    */
   Timeline.prototype.redraw = function () {
     this.itemSet && this.itemSet.markDirty({ refreshItems: true });
@@ -13584,8 +10492,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // get a rough approximation for the range based on the items start and end dates
     var range = this.getDataRange();
-    var min = range.min;
-    var max = range.max;
+ //   var min = range.min.valueOf();
+  //  var max = range.max.valueOf();
+    var min = range.min !== null ? range.min.valueOf() : null;
+   var max = range.max !== null ? range.max.valueOf() : null;
     var minItem = null;
     var maxItem = null;
 
@@ -13604,7 +10514,10 @@ return /******/ (function(modules) { // webpackBootstrap
         var getEnd = function getEnd(item) {
           var end = item.data.end != undefined ? item.data.end : item.data.start;
           return util.convert(end, 'Date').valueOf();
-        };
+        }
+
+        // calculate the date of the left side and right side of the items given
+        ;
 
         interval = max - min;
         // ms
@@ -13612,16 +10525,14 @@ return /******/ (function(modules) { // webpackBootstrap
           interval = 10;
         }
         factor = interval / _this.props.center.width;
-
-        // calculate the date of the left side and right side of the items given
         util.forEach(_this.itemSet.items, (function (item) {
           item.show();
 
           var start = getStart(item);
           var end = getEnd(item);
 
-          var left = new Date(start - (item.getWidthLeft() + 10) * factor);
-          var right = new Date(end + (item.getWidthRight() + 10) * factor);
+          var left = start - (item.getWidthLeft() + 10) * factor;
+          var right = end + (item.getWidthRight() + 10) * factor;
 
           if (left < min) {
             min = left;
@@ -13670,7 +10581,7 @@ return /******/ (function(modules) { // webpackBootstrap
           min = start;
         }
         if (max === null || end > max) {
-          max = start;
+          max = end;
         }
       });
     }
@@ -13738,16 +10649,2734 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Timeline;
 
 /***/ },
-/* 26 */
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+  // Only load hammer.js when in a browser environment
+  // (loading hammer.js in a node.js environment gives errors)
+  'use strict';
+
+  if (typeof window !== 'undefined') {
+    var propagating = __webpack_require__(21);
+    var Hammer = window['Hammer'] || __webpack_require__(22);
+    module.exports = propagating(Hammer, {
+      preventDefault: 'mouse'
+    });
+  } else {
+    module.exports = function () {
+      throw Error('hammer.js is only available in a browser, not in node.js.');
+    };
+  }
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+  var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+
+  (function (factory) {
+    if (true) {
+      // AMD. Register as an anonymous module.
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports === 'object') {
+      // Node. Does not work with strict CommonJS, but
+      // only CommonJS-like environments that support module.exports,
+      // like Node.
+      module.exports = factory();
+    } else {
+      // Browser globals (root is window)
+      window.propagating = factory();
+    }
+  }(function () {
+    var _firstTarget = null; // singleton, will contain the target element where the touch event started
+    var _processing = false; // singleton, true when a touch event is being handled
+
+    /**
+     * Extend an Hammer.js instance with event propagation.
+     *
+     * Features:
+     * - Events emitted by hammer will propagate in order from child to parent
+     *   elements.
+     * - Events are extended with a function `event.stopPropagation()` to stop
+     *   propagation to parent elements.
+     * - An option `preventDefault` to stop all default browser behavior.
+     *
+     * Usage:
+     *   var hammer = propagatingHammer(new Hammer(element));
+     *   var hammer = propagatingHammer(new Hammer(element), {preventDefault: true});
+     *
+     * @param {Hammer.Manager} hammer   An hammer instance.
+     * @param {Object} [options]        Available options:
+     *                                  - `preventDefault: true | 'mouse' | 'touch' | 'pen'`.
+     *                                    Enforce preventing the default browser behavior.
+     *                                    Cannot be set to `false`.
+     * @return {Hammer.Manager} Returns the same hammer instance with extended
+     *                          functionality
+     */
+    return function propagating(hammer, options) {
+      var _options = options || {
+        preventDefault: false
+      };
+
+      if (hammer.Manager) {
+        // This looks like the Hammer constructor.
+        // Overload the constructors with our own.
+        var Hammer = hammer;
+
+        var PropagatingHammer = function(element, options) {
+          var o = Object.create(_options);
+          if (options) Hammer.extend(o, options);
+          return propagating(new Hammer(element, o), o);
+        };
+        Hammer.extend(PropagatingHammer, Hammer);
+
+        PropagatingHammer.Manager = function (element, options) {
+          var o = Object.create(_options);
+          if (options) Hammer.extend(o, options);
+          return propagating(new Hammer.Manager(element, o), o);
+        };
+
+        return PropagatingHammer;
+      }
+
+      // create a wrapper object which will override the functions
+      // `on`, `off`, `destroy`, and `emit` of the hammer instance
+      var wrapper = Object.create(hammer);
+
+      // attach to DOM element
+      var element = hammer.element;
+      element.hammer = wrapper;
+
+      // register an event to catch the start of a gesture and store the
+      // target in a singleton
+      hammer.on('hammer.input', function (event) {
+        if (_options.preventDefault === true || (_options.preventDefault === event.pointerType)) {
+          event.preventDefault();
+        }
+        if (event.isFirst) {
+          _firstTarget = event.target;
+        }
+      });
+
+      /** @type {Object.<String, Array.<function>>} */
+      wrapper._handlers = {};
+
+      /**
+       * Register a handler for one or multiple events
+       * @param {String} events    A space separated string with events
+       * @param {function} handler A callback function, called as handler(event)
+       * @returns {Hammer.Manager} Returns the hammer instance
+       */
+      wrapper.on = function (events, handler) {
+        // register the handler
+        split(events).forEach(function (event) {
+          var _handlers = wrapper._handlers[event];
+          if (!_handlers) {
+            wrapper._handlers[event] = _handlers = [];
+
+            // register the static, propagated handler
+            hammer.on(event, propagatedHandler);
+          }
+          _handlers.push(handler);
+        });
+
+        return wrapper;
+      };
+
+      /**
+       * Unregister a handler for one or multiple events
+       * @param {String} events      A space separated string with events
+       * @param {function} [handler] Optional. The registered handler. If not
+       *                             provided, all handlers for given events
+       *                             are removed.
+       * @returns {Hammer.Manager}   Returns the hammer instance
+       */
+      wrapper.off = function (events, handler) {
+        // unregister the handler
+        split(events).forEach(function (event) {
+          var _handlers = wrapper._handlers[event];
+          if (_handlers) {
+            _handlers = handler ? _handlers.filter(function (h) {
+              return h !== handler;
+            }) : [];
+
+            if (_handlers.length > 0) {
+              wrapper._handlers[event] = _handlers;
+            }
+            else {
+              // remove static, propagated handler
+              hammer.off(event, propagatedHandler);
+              delete wrapper._handlers[event];
+            }
+          }
+        });
+
+        return wrapper;
+      };
+
+      /**
+       * Emit to the event listeners
+       * @param {string} eventType
+       * @param {Event} event
+       */
+      wrapper.emit = function(eventType, event) {
+        _firstTarget = event.target;
+        hammer.emit(eventType, event);
+      };
+
+      wrapper.destroy = function () {
+        // Detach from DOM element
+        delete hammer.element.hammer;
+
+        // clear all handlers
+        wrapper._handlers = {};
+
+        // call original hammer destroy
+        hammer.destroy();
+      };
+
+      // split a string with space separated words
+      function split(events) {
+        return events.match(/[^ ]+/g);
+      }
+
+      /**
+       * A static event handler, applying event propagation.
+       * @param {Object} event
+       */
+      function propagatedHandler(event) {
+        // let only a single hammer instance handle this event
+        if (event.type !== 'hammer.input') {
+          // it is possible that the same srcEvent is used with multiple hammer events,
+          // we keep track on which events are handled in an object _handled
+          if (!event.srcEvent._handled) {
+            event.srcEvent._handled = {};
+          }
+
+          if (event.srcEvent._handled[event.type]) {
+            return;
+          }
+          else {
+            event.srcEvent._handled[event.type] = true;
+          }
+        }
+
+        // attach a stopPropagation function to the event
+        var stopped = false;
+        event.stopPropagation = function () {
+          stopped = true;
+        };
+
+        // attach firstTarget property to the event
+        event.firstTarget = _firstTarget;
+
+        // propagate over all elements (until stopped)
+        var elem = _firstTarget;
+        while (elem && !stopped) {
+          var _handlers = elem.hammer && elem.hammer._handlers[event.type];
+          if (_handlers) {
+            for (var i = 0; i < _handlers.length && !stopped; i++) {
+              _handlers[i](event);
+            }
+          }
+
+          elem = elem.parentNode;
+        }
+      }
+
+      return wrapper;
+    };
+  }));
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+  var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.4 - 2014-09-28
+   * http://hammerjs.github.io/
+   *
+   * Copyright (c) 2014 Jorik Tangelder;
+   * Licensed under the MIT license */
+  (function(window, document, exportName, undefined) {
+    'use strict';
+
+  var VENDOR_PREFIXES = ['', 'webkit', 'moz', 'MS', 'ms', 'o'];
+  var TEST_ELEMENT = document.createElement('div');
+
+  var TYPE_FUNCTION = 'function';
+
+  var round = Math.round;
+  var abs = Math.abs;
+  var now = Date.now;
+
+  /**
+   * set a timeout with a given scope
+   * @param {Function} fn
+   * @param {Number} timeout
+   * @param {Object} context
+   * @returns {number}
+   */
+  function setTimeoutContext(fn, timeout, context) {
+      return setTimeout(bindFn(fn, context), timeout);
+  }
+
+  /**
+   * if the argument is an array, we want to execute the fn on each entry
+   * if it aint an array we don't want to do a thing.
+   * this is used by all the methods that accept a single and array argument.
+   * @param {*|Array} arg
+   * @param {String} fn
+   * @param {Object} [context]
+   * @returns {Boolean}
+   */
+  function invokeArrayArg(arg, fn, context) {
+      if (Array.isArray(arg)) {
+          each(arg, context[fn], context);
+          return true;
+      }
+      return false;
+  }
+
+  /**
+   * walk objects and arrays
+   * @param {Object} obj
+   * @param {Function} iterator
+   * @param {Object} context
+   */
+  function each(obj, iterator, context) {
+      var i;
+
+      if (!obj) {
+          return;
+      }
+
+      if (obj.forEach) {
+          obj.forEach(iterator, context);
+      } else if (obj.length !== undefined) {
+          i = 0;
+          while (i < obj.length) {
+              iterator.call(context, obj[i], i, obj);
+              i++;
+          }
+      } else {
+          for (i in obj) {
+              obj.hasOwnProperty(i) && iterator.call(context, obj[i], i, obj);
+          }
+      }
+  }
+
+  /**
+   * extend object.
+   * means that properties in dest will be overwritten by the ones in src.
+   * @param {Object} dest
+   * @param {Object} src
+   * @param {Boolean} [merge]
+   * @returns {Object} dest
+   */
+  function extend(dest, src, merge) {
+      var keys = Object.keys(src);
+      var i = 0;
+      while (i < keys.length) {
+          if (!merge || (merge && dest[keys[i]] === undefined)) {
+              dest[keys[i]] = src[keys[i]];
+          }
+          i++;
+      }
+      return dest;
+  }
+
+  /**
+   * merge the values from src in the dest.
+   * means that properties that exist in dest will not be overwritten by src
+   * @param {Object} dest
+   * @param {Object} src
+   * @returns {Object} dest
+   */
+  function merge(dest, src) {
+      return extend(dest, src, true);
+  }
+
+  /**
+   * simple class inheritance
+   * @param {Function} child
+   * @param {Function} base
+   * @param {Object} [properties]
+   */
+  function inherit(child, base, properties) {
+      var baseP = base.prototype,
+          childP;
+
+      childP = child.prototype = Object.create(baseP);
+      childP.constructor = child;
+      childP._super = baseP;
+
+      if (properties) {
+          extend(childP, properties);
+      }
+  }
+
+  /**
+   * simple function bind
+   * @param {Function} fn
+   * @param {Object} context
+   * @returns {Function}
+   */
+  function bindFn(fn, context) {
+      return function boundFn() {
+          return fn.apply(context, arguments);
+      };
+  }
+
+  /**
+   * let a boolean value also be a function that must return a boolean
+   * this first item in args will be used as the context
+   * @param {Boolean|Function} val
+   * @param {Array} [args]
+   * @returns {Boolean}
+   */
+  function boolOrFn(val, args) {
+      if (typeof val == TYPE_FUNCTION) {
+          return val.apply(args ? args[0] || undefined : undefined, args);
+      }
+      return val;
+  }
+
+  /**
+   * use the val2 when val1 is undefined
+   * @param {*} val1
+   * @param {*} val2
+   * @returns {*}
+   */
+  function ifUndefined(val1, val2) {
+      return (val1 === undefined) ? val2 : val1;
+  }
+
+  /**
+   * addEventListener with multiple events at once
+   * @param {EventTarget} target
+   * @param {String} types
+   * @param {Function} handler
+   */
+  function addEventListeners(target, types, handler) {
+      each(splitStr(types), function(type) {
+          target.addEventListener(type, handler, false);
+      });
+  }
+
+  /**
+   * removeEventListener with multiple events at once
+   * @param {EventTarget} target
+   * @param {String} types
+   * @param {Function} handler
+   */
+  function removeEventListeners(target, types, handler) {
+      each(splitStr(types), function(type) {
+          target.removeEventListener(type, handler, false);
+      });
+  }
+
+  /**
+   * find if a node is in the given parent
+   * @method hasParent
+   * @param {HTMLElement} node
+   * @param {HTMLElement} parent
+   * @return {Boolean} found
+   */
+  function hasParent(node, parent) {
+      while (node) {
+          if (node == parent) {
+              return true;
+          }
+          node = node.parentNode;
+      }
+      return false;
+  }
+
+  /**
+   * small indexOf wrapper
+   * @param {String} str
+   * @param {String} find
+   * @returns {Boolean} found
+   */
+  function inStr(str, find) {
+      return str.indexOf(find) > -1;
+  }
+
+  /**
+   * split string on whitespace
+   * @param {String} str
+   * @returns {Array} words
+   */
+  function splitStr(str) {
+      return str.trim().split(/\s+/g);
+  }
+
+  /**
+   * find if a array contains the object using indexOf or a simple polyFill
+   * @param {Array} src
+   * @param {String} find
+   * @param {String} [findByKey]
+   * @return {Boolean|Number} false when not found, or the index
+   */
+  function inArray(src, find, findByKey) {
+      if (src.indexOf && !findByKey) {
+          return src.indexOf(find);
+      } else {
+          var i = 0;
+          while (i < src.length) {
+              if ((findByKey && src[i][findByKey] == find) || (!findByKey && src[i] === find)) {
+                  return i;
+              }
+              i++;
+          }
+          return -1;
+      }
+  }
+
+  /**
+   * convert array-like objects to real arrays
+   * @param {Object} obj
+   * @returns {Array}
+   */
+  function toArray(obj) {
+      return Array.prototype.slice.call(obj, 0);
+  }
+
+  /**
+   * unique array with objects based on a key (like 'id') or just by the array's value
+   * @param {Array} src [{id:1},{id:2},{id:1}]
+   * @param {String} [key]
+   * @param {Boolean} [sort=False]
+   * @returns {Array} [{id:1},{id:2}]
+   */
+  function uniqueArray(src, key, sort) {
+      var results = [];
+      var values = [];
+      var i = 0;
+
+      while (i < src.length) {
+          var val = key ? src[i][key] : src[i];
+          if (inArray(values, val) < 0) {
+              results.push(src[i]);
+          }
+          values[i] = val;
+          i++;
+      }
+
+      if (sort) {
+          if (!key) {
+              results = results.sort();
+          } else {
+              results = results.sort(function sortUniqueArray(a, b) {
+                  return a[key] > b[key];
+              });
+          }
+      }
+
+      return results;
+  }
+
+  /**
+   * get the prefixed property
+   * @param {Object} obj
+   * @param {String} property
+   * @returns {String|Undefined} prefixed
+   */
+  function prefixed(obj, property) {
+      var prefix, prop;
+      var camelProp = property[0].toUpperCase() + property.slice(1);
+
+      var i = 0;
+      while (i < VENDOR_PREFIXES.length) {
+          prefix = VENDOR_PREFIXES[i];
+          prop = (prefix) ? prefix + camelProp : property;
+
+          if (prop in obj) {
+              return prop;
+          }
+          i++;
+      }
+      return undefined;
+  }
+
+  /**
+   * get a unique id
+   * @returns {number} uniqueId
+   */
+  var _uniqueId = 1;
+  function uniqueId() {
+      return _uniqueId++;
+  }
+
+  /**
+   * get the window object of an element
+   * @param {HTMLElement} element
+   * @returns {DocumentView|Window}
+   */
+  function getWindowForElement(element) {
+      var doc = element.ownerDocument;
+      return (doc.defaultView || doc.parentWindow);
+  }
+
+  var MOBILE_REGEX = /mobile|tablet|ip(ad|hone|od)|android/i;
+
+  var SUPPORT_TOUCH = ('ontouchstart' in window);
+  var SUPPORT_POINTER_EVENTS = prefixed(window, 'PointerEvent') !== undefined;
+  var SUPPORT_ONLY_TOUCH = SUPPORT_TOUCH && MOBILE_REGEX.test(navigator.userAgent);
+
+  var INPUT_TYPE_TOUCH = 'touch';
+  var INPUT_TYPE_PEN = 'pen';
+  var INPUT_TYPE_MOUSE = 'mouse';
+  var INPUT_TYPE_KINECT = 'kinect';
+
+  var COMPUTE_INTERVAL = 25;
+
+  var INPUT_START = 1;
+  var INPUT_MOVE = 2;
+  var INPUT_END = 4;
+  var INPUT_CANCEL = 8;
+
+  var DIRECTION_NONE = 1;
+  var DIRECTION_LEFT = 2;
+  var DIRECTION_RIGHT = 4;
+  var DIRECTION_UP = 8;
+  var DIRECTION_DOWN = 16;
+
+  var DIRECTION_HORIZONTAL = DIRECTION_LEFT | DIRECTION_RIGHT;
+  var DIRECTION_VERTICAL = DIRECTION_UP | DIRECTION_DOWN;
+  var DIRECTION_ALL = DIRECTION_HORIZONTAL | DIRECTION_VERTICAL;
+
+  var PROPS_XY = ['x', 'y'];
+  var PROPS_CLIENT_XY = ['clientX', 'clientY'];
+
+  /**
+   * create new input type manager
+   * @param {Manager} manager
+   * @param {Function} callback
+   * @returns {Input}
+   * @constructor
+   */
+  function Input(manager, callback) {
+      var self = this;
+      this.manager = manager;
+      this.callback = callback;
+      this.element = manager.element;
+      this.target = manager.options.inputTarget;
+
+      // smaller wrapper around the handler, for the scope and the enabled state of the manager,
+      // so when disabled the input events are completely bypassed.
+      this.domHandler = function(ev) {
+          if (boolOrFn(manager.options.enable, [manager])) {
+              self.handler(ev);
+          }
+      };
+
+      this.init();
+
+  }
+
+  Input.prototype = {
+      /**
+       * should handle the inputEvent data and trigger the callback
+       * @virtual
+       */
+      handler: function() { },
+
+      /**
+       * bind the events
+       */
+      init: function() {
+          this.evEl && addEventListeners(this.element, this.evEl, this.domHandler);
+          this.evTarget && addEventListeners(this.target, this.evTarget, this.domHandler);
+          this.evWin && addEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
+      },
+
+      /**
+       * unbind the events
+       */
+      destroy: function() {
+          this.evEl && removeEventListeners(this.element, this.evEl, this.domHandler);
+          this.evTarget && removeEventListeners(this.target, this.evTarget, this.domHandler);
+          this.evWin && removeEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
+      }
+  };
+
+  /**
+   * create new input type manager
+   * called by the Manager constructor
+   * @param {Hammer} manager
+   * @returns {Input}
+   */
+  function createInputInstance(manager) {
+      var Type;
+      var inputClass = manager.options.inputClass;
+
+      if (inputClass) {
+          Type = inputClass;
+      } else if (SUPPORT_POINTER_EVENTS) {
+          Type = PointerEventInput;
+      } else if (SUPPORT_ONLY_TOUCH) {
+          Type = TouchInput;
+      } else if (!SUPPORT_TOUCH) {
+          Type = MouseInput;
+      } else {
+          Type = TouchMouseInput;
+      }
+      return new (Type)(manager, inputHandler);
+  }
+
+  /**
+   * handle input events
+   * @param {Manager} manager
+   * @param {String} eventType
+   * @param {Object} input
+   */
+  function inputHandler(manager, eventType, input) {
+      var pointersLen = input.pointers.length;
+      var changedPointersLen = input.changedPointers.length;
+      var isFirst = (eventType & INPUT_START && (pointersLen - changedPointersLen === 0));
+      var isFinal = (eventType & (INPUT_END | INPUT_CANCEL) && (pointersLen - changedPointersLen === 0));
+
+      input.isFirst = !!isFirst;
+      input.isFinal = !!isFinal;
+
+      if (isFirst) {
+          manager.session = {};
+      }
+
+      // source event is the normalized value of the domEvents
+      // like 'touchstart, mouseup, pointerdown'
+      input.eventType = eventType;
+
+      // compute scale, rotation etc
+      computeInputData(manager, input);
+
+      // emit secret event
+      manager.emit('hammer.input', input);
+
+      manager.recognize(input);
+      manager.session.prevInput = input;
+  }
+
+  /**
+   * extend the data with some usable properties like scale, rotate, velocity etc
+   * @param {Object} manager
+   * @param {Object} input
+   */
+  function computeInputData(manager, input) {
+      var session = manager.session;
+      var pointers = input.pointers;
+      var pointersLength = pointers.length;
+
+      // store the first input to calculate the distance and direction
+      if (!session.firstInput) {
+          session.firstInput = simpleCloneInputData(input);
+      }
+
+      // to compute scale and rotation we need to store the multiple touches
+      if (pointersLength > 1 && !session.firstMultiple) {
+          session.firstMultiple = simpleCloneInputData(input);
+      } else if (pointersLength === 1) {
+          session.firstMultiple = false;
+      }
+
+      var firstInput = session.firstInput;
+      var firstMultiple = session.firstMultiple;
+      var offsetCenter = firstMultiple ? firstMultiple.center : firstInput.center;
+
+      var center = input.center = getCenter(pointers);
+      input.timeStamp = now();
+      input.deltaTime = input.timeStamp - firstInput.timeStamp;
+
+      input.angle = getAngle(offsetCenter, center);
+      input.distance = getDistance(offsetCenter, center);
+
+      computeDeltaXY(session, input);
+      input.offsetDirection = getDirection(input.deltaX, input.deltaY);
+
+      input.scale = firstMultiple ? getScale(firstMultiple.pointers, pointers) : 1;
+      input.rotation = firstMultiple ? getRotation(firstMultiple.pointers, pointers) : 0;
+
+      computeIntervalInputData(session, input);
+
+      // find the correct target
+      var target = manager.element;
+      if (hasParent(input.srcEvent.target, target)) {
+          target = input.srcEvent.target;
+      }
+      input.target = target;
+  }
+
+  function computeDeltaXY(session, input) {
+      var center = input.center;
+      var offset = session.offsetDelta || {};
+      var prevDelta = session.prevDelta || {};
+      var prevInput = session.prevInput || {};
+
+      if (input.eventType === INPUT_START || prevInput.eventType === INPUT_END) {
+          prevDelta = session.prevDelta = {
+              x: prevInput.deltaX || 0,
+              y: prevInput.deltaY || 0
+          };
+
+          offset = session.offsetDelta = {
+              x: center.x,
+              y: center.y
+          };
+      }
+
+      input.deltaX = prevDelta.x + (center.x - offset.x);
+      input.deltaY = prevDelta.y + (center.y - offset.y);
+  }
+
+  /**
+   * velocity is calculated every x ms
+   * @param {Object} session
+   * @param {Object} input
+   */
+  function computeIntervalInputData(session, input) {
+      var last = session.lastInterval || input,
+          deltaTime = input.timeStamp - last.timeStamp,
+          velocity, velocityX, velocityY, direction;
+
+      if (input.eventType != INPUT_CANCEL && (deltaTime > COMPUTE_INTERVAL || last.velocity === undefined)) {
+          var deltaX = last.deltaX - input.deltaX;
+          var deltaY = last.deltaY - input.deltaY;
+
+          var v = getVelocity(deltaTime, deltaX, deltaY);
+          velocityX = v.x;
+          velocityY = v.y;
+          velocity = (abs(v.x) > abs(v.y)) ? v.x : v.y;
+          direction = getDirection(deltaX, deltaY);
+
+          session.lastInterval = input;
+      } else {
+          // use latest velocity info if it doesn't overtake a minimum period
+          velocity = last.velocity;
+          velocityX = last.velocityX;
+          velocityY = last.velocityY;
+          direction = last.direction;
+      }
+
+      input.velocity = velocity;
+      input.velocityX = velocityX;
+      input.velocityY = velocityY;
+      input.direction = direction;
+  }
+
+  /**
+   * create a simple clone from the input used for storage of firstInput and firstMultiple
+   * @param {Object} input
+   * @returns {Object} clonedInputData
+   */
+  function simpleCloneInputData(input) {
+      // make a simple copy of the pointers because we will get a reference if we don't
+      // we only need clientXY for the calculations
+      var pointers = [];
+      var i = 0;
+      while (i < input.pointers.length) {
+          pointers[i] = {
+              clientX: round(input.pointers[i].clientX),
+              clientY: round(input.pointers[i].clientY)
+          };
+          i++;
+      }
+
+      return {
+          timeStamp: now(),
+          pointers: pointers,
+          center: getCenter(pointers),
+          deltaX: input.deltaX,
+          deltaY: input.deltaY
+      };
+  }
+
+  /**
+   * get the center of all the pointers
+   * @param {Array} pointers
+   * @return {Object} center contains `x` and `y` properties
+   */
+  function getCenter(pointers) {
+      var pointersLength = pointers.length;
+
+      // no need to loop when only one touch
+      if (pointersLength === 1) {
+          return {
+              x: round(pointers[0].clientX),
+              y: round(pointers[0].clientY)
+          };
+      }
+
+      var x = 0, y = 0, i = 0;
+      while (i < pointersLength) {
+          x += pointers[i].clientX;
+          y += pointers[i].clientY;
+          i++;
+      }
+
+      return {
+          x: round(x / pointersLength),
+          y: round(y / pointersLength)
+      };
+  }
+
+  /**
+   * calculate the velocity between two points. unit is in px per ms.
+   * @param {Number} deltaTime
+   * @param {Number} x
+   * @param {Number} y
+   * @return {Object} velocity `x` and `y`
+   */
+  function getVelocity(deltaTime, x, y) {
+      return {
+          x: x / deltaTime || 0,
+          y: y / deltaTime || 0
+      };
+  }
+
+  /**
+   * get the direction between two points
+   * @param {Number} x
+   * @param {Number} y
+   * @return {Number} direction
+   */
+  function getDirection(x, y) {
+      if (x === y) {
+          return DIRECTION_NONE;
+      }
+
+      if (abs(x) >= abs(y)) {
+          return x > 0 ? DIRECTION_LEFT : DIRECTION_RIGHT;
+      }
+      return y > 0 ? DIRECTION_UP : DIRECTION_DOWN;
+  }
+
+  /**
+   * calculate the absolute distance between two points
+   * @param {Object} p1 {x, y}
+   * @param {Object} p2 {x, y}
+   * @param {Array} [props] containing x and y keys
+   * @return {Number} distance
+   */
+  function getDistance(p1, p2, props) {
+      if (!props) {
+          props = PROPS_XY;
+      }
+      var x = p2[props[0]] - p1[props[0]],
+          y = p2[props[1]] - p1[props[1]];
+
+      return Math.sqrt((x * x) + (y * y));
+  }
+
+  /**
+   * calculate the angle between two coordinates
+   * @param {Object} p1
+   * @param {Object} p2
+   * @param {Array} [props] containing x and y keys
+   * @return {Number} angle
+   */
+  function getAngle(p1, p2, props) {
+      if (!props) {
+          props = PROPS_XY;
+      }
+      var x = p2[props[0]] - p1[props[0]],
+          y = p2[props[1]] - p1[props[1]];
+      return Math.atan2(y, x) * 180 / Math.PI;
+  }
+
+  /**
+   * calculate the rotation degrees between two pointersets
+   * @param {Array} start array of pointers
+   * @param {Array} end array of pointers
+   * @return {Number} rotation
+   */
+  function getRotation(start, end) {
+      return getAngle(end[1], end[0], PROPS_CLIENT_XY) - getAngle(start[1], start[0], PROPS_CLIENT_XY);
+  }
+
+  /**
+   * calculate the scale factor between two pointersets
+   * no scale is 1, and goes down to 0 when pinched together, and bigger when pinched out
+   * @param {Array} start array of pointers
+   * @param {Array} end array of pointers
+   * @return {Number} scale
+   */
+  function getScale(start, end) {
+      return getDistance(end[0], end[1], PROPS_CLIENT_XY) / getDistance(start[0], start[1], PROPS_CLIENT_XY);
+  }
+
+  var MOUSE_INPUT_MAP = {
+      mousedown: INPUT_START,
+      mousemove: INPUT_MOVE,
+      mouseup: INPUT_END
+  };
+
+  var MOUSE_ELEMENT_EVENTS = 'mousedown';
+  var MOUSE_WINDOW_EVENTS = 'mousemove mouseup';
+
+  /**
+   * Mouse events input
+   * @constructor
+   * @extends Input
+   */
+  function MouseInput() {
+      this.evEl = MOUSE_ELEMENT_EVENTS;
+      this.evWin = MOUSE_WINDOW_EVENTS;
+
+      this.allow = true; // used by Input.TouchMouse to disable mouse events
+      this.pressed = false; // mousedown state
+
+      Input.apply(this, arguments);
+  }
+
+  inherit(MouseInput, Input, {
+      /**
+       * handle mouse events
+       * @param {Object} ev
+       */
+      handler: function MEhandler(ev) {
+          var eventType = MOUSE_INPUT_MAP[ev.type];
+
+          // on start we want to have the left mouse button down
+          if (eventType & INPUT_START && ev.button === 0) {
+              this.pressed = true;
+          }
+
+          if (eventType & INPUT_MOVE && ev.which !== 1) {
+              eventType = INPUT_END;
+          }
+
+          // mouse must be down, and mouse events are allowed (see the TouchMouse input)
+          if (!this.pressed || !this.allow) {
+              return;
+          }
+
+          if (eventType & INPUT_END) {
+              this.pressed = false;
+          }
+
+          this.callback(this.manager, eventType, {
+              pointers: [ev],
+              changedPointers: [ev],
+              pointerType: INPUT_TYPE_MOUSE,
+              srcEvent: ev
+          });
+      }
+  });
+
+  var POINTER_INPUT_MAP = {
+      pointerdown: INPUT_START,
+      pointermove: INPUT_MOVE,
+      pointerup: INPUT_END,
+      pointercancel: INPUT_CANCEL,
+      pointerout: INPUT_CANCEL
+  };
+
+  // in IE10 the pointer types is defined as an enum
+  var IE10_POINTER_TYPE_ENUM = {
+      2: INPUT_TYPE_TOUCH,
+      3: INPUT_TYPE_PEN,
+      4: INPUT_TYPE_MOUSE,
+      5: INPUT_TYPE_KINECT // see https://twitter.com/jacobrossi/status/480596438489890816
+  };
+
+  var POINTER_ELEMENT_EVENTS = 'pointerdown';
+  var POINTER_WINDOW_EVENTS = 'pointermove pointerup pointercancel';
+
+  // IE10 has prefixed support, and case-sensitive
+  if (window.MSPointerEvent) {
+      POINTER_ELEMENT_EVENTS = 'MSPointerDown';
+      POINTER_WINDOW_EVENTS = 'MSPointerMove MSPointerUp MSPointerCancel';
+  }
+
+  /**
+   * Pointer events input
+   * @constructor
+   * @extends Input
+   */
+  function PointerEventInput() {
+      this.evEl = POINTER_ELEMENT_EVENTS;
+      this.evWin = POINTER_WINDOW_EVENTS;
+
+      Input.apply(this, arguments);
+
+      this.store = (this.manager.session.pointerEvents = []);
+  }
+
+  inherit(PointerEventInput, Input, {
+      /**
+       * handle mouse events
+       * @param {Object} ev
+       */
+      handler: function PEhandler(ev) {
+          var store = this.store;
+          var removePointer = false;
+
+          var eventTypeNormalized = ev.type.toLowerCase().replace('ms', '');
+          var eventType = POINTER_INPUT_MAP[eventTypeNormalized];
+          var pointerType = IE10_POINTER_TYPE_ENUM[ev.pointerType] || ev.pointerType;
+
+          var isTouch = (pointerType == INPUT_TYPE_TOUCH);
+
+          // get index of the event in the store
+          var storeIndex = inArray(store, ev.pointerId, 'pointerId');
+
+          // start and mouse must be down
+          if (eventType & INPUT_START && (ev.button === 0 || isTouch)) {
+              if (storeIndex < 0) {
+                  store.push(ev);
+                  storeIndex = store.length - 1;
+              }
+          } else if (eventType & (INPUT_END | INPUT_CANCEL)) {
+              removePointer = true;
+          }
+
+          // it not found, so the pointer hasn't been down (so it's probably a hover)
+          if (storeIndex < 0) {
+              return;
+          }
+
+          // update the event in the store
+          store[storeIndex] = ev;
+
+          this.callback(this.manager, eventType, {
+              pointers: store,
+              changedPointers: [ev],
+              pointerType: pointerType,
+              srcEvent: ev
+          });
+
+          if (removePointer) {
+              // remove from the store
+              store.splice(storeIndex, 1);
+          }
+      }
+  });
+
+  var SINGLE_TOUCH_INPUT_MAP = {
+      touchstart: INPUT_START,
+      touchmove: INPUT_MOVE,
+      touchend: INPUT_END,
+      touchcancel: INPUT_CANCEL
+  };
+
+  var SINGLE_TOUCH_TARGET_EVENTS = 'touchstart';
+  var SINGLE_TOUCH_WINDOW_EVENTS = 'touchstart touchmove touchend touchcancel';
+
+  /**
+   * Touch events input
+   * @constructor
+   * @extends Input
+   */
+  function SingleTouchInput() {
+      this.evTarget = SINGLE_TOUCH_TARGET_EVENTS;
+      this.evWin = SINGLE_TOUCH_WINDOW_EVENTS;
+      this.started = false;
+
+      Input.apply(this, arguments);
+  }
+
+  inherit(SingleTouchInput, Input, {
+      handler: function TEhandler(ev) {
+          var type = SINGLE_TOUCH_INPUT_MAP[ev.type];
+
+          // should we handle the touch events?
+          if (type === INPUT_START) {
+              this.started = true;
+          }
+
+          if (!this.started) {
+              return;
+          }
+
+          var touches = normalizeSingleTouches.call(this, ev, type);
+
+          // when done, reset the started state
+          if (type & (INPUT_END | INPUT_CANCEL) && touches[0].length - touches[1].length === 0) {
+              this.started = false;
+          }
+
+          this.callback(this.manager, type, {
+              pointers: touches[0],
+              changedPointers: touches[1],
+              pointerType: INPUT_TYPE_TOUCH,
+              srcEvent: ev
+          });
+      }
+  });
+
+  /**
+   * @this {TouchInput}
+   * @param {Object} ev
+   * @param {Number} type flag
+   * @returns {undefined|Array} [all, changed]
+   */
+  function normalizeSingleTouches(ev, type) {
+      var all = toArray(ev.touches);
+      var changed = toArray(ev.changedTouches);
+
+      if (type & (INPUT_END | INPUT_CANCEL)) {
+          all = uniqueArray(all.concat(changed), 'identifier', true);
+      }
+
+      return [all, changed];
+  }
+
+  var TOUCH_INPUT_MAP = {
+      touchstart: INPUT_START,
+      touchmove: INPUT_MOVE,
+      touchend: INPUT_END,
+      touchcancel: INPUT_CANCEL
+  };
+
+  var TOUCH_TARGET_EVENTS = 'touchstart touchmove touchend touchcancel';
+
+  /**
+   * Multi-user touch events input
+   * @constructor
+   * @extends Input
+   */
+  function TouchInput() {
+      this.evTarget = TOUCH_TARGET_EVENTS;
+      this.targetIds = {};
+
+      Input.apply(this, arguments);
+  }
+
+  inherit(TouchInput, Input, {
+      handler: function MTEhandler(ev) {
+          var type = TOUCH_INPUT_MAP[ev.type];
+          var touches = getTouches.call(this, ev, type);
+          if (!touches) {
+              return;
+          }
+
+          this.callback(this.manager, type, {
+              pointers: touches[0],
+              changedPointers: touches[1],
+              pointerType: INPUT_TYPE_TOUCH,
+              srcEvent: ev
+          });
+      }
+  });
+
+  /**
+   * @this {TouchInput}
+   * @param {Object} ev
+   * @param {Number} type flag
+   * @returns {undefined|Array} [all, changed]
+   */
+  function getTouches(ev, type) {
+      var allTouches = toArray(ev.touches);
+      var targetIds = this.targetIds;
+
+      // when there is only one touch, the process can be simplified
+      if (type & (INPUT_START | INPUT_MOVE) && allTouches.length === 1) {
+          targetIds[allTouches[0].identifier] = true;
+          return [allTouches, allTouches];
+      }
+
+      var i,
+          targetTouches,
+          changedTouches = toArray(ev.changedTouches),
+          changedTargetTouches = [],
+          target = this.target;
+
+      // get target touches from touches
+      targetTouches = allTouches.filter(function(touch) {
+          return hasParent(touch.target, target);
+      });
+
+      // collect touches
+      if (type === INPUT_START) {
+          i = 0;
+          while (i < targetTouches.length) {
+              targetIds[targetTouches[i].identifier] = true;
+              i++;
+          }
+      }
+
+      // filter changed touches to only contain touches that exist in the collected target ids
+      i = 0;
+      while (i < changedTouches.length) {
+          if (targetIds[changedTouches[i].identifier]) {
+              changedTargetTouches.push(changedTouches[i]);
+          }
+
+          // cleanup removed touches
+          if (type & (INPUT_END | INPUT_CANCEL)) {
+              delete targetIds[changedTouches[i].identifier];
+          }
+          i++;
+      }
+
+      if (!changedTargetTouches.length) {
+          return;
+      }
+
+      return [
+          // merge targetTouches with changedTargetTouches so it contains ALL touches, including 'end' and 'cancel'
+          uniqueArray(targetTouches.concat(changedTargetTouches), 'identifier', true),
+          changedTargetTouches
+      ];
+  }
+
+  /**
+   * Combined touch and mouse input
+   *
+   * Touch has a higher priority then mouse, and while touching no mouse events are allowed.
+   * This because touch devices also emit mouse events while doing a touch.
+   *
+   * @constructor
+   * @extends Input
+   */
+  function TouchMouseInput() {
+      Input.apply(this, arguments);
+
+      var handler = bindFn(this.handler, this);
+      this.touch = new TouchInput(this.manager, handler);
+      this.mouse = new MouseInput(this.manager, handler);
+  }
+
+  inherit(TouchMouseInput, Input, {
+      /**
+       * handle mouse and touch events
+       * @param {Hammer} manager
+       * @param {String} inputEvent
+       * @param {Object} inputData
+       */
+      handler: function TMEhandler(manager, inputEvent, inputData) {
+          var isTouch = (inputData.pointerType == INPUT_TYPE_TOUCH),
+              isMouse = (inputData.pointerType == INPUT_TYPE_MOUSE);
+
+          // when we're in a touch event, so  block all upcoming mouse events
+          // most mobile browser also emit mouseevents, right after touchstart
+          if (isTouch) {
+              this.mouse.allow = false;
+          } else if (isMouse && !this.mouse.allow) {
+              return;
+          }
+
+          // reset the allowMouse when we're done
+          if (inputEvent & (INPUT_END | INPUT_CANCEL)) {
+              this.mouse.allow = true;
+          }
+
+          this.callback(manager, inputEvent, inputData);
+      },
+
+      /**
+       * remove the event listeners
+       */
+      destroy: function destroy() {
+          this.touch.destroy();
+          this.mouse.destroy();
+      }
+  });
+
+  var PREFIXED_TOUCH_ACTION = prefixed(TEST_ELEMENT.style, 'touchAction');
+  var NATIVE_TOUCH_ACTION = PREFIXED_TOUCH_ACTION !== undefined;
+
+  // magical touchAction value
+  var TOUCH_ACTION_COMPUTE = 'compute';
+  var TOUCH_ACTION_AUTO = 'auto';
+  var TOUCH_ACTION_MANIPULATION = 'manipulation'; // not implemented
+  var TOUCH_ACTION_NONE = 'none';
+  var TOUCH_ACTION_PAN_X = 'pan-x';
+  var TOUCH_ACTION_PAN_Y = 'pan-y';
+
+  /**
+   * Touch Action
+   * sets the touchAction property or uses the js alternative
+   * @param {Manager} manager
+   * @param {String} value
+   * @constructor
+   */
+  function TouchAction(manager, value) {
+      this.manager = manager;
+      this.set(value);
+  }
+
+  TouchAction.prototype = {
+      /**
+       * set the touchAction value on the element or enable the polyfill
+       * @param {String} value
+       */
+      set: function(value) {
+          // find out the touch-action by the event handlers
+          if (value == TOUCH_ACTION_COMPUTE) {
+              value = this.compute();
+          }
+
+          if (NATIVE_TOUCH_ACTION) {
+              this.manager.element.style[PREFIXED_TOUCH_ACTION] = value;
+          }
+          this.actions = value.toLowerCase().trim();
+      },
+
+      /**
+       * just re-set the touchAction value
+       */
+      update: function() {
+          this.set(this.manager.options.touchAction);
+      },
+
+      /**
+       * compute the value for the touchAction property based on the recognizer's settings
+       * @returns {String} value
+       */
+      compute: function() {
+          var actions = [];
+          each(this.manager.recognizers, function(recognizer) {
+              if (boolOrFn(recognizer.options.enable, [recognizer])) {
+                  actions = actions.concat(recognizer.getTouchAction());
+              }
+          });
+          return cleanTouchActions(actions.join(' '));
+      },
+
+      /**
+       * this method is called on each input cycle and provides the preventing of the browser behavior
+       * @param {Object} input
+       */
+      preventDefaults: function(input) {
+          // not needed with native support for the touchAction property
+          if (NATIVE_TOUCH_ACTION) {
+              return;
+          }
+
+          var srcEvent = input.srcEvent;
+          var direction = input.offsetDirection;
+
+          // if the touch action did prevented once this session
+          if (this.manager.session.prevented) {
+              srcEvent.preventDefault();
+              return;
+          }
+
+          var actions = this.actions;
+          var hasNone = inStr(actions, TOUCH_ACTION_NONE);
+          var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y);
+          var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X);
+
+          if (hasNone ||
+              (hasPanY && direction & DIRECTION_HORIZONTAL) ||
+              (hasPanX && direction & DIRECTION_VERTICAL)) {
+              return this.preventSrc(srcEvent);
+          }
+      },
+
+      /**
+       * call preventDefault to prevent the browser's default behavior (scrolling in most cases)
+       * @param {Object} srcEvent
+       */
+      preventSrc: function(srcEvent) {
+          this.manager.session.prevented = true;
+          srcEvent.preventDefault();
+      }
+  };
+
+  /**
+   * when the touchActions are collected they are not a valid value, so we need to clean things up. *
+   * @param {String} actions
+   * @returns {*}
+   */
+  function cleanTouchActions(actions) {
+      // none
+      if (inStr(actions, TOUCH_ACTION_NONE)) {
+          return TOUCH_ACTION_NONE;
+      }
+
+      var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X);
+      var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y);
+
+      // pan-x and pan-y can be combined
+      if (hasPanX && hasPanY) {
+          return TOUCH_ACTION_PAN_X + ' ' + TOUCH_ACTION_PAN_Y;
+      }
+
+      // pan-x OR pan-y
+      if (hasPanX || hasPanY) {
+          return hasPanX ? TOUCH_ACTION_PAN_X : TOUCH_ACTION_PAN_Y;
+      }
+
+      // manipulation
+      if (inStr(actions, TOUCH_ACTION_MANIPULATION)) {
+          return TOUCH_ACTION_MANIPULATION;
+      }
+
+      return TOUCH_ACTION_AUTO;
+  }
+
+  /**
+   * Recognizer flow explained; *
+   * All recognizers have the initial state of POSSIBLE when a input session starts.
+   * The definition of a input session is from the first input until the last input, with all it's movement in it. *
+   * Example session for mouse-input: mousedown -> mousemove -> mouseup
+   *
+   * On each recognizing cycle (see Manager.recognize) the .recognize() method is executed
+   * which determines with state it should be.
+   *
+   * If the recognizer has the state FAILED, CANCELLED or RECOGNIZED (equals ENDED), it is reset to
+   * POSSIBLE to give it another change on the next cycle.
+   *
+   *               Possible
+   *                  |
+   *            +-----+---------------+
+   *            |                     |
+   *      +-----+-----+               |
+   *      |           |               |
+   *   Failed      Cancelled          |
+   *                          +-------+------+
+   *                          |              |
+   *                      Recognized       Began
+   *                                         |
+   *                                      Changed
+   *                                         |
+   *                                  Ended/Recognized
+   */
+  var STATE_POSSIBLE = 1;
+  var STATE_BEGAN = 2;
+  var STATE_CHANGED = 4;
+  var STATE_ENDED = 8;
+  var STATE_RECOGNIZED = STATE_ENDED;
+  var STATE_CANCELLED = 16;
+  var STATE_FAILED = 32;
+
+  /**
+   * Recognizer
+   * Every recognizer needs to extend from this class.
+   * @constructor
+   * @param {Object} options
+   */
+  function Recognizer(options) {
+      this.id = uniqueId();
+
+      this.manager = null;
+      this.options = merge(options || {}, this.defaults);
+
+      // default is enable true
+      this.options.enable = ifUndefined(this.options.enable, true);
+
+      this.state = STATE_POSSIBLE;
+
+      this.simultaneous = {};
+      this.requireFail = [];
+  }
+
+  Recognizer.prototype = {
+      /**
+       * @virtual
+       * @type {Object}
+       */
+      defaults: {},
+
+      /**
+       * set options
+       * @param {Object} options
+       * @return {Recognizer}
+       */
+      set: function(options) {
+          extend(this.options, options);
+
+          // also update the touchAction, in case something changed about the directions/enabled state
+          this.manager && this.manager.touchAction.update();
+          return this;
+      },
+
+      /**
+       * recognize simultaneous with an other recognizer.
+       * @param {Recognizer} otherRecognizer
+       * @returns {Recognizer} this
+       */
+      recognizeWith: function(otherRecognizer) {
+          if (invokeArrayArg(otherRecognizer, 'recognizeWith', this)) {
+              return this;
+          }
+
+          var simultaneous = this.simultaneous;
+          otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+          if (!simultaneous[otherRecognizer.id]) {
+              simultaneous[otherRecognizer.id] = otherRecognizer;
+              otherRecognizer.recognizeWith(this);
+          }
+          return this;
+      },
+
+      /**
+       * drop the simultaneous link. it doesnt remove the link on the other recognizer.
+       * @param {Recognizer} otherRecognizer
+       * @returns {Recognizer} this
+       */
+      dropRecognizeWith: function(otherRecognizer) {
+          if (invokeArrayArg(otherRecognizer, 'dropRecognizeWith', this)) {
+              return this;
+          }
+
+          otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+          delete this.simultaneous[otherRecognizer.id];
+          return this;
+      },
+
+      /**
+       * recognizer can only run when an other is failing
+       * @param {Recognizer} otherRecognizer
+       * @returns {Recognizer} this
+       */
+      requireFailure: function(otherRecognizer) {
+          if (invokeArrayArg(otherRecognizer, 'requireFailure', this)) {
+              return this;
+          }
+
+          var requireFail = this.requireFail;
+          otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+          if (inArray(requireFail, otherRecognizer) === -1) {
+              requireFail.push(otherRecognizer);
+              otherRecognizer.requireFailure(this);
+          }
+          return this;
+      },
+
+      /**
+       * drop the requireFailure link. it does not remove the link on the other recognizer.
+       * @param {Recognizer} otherRecognizer
+       * @returns {Recognizer} this
+       */
+      dropRequireFailure: function(otherRecognizer) {
+          if (invokeArrayArg(otherRecognizer, 'dropRequireFailure', this)) {
+              return this;
+          }
+
+          otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+          var index = inArray(this.requireFail, otherRecognizer);
+          if (index > -1) {
+              this.requireFail.splice(index, 1);
+          }
+          return this;
+      },
+
+      /**
+       * has require failures boolean
+       * @returns {boolean}
+       */
+      hasRequireFailures: function() {
+          return this.requireFail.length > 0;
+      },
+
+      /**
+       * if the recognizer can recognize simultaneous with an other recognizer
+       * @param {Recognizer} otherRecognizer
+       * @returns {Boolean}
+       */
+      canRecognizeWith: function(otherRecognizer) {
+          return !!this.simultaneous[otherRecognizer.id];
+      },
+
+      /**
+       * You should use `tryEmit` instead of `emit` directly to check
+       * that all the needed recognizers has failed before emitting.
+       * @param {Object} input
+       */
+      emit: function(input) {
+          var self = this;
+          var state = this.state;
+
+          function emit(withState) {
+              self.manager.emit(self.options.event + (withState ? stateStr(state) : ''), input);
+          }
+
+          // 'panstart' and 'panmove'
+          if (state < STATE_ENDED) {
+              emit(true);
+          }
+
+          emit(); // simple 'eventName' events
+
+          // panend and pancancel
+          if (state >= STATE_ENDED) {
+              emit(true);
+          }
+      },
+
+      /**
+       * Check that all the require failure recognizers has failed,
+       * if true, it emits a gesture event,
+       * otherwise, setup the state to FAILED.
+       * @param {Object} input
+       */
+      tryEmit: function(input) {
+          if (this.canEmit()) {
+              return this.emit(input);
+          }
+          // it's failing anyway
+          this.state = STATE_FAILED;
+      },
+
+      /**
+       * can we emit?
+       * @returns {boolean}
+       */
+      canEmit: function() {
+          var i = 0;
+          while (i < this.requireFail.length) {
+              if (!(this.requireFail[i].state & (STATE_FAILED | STATE_POSSIBLE))) {
+                  return false;
+              }
+              i++;
+          }
+          return true;
+      },
+
+      /**
+       * update the recognizer
+       * @param {Object} inputData
+       */
+      recognize: function(inputData) {
+          // make a new copy of the inputData
+          // so we can change the inputData without messing up the other recognizers
+          var inputDataClone = extend({}, inputData);
+
+          // is is enabled and allow recognizing?
+          if (!boolOrFn(this.options.enable, [this, inputDataClone])) {
+              this.reset();
+              this.state = STATE_FAILED;
+              return;
+          }
+
+          // reset when we've reached the end
+          if (this.state & (STATE_RECOGNIZED | STATE_CANCELLED | STATE_FAILED)) {
+              this.state = STATE_POSSIBLE;
+          }
+
+          this.state = this.process(inputDataClone);
+
+          // the recognizer has recognized a gesture
+          // so trigger an event
+          if (this.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED | STATE_CANCELLED)) {
+              this.tryEmit(inputDataClone);
+          }
+      },
+
+      /**
+       * return the state of the recognizer
+       * the actual recognizing happens in this method
+       * @virtual
+       * @param {Object} inputData
+       * @returns {Const} STATE
+       */
+      process: function(inputData) { }, // jshint ignore:line
+
+      /**
+       * return the preferred touch-action
+       * @virtual
+       * @returns {Array}
+       */
+      getTouchAction: function() { },
+
+      /**
+       * called when the gesture isn't allowed to recognize
+       * like when another is being recognized or it is disabled
+       * @virtual
+       */
+      reset: function() { }
+  };
+
+  /**
+   * get a usable string, used as event postfix
+   * @param {Const} state
+   * @returns {String} state
+   */
+  function stateStr(state) {
+      if (state & STATE_CANCELLED) {
+          return 'cancel';
+      } else if (state & STATE_ENDED) {
+          return 'end';
+      } else if (state & STATE_CHANGED) {
+          return 'move';
+      } else if (state & STATE_BEGAN) {
+          return 'start';
+      }
+      return '';
+  }
+
+  /**
+   * direction cons to string
+   * @param {Const} direction
+   * @returns {String}
+   */
+  function directionStr(direction) {
+      if (direction == DIRECTION_DOWN) {
+          return 'down';
+      } else if (direction == DIRECTION_UP) {
+          return 'up';
+      } else if (direction == DIRECTION_LEFT) {
+          return 'left';
+      } else if (direction == DIRECTION_RIGHT) {
+          return 'right';
+      }
+      return '';
+  }
+
+  /**
+   * get a recognizer by name if it is bound to a manager
+   * @param {Recognizer|String} otherRecognizer
+   * @param {Recognizer} recognizer
+   * @returns {Recognizer}
+   */
+  function getRecognizerByNameIfManager(otherRecognizer, recognizer) {
+      var manager = recognizer.manager;
+      if (manager) {
+          return manager.get(otherRecognizer);
+      }
+      return otherRecognizer;
+  }
+
+  /**
+   * This recognizer is just used as a base for the simple attribute recognizers.
+   * @constructor
+   * @extends Recognizer
+   */
+  function AttrRecognizer() {
+      Recognizer.apply(this, arguments);
+  }
+
+  inherit(AttrRecognizer, Recognizer, {
+      /**
+       * @namespace
+       * @memberof AttrRecognizer
+       */
+      defaults: {
+          /**
+           * @type {Number}
+           * @default 1
+           */
+          pointers: 1
+      },
+
+      /**
+       * Used to check if it the recognizer receives valid input, like input.distance > 10.
+       * @memberof AttrRecognizer
+       * @param {Object} input
+       * @returns {Boolean} recognized
+       */
+      attrTest: function(input) {
+          var optionPointers = this.options.pointers;
+          return optionPointers === 0 || input.pointers.length === optionPointers;
+      },
+
+      /**
+       * Process the input and return the state for the recognizer
+       * @memberof AttrRecognizer
+       * @param {Object} input
+       * @returns {*} State
+       */
+      process: function(input) {
+          var state = this.state;
+          var eventType = input.eventType;
+
+          var isRecognized = state & (STATE_BEGAN | STATE_CHANGED);
+          var isValid = this.attrTest(input);
+
+          // on cancel input and we've recognized before, return STATE_CANCELLED
+          if (isRecognized && (eventType & INPUT_CANCEL || !isValid)) {
+              return state | STATE_CANCELLED;
+          } else if (isRecognized || isValid) {
+              if (eventType & INPUT_END) {
+                  return state | STATE_ENDED;
+              } else if (!(state & STATE_BEGAN)) {
+                  return STATE_BEGAN;
+              }
+              return state | STATE_CHANGED;
+          }
+          return STATE_FAILED;
+      }
+  });
+
+  /**
+   * Pan
+   * Recognized when the pointer is down and moved in the allowed direction.
+   * @constructor
+   * @extends AttrRecognizer
+   */
+  function PanRecognizer() {
+      AttrRecognizer.apply(this, arguments);
+
+      this.pX = null;
+      this.pY = null;
+  }
+
+  inherit(PanRecognizer, AttrRecognizer, {
+      /**
+       * @namespace
+       * @memberof PanRecognizer
+       */
+      defaults: {
+          event: 'pan',
+          threshold: 10,
+          pointers: 1,
+          direction: DIRECTION_ALL
+      },
+
+      getTouchAction: function() {
+          var direction = this.options.direction;
+          var actions = [];
+          if (direction & DIRECTION_HORIZONTAL) {
+              actions.push(TOUCH_ACTION_PAN_Y);
+          }
+          if (direction & DIRECTION_VERTICAL) {
+              actions.push(TOUCH_ACTION_PAN_X);
+          }
+          return actions;
+      },
+
+      directionTest: function(input) {
+          var options = this.options;
+          var hasMoved = true;
+          var distance = input.distance;
+          var direction = input.direction;
+          var x = input.deltaX;
+          var y = input.deltaY;
+
+          // lock to axis?
+          if (!(direction & options.direction)) {
+              if (options.direction & DIRECTION_HORIZONTAL) {
+                  direction = (x === 0) ? DIRECTION_NONE : (x < 0) ? DIRECTION_LEFT : DIRECTION_RIGHT;
+                  hasMoved = x != this.pX;
+                  distance = Math.abs(input.deltaX);
+              } else {
+                  direction = (y === 0) ? DIRECTION_NONE : (y < 0) ? DIRECTION_UP : DIRECTION_DOWN;
+                  hasMoved = y != this.pY;
+                  distance = Math.abs(input.deltaY);
+              }
+          }
+          input.direction = direction;
+          return hasMoved && distance > options.threshold && direction & options.direction;
+      },
+
+      attrTest: function(input) {
+          return AttrRecognizer.prototype.attrTest.call(this, input) &&
+              (this.state & STATE_BEGAN || (!(this.state & STATE_BEGAN) && this.directionTest(input)));
+      },
+
+      emit: function(input) {
+          this.pX = input.deltaX;
+          this.pY = input.deltaY;
+
+          var direction = directionStr(input.direction);
+          if (direction) {
+              this.manager.emit(this.options.event + direction, input);
+          }
+
+          this._super.emit.call(this, input);
+      }
+  });
+
+  /**
+   * Pinch
+   * Recognized when two or more pointers are moving toward (zoom-in) or away from each other (zoom-out).
+   * @constructor
+   * @extends AttrRecognizer
+   */
+  function PinchRecognizer() {
+      AttrRecognizer.apply(this, arguments);
+  }
+
+  inherit(PinchRecognizer, AttrRecognizer, {
+      /**
+       * @namespace
+       * @memberof PinchRecognizer
+       */
+      defaults: {
+          event: 'pinch',
+          threshold: 0,
+          pointers: 2
+      },
+
+      getTouchAction: function() {
+          return [TOUCH_ACTION_NONE];
+      },
+
+      attrTest: function(input) {
+          return this._super.attrTest.call(this, input) &&
+              (Math.abs(input.scale - 1) > this.options.threshold || this.state & STATE_BEGAN);
+      },
+
+      emit: function(input) {
+          this._super.emit.call(this, input);
+          if (input.scale !== 1) {
+              var inOut = input.scale < 1 ? 'in' : 'out';
+              this.manager.emit(this.options.event + inOut, input);
+          }
+      }
+  });
+
+  /**
+   * Press
+   * Recognized when the pointer is down for x ms without any movement.
+   * @constructor
+   * @extends Recognizer
+   */
+  function PressRecognizer() {
+      Recognizer.apply(this, arguments);
+
+      this._timer = null;
+      this._input = null;
+  }
+
+  inherit(PressRecognizer, Recognizer, {
+      /**
+       * @namespace
+       * @memberof PressRecognizer
+       */
+      defaults: {
+          event: 'press',
+          pointers: 1,
+          time: 500, // minimal time of the pointer to be pressed
+          threshold: 5 // a minimal movement is ok, but keep it low
+      },
+
+      getTouchAction: function() {
+          return [TOUCH_ACTION_AUTO];
+      },
+
+      process: function(input) {
+          var options = this.options;
+          var validPointers = input.pointers.length === options.pointers;
+          var validMovement = input.distance < options.threshold;
+          var validTime = input.deltaTime > options.time;
+
+          this._input = input;
+
+          // we only allow little movement
+          // and we've reached an end event, so a tap is possible
+          if (!validMovement || !validPointers || (input.eventType & (INPUT_END | INPUT_CANCEL) && !validTime)) {
+              this.reset();
+          } else if (input.eventType & INPUT_START) {
+              this.reset();
+              this._timer = setTimeoutContext(function() {
+                  this.state = STATE_RECOGNIZED;
+                  this.tryEmit();
+              }, options.time, this);
+          } else if (input.eventType & INPUT_END) {
+              return STATE_RECOGNIZED;
+          }
+          return STATE_FAILED;
+      },
+
+      reset: function() {
+          clearTimeout(this._timer);
+      },
+
+      emit: function(input) {
+          if (this.state !== STATE_RECOGNIZED) {
+              return;
+          }
+
+          if (input && (input.eventType & INPUT_END)) {
+              this.manager.emit(this.options.event + 'up', input);
+          } else {
+              this._input.timeStamp = now();
+              this.manager.emit(this.options.event, this._input);
+          }
+      }
+  });
+
+  /**
+   * Rotate
+   * Recognized when two or more pointer are moving in a circular motion.
+   * @constructor
+   * @extends AttrRecognizer
+   */
+  function RotateRecognizer() {
+      AttrRecognizer.apply(this, arguments);
+  }
+
+  inherit(RotateRecognizer, AttrRecognizer, {
+      /**
+       * @namespace
+       * @memberof RotateRecognizer
+       */
+      defaults: {
+          event: 'rotate',
+          threshold: 0,
+          pointers: 2
+      },
+
+      getTouchAction: function() {
+          return [TOUCH_ACTION_NONE];
+      },
+
+      attrTest: function(input) {
+          return this._super.attrTest.call(this, input) &&
+              (Math.abs(input.rotation) > this.options.threshold || this.state & STATE_BEGAN);
+      }
+  });
+
+  /**
+   * Swipe
+   * Recognized when the pointer is moving fast (velocity), with enough distance in the allowed direction.
+   * @constructor
+   * @extends AttrRecognizer
+   */
+  function SwipeRecognizer() {
+      AttrRecognizer.apply(this, arguments);
+  }
+
+  inherit(SwipeRecognizer, AttrRecognizer, {
+      /**
+       * @namespace
+       * @memberof SwipeRecognizer
+       */
+      defaults: {
+          event: 'swipe',
+          threshold: 10,
+          velocity: 0.65,
+          direction: DIRECTION_HORIZONTAL | DIRECTION_VERTICAL,
+          pointers: 1
+      },
+
+      getTouchAction: function() {
+          return PanRecognizer.prototype.getTouchAction.call(this);
+      },
+
+      attrTest: function(input) {
+          var direction = this.options.direction;
+          var velocity;
+
+          if (direction & (DIRECTION_HORIZONTAL | DIRECTION_VERTICAL)) {
+              velocity = input.velocity;
+          } else if (direction & DIRECTION_HORIZONTAL) {
+              velocity = input.velocityX;
+          } else if (direction & DIRECTION_VERTICAL) {
+              velocity = input.velocityY;
+          }
+
+          return this._super.attrTest.call(this, input) &&
+              direction & input.direction &&
+              input.distance > this.options.threshold &&
+              abs(velocity) > this.options.velocity && input.eventType & INPUT_END;
+      },
+
+      emit: function(input) {
+          var direction = directionStr(input.direction);
+          if (direction) {
+              this.manager.emit(this.options.event + direction, input);
+          }
+
+          this.manager.emit(this.options.event, input);
+      }
+  });
+
+  /**
+   * A tap is ecognized when the pointer is doing a small tap/click. Multiple taps are recognized if they occur
+   * between the given interval and position. The delay option can be used to recognize multi-taps without firing
+   * a single tap.
+   *
+   * The eventData from the emitted event contains the property `tapCount`, which contains the amount of
+   * multi-taps being recognized.
+   * @constructor
+   * @extends Recognizer
+   */
+  function TapRecognizer() {
+      Recognizer.apply(this, arguments);
+
+      // previous time and center,
+      // used for tap counting
+      this.pTime = false;
+      this.pCenter = false;
+
+      this._timer = null;
+      this._input = null;
+      this.count = 0;
+  }
+
+  inherit(TapRecognizer, Recognizer, {
+      /**
+       * @namespace
+       * @memberof PinchRecognizer
+       */
+      defaults: {
+          event: 'tap',
+          pointers: 1,
+          taps: 1,
+          interval: 300, // max time between the multi-tap taps
+          time: 250, // max time of the pointer to be down (like finger on the screen)
+          threshold: 2, // a minimal movement is ok, but keep it low
+          posThreshold: 10 // a multi-tap can be a bit off the initial position
+      },
+
+      getTouchAction: function() {
+          return [TOUCH_ACTION_MANIPULATION];
+      },
+
+      process: function(input) {
+          var options = this.options;
+
+          var validPointers = input.pointers.length === options.pointers;
+          var validMovement = input.distance < options.threshold;
+          var validTouchTime = input.deltaTime < options.time;
+
+          this.reset();
+
+          if ((input.eventType & INPUT_START) && (this.count === 0)) {
+              return this.failTimeout();
+          }
+
+          // we only allow little movement
+          // and we've reached an end event, so a tap is possible
+          if (validMovement && validTouchTime && validPointers) {
+              if (input.eventType != INPUT_END) {
+                  return this.failTimeout();
+              }
+
+              var validInterval = this.pTime ? (input.timeStamp - this.pTime < options.interval) : true;
+              var validMultiTap = !this.pCenter || getDistance(this.pCenter, input.center) < options.posThreshold;
+
+              this.pTime = input.timeStamp;
+              this.pCenter = input.center;
+
+              if (!validMultiTap || !validInterval) {
+                  this.count = 1;
+              } else {
+                  this.count += 1;
+              }
+
+              this._input = input;
+
+              // if tap count matches we have recognized it,
+              // else it has began recognizing...
+              var tapCount = this.count % options.taps;
+              if (tapCount === 0) {
+                  // no failing requirements, immediately trigger the tap event
+                  // or wait as long as the multitap interval to trigger
+                  if (!this.hasRequireFailures()) {
+                      return STATE_RECOGNIZED;
+                  } else {
+                      this._timer = setTimeoutContext(function() {
+                          this.state = STATE_RECOGNIZED;
+                          this.tryEmit();
+                      }, options.interval, this);
+                      return STATE_BEGAN;
+                  }
+              }
+          }
+          return STATE_FAILED;
+      },
+
+      failTimeout: function() {
+          this._timer = setTimeoutContext(function() {
+              this.state = STATE_FAILED;
+          }, this.options.interval, this);
+          return STATE_FAILED;
+      },
+
+      reset: function() {
+          clearTimeout(this._timer);
+      },
+
+      emit: function() {
+          if (this.state == STATE_RECOGNIZED ) {
+              this._input.tapCount = this.count;
+              this.manager.emit(this.options.event, this._input);
+          }
+      }
+  });
+
+  /**
+   * Simple way to create an manager with a default set of recognizers.
+   * @param {HTMLElement} element
+   * @param {Object} [options]
+   * @constructor
+   */
+  function Hammer(element, options) {
+      options = options || {};
+      options.recognizers = ifUndefined(options.recognizers, Hammer.defaults.preset);
+      return new Manager(element, options);
+  }
+
+  /**
+   * @const {string}
+   */
+  Hammer.VERSION = '2.0.4';
+
+  /**
+   * default settings
+   * @namespace
+   */
+  Hammer.defaults = {
+      /**
+       * set if DOM events are being triggered.
+       * But this is slower and unused by simple implementations, so disabled by default.
+       * @type {Boolean}
+       * @default false
+       */
+      domEvents: false,
+
+      /**
+       * The value for the touchAction property/fallback.
+       * When set to `compute` it will magically set the correct value based on the added recognizers.
+       * @type {String}
+       * @default compute
+       */
+      touchAction: TOUCH_ACTION_COMPUTE,
+
+      /**
+       * @type {Boolean}
+       * @default true
+       */
+      enable: true,
+
+      /**
+       * EXPERIMENTAL FEATURE -- can be removed/changed
+       * Change the parent input target element.
+       * If Null, then it is being set the to main element.
+       * @type {Null|EventTarget}
+       * @default null
+       */
+      inputTarget: null,
+
+      /**
+       * force an input class
+       * @type {Null|Function}
+       * @default null
+       */
+      inputClass: null,
+
+      /**
+       * Default recognizer setup when calling `Hammer()`
+       * When creating a new Manager these will be skipped.
+       * @type {Array}
+       */
+      preset: [
+          // RecognizerClass, options, [recognizeWith, ...], [requireFailure, ...]
+          [RotateRecognizer, { enable: false }],
+          [PinchRecognizer, { enable: false }, ['rotate']],
+          [SwipeRecognizer,{ direction: DIRECTION_HORIZONTAL }],
+          [PanRecognizer, { direction: DIRECTION_HORIZONTAL }, ['swipe']],
+          [TapRecognizer],
+          [TapRecognizer, { event: 'doubletap', taps: 2 }, ['tap']],
+          [PressRecognizer]
+      ],
+
+      /**
+       * Some CSS properties can be used to improve the working of Hammer.
+       * Add them to this method and they will be set when creating a new Manager.
+       * @namespace
+       */
+      cssProps: {
+          /**
+           * Disables text selection to improve the dragging gesture. Mainly for desktop browsers.
+           * @type {String}
+           * @default 'none'
+           */
+          userSelect: 'none',
+
+          /**
+           * Disable the Windows Phone grippers when pressing an element.
+           * @type {String}
+           * @default 'none'
+           */
+          touchSelect: 'none',
+
+          /**
+           * Disables the default callout shown when you touch and hold a touch target.
+           * On iOS, when you touch and hold a touch target such as a link, Safari displays
+           * a callout containing information about the link. This property allows you to disable that callout.
+           * @type {String}
+           * @default 'none'
+           */
+          touchCallout: 'none',
+
+          /**
+           * Specifies whether zooming is enabled. Used by IE10>
+           * @type {String}
+           * @default 'none'
+           */
+          contentZooming: 'none',
+
+          /**
+           * Specifies that an entire element should be draggable instead of its contents. Mainly for desktop browsers.
+           * @type {String}
+           * @default 'none'
+           */
+          userDrag: 'none',
+
+          /**
+           * Overrides the highlight color shown when the user taps a link or a JavaScript
+           * clickable element in iOS. This property obeys the alpha value, if specified.
+           * @type {String}
+           * @default 'rgba(0,0,0,0)'
+           */
+          tapHighlightColor: 'rgba(0,0,0,0)'
+      }
+  };
+
+  var STOP = 1;
+  var FORCED_STOP = 2;
+
+  /**
+   * Manager
+   * @param {HTMLElement} element
+   * @param {Object} [options]
+   * @constructor
+   */
+  function Manager(element, options) {
+      options = options || {};
+
+      this.options = merge(options, Hammer.defaults);
+      this.options.inputTarget = this.options.inputTarget || element;
+
+      this.handlers = {};
+      this.session = {};
+      this.recognizers = [];
+
+      this.element = element;
+      this.input = createInputInstance(this);
+      this.touchAction = new TouchAction(this, this.options.touchAction);
+
+      toggleCssProps(this, true);
+
+      each(options.recognizers, function(item) {
+          var recognizer = this.add(new (item[0])(item[1]));
+          item[2] && recognizer.recognizeWith(item[2]);
+          item[3] && recognizer.requireFailure(item[3]);
+      }, this);
+  }
+
+  Manager.prototype = {
+      /**
+       * set options
+       * @param {Object} options
+       * @returns {Manager}
+       */
+      set: function(options) {
+          extend(this.options, options);
+
+          // Options that need a little more setup
+          if (options.touchAction) {
+              this.touchAction.update();
+          }
+          if (options.inputTarget) {
+              // Clean up existing event listeners and reinitialize
+              this.input.destroy();
+              this.input.target = options.inputTarget;
+              this.input.init();
+          }
+          return this;
+      },
+
+      /**
+       * stop recognizing for this session.
+       * This session will be discarded, when a new [input]start event is fired.
+       * When forced, the recognizer cycle is stopped immediately.
+       * @param {Boolean} [force]
+       */
+      stop: function(force) {
+          this.session.stopped = force ? FORCED_STOP : STOP;
+      },
+
+      /**
+       * run the recognizers!
+       * called by the inputHandler function on every movement of the pointers (touches)
+       * it walks through all the recognizers and tries to detect the gesture that is being made
+       * @param {Object} inputData
+       */
+      recognize: function(inputData) {
+          var session = this.session;
+          if (session.stopped) {
+              return;
+          }
+
+          // run the touch-action polyfill
+          this.touchAction.preventDefaults(inputData);
+
+          var recognizer;
+          var recognizers = this.recognizers;
+
+          // this holds the recognizer that is being recognized.
+          // so the recognizer's state needs to be BEGAN, CHANGED, ENDED or RECOGNIZED
+          // if no recognizer is detecting a thing, it is set to `null`
+          var curRecognizer = session.curRecognizer;
+
+          // reset when the last recognizer is recognized
+          // or when we're in a new session
+          if (!curRecognizer || (curRecognizer && curRecognizer.state & STATE_RECOGNIZED)) {
+              curRecognizer = session.curRecognizer = null;
+          }
+
+          var i = 0;
+          while (i < recognizers.length) {
+              recognizer = recognizers[i];
+
+              // find out if we are allowed try to recognize the input for this one.
+              // 1.   allow if the session is NOT forced stopped (see the .stop() method)
+              // 2.   allow if we still haven't recognized a gesture in this session, or the this recognizer is the one
+              //      that is being recognized.
+              // 3.   allow if the recognizer is allowed to run simultaneous with the current recognized recognizer.
+              //      this can be setup with the `recognizeWith()` method on the recognizer.
+              if (session.stopped !== FORCED_STOP && ( // 1
+                      !curRecognizer || recognizer == curRecognizer || // 2
+                      recognizer.canRecognizeWith(curRecognizer))) { // 3
+                  recognizer.recognize(inputData);
+              } else {
+                  recognizer.reset();
+              }
+
+              // if the recognizer has been recognizing the input as a valid gesture, we want to store this one as the
+              // current active recognizer. but only if we don't already have an active recognizer
+              if (!curRecognizer && recognizer.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED)) {
+                  curRecognizer = session.curRecognizer = recognizer;
+              }
+              i++;
+          }
+      },
+
+      /**
+       * get a recognizer by its event name.
+       * @param {Recognizer|String} recognizer
+       * @returns {Recognizer|Null}
+       */
+      get: function(recognizer) {
+          if (recognizer instanceof Recognizer) {
+              return recognizer;
+          }
+
+          var recognizers = this.recognizers;
+          for (var i = 0; i < recognizers.length; i++) {
+              if (recognizers[i].options.event == recognizer) {
+                  return recognizers[i];
+              }
+          }
+          return null;
+      },
+
+      /**
+       * add a recognizer to the manager
+       * existing recognizers with the same event name will be removed
+       * @param {Recognizer} recognizer
+       * @returns {Recognizer|Manager}
+       */
+      add: function(recognizer) {
+          if (invokeArrayArg(recognizer, 'add', this)) {
+              return this;
+          }
+
+          // remove existing
+          var existing = this.get(recognizer.options.event);
+          if (existing) {
+              this.remove(existing);
+          }
+
+          this.recognizers.push(recognizer);
+          recognizer.manager = this;
+
+          this.touchAction.update();
+          return recognizer;
+      },
+
+      /**
+       * remove a recognizer by name or instance
+       * @param {Recognizer|String} recognizer
+       * @returns {Manager}
+       */
+      remove: function(recognizer) {
+          if (invokeArrayArg(recognizer, 'remove', this)) {
+              return this;
+          }
+
+          var recognizers = this.recognizers;
+          recognizer = this.get(recognizer);
+          recognizers.splice(inArray(recognizers, recognizer), 1);
+
+          this.touchAction.update();
+          return this;
+      },
+
+      /**
+       * bind event
+       * @param {String} events
+       * @param {Function} handler
+       * @returns {EventEmitter} this
+       */
+      on: function(events, handler) {
+          var handlers = this.handlers;
+          each(splitStr(events), function(event) {
+              handlers[event] = handlers[event] || [];
+              handlers[event].push(handler);
+          });
+          return this;
+      },
+
+      /**
+       * unbind event, leave emit blank to remove all handlers
+       * @param {String} events
+       * @param {Function} [handler]
+       * @returns {EventEmitter} this
+       */
+      off: function(events, handler) {
+          var handlers = this.handlers;
+          each(splitStr(events), function(event) {
+              if (!handler) {
+                  delete handlers[event];
+              } else {
+                  handlers[event].splice(inArray(handlers[event], handler), 1);
+              }
+          });
+          return this;
+      },
+
+      /**
+       * emit event to the listeners
+       * @param {String} event
+       * @param {Object} data
+       */
+      emit: function(event, data) {
+          // we also want to trigger dom events
+          if (this.options.domEvents) {
+              triggerDomEvent(event, data);
+          }
+
+          // no handlers, so skip it all
+          var handlers = this.handlers[event] && this.handlers[event].slice();
+          if (!handlers || !handlers.length) {
+              return;
+          }
+
+          data.type = event;
+          data.preventDefault = function() {
+              data.srcEvent.preventDefault();
+          };
+
+          var i = 0;
+          while (i < handlers.length) {
+              handlers[i](data);
+              i++;
+          }
+      },
+
+      /**
+       * destroy the manager and unbinds all events
+       * it doesn't unbind dom events, that is the user own responsibility
+       */
+      destroy: function() {
+          this.element && toggleCssProps(this, false);
+
+          this.handlers = {};
+          this.session = {};
+          this.input.destroy();
+          this.element = null;
+      }
+  };
+
+  /**
+   * add/remove the css properties as defined in manager.options.cssProps
+   * @param {Manager} manager
+   * @param {Boolean} add
+   */
+  function toggleCssProps(manager, add) {
+      var element = manager.element;
+      each(manager.options.cssProps, function(value, name) {
+          element.style[prefixed(element.style, name)] = add ? value : '';
+      });
+  }
+
+  /**
+   * trigger dom event
+   * @param {String} event
+   * @param {Object} data
+   */
+  function triggerDomEvent(event, data) {
+      var gestureEvent = document.createEvent('Event');
+      gestureEvent.initEvent(event, true, true);
+      gestureEvent.gesture = data;
+      data.target.dispatchEvent(gestureEvent);
+  }
+
+  extend(Hammer, {
+      INPUT_START: INPUT_START,
+      INPUT_MOVE: INPUT_MOVE,
+      INPUT_END: INPUT_END,
+      INPUT_CANCEL: INPUT_CANCEL,
+
+      STATE_POSSIBLE: STATE_POSSIBLE,
+      STATE_BEGAN: STATE_BEGAN,
+      STATE_CHANGED: STATE_CHANGED,
+      STATE_ENDED: STATE_ENDED,
+      STATE_RECOGNIZED: STATE_RECOGNIZED,
+      STATE_CANCELLED: STATE_CANCELLED,
+      STATE_FAILED: STATE_FAILED,
+
+      DIRECTION_NONE: DIRECTION_NONE,
+      DIRECTION_LEFT: DIRECTION_LEFT,
+      DIRECTION_RIGHT: DIRECTION_RIGHT,
+      DIRECTION_UP: DIRECTION_UP,
+      DIRECTION_DOWN: DIRECTION_DOWN,
+      DIRECTION_HORIZONTAL: DIRECTION_HORIZONTAL,
+      DIRECTION_VERTICAL: DIRECTION_VERTICAL,
+      DIRECTION_ALL: DIRECTION_ALL,
+
+      Manager: Manager,
+      Input: Input,
+      TouchAction: TouchAction,
+
+      TouchInput: TouchInput,
+      MouseInput: MouseInput,
+      PointerEventInput: PointerEventInput,
+      TouchMouseInput: TouchMouseInput,
+      SingleTouchInput: SingleTouchInput,
+
+      Recognizer: Recognizer,
+      AttrRecognizer: AttrRecognizer,
+      Tap: TapRecognizer,
+      Pan: PanRecognizer,
+      Swipe: SwipeRecognizer,
+      Pinch: PinchRecognizer,
+      Rotate: RotateRecognizer,
+      Press: PressRecognizer,
+
+      on: addEventListeners,
+      off: removeEventListeners,
+      each: each,
+      merge: merge,
+      extend: extend,
+      inherit: inherit,
+      bindFn: bindFn,
+      prefixed: prefixed
+  });
+
+  if ("function" == TYPE_FUNCTION && __webpack_require__(23)) {
+      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+          return Hammer;
+      }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof module != 'undefined' && module.exports) {
+      module.exports = Hammer;
+  } else {
+      window[exportName] = Hammer;
+  }
+
+  })(window, document, 'Hammer');
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+  /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+
+  /* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var hammerUtil = __webpack_require__(27);
-  var moment = __webpack_require__(8);
-  var Component = __webpack_require__(28);
-  var DateUtil = __webpack_require__(29);
+  var util = __webpack_require__(1);
+  var hammerUtil = __webpack_require__(25);
+  var moment = __webpack_require__(2);
+  var Component = __webpack_require__(26);
+  var DateUtil = __webpack_require__(27);
 
   /**
    * @constructor Range
@@ -14287,7 +13916,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var scale = 1 / (event.scale + this.scaleOffset);
     var centerDate = this._pointerToDate(this.props.touch.center);
 
-    var hiddenDuration = DateUtil.getHiddenDurationBetween(this.options.moment, this.body.hiddenDates, this.start, this.end);
+    var hiddenDuration = DateUtil.getHiddenDurationBetween(this.body.hiddenDates, this.start, this.end);
     var hiddenDurationBefore = DateUtil.getHiddenDurationBefore(this.options.moment, this.body.hiddenDates, this, centerDate);
     var hiddenDurationAfter = hiddenDuration - hiddenDurationBefore;
 
@@ -14446,12 +14075,12 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Range;
 
 /***/ },
-/* 27 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Hammer = __webpack_require__(3);
+  var Hammer = __webpack_require__(20);
 
   /**
    * Register a touch event, taking place before a gesture
@@ -14518,7 +14147,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.offRelease = exports.offTouch;
 
 /***/ },
-/* 28 */
+/* 26 */
 /***/ function(module, exports) {
 
   /**
@@ -14556,7 +14185,9 @@ return /******/ (function(modules) { // webpackBootstrap
   /**
    * Destroy the component. Cleanup DOM and event listeners
    */
-  Component.prototype.destroy = function () {};
+  Component.prototype.destroy = function () {
+    // should be implemented by the component
+  };
 
   /**
    * Test whether the component is resized since the last time _isResized() was
@@ -14575,23 +14206,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
   module.exports = Component;
 
-  // should be implemented by the component
-
 /***/ },
-/* 29 */
+/* 27 */
 /***/ function(module, exports) {
 
-
+  
   /**
    * used in Core to convert the options into a volatile variable
-   *
+   * 
    * @param {function} moment
    * @param {Object} body
-   * @param {Array} hiddenDates
+   * @param {Array | Object} hiddenDates
    */
   "use strict";
 
   exports.convertHiddenOptions = function (moment, body, hiddenDates) {
+    if (hiddenDates && !Array.isArray(hiddenDates)) {
+      return exports.convertHiddenOptions(moment, body, [hiddenDates]);
+    }
+
     body.hiddenDates = [];
     if (hiddenDates) {
       if (Array.isArray(hiddenDates) == true) {
@@ -14614,9 +14247,13 @@ return /******/ (function(modules) { // webpackBootstrap
    * create new entrees for the repeating hidden dates
    * @param {function} moment
    * @param {Object} body
-   * @param {Array} hiddenDates
+   * @param {Array | Object} hiddenDates
    */
   exports.updateHiddenDates = function (moment, body, hiddenDates) {
+    if (hiddenDates && !Array.isArray(hiddenDates)) {
+      return exports.updateHiddenDates(moment, body, [hiddenDates]);
+    }
+
     if (hiddenDates && body.domProps.centerContainer.width !== undefined) {
       exports.convertHiddenOptions(moment, body, hiddenDates);
 
@@ -14651,16 +14288,16 @@ return /******/ (function(modules) { // webpackBootstrap
                 }
                 startDate.dayOfYear(start.dayOfYear());
                 startDate.year(start.year());
-                startDate.subtract(7, "days");
+                startDate.subtract(7, 'days');
 
                 endDate.dayOfYear(start.dayOfYear());
                 endDate.year(start.year());
-                endDate.subtract(7 - offset, "days");
+                endDate.subtract(7 - offset, 'days');
 
-                runUntil.add(1, "weeks");
+                runUntil.add(1, 'weeks');
                 break;
               case "weekly":
-                var dayOffset = endDate.diff(startDate, "days");
+                var dayOffset = endDate.diff(startDate, 'days');
                 var day = startDate.day();
 
                 // set the start date to the range.start
@@ -14672,12 +14309,12 @@ return /******/ (function(modules) { // webpackBootstrap
                 // force
                 startDate.day(day);
                 endDate.day(day);
-                endDate.add(dayOffset, "days");
+                endDate.add(dayOffset, 'days');
 
-                startDate.subtract(1, "weeks");
-                endDate.subtract(1, "weeks");
+                startDate.subtract(1, 'weeks');
+                endDate.subtract(1, 'weeks');
 
-                runUntil.add(1, "weeks");
+                runUntil.add(1, 'weeks');
                 break;
               case "monthly":
                 if (startDate.month() != endDate.month()) {
@@ -14685,26 +14322,26 @@ return /******/ (function(modules) { // webpackBootstrap
                 }
                 startDate.month(start.month());
                 startDate.year(start.year());
-                startDate.subtract(1, "months");
+                startDate.subtract(1, 'months');
 
                 endDate.month(start.month());
                 endDate.year(start.year());
-                endDate.subtract(1, "months");
-                endDate.add(offset, "months");
+                endDate.subtract(1, 'months');
+                endDate.add(offset, 'months');
 
-                runUntil.add(1, "months");
+                runUntil.add(1, 'months');
                 break;
               case "yearly":
                 if (startDate.year() != endDate.year()) {
                   offset = 1;
                 }
                 startDate.year(start.year());
-                startDate.subtract(1, "years");
+                startDate.subtract(1, 'years');
                 endDate.year(start.year());
-                endDate.subtract(1, "years");
-                endDate.add(offset, "years");
+                endDate.subtract(1, 'years');
+                endDate.add(offset, 'years');
 
-                runUntil.add(1, "years");
+                runUntil.add(1, 'years');
                 break;
               default:
                 console.log("Wrong repeat format, allowed are: daily, weekly, monthly, yearly. Given:", hiddenDates[i].repeat);
@@ -14714,20 +14351,20 @@ return /******/ (function(modules) { // webpackBootstrap
               body.hiddenDates.push({ start: startDate.valueOf(), end: endDate.valueOf() });
               switch (hiddenDates[i].repeat) {
                 case "daily":
-                  startDate.add(1, "days");
-                  endDate.add(1, "days");
+                  startDate.add(1, 'days');
+                  endDate.add(1, 'days');
                   break;
                 case "weekly":
-                  startDate.add(1, "weeks");
-                  endDate.add(1, "weeks");
+                  startDate.add(1, 'weeks');
+                  endDate.add(1, 'weeks');
                   break;
                 case "monthly":
-                  startDate.add(1, "months");
-                  endDate.add(1, "months");
+                  startDate.add(1, 'months');
+                  endDate.add(1, 'months');
                   break;
                 case "yearly":
-                  startDate.add(1, "y");
-                  endDate.add(1, "y");
+                  startDate.add(1, 'y');
+                  endDate.add(1, 'y');
                   break;
                 default:
                   console.log("Wrong repeat format, allowed are: daily, weekly, monthly, yearly. Given:", hiddenDates[i].repeat);
@@ -14774,14 +14411,14 @@ return /******/ (function(modules) { // webpackBootstrap
           }
           // j start inside i
           else if (hiddenDates[j].start >= hiddenDates[i].start && hiddenDates[j].start <= hiddenDates[i].end) {
-            hiddenDates[i].end = hiddenDates[j].end;
-            hiddenDates[j].remove = true;
-          }
-          // j end inside i
-          else if (hiddenDates[j].end >= hiddenDates[i].start && hiddenDates[j].end <= hiddenDates[i].end) {
-            hiddenDates[i].start = hiddenDates[j].start;
-            hiddenDates[j].remove = true;
-          }
+              hiddenDates[i].end = hiddenDates[j].end;
+              hiddenDates[j].remove = true;
+            }
+            // j end inside i
+            else if (hiddenDates[j].end >= hiddenDates[i].start && hiddenDates[j].end <= hiddenDates[i].end) {
+                hiddenDates[i].start = hiddenDates[j].start;
+                hiddenDates[j].remove = true;
+              }
         }
       }
     }
@@ -15042,22 +14679,22 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
 /***/ },
-/* 30 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Emitter = __webpack_require__(19);
-  var Hammer = __webpack_require__(3);
-  var hammerUtil = __webpack_require__(27);
-  var util = __webpack_require__(7);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
-  var Range = __webpack_require__(26);
-  var ItemSet = __webpack_require__(31);
+  var Emitter = __webpack_require__(12);
+  var Hammer = __webpack_require__(20);
+  var hammerUtil = __webpack_require__(25);
+  var util = __webpack_require__(1);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
+  var Range = __webpack_require__(24);
+  var ItemSet = __webpack_require__(29);
   var TimeAxis = __webpack_require__(39);
   var Activator = __webpack_require__(40);
-  var DateUtil = __webpack_require__(29);
+  var DateUtil = __webpack_require__(27);
   var CustomTime = __webpack_require__(42);
 
   /**
@@ -15139,7 +14776,9 @@ return /******/ (function(modules) { // webpackBootstrap
     this.dom.rightContainer.appendChild(this.dom.shadowTopRight);
     this.dom.rightContainer.appendChild(this.dom.shadowBottomRight);
 
-    this.on('rangechange', this.redraw.bind(this));
+    this.on('rangechange', (function () {
+      this._redraw(); // this allows overriding the _redraw method
+    }).bind(this));
     this.on('touch', this._onTouch.bind(this));
     this.on('pan', this._onDrag.bind(this));
 
@@ -15258,7 +14897,7 @@ return /******/ (function(modules) { // webpackBootstrap
   Core.prototype.setOptions = function (options) {
     if (options) {
       // copy the known options
-      var fields = ['width', 'height', 'minHeight', 'maxHeight', 'autoResize', 'start', 'end', 'clickToUse', 'dataAttributes', 'hiddenDates', 'locale', 'locales', 'moment'];
+      var fields = ['width', 'height', 'minHeight', 'maxHeight', 'autoResize', 'start', 'end', 'clickToUse', 'dataAttributes', 'hiddenDates', 'locale', 'locales', 'moment', 'throttleRedraw'];
       util.selectiveExtend(fields, this.options, options);
 
       if ('orientation' in options) {
@@ -15351,6 +14990,12 @@ return /******/ (function(modules) { // webpackBootstrap
       this.configurator.setModuleOptions({ global: appliedOptions });
     }
 
+    // override redraw with a throttled version
+    if (!this._origRedraw) {
+      this._origRedraw = this._redraw.bind(this);
+    }
+    this._redraw = util.throttle(this._origRedraw, this.options.throttleRedraw);
+
     // redraw everything
     this._redraw();
   };
@@ -15442,6 +15087,24 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
+   * Set a custom title for the custom time bar.
+   * @param {String} [title] Custom title
+   * @param {number} [id=undefined]    Id of the custom time bar.
+   */
+  Core.prototype.setCustomTimeTitle = function (title, id) {
+    var customTimes = this.customTimes.filter(function (component) {
+      return component.options.id === id;
+    });
+
+    if (customTimes.length === 0) {
+      throw new Error('No custom time bar found with id ' + JSON.stringify(id));
+    }
+    if (customTimes.length > 0) {
+      return customTimes[0].setCustomTitle(title);
+    }
+  };
+
+  /**
    * Retrieve meta information from an event.
    * Should be overridden by classes extending Core
    * @param {Event} event
@@ -15478,7 +15141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     this.customTimes.push(customTime);
     this.components.push(customTime);
-    this.redraw();
+    this._redraw();
 
     return id;
   };
@@ -15618,6 +15281,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
   /**
    * Force a redraw. Can be overridden by implementations of Core
+   *
+   * Note: this function will be overridden on construction with a trottled version
    */
   Core.prototype.redraw = function () {
     this._redraw();
@@ -15927,8 +15592,10 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     // remove event listener on window.resize
-    util.removeEventListener(window, 'resize', this._onResize);
-    this._onResize = null;
+    if (this._onResize) {
+      util.removeEventListener(window, 'resize', this._onResize);
+      this._onResize = null;
+    }
   };
 
   /**
@@ -15967,7 +15634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     if (newScrollTop != oldScrollTop) {
       this._redraw(); // TODO: this causes two redraws when dragging, the other is triggered by rangechange already
-      this.emit('verticalDrag');
+      this.emit("verticalDrag");
     }
   };
 
@@ -16028,22 +15695,22 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Core;
 
 /***/ },
-/* 31 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Hammer = __webpack_require__(3);
-  var util = __webpack_require__(7);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
-  var TimeStep = __webpack_require__(35);
-  var Component = __webpack_require__(28);
-  var Group = __webpack_require__(32);
-  var BackgroundGroup = __webpack_require__(36);
-  var BoxItem = __webpack_require__(37);
-  var PointItem = __webpack_require__(1);
-  var RangeItem = __webpack_require__(34);
+  var Hammer = __webpack_require__(20);
+  var util = __webpack_require__(1);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
+  var TimeStep = __webpack_require__(30);
+  var Component = __webpack_require__(26);
+  var Group = __webpack_require__(31);
+  var BackgroundGroup = __webpack_require__(35);
+  var BoxItem = __webpack_require__(36);
+  var PointItem = __webpack_require__(37);
+  var RangeItem = __webpack_require__(33);
   var BackgroundItem = __webpack_require__(38);
 
   var UNGROUPED = '__ungrouped__'; // reserved group id for ungrouped items
@@ -16068,14 +15735,26 @@ return /******/ (function(modules) { // webpackBootstrap
       },
       align: 'auto', // alignment of box items
       stack: true,
-      groupOrder: null,
+      groupOrderSwap: function groupOrderSwap(fromGroup, toGroup, groups) {
+        var targetOrder = toGroup.order;
+        toGroup.order = fromGroup.order;
+        fromGroup.order = targetOrder;
+      },
+      groupOrder: 'order',
 
       selectable: true,
       multiselect: false,
+      itemsAlwaysDraggable: false,
 
       editable: {
         updateTime: false,
         updateGroup: false,
+        add: false,
+        remove: false
+      },
+
+      groupEditable: {
+        order: false,
         add: false,
         remove: false
       },
@@ -16095,6 +15774,15 @@ return /******/ (function(modules) { // webpackBootstrap
         callback(item);
       },
       onMoving: function onMoving(item, callback) {
+        callback(item);
+      },
+      onAddGroup: function onAddGroup(item, callback) {
+        callback(item);
+      },
+      onMoveGroup: function onMoveGroup(item, callback) {
+        callback(item);
+      },
+      onRemoveGroup: function onRemoveGroup(item, callback) {
         callback(item);
       },
 
@@ -16161,6 +15849,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.stackDirty = true; // if true, all items will be restacked on next redraw
 
     this.touchParams = {}; // stores properties while dragging
+    this.groupTouchParams = {};
     // create the HTML DOM
 
     this._create();
@@ -16243,6 +15932,12 @@ return /******/ (function(modules) { // webpackBootstrap
     // add item on doubletap
     this.hammer.on('doubletap', this._onAddItem.bind(this));
 
+    this.groupHammer = new Hammer(this.body.dom.leftContainer);
+    this.groupHammer.on('panstart', this._onGroupDragStart.bind(this));
+    this.groupHammer.on('panmove', this._onGroupDrag.bind(this));
+    this.groupHammer.on('panend', this._onGroupDragEnd.bind(this));
+    this.groupHammer.get('pan').set({ threshold: 5, direction: 30 });
+
     // attach to the DOM
     this.show();
   };
@@ -16314,7 +16009,7 @@ return /******/ (function(modules) { // webpackBootstrap
   ItemSet.prototype.setOptions = function (options) {
     if (options) {
       // copy all options that we know
-      var fields = ['type', 'align', 'order', 'stack', 'selectable', 'multiselect', 'groupOrder', 'dataAttributes', 'template', 'groupTemplate', 'hide', 'snap'];
+      var fields = ['type', 'align', 'order', 'stack', 'selectable', 'multiselect', 'itemsAlwaysDraggable', 'multiselectPerGroup', 'groupOrder', 'dataAttributes', 'template', 'groupTemplate', 'hide', 'snap', 'groupOrderSwap'];
       util.selectiveExtend(fields, this.options, options);
 
       if ('orientation' in options) {
@@ -16354,6 +16049,16 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       }
 
+      if ('groupEditable' in options) {
+        if (typeof options.groupEditable === 'boolean') {
+          this.options.groupEditable.order = options.groupEditable;
+          this.options.groupEditable.add = options.groupEditable;
+          this.options.groupEditable.remove = options.groupEditable;
+        } else if (typeof options.groupEditable === 'object') {
+          util.selectiveExtend(['order', 'add', 'remove'], this.options.groupEditable, options.groupEditable);
+        }
+      }
+
       // callback functions
       var addCallback = (function (name) {
         var fn = options[name];
@@ -16364,7 +16069,7 @@ return /******/ (function(modules) { // webpackBootstrap
           this.options[name] = fn;
         }
       }).bind(this);
-      ['onAdd', 'onUpdate', 'onRemove', 'onMove', 'onMoving'].forEach(addCallback);
+      ['onAdd', 'onUpdate', 'onRemove', 'onMove', 'onMoving', 'onAddGroup', 'onMoveGroup', 'onRemoveGroup'].forEach(addCallback);
 
       // force the itemSet to refresh: options like orientation and margins may be changed
       this.markDirty();
@@ -17148,7 +16853,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var me = this;
     var props;
 
-    if (item && item.selected) {
+    if (item && (item.selected || this.options.itemsAlwaysDraggable)) {
 
       if (!this.options.editable.updateTime && !this.options.editable.updateGroup && !item.editable) {
         return;
@@ -17167,7 +16872,7 @@ return /******/ (function(modules) { // webpackBootstrap
           item: dragLeftItem,
           initialX: event.center.x,
           dragLeft: true,
-          data: util.extend({}, item.data) // clone the items data
+          data: this._cloneItemData(item.data)
         };
 
         this.touchParams.itemProps = [props];
@@ -17176,7 +16881,7 @@ return /******/ (function(modules) { // webpackBootstrap
           item: dragRightItem,
           initialX: event.center.x,
           dragRight: true,
-          data: util.extend({}, item.data) // clone the items data
+          data: this._cloneItemData(item.data)
         };
 
         this.touchParams.itemProps = [props];
@@ -17185,18 +16890,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
         var baseGroupIndex = this._getGroupIndex(item.data.group);
 
-        this.touchParams.itemProps = this.getSelection().map(function (id) {
+        var itemsToDrag = this.options.itemsAlwaysDraggable && !item.selected ? [item.id] : this.getSelection();
+
+        this.touchParams.itemProps = itemsToDrag.map((function (id) {
           var item = me.items[id];
           var groupIndex = me._getGroupIndex(item.data.group);
-          var props = {
+          return {
             item: item,
             initialX: event.center.x,
             groupOffset: baseGroupIndex - groupIndex,
-            data: util.extend({}, item.data) // clone the items data
+            data: this._cloneItemData(item.data)
           };
-
-          return props;
-        });
+        }).bind(this));
       }
 
       event.stopPropagation();
@@ -17218,7 +16923,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var time = this.body.util.toTime(x);
     var scale = this.body.util.getScale();
     var step = this.body.util.getStep();
-    var start = snap ? snap(time, scale, step) : start;
+    var start = snap ? snap(time, scale, step) : time;
     var end = start;
 
     var itemData = {
@@ -17238,14 +16943,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
     var newItem = new RangeItem(itemData, this.conversion, this.options);
     newItem.id = id; // TODO: not so nice setting id afterwards
-    newItem.data = itemData;
+    newItem.data = this._cloneItemData(itemData);
     this._addItem(newItem);
 
     var props = {
       item: newItem,
       dragRight: true,
       initialX: event.center.x,
-      data: util.extend({}, itemData)
+      data: newItem.data
     };
     this.touchParams.itemProps = [props];
 
@@ -17284,14 +16989,12 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       // move
-      this.touchParams.itemProps.forEach(function (props) {
-        var newProps = {};
+      this.touchParams.itemProps.forEach((function (props) {
         var current = me.body.util.toTime(event.center.x - xOffset);
         var initial = me.body.util.toTime(props.initialX - xOffset);
-        var offset = current - initial;
+        var offset = current - initial; // ms
 
-        var itemData = util.extend({}, props.item.data); // clone the data
-
+        var itemData = this._cloneItemData(props.item.data); // clone the data
         if (props.item.editable === false) {
           return;
         }
@@ -17304,6 +17007,7 @@ return /******/ (function(modules) { // webpackBootstrap
             if (itemData.start != undefined) {
               var initialStart = util.convert(props.data.start, 'Date');
               var start = new Date(initialStart.valueOf() + offset);
+              // TODO: pass a Moment instead of a Date to snap(). (Breaking change)
               itemData.start = snap ? snap(start, scale, step) : start;
             }
           } else if (props.dragRight) {
@@ -17311,6 +17015,7 @@ return /******/ (function(modules) { // webpackBootstrap
             if (itemData.end != undefined) {
               var initialEnd = util.convert(props.data.end, 'Date');
               var end = new Date(initialEnd.valueOf() + offset);
+              // TODO: pass a Moment instead of a Date to snap(). (Breaking change)
               itemData.end = snap ? snap(end, scale, step) : end;
             }
           } else {
@@ -17323,9 +17028,11 @@ return /******/ (function(modules) { // webpackBootstrap
                 var initialEnd = util.convert(props.data.end, 'Date');
                 var duration = initialEnd.valueOf() - initialStart.valueOf();
 
+                // TODO: pass a Moment instead of a Date to snap(). (Breaking change)
                 itemData.start = snap ? snap(start, scale, step) : start;
                 itemData.end = new Date(itemData.start.valueOf() + duration);
               } else {
+                // TODO: pass a Moment instead of a Date to snap(). (Breaking change)
                 itemData.start = snap ? snap(start, scale, step) : start;
               }
             }
@@ -17334,7 +17041,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
         var updateGroupAllowed = me.options.editable.updateGroup || props.item.editable === true;
 
-        if (updateGroupAllowed && (!props.dragLeft && !props.dragRight) && newGroupBase != null) {
+        if (updateGroupAllowed && !props.dragLeft && !props.dragRight && newGroupBase != null) {
           if (itemData.group != undefined) {
             var newOffset = newGroupBase - props.groupOffset;
 
@@ -17347,12 +17054,13 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         // confirm moving the item
-        me.options.onMoving(itemData, function (itemData) {
+        itemData = this._cloneItemData(itemData); // convert start and end to the correct type
+        me.options.onMoving(itemData, (function (itemData) {
           if (itemData) {
-            props.item.setData(itemData);
+            props.item.setData(this._cloneItemData(itemData, 'Date'));
           }
-        });
-      });
+        }).bind(this));
+      }).bind(this));
 
       this.stackDirty = true; // force re-stacking of all items next redraw
       this.body.emitter.emit('change');
@@ -17392,7 +17100,7 @@ return /******/ (function(modules) { // webpackBootstrap
       var itemProps = this.touchParams.itemProps;
       this.touchParams.itemProps = null;
 
-      itemProps.forEach(function (props) {
+      itemProps.forEach((function (props) {
         var id = props.item.id;
         var exists = me.itemsData.get(id, me.itemOptions) != null;
 
@@ -17410,7 +17118,7 @@ return /******/ (function(modules) { // webpackBootstrap
           });
         } else {
           // update existing item
-          var itemData = util.extend({}, props.item.data); // clone the data
+          var itemData = this._cloneItemData(props.item.data); // convert start and end to the correct type
           me.options.onMove(itemData, function (itemData) {
             if (itemData) {
               // apply changes
@@ -17425,7 +17133,178 @@ return /******/ (function(modules) { // webpackBootstrap
             }
           });
         }
+      }).bind(this));
+    }
+  };
+
+  ItemSet.prototype._onGroupDragStart = function (event) {
+    if (this.options.groupEditable.order) {
+      this.groupTouchParams.group = this.groupFromTarget(event);
+
+      if (this.groupTouchParams.group) {
+        event.stopPropagation();
+
+        this.groupTouchParams.originalOrder = this.groupsData.getIds({
+          order: this.options.groupOrder
+        });
+      }
+    }
+  };
+
+  ItemSet.prototype._onGroupDrag = function (event) {
+    if (this.options.groupEditable.order && this.groupTouchParams.group) {
+      event.stopPropagation();
+
+      // drag from one group to another
+      var group = this.groupFromTarget(event);
+
+      // try to avoid toggling when groups differ in height
+      if (group && group.height != this.groupTouchParams.group.height) {
+        var movingUp = group.top < this.groupTouchParams.group.top;
+        var clientY = event.center ? event.center.y : event.clientY;
+        var targetGroupTop = util.getAbsoluteTop(group.dom.foreground);
+        var draggedGroupHeight = this.groupTouchParams.group.height;
+        if (movingUp) {
+          // skip swapping the groups when the dragged group is not below clientY afterwards
+          if (targetGroupTop + draggedGroupHeight < clientY) {
+            return;
+          }
+        } else {
+          var targetGroupHeight = group.height;
+          // skip swapping the groups when the dragged group is not below clientY afterwards
+          if (targetGroupTop + targetGroupHeight - draggedGroupHeight > clientY) {
+            return;
+          }
+        }
+      }
+
+      if (group && group != this.groupTouchParams.group) {
+        var groupsData = this.groupsData;
+        var targetGroup = groupsData.get(group.groupId);
+        var draggedGroup = groupsData.get(this.groupTouchParams.group.groupId);
+
+        // switch groups
+        if (draggedGroup && targetGroup) {
+          this.options.groupOrderSwap(draggedGroup, targetGroup, this.groupsData);
+          this.groupsData.update(draggedGroup);
+          this.groupsData.update(targetGroup);
+        }
+
+        // fetch current order of groups
+        var newOrder = this.groupsData.getIds({
+          order: this.options.groupOrder
+        });
+
+        // in case of changes since _onGroupDragStart
+        if (!util.equalArray(newOrder, this.groupTouchParams.originalOrder)) {
+          var groupsData = this.groupsData;
+          var origOrder = this.groupTouchParams.originalOrder;
+          var draggedId = this.groupTouchParams.group.groupId;
+          var numGroups = Math.min(origOrder.length, newOrder.length);
+          var curPos = 0;
+          var newOffset = 0;
+          var orgOffset = 0;
+          while (curPos < numGroups) {
+            // as long as the groups are where they should be step down along the groups order
+            while (curPos + newOffset < numGroups && curPos + orgOffset < numGroups && newOrder[curPos + newOffset] == origOrder[curPos + orgOffset]) {
+              curPos++;
+            }
+
+            // all ok
+            if (curPos + newOffset >= numGroups) {
+              break;
+            }
+
+            // not all ok
+            // if dragged group was move upwards everything below should have an offset
+            if (newOrder[curPos + newOffset] == draggedId) {
+              newOffset = 1;
+              continue;
+            }
+            // if dragged group was move downwards everything above should have an offset
+            else if (origOrder[curPos + orgOffset] == draggedId) {
+                orgOffset = 1;
+                continue;
+              }
+              // found a group (apart from dragged group) that has the wrong position -> switch with the
+              // group at the position where other one should be, fix index arrays and continue
+              else {
+                  var slippedPosition = newOrder.indexOf(origOrder[curPos + orgOffset]);
+                  var switchGroup = groupsData.get(newOrder[curPos + newOffset]);
+                  var shouldBeGroup = groupsData.get(origOrder[curPos + orgOffset]);
+                  this.options.groupOrderSwap(switchGroup, shouldBeGroup, groupsData);
+                  groupsData.update(switchGroup);
+                  groupsData.update(shouldBeGroup);
+
+                  var switchGroupId = newOrder[curPos + newOffset];
+                  newOrder[curPos + newOffset] = origOrder[curPos + orgOffset];
+                  newOrder[slippedPosition] = switchGroupId;
+
+                  curPos++;
+                }
+          }
+        }
+      }
+    }
+  };
+
+  ItemSet.prototype._onGroupDragEnd = function (event) {
+    if (this.options.groupEditable.order && this.groupTouchParams.group) {
+      event.stopPropagation();
+
+      // update existing group
+      var me = this;
+      var id = me.groupTouchParams.group.groupId;
+      var dataset = me.groupsData.getDataSet();
+      var groupData = util.extend({}, dataset.get(id)); // clone the data
+      me.options.onMoveGroup(groupData, function (groupData) {
+        if (groupData) {
+          // apply changes
+          groupData[dataset._fieldId] = id; // ensure the group contains its id (can be undefined)
+          dataset.update(groupData);
+        } else {
+
+          // fetch current order of groups
+          var newOrder = dataset.getIds({
+            order: me.options.groupOrder
+          });
+
+          // restore original order
+          if (!util.equalArray(newOrder, me.groupTouchParams.originalOrder)) {
+            var origOrder = me.groupTouchParams.originalOrder;
+            var numGroups = Math.min(origOrder.length, newOrder.length);
+            var curPos = 0;
+            while (curPos < numGroups) {
+              // as long as the groups are where they should be step down along the groups order
+              while (curPos < numGroups && newOrder[curPos] == origOrder[curPos]) {
+                curPos++;
+              }
+
+              // all ok
+              if (curPos >= numGroups) {
+                break;
+              }
+
+              // found a group that has the wrong position -> switch with the
+              // group at the position where other one should be, fix index arrays and continue
+              var slippedPosition = newOrder.indexOf(origOrder[curPos]);
+              var switchGroup = dataset.get(newOrder[curPos]);
+              var shouldBeGroup = dataset.get(origOrder[curPos]);
+              me.options.groupOrderSwap(switchGroup, shouldBeGroup, dataset);
+              groupsData.update(switchGroup);
+              groupsData.update(shouldBeGroup);
+
+              var switchGroupId = newOrder[curPos];
+              newOrder[curPos] = origOrder[curPos];
+              newOrder[slippedPosition] = switchGroupId;
+
+              curPos++;
+            }
+          }
+        }
       });
+
+      me.body.emitter.emit('groupDragged', { groupId: id });
     }
   };
 
@@ -17495,7 +17374,7 @@ return /******/ (function(modules) { // webpackBootstrap
       var scale = this.body.util.getScale();
       var step = this.body.util.getStep();
 
-      var newItem = {
+      var newItemData = {
         start: snap ? snap(start, scale, step) : start,
         content: 'new item'
       };
@@ -17503,18 +17382,19 @@ return /******/ (function(modules) { // webpackBootstrap
       // when default type is a range, add a default end date to the new item
       if (this.options.type === 'range') {
         var end = this.body.util.toTime(x + this.props.width / 5);
-        newItem.end = snap ? snap(end, scale, step) : end;
+        newItemData.end = snap ? snap(end, scale, step) : end;
       }
 
-      newItem[this.itemsData._fieldId] = util.randomUUID();
+      newItemData[this.itemsData._fieldId] = util.randomUUID();
 
       var group = this.groupFromTarget(event);
       if (group) {
-        newItem.group = group.groupId;
+        newItemData.group = group.groupId;
       }
 
       // execute async handler to customize (or cancel) adding an item
-      this.options.onAdd(newItem, function (item) {
+      newItemData = this._cloneItemData(newItemData); // convert start and end to the correct type
+      this.options.onAdd(newItemData, function (item) {
         if (item) {
           me.itemsData.getDataSet().add(item);
           // TODO: need to trigger a redraw?
@@ -17543,35 +17423,48 @@ return /******/ (function(modules) { // webpackBootstrap
 
       if (shiftKey && this.options.multiselect) {
         // select all items between the old selection and the tapped item
+        var itemGroup = this.itemsData.get(item.id).group;
+
+        // when filtering get the group of the last selected item
+        var lastSelectedGroup = undefined;
+        if (this.options.multiselectPerGroup) {
+          if (selection.length > 0) {
+            lastSelectedGroup = this.itemsData.get(selection[0]).group;
+          }
+        }
 
         // determine the selection range
-        selection.push(item.id);
+        if (!this.options.multiselectPerGroup || lastSelectedGroup == undefined || lastSelectedGroup == itemGroup) {
+          selection.push(item.id);
+        }
         var range = ItemSet._getItemRange(this.itemsData.get(selection, this.itemOptions));
 
-        // select all items within the selection range
-        selection = [];
-        for (var id in this.items) {
-          if (this.items.hasOwnProperty(id)) {
-            var _item = this.items[id];
-            var start = _item.data.start;
-            var end = _item.data.end !== undefined ? _item.data.end : start;
+        if (!this.options.multiselectPerGroup || lastSelectedGroup == itemGroup) {
+          // select all items within the selection range
+          selection = [];
+          for (var id in this.items) {
+            if (this.items.hasOwnProperty(id)) {
+              var _item = this.items[id];
+              var start = _item.data.start;
+              var end = _item.data.end !== undefined ? _item.data.end : start;
 
-            if (start >= range.min && end <= range.max && !(_item instanceof BackgroundItem)) {
-              selection.push(_item.id); // do not use id but item.id, id itself is stringified
+              if (start >= range.min && end <= range.max && (!this.options.multiselectPerGroup || lastSelectedGroup == this.itemsData.get(_item.id).group) && !(_item instanceof BackgroundItem)) {
+                selection.push(_item.id); // do not use id but item.id, id itself is stringified
+              }
             }
           }
         }
       } else {
-        // add/remove this item from the current selection
-        var index = selection.indexOf(item.id);
-        if (index == -1) {
-          // item is not yet selected -> select it
-          selection.push(item.id);
-        } else {
-          // item is already selected -> deselect it
-          selection.splice(index, 1);
+          // add/remove this item from the current selection
+          var index = selection.indexOf(item.id);
+          if (index == -1) {
+            // item is not yet selected -> select it
+            selection.push(item.id);
+          } else {
+            // item is already selected -> deselect it
+            selection.splice(index, 1);
+          }
         }
-      }
 
       this.setSelection(selection);
 
@@ -17681,17 +17574,754 @@ return /******/ (function(modules) { // webpackBootstrap
     return null;
   };
 
+  /**
+   * Clone the data of an item, and "normalize" it: convert the start and end date
+   * to the type (Date, Moment, ...) configured in the DataSet. If not configured,
+   * start and end are converted to Date.
+   * @param {Object} itemData, typically `item.data`
+   * @param {string} [type]  Optional Date type. If not provided, the type from the DataSet is taken
+   * @return {Object} The cloned object
+   * @private
+   */
+  ItemSet.prototype._cloneItemData = function (itemData, type) {
+    var clone = util.extend({}, itemData);
+
+    if (!type) {
+      // convert start and end date to the type (Date, Moment, ...) configured in the DataSet
+      type = this.itemsData.getDataSet()._options.type;
+    }
+
+    if (clone.start != undefined) {
+      clone.start = util.convert(clone.start, type && type.start || 'Date');
+    }
+    if (clone.end != undefined) {
+      clone.end = util.convert(clone.end, type && type.end || 'Date');
+    }
+
+    return clone;
+  };
+
   module.exports = ItemSet;
 
 /***/ },
-/* 32 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var stack = __webpack_require__(33);
-  var RangeItem = __webpack_require__(34);
+  var moment = __webpack_require__(2);
+  var DateUtil = __webpack_require__(27);
+  var util = __webpack_require__(1);
+
+  /**
+   * @constructor  TimeStep
+   * The class TimeStep is an iterator for dates. You provide a start date and an
+   * end date. The class itself determines the best scale (step size) based on the
+   * provided start Date, end Date, and minimumStep.
+   *
+   * If minimumStep is provided, the step size is chosen as close as possible
+   * to the minimumStep but larger than minimumStep. If minimumStep is not
+   * provided, the scale is set to 1 DAY.
+   * The minimumStep should correspond with the onscreen size of about 6 characters
+   *
+   * Alternatively, you can set a scale by hand.
+   * After creation, you can initialize the class by executing first(). Then you
+   * can iterate from the start date to the end date via next(). You can check if
+   * the end date is reached with the function hasNext(). After each step, you can
+   * retrieve the current date via getCurrent().
+   * The TimeStep has scales ranging from milliseconds, seconds, minutes, hours,
+   * days, to years.
+   *
+   * Version: 1.2
+   *
+   * @param {Date} [start]         The start date, for example new Date(2010, 9, 21)
+   *                               or new Date(2010, 9, 21, 23, 45, 00)
+   * @param {Date} [end]           The end date
+   * @param {Number} [minimumStep] Optional. Minimum step size in milliseconds
+   */
+  function TimeStep(start, end, minimumStep, hiddenDates) {
+    this.moment = moment;
+
+    // variables
+    this.current = this.moment();
+    this._start = this.moment();
+    this._end = this.moment();
+
+    this.autoScale = true;
+    this.scale = 'day';
+    this.step = 1;
+
+    // initialize the range
+    this.setRange(start, end, minimumStep);
+
+    // hidden Dates options
+    this.switchedDay = false;
+    this.switchedMonth = false;
+    this.switchedYear = false;
+    if (Array.isArray(hiddenDates)) {
+      this.hiddenDates = hiddenDates;
+    } else if (hiddenDates != undefined) {
+      this.hiddenDates = [hiddenDates];
+    } else {
+      this.hiddenDates = [];
+    }
+
+    this.format = TimeStep.FORMAT; // default formatting
+  }
+
+  // Time formatting
+  TimeStep.FORMAT = {
+    minorLabels: {
+      millisecond: 'SSS',
+      second: 's',
+      minute: 'HH:mm',
+      hour: 'HH:mm',
+      weekday: 'ddd D',
+      day: 'D',
+      month: 'MMM',
+      year: 'YYYY'
+    },
+    majorLabels: {
+      millisecond: 'HH:mm:ss',
+      second: 'D MMMM HH:mm',
+      minute: 'ddd D MMMM',
+      hour: 'ddd D MMMM',
+      weekday: 'MMMM YYYY',
+      day: 'MMMM YYYY',
+      month: 'YYYY',
+      year: ''
+    }
+  };
+
+  /**
+   * Set custom constructor function for moment. Can be used to set dates
+   * to UTC or to set a utcOffset.
+   * @param {function} moment
+   */
+  TimeStep.prototype.setMoment = function (moment) {
+    this.moment = moment;
+
+    // update the date properties, can have a new utcOffset
+    this.current = this.moment(this.current);
+    this._start = this.moment(this._start);
+    this._end = this.moment(this._end);
+  };
+
+  /**
+   * Set custom formatting for the minor an major labels of the TimeStep.
+   * Both `minorLabels` and `majorLabels` are an Object with properties:
+   * 'millisecond', 'second', 'minute', 'hour', 'weekday', 'day', 'month', 'year'.
+   * @param {{minorLabels: Object, majorLabels: Object}} format
+   */
+  TimeStep.prototype.setFormat = function (format) {
+    var defaultFormat = util.deepExtend({}, TimeStep.FORMAT);
+    this.format = util.deepExtend(defaultFormat, format);
+  };
+
+  /**
+   * Set a new range
+   * If minimumStep is provided, the step size is chosen as close as possible
+   * to the minimumStep but larger than minimumStep. If minimumStep is not
+   * provided, the scale is set to 1 DAY.
+   * The minimumStep should correspond with the onscreen size of about 6 characters
+   * @param {Date} [start]      The start date and time.
+   * @param {Date} [end]        The end date and time.
+   * @param {int} [minimumStep] Optional. Minimum step size in milliseconds
+   */
+  TimeStep.prototype.setRange = function (start, end, minimumStep) {
+    if (!(start instanceof Date) || !(end instanceof Date)) {
+      throw "No legal start or end date in method setRange";
+    }
+
+    this._start = start != undefined ? this.moment(start.valueOf()) : new Date();
+    this._end = end != undefined ? this.moment(end.valueOf()) : new Date();
+
+    if (this.autoScale) {
+      this.setMinimumStep(minimumStep);
+    }
+  };
+
+  /**
+   * Set the range iterator to the start date.
+   */
+  TimeStep.prototype.start = function () {
+    this.current = this._start.clone();
+    this.roundToMinor();
+  };
+
+  /**
+   * Round the current date to the first minor date value
+   * This must be executed once when the current date is set to start Date
+   */
+  TimeStep.prototype.roundToMinor = function () {
+    // round to floor
+    // IMPORTANT: we have no breaks in this switch! (this is no bug)
+    // noinspection FallThroughInSwitchStatementJS
+    switch (this.scale) {
+      case 'year':
+        this.current.year(this.step * Math.floor(this.current.year() / this.step));
+        this.current.month(0);
+      case 'month':
+        this.current.date(1);
+      case 'day': // intentional fall through
+      case 'weekday':
+        this.current.hours(0);
+      case 'hour':
+        this.current.minutes(0);
+      case 'minute':
+        this.current.seconds(0);
+      case 'second':
+        this.current.milliseconds(0);
+      //case 'millisecond': // nothing to do for milliseconds
+    }
+
+    if (this.step != 1) {
+      // round down to the first minor value that is a multiple of the current step size
+      switch (this.scale) {
+        case 'millisecond':
+          this.current.subtract(this.current.milliseconds() % this.step, 'milliseconds');break;
+        case 'second':
+          this.current.subtract(this.current.seconds() % this.step, 'seconds');break;
+        case 'minute':
+          this.current.subtract(this.current.minutes() % this.step, 'minutes');break;
+        case 'hour':
+          this.current.subtract(this.current.hours() % this.step, 'hours');break;
+        case 'weekday': // intentional fall through
+        case 'day':
+          this.current.subtract((this.current.date() - 1) % this.step, 'day');break;
+        case 'month':
+          this.current.subtract(this.current.month() % this.step, 'month');break;
+        case 'year':
+          this.current.subtract(this.current.year() % this.step, 'year');break;
+        default:
+          break;
+      }
+    }
+  };
+
+  /**
+   * Check if the there is a next step
+   * @return {boolean}  true if the current date has not passed the end date
+   */
+  TimeStep.prototype.hasNext = function () {
+    return this.current.valueOf() <= this._end.valueOf();
+  };
+
+  /**
+   * Do the next step
+   */
+  TimeStep.prototype.next = function () {
+    var prev = this.current.valueOf();
+
+    // Two cases, needed to prevent issues with switching daylight savings
+    // (end of March and end of October)
+    if (this.current.month() < 6) {
+      switch (this.scale) {
+        case 'millisecond':
+          this.current.add(this.step, 'millisecond');break;
+        case 'second':
+          this.current.add(this.step, 'second');break;
+        case 'minute':
+          this.current.add(this.step, 'minute');break;
+        case 'hour':
+          this.current.add(this.step, 'hour');
+          // in case of skipping an hour for daylight savings, adjust the hour again (else you get: 0h 5h 9h ... instead of 0h 4h 8h ...)
+          // TODO: is this still needed now we use the function of moment.js?
+          this.current.subtract(this.current.hours() % this.step, 'hour');
+          break;
+        case 'weekday': // intentional fall through
+        case 'day':
+          this.current.add(this.step, 'day');break;
+        case 'month':
+          this.current.add(this.step, 'month');break;
+        case 'year':
+          this.current.add(this.step, 'year');break;
+        default:
+          break;
+      }
+    } else {
+      switch (this.scale) {
+        case 'millisecond':
+          this.current.add(this.step, 'millisecond');break;
+        case 'second':
+          this.current.add(this.step, 'second');break;
+        case 'minute':
+          this.current.add(this.step, 'minute');break;
+        case 'hour':
+          this.current.add(this.step, 'hour');break;
+        case 'weekday': // intentional fall through
+        case 'day':
+          this.current.add(this.step, 'day');break;
+        case 'month':
+          this.current.add(this.step, 'month');break;
+        case 'year':
+          this.current.add(this.step, 'year');break;
+        default:
+          break;
+      }
+    }
+
+    if (this.step != 1) {
+      // round down to the correct major value
+      switch (this.scale) {
+        case 'millisecond':
+          if (this.current.milliseconds() < this.step) this.current.milliseconds(0);break;
+        case 'second':
+          if (this.current.seconds() < this.step) this.current.seconds(0);break;
+        case 'minute':
+          if (this.current.minutes() < this.step) this.current.minutes(0);break;
+        case 'hour':
+          if (this.current.hours() < this.step) this.current.hours(0);break;
+        case 'weekday': // intentional fall through
+        case 'day':
+          if (this.current.date() < this.step + 1) this.current.date(1);break;
+        case 'month':
+          if (this.current.month() < this.step) this.current.month(0);break;
+        case 'year':
+          break; // nothing to do for year
+        default:
+          break;
+      }
+    }
+
+    // safety mechanism: if current time is still unchanged, move to the end
+    if (this.current.valueOf() == prev) {
+      this.current = this._end.clone();
+    }
+
+    DateUtil.stepOverHiddenDates(this.moment, this, prev);
+  };
+
+  /**
+   * Get the current datetime
+   * @return {Moment}  current The current date
+   */
+  TimeStep.prototype.getCurrent = function () {
+    return this.current;
+  };
+
+  /**
+   * Set a custom scale. Autoscaling will be disabled.
+   * For example setScale('minute', 5) will result
+   * in minor steps of 5 minutes, and major steps of an hour.
+   *
+   * @param {{scale: string, step: number}} params
+   *                               An object containing two properties:
+   *                               - A string 'scale'. Choose from 'millisecond', 'second',
+   *                                 'minute', 'hour', 'weekday', 'day', 'month', 'year'.
+   *                               - A number 'step'. A step size, by default 1.
+   *                                 Choose for example 1, 2, 5, or 10.
+   */
+  TimeStep.prototype.setScale = function (params) {
+    if (params && typeof params.scale == 'string') {
+      this.scale = params.scale;
+      this.step = params.step > 0 ? params.step : 1;
+      this.autoScale = false;
+    }
+  };
+
+  /**
+   * Enable or disable autoscaling
+   * @param {boolean} enable  If true, autoascaling is set true
+   */
+  TimeStep.prototype.setAutoScale = function (enable) {
+    this.autoScale = enable;
+  };
+
+  /**
+   * Automatically determine the scale that bests fits the provided minimum step
+   * @param {Number} [minimumStep]  The minimum step size in milliseconds
+   */
+  TimeStep.prototype.setMinimumStep = function (minimumStep) {
+    if (minimumStep == undefined) {
+      return;
+    }
+
+    //var b = asc + ds;
+
+    var stepYear = 1000 * 60 * 60 * 24 * 30 * 12;
+    var stepMonth = 1000 * 60 * 60 * 24 * 30;
+    var stepDay = 1000 * 60 * 60 * 24;
+    var stepHour = 1000 * 60 * 60;
+    var stepMinute = 1000 * 60;
+    var stepSecond = 1000;
+    var stepMillisecond = 1;
+
+    // find the smallest step that is larger than the provided minimumStep
+    if (stepYear * 1000 > minimumStep) {
+      this.scale = 'year';this.step = 1000;
+    }
+    if (stepYear * 500 > minimumStep) {
+      this.scale = 'year';this.step = 500;
+    }
+    if (stepYear * 100 > minimumStep) {
+      this.scale = 'year';this.step = 100;
+    }
+    if (stepYear * 50 > minimumStep) {
+      this.scale = 'year';this.step = 50;
+    }
+    if (stepYear * 10 > minimumStep) {
+      this.scale = 'year';this.step = 10;
+    }
+    if (stepYear * 5 > minimumStep) {
+      this.scale = 'year';this.step = 5;
+    }
+    if (stepYear > minimumStep) {
+      this.scale = 'year';this.step = 1;
+    }
+    if (stepMonth * 3 > minimumStep) {
+      this.scale = 'month';this.step = 3;
+    }
+    if (stepMonth > minimumStep) {
+      this.scale = 'month';this.step = 1;
+    }
+    if (stepDay * 5 > minimumStep) {
+      this.scale = 'day';this.step = 5;
+    }
+    if (stepDay * 2 > minimumStep) {
+      this.scale = 'day';this.step = 2;
+    }
+    if (stepDay > minimumStep) {
+      this.scale = 'day';this.step = 1;
+    }
+    if (stepDay / 2 > minimumStep) {
+      this.scale = 'weekday';this.step = 1;
+    }
+    if (stepHour * 4 > minimumStep) {
+      this.scale = 'hour';this.step = 4;
+    }
+    if (stepHour > minimumStep) {
+      this.scale = 'hour';this.step = 1;
+    }
+    if (stepMinute * 15 > minimumStep) {
+      this.scale = 'minute';this.step = 15;
+    }
+    if (stepMinute * 10 > minimumStep) {
+      this.scale = 'minute';this.step = 10;
+    }
+    if (stepMinute * 5 > minimumStep) {
+      this.scale = 'minute';this.step = 5;
+    }
+    if (stepMinute > minimumStep) {
+      this.scale = 'minute';this.step = 1;
+    }
+    if (stepSecond * 15 > minimumStep) {
+      this.scale = 'second';this.step = 15;
+    }
+    if (stepSecond * 10 > minimumStep) {
+      this.scale = 'second';this.step = 10;
+    }
+    if (stepSecond * 5 > minimumStep) {
+      this.scale = 'second';this.step = 5;
+    }
+    if (stepSecond > minimumStep) {
+      this.scale = 'second';this.step = 1;
+    }
+    if (stepMillisecond * 200 > minimumStep) {
+      this.scale = 'millisecond';this.step = 200;
+    }
+    if (stepMillisecond * 100 > minimumStep) {
+      this.scale = 'millisecond';this.step = 100;
+    }
+    if (stepMillisecond * 50 > minimumStep) {
+      this.scale = 'millisecond';this.step = 50;
+    }
+    if (stepMillisecond * 10 > minimumStep) {
+      this.scale = 'millisecond';this.step = 10;
+    }
+    if (stepMillisecond * 5 > minimumStep) {
+      this.scale = 'millisecond';this.step = 5;
+    }
+    if (stepMillisecond > minimumStep) {
+      this.scale = 'millisecond';this.step = 1;
+    }
+  };
+
+  /**
+   * Snap a date to a rounded value.
+   * The snap intervals are dependent on the current scale and step.
+   * Static function
+   * @param {Date} date    the date to be snapped.
+   * @param {string} scale Current scale, can be 'millisecond', 'second',
+   *                       'minute', 'hour', 'weekday, 'day', 'month', 'year'.
+   * @param {number} step  Current step (1, 2, 4, 5, ...
+   * @return {Date} snappedDate
+   */
+  TimeStep.snap = function (date, scale, step) {
+    var clone = moment(date);
+
+    if (scale == 'year') {
+      var year = clone.year() + Math.round(clone.month() / 12);
+      clone.year(Math.round(year / step) * step);
+      clone.month(0);
+      clone.date(0);
+      clone.hours(0);
+      clone.minutes(0);
+      clone.seconds(0);
+      clone.milliseconds(0);
+    } else if (scale == 'month') {
+      if (clone.date() > 15) {
+        clone.date(1);
+        clone.add(1, 'month');
+        // important: first set Date to 1, after that change the month.
+      } else {
+          clone.date(1);
+        }
+
+      clone.hours(0);
+      clone.minutes(0);
+      clone.seconds(0);
+      clone.milliseconds(0);
+    } else if (scale == 'day') {
+      //noinspection FallthroughInSwitchStatementJS
+      switch (step) {
+        case 5:
+        case 2:
+          clone.hours(Math.round(clone.hours() / 24) * 24);break;
+        default:
+          clone.hours(Math.round(clone.hours() / 12) * 12);break;
+      }
+      clone.minutes(0);
+      clone.seconds(0);
+      clone.milliseconds(0);
+    } else if (scale == 'weekday') {
+      //noinspection FallthroughInSwitchStatementJS
+      switch (step) {
+        case 5:
+        case 2:
+          clone.hours(Math.round(clone.hours() / 12) * 12);break;
+        default:
+          clone.hours(Math.round(clone.hours() / 6) * 6);break;
+      }
+      clone.minutes(0);
+      clone.seconds(0);
+      clone.milliseconds(0);
+    } else if (scale == 'hour') {
+      switch (step) {
+        case 4:
+          clone.minutes(Math.round(clone.minutes() / 60) * 60);break;
+        default:
+          clone.minutes(Math.round(clone.minutes() / 30) * 30);break;
+      }
+      clone.seconds(0);
+      clone.milliseconds(0);
+    } else if (scale == 'minute') {
+      //noinspection FallthroughInSwitchStatementJS
+      switch (step) {
+        case 15:
+        case 10:
+          clone.minutes(Math.round(clone.minutes() / 5) * 5);
+          clone.seconds(0);
+          break;
+        case 5:
+          clone.seconds(Math.round(clone.seconds() / 60) * 60);break;
+        default:
+          clone.seconds(Math.round(clone.seconds() / 30) * 30);break;
+      }
+      clone.milliseconds(0);
+    } else if (scale == 'second') {
+      //noinspection FallthroughInSwitchStatementJS
+      switch (step) {
+        case 15:
+        case 10:
+          clone.seconds(Math.round(clone.seconds() / 5) * 5);
+          clone.milliseconds(0);
+          break;
+        case 5:
+          clone.milliseconds(Math.round(clone.milliseconds() / 1000) * 1000);break;
+        default:
+          clone.milliseconds(Math.round(clone.milliseconds() / 500) * 500);break;
+      }
+    } else if (scale == 'millisecond') {
+      var _step = step > 5 ? step / 2 : 1;
+      clone.milliseconds(Math.round(clone.milliseconds() / _step) * _step);
+    }
+
+    return clone;
+  };
+
+  /**
+   * Check if the current value is a major value (for example when the step
+   * is DAY, a major value is each first day of the MONTH)
+   * @return {boolean} true if current date is major, else false.
+   */
+  TimeStep.prototype.isMajor = function () {
+    if (this.switchedYear == true) {
+      this.switchedYear = false;
+      switch (this.scale) {
+        case 'year':
+        case 'month':
+        case 'weekday':
+        case 'day':
+        case 'hour':
+        case 'minute':
+        case 'second':
+        case 'millisecond':
+          return true;
+        default:
+          return false;
+      }
+    } else if (this.switchedMonth == true) {
+      this.switchedMonth = false;
+      switch (this.scale) {
+        case 'weekday':
+        case 'day':
+        case 'hour':
+        case 'minute':
+        case 'second':
+        case 'millisecond':
+          return true;
+        default:
+          return false;
+      }
+    } else if (this.switchedDay == true) {
+      this.switchedDay = false;
+      switch (this.scale) {
+        case 'millisecond':
+        case 'second':
+        case 'minute':
+        case 'hour':
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    var date = this.moment(this.current);
+    switch (this.scale) {
+      case 'millisecond':
+        return date.milliseconds() == 0;
+      case 'second':
+        return date.seconds() == 0;
+      case 'minute':
+        return date.hours() == 0 && date.minutes() == 0;
+      case 'hour':
+        return date.hours() == 0;
+      case 'weekday': // intentional fall through
+      case 'day':
+        return date.date() == 1;
+      case 'month':
+        return date.month() == 0;
+      case 'year':
+        return false;
+      default:
+        return false;
+    }
+  };
+
+  /**
+   * Returns formatted text for the minor axislabel, depending on the current
+   * date and the scale. For example when scale is MINUTE, the current time is
+   * formatted as "hh:mm".
+   * @param {Date} [date] custom date. if not provided, current date is taken
+   */
+  TimeStep.prototype.getLabelMinor = function (date) {
+    if (date == undefined) {
+      date = this.current;
+    }
+
+    var format = this.format.minorLabels[this.scale];
+    return format && format.length > 0 ? this.moment(date).format(format) : '';
+  };
+
+  /**
+   * Returns formatted text for the major axis label, depending on the current
+   * date and the scale. For example when scale is MINUTE, the major scale is
+   * hours, and the hour will be formatted as "hh".
+   * @param {Date} [date] custom date. if not provided, current date is taken
+   */
+  TimeStep.prototype.getLabelMajor = function (date) {
+    if (date == undefined) {
+      date = this.current;
+    }
+
+    var format = this.format.majorLabels[this.scale];
+    return format && format.length > 0 ? this.moment(date).format(format) : '';
+  };
+
+  TimeStep.prototype.getClassName = function () {
+    var _moment = this.moment;
+    var m = this.moment(this.current);
+    var current = m.locale ? m.locale('en') : m.lang('en'); // old versions of moment have .lang() function
+    var step = this.step;
+
+    function even(value) {
+      return value / step % 2 == 0 ? ' vis-even' : ' vis-odd';
+    }
+
+    function today(date) {
+      if (date.isSame(new Date(), 'day')) {
+        return ' vis-today';
+      }
+      if (date.isSame(_moment().add(1, 'day'), 'day')) {
+        return ' vis-tomorrow';
+      }
+      if (date.isSame(_moment().add(-1, 'day'), 'day')) {
+        return ' vis-yesterday';
+      }
+      return '';
+    }
+
+    function currentWeek(date) {
+      return date.isSame(new Date(), 'week') ? ' vis-current-week' : '';
+    }
+
+    function currentMonth(date) {
+      return date.isSame(new Date(), 'month') ? ' vis-current-month' : '';
+    }
+
+    function currentYear(date) {
+      return date.isSame(new Date(), 'year') ? ' vis-current-year' : '';
+    }
+
+    switch (this.scale) {
+      case 'millisecond':
+        return even(current.milliseconds()).trim();
+
+      case 'second':
+        return even(current.seconds()).trim();
+
+      case 'minute':
+        return even(current.minutes()).trim();
+
+      case 'hour':
+        var hours = current.hours();
+        if (this.step == 4) {
+          hours = hours + '-h' + (hours + 4);
+        }
+        return 'vis-h' + hours + today(current) + even(current.hours());
+
+      case 'weekday':
+        return 'vis-' + current.format('dddd').toLowerCase() + today(current) + currentWeek(current) + even(current.date());
+
+      case 'day':
+        var day = current.date();
+        var month = current.format('MMMM').toLowerCase();
+        return 'vis-day' + day + ' vis-' + month + currentMonth(current) + even(day - 1);
+
+      case 'month':
+        return 'vis-' + current.format('MMMM').toLowerCase() + currentMonth(current) + even(current.month());
+
+      case 'year':
+        var year = current.year();
+        return 'vis-year' + year + currentYear(current) + even(year);
+
+      default:
+        return '';
+    }
+  };
+
+  module.exports = TimeStep;
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  var util = __webpack_require__(1);
+  var stack = __webpack_require__(32);
+  var RangeItem = __webpack_require__(33);
 
   /**
    * @constructor Group
@@ -17723,7 +18353,7 @@ return /******/ (function(modules) { // webpackBootstrap
     };
     this.checkRangedItems = false; // needed to refresh the ranged items if the window is programatically changed with NO overlap.
     var me = this;
-    this.itemSet.body.emitter.on('checkRangedItems', function () {
+    this.itemSet.body.emitter.on("checkRangedItems", function () {
       me.checkRangedItems = true;
     });
 
@@ -17738,7 +18368,11 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   Group.prototype._create = function () {
     var label = document.createElement('div');
-    label.className = 'vis-label';
+    if (this.itemSet.options.groupEditable.order) {
+      label.className = 'vis-label draggable';
+    } else {
+      label.className = 'vis-label';
+    }
     this.dom.label = label;
 
     var inner = document.createElement('div');
@@ -17859,6 +18493,9 @@ return /******/ (function(modules) { // webpackBootstrap
       restack = true;
     }
 
+    // recalculate the height of the subgroups
+    this._calculateSubGroupHeights();
+
     // reposition visible items vertically
     if (typeof this.itemSet.options.order === 'function') {
       // a custom order function
@@ -17927,6 +18564,25 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
+   * recalculate the height of the subgroups
+   * @private
+   */
+  Group.prototype._calculateSubGroupHeights = function () {
+    if (Object.keys(this.subgroups).length > 0) {
+      var me = this;
+
+      this.resetSubgroups();
+
+      util.forEach(this.visibleItems, function (item) {
+        if (item.data.subgroup !== undefined) {
+          me.subgroups[item.data.subgroup].height = Math.max(me.subgroups[item.data.subgroup].height, item.height);
+          me.subgroups[item.data.subgroup].visible = true;
+        }
+      });
+    }
+  };
+
+  /**
    * recalculate the height of the group
    * @param {{item: {horizontal: number, vertical: number}, axis: number}} margin
    * @returns {number} Returns the height
@@ -17936,20 +18592,12 @@ return /******/ (function(modules) { // webpackBootstrap
     // recalculate the height of the group
     var height;
     var visibleItems = this.visibleItems;
-    //var visibleSubgroups = [];
-    //this.visibleSubgroups = 0;
-    this.resetSubgroups();
-    var me = this;
     if (visibleItems.length > 0) {
       var min = visibleItems[0].top;
       var max = visibleItems[0].top + visibleItems[0].height;
       util.forEach(visibleItems, function (item) {
         min = Math.min(min, item.top);
         max = Math.max(max, item.top + item.height);
-        if (item.data.subgroup !== undefined) {
-          me.subgroups[item.data.subgroup].height = Math.max(me.subgroups[item.data.subgroup].height, item.height);
-          me.subgroups[item.data.subgroup].visible = true;
-        }
       });
       if (min > margin.axis) {
         // there is an empty gap between the lowest item and the axis
@@ -18291,7 +18939,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Group;
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports) {
 
   // Utility functions for ordering and stacking of items
@@ -18415,13 +19063,13 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Hammer = __webpack_require__(3);
-  var Item = __webpack_require__(2);
+  var Hammer = __webpack_require__(20);
+  var Item = __webpack_require__(34);
 
   /**
    * @constructor RangeItem
@@ -18608,10 +19256,10 @@ return /******/ (function(modules) { // webpackBootstrap
       //       a width which will not change when moving the Timeline
       //       So no re-stacking needed, which is nicer for the eye;
     } else {
-      this.left = start;
-      this.width = boxWidth;
-      contentWidth = Math.min(end - start, this.props.content.width);
-    }
+        this.left = start;
+        this.width = boxWidth;
+        contentWidth = Math.min(end - start, this.props.content.width);
+      }
 
     this.dom.box.style.left = this.left + 'px';
     this.dom.box.style.width = boxWidth + 'px';
@@ -18639,12 +19287,12 @@ return /******/ (function(modules) { // webpackBootstrap
             contentLeft = -contentWidth; // ensure it's not visible anymore
           }
         } else {
-          if (start < 0) {
-            contentLeft = -start;
-          } else {
-            contentLeft = 0;
+            if (start < 0) {
+              contentLeft = -start;
+            } else {
+              contentLeft = 0;
+            }
           }
-        }
         this.dom.content.style.left = contentLeft + 'px';
     }
   };
@@ -18711,720 +19359,314 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = RangeItem;
 
 /***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  var Hammer = __webpack_require__(20);
+  var util = __webpack_require__(1);
+
+  /**
+   * @constructor Item
+   * @param {Object} data             Object containing (optional) parameters type,
+   *                                  start, end, content, group, className.
+   * @param {{toScreen: function, toTime: function}} conversion
+   *                                  Conversion functions from time to screen and vice versa
+   * @param {Object} options          Configuration options
+   *                                  // TODO: describe available options
+   */
+  function Item(data, conversion, options) {
+    this.id = null;
+    this.parent = null;
+    this.data = data;
+    this.dom = null;
+    this.conversion = conversion || {};
+    this.options = options || {};
+
+    this.selected = false;
+    this.displayed = false;
+    this.dirty = true;
+
+    this.top = null;
+    this.left = null;
+    this.width = null;
+    this.height = null;
+
+    this.editable = null;
+    if (this.data && this.data.hasOwnProperty('editable') && typeof this.data.editable === 'boolean') {
+      this.editable = data.editable;
+    }
+  }
+
+  Item.prototype.stack = true;
+
+  /**
+   * Select current item
+   */
+  Item.prototype.select = function () {
+    this.selected = true;
+    this.dirty = true;
+    if (this.displayed) this.redraw();
+  };
+
+  /**
+   * Unselect current item
+   */
+  Item.prototype.unselect = function () {
+    this.selected = false;
+    this.dirty = true;
+    if (this.displayed) this.redraw();
+  };
+
+  /**
+   * Set data for the item. Existing data will be updated. The id should not
+   * be changed. When the item is displayed, it will be redrawn immediately.
+   * @param {Object} data
+   */
+  Item.prototype.setData = function (data) {
+    var groupChanged = data.group != undefined && this.data.group != data.group;
+    if (groupChanged) {
+      this.parent.itemSet._moveToGroup(this, data.group);
+    }
+
+    if (data.hasOwnProperty('editable') && typeof data.editable === 'boolean') {
+      this.editable = data.editable;
+    }
+
+    this.data = data;
+    this.dirty = true;
+    if (this.displayed) this.redraw();
+  };
+
+  /**
+   * Set a parent for the item
+   * @param {ItemSet | Group} parent
+   */
+  Item.prototype.setParent = function (parent) {
+    if (this.displayed) {
+      this.hide();
+      this.parent = parent;
+      if (this.parent) {
+        this.show();
+      }
+    } else {
+      this.parent = parent;
+    }
+  };
+
+  /**
+   * Check whether this item is visible inside given range
+   * @returns {{start: Number, end: Number}} range with a timestamp for start and end
+   * @returns {boolean} True if visible
+   */
+  Item.prototype.isVisible = function (range) {
+    // Should be implemented by Item implementations
+    return false;
+  };
+
+  /**
+   * Show the Item in the DOM (when not already visible)
+   * @return {Boolean} changed
+   */
+  Item.prototype.show = function () {
+    return false;
+  };
+
+  /**
+   * Hide the Item from the DOM (when visible)
+   * @return {Boolean} changed
+   */
+  Item.prototype.hide = function () {
+    return false;
+  };
+
+  /**
+   * Repaint the item
+   */
+  Item.prototype.redraw = function () {
+    // should be implemented by the item
+  };
+
+  /**
+   * Reposition the Item horizontally
+   */
+  Item.prototype.repositionX = function () {
+    // should be implemented by the item
+  };
+
+  /**
+   * Reposition the Item vertically
+   */
+  Item.prototype.repositionY = function () {
+    // should be implemented by the item
+  };
+
+  /**
+   * Repaint a delete button on the top right of the item when the item is selected
+   * @param {HTMLElement} anchor
+   * @protected
+   */
+  Item.prototype._repaintDeleteButton = function (anchor) {
+    var editable = (this.options.editable.remove || this.data.editable === true) && this.data.editable !== false;
+
+    if (this.selected && editable && !this.dom.deleteButton) {
+      // create and show button
+      var me = this;
+
+      var deleteButton = document.createElement('div');
+      deleteButton.className = 'vis-delete';
+      deleteButton.title = 'Delete this item';
+
+      // TODO: be able to destroy the delete button
+      new Hammer(deleteButton).on('tap', function (event) {
+        event.stopPropagation();
+        me.parent.removeFromDataSet(me);
+      });
+
+      anchor.appendChild(deleteButton);
+      this.dom.deleteButton = deleteButton;
+    } else if (!this.selected && this.dom.deleteButton) {
+      // remove button
+      if (this.dom.deleteButton.parentNode) {
+        this.dom.deleteButton.parentNode.removeChild(this.dom.deleteButton);
+      }
+      this.dom.deleteButton = null;
+    }
+  };
+
+  /**
+   * Set HTML contents for the item
+   * @param {Element} element   HTML element to fill with the contents
+   * @private
+   */
+  Item.prototype._updateContents = function (element) {
+    var content;
+    if (this.options.template) {
+      var itemData = this.parent.itemSet.itemsData.get(this.id); // get a clone of the data from the dataset
+      content = this.options.template(itemData);
+    } else {
+      content = this.data.content;
+    }
+
+    var changed = this._contentToString(this.content) !== this._contentToString(content);
+    if (changed) {
+      // only replace the content when changed
+      if (content instanceof Element) {
+        element.innerHTML = '';
+        element.appendChild(content);
+      } else if (content != undefined) {
+        element.innerHTML = content;
+      } else {
+        if (!(this.data.type == 'background' && this.data.content === undefined)) {
+          throw new Error('Property "content" missing in item ' + this.id);
+        }
+      }
+
+      this.content = content;
+    }
+  };
+
+  /**
+   * Set HTML contents for the item
+   * @param {Element} element   HTML element to fill with the contents
+   * @private
+   */
+  Item.prototype._updateTitle = function (element) {
+    if (this.data.title != null) {
+      element.title = this.data.title || '';
+    } else {
+      element.removeAttribute('vis-title');
+    }
+  };
+
+  /**
+   * Process dataAttributes timeline option and set as data- attributes on dom.content
+   * @param {Element} element   HTML element to which the attributes will be attached
+   * @private
+   */
+  Item.prototype._updateDataAttributes = function (element) {
+    if (this.options.dataAttributes && this.options.dataAttributes.length > 0) {
+      var attributes = [];
+
+      if (Array.isArray(this.options.dataAttributes)) {
+        attributes = this.options.dataAttributes;
+      } else if (this.options.dataAttributes == 'all') {
+        attributes = Object.keys(this.data);
+      } else {
+        return;
+      }
+
+      for (var i = 0; i < attributes.length; i++) {
+        var name = attributes[i];
+        var value = this.data[name];
+
+        if (value != null) {
+          element.setAttribute('data-' + name, value);
+        } else {
+          element.removeAttribute('data-' + name);
+        }
+      }
+    }
+  };
+
+  /**
+   * Update custom styles of the element
+   * @param element
+   * @private
+   */
+  Item.prototype._updateStyle = function (element) {
+    // remove old styles
+    if (this.style) {
+      util.removeCssText(element, this.style);
+      this.style = null;
+    }
+
+    // append new styles
+    if (this.data.style) {
+      util.addCssText(element, this.data.style);
+      this.style = this.data.style;
+    }
+  };
+
+  /**
+   * Stringify the items contents
+   * @param {string | Element | undefined} content
+   * @returns {string | undefined}
+   * @private
+   */
+  Item.prototype._contentToString = function (content) {
+    if (typeof content === 'string') return content;
+    if (content && 'outerHTML' in content) return content.outerHTML;
+    return content;
+  };
+
+  /**
+   * Return the width of the item left from its start date
+   * @return {number}
+   */
+  Item.prototype.getWidthLeft = function () {
+    return 0;
+  };
+
+  /**
+   * Return the width of the item right from the max of its start and end date
+   * @return {number}
+   */
+  Item.prototype.getWidthRight = function () {
+    return 0;
+  };
+
+  module.exports = Item;
+
+/***/ },
 /* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var moment = __webpack_require__(8);
-  var DateUtil = __webpack_require__(29);
-  var util = __webpack_require__(7);
-
-  /**
-   * @constructor  TimeStep
-   * The class TimeStep is an iterator for dates. You provide a start date and an
-   * end date. The class itself determines the best scale (step size) based on the
-   * provided start Date, end Date, and minimumStep.
-   *
-   * If minimumStep is provided, the step size is chosen as close as possible
-   * to the minimumStep but larger than minimumStep. If minimumStep is not
-   * provided, the scale is set to 1 DAY.
-   * The minimumStep should correspond with the onscreen size of about 6 characters
-   *
-   * Alternatively, you can set a scale by hand.
-   * After creation, you can initialize the class by executing first(). Then you
-   * can iterate from the start date to the end date via next(). You can check if
-   * the end date is reached with the function hasNext(). After each step, you can
-   * retrieve the current date via getCurrent().
-   * The TimeStep has scales ranging from milliseconds, seconds, minutes, hours,
-   * days, to years.
-   *
-   * Version: 1.2
-   *
-   * @param {Date} [start]         The start date, for example new Date(2010, 9, 21)
-   *                               or new Date(2010, 9, 21, 23, 45, 00)
-   * @param {Date} [end]           The end date
-   * @param {Number} [minimumStep] Optional. Minimum step size in milliseconds
-   */
-  function TimeStep(start, end, minimumStep, hiddenDates) {
-    this.moment = moment;
-
-    // variables
-    this.current = this.moment();
-    this._start = this.moment();
-    this._end = this.moment();
-
-    this.autoScale = true;
-    this.scale = 'day';
-    this.step = 1;
-
-    // initialize the range
-    this.setRange(start, end, minimumStep);
-
-    // hidden Dates options
-    this.switchedDay = false;
-    this.switchedMonth = false;
-    this.switchedYear = false;
-    this.hiddenDates = hiddenDates;
-    if (hiddenDates === undefined) {
-      this.hiddenDates = [];
-    }
-
-    this.format = TimeStep.FORMAT; // default formatting
-  }
-
-  // Time formatting
-  TimeStep.FORMAT = {
-    minorLabels: {
-      millisecond: 'SSS',
-      second: 's',
-      minute: 'HH:mm',
-      hour: 'HH:mm',
-      weekday: 'ddd D',
-      day: 'D',
-      month: 'MMM',
-      year: 'YYYY'
-    },
-    majorLabels: {
-      millisecond: 'HH:mm:ss',
-      second: 'D MMMM HH:mm',
-      minute: 'ddd D MMMM',
-      hour: 'ddd D MMMM',
-      weekday: 'MMMM YYYY',
-      day: 'MMMM YYYY',
-      month: 'YYYY',
-      year: ''
-    }
-  };
-
-  /**
-   * Set custom constructor function for moment. Can be used to set dates
-   * to UTC or to set a utcOffset.
-   * @param {function} moment
-   */
-  TimeStep.prototype.setMoment = function (moment) {
-    this.moment = moment;
-
-    // update the date properties, can have a new utcOffset
-    this.current = this.moment(this.current);
-    this._start = this.moment(this._start);
-    this._end = this.moment(this._end);
-  };
-
-  /**
-   * Set custom formatting for the minor an major labels of the TimeStep.
-   * Both `minorLabels` and `majorLabels` are an Object with properties:
-   * 'millisecond', 'second', 'minute', 'hour', 'weekday', 'day', 'month', 'year'.
-   * @param {{minorLabels: Object, majorLabels: Object}} format
-   */
-  TimeStep.prototype.setFormat = function (format) {
-    var defaultFormat = util.deepExtend({}, TimeStep.FORMAT);
-    this.format = util.deepExtend(defaultFormat, format);
-  };
-
-  /**
-   * Set a new range
-   * If minimumStep is provided, the step size is chosen as close as possible
-   * to the minimumStep but larger than minimumStep. If minimumStep is not
-   * provided, the scale is set to 1 DAY.
-   * The minimumStep should correspond with the onscreen size of about 6 characters
-   * @param {Date} [start]      The start date and time.
-   * @param {Date} [end]        The end date and time.
-   * @param {int} [minimumStep] Optional. Minimum step size in milliseconds
-   */
-  TimeStep.prototype.setRange = function (start, end, minimumStep) {
-    if (!(start instanceof Date) || !(end instanceof Date)) {
-      throw 'No legal start or end date in method setRange';
-    }
-
-    this._start = start != undefined ? this.moment(start.valueOf()) : new Date();
-    this._end = end != undefined ? this.moment(end.valueOf()) : new Date();
-
-    if (this.autoScale) {
-      this.setMinimumStep(minimumStep);
-    }
-  };
-
-  /**
-   * Set the range iterator to the start date.
-   */
-  TimeStep.prototype.start = function () {
-    this.current = this._start.clone();
-    this.roundToMinor();
-  };
-
-  /**
-   * Round the current date to the first minor date value
-   * This must be executed once when the current date is set to start Date
-   */
-  TimeStep.prototype.roundToMinor = function () {
-    // round to floor
-    // IMPORTANT: we have no breaks in this switch! (this is no bug)
-    // noinspection FallThroughInSwitchStatementJS
-    switch (this.scale) {
-      case 'year':
-        this.current.year(this.step * Math.floor(this.current.year() / this.step));
-        this.current.month(0);
-      case 'month':
-        this.current.date(1);
-      case 'day': // intentional fall through
-      case 'weekday':
-        this.current.hours(0);
-      case 'hour':
-        this.current.minutes(0);
-      case 'minute':
-        this.current.seconds(0);
-      case 'second':
-        this.current.milliseconds(0);
-        //case 'millisecond': // nothing to do for milliseconds
-    }
-
-    if (this.step != 1) {
-      // round down to the first minor value that is a multiple of the current step size
-      switch (this.scale) {
-        case 'millisecond':
-          this.current.subtract(this.current.milliseconds() % this.step, 'milliseconds');break;
-        case 'second':
-          this.current.subtract(this.current.seconds() % this.step, 'seconds');break;
-        case 'minute':
-          this.current.subtract(this.current.minutes() % this.step, 'minutes');break;
-        case 'hour':
-          this.current.subtract(this.current.hours() % this.step, 'hours');break;
-        case 'weekday': // intentional fall through
-        case 'day':
-          this.current.subtract((this.current.date() - 1) % this.step, 'day');break;
-        case 'month':
-          this.current.subtract(this.current.month() % this.step, 'month');break;
-        case 'year':
-          this.current.subtract(this.current.year() % this.step, 'year');break;
-        default:
-          break;
-      }
-    }
-  };
-
-  /**
-   * Check if the there is a next step
-   * @return {boolean}  true if the current date has not passed the end date
-   */
-  TimeStep.prototype.hasNext = function () {
-    return this.current.valueOf() <= this._end.valueOf();
-  };
-
-  /**
-   * Do the next step
-   */
-  TimeStep.prototype.next = function () {
-    var prev = this.current.valueOf();
-
-    // Two cases, needed to prevent issues with switching daylight savings
-    // (end of March and end of October)
-    if (this.current.month() < 6) {
-      switch (this.scale) {
-        case 'millisecond':
-          this.current.add(this.step, 'millisecond');break;
-        case 'second':
-          this.current.add(this.step, 'second');break;
-        case 'minute':
-          this.current.add(this.step, 'minute');break;
-        case 'hour':
-          this.current.add(this.step, 'hour');
-          // in case of skipping an hour for daylight savings, adjust the hour again (else you get: 0h 5h 9h ... instead of 0h 4h 8h ...)
-          // TODO: is this still needed now we use the function of moment.js?
-          this.current.subtract(this.current.hours() % this.step, 'hour');
-          break;
-        case 'weekday': // intentional fall through
-        case 'day':
-          this.current.add(this.step, 'day');break;
-        case 'month':
-          this.current.add(this.step, 'month');break;
-        case 'year':
-          this.current.add(this.step, 'year');break;
-        default:
-          break;
-      }
-    } else {
-      switch (this.scale) {
-        case 'millisecond':
-          this.current.add(this.step, 'millisecond');break;
-        case 'second':
-          this.current.add(this.step, 'second');break;
-        case 'minute':
-          this.current.add(this.step, 'minute');break;
-        case 'hour':
-          this.current.add(this.step, 'hour');break;
-        case 'weekday': // intentional fall through
-        case 'day':
-          this.current.add(this.step, 'day');break;
-        case 'month':
-          this.current.add(this.step, 'month');break;
-        case 'year':
-          this.current.add(this.step, 'year');break;
-        default:
-          break;
-      }
-    }
-
-    if (this.step != 1) {
-      // round down to the correct major value
-      switch (this.scale) {
-        case 'millisecond':
-          if (this.current.milliseconds() < this.step) this.current.milliseconds(0);break;
-        case 'second':
-          if (this.current.seconds() < this.step) this.current.seconds(0);break;
-        case 'minute':
-          if (this.current.minutes() < this.step) this.current.minutes(0);break;
-        case 'hour':
-          if (this.current.hours() < this.step) this.current.hours(0);break;
-        case 'weekday': // intentional fall through
-        case 'day':
-          if (this.current.date() < this.step + 1) this.current.date(1);break;
-        case 'month':
-          if (this.current.month() < this.step) this.current.month(0);break;
-        case 'year':
-          break; // nothing to do for year
-        default:
-          break;
-      }
-    }
-
-    // safety mechanism: if current time is still unchanged, move to the end
-    if (this.current.valueOf() == prev) {
-      this.current = this._end.clone();
-    }
-
-    DateUtil.stepOverHiddenDates(this.moment, this, prev);
-  };
-
-  /**
-   * Get the current datetime
-   * @return {Moment}  current The current date
-   */
-  TimeStep.prototype.getCurrent = function () {
-    return this.current;
-  };
-
-  /**
-   * Set a custom scale. Autoscaling will be disabled.
-   * For example setScale('minute', 5) will result
-   * in minor steps of 5 minutes, and major steps of an hour.
-   *
-   * @param {{scale: string, step: number}} params
-   *                               An object containing two properties:
-   *                               - A string 'scale'. Choose from 'millisecond', 'second',
-   *                                 'minute', 'hour', 'weekday', 'day', 'month', 'year'.
-   *                               - A number 'step'. A step size, by default 1.
-   *                                 Choose for example 1, 2, 5, or 10.
-   */
-  TimeStep.prototype.setScale = function (params) {
-    if (params && typeof params.scale == 'string') {
-      this.scale = params.scale;
-      this.step = params.step > 0 ? params.step : 1;
-      this.autoScale = false;
-    }
-  };
-
-  /**
-   * Enable or disable autoscaling
-   * @param {boolean} enable  If true, autoascaling is set true
-   */
-  TimeStep.prototype.setAutoScale = function (enable) {
-    this.autoScale = enable;
-  };
-
-  /**
-   * Automatically determine the scale that bests fits the provided minimum step
-   * @param {Number} [minimumStep]  The minimum step size in milliseconds
-   */
-  TimeStep.prototype.setMinimumStep = function (minimumStep) {
-    if (minimumStep == undefined) {
-      return;
-    }
-
-    //var b = asc + ds;
-
-    var stepYear = 1000 * 60 * 60 * 24 * 30 * 12;
-    var stepMonth = 1000 * 60 * 60 * 24 * 30;
-    var stepDay = 1000 * 60 * 60 * 24;
-    var stepHour = 1000 * 60 * 60;
-    var stepMinute = 1000 * 60;
-    var stepSecond = 1000;
-    var stepMillisecond = 1;
-
-    // find the smallest step that is larger than the provided minimumStep
-    if (stepYear * 1000 > minimumStep) {
-      this.scale = 'year';this.step = 1000;
-    }
-    if (stepYear * 500 > minimumStep) {
-      this.scale = 'year';this.step = 500;
-    }
-    if (stepYear * 100 > minimumStep) {
-      this.scale = 'year';this.step = 100;
-    }
-    if (stepYear * 50 > minimumStep) {
-      this.scale = 'year';this.step = 50;
-    }
-    if (stepYear * 10 > minimumStep) {
-      this.scale = 'year';this.step = 10;
-    }
-    if (stepYear * 5 > minimumStep) {
-      this.scale = 'year';this.step = 5;
-    }
-    if (stepYear > minimumStep) {
-      this.scale = 'year';this.step = 1;
-    }
-    if (stepMonth * 3 > minimumStep) {
-      this.scale = 'month';this.step = 3;
-    }
-    if (stepMonth > minimumStep) {
-      this.scale = 'month';this.step = 1;
-    }
-    if (stepDay * 5 > minimumStep) {
-      this.scale = 'day';this.step = 5;
-    }
-    if (stepDay * 2 > minimumStep) {
-      this.scale = 'day';this.step = 2;
-    }
-    if (stepDay > minimumStep) {
-      this.scale = 'day';this.step = 1;
-    }
-    if (stepDay / 2 > minimumStep) {
-      this.scale = 'weekday';this.step = 1;
-    }
-    if (stepHour * 4 > minimumStep) {
-      this.scale = 'hour';this.step = 4;
-    }
-    if (stepHour > minimumStep) {
-      this.scale = 'hour';this.step = 1;
-    }
-    if (stepMinute * 15 > minimumStep) {
-      this.scale = 'minute';this.step = 15;
-    }
-    if (stepMinute * 10 > minimumStep) {
-      this.scale = 'minute';this.step = 10;
-    }
-    if (stepMinute * 5 > minimumStep) {
-      this.scale = 'minute';this.step = 5;
-    }
-    if (stepMinute > minimumStep) {
-      this.scale = 'minute';this.step = 1;
-    }
-    if (stepSecond * 15 > minimumStep) {
-      this.scale = 'second';this.step = 15;
-    }
-    if (stepSecond * 10 > minimumStep) {
-      this.scale = 'second';this.step = 10;
-    }
-    if (stepSecond * 5 > minimumStep) {
-      this.scale = 'second';this.step = 5;
-    }
-    if (stepSecond > minimumStep) {
-      this.scale = 'second';this.step = 1;
-    }
-    if (stepMillisecond * 200 > minimumStep) {
-      this.scale = 'millisecond';this.step = 200;
-    }
-    if (stepMillisecond * 100 > minimumStep) {
-      this.scale = 'millisecond';this.step = 100;
-    }
-    if (stepMillisecond * 50 > minimumStep) {
-      this.scale = 'millisecond';this.step = 50;
-    }
-    if (stepMillisecond * 10 > minimumStep) {
-      this.scale = 'millisecond';this.step = 10;
-    }
-    if (stepMillisecond * 5 > minimumStep) {
-      this.scale = 'millisecond';this.step = 5;
-    }
-    if (stepMillisecond > minimumStep) {
-      this.scale = 'millisecond';this.step = 1;
-    }
-  };
-
-  /**
-   * Snap a date to a rounded value.
-   * The snap intervals are dependent on the current scale and step.
-   * Static function
-   * @param {Date} date    the date to be snapped.
-   * @param {string} scale Current scale, can be 'millisecond', 'second',
-   *                       'minute', 'hour', 'weekday, 'day', 'month', 'year'.
-   * @param {number} step  Current step (1, 2, 4, 5, ...
-   * @return {Date} snappedDate
-   */
-  TimeStep.snap = function (date, scale, step) {
-    var clone = moment(date);
-
-    if (scale == 'year') {
-      var year = clone.year() + Math.round(clone.month() / 12);
-      clone.year(Math.round(year / step) * step);
-      clone.month(0);
-      clone.date(0);
-      clone.hours(0);
-      clone.minutes(0);
-      clone.seconds(0);
-      clone.mlliseconds(0);
-    } else if (scale == 'month') {
-      if (clone.date() > 15) {
-        clone.date(1);
-        clone.add(1, 'month');
-        // important: first set Date to 1, after that change the month.
-      } else {
-        clone.date(1);
-      }
-
-      clone.hours(0);
-      clone.minutes(0);
-      clone.seconds(0);
-      clone.milliseconds(0);
-    } else if (scale == 'day') {
-      //noinspection FallthroughInSwitchStatementJS
-      switch (step) {
-        case 5:
-        case 2:
-          clone.hours(Math.round(clone.hours() / 24) * 24);break;
-        default:
-          clone.hours(Math.round(clone.hours() / 12) * 12);break;
-      }
-      clone.minutes(0);
-      clone.seconds(0);
-      clone.milliseconds(0);
-    } else if (scale == 'weekday') {
-      //noinspection FallthroughInSwitchStatementJS
-      switch (step) {
-        case 5:
-        case 2:
-          clone.hours(Math.round(clone.hours() / 12) * 12);break;
-        default:
-          clone.hours(Math.round(clone.hours() / 6) * 6);break;
-      }
-      clone.minutes(0);
-      clone.seconds(0);
-      clone.milliseconds(0);
-    } else if (scale == 'hour') {
-      switch (step) {
-        case 4:
-          clone.minutes(Math.round(clone.minutes() / 60) * 60);break;
-        default:
-          clone.minutes(Math.round(clone.minutes() / 30) * 30);break;
-      }
-      clone.seconds(0);
-      clone.milliseconds(0);
-    } else if (scale == 'minute') {
-      //noinspection FallthroughInSwitchStatementJS
-      switch (step) {
-        case 15:
-        case 10:
-          clone.minutes(Math.round(clone.minutes() / 5) * 5);
-          clone.seconds(0);
-          break;
-        case 5:
-          clone.seconds(Math.round(clone.seconds() / 60) * 60);break;
-        default:
-          clone.seconds(Math.round(clone.seconds() / 30) * 30);break;
-      }
-      clone.milliseconds(0);
-    } else if (scale == 'second') {
-      //noinspection FallthroughInSwitchStatementJS
-      switch (step) {
-        case 15:
-        case 10:
-          clone.seconds(Math.round(clone.seconds() / 5) * 5);
-          clone.milliseconds(0);
-          break;
-        case 5:
-          clone.milliseconds(Math.round(clone.milliseconds() / 1000) * 1000);break;
-        default:
-          clone.milliseconds(Math.round(clone.milliseconds() / 500) * 500);break;
-      }
-    } else if (scale == 'millisecond') {
-      var _step = step > 5 ? step / 2 : 1;
-      clone.milliseconds(Math.round(clone.milliseconds() / _step) * _step);
-    }
-
-    return clone;
-  };
-
-  /**
-   * Check if the current value is a major value (for example when the step
-   * is DAY, a major value is each first day of the MONTH)
-   * @return {boolean} true if current date is major, else false.
-   */
-  TimeStep.prototype.isMajor = function () {
-    if (this.switchedYear == true) {
-      this.switchedYear = false;
-      switch (this.scale) {
-        case 'year':
-        case 'month':
-        case 'weekday':
-        case 'day':
-        case 'hour':
-        case 'minute':
-        case 'second':
-        case 'millisecond':
-          return true;
-        default:
-          return false;
-      }
-    } else if (this.switchedMonth == true) {
-      this.switchedMonth = false;
-      switch (this.scale) {
-        case 'weekday':
-        case 'day':
-        case 'hour':
-        case 'minute':
-        case 'second':
-        case 'millisecond':
-          return true;
-        default:
-          return false;
-      }
-    } else if (this.switchedDay == true) {
-      this.switchedDay = false;
-      switch (this.scale) {
-        case 'millisecond':
-        case 'second':
-        case 'minute':
-        case 'hour':
-          return true;
-        default:
-          return false;
-      }
-    }
-
-    var date = this.moment(this.current);
-    switch (this.scale) {
-      case 'millisecond':
-        return date.milliseconds() == 0;
-      case 'second':
-        return date.seconds() == 0;
-      case 'minute':
-        return date.hours() == 0 && date.minutes() == 0;
-      case 'hour':
-        return date.hours() == 0;
-      case 'weekday': // intentional fall through
-      case 'day':
-        return date.date() == 1;
-      case 'month':
-        return date.month() == 0;
-      case 'year':
-        return false;
-      default:
-        return false;
-    }
-  };
-
-  /**
-   * Returns formatted text for the minor axislabel, depending on the current
-   * date and the scale. For example when scale is MINUTE, the current time is
-   * formatted as "hh:mm".
-   * @param {Date} [date] custom date. if not provided, current date is taken
-   */
-  TimeStep.prototype.getLabelMinor = function (date) {
-    if (date == undefined) {
-      date = this.current;
-    }
-
-    var format = this.format.minorLabels[this.scale];
-    return format && format.length > 0 ? this.moment(date).format(format) : '';
-  };
-
-  /**
-   * Returns formatted text for the major axis label, depending on the current
-   * date and the scale. For example when scale is MINUTE, the major scale is
-   * hours, and the hour will be formatted as "hh".
-   * @param {Date} [date] custom date. if not provided, current date is taken
-   */
-  TimeStep.prototype.getLabelMajor = function (date) {
-    if (date == undefined) {
-      date = this.current;
-    }
-
-    var format = this.format.majorLabels[this.scale];
-    return format && format.length > 0 ? this.moment(date).format(format) : '';
-  };
-
-  TimeStep.prototype.getClassName = function () {
-    var _moment = this.moment;
-    var m = this.moment(this.current);
-    var current = m.locale ? m.locale('en') : m.lang('en'); // old versions of moment have .lang() function
-    var step = this.step;
-
-    function even(value) {
-      return value / step % 2 == 0 ? ' vis-even' : ' vis-odd';
-    }
-
-    function today(date) {
-      if (date.isSame(new Date(), 'day')) {
-        return ' vis-today';
-      }
-      if (date.isSame(_moment().add(1, 'day'), 'day')) {
-        return ' vis-tomorrow';
-      }
-      if (date.isSame(_moment().add(-1, 'day'), 'day')) {
-        return ' vis-yesterday';
-      }
-      return '';
-    }
-
-    function currentWeek(date) {
-      return date.isSame(new Date(), 'week') ? ' vis-current-week' : '';
-    }
-
-    function currentMonth(date) {
-      return date.isSame(new Date(), 'month') ? ' vis-current-month' : '';
-    }
-
-    function currentYear(date) {
-      return date.isSame(new Date(), 'year') ? ' vis-current-year' : '';
-    }
-
-    switch (this.scale) {
-      case 'millisecond':
-        return even(current.milliseconds()).trim();
-
-      case 'second':
-        return even(current.seconds()).trim();
-
-      case 'minute':
-        return even(current.minutes()).trim();
-
-      case 'hour':
-        var hours = current.hours();
-        if (this.step == 4) {
-          hours = hours + '-h' + (hours + 4);
-        }
-        return 'vis-h' + hours + today(current) + even(current.hours());
-
-      case 'weekday':
-        return 'vis-' + current.format('dddd').toLowerCase() + today(current) + currentWeek(current) + even(current.date());
-
-      case 'day':
-        var day = current.date();
-        var month = current.format('MMMM').toLowerCase();
-        return 'vis-day' + day + ' vis-' + month + currentMonth(current) + even(day - 1);
-
-      case 'month':
-        return 'vis-' + current.format('MMMM').toLowerCase() + currentMonth(current) + even(current.month());
-
-      case 'year':
-        var year = current.year();
-        return 'vis-year' + year + currentYear(current) + even(year);
-
-      default:
-        return '';
-    }
-  };
-
-  module.exports = TimeStep;
-
-/***/ },
-/* 36 */
-/***/ function(module, exports, __webpack_require__) {
-
-  'use strict';
-
-  var util = __webpack_require__(7);
-  var Group = __webpack_require__(32);
+  var util = __webpack_require__(1);
+  var Group = __webpack_require__(31);
 
   /**
    * @constructor BackgroundGroup
@@ -19482,13 +19724,13 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = BackgroundGroup;
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Item = __webpack_require__(2);
-  var util = __webpack_require__(7);
+  var Item = __webpack_require__(34);
+  var util = __webpack_require__(1);
 
   /**
    * @constructor BoxItem
@@ -19722,15 +19964,221 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = BoxItem;
 
 /***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  var Item = __webpack_require__(34);
+
+  /**
+   * @constructor PointItem
+   * @extends Item
+   * @param {Object} data             Object containing parameters start
+   *                                  content, className.
+   * @param {{toScreen: function, toTime: function}} conversion
+   *                                  Conversion functions from time to screen and vice versa
+   * @param {Object} [options]        Configuration options
+   *                                  // TODO: describe available options
+   */
+  function PointItem(data, conversion, options) {
+    this.props = {
+      dot: {
+        top: 0,
+        width: 0,
+        height: 0
+      },
+      content: {
+        height: 0,
+        marginLeft: 0
+      }
+    };
+
+    // validate data
+    if (data) {
+      if (data.start == undefined) {
+        throw new Error('Property "start" missing in item ' + data);
+      }
+    }
+
+    Item.call(this, data, conversion, options);
+  }
+
+  PointItem.prototype = new Item(null, null, null);
+
+  /**
+   * Check whether this item is visible inside given range
+   * @returns {{start: Number, end: Number}} range with a timestamp for start and end
+   * @returns {boolean} True if visible
+   */
+  PointItem.prototype.isVisible = function (range) {
+    // determine visibility
+    // TODO: account for the real width of the item. Right now we just add 1/4 to the window
+    var interval = (range.end - range.start) / 4;
+    return this.data.start > range.start - interval && this.data.start < range.end + interval;
+  };
+
+  /**
+   * Repaint the item
+   */
+  PointItem.prototype.redraw = function () {
+    var dom = this.dom;
+    if (!dom) {
+      // create DOM
+      this.dom = {};
+      dom = this.dom;
+
+      // background box
+      dom.point = document.createElement('div');
+      // className is updated in redraw()
+
+      // contents box, right from the dot
+      dom.content = document.createElement('div');
+      dom.content.className = 'vis-item-content';
+      dom.point.appendChild(dom.content);
+
+      // dot at start
+      dom.dot = document.createElement('div');
+      dom.point.appendChild(dom.dot);
+
+      // attach this item as attribute
+      dom.point['timeline-item'] = this;
+
+      this.dirty = true;
+    }
+
+    // append DOM to parent DOM
+    if (!this.parent) {
+      throw new Error('Cannot redraw item: no parent attached');
+    }
+    if (!dom.point.parentNode) {
+      var foreground = this.parent.dom.foreground;
+      if (!foreground) {
+        throw new Error('Cannot redraw item: parent has no foreground container element');
+      }
+      foreground.appendChild(dom.point);
+    }
+    this.displayed = true;
+
+    // Update DOM when item is marked dirty. An item is marked dirty when:
+    // - the item is not yet rendered
+    // - the item's data is changed
+    // - the item is selected/deselected
+    if (this.dirty) {
+      this._updateContents(this.dom.content);
+      this._updateTitle(this.dom.point);
+      this._updateDataAttributes(this.dom.point);
+      this._updateStyle(this.dom.point);
+
+      var editable = (this.options.editable.updateTime || this.options.editable.updateGroup || this.editable === true) && this.editable !== false;
+
+      // update class
+      var className = (this.data.className ? ' ' + this.data.className : '') + (this.selected ? ' vis-selected' : '') + (editable ? ' vis-editable' : ' vis-readonly');
+      dom.point.className = 'vis-item vis-point' + className;
+      dom.dot.className = 'vis-item vis-dot' + className;
+
+      // recalculate size of dot and contents
+      this.props.dot.width = dom.dot.offsetWidth;
+      this.props.dot.height = dom.dot.offsetHeight;
+      this.props.content.height = dom.content.offsetHeight;
+
+      // resize contents
+      dom.content.style.marginLeft = 2 * this.props.dot.width + 'px';
+      //dom.content.style.marginRight = ... + 'px'; // TODO: margin right
+
+      // recalculate size
+      this.width = dom.point.offsetWidth;
+      this.height = dom.point.offsetHeight;
+
+      // reposition the dot
+      dom.dot.style.top = (this.height - this.props.dot.height) / 2 + 'px';
+      dom.dot.style.left = this.props.dot.width / 2 + 'px';
+
+      this.dirty = false;
+    }
+
+    this._repaintDeleteButton(dom.point);
+  };
+
+  /**
+   * Show the item in the DOM (when not already visible). The items DOM will
+   * be created when needed.
+   */
+  PointItem.prototype.show = function () {
+    if (!this.displayed) {
+      this.redraw();
+    }
+  };
+
+  /**
+   * Hide the item from the DOM (when visible)
+   */
+  PointItem.prototype.hide = function () {
+    if (this.displayed) {
+      if (this.dom.point.parentNode) {
+        this.dom.point.parentNode.removeChild(this.dom.point);
+      }
+
+      this.displayed = false;
+    }
+  };
+
+  /**
+   * Reposition the item horizontally
+   * @Override
+   */
+  PointItem.prototype.repositionX = function () {
+    var start = this.conversion.toScreen(this.data.start);
+
+    this.left = start - this.props.dot.width;
+
+    // reposition point
+    this.dom.point.style.left = this.left + 'px';
+  };
+
+  /**
+   * Reposition the item vertically
+   * @Override
+   */
+  PointItem.prototype.repositionY = function () {
+    var orientation = this.options.orientation.item;
+    var point = this.dom.point;
+
+    if (orientation == 'top') {
+      point.style.top = this.top + 'px';
+    } else {
+      point.style.top = this.parent.height - this.top - this.height + 'px';
+    }
+  };
+
+  /**
+   * Return the width of the item left from its start date
+   * @return {number}
+   */
+  PointItem.prototype.getWidthLeft = function () {
+    return this.props.dot.width;
+  };
+
+  /**
+   * Return the width of the item right from  its start date
+   * @return {number}
+   */
+  PointItem.prototype.getWidthRight = function () {
+    return this.width - this.props.dot.width;
+  };
+
+  module.exports = PointItem;
+
+/***/ },
 /* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var Hammer = __webpack_require__(3);
-  var Item = __webpack_require__(2);
-  var BackgroundGroup = __webpack_require__(36);
-  var RangeItem = __webpack_require__(34);
+  var Hammer = __webpack_require__(20);
+  var Item = __webpack_require__(34);
+  var BackgroundGroup = __webpack_require__(35);
+  var RangeItem = __webpack_require__(33);
 
   /**
    * @constructor BackgroundItem
@@ -19904,39 +20352,39 @@ return /******/ (function(modules) { // webpackBootstrap
       }
       // and when the orientation is bottom:
       else {
-        var newTop = this.parent.top;
-        var totalHeight = 0;
-        for (var subgroup in subgroups) {
-          if (subgroups.hasOwnProperty(subgroup)) {
-            if (subgroups[subgroup].visible == true) {
-              var newHeight = subgroups[subgroup].height + margin.item.vertical;
-              totalHeight += newHeight;
-              if (subgroups[subgroup].index > subgroupIndex) {
-                newTop += newHeight;
+          var newTop = this.parent.top;
+          var totalHeight = 0;
+          for (var subgroup in subgroups) {
+            if (subgroups.hasOwnProperty(subgroup)) {
+              if (subgroups[subgroup].visible == true) {
+                var newHeight = subgroups[subgroup].height + margin.item.vertical;
+                totalHeight += newHeight;
+                if (subgroups[subgroup].index > subgroupIndex) {
+                  newTop += newHeight;
+                }
               }
             }
           }
+          height = this.parent.subgroups[itemSubgroup].height + margin.item.vertical;
+          this.dom.box.style.top = this.parent.height - totalHeight + newTop + 'px';
+          this.dom.box.style.bottom = '';
         }
-        height = this.parent.subgroups[itemSubgroup].height + margin.item.vertical;
-        this.dom.box.style.top = this.parent.height - totalHeight + newTop + 'px';
-        this.dom.box.style.bottom = '';
-      }
     }
     // and in the case of no subgroups:
     else {
-      // we want backgrounds with groups to only show in groups.
-      if (this.parent instanceof BackgroundGroup) {
-        // if the item is not in a group:
-        height = Math.max(this.parent.height, this.parent.itemSet.body.domProps.center.height, this.parent.itemSet.body.domProps.centerContainer.height);
-        this.dom.box.style.top = onTop ? '0' : '';
-        this.dom.box.style.bottom = onTop ? '' : '0';
-      } else {
-        height = this.parent.height;
-        // same alignment for items when orientation is top or bottom
-        this.dom.box.style.top = this.parent.top + 'px';
-        this.dom.box.style.bottom = '';
+        // we want backgrounds with groups to only show in groups.
+        if (this.parent instanceof BackgroundGroup) {
+          // if the item is not in a group:
+          height = Math.max(this.parent.height, this.parent.itemSet.body.domProps.center.height, this.parent.itemSet.body.domProps.centerContainer.height);
+          this.dom.box.style.top = onTop ? '0' : '';
+          this.dom.box.style.bottom = onTop ? '' : '0';
+        } else {
+          height = this.parent.height;
+          // same alignment for items when orientation is top or bottom
+          this.dom.box.style.top = this.parent.top + 'px';
+          this.dom.box.style.bottom = '';
+        }
       }
-    }
     this.dom.box.style.height = height + 'px';
   };
 
@@ -19948,11 +20396,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var Component = __webpack_require__(28);
-  var TimeStep = __webpack_require__(35);
-  var DateUtil = __webpack_require__(29);
-  var moment = __webpack_require__(8);
+  var util = __webpack_require__(1);
+  var Component = __webpack_require__(26);
+  var TimeStep = __webpack_require__(30);
+  var DateUtil = __webpack_require__(27);
+  var moment = __webpack_require__(2);
 
   /**
    * A horizontal time axis
@@ -19989,6 +20437,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }, // axis orientation: 'top' or 'bottom'
       showMinorLabels: true,
       showMajorLabels: true,
+      maxMinorChars: 7,
       format: TimeStep.FORMAT,
       moment: moment,
       timeAxis: null
@@ -20016,7 +20465,7 @@ return /******/ (function(modules) { // webpackBootstrap
   TimeAxis.prototype.setOptions = function (options) {
     if (options) {
       // copy all options that we know
-      util.selectiveExtend(['showMinorLabels', 'showMajorLabels', 'hiddenDates', 'timeAxis', 'moment'], this.options, options);
+      util.selectiveExtend(['showMinorLabels', 'showMajorLabels', 'maxMinorChars', 'hiddenDates', 'timeAxis', 'moment'], this.options, options);
 
       // deep copy the format options
       util.selectiveDeepExtend(['format'], this.options, options);
@@ -20134,7 +20583,7 @@ return /******/ (function(modules) { // webpackBootstrap
     // calculate range and step (step such that we have space for 7 characters per label)
     var start = util.convert(this.body.range.start, 'Number');
     var end = util.convert(this.body.range.end, 'Number');
-    var timeLabelsize = this.body.util.toTime((this.props.minorCharWidth || 10) * 7).valueOf();
+    var timeLabelsize = this.body.util.toTime((this.props.minorCharWidth || 10) * this.options.maxMinorChars).valueOf();
     var minimumStep = timeLabelsize - DateUtil.getHiddenDurationBefore(this.options.moment, this.body.hiddenDates, this.body.range, timeLabelsize);
     minimumStep -= this.body.util.toTime(0).valueOf();
 
@@ -20163,19 +20612,21 @@ return /******/ (function(modules) { // webpackBootstrap
     var next;
     var x;
     var xNext;
-    var isMajor;
-    var width;
+    var isMajor, nextIsMajor;
+    var width = 0,
+        prevWidth;
     var line;
     var labelMinor;
     var xFirstMajorLabel = undefined;
-    var max = 0;
+    var count = 0;
+    var MAX = 1000;
     var className;
 
     step.start();
     next = step.getCurrent();
     xNext = this.body.util.toScreen(next);
-    while (step.hasNext() && max < 1000) {
-      max++;
+    while (step.hasNext() && count < MAX) {
+      count++;
 
       isMajor = step.isMajor();
       className = step.getClassName();
@@ -20186,13 +20637,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
       step.next();
       next = step.getCurrent();
+      nextIsMajor = step.isMajor();
       xNext = this.body.util.toScreen(next);
 
+      prevWidth = width;
       width = xNext - x;
-      var labelFits = (labelMinor.length + 1) * this.props.minorCharWidth < width;
+      var showMinorGrid = width >= prevWidth * 0.4; // prevent displaying of the 31th of the month on a scale of 5 days
 
-      if (this.options.showMinorLabels && labelFits) {
-        this._repaintMinorText(x, labelMinor, orientation, className);
+      if (this.options.showMinorLabels && showMinorGrid) {
+        var label = this._repaintMinorText(x, labelMinor, orientation, className);
+        label.style.width = width + 'px'; // set width to prevent overflow
       }
 
       if (isMajor && this.options.showMajorLabels) {
@@ -20200,18 +20654,25 @@ return /******/ (function(modules) { // webpackBootstrap
           if (xFirstMajorLabel == undefined) {
             xFirstMajorLabel = x;
           }
-          this._repaintMajorText(x, step.getLabelMajor(), orientation, className);
+          label = this._repaintMajorText(x, step.getLabelMajor(), orientation, className);
         }
         line = this._repaintMajorLine(x, width, orientation, className);
       } else {
-        if (labelFits) {
+        // minor line
+        if (showMinorGrid) {
           line = this._repaintMinorLine(x, width, orientation, className);
         } else {
           if (line) {
+            // adjust the width of the previous grid
             line.style.width = parseInt(line.style.width) + width + 'px';
           }
         }
       }
+    }
+
+    if (count === MAX && !warnedForOverflow) {
+      console.warn('Something is wrong with the Timeline scale. Limited drawing of grid lines to ' + MAX + ' lines.');
+      warnedForOverflow = true;
     }
 
     // create a major label on the left when needed
@@ -20402,6 +20863,8 @@ return /******/ (function(modules) { // webpackBootstrap
     this.props.majorCharWidth = this.dom.measureCharMajor.clientWidth;
   };
 
+  var warnedForOverflow = false;
+
   module.exports = TimeAxis;
 
 /***/ },
@@ -20411,9 +20874,9 @@ return /******/ (function(modules) { // webpackBootstrap
   'use strict';
 
   var keycharm = __webpack_require__(41);
-  var Emitter = __webpack_require__(19);
-  var Hammer = __webpack_require__(3);
-  var util = __webpack_require__(7);
+  var Emitter = __webpack_require__(12);
+  var Hammer = __webpack_require__(20);
+  var util = __webpack_require__(1);
 
   /**
    * Turn an element into an clickToUse element.
@@ -20768,10 +21231,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var Hammer = __webpack_require__(3);
-  var util = __webpack_require__(7);
-  var Component = __webpack_require__(28);
-  var moment = __webpack_require__(8);
+  var Hammer = __webpack_require__(20);
+  var util = __webpack_require__(1);
+  var Component = __webpack_require__(26);
+  var moment = __webpack_require__(2);
   var locales = __webpack_require__(43);
 
   /**
@@ -20793,7 +21256,8 @@ return /******/ (function(modules) { // webpackBootstrap
       moment: moment,
       locales: locales,
       locale: 'en',
-      id: undefined
+      id: undefined,
+      title: undefined
     };
     this.options = util.extend({}, this.defaultOptions);
 
@@ -20893,8 +21357,12 @@ return /******/ (function(modules) { // webpackBootstrap
       locale = this.options.locales['en']; // fall back on english when not available
     }
 
-    var title = locale.time + ': ' + this.options.moment(this.customTime).format('dddd, MMMM Do YYYY, H:mm:ss');
-    title = title.charAt(0).toUpperCase() + title.substring(1);
+    var title = this.options.title;
+    // To hide the title completely use empty string ''.
+    if (title === undefined) {
+      title = locale.time + ': ' + this.options.moment(this.customTime).format('dddd, MMMM Do YYYY, H:mm:ss');
+      title = title.charAt(0).toUpperCase() + title.substring(1);
+    }
 
     this.bar.style.left = x + 'px';
     this.bar.title = title;
@@ -20927,6 +21395,14 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   CustomTime.prototype.getCustomTime = function () {
     return new Date(this.customTime.valueOf());
+  };
+
+  /**
+    * Set custom title.
+    * @param {Date | number | string} title
+    */
+  CustomTime.prototype.setCustomTitle = function (title) {
+    this.options.title = title;
   };
 
   /**
@@ -21028,9 +21504,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var Component = __webpack_require__(28);
-  var moment = __webpack_require__(8);
+  var util = __webpack_require__(1);
+  var Component = __webpack_require__(26);
+  var moment = __webpack_require__(2);
   var locales = __webpack_require__(43);
 
   /**
@@ -21121,7 +21597,7 @@ return /******/ (function(modules) { // webpackBootstrap
       var locale = this.options.locales[this.options.locale];
       if (!locale) {
         if (!this.warned) {
-          console.log('WARNING: options.locales[\'' + this.options.locale + '\'] not found. See http://visjs.org/docs/timeline.html#Localization');
+          console.log('WARNING: options.locales[\'' + this.options.locale + '\'] not found. See http://visjs.org/docs/timeline/#Localization');
           this.warned = true;
         }
         locale = this.options.locales['en']; // fall back on english when not available
@@ -21219,8 +21695,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _ColorPicker2 = _interopRequireDefault(_ColorPicker);
 
-  var util = __webpack_require__(7);
-
   /**
    * The way this works is for all properties of this.possible options, you can supply the property name in any form to list the options.
    * Boolean options are recognised as Boolean
@@ -21235,6 +21709,7 @@ return /******/ (function(modules) { // webpackBootstrap
    * @param configureOptions    | the fully configured and predefined options set found in allOptions.js
    * @param pixelRatio          | canvas pixel ratio
    */
+  var util = __webpack_require__(1);
 
   var Configurator = (function () {
     function Configurator(parentModule, defaultContainer, configureOptions) {
@@ -21248,6 +21723,8 @@ return /******/ (function(modules) { // webpackBootstrap
       this.allowCreation = false;
 
       this.options = {};
+      this.initialized = false;
+      this.popupCounter = 0;
       this.defaultOptions = {
         enabled: false,
         filter: true,
@@ -21259,21 +21736,28 @@ return /******/ (function(modules) { // webpackBootstrap
       this.configureOptions = configureOptions;
       this.moduleOptions = {};
       this.domElements = [];
+      this.popupDiv = {};
+      this.popupLimit = 5;
+      this.popupHistory = {};
       this.colorPicker = new _ColorPicker2['default'](pixelRatio);
       this.wrapper = undefined;
     }
 
+    /**
+     * refresh all options.
+     * Because all modules parse their options by themselves, we just use their options. We copy them here.
+     *
+     * @param options
+     */
+
     _createClass(Configurator, [{
       key: 'setOptions',
-
-      /**
-       * refresh all options.
-       * Because all modules parse their options by themselves, we just use their options. We copy them here.
-       *
-       * @param options
-       */
       value: function setOptions(options) {
         if (options !== undefined) {
+          // reset the popup history because the indices may have been changed.
+          this.popupHistory = {};
+          this._removePopup();
+
           var enabled = true;
           if (typeof options === 'string') {
             this.options.filter = options;
@@ -21319,13 +21803,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this._create();
         }
       }
-    }, {
-      key: '_create',
 
       /**
        * Create all DOM elements
        * @private
        */
+    }, {
+      key: '_create',
       value: function _create() {
         var _this = this;
 
@@ -21366,20 +21850,20 @@ return /******/ (function(modules) { // webpackBootstrap
         if (this.options.showButton === true) {
           (function () {
             var generateButton = document.createElement('div');
-            generateButton.className = 'vis-network-configuration button';
+            generateButton.className = 'vis-configuration vis-config-button';
             generateButton.innerHTML = 'generate options';
             generateButton.onclick = function () {
               _this._printOptions();
             };
             generateButton.onmouseover = function () {
-              generateButton.className = 'vis-network-configuration button hover';
+              generateButton.className = 'vis-configuration vis-config-button hover';
             };
             generateButton.onmouseout = function () {
-              generateButton.className = 'vis-network-configuration button';
+              generateButton.className = 'vis-configuration vis-config-button';
             };
 
             _this.optionsContainer = document.createElement('div');
-            _this.optionsContainer.className = 'vis-network-configuration vis-option-container';
+            _this.optionsContainer.className = 'vis-configuration vis-config-option-container';
 
             _this.domElements.push(_this.optionsContainer);
             _this.domElements.push(generateButton);
@@ -21389,28 +21873,30 @@ return /******/ (function(modules) { // webpackBootstrap
         this._push();
         this.colorPicker.insertTo(this.container);
       }
-    }, {
-      key: '_push',
 
       /**
        * draw all DOM elements on the screen
        * @private
        */
+    }, {
+      key: '_push',
       value: function _push() {
         this.wrapper = document.createElement('div');
-        this.wrapper.className = 'vis-network-configuration-wrapper';
+        this.wrapper.className = 'vis-configuration-wrapper';
         this.container.appendChild(this.wrapper);
         for (var i = 0; i < this.domElements.length; i++) {
           this.wrapper.appendChild(this.domElements[i]);
         }
+
+        this._showPopupIfNeeded();
       }
-    }, {
-      key: '_clean',
 
       /**
        * delete all DOM elements
        * @private
        */
+    }, {
+      key: '_clean',
       value: function _clean() {
         for (var i = 0; i < this.domElements.length; i++) {
           this.wrapper.removeChild(this.domElements[i]);
@@ -21421,9 +21907,9 @@ return /******/ (function(modules) { // webpackBootstrap
           this.wrapper = undefined;
         }
         this.domElements = [];
+
+        this._removePopup();
       }
-    }, {
-      key: '_getValue',
 
       /**
        * get the value from the actualOptions if it exists
@@ -21431,6 +21917,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {*}
        * @private
        */
+    }, {
+      key: '_getValue',
       value: function _getValue(path) {
         var base = this.moduleOptions;
         for (var i = 0; i < path.length; i++) {
@@ -21443,8 +21931,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return base;
       }
-    }, {
-      key: '_makeItem',
 
       /**
        * all option elements are wrapped in an item
@@ -21452,6 +21938,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param domElements
        * @private
        */
+    }, {
+      key: '_makeItem',
       value: function _makeItem(path) {
         var _arguments = arguments,
             _this2 = this;
@@ -21459,9 +21947,9 @@ return /******/ (function(modules) { // webpackBootstrap
         if (this.allowCreation === true) {
           var _len, domElements, _key;
 
-          (function () {
+          var _ret2 = (function () {
             var item = document.createElement('div');
-            item.className = 'vis-network-configuration item s' + path.length;
+            item.className = 'vis-configuration vis-config-item vis-config-s' + path.length;
 
             for (_len = _arguments.length, domElements = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
               domElements[_key - 1] = _arguments[_key];
@@ -21471,25 +21959,29 @@ return /******/ (function(modules) { // webpackBootstrap
               item.appendChild(element);
             });
             _this2.domElements.push(item);
+            return {
+              v: _this2.domElements.length
+            };
           })();
+
+          if (typeof _ret2 === 'object') return _ret2.v;
         }
+        return 0;
       }
-    }, {
-      key: '_makeHeader',
 
       /**
        * header for major subjects
        * @param name
        * @private
        */
+    }, {
+      key: '_makeHeader',
       value: function _makeHeader(name) {
         var div = document.createElement('div');
-        div.className = 'vis-network-configuration header';
+        div.className = 'vis-configuration vis-config-header';
         div.innerHTML = name;
         this._makeItem([], div);
       }
-    }, {
-      key: '_makeLabel',
 
       /**
        * make a label, if it is an object label, it gets different styling.
@@ -21499,11 +21991,13 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {HTMLElement}
        * @private
        */
+    }, {
+      key: '_makeLabel',
       value: function _makeLabel(name, path) {
         var objectLabel = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
         var div = document.createElement('div');
-        div.className = 'vis-network-configuration label s' + path.length;
+        div.className = 'vis-configuration vis-config-label vis-config-s' + path.length;
         if (objectLabel === true) {
           div.innerHTML = '<i><b>' + name + ':</b></i>';
         } else {
@@ -21511,8 +22005,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return div;
       }
-    }, {
-      key: '_makeDropdown',
 
       /**
        * make a dropdown list for multiple possible string optoins
@@ -21521,9 +22013,11 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_makeDropdown',
       value: function _makeDropdown(arr, value, path) {
         var select = document.createElement('select');
-        select.className = 'vis-network-configuration select';
+        select.className = 'vis-configuration vis-config-select';
         var selectedValue = 0;
         if (value !== undefined) {
           if (arr.indexOf(value) !== -1) {
@@ -21549,8 +22043,6 @@ return /******/ (function(modules) { // webpackBootstrap
         var label = this._makeLabel(path[path.length - 1], path);
         this._makeItem(path, label, select);
       }
-    }, {
-      key: '_makeRange',
 
       /**
        * make a range object for numeric options
@@ -21559,13 +22051,15 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_makeRange',
       value: function _makeRange(arr, value, path) {
         var defaultValue = arr[0];
         var min = arr[1];
         var max = arr[2];
         var step = arr[3];
         var range = document.createElement('input');
-        range.className = 'vis-network-configuration range';
+        range.className = 'vis-configuration vis-config-range';
         try {
           range.type = 'range'; // not supported on IE9
           range.min = min;
@@ -21573,14 +22067,25 @@ return /******/ (function(modules) { // webpackBootstrap
         } catch (err) {}
         range.step = step;
 
+        // set up the popup settings in case they are needed.
+        var popupString = '';
+        var popupValue = 0;
+
         if (value !== undefined) {
-          if (value < 0 && value * 2 < min) {
-            range.min = value * 2;
-          } else if (value * 0.1 < min) {
-            range.min = value / 10;
+          var factor = 1.20;
+          if (value < 0 && value * factor < min) {
+            range.min = Math.ceil(value * factor);
+            popupValue = range.min;
+            popupString = 'range increased';
+          } else if (value / factor < min) {
+            range.min = Math.ceil(value / factor);
+            popupValue = range.min;
+            popupString = 'range increased';
           }
-          if (value * 2 > max && max !== 1) {
-            range.max = value * 2;
+          if (value * factor > max && max !== 1) {
+            range.max = Math.ceil(value * factor);
+            popupValue = range.max;
+            popupString = 'range increased';
           }
           range.value = value;
         } else {
@@ -21588,7 +22093,7 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         var input = document.createElement('input');
-        input.className = 'vis-network-configuration rangeinput';
+        input.className = 'vis-configuration vis-config-rangeinput';
         input.value = range.value;
 
         var me = this;
@@ -21600,10 +22105,77 @@ return /******/ (function(modules) { // webpackBootstrap
         };
 
         var label = this._makeLabel(path[path.length - 1], path);
-        this._makeItem(path, label, range, input);
+        var itemIndex = this._makeItem(path, label, range, input);
+
+        // if a popup is needed AND it has not been shown for this value, show it.
+        if (popupString !== '' && this.popupHistory[itemIndex] !== popupValue) {
+          this.popupHistory[itemIndex] = popupValue;
+          this._setupPopup(popupString, itemIndex);
+        }
       }
+
+      /**
+       * prepare the popup
+       * @param string
+       * @param index
+       * @private
+       */
     }, {
-      key: '_makeCheckbox',
+      key: '_setupPopup',
+      value: function _setupPopup(string, index) {
+        var _this3 = this;
+
+        if (this.initialized === true && this.allowCreation === true && this.popupCounter < this.popupLimit) {
+          var div = document.createElement("div");
+          div.id = "vis-configuration-popup";
+          div.className = "vis-configuration-popup";
+          div.innerHTML = string;
+          div.onclick = function () {
+            _this3._removePopup();
+          };
+          this.popupCounter += 1;
+          this.popupDiv = { html: div, index: index };
+        }
+      }
+
+      /**
+       * remove the popup from the dom
+       * @private
+       */
+    }, {
+      key: '_removePopup',
+      value: function _removePopup() {
+        if (this.popupDiv.html !== undefined) {
+          this.popupDiv.html.parentNode.removeChild(this.popupDiv.html);
+          clearTimeout(this.popupDiv.hideTimeout);
+          clearTimeout(this.popupDiv.deleteTimeout);
+          this.popupDiv = {};
+        }
+      }
+
+      /**
+       * Show the popup if it is needed.
+       * @private
+       */
+    }, {
+      key: '_showPopupIfNeeded',
+      value: function _showPopupIfNeeded() {
+        var _this4 = this;
+
+        if (this.popupDiv.html !== undefined) {
+          var correspondingElement = this.domElements[this.popupDiv.index];
+          var rect = correspondingElement.getBoundingClientRect();
+          this.popupDiv.html.style.left = rect.left + "px";
+          this.popupDiv.html.style.top = rect.top - 30 + "px"; // 30 is the height;
+          document.body.appendChild(this.popupDiv.html);
+          this.popupDiv.hideTimeout = setTimeout(function () {
+            _this4.popupDiv.html.style.opacity = 0;
+          }, 1500);
+          this.popupDiv.deleteTimeout = setTimeout(function () {
+            _this4._removePopup();
+          }, 1800);
+        }
+      }
 
       /**
        * make a checkbox for boolean options.
@@ -21612,10 +22184,12 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_makeCheckbox',
       value: function _makeCheckbox(defaultValue, value, path) {
         var checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.className = 'vis-network-configuration checkbox';
+        checkbox.className = 'vis-configuration vis-config-checkbox';
         checkbox.checked = defaultValue;
         if (value !== undefined) {
           checkbox.checked = value;
@@ -21638,8 +22212,6 @@ return /******/ (function(modules) { // webpackBootstrap
         var label = this._makeLabel(path[path.length - 1], path);
         this._makeItem(path, label, checkbox);
       }
-    }, {
-      key: '_makeTextInput',
 
       /**
        * make a text input field for string options.
@@ -21648,10 +22220,12 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_makeTextInput',
       value: function _makeTextInput(defaultValue, value, path) {
         var checkbox = document.createElement('input');
         checkbox.type = 'text';
-        checkbox.className = 'vis-network-configuration text';
+        checkbox.className = 'vis-configuration vis-config-text';
         checkbox.value = value;
         if (value !== defaultValue) {
           this.changedOptions.push({ path: path, value: value });
@@ -21665,8 +22239,6 @@ return /******/ (function(modules) { // webpackBootstrap
         var label = this._makeLabel(path[path.length - 1], path);
         this._makeItem(path, label, checkbox);
       }
-    }, {
-      key: '_makeColorField',
 
       /**
        * make a color field with a color picker for color fields
@@ -21675,30 +22247,30 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_makeColorField',
       value: function _makeColorField(arr, value, path) {
-        var _this3 = this;
+        var _this5 = this;
 
         var defaultColor = arr[1];
         var div = document.createElement('div');
         value = value === undefined ? defaultColor : value;
 
         if (value !== 'none') {
-          div.className = 'vis-network-configuration colorBlock';
+          div.className = 'vis-configuration vis-config-colorBlock';
           div.style.backgroundColor = value;
         } else {
-          div.className = 'vis-network-configuration colorBlock none';
+          div.className = 'vis-configuration vis-config-colorBlock none';
         }
 
         value = value === undefined ? defaultColor : value;
         div.onclick = function () {
-          _this3._showColorPicker(value, div, path);
+          _this5._showColorPicker(value, div, path);
         };
 
         var label = this._makeLabel(path[path.length - 1], path);
         this._makeItem(path, label, div);
       }
-    }, {
-      key: '_showColorPicker',
 
       /**
        * used by the color buttons to call the color picker.
@@ -21708,23 +22280,23 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_showColorPicker',
       value: function _showColorPicker(value, div, path) {
-        var _this4 = this;
+        var _this6 = this;
 
         var rect = div.getBoundingClientRect();
         var bodyRect = document.body.getBoundingClientRect();
         var pickerX = rect.left + rect.width + 5;
-        var pickerY = rect.top - bodyRect.top + rect.height * 0.5;
+        var pickerY = rect.top - bodyRect.top + rect.height + 2;
         this.colorPicker.show(pickerX, pickerY);
         this.colorPicker.setColor(value);
         this.colorPicker.setCallback(function (color) {
           var colorString = 'rgba(' + color.r + ',' + color.g + ',' + color.b + ',' + color.a + ')';
           div.style.backgroundColor = colorString;
-          _this4._update(colorString, path);
+          _this6._update(colorString, path);
         });
       }
-    }, {
-      key: '_handleObject',
 
       /**
        * parse an object and draw the correct items
@@ -21732,6 +22304,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_handleObject',
       value: function _handleObject(obj) {
         var path = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
         var checkOnly = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
@@ -21802,8 +22376,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return visibleInSet;
       }
-    }, {
-      key: '_handleArray',
 
       /**
        * handle the array type of option
@@ -21813,6 +22385,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_handleArray',
       value: function _handleArray(arr, value, path) {
         if (typeof arr[0] === 'string' && arr[0] === 'color') {
           this._makeColorField(arr, value, path);
@@ -21831,8 +22405,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: '_update',
 
       /**
        * called to update the network with the new settings.
@@ -21840,13 +22412,15 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param path
        * @private
        */
+    }, {
+      key: '_update',
       value: function _update(value, path) {
         var options = this._constructOptions(value, path);
 
         if (this.parent.body && this.parent.body.emitter && this.parent.body.emitter.emit) {
-          this.parent.body.emitter.emit('configChange', options);
+          this.parent.body.emitter.emit("configChange", options);
         }
-
+        this.initialized = true;
         this.parent.setOptions(options);
       }
     }, {
@@ -21911,9 +22485,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var Hammer = __webpack_require__(3);
-  var hammerUtil = __webpack_require__(27);
-  var util = __webpack_require__(7);
+  var Hammer = __webpack_require__(20);
+  var hammerUtil = __webpack_require__(25);
+  var util = __webpack_require__(1);
 
   var ColorPicker = (function () {
     function ColorPicker() {
@@ -21938,13 +22512,13 @@ return /******/ (function(modules) { // webpackBootstrap
       this._create();
     }
 
+    /**
+     * this inserts the colorPicker into a div from the DOM
+     * @param container
+     */
+
     _createClass(ColorPicker, [{
       key: 'insertTo',
-
-      /**
-       * this inserts the colorPicker into a div from the DOM
-       * @param container
-       */
       value: function insertTo(container) {
         if (this.hammer !== undefined) {
           this.hammer.destroy();
@@ -21956,18 +22530,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this._setSize();
       }
-    }, {
-      key: 'setCallback',
 
       /**
        * the callback is executed on apply and save. Bind it to the application
        * @param callback
        */
+    }, {
+      key: 'setCallback',
       value: function setCallback(callback) {
         if (typeof callback === 'function') {
           this.updateCallback = callback;
         } else {
-          throw new Error('Function attempted to set as colorPicker callback is not a function.');
+          throw new Error("Function attempted to set as colorPicker callback is not a function.");
         }
       }
     }, {
@@ -21978,8 +22552,6 @@ return /******/ (function(modules) { // webpackBootstrap
           return htmlColors[color];
         }
       }
-    }, {
-      key: 'setColor',
 
       /**
        * Set the color of the colorPicker
@@ -21993,6 +22565,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param color
        * @param setInitial
        */
+    }, {
+      key: 'setColor',
       value: function setColor(color) {
         var setInitial = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
@@ -22031,19 +22605,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
         // set color
         if (rgba === undefined) {
-          throw new Error('Unknown color passed to the colorPicker. Supported are strings: rgb, hex, rgba. Object: rgb ({r:r,g:g,b:b,[a:a]}). Supplied: ' + JSON.stringify(color));
+          throw new Error("Unknown color passed to the colorPicker. Supported are strings: rgb, hex, rgba. Object: rgb ({r:r,g:g,b:b,[a:a]}). Supplied: " + JSON.stringify(color));
         } else {
           this._setColor(rgba, setInitial);
         }
       }
-    }, {
-      key: 'show',
 
       /**
        * this shows the color picker at a location. The hue circle is constructed once and stored.
        * @param x
        * @param y
        */
+    }, {
+      key: 'show',
       value: function show(x, y) {
         this.applied = false;
         this.frame.style.display = 'block';
@@ -22051,8 +22625,6 @@ return /******/ (function(modules) { // webpackBootstrap
         this.frame.style.left = x + 'px';
         this._generateHueCircle();
       }
-    }, {
-      key: '_hide',
 
       // ------------------------------------------ PRIVATE ----------------------------- //
 
@@ -22062,6 +22634,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param storePrevious
        * @private
        */
+    }, {
+      key: '_hide',
       value: function _hide() {
         var storePrevious = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
@@ -22076,46 +22650,44 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.frame.style.display = 'none';
       }
-    }, {
-      key: '_save',
 
       /**
        * bound to the save button. Saves and hides.
        * @private
        */
+    }, {
+      key: '_save',
       value: function _save() {
         this.updateCallback(this.color);
         this.applied = false;
         this._hide();
       }
-    }, {
-      key: '_apply',
 
       /**
        * Bound to apply button. Saves but does not close. Is undone by the cancel button.
        * @private
        */
+    }, {
+      key: '_apply',
       value: function _apply() {
         this.applied = true;
         this.updateCallback(this.color);
         this._updatePicker(this.color);
       }
-    }, {
-      key: '_loadLast',
 
       /**
        * load the color from the previous session.
        * @private
        */
+    }, {
+      key: '_loadLast',
       value: function _loadLast() {
         if (this.previousColor !== undefined) {
           this.setColor(this.previousColor, false);
         } else {
-          alert('There is no last color to load...');
+          alert("There is no last color to load...");
         }
       }
-    }, {
-      key: '_setColor',
 
       /**
        * set the color, place the picker
@@ -22123,6 +22695,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param setInitial
        * @private
        */
+    }, {
+      key: '_setColor',
       value: function _setColor(rgba) {
         var setInitial = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
@@ -22144,26 +22718,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this._updatePicker(rgba);
       }
-    }, {
-      key: '_setOpacity',
 
       /**
        * bound to opacity control
        * @param value
        * @private
        */
+    }, {
+      key: '_setOpacity',
       value: function _setOpacity(value) {
         this.color.a = value / 100;
         this._updatePicker(this.color);
       }
-    }, {
-      key: '_setBrightness',
 
       /**
        * bound to brightness control
        * @param value
        * @private
        */
+    }, {
+      key: '_setBrightness',
       value: function _setBrightness(value) {
         var hsv = util.RGBToHSV(this.color.r, this.color.g, this.color.b);
         hsv.v = value / 100;
@@ -22172,14 +22746,14 @@ return /******/ (function(modules) { // webpackBootstrap
         this.color = rgba;
         this._updatePicker();
       }
-    }, {
-      key: '_updatePicker',
 
       /**
        * update the colorpicker. A black circle overlays the hue circle to mimic the brightness decreasing.
        * @param rgba
        * @private
        */
+    }, {
+      key: '_updatePicker',
       value: function _updatePicker() {
         var rgba = arguments.length <= 0 || arguments[0] === undefined ? this.color : arguments[0];
 
@@ -22206,13 +22780,13 @@ return /******/ (function(modules) { // webpackBootstrap
         this.initialColorDiv.style.backgroundColor = 'rgba(' + this.initialColor.r + ',' + this.initialColor.g + ',' + this.initialColor.b + ',' + this.initialColor.a + ')';
         this.newColorDiv.style.backgroundColor = 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ',' + this.color.a + ')';
       }
-    }, {
-      key: '_setSize',
 
       /**
        * used by create to set the size of the canvas.
        * @private
        */
+    }, {
+      key: '_setSize',
       value: function _setSize() {
         this.colorPickerCanvas.style.width = '100%';
         this.colorPickerCanvas.style.height = '100%';
@@ -22220,14 +22794,14 @@ return /******/ (function(modules) { // webpackBootstrap
         this.colorPickerCanvas.width = 289 * this.pixelRatio;
         this.colorPickerCanvas.height = 289 * this.pixelRatio;
       }
-    }, {
-      key: '_create',
 
       /**
        * create all dom elements
        * TODO: cleanup, lots of similar dom elements
        * @private
        */
+    }, {
+      key: '_create',
       value: function _create() {
         this.frame = document.createElement('div');
         this.frame.className = 'vis-color-picker';
@@ -22248,10 +22822,10 @@ return /******/ (function(modules) { // webpackBootstrap
           noCanvas.innerHTML = 'Error: your browser does not support HTML canvas';
           this.colorPickerCanvas.appendChild(noCanvas);
         } else {
-          var ctx = this.colorPickerCanvas.getContext('2d');
+          var ctx = this.colorPickerCanvas.getContext("2d");
           this.pixelRatio = (window.devicePixelRatio || 1) / (ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1);
 
-          this.colorPickerCanvas.getContext('2d').setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+          this.colorPickerCanvas.getContext("2d").setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
         }
 
         this.colorPickerDiv.className = 'vis-color';
@@ -22300,39 +22874,39 @@ return /******/ (function(modules) { // webpackBootstrap
           me._setBrightness(this.value);
         };
 
-        this.brightnessLabel = document.createElement('div');
-        this.brightnessLabel.className = 'vis-label vis-brightness';
+        this.brightnessLabel = document.createElement("div");
+        this.brightnessLabel.className = "vis-label vis-brightness";
         this.brightnessLabel.innerHTML = 'brightness:';
 
-        this.opacityLabel = document.createElement('div');
-        this.opacityLabel.className = 'vis-label vis-opacity';
+        this.opacityLabel = document.createElement("div");
+        this.opacityLabel.className = "vis-label vis-opacity";
         this.opacityLabel.innerHTML = 'opacity:';
 
-        this.newColorDiv = document.createElement('div');
-        this.newColorDiv.className = 'vis-new-color';
+        this.newColorDiv = document.createElement("div");
+        this.newColorDiv.className = "vis-new-color";
         this.newColorDiv.innerHTML = 'new';
 
-        this.initialColorDiv = document.createElement('div');
-        this.initialColorDiv.className = 'vis-initial-color';
+        this.initialColorDiv = document.createElement("div");
+        this.initialColorDiv.className = "vis-initial-color";
         this.initialColorDiv.innerHTML = 'initial';
 
-        this.cancelButton = document.createElement('div');
-        this.cancelButton.className = 'vis-button vis-cancel';
+        this.cancelButton = document.createElement("div");
+        this.cancelButton.className = "vis-button vis-cancel";
         this.cancelButton.innerHTML = 'cancel';
         this.cancelButton.onclick = this._hide.bind(this, false);
 
-        this.applyButton = document.createElement('div');
-        this.applyButton.className = 'vis-button vis-apply';
+        this.applyButton = document.createElement("div");
+        this.applyButton.className = "vis-button vis-apply";
         this.applyButton.innerHTML = 'apply';
         this.applyButton.onclick = this._apply.bind(this);
 
-        this.saveButton = document.createElement('div');
-        this.saveButton.className = 'vis-button vis-save';
+        this.saveButton = document.createElement("div");
+        this.saveButton.className = "vis-button vis-save";
         this.saveButton.innerHTML = 'save';
         this.saveButton.onclick = this._save.bind(this);
 
-        this.loadButton = document.createElement('div');
-        this.loadButton.className = 'vis-button vis-load';
+        this.loadButton = document.createElement("div");
+        this.loadButton.className = "vis-button vis-load";
         this.loadButton.innerHTML = 'load last';
         this.loadButton.onclick = this._loadLast.bind(this);
 
@@ -22350,13 +22924,13 @@ return /******/ (function(modules) { // webpackBootstrap
         this.frame.appendChild(this.saveButton);
         this.frame.appendChild(this.loadButton);
       }
-    }, {
-      key: '_bindHammer',
 
       /**
        * bind hammer to the color picker
        * @private
        */
+    }, {
+      key: '_bindHammer',
       value: function _bindHammer() {
         var _this = this;
 
@@ -22381,13 +22955,13 @@ return /******/ (function(modules) { // webpackBootstrap
           _this._moveSelector(event);
         });
       }
-    }, {
-      key: '_generateHueCircle',
 
       /**
        * generate the hue circle. This is relatively heavy (200ms) and is done only once on the first time it is shown.
        * @private
        */
+    }, {
+      key: '_generateHueCircle',
       value: function _generateHueCircle() {
         if (this.generated === false) {
           var ctx = this.colorPickerCanvas.getContext('2d');
@@ -22429,8 +23003,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         this.generated = true;
       }
-    }, {
-      key: '_moveSelector',
 
       /**
        * move the selector. This is called by hammer functions.
@@ -22438,6 +23010,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param event
        * @private
        */
+    }, {
+      key: '_moveSelector',
       value: function _moveSelector(event) {
         var rect = this.colorPickerDiv.getBoundingClientRect();
         var left = event.center.x - rect.left;
@@ -22495,7 +23069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   var errorFound = false;
   var allOptions = undefined;
@@ -22509,15 +23083,15 @@ return /******/ (function(modules) { // webpackBootstrap
       _classCallCheck(this, Validator);
     }
 
+    /**
+     * Main function to be called
+     * @param options
+     * @param subObject
+     * @returns {boolean}
+     */
+
     _createClass(Validator, null, [{
       key: 'validate',
-
-      /**
-       * Main function to be called
-       * @param options
-       * @param subObject
-       * @returns {boolean}
-       */
       value: function validate(options, referenceOptions, subObject) {
         errorFound = false;
         allOptions = referenceOptions;
@@ -22528,8 +23102,6 @@ return /******/ (function(modules) { // webpackBootstrap
         Validator.parse(options, usedOptions, []);
         return errorFound;
       }
-    }, {
-      key: 'parse',
 
       /**
        * Will traverse an object recursively and check every value
@@ -22537,6 +23109,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param referenceOptions
        * @param path
        */
+    }, {
+      key: 'parse',
       value: function parse(options, referenceOptions, path) {
         for (var option in options) {
           if (options.hasOwnProperty(option)) {
@@ -22544,8 +23118,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'check',
 
       /**
        * Check every value. If the value is an object, call the parse function on that object.
@@ -22554,6 +23126,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param referenceOptions
        * @param path
        */
+    }, {
+      key: 'check',
       value: function check(option, options, referenceOptions, path) {
         if (referenceOptions[option] === undefined && referenceOptions.__any__ === undefined) {
           Validator.getSuggestion(option, referenceOptions, path);
@@ -22575,8 +23149,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'checkFields',
 
       /**
        *
@@ -22587,6 +23159,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {String}  refOptionType       | This is the type object from the reference options
        * @param {Array}   path      | where in the object is the option
        */
+    }, {
+      key: 'checkFields',
       value: function checkFields(option, options, referenceOptions, referenceOption, refOptionObj, path) {
         var optionType = Validator.getType(options[option]);
         var refOptionType = refOptionObj[optionType];
@@ -22596,11 +23170,11 @@ return /******/ (function(modules) { // webpackBootstrap
             if (refOptionType.indexOf(options[option]) === -1) {
               console.log('%cInvalid option detected in "' + option + '".' + ' Allowed values are:' + Validator.print(refOptionType) + ' not "' + options[option] + '". ' + Validator.printLocation(path, option), printStyle);
               errorFound = true;
-            } else if (optionType === 'object' && referenceOption !== '__any__') {
+            } else if (optionType === 'object' && referenceOption !== "__any__") {
               path = util.copyAndExtendArray(path, option);
               Validator.parse(options[option], referenceOptions[referenceOption], path);
             }
-          } else if (optionType === 'object' && referenceOption !== '__any__') {
+          } else if (optionType === 'object' && referenceOption !== "__any__") {
             path = util.copyAndExtendArray(path, option);
             Validator.parse(options[option], referenceOptions[referenceOption], path);
           }
@@ -22673,8 +23247,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         errorFound = true;
       }
-    }, {
-      key: 'findInOptions',
 
       /**
        * traverse the options in search for a match.
@@ -22684,6 +23256,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param recursive
        * @returns {{closestMatch: string, path: Array, distance: number}}
        */
+    }, {
+      key: 'findInOptions',
       value: function findInOptions(option, options, path) {
         var recursive = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 
@@ -22743,10 +23317,8 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'print',
       value: function print(options) {
-        return JSON.stringify(options).replace(/(\")|(\[)|(\])|(,"__type__")/g, '').replace(/(\,)/g, ', ');
+        return JSON.stringify(options).replace(/(\")|(\[)|(\])|(,"__type__")/g, "").replace(/(\,)/g, ', ');
       }
-    }, {
-      key: 'levenshteinDistance',
 
       // Compute the edit distance between the two given strings
       // http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#JavaScript
@@ -22756,6 +23328,8 @@ return /******/ (function(modules) { // webpackBootstrap
         The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
        */
+    }, {
+      key: 'levenshteinDistance',
       value: function levenshteinDistance(a, b) {
         if (a.length === 0) return b.length;
         if (b.length === 0) return a.length;
@@ -22834,6 +23408,7 @@ return /******/ (function(modules) { // webpackBootstrap
     //globals :
     align: { string: string },
     autoResize: { boolean: boolean },
+    throttleRedraw: { number: number },
     clickToUse: { boolean: boolean },
     dataAttributes: { string: string, array: array },
     editable: {
@@ -22871,8 +23446,21 @@ return /******/ (function(modules) { // webpackBootstrap
     },
     moment: { 'function': 'function' },
     groupOrder: { string: string, 'function': 'function' },
+    groupEditable: {
+      add: { boolean: boolean, 'undefined': 'undefined' },
+      remove: { boolean: boolean, 'undefined': 'undefined' },
+      order: { boolean: boolean, 'undefined': 'undefined' },
+      __type__: { boolean: boolean, object: object }
+    },
+    groupOrderSwap: { 'function': 'function' },
     height: { string: string, number: number },
-    hiddenDates: { object: object, array: array },
+    hiddenDates: {
+      start: { date: date, number: number, string: string, moment: moment },
+      end: { date: date, number: number, string: string, moment: moment },
+      repeat: { string: string },
+      __type__: { object: object, array: array }
+    },
+    itemsAlwaysDraggable: { boolean: boolean },
     locale: { string: string },
     locales: {
       __any__: { any: any },
@@ -22889,15 +23477,20 @@ return /******/ (function(modules) { // webpackBootstrap
     },
     max: { date: date, number: number, string: string, moment: moment },
     maxHeight: { number: number, string: string },
+    maxMinorChars: { number: number },
     min: { date: date, number: number, string: string, moment: moment },
     minHeight: { number: number, string: string },
     moveable: { boolean: boolean },
     multiselect: { boolean: boolean },
+    multiselectPerGroup: { boolean: boolean },
     onAdd: { 'function': 'function' },
     onUpdate: { 'function': 'function' },
     onMove: { 'function': 'function' },
     onMoving: { 'function': 'function' },
     onRemove: { 'function': 'function' },
+    onAddGroup: { 'function': 'function' },
+    onMoveGroup: { 'function': 'function' },
+    onRemoveGroup: { 'function': 'function' },
     order: { 'function': 'function' },
     orientation: {
       axis: { string: string, 'undefined': 'undefined' },
@@ -22932,6 +23525,7 @@ return /******/ (function(modules) { // webpackBootstrap
     global: {
       align: ['center', 'left', 'right'],
       autoResize: true,
+      throttleRedraw: [10, 0, 1000, 10],
       clickToUse: false,
       // dataAttributes: ['all'], // FIXME: can be 'all' or string[]
       editable: {
@@ -22965,6 +23559,7 @@ return /******/ (function(modules) { // webpackBootstrap
       },
 
       //groupOrder: {string, 'function': 'function'},
+      groupsDraggable: false,
       height: '',
       //hiddenDates: {object, array},
       locale: '',
@@ -22977,10 +23572,12 @@ return /******/ (function(modules) { // webpackBootstrap
       },
       max: '',
       maxHeight: '',
+      maxMinorChars: [7, 0, 20, 1],
       min: '',
       minHeight: '',
       moveable: false,
       multiselect: false,
+      multiselectPerGroup: false,
       //onAdd: {'function': 'function'},
       //onUpdate: {'function': 'function'},
       //onMove: {'function': 'function'},
@@ -23021,14 +23618,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var Emitter = __webpack_require__(19);
-  var Hammer = __webpack_require__(3);
-  var moment = __webpack_require__(8);
-  var util = __webpack_require__(7);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
-  var Range = __webpack_require__(26);
-  var Core = __webpack_require__(30);
+  var Emitter = __webpack_require__(12);
+  var Hammer = __webpack_require__(20);
+  var moment = __webpack_require__(2);
+  var util = __webpack_require__(1);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
+  var Range = __webpack_require__(24);
+  var Core = __webpack_require__(28);
   var TimeAxis = __webpack_require__(39);
   var CurrentTime = __webpack_require__(44);
   var CustomTime = __webpack_require__(42);
@@ -23050,7 +23647,7 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   function Graph2d(container, items, groups, options) {
     // if the third element is options, the forth is groups (optionally);
-    if (!(Array.isArray(groups) || groups instanceof DataSet) && groups instanceof Object) {
+    if (!(Array.isArray(groups) || groups instanceof DataSet || groups instanceof DataView) && groups instanceof Object) {
       var forthArgument = options;
       options = groups;
       groups = forthArgument;
@@ -23237,7 +23834,7 @@ return /******/ (function(modules) { // webpackBootstrap
     if (this.linegraph.groups[groupId] !== undefined) {
       return this.linegraph.groups[groupId].getLegend(width, height);
     } else {
-      return 'cannot find group:' + groupId;
+      return "cannot find group:'" + groupId + "'";
     }
   };
 
@@ -23360,16 +23957,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var DOMutil = __webpack_require__(13);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
-  var Component = __webpack_require__(28);
+  var util = __webpack_require__(1);
+  var DOMutil = __webpack_require__(7);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
+  var Component = __webpack_require__(26);
   var DataAxis = __webpack_require__(51);
   var GraphGroup = __webpack_require__(53);
   var Legend = __webpack_require__(57);
-  var BarFunctions = __webpack_require__(56);
-  var LineFunctions = __webpack_require__(54);
+  var Bars = __webpack_require__(54);
+  var Lines = __webpack_require__(56);
+  var Points = __webpack_require__(55);
 
   var UNGROUPED = '__ungrouped__'; // reserved group id for ungrouped items
 
@@ -23393,7 +23991,7 @@ return /******/ (function(modules) { // webpackBootstrap
       graphHeight: '400px',
       shaded: {
         enabled: false,
-        orientation: 'bottom' // top, bottom
+        orientation: 'bottom' // top, bottom, zero
       },
       style: 'line', // line, bar
       barChart: {
@@ -23450,7 +24048,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     };
 
-    // options is shared by this ItemSet and all its items
+    // options is shared by this lineGraph and all its items
     this.options = util.extend({}, this.defaultOptions);
     this.dom = {};
     this.props = {};
@@ -23554,7 +24152,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.updateSVGheight = true;
         this.updateSVGheightOnResize = true;
       } else if (this.body.domProps.centerContainer.height !== undefined && options.graphHeight !== undefined) {
-        if (parseInt((options.graphHeight + '').replace('px', '')) < this.body.domProps.centerContainer.height) {
+        if (parseInt((options.graphHeight + '').replace("px", '')) < this.body.domProps.centerContainer.height) {
           this.updateSVGheight = true;
         }
       }
@@ -23665,9 +24263,6 @@ return /******/ (function(modules) { // webpackBootstrap
       ids = this.itemsData.getIds();
       this._onAdd(ids);
     }
-    this._updateUngrouped();
-    //this._updateGraph();
-    this.redraw(true);
   };
 
   /**
@@ -23687,7 +24282,9 @@ return /******/ (function(modules) { // webpackBootstrap
       // remove all drawn groups
       ids = this.groupsData.getIds();
       this.groupsData = null;
-      this._onRemoveGroups(ids); // note: this will cause a redraw
+      for (var i = 0; i < ids.length; i++) {
+        this._removeGroup(ids[i]);
+      }
     }
 
     // replace the dataset
@@ -23710,18 +24307,10 @@ return /******/ (function(modules) { // webpackBootstrap
       ids = this.groupsData.getIds();
       this._onAddGroups(ids);
     }
-    this._onUpdate();
   };
 
-  /**
-   * Update the data
-   * @param [ids]
-   * @private
-   */
   LineGraph.prototype._onUpdate = function (ids) {
-    this._updateUngrouped();
     this._updateAllGroupData();
-    //this._updateGraph();
     this.redraw(true);
   };
   LineGraph.prototype._onAdd = function (ids) {
@@ -23731,12 +24320,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this._onUpdate(ids);
   };
   LineGraph.prototype._onUpdateGroups = function (groupIds) {
-    for (var i = 0; i < groupIds.length; i++) {
-      var group = this.groupsData.get(groupIds[i]);
-      this._updateGroup(group, groupIds[i]);
-    }
-
-    //this._updateGraph();
+    this._updateAllGroupData();
     this.redraw(true);
   };
   LineGraph.prototype._onAddGroups = function (groupIds) {
@@ -23750,22 +24334,29 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   LineGraph.prototype._onRemoveGroups = function (groupIds) {
     for (var i = 0; i < groupIds.length; i++) {
-      if (this.groups.hasOwnProperty(groupIds[i])) {
-        if (this.groups[groupIds[i]].options.yAxisOrientation == 'right') {
-          this.yAxisRight.removeGroup(groupIds[i]);
-          this.legendRight.removeGroup(groupIds[i]);
-          this.legendRight.redraw();
-        } else {
-          this.yAxisLeft.removeGroup(groupIds[i]);
-          this.legendLeft.removeGroup(groupIds[i]);
-          this.legendLeft.redraw();
-        }
-        delete this.groups[groupIds[i]];
-      }
+      this._removeGroup(groupIds[i]);
     }
-    this._updateUngrouped();
-    //this._updateGraph();
     this.redraw(true);
+  };
+
+  /**
+   * this cleans the group out off the legends and the dataaxis
+   * @param groupId
+   * @private
+   */
+  LineGraph.prototype._removeGroup = function (groupId) {
+    if (this.groups.hasOwnProperty(groupId)) {
+      if (this.groups[groupId].options.yAxisOrientation == 'right') {
+        this.yAxisRight.removeGroup(groupId);
+        this.legendRight.removeGroup(groupId);
+        this.legendRight.redraw();
+      } else {
+        this.yAxisLeft.removeGroup(groupId);
+        this.legendLeft.removeGroup(groupId);
+        this.legendLeft.redraw();
+      }
+      delete this.groups[groupId];
+    }
   };
 
   /**
@@ -23807,74 +24398,68 @@ return /******/ (function(modules) { // webpackBootstrap
   LineGraph.prototype._updateAllGroupData = function () {
     if (this.itemsData != null) {
       var groupsContent = {};
-      var groupId;
-      for (groupId in this.groups) {
-        if (this.groups.hasOwnProperty(groupId)) {
-          groupsContent[groupId] = [];
+      var items = this.itemsData.get();
+      //pre-Determine array sizes, for more efficient memory claim
+      var groupCounts = {};
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var groupId = item.group;
+        if (groupId === null || groupId === undefined) {
+          groupId = UNGROUPED;
         }
+        groupCounts.hasOwnProperty(groupId) ? groupCounts[groupId]++ : groupCounts[groupId] = 1;
       }
-      for (var itemId in this.itemsData._data) {
-        if (this.itemsData._data.hasOwnProperty(itemId)) {
-          var item = this.itemsData._data[itemId];
-          if (groupsContent[item.group] === undefined) {
-            throw new Error('Cannot find referenced group ' + item.group + '. Possible reason: items added before groups? Groups need to be added before items, as items refer to groups.');
-          }
-          item.x = util.convert(item.x, 'Date');
-          groupsContent[item.group].push(item);
+      //Now insert data into the arrays.
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var groupId = item.group;
+        if (groupId === null || groupId === undefined) {
+          groupId = UNGROUPED;
         }
-      }
-      for (groupId in this.groups) {
-        if (this.groups.hasOwnProperty(groupId)) {
-          this.groups[groupId].setItems(groupsContent[groupId]);
+        if (!groupsContent.hasOwnProperty(groupId)) {
+          groupsContent[groupId] = new Array(groupCounts[groupId]);
         }
-      }
-    }
-  };
+        //Copy data (because of unmodifiable DataView input.
+        var extended = util.bridgeObject(item);
+        extended.x = util.convert(item.x, 'Date');
+        extended.orginalY = item.y; //real Y
+        // typecast all items to numbers. Takes around 10ms for 500.000 items
+        extended.y = Number(item.y);
 
-  /**
-   * Create or delete the group holding all ungrouped items. This group is used when
-   * there are no groups specified. This anonymous group is called 'graph'.
-   * @protected
-   */
-  LineGraph.prototype._updateUngrouped = function () {
-    if (this.itemsData && this.itemsData != null) {
-      var ungroupedCounter = 0;
-      for (var itemId in this.itemsData._data) {
-        if (this.itemsData._data.hasOwnProperty(itemId)) {
-          var item = this.itemsData._data[itemId];
-          if (item != undefined) {
-            if (item.hasOwnProperty('group')) {
-              if (item.group === undefined) {
-                item.group = UNGROUPED;
-              }
-            } else {
-              item.group = UNGROUPED;
+        var index = groupsContent[groupId].length - groupCounts[groupId]--;
+        groupsContent[groupId][index] = extended;
+      }
+
+      //Make sure all groups are present, to allow removal of old groups
+      for (var groupId in this.groups) {
+        if (this.groups.hasOwnProperty(groupId)) {
+          if (!groupsContent.hasOwnProperty(groupId)) {
+            groupsContent[groupId] = new Array(0);
+          }
+        }
+      }
+
+      //Update legendas, style and axis
+      for (var groupId in groupsContent) {
+        if (groupsContent.hasOwnProperty(groupId)) {
+          if (groupsContent[groupId].length == 0) {
+            if (this.groups.hasOwnProperty(groupId)) {
+              this._removeGroup(groupId);
             }
-            ungroupedCounter = item.group == UNGROUPED ? ungroupedCounter + 1 : ungroupedCounter;
+          } else {
+            var group = undefined;
+            if (this.groupsData != undefined) {
+              group = this.groupsData.get(groupId);
+            }
+            if (group == undefined) {
+              group = { id: groupId, content: this.options.defaultGroup + groupId };
+            }
+            this._updateGroup(group, groupId);
+            this.groups[groupId].setItems(groupsContent[groupId]);
           }
         }
       }
-
-      if (ungroupedCounter == 0) {
-        delete this.groups[UNGROUPED];
-        this.legendLeft.removeGroup(UNGROUPED);
-        this.legendRight.removeGroup(UNGROUPED);
-        this.yAxisLeft.removeGroup(UNGROUPED);
-        this.yAxisRight.removeGroup(UNGROUPED);
-      } else {
-        var group = { id: UNGROUPED, content: this.options.defaultGroup };
-        this._updateGroup(group, UNGROUPED);
-      }
-    } else {
-      delete this.groups[UNGROUPED];
-      this.legendLeft.removeGroup(UNGROUPED);
-      this.legendRight.removeGroup(UNGROUPED);
-      this.yAxisLeft.removeGroup(UNGROUPED);
-      this.yAxisRight.removeGroup(UNGROUPED);
     }
-
-    this.legendLeft.redraw();
-    this.legendRight.redraw();
   };
 
   /**
@@ -23908,7 +24493,7 @@ return /******/ (function(modules) { // webpackBootstrap
       this.svg.style.left = util.option.asSize(-this.props.width);
 
       // if the height of the graph is set as proportional, change the height of the svg
-      if ((this.options.height + '').indexOf('%') != -1 || this.updateSVGheightOnResize == true) {
+      if ((this.options.height + '').indexOf("%") != -1 || this.updateSVGheightOnResize == true) {
         this.updateSVGheight = true;
       }
     }
@@ -23945,6 +24530,31 @@ return /******/ (function(modules) { // webpackBootstrap
     return resized;
   };
 
+  LineGraph.prototype._getSortedGroupIds = function () {
+    // getting group Ids
+    var grouplist = [];
+    for (var groupId in this.groups) {
+      if (this.groups.hasOwnProperty(groupId)) {
+        var group = this.groups[groupId];
+        if (group.visible == true && (this.options.groups.visibility[groupId] === undefined || this.options.groups.visibility[groupId] == true)) {
+          grouplist.push({ id: groupId, zIndex: group.options.zIndex });
+        }
+      }
+    }
+    util.insertSort(grouplist, function (a, b) {
+      var az = a.zIndex;
+      var bz = b.zIndex;
+      if (az === undefined) az = 0;
+      if (bz === undefined) bz = 0;
+      return az == bz ? 0 : az < bz ? -1 : 1;
+    });
+    var groupIds = new Array(grouplist.length);
+    for (var i = 0; i < grouplist.length; i++) {
+      groupIds[i] = grouplist[i].id;
+    }
+    return groupIds;
+  };
+
   /**
    * Update and redraw the graph.
    *
@@ -23954,26 +24564,17 @@ return /******/ (function(modules) { // webpackBootstrap
     DOMutil.prepareElements(this.svgElements);
     if (this.props.width != 0 && this.itemsData != null) {
       var group, i;
-      var preprocessedGroupData = {};
-      var processedGroupData = {};
       var groupRanges = {};
       var changeCalled = false;
+      // this is the range of the SVG canvas
+      var minDate = this.body.util.toGlobalTime(-this.body.domProps.root.width);
+      var maxDate = this.body.util.toGlobalTime(2 * this.body.domProps.root.width);
 
       // getting group Ids
-      var groupIds = [];
-      for (var groupId in this.groups) {
-        if (this.groups.hasOwnProperty(groupId)) {
-          group = this.groups[groupId];
-          if (group.visible == true && (this.options.groups.visibility[groupId] === undefined || this.options.groups.visibility[groupId] == true)) {
-            groupIds.push(groupId);
-          }
-        }
-      }
+      var groupIds = this._getSortedGroupIds();
       if (groupIds.length > 0) {
-        // this is the range of the SVG canvas
-        var minDate = this.body.util.toGlobalTime(-this.body.domProps.root.width);
-        var maxDate = this.body.util.toGlobalTime(2 * this.body.domProps.root.width);
         var groupsData = {};
+
         // fill groups data, this only loads the data we require based on the timewindow
         this._getRelevantData(groupIds, groupsData, minDate, maxDate);
 
@@ -23982,11 +24583,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
         // we transform the X coordinates to detect collisions
         for (i = 0; i < groupIds.length; i++) {
-          preprocessedGroupData[groupIds[i]] = this._convertXcoordinates(groupsData[groupIds[i]]);
+          this._convertXcoordinates(groupsData[groupIds[i]]);
         }
 
         // now all needed data has been collected we start the processing.
-        this._getYRanges(groupIds, preprocessedGroupData, groupRanges);
+        this._getYRanges(groupIds, groupsData, groupRanges);
 
         // update the Y axis first, we use this data to draw at the correct Y points
         // changeCalled is required to clean the SVG on a change emit.
@@ -24000,26 +24601,87 @@ return /******/ (function(modules) { // webpackBootstrap
           return true;
         } else {
           if (this.COUNTER > MAX_CYCLES) {
-            console.log('WARNING: there may be an infinite loop in the _updateGraph emitter cycle.');
+            console.log("WARNING: there may be an infinite loop in the _updateGraph emitter cycle.");
           }
           this.COUNTER = 0;
           this.abortedGraphUpdate = false;
 
           // With the yAxis scaled correctly, use this to get the Y values of the points.
+          var below = undefined;
           for (i = 0; i < groupIds.length; i++) {
             group = this.groups[groupIds[i]];
-            processedGroupData[groupIds[i]] = this._convertYcoordinates(groupsData[groupIds[i]], group);
+            if (this.options.stack === true && this.options.style === 'line') {
+              if (group.options.excludeFromStacking == undefined || !group.options.excludeFromStacking) {
+                if (below != undefined) {
+                  this._stack(groupsData[group.id], groupsData[below.id]);
+                  if (group.options.shaded.enabled == true && group.options.shaded.orientation !== "group") {
+                    if (group.options.shaded.orientation == "top" && below.options.shaded.orientation !== "group") {
+                      below.options.shaded.orientation = "group";
+                      below.options.shaded.groupId = group.id;
+                    } else {
+                      group.options.shaded.orientation = "group";
+                      group.options.shaded.groupId = below.id;
+                    }
+                  }
+                }
+                below = group;
+              }
+            }
+            this._convertYcoordinates(groupsData[groupIds[i]], group);
           }
 
-          // draw the groups
+          //Precalculate paths and draw shading if appropriate. This will make sure the shading is always behind any lines.
+          var paths = {};
           for (i = 0; i < groupIds.length; i++) {
             group = this.groups[groupIds[i]];
-            if (group.options.style != 'bar') {
-              // bar needs to be drawn enmasse
-              group.draw(processedGroupData[groupIds[i]], group, this.framework);
+            if (group.options.style === 'line' && group.options.shaded.enabled == true) {
+              var dataset = groupsData[groupIds[i]];
+              if (!paths.hasOwnProperty(groupIds[i])) {
+                paths[groupIds[i]] = Lines.calcPath(dataset, group);
+              }
+              if (group.options.shaded.orientation === "group") {
+                var subGroupId = group.options.shaded.groupId;
+                if (groupIds.indexOf(subGroupId) === -1) {
+                  console.log(group.id + ": Unknown shading group target given:" + subGroupId);
+                  continue;
+                }
+                if (!paths.hasOwnProperty(subGroupId)) {
+                  paths[subGroupId] = Lines.calcPath(groupsData[subGroupId], this.groups[subGroupId]);
+                }
+                Lines.drawShading(paths[groupIds[i]], group, paths[subGroupId], this.framework);
+              } else {
+                Lines.drawShading(paths[groupIds[i]], group, undefined, this.framework);
+              }
             }
           }
-          BarFunctions.draw(groupIds, processedGroupData, this.framework);
+
+          // draw the groups, calculating paths if still necessary.
+          Bars.draw(groupIds, groupsData, this.framework);
+          for (i = 0; i < groupIds.length; i++) {
+            group = this.groups[groupIds[i]];
+            if (groupsData[groupIds[i]].length > 0) {
+              switch (group.options.style) {
+                case "line":
+                  if (!paths.hasOwnProperty(groupIds[i])) {
+                    paths[groupIds[i]] = Lines.calcPath(groupsData[groupIds[i]], group);
+                  }
+                  Lines.draw(paths[groupIds[i]], group, this.framework);
+                //explicit no break;
+                case "point":
+                //explicit no break;
+                case "points":
+                  if (group.options.style == "point" || group.options.style == "points" || group.options.drawPoints.enabled == true) {
+                    Points.draw(groupsData[groupIds[i]], group, this.framework);
+                  }
+                  break;
+                case "bar":
+                // bar needs to be drawn enmasse
+                //explicit no break
+                default:
+                //do nothing...
+              }
+            }
+          }
         }
       }
     }
@@ -24027,6 +24689,49 @@ return /******/ (function(modules) { // webpackBootstrap
     // cleanup unused svg elements
     DOMutil.cleanupElements(this.svgElements);
     return false;
+  };
+
+  LineGraph.prototype._stack = function (data, subData) {
+    var index, dx, dy, subPrevPoint, subNextPoint;
+    index = 0;
+    // for each data point we look for a matching on in the set below
+    for (var j = 0; j < data.length; j++) {
+      subPrevPoint = undefined;
+      subNextPoint = undefined;
+      // we look for time matches or a before-after point
+      for (var k = index; k < subData.length; k++) {
+        // if times match exactly
+        if (subData[k].x === data[j].x) {
+          subPrevPoint = subData[k];
+          subNextPoint = subData[k];
+          index = k;
+          break;
+        } else if (subData[k].x > data[j].x) {
+          // overshoot
+          subNextPoint = subData[k];
+          if (k == 0) {
+            subPrevPoint = subNextPoint;
+          } else {
+            subPrevPoint = subData[k - 1];
+          }
+          index = k;
+          break;
+        }
+      }
+      // in case the last data point has been used, we assume it stays like this.
+      if (subNextPoint === undefined) {
+        subPrevPoint = subData[subData.length - 1];
+        subNextPoint = subData[subData.length - 1];
+      }
+      // linear interpolation
+      dx = subNextPoint.x - subPrevPoint.x;
+      dy = subNextPoint.y - subPrevPoint.y;
+      if (dx == 0) {
+        data[j].y = data[j].orginalY + subNextPoint.y;
+      } else {
+        data[j].y = data[j].orginalY + dy / dx * (data[j].x - subPrevPoint.x) + subPrevPoint.y; // ax + b where b is data[j].y
+      }
+    }
   };
 
   /**
@@ -24047,31 +24752,23 @@ return /******/ (function(modules) { // webpackBootstrap
     if (groupIds.length > 0) {
       for (i = 0; i < groupIds.length; i++) {
         group = this.groups[groupIds[i]];
-        groupsData[groupIds[i]] = [];
-        var dataContainer = groupsData[groupIds[i]];
+        var itemsData = group.getItems();
         // optimization for sorted data
         if (group.options.sort == true) {
-          var guess = Math.max(0, util.binarySearchValue(group.itemsData, minDate, 'x', 'before'));
-          for (j = guess; j < group.itemsData.length; j++) {
-            item = group.itemsData[j];
-            if (item !== undefined) {
-              if (item.x > maxDate) {
-                dataContainer.push(item);
-                break;
-              } else {
-                dataContainer.push(item);
-              }
-            }
+          var first = Math.max(0, util.binarySearchValue(itemsData, minDate, 'x', 'before'));
+          var last = Math.min(itemsData.length, util.binarySearchValue(itemsData, maxDate, 'x', 'after') + 1);
+          if (last <= 0) {
+            last = itemsData.length;
           }
+          var dataContainer = new Array(last - first);
+          for (j = first; j < last; j++) {
+            item = group.itemsData[j];
+            dataContainer[j - first] = item;
+          }
+          groupsData[groupIds[i]] = dataContainer;
         } else {
-          for (j = 0; j < group.itemsData.length; j++) {
-            item = group.itemsData[j];
-            if (item !== undefined) {
-              if (item.x > minDate && item.x < maxDate) {
-                dataContainer.push(item);
-              }
-            }
-          }
+          // If unsorted data, all data is relevant, just returning entire structure
+          groupsData[groupIds[i]] = group.itemsData;
         }
       }
     }
@@ -24100,11 +24797,12 @@ return /******/ (function(modules) { // webpackBootstrap
             var pointsPerPixel = amountOfPoints / xDistance;
             increment = Math.min(Math.ceil(0.2 * amountOfPoints), Math.max(1, Math.round(pointsPerPixel)));
 
-            var sampledData = [];
+            var sampledData = new Array(amountOfPoints);
             for (var j = 0; j < amountOfPoints; j += increment) {
-              sampledData.push(dataContainer[j]);
+              var idx = Math.round(j / increment);
+              sampledData[idx] = dataContainer[j];
             }
-            groupsData[groupIds[i]] = sampledData;
+            groupsData[groupIds[i]] = sampledData.splice(0, Math.round(amountOfPoints / increment));
           }
         }
       }
@@ -24133,9 +24831,9 @@ return /******/ (function(modules) { // webpackBootstrap
           // if bar graphs are stacked, their range need to be handled differently and accumulated over all groups.
           if (options.stack === true && options.style === 'bar') {
             if (options.yAxisOrientation === 'left') {
-              combinedDataLeft = combinedDataLeft.concat(group.getData(groupData));
+              combinedDataLeft = combinedDataLeft.concat(group.getItems());
             } else {
-              combinedDataRight = combinedDataRight.concat(group.getData(groupData));
+              combinedDataRight = combinedDataRight.concat(group.getItems());
             }
           } else {
             groupRanges[groupIds[i]] = group.getYRange(groupData, groupIds[i]);
@@ -24144,11 +24842,8 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       // if bar graphs are stacked, their range need to be handled differently and accumulated over all groups.
-      BarFunctions.getStackedYRange(combinedDataLeft, groupRanges, groupIds, '__barStackLeft', 'left');
-      BarFunctions.getStackedYRange(combinedDataRight, groupRanges, groupIds, '__barStackRight', 'right');
-      // if line graphs are stacked, their range need to be handled differently and accumulated over all groups.
-      //LineFunctions.getStackedYRange(combinedDataLeft , groupRanges, groupIds, '__lineStackLeft' , 'left' );
-      //LineFunctions.getStackedYRange(combinedDataRight, groupRanges, groupIds, '__lineStackRight', 'right');
+      Bars.getStackedYRange(combinedDataLeft, groupRanges, groupIds, '__barStackLeft', 'left');
+      Bars.getStackedYRange(combinedDataRight, groupRanges, groupIds, '__barStackRight', 'right');
     }
   };
 
@@ -24283,17 +24978,11 @@ return /******/ (function(modules) { // webpackBootstrap
    * @private
    */
   LineGraph.prototype._convertXcoordinates = function (datapoints) {
-    var extractedData = [];
-    var xValue, yValue;
     var toScreen = this.body.util.toScreen;
-
     for (var i = 0; i < datapoints.length; i++) {
-      xValue = toScreen(datapoints[i].x) + this.props.width;
-      yValue = datapoints[i].y;
-      extractedData.push({ x: xValue, y: yValue });
+      datapoints[i].screen_x = toScreen(datapoints[i].x) + this.props.width;
+      datapoints[i].screen_y = datapoints[i].y; //starting point for range calculations
     }
-
-    return extractedData;
   };
 
   /**
@@ -24307,25 +24996,15 @@ return /******/ (function(modules) { // webpackBootstrap
    * @private
    */
   LineGraph.prototype._convertYcoordinates = function (datapoints, group) {
-    var extractedData = [];
-    var xValue, yValue;
-    var toScreen = this.body.util.toScreen;
     var axis = this.yAxisLeft;
     var svgHeight = Number(this.svg.style.height.replace('px', ''));
     if (group.options.yAxisOrientation == 'right') {
       axis = this.yAxisRight;
     }
-
     for (var i = 0; i < datapoints.length; i++) {
-      var labelValue = datapoints[i].label ? datapoints[i].label : null;
-      xValue = toScreen(datapoints[i].x) + this.props.width;
-      yValue = Math.round(axis.convertValue(datapoints[i].y));
-      extractedData.push({ x: xValue, y: yValue, label: labelValue });
+      datapoints[i].screen_y = Math.round(axis.convertValue(datapoints[i].y));
     }
-
     group.setZeroPosition(Math.min(svgHeight, axis.convertValue(0)));
-
-    return extractedData;
   };
 
   module.exports = LineGraph;
@@ -24336,9 +25015,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var DOMutil = __webpack_require__(13);
-  var Component = __webpack_require__(28);
+  var util = __webpack_require__(1);
+  var DOMutil = __webpack_require__(7);
+  var Component = __webpack_require__(26);
   var DataStep = __webpack_require__(52);
 
   /**
@@ -24399,9 +25078,9 @@ return /******/ (function(modules) { // webpackBootstrap
     this.conversionFactor = 1;
 
     this.setOptions(options);
-    this.width = Number(('' + this.options.width).replace('px', ''));
+    this.width = Number(('' + this.options.width).replace("px", ""));
     this.minWidth = this.width;
-    this.height = this.linegraphSVG.offsetHeight;
+    this.height = this.linegraphSVG.getBoundingClientRect().height;
     this.hidden = false;
 
     this.stepPixels = 25;
@@ -24418,9 +25097,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // create the HTML DOM
     this._create();
+    this.framework = { svg: this.svg, svgElements: this.svgElements, options: this.options, groups: this.groups };
 
     var me = this;
-    this.body.emitter.on('verticalDrag', function () {
+    this.body.emitter.on("verticalDrag", function () {
       me.dom.lineContainer.style.top = me.body.domProps.scrollTop + 'px';
     });
   }
@@ -24454,7 +25134,7 @@ return /******/ (function(modules) { // webpackBootstrap
       var fields = ['orientation', 'showMinorLabels', 'showMajorLabels', 'icons', 'majorLinesOffset', 'minorLinesOffset', 'labelOffsetX', 'labelOffsetY', 'iconWidth', 'width', 'visible', 'left', 'right', 'alignZeros'];
       util.selectiveExtend(fields, this.options, options);
 
-      this.minWidth = Number(('' + this.options.width).replace('px', ''));
+      this.minWidth = Number(('' + this.options.width).replace("px", ""));
 
       if (redraw === true && this.dom.frame) {
         this.hide();
@@ -24477,12 +25157,12 @@ return /******/ (function(modules) { // webpackBootstrap
     this.dom.lineContainer.style.position = 'relative';
 
     // create svg element for graph drawing.
-    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    this.svg.style.position = 'absolute';
+    this.svg = document.createElementNS('http://www.w3.org/2000/svg', "svg");
+    this.svg.style.position = "absolute";
     this.svg.style.top = '0px';
     this.svg.style.height = '100%';
     this.svg.style.width = '100%';
-    this.svg.style.display = 'block';
+    this.svg.style.display = "block";
     this.dom.frame.appendChild(this.svg);
   };
 
@@ -24509,7 +25189,7 @@ return /******/ (function(modules) { // webpackBootstrap
     for (var i = 0; i < groupArray.length; i++) {
       var groupId = groupArray[i];
       if (this.groups[groupId].visible === true && (this.linegraphOptions.visibility[groupId] === undefined || this.linegraphOptions.visibility[groupId] === true)) {
-        this.groups[groupId].drawIcon(x, y, this.svgElements, this.svg, iconWidth, iconHeight);
+        this.groups[groupId].getLegend(iconWidth, iconHeight, this.framework, x, y);
         y += iconHeight + iconOffset;
       }
     }
@@ -24596,11 +25276,11 @@ return /******/ (function(modules) { // webpackBootstrap
       this.hide();
     } else {
       this.show();
-      this.height = Number(this.linegraphSVG.style.height.replace('px', ''));
+      this.height = Number(this.linegraphSVG.style.height.replace("px", ""));
 
       // svg offsetheight did not work in firefox and explorer...
       this.dom.lineContainer.style.height = this.height + 'px';
-      this.width = this.options.visible === true ? Number(('' + this.options.width).replace('px', '')) : 0;
+      this.width = this.options.visible === true ? Number(('' + this.options.width).replace("px", "")) : 0;
 
       var props = this.props;
       var frame = this.dom.frame;
@@ -24630,7 +25310,7 @@ return /******/ (function(modules) { // webpackBootstrap
         frame.style.left = '0';
         frame.style.bottom = '';
         frame.style.width = this.width + 'px';
-        frame.style.height = this.height + 'px';
+        frame.style.height = this.height + "px";
         this.props.width = this.body.domProps.left.width;
         this.props.height = this.body.domProps.left.height;
       } else {
@@ -24639,7 +25319,7 @@ return /******/ (function(modules) { // webpackBootstrap
         frame.style.bottom = '0';
         frame.style.left = '0';
         frame.style.width = this.width + 'px';
-        frame.style.height = this.height + 'px';
+        frame.style.height = this.height + "px";
         this.props.width = this.body.domProps.right.width;
         this.props.height = this.body.domProps.right.height;
       }
@@ -24763,7 +25443,7 @@ return /******/ (function(modules) { // webpackBootstrap
     // this will resize the yAxis to accommodate the labels.
     if (this.maxLabelSize > this.width - offset && this.options.visible === true) {
       this.width = this.maxLabelSize + offset;
-      this.options.width = this.width + 'px';
+      this.options.width = this.width + "px";
       DOMutil.cleanupElements(this.DOMelements.lines);
       DOMutil.cleanupElements(this.DOMelements.labels);
       this.redraw();
@@ -24771,17 +25451,17 @@ return /******/ (function(modules) { // webpackBootstrap
     }
     // this will resize the yAxis if it is too big for the labels.
     else if (this.maxLabelSize < this.width - offset && this.options.visible === true && this.width > this.minWidth) {
-      this.width = Math.max(this.minWidth, this.maxLabelSize + offset);
-      this.options.width = this.width + 'px';
-      DOMutil.cleanupElements(this.DOMelements.lines);
-      DOMutil.cleanupElements(this.DOMelements.labels);
-      this.redraw();
-      resized = true;
-    } else {
-      DOMutil.cleanupElements(this.DOMelements.lines);
-      DOMutil.cleanupElements(this.DOMelements.labels);
-      resized = false;
-    }
+        this.width = Math.max(this.minWidth, this.maxLabelSize + offset);
+        this.options.width = this.width + "px";
+        DOMutil.cleanupElements(this.DOMelements.lines);
+        DOMutil.cleanupElements(this.DOMelements.labels);
+        this.redraw();
+        resized = true;
+      } else {
+        DOMutil.cleanupElements(this.DOMelements.lines);
+        DOMutil.cleanupElements(this.DOMelements.labels);
+        resized = false;
+      }
 
     return resized;
   };
@@ -24812,10 +25492,10 @@ return /******/ (function(modules) { // webpackBootstrap
     label.innerHTML = text;
     if (orientation === 'left') {
       label.style.left = '-' + this.options.labelOffsetX + 'px';
-      label.style.textAlign = 'right';
+      label.style.textAlign = "right";
     } else {
       label.style.right = '-' + this.options.labelOffsetX + 'px';
-      label.style.textAlign = 'left';
+      label.style.textAlign = "left";
     }
 
     label.style.top = y - 0.5 * characterHeight + this.options.labelOffsetY + 'px';
@@ -25167,10 +25847,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var DOMutil = __webpack_require__(13);
-  var Line = __webpack_require__(54);
-  var Bar = __webpack_require__(56);
+  var util = __webpack_require__(1);
+  var DOMutil = __webpack_require__(7);
+  var Bars = __webpack_require__(54);
+  var Lines = __webpack_require__(56);
   var Points = __webpack_require__(55);
 
   /**
@@ -25185,7 +25865,7 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   function GraphGroup(group, groupId, options, groupsUsingDefaultStyles) {
     this.id = groupId;
-    var fields = ['sampling', 'style', 'sort', 'yAxisOrientation', 'barChart', 'drawPoints', 'shaded', 'interpolation'];
+    var fields = ['sampling', 'style', 'sort', 'yAxisOrientation', 'barChart', 'drawPoints', 'shaded', 'interpolation', 'zIndex'];
     this.options = util.selectiveBridgeObject(fields, options);
     this.usingDefaultStyle = group.className === undefined;
     this.groupsUsingDefaultStyles = groupsUsingDefaultStyles;
@@ -25206,21 +25886,21 @@ return /******/ (function(modules) { // webpackBootstrap
     if (items != null) {
       this.itemsData = items;
       if (this.options.sort == true) {
-        this.itemsData.sort(function (a, b) {
-          return a.x - b.x;
+        util.insertSort(this.itemsData, function (a, b) {
+          return a.x > b.x ? 1 : -1;
         });
-      }
-      // typecast all items to numbers. Takes around 10ms for 500.000 items
-      for (var i = 0; i < this.itemsData.length; i++) {
-        this.itemsData[i].y = Number(this.itemsData[i].y);
       }
     } else {
       this.itemsData = [];
     }
   };
 
+  GraphGroup.prototype.getItems = function () {
+    return this.itemsData;
+  };
+
   /**
-   * this is used for plotting barcharts, this way, we only have to calculate it once.
+   * this is used for barcharts and shading, this way, we only have to calculate it once.
    * @param pos
    */
   GraphGroup.prototype.setZeroPosition = function (pos) {
@@ -25233,7 +25913,7 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   GraphGroup.prototype.setOptions = function (options) {
     if (options !== undefined) {
-      var fields = ['sampling', 'style', 'sort', 'yAxisOrientation', 'barChart'];
+      var fields = ['sampling', 'style', 'sort', 'yAxisOrientation', 'barChart', 'excludeFromLegend', 'excludeFromStacking', 'zIndex'];
       util.selectiveDeepExtend(fields, this.options, options);
 
       // if the group's drawPoints is a function delegate the callback to the onRender property
@@ -25262,14 +25942,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       }
     }
-
-    if (this.options.style == 'line') {
-      this.type = new Line(this.id, this.options);
-    } else if (this.options.style == 'bar') {
-      this.type = new Bar(this.id, this.options);
-    } else if (this.options.style == 'points') {
-      this.type = new Points(this.id, this.options);
-    }
   };
 
   /**
@@ -25286,87 +25958,46 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * draw the icon for the legend.
-   *
-   * @param x
-   * @param y
-   * @param JSONcontainer
-   * @param SVGcontainer
-   * @param iconWidth
-   * @param iconHeight
-   */
-  GraphGroup.prototype.drawIcon = function (x, y, JSONcontainer, SVGcontainer, iconWidth, iconHeight) {
-    var fillHeight = iconHeight * 0.5;
-    var path, fillPath;
-
-    var outline = DOMutil.getSVGElement('rect', JSONcontainer, SVGcontainer);
-    outline.setAttributeNS(null, 'x', x);
-    outline.setAttributeNS(null, 'y', y - fillHeight);
-    outline.setAttributeNS(null, 'width', iconWidth);
-    outline.setAttributeNS(null, 'height', 2 * fillHeight);
-    outline.setAttributeNS(null, 'class', 'vis-outline');
-
-    if (this.options.style == 'line') {
-      path = DOMutil.getSVGElement('path', JSONcontainer, SVGcontainer);
-      path.setAttributeNS(null, 'class', this.className);
-      if (this.style !== undefined) {
-        path.setAttributeNS(null, 'style', this.style);
-      }
-
-      path.setAttributeNS(null, 'd', 'M' + x + ',' + y + ' L' + (x + iconWidth) + ',' + y + '');
-      if (this.options.shaded.enabled == true) {
-        fillPath = DOMutil.getSVGElement('path', JSONcontainer, SVGcontainer);
-        if (this.options.shaded.orientation == 'top') {
-          fillPath.setAttributeNS(null, 'd', 'M' + x + ', ' + (y - fillHeight) + 'L' + x + ',' + y + ' L' + (x + iconWidth) + ',' + y + ' L' + (x + iconWidth) + ',' + (y - fillHeight));
-        } else {
-          fillPath.setAttributeNS(null, 'd', 'M' + x + ',' + y + ' ' + 'L' + x + ',' + (y + fillHeight) + ' ' + 'L' + (x + iconWidth) + ',' + (y + fillHeight) + 'L' + (x + iconWidth) + ',' + y);
-        }
-        fillPath.setAttributeNS(null, 'class', this.className + ' vis-icon-fill');
-      }
-
-      if (this.options.drawPoints.enabled == true) {
-        var groupTemplate = {
-          style: this.options.drawPoints.style,
-          size: this.options.drawPoints.size,
-          className: this.className
-        };
-        DOMutil.drawPoint(x + 0.5 * iconWidth, y, groupTemplate, JSONcontainer, SVGcontainer);
-      }
-    } else {
-      var barWidth = Math.round(0.3 * iconWidth);
-      var bar1Height = Math.round(0.4 * iconHeight);
-      var bar2Height = Math.round(0.75 * iconHeight);
-
-      var offset = Math.round((iconWidth - 2 * barWidth) / 3);
-
-      DOMutil.drawBar(x + 0.5 * barWidth + offset, y + fillHeight - bar1Height - 1, barWidth, bar1Height, this.className + ' vis-bar', JSONcontainer, SVGcontainer, this.style);
-      DOMutil.drawBar(x + 1.5 * barWidth + offset + 2, y + fillHeight - bar2Height - 1, barWidth, bar2Height, this.className + ' vis-bar', JSONcontainer, SVGcontainer, this.style);
-    }
-  };
-
-  /**
    * return the legend entree for this group.
    *
    * @param iconWidth
    * @param iconHeight
    * @returns {{icon: HTMLElement, label: (group.content|*|string), orientation: (.options.yAxisOrientation|*)}}
    */
-  GraphGroup.prototype.getLegend = function (iconWidth, iconHeight) {
-    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    this.drawIcon(0, 0.5 * iconHeight, [], svg, iconWidth, iconHeight);
-    return { icon: svg, label: this.content, orientation: this.options.yAxisOrientation };
+  GraphGroup.prototype.getLegend = function (iconWidth, iconHeight, framework, x, y) {
+    if (framework == undefined || framework == null) {
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', "svg");
+      framework = { svg: svg, svgElements: {}, options: this.options, groups: [this] };
+    }
+    if (x == undefined || x == null) {
+      x = 0;
+    }
+    if (y == undefined || y == null) {
+      y = 0.5 * iconHeight;
+    }
+    switch (this.options.style) {
+      case "line":
+        Lines.drawIcon(this, x, y, iconWidth, iconHeight, framework);
+        break;
+      case "points": //explicit no break
+      case "point":
+        Points.drawIcon(this, x, y, iconWidth, iconHeight, framework);
+        break;
+      case "bar":
+        Bars.drawIcon(this, x, y, iconWidth, iconHeight, framework);
+        break;
+    }
+    return { icon: framework.svg, label: this.content, orientation: this.options.yAxisOrientation };
   };
 
   GraphGroup.prototype.getYRange = function (groupData) {
-    return this.type.getYRange(groupData);
-  };
-
-  GraphGroup.prototype.getData = function (groupData) {
-    return this.type.getData(groupData);
-  };
-
-  GraphGroup.prototype.draw = function (dataset, group, framework) {
-    this.type.draw(dataset, group, framework);
+    var yMin = groupData[0].y;
+    var yMax = groupData[0].y;
+    for (var j = 0; j < groupData.length; j++) {
+      yMin = yMin > groupData[j].y ? groupData[j].y : yMin;
+      yMax = yMax < groupData[j].y ? groupData[j].y : yMax;
+    }
+    return { min: yMin, max: yMax, yAxisOrientation: this.options.yAxisOrientation };
   };
 
   module.exports = GraphGroup;
@@ -25377,408 +26008,43 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
-  var DOMutil = __webpack_require__(13);
+  var DOMutil = __webpack_require__(7);
   var Points = __webpack_require__(55);
 
-  function Line(groupId, options) {
-    this.groupId = groupId;
-    this.options = options;
-  }
+  function Bargraph(groupId, options) {}
 
-  Line.prototype.getData = function (groupData) {
-    var combinedData = [];
-    for (var j = 0; j < groupData.length; j++) {
-      combinedData.push({
-        x: groupData[j].x,
-        y: groupData[j].y,
-        groupId: this.groupId
-      });
-    }
-    return combinedData;
-  };
+  Bargraph.drawIcon = function (group, x, y, iconWidth, iconHeight, framework) {
+    var fillHeight = iconHeight * 0.5;
+    var path, fillPath;
 
-  Line.prototype.getYRange = function (groupData) {
-    var yMin = groupData[0].y;
-    var yMax = groupData[0].y;
-    for (var j = 0; j < groupData.length; j++) {
-      yMin = yMin > groupData[j].y ? groupData[j].y : yMin;
-      yMax = yMax < groupData[j].y ? groupData[j].y : yMax;
-    }
-    return { min: yMin, max: yMax, yAxisOrientation: this.options.yAxisOrientation };
-  };
+    var outline = DOMutil.getSVGElement("rect", framework.svgElements, framework.svg);
+    outline.setAttributeNS(null, "x", x);
+    outline.setAttributeNS(null, "y", y - fillHeight);
+    outline.setAttributeNS(null, "width", iconWidth);
+    outline.setAttributeNS(null, "height", 2 * fillHeight);
+    outline.setAttributeNS(null, "class", "vis-outline");
 
-  Line.getStackedYRange = function (combinedData, groupRanges, groupIds, groupLabel, orientation) {
-    if (combinedData.length > 0) {
-      // sort by time and by group
-      combinedData.sort(function (a, b) {
-        if (a.x === b.x) {
-          return a.groupId < b.groupId ? -1 : 1;
-        } else {
-          return a.x - b.x;
-        }
-      });
-      var intersections = {};
+    var barWidth = Math.round(0.3 * iconWidth);
+    var originalWidth = group.options.barChart.width;
+    var scale = originalWidth / barWidth;
+    var bar1Height = Math.round(0.4 * iconHeight);
+    var bar2Height = Math.round(0.75 * iconHeight);
 
-      Line._getDataIntersections(intersections, combinedData);
-      groupRanges[groupLabel] = Line._getStackedYRange(intersections, combinedData);
-      groupRanges[groupLabel].yAxisOrientation = orientation;
-      groupIds.push(groupLabel);
-    }
-  };
+    var offset = Math.round((iconWidth - 2 * barWidth) / 3);
 
-  Line._getStackedYRange = function (intersections, combinedData) {
-    var key;
-    var yMin = combinedData[0].y;
-    var yMax = combinedData[0].y;
-    for (var i = 0; i < combinedData.length; i++) {
-      key = combinedData[i].x;
-      if (intersections[key] === undefined) {
-        yMin = yMin > combinedData[i].y ? combinedData[i].y : yMin;
-        yMax = yMax < combinedData[i].y ? combinedData[i].y : yMax;
-      } else {
-        if (combinedData[i].y < 0) {
-          intersections[key].accumulatedNegative += combinedData[i].y;
-        } else {
-          intersections[key].accumulatedPositive += combinedData[i].y;
-        }
-      }
-    }
-    for (var xpos in intersections) {
-      if (intersections.hasOwnProperty(xpos)) {
-        yMin = yMin > intersections[xpos].accumulatedNegative ? intersections[xpos].accumulatedNegative : yMin;
-        yMin = yMin > intersections[xpos].accumulatedPositive ? intersections[xpos].accumulatedPositive : yMin;
-        yMax = yMax < intersections[xpos].accumulatedNegative ? intersections[xpos].accumulatedNegative : yMax;
-        yMax = yMax < intersections[xpos].accumulatedPositive ? intersections[xpos].accumulatedPositive : yMax;
-      }
-    }
+    DOMutil.drawBar(x + 0.5 * barWidth + offset, y + fillHeight - bar1Height - 1, barWidth, bar1Height, group.className + ' vis-bar', framework.svgElements, framework.svg, group.style);
+    DOMutil.drawBar(x + 1.5 * barWidth + offset + 2, y + fillHeight - bar2Height - 1, barWidth, bar2Height, group.className + ' vis-bar', framework.svgElements, framework.svg, group.style);
 
-    return { min: yMin, max: yMax };
-  };
-
-  /**
-   * Fill the intersections object with counters of how many datapoints share the same x coordinates
-   * @param intersections
-   * @param combinedData
-   * @private
-   */
-  Line._getDataIntersections = function (intersections, combinedData) {
-    // get intersections
-    var coreDistance;
-    for (var i = 0; i < combinedData.length; i++) {
-      if (i + 1 < combinedData.length) {
-        coreDistance = Math.abs(combinedData[i + 1].x - combinedData[i].x);
-      }
-      if (i > 0) {
-        coreDistance = Math.min(coreDistance, Math.abs(combinedData[i - 1].x - combinedData[i].x));
-      }
-      if (coreDistance === 0) {
-        if (intersections[combinedData[i].x] === undefined) {
-          intersections[combinedData[i].x] = { amount: 0, resolved: 0, accumulatedPositive: 0, accumulatedNegative: 0 };
-        }
-        intersections[combinedData[i].x].amount += 1;
-      }
-    }
-  };
-
-  /**
-   * draw a line graph
-   *
-   * @param dataset
-   * @param group
-   */
-  Line.prototype.draw = function (dataset, group, framework) {
-    if (dataset != null) {
-      if (dataset.length > 0) {
-        var path, d;
-        var svgHeight = Number(framework.svg.style.height.replace('px', ''));
-        path = DOMutil.getSVGElement('path', framework.svgElements, framework.svg);
-        path.setAttributeNS(null, 'class', group.className);
-        if (group.style !== undefined) {
-          path.setAttributeNS(null, 'style', group.style);
-        }
-
-        // construct path from dataset
-        if (group.options.interpolation.enabled == true) {
-          d = Line._catmullRom(dataset, group);
-        } else {
-          d = Line._linear(dataset);
-        }
-
-        // append with points for fill and finalize the path
-        if (group.options.shaded.enabled == true) {
-          var fillPath = DOMutil.getSVGElement('path', framework.svgElements, framework.svg);
-          var dFill;
-          if (group.options.shaded.orientation == 'top') {
-            dFill = 'M' + dataset[0].x + ',' + 0 + ' ' + d + 'L' + dataset[dataset.length - 1].x + ',' + 0;
-          } else {
-            dFill = 'M' + dataset[0].x + ',' + svgHeight + ' ' + d + 'L' + dataset[dataset.length - 1].x + ',' + svgHeight;
-          }
-          fillPath.setAttributeNS(null, 'class', group.className + ' vis-fill');
-          if (group.options.shaded.style !== undefined) {
-            fillPath.setAttributeNS(null, 'style', group.options.shaded.style);
-          }
-          fillPath.setAttributeNS(null, 'd', dFill);
-        }
-        // copy properties to path for drawing.
-        path.setAttributeNS(null, 'd', 'M' + d);
-
-        // draw points
-        if (group.options.drawPoints.enabled == true) {
-          Points.draw(dataset, group, framework);
-        }
-      }
-    }
-  };
-
-  /**
-   * This uses an uniform parametrization of the interpolation algorithm:
-   * 'On the Parameterization of Catmull-Rom Curves' by Cem Yuksel et al.
-   * @param data
-   * @returns {string}
-   * @private
-   */
-  Line._catmullRomUniform = function (data) {
-    // catmull rom
-    var p0, p1, p2, p3, bp1, bp2;
-    var d = Math.round(data[0].x) + ',' + Math.round(data[0].y) + ' ';
-    var normalization = 1 / 6;
-    var length = data.length;
-    for (var i = 0; i < length - 1; i++) {
-
-      p0 = i == 0 ? data[0] : data[i - 1];
-      p1 = data[i];
-      p2 = data[i + 1];
-      p3 = i + 2 < length ? data[i + 2] : p2;
-
-      // Catmull-Rom to Cubic Bezier conversion matrix
-      //    0       1       0       0
-      //  -1/6      1      1/6      0
-      //    0      1/6      1     -1/6
-      //    0       0       1       0
-
-      //    bp0 = { x: p1.x,                               y: p1.y };
-      bp1 = { x: (-p0.x + 6 * p1.x + p2.x) * normalization, y: (-p0.y + 6 * p1.y + p2.y) * normalization };
-      bp2 = { x: (p1.x + 6 * p2.x - p3.x) * normalization, y: (p1.y + 6 * p2.y - p3.y) * normalization };
-      //    bp0 = { x: p2.x,                               y: p2.y };
-
-      d += 'C' + bp1.x + ',' + bp1.y + ' ' + bp2.x + ',' + bp2.y + ' ' + p2.x + ',' + p2.y + ' ';
-    }
-
-    return d;
-  };
-
-  /**
-   * This uses either the chordal or centripetal parameterization of the catmull-rom algorithm.
-   * By default, the centripetal parameterization is used because this gives the nicest results.
-   * These parameterizations are relatively heavy because the distance between 4 points have to be calculated.
-   *
-   * One optimization can be used to reuse distances since this is a sliding window approach.
-   * @param data
-   * @param group
-   * @returns {string}
-   * @private
-   */
-  Line._catmullRom = function (data, group) {
-    var alpha = group.options.interpolation.alpha;
-    if (alpha == 0 || alpha === undefined) {
-      return this._catmullRomUniform(data);
-    } else {
-      var p0, p1, p2, p3, bp1, bp2, d1, d2, d3, A, B, N, M;
-      var d3powA, d2powA, d3pow2A, d2pow2A, d1pow2A, d1powA;
-      var d = Math.round(data[0].x) + ',' + Math.round(data[0].y) + ' ';
-      var length = data.length;
-      for (var i = 0; i < length - 1; i++) {
-
-        p0 = i == 0 ? data[0] : data[i - 1];
-        p1 = data[i];
-        p2 = data[i + 1];
-        p3 = i + 2 < length ? data[i + 2] : p2;
-
-        d1 = Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
-        d2 = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-        d3 = Math.sqrt(Math.pow(p2.x - p3.x, 2) + Math.pow(p2.y - p3.y, 2));
-
-        // Catmull-Rom to Cubic Bezier conversion matrix
-
-        // A = 2d1^2a + 3d1^a * d2^a + d3^2a
-        // B = 2d3^2a + 3d3^a * d2^a + d2^2a
-
-        // [   0             1            0          0          ]
-        // [   -d2^2a /N     A/N          d1^2a /N   0          ]
-        // [   0             d3^2a /M     B/M        -d2^2a /M  ]
-        // [   0             0            1          0          ]
-
-        d3powA = Math.pow(d3, alpha);
-        d3pow2A = Math.pow(d3, 2 * alpha);
-        d2powA = Math.pow(d2, alpha);
-        d2pow2A = Math.pow(d2, 2 * alpha);
-        d1powA = Math.pow(d1, alpha);
-        d1pow2A = Math.pow(d1, 2 * alpha);
-
-        A = 2 * d1pow2A + 3 * d1powA * d2powA + d2pow2A;
-        B = 2 * d3pow2A + 3 * d3powA * d2powA + d2pow2A;
-        N = 3 * d1powA * (d1powA + d2powA);
-        if (N > 0) {
-          N = 1 / N;
-        }
-        M = 3 * d3powA * (d3powA + d2powA);
-        if (M > 0) {
-          M = 1 / M;
-        }
-
-        bp1 = { x: (-d2pow2A * p0.x + A * p1.x + d1pow2A * p2.x) * N,
-          y: (-d2pow2A * p0.y + A * p1.y + d1pow2A * p2.y) * N };
-
-        bp2 = { x: (d3pow2A * p1.x + B * p2.x - d2pow2A * p3.x) * M,
-          y: (d3pow2A * p1.y + B * p2.y - d2pow2A * p3.y) * M };
-
-        if (bp1.x == 0 && bp1.y == 0) {
-          bp1 = p1;
-        }
-        if (bp2.x == 0 && bp2.y == 0) {
-          bp2 = p2;
-        }
-        d += 'C' + bp1.x + ',' + bp1.y + ' ' + bp2.x + ',' + bp2.y + ' ' + p2.x + ',' + p2.y + ' ';
-      }
-
-      return d;
-    }
-  };
-
-  /**
-   * this generates the SVG path for a linear drawing between datapoints.
-   * @param data
-   * @returns {string}
-   * @private
-   */
-  Line._linear = function (data) {
-    // linear
-    var d = '';
-    for (var i = 0; i < data.length; i++) {
-      if (i == 0) {
-        d += data[i].x + ',' + data[i].y;
-      } else {
-        d += ' ' + data[i].x + ',' + data[i].y;
-      }
-    }
-    return d;
-  };
-
-  module.exports = Line;
-
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-  'use strict';
-
-  var DOMutil = __webpack_require__(13);
-
-  function Points(groupId, options) {
-    this.groupId = groupId;
-    this.options = options;
-  }
-
-  Points.prototype.getYRange = function (groupData) {
-    var yMin = groupData[0].y;
-    var yMax = groupData[0].y;
-    for (var j = 0; j < groupData.length; j++) {
-      yMin = yMin > groupData[j].y ? groupData[j].y : yMin;
-      yMax = yMax < groupData[j].y ? groupData[j].y : yMax;
-    }
-    return { min: yMin, max: yMax, yAxisOrientation: this.options.yAxisOrientation };
-  };
-
-  Points.prototype.draw = function (dataset, group, framework, offset) {
-    Points.draw(dataset, group, framework, offset);
-  };
-
-  /**
-   * draw the data points
-   *
-   * @param {Array} dataset
-   * @param {Object} JSONcontainer
-   * @param {Object} svg            | SVG DOM element
-   * @param {GraphGroup} group
-   * @param {Number} [offset]
-   */
-  Points.draw = function (dataset, group, framework, offset) {
-    offset = offset || 0;
-    var callback = getCallback();
-
-    for (var i = 0; i < dataset.length; i++) {
-      if (!callback) {
-        // draw the point the simple way.
-        DOMutil.drawPoint(dataset[i].x + offset, dataset[i].y, getGroupTemplate(), framework.svgElements, framework.svg, dataset[i].label);
-      } else {
-        var callbackResult = callback(dataset[i], group, framework); // result might be true, false or an object
-        if (callbackResult === true || typeof callbackResult === 'object') {
-          DOMutil.drawPoint(dataset[i].x + offset, dataset[i].y, getGroupTemplate(callbackResult), framework.svgElements, framework.svg, dataset[i].label);
-        }
-      }
-    }
-
-    function getGroupTemplate(callbackResult) {
-      callbackResult = typeof callbackResult === 'undefined' ? {} : callbackResult;
-      return {
-        style: callbackResult.style || group.options.drawPoints.style,
-        size: callbackResult.size || group.options.drawPoints.size,
-        className: callbackResult.className || group.className
+    if (group.options.drawPoints.enabled == true) {
+      var groupTemplate = {
+        style: group.options.drawPoints.style,
+        styles: group.options.drawPoints.styles,
+        size: group.options.drawPoints.size / scale,
+        className: group.className
       };
+      DOMutil.drawPoint(x + 0.5 * barWidth + offset, y + fillHeight - bar1Height - 1, groupTemplate, framework.svgElements, framework.svg);
+      DOMutil.drawPoint(x + 1.5 * barWidth + offset + 2, y + fillHeight - bar2Height - 1, groupTemplate, framework.svgElements, framework.svg);
     }
-
-    function getCallback() {
-      var callback = undefined;
-      // check for the graph2d onRender
-      if (framework.options.drawPoints.onRender && typeof framework.options.drawPoints.onRender == 'function') {
-        callback = framework.options.drawPoints.onRender;
-      }
-
-      // override it with the group onRender if defined
-      if (group.group.options && group.group.options.drawPoints && group.group.options.drawPoints.onRender && typeof group.group.options.drawPoints.onRender == 'function') {
-        callback = group.group.options.drawPoints.onRender;
-      }
-
-      return callback;
-    }
-  };
-
-  module.exports = Points;
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-  'use strict';
-
-  var DOMutil = __webpack_require__(13);
-  var Points = __webpack_require__(55);
-
-  function Bargraph(groupId, options) {
-    this.groupId = groupId;
-    this.options = options;
-  }
-
-  Bargraph.prototype.getYRange = function (groupData) {
-    var yMin = groupData[0].y;
-    var yMax = groupData[0].y;
-    for (var j = 0; j < groupData.length; j++) {
-      yMin = yMin > groupData[j].y ? groupData[j].y : yMin;
-      yMax = yMax < groupData[j].y ? groupData[j].y : yMax;
-    }
-    return { min: yMin, max: yMax, yAxisOrientation: this.options.yAxisOrientation };
-  };
-
-  Bargraph.prototype.getData = function (groupData) {
-    var combinedData = [];
-    for (var j = 0; j < groupData.length; j++) {
-      combinedData.push({
-        x: groupData[j].x,
-        y: groupData[j].y,
-        groupId: this.groupId
-      });
-    }
-    return combinedData;
   };
 
   /**
@@ -25803,6 +26069,8 @@ return /******/ (function(modules) { // webpackBootstrap
         if (group.visible === true && (framework.options.groups.visibility[groupIds[i]] === undefined || framework.options.groups.visibility[groupIds[i]] === true)) {
           for (j = 0; j < processedGroupData[groupIds[i]].length; j++) {
             combinedData.push({
+              screen_x: processedGroupData[groupIds[i]][j].screen_x,
+              screen_y: processedGroupData[groupIds[i]][j].screen_y,
               x: processedGroupData[groupIds[i]][j].x,
               y: processedGroupData[groupIds[i]][j].y,
               groupId: groupIds[i],
@@ -25820,10 +26088,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // sort by time and by group
     combinedData.sort(function (a, b) {
-      if (a.x === b.x) {
+      if (a.screen_x === b.screen_x) {
         return a.groupId < b.groupId ? -1 : 1;
       } else {
-        return a.x - b.x;
+        return a.screen_x - b.screen_x;
       }
     });
 
@@ -25835,35 +26103,35 @@ return /******/ (function(modules) { // webpackBootstrap
       group = framework.groups[combinedData[i].groupId];
       var minWidth = 0.1 * group.options.barChart.width;
 
-      key = combinedData[i].x;
+      key = combinedData[i].screen_x;
       var heightOffset = 0;
       if (intersections[key] === undefined) {
         if (i + 1 < combinedData.length) {
-          coreDistance = Math.abs(combinedData[i + 1].x - key);
+          coreDistance = Math.abs(combinedData[i + 1].screen_x - key);
         }
         if (i > 0) {
-          coreDistance = Math.min(coreDistance, Math.abs(combinedData[i - 1].x - key));
+          coreDistance = Math.min(coreDistance, Math.abs(combinedData[i - 1].screen_x - key));
         }
         drawData = Bargraph._getSafeDrawData(coreDistance, group, minWidth);
       } else {
         var nextKey = i + (intersections[key].amount - intersections[key].resolved);
         var prevKey = i - (intersections[key].resolved + 1);
         if (nextKey < combinedData.length) {
-          coreDistance = Math.abs(combinedData[nextKey].x - key);
+          coreDistance = Math.abs(combinedData[nextKey].screen_x - key);
         }
         if (prevKey > 0) {
-          coreDistance = Math.min(coreDistance, Math.abs(combinedData[prevKey].x - key));
+          coreDistance = Math.min(coreDistance, Math.abs(combinedData[prevKey].screen_x - key));
         }
         drawData = Bargraph._getSafeDrawData(coreDistance, group, minWidth);
         intersections[key].resolved += 1;
 
         if (group.options.stack === true) {
-          if (combinedData[i].y < group.zeroPosition) {
+          if (combinedData[i].screen_y < group.zeroPosition) {
             heightOffset = intersections[key].accumulatedNegative;
-            intersections[key].accumulatedNegative += group.zeroPosition - combinedData[i].y;
+            intersections[key].accumulatedNegative += group.zeroPosition - combinedData[i].screen_y;
           } else {
             heightOffset = intersections[key].accumulatedPositive;
-            intersections[key].accumulatedPositive += group.zeroPosition - combinedData[i].y;
+            intersections[key].accumulatedPositive += group.zeroPosition - combinedData[i].screen_y;
           }
         } else if (group.options.barChart.sideBySide === true) {
           drawData.width = drawData.width / intersections[key].amount;
@@ -25875,10 +26143,18 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-      DOMutil.drawBar(combinedData[i].x + drawData.offset, combinedData[i].y - heightOffset, drawData.width, group.zeroPosition - combinedData[i].y, group.className + ' vis-bar', framework.svgElements, framework.svg, group.style);
+      DOMutil.drawBar(combinedData[i].screen_x + drawData.offset, combinedData[i].screen_y - heightOffset, drawData.width, group.zeroPosition - combinedData[i].screen_y, group.className + ' vis-bar', framework.svgElements, framework.svg, group.style);
       // draw points
       if (group.options.drawPoints.enabled === true) {
-        Points.draw([combinedData[i]], group, framework, drawData.offset);
+        var pointData = {
+          screen_x: combinedData[i].screen_x,
+          screen_y: combinedData[i].screen_y - heightOffset,
+          x: combinedData[i].x,
+          y: combinedData[i].y,
+          groupId: combinedData[i].groupId,
+          label: combinedData[i].label
+        };
+        Points.draw([pointData], group, framework, drawData.offset);
         //DOMutil.drawPoint(combinedData[i].x + drawData.offset, combinedData[i].y, group, framework.svgElements, framework.svg);
       }
     }
@@ -25895,16 +26171,21 @@ return /******/ (function(modules) { // webpackBootstrap
     var coreDistance;
     for (var i = 0; i < combinedData.length; i++) {
       if (i + 1 < combinedData.length) {
-        coreDistance = Math.abs(combinedData[i + 1].x - combinedData[i].x);
+        coreDistance = Math.abs(combinedData[i + 1].screen_x - combinedData[i].screen_x);
       }
       if (i > 0) {
-        coreDistance = Math.min(coreDistance, Math.abs(combinedData[i - 1].x - combinedData[i].x));
+        coreDistance = Math.min(coreDistance, Math.abs(combinedData[i - 1].screen_x - combinedData[i].screen_x));
       }
       if (coreDistance === 0) {
-        if (intersections[combinedData[i].x] === undefined) {
-          intersections[combinedData[i].x] = { amount: 0, resolved: 0, accumulatedPositive: 0, accumulatedNegative: 0 };
+        if (intersections[combinedData[i].screen_x] === undefined) {
+          intersections[combinedData[i].screen_x] = {
+            amount: 0,
+            resolved: 0,
+            accumulatedPositive: 0,
+            accumulatedNegative: 0
+          };
         }
-        intersections[combinedData[i].x].amount += 1;
+        intersections[combinedData[i].screen_x].amount += 1;
       }
     }
   };
@@ -25947,10 +26228,10 @@ return /******/ (function(modules) { // webpackBootstrap
     if (combinedData.length > 0) {
       // sort by time and by group
       combinedData.sort(function (a, b) {
-        if (a.x === b.x) {
+        if (a.screen_x === b.screen_x) {
           return a.groupId < b.groupId ? -1 : 1;
         } else {
-          return a.x - b.x;
+          return a.screen_x - b.screen_x;
         }
       });
       var intersections = {};
@@ -25964,18 +26245,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
   Bargraph._getStackedYRange = function (intersections, combinedData) {
     var key;
-    var yMin = combinedData[0].y;
-    var yMax = combinedData[0].y;
+    var yMin = combinedData[0].screen_y;
+    var yMax = combinedData[0].screen_y;
     for (var i = 0; i < combinedData.length; i++) {
-      key = combinedData[i].x;
+      key = combinedData[i].screen_x;
       if (intersections[key] === undefined) {
-        yMin = yMin > combinedData[i].y ? combinedData[i].y : yMin;
-        yMax = yMax < combinedData[i].y ? combinedData[i].y : yMax;
+        yMin = yMin > combinedData[i].screen_y ? combinedData[i].screen_y : yMin;
+        yMax = yMax < combinedData[i].screen_y ? combinedData[i].screen_y : yMax;
       } else {
-        if (combinedData[i].y < 0) {
-          intersections[key].accumulatedNegative += combinedData[i].y;
+        if (combinedData[i].screen_y < 0) {
+          intersections[key].accumulatedNegative += combinedData[i].screen_y;
         } else {
-          intersections[key].accumulatedPositive += combinedData[i].y;
+          intersections[key].accumulatedPositive += combinedData[i].screen_y;
         }
       }
     }
@@ -25994,14 +26275,380 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Bargraph;
 
 /***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  var DOMutil = __webpack_require__(7);
+
+  function Points(groupId, options) {}
+
+  /**
+   * draw the data points
+   *
+   * @param {Array} dataset
+   * @param {Object} JSONcontainer
+   * @param {Object} svg            | SVG DOM element
+   * @param {GraphGroup} group
+   * @param {Number} [offset]
+   */
+  Points.draw = function (dataset, group, framework, offset) {
+    offset = offset || 0;
+    var callback = getCallback(framework, group);
+
+    for (var i = 0; i < dataset.length; i++) {
+      if (!callback) {
+        // draw the point the simple way.
+        DOMutil.drawPoint(dataset[i].screen_x + offset, dataset[i].screen_y, getGroupTemplate(group), framework.svgElements, framework.svg, dataset[i].label);
+      } else {
+        var callbackResult = callback(dataset[i], group); // result might be true, false or an object
+        if (callbackResult === true || typeof callbackResult === 'object') {
+          DOMutil.drawPoint(dataset[i].screen_x + offset, dataset[i].screen_y, getGroupTemplate(group, callbackResult), framework.svgElements, framework.svg, dataset[i].label);
+        }
+      }
+    }
+  };
+
+  Points.drawIcon = function (group, x, y, iconWidth, iconHeight, framework) {
+    var fillHeight = iconHeight * 0.5;
+    var path, fillPath;
+
+    var outline = DOMutil.getSVGElement("rect", framework.svgElements, framework.svg);
+    outline.setAttributeNS(null, "x", x);
+    outline.setAttributeNS(null, "y", y - fillHeight);
+    outline.setAttributeNS(null, "width", iconWidth);
+    outline.setAttributeNS(null, "height", 2 * fillHeight);
+    outline.setAttributeNS(null, "class", "vis-outline");
+
+    //Don't call callback on icon
+    DOMutil.drawPoint(x + 0.5 * iconWidth, y, getGroupTemplate(group), framework.svgElements, framework.svg);
+  };
+
+  function getGroupTemplate(group, callbackResult) {
+    callbackResult = typeof callbackResult === 'undefined' ? {} : callbackResult;
+    return {
+      style: callbackResult.style || group.options.drawPoints.style,
+      styles: callbackResult.styles || group.options.drawPoints.styles,
+      size: callbackResult.size || group.options.drawPoints.size,
+      className: callbackResult.className || group.className
+    };
+  }
+
+  function getCallback(framework, group) {
+    var callback = undefined;
+    // check for the graph2d onRender
+    if (framework.options && framework.options.drawPoints && framework.options.drawPoints.onRender && typeof framework.options.drawPoints.onRender == 'function') {
+      callback = framework.options.drawPoints.onRender;
+    }
+
+    // override it with the group onRender if defined
+    if (group.group.options && group.group.options.drawPoints && group.group.options.drawPoints.onRender && typeof group.group.options.drawPoints.onRender == 'function') {
+      callback = group.group.options.drawPoints.onRender;
+    }
+    return callback;
+  }
+
+  module.exports = Points;
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+  "use strict";
+
+  var DOMutil = __webpack_require__(7);
+
+  function Line(groupId, options) {}
+
+  Line.calcPath = function (dataset, group) {
+      if (dataset != null) {
+          if (dataset.length > 0) {
+              var d = [];
+
+              // construct path from dataset
+              if (group.options.interpolation.enabled == true) {
+                  d = Line._catmullRom(dataset, group);
+              } else {
+                  d = Line._linear(dataset);
+              }
+              return d;
+          }
+      }
+  };
+
+  Line.drawIcon = function (group, x, y, iconWidth, iconHeight, framework) {
+      var fillHeight = iconHeight * 0.5;
+      var path, fillPath;
+
+      var outline = DOMutil.getSVGElement("rect", framework.svgElements, framework.svg);
+      outline.setAttributeNS(null, "x", x);
+      outline.setAttributeNS(null, "y", y - fillHeight);
+      outline.setAttributeNS(null, "width", iconWidth);
+      outline.setAttributeNS(null, "height", 2 * fillHeight);
+      outline.setAttributeNS(null, "class", "vis-outline");
+
+      path = DOMutil.getSVGElement("path", framework.svgElements, framework.svg);
+      path.setAttributeNS(null, "class", group.className);
+      if (group.style !== undefined) {
+          path.setAttributeNS(null, "style", group.style);
+      }
+
+      path.setAttributeNS(null, "d", "M" + x + "," + y + " L" + (x + iconWidth) + "," + y + "");
+      if (group.options.shaded.enabled == true) {
+          fillPath = DOMutil.getSVGElement("path", framework.svgElements, framework.svg);
+          if (group.options.shaded.orientation == 'top') {
+              fillPath.setAttributeNS(null, "d", "M" + x + ", " + (y - fillHeight) + "L" + x + "," + y + " L" + (x + iconWidth) + "," + y + " L" + (x + iconWidth) + "," + (y - fillHeight));
+          } else {
+              fillPath.setAttributeNS(null, "d", "M" + x + "," + y + " " + "L" + x + "," + (y + fillHeight) + " " + "L" + (x + iconWidth) + "," + (y + fillHeight) + "L" + (x + iconWidth) + "," + y);
+          }
+          fillPath.setAttributeNS(null, "class", group.className + " vis-icon-fill");
+          if (group.options.shaded.style !== undefined && group.options.shaded.style !== "") {
+              fillPath.setAttributeNS(null, "style", group.options.shaded.style);
+          }
+      }
+
+      if (group.options.drawPoints.enabled == true) {
+          var groupTemplate = {
+              style: group.options.drawPoints.style,
+              styles: group.options.drawPoints.styles,
+              size: group.options.drawPoints.size,
+              className: group.className
+          };
+          DOMutil.drawPoint(x + 0.5 * iconWidth, y, groupTemplate, framework.svgElements, framework.svg);
+      }
+  };
+
+  Line.drawShading = function (pathArray, group, subPathArray, framework) {
+      // append shading to the path
+      if (group.options.shaded.enabled == true) {
+          var svgHeight = Number(framework.svg.style.height.replace('px', ''));
+          var fillPath = DOMutil.getSVGElement('path', framework.svgElements, framework.svg);
+          var type = "L";
+          if (group.options.interpolation.enabled == true) {
+              type = "C";
+          }
+          var dFill;
+          var zero = 0;
+          if (group.options.shaded.orientation == 'top') {
+              zero = 0;
+          } else if (group.options.shaded.orientation == 'bottom') {
+              zero = svgHeight;
+          } else {
+              zero = Math.min(Math.max(0, group.zeroPosition), svgHeight);
+          }
+          if (group.options.shaded.orientation == 'group' && subPathArray != null && subPathArray != undefined) {
+              dFill = 'M' + pathArray[0][0] + "," + pathArray[0][1] + " " + this.serializePath(pathArray, type, false) + ' L' + subPathArray[subPathArray.length - 1][0] + "," + subPathArray[subPathArray.length - 1][1] + " " + this.serializePath(subPathArray, type, true) + subPathArray[0][0] + "," + subPathArray[0][1] + " Z";
+          } else {
+              dFill = 'M' + pathArray[0][0] + "," + pathArray[0][1] + " " + this.serializePath(pathArray, type, false) + ' V' + zero + ' H' + pathArray[0][0] + " Z";
+          }
+
+          fillPath.setAttributeNS(null, 'class', group.className + ' vis-fill');
+          if (group.options.shaded.style !== undefined) {
+              fillPath.setAttributeNS(null, 'style', group.options.shaded.style);
+          }
+          fillPath.setAttributeNS(null, 'd', dFill);
+      }
+  };
+
+  /**
+   * draw a line graph
+   *
+   * @param dataset
+   * @param group
+   */
+  Line.draw = function (pathArray, group, framework) {
+      if (pathArray != null && pathArray != undefined) {
+          var path = DOMutil.getSVGElement('path', framework.svgElements, framework.svg);
+          path.setAttributeNS(null, "class", group.className);
+          if (group.style !== undefined) {
+              path.setAttributeNS(null, "style", group.style);
+          }
+
+          var type = "L";
+          if (group.options.interpolation.enabled == true) {
+              type = "C";
+          }
+          // copy properties to path for drawing.
+          path.setAttributeNS(null, 'd', 'M' + pathArray[0][0] + "," + pathArray[0][1] + " " + this.serializePath(pathArray, type, false));
+      }
+  };
+
+  Line.serializePath = function (pathArray, type, inverse) {
+      if (pathArray.length < 2) {
+          //Too little data to create a path.
+          return "";
+      }
+      var d = type;
+      if (inverse) {
+          for (var i = pathArray.length - 2; i > 0; i--) {
+              d += pathArray[i][0] + "," + pathArray[i][1] + " ";
+          }
+      } else {
+          for (var i = 1; i < pathArray.length; i++) {
+              d += pathArray[i][0] + "," + pathArray[i][1] + " ";
+          }
+      }
+      return d;
+  };
+
+  /**
+   * This uses an uniform parametrization of the interpolation algorithm:
+   * 'On the Parameterization of Catmull-Rom Curves' by Cem Yuksel et al.
+   * @param data
+   * @returns {string}
+   * @private
+   */
+  Line._catmullRomUniform = function (data) {
+      // catmull rom
+      var p0, p1, p2, p3, bp1, bp2;
+      var d = [];
+      d.push([Math.round(data[0].screen_x), Math.round(data[0].screen_y)]);
+      var normalization = 1 / 6;
+      var length = data.length;
+      for (var i = 0; i < length - 1; i++) {
+
+          p0 = i == 0 ? data[0] : data[i - 1];
+          p1 = data[i];
+          p2 = data[i + 1];
+          p3 = i + 2 < length ? data[i + 2] : p2;
+
+          // Catmull-Rom to Cubic Bezier conversion matrix
+          //    0       1       0       0
+          //  -1/6      1      1/6      0
+          //    0      1/6      1     -1/6
+          //    0       0       1       0
+
+          //    bp0 = { x: p1.x,                               y: p1.y };
+          bp1 = {
+              screen_x: (-p0.screen_x + 6 * p1.screen_x + p2.screen_x) * normalization,
+              screen_y: (-p0.screen_y + 6 * p1.screen_y + p2.screen_y) * normalization
+          };
+          bp2 = {
+              screen_x: (p1.screen_x + 6 * p2.screen_x - p3.screen_x) * normalization,
+              screen_y: (p1.screen_y + 6 * p2.screen_y - p3.screen_y) * normalization
+          };
+          //    bp0 = { x: p2.x,                               y: p2.y };
+
+          d.push([bp1.screen_x, bp1.screen_y]);
+          d.push([bp2.screen_x, bp2.screen_y]);
+          d.push([p2.screen_x, p2.screen_y]);
+      }
+
+      return d;
+  };
+
+  /**
+   * This uses either the chordal or centripetal parameterization of the catmull-rom algorithm.
+   * By default, the centripetal parameterization is used because this gives the nicest results.
+   * These parameterizations are relatively heavy because the distance between 4 points have to be calculated.
+   *
+   * One optimization can be used to reuse distances since this is a sliding window approach.
+   * @param data
+   * @param group
+   * @returns {string}
+   * @private
+   */
+  Line._catmullRom = function (data, group) {
+      var alpha = group.options.interpolation.alpha;
+      if (alpha == 0 || alpha === undefined) {
+          return this._catmullRomUniform(data);
+      } else {
+          var p0, p1, p2, p3, bp1, bp2, d1, d2, d3, A, B, N, M;
+          var d3powA, d2powA, d3pow2A, d2pow2A, d1pow2A, d1powA;
+          var d = [];
+          d.push([Math.round(data[0].screen_x), Math.round(data[0].screen_y)]);
+          var length = data.length;
+          for (var i = 0; i < length - 1; i++) {
+
+              p0 = i == 0 ? data[0] : data[i - 1];
+              p1 = data[i];
+              p2 = data[i + 1];
+              p3 = i + 2 < length ? data[i + 2] : p2;
+
+              d1 = Math.sqrt(Math.pow(p0.screen_x - p1.screen_x, 2) + Math.pow(p0.screen_y - p1.screen_y, 2));
+              d2 = Math.sqrt(Math.pow(p1.screen_x - p2.screen_x, 2) + Math.pow(p1.screen_y - p2.screen_y, 2));
+              d3 = Math.sqrt(Math.pow(p2.screen_x - p3.screen_x, 2) + Math.pow(p2.screen_y - p3.screen_y, 2));
+
+              // Catmull-Rom to Cubic Bezier conversion matrix
+
+              // A = 2d1^2a + 3d1^a * d2^a + d3^2a
+              // B = 2d3^2a + 3d3^a * d2^a + d2^2a
+
+              // [   0             1            0          0          ]
+              // [   -d2^2a /N     A/N          d1^2a /N   0          ]
+              // [   0             d3^2a /M     B/M        -d2^2a /M  ]
+              // [   0             0            1          0          ]
+
+              d3powA = Math.pow(d3, alpha);
+              d3pow2A = Math.pow(d3, 2 * alpha);
+              d2powA = Math.pow(d2, alpha);
+              d2pow2A = Math.pow(d2, 2 * alpha);
+              d1powA = Math.pow(d1, alpha);
+              d1pow2A = Math.pow(d1, 2 * alpha);
+
+              A = 2 * d1pow2A + 3 * d1powA * d2powA + d2pow2A;
+              B = 2 * d3pow2A + 3 * d3powA * d2powA + d2pow2A;
+              N = 3 * d1powA * (d1powA + d2powA);
+              if (N > 0) {
+                  N = 1 / N;
+              }
+              M = 3 * d3powA * (d3powA + d2powA);
+              if (M > 0) {
+                  M = 1 / M;
+              }
+
+              bp1 = {
+                  screen_x: (-d2pow2A * p0.screen_x + A * p1.screen_x + d1pow2A * p2.screen_x) * N,
+                  screen_y: (-d2pow2A * p0.screen_y + A * p1.screen_y + d1pow2A * p2.screen_y) * N
+              };
+
+              bp2 = {
+                  screen_x: (d3pow2A * p1.screen_x + B * p2.screen_x - d2pow2A * p3.screen_x) * M,
+                  screen_y: (d3pow2A * p1.screen_y + B * p2.screen_y - d2pow2A * p3.screen_y) * M
+              };
+
+              if (bp1.screen_x == 0 && bp1.screen_y == 0) {
+                  bp1 = p1;
+              }
+              if (bp2.screen_x == 0 && bp2.screen_y == 0) {
+                  bp2 = p2;
+              }
+              d.push([bp1.screen_x, bp1.screen_y]);
+              d.push([bp2.screen_x, bp2.screen_y]);
+              d.push([p2.screen_x, p2.screen_y]);
+          }
+
+          return d;
+      }
+  };
+
+  /**
+   * this generates the SVG path for a linear drawing between datapoints.
+   * @param data
+   * @returns {string}
+   * @private
+   */
+  Line._linear = function (data) {
+      // linear
+      var d = [];
+      for (var i = 0; i < data.length; i++) {
+          d.push([data[i].screen_x, data[i].screen_y]);
+      }
+      return d;
+  };
+
+  module.exports = Line;
+
+/***/ },
 /* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var util = __webpack_require__(7);
-  var DOMutil = __webpack_require__(13);
-  var Component = __webpack_require__(28);
+  var util = __webpack_require__(1);
+  var DOMutil = __webpack_require__(7);
+  var Component = __webpack_require__(26);
 
   /**
    * Legend for Graph2d
@@ -26031,6 +26678,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.groups = {};
     this.amountOfGroups = 0;
     this._create();
+    this.framework = { svg: this.svg, svgElements: this.svgElements, options: this.options, groups: this.groups };
 
     this.setOptions(options);
   }
@@ -26044,10 +26692,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   Legend.prototype.addGroup = function (label, graphOptions) {
 
-    if (!this.groups.hasOwnProperty(label)) {
-      this.groups[label] = graphOptions;
+    // Include a group only if the group option 'excludeFromLegend: false' is not set.
+    if (graphOptions.options.excludeFromLegend != true) {
+      if (!this.groups.hasOwnProperty(label)) {
+        this.groups[label] = graphOptions;
+      }
+      this.amountOfGroups += 1;
     }
-    this.amountOfGroups += 1;
   };
 
   Legend.prototype.updateGroup = function (label, graphOptions) {
@@ -26064,16 +26715,16 @@ return /******/ (function(modules) { // webpackBootstrap
   Legend.prototype._create = function () {
     this.dom.frame = document.createElement('div');
     this.dom.frame.className = 'vis-legend';
-    this.dom.frame.style.position = 'absolute';
-    this.dom.frame.style.top = '10px';
-    this.dom.frame.style.display = 'block';
+    this.dom.frame.style.position = "absolute";
+    this.dom.frame.style.top = "10px";
+    this.dom.frame.style.display = "block";
 
     this.dom.textArea = document.createElement('div');
     this.dom.textArea.className = 'vis-legend-text';
-    this.dom.textArea.style.position = 'relative';
-    this.dom.textArea.style.top = '0px';
+    this.dom.textArea.style.position = "relative";
+    this.dom.textArea.style.top = "0px";
 
-    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.svg = document.createElementNS('http://www.w3.org/2000/svg', "svg");
     this.svg.style.position = 'absolute';
     this.svg.style.top = 0 + 'px';
     this.svg.style.width = this.options.iconSize + 5 + 'px';
@@ -26129,16 +26780,16 @@ return /******/ (function(modules) { // webpackBootstrap
       this.show();
       if (this.options[this.side].position == 'top-left' || this.options[this.side].position == 'bottom-left') {
         this.dom.frame.style.left = '4px';
-        this.dom.frame.style.textAlign = 'left';
-        this.dom.textArea.style.textAlign = 'left';
+        this.dom.frame.style.textAlign = "left";
+        this.dom.textArea.style.textAlign = "left";
         this.dom.textArea.style.left = this.options.iconSize + 15 + 'px';
         this.dom.textArea.style.right = '';
         this.svg.style.left = 0 + 'px';
         this.svg.style.right = '';
       } else {
         this.dom.frame.style.right = '4px';
-        this.dom.frame.style.textAlign = 'right';
-        this.dom.textArea.style.textAlign = 'right';
+        this.dom.frame.style.textAlign = "right";
+        this.dom.textArea.style.textAlign = "right";
         this.dom.textArea.style.right = this.options.iconSize + 15 + 'px';
         this.dom.textArea.style.left = '';
         this.svg.style.right = 0 + 'px';
@@ -26146,11 +26797,11 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       if (this.options[this.side].position == 'top-left' || this.options[this.side].position == 'top-right') {
-        this.dom.frame.style.top = 4 - Number(this.body.dom.center.style.top.replace('px', '')) + 'px';
+        this.dom.frame.style.top = 4 - Number(this.body.dom.center.style.top.replace("px", "")) + 'px';
         this.dom.frame.style.bottom = '';
       } else {
         var scrollableHeight = this.body.domProps.center.height - this.body.domProps.centerContainer.height;
-        this.dom.frame.style.bottom = 4 + scrollableHeight + Number(this.body.dom.center.style.top.replace('px', '')) + 'px';
+        this.dom.frame.style.bottom = 4 + scrollableHeight + Number(this.body.dom.center.style.top.replace("px", "")) + 'px';
         this.dom.frame.style.top = '';
       }
 
@@ -26183,7 +26834,9 @@ return /******/ (function(modules) { // webpackBootstrap
         return a < b ? -1 : 1;
       });
 
-      DOMutil.prepareElements(this.svgElements);
+      // this resets the elements so the order is maintained
+      DOMutil.resetElements(this.svgElements);
+
       var padding = window.getComputedStyle(this.dom.frame).paddingTop;
       var iconOffset = Number(padding.replace('px', ''));
       var x = iconOffset;
@@ -26196,12 +26849,10 @@ return /******/ (function(modules) { // webpackBootstrap
       for (var i = 0; i < groupArray.length; i++) {
         var groupId = groupArray[i];
         if (this.groups[groupId].visible == true && (this.linegraphOptions.visibility[groupId] === undefined || this.linegraphOptions.visibility[groupId] == true)) {
-          this.groups[groupId].drawIcon(x, y, this.svgElements, this.svg, iconWidth, iconHeight);
+          this.groups[groupId].getLegend(iconWidth, iconHeight, this.framework, x, y);
           y += iconHeight + this.options.iconSpacing;
         }
       }
-
-      DOMutil.cleanupElements(this.svgElements);
     }
   };
 
@@ -26250,7 +26901,8 @@ return /******/ (function(modules) { // webpackBootstrap
     graphHeight: { string: string, number: number },
     shaded: {
       enabled: { boolean: boolean },
-      orientation: { string: ['bottom', 'top'] }, // top, bottom
+      orientation: { string: ['bottom', 'top', 'zero', 'group'] }, // top, bottom, zero, group
+      groupId: { object: object },
       __type__: { boolean: boolean, object: object }
     },
     style: { string: ['line', 'bar', 'points'] }, // line, bar
@@ -26315,6 +26967,7 @@ return /******/ (function(modules) { // webpackBootstrap
     },
 
     autoResize: { boolean: boolean },
+    throttleRedraw: { number: number },
     clickToUse: { boolean: boolean },
     end: { number: number, date: date, string: string, moment: moment },
     format: {
@@ -26344,7 +26997,12 @@ return /******/ (function(modules) { // webpackBootstrap
     },
     moment: { 'function': 'function' },
     height: { string: string, number: number },
-    hiddenDates: { object: object, array: array },
+    hiddenDates: {
+      start: { date: date, number: number, string: string, moment: moment },
+      end: { date: date, number: number, string: string, moment: moment },
+      repeat: { string: string },
+      __type__: { object: object, array: array }
+    },
     locale: { string: string },
     locales: {
       __any__: { any: any },
@@ -26352,6 +27010,7 @@ return /******/ (function(modules) { // webpackBootstrap
     },
     max: { date: date, number: number, string: string, moment: moment },
     maxHeight: { number: number, string: string },
+    maxMinorChars: { number: number },
     min: { date: date, number: number, string: string, moment: moment },
     minHeight: { number: number, string: string },
     moveable: { boolean: boolean },
@@ -26371,6 +27030,7 @@ return /******/ (function(modules) { // webpackBootstrap
     zoomKey: { string: ['ctrlKey', 'altKey', 'metaKey', ''] },
     zoomMax: { number: number },
     zoomMin: { number: number },
+    zIndex: { number: number },
     __type__: { object: object }
   };
 
@@ -26382,7 +27042,7 @@ return /******/ (function(modules) { // webpackBootstrap
       stack: false,
       shaded: {
         enabled: false,
-        orientation: ['top', 'bottom'] // top, bottom
+        orientation: ['zero', 'top', 'bottom', 'group'] // zero, top, bottom
       },
       style: ['line', 'bar', 'points'], // line, bar
       barChart: {
@@ -26431,6 +27091,7 @@ return /******/ (function(modules) { // webpackBootstrap
       },
 
       autoResize: true,
+      throttleRedraw: [10, 0, 1000, 10],
       clickToUse: false,
       end: '',
       format: {
@@ -26460,6 +27121,7 @@ return /******/ (function(modules) { // webpackBootstrap
       locale: '',
       max: '',
       maxHeight: '',
+      maxMinorChars: [7, 0, 20, 1],
       min: '',
       minHeight: '',
       moveable: true,
@@ -26472,7 +27134,8 @@ return /******/ (function(modules) { // webpackBootstrap
       zoomable: true,
       zoomKey: ['ctrlKey', 'altKey', 'metaKey', ''],
       zoomMax: [315360000000000, 10, 315360000000000, 1],
-      zoomMin: [10, 10, 315360000000000, 1]
+      zoomMin: [10, 10, 315360000000000, 1],
+      zIndex: 0
     }
   };
 
@@ -26508,31 +27171,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _modulesClustering2 = _interopRequireDefault(_modulesClustering);
 
-  var _modulesCanvasRenderer = __webpack_require__(101);
+  var _modulesCanvasRenderer = __webpack_require__(102);
 
   var _modulesCanvasRenderer2 = _interopRequireDefault(_modulesCanvasRenderer);
 
-  var _modulesCanvas = __webpack_require__(102);
+  var _modulesCanvas = __webpack_require__(103);
 
   var _modulesCanvas2 = _interopRequireDefault(_modulesCanvas);
 
-  var _modulesView = __webpack_require__(103);
+  var _modulesView = __webpack_require__(104);
 
   var _modulesView2 = _interopRequireDefault(_modulesView);
 
-  var _modulesInteractionHandler = __webpack_require__(104);
+  var _modulesInteractionHandler = __webpack_require__(105);
 
   var _modulesInteractionHandler2 = _interopRequireDefault(_modulesInteractionHandler);
 
-  var _modulesSelectionHandler = __webpack_require__(107);
+  var _modulesSelectionHandler = __webpack_require__(108);
 
   var _modulesSelectionHandler2 = _interopRequireDefault(_modulesSelectionHandler);
 
-  var _modulesLayoutEngine = __webpack_require__(108);
+  var _modulesLayoutEngine = __webpack_require__(109);
 
   var _modulesLayoutEngine2 = _interopRequireDefault(_modulesLayoutEngine);
 
-  var _modulesManipulationSystem = __webpack_require__(109);
+  var _modulesManipulationSystem = __webpack_require__(110);
 
   var _modulesManipulationSystem2 = _interopRequireDefault(_modulesManipulationSystem);
 
@@ -26544,20 +27207,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _sharedValidator2 = _interopRequireDefault(_sharedValidator);
 
-  var _optionsJs = __webpack_require__(110);
+  var _optionsJs = __webpack_require__(111);
 
-  __webpack_require__(111);
+  var _modulesKamadaKawaiJs = __webpack_require__(112);
 
-  var Emitter = __webpack_require__(19);
-  var Hammer = __webpack_require__(3);
-  var util = __webpack_require__(7);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
-  var dotparser = __webpack_require__(112);
-  var gephiParser = __webpack_require__(113);
-  var Images = __webpack_require__(114);
-  var Activator = __webpack_require__(40);
-  var locales = __webpack_require__(115);
+  var _modulesKamadaKawaiJs2 = _interopRequireDefault(_modulesKamadaKawaiJs);
 
   /**
    * @constructor Network
@@ -26570,6 +27224,19 @@ return /******/ (function(modules) { // webpackBootstrap
    *                              {Array} edges
    * @param {Object} options      Options
    */
+  __webpack_require__(114);
+
+  var Emitter = __webpack_require__(12);
+  var Hammer = __webpack_require__(20);
+  var util = __webpack_require__(1);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
+  var dotparser = __webpack_require__(115);
+  var gephiParser = __webpack_require__(116);
+  var Images = __webpack_require__(117);
+  var Activator = __webpack_require__(40);
+  var locales = __webpack_require__(118);
+
   function Network(container, data, options) {
     var _this = this;
 
@@ -26622,6 +27289,7 @@ return /******/ (function(modules) { // webpackBootstrap
         createEdge: function createEdge() {},
         getPointer: function getPointer() {}
       },
+      modules: {},
       view: {
         scale: 1,
         translation: { x: 0, y: 0 }
@@ -26633,7 +27301,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // setting up all modules
     this.images = new Images(function () {
-      return _this.body.emitter.emit('_requestRedraw');
+      return _this.body.emitter.emit("_requestRedraw");
     }); // object with images
     this.groups = new _modulesGroups2['default'](); // object with groups
     this.canvas = new _modulesCanvas2['default'](this.body); // DOM handler
@@ -26648,6 +27316,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
     this.nodesHandler = new _modulesNodesHandler2['default'](this.body, this.images, this.groups, this.layoutEngine); // Handle adding, deleting and updating of nodes as well as global options
     this.edgesHandler = new _modulesEdgesHandler2['default'](this.body, this.images, this.groups); // Handle adding, deleting and updating of edges as well as global options
+
+    this.body.modules["kamadaKawai"] = new _modulesKamadaKawaiJs2['default'](this.body, 150, 0.05); // Layouting algorithm.
+    this.body.modules["clustering"] = this.clustering;
 
     // create the DOM elements
     this.canvas._create();
@@ -26698,7 +27369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // reload the settings of the nodes to apply changes in groups that are not referenced by pointer.
       if (options.groups !== undefined) {
-        this.body.emitter.emit('refreshNodes');
+        this.body.emitter.emit("refreshNodes");
       }
       // these two do not have options at the moment, here for completeness
       //this.view.setOptions(options.view);
@@ -26739,7 +27410,7 @@ return /******/ (function(modules) { // webpackBootstrap
           if (this.activator === undefined) {
             this.activator = new Activator(this.canvas.frame);
             this.activator.on('change', function () {
-              _this2.body.emitter.emit('activate');
+              _this2.body.emitter.emit("activate");
             });
           }
         } else {
@@ -26747,15 +27418,15 @@ return /******/ (function(modules) { // webpackBootstrap
             this.activator.destroy();
             delete this.activator;
           }
-          this.body.emitter.emit('activate');
+          this.body.emitter.emit("activate");
         }
       } else {
-        this.body.emitter.emit('activate');
+        this.body.emitter.emit("activate");
       }
 
       this.canvas.setSize();
       // start the physics simulation. Can be safely called multiple times.
-      this.body.emitter.emit('startSimulation');
+      this.body.emitter.emit("startSimulation");
     }
   };
 
@@ -26793,23 +27464,22 @@ return /******/ (function(modules) { // webpackBootstrap
     var _this3 = this;
 
     // this event will trigger a rebuilding of the cache everything. Used when nodes or edges have been added or removed.
-    this.body.emitter.on('_dataChanged', function () {
+    this.body.emitter.on("_dataChanged", function () {
       // update shortcut lists
       _this3._updateVisibleIndices();
-      _this3.physics.updatePhysicsData();
-      _this3.body.emitter.emit('_requestRedraw');
+      _this3.body.emitter.emit("_requestRedraw");
       // call the dataUpdated event because the only difference between the two is the updating of the indices
-      _this3.body.emitter.emit('_dataUpdated');
+      _this3.body.emitter.emit("_dataUpdated");
     });
 
     // this is called when options of EXISTING nodes or edges have changed.
-    this.body.emitter.on('_dataUpdated', function () {
+    this.body.emitter.on("_dataUpdated", function () {
       // update values
       _this3._updateValueRange(_this3.body.nodes);
       _this3._updateValueRange(_this3.body.edges);
       // start simulation (can be called safely, even if already running)
-      _this3.body.emitter.emit('startSimulation');
-      _this3.body.emitter.emit('_requestRedraw');
+      _this3.body.emitter.emit("startSimulation");
+      _this3.body.emitter.emit("_requestRedraw");
     });
   };
 
@@ -26825,8 +27495,8 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   Network.prototype.setData = function (data) {
     // reset the physics engine.
-    this.body.emitter.emit('resetPhysics');
-    this.body.emitter.emit('_resetData');
+    this.body.emitter.emit("resetPhysics");
+    this.body.emitter.emit("_resetData");
 
     // unselect all to ensure no selections from old data are carried over.
     this.selectionHandler.unselectAll();
@@ -26856,10 +27526,13 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     // emit change in data
-    this.body.emitter.emit('_dataChanged');
+    this.body.emitter.emit("_dataChanged");
+
+    // emit data loaded
+    this.body.emitter.emit("_dataLoaded");
 
     // find a stable position or start animating to a stable position
-    this.body.emitter.emit('initPhysics');
+    this.body.emitter.emit("initPhysics");
   };
 
   /**
@@ -26869,7 +27542,7 @@ return /******/ (function(modules) { // webpackBootstrap
    * network = null;
    */
   Network.prototype.destroy = function () {
-    this.body.emitter.emit('destroy');
+    this.body.emitter.emit("destroy");
     // clear events
     this.body.emitter.off();
     this.off();
@@ -26994,7 +27667,7 @@ return /******/ (function(modules) { // webpackBootstrap
     return this.manipulation.editNode.apply(this.manipulation, arguments);
   };
   Network.prototype.editNodeMode = function () {
-    console.log('Depricated: Please use editNode instead of editNodeMode.');return this.manipulation.editNode.apply(this.manipulation, arguments);
+    console.log("Deprecated: Please use editNode instead of editNodeMode.");return this.manipulation.editNode.apply(this.manipulation, arguments);
   };
   Network.prototype.addEdgeMode = function () {
     return this.manipulation.addEdgeMode.apply(this.manipulation, arguments);
@@ -27039,6 +27712,9 @@ return /******/ (function(modules) { // webpackBootstrap
   Network.prototype.getSelection = function () {
     return this.selectionHandler.getSelection.apply(this.selectionHandler, arguments);
   };
+  Network.prototype.setSelection = function () {
+    return this.selectionHandler.setSelection.apply(this.selectionHandler, arguments);
+  };
   Network.prototype.getSelectedNodes = function () {
     return this.selectionHandler.getSelectedNodes.apply(this.selectionHandler, arguments);
   };
@@ -27066,7 +27742,8 @@ return /******/ (function(modules) { // webpackBootstrap
     return this.selectionHandler.selectEdges.apply(this.selectionHandler, arguments);
   };
   Network.prototype.unselectAll = function () {
-    return this.selectionHandler.unselectAll.apply(this.selectionHandler, arguments);
+    this.selectionHandler.unselectAll.apply(this.selectionHandler, arguments);
+    this.redraw();
   };
   Network.prototype.redraw = function () {
     return this.renderer.redraw.apply(this.renderer, arguments);
@@ -27113,7 +27790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   /**
    * @class Groups
@@ -27164,7 +27841,7 @@ return /******/ (function(modules) { // webpackBootstrap
     _createClass(Groups, [{
       key: "setOptions",
       value: function setOptions(options) {
-        var optionFields = ["useDefaultGroups"];
+        var optionFields = ['useDefaultGroups'];
 
         if (options !== undefined) {
           for (var groupName in options) {
@@ -27177,18 +27854,16 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: "clear",
 
       /**
        * Clear all groups
        */
+    }, {
+      key: "clear",
       value: function clear() {
         this.groups = {};
         this.groupsArray = [];
       }
-    }, {
-      key: "get",
 
       /**
        * get group options of a groupname. If groupname is not found, a new group
@@ -27196,6 +27871,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {*} groupname        Can be a number, string, Date, etc.
        * @return {Object} group      The created group, containing all group options
        */
+    }, {
+      key: "get",
       value: function get(groupname) {
         var group = this.groups[groupname];
         if (group === undefined) {
@@ -27218,8 +27895,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return group;
       }
-    }, {
-      key: "add",
 
       /**
        * Add a custom group style
@@ -27228,6 +27903,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *                             backgroundColor, etc.
        * @return {Object} group      The created group object
        */
+    }, {
+      key: "add",
       value: function add(groupName, style) {
         this.groups[groupName] = style;
         this.groupsArray.push(groupName);
@@ -27265,9 +27942,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _componentsSharedLabel2 = _interopRequireDefault(_componentsSharedLabel);
 
-  var util = __webpack_require__(7);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
+  var util = __webpack_require__(1);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
 
   var NodesHandler = (function () {
     function NodesHandler(body, images, groups, layoutEngine) {
@@ -27368,7 +28045,8 @@ return /******/ (function(modules) { // webpackBootstrap
         shapeProperties: {
           borderDashes: false, // only for borders
           borderRadius: 6, // only for box shape
-          useImageSize: false // only for image and circularImage shapes
+          useImageSize: false, // only for image and circularImage shapes
+          useBorderWithImage: false // only for image shape
         },
         size: 25,
         title: undefined,
@@ -27412,7 +28090,7 @@ return /******/ (function(modules) { // webpackBootstrap
             }
           }
 
-          // update the shape size in all nodes
+          // update the font in all nodes
           if (options.font !== undefined) {
             _componentsSharedLabel2['default'].parseOptions(this.options.font, options);
             for (var nodeId in this.body.nodes) {
@@ -27438,14 +28116,14 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'setData',
 
       /**
        * Set a data set with nodes for the network
        * @param {Array | DataSet | DataView} nodes         The data containing the nodes.
        * @private
        */
+    }, {
+      key: 'setData',
       value: function setData(nodes) {
         var _this3 = this;
 
@@ -27489,17 +28167,17 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         if (doNotEmit === false) {
-          this.body.emitter.emit('_dataChanged');
+          this.body.emitter.emit("_dataChanged");
         }
       }
-    }, {
-      key: 'add',
 
       /**
        * Add nodes
        * @param {Number[] | String[]} ids
        * @private
        */
+    }, {
+      key: 'add',
       value: function add(ids) {
         var doNotEmit = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
@@ -27516,17 +28194,17 @@ return /******/ (function(modules) { // webpackBootstrap
         this.layoutEngine.positionInitially(newNodes);
 
         if (doNotEmit === false) {
-          this.body.emitter.emit('_dataChanged');
+          this.body.emitter.emit("_dataChanged");
         }
       }
-    }, {
-      key: 'update',
 
       /**
        * Update existing nodes, or create them when not yet existing
        * @param {Number[] | String[]} ids
        * @private
        */
+    }, {
+      key: 'update',
       value: function update(ids, changedData) {
         var nodes = this.body.nodes;
         var dataChanged = false;
@@ -27545,38 +28223,37 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
         if (dataChanged === true) {
-          this.body.emitter.emit('_dataChanged');
+          this.body.emitter.emit("_dataChanged");
         } else {
-          this.body.emitter.emit('_dataUpdated');
+          this.body.emitter.emit("_dataUpdated");
         }
       }
-    }, {
-      key: 'remove',
 
       /**
        * Remove existing nodes. If nodes do not exist, the method will just ignore it.
        * @param {Number[] | String[]} ids
        * @private
        */
+    }, {
+      key: 'remove',
       value: function remove(ids) {
         var nodes = this.body.nodes;
 
         for (var i = 0; i < ids.length; i++) {
           var id = ids[i];
-          nodes[id].cleanup();
           delete nodes[id];
         }
 
-        this.body.emitter.emit('_dataChanged');
+        this.body.emitter.emit("_dataChanged");
       }
-    }, {
-      key: 'create',
 
       /**
        * create a node
        * @param properties
        * @param constructorClass
        */
+    }, {
+      key: 'create',
       value: function create(properties) {
         var constructorClass = arguments.length <= 1 || arguments[1] === undefined ? _componentsNode2['default'] : arguments[1];
 
@@ -27603,14 +28280,14 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'getPositions',
 
       /**
        * Returns the positions of the nodes.
        * @param ids  --> optional, can be array of nodeIds, can be string
        * @returns {{}}
        */
+    }, {
+      key: 'getPositions',
       value: function getPositions(ids) {
         var dataArray = {};
         if (ids !== undefined) {
@@ -27628,21 +28305,19 @@ return /******/ (function(modules) { // webpackBootstrap
             }
           }
         } else {
-          for (var nodeId in this.body.nodes) {
-            if (this.body.nodes.hasOwnProperty(nodeId)) {
-              var node = this.body.nodes[nodeId];
-              dataArray[nodeId] = { x: Math.round(node.x), y: Math.round(node.y) };
-            }
+          for (var i = 0; i < this.body.nodeIndices.length; i++) {
+            var node = this.body.nodes[this.body.nodeIndices[i]];
+            dataArray[this.body.nodeIndices[i]] = { x: Math.round(node.x), y: Math.round(node.y) };
           }
         }
         return dataArray;
       }
-    }, {
-      key: 'storePositions',
 
       /**
        * Load the XY positions of the nodes into the dataset.
        */
+    }, {
+      key: 'storePositions',
       value: function storePositions() {
         // todo: add support for clusters and hierarchical.
         var dataArray = [];
@@ -27658,27 +28333,27 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         dataset.update(dataArray);
       }
-    }, {
-      key: 'getBoundingBox',
 
       /**
        * get the bounding box of a node.
        * @param nodeId
        * @returns {j|*}
        */
+    }, {
+      key: 'getBoundingBox',
       value: function getBoundingBox(nodeId) {
         if (this.body.nodes[nodeId] !== undefined) {
           return this.body.nodes[nodeId].shape.boundingBox;
         }
       }
-    }, {
-      key: 'getConnectedNodes',
 
       /**
        * Get the Ids of nodes connected to this node.
        * @param nodeId
        * @returns {Array}
        */
+    }, {
+      key: 'getConnectedNodes',
       value: function getConnectedNodes(nodeId) {
         var nodeList = [];
         if (this.body.nodes[nodeId] !== undefined) {
@@ -27703,14 +28378,14 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return nodeList;
       }
-    }, {
-      key: 'getConnectedEdges',
 
       /**
        * Get the ids of the edges connected to this node.
        * @param nodeId
        * @returns {*}
        */
+    }, {
+      key: 'getConnectedEdges',
       value: function getConnectedEdges(nodeId) {
         var edgeList = [];
         if (this.body.nodes[nodeId] !== undefined) {
@@ -27719,12 +28394,10 @@ return /******/ (function(modules) { // webpackBootstrap
             edgeList.push(node.edges[i].id);
           }
         } else {
-          console.log('NodeId provided for getConnectedEdges does not exist. Provided: ', nodeId);
+          console.log("NodeId provided for getConnectedEdges does not exist. Provided: ", nodeId);
         }
         return edgeList;
       }
-    }, {
-      key: 'moveNode',
 
       /**
        * Move a node.
@@ -27732,6 +28405,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param Number x
        * @param Number y
        */
+    }, {
+      key: 'moveNode',
       value: function moveNode(nodeId, x, y) {
         var _this4 = this;
 
@@ -27739,10 +28414,10 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.nodes[nodeId].x = Number(x);
           this.body.nodes[nodeId].y = Number(y);
           setTimeout(function () {
-            _this4.body.emitter.emit('startSimulation');
+            _this4.body.emitter.emit("startSimulation");
           }, 0);
         } else {
-          console.log('Node id supplied to moveNode does not exist. Provided: ', nodeId);
+          console.log("Node id supplied to moveNode does not exist. Provided: ", nodeId);
         }
       }
     }]);
@@ -27833,7 +28508,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _sharedValidator2 = _interopRequireDefault(_sharedValidator);
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   /**
    * @class Node
@@ -27866,6 +28541,7 @@ return /******/ (function(modules) { // webpackBootstrap
       _classCallCheck(this, Node);
 
       this.options = util.bridgeObject(globalOptions);
+      this.globalOptions = globalOptions;
       this.body = body;
 
       this.edges = []; // all edges connected to this node
@@ -27888,39 +28564,39 @@ return /******/ (function(modules) { // webpackBootstrap
       this.setOptions(options);
     }
 
+    /**
+     * Attach a edge to the node
+     * @param {Edge} edge
+     */
+
     _createClass(Node, [{
       key: 'attachEdge',
-
-      /**
-       * Attach a edge to the node
-       * @param {Edge} edge
-       */
       value: function attachEdge(edge) {
         if (this.edges.indexOf(edge) === -1) {
           this.edges.push(edge);
         }
       }
-    }, {
-      key: 'detachEdge',
 
       /**
        * Detach a edge from the node
        * @param {Edge} edge
        */
+    }, {
+      key: 'detachEdge',
       value: function detachEdge(edge) {
         var index = this.edges.indexOf(edge);
         if (index != -1) {
           this.edges.splice(index, 1);
         }
       }
-    }, {
-      key: 'setOptions',
 
       /**
        * Set or overwrite options for the node
        * @param {Object} options an object with options
        * @param {Object} constants  and object with default, global options
        */
+    }, {
+      key: 'setOptions',
       value: function setOptions(options) {
         var currentShape = this.options.shape;
         if (!options) {
@@ -27932,7 +28608,7 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         if (this.id === undefined) {
-          throw 'Node must have an id';
+          throw "Node must have an id";
         }
 
         // set these options locally
@@ -27967,25 +28643,32 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         // this transforms all shorthands into fully defined options
-        Node.parseOptions(this.options, options, true);
+        Node.parseOptions(this.options, options, true, this.globalOptions);
 
         // load the images
         if (this.options.image !== undefined) {
           if (this.imagelist) {
             this.imageObj = this.imagelist.load(this.options.image, this.options.brokenImage, this.id);
           } else {
-            throw 'No imagelist provided';
+            throw "No imagelist provided";
           }
         }
 
-        this.updateShape(currentShape);
         this.updateLabelModule();
+        this.updateShape(currentShape);
 
         if (options.hidden !== undefined || options.physics !== undefined) {
           return true;
         }
         return false;
       }
+
+      /**
+       * This process all possible shorthands in the new options and makes sure that the parentOptions are fully defined.
+       * Static so it can also be used by the handler.
+       * @param parentOptions
+       * @param newOptions
+       */
     }, {
       key: 'updateLabelModule',
       value: function updateLabelModule() {
@@ -28001,12 +28684,8 @@ return /******/ (function(modules) { // webpackBootstrap
       key: 'updateShape',
       value: function updateShape(currentShape) {
         if (currentShape === this.options.shape && this.shape) {
-          this.shape.setOptions(this.options);
+          this.shape.setOptions(this.options, this.imageObj);
         } else {
-          // clean up the shape if it is already made so the new shape can start clean.
-          if (this.shape) {
-            this.shape.cleanup();
-          }
           // choose draw method depending on the shape
           switch (this.options.shape) {
             case 'box':
@@ -28058,50 +28737,48 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         this._reset();
       }
-    }, {
-      key: 'select',
 
       /**
        * select this node
        */
+    }, {
+      key: 'select',
       value: function select() {
         this.selected = true;
         this._reset();
       }
-    }, {
-      key: 'unselect',
 
       /**
        * unselect this node
        */
+    }, {
+      key: 'unselect',
       value: function unselect() {
         this.selected = false;
         this._reset();
       }
-    }, {
-      key: '_reset',
 
       /**
        * Reset the calculated size of the node, forces it to recalculate its size
        * @private
        */
+    }, {
+      key: '_reset',
       value: function _reset() {
         this.shape.width = undefined;
         this.shape.height = undefined;
       }
-    }, {
-      key: 'getTitle',
 
       /**
        * get the title of this node.
        * @return {string} title    The title of the node, or undefined when no title
        *                           has been set.
        */
+    }, {
+      key: 'getTitle',
       value: function getTitle() {
         return this.options.title;
       }
-    }, {
-      key: 'distanceToBorder',
 
       /**
        * Calculate the distance to the border of the Node
@@ -28109,41 +28786,41 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Number} angle        Angle in radians
        * @returns {number} distance   Distance to the border in pixels
        */
+    }, {
+      key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
         return this.shape.distanceToBorder(ctx, angle);
       }
-    }, {
-      key: 'isFixed',
 
       /**
        * Check if this node has a fixed x and y position
        * @return {boolean}      true if fixed, false if not
        */
+    }, {
+      key: 'isFixed',
       value: function isFixed() {
         return this.options.fixed.x && this.options.fixed.y;
       }
-    }, {
-      key: 'isSelected',
 
       /**
        * check if this node is selecte
        * @return {boolean} selected   True if node is selected, else false
        */
+    }, {
+      key: 'isSelected',
       value: function isSelected() {
         return this.selected;
       }
-    }, {
-      key: 'getValue',
 
       /**
        * Retrieve the value of the node. Can be undefined
        * @return {Number} value
        */
+    }, {
+      key: 'getValue',
       value: function getValue() {
         return this.options.value;
       }
-    }, {
-      key: 'setValueRange',
 
       /**
        * Adjust the value range of the node. The node will adjust it's size
@@ -28151,6 +28828,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Number} min
        * @param {Number} max
        */
+    }, {
+      key: 'setValueRange',
       value: function setValueRange(min, max, total) {
         if (this.options.value !== undefined) {
           var scale = this.options.scaling.customScalingFunction(min, max, total, this.options.value);
@@ -28164,95 +28843,80 @@ return /******/ (function(modules) { // webpackBootstrap
           this.options.size = this.baseSize;
           this.options.font.size = this.baseFontSize;
         }
+
+        this.updateLabelModule();
       }
-    }, {
-      key: 'draw',
 
       /**
        * Draw this node in the given canvas
        * The 2d context of a HTML canvas can be retrieved by canvas.getContext("2d");
        * @param {CanvasRenderingContext2D}   ctx
        */
+    }, {
+      key: 'draw',
       value: function draw(ctx) {
         this.shape.draw(ctx, this.x, this.y, this.selected, this.hover);
       }
-    }, {
-      key: 'updateBoundingBox',
 
       /**
        * Update the bounding box of the shape
        */
+    }, {
+      key: 'updateBoundingBox',
       value: function updateBoundingBox(ctx) {
         this.shape.updateBoundingBox(this.x, this.y, ctx);
       }
-    }, {
-      key: 'resize',
 
       /**
        * Recalculate the size of this node in the given canvas
        * The 2d context of a HTML canvas can be retrieved by canvas.getContext("2d");
        * @param {CanvasRenderingContext2D}   ctx
        */
+    }, {
+      key: 'resize',
       value: function resize(ctx) {
         this.shape.resize(ctx, this.selected);
       }
-    }, {
-      key: 'isOverlappingWith',
 
       /**
        * Check if this object is overlapping with the provided object
        * @param {Object} obj   an object with parameters left, top, right, bottom
        * @return {boolean}     True if location is located on node
        */
+    }, {
+      key: 'isOverlappingWith',
       value: function isOverlappingWith(obj) {
         return this.shape.left < obj.right && this.shape.left + this.shape.width > obj.left && this.shape.top < obj.bottom && this.shape.top + this.shape.height > obj.top;
       }
-    }, {
-      key: 'isBoundingBoxOverlappingWith',
 
       /**
        * Check if this object is overlapping with the provided object
        * @param {Object} obj   an object with parameters left, top, right, bottom
        * @return {boolean}     True if location is located on node
        */
+    }, {
+      key: 'isBoundingBoxOverlappingWith',
       value: function isBoundingBoxOverlappingWith(obj) {
         return this.shape.boundingBox.left < obj.right && this.shape.boundingBox.right > obj.left && this.shape.boundingBox.top < obj.bottom && this.shape.boundingBox.bottom > obj.top;
       }
-    }, {
-      key: 'cleanup',
-
-      /**
-       * clean all required things on delete.
-       * @returns {*}
-       */
-      value: function cleanup() {
-        return this.shape.cleanup();
-      }
     }], [{
       key: 'parseOptions',
-
-      /**
-       * This process all possible shorthands in the new options and makes sure that the parentOptions are fully defined.
-       * Static so it can also be used by the handler.
-       * @param parentOptions
-       * @param newOptions
-       */
       value: function parseOptions(parentOptions, newOptions) {
         var allowDeletion = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+        var globalOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
 
         var fields = ['color', 'font', 'fixed', 'shadow'];
         util.selectiveNotDeepExtend(fields, parentOptions, newOptions, allowDeletion);
 
         // merge the shadow options into the parent.
-        util.mergeOptions(parentOptions, newOptions, 'shadow');
+        util.mergeOptions(parentOptions, newOptions, 'shadow', allowDeletion, globalOptions);
 
         // individual shape newOptions
         if (newOptions.color !== undefined && newOptions.color !== null) {
           var parsedColor = util.parseColor(newOptions.color);
           util.fillIfDefined(parentOptions.color, parsedColor);
         } else if (allowDeletion === true && newOptions.color === null) {
-          parentOptions.color = undefined;
-          delete parentOptions.color;
+          parentOptions.color = util.bridgeObject(globalOptions.color); // set the object back to the global options
         }
 
         // handle the fixed options
@@ -28271,13 +28935,15 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         // handle the font options
-        if (newOptions.font !== undefined) {
+        if (newOptions.font !== undefined && newOptions.font !== null) {
           _sharedLabel2['default'].parseOptions(parentOptions.font, newOptions);
+        } else if (allowDeletion === true && newOptions.font === null) {
+          parentOptions.font = util.bridgeObject(globalOptions.font); // set the object back to the global options
         }
 
         // handle the scaling options, specifically the label part
         if (newOptions.scaling !== undefined) {
-          util.mergeOptions(parentOptions.scaling, newOptions.scaling, 'label');
+          util.mergeOptions(parentOptions.scaling, newOptions.scaling, 'label', allowDeletion, globalOptions.scaling);
         }
       }
     }]);
@@ -28304,7 +28970,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   var Label = (function () {
     function Label(body, options) {
@@ -28314,6 +28980,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       this.pointToSelf = false;
       this.baseSize = undefined;
+      this.fontOptions = {};
       this.setOptions(options);
       this.size = { top: 0, left: 0, width: 0, height: 0, yLine: 0 }; // could be cached
     }
@@ -28323,16 +28990,20 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function setOptions(options) {
         var allowDeletion = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-        this.options = options;
+        this.nodeOptions = options;
+
+        // We want to keep the font options seperated from the node options.
+        // The node options have to mirror the globals when they are not overruled.
+        this.fontOptions = util.deepExtend({}, options.font, true);
 
         if (options.label !== undefined) {
           this.labelDirty = true;
         }
 
         if (options.font !== undefined) {
-          Label.parseOptions(this.options.font, options, allowDeletion);
+          Label.parseOptions(this.fontOptions, options, allowDeletion);
           if (typeof options.font === 'string') {
-            this.baseSize = this.options.font.size;
+            this.baseSize = this.fontOptions.size;
           } else if (typeof options.font === 'object') {
             if (options.font.size !== undefined) {
               this.baseSize = options.font.size;
@@ -28355,11 +29026,11 @@ return /******/ (function(modules) { // webpackBootstrap
         var baseline = arguments.length <= 4 || arguments[4] === undefined ? 'middle' : arguments[4];
 
         // if no label, return
-        if (this.options.label === undefined) return;
+        if (this.nodeOptions.label === undefined) return;
 
         // check if we have to render the label
-        var viewFontSize = this.options.font.size * this.body.view.scale;
-        if (this.options.label && viewFontSize < this.options.scaling.label.drawThreshold - 1) return;
+        var viewFontSize = this.fontOptions.size * this.body.view.scale;
+        if (this.nodeOptions.label && viewFontSize < this.nodeOptions.scaling.label.drawThreshold - 1) return;
 
         // update the size cache if required
         this.calculateLabelSize(ctx, selected, x, y, baseline);
@@ -28369,21 +29040,21 @@ return /******/ (function(modules) { // webpackBootstrap
         // draw text
         this._drawText(ctx, selected, x, y, baseline);
       }
-    }, {
-      key: '_drawBackground',
 
       /**
        * Draws the label background
        * @param {CanvasRenderingContext2D} ctx
        * @private
        */
+    }, {
+      key: '_drawBackground',
       value: function _drawBackground(ctx) {
-        if (this.options.font.background !== undefined && this.options.font.background !== 'none') {
-          ctx.fillStyle = this.options.font.background;
+        if (this.fontOptions.background !== undefined && this.fontOptions.background !== "none") {
+          ctx.fillStyle = this.fontOptions.background;
 
           var lineMargin = 2;
 
-          switch (this.options.font.align) {
+          switch (this.fontOptions.align) {
             case 'middle':
               ctx.fillRect(-this.size.width * 0.5, -this.size.height * 0.5, this.size.width, this.size.height);
               break;
@@ -28399,8 +29070,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: '_drawText',
 
       /**
        *
@@ -28409,14 +29078,16 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param baseline
        * @private
        */
+    }, {
+      key: '_drawText',
       value: function _drawText(ctx, selected, x, y) {
         var baseline = arguments.length <= 4 || arguments[4] === undefined ? 'middle' : arguments[4];
 
-        var fontSize = this.options.font.size;
+        var fontSize = this.fontOptions.size;
         var viewFontSize = fontSize * this.body.view.scale;
         // this ensures that there will not be HUGE letters on screen by setting an upper limit on the visible text size (regardless of zoomLevel)
-        if (viewFontSize >= this.options.scaling.label.maxVisible) {
-          fontSize = Number(this.options.scaling.label.maxVisible) / this.body.view.scale;
+        if (viewFontSize >= this.nodeOptions.scaling.label.maxVisible) {
+          fontSize = Number(this.nodeOptions.scaling.label.maxVisible) / this.body.view.scale;
         }
 
         var yLine = this.size.yLine;
@@ -28428,28 +29099,28 @@ return /******/ (function(modules) { // webpackBootstrap
         var fontColor = _getColor22[0];
         var strokeColor = _getColor22[1];
 
+        // configure context for drawing the text
+
         var _setAlignment2 = this._setAlignment(ctx, x, yLine, baseline);
 
         var _setAlignment22 = _slicedToArray(_setAlignment2, 2);
 
         x = _setAlignment22[0];
         yLine = _setAlignment22[1];
-
-        // configure context for drawing the text
-        ctx.font = (selected && this.options.labelHighlightBold ? 'bold ' : '') + fontSize + 'px ' + this.options.font.face;
+        ctx.font = (selected && this.nodeOptions.labelHighlightBold ? 'bold ' : '') + fontSize + "px " + this.fontOptions.face;
         ctx.fillStyle = fontColor;
         ctx.textAlign = 'center';
 
         // set the strokeWidth
-        if (this.options.font.strokeWidth > 0) {
-          ctx.lineWidth = this.options.font.strokeWidth;
+        if (this.fontOptions.strokeWidth > 0) {
+          ctx.lineWidth = this.fontOptions.strokeWidth;
           ctx.strokeStyle = strokeColor;
           ctx.lineJoin = 'round';
         }
 
         // draw the text
         for (var i = 0; i < this.lineCount; i++) {
-          if (this.options.font.strokeWidth > 0) {
+          if (this.fontOptions.strokeWidth > 0) {
             ctx.strokeText(this.lines[i], x, yLine);
           }
           ctx.fillText(this.lines[i], x, yLine);
@@ -28461,28 +29132,26 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function _setAlignment(ctx, x, yLine, baseline) {
         // check for label alignment (for edges)
         // TODO: make alignment for nodes
-        if (this.options.font.align !== 'horizontal' && this.pointToSelf === false) {
+        if (this.fontOptions.align !== 'horizontal' && this.pointToSelf === false) {
           x = 0;
           yLine = 0;
 
           var lineMargin = 2;
-          if (this.options.font.align === 'top') {
+          if (this.fontOptions.align === 'top') {
             ctx.textBaseline = 'alphabetic';
             yLine -= 2 * lineMargin; // distance from edge, required because we use alphabetic. Alphabetic has less difference between browsers
-          } else if (this.options.font.align === 'bottom') {
-            ctx.textBaseline = 'hanging';
-            yLine += 2 * lineMargin; // distance from edge, required because we use hanging. Hanging has less difference between browsers
-          } else {
-            ctx.textBaseline = 'middle';
-          }
+          } else if (this.fontOptions.align === 'bottom') {
+              ctx.textBaseline = 'hanging';
+              yLine += 2 * lineMargin; // distance from edge, required because we use hanging. Hanging has less difference between browsers
+            } else {
+                ctx.textBaseline = 'middle';
+              }
         } else {
           ctx.textBaseline = baseline;
         }
 
         return [x, yLine];
       }
-    }, {
-      key: '_getColor',
 
       /**
        * fade in when relative scale is between threshold and threshold - 1.
@@ -28492,18 +29161,18 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {*[]}
        * @private
        */
+    }, {
+      key: '_getColor',
       value: function _getColor(viewFontSize) {
-        var fontColor = this.options.font.color || '#000000';
-        var strokeColor = this.options.font.strokeColor || '#ffffff';
-        if (viewFontSize <= this.options.scaling.label.drawThreshold) {
-          var opacity = Math.max(0, Math.min(1, 1 - (this.options.scaling.label.drawThreshold - viewFontSize)));
+        var fontColor = this.fontOptions.color || '#000000';
+        var strokeColor = this.fontOptions.strokeColor || '#ffffff';
+        if (viewFontSize <= this.nodeOptions.scaling.label.drawThreshold) {
+          var opacity = Math.max(0, Math.min(1, 1 - (this.nodeOptions.scaling.label.drawThreshold - viewFontSize)));
           fontColor = util.overrideOpacity(fontColor, opacity);
           strokeColor = util.overrideOpacity(strokeColor, opacity);
         }
         return [fontColor, strokeColor];
       }
-    }, {
-      key: 'getTextSize',
 
       /**
        *
@@ -28511,18 +29180,18 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param selected
        * @returns {{width: number, height: number}}
        */
+    }, {
+      key: 'getTextSize',
       value: function getTextSize(ctx) {
         var selected = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
         var size = {
           width: this._processLabel(ctx, selected),
-          height: this.options.font.size * this.lineCount,
+          height: this.fontOptions.size * this.lineCount,
           lineCount: this.lineCount
         };
         return size;
       }
-    }, {
-      key: 'calculateLabelSize',
 
       /**
        *
@@ -28532,6 +29201,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param y
        * @param baseline
        */
+    }, {
+      key: 'calculateLabelSize',
       value: function calculateLabelSize(ctx, selected) {
         var x = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
         var y = arguments.length <= 3 || arguments[3] === undefined ? 0 : arguments[3];
@@ -28540,20 +29211,18 @@ return /******/ (function(modules) { // webpackBootstrap
         if (this.labelDirty === true) {
           this.size.width = this._processLabel(ctx, selected);
         }
-        this.size.height = this.options.font.size * this.lineCount;
+        this.size.height = this.fontOptions.size * this.lineCount;
         this.size.left = x - this.size.width * 0.5;
         this.size.top = y - this.size.height * 0.5;
-        this.size.yLine = y + (1 - this.lineCount) * 0.5 * this.options.font.size;
-        if (baseline === 'hanging') {
-          this.size.top += 0.5 * this.options.font.size;
+        this.size.yLine = y + (1 - this.lineCount) * 0.5 * this.fontOptions.size;
+        if (baseline === "hanging") {
+          this.size.top += 0.5 * this.fontOptions.size;
           this.size.top += 4; // distance from node, required because we use hanging. Hanging has less difference between browsers
           this.size.yLine += 4; // distance from node
         }
 
         this.labelDirty = false;
       }
-    }, {
-      key: '_processLabel',
 
       /**
        * This calculates the width as well as explodes the label string and calculates the amount of lines.
@@ -28562,14 +29231,16 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: '_processLabel',
       value: function _processLabel(ctx, selected) {
         var width = 0;
         var lines = [''];
         var lineCount = 0;
-        if (this.options.label !== undefined) {
-          lines = String(this.options.label).split('\n');
+        if (this.nodeOptions.label !== undefined) {
+          lines = String(this.nodeOptions.label).split('\n');
           lineCount = lines.length;
-          ctx.font = (selected && this.options.labelHighlightBold ? 'bold ' : '') + this.options.font.size + 'px ' + this.options.font.face;
+          ctx.font = (selected && this.nodeOptions.labelHighlightBold ? 'bold ' : '') + this.fontOptions.size + "px " + this.fontOptions.face;
           width = ctx.measureText(lines[0]).width;
           for (var i = 1; i < lineCount; i++) {
             var lineWidth = ctx.measureText(lines[i]).width;
@@ -28587,8 +29258,8 @@ return /******/ (function(modules) { // webpackBootstrap
         var allowDeletion = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
         if (typeof newOptions.font === 'string') {
-          var newOptionsArray = newOptions.font.split(' ');
-          parentOptions.size = newOptionsArray[0].replace('px', '');
+          var newOptionsArray = newOptions.font.split(" ");
+          parentOptions.size = newOptionsArray[0].replace("px", '');
           parentOptions.face = newOptionsArray[1];
           parentOptions.color = newOptionsArray[2];
         } else if (typeof newOptions.font === 'object') {
@@ -28616,13 +29287,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilNodeBase = __webpack_require__(65);
 
@@ -28684,12 +29355,13 @@ return /******/ (function(modules) { // webpackBootstrap
         this.disableBorderDashes(ctx);
         ctx.restore();
 
-        this.updateBoundingBox(x, y);
+        this.updateBoundingBox(x, y, ctx, selected);
         this.labelModule.draw(ctx, x, y, selected);
       }
     }, {
       key: 'updateBoundingBox',
-      value: function updateBoundingBox(x, y) {
+      value: function updateBoundingBox(x, y, ctx, selected) {
+        this.resize(ctx, selected);
         this.left = x - this.width * 0.5;
         this.top = y - this.height * 0.5;
 
@@ -28752,8 +29424,9 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     }, {
       key: '_distanceToBorder',
-      value: function _distanceToBorder(angle) {
+      value: function _distanceToBorder(ctx, angle) {
         var borderWidth = 1;
+        this.resize(ctx);
         return Math.min(Math.abs(this.width / 2 / Math.cos(angle)), Math.abs(this.height / 2 / Math.sin(angle))) + borderWidth;
       }
     }, {
@@ -28787,7 +29460,7 @@ return /******/ (function(modules) { // webpackBootstrap
             }
             ctx.setLineDash(dashes);
           } else {
-            console.warn('setLineDash is not supported in this browser. The dashed borders cannot be used.');
+            console.warn("setLineDash is not supported in this browser. The dashed borders cannot be used.");
             this.options.shapeProperties.borderDashes = false;
           }
         }
@@ -28799,16 +29472,11 @@ return /******/ (function(modules) { // webpackBootstrap
           if (ctx.setLineDash !== undefined) {
             ctx.setLineDash([0]);
           } else {
-            console.warn('setLineDash is not supported in this browser. The dashed borders cannot be used.');
+            console.warn("setLineDash is not supported in this browser. The dashed borders cannot be used.");
             this.options.shapeProperties.borderDashes = false;
           }
         }
       }
-    }, {
-      key: 'cleanup',
-
-      // possible cleanup for use in shapes
-      value: function cleanup() {}
     }]);
 
     return NodeBase;
@@ -28829,13 +29497,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilCircleImageBase = __webpack_require__(67);
 
@@ -28919,13 +29587,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilNodeBase = __webpack_require__(65);
 
@@ -28943,7 +29611,13 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     _createClass(CircleImageBase, [{
-      key: '_resizeImage',
+      key: 'setOptions',
+      value: function setOptions(options, imageObj) {
+        this.options = options;
+        if (imageObj) {
+          this.imageObj = imageObj;
+        }
+      }
 
       /**
        * This function resizes the image by the options size when the image has not yet loaded. If the image has loaded, we
@@ -28951,6 +29625,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: '_resizeImage',
       value: function _resizeImage() {
         var force = false;
         if (!this.imageObj.width || !this.imageObj.height) {
@@ -29082,13 +29758,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilCircleImageBase = __webpack_require__(67);
 
@@ -29166,7 +29842,7 @@ return /******/ (function(modules) { // webpackBootstrap
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
         this.resize(ctx);
-        return this._distanceToBorder(angle);
+        return this._distanceToBorder(ctx, angle);
       }
     }]);
 
@@ -29188,13 +29864,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilNodeBase = __webpack_require__(65);
 
@@ -29301,13 +29977,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilShapeBase = __webpack_require__(71);
 
@@ -29335,7 +30011,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
-        return this._distanceToBorder(angle);
+        return this._distanceToBorder(ctx, angle);
       }
     }]);
 
@@ -29357,13 +30033,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilNodeBase = __webpack_require__(65);
 
@@ -29463,13 +30139,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilShapeBase = __webpack_require__(71);
 
@@ -29497,6 +30173,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
+        this.resize(ctx);
         return this.options.size + this.options.borderWidth;
       }
     }]);
@@ -29519,13 +30196,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilNodeBase = __webpack_require__(65);
 
@@ -29635,13 +30312,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilNodeBase = __webpack_require__(65);
 
@@ -29708,12 +30385,12 @@ return /******/ (function(modules) { // webpackBootstrap
         var iconSize = Number(this.options.icon.size);
 
         if (this.options.icon.code !== undefined) {
-          ctx.font = (selected ? 'bold ' : '') + iconSize + 'px ' + this.options.icon.face;
+          ctx.font = (selected ? "bold " : "") + iconSize + "px " + this.options.icon.face;
 
           // draw icon
-          ctx.fillStyle = this.options.icon.color || 'black';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
+          ctx.fillStyle = this.options.icon.color || "black";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
 
           // draw shadow if enabled
           this.enableShadow(ctx);
@@ -29728,8 +30405,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
-        this.resize(ctx);
-        return this._distanceToBorder(angle);
+        return this._distanceToBorder(ctx, angle);
       }
     }]);
 
@@ -29751,13 +30427,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilCircleImageBase = __webpack_require__(67);
 
@@ -29784,6 +30460,38 @@ return /******/ (function(modules) { // webpackBootstrap
         this.resize();
         this.left = x - this.width / 2;
         this.top = y - this.height / 2;
+
+        if (this.options.shapeProperties.useBorderWithImage === true) {
+          var borderWidth = this.options.borderWidth;
+
+          var selectionLineWidth = this.options.borderWidthSelected || 2 * this.options.borderWidth;
+
+          ctx.beginPath();
+
+          // setup the line properties.
+          ctx.strokeStyle = selected ? this.options.color.highlight.border : hover ? this.options.color.hover.border : this.options.color.border;
+          ctx.lineWidth = selected ? selectionLineWidth : borderWidth;
+          ctx.lineWidth /= this.body.view.scale;
+          ctx.lineWidth = Math.min(this.width, ctx.lineWidth);
+
+          // set a fillstyle
+          ctx.fillStyle = selected ? this.options.color.highlight.background : hover ? this.options.color.hover.background : this.options.color.background;
+
+          // draw a rectangle to form the border around. This rectangle is filled so the opacity of a picture (in future vis releases?) can be used to tint the image
+          ctx.rect(this.left - 0.5 * ctx.lineWidth, this.top - 0.5 * ctx.lineWidth, this.width + ctx.lineWidth, this.height + ctx.lineWidth);
+          ctx.fill();
+
+          //draw dashed border if enabled, save and restore is required for firefox not to crash on unix.
+          ctx.save();
+          this.enableBorderDashes(ctx);
+          //draw the border
+          ctx.stroke();
+          //disable dashed border for other elements
+          this.disableBorderDashes(ctx);
+          ctx.restore();
+
+          ctx.closePath();
+        }
 
         this._drawImageAtPosition(ctx);
 
@@ -29839,13 +30547,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilShapeBase = __webpack_require__(71);
 
@@ -29873,8 +30581,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
-        this.resize();
-        return this._distanceToBorder(angle);
+        return this._distanceToBorder(ctx, angle);
       }
     }]);
 
@@ -29896,13 +30603,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilShapeBase = __webpack_require__(71);
 
@@ -29930,7 +30637,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
-        return this._distanceToBorder(angle);
+        return this._distanceToBorder(ctx, angle);
       }
     }]);
 
@@ -29952,13 +30659,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilNodeBase = __webpack_require__(65);
 
@@ -30016,8 +30723,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
-        this.resize(ctx);
-        return this._distanceToBorder(angle);
+        return this._distanceToBorder(ctx, angle);
       }
     }]);
 
@@ -30039,13 +30745,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilShapeBase = __webpack_require__(71);
 
@@ -30073,7 +30779,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
-        return this._distanceToBorder(angle);
+        return this._distanceToBorder(ctx, angle);
       }
     }]);
 
@@ -30095,13 +30801,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _utilShapeBase = __webpack_require__(71);
 
@@ -30129,7 +30835,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'distanceToBorder',
       value: function distanceToBorder(ctx, angle) {
-        return this._distanceToBorder(angle);
+        return this._distanceToBorder(ctx, angle);
       }
     }]);
 
@@ -30163,9 +30869,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _componentsSharedLabel2 = _interopRequireDefault(_componentsSharedLabel);
 
-  var util = __webpack_require__(7);
-  var DataSet = __webpack_require__(14);
-  var DataView = __webpack_require__(16);
+  var util = __webpack_require__(1);
+  var DataSet = __webpack_require__(8);
+  var DataView = __webpack_require__(10);
 
   var EdgesHandler = (function () {
     function EdgesHandler(body, images, groups) {
@@ -30251,7 +30957,7 @@ return /******/ (function(modules) { // webpackBootstrap
         },
         smooth: {
           enabled: true,
-          type: 'dynamic',
+          type: "dynamic",
           forceDirection: 'none',
           roundness: 0.5
         },
@@ -30271,7 +30977,7 @@ return /******/ (function(modules) { // webpackBootstrap
         var _this2 = this;
 
         // this allows external modules to force all dynamic curves to turn static.
-        this.body.emitter.on('_forceDisableDynamicCurves', function (type) {
+        this.body.emitter.on("_forceDisableDynamicCurves", function (type) {
           if (type === 'dynamic') {
             type = 'continuous';
           }
@@ -30299,20 +31005,20 @@ return /******/ (function(modules) { // webpackBootstrap
             }
           }
           if (emitChange === true) {
-            _this2.body.emitter.emit('_dataChanged');
+            _this2.body.emitter.emit("_dataChanged");
           }
         });
 
         // this is called when options of EXISTING nodes or edges have changed.
-        this.body.emitter.on('_dataUpdated', function () {
+        this.body.emitter.on("_dataUpdated", function () {
           _this2.reconnectEdges();
           _this2.markAllEdgesAsDirty();
         });
 
         // refresh the edges. Used when reverting from hierarchical layout
-        this.body.emitter.on('refreshEdges', this.refresh.bind(this));
-        this.body.emitter.on('refresh', this.refresh.bind(this));
-        this.body.emitter.on('destroy', function () {
+        this.body.emitter.on("refreshEdges", this.refresh.bind(this));
+        this.body.emitter.on("refresh", this.refresh.bind(this));
+        this.body.emitter.on("destroy", function () {
           delete _this2.body.functions.createEdge;
           delete _this2.edgesListeners.add;
           delete _this2.edgesListeners.update;
@@ -30359,8 +31065,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'setData',
 
       /**
        * Load edges by reading the data table
@@ -30368,6 +31072,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @private
        * @private
        */
+    }, {
+      key: 'setData',
       value: function setData(edges) {
         var _this3 = this;
 
@@ -30410,17 +31116,17 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         if (doNotEmit === false) {
-          this.body.emitter.emit('_dataChanged');
+          this.body.emitter.emit("_dataChanged");
         }
       }
-    }, {
-      key: 'add',
 
       /**
        * Add edges
        * @param {Number[] | String[]} ids
        * @private
        */
+    }, {
+      key: 'add',
       value: function add(ids) {
         var doNotEmit = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
@@ -30435,22 +31141,22 @@ return /******/ (function(modules) { // webpackBootstrap
             oldEdge.disconnect();
           }
 
-          var data = edgesData.get(id, { 'showInternalIds': true });
+          var data = edgesData.get(id, { "showInternalIds": true });
           edges[id] = this.create(data);
         }
 
         if (doNotEmit === false) {
-          this.body.emitter.emit('_dataChanged');
+          this.body.emitter.emit("_dataChanged");
         }
       }
-    }, {
-      key: 'update',
 
       /**
        * Update existing edges, or create them when not yet existing
        * @param {Number[] | String[]} ids
        * @private
        */
+    }, {
+      key: 'update',
       value: function update(ids) {
         var edges = this.body.edges;
         var edgesData = this.body.data.edges;
@@ -30472,19 +31178,19 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         if (dataChanged === true) {
-          this.body.emitter.emit('_dataChanged');
+          this.body.emitter.emit("_dataChanged");
         } else {
-          this.body.emitter.emit('_dataUpdated');
+          this.body.emitter.emit("_dataUpdated");
         }
       }
-    }, {
-      key: 'remove',
 
       /**
        * Remove existing edges. Non existing ids will be ignored
        * @param {Number[] | String[]} ids
        * @private
        */
+    }, {
+      key: 'remove',
       value: function remove(ids) {
         var edges = this.body.edges;
         for (var i = 0; i < ids.length; i++) {
@@ -30497,7 +31203,7 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
 
-        this.body.emitter.emit('_dataChanged');
+        this.body.emitter.emit("_dataChanged");
       }
     }, {
       key: 'refresh',
@@ -30526,13 +31232,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.edges[edgeId].edgeType.colorDirty = true;
         }
       }
-    }, {
-      key: 'reconnectEdges',
 
       /**
        * Reconnect all edges
        * @private
        */
+    }, {
+      key: 'reconnectEdges',
       value: function reconnectEdges() {
         var id;
         var nodes = this.body.nodes;
@@ -30596,23 +31302,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _sharedLabel2 = _interopRequireDefault(_sharedLabel);
 
-  var _edgesCubicBezierEdge = __webpack_require__(86);
+  var _edgesCubicBezierEdge = __webpack_require__(83);
 
   var _edgesCubicBezierEdge2 = _interopRequireDefault(_edgesCubicBezierEdge);
 
-  var _edgesBezierEdgeDynamic = __webpack_require__(88);
+  var _edgesBezierEdgeDynamic = __webpack_require__(87);
 
   var _edgesBezierEdgeDynamic2 = _interopRequireDefault(_edgesBezierEdgeDynamic);
 
-  var _edgesBezierEdgeStatic = __webpack_require__(83);
+  var _edgesBezierEdgeStatic = __webpack_require__(88);
 
   var _edgesBezierEdgeStatic2 = _interopRequireDefault(_edgesBezierEdgeStatic);
 
   var _edgesStraightEdge = __webpack_require__(89);
 
   var _edgesStraightEdge2 = _interopRequireDefault(_edgesStraightEdge);
-
-  var util = __webpack_require__(7);
 
   /**
    * @class Edge
@@ -30629,15 +31333,17 @@ return /******/ (function(modules) { // webpackBootstrap
    * @param {Object} constants      An object with default values for
    *                                example for the color
    */
+  var util = __webpack_require__(1);
 
   var Edge = (function () {
     function Edge(options, body, globalOptions) {
       _classCallCheck(this, Edge);
 
       if (body === undefined) {
-        throw 'No body provided';
+        throw "No body provided";
       }
       this.options = util.bridgeObject(globalOptions);
+      this.globalOptions = globalOptions;
       this.body = body;
 
       // initialize variables
@@ -30664,21 +31370,21 @@ return /******/ (function(modules) { // webpackBootstrap
       this.setOptions(options);
     }
 
+    /**
+     * Set or overwrite options for the edge
+     * @param {Object} options  an object with options
+     * @param doNotEmit
+     */
+
     _createClass(Edge, [{
       key: 'setOptions',
-
-      /**
-       * Set or overwrite options for the edge
-       * @param {Object} options  an object with options
-       * @param doNotEmit
-       */
       value: function setOptions(options) {
         if (!options) {
           return;
         }
         this.colorDirty = true;
 
-        Edge.parseOptions(this.options, options, true);
+        Edge.parseOptions(this.options, options, true, this.globalOptions);
 
         if (options.id !== undefined) {
           this.id = options.id;
@@ -30715,6 +31421,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     }, {
       key: 'updateLabelModule',
+      // set the object back to the global options
 
       /**
        * update the options in the label module
@@ -30725,13 +31432,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.baseFontSize = this.labelModule.baseSize;
         }
       }
-    }, {
-      key: 'updateEdgeType',
 
       /**
        * update the edge type, set the options
        * @returns {boolean}
        */
+    }, {
+      key: 'updateEdgeType',
       value: function updateEdgeType() {
         var dataChanged = false;
         var changeInType = true;
@@ -30775,12 +31482,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return dataChanged;
       }
-    }, {
-      key: 'connect',
 
       /**
        * Connect an edge to its nodes
        */
+    }, {
+      key: 'connect',
       value: function connect() {
         this.disconnect();
 
@@ -30802,12 +31509,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.edgeType.connect();
       }
-    }, {
-      key: 'disconnect',
 
       /**
        * Disconnect an edge from its nodes
        */
+    }, {
+      key: 'disconnect',
       value: function disconnect() {
         if (this.from) {
           this.from.detachEdge(this);
@@ -30820,39 +31527,37 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.connected = false;
       }
-    }, {
-      key: 'getTitle',
 
       /**
        * get the title of this edge.
        * @return {string} title    The title of the edge, or undefined when no title
        *                           has been set.
        */
+    }, {
+      key: 'getTitle',
       value: function getTitle() {
         return this.title;
       }
-    }, {
-      key: 'isSelected',
 
       /**
        * check if this node is selecte
        * @return {boolean} selected   True if node is selected, else false
        */
+    }, {
+      key: 'isSelected',
       value: function isSelected() {
         return this.selected;
       }
-    }, {
-      key: 'getValue',
 
       /**
        * Retrieve the value of the edge. Can be undefined
        * @return {Number} value
        */
+    }, {
+      key: 'getValue',
       value: function getValue() {
         return this.options.value;
       }
-    }, {
-      key: 'setValueRange',
 
       /**
        * Adjust the value range of the edge. The edge will adjust it's width
@@ -30861,6 +31566,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Number} max
        * @param total
        */
+    }, {
+      key: 'setValueRange',
       value: function setValueRange(min, max, total) {
         if (this.options.value !== undefined) {
           var scale = this.options.scaling.customScalingFunction(min, max, total, this.options.value);
@@ -30876,6 +31583,7 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         this._setInteractionWidths();
+        this.updateLabelModule();
       }
     }, {
       key: '_setInteractionWidths',
@@ -30892,8 +31600,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this.edgeType.selectionWidth = this.options.selectionWidth + this.options.width;
         }
       }
-    }, {
-      key: 'draw',
 
       /**
        * Redraw a edge
@@ -30901,6 +31607,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * The 2d context of a HTML canvas can be retrieved by canvas.getContext("2d");
        * @param {CanvasRenderingContext2D}   ctx
        */
+    }, {
+      key: 'draw',
       value: function draw(ctx) {
         var via = this.edgeType.drawLine(ctx, this.selected, this.hover);
         this.drawArrows(ctx, via);
@@ -30933,7 +31641,7 @@ return /******/ (function(modules) { // webpackBootstrap
             ctx.save();
 
             // if the label has to be rotated:
-            if (this.options.font.align !== 'horizontal') {
+            if (this.options.font.align !== "horizontal") {
               this.labelModule.calculateLabelSize(ctx, selected, point.x, point.y);
               ctx.translate(point.x, this.labelModule.size.yLine);
               this._rotateForLabelAlignment(ctx);
@@ -30959,14 +31667,14 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'isOverlappingWith',
 
       /**
        * Check if this object is overlapping with the provided object
        * @param {Object} obj   an object with parameters left, top
        * @return {boolean}     True if location is located on the edge
        */
+    }, {
+      key: 'isOverlappingWith',
       value: function isOverlappingWith(obj) {
         if (this.connected) {
           var distMax = 10;
@@ -30984,14 +31692,14 @@ return /******/ (function(modules) { // webpackBootstrap
           return false;
         }
       }
-    }, {
-      key: '_rotateForLabelAlignment',
 
       /**
        * Rotates the canvas so the text is most readable
        * @param {CanvasRenderingContext2D} ctx
        * @private
        */
+    }, {
+      key: '_rotateForLabelAlignment',
       value: function _rotateForLabelAlignment(ctx) {
         var dy = this.from.y - this.to.y;
         var dx = this.from.x - this.to.x;
@@ -31004,8 +31712,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         ctx.rotate(angleInDegrees);
       }
-    }, {
-      key: '_pointOnCircle',
 
       /**
        * Get a point on a circle
@@ -31016,6 +31722,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {Object} point
        * @private
        */
+    }, {
+      key: '_pointOnCircle',
       value: function _pointOnCircle(x, y, radius, percentage) {
         var angle = percentage * 2 * Math.PI;
         return {
@@ -31033,13 +31741,13 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function unselect() {
         this.selected = false;
       }
-    }, {
-      key: 'cleanup',
 
       /**
        * cleans all required things on delete
        * @returns {*}
        */
+    }, {
+      key: 'cleanup',
       value: function cleanup() {
         return this.edgeType.cleanup();
       }
@@ -31047,20 +31755,20 @@ return /******/ (function(modules) { // webpackBootstrap
       key: 'parseOptions',
       value: function parseOptions(parentOptions, newOptions) {
         var allowDeletion = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+        var globalOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
 
-        var fields = ['id', 'from', 'hidden', 'hoverWidth', 'label', 'labelHighlightBold', 'length', 'line', 'opacity', 'physics', 'selectionWidth', 'selfReferenceSize', 'to', 'title', 'value', 'width'];
+        var fields = ['id', 'from', 'hidden', 'hoverWidth', 'label', 'labelHighlightBold', 'length', 'line', 'opacity', 'physics', 'scaling', 'selectionWidth', 'selfReferenceSize', 'to', 'title', 'value', 'width'];
 
         // only deep extend the items in the field array. These do not have shorthand.
         util.selectiveDeepExtend(fields, parentOptions, newOptions, allowDeletion);
 
-        util.mergeOptions(parentOptions, newOptions, 'smooth');
-        util.mergeOptions(parentOptions, newOptions, 'shadow');
+        util.mergeOptions(parentOptions, newOptions, 'smooth', allowDeletion, globalOptions);
+        util.mergeOptions(parentOptions, newOptions, 'shadow', allowDeletion, globalOptions);
 
         if (newOptions.dashes !== undefined && newOptions.dashes !== null) {
           parentOptions.dashes = newOptions.dashes;
         } else if (allowDeletion === true && newOptions.dashes === null) {
-          parentOptions.dashes = undefined;
-          delete parentOptions.dashes;
+          parentOptions.dashes = Object.create(globalOptions.dashes); // this sets the pointer of the option back to the global option.
         }
 
         // set the scaling newOptions
@@ -31071,39 +31779,39 @@ return /******/ (function(modules) { // webpackBootstrap
           if (newOptions.scaling.max !== undefined) {
             parentOptions.scaling.max = newOptions.scaling.max;
           }
-          util.mergeOptions(parentOptions.scaling, newOptions.scaling, 'label');
+          util.mergeOptions(parentOptions.scaling, newOptions.scaling, 'label', allowDeletion, globalOptions.scaling);
         } else if (allowDeletion === true && newOptions.scaling === null) {
-          parentOptions.scaling = undefined;
-          delete parentOptions.scaling;
+          parentOptions.scaling = Object.create(globalOptions.scaling); // this sets the pointer of the option back to the global option.
         }
 
         // hanlde multiple input cases for arrows
         if (newOptions.arrows !== undefined && newOptions.arrows !== null) {
           if (typeof newOptions.arrows === 'string') {
             var arrows = newOptions.arrows.toLowerCase();
-            if (arrows.indexOf('to') != -1) {
+            if (arrows.indexOf("to") != -1) {
               parentOptions.arrows.to.enabled = true;
             }
-            if (arrows.indexOf('middle') != -1) {
+            if (arrows.indexOf("middle") != -1) {
               parentOptions.arrows.middle.enabled = true;
             }
-            if (arrows.indexOf('from') != -1) {
+            if (arrows.indexOf("from") != -1) {
               parentOptions.arrows.from.enabled = true;
             }
           } else if (typeof newOptions.arrows === 'object') {
-            util.mergeOptions(parentOptions.arrows, newOptions.arrows, 'to');
-            util.mergeOptions(parentOptions.arrows, newOptions.arrows, 'middle');
-            util.mergeOptions(parentOptions.arrows, newOptions.arrows, 'from');
+            util.mergeOptions(parentOptions.arrows, newOptions.arrows, 'to', allowDeletion, globalOptions.arrows);
+            util.mergeOptions(parentOptions.arrows, newOptions.arrows, 'middle', allowDeletion, globalOptions.arrows);
+            util.mergeOptions(parentOptions.arrows, newOptions.arrows, 'from', allowDeletion, globalOptions.arrows);
           } else {
-            throw new Error('The arrow newOptions can only be an object or a string. Refer to the documentation. You used:' + JSON.stringify(newOptions.arrows));
+            throw new Error("The arrow newOptions can only be an object or a string. Refer to the documentation. You used:" + JSON.stringify(newOptions.arrows));
           }
         } else if (allowDeletion === true && newOptions.arrows === null) {
-          parentOptions.arrows = undefined;
-          delete parentOptions.arrows;
+          parentOptions.arrows = Object.create(globalOptions.arrows); // this sets the pointer of the option back to the global option.
         }
 
         // hanlde multiple input cases for color
         if (newOptions.color !== undefined && newOptions.color !== null) {
+          // make a copy of the parent object in case this is referring to the global one (due to object create once, then update)
+          parentOptions.color = util.deepExtend({}, parentOptions.color, true);
           if (util.isString(newOptions.color)) {
             parentOptions.color.color = newOptions.color;
             parentOptions.color.highlight = newOptions.color;
@@ -31132,13 +31840,14 @@ return /******/ (function(modules) { // webpackBootstrap
             }
           }
         } else if (allowDeletion === true && newOptions.color === null) {
-          parentOptions.color = undefined;
-          delete parentOptions.color;
+          parentOptions.color = util.bridgeObject(globalOptions.color); // set the object back to the global options
         }
 
         // handle the font settings
-        if (newOptions.font !== undefined) {
+        if (newOptions.font !== undefined && newOptions.font !== null) {
           _sharedLabel2['default'].parseOptions(parentOptions.font, newOptions);
+        } else if (allowDeletion === true && newOptions.font === null) {
+          parentOptions.font = util.bridgeObject(globalOptions.font);
         }
       }
     }]);
@@ -31159,50 +31868,61 @@ return /******/ (function(modules) { // webpackBootstrap
     value: true
   });
 
+  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x4, _x5, _x6) { var _again = true; _function: while (_again) { var object = _x4, property = _x5, receiver = _x6; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x4 = parent; _x5 = property; _x6 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-  var _utilBezierEdgeBase = __webpack_require__(84);
+  var _utilCubicBezierEdgeBase = __webpack_require__(84);
 
-  var _utilBezierEdgeBase2 = _interopRequireDefault(_utilBezierEdgeBase);
+  var _utilCubicBezierEdgeBase2 = _interopRequireDefault(_utilCubicBezierEdgeBase);
 
-  var BezierEdgeStatic = (function (_BezierEdgeBase) {
-    _inherits(BezierEdgeStatic, _BezierEdgeBase);
+  var CubicBezierEdge = (function (_CubicBezierEdgeBase) {
+    _inherits(CubicBezierEdge, _CubicBezierEdgeBase);
 
-    function BezierEdgeStatic(options, body, labelModule) {
-      _classCallCheck(this, BezierEdgeStatic);
+    function CubicBezierEdge(options, body, labelModule) {
+      _classCallCheck(this, CubicBezierEdge);
 
-      _get(Object.getPrototypeOf(BezierEdgeStatic.prototype), 'constructor', this).call(this, options, body, labelModule);
+      _get(Object.getPrototypeOf(CubicBezierEdge.prototype), 'constructor', this).call(this, options, body, labelModule);
     }
 
-    _createClass(BezierEdgeStatic, [{
-      key: '_line',
+    /**
+     * Draw a line between two nodes
+     * @param {CanvasRenderingContext2D} ctx
+     * @private
+     */
 
-      /**
-       * Draw a line between two nodes
-       * @param {CanvasRenderingContext2D} ctx
-       * @private
-       */
+    _createClass(CubicBezierEdge, [{
+      key: '_line',
       value: function _line(ctx) {
-        // draw a straight line
+        // get the coordinates of the support points.
+
+        var _getViaCoordinates2 = this._getViaCoordinates();
+
+        var _getViaCoordinates22 = _slicedToArray(_getViaCoordinates2, 2);
+
+        var via1 = _getViaCoordinates22[0];
+        var via2 = _getViaCoordinates22[1];
+
+        var returnValue = [via1, via2];
+
+        // start drawing the line.
         ctx.beginPath();
         ctx.moveTo(this.from.x, this.from.y);
-        var via = this._getViaCoordinates();
-        var returnValue = via;
 
         // fallback to normal straight edges
-        if (via.x === undefined) {
+        if (via1.x === undefined) {
           ctx.lineTo(this.to.x, this.to.y);
           returnValue = undefined;
         } else {
-          ctx.quadraticCurveTo(via.x, via.y, this.to.x, this.to.y);
+          ctx.bezierCurveTo(via1.x, via1.y, via2.x, via2.y, this.to.x, this.to.y);
         }
         // draw shadow if enabled
         this.enableShadow(ctx);
@@ -31213,176 +31933,47 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: '_getViaCoordinates',
       value: function _getViaCoordinates() {
-        var xVia = undefined;
-        var yVia = undefined;
-        var factor = this.options.smooth.roundness;
-        var type = this.options.smooth.type;
-        var dx = Math.abs(this.from.x - this.to.x);
-        var dy = Math.abs(this.from.y - this.to.y);
-        if (type === 'discrete' || type === 'diagonalCross') {
-          if (Math.abs(this.from.x - this.to.x) <= Math.abs(this.from.y - this.to.y)) {
-            if (this.from.y >= this.to.y) {
-              if (this.from.x <= this.to.x) {
-                xVia = this.from.x + factor * dy;
-                yVia = this.from.y - factor * dy;
-              } else if (this.from.x > this.to.x) {
-                xVia = this.from.x - factor * dy;
-                yVia = this.from.y - factor * dy;
-              }
-            } else if (this.from.y < this.to.y) {
-              if (this.from.x <= this.to.x) {
-                xVia = this.from.x + factor * dy;
-                yVia = this.from.y + factor * dy;
-              } else if (this.from.x > this.to.x) {
-                xVia = this.from.x - factor * dy;
-                yVia = this.from.y + factor * dy;
-              }
-            }
-            if (type === 'discrete') {
-              xVia = dx < factor * dy ? this.from.x : xVia;
-            }
-          } else if (Math.abs(this.from.x - this.to.x) > Math.abs(this.from.y - this.to.y)) {
-            if (this.from.y >= this.to.y) {
-              if (this.from.x <= this.to.x) {
-                xVia = this.from.x + factor * dx;
-                yVia = this.from.y - factor * dx;
-              } else if (this.from.x > this.to.x) {
-                xVia = this.from.x - factor * dx;
-                yVia = this.from.y - factor * dx;
-              }
-            } else if (this.from.y < this.to.y) {
-              if (this.from.x <= this.to.x) {
-                xVia = this.from.x + factor * dx;
-                yVia = this.from.y + factor * dx;
-              } else if (this.from.x > this.to.x) {
-                xVia = this.from.x - factor * dx;
-                yVia = this.from.y + factor * dx;
-              }
-            }
-            if (type === 'discrete') {
-              yVia = dy < factor * dx ? this.from.y : yVia;
-            }
-          }
-        } else if (type === 'straightCross') {
-          if (Math.abs(this.from.x - this.to.x) <= Math.abs(this.from.y - this.to.y)) {
-            // up - down
-            xVia = this.from.x;
-            if (this.from.y < this.to.y) {
-              yVia = this.to.y - (1 - factor) * dy;
-            } else {
-              yVia = this.to.y + (1 - factor) * dy;
-            }
-          } else if (Math.abs(this.from.x - this.to.x) > Math.abs(this.from.y - this.to.y)) {
-            // left - right
-            if (this.from.x < this.to.x) {
-              xVia = this.to.x - (1 - factor) * dx;
-            } else {
-              xVia = this.to.x + (1 - factor) * dx;
-            }
-            yVia = this.from.y;
-          }
-        } else if (type === 'horizontal') {
-          if (this.from.x < this.to.x) {
-            xVia = this.to.x - (1 - factor) * dx;
-          } else {
-            xVia = this.to.x + (1 - factor) * dx;
-          }
-          yVia = this.from.y;
-        } else if (type === 'vertical') {
-          xVia = this.from.x;
-          if (this.from.y < this.to.y) {
-            yVia = this.to.y - (1 - factor) * dy;
-          } else {
-            yVia = this.to.y + (1 - factor) * dy;
-          }
-        } else if (type === 'curvedCW') {
-          dx = this.to.x - this.from.x;
-          dy = this.from.y - this.to.y;
-          var radius = Math.sqrt(dx * dx + dy * dy);
-          var pi = Math.PI;
+        var dx = this.from.x - this.to.x;
+        var dy = this.from.y - this.to.y;
 
-          var originalAngle = Math.atan2(dy, dx);
-          var myAngle = (originalAngle + (factor * 0.5 + 0.5) * pi) % (2 * pi);
+        var x1 = undefined,
+            y1 = undefined,
+            x2 = undefined,
+            y2 = undefined;
+        var roundness = this.options.smooth.roundness;;
 
-          xVia = this.from.x + (factor * 0.5 + 0.5) * radius * Math.sin(myAngle);
-          yVia = this.from.y + (factor * 0.5 + 0.5) * radius * Math.cos(myAngle);
-        } else if (type === 'curvedCCW') {
-          dx = this.to.x - this.from.x;
-          dy = this.from.y - this.to.y;
-          var radius = Math.sqrt(dx * dx + dy * dy);
-          var pi = Math.PI;
-
-          var originalAngle = Math.atan2(dy, dx);
-          var myAngle = (originalAngle + (-factor * 0.5 + 0.5) * pi) % (2 * pi);
-
-          xVia = this.from.x + (factor * 0.5 + 0.5) * radius * Math.sin(myAngle);
-          yVia = this.from.y + (factor * 0.5 + 0.5) * radius * Math.cos(myAngle);
+        // horizontal if x > y or if direction is forced or if direction is horizontal
+        if ((Math.abs(dx) > Math.abs(dy) || this.options.smooth.forceDirection === true || this.options.smooth.forceDirection === 'horizontal') && this.options.smooth.forceDirection !== 'vertical') {
+          y1 = this.from.y;
+          y2 = this.to.y;
+          x1 = this.from.x - roundness * dx;
+          x2 = this.to.x + roundness * dx;
         } else {
-          // continuous
-          if (Math.abs(this.from.x - this.to.x) <= Math.abs(this.from.y - this.to.y)) {
-            if (this.from.y >= this.to.y) {
-              if (this.from.x <= this.to.x) {
-                xVia = this.from.x + factor * dy;
-                yVia = this.from.y - factor * dy;
-                xVia = this.to.x < xVia ? this.to.x : xVia;
-              } else if (this.from.x > this.to.x) {
-                xVia = this.from.x - factor * dy;
-                yVia = this.from.y - factor * dy;
-                xVia = this.to.x > xVia ? this.to.x : xVia;
-              }
-            } else if (this.from.y < this.to.y) {
-              if (this.from.x <= this.to.x) {
-                xVia = this.from.x + factor * dy;
-                yVia = this.from.y + factor * dy;
-                xVia = this.to.x < xVia ? this.to.x : xVia;
-              } else if (this.from.x > this.to.x) {
-                xVia = this.from.x - factor * dy;
-                yVia = this.from.y + factor * dy;
-                xVia = this.to.x > xVia ? this.to.x : xVia;
-              }
-            }
-          } else if (Math.abs(this.from.x - this.to.x) > Math.abs(this.from.y - this.to.y)) {
-            if (this.from.y >= this.to.y) {
-              if (this.from.x <= this.to.x) {
-                xVia = this.from.x + factor * dx;
-                yVia = this.from.y - factor * dx;
-                yVia = this.to.y > yVia ? this.to.y : yVia;
-              } else if (this.from.x > this.to.x) {
-                xVia = this.from.x - factor * dx;
-                yVia = this.from.y - factor * dx;
-                yVia = this.to.y > yVia ? this.to.y : yVia;
-              }
-            } else if (this.from.y < this.to.y) {
-              if (this.from.x <= this.to.x) {
-                xVia = this.from.x + factor * dx;
-                yVia = this.from.y + factor * dx;
-                yVia = this.to.y < yVia ? this.to.y : yVia;
-              } else if (this.from.x > this.to.x) {
-                xVia = this.from.x - factor * dx;
-                yVia = this.from.y + factor * dx;
-                yVia = this.to.y < yVia ? this.to.y : yVia;
-              }
-            }
-          }
+          y1 = this.from.y - roundness * dy;
+          y2 = this.to.y + roundness * dy;
+          x1 = this.from.x;
+          x2 = this.to.x;
         }
-        return { x: xVia, y: yVia };
+
+        return [{ x: x1, y: y1 }, { x: x2, y: y2 }];
       }
     }, {
       key: '_findBorderPosition',
       value: function _findBorderPosition(nearNode, ctx) {
-        var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-        return this._findBorderPositionBezier(nearNode, ctx, options.via);
+        return this._findBorderPositionBezier(nearNode, ctx);
       }
     }, {
       key: '_getDistanceToEdge',
       value: function _getDistanceToEdge(x1, y1, x2, y2, x3, y3) {
-        var via = arguments.length <= 6 || arguments[6] === undefined ? this._getViaCoordinates() : arguments[6];
+        var _ref = arguments.length <= 6 || arguments[6] === undefined ? this._getViaCoordinates() : arguments[6];
+
+        var _ref2 = _slicedToArray(_ref, 2);
+
+        var via1 = _ref2[0];
+        var via2 = _ref2[1];
         // x3,y3 is the point
-        return this._getDistanceToBezierEdge(x1, y1, x2, y2, x3, y3, via);
+        return this._getDistanceToBezierEdge(x1, y1, x2, y2, x3, y3, via1, via2);
       }
-    }, {
-      key: 'getPoint',
 
       /**
        * Combined function of pointOnLine and pointOnBezier. This gives the coordinates of a point on the line at a certain percentage of the way
@@ -31391,21 +31982,33 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {{x: number, y: number}}
        * @private
        */
+    }, {
+      key: 'getPoint',
       value: function getPoint(percentage) {
-        var via = arguments.length <= 1 || arguments[1] === undefined ? this._getViaCoordinates() : arguments[1];
+        var _ref3 = arguments.length <= 1 || arguments[1] === undefined ? this._getViaCoordinates() : arguments[1];
+
+        var _ref32 = _slicedToArray(_ref3, 2);
+
+        var via1 = _ref32[0];
+        var via2 = _ref32[1];
 
         var t = percentage;
-        var x = Math.pow(1 - t, 2) * this.from.x + 2 * t * (1 - t) * via.x + Math.pow(t, 2) * this.to.x;
-        var y = Math.pow(1 - t, 2) * this.from.y + 2 * t * (1 - t) * via.y + Math.pow(t, 2) * this.to.y;
+        var vec = [];
+        vec[0] = Math.pow(1 - t, 3);
+        vec[1] = 3 * t * Math.pow(1 - t, 2);
+        vec[2] = 3 * Math.pow(t, 2) * (1 - t);
+        vec[3] = Math.pow(t, 3);
+        var x = vec[0] * this.from.x + vec[1] * via1.x + vec[2] * via2.x + vec[3] * this.to.x;
+        var y = vec[0] * this.from.y + vec[1] * via1.y + vec[2] * via2.y + vec[3] * this.to.y;
 
         return { x: x, y: y };
       }
     }]);
 
-    return BezierEdgeStatic;
-  })(_utilBezierEdgeBase2['default']);
+    return CubicBezierEdge;
+  })(_utilCubicBezierEdgeBase2['default']);
 
-  exports['default'] = BezierEdgeStatic;
+  exports['default'] = CubicBezierEdge;
   module.exports = exports['default'];
 
 /***/ },
@@ -31420,15 +32023,101 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-  var _EdgeBase2 = __webpack_require__(85);
+  var _BezierEdgeBase2 = __webpack_require__(85);
+
+  var _BezierEdgeBase3 = _interopRequireDefault(_BezierEdgeBase2);
+
+  var CubicBezierEdgeBase = (function (_BezierEdgeBase) {
+    _inherits(CubicBezierEdgeBase, _BezierEdgeBase);
+
+    function CubicBezierEdgeBase(options, body, labelModule) {
+      _classCallCheck(this, CubicBezierEdgeBase);
+
+      _get(Object.getPrototypeOf(CubicBezierEdgeBase.prototype), 'constructor', this).call(this, options, body, labelModule);
+    }
+
+    /**
+     * Calculate the distance between a point (x3,y3) and a line segment from
+     * (x1,y1) to (x2,y2).
+     * http://stackoverflow.com/questions/849211/shortest-distancae-between-a-point-and-a-line-segment
+     * https://en.wikipedia.org/wiki/B%C3%A9zier_curve
+     * @param {number} x1 from x
+     * @param {number} y1 from y
+     * @param {number} x2 to x
+     * @param {number} y2 to y
+     * @param {number} x3 point to check x
+     * @param {number} y3 point to check y
+     * @private
+     */
+
+    _createClass(CubicBezierEdgeBase, [{
+      key: '_getDistanceToBezierEdge',
+      value: function _getDistanceToBezierEdge(x1, y1, x2, y2, x3, y3, via1, via2) {
+        // x3,y3 is the point
+        var minDistance = 1e9;
+        var distance = undefined;
+        var i = undefined,
+            t = undefined,
+            x = undefined,
+            y = undefined;
+        var lastX = x1;
+        var lastY = y1;
+        var vec = [0, 0, 0, 0];
+        for (i = 1; i < 10; i++) {
+          t = 0.1 * i;
+          vec[0] = Math.pow(1 - t, 3);
+          vec[1] = 3 * t * Math.pow(1 - t, 2);
+          vec[2] = 3 * Math.pow(t, 2) * (1 - t);
+          vec[3] = Math.pow(t, 3);
+          x = vec[0] * x1 + vec[1] * via1.x + vec[2] * via2.x + vec[3] * x2;
+          y = vec[0] * y1 + vec[1] * via1.y + vec[2] * via2.y + vec[3] * y2;
+          if (i > 0) {
+            distance = this._getDistanceToLine(lastX, lastY, x, y, x3, y3);
+            minDistance = distance < minDistance ? distance : minDistance;
+          }
+          lastX = x;
+          lastY = y;
+        }
+
+        return minDistance;
+      }
+    }]);
+
+    return CubicBezierEdgeBase;
+  })(_BezierEdgeBase3['default']);
+
+  exports['default'] = CubicBezierEdgeBase;
+  module.exports = exports['default'];
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+  var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+  var _EdgeBase2 = __webpack_require__(86);
 
   var _EdgeBase3 = _interopRequireDefault(_EdgeBase2);
 
@@ -31441,22 +32130,22 @@ return /******/ (function(modules) { // webpackBootstrap
       _get(Object.getPrototypeOf(BezierEdgeBase.prototype), 'constructor', this).call(this, options, body, labelModule);
     }
 
+    /**
+     * This function uses binary search to look for the point where the bezier curve crosses the border of the node.
+     *
+     * @param nearNode
+     * @param ctx
+     * @param viaNode
+     * @param nearNode
+     * @param ctx
+     * @param viaNode
+     * @param nearNode
+     * @param ctx
+     * @param viaNode
+     */
+
     _createClass(BezierEdgeBase, [{
       key: '_findBorderPositionBezier',
-
-      /**
-       * This function uses binary search to look for the point where the bezier curve crosses the border of the node.
-       *
-       * @param nearNode
-       * @param ctx
-       * @param viaNode
-       * @param nearNode
-       * @param ctx
-       * @param viaNode
-       * @param nearNode
-       * @param ctx
-       * @param viaNode
-       */
       value: function _findBorderPositionBezier(nearNode, ctx) {
         var viaNode = arguments.length <= 2 || arguments[2] === undefined ? this._getViaCoordinates() : arguments[2];
 
@@ -31484,19 +32173,19 @@ return /******/ (function(modules) { // webpackBootstrap
           if (Math.abs(difference) < threshold) {
             break; // found
           } else if (difference < 0) {
-            // distance to nodes is larger than distance to border --> t needs to be bigger if we're looking at the to node.
-            if (from === false) {
-              low = middle;
+              // distance to nodes is larger than distance to border --> t needs to be bigger if we're looking at the to node.
+              if (from === false) {
+                low = middle;
+              } else {
+                high = middle;
+              }
             } else {
-              high = middle;
+              if (from === false) {
+                high = middle;
+              } else {
+                low = middle;
+              }
             }
-          } else {
-            if (from === false) {
-              high = middle;
-            } else {
-              low = middle;
-            }
-          }
 
           iteration++;
         }
@@ -31504,8 +32193,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return pos;
       }
-    }, {
-      key: '_getDistanceToBezierEdge',
 
       /**
        * Calculate the distance between a point (x3,y3) and a line segment from
@@ -31519,6 +32206,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {number} y3 point to check y
        * @private
        */
+    }, {
+      key: '_getDistanceToBezierEdge',
       value: function _getDistanceToBezierEdge(x1, y1, x2, y2, x3, y3, via) {
         // x3,y3 is the point
         var minDistance = 1e9;
@@ -31552,7 +32241,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -31567,7 +32256,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   var EdgeBase = (function () {
     function EdgeBase(options, body, labelModule) {
@@ -31575,6 +32264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       this.body = body;
       this.labelModule = labelModule;
+      this.options = {};
       this.setOptions(options);
       this.colorDirty = true;
       this.color = {};
@@ -31601,8 +32291,6 @@ return /******/ (function(modules) { // webpackBootstrap
         this.to = this.body.nodes[this.options.to];
         this.id = this.options.id;
       }
-    }, {
-      key: 'drawLine',
 
       /**
        * Redraw a edge as a line
@@ -31611,6 +32299,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {CanvasRenderingContext2D}   ctx
        * @private
        */
+    }, {
+      key: 'drawLine',
       value: function drawLine(ctx, selected, hover) {
         // set style
         ctx.strokeStyle = this.getColor(ctx, selected, hover);
@@ -31762,8 +32452,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return [x, y, radius];
       }
-    }, {
-      key: '_pointOnCircle',
 
       /**
        * Get a point on a circle
@@ -31774,6 +32462,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {Object} point
        * @private
        */
+    }, {
+      key: '_pointOnCircle',
       value: function _pointOnCircle(x, y, radius, percentage) {
         var angle = percentage * 2 * Math.PI;
         return {
@@ -31781,8 +32471,6 @@ return /******/ (function(modules) { // webpackBootstrap
           y: y - radius * Math.sin(angle)
         };
       }
-    }, {
-      key: '_findBorderPositionCircle',
 
       /**
        * This function uses binary search to look for the point where the circle crosses the border of the node.
@@ -31792,6 +32480,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {*}
        * @private
        */
+    }, {
+      key: '_findBorderPositionCircle',
       value: function _findBorderPositionCircle(node, ctx, options) {
         var x = options.x;
         var y = options.y;
@@ -31821,27 +32511,25 @@ return /******/ (function(modules) { // webpackBootstrap
           if (Math.abs(difference) < threshold) {
             break; // found
           } else if (difference > 0) {
-            // distance to nodes is larger than distance to border --> t needs to be bigger if we're looking at the to node.
-            if (direction > 0) {
-              low = middle;
+              // distance to nodes is larger than distance to border --> t needs to be bigger if we're looking at the to node.
+              if (direction > 0) {
+                low = middle;
+              } else {
+                high = middle;
+              }
             } else {
-              high = middle;
+              if (direction > 0) {
+                high = middle;
+              } else {
+                low = middle;
+              }
             }
-          } else {
-            if (direction > 0) {
-              high = middle;
-            } else {
-              low = middle;
-            }
-          }
           iteration++;
         }
         pos.t = middle;
 
         return pos;
       }
-    }, {
-      key: 'getLineWidth',
 
       /**
        * Get the line width of the edge. Depends on width and whether one of the
@@ -31849,6 +32537,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {Number} width
        * @private
        */
+    }, {
+      key: 'getLineWidth',
       value: function getLineWidth(selected, hover) {
         if (selected === true) {
           return Math.max(this.selectionWidth, 0.3 / this.body.view.scale);
@@ -31889,7 +32579,7 @@ return /******/ (function(modules) { // webpackBootstrap
           }
 
           if (this.colorDirty === true) {
-            if (colorOptions.inherit === 'to') {
+            if (colorOptions.inherit === "to") {
               this.color.highlight = this.to.options.color.highlight.border;
               this.color.hover = this.to.options.color.hover.border;
               this.color.color = util.overrideOpacity(this.to.options.color.border, colorOptions.opacity);
@@ -31917,8 +32607,6 @@ return /******/ (function(modules) { // webpackBootstrap
           return this.color.color;
         }
       }
-    }, {
-      key: '_circle',
 
       /**
        * Draw a line from a node to itself, a circle
@@ -31928,6 +32616,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Number} radius
        * @private
        */
+    }, {
+      key: '_circle',
       value: function _circle(ctx, x, y, radius) {
         // draw shadow if enabled
         this.enableShadow(ctx);
@@ -31940,8 +32630,6 @@ return /******/ (function(modules) { // webpackBootstrap
         // disable shadows for other elements.
         this.disableShadow(ctx);
       }
-    }, {
-      key: 'getDistanceToEdge',
 
       /**
        * Calculate the distance between a point (x3,y3) and a line segment from
@@ -31955,6 +32643,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {number} y3
        * @private
        */
+    }, {
+      key: 'getDistanceToEdge',
       value: function getDistanceToEdge(x1, y1, x2, y2, x3, y3, via) {
         // x3,y3 is the point
         var returnValue = 0;
@@ -32007,8 +32697,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return Math.sqrt(dx * dx + dy * dy);
       }
-    }, {
-      key: 'drawArrowHead',
 
       /**
        *
@@ -32016,6 +32704,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param position
        * @param viaNode
        */
+    }, {
+      key: 'drawArrowHead',
       value: function drawArrowHead(ctx, position, viaNode, selected, hover) {
         // set style
         ctx.strokeStyle = this.getColor(ctx, selected, hover);
@@ -32140,265 +32830,26 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 86 */
-/***/ function(module, exports, __webpack_require__) {
-
-  'use strict';
-
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-
-  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
-
-  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-  var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-  var _utilCubicBezierEdgeBase = __webpack_require__(87);
-
-  var _utilCubicBezierEdgeBase2 = _interopRequireDefault(_utilCubicBezierEdgeBase);
-
-  var CubicBezierEdge = (function (_CubicBezierEdgeBase) {
-    _inherits(CubicBezierEdge, _CubicBezierEdgeBase);
-
-    function CubicBezierEdge(options, body, labelModule) {
-      _classCallCheck(this, CubicBezierEdge);
-
-      _get(Object.getPrototypeOf(CubicBezierEdge.prototype), 'constructor', this).call(this, options, body, labelModule);
-    }
-
-    _createClass(CubicBezierEdge, [{
-      key: '_line',
-
-      /**
-       * Draw a line between two nodes
-       * @param {CanvasRenderingContext2D} ctx
-       * @private
-       */
-      value: function _line(ctx) {
-        // get the coordinates of the support points.
-
-        var _getViaCoordinates2 = this._getViaCoordinates();
-
-        var _getViaCoordinates22 = _slicedToArray(_getViaCoordinates2, 2);
-
-        var via1 = _getViaCoordinates22[0];
-        var via2 = _getViaCoordinates22[1];
-
-        var returnValue = [via1, via2];
-
-        // start drawing the line.
-        ctx.beginPath();
-        ctx.moveTo(this.from.x, this.from.y);
-
-        // fallback to normal straight edges
-        if (via1.x === undefined) {
-          ctx.lineTo(this.to.x, this.to.y);
-          returnValue = undefined;
-        } else {
-          ctx.bezierCurveTo(via1.x, via1.y, via2.x, via2.y, this.to.x, this.to.y);
-        }
-        // draw shadow if enabled
-        this.enableShadow(ctx);
-        ctx.stroke();
-        this.disableShadow(ctx);
-        return returnValue;
-      }
-    }, {
-      key: '_getViaCoordinates',
-      value: function _getViaCoordinates() {
-        var dx = this.from.x - this.to.x;
-        var dy = this.from.y - this.to.y;
-
-        var x1 = undefined,
-            y1 = undefined,
-            x2 = undefined,
-            y2 = undefined;
-        var roundness = this.options.smooth.roundness;;
-
-        // horizontal if x > y or if direction is forced or if direction is horizontal
-        if ((Math.abs(dx) > Math.abs(dy) || this.options.smooth.forceDirection === true || this.options.smooth.forceDirection === 'horizontal') && this.options.smooth.forceDirection !== 'vertical') {
-          y1 = this.from.y;
-          y2 = this.to.y;
-          x1 = this.from.x - roundness * dx;
-          x2 = this.to.x + roundness * dx;
-        } else {
-          y1 = this.from.y - roundness * dy;
-          y2 = this.to.y + roundness * dy;
-          x1 = this.from.x;
-          x2 = this.to.x;
-        }
-
-        return [{ x: x1, y: y1 }, { x: x2, y: y2 }];
-      }
-    }, {
-      key: '_findBorderPosition',
-      value: function _findBorderPosition(nearNode, ctx) {
-        return this._findBorderPositionBezier(nearNode, ctx);
-      }
-    }, {
-      key: '_getDistanceToEdge',
-      value: function _getDistanceToEdge(x1, y1, x2, y2, x3, y3) {
-        var _ref = arguments.length <= 6 || arguments[6] === undefined ? this._getViaCoordinates() : arguments[6];
-
-        var _ref2 = _slicedToArray(_ref, 2);
-
-        var via1 = _ref2[0];
-        var via2 = _ref2[1];
-        // x3,y3 is the point
-        return this._getDistanceToBezierEdge(x1, y1, x2, y2, x3, y3, via1, via2);
-      }
-    }, {
-      key: 'getPoint',
-
-      /**
-       * Combined function of pointOnLine and pointOnBezier. This gives the coordinates of a point on the line at a certain percentage of the way
-       * @param percentage
-       * @param via
-       * @returns {{x: number, y: number}}
-       * @private
-       */
-      value: function getPoint(percentage) {
-        var _ref3 = arguments.length <= 1 || arguments[1] === undefined ? this._getViaCoordinates() : arguments[1];
-
-        var _ref32 = _slicedToArray(_ref3, 2);
-
-        var via1 = _ref32[0];
-        var via2 = _ref32[1];
-
-        var t = percentage;
-        var vec = [];
-        vec[0] = Math.pow(1 - t, 3);
-        vec[1] = 3 * t * Math.pow(1 - t, 2);
-        vec[2] = 3 * Math.pow(t, 2) * (1 - t);
-        vec[3] = Math.pow(t, 3);
-        var x = vec[0] * this.from.x + vec[1] * via1.x + vec[2] * via2.x + vec[3] * this.to.x;
-        var y = vec[0] * this.from.y + vec[1] * via1.y + vec[2] * via2.y + vec[3] * this.to.y;
-
-        return { x: x, y: y };
-      }
-    }]);
-
-    return CubicBezierEdge;
-  })(_utilCubicBezierEdgeBase2['default']);
-
-  exports['default'] = CubicBezierEdge;
-  module.exports = exports['default'];
-
-/***/ },
 /* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-  'use strict';
+  "use strict";
 
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-  var _BezierEdgeBase2 = __webpack_require__(84);
-
-  var _BezierEdgeBase3 = _interopRequireDefault(_BezierEdgeBase2);
-
-  var CubicBezierEdgeBase = (function (_BezierEdgeBase) {
-    _inherits(CubicBezierEdgeBase, _BezierEdgeBase);
-
-    function CubicBezierEdgeBase(options, body, labelModule) {
-      _classCallCheck(this, CubicBezierEdgeBase);
-
-      _get(Object.getPrototypeOf(CubicBezierEdgeBase.prototype), 'constructor', this).call(this, options, body, labelModule);
-    }
-
-    _createClass(CubicBezierEdgeBase, [{
-      key: '_getDistanceToBezierEdge',
-
-      /**
-       * Calculate the distance between a point (x3,y3) and a line segment from
-       * (x1,y1) to (x2,y2).
-       * http://stackoverflow.com/questions/849211/shortest-distancae-between-a-point-and-a-line-segment
-       * https://en.wikipedia.org/wiki/B%C3%A9zier_curve
-       * @param {number} x1 from x
-       * @param {number} y1 from y
-       * @param {number} x2 to x
-       * @param {number} y2 to y
-       * @param {number} x3 point to check x
-       * @param {number} y3 point to check y
-       * @private
-       */
-      value: function _getDistanceToBezierEdge(x1, y1, x2, y2, x3, y3, via1, via2) {
-        // x3,y3 is the point
-        var minDistance = 1e9;
-        var distance = undefined;
-        var i = undefined,
-            t = undefined,
-            x = undefined,
-            y = undefined;
-        var lastX = x1;
-        var lastY = y1;
-        var vec = [0, 0, 0, 0];
-        for (i = 1; i < 10; i++) {
-          t = 0.1 * i;
-          vec[0] = Math.pow(1 - t, 3);
-          vec[1] = 3 * t * Math.pow(1 - t, 2);
-          vec[2] = 3 * Math.pow(t, 2) * (1 - t);
-          vec[3] = Math.pow(t, 3);
-          x = vec[0] * x1 + vec[1] * via1.x + vec[2] * via2.x + vec[3] * x2;
-          y = vec[0] * y1 + vec[1] * via1.y + vec[2] * via2.y + vec[3] * y2;
-          if (i > 0) {
-            distance = this._getDistanceToLine(lastX, lastY, x, y, x3, y3);
-            minDistance = distance < minDistance ? distance : minDistance;
-          }
-          lastX = x;
-          lastY = y;
-        }
-
-        return minDistance;
-      }
-    }]);
-
-    return CubicBezierEdgeBase;
-  })(_BezierEdgeBase3['default']);
-
-  exports['default'] = CubicBezierEdgeBase;
-  module.exports = exports['default'];
-
-/***/ },
-/* 88 */
-/***/ function(module, exports, __webpack_require__) {
-
-  'use strict';
-
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-
-  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-  var _utilBezierEdgeBase = __webpack_require__(84);
+  var _utilBezierEdgeBase = __webpack_require__(85);
 
   var _utilBezierEdgeBase2 = _interopRequireDefault(_utilBezierEdgeBase);
 
@@ -32406,28 +32857,45 @@ return /******/ (function(modules) { // webpackBootstrap
     _inherits(BezierEdgeDynamic, _BezierEdgeBase);
 
     function BezierEdgeDynamic(options, body, labelModule) {
+      var _this = this;
+
       _classCallCheck(this, BezierEdgeDynamic);
 
       //this.via = undefined; // Here for completeness but not allowed to defined before super() is invoked.
-      _get(Object.getPrototypeOf(BezierEdgeDynamic.prototype), 'constructor', this).call(this, options, body, labelModule); // --> this calls the setOptions below
+      _get(Object.getPrototypeOf(BezierEdgeDynamic.prototype), "constructor", this).call(this, options, body, labelModule); // --> this calls the setOptions below
+      this._boundFunction = function () {
+        _this.positionBezierNode();
+      };
+      this.body.emitter.on("_repositionBezierNodes", this._boundFunction);
     }
 
     _createClass(BezierEdgeDynamic, [{
-      key: 'setOptions',
+      key: "setOptions",
       value: function setOptions(options) {
+        // check if the physics has changed.
+        var physicsChange = false;
+        if (this.options.physics !== options.physics) {
+          physicsChange = true;
+        }
+
+        // set the options and the to and from nodes
         this.options = options;
         this.id = this.options.id;
+        this.from = this.body.nodes[this.options.from];
+        this.to = this.body.nodes[this.options.to];
+
+        // setup the support node and connect
         this.setupSupportNode();
+        this.connect();
 
         // when we change the physics state of the edge, we reposition the support node.
-        if (this.options.physics !== options.physics) {
+        if (physicsChange === true) {
           this.via.setOptions({ physics: this.options.physics });
           this.positionBezierNode();
         }
-        this.connect();
       }
     }, {
-      key: 'connect',
+      key: "connect",
       value: function connect() {
         this.from = this.body.nodes[this.options.from];
         this.to = this.body.nodes[this.options.to];
@@ -32442,14 +32910,15 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'cleanup',
 
       /**
        * remove the support nodes
        * @returns {boolean}
        */
+    }, {
+      key: "cleanup",
       value: function cleanup() {
+        this.body.emitter.off("_repositionBezierNodes", this._boundFunction);
         if (this.via !== undefined) {
           delete this.body.nodes[this.via.id];
           this.via = undefined;
@@ -32457,8 +32926,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return false;
       }
-    }, {
-      key: 'setupSupportNode',
 
       /**
        * Bezier curves require an anchor point to calculate the smooth flow. These points are nodes. These nodes are invisible but
@@ -32467,9 +32934,11 @@ return /******/ (function(modules) { // webpackBootstrap
        * The changed data is not called, if needed, it is returned by the main edge constructor.
        * @private
        */
+    }, {
+      key: "setupSupportNode",
       value: function setupSupportNode() {
         if (this.via === undefined) {
-          var nodeId = 'edgeId:' + this.id;
+          var nodeId = "edgeId:" + this.id;
           var node = this.body.functions.createNode({
             id: nodeId,
             shape: 'circle',
@@ -32483,7 +32952,7 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       }
     }, {
-      key: 'positionBezierNode',
+      key: "positionBezierNode",
       value: function positionBezierNode() {
         if (this.via !== undefined && this.from !== undefined && this.to !== undefined) {
           this.via.x = 0.5 * (this.from.x + this.to.x);
@@ -32493,14 +32962,14 @@ return /******/ (function(modules) { // webpackBootstrap
           this.via.y = 0;
         }
       }
-    }, {
-      key: '_line',
 
       /**
        * Draw a line between two nodes
        * @param {CanvasRenderingContext2D} ctx
        * @private
        */
+    }, {
+      key: "_line",
       value: function _line(ctx) {
         // draw a straight line
         ctx.beginPath();
@@ -32512,8 +32981,6 @@ return /******/ (function(modules) { // webpackBootstrap
         this.disableShadow(ctx);
         return this.via;
       }
-    }, {
-      key: 'getPoint',
 
       /**
        * Combined function of pointOnLine and pointOnBezier. This gives the coordinates of a point on the line at a certain percentage of the way
@@ -32522,6 +32989,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {{x: number, y: number}}
        * @private
        */
+    }, {
+      key: "getPoint",
       value: function getPoint(percentage) {
         var t = percentage;
         var x = Math.pow(1 - t, 2) * this.from.x + 2 * t * (1 - t) * this.via.x + Math.pow(t, 2) * this.to.x;
@@ -32530,12 +32999,12 @@ return /******/ (function(modules) { // webpackBootstrap
         return { x: x, y: y };
       }
     }, {
-      key: '_findBorderPosition',
+      key: "_findBorderPosition",
       value: function _findBorderPosition(nearNode, ctx) {
         return this._findBorderPositionBezier(nearNode, ctx, this.via);
       }
     }, {
-      key: '_getDistanceToEdge',
+      key: "_getDistanceToEdge",
       value: function _getDistanceToEdge(x1, y1, x2, y2, x3, y3) {
         // x3,y3 is the point
         return this._getDistanceToBezierEdge(x1, y1, x2, y2, x3, y3, this.via);
@@ -32543,9 +33012,268 @@ return /******/ (function(modules) { // webpackBootstrap
     }]);
 
     return BezierEdgeDynamic;
+  })(_utilBezierEdgeBase2["default"]);
+
+  exports["default"] = BezierEdgeDynamic;
+  module.exports = exports["default"];
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+  var _get = function get(_x4, _x5, _x6) { var _again = true; _function: while (_again) { var object = _x4, property = _x5, receiver = _x6; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x4 = parent; _x5 = property; _x6 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+  var _utilBezierEdgeBase = __webpack_require__(85);
+
+  var _utilBezierEdgeBase2 = _interopRequireDefault(_utilBezierEdgeBase);
+
+  var BezierEdgeStatic = (function (_BezierEdgeBase) {
+    _inherits(BezierEdgeStatic, _BezierEdgeBase);
+
+    function BezierEdgeStatic(options, body, labelModule) {
+      _classCallCheck(this, BezierEdgeStatic);
+
+      _get(Object.getPrototypeOf(BezierEdgeStatic.prototype), 'constructor', this).call(this, options, body, labelModule);
+    }
+
+    /**
+     * Draw a line between two nodes
+     * @param {CanvasRenderingContext2D} ctx
+     * @private
+     */
+
+    _createClass(BezierEdgeStatic, [{
+      key: '_line',
+      value: function _line(ctx) {
+        // draw a straight line
+        ctx.beginPath();
+        ctx.moveTo(this.from.x, this.from.y);
+        var via = this._getViaCoordinates();
+        var returnValue = via;
+
+        // fallback to normal straight edges
+        if (via.x === undefined) {
+          ctx.lineTo(this.to.x, this.to.y);
+          returnValue = undefined;
+        } else {
+          ctx.quadraticCurveTo(via.x, via.y, this.to.x, this.to.y);
+        }
+        // draw shadow if enabled
+        this.enableShadow(ctx);
+        ctx.stroke();
+        this.disableShadow(ctx);
+        return returnValue;
+      }
+    }, {
+      key: '_getViaCoordinates',
+      value: function _getViaCoordinates() {
+        var xVia = undefined;
+        var yVia = undefined;
+        var factor = this.options.smooth.roundness;
+        var type = this.options.smooth.type;
+        var dx = Math.abs(this.from.x - this.to.x);
+        var dy = Math.abs(this.from.y - this.to.y);
+        if (type === 'discrete' || type === 'diagonalCross') {
+          if (Math.abs(this.from.x - this.to.x) <= Math.abs(this.from.y - this.to.y)) {
+            if (this.from.y >= this.to.y) {
+              if (this.from.x <= this.to.x) {
+                xVia = this.from.x + factor * dy;
+                yVia = this.from.y - factor * dy;
+              } else if (this.from.x > this.to.x) {
+                xVia = this.from.x - factor * dy;
+                yVia = this.from.y - factor * dy;
+              }
+            } else if (this.from.y < this.to.y) {
+              if (this.from.x <= this.to.x) {
+                xVia = this.from.x + factor * dy;
+                yVia = this.from.y + factor * dy;
+              } else if (this.from.x > this.to.x) {
+                xVia = this.from.x - factor * dy;
+                yVia = this.from.y + factor * dy;
+              }
+            }
+            if (type === "discrete") {
+              xVia = dx < factor * dy ? this.from.x : xVia;
+            }
+          } else if (Math.abs(this.from.x - this.to.x) > Math.abs(this.from.y - this.to.y)) {
+            if (this.from.y >= this.to.y) {
+              if (this.from.x <= this.to.x) {
+                xVia = this.from.x + factor * dx;
+                yVia = this.from.y - factor * dx;
+              } else if (this.from.x > this.to.x) {
+                xVia = this.from.x - factor * dx;
+                yVia = this.from.y - factor * dx;
+              }
+            } else if (this.from.y < this.to.y) {
+              if (this.from.x <= this.to.x) {
+                xVia = this.from.x + factor * dx;
+                yVia = this.from.y + factor * dx;
+              } else if (this.from.x > this.to.x) {
+                xVia = this.from.x - factor * dx;
+                yVia = this.from.y + factor * dx;
+              }
+            }
+            if (type === "discrete") {
+              yVia = dy < factor * dx ? this.from.y : yVia;
+            }
+          }
+        } else if (type === "straightCross") {
+          if (Math.abs(this.from.x - this.to.x) <= Math.abs(this.from.y - this.to.y)) {
+            // up - down
+            xVia = this.from.x;
+            if (this.from.y < this.to.y) {
+              yVia = this.to.y - (1 - factor) * dy;
+            } else {
+              yVia = this.to.y + (1 - factor) * dy;
+            }
+          } else if (Math.abs(this.from.x - this.to.x) > Math.abs(this.from.y - this.to.y)) {
+            // left - right
+            if (this.from.x < this.to.x) {
+              xVia = this.to.x - (1 - factor) * dx;
+            } else {
+              xVia = this.to.x + (1 - factor) * dx;
+            }
+            yVia = this.from.y;
+          }
+        } else if (type === 'horizontal') {
+          if (this.from.x < this.to.x) {
+            xVia = this.to.x - (1 - factor) * dx;
+          } else {
+            xVia = this.to.x + (1 - factor) * dx;
+          }
+          yVia = this.from.y;
+        } else if (type === 'vertical') {
+          xVia = this.from.x;
+          if (this.from.y < this.to.y) {
+            yVia = this.to.y - (1 - factor) * dy;
+          } else {
+            yVia = this.to.y + (1 - factor) * dy;
+          }
+        } else if (type === 'curvedCW') {
+          dx = this.to.x - this.from.x;
+          dy = this.from.y - this.to.y;
+          var radius = Math.sqrt(dx * dx + dy * dy);
+          var pi = Math.PI;
+
+          var originalAngle = Math.atan2(dy, dx);
+          var myAngle = (originalAngle + (factor * 0.5 + 0.5) * pi) % (2 * pi);
+
+          xVia = this.from.x + (factor * 0.5 + 0.5) * radius * Math.sin(myAngle);
+          yVia = this.from.y + (factor * 0.5 + 0.5) * radius * Math.cos(myAngle);
+        } else if (type === 'curvedCCW') {
+          dx = this.to.x - this.from.x;
+          dy = this.from.y - this.to.y;
+          var radius = Math.sqrt(dx * dx + dy * dy);
+          var pi = Math.PI;
+
+          var originalAngle = Math.atan2(dy, dx);
+          var myAngle = (originalAngle + (-factor * 0.5 + 0.5) * pi) % (2 * pi);
+
+          xVia = this.from.x + (factor * 0.5 + 0.5) * radius * Math.sin(myAngle);
+          yVia = this.from.y + (factor * 0.5 + 0.5) * radius * Math.cos(myAngle);
+        } else {
+          // continuous
+          if (Math.abs(this.from.x - this.to.x) <= Math.abs(this.from.y - this.to.y)) {
+            if (this.from.y >= this.to.y) {
+              if (this.from.x <= this.to.x) {
+                xVia = this.from.x + factor * dy;
+                yVia = this.from.y - factor * dy;
+                xVia = this.to.x < xVia ? this.to.x : xVia;
+              } else if (this.from.x > this.to.x) {
+                xVia = this.from.x - factor * dy;
+                yVia = this.from.y - factor * dy;
+                xVia = this.to.x > xVia ? this.to.x : xVia;
+              }
+            } else if (this.from.y < this.to.y) {
+              if (this.from.x <= this.to.x) {
+                xVia = this.from.x + factor * dy;
+                yVia = this.from.y + factor * dy;
+                xVia = this.to.x < xVia ? this.to.x : xVia;
+              } else if (this.from.x > this.to.x) {
+                xVia = this.from.x - factor * dy;
+                yVia = this.from.y + factor * dy;
+                xVia = this.to.x > xVia ? this.to.x : xVia;
+              }
+            }
+          } else if (Math.abs(this.from.x - this.to.x) > Math.abs(this.from.y - this.to.y)) {
+            if (this.from.y >= this.to.y) {
+              if (this.from.x <= this.to.x) {
+                xVia = this.from.x + factor * dx;
+                yVia = this.from.y - factor * dx;
+                yVia = this.to.y > yVia ? this.to.y : yVia;
+              } else if (this.from.x > this.to.x) {
+                xVia = this.from.x - factor * dx;
+                yVia = this.from.y - factor * dx;
+                yVia = this.to.y > yVia ? this.to.y : yVia;
+              }
+            } else if (this.from.y < this.to.y) {
+              if (this.from.x <= this.to.x) {
+                xVia = this.from.x + factor * dx;
+                yVia = this.from.y + factor * dx;
+                yVia = this.to.y < yVia ? this.to.y : yVia;
+              } else if (this.from.x > this.to.x) {
+                xVia = this.from.x - factor * dx;
+                yVia = this.from.y + factor * dx;
+                yVia = this.to.y < yVia ? this.to.y : yVia;
+              }
+            }
+          }
+        }
+        return { x: xVia, y: yVia };
+      }
+    }, {
+      key: '_findBorderPosition',
+      value: function _findBorderPosition(nearNode, ctx) {
+        var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+        return this._findBorderPositionBezier(nearNode, ctx, options.via);
+      }
+    }, {
+      key: '_getDistanceToEdge',
+      value: function _getDistanceToEdge(x1, y1, x2, y2, x3, y3) {
+        var via = arguments.length <= 6 || arguments[6] === undefined ? this._getViaCoordinates() : arguments[6];
+        // x3,y3 is the point
+        return this._getDistanceToBezierEdge(x1, y1, x2, y2, x3, y3, via);
+      }
+
+      /**
+       * Combined function of pointOnLine and pointOnBezier. This gives the coordinates of a point on the line at a certain percentage of the way
+       * @param percentage
+       * @param via
+       * @returns {{x: number, y: number}}
+       * @private
+       */
+    }, {
+      key: 'getPoint',
+      value: function getPoint(percentage) {
+        var via = arguments.length <= 1 || arguments[1] === undefined ? this._getViaCoordinates() : arguments[1];
+
+        var t = percentage;
+        var x = Math.pow(1 - t, 2) * this.from.x + 2 * t * (1 - t) * via.x + Math.pow(t, 2) * this.to.x;
+        var y = Math.pow(1 - t, 2) * this.from.y + 2 * t * (1 - t) * via.y + Math.pow(t, 2) * this.to.y;
+
+        return { x: x, y: y };
+      }
+    }]);
+
+    return BezierEdgeStatic;
   })(_utilBezierEdgeBase2['default']);
 
-  exports['default'] = BezierEdgeDynamic;
+  exports['default'] = BezierEdgeStatic;
   module.exports = exports['default'];
 
 /***/ },
@@ -32560,15 +33288,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-  var _utilEdgeBase = __webpack_require__(85);
+  var _utilEdgeBase = __webpack_require__(86);
 
   var _utilEdgeBase2 = _interopRequireDefault(_utilEdgeBase);
 
@@ -32581,14 +33309,14 @@ return /******/ (function(modules) { // webpackBootstrap
       _get(Object.getPrototypeOf(StraightEdge.prototype), 'constructor', this).call(this, options, body, labelModule);
     }
 
+    /**
+     * Draw a line between two nodes
+     * @param {CanvasRenderingContext2D} ctx
+     * @private
+     */
+
     _createClass(StraightEdge, [{
       key: '_line',
-
-      /**
-       * Draw a line between two nodes
-       * @param {CanvasRenderingContext2D} ctx
-       * @private
-       */
       value: function _line(ctx) {
         // draw a straight line
         ctx.beginPath();
@@ -32600,8 +33328,6 @@ return /******/ (function(modules) { // webpackBootstrap
         this.disableShadow(ctx);
         return undefined;
       }
-    }, {
-      key: 'getPoint',
 
       /**
        * Combined function of pointOnLine and pointOnBezier. This gives the coordinates of a point on the line at a certain percentage of the way
@@ -32610,6 +33336,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {{x: number, y: number}}
        * @private
        */
+    }, {
+      key: 'getPoint',
       value: function getPoint(percentage) {
         return {
           x: (1 - percentage) * this.from.x + percentage * this.to.x,
@@ -32701,7 +33429,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _componentsPhysicsFA2BasedCentralGravitySolver2 = _interopRequireDefault(_componentsPhysicsFA2BasedCentralGravitySolver);
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   var PhysicsEngine = (function () {
     function PhysicsEngine(body) {
@@ -32714,9 +33442,15 @@ return /******/ (function(modules) { // webpackBootstrap
       this.simulationInterval = 1000 / 60;
       this.requiresTimeout = true;
       this.previousStates = {};
+      this.referenceState = {};
       this.freezeCache = {};
       this.renderTimer = undefined;
-      this.initialStabilizationEmitted = false;
+
+      // parameters for the adaptive timestep
+      this.adaptiveTimestep = false;
+      this.adaptiveTimestepEnabled = false;
+      this.adaptiveCounter = 0;
+      this.adaptiveInterval = 3;
 
       this.stabilized = false;
       this.startedStabilization = false;
@@ -32761,7 +33495,7 @@ return /******/ (function(modules) { // webpackBootstrap
           damping: 0.09
         },
         maxVelocity: 50,
-        minVelocity: 0.1, // px/s
+        minVelocity: 0.75, // px/s
         solver: 'barnesHut',
         stabilization: {
           enabled: true,
@@ -32770,9 +33504,12 @@ return /******/ (function(modules) { // webpackBootstrap
           onlyDynamicEdges: false,
           fit: true
         },
-        timestep: 0.5
+        timestep: 0.5,
+        adaptiveTimestep: true
       };
       util.extend(this.options, this.defaultOptions);
+      this.timestep = 0.5;
+      this.layoutFailed = false;
 
       this.bindEventListeners();
     }
@@ -32784,6 +33521,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.body.emitter.on('initPhysics', function () {
           _this.initPhysics();
+        });
+        this.body.emitter.on('_layoutFailed', function () {
+          _this.layoutFailed = true;
         });
         this.body.emitter.on('resetPhysics', function () {
           _this.stopSimulation();_this.ready = false;
@@ -32809,7 +33549,20 @@ return /******/ (function(modules) { // webpackBootstrap
           _this.stopSimulation(false);
           _this.body.emitter.off();
         });
+        // this event will trigger a rebuilding of the cache everything. Used when nodes or edges have been added or removed.
+        this.body.emitter.on("_dataChanged", function () {
+          // update shortcut lists
+          _this.updatePhysicsData();
+        });
+
+        // debug: show forces
+        // this.body.emitter.on("afterDrawing", (ctx) => {this._drawForces(ctx);});
       }
+
+      /**
+       * set the physics options
+       * @param options
+       */
     }, {
       key: 'setOptions',
       value: function setOptions(options) {
@@ -32831,10 +33584,17 @@ return /******/ (function(modules) { // webpackBootstrap
               this.physicsEnabled = false;
               this.stopSimulation();
             }
+
+            // set the timestep
+            this.timestep = this.options.timestep;
           }
         }
         this.init();
       }
+
+      /**
+       * configure the engine.
+       */
     }, {
       key: 'init',
       value: function init() {
@@ -32864,6 +33624,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.modelOptions = options;
       }
+
+      /**
+       * initialize the engine
+       */
     }, {
       key: 'initPhysics',
       value: function initPhysics() {
@@ -32873,7 +33637,7 @@ return /******/ (function(modules) { // webpackBootstrap
           } else {
             this.stabilized = false;
             this.ready = true;
-            this.body.emitter.emit('fit', {}, true);
+            this.body.emitter.emit('fit', {}, this.layoutFailed); // if the layout failed, we use the approximation for the zoom
             this.startSimulation();
           }
         } else {
@@ -32881,18 +33645,21 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.emitter.emit('fit');
         }
       }
-    }, {
-      key: 'startSimulation',
 
       /**
        * Start the simulation
        */
+    }, {
+      key: 'startSimulation',
       value: function startSimulation() {
         if (this.physicsEnabled === true && this.options.enabled === true) {
           this.stabilized = false;
 
+          // when visible, adaptivity is disabled.
+          this.adaptiveTimestep = false;
+
           // this sets the width of all nodes initially which could be required for the avoidOverlap
-          this.body.emitter.emit('_resizeNodes');
+          this.body.emitter.emit("_resizeNodes");
           if (this.viewFunction === undefined) {
             this.viewFunction = this.simulationStep.bind(this);
             this.body.emitter.on('initRedraw', this.viewFunction);
@@ -32902,12 +33669,12 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.emitter.emit('_redraw');
         }
       }
-    }, {
-      key: 'stopSimulation',
 
       /**
        * Stop the simulation, force stabilization.
        */
+    }, {
+      key: 'stopSimulation',
       value: function stopSimulation() {
         var emit = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
@@ -32923,13 +33690,13 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'simulationStep',
 
       /**
        * The viewFunction inserts this step into each renderloop. It calls the physics tick and handles the cleanup at stabilized.
        *
        */
+    }, {
+      key: 'simulationStep',
       value: function simulationStep() {
         // check if the physics have settled
         var startTime = Date.now();
@@ -32945,65 +33712,115 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         if (this.stabilized === true) {
-          if (this.stabilizationIterations > 1) {
-            // trigger the 'stabilized' event.
-            // The event is triggered on the next tick, to prevent the case that
-            // it is fired while initializing the Network, in which case you would not
-            // be able to catch it
-            this.startedStabilization = false;
-            //this._emitStabilized();
-          }
           this.stopSimulation();
         }
       }
+
+      /**
+       * trigger the stabilized event.
+       * @private
+       */
     }, {
       key: '_emitStabilized',
       value: function _emitStabilized() {
         var _this2 = this;
 
-        if (this.stabilizationIterations > 1 || this.initialStabilizationEmitted === false) {
-          this.initialStabilizationEmitted = true;
+        var amountOfIterations = arguments.length <= 0 || arguments[0] === undefined ? this.stabilizationIterations : arguments[0];
+
+        if (this.stabilizationIterations > 1 || this.startedStabilization === true) {
           setTimeout(function () {
-            _this2.body.emitter.emit('stabilized', { iterations: _this2.stabilizationIterations });
+            _this2.body.emitter.emit('stabilized', { iterations: amountOfIterations });
+            _this2.startedStabilization = false;
             _this2.stabilizationIterations = 0;
           }, 0);
         }
       }
-    }, {
-      key: 'physicsTick',
 
       /**
        * A single simulation step (or 'tick') in the physics simulation
        *
        * @private
        */
+    }, {
+      key: 'physicsTick',
       value: function physicsTick() {
+        // this is here to ensure that there is no start event when the network is already stable.
+        if (this.startedStabilization === false) {
+          this.body.emitter.emit('startStabilizing');
+          this.startedStabilization = true;
+        }
+
         if (this.stabilized === false) {
-          this.calculateForces();
-          this.stabilized = this.moveNodes();
+          // adaptivity means the timestep adapts to the situation, only applicable for stabilization
+          if (this.adaptiveTimestep === true && this.adaptiveTimestepEnabled === true) {
+            // this is the factor for increasing the timestep on success.
+            var factor = 1.2;
+
+            // we assume the adaptive interval is
+            if (this.adaptiveCounter % this.adaptiveInterval === 0) {
+              // we leave the timestep stable for "interval" iterations.
+              // first the big step and revert. Revert saves the reference state.
+              this.timestep = 2 * this.timestep;
+              this.calculateForces();
+              this.moveNodes();
+              this.revert();
+
+              // now the normal step. Since this is the last step, it is the more stable one and we will take this.
+              this.timestep = 0.5 * this.timestep;
+
+              // since it's half the step, we do it twice.
+              this.calculateForces();
+              this.moveNodes();
+              this.calculateForces();
+              this.moveNodes();
+
+              // we compare the two steps. if it is acceptable we double the step.
+              if (this._evaluateStepQuality() === true) {
+                this.timestep = factor * this.timestep;
+              } else {
+                // if not, we decrease the step to a minimum of the options timestep.
+                // if the decreased timestep is smaller than the options step, we do not reset the counter
+                // we assume that the options timestep is stable enough.
+                if (this.timestep / factor < this.options.timestep) {
+                  this.timestep = this.options.timestep;
+                } else {
+                  // if the timestep was larger than 2 times the option one we check the adaptivity again to ensure
+                  // that large instabilities do not form.
+                  this.adaptiveCounter = -1; // check again next iteration
+                  this.timestep = Math.max(this.options.timestep, this.timestep / factor);
+                }
+              }
+            } else {
+              // normal step, keeping timestep constant
+              this.calculateForces();
+              this.moveNodes();
+            }
+
+            // increment the counter
+            this.adaptiveCounter += 1;
+          } else {
+            // case for the static timestep, we reset it to the one in options and take a normal step.
+            this.timestep = this.options.timestep;
+            this.calculateForces();
+            this.moveNodes();
+          }
 
           // determine if the network has stabilzied
           if (this.stabilized === true) {
             this.revert();
-          } else {
-            // this is here to ensure that there is no start event when the network is already stable.
-            if (this.startedStabilization === false) {
-              this.body.emitter.emit('startStabilizing');
-              this.startedStabilization = true;
-            }
           }
 
           this.stabilizationIterations++;
         }
       }
-    }, {
-      key: 'updatePhysicsData',
 
       /**
        * Nodes and edges can have the physics toggles on or off. A collection of indices is created here so we can skip the check all the time.
        *
        * @private
        */
+    }, {
+      key: 'updatePhysicsData',
       value: function updatePhysicsData() {
         this.physicsBody.forces = {};
         this.physicsBody.physicsNodeIndices = [];
@@ -33047,21 +33864,25 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'revert',
 
       /**
        * Revert the simulation one step. This is done so after stabilization, every new start of the simulation will also say stabilized.
        */
+    }, {
+      key: 'revert',
       value: function revert() {
         var nodeIds = Object.keys(this.previousStates);
         var nodes = this.body.nodes;
         var velocities = this.physicsBody.velocities;
+        this.referenceState = {};
 
         for (var i = 0; i < nodeIds.length; i++) {
           var nodeId = nodeIds[i];
           if (nodes[nodeId] !== undefined) {
             if (nodes[nodeId].options.physics === true) {
+              this.referenceState[nodeId] = {
+                positions: { x: nodes[nodeId].x, y: nodes[nodeId].y }
+              };
               velocities[nodeId].x = this.previousStates[nodeId].vx;
               velocities[nodeId].y = this.previousStates[nodeId].vy;
               nodes[nodeId].x = this.previousStates[nodeId].x;
@@ -33072,39 +33893,62 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
+
+      /**
+       * This compares the reference state to the current state
+       */
     }, {
-      key: 'moveNodes',
+      key: '_evaluateStepQuality',
+      value: function _evaluateStepQuality() {
+        var dx = undefined,
+            dy = undefined,
+            dpos = undefined;
+        var nodes = this.body.nodes;
+        var reference = this.referenceState;
+        var posThreshold = 0.3;
+
+        for (var nodeId in this.referenceState) {
+          if (this.referenceState.hasOwnProperty(nodeId) && nodes[nodeId] !== undefined) {
+            dx = nodes[nodeId].x - reference[nodeId].positions.x;
+            dy = nodes[nodeId].y - reference[nodeId].positions.y;
+
+            dpos = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+
+            if (dpos > posThreshold) {
+              return false;
+            }
+          }
+        }
+        return true;
+      }
 
       /**
        * move the nodes one timestap and check if they are stabilized
        * @returns {boolean}
        */
+    }, {
+      key: 'moveNodes',
       value: function moveNodes() {
-        var nodesPresent = false;
         var nodeIndices = this.physicsBody.physicsNodeIndices;
         var maxVelocity = this.options.maxVelocity ? this.options.maxVelocity : 1e9;
-        var stabilized = true;
-        var vminCorrected = this.options.minVelocity / Math.max(this.body.view.scale, 0.05);
+        var maxNodeVelocity = 0;
+        var averageNodeVelocity = 0;
+
+        // the velocity threshold (energy in the system) for the adaptivity toggle
+        var velocityAdaptiveThreshold = 5;
 
         for (var i = 0; i < nodeIndices.length; i++) {
           var nodeId = nodeIndices[i];
           var nodeVelocity = this._performStep(nodeId, maxVelocity);
           // stabilized is true if stabilized is true and velocity is smaller than vmin --> all nodes must be stabilized
-          stabilized = nodeVelocity < vminCorrected && stabilized === true;
-          nodesPresent = true;
+          maxNodeVelocity = Math.max(maxNodeVelocity, nodeVelocity);
+          averageNodeVelocity += nodeVelocity;
         }
 
-        if (nodesPresent === true) {
-          if (vminCorrected > 0.5 * this.options.maxVelocity) {
-            return false;
-          } else {
-            return stabilized;
-          }
-        }
-        return true;
+        // evaluating the stabilized and adaptiveTimestepEnabled conditions
+        this.adaptiveTimestepEnabled = averageNodeVelocity / nodeIndices.length < velocityAdaptiveThreshold;
+        this.stabilized = maxNodeVelocity < this.options.minVelocity;
       }
-    }, {
-      key: '_performStep',
 
       /**
        * Perform the actual step
@@ -33114,9 +33958,11 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: '_performStep',
       value: function _performStep(nodeId, maxVelocity) {
         var node = this.body.nodes[nodeId];
-        var timestep = this.options.timestep;
+        var timestep = this.timestep;
         var forces = this.physicsBody.forces;
         var velocities = this.physicsBody.velocities;
 
@@ -33130,9 +33976,9 @@ return /******/ (function(modules) { // webpackBootstrap
           velocities[nodeId].x = Math.abs(velocities[nodeId].x) > maxVelocity ? velocities[nodeId].x > 0 ? maxVelocity : -maxVelocity : velocities[nodeId].x;
           node.x += velocities[nodeId].x * timestep; // position
         } else {
-          forces[nodeId].x = 0;
-          velocities[nodeId].x = 0;
-        }
+            forces[nodeId].x = 0;
+            velocities[nodeId].x = 0;
+          }
 
         if (node.options.fixed.y === false) {
           var dy = this.modelOptions.damping * velocities[nodeId].y; // damping force
@@ -33141,26 +33987,24 @@ return /******/ (function(modules) { // webpackBootstrap
           velocities[nodeId].y = Math.abs(velocities[nodeId].y) > maxVelocity ? velocities[nodeId].y > 0 ? maxVelocity : -maxVelocity : velocities[nodeId].y;
           node.y += velocities[nodeId].y * timestep; // position
         } else {
-          forces[nodeId].y = 0;
-          velocities[nodeId].y = 0;
-        }
+            forces[nodeId].y = 0;
+            velocities[nodeId].y = 0;
+          }
 
         var totalVelocity = Math.sqrt(Math.pow(velocities[nodeId].x, 2) + Math.pow(velocities[nodeId].y, 2));
         return totalVelocity;
       }
-    }, {
-      key: 'calculateForces',
 
       /**
        * calculate the forces for one physics iteration.
        */
+    }, {
+      key: 'calculateForces',
       value: function calculateForces() {
         this.gravitySolver.solve();
         this.nodesSolver.solve();
         this.edgesSolver.solve();
       }
-    }, {
-      key: '_freezeNodes',
 
       /**
        * When initializing and stabilizing, we can freeze nodes with a predefined position. This greatly speeds up stabilization
@@ -33168,6 +34012,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: '_freezeNodes',
       value: function _freezeNodes() {
         var nodes = this.body.nodes;
         for (var id in nodes) {
@@ -33180,14 +34026,14 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: '_restoreFrozenNodes',
 
       /**
        * Unfreezes the nodes that have been frozen by _freezeDefinedNodes.
        *
        * @private
        */
+    }, {
+      key: '_restoreFrozenNodes',
       value: function _restoreFrozenNodes() {
         var nodes = this.body.nodes;
         for (var id in nodes) {
@@ -33200,13 +34046,12 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         this.freezeCache = {};
       }
-    }, {
-      key: 'stabilize',
 
       /**
        * Find a stable position for all nodes
-       * @private
        */
+    }, {
+      key: 'stabilize',
       value: function stabilize() {
         var _this3 = this;
 
@@ -33222,8 +34067,11 @@ return /******/ (function(modules) { // webpackBootstrap
           return;
         }
 
+        // enable adaptive timesteps
+        this.adaptiveTimestep = true && this.options.adaptiveTimestep;
+
         // this sets the width of all nodes initially which could be required for the avoidOverlap
-        this.body.emitter.emit('_resizeNodes');
+        this.body.emitter.emit("_resizeNodes");
 
         // stop the render loop
         this.stopSimulation();
@@ -33245,13 +34093,23 @@ return /******/ (function(modules) { // webpackBootstrap
           return _this3._stabilizationBatch();
         }, 0);
       }
+
+      /**
+       * One batch of stabilization
+       * @private
+       */
     }, {
       key: '_stabilizationBatch',
       value: function _stabilizationBatch() {
+        // this is here to ensure that there is at least one start event.
+        if (this.startedStabilization === false) {
+          this.body.emitter.emit('startStabilizing');
+          this.startedStabilization = true;
+        }
+
         var count = 0;
         while (this.stabilized === false && count < this.options.stabilization.updateInterval && this.stabilizationIterations < this.targetIterations) {
           this.physicsTick();
-          this.stabilizationIterations++;
           count++;
         }
 
@@ -33262,6 +34120,11 @@ return /******/ (function(modules) { // webpackBootstrap
           this._finalizeStabilization();
         }
       }
+
+      /**
+       * Wrap up the stabilization, fit and emit the events.
+       * @private
+       */
     }, {
       key: '_finalizeStabilization',
       value: function _finalizeStabilization() {
@@ -33284,6 +34147,34 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         this.ready = true;
+      }
+    }, {
+      key: '_drawForces',
+      value: function _drawForces(ctx) {
+        for (var i = 0; i < this.physicsBody.physicsNodeIndices.length; i++) {
+          var node = this.body.nodes[this.physicsBody.physicsNodeIndices[i]];
+          var force = this.physicsBody.forces[this.physicsBody.physicsNodeIndices[i]];
+          var factor = 20;
+          var colorFactor = 0.03;
+          var forceSize = Math.sqrt(Math.pow(force.x, 2) + Math.pow(force.x, 2));
+
+          var size = Math.min(Math.max(5, forceSize), 15);
+          var arrowSize = 3 * size;
+
+          var color = util.HSVToHex((180 - Math.min(1, Math.max(0, colorFactor * forceSize)) * 180) / 360, 1, 1);
+
+          ctx.lineWidth = size;
+          ctx.strokeStyle = color;
+          ctx.beginPath();
+          ctx.moveTo(node.x, node.y);
+          ctx.lineTo(node.x + factor * force.x, node.y + factor * force.y);
+          ctx.stroke();
+
+          var angle = Math.atan2(force.y, force.x);
+          ctx.fillStyle = color;
+          ctx.arrow(node.x + factor * force.x + Math.cos(angle) * arrowSize, node.y + factor * force.y + Math.sin(angle) * arrowSize, angle, arrowSize);
+          ctx.fill();
+        }
       }
     }]);
 
@@ -33316,6 +34207,9 @@ return /******/ (function(modules) { // webpackBootstrap
       this.barnesHutTree;
       this.setOptions(options);
       this.randomSeed = 5;
+
+      // debug: show grid
+      //this.body.emitter.on("afterDrawing", (ctx) => {this._debug(ctx,'#ff0000')})
     }
 
     _createClass(BarnesHutSolver, [{
@@ -33331,8 +34225,6 @@ return /******/ (function(modules) { // webpackBootstrap
         var x = Math.sin(this.randomSeed++) * 10000;
         return x - Math.floor(x);
       }
-    }, {
-      key: "solve",
 
       /**
        * This function calculates the forces the nodes apply on eachother based on a gravitational model.
@@ -33340,6 +34232,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: "solve",
       value: function solve() {
         if (this.options.gravitationalConstant !== 0 && this.physicsBody.physicsNodeIndices.length > 0) {
           var node = undefined;
@@ -33366,8 +34260,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: "_getForceContribution",
 
       /**
        * This function traverses the barnesHutTree. It checks when it can approximate distant nodes with their center of mass.
@@ -33377,6 +34269,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param node
        * @private
        */
+    }, {
+      key: "_getForceContribution",
       value: function _getForceContribution(parentBranch, node) {
         // we get no force contribution from an empty region
         if (parentBranch.childrenCount > 0) {
@@ -33411,8 +34305,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: "_calculateForces",
 
       /**
        * Calculate the forces based on the distance.
@@ -33424,6 +34316,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param parentBranch
        * @private
        */
+    }, {
+      key: "_calculateForces",
       value: function _calculateForces(distance, dx, dy, node, parentBranch) {
         if (distance === 0) {
           distance = 0.1;
@@ -33443,8 +34337,6 @@ return /******/ (function(modules) { // webpackBootstrap
         this.physicsBody.forces[node.id].x += fx;
         this.physicsBody.forces[node.id].y += fy;
       }
-    }, {
-      key: "_formBarnesHutTree",
 
       /**
        * This function constructs the barnesHut tree recursively. It creates the root, splits it and starts placing the nodes.
@@ -33453,6 +34345,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param nodeIndices
        * @private
        */
+    }, {
+      key: "_formBarnesHutTree",
       value: function _formBarnesHutTree(nodes, nodeIndices) {
         var node = undefined;
         var nodeCount = nodeIndices.length;
@@ -33488,9 +34382,9 @@ return /******/ (function(modules) { // webpackBootstrap
           maxY += 0.5 * sizeDiff;
         } // xSize > ySize
         else {
-          minX += 0.5 * sizeDiff;
-          maxX -= 0.5 * sizeDiff;
-        } // xSize < ySize
+            minX += 0.5 * sizeDiff;
+            maxX -= 0.5 * sizeDiff;
+          } // xSize < ySize
 
         var minimumTreeSize = 1e-5;
         var rootSize = Math.max(minimumTreeSize, Math.abs(maxX - minX));
@@ -33528,8 +34422,6 @@ return /******/ (function(modules) { // webpackBootstrap
         // make global
         return barnesHutTree;
       }
-    }, {
-      key: "_updateBranchMass",
 
       /**
        * this updates the mass of a branch. this is increased by adding a node.
@@ -33538,6 +34430,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param node
        * @private
        */
+    }, {
+      key: "_updateBranchMass",
       value: function _updateBranchMass(parentBranch, node) {
         var totalMass = parentBranch.mass + node.options.mass;
         var totalMassInv = 1 / totalMass;
@@ -33552,8 +34446,6 @@ return /******/ (function(modules) { // webpackBootstrap
         var biggestSize = Math.max(Math.max(node.height, node.radius), node.width);
         parentBranch.maxWidth = parentBranch.maxWidth < biggestSize ? biggestSize : parentBranch.maxWidth;
       }
-    }, {
-      key: "_placeInTree",
 
       /**
        * determine in which branch the node will be placed.
@@ -33563,6 +34455,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param skipMassUpdate
        * @private
        */
+    }, {
+      key: "_placeInTree",
       value: function _placeInTree(parentBranch, node, skipMassUpdate) {
         if (skipMassUpdate != true || skipMassUpdate === undefined) {
           // update the mass of the branch.
@@ -33589,8 +34483,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: "_placeInRegion",
 
       /**
        * actually place the node in a region (or branch)
@@ -33600,6 +34492,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param region
        * @private
        */
+    }, {
+      key: "_placeInRegion",
       value: function _placeInRegion(parentBranch, node, region) {
         switch (parentBranch.children[region].childrenCount) {
           case 0:
@@ -33611,7 +34505,7 @@ return /******/ (function(modules) { // webpackBootstrap
           case 1:
             // convert into children
             // if there are two nodes exactly overlapping (on init, on opening of cluster etc.)
-            // we move one node a pixel and we do not put it in the tree.
+            // we move one node a little bit and we do not put it in the tree.
             if (parentBranch.children[region].children.data.x === node.x && parentBranch.children[region].children.data.y === node.y) {
               node.x += this.seededRandom();
               node.y += this.seededRandom();
@@ -33626,8 +34520,6 @@ return /******/ (function(modules) { // webpackBootstrap
             break;
         }
       }
-    }, {
-      key: "_splitBranch",
 
       /**
        * this function splits a branch into 4 sub branches. If the branch contained a node, we place it in the subbranch
@@ -33636,6 +34528,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param parentBranch
        * @private
        */
+    }, {
+      key: "_splitBranch",
       value: function _splitBranch(parentBranch) {
         // if the branch is shaded with a node, replace the node in the new subset.
         var containedNode = null;
@@ -33656,8 +34550,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this._placeInTree(parentBranch, containedNode);
         }
       }
-    }, {
-      key: "_insertRegion",
 
       /**
        * This function subdivides the region into four new segments.
@@ -33669,6 +34561,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param parentRange
        * @private
        */
+    }, {
+      key: "_insertRegion",
       value: function _insertRegion(parentBranch, region) {
         var minX = undefined,
             maxX = undefined,
@@ -33714,8 +34608,6 @@ return /******/ (function(modules) { // webpackBootstrap
           childrenCount: 0
         };
       }
-    }, {
-      key: "_debug",
 
       //---------------------------  DEBUGGING BELOW  ---------------------------//
 
@@ -33726,6 +34618,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param color
        * @private
        */
+    }, {
+      key: "_debug",
       value: function _debug(ctx, color) {
         if (this.barnesHutTree !== undefined) {
 
@@ -33734,8 +34628,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this._drawBranch(this.barnesHutTree.root, ctx, color);
         }
       }
-    }, {
-      key: "_drawBranch",
 
       /**
        * This function is for debugging purposes. It draws the branches recursively.
@@ -33745,6 +34637,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param color
        * @private
        */
+    }, {
+      key: "_drawBranch",
       value: function _drawBranch(branch, ctx, color) {
         if (color === undefined) {
           color = "#FF0000";
@@ -33820,8 +34714,6 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function setOptions(options) {
         this.options = options;
       }
-    }, {
-      key: "solve",
 
       /**
        * Calculate the forces the nodes apply on each other based on a repulsion field.
@@ -33829,6 +34721,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: "solve",
       value: function solve() {
         var dx, dy, distance, fx, fy, repulsingForce, node1, node2;
 
@@ -33915,8 +34809,6 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function setOptions(options) {
         this.options = options;
       }
-    }, {
-      key: "solve",
 
       /**
        * Calculate the forces the nodes apply on each other based on a repulsion field.
@@ -33924,6 +34816,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: "solve",
       value: function solve() {
         var dx, dy, distance, fx, fy, repulsingForce, node1, node2, i, j;
 
@@ -34006,14 +34900,14 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function setOptions(options) {
         this.options = options;
       }
-    }, {
-      key: "solve",
 
       /**
        * This function calculates the springforces on the nodes, accounting for the support nodes.
        *
        * @private
        */
+    }, {
+      key: "solve",
       value: function solve() {
         var edgeLength = undefined,
             edge = undefined;
@@ -34047,8 +34941,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: "_calculateSpringForce",
 
       /**
        * This is the code actually performing the calculation for the function above.
@@ -34058,6 +34950,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param edgeLength
        * @private
        */
+    }, {
+      key: "_calculateSpringForce",
       value: function _calculateSpringForce(node1, node2, edgeLength) {
         var dx = node1.x - node2.x;
         var dy = node1.y - node2.y;
@@ -34116,14 +35010,14 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function setOptions(options) {
         this.options = options;
       }
-    }, {
-      key: "solve",
 
       /**
        * This function calculates the springforces on the nodes, accounting for the support nodes.
        *
        * @private
        */
+    }, {
+      key: "solve",
       value: function solve() {
         var edgeLength, edge;
         var dx, dy, fx, fy, springForce, distance;
@@ -34266,13 +35160,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this._calculateForces(distance, dx, dy, forces, node);
         }
       }
-    }, {
-      key: "_calculateForces",
 
       /**
        * Calculate the forces based on the distance.
        * @private
        */
+    }, {
+      key: "_calculateForces",
       value: function _calculateForces(distance, dx, dy, forces, node) {
         var gravityForce = distance === 0 ? 0 : this.options.centralGravity / distance;
         forces[node.id].x = dx * gravityForce;
@@ -34298,13 +35192,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _BarnesHutSolver2 = __webpack_require__(91);
 
@@ -34319,19 +35213,19 @@ return /******/ (function(modules) { // webpackBootstrap
       _get(Object.getPrototypeOf(ForceAtlas2BasedRepulsionSolver.prototype), "constructor", this).call(this, body, physicsBody, options);
     }
 
+    /**
+     * Calculate the forces based on the distance.
+     *
+     * @param distance
+     * @param dx
+     * @param dy
+     * @param node
+     * @param parentBranch
+     * @private
+     */
+
     _createClass(ForceAtlas2BasedRepulsionSolver, [{
       key: "_calculateForces",
-
-      /**
-       * Calculate the forces based on the distance.
-       *
-       * @param distance
-       * @param dx
-       * @param dy
-       * @param node
-       * @param parentBranch
-       * @private
-       */
       value: function _calculateForces(distance, dx, dy, node, parentBranch) {
         if (distance === 0) {
           distance = 0.1 * Math.random();
@@ -34372,13 +35266,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _CentralGravitySolver2 = __webpack_require__(96);
 
@@ -34393,13 +35287,13 @@ return /******/ (function(modules) { // webpackBootstrap
       _get(Object.getPrototypeOf(ForceAtlas2BasedCentralGravitySolver.prototype), "constructor", this).call(this, body, physicsBody, options);
     }
 
+    /**
+     * Calculate the forces based on the distance.
+     * @private
+     */
+
     _createClass(ForceAtlas2BasedCentralGravitySolver, [{
       key: "_calculateForces",
-
-      /**
-       * Calculate the forces based on the distance.
-       * @private
-       */
       value: function _calculateForces(distance, dx, dy, forces, node) {
         if (distance > 0) {
           var degree = node.edges.length + 1;
@@ -34432,11 +35326,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var _componentsNodesCluster = __webpack_require__(100);
+  var _NetworkUtil = __webpack_require__(100);
+
+  var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
+
+  var _componentsNodesCluster = __webpack_require__(101);
 
   var _componentsNodesCluster2 = _interopRequireDefault(_componentsNodesCluster);
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   var ClusterEngine = (function () {
     function ClusterEngine(body) {
@@ -34461,18 +35359,18 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function setOptions(options) {
         if (options !== undefined) {}
       }
-    }, {
-      key: 'clusterByHubsize',
 
       /**
       *
       * @param hubsize
       * @param options
       */
+    }, {
+      key: 'clusterByHubsize',
       value: function clusterByHubsize(hubsize, options) {
         if (hubsize === undefined) {
           hubsize = this._getHubSize();
-        } else if (typeof hubsize === 'object') {
+        } else if (typeof hubsize === "object") {
           options = this._checkOptions(hubsize);
           hubsize = this._getHubSize();
         }
@@ -34486,24 +35384,25 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         for (var i = 0; i < nodesToCluster.length; i++) {
-          this.clusterByConnection(nodesToCluster[i], options, false);
+          this.clusterByConnection(nodesToCluster[i], options, true);
         }
+
         this.body.emitter.emit('_dataChanged');
       }
-    }, {
-      key: 'cluster',
 
       /**
       * loop over all nodes, check if they adhere to the condition and cluster if needed.
       * @param options
       * @param refreshData
       */
+    }, {
+      key: 'cluster',
       value: function cluster() {
         var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
         var refreshData = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
         if (options.joinCondition === undefined) {
-          throw new Error('Cannot call clusterByNodeData without a joinCondition function in the options.');
+          throw new Error("Cannot call clusterByNodeData without a joinCondition function in the options.");
         }
 
         // check if the options object is fine, append if needed
@@ -34516,72 +35415,91 @@ return /******/ (function(modules) { // webpackBootstrap
         for (var i = 0; i < this.body.nodeIndices.length; i++) {
           var nodeId = this.body.nodeIndices[i];
           var node = this.body.nodes[nodeId];
-          var clonedOptions = this._cloneOptions(node);
+          var clonedOptions = _NetworkUtil2['default']._cloneOptions(node);
           if (options.joinCondition(clonedOptions) === true) {
             childNodesObj[nodeId] = this.body.nodes[nodeId];
 
             // collect the nodes that will be in the cluster
             for (var _i = 0; _i < node.edges.length; _i++) {
               var edge = node.edges[_i];
-              childEdgesObj[edge.id] = edge;
+              if (edge.hiddenByCluster !== true) {
+                childEdgesObj[edge.id] = edge;
+              }
             }
           }
         }
 
         this._cluster(childNodesObj, childEdgesObj, options, refreshData);
       }
-    }, {
-      key: 'clusterOutliers',
 
       /**
-      * Cluster all nodes in the network that have only 1 edge
-      * @param options
-      * @param refreshData
-      */
-      value: function clusterOutliers(options) {
-        var refreshData = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+       * Cluster all nodes in the network that have only X edges
+       * @param edgeCount
+       * @param options
+       * @param refreshData
+       */
+    }, {
+      key: 'clusterByEdgeCount',
+      value: function clusterByEdgeCount(edgeCount, options) {
+        var refreshData = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         options = this._checkOptions(options);
         var clusters = [];
-
+        var usedNodes = {};
+        var edge = undefined,
+            edges = undefined,
+            node = undefined,
+            nodeId = undefined,
+            relevantEdgeCount = undefined;
         // collect the nodes that will be in the cluster
         for (var i = 0; i < this.body.nodeIndices.length; i++) {
           var childNodesObj = {};
           var childEdgesObj = {};
-          var nodeId = this.body.nodeIndices[i];
-          var visibleEdges = 0;
-          var edge = undefined;
-          for (var j = 0; j < this.body.nodes[nodeId].edges.length; j++) {
-            if (this.body.nodes[nodeId].edges[j].options.hidden === false) {
-              visibleEdges++;
-              edge = this.body.nodes[nodeId].edges[j];
-            }
-          }
+          nodeId = this.body.nodeIndices[i];
 
-          if (visibleEdges === 1) {
-            // this is an outlier
-            var childNodeId = this._getConnectedId(edge, nodeId);
-            if (childNodeId !== nodeId) {
-              if (options.joinCondition === undefined) {
-                if (this._checkIfUsed(clusters, nodeId, edge.id) === false && this._checkIfUsed(clusters, childNodeId, edge.id) === false) {
+          // if this node is already used in another cluster this session, we do not have to re-evaluate it.
+          if (usedNodes[nodeId] === undefined) {
+            relevantEdgeCount = 0;
+            node = this.body.nodes[nodeId];
+            edges = [];
+            for (var j = 0; j < node.edges.length; j++) {
+              edge = node.edges[j];
+              if (edge.hiddenByCluster !== true) {
+                if (edge.toId !== edge.fromId) {
+                  relevantEdgeCount++;
+                }
+                edges.push(edge);
+              }
+            }
+
+            // this node qualifies, we collect its neighbours to start the clustering process.
+            if (relevantEdgeCount === edgeCount) {
+              var gatheringSuccessful = true;
+              for (var j = 0; j < edges.length; j++) {
+                edge = edges[j];
+                var childNodeId = this._getConnectedId(edge, nodeId);
+                // add the nodes to the list by the join condition.
+                if (options.joinCondition === undefined) {
                   childEdgesObj[edge.id] = edge;
                   childNodesObj[nodeId] = this.body.nodes[nodeId];
                   childNodesObj[childNodeId] = this.body.nodes[childNodeId];
-                }
-              } else {
-                var clonedOptions = this._cloneOptions(this.body.nodes[nodeId]);
-                if (options.joinCondition(clonedOptions) === true && this._checkIfUsed(clusters, nodeId, edge.id) === false) {
-                  childEdgesObj[edge.id] = edge;
-                  childNodesObj[nodeId] = this.body.nodes[nodeId];
-                }
-                clonedOptions = this._cloneOptions(this.body.nodes[childNodeId]);
-                if (options.joinCondition(clonedOptions) === true && this._checkIfUsed(clusters, nodeId, edge.id) === false) {
-                  childEdgesObj[edge.id] = edge;
-                  childNodesObj[childNodeId] = this.body.nodes[childNodeId];
+                  usedNodes[nodeId] = true;
+                } else {
+                  var clonedOptions = _NetworkUtil2['default']._cloneOptions(this.body.nodes[nodeId]);
+                  if (options.joinCondition(clonedOptions) === true) {
+                    childEdgesObj[edge.id] = edge;
+                    childNodesObj[nodeId] = this.body.nodes[nodeId];
+                    usedNodes[nodeId] = true;
+                  } else {
+                    // this node does not qualify after all.
+                    gatheringSuccessful = false;
+                    break;
+                  }
                 }
               }
 
-              if (Object.keys(childNodesObj).length > 0 && Object.keys(childEdgesObj).length > 0) {
+              // add to the cluster queue
+              if (Object.keys(childNodesObj).length > 0 && Object.keys(childEdgesObj).length > 0 && gatheringSuccessful === true) {
                 clusters.push({ nodes: childNodesObj, edges: childEdgesObj });
               }
             }
@@ -34596,19 +35514,32 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.emitter.emit('_dataChanged');
         }
       }
+
+      /**
+      * Cluster all nodes in the network that have only 1 edge
+      * @param options
+      * @param refreshData
+      */
     }, {
-      key: '_checkIfUsed',
-      value: function _checkIfUsed(clusters, nodeId, edgeId) {
-        for (var i = 0; i < clusters.length; i++) {
-          var cluster = clusters[i];
-          if (cluster.nodes[nodeId] !== undefined || cluster.edges[edgeId] !== undefined) {
-            return true;
-          }
-        }
-        return false;
+      key: 'clusterOutliers',
+      value: function clusterOutliers(options) {
+        var refreshData = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+        this.clusterByEdgeCount(1, options, refreshData);
       }
+
+      /**
+       * Cluster all nodes in the network that have only 2 edge
+       * @param options
+       * @param refreshData
+       */
     }, {
-      key: 'clusterByConnection',
+      key: 'clusterBridges',
+      value: function clusterBridges(options) {
+        var refreshData = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+        this.clusterByEdgeCount(2, options, refreshData);
+      }
 
       /**
       * suck all connected nodes of a node into the node.
@@ -34616,15 +35547,17 @@ return /******/ (function(modules) { // webpackBootstrap
       * @param options
       * @param refreshData
       */
+    }, {
+      key: 'clusterByConnection',
       value: function clusterByConnection(nodeId, options) {
         var refreshData = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         // kill conditions
         if (nodeId === undefined) {
-          throw new Error('No nodeId supplied to clusterByConnection!');
+          throw new Error("No nodeId supplied to clusterByConnection!");
         }
         if (this.body.nodes[nodeId] === undefined) {
-          throw new Error('The nodeId given to clusterByConnection does not exist!');
+          throw new Error("The nodeId given to clusterByConnection does not exist!");
         }
 
         var node = this.body.nodes[nodeId];
@@ -34644,68 +35577,52 @@ return /******/ (function(modules) { // webpackBootstrap
         var childNodesObj = {};
         var childEdgesObj = {};
         var parentNodeId = node.id;
-        var parentClonedOptions = this._cloneOptions(node);
+        var parentClonedOptions = _NetworkUtil2['default']._cloneOptions(node);
         childNodesObj[parentNodeId] = node;
 
         // collect the nodes that will be in the cluster
         for (var i = 0; i < node.edges.length; i++) {
           var edge = node.edges[i];
-          var childNodeId = this._getConnectedId(edge, parentNodeId);
+          if (edge.hiddenByCluster !== true) {
+            var childNodeId = this._getConnectedId(edge, parentNodeId);
 
-          if (childNodeId !== parentNodeId) {
-            if (options.joinCondition === undefined) {
-              childEdgesObj[edge.id] = edge;
-              childNodesObj[childNodeId] = this.body.nodes[childNodeId];
-            } else {
-              // clone the options and insert some additional parameters that could be interesting.
-              var childClonedOptions = this._cloneOptions(this.body.nodes[childNodeId]);
-              if (options.joinCondition(parentClonedOptions, childClonedOptions) === true) {
+            // if the child node is not in a cluster (may not be needed now with the edge.hiddenByCluster check)
+            if (this.clusteredNodes[childNodeId] === undefined) {
+              if (childNodeId !== parentNodeId) {
+                if (options.joinCondition === undefined) {
+                  childEdgesObj[edge.id] = edge;
+                  childNodesObj[childNodeId] = this.body.nodes[childNodeId];
+                } else {
+                  // clone the options and insert some additional parameters that could be interesting.
+                  var childClonedOptions = _NetworkUtil2['default']._cloneOptions(this.body.nodes[childNodeId]);
+                  if (options.joinCondition(parentClonedOptions, childClonedOptions) === true) {
+                    childEdgesObj[edge.id] = edge;
+                    childNodesObj[childNodeId] = this.body.nodes[childNodeId];
+                  }
+                }
+              } else {
+                // swallow the edge if it is self-referencing.
                 childEdgesObj[edge.id] = edge;
-                childNodesObj[childNodeId] = this.body.nodes[childNodeId];
               }
             }
-          } else {
-            childEdgesObj[edge.id] = edge;
           }
         }
 
         this._cluster(childNodesObj, childEdgesObj, options, refreshData);
       }
-    }, {
-      key: '_cloneOptions',
 
       /**
-      * This returns a clone of the options or options of the edge or node to be used for construction of new edges or check functions for new nodes.
-      * @param objId
-      * @param type
-      * @returns {{}}
-      * @private
-      */
-      value: function _cloneOptions(item, type) {
-        var clonedOptions = {};
-        if (type === undefined || type === 'node') {
-          util.deepExtend(clonedOptions, item.options, true);
-          clonedOptions.x = item.x;
-          clonedOptions.y = item.y;
-          clonedOptions.amountOfConnections = item.edges.length;
-        } else {
-          util.deepExtend(clonedOptions, item.options, true);
-        }
-        return clonedOptions;
-      }
-    }, {
-      key: '_createClusterEdges',
-
-      /**
-      * This function creates the edges that will be attached to the cluster.
+      * This function creates the edges that will be attached to the cluster
+      * It looks for edges that are connected to the nodes from the "outside' of the cluster.
       *
       * @param childNodesObj
-      * @param childEdgesObj
       * @param newEdges
       * @param options
       * @private
       */
-      value: function _createClusterEdges(childNodesObj, childEdgesObj, newEdges, clusterNodeProperties, clusterEdgeProperties) {
+    }, {
+      key: '_createClusterEdges',
+      value: function _createClusterEdges(childNodesObj, childEdgesObj, clusterNodeProperties, clusterEdgeProperties) {
         var edge = undefined,
             childNodeId = undefined,
             childNode = undefined,
@@ -34713,7 +35630,10 @@ return /******/ (function(modules) { // webpackBootstrap
             fromId = undefined,
             otherNodeId = undefined;
 
+        // loop over all child nodes and their edges to find edges going out of the cluster
+        // these edges will be replaced by clusterEdges.
         var childKeys = Object.keys(childNodesObj);
+        var createEdges = [];
         for (var i = 0; i < childKeys.length; i++) {
           childNodeId = childKeys[i];
           childNode = childNodesObj[childNodeId];
@@ -34721,34 +35641,61 @@ return /******/ (function(modules) { // webpackBootstrap
           // construct new edges from the cluster to others
           for (var j = 0; j < childNode.edges.length; j++) {
             edge = childNode.edges[j];
-            childEdgesObj[edge.id] = edge;
+            // we only handle edges that are visible to the system, not the disabled ones from the clustering process.
+            if (edge.hiddenByCluster !== true) {
+              // self-referencing edges will be added to the "hidden" list
+              if (edge.toId == edge.fromId) {
+                childEdgesObj[edge.id] = edge;
+              } else {
+                // set up the from and to.
+                if (edge.toId == childNodeId) {
+                  // this is a double equals because ints and strings can be interchanged here.
+                  toId = clusterNodeProperties.id;
+                  fromId = edge.fromId;
+                  otherNodeId = fromId;
+                } else {
+                  toId = edge.toId;
+                  fromId = clusterNodeProperties.id;
+                  otherNodeId = toId;
+                }
+              }
 
-            // childNodeId position will be replaced by the cluster.
-            if (edge.toId == childNodeId) {
-              // this is a double equals because ints and strings can be interchanged here.
-              toId = clusterNodeProperties.id;
-              fromId = edge.fromId;
-              otherNodeId = fromId;
-            } else {
-              toId = edge.toId;
-              fromId = clusterNodeProperties.id;
-              otherNodeId = toId;
-            }
-
-            // if the node connected to the cluster is also in the cluster we do not need a new edge.
-            if (childNodesObj[otherNodeId] === undefined) {
-              var clonedOptions = this._cloneOptions(edge, 'edge');
-              util.deepExtend(clonedOptions, clusterEdgeProperties);
-              clonedOptions.from = fromId;
-              clonedOptions.to = toId;
-              clonedOptions.id = 'clusterEdge:' + util.randomUUID();
-              newEdges.push(this.body.functions.createEdge(clonedOptions));
+              // Only edges from the cluster outwards are being replaced.
+              if (childNodesObj[otherNodeId] === undefined) {
+                createEdges.push({ edge: edge, fromId: fromId, toId: toId });
+              }
             }
           }
         }
+
+        // here we actually create the replacement edges. We could not do this in the loop above as the creation process
+        // would add an edge to the edges array we are iterating over.
+        for (var j = 0; j < createEdges.length; j++) {
+          var _edge = createEdges[j].edge;
+          // copy the options of the edge we will replace
+          var clonedOptions = _NetworkUtil2['default']._cloneOptions(_edge, 'edge');
+          // make sure the properties of clusterEdges are superimposed on it
+          util.deepExtend(clonedOptions, clusterEdgeProperties);
+
+          // set up the edge
+          clonedOptions.from = createEdges[j].fromId;
+          clonedOptions.to = createEdges[j].toId;
+          clonedOptions.id = 'clusterEdge:' + util.randomUUID();
+          //clonedOptions.id = '(cf: ' + createEdges[j].fromId + " to: " + createEdges[j].toId + ")" + Math.random();
+
+          // create the edge and give a reference to the one it replaced.
+          var newEdge = this.body.functions.createEdge(clonedOptions);
+          newEdge.clusteringEdgeReplacingId = _edge.id;
+
+          // connect the edge.
+          this.body.edges[newEdge.id] = newEdge;
+          newEdge.connect();
+
+          // hide the replaced edge
+          _edge.setOptions({ physics: false, hidden: true });
+          _edge.hiddenByCluster = true;
+        }
       }
-    }, {
-      key: '_checkOptions',
 
       /**
       * This function checks the options that can be supplied to the different cluster functions
@@ -34757,6 +35704,8 @@ return /******/ (function(modules) { // webpackBootstrap
       * @returns {*}
       * @private
       */
+    }, {
+      key: '_checkOptions',
       value: function _checkOptions() {
         var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
@@ -34769,8 +35718,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return options;
       }
-    }, {
-      key: '_cluster',
 
       /**
       *
@@ -34780,12 +35727,23 @@ return /******/ (function(modules) { // webpackBootstrap
       * @param {Boolean}   refreshData | when true, do not wrap up
       * @private
       */
+    }, {
+      key: '_cluster',
       value: function _cluster(childNodesObj, childEdgesObj, options) {
         var refreshData = arguments.length <= 3 || arguments[3] === undefined ? true : arguments[3];
 
-        // kill condition: no children so cant cluster
-        if (Object.keys(childNodesObj).length === 0) {
+        // kill condition: no children so can't cluster or only one node in the cluster, dont bother
+        if (Object.keys(childNodesObj).length < 2) {
           return;
+        }
+
+        // check if this cluster call is not trying to cluster anything that is in another cluster.
+        for (var nodeId in childNodesObj) {
+          if (childNodesObj.hasOwnProperty(nodeId)) {
+            if (this.clusteredNodes[nodeId] !== undefined) {
+              return;
+            }
+          }
         }
 
         var clusterNodeProperties = util.deepExtend({}, options.clusterNodeProperties);
@@ -34795,23 +35753,27 @@ return /******/ (function(modules) { // webpackBootstrap
           // get the childNode options
           var childNodesOptions = [];
           for (var nodeId in childNodesObj) {
-            var clonedOptions = this._cloneOptions(childNodesObj[nodeId]);
-            childNodesOptions.push(clonedOptions);
+            if (childNodesObj.hasOwnProperty(nodeId)) {
+              var clonedOptions = _NetworkUtil2['default']._cloneOptions(childNodesObj[nodeId]);
+              childNodesOptions.push(clonedOptions);
+            }
           }
 
           // get clusterproperties based on childNodes
           var childEdgesOptions = [];
           for (var edgeId in childEdgesObj) {
-            // these cluster edges will be removed on creation of the cluster.
-            if (edgeId.substr(0, 12) !== 'clusterEdge:') {
-              var clonedOptions = this._cloneOptions(childEdgesObj[edgeId], 'edge');
-              childEdgesOptions.push(clonedOptions);
+            if (childEdgesObj.hasOwnProperty(edgeId)) {
+              // these cluster edges will be removed on creation of the cluster.
+              if (edgeId.substr(0, 12) !== "clusterEdge:") {
+                var clonedOptions = _NetworkUtil2['default']._cloneOptions(childEdgesObj[edgeId], 'edge');
+                childEdgesOptions.push(clonedOptions);
+              }
             }
           }
 
           clusterNodeProperties = options.processProperties(clusterNodeProperties, childNodesOptions, childEdgesOptions);
           if (!clusterNodeProperties) {
-            throw new Error('The processProperties function does not return properties!');
+            throw new Error("The processProperties function does not return properties!");
           }
         }
 
@@ -34852,28 +35814,16 @@ return /******/ (function(modules) { // webpackBootstrap
         // finally put the cluster node into global
         this.body.nodes[clusterNodeProperties.id] = clusterNode;
 
-        // create the new edges that will connect to the cluster
-        var newEdges = [];
-        this._createClusterEdges(childNodesObj, childEdgesObj, newEdges, clusterNodeProperties, options.clusterEdgeProperties);
+        // create the new edges that will connect to the cluster, all self-referencing edges will be added to childEdgesObject here.
+        this._createClusterEdges(childNodesObj, childEdgesObj, clusterNodeProperties, options.clusterEdgeProperties);
 
         // disable the childEdges
         for (var edgeId in childEdgesObj) {
           if (childEdgesObj.hasOwnProperty(edgeId)) {
             if (this.body.edges[edgeId] !== undefined) {
               var edge = this.body.edges[edgeId];
-
-              // if this is a cluster edge that is fully encompassed in the cluster, we want to delete it
-              // this check verifies that both of the connected nodes are in this cluster
-              if (edgeId.substr(0, 12) === 'clusterEdge:' && childNodesObj[edge.fromId] !== undefined && childNodesObj[edge.toId] !== undefined) {
-                edge.cleanup();
-                // this removes the edge from node.edges, which is why edgeIds is formed
-                edge.disconnect();
-                delete childEdgesObj[edgeId];
-                delete this.body.edges[edgeId];
-              } else {
-                edge.setOptions({ physics: false, hidden: true });
-                //edge.options.hidden = true;
-              }
+              edge.setOptions({ physics: false, hidden: true });
+              edge.hiddenByCluster = true;
             }
           }
         }
@@ -34886,12 +35836,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
 
-        // push new edges to global
-        for (var i = 0; i < newEdges.length; i++) {
-          this.body.edges[newEdges[i].id] = newEdges[i];
-          this.body.edges[newEdges[i].id].connect();
-        }
-
         // set ID to undefined so no duplicates arise
         clusterNodeProperties.id = undefined;
 
@@ -34900,24 +35844,22 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.emitter.emit('_dataChanged');
         }
       }
-    }, {
-      key: 'isCluster',
 
       /**
       * Check if a node is a cluster.
       * @param nodeId
       * @returns {*}
       */
+    }, {
+      key: 'isCluster',
       value: function isCluster(nodeId) {
         if (this.body.nodes[nodeId] !== undefined) {
           return this.body.nodes[nodeId].isCluster === true;
         } else {
-          console.log('Node does not exist.');
+          console.log("Node does not exist.");
           return false;
         }
       }
-    }, {
-      key: '_getClusterPosition',
 
       /**
       * get the position of the cluster node based on what's inside
@@ -34925,6 +35867,8 @@ return /******/ (function(modules) { // webpackBootstrap
       * @returns {{x: number, y: number}}
       * @private
       */
+    }, {
+      key: '_getClusterPosition',
       value: function _getClusterPosition(childNodesObj) {
         var childKeys = Object.keys(childNodesObj);
         var minX = childNodesObj[childKeys[0]].x;
@@ -34942,26 +35886,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return { x: 0.5 * (minX + maxX), y: 0.5 * (minY + maxY) };
       }
-    }, {
-      key: 'openCluster',
 
       /**
       * Open a cluster by calling this function.
       * @param {String}  clusterNodeId | the ID of the cluster node
       * @param {Boolean} refreshData | wrap up afterwards if not true
       */
+    }, {
+      key: 'openCluster',
       value: function openCluster(clusterNodeId, options) {
         var refreshData = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         // kill conditions
         if (clusterNodeId === undefined) {
-          throw new Error('No clusterNodeId supplied to openCluster.');
+          throw new Error("No clusterNodeId supplied to openCluster.");
         }
         if (this.body.nodes[clusterNodeId] === undefined) {
-          throw new Error('The clusterNodeId supplied to openCluster does not exist.');
+          throw new Error("The clusterNodeId supplied to openCluster does not exist.");
         }
         if (this.body.nodes[clusterNodeId].containedNodes === undefined) {
-          console.log('The node:' + clusterNodeId + ' is not a cluster.');
+          console.log("The node:" + clusterNodeId + " is not a cluster.");
           return;
         }
         var clusterNode = this.body.nodes[clusterNodeId];
@@ -34984,8 +35928,8 @@ return /******/ (function(modules) { // webpackBootstrap
             if (containedNodes.hasOwnProperty(nodeId)) {
               var containedNode = this.body.nodes[nodeId];
               if (newPositions[nodeId] !== undefined) {
-                containedNode.x = newPositions[nodeId].x || clusterNode.x;
-                containedNode.y = newPositions[nodeId].y || clusterNode.y;
+                containedNode.x = newPositions[nodeId].x === undefined ? clusterNode.x : newPositions[nodeId].x;
+                containedNode.y = newPositions[nodeId].y === undefined ? clusterNode.y : newPositions[nodeId].y;
               }
             }
           }
@@ -34996,8 +35940,12 @@ return /******/ (function(modules) { // webpackBootstrap
               var containedNode = this.body.nodes[nodeId];
               containedNode = containedNodes[nodeId];
               // inherit position
-              containedNode.x = clusterNode.x;
-              containedNode.y = clusterNode.y;
+              if (containedNode.options.fixed.x === false) {
+                containedNode.x = clusterNode.x;
+              }
+              if (containedNode.options.fixed.y === false) {
+                containedNode.y = clusterNode.y;
+              }
             }
           }
         }
@@ -35012,80 +35960,82 @@ return /******/ (function(modules) { // webpackBootstrap
             containedNode.vy = clusterNode.vy;
 
             // we use these methods to avoid reinstantiating the shape, which happens with setOptions.
-            //containedNode.toggleHidden(false);
-            //containedNode.togglePhysics(true);
             containedNode.setOptions({ hidden: false, physics: true });
 
             delete this.clusteredNodes[nodeId];
           }
         }
 
-        // release edges
+        // copy the clusterNode edges because we cannot iterate over an object that we add or remove from.
+        var edgesToBeDeleted = [];
+        for (var i = 0; i < clusterNode.edges.length; i++) {
+          edgesToBeDeleted.push(clusterNode.edges[i]);
+        }
+
+        // actually handling the deleting.
+        for (var i = 0; i < edgesToBeDeleted.length; i++) {
+          var edge = edgesToBeDeleted[i];
+
+          var otherNodeId = this._getConnectedId(edge, clusterNodeId);
+          // if the other node is in another cluster, we transfer ownership of this edge to the other cluster
+          if (this.clusteredNodes[otherNodeId] !== undefined) {
+            // transfer ownership:
+            var otherCluster = this.body.nodes[this.clusteredNodes[otherNodeId].clusterId];
+            var transferEdge = this.body.edges[edge.clusteringEdgeReplacingId];
+            if (transferEdge !== undefined) {
+              otherCluster.containedEdges[transferEdge.id] = transferEdge;
+
+              // delete local reference
+              delete containedEdges[transferEdge.id];
+
+              // create new cluster edge from the otherCluster:
+              // get to and from
+              var fromId = transferEdge.fromId;
+              var toId = transferEdge.toId;
+              if (transferEdge.toId == otherNodeId) {
+                toId = this.clusteredNodes[otherNodeId].clusterId;
+              } else {
+                fromId = this.clusteredNodes[otherNodeId].clusterId;
+              }
+
+              // clone the options and apply the cluster options to them
+              var clonedOptions = _NetworkUtil2['default']._cloneOptions(transferEdge, 'edge');
+              util.deepExtend(clonedOptions, otherCluster.clusterEdgeProperties);
+
+              // apply the edge specific options to it.
+              var id = 'clusterEdge:' + util.randomUUID();
+              util.deepExtend(clonedOptions, { from: fromId, to: toId, hidden: false, physics: true, id: id });
+
+              // create it
+              var newEdge = this.body.functions.createEdge(clonedOptions);
+              newEdge.clusteringEdgeReplacingId = transferEdge.id;
+              this.body.edges[id] = newEdge;
+              this.body.edges[id].connect();
+            }
+          } else {
+            var replacedEdge = this.body.edges[edge.clusteringEdgeReplacingId];
+            if (replacedEdge !== undefined) {
+              replacedEdge.setOptions({ physics: true, hidden: false });
+              replacedEdge.hiddenByCluster = false;
+            }
+          }
+          edge.cleanup();
+          // this removes the edge from node.edges, which is why edgeIds is formed
+          edge.disconnect();
+          delete this.body.edges[edge.id];
+        }
+
+        // handle the releasing of the edges
         for (var edgeId in containedEdges) {
           if (containedEdges.hasOwnProperty(edgeId)) {
             var edge = containedEdges[edgeId];
-            // if this edge was a temporary edge and it's connected nodes do not exist anymore, we remove it from the data
-            if (this.body.nodes[edge.fromId] === undefined || this.body.nodes[edge.toId] === undefined || edge.toId == clusterNodeId || edge.fromId == clusterNodeId) {
-              edge.cleanup();
-              // this removes the edge from node.edges, which is why edgeIds is formed
-              edge.disconnect();
-              delete this.body.edges[edgeId];
-            } else {
-              // one of the nodes connected to this edge is in a cluster. We give the edge to that cluster so it will be released when that cluster is opened.
-              if (this.clusteredNodes[edge.fromId] !== undefined || this.clusteredNodes[edge.toId] !== undefined) {
-                var fromId = undefined,
-                    toId = undefined;
-                var clusteredNode = this.clusteredNodes[edge.fromId] || this.clusteredNodes[edge.toId];
-                var clusterId = clusteredNode.clusterId;
-                var _clusterNode = this.body.nodes[clusterId];
-                _clusterNode.containedEdges[edgeId] = edge;
-
-                if (this.clusteredNodes[edge.fromId] !== undefined) {
-                  fromId = clusterId;
-                  toId = edge.toId;
-                } else {
-                  fromId = edge.fromId;
-                  toId = clusterId;
-                }
-
-                // if both from and to nodes are visible, we create a new temporary edge
-                if (this.body.nodes[fromId].options.hidden !== true && this.body.nodes[toId].options.hidden !== true) {
-                  var clonedOptions = this._cloneOptions(edge, 'edge');
-                  var id = 'clusterEdge:' + util.randomUUID();
-                  util.deepExtend(clonedOptions, _clusterNode.clusterEdgeProperties);
-                  util.deepExtend(clonedOptions, { from: fromId, to: toId, hidden: false, physics: true, id: id });
-                  var newEdge = this.body.functions.createEdge(clonedOptions);
-
-                  this.body.edges[id] = newEdge;
-                  this.body.edges[id].connect();
-                }
-              } else {
-                edge.setOptions({ physics: true, hidden: false });
-                //edge.options.hidden = false;
-                //edge.togglePhysics(true);
-              }
-            }
+            edge.setOptions({ physics: true, hidden: false });
+            edge.hiddenByCluster = undefined;
+            delete edge.hiddenByCluster;
           }
         }
 
-        // remove all temporary edges, make an array of ids so we don't remove from the list we're iterating over.
-        var removeIds = [];
-        for (var i = 0; i < clusterNode.edges.length; i++) {
-          var edgeId = clusterNode.edges[i].id;
-          removeIds.push(edgeId);
-        }
-
-        // actually removing the edges
-        for (var i = 0; i < removeIds.length; i++) {
-          var edgeId = removeIds[i];
-          this.body.edges[edgeId].cleanup();
-          // this removes the edge from node.edges, which is why edgeIds is formed
-          this.body.edges[edgeId].disconnect();
-          delete this.body.edges[edgeId];
-        }
-
         // remove clusterNode
-        this.body.nodes[clusterNodeId].cleanup();
         delete this.body.nodes[clusterNodeId];
 
         if (refreshData === true) {
@@ -35107,15 +36057,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return nodesArray;
       }
-    }, {
-      key: 'findNode',
 
       /**
       * Get the stack clusterId's that a certain node resides in. cluster A -> cluster B -> cluster C -> node
       * @param nodeId
       * @returns {Array}
-      * @private
       */
+    }, {
+      key: 'findNode',
       value: function findNode(nodeId) {
         var stack = [];
         var max = 100;
@@ -35129,8 +36078,6 @@ return /******/ (function(modules) { // webpackBootstrap
         stack.push(this.body.nodes[nodeId]);
         return stack;
       }
-    }, {
-      key: '_getConnectedId',
 
       /**
       * Get the Id the node is connected to
@@ -35139,6 +36086,8 @@ return /******/ (function(modules) { // webpackBootstrap
       * @returns {*}
       * @private
       */
+    }, {
+      key: '_getConnectedId',
       value: function _getConnectedId(edge, nodeId) {
         if (edge.toId != nodeId) {
           return edge.toId;
@@ -35148,8 +36097,6 @@ return /******/ (function(modules) { // webpackBootstrap
           return edge.fromId;
         }
       }
-    }, {
-      key: '_getHubSize',
 
       /**
       * We determine how many connections denote an important hub.
@@ -35157,6 +36104,8 @@ return /******/ (function(modules) { // webpackBootstrap
       *
       * @private
       */
+    }, {
+      key: '_getHubSize',
       value: function _getHubSize() {
         var average = 0;
         var averageSquared = 0;
@@ -35199,19 +36148,158 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  var util = __webpack_require__(1);
+
+  var NetworkUtil = (function () {
+    function NetworkUtil() {
+      _classCallCheck(this, NetworkUtil);
+    }
+
+    /**
+     * Find the center position of the network considering the bounding boxes
+     * @private
+     */
+
+    _createClass(NetworkUtil, null, [{
+      key: "_getRange",
+      value: function _getRange(allNodes) {
+        var specificNodes = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
+        var minY = 1e9,
+            maxY = -1e9,
+            minX = 1e9,
+            maxX = -1e9,
+            node;
+        if (specificNodes.length > 0) {
+          for (var i = 0; i < specificNodes.length; i++) {
+            node = allNodes[specificNodes[i]];
+            if (minX > node.shape.boundingBox.left) {
+              minX = node.shape.boundingBox.left;
+            }
+            if (maxX < node.shape.boundingBox.right) {
+              maxX = node.shape.boundingBox.right;
+            }
+            if (minY > node.shape.boundingBox.top) {
+              minY = node.shape.boundingBox.top;
+            } // top is negative, bottom is positive
+            if (maxY < node.shape.boundingBox.bottom) {
+              maxY = node.shape.boundingBox.bottom;
+            } // top is negative, bottom is positive
+          }
+        }
+
+        if (minX === 1e9 && maxX === -1e9 && minY === 1e9 && maxY === -1e9) {
+          minY = 0, maxY = 0, minX = 0, maxX = 0;
+        }
+        return { minX: minX, maxX: maxX, minY: minY, maxY: maxY };
+      }
+
+      /**
+       * Find the center position of the network
+       * @private
+       */
+    }, {
+      key: "_getRangeCore",
+      value: function _getRangeCore(allNodes) {
+        var specificNodes = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
+        var minY = 1e9,
+            maxY = -1e9,
+            minX = 1e9,
+            maxX = -1e9,
+            node;
+        if (specificNodes.length > 0) {
+          for (var i = 0; i < specificNodes.length; i++) {
+            node = allNodes[specificNodes[i]];
+            if (minX > node.x) {
+              minX = node.x;
+            }
+            if (maxX < node.x) {
+              maxX = node.x;
+            }
+            if (minY > node.y) {
+              minY = node.y;
+            } // top is negative, bottom is positive
+            if (maxY < node.y) {
+              maxY = node.y;
+            } // top is negative, bottom is positive
+          }
+        }
+
+        if (minX === 1e9 && maxX === -1e9 && minY === 1e9 && maxY === -1e9) {
+          minY = 0, maxY = 0, minX = 0, maxX = 0;
+        }
+        return { minX: minX, maxX: maxX, minY: minY, maxY: maxY };
+      }
+
+      /**
+       * @param {object} range = {minX: minX, maxX: maxX, minY: minY, maxY: maxY};
+       * @returns {{x: number, y: number}}
+       * @private
+       */
+    }, {
+      key: "_findCenter",
+      value: function _findCenter(range) {
+        return { x: 0.5 * (range.maxX + range.minX),
+          y: 0.5 * (range.maxY + range.minY) };
+      }
+
+      /**
+       * This returns a clone of the options or options of the edge or node to be used for construction of new edges or check functions for new nodes.
+       * @param item
+       * @param type
+       * @returns {{}}
+       * @private
+       */
+    }, {
+      key: "_cloneOptions",
+      value: function _cloneOptions(item, type) {
+        var clonedOptions = {};
+        if (type === undefined || type === 'node') {
+          util.deepExtend(clonedOptions, item.options, true);
+          clonedOptions.x = item.x;
+          clonedOptions.y = item.y;
+          clonedOptions.amountOfConnections = item.edges.length;
+        } else {
+          util.deepExtend(clonedOptions, item.options, true);
+        }
+        return clonedOptions;
+      }
+    }]);
+
+    return NetworkUtil;
+  })();
+
+  exports["default"] = NetworkUtil;
+  module.exports = exports["default"];
+
+/***/ },
+/* 101 */
+/***/ function(module, exports, __webpack_require__) {
+
   'use strict';
 
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
 
-  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+  var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _Node2 = __webpack_require__(62);
 
@@ -35241,7 +36329,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35258,7 +36346,7 @@ return /******/ (function(modules) { // webpackBootstrap
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
   }
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   var CanvasRenderer = (function () {
     function CanvasRenderer(body, canvas) {
@@ -35292,33 +36380,33 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function bindEventListeners() {
         var _this = this;
 
-        this.body.emitter.on('dragStart', function () {
+        this.body.emitter.on("dragStart", function () {
           _this.dragging = true;
         });
-        this.body.emitter.on('dragEnd', function () {
+        this.body.emitter.on("dragEnd", function () {
           return _this.dragging = false;
         });
-        this.body.emitter.on('_resizeNodes', function () {
+        this.body.emitter.on("_resizeNodes", function () {
           return _this._resizeNodes();
         });
-        this.body.emitter.on('_redraw', function () {
+        this.body.emitter.on("_redraw", function () {
           if (_this.renderingActive === false) {
             _this._redraw();
           }
         });
-        this.body.emitter.on('_blockRedraw', function () {
+        this.body.emitter.on("_blockRedraw", function () {
           _this.allowRedraw = false;
         });
-        this.body.emitter.on('_allowRedraw', function () {
+        this.body.emitter.on("_allowRedraw", function () {
           _this.allowRedraw = true;_this.redrawRequested = false;
         });
-        this.body.emitter.on('_requestRedraw', this._requestRedraw.bind(this));
-        this.body.emitter.on('_startRendering', function () {
+        this.body.emitter.on("_requestRedraw", this._requestRedraw.bind(this));
+        this.body.emitter.on("_startRendering", function () {
           _this.renderRequests += 1;
           _this.renderingActive = true;
           _this._startRendering();
         });
-        this.body.emitter.on('_stopRendering', function () {
+        this.body.emitter.on("_stopRendering", function () {
           _this.renderRequests -= 1;
           _this.renderingActive = _this.renderRequests > 0;
           _this.renderTimer = undefined;
@@ -35351,8 +36439,8 @@ return /******/ (function(modules) { // webpackBootstrap
             if (this.requiresTimeout === true) {
               this.renderTimer = window.setTimeout(this._renderStep.bind(this), this.simulationInterval); // wait this.renderTimeStep milliseconds and perform the animation step function
             } else {
-              this.renderTimer = window.requestAnimationFrame(this._renderStep.bind(this)); // wait this.renderTimeStep milliseconds and perform the animation step function
-            }
+                this.renderTimer = window.requestAnimationFrame(this._renderStep.bind(this)); // wait this.renderTimeStep milliseconds and perform the animation step function
+              }
           }
         }
       }
@@ -35376,25 +36464,25 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'redraw',
 
       /**
        * Redraw the network with the current data
        * chart will be resized too.
        */
+    }, {
+      key: 'redraw',
       value: function redraw() {
         this.body.emitter.emit('setSize');
         this._redraw();
       }
-    }, {
-      key: '_requestRedraw',
 
       /**
        * Redraw the network with the current data
        * @param hidden | used to get the first estimate of the node sizes. only the nodes are drawn after which they are quickly drawn over.
        * @private
        */
+    }, {
+      key: '_requestRedraw',
       value: function _requestRedraw() {
         var _this2 = this;
 
@@ -35417,7 +36505,7 @@ return /******/ (function(modules) { // webpackBootstrap
         var hidden = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 
         if (this.allowRedraw === true) {
-          this.body.emitter.emit('initRedraw');
+          this.body.emitter.emit("initRedraw");
 
           this.redrawRequested = false;
           var ctx = this.canvas.frame.canvas.getContext('2d');
@@ -35427,9 +36515,7 @@ return /******/ (function(modules) { // webpackBootstrap
             this.canvas.setSize();
           }
 
-          if (this.pixelRatio === undefined) {
-            this.pixelRatio = (window.devicePixelRatio || 1) / (ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1);
-          }
+          this.pixelRatio = (window.devicePixelRatio || 1) / (ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1);
 
           ctx.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
 
@@ -35438,13 +36524,18 @@ return /******/ (function(modules) { // webpackBootstrap
           var h = this.canvas.frame.canvas.clientHeight;
           ctx.clearRect(0, 0, w, h);
 
+          // if the div is hidden, we stop the redraw here for performance.
+          if (this.canvas.frame.clientWidth === 0) {
+            return;
+          }
+
           // set scaling and translation
           ctx.save();
           ctx.translate(this.body.view.translation.x, this.body.view.translation.y);
           ctx.scale(this.body.view.scale, this.body.view.scale);
 
           ctx.beginPath();
-          this.body.emitter.emit('beforeDrawing', ctx);
+          this.body.emitter.emit("beforeDrawing", ctx);
           ctx.closePath();
 
           if (hidden === false) {
@@ -35462,19 +36553,16 @@ return /******/ (function(modules) { // webpackBootstrap
           }
 
           ctx.beginPath();
-          //this.physics.nodesSolver._debug(ctx,"#F00F0F");
-          this.body.emitter.emit('afterDrawing', ctx);
+          this.body.emitter.emit("afterDrawing", ctx);
           ctx.closePath();
+
           // restore original scaling and translation
           ctx.restore();
-
           if (hidden === true) {
             ctx.clearRect(0, 0, w, h);
           }
         }
       }
-    }, {
-      key: '_resizeNodes',
 
       /**
        * Redraw all nodes
@@ -35483,6 +36571,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Boolean} [alwaysShow]
        * @private
        */
+    }, {
+      key: '_resizeNodes',
       value: function _resizeNodes() {
         var ctx = this.canvas.frame.canvas.getContext('2d');
         if (this.pixelRatio === undefined) {
@@ -35508,8 +36598,6 @@ return /******/ (function(modules) { // webpackBootstrap
         // restore original scaling and translation
         ctx.restore();
       }
-    }, {
-      key: '_drawNodes',
 
       /**
        * Redraw all nodes
@@ -35518,6 +36606,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Boolean} [alwaysShow]
        * @private
        */
+    }, {
+      key: '_drawNodes',
       value: function _drawNodes(ctx) {
         var alwaysShow = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
@@ -35556,8 +36646,6 @@ return /******/ (function(modules) { // webpackBootstrap
           node.draw(ctx);
         }
       }
-    }, {
-      key: '_drawEdges',
 
       /**
        * Redraw all edges
@@ -35565,6 +36653,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {CanvasRenderingContext2D}   ctx
        * @private
        */
+    }, {
+      key: '_drawEdges',
       value: function _drawEdges(ctx) {
         var edges = this.body.edges;
         var edgeIndices = this.body.edgeIndices;
@@ -35577,8 +36667,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: '_drawControlNodes',
 
       /**
        * Redraw all edges
@@ -35586,6 +36674,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {CanvasRenderingContext2D}   ctx
        * @private
        */
+    }, {
+      key: '_drawControlNodes',
       value: function _drawControlNodes(ctx) {
         var edges = this.body.edges;
         var edgeIndices = this.body.edgeIndices;
@@ -35596,14 +36686,14 @@ return /******/ (function(modules) { // webpackBootstrap
           edge._drawControlNodes(ctx);
         }
       }
-    }, {
-      key: '_determineBrowserMethod',
 
       /**
        * Determine if the browser requires a setTimeout or a requestAnimationFrame. This was required because
        * some implementations (safari and IE9) did not support requestAnimationFrame
        * @private
        */
+    }, {
+      key: '_determineBrowserMethod',
       value: function _determineBrowserMethod() {
         if (typeof window !== 'undefined') {
           var browserType = navigator.userAgent.toLowerCase();
@@ -35630,7 +36720,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35643,10 +36733,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var Hammer = __webpack_require__(3);
-  var hammerUtil = __webpack_require__(27);
+  var Hammer = __webpack_require__(20);
+  var hammerUtil = __webpack_require__(25);
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   /**
    * Create the main frame for the Network.
@@ -35664,6 +36754,7 @@ return /******/ (function(modules) { // webpackBootstrap
       this.pixelRatio = 1;
       this.resizeTimer = undefined;
       this.resizeFunction = this._onResize.bind(this);
+      this.cameraState = {};
 
       this.options = {};
       this.defaultOptions = {
@@ -35682,7 +36773,7 @@ return /******/ (function(modules) { // webpackBootstrap
         var _this = this;
 
         // bind the events
-        this.body.emitter.once('resize', function (obj) {
+        this.body.emitter.once("resize", function (obj) {
           if (obj.width !== 0) {
             _this.body.view.translation.x = obj.width * 0.5;
           }
@@ -35690,8 +36781,8 @@ return /******/ (function(modules) { // webpackBootstrap
             _this.body.view.translation.y = obj.height * 0.5;
           }
         });
-        this.body.emitter.on('setSize', this.setSize.bind(this));
-        this.body.emitter.on('destroy', function () {
+        this.body.emitter.on("setSize", this.setSize.bind(this));
+        this.body.emitter.on("destroy", function () {
           _this.hammerFrame.destroy();
           _this.hammer.destroy();
           _this._cleanUp();
@@ -35713,7 +36804,7 @@ return /******/ (function(modules) { // webpackBootstrap
           this.resizeTimer = setInterval(function () {
             var changed = _this2.setSize();
             if (changed === true) {
-              _this2.body.emitter.emit('_requestRedraw');
+              _this2.body.emitter.emit("_requestRedraw");
             }
           }, 1000);
           this.resizeFunction = this._onResize.bind(this);
@@ -35734,7 +36825,48 @@ return /******/ (function(modules) { // webpackBootstrap
       key: '_onResize',
       value: function _onResize() {
         this.setSize();
-        this.body.emitter.emit('_redraw');
+        this.body.emitter.emit("_redraw");
+      }
+
+      /**
+       * Get and store the cameraState
+       * @private
+       */
+    }, {
+      key: '_getCameraState',
+      value: function _getCameraState() {
+        var pixelRatio = arguments.length <= 0 || arguments[0] === undefined ? this.pixelRatio : arguments[0];
+
+        this.cameraState.previousWidth = this.frame.canvas.width / pixelRatio;
+        this.cameraState.previousHeight = this.frame.canvas.height / pixelRatio;
+        this.cameraState.scale = this.body.view.scale;
+        this.cameraState.position = this.DOMtoCanvas({ x: 0.5 * this.frame.canvas.width / pixelRatio, y: 0.5 * this.frame.canvas.height / pixelRatio });
+      }
+
+      /**
+       * Set the cameraState
+       * @private
+       */
+    }, {
+      key: '_setCameraState',
+      value: function _setCameraState() {
+        if (this.cameraState.scale !== undefined && this.frame.canvas.clientWidth !== 0 && this.frame.canvas.clientHeight !== 0 && this.pixelRatio !== 0 && this.cameraState.previousWidth > 0) {
+
+          this.body.view.scale = this.cameraState.scale * Math.min(this.frame.canvas.width / this.pixelRatio / this.cameraState.previousWidth, this.frame.canvas.height / this.pixelRatio / this.cameraState.previousHeight);
+
+          // this comes from the view module.
+          var currentViewCenter = this.DOMtoCanvas({
+            x: 0.5 * this.frame.canvas.clientWidth,
+            y: 0.5 * this.frame.canvas.clientHeight
+          });
+
+          var distanceFromCenter = { // offset from view, distance view has to change by these x and y to center the node
+            x: currentViewCenter.x - this.cameraState.position.x,
+            y: currentViewCenter.y - this.cameraState.position.y
+          };
+          this.body.view.translation.x += distanceFromCenter.x * this.body.view.scale;
+          this.body.view.translation.y += distanceFromCenter.y * this.body.view.scale;
+        }
       }
     }, {
       key: '_prepareValue',
@@ -35748,14 +36880,14 @@ return /******/ (function(modules) { // webpackBootstrap
             return value + 'px';
           }
         }
-        throw new Error('Could not use the value supplie for width or height:' + value);
+        throw new Error('Could not use the value supplied for width or height:' + value);
       }
-    }, {
-      key: '_create',
 
       /**
        * Create the HTML
        */
+    }, {
+      key: '_create',
       value: function _create() {
         // remove all elements from the container element.
         while (this.body.container.hasChildNodes()) {
@@ -35770,7 +36902,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
         //////////////////////////////////////////////////////////////////
 
-        this.frame.canvas = document.createElement('canvas');
+        this.frame.canvas = document.createElement("canvas");
         this.frame.canvas.style.position = 'relative';
         this.frame.appendChild(this.frame.canvas);
 
@@ -35782,10 +36914,10 @@ return /******/ (function(modules) { // webpackBootstrap
           noCanvas.innerHTML = 'Error: your browser does not support HTML canvas';
           this.frame.canvas.appendChild(noCanvas);
         } else {
-          var ctx = this.frame.canvas.getContext('2d');
+          var ctx = this.frame.canvas.getContext("2d");
           this.pixelRatio = (window.devicePixelRatio || 1) / (ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1);
 
-          this.frame.canvas.getContext('2d').setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+          this.frame.canvas.getContext("2d").setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
         }
 
         // add the frame to the container element
@@ -35796,13 +36928,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this._bindHammer();
       }
-    }, {
-      key: '_bindHammer',
 
       /**
        * This function binds hammer, it can be repeated over and over due to the uniqueness check.
        * @private
        */
+    }, {
+      key: '_bindHammer',
       value: function _bindHammer() {
         var _this3 = this;
 
@@ -35863,8 +36995,6 @@ return /******/ (function(modules) { // webpackBootstrap
           _this3.body.eventListeners.onRelease(event);
         });
       }
-    }, {
-      key: 'setSize',
 
       /**
        * Set a new size for the network
@@ -35873,6 +37003,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {string} height  Height in pixels or percentage  (for example '400px'
        *                         or '30%')
        */
+    }, {
+      key: 'setSize',
       value: function setSize() {
         var width = arguments.length <= 0 || arguments[0] === undefined ? this.options.width : arguments[0];
         var height = arguments.length <= 1 || arguments[1] === undefined ? this.options.height : arguments[1];
@@ -35884,7 +37016,14 @@ return /******/ (function(modules) { // webpackBootstrap
         var oldWidth = this.frame.canvas.width;
         var oldHeight = this.frame.canvas.height;
 
+        // update the pixelratio
+        var ctx = this.frame.canvas.getContext("2d");
+        var previousRation = this.pixelRatio; // we cache this because the camera state storage needs the old value
+        this.pixelRatio = (window.devicePixelRatio || 1) / (ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1);
+
         if (width != this.options.width || height != this.options.height || this.frame.style.width != width || this.frame.style.height != height) {
+          this._getCameraState(previousRation);
+
           this.frame.style.width = width;
           this.frame.style.height = height;
 
@@ -35901,6 +37040,11 @@ return /******/ (function(modules) { // webpackBootstrap
         } else {
           // this would adapt the width of the canvas to the width from 100% if and only if
           // there is a change.
+
+          // store the camera if there is a change in size.
+          if (this.frame.canvas.width != Math.round(this.frame.canvas.clientWidth * this.pixelRatio) || this.frame.canvas.height != Math.round(this.frame.canvas.clientHeight * this.pixelRatio)) {
+            this._getCameraState(previousRation);
+          }
 
           if (this.frame.canvas.width != Math.round(this.frame.canvas.clientWidth * this.pixelRatio)) {
             this.frame.canvas.width = Math.round(this.frame.canvas.clientWidth * this.pixelRatio);
@@ -35919,6 +37063,9 @@ return /******/ (function(modules) { // webpackBootstrap
             oldWidth: Math.round(oldWidth / this.pixelRatio),
             oldHeight: Math.round(oldHeight / this.pixelRatio)
           });
+
+          // restore the camera on change.
+          this._setCameraState();
         }
 
         return emitEvent;
@@ -35936,8 +37083,6 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function _XconvertDOMtoCanvas(x) {
         return (x - this.body.view.translation.x) / this.body.view.scale;
       }
-    }, {
-      key: '_XconvertCanvasToDOM',
 
       /**
        * Convert the X coordinate in canvas-space (the simulation sandbox, which the camera looks upon) to
@@ -35946,11 +37091,11 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: '_XconvertCanvasToDOM',
       value: function _XconvertCanvasToDOM(x) {
         return x * this.body.view.scale + this.body.view.translation.x;
       }
-    }, {
-      key: '_YconvertDOMtoCanvas',
 
       /**
        * Convert the Y coordinate in DOM-space (coordinate point in browser relative to the container div) to
@@ -35959,11 +37104,11 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: '_YconvertDOMtoCanvas',
       value: function _YconvertDOMtoCanvas(y) {
         return (y - this.body.view.translation.y) / this.body.view.scale;
       }
-    }, {
-      key: '_YconvertCanvasToDOM',
 
       /**
        * Convert the Y coordinate in canvas-space (the simulation sandbox, which the camera looks upon) to
@@ -35972,11 +37117,11 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: '_YconvertCanvasToDOM',
       value: function _YconvertCanvasToDOM(y) {
         return y * this.body.view.scale + this.body.view.translation.y;
       }
-    }, {
-      key: 'canvasToDOM',
 
       /**
        *
@@ -35984,11 +37129,11 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {{x: number, y: number}}
        * @constructor
        */
+    }, {
+      key: 'canvasToDOM',
       value: function canvasToDOM(pos) {
         return { x: this._XconvertCanvasToDOM(pos.x), y: this._YconvertCanvasToDOM(pos.y) };
       }
-    }, {
-      key: 'DOMtoCanvas',
 
       /**
        *
@@ -35996,6 +37141,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {{x: number, y: number}}
        * @constructor
        */
+    }, {
+      key: 'DOMtoCanvas',
       value: function DOMtoCanvas(pos) {
         return { x: this._XconvertDOMtoCanvas(pos.x), y: this._YconvertDOMtoCanvas(pos.y) };
       }
@@ -36008,20 +37155,26 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
-  "use strict";
+  'use strict';
 
-  Object.defineProperty(exports, "__esModule", {
+  Object.defineProperty(exports, '__esModule', {
     value: true
   });
 
-  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-  var util = __webpack_require__(7);
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+  var _NetworkUtil = __webpack_require__(100);
+
+  var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
+
+  var util = __webpack_require__(1);
 
   var View = (function () {
     function View(body, canvas) {
@@ -36053,92 +37206,29 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     _createClass(View, [{
-      key: "setOptions",
+      key: 'setOptions',
       value: function setOptions() {
         var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
         this.options = options;
       }
-    }, {
-      key: "_getRange",
-
-      /**
-       * Find the center position of the network
-       * @private
-       */
-      value: function _getRange() {
-        var specificNodes = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-
-        var minY = 1e9,
-            maxY = -1e9,
-            minX = 1e9,
-            maxX = -1e9,
-            node;
-        if (specificNodes.length > 0) {
-          for (var i = 0; i < specificNodes.length; i++) {
-            node = this.body.nodes[specificNodes[i]];
-            if (minX > node.shape.boundingBox.left) {
-              minX = node.shape.boundingBox.left;
-            }
-            if (maxX < node.shape.boundingBox.right) {
-              maxX = node.shape.boundingBox.right;
-            }
-            if (minY > node.shape.boundingBox.top) {
-              minY = node.shape.boundingBox.top;
-            } // top is negative, bottom is positive
-            if (maxY < node.shape.boundingBox.bottom) {
-              maxY = node.shape.boundingBox.bottom;
-            } // top is negative, bottom is positive
-          }
-        } else {
-          for (var i = 0; i < this.body.nodeIndices.length; i++) {
-            node = this.body.nodes[this.body.nodeIndices[i]];
-            if (minX > node.shape.boundingBox.left) {
-              minX = node.shape.boundingBox.left;
-            }
-            if (maxX < node.shape.boundingBox.right) {
-              maxX = node.shape.boundingBox.right;
-            }
-            if (minY > node.shape.boundingBox.top) {
-              minY = node.shape.boundingBox.top;
-            } // top is negative, bottom is positive
-            if (maxY < node.shape.boundingBox.bottom) {
-              maxY = node.shape.boundingBox.bottom;
-            } // top is negative, bottom is positive
-          }
-        }
-
-        if (minX === 1e9 && maxX === -1e9 && minY === 1e9 && maxY === -1e9) {
-          minY = 0, maxY = 0, minX = 0, maxX = 0;
-        }
-        return { minX: minX, maxX: maxX, minY: minY, maxY: maxY };
-      }
-    }, {
-      key: "_findCenter",
-
-      /**
-       * @param {object} range = {minX: minX, maxX: maxX, minY: minY, maxY: maxY};
-       * @returns {{x: number, y: number}}
-       * @private
-       */
-      value: function _findCenter(range) {
-        return { x: 0.5 * (range.maxX + range.minX),
-          y: 0.5 * (range.maxY + range.minY) };
-      }
-    }, {
-      key: "fit",
 
       /**
        * This function zooms out to fit all data on screen based on amount of nodes
        * @param {Object} Options
        * @param {Boolean} [initialZoom]  | zoom based on fitted formula or range, true = fitted, default = false;
        */
+    }, {
+      key: 'fit',
       value: function fit() {
         var options = arguments.length <= 0 || arguments[0] === undefined ? { nodes: [] } : arguments[0];
         var initialZoom = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-        var range;
-        var zoomLevel;
+        var range = undefined;
+        var zoomLevel = undefined;
+        if (options.nodes === undefined || options.nodes.length === 0) {
+          options.nodes = this.body.nodeIndices;
+        }
 
         if (initialZoom === true) {
           // check if more than half of the nodes have a predefined position. If so, we use the range, not the approximation.
@@ -36156,7 +37246,7 @@ return /******/ (function(modules) { // webpackBootstrap
             return;
           }
 
-          range = this._getRange(options.nodes);
+          range = _NetworkUtil2['default']._getRange(this.body.nodes, options.nodes);
 
           var numberOfNodes = this.body.nodeIndices.length;
           zoomLevel = 12.662 / (numberOfNodes + 7.4147) + 0.0964822; // this is obtained from fitting a dataset from 5 points with scale levels that looked good.
@@ -36166,7 +37256,7 @@ return /******/ (function(modules) { // webpackBootstrap
           zoomLevel *= factor;
         } else {
           this.body.emitter.emit("_resizeNodes");
-          range = this._getRange(options.nodes);
+          range = _NetworkUtil2['default']._getRange(this.body.nodes, options.nodes);
 
           var xDistance = Math.abs(range.maxX - range.minX) * 1.1;
           var yDistance = Math.abs(range.maxY - range.minY) * 1.1;
@@ -36183,12 +37273,10 @@ return /******/ (function(modules) { // webpackBootstrap
           zoomLevel = 1.0;
         }
 
-        var center = this._findCenter(range);
+        var center = _NetworkUtil2['default']._findCenter(range);
         var animationOptions = { position: center, scale: zoomLevel, animation: options.animation };
         this.moveTo(animationOptions);
       }
-    }, {
-      key: "focus",
 
       // animation
 
@@ -36198,6 +37286,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Number} nodeId
        * @param {Number} [options]
        */
+    }, {
+      key: 'focus',
       value: function focus(nodeId) {
         var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -36211,8 +37301,6 @@ return /******/ (function(modules) { // webpackBootstrap
           console.log("Node: " + nodeId + " cannot be found.");
         }
       }
-    }, {
-      key: "moveTo",
 
       /**
        *
@@ -36221,6 +37309,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *                          |  options.position = {x:Number, y:Number}   // position to move to
        *                          |  options.animation = {duration:Number, easingFunction:String} || Boolean   // position to move to
        */
+    }, {
+      key: 'moveTo',
       value: function moveTo(options) {
         if (options === undefined) {
           options = {};
@@ -36259,8 +37349,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.animateView(options);
       }
-    }, {
-      key: "animateView",
 
       /**
        *
@@ -36273,6 +37361,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *                                                                       // easeInQuart, easeOutQuart, easeInOutQuart,
        *                                                                       // easeInQuint, easeOutQuint, easeInOutQuint
        */
+    }, {
+      key: 'animateView',
       value: function animateView(options) {
         if (options === undefined) {
           return;
@@ -36327,13 +37417,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.emitter.emit("_startRendering");
         }
       }
-    }, {
-      key: "_lockedRedraw",
 
       /**
        * used to animate smoothly by hijacking the redraw function.
        * @private
        */
+    }, {
+      key: '_lockedRedraw',
       value: function _lockedRedraw() {
         var nodePosition = { x: this.body.nodes[this.lockedOnNodeId].x, y: this.body.nodes[this.lockedOnNodeId].y };
         var viewCenter = this.canvas.DOMtoCanvas({ x: 0.5 * this.canvas.frame.canvas.clientWidth, y: 0.5 * this.canvas.frame.canvas.clientHeight });
@@ -36350,7 +37440,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.body.view.translation = targetTranslation;
       }
     }, {
-      key: "releaseNode",
+      key: 'releaseNode',
       value: function releaseNode() {
         if (this.lockedOnNodeId !== undefined && this.viewFunction !== undefined) {
           this.body.emitter.off("initRedraw", this.viewFunction);
@@ -36358,14 +37448,14 @@ return /******/ (function(modules) { // webpackBootstrap
           this.lockedOnNodeOffset = undefined;
         }
       }
-    }, {
-      key: "_transitionRedraw",
 
       /**
        *
        * @param easingTime
        * @private
        */
+    }, {
+      key: '_transitionRedraw',
       value: function _transitionRedraw() {
         var finished = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 
@@ -36392,12 +37482,12 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       }
     }, {
-      key: "getScale",
+      key: 'getScale',
       value: function getScale() {
         return this.body.view.scale;
       }
     }, {
-      key: "getViewPosition",
+      key: 'getViewPosition',
       value: function getViewPosition() {
         return this.canvas.DOMtoCanvas({ x: 0.5 * this.canvas.frame.canvas.clientWidth, y: 0.5 * this.canvas.frame.canvas.clientHeight });
       }
@@ -36406,11 +37496,11 @@ return /******/ (function(modules) { // webpackBootstrap
     return View;
   })();
 
-  exports["default"] = View;
-  module.exports = exports["default"];
+  exports['default'] = View;
+  module.exports = exports['default'];
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36425,15 +37515,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var _componentsNavigationHandler = __webpack_require__(105);
+  var _componentsNavigationHandler = __webpack_require__(106);
 
   var _componentsNavigationHandler2 = _interopRequireDefault(_componentsNavigationHandler);
 
-  var _componentsPopup = __webpack_require__(106);
+  var _componentsPopup = __webpack_require__(107);
 
   var _componentsPopup2 = _interopRequireDefault(_componentsPopup);
 
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   var InteractionHandler = (function () {
     function InteractionHandler(body, canvas, selectionHandler) {
@@ -36517,8 +37607,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.navigationHandler.setOptions(this.options);
       }
-    }, {
-      key: 'getPointer',
 
       /**
        * Get the pointer location from a touch location
@@ -36526,20 +37614,22 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {{x: Number, y: Number}} pointer
        * @private
        */
+    }, {
+      key: 'getPointer',
       value: function getPointer(touch) {
         return {
           x: touch.x - util.getAbsoluteLeft(this.canvas.frame.canvas),
           y: touch.y - util.getAbsoluteTop(this.canvas.frame.canvas)
         };
       }
-    }, {
-      key: 'onTouch',
 
       /**
        * On start of a touch gesture, store the pointer
        * @param event
        * @private
        */
+    }, {
+      key: 'onTouch',
       value: function onTouch(event) {
         if (new Date().valueOf() - this.touchTime > 50) {
           this.drag.pointer = this.getPointer(event.center);
@@ -36549,13 +37639,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.touchTime = new Date().valueOf();
         }
       }
-    }, {
-      key: 'onTap',
 
       /**
        * handle tap/click event: select/unselect a node
        * @private
        */
+    }, {
+      key: 'onTap',
       value: function onTap(event) {
         var pointer = this.getPointer(event.center);
         var multiselect = this.selectionHandler.options.multiselect && (event.changedPointers[0].ctrlKey || event.changedPointers[0].metaKey);
@@ -36563,24 +37653,24 @@ return /******/ (function(modules) { // webpackBootstrap
         this.checkSelectionChanges(pointer, event, multiselect);
         this.selectionHandler._generateClickEvent('click', event, pointer);
       }
-    }, {
-      key: 'onDoubleTap',
 
       /**
        * handle doubletap event
        * @private
        */
+    }, {
+      key: 'onDoubleTap',
       value: function onDoubleTap(event) {
         var pointer = this.getPointer(event.center);
         this.selectionHandler._generateClickEvent('doubleClick', event, pointer);
       }
-    }, {
-      key: 'onHold',
 
       /**
        * handle long tap event: multi select nodes
        * @private
        */
+    }, {
+      key: 'onHold',
       value: function onHold(event) {
         var pointer = this.getPointer(event.center);
         var multiselect = this.selectionHandler.options.multiselect;
@@ -36590,14 +37680,14 @@ return /******/ (function(modules) { // webpackBootstrap
         this.selectionHandler._generateClickEvent('click', event, pointer);
         this.selectionHandler._generateClickEvent('hold', event, pointer);
       }
-    }, {
-      key: 'onRelease',
 
       /**
        * handle the release of the screen
        *
        * @private
        */
+    }, {
+      key: 'onRelease',
       value: function onRelease(event) {
         if (new Date().valueOf() - this.touchTime > 10) {
           var pointer = this.getPointer(event.center);
@@ -36612,14 +37702,14 @@ return /******/ (function(modules) { // webpackBootstrap
         var pointer = this.getPointer({ x: event.clientX, y: event.clientY });
         this.selectionHandler._generateClickEvent('oncontext', event, pointer);
       }
-    }, {
-      key: 'checkSelectionChanges',
 
       /**
        *
        * @param pointer
        * @param add
        */
+    }, {
+      key: 'checkSelectionChanges',
       value: function checkSelectionChanges(pointer, event) {
         var add = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
@@ -36641,10 +37731,13 @@ return /******/ (function(modules) { // webpackBootstrap
         var nodesChanges = _determineIfDifferent2.nodesChanges;
         var edgesChanges = _determineIfDifferent2.edgesChanges;
 
+        var nodeSelected = false;
+
         if (selectedNodesCount - previouslySelectedNodeCount > 0) {
           // node was selected
           this.selectionHandler._generateClickEvent('selectNode', event, pointer);
           selected = true;
+          nodeSelected = true;
         } else if (selectedNodesCount - previouslySelectedNodeCount < 0) {
           // node was deselected
           this.selectionHandler._generateClickEvent('deselectNode', event, pointer, previousSelection);
@@ -36652,10 +37745,12 @@ return /******/ (function(modules) { // webpackBootstrap
         } else if (selectedNodesCount === previouslySelectedNodeCount && nodesChanges === true) {
           this.selectionHandler._generateClickEvent('deselectNode', event, pointer, previousSelection);
           this.selectionHandler._generateClickEvent('selectNode', event, pointer);
+          nodeSelected = true;
           selected = true;
         }
 
-        if (selectedEdgesCount - previouslySelectedEdgeCount > 0) {
+        // handle the selected edges
+        if (selectedEdgesCount - previouslySelectedEdgeCount > 0 && nodeSelected === false) {
           // edge was selected
           this.selectionHandler._generateClickEvent('selectEdge', event, pointer);
           selected = true;
@@ -36669,13 +37764,12 @@ return /******/ (function(modules) { // webpackBootstrap
           selected = true;
         }
 
+        // fire the select event if anything has been selected or deselected
         if (selected === true) {
           // select or unselect
           this.selectionHandler._generateClickEvent('select', event, pointer);
         }
       }
-    }, {
-      key: '_determineIfDifferent',
 
       /**
        * This function checks if the nodes and edges previously selected have changed.
@@ -36684,6 +37778,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {{nodesChanges: boolean, edgesChanges: boolean}}
        * @private
        */
+    }, {
+      key: '_determineIfDifferent',
       value: function _determineIfDifferent(previousSelection, currentSelection) {
         var nodesChanges = false;
         var edgesChanges = false;
@@ -36711,8 +37807,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return { nodesChanges: nodesChanges, edgesChanges: edgesChanges };
       }
-    }, {
-      key: 'onDragStart',
 
       /**
        * This function is called by onDragStart.
@@ -36720,6 +37814,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: 'onDragStart',
       value: function onDragStart(event) {
         //in case the touch event was triggered on an external div, do the initial touch now.
         if (this.drag.pointer === undefined) {
@@ -36772,13 +37868,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.selectionHandler._generateClickEvent('dragStart', event, this.drag.pointer, undefined, true);
         }
       }
-    }, {
-      key: 'onDrag',
 
       /**
        * handle drag event
        * @private
        */
+    }, {
+      key: 'onDrag',
       value: function onDrag(event) {
         var _this2 = this;
 
@@ -36834,13 +37930,13 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'onDragEnd',
 
       /**
        * handle drag start event
        * @private
        */
+    }, {
+      key: 'onDragEnd',
       value: function onDragEnd(event) {
         this.drag.dragging = false;
         var selection = this.drag.selection;
@@ -36857,14 +37953,14 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.emitter.emit('_requestRedraw');
         }
       }
-    }, {
-      key: 'onPinch',
 
       /**
        * Handle pinch event
        * @param event
        * @private
        */
+    }, {
+      key: 'onPinch',
       value: function onPinch(event) {
         var pointer = this.getPointer(event.center);
 
@@ -36877,8 +37973,6 @@ return /******/ (function(modules) { // webpackBootstrap
         var scale = this.pinch.scale * event.scale;
         this.zoom(scale, pointer);
       }
-    }, {
-      key: 'zoom',
 
       /**
        * Zoom the network in or out
@@ -36887,6 +37981,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {Number} appliedScale    scale is limited within the boundaries
        * @private
        */
+    }, {
+      key: 'zoom',
       value: function zoom(scale, pointer) {
         if (this.options.zoomView === true) {
           var scaleOld = this.body.view.scale;
@@ -36928,8 +38024,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'onMouseWheel',
 
       /**
        * Event handler for mouse wheel event, used to zoom the timeline
@@ -36938,6 +38032,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {MouseEvent}  event
        * @private
        */
+    }, {
+      key: 'onMouseWheel',
       value: function onMouseWheel(event) {
         // retrieve delta
         var delta = 0;
@@ -36974,14 +38070,14 @@ return /******/ (function(modules) { // webpackBootstrap
         // Prevent default actions caused by mouse wheel.
         event.preventDefault();
       }
-    }, {
-      key: 'onMouseMove',
 
       /**
        * Mouse move handler for checking whether the title moves over a node with a title.
        * @param  {Event} event
        * @private
        */
+    }, {
+      key: 'onMouseMove',
       value: function onMouseMove(event) {
         var _this3 = this;
 
@@ -37032,8 +38128,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this.selectionHandler.hoverObject(obj);
         }
       }
-    }, {
-      key: '_checkShowPopup',
 
       /**
        * Check if there is an element on the given position in the network
@@ -37043,6 +38137,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {{x:Number, y:Number}} pointer
        * @private
        */
+    }, {
+      key: '_checkShowPopup',
       value: function _checkShowPopup(pointer) {
         var x = this.canvas._XconvertDOMtoCanvas(pointer.x);
         var y = this.canvas._YconvertDOMtoCanvas(pointer.y);
@@ -37127,8 +38223,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: '_checkHidePopup',
 
       /**
        * Check if the popup must be hidden, which is the case when the mouse is no
@@ -37136,6 +38230,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {{x:Number, y:Number}} pointer
        * @private
        */
+    }, {
+      key: '_checkHidePopup',
       value: function _checkHidePopup(pointer) {
         var pointerObj = this.selectionHandler._pointerToPositionObject(pointer);
 
@@ -37174,7 +38270,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -37187,9 +38283,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var util = __webpack_require__(7);
-  var Hammer = __webpack_require__(3);
-  var hammerUtil = __webpack_require__(27);
+  var util = __webpack_require__(1);
+  var Hammer = __webpack_require__(20);
+  var hammerUtil = __webpack_require__(25);
   var keycharm = __webpack_require__(41);
 
   var NavigationHandler = (function () {
@@ -37207,13 +38303,13 @@ return /******/ (function(modules) { // webpackBootstrap
       this.touchTime = 0;
       this.activated = false;
 
-      this.body.emitter.on('activate', function () {
+      this.body.emitter.on("activate", function () {
         _this.activated = true;_this.configureKeyboardBindings();
       });
-      this.body.emitter.on('deactivate', function () {
+      this.body.emitter.on("deactivate", function () {
         _this.activated = false;_this.configureKeyboardBindings();
       });
-      this.body.emitter.on('destroy', function () {
+      this.body.emitter.on("destroy", function () {
         if (_this.keycharm !== undefined) {
           _this.keycharm.destroy();
         }
@@ -37261,8 +38357,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.iconsCreated = false;
       }
-    }, {
-      key: 'loadNavigationElements',
 
       /**
        * Creation of the navigation controls nodes. They are drawn over the rest of the nodes and are not affected by scale and translation
@@ -37272,6 +38366,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: 'loadNavigationElements',
       value: function loadNavigationElements() {
         var _this2 = this;
 
@@ -37291,7 +38387,7 @@ return /******/ (function(modules) { // webpackBootstrap
           this.navigationDOM['wrapper'].appendChild(this.navigationDOM[navigationDivs[i]]);
 
           var hammer = new Hammer(this.navigationDOM[navigationDivs[i]]);
-          if (navigationDivActions[i] === '_fit') {
+          if (navigationDivActions[i] === "_fit") {
             hammerUtil.onTouch(hammer, this._fit.bind(this));
           } else {
             hammerUtil.onTouch(hammer, this.bindToRedraw.bind(this, navigationDivActions[i]));
@@ -37315,47 +38411,47 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function bindToRedraw(action) {
         if (this.boundFunctions[action] === undefined) {
           this.boundFunctions[action] = this[action].bind(this);
-          this.body.emitter.on('initRedraw', this.boundFunctions[action]);
-          this.body.emitter.emit('_startRendering');
+          this.body.emitter.on("initRedraw", this.boundFunctions[action]);
+          this.body.emitter.emit("_startRendering");
         }
       }
     }, {
       key: 'unbindFromRedraw',
       value: function unbindFromRedraw(action) {
         if (this.boundFunctions[action] !== undefined) {
-          this.body.emitter.off('initRedraw', this.boundFunctions[action]);
-          this.body.emitter.emit('_stopRendering');
+          this.body.emitter.off("initRedraw", this.boundFunctions[action]);
+          this.body.emitter.emit("_stopRendering");
           delete this.boundFunctions[action];
         }
       }
-    }, {
-      key: '_fit',
 
       /**
        * this stops all movement induced by the navigation buttons
        *
        * @private
        */
+    }, {
+      key: '_fit',
       value: function _fit() {
         if (new Date().valueOf() - this.touchTime > 700) {
           // TODO: fix ugly hack to avoid hammer's double fireing of event (because we use release?)
-          this.body.emitter.emit('fit', { duration: 700 });
+          this.body.emitter.emit("fit", { duration: 700 });
           this.touchTime = new Date().valueOf();
         }
       }
-    }, {
-      key: '_stopMovement',
 
       /**
        * this stops all movement induced by the navigation buttons
        *
        * @private
        */
+    }, {
+      key: '_stopMovement',
       value: function _stopMovement() {
         for (var boundAction in this.boundFunctions) {
           if (this.boundFunctions.hasOwnProperty(boundAction)) {
-            this.body.emitter.off('initRedraw', this.boundFunctions[boundAction]);
-            this.body.emitter.emit('_stopRendering');
+            this.body.emitter.off("initRedraw", this.boundFunctions[boundAction]);
+            this.body.emitter.emit("_stopRendering");
           }
         }
         this.boundFunctions = {};
@@ -37392,12 +38488,12 @@ return /******/ (function(modules) { // webpackBootstrap
         this.body.view.scale /= 1 + this.options.keyboard.speed.zoom;
         this.body.emitter.emit('zoom', { direction: '-', scale: this.body.view.scale });
       }
-    }, {
-      key: 'configureKeyboardBindings',
 
       /**
        * bind all keys using keycharm.
        */
+    }, {
+      key: 'configureKeyboardBindings',
       value: function configureKeyboardBindings() {
         var _this3 = this;
 
@@ -37415,79 +38511,79 @@ return /******/ (function(modules) { // webpackBootstrap
           this.keycharm.reset();
 
           if (this.activated === true) {
-            this.keycharm.bind('up', function () {
-              _this3.bindToRedraw('_moveUp');
-            }, 'keydown');
-            this.keycharm.bind('down', function () {
-              _this3.bindToRedraw('_moveDown');
-            }, 'keydown');
-            this.keycharm.bind('left', function () {
-              _this3.bindToRedraw('_moveLeft');
-            }, 'keydown');
-            this.keycharm.bind('right', function () {
-              _this3.bindToRedraw('_moveRight');
-            }, 'keydown');
-            this.keycharm.bind('=', function () {
-              _this3.bindToRedraw('_zoomIn');
-            }, 'keydown');
-            this.keycharm.bind('num+', function () {
-              _this3.bindToRedraw('_zoomIn');
-            }, 'keydown');
-            this.keycharm.bind('num-', function () {
-              _this3.bindToRedraw('_zoomOut');
-            }, 'keydown');
-            this.keycharm.bind('-', function () {
-              _this3.bindToRedraw('_zoomOut');
-            }, 'keydown');
-            this.keycharm.bind('[', function () {
-              _this3.bindToRedraw('_zoomOut');
-            }, 'keydown');
-            this.keycharm.bind(']', function () {
-              _this3.bindToRedraw('_zoomIn');
-            }, 'keydown');
-            this.keycharm.bind('pageup', function () {
-              _this3.bindToRedraw('_zoomIn');
-            }, 'keydown');
-            this.keycharm.bind('pagedown', function () {
-              _this3.bindToRedraw('_zoomOut');
-            }, 'keydown');
+            this.keycharm.bind("up", function () {
+              _this3.bindToRedraw("_moveUp");
+            }, "keydown");
+            this.keycharm.bind("down", function () {
+              _this3.bindToRedraw("_moveDown");
+            }, "keydown");
+            this.keycharm.bind("left", function () {
+              _this3.bindToRedraw("_moveLeft");
+            }, "keydown");
+            this.keycharm.bind("right", function () {
+              _this3.bindToRedraw("_moveRight");
+            }, "keydown");
+            this.keycharm.bind("=", function () {
+              _this3.bindToRedraw("_zoomIn");
+            }, "keydown");
+            this.keycharm.bind("num+", function () {
+              _this3.bindToRedraw("_zoomIn");
+            }, "keydown");
+            this.keycharm.bind("num-", function () {
+              _this3.bindToRedraw("_zoomOut");
+            }, "keydown");
+            this.keycharm.bind("-", function () {
+              _this3.bindToRedraw("_zoomOut");
+            }, "keydown");
+            this.keycharm.bind("[", function () {
+              _this3.bindToRedraw("_zoomOut");
+            }, "keydown");
+            this.keycharm.bind("]", function () {
+              _this3.bindToRedraw("_zoomIn");
+            }, "keydown");
+            this.keycharm.bind("pageup", function () {
+              _this3.bindToRedraw("_zoomIn");
+            }, "keydown");
+            this.keycharm.bind("pagedown", function () {
+              _this3.bindToRedraw("_zoomOut");
+            }, "keydown");
 
-            this.keycharm.bind('up', function () {
-              _this3.unbindFromRedraw('_moveUp');
-            }, 'keyup');
-            this.keycharm.bind('down', function () {
-              _this3.unbindFromRedraw('_moveDown');
-            }, 'keyup');
-            this.keycharm.bind('left', function () {
-              _this3.unbindFromRedraw('_moveLeft');
-            }, 'keyup');
-            this.keycharm.bind('right', function () {
-              _this3.unbindFromRedraw('_moveRight');
-            }, 'keyup');
-            this.keycharm.bind('=', function () {
-              _this3.unbindFromRedraw('_zoomIn');
-            }, 'keyup');
-            this.keycharm.bind('num+', function () {
-              _this3.unbindFromRedraw('_zoomIn');
-            }, 'keyup');
-            this.keycharm.bind('num-', function () {
-              _this3.unbindFromRedraw('_zoomOut');
-            }, 'keyup');
-            this.keycharm.bind('-', function () {
-              _this3.unbindFromRedraw('_zoomOut');
-            }, 'keyup');
-            this.keycharm.bind('[', function () {
-              _this3.unbindFromRedraw('_zoomOut');
-            }, 'keyup');
-            this.keycharm.bind(']', function () {
-              _this3.unbindFromRedraw('_zoomIn');
-            }, 'keyup');
-            this.keycharm.bind('pageup', function () {
-              _this3.unbindFromRedraw('_zoomIn');
-            }, 'keyup');
-            this.keycharm.bind('pagedown', function () {
-              _this3.unbindFromRedraw('_zoomOut');
-            }, 'keyup');
+            this.keycharm.bind("up", function () {
+              _this3.unbindFromRedraw("_moveUp");
+            }, "keyup");
+            this.keycharm.bind("down", function () {
+              _this3.unbindFromRedraw("_moveDown");
+            }, "keyup");
+            this.keycharm.bind("left", function () {
+              _this3.unbindFromRedraw("_moveLeft");
+            }, "keyup");
+            this.keycharm.bind("right", function () {
+              _this3.unbindFromRedraw("_moveRight");
+            }, "keyup");
+            this.keycharm.bind("=", function () {
+              _this3.unbindFromRedraw("_zoomIn");
+            }, "keyup");
+            this.keycharm.bind("num+", function () {
+              _this3.unbindFromRedraw("_zoomIn");
+            }, "keyup");
+            this.keycharm.bind("num-", function () {
+              _this3.unbindFromRedraw("_zoomOut");
+            }, "keyup");
+            this.keycharm.bind("-", function () {
+              _this3.unbindFromRedraw("_zoomOut");
+            }, "keyup");
+            this.keycharm.bind("[", function () {
+              _this3.unbindFromRedraw("_zoomOut");
+            }, "keyup");
+            this.keycharm.bind("]", function () {
+              _this3.unbindFromRedraw("_zoomIn");
+            }, "keyup");
+            this.keycharm.bind("pageup", function () {
+              _this3.unbindFromRedraw("_zoomIn");
+            }, "keyup");
+            this.keycharm.bind("pagedown", function () {
+              _this3.unbindFromRedraw("_zoomOut");
+            }, "keyup");
           }
         }
       }
@@ -37500,7 +38596,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 106 */
+/* 107 */
 /***/ function(module, exports) {
 
   /**
@@ -37539,24 +38635,24 @@ return /******/ (function(modules) { // webpackBootstrap
       this.container.appendChild(this.frame);
     }
 
+    /**
+     * @param {number} x   Horizontal position of the popup window
+     * @param {number} y   Vertical position of the popup window
+     */
+
     _createClass(Popup, [{
       key: 'setPosition',
-
-      /**
-       * @param {number} x   Horizontal position of the popup window
-       * @param {number} y   Vertical position of the popup window
-       */
       value: function setPosition(x, y) {
         this.x = parseInt(x);
         this.y = parseInt(y);
       }
-    }, {
-      key: 'setText',
 
       /**
        * Set the content for the popup window. This can be HTML code or text.
        * @param {string | Element} content
        */
+    }, {
+      key: 'setText',
       value: function setText(content) {
         if (content instanceof Element) {
           this.frame.innerHTML = '';
@@ -37565,13 +38661,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.frame.innerHTML = content; // string containing text or HTML
         }
       }
-    }, {
-      key: 'show',
 
       /**
        * Show the popup window
        * @param {boolean} [doShow]    Show or hide the window
        */
+    }, {
+      key: 'show',
       value: function show(doShow) {
         if (doShow === undefined) {
           doShow = true;
@@ -37599,23 +38695,23 @@ return /******/ (function(modules) { // webpackBootstrap
             left = this.padding;
           }
 
-          this.frame.style.left = left + 'px';
-          this.frame.style.top = top + 'px';
-          this.frame.style.visibility = 'visible';
+          this.frame.style.left = left + "px";
+          this.frame.style.top = top + "px";
+          this.frame.style.visibility = "visible";
           this.hidden = false;
         } else {
           this.hide();
         }
       }
-    }, {
-      key: 'hide',
 
       /**
        * Hide the popup window
        */
+    }, {
+      key: 'hide',
       value: function hide() {
         this.hidden = true;
-        this.frame.style.visibility = 'hidden';
+        this.frame.style.visibility = "hidden";
       }
     }]);
 
@@ -37626,7 +38722,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -37641,7 +38737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var Node = __webpack_require__(62);
   var Edge = __webpack_require__(82);
-  var util = __webpack_require__(7);
+  var util = __webpack_require__(1);
 
   var SelectionHandler = (function () {
     function SelectionHandler(body, canvas) {
@@ -37672,12 +38768,10 @@ return /******/ (function(modules) { // webpackBootstrap
       key: "setOptions",
       value: function setOptions(options) {
         if (options !== undefined) {
-          var fields = ["multiselect", "hoverConnectedEdges", "selectable", "selectConnectedEdges"];
+          var fields = ['multiselect', 'hoverConnectedEdges', 'selectable', 'selectConnectedEdges'];
           util.selectiveDeepExtend(fields, this.options, options);
         }
       }
-    }, {
-      key: "selectOnPoint",
 
       /**
        * handles the selection part of the tap;
@@ -37685,6 +38779,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Object} pointer
        * @private
        */
+    }, {
+      key: "selectOnPoint",
       value: function selectOnPoint(pointer) {
         var selected = false;
         if (this.options.selectable === true) {
@@ -37731,14 +38827,14 @@ return /******/ (function(modules) { // webpackBootstrap
         } else {
           properties = this.getSelection();
         }
-        properties["pointer"] = {
+        properties['pointer'] = {
           DOM: { x: pointer.x, y: pointer.y },
           canvas: this.canvas.DOMtoCanvas(pointer)
         };
-        properties["event"] = event;
+        properties['event'] = event;
 
         if (oldSelection !== undefined) {
-          properties["previousSelection"] = oldSelection;
+          properties['previousSelection'] = oldSelection;
         }
         this.body.emitter.emit(eventType, properties);
       }
@@ -37767,8 +38863,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this._removeFromSelection(obj);
         }
       }
-    }, {
-      key: "_getAllNodesOverlappingWith",
 
       /**
        * retrieve all nodes overlapping with given object
@@ -37776,6 +38870,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {Number[]}   An array with id's of the overlapping nodes
        * @private
        */
+    }, {
+      key: "_getAllNodesOverlappingWith",
       value: function _getAllNodesOverlappingWith(object) {
         var overlappingNodes = [];
         var nodes = this.body.nodes;
@@ -37787,8 +38883,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return overlappingNodes;
       }
-    }, {
-      key: "_pointerToPositionObject",
 
       /**
        * Return a position object in canvasspace from a single point in screenspace
@@ -37797,6 +38891,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {{left: number, top: number, right: number, bottom: number}}
        * @private
        */
+    }, {
+      key: "_pointerToPositionObject",
       value: function _pointerToPositionObject(pointer) {
         var canvasPos = this.canvas.DOMtoCanvas(pointer);
         return {
@@ -37806,16 +38902,15 @@ return /******/ (function(modules) { // webpackBootstrap
           bottom: canvasPos.y - 1
         };
       }
-    }, {
-      key: "getNodeAt",
 
       /**
        * Get the top node at the a specific point (like a click)
        *
        * @param {{x: Number, y: Number}} pointer
        * @return {Node | undefined} node
-       * @private
        */
+    }, {
+      key: "getNodeAt",
       value: function getNodeAt(pointer) {
         var returnNode = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
@@ -37834,8 +38929,6 @@ return /******/ (function(modules) { // webpackBootstrap
           return undefined;
         }
       }
-    }, {
-      key: "_getEdgesOverlappingWith",
 
       /**
        * retrieve all edges overlapping with given object, selector is around center
@@ -37843,6 +38936,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {Number[]}   An array with id's of the overlapping nodes
        * @private
        */
+    }, {
+      key: "_getEdgesOverlappingWith",
       value: function _getEdgesOverlappingWith(object, overlappingEdges) {
         var edges = this.body.edges;
         for (var i = 0; i < this.body.edgeIndices.length; i++) {
@@ -37852,8 +38947,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: "_getAllEdgesOverlappingWith",
 
       /**
        * retrieve all nodes overlapping with given object
@@ -37861,13 +38954,13 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {Number[]}   An array with id's of the overlapping nodes
        * @private
        */
+    }, {
+      key: "_getAllEdgesOverlappingWith",
       value: function _getAllEdgesOverlappingWith(object) {
         var overlappingEdges = [];
         this._getEdgesOverlappingWith(object, overlappingEdges);
         return overlappingEdges;
       }
-    }, {
-      key: "getEdgeAt",
 
       /**
        * Place holder. To implement change the getNodeAt to a _getObjectAt. Have the _getObjectAt call
@@ -37875,8 +38968,9 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @param pointer
        * @returns {undefined}
-       * @private
        */
+    }, {
+      key: "getEdgeAt",
       value: function getEdgeAt(pointer) {
         var returnEdge = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
@@ -37893,8 +38987,6 @@ return /******/ (function(modules) { // webpackBootstrap
           return undefined;
         }
       }
-    }, {
-      key: "_addToSelection",
 
       /**
        * Add object to the selection array.
@@ -37902,6 +38994,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param obj
        * @private
        */
+    }, {
+      key: "_addToSelection",
       value: function _addToSelection(obj) {
         if (obj instanceof Node) {
           this.selectionObj.nodes[obj.id] = obj;
@@ -37909,8 +39003,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this.selectionObj.edges[obj.id] = obj;
         }
       }
-    }, {
-      key: "_addToHover",
 
       /**
        * Add object to the selection array.
@@ -37918,6 +39010,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param obj
        * @private
        */
+    }, {
+      key: "_addToHover",
       value: function _addToHover(obj) {
         if (obj instanceof Node) {
           this.hoverObj.nodes[obj.id] = obj;
@@ -37925,8 +39019,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this.hoverObj.edges[obj.id] = obj;
         }
       }
-    }, {
-      key: "_removeFromSelection",
 
       /**
        * Remove a single option from selection.
@@ -37934,21 +39026,22 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Object} obj
        * @private
        */
+    }, {
+      key: "_removeFromSelection",
       value: function _removeFromSelection(obj) {
         if (obj instanceof Node) {
           delete this.selectionObj.nodes[obj.id];
+          this._unselectConnectedEdges(obj);
         } else {
           delete this.selectionObj.edges[obj.id];
         }
       }
-    }, {
-      key: "unselectAll",
 
       /**
        * Unselect all. The selectionObj is useful for this.
-       *
-       * @private
        */
+    }, {
+      key: "unselectAll",
       value: function unselectAll() {
         for (var nodeId in this.selectionObj.nodes) {
           if (this.selectionObj.nodes.hasOwnProperty(nodeId)) {
@@ -37963,8 +39056,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.selectionObj = { nodes: {}, edges: {} };
       }
-    }, {
-      key: "_getSelectedNodeCount",
 
       /**
        * return the number of selected nodes
@@ -37972,6 +39063,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: "_getSelectedNodeCount",
       value: function _getSelectedNodeCount() {
         var count = 0;
         for (var nodeId in this.selectionObj.nodes) {
@@ -37981,8 +39074,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return count;
       }
-    }, {
-      key: "_getSelectedNode",
 
       /**
        * return the selected node
@@ -37990,6 +39081,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: "_getSelectedNode",
       value: function _getSelectedNode() {
         for (var nodeId in this.selectionObj.nodes) {
           if (this.selectionObj.nodes.hasOwnProperty(nodeId)) {
@@ -37998,8 +39091,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return undefined;
       }
-    }, {
-      key: "_getSelectedEdge",
 
       /**
        * return the selected edge
@@ -38007,6 +39098,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: "_getSelectedEdge",
       value: function _getSelectedEdge() {
         for (var edgeId in this.selectionObj.edges) {
           if (this.selectionObj.edges.hasOwnProperty(edgeId)) {
@@ -38015,8 +39108,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return undefined;
       }
-    }, {
-      key: "_getSelectedEdgeCount",
 
       /**
        * return the number of selected edges
@@ -38024,6 +39115,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: "_getSelectedEdgeCount",
       value: function _getSelectedEdgeCount() {
         var count = 0;
         for (var edgeId in this.selectionObj.edges) {
@@ -38033,8 +39126,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return count;
       }
-    }, {
-      key: "_getSelectedObjectCount",
 
       /**
        * return the number of selected objects.
@@ -38042,6 +39133,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: "_getSelectedObjectCount",
       value: function _getSelectedObjectCount() {
         var count = 0;
         for (var nodeId in this.selectionObj.nodes) {
@@ -38056,8 +39149,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return count;
       }
-    }, {
-      key: "_selectionIsEmpty",
 
       /**
        * Check if anything is selected
@@ -38065,6 +39156,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {boolean}
        * @private
        */
+    }, {
+      key: "_selectionIsEmpty",
       value: function _selectionIsEmpty() {
         for (var nodeId in this.selectionObj.nodes) {
           if (this.selectionObj.nodes.hasOwnProperty(nodeId)) {
@@ -38078,8 +39171,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return true;
       }
-    }, {
-      key: "_clusterInSelection",
 
       /**
        * check if one of the selected nodes is a cluster.
@@ -38087,6 +39178,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {boolean}
        * @private
        */
+    }, {
+      key: "_clusterInSelection",
       value: function _clusterInSelection() {
         for (var nodeId in this.selectionObj.nodes) {
           if (this.selectionObj.nodes.hasOwnProperty(nodeId)) {
@@ -38097,8 +39190,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return false;
       }
-    }, {
-      key: "_selectConnectedEdges",
 
       /**
        * select the edges connected to the node that is being selected
@@ -38106,6 +39197,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Node} node
        * @private
        */
+    }, {
+      key: "_selectConnectedEdges",
       value: function _selectConnectedEdges(node) {
         for (var i = 0; i < node.edges.length; i++) {
           var edge = node.edges[i];
@@ -38113,8 +39206,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this._addToSelection(edge);
         }
       }
-    }, {
-      key: "_hoverConnectedEdges",
 
       /**
        * select the edges connected to the node that is being selected
@@ -38122,6 +39213,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Node} node
        * @private
        */
+    }, {
+      key: "_hoverConnectedEdges",
       value: function _hoverConnectedEdges(node) {
         for (var i = 0; i < node.edges.length; i++) {
           var edge = node.edges[i];
@@ -38129,8 +39222,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this._addToHover(edge);
         }
       }
-    }, {
-      key: "_unselectConnectedEdges",
 
       /**
        * unselect the edges connected to the node that is being selected
@@ -38138,6 +39229,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Node} node
        * @private
        */
+    }, {
+      key: "_unselectConnectedEdges",
       value: function _unselectConnectedEdges(node) {
         for (var i = 0; i < node.edges.length; i++) {
           var edge = node.edges[i];
@@ -38145,8 +39238,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this._removeFromSelection(edge);
         }
       }
-    }, {
-      key: "blurObject",
 
       /**
        * This is called when someone clicks on a node. either select or deselect it.
@@ -38155,6 +39246,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Node || Edge} object
        * @private
        */
+    }, {
+      key: "blurObject",
       value: function blurObject(object) {
         if (object.hover === true) {
           object.hover = false;
@@ -38165,8 +39258,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: "hoverObject",
 
       /**
        * This is called when someone clicks on a node. either select or deselect it.
@@ -38175,6 +39266,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Node || Edge} object
        * @private
        */
+    }, {
+      key: "hoverObject",
       value: function hoverObject(object) {
         var hoverChanged = false;
         // remove all node hover highlights
@@ -38199,10 +39292,10 @@ return /******/ (function(modules) { // webpackBootstrap
             }
             // if the blur remains the same and the object is undefined (mouse off), we blur the edge
             else if (object === undefined) {
-              this.blurObject(this.hoverObj.edges[edgeId]);
-              delete this.hoverObj.edges[edgeId];
-              hoverChanged = true;
-            }
+                this.blurObject(this.hoverObj.edges[edgeId]);
+                delete this.hoverObj.edges[edgeId];
+                hoverChanged = true;
+              }
           }
         }
 
@@ -38223,24 +39316,22 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         if (hoverChanged === true) {
-          this.body.emitter.emit("_requestRedraw");
+          this.body.emitter.emit('_requestRedraw');
         }
       }
-    }, {
-      key: "getSelection",
 
       /**
        *
        * retrieve the currently selected objects
        * @return {{nodes: Array.<String>, edges: Array.<String>}} selection
        */
+    }, {
+      key: "getSelection",
       value: function getSelection() {
         var nodeIds = this.getSelectedNodes();
         var edgeIds = this.getSelectedEdges();
         return { nodes: nodeIds, edges: edgeIds };
       }
-    }, {
-      key: "getSelectedNodes",
 
       /**
        *
@@ -38248,6 +39339,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {String[]} selection    An array with the ids of the
        *                                            selected nodes.
        */
+    }, {
+      key: "getSelectedNodes",
       value: function getSelectedNodes() {
         var idArray = [];
         if (this.options.selectable === true) {
@@ -38259,8 +39352,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return idArray;
       }
-    }, {
-      key: "getSelectedEdges",
 
       /**
        *
@@ -38268,6 +39359,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @return {Array} selection    An array with the ids of the
        *                                            selected nodes.
        */
+    }, {
+      key: "getSelectedEdges",
       value: function getSelectedEdges() {
         var idArray = [];
         if (this.options.selectable === true) {
@@ -38279,8 +39372,51 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return idArray;
       }
+
+      /**
+       * Updates the current selection
+       * @param {{nodes: Array.<String>, edges: Array.<String>}} Selection
+       * @param {Object} options                                 Options
+       */
     }, {
-      key: "selectNodes",
+      key: "setSelection",
+      value: function setSelection(selection) {
+        var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+        var i = undefined,
+            id = undefined;
+
+        if (!selection || !selection.nodes && !selection.edges) throw 'Selection must be an object with nodes and/or edges properties';
+        // first unselect any selected node, if option is true or undefined
+        if (options.unselectAll || options.unselectAll === undefined) {
+          this.unselectAll();
+        }
+        if (selection.nodes) {
+          for (i = 0; i < selection.nodes.length; i++) {
+            id = selection.nodes[i];
+
+            var node = this.body.nodes[id];
+            if (!node) {
+              throw new RangeError('Node with id "' + id + '" not found');
+            }
+            // don't select edges with it
+            this.selectObject(node, options.highlightEdges);
+          }
+        }
+
+        if (selection.edges) {
+          for (i = 0; i < selection.edges.length; i++) {
+            id = selection.edges[i];
+
+            var edge = this.body.edges[id];
+            if (!edge) {
+              throw new RangeError('Edge with id "' + id + '" not found');
+            }
+            this.selectObject(edge);
+          }
+        }
+        this.body.emitter.emit('_requestRedraw');
+      }
 
       /**
        * select zero or more nodes with the option to highlight edges
@@ -38288,63 +39424,35 @@ return /******/ (function(modules) { // webpackBootstrap
        *                                            selected nodes.
        * @param {boolean} [highlightEdges]
        */
+    }, {
+      key: "selectNodes",
       value: function selectNodes(selection) {
         var highlightEdges = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
-        var i = undefined,
-            id = undefined;
+        if (!selection || selection.length === undefined) throw 'Selection must be an array with ids';
 
-        if (!selection || selection.length === undefined) throw "Selection must be an array with ids";
-
-        // first unselect any selected node
-        this.unselectAll();
-
-        for (i = 0; i < selection.length; i++) {
-          id = selection[i];
-
-          var node = this.body.nodes[id];
-          if (!node) {
-            throw new RangeError("Node with id \"" + id + "\" not found");
-          }
-          this.selectObject(node, highlightEdges);
-        }
-        this.body.emitter.emit("_requestRedraw");
+        this.setSelection({ nodes: selection }, { highlightEdges: highlightEdges });
       }
-    }, {
-      key: "selectEdges",
 
       /**
        * select zero or more edges
        * @param {Number[] | String[]} selection     An array with the ids of the
        *                                            selected nodes.
        */
-      value: function selectEdges(selection) {
-        var i = undefined,
-            id = undefined;
-
-        if (!selection || selection.length === undefined) throw "Selection must be an array with ids";
-
-        // first unselect any selected objects
-        this.unselectAll();
-
-        for (i = 0; i < selection.length; i++) {
-          id = selection[i];
-
-          var edge = this.body.edges[id];
-          if (!edge) {
-            throw new RangeError("Edge with id \"" + id + "\" not found");
-          }
-          this.selectObject(edge);
-        }
-        this.body.emitter.emit("_requestRedraw");
-      }
     }, {
-      key: "updateSelection",
+      key: "selectEdges",
+      value: function selectEdges(selection) {
+        if (!selection || selection.length === undefined) throw 'Selection must be an array with ids';
+
+        this.setSelection({ edges: selection });
+      }
 
       /**
        * Validate the selection: remove ids of nodes which no longer exist
        * @private
        */
+    }, {
+      key: "updateSelection",
       value: function updateSelection() {
         for (var nodeId in this.selectionObj.nodes) {
           if (this.selectionObj.nodes.hasOwnProperty(nodeId)) {
@@ -38370,7 +39478,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports["default"];
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38381,9 +39489,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var util = __webpack_require__(7);
+  var _NetworkUtil = __webpack_require__(100);
+
+  var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
+
+  var util = __webpack_require__(1);
 
   var LayoutEngine = (function () {
     function LayoutEngine(body) {
@@ -38398,6 +39512,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       this.defaultOptions = {
         randomSeed: undefined,
+        improvedLayout: true,
         hierarchical: {
           enabled: false,
           levelSeparation: 150,
@@ -38407,7 +39522,9 @@ return /******/ (function(modules) { // webpackBootstrap
       };
       util.extend(this.options, this.defaultOptions);
 
-      this.hierarchicalLevels = {};
+      this.lastNodeOnLevel = {};
+      this.hierarchicalParents = {};
+      this.hierarchicalChildren = {};
 
       this.bindEventListeners();
     }
@@ -38420,6 +39537,9 @@ return /******/ (function(modules) { // webpackBootstrap
         this.body.emitter.on('_dataChanged', function () {
           _this.setupHierarchicalLayout();
         });
+        this.body.emitter.on('_dataLoaded', function () {
+          _this.layoutNetwork();
+        });
         this.body.emitter.on('_resetHierarchicalLayout', function () {
           _this.setupHierarchicalLayout();
         });
@@ -38429,7 +39549,7 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function setOptions(options, allOptions) {
         if (options !== undefined) {
           var prevHierarchicalState = this.options.hierarchical.enabled;
-
+          util.selectiveDeepExtend(["randomSeed", "improvedLayout"], this.options, options);
           util.mergeOptions(this.options, options, 'hierarchical');
           if (options.randomSeed !== undefined) {
             this.initialRandomSeed = options.randomSeed;
@@ -38454,7 +39574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
             this.body.emitter.emit('_resetHierarchicalLayout');
             // because the hierarchical system needs it's own physics and smooth curve settings, we adapt the other options if needed.
-            return this.adaptAllOptions(allOptions);
+            return this.adaptAllOptionsForHierarchicalLayout(allOptions);
           } else {
             if (prevHierarchicalState === true) {
               // refresh the overridden options for nodes and edges.
@@ -38466,8 +39586,8 @@ return /******/ (function(modules) { // webpackBootstrap
         return allOptions;
       }
     }, {
-      key: 'adaptAllOptions',
-      value: function adaptAllOptions(allOptions) {
+      key: 'adaptAllOptionsForHierarchicalLayout',
+      value: function adaptAllOptionsForHierarchicalLayout(allOptions) {
         if (this.options.hierarchical.enabled === true) {
           // set the physics
           if (allOptions.physics === undefined || allOptions.physics === true) {
@@ -38551,13 +39671,115 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
+
+      /**
+       * Use KamadaKawai to position nodes. This is quite a heavy algorithm so if there are a lot of nodes we
+       * cluster them first to reduce the amount.
+       */
+    }, {
+      key: 'layoutNetwork',
+      value: function layoutNetwork() {
+        if (this.options.hierarchical.enabled !== true && this.options.improvedLayout === true) {
+          // first check if we should KamadaKawai to layout. The threshold is if less than half of the visible
+          // nodes have predefined positions we use this.
+          var positionDefined = 0;
+          for (var i = 0; i < this.body.nodeIndices.length; i++) {
+            var node = this.body.nodes[this.body.nodeIndices[i]];
+            if (node.predefinedPosition === true) {
+              positionDefined += 1;
+            }
+          }
+
+          // if less than half of the nodes have a predefined position we continue
+          if (positionDefined < 0.5 * this.body.nodeIndices.length) {
+            var MAX_LEVELS = 10;
+            var level = 0;
+            var clusterThreshold = 100;
+            // if there are a lot of nodes, we cluster before we run the algorithm.
+            if (this.body.nodeIndices.length > clusterThreshold) {
+              var startLength = this.body.nodeIndices.length;
+              while (this.body.nodeIndices.length > clusterThreshold) {
+                //console.time("clustering")
+                level += 1;
+                var before = this.body.nodeIndices.length;
+                // if there are many nodes we do a hubsize cluster
+                if (level % 3 === 0) {
+                  this.body.modules.clustering.clusterBridges();
+                } else {
+                  this.body.modules.clustering.clusterOutliers();
+                }
+                var after = this.body.nodeIndices.length;
+                if (before == after && level % 3 !== 0 || level > MAX_LEVELS) {
+                  this._declusterAll();
+                  this.body.emitter.emit("_layoutFailed");
+                  console.info("This network could not be positioned by this version of the improved layout algorithm. Please disable improvedLayout for better performance.");
+                  return;
+                }
+                //console.timeEnd("clustering")
+                //console.log(level,after)
+              }
+              // increase the size of the edges
+              this.body.modules.kamadaKawai.setOptions({ springLength: Math.max(150, 2 * startLength) });
+            }
+
+            // position the system for these nodes and edges
+            this.body.modules.kamadaKawai.solve(this.body.nodeIndices, this.body.edgeIndices, true);
+
+            // shift to center point
+            this._shiftToCenter();
+
+            // perturb the nodes a little bit to force the physics to kick in
+            var offset = 70;
+            for (var i = 0; i < this.body.nodeIndices.length; i++) {
+              this.body.nodes[this.body.nodeIndices[i]].x += (0.5 - this.seededRandom()) * offset;
+              this.body.nodes[this.body.nodeIndices[i]].y += (0.5 - this.seededRandom()) * offset;
+            }
+
+            // uncluster all clusters
+            this._declusterAll();
+
+            // reposition all bezier nodes.
+            this.body.emitter.emit("_repositionBezierNodes");
+          }
+        }
+      }
+
+      /**
+       * Move all the nodes towards to the center so gravitational pull wil not move the nodes away from view
+       * @private
+       */
+    }, {
+      key: '_shiftToCenter',
+      value: function _shiftToCenter() {
+        var range = _NetworkUtil2['default']._getRangeCore(this.body.nodes, this.body.nodeIndices);
+        var center = _NetworkUtil2['default']._findCenter(range);
+        for (var i = 0; i < this.body.nodeIndices.length; i++) {
+          this.body.nodes[this.body.nodeIndices[i]].x -= center.x;
+          this.body.nodes[this.body.nodeIndices[i]].y -= center.y;
+        }
+      }
+    }, {
+      key: '_declusterAll',
+      value: function _declusterAll() {
+        var clustersPresent = true;
+        while (clustersPresent === true) {
+          clustersPresent = false;
+          for (var i = 0; i < this.body.nodeIndices.length; i++) {
+            if (this.body.nodes[this.body.nodeIndices[i]].isCluster === true) {
+              clustersPresent = true;
+              this.body.modules.clustering.openCluster(this.body.nodeIndices[i], {}, false);
+            }
+          }
+          if (clustersPresent === true) {
+            this.body.emitter.emit('_dataChanged');
+          }
+        }
+      }
     }, {
       key: 'getSeed',
       value: function getSeed() {
         return this.initialRandomSeed;
       }
-    }, {
-      key: 'setupHierarchicalLayout',
 
       /**
        * This is the main function to layout the nodes in a hierarchical way.
@@ -38565,6 +39787,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: 'setupHierarchicalLayout',
       value: function setupHierarchicalLayout() {
         if (this.options.hierarchical.enabled === true && this.body.nodeIndices.length > 0) {
           // get the size of the largest hubs and check if the user has defined a level for a node.
@@ -38592,28 +39816,42 @@ return /******/ (function(modules) { // webpackBootstrap
             throw new Error('To use the hierarchical layout, nodes require either no predefined levels or levels have to be defined for all nodes.');
             return;
           } else {
-            // setup the system to use hierarchical method.
-            //this._changeConstants();
-
             // define levels if undefined by the users. Based on hubsize
             if (undefinedLevel === true) {
               if (this.options.hierarchical.sortMethod === 'hubsize') {
                 this._determineLevelsByHubsize();
-              } else if (this.options.hierarchical.sortMethod === 'directed' || 'direction') {
+              } else if (this.options.hierarchical.sortMethod === 'directed') {
                 this._determineLevelsDirected();
+              } else if (this.options.hierarchical.sortMethod === 'custom') {
+                this._determineLevelsCustomCallback();
               }
             }
 
             // check the distribution of the nodes per level.
             var distribution = this._getDistribution();
 
+            // get the parent children relations.
+            this._generateMap();
+
             // place the nodes on the canvas.
             this._placeNodesByHierarchy(distribution);
+
+            // Todo: condense the whitespace.
+            this._condenseHierarchy(distribution);
+
+            // shift to center so gravity does not have to do much
+            this._shiftToCenter();
           }
         }
       }
+
+      /**
+       * TODO: implement. Clear whitespace after positioning.
+       * @private
+       */
     }, {
-      key: '_placeNodesByHierarchy',
+      key: '_condenseHierarchy',
+      value: function _condenseHierarchy(distribution) {}
 
       /**
        * This function places the nodes on the canvas based on the hierarchial distribution.
@@ -38621,39 +39859,44 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param {Object} distribution | obtained by the function this._getDistribution()
        * @private
        */
+    }, {
+      key: '_placeNodesByHierarchy',
       value: function _placeNodesByHierarchy(distribution) {
-        var nodeId = undefined,
-            node = undefined;
         this.positionedNodes = {};
         // start placing all the level 0 nodes first. Then recursively position their branches.
         for (var level in distribution) {
           if (distribution.hasOwnProperty(level)) {
-            for (nodeId in distribution[level].nodes) {
-              if (distribution[level].nodes.hasOwnProperty(nodeId)) {
+            // sort nodes in level by position:
+            var nodeArray = Object.keys(distribution[level]);
+            nodeArray = this._indexArrayToNodes(nodeArray);
+            this._sortNodeArray(nodeArray);
 
-                node = distribution[level].nodes[nodeId];
-
-                if (this.options.hierarchical.direction === 'UD' || this.options.hierarchical.direction === 'DU') {
-                  if (node.x === undefined) {
-                    node.x = distribution[level].distance;
-                  }
-                  distribution[level].distance = node.x + this.nodeSpacing;
-                } else {
-                  if (node.y === undefined) {
-                    node.y = distribution[level].distance;
-                  }
-                  distribution[level].distance = node.y + this.nodeSpacing;
-                }
-
-                this.positionedNodes[nodeId] = true;
-                this._placeBranchNodes(node.edges, node.id, distribution, level);
+            for (var i = 0; i < nodeArray.length; i++) {
+              var node = nodeArray[i];
+              if (this.positionedNodes[node.id] === undefined) {
+                this._setPositionForHierarchy(node, this.nodeSpacing * i);
+                this.positionedNodes[node.id] = true;
+                this._placeBranchNodes(node.id, level);
               }
             }
           }
         }
       }
+
+      /**
+       * Receives an array with node indices and returns an array with the actual node references. Used for sorting based on
+       * node properties.
+       * @param idArray
+       */
     }, {
-      key: '_getDistribution',
+      key: '_indexArrayToNodes',
+      value: function _indexArrayToNodes(idArray) {
+        var array = [];
+        for (var i = 0; i < idArray.length; i++) {
+          array.push(this.body.nodes[idArray[i]]);
+        }
+        return array;
+      }
 
       /**
        * This function get the distribution of levels based on hubsize
@@ -38661,6 +39904,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {Object}
        * @private
        */
+    }, {
+      key: '_getDistribution',
       value: function _getDistribution() {
         var distribution = {};
         var nodeId = undefined,
@@ -38680,16 +39925,13 @@ return /******/ (function(modules) { // webpackBootstrap
               node.options.fixed.x = true;
             }
             if (distribution[level] === undefined) {
-              distribution[level] = { amount: 0, nodes: {}, distance: 0 };
+              distribution[level] = {};
             }
-            distribution[level].amount += 1;
-            distribution[level].nodes[nodeId] = node;
+            distribution[level][nodeId] = node;
           }
         }
         return distribution;
       }
-    }, {
-      key: '_getHubSize',
 
       /**
        * Get the hubsize from all remaining unlevelled nodes.
@@ -38697,6 +39939,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {number}
        * @private
        */
+    }, {
+      key: '_getHubSize',
       value: function _getHubSize() {
         var hubSize = 0;
         for (var nodeId in this.body.nodes) {
@@ -38709,8 +39953,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         return hubSize;
       }
-    }, {
-      key: '_determineLevelsByHubsize',
 
       /**
        * this function allocates nodes in levels based on the recursive branching from the largest hubs.
@@ -38718,53 +39960,69 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param hubsize
        * @private
        */
+    }, {
+      key: '_determineLevelsByHubsize',
       value: function _determineLevelsByHubsize() {
-        var nodeId = undefined,
-            node = undefined;
+        var _this2 = this;
+
         var hubSize = 1;
+
+        var levelDownstream = function levelDownstream(nodeA, nodeB) {
+          if (_this2.hierarchicalLevels[nodeB.id] === undefined) {
+            // set initial level
+            if (_this2.hierarchicalLevels[nodeA.id] === undefined) {
+              _this2.hierarchicalLevels[nodeA.id] = 0;
+            }
+            // set level
+            _this2.hierarchicalLevels[nodeB.id] = _this2.hierarchicalLevels[nodeA.id] + 1;
+          }
+        };
 
         while (hubSize > 0) {
           // determine hubs
           hubSize = this._getHubSize();
           if (hubSize === 0) break;
 
-          for (nodeId in this.body.nodes) {
+          for (var nodeId in this.body.nodes) {
             if (this.body.nodes.hasOwnProperty(nodeId)) {
-              node = this.body.nodes[nodeId];
+              var node = this.body.nodes[nodeId];
               if (node.edges.length === hubSize) {
-                this._setLevelByHubsize(0, node);
+                this._crawlNetwork(levelDownstream, nodeId);
               }
             }
           }
         }
       }
-    }, {
-      key: '_setLevelByHubsize',
 
       /**
-       * this function is called recursively to enumerate the barnches of the largest hubs and give each node a level.
-       *
-       * @param level
-       * @param edges
-       * @param parentId
+       * TODO: release feature
        * @private
        */
-      value: function _setLevelByHubsize(level, node) {
-        if (this.hierarchicalLevels[node.id] !== undefined) return;
-
-        var childNode = undefined;
-        this.hierarchicalLevels[node.id] = level;
-        for (var i = 0; i < node.edges.length; i++) {
-          if (node.edges[i].toId === node.id) {
-            childNode = node.edges[i].from;
-          } else {
-            childNode = node.edges[i].to;
-          }
-          this._setLevelByHubsize(level + 1, childNode);
-        }
-      }
     }, {
-      key: '_determineLevelsDirected',
+      key: '_determineLevelsCustomCallback',
+      value: function _determineLevelsCustomCallback() {
+        var _this3 = this;
+
+        var minLevel = 100000;
+
+        // TODO: this should come from options.
+        var customCallback = function customCallback(nodeA, nodeB, edge) {};
+
+        var levelByDirection = function levelByDirection(nodeA, nodeB, edge) {
+          var levelA = _this3.hierarchicalLevels[nodeA.id];
+          // set initial level
+          if (levelA === undefined) {
+            _this3.hierarchicalLevels[nodeA.id] = minLevel;
+          }
+
+          var diff = customCallback(_NetworkUtil2['default']._cloneOptions(nodeA, 'node'), _NetworkUtil2['default']._cloneOptions(nodeB, 'node'), _NetworkUtil2['default']._cloneOptions(edge, 'edge'));
+
+          _this3.hierarchicalLevels[nodeB.id] = _this3.hierarchicalLevels[nodeA.id] + diff;
+        };
+
+        this._crawlNetwork(levelByDirection);
+        this._setMinLevelToZero();
+      }
 
       /**
        * this function allocates nodes in levels based on the direction of the edges
@@ -38772,107 +40030,313 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param hubsize
        * @private
        */
+    }, {
+      key: '_determineLevelsDirected',
       value: function _determineLevelsDirected() {
-        var nodeId = undefined,
-            node = undefined;
+        var _this4 = this;
+
         var minLevel = 10000;
-
-        // set first node to source
-        for (nodeId in this.body.nodes) {
-          if (this.body.nodes.hasOwnProperty(nodeId)) {
-            node = this.body.nodes[nodeId];
-            this._setLevelDirected(minLevel, node);
+        var levelByDirection = function levelByDirection(nodeA, nodeB, edge) {
+          var levelA = _this4.hierarchicalLevels[nodeA.id];
+          // set initial level
+          if (levelA === undefined) {
+            _this4.hierarchicalLevels[nodeA.id] = minLevel;
           }
-        }
+          if (edge.toId == nodeB.id) {
+            _this4.hierarchicalLevels[nodeB.id] = _this4.hierarchicalLevels[nodeA.id] + 1;
+          } else {
+            _this4.hierarchicalLevels[nodeB.id] = _this4.hierarchicalLevels[nodeA.id] - 1;
+          }
+        };
+        this._crawlNetwork(levelByDirection);
+        this._setMinLevelToZero();
+      }
 
+      /**
+       * Small util method to set the minimum levels of the nodes to zero.
+       * @private
+       */
+    }, {
+      key: '_setMinLevelToZero',
+      value: function _setMinLevelToZero() {
+        var minLevel = 1e9;
         // get the minimum level
-        for (nodeId in this.body.nodes) {
+        for (var nodeId in this.body.nodes) {
           if (this.body.nodes.hasOwnProperty(nodeId)) {
-            minLevel = this.hierarchicalLevels[nodeId] < minLevel ? this.hierarchicalLevels[nodeId] : minLevel;
+            minLevel = Math.min(this.hierarchicalLevels[nodeId], minLevel);
           }
         }
 
         // subtract the minimum from the set so we have a range starting from 0
-        for (nodeId in this.body.nodes) {
+        for (var nodeId in this.body.nodes) {
           if (this.body.nodes.hasOwnProperty(nodeId)) {
             this.hierarchicalLevels[nodeId] -= minLevel;
           }
         }
       }
-    }, {
-      key: '_setLevelDirected',
 
       /**
-       * this function is called recursively to enumerate the branched of the first node and give each node a level based on edge direction
-       *
-       * @param level
-       * @param edges
-       * @param parentId
+       * Update the bookkeeping of parent and child.
+       * @param parentNodeId
+       * @param childNodeId
        * @private
        */
-      value: function _setLevelDirected(level, node) {
-        if (this.hierarchicalLevels[node.id] !== undefined) return;
+    }, {
+      key: '_generateMap',
+      value: function _generateMap() {
+        var _this5 = this;
 
-        var childNode = undefined;
-        this.hierarchicalLevels[node.id] = level;
-
-        for (var i = 0; i < node.edges.length; i++) {
-          if (node.edges[i].toId === node.id) {
-            childNode = node.edges[i].from;
-            this._setLevelDirected(level - 1, childNode);
-          } else {
-            childNode = node.edges[i].to;
-            this._setLevelDirected(level + 1, childNode);
+        var fillInRelations = function fillInRelations(parentNode, childNode) {
+          if (_this5.hierarchicalLevels[childNode.id] > _this5.hierarchicalLevels[parentNode.id]) {
+            var parentNodeId = parentNode.id;
+            var childNodeId = childNode.id;
+            if (_this5.hierarchicalParents[parentNodeId] === undefined) {
+              _this5.hierarchicalParents[parentNodeId] = { children: [], amount: 0 };
+            }
+            _this5.hierarchicalParents[parentNodeId].children.push(childNodeId);
+            if (_this5.hierarchicalChildren[childNodeId] === undefined) {
+              _this5.hierarchicalChildren[childNodeId] = { parents: [], amount: 0 };
+            }
+            _this5.hierarchicalChildren[childNodeId].parents.push(parentNodeId);
           }
+        };
+
+        this._crawlNetwork(fillInRelations);
+      }
+
+      /**
+       * Crawl over the entire network and use a callback on each node couple that is connected to eachother.
+       * @param callback          | will receive nodeA nodeB and the connecting edge. A and B are unique.
+       * @param startingNodeId
+       * @private
+       */
+    }, {
+      key: '_crawlNetwork',
+      value: function _crawlNetwork(callback, startingNodeId) {
+        if (callback === undefined) callback = function () {};
+
+        var progress = {};
+        var crawler = function crawler(node) {
+          if (progress[node.id] === undefined) {
+            progress[node.id] = true;
+            var childNode = undefined;
+            for (var i = 0; i < node.edges.length; i++) {
+              if (node.edges[i].toId === node.id) {
+                childNode = node.edges[i].from;
+              } else {
+                childNode = node.edges[i].to;
+              }
+
+              if (node.id !== childNode.id) {
+                callback(node, childNode, node.edges[i]);
+                crawler(childNode);
+              }
+            }
+          }
+        };
+
+        // we can crawl from a specific node or over all nodes.
+        if (startingNodeId === undefined) {
+          for (var i = 0; i < this.body.nodeIndices.length; i++) {
+            var node = this.body.nodes[this.body.nodeIndices[i]];
+            crawler(node);
+          }
+        } else {
+          var node = this.body.nodes[startingNodeId];
+          if (node === undefined) {
+            console.error("Node not found:", startingNodeId);
+            return;
+          }
+          crawler(node);
         }
       }
-    }, {
-      key: '_placeBranchNodes',
 
       /**
        * This is a recursively called function to enumerate the branches from the largest hubs and place the nodes
        * on a X position that ensures there will be no overlap.
        *
-       * @param edges
        * @param parentId
-       * @param distribution
        * @param parentLevel
        * @private
        */
-      value: function _placeBranchNodes(edges, parentId, distribution, parentLevel) {
-        for (var i = 0; i < edges.length; i++) {
-          var childNode = undefined;
-          var parentNode = undefined;
-          if (edges[i].toId === parentId) {
-            childNode = edges[i].from;
-            parentNode = edges[i].to;
-          } else {
-            childNode = edges[i].to;
-            parentNode = edges[i].from;
-          }
+    }, {
+      key: '_placeBranchNodes',
+      value: function _placeBranchNodes(parentId, parentLevel) {
+        // if this is not a parent, cancel the placing. This can happen with multiple parents to one child.
+        if (this.hierarchicalParents[parentId] === undefined) {
+          return;
+        }
+
+        // get a list of childNodes
+        var childNodes = [];
+        for (var i = 0; i < this.hierarchicalParents[parentId].children.length; i++) {
+          childNodes.push(this.body.nodes[this.hierarchicalParents[parentId].children[i]]);
+        }
+
+        // use the positions to order the nodes.
+        this._sortNodeArray(childNodes);
+
+        // position the childNodes
+        for (var i = 0; i < childNodes.length; i++) {
+          var childNode = childNodes[i];
           var childNodeLevel = this.hierarchicalLevels[childNode.id];
+          // check if the childnode is below the parent node and if it has already been positioned.
+          if (childNodeLevel > parentLevel && this.positionedNodes[childNode.id] === undefined) {
+            // get the amount of space required for this node. If parent the width is based on the amount of children.
+            var pos = undefined;
 
-          if (this.positionedNodes[childNode.id] === undefined) {
-            // if a node is conneceted to another node on the same level (or higher (means lower level))!, this is not handled here.
-            if (childNodeLevel > parentLevel) {
-              if (this.options.hierarchical.direction === 'UD' || this.options.hierarchical.direction === 'DU') {
-                if (childNode.x === undefined) {
-                  childNode.x = Math.max(distribution[childNodeLevel].distance, parentNode.x);
-                }
-                distribution[childNodeLevel].distance = childNode.x + this.nodeSpacing;
-                this.positionedNodes[childNode.id] = true;
-              } else {
-                if (childNode.y === undefined) {
-                  childNode.y = Math.max(distribution[childNodeLevel].distance, parentNode.y);
-                }
-                distribution[childNodeLevel].distance = childNode.y + this.nodeSpacing;
-              }
-              this.positionedNodes[childNode.id] = true;
+            // we get the X or Y values we need and store them in pos and previousPos. The get and set make sure we get X or Y
+            if (i === 0) {
+              pos = this._getPositionForHierarchy(this.body.nodes[parentId]);
+            } else {
+              pos = this._getPositionForHierarchy(childNodes[i - 1]) + this.nodeSpacing;
+            }
+            this._setPositionForHierarchy(childNode, pos);
 
-              if (childNode.edges.length > 1) {
-                this._placeBranchNodes(childNode.edges, childNode.id, distribution, childNodeLevel);
+            // if overlap has been detected, we shift the branch
+            if (this.lastNodeOnLevel[childNodeLevel] !== undefined) {
+              var previousPos = this._getPositionForHierarchy(this.body.nodes[this.lastNodeOnLevel[childNodeLevel]]);
+              if (pos - previousPos < this.nodeSpacing) {
+                var diff = previousPos + this.nodeSpacing - pos;
+                var sharedParent = this._findCommonParent(this.lastNodeOnLevel[childNodeLevel], childNode.id);
+                this._shiftBlock(sharedParent.withChild, diff);
               }
             }
+
+            // store change in position.
+            this.lastNodeOnLevel[childNodeLevel] = childNode.id;
+
+            this.positionedNodes[childNode.id] = true;
+
+            this._placeBranchNodes(childNode.id, childNodeLevel);
+          } else {
+            return;
+          }
+        }
+
+        // center the parent nodes.
+        var minPos = 1e9;
+        var maxPos = -1e9;
+        for (var i = 0; i < childNodes.length; i++) {
+          var childNodeId = childNodes[i].id;
+          minPos = Math.min(minPos, this._getPositionForHierarchy(this.body.nodes[childNodeId]));
+          maxPos = Math.max(maxPos, this._getPositionForHierarchy(this.body.nodes[childNodeId]));
+        }
+        this._setPositionForHierarchy(this.body.nodes[parentId], 0.5 * (minPos + maxPos));
+      }
+
+      /**
+       * Shift a branch a certain distance
+       * @param parentId
+       * @param diff
+       * @private
+       */
+    }, {
+      key: '_shiftBlock',
+      value: function _shiftBlock(parentId, diff) {
+        if (this.options.hierarchical.direction === 'UD' || this.options.hierarchical.direction === 'DU') {
+          this.body.nodes[parentId].x += diff;
+        } else {
+          this.body.nodes[parentId].y += diff;
+        }
+        if (this.hierarchicalParents[parentId] !== undefined) {
+          for (var i = 0; i < this.hierarchicalParents[parentId].children.length; i++) {
+            this._shiftBlock(this.hierarchicalParents[parentId].children[i], diff);
+          }
+        }
+      }
+
+      /**
+       * Find a common parent between branches.
+       * @param childA
+       * @param childB
+       * @returns {{foundParent, withChild}}
+       * @private
+       */
+    }, {
+      key: '_findCommonParent',
+      value: function _findCommonParent(childA, childB) {
+        var _this6 = this;
+
+        var parents = {};
+        var iterateParents = function iterateParents(parents, child) {
+          if (_this6.hierarchicalChildren[child] !== undefined) {
+            for (var i = 0; i < _this6.hierarchicalChildren[child].parents.length; i++) {
+              var _parent = _this6.hierarchicalChildren[child].parents[i];
+              parents[_parent] = true;
+              iterateParents(parents, _parent);
+            }
+          }
+        };
+        var findParent = function findParent(parents, child) {
+          if (_this6.hierarchicalChildren[child] !== undefined) {
+            for (var i = 0; i < _this6.hierarchicalChildren[child].parents.length; i++) {
+              var _parent2 = _this6.hierarchicalChildren[child].parents[i];
+              if (parents[_parent2] !== undefined) {
+                return { foundParent: _parent2, withChild: child };
+              }
+              var branch = findParent(parents, _parent2);
+              if (branch.foundParent !== null) {
+                return branch;
+              }
+            }
+          }
+          return { foundParent: null, withChild: child };
+        };
+
+        iterateParents(parents, childA);
+        return findParent(parents, childB);
+      }
+
+      /**
+       * Abstract the getting of the position so we won't have to repeat the check for direction all the time
+       * @param node
+       * @param position
+       * @private
+       */
+    }, {
+      key: '_setPositionForHierarchy',
+      value: function _setPositionForHierarchy(node, position) {
+        if (this.options.hierarchical.direction === 'UD' || this.options.hierarchical.direction === 'DU') {
+          node.x = position;
+        } else {
+          node.y = position;
+        }
+      }
+
+      /**
+       * Abstract the getting of the position of a node so we do not have to repeat the direction check all the time.
+       * @param node
+       * @returns {number|*}
+       * @private
+       */
+    }, {
+      key: '_getPositionForHierarchy',
+      value: function _getPositionForHierarchy(node) {
+        if (this.options.hierarchical.direction === 'UD' || this.options.hierarchical.direction === 'DU') {
+          return node.x;
+        } else {
+          return node.y;
+        }
+      }
+
+      /**
+       * Use the x or y value to sort the array, allowing users to specify order.
+       * @param nodeArray
+       * @private
+       */
+    }, {
+      key: '_sortNodeArray',
+      value: function _sortNodeArray(nodeArray) {
+        if (nodeArray.length > 1) {
+          if (this.options.hierarchical.direction === 'UD' || this.options.hierarchical.direction === 'DU') {
+            nodeArray.sort(function (a, b) {
+              return a.x - b.x;
+            });
+          } else {
+            nodeArray.sort(function (a, b) {
+              return a.y - b.y;
+            });
           }
         }
       }
@@ -38885,7 +40349,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38898,9 +40362,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var util = __webpack_require__(7);
-  var Hammer = __webpack_require__(3);
-  var hammerUtil = __webpack_require__(27);
+  var util = __webpack_require__(1);
+  var Hammer = __webpack_require__(20);
+  var hammerUtil = __webpack_require__(25);
 
   /**
    * clears the toolbar div element of children
@@ -38960,13 +40424,13 @@ return /******/ (function(modules) { // webpackBootstrap
       this.body.emitter.on('_resetData', this._restore.bind(this));
     }
 
+    /**
+     * If something changes in the data during editing, switch back to the initial datamanipulation state and close all edit modes.
+     * @private
+     */
+
     _createClass(ManipulationSystem, [{
       key: '_restore',
-
-      /**
-       * If something changes in the data during editing, switch back to the initial datamanipulation state and close all edit modes.
-       * @private
-       */
       value: function _restore() {
         if (this.inMode !== false) {
           if (this.options.initiallyActive === true) {
@@ -38976,13 +40440,13 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
-    }, {
-      key: 'setOptions',
 
       /**
        * Set the Options
        * @param options
        */
+    }, {
+      key: 'setOptions',
       value: function setOptions(options, allOptions, globalOptions) {
         if (allOptions !== undefined) {
           if (allOptions.locale !== undefined) {
@@ -39010,14 +40474,14 @@ return /******/ (function(modules) { // webpackBootstrap
           this._setup();
         }
       }
-    }, {
-      key: 'toggleEditMode',
 
       /**
        * Enable or disable edit-mode. Draws the DOM required and cleans up after itself.
        *
        * @private
        */
+    }, {
+      key: 'toggleEditMode',
       value: function toggleEditMode() {
         if (this.editMode === true) {
           this.disableEditMode();
@@ -39051,14 +40515,14 @@ return /******/ (function(modules) { // webpackBootstrap
           this._createEditButton();
         }
       }
-    }, {
-      key: 'showManipulatorToolbar',
 
       /**
        * Creates the main toolbar. Removes functions bound to the select event. Binds all the buttons of the toolbar.
        *
        * @private
        */
+    }, {
+      key: 'showManipulatorToolbar',
       value: function showManipulatorToolbar() {
         // restore the state of any bound functions or events, remove control nodes, restore physics
         this._clean();
@@ -39133,14 +40597,12 @@ return /******/ (function(modules) { // webpackBootstrap
         // redraw to show any possible changes
         this.body.emitter.emit('_redraw');
       }
-    }, {
-      key: 'addNodeMode',
 
       /**
        * Create the toolbar for adding Nodes
-       *
-       * @private
        */
+    }, {
+      key: 'addNodeMode',
       value: function addNodeMode() {
         // when using the gui, enable edit mode if it wasnt already.
         if (this.editMode !== true) {
@@ -39164,14 +40626,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this._temporaryBindEvent('click', this._performAddNode.bind(this));
       }
-    }, {
-      key: 'editNode',
 
       /**
        * call the bound function to handle the editing of the node. The node has to be selected.
-       *
-       * @private
        */
+    }, {
+      key: 'editNode',
       value: function editNode() {
         var _this2 = this;
 
@@ -39212,14 +40672,12 @@ return /******/ (function(modules) { // webpackBootstrap
           this.showManipulatorToolbar();
         }
       }
-    }, {
-      key: 'addEdgeMode',
 
       /**
        * create the toolbar to connect nodes
-       *
-       * @private
        */
+    }, {
+      key: 'addEdgeMode',
       value: function addEdgeMode() {
         // when using the gui, enable edit mode if it wasnt already.
         if (this.editMode !== true) {
@@ -39250,14 +40708,12 @@ return /******/ (function(modules) { // webpackBootstrap
         this._temporaryBindUI('onDragStart', function () {});
         this._temporaryBindUI('onHold', function () {});
       }
-    }, {
-      key: 'editEdgeMode',
 
       /**
        * create the toolbar to edit edges
-       *
-       * @private
        */
+    }, {
+      key: 'editEdgeMode',
       value: function editEdgeMode() {
         var _this3 = this;
 
@@ -39327,14 +40783,12 @@ return /******/ (function(modules) { // webpackBootstrap
           this.showManipulatorToolbar();
         }
       }
-    }, {
-      key: 'deleteSelected',
 
       /**
        * delete everything in the selection
-       *
-       * @private
        */
+    }, {
+      key: 'deleteSelected',
       value: function deleteSelected() {
         var _this4 = this;
 
@@ -39392,8 +40846,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this.showManipulatorToolbar();
         }
       }
-    }, {
-      key: '_setup',
 
       //********************************************** PRIVATE ***************************************//
 
@@ -39401,6 +40853,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * draw or remove the DOM
        * @private
        */
+    }, {
+      key: '_setup',
       value: function _setup() {
         if (this.options.enabled === true) {
           // Enable the GUI
@@ -39419,13 +40873,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.guiEnabled = false;
         }
       }
-    }, {
-      key: '_createWrappers',
 
       /**
        * create the div overlays that contain the DOM
        * @private
        */
+    }, {
+      key: '_createWrappers',
       value: function _createWrappers() {
         // load the manipulator HTML elements. All styling done in css.
         if (this.manipulationDiv === undefined) {
@@ -39459,8 +40913,6 @@ return /******/ (function(modules) { // webpackBootstrap
           this.canvas.frame.appendChild(this.closeDiv);
         }
       }
-    }, {
-      key: '_getNewTargetNode',
 
       /**
        * generate a new target node. Used for creating new edges and editing edges
@@ -39469,6 +40921,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @returns {*}
        * @private
        */
+    }, {
+      key: '_getNewTargetNode',
       value: function _getNewTargetNode(x, y) {
         var controlNodeStyle = util.deepExtend({}, this.options.controlNodeStyle);
 
@@ -39480,12 +40934,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
         return this.body.functions.createNode(controlNodeStyle);
       }
-    }, {
-      key: '_createEditButton',
 
       /**
        * Create the edit button
        */
+    }, {
+      key: '_createEditButton',
       value: function _createEditButton() {
         // restore everything to it's original state (if applicable)
         this._clean();
@@ -39504,13 +40958,13 @@ return /******/ (function(modules) { // webpackBootstrap
         // bind a hammer listener to the button, calling the function toggleEditMode.
         this._bindHammerToDiv(button, this.toggleEditMode.bind(this));
       }
-    }, {
-      key: '_clean',
 
       /**
        * this function cleans up after everything this module does. Temporary elements, functions and events are removed, physics restored, hammers removed.
        * @private
        */
+    }, {
+      key: '_clean',
       value: function _clean() {
         // not in mode
         this.inMode = false;
@@ -39536,13 +40990,13 @@ return /******/ (function(modules) { // webpackBootstrap
         // restore the physics if required
         this.body.emitter.emit('restorePhysics');
       }
-    }, {
-      key: '_cleanManipulatorHammers',
 
       /**
        * Each dom element has it's own hammer. They are stored in this.manipulationHammers. This cleans them up.
        * @private
        */
+    }, {
+      key: '_cleanManipulatorHammers',
       value: function _cleanManipulatorHammers() {
         // _clean hammer bindings
         if (this.manipulationHammers.length != 0) {
@@ -39552,13 +41006,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.manipulationHammers = [];
         }
       }
-    }, {
-      key: '_removeManipulationDOM',
 
       /**
        * Remove all DOM elements created by this module.
        * @private
        */
+    }, {
+      key: '_removeManipulationDOM',
       value: function _removeManipulationDOM() {
         // removes all the bindings and overloads
         this._clean();
@@ -39584,14 +41038,14 @@ return /******/ (function(modules) { // webpackBootstrap
         this.editModeDiv = undefined;
         this.closeDiv = undefined;
       }
-    }, {
-      key: '_createSeperator',
 
       /**
        * create a seperator line. the index is to differentiate in the manipulation dom
        * @param index
        * @private
        */
+    }, {
+      key: '_createSeperator',
       value: function _createSeperator() {
         var index = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
 
@@ -39599,11 +41053,11 @@ return /******/ (function(modules) { // webpackBootstrap
         this.manipulationDOM['seperatorLineDiv' + index].className = 'vis-separator-line';
         this.manipulationDiv.appendChild(this.manipulationDOM['seperatorLineDiv' + index]);
       }
-    }, {
-      key: '_createAddNodeButton',
 
       // ----------------------    DOM functions for buttons    --------------------------//
 
+    }, {
+      key: '_createAddNodeButton',
       value: function _createAddNodeButton(locale) {
         var button = this._createButton('addNode', 'vis-button vis-add', locale['addNode'] || this.options.locales['en']['addNode']);
         this.manipulationDiv.appendChild(button);
@@ -39662,8 +41116,6 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function _createDescription(label) {
         this.manipulationDiv.appendChild(this._createButton('description', 'vis-button vis-none', label));
       }
-    }, {
-      key: '_temporaryBindEvent',
 
       // -------------------------- End of DOM functions for buttons ------------------------------//
 
@@ -39673,12 +41125,12 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param newFunction
        * @private
        */
+    }, {
+      key: '_temporaryBindEvent',
       value: function _temporaryBindEvent(event, newFunction) {
         this.temporaryEventFunctions.push({ event: event, boundFunction: newFunction });
         this.body.emitter.on(event, newFunction);
       }
-    }, {
-      key: '_temporaryBindUI',
 
       /**
        * this overrides an UI function until cleanup by the clean function
@@ -39686,6 +41138,8 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param newFunction
        * @private
        */
+    }, {
+      key: '_temporaryBindUI',
       value: function _temporaryBindUI(UIfunctionName, newFunction) {
         if (this.body.eventListeners[UIfunctionName] !== undefined) {
           this.temporaryUIFunctions[UIfunctionName] = this.body.eventListeners[UIfunctionName];
@@ -39694,14 +41148,14 @@ return /******/ (function(modules) { // webpackBootstrap
           throw new Error('This UI function does not exist. Typo? You tried: ' + UIfunctionName + ' possible are: ' + JSON.stringify(Object.keys(this.body.eventListeners)));
         }
       }
-    }, {
-      key: '_unbindTemporaryUIs',
 
       /**
        * Restore the overridden UI functions to their original state.
        *
        * @private
        */
+    }, {
+      key: '_unbindTemporaryUIs',
       value: function _unbindTemporaryUIs() {
         for (var functionName in this.temporaryUIFunctions) {
           if (this.temporaryUIFunctions.hasOwnProperty(functionName)) {
@@ -39711,13 +41165,13 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         this.temporaryUIFunctions = {};
       }
-    }, {
-      key: '_unbindTemporaryEvents',
 
       /**
        * Unbind the events created by _temporaryBindEvent
        * @private
        */
+    }, {
+      key: '_unbindTemporaryEvents',
       value: function _unbindTemporaryEvents() {
         for (var i = 0; i < this.temporaryEventFunctions.length; i++) {
           var eventName = this.temporaryEventFunctions[i].event;
@@ -39726,26 +41180,26 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         this.temporaryEventFunctions = [];
       }
-    }, {
-      key: '_bindHammerToDiv',
 
       /**
        * Bind an hammer instance to a DOM element.
        * @param domElement
        * @param funct
        */
+    }, {
+      key: '_bindHammerToDiv',
       value: function _bindHammerToDiv(domElement, boundFunction) {
         var hammer = new Hammer(domElement, {});
         hammerUtil.onTouch(hammer, boundFunction);
         this.manipulationHammers.push(hammer);
       }
-    }, {
-      key: '_cleanupTemporaryNodesAndEdges',
 
       /**
        * Neatly clean up temporary edges and nodes
        * @private
        */
+    }, {
+      key: '_cleanupTemporaryNodesAndEdges',
       value: function _cleanupTemporaryNodesAndEdges() {
         // _clean temporary edges
         for (var i = 0; i < this.temporaryIds.edges.length; i++) {
@@ -39768,8 +41222,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.temporaryIds = { nodes: [], edges: [] };
       }
-    }, {
-      key: '_controlNodeTouch',
 
       // ------------------------------------------ EDIT EDGE FUNCTIONS -----------------------------------------//
 
@@ -39778,19 +41230,21 @@ return /******/ (function(modules) { // webpackBootstrap
        * @param event
        * @private
        */
+    }, {
+      key: '_controlNodeTouch',
       value: function _controlNodeTouch(event) {
         this.selectionHandler.unselectAll();
         this.lastTouch = this.body.functions.getPointer(event.center);
         this.lastTouch.translation = util.extend({}, this.body.view.translation); // copy the object
       }
-    }, {
-      key: '_controlNodeDragStart',
 
       /**
        * the drag start is used to mark one of the control nodes as selected.
        * @param event
        * @private
        */
+    }, {
+      key: '_controlNodeDragStart',
       value: function _controlNodeDragStart(event) {
         var pointer = this.lastTouch;
         var pointerObj = this.selectionHandler._pointerToPositionObject(pointer);
@@ -39812,14 +41266,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.body.emitter.emit('_redraw');
       }
-    }, {
-      key: '_controlNodeDrag',
 
       /**
        * dragging the control nodes or the canvas
        * @param event
        * @private
        */
+    }, {
+      key: '_controlNodeDrag',
       value: function _controlNodeDrag(event) {
         this.body.emitter.emit('disablePhysics');
         var pointer = this.body.functions.getPointer(event.center);
@@ -39836,18 +41290,23 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         this.body.emitter.emit('_redraw');
       }
-    }, {
-      key: '_controlNodeDragEnd',
 
       /**
        * connecting or restoring the control nodes.
        * @param event
        * @private
        */
+    }, {
+      key: '_controlNodeDragEnd',
       value: function _controlNodeDragEnd(event) {
         var pointer = this.body.functions.getPointer(event.center);
         var pointerObj = this.selectionHandler._pointerToPositionObject(pointer);
         var edge = this.body.edges[this.edgeBeingEditedId];
+
+        // if the node that was dragged is not a control node, return
+        if (this.selectedControlNode === undefined) {
+          return;
+        }
 
         var overlappingNodeIds = this.selectionHandler._getAllNodesOverlappingWith(pointerObj);
         var node = undefined;
@@ -39876,8 +41335,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         this.body.emitter.emit('_redraw');
       }
-    }, {
-      key: '_handleConnect',
 
       // ------------------------------------ END OF EDIT EDGE FUNCTIONS -----------------------------------------//
 
@@ -39888,6 +41345,8 @@ return /******/ (function(modules) { // webpackBootstrap
        *
        * @private
        */
+    }, {
+      key: '_handleConnect',
       value: function _handleConnect(event) {
         // check to avoid double fireing of this function.
         if (new Date().valueOf() - this.touchTime > 100) {
@@ -39943,14 +41402,14 @@ return /******/ (function(modules) { // webpackBootstrap
           this.body.view.translation = { x: this.lastTouch.translation.x + diffX, y: this.lastTouch.translation.y + diffY };
         }
       }
-    }, {
-      key: '_finishConnect',
 
       /**
        * Connect the new edge to the target if one exists, otherwise remove temp line
        * @param event
        * @private
        */
+    }, {
+      key: '_finishConnect',
       value: function _finishConnect(event) {
         var pointer = this.body.functions.getPointer(event.center);
         var pointerObj = this.selectionHandler._pointerToPositionObject(pointer);
@@ -39987,8 +41446,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }
         this.body.emitter.emit('_redraw');
       }
-    }, {
-      key: '_performAddNode',
 
       // --------------------------------------- END OF ADD EDGE FUNCTIONS -------------------------------------//
 
@@ -39997,6 +41454,8 @@ return /******/ (function(modules) { // webpackBootstrap
       /**
        * Adds a node on the specified location
        */
+    }, {
+      key: '_performAddNode',
       value: function _performAddNode(clickData) {
         var _this5 = this;
 
@@ -40025,14 +41484,14 @@ return /******/ (function(modules) { // webpackBootstrap
           this.showManipulatorToolbar();
         }
       }
-    }, {
-      key: '_performAddEdge',
 
       /**
        * connect two nodes with a new edge.
        *
        * @private
        */
+    }, {
+      key: '_performAddEdge',
       value: function _performAddEdge(sourceNodeId, targetNodeId) {
         var _this6 = this;
 
@@ -40056,14 +41515,14 @@ return /******/ (function(modules) { // webpackBootstrap
           this.showManipulatorToolbar();
         }
       }
-    }, {
-      key: '_performEditEdge',
 
       /**
        * connect two nodes with a new edge.
        *
        * @private
        */
+    }, {
+      key: '_performEditEdge',
       value: function _performEditEdge(sourceNodeId, targetNodeId) {
         var _this7 = this;
 
@@ -40099,7 +41558,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports['default'];
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports) {
 
   /**
@@ -40225,6 +41684,7 @@ return /******/ (function(modules) { // webpackBootstrap
     },
     layout: {
       randomSeed: { 'undefined': 'undefined', number: number },
+      improvedLayout: { boolean: boolean },
       hierarchical: {
         enabled: { boolean: boolean },
         levelSeparation: { number: number },
@@ -40321,6 +41781,7 @@ return /******/ (function(modules) { // webpackBootstrap
         borderDashes: { boolean: boolean, array: array },
         borderRadius: { number: number },
         useImageSize: { boolean: boolean },
+        useBorderWithImage: { boolean: boolean },
         __type__: { object: object }
       },
       size: { number: number },
@@ -40378,6 +41839,7 @@ return /******/ (function(modules) { // webpackBootstrap
         __type__: { object: object, boolean: boolean }
       },
       timestep: { number: number },
+      adaptiveTimestep: { boolean: boolean },
       __type__: { object: object, boolean: boolean }
     },
 
@@ -40517,6 +41979,7 @@ return /******/ (function(modules) { // webpackBootstrap
     },
     layout: {
       //randomSeed: [0, 0, 500, 1],
+      //improvedLayout: true,
       hierarchical: {
         enabled: false,
         levelSeparation: [150, 20, 500, 5],
@@ -40586,6 +42049,7 @@ return /******/ (function(modules) { // webpackBootstrap
       solver: ['barnesHut', 'forceAtlas2Based', 'repulsion', 'hierarchicalRepulsion'],
       timestep: [0.5, 0.01, 1, 0.01]
     },
+    //adaptiveTimestep: true
     global: {
       locale: ['en', 'nl']
     }
@@ -40595,7 +42059,367 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.configureOptions = configureOptions;
 
 /***/ },
-/* 111 */
+/* 112 */
+/***/ function(module, exports, __webpack_require__) {
+
+  /**
+   * Created by Alex on 8/7/2015.
+   */
+
+  // distance finding algorithm
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  var _componentsAlgorithmsFloydWarshallJs = __webpack_require__(113);
+
+  var _componentsAlgorithmsFloydWarshallJs2 = _interopRequireDefault(_componentsAlgorithmsFloydWarshallJs);
+
+  /**
+   * KamadaKawai positions the nodes initially based on
+   *
+   * "AN ALGORITHM FOR DRAWING GENERAL UNDIRECTED GRAPHS"
+   * -- Tomihisa KAMADA and Satoru KAWAI in 1989
+   *
+   * Possible optimizations in the distance calculation can be implemented.
+   */
+
+  var KamadaKawai = (function () {
+    function KamadaKawai(body, edgeLength, edgeStrength) {
+      _classCallCheck(this, KamadaKawai);
+
+      this.body = body;
+      this.springLength = edgeLength;
+      this.springConstant = edgeStrength;
+      this.distanceSolver = new _componentsAlgorithmsFloydWarshallJs2["default"]();
+    }
+
+    /**
+     * Not sure if needed but can be used to update the spring length and spring constant
+     * @param options
+     */
+
+    _createClass(KamadaKawai, [{
+      key: "setOptions",
+      value: function setOptions(options) {
+        if (options) {
+          if (options.springLength) {
+            this.springLength = options.springLength;
+          }
+          if (options.springConstant) {
+            this.springConstant = options.springConstant;
+          }
+        }
+      }
+
+      /**
+       * Position the system
+       * @param nodesArray
+       * @param edgesArray
+       */
+    }, {
+      key: "solve",
+      value: function solve(nodesArray, edgesArray) {
+        var ignoreClusters = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
+        // get distance matrix
+        var D_matrix = this.distanceSolver.getDistances(this.body, nodesArray, edgesArray); // distance matrix
+
+        // get the L Matrix
+        this._createL_matrix(D_matrix);
+
+        // get the K Matrix
+        this._createK_matrix(D_matrix);
+
+        // calculate positions
+        var threshold = 0.01;
+        var innerThreshold = 1;
+        var iterations = 0;
+        var maxIterations = Math.max(1000, Math.min(10 * this.body.nodeIndices.length, 6000));
+        var maxInnerIterations = 5;
+
+        var maxEnergy = 1e9;
+        var highE_nodeId = 0,
+            dE_dx = 0,
+            dE_dy = 0,
+            delta_m = 0,
+            subIterations = 0;
+
+        while (maxEnergy > threshold && iterations < maxIterations) {
+          iterations += 1;
+
+          var _getHighestEnergyNode2 = this._getHighestEnergyNode(ignoreClusters);
+
+          var _getHighestEnergyNode22 = _slicedToArray(_getHighestEnergyNode2, 4);
+
+          highE_nodeId = _getHighestEnergyNode22[0];
+          maxEnergy = _getHighestEnergyNode22[1];
+          dE_dx = _getHighestEnergyNode22[2];
+          dE_dy = _getHighestEnergyNode22[3];
+
+          delta_m = maxEnergy;
+          subIterations = 0;
+          while (delta_m > innerThreshold && subIterations < maxInnerIterations) {
+            subIterations += 1;
+            this._moveNode(highE_nodeId, dE_dx, dE_dy);
+
+            var _getEnergy2 = this._getEnergy(highE_nodeId);
+
+            var _getEnergy22 = _slicedToArray(_getEnergy2, 3);
+
+            delta_m = _getEnergy22[0];
+            dE_dx = _getEnergy22[1];
+            dE_dy = _getEnergy22[2];
+          }
+        }
+      }
+
+      /**
+       * get the node with the highest energy
+       * @returns {*[]}
+       * @private
+       */
+    }, {
+      key: "_getHighestEnergyNode",
+      value: function _getHighestEnergyNode(ignoreClusters) {
+        var nodesArray = this.body.nodeIndices;
+        var nodes = this.body.nodes;
+        var maxEnergy = 0;
+        var maxEnergyNodeId = nodesArray[0];
+        var dE_dx_max = 0,
+            dE_dy_max = 0;
+
+        for (var nodeIdx = 0; nodeIdx < nodesArray.length; nodeIdx++) {
+          var m = nodesArray[nodeIdx];
+          // by not evaluating nodes with predefined positions we should only move nodes that have no positions.
+          if (nodes[m].predefinedPosition === false || nodes[m].isCluster === true && ignoreClusters === true || nodes[m].options.fixed.x === true || nodes[m].options.fixed.y === true) {
+            var _getEnergy3 = this._getEnergy(m);
+
+            var _getEnergy32 = _slicedToArray(_getEnergy3, 3);
+
+            var delta_m = _getEnergy32[0];
+            var dE_dx = _getEnergy32[1];
+            var dE_dy = _getEnergy32[2];
+
+            if (maxEnergy < delta_m) {
+              maxEnergy = delta_m;
+              maxEnergyNodeId = m;
+              dE_dx_max = dE_dx;
+              dE_dy_max = dE_dy;
+            }
+          }
+        }
+
+        return [maxEnergyNodeId, maxEnergy, dE_dx_max, dE_dy_max];
+      }
+
+      /**
+       * calculate the energy of a single node
+       * @param m
+       * @returns {*[]}
+       * @private
+       */
+    }, {
+      key: "_getEnergy",
+      value: function _getEnergy(m) {
+        var nodesArray = this.body.nodeIndices;
+        var nodes = this.body.nodes;
+
+        var x_m = nodes[m].x;
+        var y_m = nodes[m].y;
+        var dE_dx = 0;
+        var dE_dy = 0;
+        for (var iIdx = 0; iIdx < nodesArray.length; iIdx++) {
+          var i = nodesArray[iIdx];
+          if (i !== m) {
+            var x_i = nodes[i].x;
+            var y_i = nodes[i].y;
+            var denominator = 1.0 / Math.sqrt(Math.pow(x_m - x_i, 2) + Math.pow(y_m - y_i, 2));
+            dE_dx += this.K_matrix[m][i] * (x_m - x_i - this.L_matrix[m][i] * (x_m - x_i) * denominator);
+            dE_dy += this.K_matrix[m][i] * (y_m - y_i - this.L_matrix[m][i] * (y_m - y_i) * denominator);
+          }
+        }
+
+        var delta_m = Math.sqrt(Math.pow(dE_dx, 2) + Math.pow(dE_dy, 2));
+        return [delta_m, dE_dx, dE_dy];
+      }
+
+      /**
+       * move the node based on it's energy
+       * the dx and dy are calculated from the linear system proposed by Kamada and Kawai
+       * @param m
+       * @param dE_dx
+       * @param dE_dy
+       * @private
+       */
+    }, {
+      key: "_moveNode",
+      value: function _moveNode(m, dE_dx, dE_dy) {
+        var nodesArray = this.body.nodeIndices;
+        var nodes = this.body.nodes;
+        var d2E_dx2 = 0;
+        var d2E_dxdy = 0;
+        var d2E_dy2 = 0;
+
+        var x_m = nodes[m].x;
+        var y_m = nodes[m].y;
+        for (var iIdx = 0; iIdx < nodesArray.length; iIdx++) {
+          var i = nodesArray[iIdx];
+          if (i !== m) {
+            var x_i = nodes[i].x;
+            var y_i = nodes[i].y;
+            var denominator = 1.0 / Math.pow(Math.pow(x_m - x_i, 2) + Math.pow(y_m - y_i, 2), 1.5);
+            d2E_dx2 += this.K_matrix[m][i] * (1 - this.L_matrix[m][i] * Math.pow(y_m - y_i, 2) * denominator);
+            d2E_dxdy += this.K_matrix[m][i] * (this.L_matrix[m][i] * (x_m - x_i) * (y_m - y_i) * denominator);
+            d2E_dy2 += this.K_matrix[m][i] * (1 - this.L_matrix[m][i] * Math.pow(x_m - x_i, 2) * denominator);
+          }
+        }
+        // make the variable names easier to make the solving of the linear system easier to read
+        var A = d2E_dx2,
+            B = d2E_dxdy,
+            C = dE_dx,
+            D = d2E_dy2,
+            E = dE_dy;
+
+        // solve the linear system for dx and dy
+        var dy = (C / A + E / B) / (B / A - D / B);
+        var dx = -(B * dy + C) / A;
+
+        // move the node
+        nodes[m].x += dx;
+        nodes[m].y += dy;
+      }
+
+      /**
+       * Create the L matrix: edge length times shortest path
+       * @param D_matrix
+       * @private
+       */
+    }, {
+      key: "_createL_matrix",
+      value: function _createL_matrix(D_matrix) {
+        var nodesArray = this.body.nodeIndices;
+        var edgeLength = this.springLength;
+
+        this.L_matrix = [];
+        for (var i = 0; i < nodesArray.length; i++) {
+          this.L_matrix[nodesArray[i]] = {};
+          for (var j = 0; j < nodesArray.length; j++) {
+            this.L_matrix[nodesArray[i]][nodesArray[j]] = edgeLength * D_matrix[nodesArray[i]][nodesArray[j]];
+          }
+        }
+      }
+
+      /**
+       * Create the K matrix: spring constants times shortest path
+       * @param D_matrix
+       * @private
+       */
+    }, {
+      key: "_createK_matrix",
+      value: function _createK_matrix(D_matrix) {
+        var nodesArray = this.body.nodeIndices;
+        var edgeStrength = this.springConstant;
+
+        this.K_matrix = [];
+        for (var i = 0; i < nodesArray.length; i++) {
+          this.K_matrix[nodesArray[i]] = {};
+          for (var j = 0; j < nodesArray.length; j++) {
+            this.K_matrix[nodesArray[i]][nodesArray[j]] = edgeStrength * Math.pow(D_matrix[nodesArray[i]][nodesArray[j]], -2);
+          }
+        }
+      }
+    }]);
+
+    return KamadaKawai;
+  })();
+
+  exports["default"] = KamadaKawai;
+  module.exports = exports["default"];
+
+/***/ },
+/* 113 */
+/***/ function(module, exports) {
+
+  /**
+   * Created by Alex on 10-Aug-15.
+   */
+
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  var FloydWarshall = (function () {
+    function FloydWarshall() {
+      _classCallCheck(this, FloydWarshall);
+    }
+
+    _createClass(FloydWarshall, [{
+      key: "getDistances",
+      value: function getDistances(body, nodesArray, edgesArray) {
+        var D_matrix = {};
+        var edges = body.edges;
+
+        // prepare matrix with large numbers
+        for (var i = 0; i < nodesArray.length; i++) {
+          D_matrix[nodesArray[i]] = {};
+          D_matrix[nodesArray[i]] = {};
+          for (var j = 0; j < nodesArray.length; j++) {
+            D_matrix[nodesArray[i]][nodesArray[j]] = i == j ? 0 : 1e9;
+            D_matrix[nodesArray[i]][nodesArray[j]] = i == j ? 0 : 1e9;
+          }
+        }
+
+        // put the weights for the edges in. This assumes unidirectionality.
+        for (var i = 0; i < edgesArray.length; i++) {
+          var edge = edges[edgesArray[i]];
+          // edge has to be connected if it counts to the distances. If it is connected to inner clusters it will crash so we also check if it is in the D_matrix
+          if (edge.connected === true && D_matrix[edge.fromId] !== undefined && D_matrix[edge.toId] !== undefined) {
+            D_matrix[edge.fromId][edge.toId] = 1;
+            D_matrix[edge.toId][edge.fromId] = 1;
+          }
+        }
+
+        var nodeCount = nodesArray.length;
+
+        // Adapted FloydWarshall based on unidirectionality to greatly reduce complexity.
+        for (var k = 0; k < nodeCount; k++) {
+          for (var i = 0; i < nodeCount - 1; i++) {
+            for (var j = i + 1; j < nodeCount; j++) {
+              D_matrix[nodesArray[i]][nodesArray[j]] = Math.min(D_matrix[nodesArray[i]][nodesArray[j]], D_matrix[nodesArray[i]][nodesArray[k]] + D_matrix[nodesArray[k]][nodesArray[j]]);
+              D_matrix[nodesArray[j]][nodesArray[i]] = D_matrix[nodesArray[i]][nodesArray[j]];
+            }
+          }
+        }
+
+        return D_matrix;
+      }
+    }]);
+
+    return FloydWarshall;
+  })();
+
+  exports["default"] = FloydWarshall;
+  module.exports = exports["default"];
+
+/***/ },
+/* 114 */
 /***/ function(module, exports) {
 
   /**
@@ -40882,7 +42706,7 @@ return /******/ (function(modules) { // webpackBootstrap
   }
 
 /***/ },
-/* 112 */
+/* 115 */
 /***/ function(module, exports) {
 
   /**
@@ -41232,10 +43056,10 @@ return /******/ (function(modules) { // webpackBootstrap
       if (token === 'false') {
         token = false; // convert to boolean
       } else if (token === 'true') {
-        token = true; // convert to boolean
-      } else if (!isNaN(Number(token))) {
-        token = Number(token); // convert to number
-      }
+          token = true; // convert to boolean
+        } else if (!isNaN(Number(token))) {
+            token = Number(token); // convert to number
+          }
       tokenType = TOKENTYPE.IDENTIFIER;
       return;
     }
@@ -41377,8 +43201,8 @@ return /******/ (function(modules) { // webpackBootstrap
       getToken();
       // TODO: implement comma separated list with "a_list: ID=ID [','] [a_list] "
     } else {
-      parseNodeStatement(graph, id);
-    }
+        parseNodeStatement(graph, id);
+      }
   }
 
   /**
@@ -41780,7 +43604,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.DOTToGraph = DOTToGraph;
 
 /***/ },
-/* 113 */
+/* 116 */
 /***/ function(module, exports) {
 
   'use strict';
@@ -41819,6 +43643,11 @@ return /******/ (function(modules) { // webpackBootstrap
       edge['from'] = gEdge.source;
       edge['to'] = gEdge.target;
       edge['attributes'] = gEdge.attributes;
+      edge['label'] = gEdge.label;
+      edge['title'] = gEdge.attributes !== undefined ? gEdge.attributes.title : undefined;
+      if (gEdge['type'] === 'Directed') {
+        edge['arrows'] = 'to';
+      }
       //    edge['value'] = gEdge.attributes !== undefined ? gEdge.attributes.Weight : undefined;
       //    edge['width'] = edge['value'] !== undefined ? undefined : edgegEdge.size;
       if (gEdge.color && options.inheritColor === false) {
@@ -41836,6 +43665,7 @@ return /******/ (function(modules) { // webpackBootstrap
       node['x'] = gNode.x;
       node['y'] = gNode.y;
       node['label'] = gNode.label;
+      node['title'] = gNode.attributes !== undefined ? gNode.attributes.title : undefined;
       if (options.nodes.parseColor === true) {
         node['color'] = gNode.color;
       } else {
@@ -41852,7 +43682,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.parseGephi = parseGephi;
 
 /***/ },
-/* 114 */
+/* 117 */
 /***/ function(module, exports) {
 
   /**
@@ -41878,13 +43708,13 @@ return /******/ (function(modules) { // webpackBootstrap
           this.callback = callback;
       }
 
+      /**
+       * @param {string} url                      The Url to cache the image as 
+        * @return {Image} imageToLoadBrokenUrlOn  The image object
+       */
+
       _createClass(Images, [{
           key: "_addImageToCache",
-
-          /**
-           * @param {string} url                      The Url to cache the image as
-            * @return {Image} imageToLoadBrokenUrlOn  The image object
-           */
           value: function _addImageToCache(url, imageToCache) {
               // IE11 fix -- thanks dponch!
               if (imageToCache.width === 0) {
@@ -41896,14 +43726,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
               this.images[url] = imageToCache;
           }
-      }, {
-          key: "_tryloadBrokenUrl",
 
           /**
            * @param {string} url                      The original Url that failed to load, if the broken image is successfully loaded it will be added to the cache using this Url as the key so that subsequent requests for this Url will return the broken image
            * @param {string} brokenUrl                Url the broken image to try and load
            * @return {Image} imageToLoadBrokenUrlOn   The image object
            */
+      }, {
+          key: "_tryloadBrokenUrl",
           value: function _tryloadBrokenUrl(url, brokenUrl, imageToLoadBrokenUrlOn) {
               var _this = this;
 
@@ -41920,29 +43750,29 @@ return /******/ (function(modules) { // webpackBootstrap
               //Set the source of the image to the brokenUrl, this is actually what kicks off the loading of the broken image
               imageToLoadBrokenUrlOn.src = brokenUrl;
           }
-      }, {
-          key: "_redrawWithImage",
 
           /**
            * @return {Image} imageToRedrawWith The images that will be passed to the callback when it is invoked
            */
+      }, {
+          key: "_redrawWithImage",
           value: function _redrawWithImage(imageToRedrawWith) {
               if (this.callback) {
                   this.callback(imageToRedrawWith);
               }
           }
-      }, {
-          key: "load",
 
           /**
            * @param {string} url          Url of the image
            * @param {string} brokenUrl    Url of an image to use if the url image is not found
            * @return {Image} img          The image object
            */
+      }, {
+          key: "load",
           value: function load(url, brokenUrl, id) {
               var _this2 = this;
 
-              //Try and get the image from the cache, if successful then return the cached image
+              //Try and get the image from the cache, if successful then return the cached image  
               var cachedImage = this.images[url];
               if (cachedImage) return cachedImage;
 
@@ -41978,7 +43808,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = exports["default"];
 
 /***/ },
-/* 115 */
+/* 118 */
 /***/ function(module, exports) {
 
   // English
@@ -42001,6 +43831,42 @@ return /******/ (function(modules) { // webpackBootstrap
   };
   exports['en_EN'] = exports['en'];
   exports['en_US'] = exports['en'];
+
+  // German
+  exports['de'] = {
+    edit: 'Editieren',
+    del: 'Lösche Auswahl',
+    back: 'Zurück',
+    addNode: 'Knoten hinzufügen',
+    addEdge: 'Kante hinzufügen',
+    editNode: 'Knoten editieren',
+    editEdge: 'Kante editieren',
+    addDescription: 'Klicke auf eine freie Stelle, um einen neuen Knoten zu plazieren.',
+    edgeDescription: 'Klicke auf einen Knoten und ziehe die Kante zu einem anderen Knoten, um diese zu verbinden.',
+    editEdgeDescription: 'Klicke auf die Verbindungspunkte und ziehe diese auf einen Knoten, um sie zu verbinden.',
+    createEdgeError: 'Es ist nicht möglich, Kanten mit Clustern zu verbinden.',
+    deleteClusterError: 'Cluster können nicht gelöscht werden.',
+    editClusterError: 'Cluster können nicht editiert werden.'
+  };
+  exports['de_DE'] = exports['de'];
+
+  // Spanish
+  exports['es'] = {
+    edit: 'Editar',
+    del: 'Eliminar selección',
+    back: 'Átras',
+    addNode: 'Añadir nodo',
+    addEdge: 'Añadir arista',
+    editNode: 'Editar nodo',
+    editEdge: 'Editar arista',
+    addDescription: 'Haga clic en un lugar vacío para colocar un nuevo nodo.',
+    edgeDescription: 'Haga clic en un nodo y arrastre la arista hacia otro nodo para conectarlos.',
+    editEdgeDescription: 'Haga clic en un punto de control y arrastrelo a un nodo para conectarlo.',
+    createEdgeError: 'No se puede conectar una arista a un grupo.',
+    deleteClusterError: 'No es posible eliminar grupos.',
+    editClusterError: 'No es posible editar grupos.'
+  };
+  exports['es_ES'] = exports['es'];
 
   // Dutch
   exports['nl'] = {
