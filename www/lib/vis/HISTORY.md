@@ -2,6 +2,156 @@
 http://visjs.org
 
 
+## 2015-12-18, version 4.11.0
+
+### Network
+
+- Expose `setSelection` method. Thanks @zefrog.
+
+### Timeline
+
+- Fixed #1441: Height of subgroups not immediately updated after updating
+  data in a DataSet or DataView.
+- Fixed #1491: Problem using ctrl+drag in combination with using a `DataView`,
+  and an issue with ctrl+drag when using `snap: null`.
+- Fixed #1486: Item range sometimes wrongly calculated on IE in case of old dates.
+- Fixed #1523: end of data range wrongly determined.
+
+### Graph2d
+
+- Large refactoring of Graph2d code base:
+  - Implemented a new option for `shaded.orientation` to always shade towards zero.
+  - Implemented a new option for `shaded.orientation` to follow another group (fill in between)
+  - Implemented line-graph stacking
+  - Fixed support for using a `DataView` in Graph2d.
+  - Implemented a new zindex option for controlling svg rendering order.
+  - Performance updates and fixes
+
+### DataSet
+- Fixed #1487: DataSet cannot remove an item with id `0` correctly.
+
+### DataView
+- Added the map() function from DataSet.
+
+
+## 2015-11-27, version 4.10.0
+
+### General
+
+- Fixed #1353: Custom bundling with browserify requiring manual installation
+  of `babelify`.  
+
+### Network
+
+- Implemented new method `setSelection({nodes:[...], edges: [...]})`.
+  Thanks @zefrog.
+- Fixed #1343: Connected edges are now deselected too when deselecting a node.
+- Fixed #1398: Support nodes start with the correct positions.
+- Fixed #1324: Labels now scale again.
+- Fixed #1362: Layout of hierarchicaly systems no longer overlaps NODES.
+- Fixed #1414: Fixed color references for nodes and edges.
+- Fixed #1408: Unclustering without release function respects fixed positions now.
+- Fixed #1358: Fixed example for clustering on zoom.
+- Fixed #1416: Fixed error in improvedLayout.
+- Improvements on hierarchical layout.
+
+### Timeline
+
+- Implemented option `itemsAlwaysDraggable`, See #1395. Thanks @liuqingc.
+- Implemented option `multiselectPerGroup`. Thanks @hansmaulwurf23.
+- Implemented property `oldData` on change events of the DataSet, and
+  deprecated the `data` property which wrongly contained new data instead of
+  old data. Thanks @hansmaulwurf23.
+- Implemented option `maxMinorChars` to customize the width of the grid.
+- Expose `vis.timeline.Core` for customization purposes.
+- Fixed #1449, #1393: text of minor grids sometimes not being drawn.
+
+### Graph2d
+
+- Fixed #1385: Draw lines on top of bars.
+- Fixed #1461 and #1345: Reset order of SVG elements in legend icons.
+
+### DataSet/DataView
+
+- Performance improvements (see #1381). Thanks @phimimms.
+
+
+## 2015-10-01, version 4.9.0
+
+### Network
+
+- Fixed bug where an edge that was not connected would crash the layout algorithms.
+- Fixed bug where a box shape could not be drawn outside of the viewable area.
+- Fixed bug where dragging a node that is not a control node during edit edge mode would throw an error.
+- Made auto scaling on container size change pick the lowest between delta height and delta width.
+- Added images with borders option (useBorderWithImage)
+- Updated the manipulation css to fix offset if there is no separator.
+
+### Timeline
+
+- Fixed #1326: wrongly positioned dot of PointItems.
+- Fixed #1249: option `hiddenDates` not accepting a single hidden date.
+- Fixed a bug when pinching and using hidden dates. Thanks @lauzierj.
+
+
+## 2015-09-14, version 4.8.2
+
+### Network
+
+- Fixed Phantom Edges during clustering.
+- Fixed scaling not doing anything to edges.
+- Fixed setting font to null so the network won't crash anymore.
+- Fixed stabilized event not firing if layout algorithm does very well.
+- Fixed arrows with some shapes when they are selected. #1292
+- Fixed deletion of options by settings them to null.
+
+
+## 2015-09-07, version 4.8.1
+
+### Network
+
+- Added German (de) locale. Thanks @Tooa.
+- Fixed critical camera zoom bug #1273.
+- Fixed unselectAll method. #1256
+- Fixed bug that broke the network if drawn in a hidden div #1254
+
+### Timeline
+
+- Fixed #1215: inconsistent types of properties `start` and `end` in callback
+  functions `onMove`, `onMoving`, `onAdd`.
+
+
+## 2015-08-28, version 4.8.0
+
+### Timeline
+
+- Implemented reordering groups by dragging them vertically. Thanks @hansmaulwurf23.
+
+### Network
+
+- Added Spanish (es) locale. Thanks @gomezgoiri.
+- Added support for labels in edges and titles for both nodes and edges during gephi import.
+- Added KamadaKawai layout engine for improved initial layout.
+- Added Adaptive timestep to the physics solvers for increased performance during stabilization.
+- Added improvedLayout as experimental option for greatly improved stabilization times.
+- Added adaptiveTimestep as experimental option for greatly improved stabilization times.
+- Added support for Gephi directed edges, edge labels and titles.
+- Improved the positioning and CSS of the configurator and the color picker.
+- Greatly improved performance in clustering.
+- Made the network keep its 'view' during a change of the size of the container.
+- Fixed #1152, updating images now works.
+- Fixed cleaning up of nodes.
+- Fixed dynamic updating of label properties.
+- Fixed bugs in clustering algorithm.
+- Fixed find node return types.
+- Fixed bug where stabilization iterations were counted double. If it looks like the stabilization is slower, its because it is doing twice the amount of steps it did before.
+- Fixed getPositions return values.
+
+## Graph2d
+
+- Implemented configuration option `excludeFromLegend`. Thanks @Bernd0.
+
+
 ## 2015-07-27, version 4.7.0
 
 ### Timeline

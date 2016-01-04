@@ -315,6 +315,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var ld = ZMDataModel.getLogin();
     var maxItems = ld.graphSize || 200;
     
+    ZMDataModel.zmLog ("Graph items to draw is " + maxItems);
     $scope.maxItems = maxItems;
     $scope.graphLoaded = false;
     ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);

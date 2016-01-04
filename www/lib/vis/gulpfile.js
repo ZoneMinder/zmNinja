@@ -100,6 +100,7 @@ gulp.task('bundle-css', ['clean'], function () {
   var files = [
     './lib/shared/activator.css',
     './lib/shared/bootstrap.css',
+    './lib/shared/configuration.css',
 
     './lib/timeline/component/css/timeline.css',
     './lib/timeline/component/css/panel.css',
@@ -115,9 +116,8 @@ gulp.task('bundle-css', ['clean'], function () {
     './lib/timeline/component/css/pathStyles.css',
 
     './lib/network/css/network-manipulation.css',
-    './lib/network/css/network-navigation.css',
     './lib/network/css/network-tooltip.css',
-    './lib/network/css/network-configuration.css',
+    './lib/network/css/network-navigation.css',
     './lib/network/css/network-colorpicker.css'
   ];
 
@@ -148,7 +148,7 @@ gulp.task('minify', ['bundle-js'], function (cb) {
   //       any issues when concatenating the file downstream (the file ends
   //       with a comment).
   fs.writeFileSync(DIST + '/' + VIS_MIN_JS, result.code + '\n');
-  fs.writeFileSync(DIST + '/' + VIS_MAP, result.map);
+  fs.writeFileSync(DIST + '/' + VIS_MAP, result.map.replace(/"\.\/dist\//g, '"'));
 
   cb();
 });
