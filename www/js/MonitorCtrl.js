@@ -295,6 +295,7 @@ angular.module('zmApp.controllers')
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
         $scope.ptzMoveCommand = "";
+         $scope.presetOn = false;
         
 
         // This is a modal to show the monitor footage
@@ -329,6 +330,17 @@ angular.module('zmApp.controllers')
                         $scope.ptzStopCommand = "moveStop";
                     }
             
+                    // presets
+                    ZMDataModel.zmDebug ("Preset value is " +data.control.Control.HasPresets);
+                
+                    if (data.control.Control.HasPresets == '1')
+                    {
+                        $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
+                         $scope.ptzPresetCount = 13;
+                        ZMDataModel.zmDebug ("Number of presets is " + $scope.ptzPresetCount);
+                        $scope.ptzPresets = new Array($scope.ptzPresetCount);
+                        
+                    }
                     
 
                     console.log("***moveCommand: " + $scope.ptzMoveCommand);
