@@ -268,7 +268,12 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     var intervalModalHandle;
 
 
-
+$scope.togglePresets = function()
+{
+    $scope.presetOn = !$scope.presetOn;
+    console.log ("Changing preset to " + $scope.presetOn);
+};
+    
     //-------------------------------------------------------------
     // Send PTZ command to ZM
     // Note: PTZ fails on desktop, don't bother about it
