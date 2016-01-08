@@ -557,6 +557,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $scope.ptzMoveCommand = "";
         $scope.ptzStopCommand = "";
+        $scope.presetOn = false;
 
         // This is a modal to show the monitor footage
         // We need to switch to always awake if set so the feed doesn't get interrupted
@@ -575,6 +576,35 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                     $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1') ? 'moveCon' : 'move';
                     $scope.ptzStopCommand = "moveStop";
                     console.log("***moveCommand: " + $scope.ptzMoveCommand);
+                
+                
+                // presets
+                    ZMDataModel.zmDebug ("Preset value is " +data.control.Control.HasPresets);
+                
+                    if (data.control.Control.HasPresets == '1')
+                    {
+                        $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
+                         
+                        ZMDataModel.zmDebug ("Number of presets is " + $scope.ptzPresetCount);
+                        
+                        $scope.ptzPresets = [];
+                        for (var p=0; p<$scope.ptzPresetCount; p++)
+                        {
+                            $scope.ptzPresets.push ({name:(p+1).toString(), icon:'', cmd:"presetGoto"+(p+1).toString()});
+                           // $scope.ptzPresets[p].name = "Arjun " + p;
+                          //  console.log ("Name to " + $scope.ptzPresets[p].name);
+                        }
+                        
+                        if (data.control.Control.HasHomePreset == '1')
+                        {
+                            $scope.ptzPresets.unshift({name:'', icon:"ion-ios-home", cmd:'presetHome'});
+                            
+                            $scope.ptzPresetCount++;
+                        }
+                        
+                    }
+                
+                
                     ZMDataModel.zmLog("ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
                 })
                 .error(function (data) {
