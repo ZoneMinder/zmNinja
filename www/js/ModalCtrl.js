@@ -4,7 +4,7 @@
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment */
 
 
-angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils) {
+angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
 
 
     // from parent scope
@@ -272,18 +272,35 @@ $scope.togglePresets = function()
 {
     $scope.presetOn = !$scope.presetOn;
     console.log ("Changing preset to " + $scope.presetOn);
+    
+      var element = angular.element(document.getElementById("presetlist"));
+
+        if (!$scope.presetOn) {
+            element.removeClass("animated fadeInDown");
+            element.addClass("animated fadeOutUp");
+        } else {
+            element.removeClass("animated fadeOutUp");
+            element.addClass("animated fadeInDown");
+        }
+
+    
+    
 };
     
     //-------------------------------------------------------------
     // Send PTZ command to ZM
     // Note: PTZ fails on desktop, don't bother about it
     //-------------------------------------------------------------
+    
+
     $scope.controlPTZ = function (monitorId, cmd)
     {
         controlPTZ(monitorId, cmd);
     };
     function controlPTZ(monitorId, cmd) {
 
+        //presetGotoX
+        //presetHome
         //curl -X POST "http://server.com/zm/index.php?view=request" -d
         //"request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
 
@@ -296,8 +313,35 @@ $scope.togglePresets = function()
             return;
         }
 
+        var ptzData = "";
+        if (cmd.lastIndexOf("preset", 0) === 0)
+        {
+            ZMDataModel.zmDebug("PTZ command is a preset, so skipping xge/lge");
+            ptzData = {
+                view: "request",
+                request: "control",
+                id: monitorId,
+                control: cmd,
+              //  xge: "30", //wtf
+              //  yge: "30", //wtf
+            };
+            
+        }
+        else
+        {
+            
+            ptzData = {
+                view: "request",
+                request: "control",
+                id: monitorId,
+                control: cmd,
+                xge: "30", //wtf
+                yge: "30", //wtf
+            };
+        }
 
         console.log("Command value " + cmd + " with MID=" + monitorId);
+        console.log ("PTZDATA is " + JSON.stringify(ptzData));
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "please wait...",
@@ -337,14 +381,7 @@ $scope.togglePresets = function()
             // logic - /zm/api/monitors/X.json, read ControlId = Y
             // then zm/api/controls/Y.json
 
-            data: {
-                view: "request",
-                request: "control",
-                id: monitorId,
-                control: cmd,
-                xge: "30", //wtf
-                yge: "30", //wtf
-            }
+            data: ptzData
 
         });
 

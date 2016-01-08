@@ -336,9 +336,23 @@ angular.module('zmApp.controllers')
                     if (data.control.Control.HasPresets == '1')
                     {
                         $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
-                         $scope.ptzPresetCount = 13;
+                         //$scope.ptzPresetCount = 33;
                         ZMDataModel.zmDebug ("Number of presets is " + $scope.ptzPresetCount);
-                        $scope.ptzPresets = new Array($scope.ptzPresetCount);
+                        
+                        $scope.ptzPresets = [];
+                        for (var p=0; p<$scope.ptzPresetCount; p++)
+                        {
+                           $scope.ptzPresets.push ({name:(p+1).toString(), icon:'', cmd:"presetGoto"+(p+1).toString()});
+                           // $scope.ptzPresets[p].name = "Arjun " + p;
+                          //  console.log ("Name to " + $scope.ptzPresets[p].name);
+                        }
+                        
+                        if (data.control.Control.HasHomePreset == '1')
+                        {
+                            $scope.ptzPresets.unshift({name:'', icon:"ion-ios-home", cmd:'presetHome'});
+                            
+                            $scope.ptzPresetCount++;
+                        }
                         
                     }
                     

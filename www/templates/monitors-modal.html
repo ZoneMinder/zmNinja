@@ -50,19 +50,10 @@
                 </circular>
             </div>  
             
-            <div ng-if="presetOn" class="ptzpresetbuttons animated fadeInDown">
+            <div ng-if="presetOn" class="ptzpresetbuttons animated fadeInDown" id="presetlist">
                 <div ng-repeat="preset in ptzPresets track by $index">
-                    <div ng-if="$index%4==0" class="row">
-                          <div class="col">
-                             <button class="button button-small button-dark">{{$index+1}}</button>
-                             <button ng-if="$index+2<=ptzPresetCount" 
-                                     class="button button-small  button-dark">{{$index+2}}</button>
-                             <button ng-if="$index+3<=ptzPresetCount" 
-                                     class="button button-small  button-dark">{{$index+3}}</button>
-                             <button ng-if="$index+4<=ptzPresetCount"
-                                     class="button  button-small  button-dark">{{$index+4}}</button>
-                          </div>
-                    </div>
+                    <button class="button {{preset.icon}} button-small button-royal" style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, preset.cmd);">{{preset.name}}</button>
+                    
                     
                 </div>
             </div>
@@ -70,7 +61,7 @@
            
             <div class="ptzcenteredbutton">
               <a class="button button-small icon ion-stop  button-assertive" href="" ng-click="controlPTZ(monitorId, ptzStopCommand);"></a>
-                <a class="button button-small button-stable" href="" ng-click="togglePresets();">presets</a>
+                <a class="button button-small button-royal" href="" ng-click="togglePresets();">presets</a>
             </div>
             
         </div>
