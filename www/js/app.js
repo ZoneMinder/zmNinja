@@ -18,8 +18,8 @@ angular.module('zmApp', [
                             'com.2fdevs.videogular',
 			                 'com.2fdevs.videogular.plugins.controls',
                             'com.2fdevs.videogular.plugins.overlayplay'
-                           
- 
+
+
                         ])
 
 // ------------------------------------------
@@ -30,18 +30,18 @@ angular.module('zmApp', [
 .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     minEventServerVersion: '0.5',
-    alarmFlashTimer:20000, // time to flash alarm
-    gcmSenderId:'710936220256',
+    alarmFlashTimer: 20000, // time to flash alarm
+    gcmSenderId: '710936220256',
     httpTimeout: 15000,
     largeHttpTimeout: 60000,
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
     logFileMaxSize: 10000, // after this limit log gets reset
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
-    updateCheckInterval:  86400000, // 24 hrs
+    updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
     safeMontageLimit: 10,
-    safeImageQuality:10,
+    safeImageQuality: 10,
     maxFPS: 30,
     defaultFPS: 3,
     maxMontageQuality: 70,
@@ -51,7 +51,7 @@ angular.module('zmApp', [
     graphStrokeColor: 'rgba(151,187,205,0.8)',
     graphHighlightFill: 'rgba(0,163,124,0.5)',
     graphItemMax: 200,
-    graphDesktopItemMax:2000,
+    graphDesktopItemMax: 2000,
     monitorCheckingColor: '#03A9F4',
     monitorNotRunningColor: '#F44336',
     monitorPendingColor: '#FF9800',
@@ -61,10 +61,10 @@ angular.module('zmApp', [
     eventsListDetailsHeight: 200.0,
     eventsListScrubHeight: 300,
     loginScreenString: "var currentView = 'login'", // Isn't there a better way?
-    desktopUrl:"/zm",
+    desktopUrl: "/zm",
     desktopApiUrl: "/api/zm",
     latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
-    
+
 })
 
 
@@ -72,20 +72,20 @@ angular.module('zmApp', [
 //------------------------------------------------------------------
 // switch between collection repeat or ng-repeat
 //-------------------------------------------------------------------
-.directive('repeat', function ($compile, $rootScope) { 
-  return {
-    restrict: 'A',
-    priority: 2000,
-    terminal: true,
-    link: function (scope, element) {
-      var repeatDirective = ($rootScope.platformOS == 'desktop') ? 'ng-repeat' : 'collection-repeat';
-      //console.log ("*********** REPEAT SCROLL IS " + repeatDirective);
+.directive('repeat', function ($compile, $rootScope) {
+    return {
+        restrict: 'A',
+        priority: 2000,
+        terminal: true,
+        link: function (scope, element) {
+            var repeatDirective = ($rootScope.platformOS == 'desktop') ? 'ng-repeat' : 'collection-repeat';
+            //console.log ("*********** REPEAT SCROLL IS " + repeatDirective);
 
-      element.attr(repeatDirective, element.attr('repeat'));
-      element.removeAttr('repeat');
-      $compile(element)(scope);
-    }
-  };
+            element.attr(repeatDirective, element.attr('repeat'));
+            element.removeAttr('repeat');
+            $compile(element)(scope);
+        }
+    };
 })
 
 
@@ -164,21 +164,21 @@ angular.module('zmApp', [
                 $element.bind('error', function () {
                     // console.log ("DIRECTIVE: IMAGE ERROR");
                     loader.remove();
-                    
+
 
                     var url = 'img/novideo.png';
                     $element.prop('src', url);
                     imageLoadingDataShare.set(0);
                 });
-                
-                function waitForFrame1()
-                    {
-                        ionic.DomUtil.requestAnimationFrame (
-                            function () {imageLoadingDataShare.set(0); 
-                                         //console.log ("IMAGE LOADED");
-                                        });
-                        
-                    }
+
+                function waitForFrame1() {
+                    ionic.DomUtil.requestAnimationFrame(
+                        function () {
+                            imageLoadingDataShare.set(0);
+                            //console.log ("IMAGE LOADED");
+                        });
+
+                }
 
                 function loadImage() {
                     $element.bind("load", function (e) {
@@ -187,17 +187,19 @@ angular.module('zmApp', [
                             loader.remove();
                             //imageLoadingDataShare.set(0);
                             //console.log ("rendered");
-                            
+
                             // lets wait for 2 frames for animation
                             // to render - hoping this will improve tear 
                             // of images
-                           ionic.DomUtil.requestAnimationFrame (
-                               function () {waitForFrame1();});
-                            
+                            ionic.DomUtil.requestAnimationFrame(
+                                function () {
+                                    waitForFrame1();
+                                });
+
                         }
                     });
 
-                    
+
 
 
                     if ($scope.imageSpinnerBackgroundImage == "true") {
@@ -207,20 +209,20 @@ angular.module('zmApp', [
                                 loader.remove();
                             }
                             // set style attribute on element (it will load image)
-                              if (imageLoadingDataShare.get() != 1) 
-                              
+                            if (imageLoadingDataShare.get() != 1)
+
                                 $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')';
-                            
+
                             //$element[0].style.backgroundImage = 'url(' + 'img/novideo.png'+ ')';
-                            
+
                         };
-                        
-                    
+
+
                         bgImg.src = $attributes.imageSpinnerSrc;
-                        
+
                     } else {
                         $element[0].src = $attributes.imageSpinnerSrc; // set src attribute on element (it will load image)
-                        
+
                     }
                 }
 
@@ -229,9 +231,9 @@ angular.module('zmApp', [
                 }
 
                 $element.on('$destroy', function () {
-                    
+
                 });
-                
+
 
             }
         };
@@ -247,13 +249,13 @@ angular.module('zmApp', [
 // That way the user can try again, and won't get stuck
 // Also remember you need to add it to .config
 //------------------------------------------------------------------
-.factory('timeoutHttpIntercept', [  '$rootScope', '$q', 'zm', '$injector', function ( $rootScope, $q, zm, $injector) {
+.factory('timeoutHttpIntercept', ['$rootScope', '$q', 'zm', '$injector', function ($rootScope, $q, zm, $injector) {
     var zmCookie = "";
 
     return {
         'request': function (config) {
-            
-            
+
+
             if (zmCookie) {
                 config.headers.Cookie = "ZMSESSID=" + zmCookie;
             }
@@ -266,7 +268,7 @@ angular.module('zmApp', [
             {
                 // these can take time, so lets bump up timeout
                 config.timeout = zm.largeHttpTimeout;
-                
+
             } else {
                 config.timeout = zm.httpTimeout;
             }
@@ -284,7 +286,7 @@ angular.module('zmApp', [
 
                         zmCookie = zmSess[1];
                     }
-                } 
+                }
             }
             return response;
         }
@@ -297,87 +299,76 @@ angular.module('zmApp', [
 //-----------------------------------------------------------------
 // This service automatically checks for new versions every 24 hrs
 //------------------------------------------------------------------
-.factory ('zmCheckUpdates', function($interval, $http, zm, $timeout, $localstorage, ZMDataModel, $rootScope) {
+.factory('zmCheckUpdates', function ($interval, $http, zm, $timeout, $localstorage, ZMDataModel, $rootScope) {
     var zmUpdateHandle;
-    var zmUpdateVersion ="";
-    
-    function start()
-    {
+    var zmUpdateVersion = "";
+
+    function start() {
         checkUpdate();
-        $interval.cancel(zmUpdateHandle);     
+        $interval.cancel(zmUpdateHandle);
         zmUpdateHandle = $interval(function () {
-                    checkUpdate();
+            checkUpdate();
 
-                }, zm.updateCheckInterval);
+        }, zm.updateCheckInterval);
 
 
-        function checkUpdate()
-        {
-            var lastdateString = $localstorage.get ("lastUpdateCheck");
+        function checkUpdate() {
+            var lastdateString = $localstorage.get("lastUpdateCheck");
             var lastdate;
-            if (!lastdateString)
-            {
-                
-                lastdate = moment().subtract (2,'day');
-                
-            }
-            else
-            {
+            if (!lastdateString) {
+
+                lastdate = moment().subtract(2, 'day');
+
+            } else {
                 lastdate = moment(lastdateString);
             }
-            var timdiff =  moment().diff(lastdate,'hours');
-            if (timdiff < 24 )
-            {
-                ZMDataModel.zmLog ("Checked for update " + timdiff + " hours ago. Not checking again");
-                
-                return;   
+            var timdiff = moment().diff(lastdate, 'hours');
+            if (timdiff < 24) {
+                ZMDataModel.zmLog("Checked for update " + timdiff + " hours ago. Not checking again");
+
+                return;
             }
-            ZMDataModel.zmLog ("Checking for new version updates...");
-            
-            
-            $http.get (zm.latestRelease)
-            .then (function(success) {
-                
-                            
-                $localstorage.set ("lastUpdateCheck", moment().toString());
-                //console.log ("FULL STRING " + success.data.tag_name);
-                var res = success.data.tag_name.match("v(.*)");
-                zmUpdateVersion = res[1];
-                var currentVersion = ZMDataModel.getAppVersion();
-                if ($rootScope.platformOS == "desktop")
-                {
-                    zmUpdateVersion = zmUpdateVersion+"D";
-                }
-                if (ZMDataModel.getAppVersion() != zmUpdateVersion)
-                {
-                    $rootScope.newVersionAvailable = "v" + zmUpdateVersion + " available";
-                }
-                else
-                {
-                    $rootScope.newVersionAvailable = "";
-                }
-                //console.log ("UPDATE " + zmVersion);
-            });
+            ZMDataModel.zmLog("Checking for new version updates...");
+
+
+            $http.get(zm.latestRelease)
+                .then(function (success) {
+
+
+                    $localstorage.set("lastUpdateCheck", moment().toString());
+                    //console.log ("FULL STRING " + success.data.tag_name);
+                    var res = success.data.tag_name.match("v(.*)");
+                    zmUpdateVersion = res[1];
+                    var currentVersion = ZMDataModel.getAppVersion();
+                    if ($rootScope.platformOS == "desktop") {
+                        zmUpdateVersion = zmUpdateVersion + "D";
+                    }
+                    if (ZMDataModel.getAppVersion() != zmUpdateVersion) {
+                        $rootScope.newVersionAvailable = "v" + zmUpdateVersion + " available";
+                    } else {
+                        $rootScope.newVersionAvailable = "";
+                    }
+                    //console.log ("UPDATE " + zmVersion);
+                });
 
         }
     }
-    
-    function getLatestUpdateVersion()
-    {
-        return (zmUpdateVersion == "")? "(unknown)" : zmUpdateVersion;
+
+    function getLatestUpdateVersion() {
+        return (zmUpdateVersion == "") ? "(unknown)" : zmUpdateVersion;
     }
-    
+
     return {
         start: start,
         getLatestUpdateVersion: getLatestUpdateVersion
-        //stop: stop,
-        
+            //stop: stop,
+
     };
-    
-    
+
+
 })
-          
-        
+
+
 
 //-----------------------------------------------------------------
 // This service automatically logs into ZM at periodic intervals
@@ -414,7 +405,7 @@ angular.module('zmApp', [
             contentBannerInstance();
         }, 2000);
         ZMDataModel.zmDebug("auth-success emit:Successful");
-      });
+    });
 
 
 
@@ -431,22 +422,22 @@ angular.module('zmApp', [
         if (ld.isUseAuth != "1") {
             $ionicLoading.hide();
             ZMDataModel.zmLog("Authentication is disabled. Skipping login");
-            ZMDataModel.zmLog ("However, still doing a reachability check...");
-            
+            ZMDataModel.zmLog("However, still doing a reachability check...");
+
             $http.get(ld.url)
-            .then (function(success) {
-                    ZMDataModel.zmLog(ld.url + " is reachable.");
-                    d.resolve("Login success - no auth");
-                    return d.promise;
-                    
-                   },
-                   function (error) {
-                    ZMDataModel.zmLog(ld.url + " is NOT reachable.");
-                    d.reject("Login Error - not reachable");
-                    $rootScope.$emit('auth-error', "not reachable");
-                    return d.promise;
-            });
-         
+                .then(function (success) {
+                        ZMDataModel.zmLog(ld.url + " is reachable.");
+                        d.resolve("Login success - no auth");
+                        return d.promise;
+
+                    },
+                    function (error) {
+                        ZMDataModel.zmLog(ld.url + " is NOT reachable.");
+                        d.reject("Login Error - not reachable");
+                        $rootScope.$emit('auth-error', "not reachable");
+                        return d.promise;
+                    });
+
             return d.promise;
         }
 
@@ -480,7 +471,7 @@ angular.module('zmApp', [
 
             });
 
-        
+
 
         var loginData = ZMDataModel.getLogin();
         //ZMDataModel.zmDebug ("*** AUTH LOGIN URL IS " + loginData.url);
@@ -517,11 +508,11 @@ angular.module('zmApp', [
                 // so we will check if the data has
                 // <title>ZM - Login</title> -- it it does then its the login page
 
-                
+
                 if (data.indexOf(zm.loginScreenString) == -1) {
-                     //eventServer.start();
+                    //eventServer.start();
                     $rootScope.loggedIntoZm = 1;
-                   
+
                     ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
 
                     d.resolve("Login Success");
@@ -552,9 +543,9 @@ angular.module('zmApp', [
                         },
                         function (error) {
                             //console.log(error);
-                            
+
                             ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-                        ZMDataModel.zmDebug("Error was: " + JSON.stringify(error));
+                            ZMDataModel.zmDebug("Error was: " + JSON.stringify(error));
                         });
 
                 return (d.promise);
@@ -564,8 +555,8 @@ angular.module('zmApp', [
                 $ionicLoading.hide();
                 $rootScope.loggedIntoZm = -1;
                 console.log("**** ZM Login FAILED");
-                ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error), 
-                                  "error, but not calling auth-error emit");
+                ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error),
+                    "error, but not calling auth-error emit");
                 // bad urls etc come here
                 $rootScope.$emit('auth-error', error);
 
@@ -617,9 +608,9 @@ angular.module('zmApp', [
 //====================================================================
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer,$ionicContentBanner, $ionicLoading) {
-    
-    
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading) {
+
+
 
         $rootScope.zmGlobalCookie = "";
         $rootScope.isEventFilterOn = false;
@@ -632,48 +623,46 @@ angular.module('zmApp', [
         $rootScope.loggedIntoZm = 0;
         $rootScope.apnsToken = '';
         $rootScope.tappedNotification = 0;
-         //var eventsToDisplay=[];
-        $rootScope.alarmCount="0";
-        $rootScope.platformOS="desktop";
+        //var eventsToDisplay=[];
+        $rootScope.alarmCount = "0";
+        $rootScope.platformOS = "desktop";
         $rootScope.currentServerGroup = "defaultServer";
         $rootScope.validMonitorId = "";
         $rootScope.newVersionAvailable = "";
         $rootScope.userCancelledAuth = false;
         $rootScope.online = true;
         //$rootScope.minAlarmCount = "1";
-    
-    
+
+
         // only for android
-        $rootScope.exitApp = function()
-        {
-            ZMDataModel.zmLog ("user exited app");
+        $rootScope.exitApp = function () {
+            ZMDataModel.zmLog("user exited app");
             ionic.Platform.exitApp();
         };
-       
+
 
         // This is a global exception interceptor
-        $rootScope.exceptionMessage = function(error)
-        {
-            ZMDataModel.zmDebug("**EXCEPTION**"+error.reason+" caused by " + error.cause);
+        $rootScope.exceptionMessage = function (error) {
+            ZMDataModel.zmDebug("**EXCEPTION**" + error.reason + " caused by " + error.cause);
         };
-       
+
         // register callbacks for online/offline
         // lets see if it really works
         $rootScope.online = navigator.onLine;
-          $window.addEventListener("offline", function () {
-            $rootScope.$apply(function() {
-              $rootScope.online = false;
-                ZMDataModel.zmLog ("Your network went offline");
+        $window.addEventListener("offline", function () {
+            $rootScope.$apply(function () {
+                $rootScope.online = false;
+                ZMDataModel.zmLog("Your network went offline");
             });
-          }, false);
-          $window.addEventListener("online", function () {
-            $rootScope.$apply(function() {
-              $rootScope.online = true;
-            ZMDataModel.zmLog ("Your network is online, re-authenticating");
+        }, false);
+        $window.addEventListener("online", function () {
+            $rootScope.$apply(function () {
+                $rootScope.online = true;
+                ZMDataModel.zmLog("Your network is online, re-authenticating");
                 zmAutoLogin.doLogin("re-authenticating");
-                
+
             });
-          }, false);
+        }, false);
 
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
@@ -701,24 +690,23 @@ angular.module('zmApp', [
         };
 
         window.addEventListener("resize", checkOrientation, false);
-    
 
-    // we come here when a user forcibly cancels portal auth
-    // useful when you know your auth won't succeed and you need to 
-    // switch to another server
-    $rootScope.cancelAuth = function()
-    {
-        $ionicLoading.hide();
-        ZMDataModel.zmLog("User cancelled login");
-        $ionicHistory.nextViewOptions({
-                        disableAnimate: true,
-                        disableBack: true
-                    });
-        $rootScope.userCancelledAuth = true;
-        $state.go("login");
-        
-    };
-    
+
+        // we come here when a user forcibly cancels portal auth
+        // useful when you know your auth won't succeed and you need to 
+        // switch to another server
+        $rootScope.cancelAuth = function () {
+            $ionicLoading.hide();
+            ZMDataModel.zmLog("User cancelled login");
+            $ionicHistory.nextViewOptions({
+                disableAnimate: true,
+                disableBack: true
+            });
+            $rootScope.userCancelledAuth = true;
+            $state.go("login");
+
+        };
+
         //---------------------------------------------------------------------------
         // authorize state transitions
         //----------------------------------------------------------------------------
@@ -728,16 +716,14 @@ angular.module('zmApp', [
 
             if (ZMDataModel.isLoggedIn()) {
                 console.log("State transition is authorized");
-                
+
                 return;
-            }
-            else
-            {
-                console.log ("Not logged in, requested to go to " + JSON.stringify(toState));
+            } else {
+                console.log("Not logged in, requested to go to " + JSON.stringify(toState));
                 // event.preventDefault();
-               // $state.transitionTo('login');
-                
-                
+                // $state.transitionTo('login');
+
+
             }
 
             if (requireLogin) {
@@ -751,33 +737,33 @@ angular.module('zmApp', [
                 event.preventDefault();
                 $state.transitionTo('login');
             }
-        
+
             return;
 
         });
-    
+
 
         //---------------------------------------------------------------------
         // called when device is ready
         //---------------------------------------------------------------------
 
         $ionicPlatform.ready(function () {
-              $rootScope.platformOS = "desktop";
-            
-            
-            
-         
+            $rootScope.platformOS = "desktop";
+
+
+
+
             ZMDataModel.zmLog("Device is ready");
             var ld = ZMDataModel.getLogin();
-            
-            if  ($ionicPlatform.is('ios'))
-            $rootScope.platformOS = "ios";
-    
-    
-            if  ($ionicPlatform.is('android'))
-                    $rootScope.platformOS = "android";
-            
-            console.log ("**** You are running on " + $rootScope.platformOS);
+
+            if ($ionicPlatform.is('ios'))
+                $rootScope.platformOS = "ios";
+
+
+            if ($ionicPlatform.is('android'))
+                $rootScope.platformOS = "android";
+
+            console.log("**** You are running on " + $rootScope.platformOS);
 
             ZMDataModel.init();
             EventServer.init();
@@ -788,22 +774,22 @@ angular.module('zmApp', [
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
 
-           // var loginData = ZMDataModel.getLogin();
+            // var loginData = ZMDataModel.getLogin();
 
-            
-          
+
+
             $fileLogger.checkFile().then(function (resp) {
                 if (parseInt(resp.size) > zm.logFileMaxSize) {
-                    
+
                     $fileLogger.deleteLogfile().then(function () {
                         console.log('Logfile deleted');
-                        
+
                     });
                 } else {
                     console.log("Log file size is " + resp.size + " bytes");
                 }
-                
-               
+
+
             });
 
 
@@ -814,9 +800,9 @@ angular.module('zmApp', [
             $fileLogger.setStorageFilename(zm.logFile);
             // easier tz reading
             $fileLogger.setTimestampFormat('medium');
-            
+
             ZMDataModel.zmLog("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
-            
+
             if (window.cordova) {
                 // getAppVersion is a handy library
                 // that lets you extract the app version in config.xml
@@ -849,7 +835,7 @@ angular.module('zmApp', [
             $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
 
             console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" +
-                        $rootScope.devHeight);
+                $rootScope.devHeight);
 
             // What I noticed is when I moved the app to the device
             // the montage screens were not redrawn after resuming from background mode
@@ -859,12 +845,11 @@ angular.module('zmApp', [
             document.addEventListener("resume", function () {
                 ZMDataModel.zmLog("App is resuming from background");
                 var ld = ZMDataModel.getLogin();
-                if ($rootScope.apnsToken && ld.isUseEventServer =="1")
-                {
-                   // ZMDataModel.zmDebug("sending enable push to Event Server");
-                   // EventServer.sendMessage('push', {type:'control', enablepush:'0'});
+                if ($rootScope.apnsToken && ld.isUseEventServer == "1") {
+                    // ZMDataModel.zmDebug("sending enable push to Event Server");
+                    // EventServer.sendMessage('push', {type:'control', enablepush:'0'});
                 }
-                
+
                 ZMDataModel.setBackground(false);
                 // don't animate
                 $ionicHistory.nextViewOptions({
@@ -895,18 +880,17 @@ angular.module('zmApp', [
             document.addEventListener("pause", function () {
                 console.log("****The application is going into  background");
                 ZMDataModel.zmLog("App is going into background");
-                
+
                 var ld = ZMDataModel.getLogin();
-                if ($rootScope.apnsToken && ld.isUseEventServer == "1")
-                {
-                  //  ZMDataModel.zmDebug("sending enable push to Event Server");
+                if ($rootScope.apnsToken && ld.isUseEventServer == "1") {
+                    //  ZMDataModel.zmDebug("sending enable push to Event Server");
                     //EventServer.sendMessage('push', {type:'control',enablepush:'1'});
                 }
                 ZMDataModel.setBackground(true);
 
                 zmAutoLogin.stop();
                 if ($rootScope.zmPopup)
-                        $rootScope.zmPopup.close();
+                    $rootScope.zmPopup.close();
                 //$ionicPopup.close();
 
             }, false);
@@ -923,11 +907,11 @@ angular.module('zmApp', [
                 StatusBar.styleDefault();
             }
 
-        // lets POST so we get a session ID right hre
+            // lets POST so we get a session ID right hre
 
-        console.log("Setting up POST LOGIN timer");
-        zmAutoLogin.start();
-    
+            console.log("Setting up POST LOGIN timer");
+            zmAutoLogin.start();
+
 
         }); //platformReady
 
@@ -939,24 +923,27 @@ angular.module('zmApp', [
 
 // My route map connecting menu options to their respective templates and controllers
 .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide) {
-    
-    
+
+
     // This is an exception interceptor so it can show up in app logs 
     // if they occur. I suspect digest and other errors will be useful
     // for me to see
-    
-     $provide.decorator("$exceptionHandler", ['$delegate','$injector', function($delegate, $injector) {
-        return function(exception, cause) {
-           
-        
-             var $rootScope = $injector.get("$rootScope");
-            $rootScope.exceptionMessage({reason:exception, cause:cause});
-            
+
+    $provide.decorator("$exceptionHandler", ['$delegate', '$injector', function ($delegate, $injector) {
+        return function (exception, cause) {
+
+
+            var $rootScope = $injector.get("$rootScope");
+            $rootScope.exceptionMessage({
+                reason: exception,
+                cause: cause
+            });
+
             $delegate(exception, cause);
-            
+
         };
     }]);
-    
+
     // If you do this, Allow Origin can't be *
     //$httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
@@ -1027,15 +1014,15 @@ angular.module('zmApp', [
         data: {
             requireLogin: false
         },
-        
+
         url: "/lowversion/:ver",
         templateUrl: "templates/lowversion.html",
         controller: 'zmApp.LowVersionCtrl',
 
     })
 
-    
-    
+
+
     .state('events-graphs', {
         data: {
             requireLogin: true
@@ -1088,7 +1075,7 @@ angular.module('zmApp', [
         controller: 'zmApp.TimelineCtrl',
     })
 
-     .state('eventserversettings', {
+    .state('eventserversettings', {
         data: {
             requireLogin: true
         },
@@ -1110,8 +1097,8 @@ angular.module('zmApp', [
         templateUrl: "templates/log.html",
         controller: 'zmApp.LogCtrl',
     })
-    
-   
+
+
 
     .state('zm-portal-login', {
         data: {
@@ -1121,7 +1108,7 @@ angular.module('zmApp', [
         templateUrl: "templates/zm-portal-login.html",
         controller: 'zmApp.PortalLoginCtrl',
     })
-    
+
     .state('first-use', {
         data: {
             requireLogin: false
@@ -1167,9 +1154,9 @@ angular.module('zmApp', [
 
     $urlRouterProvider.otherwise(function ($injector, $location) {
         var $state = $injector.get("$state");
-        
+
         $state.go("zm-portal-login");
-       
+
     });
 
 }); //config
