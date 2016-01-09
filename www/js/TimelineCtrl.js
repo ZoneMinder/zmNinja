@@ -13,24 +13,28 @@
 // FIXME: too much redundant code between EventCtrl and Timeline 
 // Move to ModalCtrl and see if it works
 
-angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory','$sce', '$stateParams', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce,$stateParams) {
+angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory', '$sce', '$stateParams', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce, $stateParams) {
 
     console.log("Inside Timeline controller");
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
-    
+
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
-    $scope.handleAlarms = function()
-    {
-        $rootScope.isAlarm=!$rootScope.isAlarm;
-        if (!$rootScope.isAlarm)
-        {
-            $rootScope.alarmCount="0";
-            $ionicHistory.nextViewOptions({disableBack: true});		
-            $state.go("events", {"id": 0}, { reload: true });
+    $scope.handleAlarms = function () {
+        $rootScope.isAlarm = !$rootScope.isAlarm;
+        if (!$rootScope.isAlarm) {
+            $rootScope.alarmCount = "0";
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+            $state.go("events", {
+                "id": 0
+            }, {
+                reload: true
+            });
         }
     };
 
@@ -59,19 +63,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         //  console.log ("*** MS COUNT " + (1000.0/(myframes/mylen)));
         return (Math.round(1000 / (myframes / mylen)));
     };
-    
-    
+
+
     $scope.toggleMinAlarmFrameCount = function () {
-            console.log ("Toggling");
-        
+        console.log("Toggling");
+
         var ld = ZMDataModel.getLogin();
-            ld.minAlarmCount = ld.minAlarmCount=="0"? "1":"0";
-            ZMDataModel.setLogin(ld);
-        
-        
+        ld.minAlarmCount = ld.minAlarmCount == "0" ? "1" : "0";
+        ZMDataModel.setLogin(ld);
+
+
         drawGraph(curFromDate, curToDate, curCount);
-           
-        };
+
+    };
 
     //-----------------------------------------------------------
     // Move/Zoom are used to move the timeline around
@@ -107,7 +111,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     };
 
 
-    
+
 
 
     //--------------------------------------------------------
@@ -116,35 +120,35 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //--------------------------------------------------------
     function openModal(event) {
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
-            
-            // pass this event to ModalCtrl
-            $scope.currentEvent = event;
-            $scope.event = event;
-            // in Timeline view, make sure events stick to same monitor
-            $scope.followSameMonitor="1";
 
-            //prepareModalEvent(event.Event.Id);
+        // pass this event to ModalCtrl
+        $scope.currentEvent = event;
+        $scope.event = event;
+        // in Timeline view, make sure events stick to same monitor
+        $scope.followSameMonitor = "1";
 
-            $ionicModal.fromTemplateUrl('templates/events-modal.html', {
-                    scope: $scope, // give ModalCtrl access to this scope
-                    animation: 'slide-in-up'
-                })
-                .then(function (modal) {
-                    $scope.modal = modal;
+        //prepareModalEvent(event.Event.Id);
 
-                    $ionicLoading.show({
-                        template: "please wait...",
-                        noBackdrop: true,
-                        duration: 10000
-                    });
+        $ionicModal.fromTemplateUrl('templates/events-modal.html', {
+                scope: $scope, // give ModalCtrl access to this scope
+                animation: 'slide-in-up'
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
 
-                    $scope.modal.show();
-
-                    var ld = ZMDataModel.getLogin();
-
-                    
-
+                $ionicLoading.show({
+                    template: "please wait...",
+                    noBackdrop: true,
+                    duration: 10000
                 });
+
+                $scope.modal.show();
+
+                var ld = ZMDataModel.getLogin();
+
+
+
+            });
 
     }
 
@@ -162,14 +166,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         }
 
     };
-    
-  /*   $scope.toggleGapless = function()
-        {
-            console.log ("GAPLESS TOGGLE");
-            $scope.loginData.gapless = !$scope.loginData.gapless;
-            ZMDataModel.setLogin($scope.loginData);
-            
-        };*/
+
+    /*   $scope.toggleGapless = function()
+          {
+              console.log ("GAPLESS TOGGLE");
+              $scope.loginData.gapless = !$scope.loginData.gapless;
+              ZMDataModel.setLogin($scope.loginData);
+              
+          };*/
 
 
     //-------------------------------------------------------------------------
@@ -190,15 +194,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //--------------------------------------------------------
 
     function showEvent(event) {
-    
+
 
         openModal(event);
 
     }
 
-    
-    
-     
+
+
+
 
     //-------------------------------------------------
     // Make sure we delete the timeline
@@ -223,17 +227,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         console.log("***AFTER ENTER");
 
         var tempMon = message;
-        
+
         //console.log ("TIMELINE MONITORS: " + JSON.stringify(message));
         var ld = ZMDataModel.getLogin();
         $scope.loginData = ZMDataModel.getLogin();
-        
-        if (ld.persistMontageOrder)
-        {
-            var iMon = ZMDataModel.applyMontageMonitorPrefs (tempMon, 2);
+
+        if (ld.persistMontageOrder) {
+            var iMon = ZMDataModel.applyMontageMonitorPrefs(tempMon, 2);
             $scope.monitors = iMon[0];
-        }
-        else
+        } else
             $scope.monitors = message;
         if ($rootScope.customTimelineRange) {
             console.log("***** CUSTOM RANGE");
@@ -248,33 +250,31 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             } else {
                 console.log("FROM & TO IS CUSTOM INVALID");
             }
-        }
-        else
-        {
+        } else {
             drawGraph(fromDate, toDate, maxItems);
         }
-        
-        $ionicPopover.fromTemplateUrl('templates/timeline-popover.html', {
-        scope: $scope,
-    }).then(function (popover) {
-        $scope.popover = popover;
-    });
 
-        
+        $ionicPopover.fromTemplateUrl('templates/timeline-popover.html', {
+            scope: $scope,
+        }).then(function (popover) {
+            $scope.popover = popover;
+        });
+
+
     });
 
     //-------------------------------------------------
     // Controller main
     //-------------------------------------------------
-    
+
     $scope.mycarousel = {
-            index: 0
-        };
-        $scope.ionRange = {
-            index: 1
-        };
+        index: 0
+    };
+    $scope.ionRange = {
+        index: 1
+    };
     //var currentEvent="";
-    
+
     // keep a record for redraw 
     var curFromDate, curToDate, curCount;
 
@@ -287,10 +287,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // FIXME: Timeline awake to avoid graph redrawing
     ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
-   
-    
 
-    
+
+
+
 
     // fromDate and toDate will be used to plot the range for the graph
     // We start in day mode
@@ -308,14 +308,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.toDate = toDate;
 
 
-    console.log ("*********************** TIMELINE MAIN ");
+    console.log("*********************** TIMELINE MAIN ");
 
     // maxItems will be ignored during timeline draw if its desktop
-   // var maxItems = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
+    // var maxItems = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
     var ld = ZMDataModel.getLogin();
     var maxItems = ld.graphSize || 200;
-    
-    ZMDataModel.zmLog ("Graph items to draw is " + maxItems);
+
+    ZMDataModel.zmLog("Graph items to draw is " + maxItems);
     $scope.maxItems = maxItems;
     $scope.graphLoaded = false;
     ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
@@ -327,17 +327,17 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     container = angular.element(document.getElementById('visualization'));
     var timeline = "";
 
-    
-    
+
+
     //console.log ("RETURNING MONITORS " + JSON.stringify($scope.monitors));
     //$scope.monitors = message;
-    
+
     //console.log ("MONITOR DATA AFTER APPLYING : " + JSON.stringify($scope.monitors));
-    
+
     $scope.navControls = false;
     var navControls = false;
 
-    
+
 
     //drawGraph(fromDate, toDate, maxItems);
     //dummyDrawGraph(fromDate, toDate,maxItems);
@@ -353,7 +353,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.toggleNav = function () {
         if (navControls == true) {
             navControls = !navControls;
-           // $scope.navControls = navControls;
+            // $scope.navControls = navControls;
             // give out animation time
             $timeout(function () {
                 $scope.navControls = navControls;
@@ -428,8 +428,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
 
     function drawGraph(fromDate, toDate, count) {
-        
-        
+
+
         curFromDate = fromDate;
         curToDate = toDate;
         curCount = count;
@@ -499,7 +499,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 // I figure out how many items the server returns per API page
                 // and divide the # of items I want (currently 200) with # of items per page
                 // So iterCount is the # of HTTP calls I need to make
-                iterCount =  Math.max(Math.round(count / itemsPerPage),1);
+                iterCount = Math.max(Math.round(count / itemsPerPage), 1);
                 ZMDataModel.zmDebug("TimelineCtrl/drawGraph: pages of data: " + pages + " items per page: " + itemsPerPage);
                 ZMDataModel.zmDebug("TimelineCtrl/drawGraph: I will make " + iterCount + " HTTP Requests to get all graph data");
 
@@ -524,7 +524,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             for (var g = 0; g < $scope.monitors.length; g++) {
                                 groups.add({
                                     id: $scope.monitors[g].Monitor.Id,
-                                   //mid: $scope.monitors[g].Monitor.Id,
+                                    //mid: $scope.monitors[g].Monitor.Id,
                                     content: ZMDataModel.getMonitorName($scope.monitors[g].Monitor.Id),
                                     order: $scope.monitors[g].Monitor.Sequence
                                 });
@@ -544,19 +544,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                 }
 
                                 for (var i = 0; i < myevents.length; i++) {
-                                    
+
                                     // make sure group id exists before adding
-                                    var idfound=true;
+                                    var idfound = true;
                                     var ld = ZMDataModel.getLogin();
-                                    
-                                    if (ld.persistMontageOrder)
-                                    {
-                                
+
+                                    if (ld.persistMontageOrder) {
+
                                         idfound = false;
-                                        for (var ii=0; ii< $scope.monitors.length; ii++)
-                                        {
-                                            if ($scope.monitors[ii].Monitor.Id ==  myevents[i].Event.MonitorId)
-                                            {
+                                        for (var ii = 0; ii < $scope.monitors.length; ii++) {
+                                            if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId) {
                                                 idfound = true;
                                                 //console.log ("****************** ID MATCH " + graphIndex);
 
@@ -565,36 +562,33 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         }
                                     }
 
-                                    if (idfound)
-                                    {
-                                        
-                                        if  (typeof myevents[i].Event.DefaultVideo === 'undefined')
-                myevents[i].Event.DefaultVideo="";
-                                    graphData.add({
-                                        id: graphIndex,
-                                        content: "<span class='my-vis-font'>" + myevents[i].Event.Notes + "</span>",
-                                        start: myevents[i].Event.StartTime,
-                                        end: myevents[i].Event.EndTime,
-                                        group: myevents[i].Event.MonitorId,
-                                        //type: "range",
-                                        style: "background-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length] +
-                                        ";border-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length],
-                                        myframes: myevents[i].Event.Frames,
-                                        mydur: myevents[i].Event.Length,
-                                        myeid: myevents[i].Event.Id,
-                                        myename: myevents[i].Event.Name,
-                                        myvideo: myevents[i].Event.DefaultVideo,
-                                        myevent:myevents[i]
+                                    if (idfound) {
 
-                                    });
+                                        if (typeof myevents[i].Event.DefaultVideo === 'undefined')
+                                            myevents[i].Event.DefaultVideo = "";
+                                        graphData.add({
+                                            id: graphIndex,
+                                            content: "<span class='my-vis-font'>" + myevents[i].Event.Notes + "</span>",
+                                            start: myevents[i].Event.StartTime,
+                                            end: myevents[i].Event.EndTime,
+                                            group: myevents[i].Event.MonitorId,
+                                            //type: "range",
+                                            style: "background-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length] +
+                                                ";border-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length],
+                                            myframes: myevents[i].Event.Frames,
+                                            mydur: myevents[i].Event.Length,
+                                            myeid: myevents[i].Event.Id,
+                                            myename: myevents[i].Event.Name,
+                                            myvideo: myevents[i].Event.DefaultVideo,
+                                            myevent: myevents[i]
+
+                                        });
                                         graphIndex++;
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         //console.log ("SKIPPED GRAPH ID " + graphIndex);
                                     }
-                                   
-                                    
+
+
 
                                     if (graphIndex > count) {
                                         ZMDataModel.zmLog("Exiting event graph - reached limit of " + count);
@@ -606,11 +600,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             }
 
                             timeline = new vis.Timeline(container[0], null, options);
-                           // console.log ("GRAPH DATA");
+                            // console.log ("GRAPH DATA");
                             timeline.setItems(graphData);
-                         //   console.log ("GROUPS");
+                            //   console.log ("GROUPS");
                             timeline.setGroups(groups);
-                            
+
                             timeline.fit();
 
                             $ionicLoading.hide();
@@ -651,7 +645,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     $scope.radialMenuOptions = {
         content: '',
-        size: 'small',
+        //size: 'small',
 
         background: '#982112',
         isOpen: true,
@@ -679,7 +673,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
                 onclick: function () {
-                    
+
                 }
             },
 
@@ -689,7 +683,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 empty: false,
 
                 onclick: function () {
-                   
+
                     move(0.2);
                 }
             },
@@ -707,7 +701,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
                 onclick: function () {
-                    
+
                 }
             },
 
@@ -716,7 +710,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-plus-circle',
                 empty: false,
                 onclick: function () {
-                   
+
                     zoom(-0.2);
                 }
             },
@@ -726,7 +720,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
                 onclick: function () {
-                    
+
                 }
             },
 
@@ -753,7 +747,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
                 onclick: function () {
-                    
+
                 }
             },
 
