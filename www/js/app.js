@@ -669,7 +669,9 @@ angular.module('zmApp', [
           $window.addEventListener("online", function () {
             $rootScope.$apply(function() {
               $rootScope.online = true;
-            ZMDataModel.zmLog ("Your network is online");
+            ZMDataModel.zmLog ("Your network is online, re-authenticating");
+                zmAutoLogin.doLogin("re-authenticating");
+                
             });
           }, false);
 
