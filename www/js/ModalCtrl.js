@@ -441,30 +441,42 @@ $scope.togglePresets = function()
         var mid;
         mid = ZMDataModel.getNextMonitor(m, d);
 
-        if (curstate != "monitors") {
+    
 
-            // FIXME: clean this up - in a situation where
-            // no monitors are enabled, will it loop for ever?
-            do {
-                mid = ZMDataModel.getNextMonitor(m, d);
-                m = mid;
-                console.log("Next Monitor is " + m);
+        // FIXME: clean this up - in a situation where
+        // no monitors are enabled, will it loop for ever?
+        do {
+            mid = ZMDataModel.getNextMonitor(m, d);
+            m = mid;
+            console.log("Next Monitor is " + m);
 
 
-                found = 0;
-                for (var i = 0; i < $scope.monitors.length; i++) {
-                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow' && $scope.monitors[i].Monitor.Function !='None' && $scope.monitors[i].Monitor.Enabled != '0') {
-                        found = 1;
-                        console.log(mid + "is part of the monitor list");
-                        ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " + mid);
-                        break;
-                    }
+            found = 0;
+            for (var i = 0; i < $scope.monitors.length; i++) {
+                if ($scope.monitors[i].Monitor.Id == mid &&
+                    // if you came from monitors, then ignore noshow
+                    ($scope.monitors[i].Monitor.listDisplay != 'noshow' || curstate == "monitors" ) &&
+                    $scope.monitors[i].Monitor.Function !='None' &&
+                    $scope.monitors[i].Monitor.Enabled != '0') {
+                    found = 1;
+                    console.log(mid + "is part of the monitor list");
+                    ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " + mid);
+                    break;
                 }
 
-
+                else 
+                {
+                    ZMDataModel.zmDebug ("skipping " + $scope.monitors[i].Monitor.Id + 
+                                         " listDisplay="+$scope.monitors[i].Monitor.listDisplay+
+                                         " Function="+$scope.monitors[i].Monitor.Function+
+                                         " Enabled="+ $scope.monitors[i].Monitor.Enabled);
+                }
             }
-            while (found != 1);
+
+
         }
+        while (found != 1);
+        
 
         var slidein;
         var slideout;
