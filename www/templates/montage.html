@@ -33,7 +33,7 @@
         </span>
 
         <div style="-webkit-column-count:{{slider.monsize}};-webkit-column-gap:0px;line-height:0px;">
-            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow'">
+            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
      
             <!-- back to ng-src. spinner was not updating when rand changes-->
             <!-- moving to single so I can rely on rand for reloads -->

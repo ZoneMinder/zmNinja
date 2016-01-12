@@ -443,6 +443,8 @@ $scope.togglePresets = function()
 
         if (curstate != "monitors") {
 
+            // FIXME: clean this up - in a situation where
+            // no monitors are enabled, will it loop for ever?
             do {
                 mid = ZMDataModel.getNextMonitor(m, d);
                 m = mid;
@@ -451,7 +453,7 @@ $scope.togglePresets = function()
 
                 found = 0;
                 for (var i = 0; i < $scope.monitors.length; i++) {
-                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow' && $scope.monitors[i].Monitor.Function !='None') {
+                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow' && $scope.monitors[i].Monitor.Function !='None' && $scope.monitors[i].Monitor.Enabled != '0') {
                         found = 1;
                         console.log(mid + "is part of the monitor list");
                         ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " + mid);
