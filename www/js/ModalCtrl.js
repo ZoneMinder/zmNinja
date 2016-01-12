@@ -451,7 +451,7 @@ $scope.togglePresets = function()
 
                 found = 0;
                 for (var i = 0; i < $scope.monitors.length; i++) {
-                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow') {
+                    if ($scope.monitors[i].Monitor.Id == mid && $scope.monitors[i].Monitor.listDisplay != 'noshow' && $scope.monitors[i].Monitor.Function !='None') {
                         found = 1;
                         console.log(mid + "is part of the monitor list");
                         ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " + mid);
