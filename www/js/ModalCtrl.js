@@ -47,6 +47,24 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     var ld = ZMDataModel.getLogin();
     
     $scope.streamMode = ld.useNphZms ? "jpeg":"single";
+    $scope.currentStreamMode = 'single';
+     ZMDataModel.zmLog ("Using stream mode " + $scope.currentStreamMode);
+    
+    if (ld.useNphZms == true)
+    {
+        ZMDataModel.zmLog ("Setting timer to play nph-zms mode");
+        // first 5 seconds, load a snapshot, then switch to real FPS display
+        // this is to avoid initial image load delay
+        // FIXME: 5 seconds fair?
+        $timeout( function()
+                 { 
+                    $scope.currentStreamMode = 'jpeg';
+                    ZMDataModel.zmLog ("Switching playback via nphzms");
+        },zm.nphSwitchTimer);
+    }
+    
+    
+    
     ZMDataModel.zmDebug ("Setting playback to " + $scope.streamMode);
     
     
@@ -274,13 +292,14 @@ $scope.togglePresets = function()
     console.log ("Changing preset to " + $scope.presetOn);
     
       var element = angular.element(document.getElementById("presetlist"));
-
-        if (!$scope.presetOn) {
+        // bring it in
+        if ($scope.presetOn) {
+            element.removeClass("animated fadeOutUp");
+           
+            
+        } else {
             element.removeClass("animated fadeInDown");
             element.addClass("animated fadeOutUp");
-        } else {
-            element.removeClass("animated fadeOutUp");
-            element.addClass("animated fadeInDown");
         }
 
     
@@ -514,6 +533,22 @@ $scope.togglePresets = function()
 
             element.removeClass(slidein);
             $scope.animationInProgress = false;
+            
+            ZMDataModel.zmLog ("New image loaded in");
+            var ld = ZMDataModel.getLogin();
+            if (ld.useNphZms == true)
+            {
+                 $scope.currentStreamMode = 'single';
+                ZMDataModel.zmLog ("Setting timer to play nph-zms mode");
+                // first 5 seconds, load a snapshot, then switch to real FPS display
+                // this is to avoid initial image load delay
+                // FIXME: 5 seconds fair?
+                $timeout( function()
+                         { 
+                            $scope.currentStreamMode = 'jpeg';
+                            ZMDataModel.zmLog ("Switching playback via nphzms");
+                },zm.nphSwitchTimer);
+            }
 
         }
 

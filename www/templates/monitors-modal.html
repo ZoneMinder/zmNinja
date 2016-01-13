@@ -18,9 +18,10 @@
                         
                             
                             <div ng-if="!animationInProgress" >
+                                
                                 <img  style="width:100vw; height:100vh" imageonload="finishedLoadingImage()"
                                      image-spinner-loader="lines"
-                                     image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode={{streamMode}}&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" 
+                                     image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" 
                                      on-swipe-left="onSwipe(monitorId,1)" 
                                      on-swipe-right="onSwipe(monitorId,-1)" />
         
