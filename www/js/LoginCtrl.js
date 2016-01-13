@@ -43,7 +43,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
 
     availableServers = Object.keys(ZMDataModel.getServerGroups());
-    serverbuttons = [];
+    serverbuttons = [{text:"Add..."}];
     for (var servIter = 0; servIter < availableServers.length; servIter++) {
         serverbuttons.push({
             text: availableServers[servIter]
@@ -61,9 +61,20 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 // add cancel code..
             },
             buttonClicked: function (index) {
-                // console.log ("YOU WANT " + serverbuttons[index].text + " INDEX " + index);
+                 //console.log ("YOU WANT " + serverbuttons[index].text + " INDEX " + index);
+                
+                if (serverbuttons[index].text == 'Add...')
+                {
+                    
+                    $scope.loginData = angular.copy(ZMDataModel.getDefaultLoginObject());
+                    return true;
+                }
+                
                 var zmServers = ZMDataModel.getServerGroups();
                 $scope.loginData = zmServers[serverbuttons[index].text];
+                
+                
+                
                 $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
                 $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
 
@@ -80,6 +91,15 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             },
 
             destructiveButtonClicked: function () {
+                
+                
+                if (!$scope.loginData.serverName)
+                {
+                    ZMDataModel.zmDebug("cannot delete empty entry");
+                    return true;
+                    
+                    
+                }
                 var zmServers = ZMDataModel.getServerGroups();
                 //console.log ("YOU WANT TO DELETE " + $scope.loginData.serverName);
                 //console.log ("LENGTH OF SERVERS IS " + Object.keys(zmServers).length);
@@ -94,7 +114,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     ZMDataModel.setLogin($scope.loginData);
 
                     availableServers = Object.keys(ZMDataModel.getServerGroups());
-                    serverbuttons = [];
+                    serverbuttons = [{text:'Add...'}];
                     for (var servIter = 0; servIter < availableServers.length; servIter++) {
                         serverbuttons.push({
                             text: availableServers[servIter]

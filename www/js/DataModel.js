@@ -66,6 +66,8 @@ angular.module('zmApp.controllers')
         
     };
      
+     var defaultLoginData = angular.copy(loginData);
+     
      
      
     var configParams = {
@@ -188,7 +190,13 @@ angular.module('zmApp.controllers')
         // the ZM authors fix this and streamline the access of images
         // from APIs, I don't have an option
         
-        // FIXME: Move all of this into a neat JSON object 
+        
+        // used when an empty server profile is created
+        getDefaultLoginObject: function()
+        {
+            return defaultLoginData;
+        },
+        
         
         init: function () {
            // console.log("****** DATAMODEL INIT SERVICE CALLED ********");
