@@ -64,6 +64,7 @@ angular.module('zmApp', [
     desktopUrl: "/zm",
     desktopApiUrl: "/api/zm",
     latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
+    nphSwitchTimer:6000,
 
 })
 
