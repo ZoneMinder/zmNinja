@@ -33,16 +33,15 @@
         </span>
 
         <div style="-webkit-column-count:{{slider.monsize}};-webkit-column-gap:0px;line-height:0px;">
-            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
+            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
+                  ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
      
             <!-- back to ng-src. spinner was not updating when rand changes-->
             <!-- moving to single so I can rely on rand for reloads -->
                 
                 <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
                     <div ng-if="!isModalActive">
-                        
-
-                        <div ng-if="$root.authSession!='undefined'">
+                        <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal">
                                 <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId)" image-spinner-loader="lines" style="
         width: 100% !important;
@@ -58,7 +57,7 @@
 
                         </div>
 
-                        <div ng-if="!$root.authSession=='undefined'">
+                        <div ng-if="!$root.authSession=='undefined' || isBackground()">
                             <img id="img-$index" ng-src="img/pausevideo.png" style="width: 100% !important;
   height: auto !important;" />
                         </div>

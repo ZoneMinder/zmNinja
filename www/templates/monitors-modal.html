@@ -17,7 +17,7 @@
                         <div ng-if="$root.authSession!='undefined'">
                         
                             
-                            <div ng-if="!animationInProgress" >
+                            <div ng-if="!animationInProgress && !isBackground()" >
                                 
                                 <img  style="width:100vw; height:100vh" imageonload="finishedLoadingImage()"
                                      image-spinner-loader="lines"
@@ -26,7 +26,7 @@
                                      on-swipe-right="onSwipe(monitorId,-1)" />
         
                             </div>
-                            <div ng-if="animationInProgress">
+                            <div ng-if="animationInProgress || isBackground()">
                                     <img style="width:100vw; height:100vh"
                                      
                                      ng-src="img/pausevideo.png" class="object-fit_contain"  
