@@ -306,6 +306,20 @@ $scope.togglePresets = function()
     
 };
     
+    
+    //-------------------------------------------------------------
+    // this is checked to make sure we are not pulling images
+    // when app is in background. This is a problem with Android,
+    // for example
+    //-------------------------------------------------------------
+
+    $scope.isBackground = function()
+    {
+        console.log ("Is background called from ModalCtrl and returned " +    
+        ZMDataModel.isBackground());
+        return ZMDataModel.isBackground();
+    };
+    
     //-------------------------------------------------------------
     // Send PTZ command to ZM
     // Note: PTZ fails on desktop, don't bother about it

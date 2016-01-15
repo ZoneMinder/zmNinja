@@ -290,6 +290,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             $state.go("events", {"id": 0}, { reload: true });
         }
     };
+    
+    
+    //-------------------------------------------------------------
+    // this is checked to make sure we are not pulling images
+    // when app is in background. This is a problem with Android,
+    // for example
+    //-------------------------------------------------------------
+
+    $scope.isBackground = function()
+    {
+        console.log ("Is background called from Montage and returned " +    
+        ZMDataModel.isBackground());
+        return ZMDataModel.isBackground();
+    };
 
     //-------------------------------------------------------------
     // Called when user taps on the reorder button
