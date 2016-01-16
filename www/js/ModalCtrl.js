@@ -315,8 +315,8 @@ $scope.togglePresets = function()
 
     $scope.isBackground = function()
     {
-        console.log ("Is background called from ModalCtrl and returned " +    
-        ZMDataModel.isBackground());
+       // console.log ("Is background called from ModalCtrl and returned " +    
+       // ZMDataModel.isBackground());
         return ZMDataModel.isBackground();
     };
     

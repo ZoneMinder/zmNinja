@@ -300,8 +300,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.isBackground = function()
     {
-        console.log ("Is background called from Montage and returned " +    
-        ZMDataModel.isBackground());
+        //console.log ("Is background called from Montage and returned " +    
+        //ZMDataModel.isBackground());
         return ZMDataModel.isBackground();
     };
 

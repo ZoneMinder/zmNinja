@@ -12,7 +12,7 @@
     {
       "platform": "android",
       "browser": "crosswalk",
-      "version": "14.42.334.0"
+      "version": "15.44.384.9"
     }
   ],
   "gulpStartupTasks": [

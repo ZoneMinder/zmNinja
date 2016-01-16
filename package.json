@@ -72,8 +72,7 @@
     {
       "locator": "https://github.com/pliablepixels/cordova-plugin-media.git",
       "id": "org.apache.cordova.media"
-    },
-    "cordova-plugin-crosswalk-webview"
+    }
   ],
   "cordovaPlatforms": [
     "ios",
@@ -82,11 +81,6 @@
       "version": "",
       "locator": "ios"
     },
-    "android",
-    {
-      "platform": "android",
-      "version": "",
-      "locator": "android"
-    }
+    "android"
   ]
 }
