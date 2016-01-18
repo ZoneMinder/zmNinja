@@ -394,10 +394,13 @@ angular.module('zmApp.controllers')
 
     $scope.closeModal = function () {
         console.log("Close & Destroy Monitor Modal");
+        
+        // stop networking -nph-zms keeps sucking data
+        
         // switch off awake, as liveview is finished
         ZMDataModel.setAwake(false);
         $scope.modal.remove();
-
+        $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");window.stop();},50);
     };
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function () {

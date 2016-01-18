@@ -530,7 +530,8 @@ $scope.togglePresets = function()
 
         function outWithOld() {
 
-
+             ZMDataModel.zmLog("Stopping network pull...");
+                window.stop();
             $scope.rand = Math.floor((Math.random() * 100000) + 1);
             $scope.animationInProgress = true;
 
@@ -875,7 +876,8 @@ $scope.togglePresets = function()
             function outWithOld()
             {
                 
-                
+                ZMDataModel.zmLog("Stopping network pull...");
+                window.stop();
                 $scope.animationInProgress = true;
                 // give digest time for image to swap
                 // 100 should be enough
