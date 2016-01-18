@@ -289,6 +289,8 @@ angular.module('zmApp', [
                     }
                 }
             }
+            
+            //console.log ("HTTP response");
             return response;
         }
 
@@ -892,8 +894,20 @@ angular.module('zmApp', [
                 zmAutoLogin.stop();
                 if ($rootScope.zmPopup)
                     $rootScope.zmPopup.close();
+                
+                
+                ZMDataModel.zmLog("Stopping network pull...");
+                window.stop();
+                
                 //$ionicPopup.close();
-
+                
+                
+               /* if ($rootScope.platformOS == 'android')
+                {
+                    ZMDataModel.zmLog("Android detected - calling stop");
+                    window.stop();
+                    //ionic.Platform.exitApp();
+                }*/
             }, false);
 
 

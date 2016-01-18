@@ -662,7 +662,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // $scope.isModalActive = false;
         // Note: no need to setAwake(false) as needs to be awake
         // in montage view
+        
+       
         $scope.modal.remove();
+          $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");window.stop();},50);
 
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $scope.isModalActive = false;
