@@ -1,7 +1,40 @@
 # Change Log
 
-## [1.0.2](https://github.com/pliablepixels/zmNinja/tree/1.0.2) (2015-12-28)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.1...1.0.2)
+## [1.0.3](https://github.com/pliablepixels/zmNinja/tree/1.0.3) (2016-01-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.2...1.0.3)
+
+**Implemented enhancements:**
+
+- Allow montage to flow as columns \(packed\) or rows \(not packed\)  [\#144](https://github.com/pliablepixels/zmNinja/issues/144)
+- Reduce android apk size  [\#142](https://github.com/pliablepixels/zmNinja/issues/142)
+- Improve timeline performance [\#129](https://github.com/pliablepixels/zmNinja/issues/129)
+- For Android only: Allow an exit option in menu [\#128](https://github.com/pliablepixels/zmNinja/issues/128)
+- Implement a mechanism to detect when network is on/off [\#127](https://github.com/pliablepixels/zmNinja/issues/127)
+- Add support for Pan/Tilt/Zoom Presets [\#116](https://github.com/pliablepixels/zmNinja/issues/116)
+
+**Fixed bugs:**
+
+- Monitor order is different one can observe in ZM montage [\#143](https://github.com/pliablepixels/zmNinja/issues/143)
+- You can swipe to dead monitor [\#138](https://github.com/pliablepixels/zmNinja/issues/138)
+- switching networks should trigger authentication [\#134](https://github.com/pliablepixels/zmNinja/issues/134)
+- Excessive background data usage [\#131](https://github.com/pliablepixels/zmNinja/issues/131)
+
+**Closed issues:**
+
+- \[Log in Failed\] Checking if reCaptcha is enabled in zm.. [\#141](https://github.com/pliablepixels/zmNinja/issues/141)
+- Swiping with ZMS is slower than swiping without zms [\#139](https://github.com/pliablepixels/zmNinja/issues/139)
+- Exit button on Android build  [\#137](https://github.com/pliablepixels/zmNinja/issues/137)
+- zmninja cannot talk to zmeventserver [\#136](https://github.com/pliablepixels/zmNinja/issues/136)
+- HTTP basic auth credentials not stored [\#132](https://github.com/pliablepixels/zmNinja/issues/132)
+- Android build fails [\#130](https://github.com/pliablepixels/zmNinja/issues/130)
+- \[DESKTOP\]\[QUESTION\] gconf [\#125](https://github.com/pliablepixels/zmNinja/issues/125)
+- CSS montage - implement a better reflow algorithm [\#124](https://github.com/pliablepixels/zmNinja/issues/124)
+- Auto upload successful build to testfairy [\#75](https://github.com/pliablepixels/zmNinja/issues/75)
+- Integrate with Travis [\#72](https://github.com/pliablepixels/zmNinja/issues/72)
+- When moving montage monitors around, remember to move the size  [\#16](https://github.com/pliablepixels/zmNinja/issues/16)
+
+## [v1.0.2](https://github.com/pliablepixels/zmNinja/tree/v1.0.2) (2015-12-28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.1...v1.0.2)
 
 **Implemented enhancements:**
 
