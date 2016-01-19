@@ -6,14 +6,24 @@
 
 
     <ion-nav-buttons side="right">
+        
+        <button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'"
+                ng-click="toggleMontageDisplayOrder();">&nbsp;
+        </button>
+        
         <span class="rotate-button">
                 <button class="button button-icon button-clear ion-arrow-swap"
                         ng-click="toggleReorder();">
                 </button>
-        </span>
+        </span>   
+
+  
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
         </button>
         <!--<button class="button button-icon ion-ios-help-outline" ng-click="popover.show($event)"></button>-->
+        
+        
+        
     </ion-nav-buttons>
 
     <ion-content has-bouncing="false" style="background-color:#444444">
@@ -32,7 +42,9 @@
                 </div>
         </span>
 
-        <div style="-webkit-column-count:{{slider.monsize}};-webkit-column-gap:0px;line-height:0px;">
+       <div ng-style="packMontage ? {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px'}:{'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'flex','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap'}">
+            
+            
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
                   ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
      
