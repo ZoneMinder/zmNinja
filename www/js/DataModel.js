@@ -62,6 +62,7 @@ angular.module('zmApp.controllers')
          'minAlarmCount':'1',
          'montageSize':'10',
          'useNphZms':true,
+         'packMontage':true,
          
         
     };
@@ -231,8 +232,14 @@ angular.module('zmApp.controllers')
                 
                 if (typeof loginData.useNphZms == 'undefined')
                 {
-                    zmDebug ("useNphZms does not exist. Setting to false");
+                    zmDebug ("useNphZms does not exist. Setting to true");
                     loginData.useNphZms  = true;
+                }
+                
+                if (typeof loginData.packMontage == 'undefined')
+                {
+                    zmDebug ("packMontage does not exist. Setting to true");
+                    loginData.packMontage  = true;
                 }
                 
                 zmLog ("DataModel init recovered this loginData as " + JSON.stringify(loginData));
