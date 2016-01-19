@@ -311,9 +311,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     console.log("*********************** TIMELINE MAIN ");
 
     // maxItems will be ignored during timeline draw if its desktop
-    // var maxItems = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
+     var maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
+    
     var ld = ZMDataModel.getLogin();
-    var maxItems = ld.graphSize || 200;
+    var maxItems = ld.graphSize || maxItemsConf;
 
     ZMDataModel.zmLog("Graph items to draw is " + maxItems);
     $scope.maxItems = maxItems;
@@ -493,11 +494,6 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 var itemsPerPage = parseInt(data.limit);
                 var iterCount;
 
-                // The graph seems to get very slow
-                // even with 200 items. My data comes in pages from
-                // the server - so to make sure I don't exceed 200 items
-                // I figure out how many items the server returns per API page
-                // and divide the # of items I want (currently 200) with # of items per page
                 // So iterCount is the # of HTTP calls I need to make
                 iterCount = Math.max(Math.round(count / itemsPerPage), 1);
                 ZMDataModel.zmDebug("TimelineCtrl/drawGraph: pages of data: " + pages + " items per page: " + itemsPerPage);

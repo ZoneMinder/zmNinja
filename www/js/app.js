@@ -36,7 +36,7 @@ angular.module('zmApp', [
     largeHttpTimeout: 60000,
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
-    logFileMaxSize: 10000, // after this limit log gets reset
+    logFileMaxSize: 20000, // after this limit log gets reset
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
@@ -50,7 +50,7 @@ angular.module('zmApp', [
     graphFillColor: 'rgba(151,187,205,0.5)',
     graphStrokeColor: 'rgba(151,187,205,0.8)',
     graphHighlightFill: 'rgba(0,163,124,0.5)',
-    graphItemMax: 200,
+    graphItemMax: 2000,
     graphDesktopItemMax: 2000,
     monitorCheckingColor: '#03A9F4',
     monitorNotRunningColor: '#F44336',
