@@ -70,7 +70,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     
     var loginData = ZMDataModel.getLogin();
     
-    $scope.packMontage = true;
+    $scope.packMontage = loginData.packMontage;
     
     
     
@@ -699,11 +699,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
     };
-    
+
+    //---------------------------------------------------------------------
+    // changes order of montage display
+    //---------------------------------------------------------------------
     
     $scope.toggleMontageDisplayOrder = function()
     {
         $scope.packMontage = !$scope.packMontage;
+        loginData.packMontage = $scope.packMontage;
+        ZMDataModel.setLogin(loginData);
     };
 
     //---------------------------------------------------------------------
