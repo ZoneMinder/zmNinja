@@ -1,7 +1,7 @@
 // Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,ionic */
+/* global cordova,StatusBar,angular,console,ionic,Masonry */
 
 
 angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window) {
@@ -18,6 +18,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.isReorder = false;
     var intervalHandleMontage; // will hold image resize timer on long press
     var montageIndex = 0; // will hold monitor ID to scale in timer
+    
+    var gridcontainer;
 
     $scope.monitorSize = []; // array with montage sizes per monitor
     $scope.scaleDirection = []; // 1 = increase -1 = decrease
@@ -68,6 +70,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     
     var loginData = ZMDataModel.getLogin();
     
+    $scope.packMontage = true;
+    
+    
+    
+    
+    if (0)
+    {
+        var elem = angular.element(document.getElementById('.grid'));
+            var msnry = new Masonry( elem, {
+          // options
+          itemSelector: '.grid-item',
+          columnWidth: 200
+        });
+    }
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
     // close the modal
@@ -682,6 +698,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
 
+    };
+    
+    
+    $scope.toggleMontageDisplayOrder = function()
+    {
+        $scope.packMontage = !$scope.packMontage;
     };
 
     //---------------------------------------------------------------------
