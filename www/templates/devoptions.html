@@ -64,7 +64,7 @@
             <div class="item item-input-inset">
                  Max. items for Timeline&nbsp;
                 <label class="item-input-wrapper">
-                    <input type="tel" placeholder="200" ng-model="loginData.graphSize">
+                    <input type="tel" placeholder="" ng-model="loginData.graphSize">
                     <br/>
             
                 </label>
@@ -72,7 +72,7 @@
         
             </div>
             
-            <div class="item" style="background-color:#C8F7C5" ng-if="loginData.graphSize > 2000">
+            <div class="item" style="background-color:#C8F7C5" ng-if="loginData.graphSize > 5000">
                 <label class="animated fadeInDown item-text-wrap" >
                     
                 A large value can affect timeline performance. If you find timeline performance slow, try reducing the value to 200 and work your way up from there.
