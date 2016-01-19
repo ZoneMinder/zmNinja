@@ -451,12 +451,13 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 			   }  
 			   else
 			   {
+            			scope.autoSlide();
 				// lets move the index along - PP
 				// so playback total time is not affected
 			
-                                scope.carouselIndex = index;
+                            //    scope.carouselIndex = index;
 				//console.log ("Image is still loading, not skipping slides, index at "+index);
-                                updateBufferIndex();
+                              //  updateBufferIndex();
 				//console.log ("NOT LOADED but advancing carousel to " + scope.carouselIndex);
 			   	
 }

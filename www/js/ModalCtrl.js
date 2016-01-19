@@ -1173,6 +1173,7 @@ $scope.togglePresets = function()
           //  
             if (carouselUtils.getStop() == true)
                     return;
+             
             $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
            //  console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
         });
