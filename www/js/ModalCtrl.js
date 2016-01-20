@@ -9,6 +9,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     // from parent scope
     var currentEvent=$scope.currentEvent;
+    var nphTimer;
     
   
     var eventImageDigits = 5; // failsafe
@@ -27,6 +28,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     $scope.showModalRangeSider = false;
     $scope.isModalActive = true;
 
+    
     $timeout(function () {
         $scope.showModalRangeSider = true;
 
@@ -56,7 +58,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         // first 5 seconds, load a snapshot, then switch to real FPS display
         // this is to avoid initial image load delay
         // FIXME: 5 seconds fair?
-        $timeout( function()
+        $timeout.cancel(nphTimer);
+        nphTimer=$timeout( function()
                  { 
                     $scope.currentStreamMode = 'jpeg';
                     ZMDataModel.zmLog ("Switching playback via nphzms");
@@ -558,7 +561,8 @@ $scope.togglePresets = function()
                 // first 5 seconds, load a snapshot, then switch to real FPS display
                 // this is to avoid initial image load delay
                 // FIXME: 5 seconds fair?
-                $timeout( function()
+                $timeout.cancel(nphTimer);
+                nphTimer = $timeout( function()
                          { 
                             $scope.currentStreamMode = 'jpeg';
                             ZMDataModel.zmLog ("Switching playback via nphzms");
