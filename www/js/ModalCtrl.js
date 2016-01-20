@@ -554,6 +554,7 @@ $scope.togglePresets = function()
             
             ZMDataModel.zmLog ("New image loaded in");
             var ld = ZMDataModel.getLogin();
+            carouselUtils.setStop(false);
             if (ld.useNphZms == true)
             {
                  $scope.currentStreamMode = 'single';
@@ -898,6 +899,7 @@ $scope.togglePresets = function()
             {
                 element.removeClass(slidein);
                 $scope.animationInProgress = false;
+                carouselUtils.setStop(false);
             }
 
         }

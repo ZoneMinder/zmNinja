@@ -1270,6 +1270,7 @@ angular.module('zmApp.controllers')
             
             $scope.currentEvent = event;
             $scope.followSameMonitor = ($stateParams.id == "0")?"0":"1";
+            
 
            // prepareModalEvent(event.Event.Id);
 
