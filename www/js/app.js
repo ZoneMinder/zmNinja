@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic */
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI */
 
 
 var appVersion = "0.0.0";
@@ -256,6 +256,21 @@ angular.module('zmApp', [
     return {
         'request': function (config) {
 
+            
+            // handle basic auth properly
+            if (config.url.indexOf("@") > -1)
+            {
+               // console.log ("HTTP basic auth INTERCEPTOR URL IS "  + config.url);
+                var components = URI.parse(config.url);
+                //console.log ("Parsed data is " + JSON.stringify(components));
+                var credentials = btoa(components.userinfo);
+                //var authorization = {'Authorization': 'Basic ' + credentials};
+                config.headers.Authorization = 'Basic ' + credentials;
+                
+                //console.log ("Full headers: " + JSON.stringify(config.headers));
+                
+            }
+            
 
             if (zmCookie) {
                 config.headers.Cookie = "ZMSESSID=" + zmCookie;
@@ -427,6 +442,7 @@ angular.module('zmApp', [
             ZMDataModel.zmLog("Authentication is disabled. Skipping login");
             ZMDataModel.zmLog("However, still doing a reachability check...");
 
+            ZMDataModel.zmDebug ("LD.url is " + ld.url);
             $http.get(ld.url)
                 .then(function (success) {
                         ZMDataModel.zmLog(ld.url + " is reachable.");
