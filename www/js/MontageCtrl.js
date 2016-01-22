@@ -709,6 +709,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.packMontage = !$scope.packMontage;
         loginData.packMontage = $scope.packMontage;
         ZMDataModel.setLogin(loginData);
+        console.log ("Switching orientation");
     };
 
     //---------------------------------------------------------------------
