@@ -25,7 +25,7 @@ angular.module('zmApp', [
 // ------------------------------------------
 // Various constants central repository
 // Feel free to change them as you see fit
-//-----------------------------------------------
+//------------------------------------------------
 
 .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
