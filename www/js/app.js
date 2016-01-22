@@ -69,6 +69,43 @@ angular.module('zmApp', [
 })
 
 
+//credit http://stackoverflow.com/questions/20997406/force-http-interceptor-in-dynamic-ngsrc-request
+.directive('httpSrc', [
+        '$http', function ($http) {
+            var directive = {
+                link: link,
+                restrict: 'A'
+            };
+            return directive;
+
+            function link(scope, element, attrs) {
+                var requestConfig = {
+                    method: 'Get',
+                    url: attrs.httpSrc,
+                    responseType: 'arraybuffer',
+                    cache: 'true'
+                };
+
+                $http(requestConfig)
+                    .success(function(data) {
+                        var arr = new Uint8Array(data);
+
+                        var raw = '';
+                        var i, j, subArray, chunk = 5000;
+                        for (i = 0, j = arr.length; i < j; i += chunk) {
+                            subArray = arr.subarray(i, i + chunk);
+                            raw += String.fromCharCode.apply(null, subArray);
+                        }
+
+                        var b64 = btoa(raw);
+
+                        attrs.$set('src', "data:image/jpeg;base64," + b64);
+                    });
+            }
+
+        }
+    ])
+
 
 //------------------------------------------------------------------
 // switch between collection repeat or ng-repeat
@@ -260,14 +297,14 @@ angular.module('zmApp', [
             // handle basic auth properly
             if (config.url.indexOf("@") > -1)
             {
-               // console.log ("HTTP basic auth INTERCEPTOR URL IS "  + config.url);
+               //console.log ("HTTP basic auth INTERCEPTOR URL IS "  + config.url);
                 var components = URI.parse(config.url);
-                //console.log ("Parsed data is " + JSON.stringify(components));
+               // console.log ("Parsed data is " + JSON.stringify(components));
                 var credentials = btoa(components.userinfo);
                 //var authorization = {'Authorization': 'Basic ' + credentials};
-                config.headers.Authorization = 'Basic ' + credentials;
+               config.headers.Authorization = 'Basic ' + credentials;
                 
-                //console.log ("Full headers: " + JSON.stringify(config.headers));
+               // console.log ("Full headers: " + JSON.stringify(config.headers));
                 
             }
             
