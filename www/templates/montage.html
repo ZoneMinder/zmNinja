@@ -42,7 +42,9 @@
                 </div>
         </span>
 
-       <div ng-style="packMontage ? {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px'}:{'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'flex','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap'}">
+       <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px' } : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
+           
+              <!--<div ng-style="packMontage ? { '-webkit-column-count':slider.monsize, '-webkit-column-gap':'0px','line-height':'0px' } : { 'flex':'display', '-webkit-column-count':slider.monsize }">-->
             
             
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
