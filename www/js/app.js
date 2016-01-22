@@ -71,7 +71,7 @@ angular.module('zmApp', [
 
 //credit http://stackoverflow.com/questions/20997406/force-http-interceptor-in-dynamic-ngsrc-request
 .directive('httpSrc', [
-        '$http', function ($http) {
+        '$http', 'imageLoadingDataShare', function ($http, imageLoadingDataShare) {
             var directive = {
                 link: link,
                 restrict: 'A'
@@ -86,6 +86,7 @@ angular.module('zmApp', [
                     cache: 'true'
                 };
 
+                imageLoadingDataShare.set(1);
                 $http(requestConfig)
                     .success(function(data) {
                         var arr = new Uint8Array(data);
@@ -100,7 +101,12 @@ angular.module('zmApp', [
                         var b64 = btoa(raw);
 
                         attrs.$set('src', "data:image/jpeg;base64," + b64);
-                    });
+                        imageLoadingDataShare.set(0);
+                    })
+                    .error (function(data) {
+                        attrs.$set('src', 'img/novideo.png');
+                        imageLoadingDataShare.set(0);
+                });
             }
 
         }
