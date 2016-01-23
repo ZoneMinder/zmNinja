@@ -1,79 +1,66 @@
-
 <div ng-controller="ModalCtrl" ng-cloak>
 
-   <!--style="background-color:#444444;width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
+    <!--style="background-color:#444444;width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
 
-    <ion-modal-view cache-view="false" style="background-color:#444444"  >
-        <ion-content >
- <!-- <div style="background-color:red; color:white"> Modal Rand:{{$root.modalRand}} </div>-->
-                <ion-scroll delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="true"
-                            direction="xy" style="width: 100%; ">
-                    <!-- android needs this 100vh - otherwise max- does not work -->
-                    <!--  -->
-                    <div id="monitorimage" style="height: 100vh;" class="main">
-                           
-                        
-                        
-                        <div ng-if="$root.authSession!='undefined'">
-                        
-                            
-                            <div ng-if="!animationInProgress && !isBackground()" >
-                                
-                                <img  style="width:100vw; height:100vh" imageonload="finishedLoadingImage()"
-                                     image-spinner-loader="lines"
-                                     image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" 
-                                     on-swipe-left="onSwipe(monitorId,1)" 
-                                     on-swipe-right="onSwipe(monitorId,-1)" />
-        
-                            </div>
-                            <div ng-if="animationInProgress || isBackground()">
-                                    <img style="width:100vw; height:100vh"
-                                     
-                                     ng-src="img/pausevideo.png" class="object-fit_contain"  
-                                      />
-                            </div>
-                            
-                            
-                        
-                        
+    <ion-modal-view cache-view="false" style="background-color:#444444">
+        <ion-content>
+            <!-- <div style="background-color:red; color:white"> Modal Rand:{{$root.modalRand}} </div>-->
+            <ion-scroll delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; ">
+                <!-- android needs this 100vh - otherwise max- does not work -->
+                <!--  -->
+                <div id="monitorimage" style="height: 100vh;" class="main">
+
+
+
+                    <div ng-if="$root.authSession!='undefined'">
+
+
+                        <div ng-if="!animationInProgress && !isBackground()">
+
+                            <img style="width:100vw; height:100vh" imageonload="finishedLoadingImage()" image-spinner-loader="lines" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" />
+
                         </div>
-                        <div ng-if="$root.authSession=='undefined'">
-                            <img id="img-$index" ng-src="img/pausevideo.png" style="width:100vw; height:100vh; display:block;" class="object-fit_contain" 
-                                 width="{{((devWidth)/(7-monitorSize[$index]))}}px;"/>
+                        <div ng-if="animationInProgress || isBackground()">
+                            <img style="width:100vw; height:100vh" ng-src="img/pausevideo.png" class="object-fit_contain" />
                         </div>
+
                     </div>
-                </ion-scroll>
-           <!--url: {{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&amp;monitor={{monitorId}}&amp;maxfps={{LoginData.maxFPS}}&amp;{{$root.authSession}}&amp;rand={{$root.modalRand}}-->
+                    <div ng-if="$root.authSession=='undefined'">
+                        <img id="img-$index" ng-src="img/pausevideo.png" style="width:100vw; height:100vh; display:block;" class="object-fit_contain" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
+                    </div>
+                </div>
+            </ion-scroll>
+            <!--url: {{LoginData.streamingurl}}/cgi-bin/nph-zms?mode=single&amp;monitor={{monitorId}}&amp;maxfps={{LoginData.maxFPS}}&amp;{{$root.authSession}}&amp;rand={{$root.modalRand}}-->
         </ion-content>
-  
+
 
         <div ng-show="isControllable=='1' && showPTZ">
             <div class="ptzcentered">
                 <circular options="radialMenuOptions">
                 </circular>
-            </div>  
-            
+            </div>
+
             <div ng-if="presetOn" class="ptzpresetbuttons animated fadeInDown" id="presetlist">
                 <div ng-repeat="preset in ptzPresets track by $index">
                     <button class="button {{preset.icon}} button-small button-royal" style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, preset.cmd);">{{preset.name}}</button>
-                    
-                    
+
+
                 </div>
             </div>
-                
-           
+
+
             <div class="ptzcenteredbutton">
-              <a class="button button-small icon ion-stop  button-assertive" href="" ng-click="controlPTZ(monitorId, ptzStopCommand);"></a>
+                <a class="button button-small icon ion-stop  button-assertive" href="" ng-click="controlPTZ(monitorId, ptzStopCommand);"></a>
                 <a class="button button-small button-royal" href="" ng-click="togglePresets();">presets</a>
             </div>
-            
+
         </div>
 
 
-    </span>
+        
 
     </ion-modal-view>
- <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+    <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
         <button mfb-button icon="ion-arrow-resize" label="{{imageFit?'fill screen':'fit screen'}}" ng-click="scaleImage();">
         </button>
         <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
@@ -84,24 +71,23 @@
         </button>
     </nav>
 
-<nav mfb-menu position="tr" effect="zoomin" label="collapse" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
+    <nav mfb-menu position="tr" effect="zoomin" label="collapse" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
         <button mfb-button icon="ion-android-arrow-back" label="previous monitor" ng-click="onTap(monitorId,-1);">
         </button>
         <button mfb-button icon="ion-android-arrow-forward" label="next monitor" ng-click="onTap(monitorId,1);">
         </button>
-        
+
     </nav>
 
     <span class="camera-icon">
         <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(monitorId)"></a>
     </span>
-        
-        <span class="modal-alarm-badge">
+
+    <span class="modal-alarm-badge">
             <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon ion-ios-bell notification-badge button-assertive" 
                     ng-click="handleAlarms();" ng-if="$root.isAlarm"></a>
         </span>
 
-<div class="monitor-modal-text" >{{monitorName}}</div>
+    <div class="monitor-modal-text">{{monitorName}}</div>
 
 </div>
-

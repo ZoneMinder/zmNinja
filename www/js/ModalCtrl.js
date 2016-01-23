@@ -675,6 +675,82 @@ $scope.togglePresets = function()
         }
     };
     
+    
+    
+     //-----------------------------------------------------------------------
+    // Saves a snapshot of the monitor image to phone storage
+    //-----------------------------------------------------------------------
+
+    $scope.saveEventImageToPhone = function () {
+        $ionicLoading.show({
+            template: "saving snapshot...",
+            noBackdrop: true,
+            duration: zm.httpTimeout
+        });
+
+        var curState = carouselUtils.getStop();
+        carouselUtils.setStop(true);
+        
+        console.log ("Your index is  " + $scope.mycarousel.index);
+        console.log ("Associated image is " + $scope.slides[$scope.mycarousel.index].img);
+        
+        ZMDataModel.zmDebug("ModalCtrl: SaveEventImageToPhone called");
+        var canvas, context, imageDataUrl, imageData;
+        var loginData = ZMDataModel.getLogin();
+        
+        var url = $scope.playbackURL+'/index.php?view=image&rand='+$rootScope.rand+"&path="+$scope.relativePath+$scope.slides[$scope.mycarousel.index].img; 
+        
+        
+        ZMDataModel.zmLog ("File path to grab is " + url);
+
+        var img = new Image();
+        img.onload = function () {
+           // console.log("********* ONLOAD");
+            canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            context = canvas.getContext('2d');
+            context.drawImage(img, 0, 0);
+
+            imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+            imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+
+            if ($rootScope.platformOS != "desktop") {
+                try {
+                   
+                    cordova.exec(
+                        SaveSuccess,
+                        SaveError,
+                        'Canvas2ImagePlugin',
+                        'saveImageDataToLibrary', [imageData]
+                    );
+                   // carouselUtils.setStop(curState);
+                } catch (e) {
+
+                    SaveError(e.message);
+                   // carouselUtils.setStop(curState);
+                }
+            } else {
+
+
+                var fname = $scope.relativePath+$scope.slides[$scope.mycarousel.index].img + ".png";
+                fname = fname.replace(/\//,"-");
+                 fname = fname.replace(/\.jpg/,'');
+                
+                canvas.toBlob(function (blob) {
+                    saveAs(blob, fname);
+                });
+            }
+        };
+        try {
+            img.src = url;
+           // console.log ("SAVING IMAGE SOURCE");
+        } catch (e) {
+            SaveError(e.message);
+
+        }
+    };
+    
 
       
     

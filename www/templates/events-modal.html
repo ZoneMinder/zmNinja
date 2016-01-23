@@ -122,6 +122,10 @@
 <span class="events-modal-gapless-icon">
         <a ng-class="loginData.gapless? 'button button-small button-stable' : 'button button-small button-assertive' " href="" ng-click="toggleGapless()">gapless: {{loginData.gapless?"on":"off"}}</a>
 </span>
+    
+ <span class="events-modal-camera-icon" ng-if="defaultVideo==''">
+        <a class="button button-small icon ion-ios-camera button-positive" href="" ng-click="saveEventImageToPhone()"></a>
+</span>
 
 <!--
     <nav mfb-menu position="bl" effect="zoomin" label="collapse"
