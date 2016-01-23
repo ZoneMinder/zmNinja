@@ -222,6 +222,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     function loadNotifications() {
 
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+
         //console.log ("Inside Montage timer...");
 
     }

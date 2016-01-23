@@ -20,7 +20,7 @@
                             <li ng-repeat="slide in slides">
                                 <div ng-if="!animationInProgress">
                                     <img  style="width:100vw; height:100vh" imageonload="finishedLoadingImage($index)" 
-                                         http-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale={{loginData.singleImageQuality}}" 
+                                         image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale={{loginData.singleImageQuality}}" 
                                          image-spinner-loader="lines" 
                                          ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" 
                                          
@@ -28,7 +28,7 @@
                                 </div>
                                 <div ng-if="animationInProgress">
                                     <img   style="width:100vw; height:100vh" imageonload="finishedLoadingImage($index)" 
-                                         http-src="img/pausevideo.png" 
+                                         image-spinner-src="img/pausevideo.png" 
                                          image-spinner-loader="lines" 
                                          class="object-fit_contain"  />
                                 </div>
