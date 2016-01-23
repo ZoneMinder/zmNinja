@@ -69,9 +69,64 @@ angular.module('zmApp', [
 })
 
 
-//credit http://stackoverflow.com/questions/20997406/force-http-interceptor-in-dynamic-ngsrc-request
+
+//credit: http://stackoverflow.com/questions/34958575/intercepting-img-src-via-http-interceptor-as-well-as-not-lose-the-ability-to-kee
 .directive('httpSrc', [
-        '$http', 'imageLoadingDataShare', function ($http, imageLoadingDataShare) {
+        '$http', 'imageLoadingDataShare', 'ZMDataModel',
+        function ($http, imageLoadingDataShare, ZMDataModel) {
+        var directive = {
+            link: postLink,
+            restrict: 'A'
+        };
+        return directive;
+
+        function postLink(scope, element, attrs) {
+            console.log ("HELLO NEW");
+            var requestConfig = {
+                method: 'GET',
+                //url: attrs.httpSrc,
+                responseType: 'arraybuffer',
+                cache: 'true'
+            };
+
+            function base64Img(data) {
+                var arr = new Uint8Array(data);
+                var raw = '';
+                var i, j, subArray, chunk = 5000;
+                for (i = 0, j = arr.length; i < j; i += chunk) {
+                    subArray = arr.subarray(i, i + chunk);
+                    raw += String.fromCharCode.apply(null, subArray);
+                }
+                return btoa(raw);
+            }
+            attrs.$observe('httpSrc', function (newValue) {
+                requestConfig.url = newValue;
+                console.log ("requestConfig is " + JSON.stringify(requestConfig));
+                imageLoadingDataShare.set(1);
+                $http(requestConfig)
+                    .success(function (data) {
+                        console.log ("Inside HTTP after Calling " + requestConfig.url);
+                        //console.log ("data got " + JSON.stringify(data));
+                    
+                       
+                        var b64 = base64Img(data);
+                        attrs.$set('src', "data:image/jpeg;base64," + b64);
+                        imageLoadingDataShare.set(0);
+                    });
+            });
+
+        }
+    }
+])
+
+
+ 
+
+
+
+//credit http://stackoverflow.com/questions/20997406/force-http-interceptor-in-dynamic-ngsrc-request
+.directive('httpSrcOld', [
+        '$http', 'imageLoadingDataShare', 'ZMDataModel', function ($http, imageLoadingDataShare, ZMDataModel) {
             var directive = {
                 link: link,
                 restrict: 'A'
@@ -79,34 +134,42 @@ angular.module('zmApp', [
             return directive;
 
             function link(scope, element, attrs) {
-                var requestConfig = {
-                    method: 'Get',
-                    url: attrs.httpSrc,
-                    responseType: 'arraybuffer',
-                    cache: 'true'
-                };
+                
+                console.log ("HELLO OLD");
+                
+                    var requestConfig = {
+                        method: 'Get',
+                        url: attrs.httpSrcOld,
+                        responseType: 'arraybuffer',
+                        cache: 'true'
+                    };
 
-                imageLoadingDataShare.set(1);
-                $http(requestConfig)
-                    .success(function(data) {
-                        var arr = new Uint8Array(data);
+                    console.log ("Calling " + requestConfig.url);
+                    imageLoadingDataShare.set(1);
+                    $http(requestConfig)
+                        .success(function(data) {
+                        
+                        console.log ("data got " + JSON.stringify(data));
+                            var arr = new Uint8Array(data);
 
-                        var raw = '';
-                        var i, j, subArray, chunk = 5000;
-                        for (i = 0, j = arr.length; i < j; i += chunk) {
-                            subArray = arr.subarray(i, i + chunk);
-                            raw += String.fromCharCode.apply(null, subArray);
-                        }
+                            var raw = '';
+                            var i, j, subArray, chunk = 5000;
+                            for (i = 0, j = arr.length; i < j; i += chunk) {
+                                subArray = arr.subarray(i, i + chunk);
+                                raw += String.fromCharCode.apply(null, subArray);
+                            }
 
-                        var b64 = btoa(raw);
+                            var b64 = btoa(raw);
 
-                        attrs.$set('src', "data:image/jpeg;base64," + b64);
-                        imageLoadingDataShare.set(0);
-                    })
-                    .error (function(data) {
-                        attrs.$set('src', 'img/novideo.png');
-                        imageLoadingDataShare.set(0);
-                });
+                            attrs.$set('src', "data:image/jpeg;base64," + b64);
+                            imageLoadingDataShare.set(0);
+                        })
+                        .error (function(data) {
+                           attrs.$set('src', 'img/novideo.png');
+                            imageLoadingDataShare.set(0);
+                            ZMDataModel.zmDebug ("Inside http-src err");
+                    });
+          
             }
 
         }
@@ -308,7 +371,7 @@ angular.module('zmApp', [
                // console.log ("Parsed data is " + JSON.stringify(components));
                 var credentials = btoa(components.userinfo);
                 //var authorization = {'Authorization': 'Basic ' + credentials};
-               config.headers.Authorization = 'Basic ' + credentials;
+               //config.headers.Authorization = 'Basic ' + credentials;
                 
                // console.log ("Full headers: " + JSON.stringify(config.headers));
                 
