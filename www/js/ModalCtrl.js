@@ -687,7 +687,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
         $rootScope.zmPopup = $ionicPopup.show({
             template: '<center>Frame: {{slideIndex+1}} of {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  />',
-            title: 'Select Frame to save',
+            title: 'Select frame to save',
             subTitle: 'use left and right arrows to change',
             scope: $scope,
             cssClass: 'popup80',
@@ -749,7 +749,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
                 {
                     text: '',
-                    type: 'button-small ion-close-round'
+                    type: 'button-assertive button-small ion-close-round'
                 },
                 {
                     text: '',
