@@ -8,10 +8,10 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
     // from parent scope
-    var currentEvent=$scope.currentEvent;
+    var currentEvent = $scope.currentEvent;
     var nphTimer;
-    
-  
+
+
     var eventImageDigits = 5; // failsafe
     ZMDataModel.getKeyConfigParams(0)
         .then(function (data) {
@@ -19,7 +19,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             eventImageDigits = parseInt(data);
             ZMDataModel.zmLog("Image padding digits reported as " + eventImageDigits);
         });
-    
+
     $scope.animationInProgress = false;
     $scope.imageFit = true;
     // FIXME: This is a hack - for some reason
@@ -28,7 +28,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     $scope.showModalRangeSider = false;
     $scope.isModalActive = true;
 
-    
+
     $timeout(function () {
         $scope.showModalRangeSider = true;
 
@@ -47,30 +47,28 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         showDelay: 0
     });
     var ld = ZMDataModel.getLogin();
-    
-    $scope.streamMode = ld.useNphZms ? "jpeg":"single";
+
+    $scope.streamMode = ld.useNphZms ? "jpeg" : "single";
     $scope.currentStreamMode = 'single';
-     ZMDataModel.zmLog ("Using stream mode " + $scope.currentStreamMode);
-    
-    if (ld.useNphZms == true)
-    {
-        ZMDataModel.zmLog ("Setting timer to play nph-zms mode");
+    ZMDataModel.zmLog("Using stream mode " + $scope.currentStreamMode);
+
+    if (ld.useNphZms == true) {
+        ZMDataModel.zmLog("Setting timer to play nph-zms mode");
         // first 5 seconds, load a snapshot, then switch to real FPS display
         // this is to avoid initial image load delay
         // FIXME: 5 seconds fair?
         $timeout.cancel(nphTimer);
-        nphTimer=$timeout( function()
-                 { 
-                    $scope.currentStreamMode = 'jpeg';
-                    ZMDataModel.zmLog ("Switching playback via nphzms");
-        },zm.nphSwitchTimer);
+        nphTimer = $timeout(function () {
+            $scope.currentStreamMode = 'jpeg';
+            ZMDataModel.zmLog("Switching playback via nphzms");
+        }, zm.nphSwitchTimer);
     }
-    
-    
-    
-    ZMDataModel.zmDebug ("Setting playback to " + $scope.streamMode);
-    
-    
+
+
+
+    ZMDataModel.zmDebug("Setting playback to " + $scope.streamMode);
+
+
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
     ZMDataModel.getAuthKey($rootScope.validMonitorId)
         .then(function (success) {
@@ -89,25 +87,22 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
     $scope.togglePTZ = function () {
-        
-        console.log ("PTZ");
-        
-        if ($scope.isControllable=='1')
-        {
+
+        console.log("PTZ");
+
+        if ($scope.isControllable == '1') {
             //console.log ("iscontrollable is true");
             $scope.showPTZ = !$scope.showPTZ;
+        } else {
+            $ionicLoading.show({
+                template: "PTZ not configured for this monitor",
+                noBackdrop: true,
+                duration: 3000,
+            });
         }
-        else
-        {
-             $ionicLoading.show({
-                            template: "PTZ not configured for this monitor",
-                            noBackdrop: true,
-                            duration: 3000,
-                        });
-        }
-        
-        
-        
+
+
+
     };
 
 
@@ -126,7 +121,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'Down');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Down');
                 }
             },
 
@@ -135,7 +130,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'DownLeft');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'DownLeft');
                 }
             },
 
@@ -145,7 +140,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 empty: false,
 
                 onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'Left');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Left');
                 }
             },
             {
@@ -162,7 +157,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'UpLeft');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'UpLeft');
                 }
             },
 
@@ -171,7 +166,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'Up');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Up');
                 }
             },
 
@@ -180,7 +175,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'UpRight');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'UpRight');
                 }
             },
 
@@ -197,7 +192,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'Right');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Right');
                 }
             },
 
@@ -207,7 +202,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
                 onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand +'DownRight');
+                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'DownRight');
                 }
             },
 
@@ -223,18 +218,15 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
     $interval.cancel(intervalModalHandle);
-    
-    if (ld.useNphZms == false )
-    {
+
+    if (ld.useNphZms == false) {
         intervalModalHandle = $interval(function () {
             loadModalNotifications();
             //  console.log ("Refreshing Image...");
         }.bind(this), ld.refreshSec * 1000);
 
         loadModalNotifications();
-    }
-    else
-    {
+    } else {
         ZMDataModel.zmLog("Using nph-zms, no timer needed");
     }
 
@@ -256,17 +248,14 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             ZMDataModel.zmLog("ModalCtrl: Restarting Modal timer on resume");
 
             $interval.cancel(intervalModalHandle);
-            
+
             var ld = ZMDataModel.getLogin();
-            if (ld.useNphZms == false)
-            {
+            if (ld.useNphZms == false) {
                 intervalModalHandle = $interval(function () {
                     loadModalNotifications();
                     //  console.log ("Refreshing Image...");
                 }.bind(this), ld.refreshSec * 1000);
-            }
-            else
-            {
+            } else {
                 ZMDataModel.zmLog("using nph - no timers needed");
             }
 
@@ -289,50 +278,48 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     var intervalModalHandle;
 
 
-$scope.togglePresets = function()
-{
-    $scope.presetOn = !$scope.presetOn;
-    console.log ("Changing preset to " + $scope.presetOn);
-    
-      var element = angular.element(document.getElementById("presetlist"));
+    $scope.togglePresets = function () {
+        $scope.presetOn = !$scope.presetOn;
+        console.log("Changing preset to " + $scope.presetOn);
+
+        var element = angular.element(document.getElementById("presetlist"));
         // bring it in
         if ($scope.presetOn) {
             element.removeClass("animated fadeOutUp");
-           
-            
+
+
         } else {
             element.removeClass("animated fadeInDown");
             element.addClass("animated fadeOutUp");
         }
 
-    
-    
-};
-    
-    
+
+
+    };
+
+
     //-------------------------------------------------------------
     // this is checked to make sure we are not pulling images
     // when app is in background. This is a problem with Android,
     // for example
     //-------------------------------------------------------------
 
-    $scope.isBackground = function()
-    {
-       // console.log ("Is background called from ModalCtrl and returned " +    
-       // ZMDataModel.isBackground());
+    $scope.isBackground = function () {
+        // console.log ("Is background called from ModalCtrl and returned " +    
+        // ZMDataModel.isBackground());
         return ZMDataModel.isBackground();
     };
-    
+
     //-------------------------------------------------------------
     // Send PTZ command to ZM
     // Note: PTZ fails on desktop, don't bother about it
     //-------------------------------------------------------------
-    
 
-    $scope.controlPTZ = function (monitorId, cmd)
-    {
+
+    $scope.controlPTZ = function (monitorId, cmd) {
         controlPTZ(monitorId, cmd);
     };
+
     function controlPTZ(monitorId, cmd) {
 
         //presetGotoX
@@ -350,22 +337,19 @@ $scope.togglePresets = function()
         }
 
         var ptzData = "";
-        if (cmd.lastIndexOf("preset", 0) === 0)
-        {
+        if (cmd.lastIndexOf("preset", 0) === 0) {
             ZMDataModel.zmDebug("PTZ command is a preset, so skipping xge/lge");
             ptzData = {
                 view: "request",
                 request: "control",
                 id: monitorId,
                 control: cmd,
-              //  xge: "30", //wtf
-              //  yge: "30", //wtf
+                //  xge: "30", //wtf
+                //  yge: "30", //wtf
             };
-            
-        }
-        else
-        {
-            
+
+        } else {
+
             ptzData = {
                 view: "request",
                 request: "control",
@@ -377,7 +361,7 @@ $scope.togglePresets = function()
         }
 
         console.log("Command value " + cmd + " with MID=" + monitorId);
-        console.log ("PTZDATA is " + JSON.stringify(ptzData));
+        console.log("PTZDATA is " + JSON.stringify(ptzData));
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "please wait...",
@@ -477,7 +461,7 @@ $scope.togglePresets = function()
         var mid;
         mid = ZMDataModel.getNextMonitor(m, d);
 
-    
+
 
         // FIXME: clean this up - in a situation where
         // no monitors are enabled, will it loop for ever?
@@ -491,28 +475,25 @@ $scope.togglePresets = function()
             for (var i = 0; i < $scope.monitors.length; i++) {
                 if ($scope.monitors[i].Monitor.Id == mid &&
                     // if you came from monitors, then ignore noshow
-                    ($scope.monitors[i].Monitor.listDisplay != 'noshow' || curstate == "monitors" ) &&
-                    $scope.monitors[i].Monitor.Function !='None' &&
+                    ($scope.monitors[i].Monitor.listDisplay != 'noshow' || curstate == "monitors") &&
+                    $scope.monitors[i].Monitor.Function != 'None' &&
                     $scope.monitors[i].Monitor.Enabled != '0') {
                     found = 1;
                     console.log(mid + "is part of the monitor list");
                     ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " + mid);
                     break;
-                }
-
-                else 
-                {
-                    ZMDataModel.zmDebug ("skipping " + $scope.monitors[i].Monitor.Id + 
-                                         " listDisplay="+$scope.monitors[i].Monitor.listDisplay+
-                                         " Function="+$scope.monitors[i].Monitor.Function+
-                                         " Enabled="+ $scope.monitors[i].Monitor.Enabled);
+                } else {
+                    ZMDataModel.zmDebug("skipping " + $scope.monitors[i].Monitor.Id +
+                        " listDisplay=" + $scope.monitors[i].Monitor.listDisplay +
+                        " Function=" + $scope.monitors[i].Monitor.Function +
+                        " Enabled=" + $scope.monitors[i].Monitor.Enabled);
                 }
             }
 
 
         }
         while (found != 1);
-        
+
 
         var slidein;
         var slideout;
@@ -533,8 +514,8 @@ $scope.togglePresets = function()
 
         function outWithOld() {
 
-             ZMDataModel.zmLog("Stopping network pull...");
-                window.stop();
+            ZMDataModel.zmLog("Stopping network pull...");
+            window.stop();
             $scope.rand = Math.floor((Math.random() * 100000) + 1);
             $scope.animationInProgress = true;
 
@@ -551,23 +532,21 @@ $scope.togglePresets = function()
 
             element.removeClass(slidein);
             $scope.animationInProgress = false;
-            
-            ZMDataModel.zmLog ("New image loaded in");
+
+            ZMDataModel.zmLog("New image loaded in");
             var ld = ZMDataModel.getLogin();
             carouselUtils.setStop(false);
-            if (ld.useNphZms == true)
-            {
-                 $scope.currentStreamMode = 'single';
-                ZMDataModel.zmLog ("Setting timer to play nph-zms mode");
+            if (ld.useNphZms == true) {
+                $scope.currentStreamMode = 'single';
+                ZMDataModel.zmLog("Setting timer to play nph-zms mode");
                 // first 5 seconds, load a snapshot, then switch to real FPS display
                 // this is to avoid initial image load delay
                 // FIXME: 5 seconds fair?
                 $timeout.cancel(nphTimer);
-                nphTimer = $timeout( function()
-                         { 
-                            $scope.currentStreamMode = 'jpeg';
-                            ZMDataModel.zmLog ("Switching playback via nphzms");
-                },zm.nphSwitchTimer);
+                nphTimer = $timeout(function () {
+                    $scope.currentStreamMode = 'jpeg';
+                    ZMDataModel.zmLog("Switching playback via nphzms");
+                }, zm.nphSwitchTimer);
             }
 
         }
@@ -608,9 +587,9 @@ $scope.togglePresets = function()
         ZMDataModel.zmLog("Error saving image: " + e.message);
         console.log("***ERROR");
     }
-    
-    
-     
+
+
+
 
     //-----------------------------------------------------------------------
     // Saves a snapshot of the monitor image to phone storage
@@ -633,7 +612,7 @@ $scope.togglePresets = function()
 
         var img = new Image();
         img.onload = function () {
-           // console.log("********* ONLOAD");
+            // console.log("********* ONLOAD");
             canvas = document.createElement('canvas');
             canvas.width = img.width;
             canvas.height = img.height;
@@ -645,7 +624,7 @@ $scope.togglePresets = function()
 
             if ($rootScope.platformOS != "desktop") {
                 try {
-                   
+
                     cordova.exec(
                         SaveSuccess,
                         SaveError,
@@ -659,101 +638,191 @@ $scope.togglePresets = function()
             } else {
 
 
-                var fname = $scope.monitorName + "-" + 
+                var fname = $scope.monitorName + "-" +
                     moment().format('MMM-DD-YY_HH-mm-ss') + ".png";
                 canvas.toBlob(function (blob) {
                     saveAs(blob, fname);
+                    SaveSuccess();
+                    
                 });
             }
         };
         try {
             img.src = url;
-           // console.log ("SAVING IMAGE SOURCE");
+            // console.log ("SAVING IMAGE SOURCE");
         } catch (e) {
             SaveError(e.message);
 
         }
     };
-    
-    
-    
-     //-----------------------------------------------------------------------
+
+
+
+    //-----------------------------------------------------------------------
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
     $scope.saveEventImageToPhone = function () {
-        $ionicLoading.show({
-            template: "saving snapshot...",
-            noBackdrop: true,
-            duration: zm.httpTimeout
-        });
+        
 
         var curState = carouselUtils.getStop();
         carouselUtils.setStop(true);
-        
-        console.log ("Your index is  " + $scope.mycarousel.index);
-        console.log ("Associated image is " + $scope.slides[$scope.mycarousel.index].img);
-        
+
+        console.log("Your index is  " + $scope.mycarousel.index);
+        console.log("Associated image is " + $scope.slides[$scope.mycarousel.index].img);
+
         ZMDataModel.zmDebug("ModalCtrl: SaveEventImageToPhone called");
         var canvas, context, imageDataUrl, imageData;
         var loginData = ZMDataModel.getLogin();
-        
-        var url = $scope.playbackURL+'/index.php?view=image&rand='+$rootScope.rand+"&path="+$scope.relativePath+$scope.slides[$scope.mycarousel.index].img; 
-        
-        
-        ZMDataModel.zmLog ("File path to grab is " + url);
 
-        var img = new Image();
-        img.onload = function () {
-           // console.log("********* ONLOAD");
-            canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            context = canvas.getContext('2d');
-            context.drawImage(img, 0, 0);
-
-            imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-            imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
-
-            if ($rootScope.platformOS != "desktop") {
-                try {
-                   
-                    cordova.exec(
-                        SaveSuccess,
-                        SaveError,
-                        'Canvas2ImagePlugin',
-                        'saveImageDataToLibrary', [imageData]
-                    );
-                   // carouselUtils.setStop(curState);
-                } catch (e) {
-
-                    SaveError(e.message);
-                   // carouselUtils.setStop(curState);
-                }
-            } else {
+        var url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.mycarousel.index].img;
 
 
-                var fname = $scope.relativePath+$scope.slides[$scope.mycarousel.index].img + ".png";
-                fname = fname.replace(/\//,"-");
-                 fname = fname.replace(/\.jpg/,'');
-                
-                canvas.toBlob(function (blob) {
-                    saveAs(blob, fname);
-                });
-            }
-        };
-        try {
-            img.src = url;
-           // console.log ("SAVING IMAGE SOURCE");
-        } catch (e) {
-            SaveError(e.message);
+        $scope.selectEventUrl = url;
+        $scope.slideIndex = $scope.mycarousel.index;
+        $scope.slideLastIndex = $scope.slides.length - 1;
 
+
+
+
+        $rootScope.zmPopup = $ionicPopup.show({
+            template: '<center>Frame: {{slideIndex+1}} of {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  />',
+            title: 'Select Frame to save',
+            subTitle: 'use left and right arrows to change',
+            scope: $scope,
+            cssClass: 'popup80',
+            buttons: [
+                {
+                    // left 1
+                    text: '',
+                    type: 'button-small button-energized ion-chevron-left',
+                    onTap: function (e) {
+                        if ($scope.slideIndex > 0) $scope.slideIndex--;
+                        $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
+                        //ZMDataModel.zmLog("selected frame is " + $scope.slideIndex);
+
+                        e.preventDefault();
+                    }
+                },
+                {
+                    // right 1
+                    text: '',
+                    type: 'button-small button-energized ion-chevron-right',
+                    onTap: function (e) {
+                        if ($scope.slideIndex < $scope.slideLastIndex) $scope.slideIndex++;
+                        $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
+                        //ZMDataModel.zmLog("selected frame is " + $scope.slideIndex);
+                        e.preventDefault();
+                    }
+                },
+                {
+                    // left 10
+                    text: '',
+                    type: 'button-small button-energized ion-skip-backward',
+                    onTap: function (e) {
+                        var tempVar = $scope.slideIndex;
+                        tempVar -= 10;
+                        if (tempVar < 0) tempVar = 0;
+                        $scope.slideIndex = tempVar;
+
+                        $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
+                        //ZMDataModel.zmLog("selected frame is " + $scope.slideIndex);
+
+                        e.preventDefault();
+                    }
+                },
+                {
+                    // right 10
+                    text: '',
+                    type: 'button-small button-energized ion-skip-forward',
+                    onTap: function (e) {
+                        var tempVar = $scope.slideIndex;
+                        tempVar += 10;
+                        if (tempVar > $scope.slideLastIndex) tempVar = $scope.slideLastIndex;
+                        $scope.slideIndex = tempVar;
+                        if ($scope.slideIndex < $scope.slideLastIndex) $scope.slideIndex++;
+                        $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
+                        //ZMDataModel.zmLog("selected frame is " + $scope.slideIndex);
+                        e.preventDefault();
+                    }
+                },
+
+                {
+                    text: '',
+                    type: 'button-small ion-close-round'
+                },
+                {
+                    text: '',
+                    type: 'button-positive button-small ion-checkmark-round',
+                    onTap: function (e) {
+                        saveNow();
+
+                    }
+                }]
+        });
+
+        function saveNow()
+        {
+            $ionicLoading.show({
+             template: "saving snapshot...",
+             noBackdrop: true,
+             duration: zm.httpTimeout
+            });
+            var url = $scope.selectEventUrl;
+            ZMDataModel.zmLog ("saveNow: File path to grab is " + url);
+
+             var img = new Image();
+             img.onload = function () {
+                // console.log("********* ONLOAD");
+                 canvas = document.createElement('canvas');
+                 canvas.width = img.width;
+                 canvas.height = img.height;
+                 context = canvas.getContext('2d');
+                 context.drawImage(img, 0, 0);
+
+                 imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+                 imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+
+                 if ($rootScope.platformOS != "desktop") {
+                     try {
+
+                         cordova.exec(
+                             SaveSuccess,
+                             SaveError,
+                             'Canvas2ImagePlugin',
+                             'saveImageDataToLibrary', [imageData]
+                         );
+                        // carouselUtils.setStop(curState);
+                     } catch (e) {
+
+                         SaveError(e.message);
+                        // carouselUtils.setStop(curState);
+                     }
+                 } else {
+
+
+                     var fname = $scope.relativePath+$scope.slides[$scope.slideIndex].img + ".png";
+                     fname = fname.replace(/\//,"-");
+                      fname = fname.replace(/\.jpg/,'');
+
+                     canvas.toBlob(function (blob) {
+                         saveAs(blob, fname);
+                         SaveSuccess();
+                     });
+                 }
+             };
+             try {
+                 img.src = url;
+                // console.log ("SAVING IMAGE SOURCE");
+             } catch (e) {
+                 SaveError(e.message);
+             } 
         }
     };
-    
 
-      
-    
+
+
+
 
     $scope.reloadView = function () {
         ZMDataModel.zmLog("Reloading view for modal view, recomputing rand");
@@ -762,7 +831,7 @@ $scope.togglePresets = function()
     };
 
     $scope.scaleImage = function () {
-        
+
         $scope.imageFit = !$scope.imageFit;
         console.log("Switching image style to " + $scope.imageFit);
     };
@@ -794,505 +863,481 @@ $scope.togglePresets = function()
 
         // Execute action
     });
-    
-    
+
+
     // Playback speed adjuster
-    $scope.adjustSpeed = function (val)
-    {
-        switch(val) {
-        
+    $scope.adjustSpeed = function (val) {
+        switch (val) {
+
             case "super":
-                $scope.eventSpeed = 20/$scope.event.Event.Frames;
+                $scope.eventSpeed = 20 / $scope.event.Event.Frames;
                 carouselUtils.setDuration($scope.eventSpeed);
                 break;
             case "normal":
-               $scope.eventSpeed = $scope.event.Event.Length/$scope.event.Event.Frames;
+                $scope.eventSpeed = $scope.event.Event.Length / $scope.event.Event.Frames;
                 //$scope.eventSpeed = 5;
                 carouselUtils.setDuration($scope.eventSpeed);
-                
+
                 break;
             case "faster":
                 $scope.eventSpeed = $scope.eventSpeed / 2;
-                if ($scope.eventSpeed <20/$scope.event.Event.Frames)
-                        $scope.eventSpeed = 10/$scope.event.Event.Frames;
+                if ($scope.eventSpeed < 20 / $scope.event.Event.Frames)
+                    $scope.eventSpeed = 10 / $scope.event.Event.Frames;
                 carouselUtils.setDuration($scope.eventSpeed);
                 break;
             case "slower":
-                 $scope.eventSpeed = $scope.eventSpeed * 2;
-                 carouselUtils.setDuration($scope.eventSpeed);
-                
+                $scope.eventSpeed = $scope.eventSpeed * 2;
+                carouselUtils.setDuration($scope.eventSpeed);
+
                 break;
             default:
-    
-                
+
+
         }
-        ZMDataModel.zmDebug("Set playback speed to "+$scope.eventSpeed);
-        
+        ZMDataModel.zmDebug("Set playback speed to " + $scope.eventSpeed);
+
         $ionicLoading.show({
-        template: 'playback interval: '+$scope.eventSpeed.toFixed(3)+"ms",
-        animation: 'fade-in',
-        showBackdrop: false,
-        duration: 1500,
-        maxWidth: 300,
-        showDelay: 0
-    });
-        
-        
-    };
-    
-    
-    $scope.toggleGapless = function()
-    {
-            console.log (">>>>>>>>>>>>>>GAPLESS TOGGLE INSIDE MODAL");
-            $scope.loginData.gapless = !$scope.loginData.gapless;
-            ZMDataModel.setLogin($scope.loginData);
-            
+            template: 'playback interval: ' + $scope.eventSpeed.toFixed(3) + "ms",
+            animation: 'fade-in',
+            showBackdrop: false,
+            duration: 1500,
+            maxWidth: 300,
+            showDelay: 0
+        });
+
+
     };
 
-    
+
+    $scope.toggleGapless = function () {
+        console.log(">>>>>>>>>>>>>>GAPLESS TOGGLE INSIDE MODAL");
+        $scope.loginData.gapless = !$scope.loginData.gapless;
+        ZMDataModel.setLogin($scope.loginData);
+
+    };
+
+
     // This function returns neighbor events if applicable
-        function neighborEvents(eid) {
-            var d = $q.defer();
-            // now get event details to show alarm frames
-            var loginData = ZMDataModel.getLogin();
-            var myurl = loginData.apiurl + '/events/' + eid + ".json";
-            var neighbors = {
-                prev: "",
-                next: ""
-            };
-            $http.get(myurl)
-                .success(function (data) {
-                 
+    function neighborEvents(eid) {
+        var d = $q.defer();
+        // now get event details to show alarm frames
+        var loginData = ZMDataModel.getLogin();
+        var myurl = loginData.apiurl + '/events/' + eid + ".json";
+        var neighbors = {
+            prev: "",
+            next: ""
+        };
+        $http.get(myurl)
+            .success(function (data) {
+
                 // In Timeline view, gapless should stick to the same monitor
-                    if ($scope.followSameMonitor=="1") // we are viewing only one monitor
-                    {
-                        ZMDataModel.zmDebug ("Getting next event for same monitor Id ");
-                        neighbors.prev = data.event.Event.PrevOfMonitor ? data.event.Event.PrevOfMonitor : "";
-                        neighbors.next = data.event.Event.NextOfMonitor ? data.event.Event.NextOfMonitor : "";
-                    }
-                    else
-                    {
-                        neighbors.prev = data.event.Event.Prev ? data.event.Event.Prev : "";
-                        neighbors.next = data.event.Event.Next ? data.event.Event.Next : "";
-                    }
-                    ZMDataModel.zmDebug("Neighbor events of " + eid + "are Prev:" +
-                        neighbors.prev + " and Next:" + neighbors.next);
-                    
-
-                    d.resolve(neighbors);
-                    return (d.promise);
-                })
-                .error(function (err) {
-                    ZMDataModel.zmLog("Error retrieving neighbors" + JSON.stringify(err));
-                    d.reject(neighbors);
-                    return (d.promise);
-
-
-                });
-            return (d.promise);
-
-        }
-
-       
-      
-        
-        //--------------------------------------------------------
-        //Navigate to next/prev event in full screen mode
-        //--------------------------------------------------------
-
-        $scope.onSwipeEvent = function(eid,dirn)
-        {
-            console.log ("HERE");
-            var ld = ZMDataModel.getLogin();
-            if (!ld.canSwipeMonitors) return;
-            
-            if 
-   ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom!=1)
-   {
-       console.log("Image is zoomed in - not honoring swipe");
-       return;
-   }
-            console.log ("JUMPING");
-            jumpToEvent(eid,dirn);
-            
-        };
-        
-        $scope.jumpToEvent = function (eid, dirn) {
-            console.log ("jumptoevent");
-            
-            jumpToEvent(eid, dirn);
-
-        };
-        
-        function jumpToEvent (eid, dirn)
-        {
-            ZMDataModel.zmLog("Event jump called with:" + eid);
-            if (eid == "") {
-                $ionicLoading.show({
-                    template: "no more events",
-                    noBackdrop: true,
-                    duration: 2000
-                });
-
-                return;
-            }
-            
-            var slidein;
-            var slideout;
-            if (dirn==1)
-            {
-                slideout = "animated slideOutLeft";
-                slidein = "animated slideInRight";
-            }
-            else
-            {
-                slideout = "animated slideOutRight";
-                slidein = "animated slideInLeft";
-            }
-            var element = angular.element(document.getElementById("full-screen-event"));
-            element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
-            
-            
-            
-            function outWithOld()
-            {
-                
-                ZMDataModel.zmLog("Stopping network pull...");
-                window.stop();
-                $scope.animationInProgress = true;
-                // give digest time for image to swap
-                // 100 should be enough
-                $timeout(function()
+                if ($scope.followSameMonitor == "1") // we are viewing only one monitor
                 {
-                    element.removeClass(slideout);
-                    element.addClass(slidein)
-                        .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew );
-                    prepareModalEvent(eid);
-                },200);
-            }
-            
-            function inWithNew()
-            {
-                element.removeClass(slidein);
-                $scope.animationInProgress = false;
-                carouselUtils.setStop(false);
-            }
+                    ZMDataModel.zmDebug("Getting next event for same monitor Id ");
+                    neighbors.prev = data.event.Event.PrevOfMonitor ? data.event.Event.PrevOfMonitor : "";
+                    neighbors.next = data.event.Event.NextOfMonitor ? data.event.Event.NextOfMonitor : "";
+                } else {
+                    neighbors.prev = data.event.Event.Prev ? data.event.Event.Prev : "";
+                    neighbors.next = data.event.Event.Next ? data.event.Event.Next : "";
+                }
+                ZMDataModel.zmDebug("Neighbor events of " + eid + "are Prev:" +
+                    neighbors.prev + " and Next:" + neighbors.next);
 
+
+                d.resolve(neighbors);
+                return (d.promise);
+            })
+            .error(function (err) {
+                ZMDataModel.zmLog("Error retrieving neighbors" + JSON.stringify(err));
+                d.reject(neighbors);
+                return (d.promise);
+
+
+            });
+        return (d.promise);
+
+    }
+
+
+
+
+    //--------------------------------------------------------
+    //Navigate to next/prev event in full screen mode
+    //--------------------------------------------------------
+
+    $scope.onSwipeEvent = function (eid, dirn) {
+        console.log("HERE");
+        var ld = ZMDataModel.getLogin();
+        if (!ld.canSwipeMonitors) return;
+
+        if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1) {
+            console.log("Image is zoomed in - not honoring swipe");
+            return;
         }
-        
-        //--------------------------------------------------------
-        // utility function
-        //--------------------------------------------------------
+        console.log("JUMPING");
+        jumpToEvent(eid, dirn);
 
-        function computeRelativePath(event) {
-            var relativePath = "";
-            var loginData = ZMDataModel.getLogin();
-            var str = event.Event.StartTime;
-            var yy = moment(str).format('YY');
-            var mm = moment(str).format('MM');
-            var dd = moment(str).format('DD');
-            var hh = moment(str).format('HH');
-            var min = moment(str).format('mm');
-            var sec = moment(str).format('ss');
-            relativePath = event.Event.MonitorId + "/" +
-                yy + "/" +
-                mm + "/" +
-                dd + "/" +
-                hh + "/" +
-                min + "/" +
-                sec + "/";
-            return relativePath;
+    };
 
+    $scope.jumpToEvent = function (eid, dirn) {
+        console.log("jumptoevent");
+
+        jumpToEvent(eid, dirn);
+
+    };
+
+    function jumpToEvent(eid, dirn) {
+        ZMDataModel.zmLog("Event jump called with:" + eid);
+        if (eid == "") {
+            $ionicLoading.show({
+                template: "no more events",
+                noBackdrop: true,
+                duration: 2000
+            });
+
+            return;
         }
-        
-        //--------------------------------------------------------
-        // utility function
-        //--------------------------------------------------------
 
-        function computeBasePath(event) {
-            var basePath = "";
-            var loginData = ZMDataModel.getLogin();
-            var str = event.Event.StartTime;
-            var yy = moment(str).format('YY');
-            var mm = moment(str).format('MM');
-            var dd = moment(str).format('DD');
-            var hh = moment(str).format('HH');
-            var min = moment(str).format('mm');
-            var sec = moment(str).format('ss');
-
-            basePath = loginData.url + "/events/" +
-                event.Event.MonitorId + "/" +
-                yy + "/" +
-                mm + "/" +
-                dd + "/" +
-                hh + "/" +
-                min + "/" +
-                sec + "/";
-            return basePath;
+        var slidein;
+        var slideout;
+        if (dirn == 1) {
+            slideout = "animated slideOutLeft";
+            slidein = "animated slideInRight";
+        } else {
+            slideout = "animated slideOutRight";
+            slidein = "animated slideInLeft";
         }
-    
-    
+        var element = angular.element(document.getElementById("full-screen-event"));
+        element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
+
+
+
+        function outWithOld() {
+
+            ZMDataModel.zmLog("Stopping network pull...");
+            window.stop();
+            $scope.animationInProgress = true;
+            // give digest time for image to swap
+            // 100 should be enough
+            $timeout(function () {
+                element.removeClass(slideout);
+                element.addClass(slidein)
+                    .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
+                prepareModalEvent(eid);
+            }, 200);
+        }
+
+        function inWithNew() {
+            element.removeClass(slidein);
+            $scope.animationInProgress = false;
+            carouselUtils.setStop(false);
+        }
+
+    }
+
+    //--------------------------------------------------------
+    // utility function
+    //--------------------------------------------------------
+
+    function computeRelativePath(event) {
+        var relativePath = "";
+        var loginData = ZMDataModel.getLogin();
+        var str = event.Event.StartTime;
+        var yy = moment(str).format('YY');
+        var mm = moment(str).format('MM');
+        var dd = moment(str).format('DD');
+        var hh = moment(str).format('HH');
+        var min = moment(str).format('mm');
+        var sec = moment(str).format('ss');
+        relativePath = event.Event.MonitorId + "/" +
+            yy + "/" +
+            mm + "/" +
+            dd + "/" +
+            hh + "/" +
+            min + "/" +
+            sec + "/";
+        return relativePath;
+
+    }
+
+    //--------------------------------------------------------
+    // utility function
+    //--------------------------------------------------------
+
+    function computeBasePath(event) {
+        var basePath = "";
+        var loginData = ZMDataModel.getLogin();
+        var str = event.Event.StartTime;
+        var yy = moment(str).format('YY');
+        var mm = moment(str).format('MM');
+        var dd = moment(str).format('DD');
+        var hh = moment(str).format('HH');
+        var min = moment(str).format('mm');
+        var sec = moment(str).format('ss');
+
+        basePath = loginData.url + "/events/" +
+            event.Event.MonitorId + "/" +
+            yy + "/" +
+            mm + "/" +
+            dd + "/" +
+            hh + "/" +
+            min + "/" +
+            sec + "/";
+        return basePath;
+    }
+
+
     //-------------------------------------------------------------------------
-        // Called when rncarousel or video player finished playing event
-        //-------------------------------------------------------------------------     
-        
-       $scope.playbackFinished = function()
-       {
-           playbackFinished();
-       };
+    // Called when rncarousel or video player finished playing event
+    //-------------------------------------------------------------------------     
 
-        function playbackFinished()
-        {
-            // currentEvent is updated with the currently playing event in prepareModalEvent()
-            ZMDataModel.zmLog ("Playback of event " + currentEvent.Event.Id + " is finished");
-            
-            if ($scope.loginData.gapless)
-            {
-            
-                neighborEvents(currentEvent.Event.Id)
-                                .then(function (success) {
+    $scope.playbackFinished = function () {
+        playbackFinished();
+    };
 
-                                        // lets give a second before gapless transition to the next event
-                                        $timeout ( function() {
-                                        $scope.nextId = success.next;
-                                        $scope.prevId = success.prev;
-                                        ZMDataModel.zmDebug ("Gapless move to event " + $scope.nextId);
-                                        jumpToEvent($scope.nextId, 1);
-                                        },1000);
-                                    },
-                                    function (error) {
-                                        ZMDataModel.zmDebug("Error in neighbor call " +
-                                                            JSON.stringify(error));
-                                    });
-            }
-            else
-            {
-                ZMDataModel.zmDebug ("not going to next event, gapless is off");
-            }
-        }
+    function playbackFinished() {
+        // currentEvent is updated with the currently playing event in prepareModalEvent()
+        ZMDataModel.zmLog("Playback of event " + currentEvent.Event.Id + " is finished");
 
+        if ($scope.loginData.gapless) {
 
-        //--------------------------------------------------------
-        // Called by openModal as well as jump to event
-        // what it basically does is get a detailed event API
-        // for an event ID and constructs required playback
-        // parameters
-        // Note that openModal is called with the top level event
-        // API. Some parameters are repeated across both
-        //--------------------------------------------------------
-
-
-        function prepareModalEvent(eid) {
-
-            // Lets get the detailed event API
-            var loginData = ZMDataModel.getLogin();
-            var myurl = loginData.apiurl + '/events/' + eid + ".json";
-            ZMDataModel.zmLog("*** Constructed API for detailed events: " + myurl);
-            $http.get(myurl)
+            neighborEvents(currentEvent.Event.Id)
                 .then(function (success) {
 
+                        // lets give a second before gapless transition to the next event
+                        $timeout(function () {
+                            $scope.nextId = success.next;
+                            $scope.prevId = success.prev;
+                            ZMDataModel.zmDebug("Gapless move to event " + $scope.nextId);
+                            jumpToEvent($scope.nextId, 1);
+                        }, 1000);
+                    },
+                    function (error) {
+                        ZMDataModel.zmDebug("Error in neighbor call " +
+                            JSON.stringify(error));
+                    });
+        } else {
+            ZMDataModel.zmDebug("not going to next event, gapless is off");
+        }
+    }
 
 
-                        var event = success.data.event;
-                        currentEvent = event;
+    //--------------------------------------------------------
+    // Called by openModal as well as jump to event
+    // what it basically does is get a detailed event API
+    // for an event ID and constructs required playback
+    // parameters
+    // Note that openModal is called with the top level event
+    // API. Some parameters are repeated across both
+    //--------------------------------------------------------
 
-                        event.Event.BasePath = computeBasePath(event);
-                        event.Event.relativePath = computeRelativePath(event);
 
+    function prepareModalEvent(eid) {
 
-                        //console.log (JSON.stringify( success));
-                        $scope.eventName = event.Event.Name;
-                        $scope.eventId = event.Event.Id;
-                        $scope.eFramesNum = event.Event.Frames;
-                        $scope.eventDur = Math.round(event.Event.Length);
-                        $scope.loginData = ZMDataModel.getLogin();
-
-                        //console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
-                        if (typeof event.Event.DefaultVideo === 'undefined')
-                            event.Event.DefaultVideo = "";
-
-                        $scope.defaultVideo = event.Event.DefaultVideo;
-                        
-
-                        neighborEvents(event.Event.Id)
-                            .then(function (success) {
-                                    $scope.nextId = success.next;
-                                    $scope.prevId = success.prev;
-                                },
-                                function (error) {
-                                    console.log(JSON.stringify(error));
-                                });
-
-                        $scope.nextId = "...";
-                        $scope.prevId = "...";
+        // Lets get the detailed event API
+        var loginData = ZMDataModel.getLogin();
+        var myurl = loginData.apiurl + '/events/' + eid + ".json";
+        ZMDataModel.zmLog("*** Constructed API for detailed events: " + myurl);
+        $http.get(myurl)
+            .then(function (success) {
 
 
 
+                    var event = success.data.event;
+                    currentEvent = event;
 
-                        event.Event.video = {};
-                        var videoURL = $scope.loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
+                    event.Event.BasePath = computeBasePath(event);
+                    event.Event.relativePath = computeRelativePath(event);
 
-                        //console.log("************** VIDEO IS " + videoURL);
-                        event.Event.video.config = {
-                            autoPlay: true,
-                            sources: [
-                                {
-                                    src: $sce.trustAsResourceUrl(videoURL),
-                                    type: "video/mp4"
+
+                    //console.log (JSON.stringify( success));
+                    $scope.eventName = event.Event.Name;
+                    $scope.eventId = event.Event.Id;
+                    $scope.eFramesNum = event.Event.Frames;
+                    $scope.eventDur = Math.round(event.Event.Length);
+                    $scope.loginData = ZMDataModel.getLogin();
+
+                    //console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
+                    if (typeof event.Event.DefaultVideo === 'undefined')
+                        event.Event.DefaultVideo = "";
+
+                    $scope.defaultVideo = event.Event.DefaultVideo;
+
+
+                    neighborEvents(event.Event.Id)
+                        .then(function (success) {
+                                $scope.nextId = success.next;
+                                $scope.prevId = success.prev;
+                            },
+                            function (error) {
+                                console.log(JSON.stringify(error));
+                            });
+
+                    $scope.nextId = "...";
+                    $scope.prevId = "...";
+
+
+
+
+                    event.Event.video = {};
+                    var videoURL = $scope.loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
+
+                    //console.log("************** VIDEO IS " + videoURL);
+                    event.Event.video.config = {
+                        autoPlay: true,
+                        sources: [
+                            {
+                                src: $sce.trustAsResourceUrl(videoURL),
+                                type: "video/mp4"
                         }
 
                     ],
 
-                            theme: "lib/videogular-themes-default/videogular.css",
+                        theme: "lib/videogular-themes-default/videogular.css",
 
-                        };
+                    };
 
-                        $scope.videoObject = event.Event.video;
+                    $scope.videoObject = event.Event.video;
 
-                        $scope.playbackURL = $scope.loginData.url;
-                
-                        /* we don't need this for electron
-                        if ($rootScope.platformOS == "desktop") {
-                            $scope.playbackURL = zm.desktopUrl;
-                        } */
+                    $scope.playbackURL = $scope.loginData.url;
 
-                        $scope.eventBasePath = event.Event.BasePath;
-                        $scope.relativePath = event.Event.relativePath;
-                        $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+                    /* we don't need this for electron
+                    if ($rootScope.platformOS == "desktop") {
+                        $scope.playbackURL = zm.desktopUrl;
+                    } */
 
-                        $scope.slider_modal_options = {
-                            from: 1,
-                            to: event.Event.Frames,
-                            realtime: true,
-                            step: 1,
-                            className: "mySliderClass",
-                            callback: function (value, released) {
-                                //console.log("CALLBACK"+value+released);
-                                $ionicScrollDelegate.freezeScroll(!released);
+                    $scope.eventBasePath = event.Event.BasePath;
+                    $scope.relativePath = event.Event.relativePath;
+                    $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+
+                    $scope.slider_modal_options = {
+                        from: 1,
+                        to: event.Event.Frames,
+                        realtime: true,
+                        step: 1,
+                        className: "mySliderClass",
+                        callback: function (value, released) {
+                            //console.log("CALLBACK"+value+released);
+                            $ionicScrollDelegate.freezeScroll(!released);
 
 
+                        },
+                        //modelLabels:function(val) {return "";},
+                        smooth: false,
+                        css: {
+                            background: {
+                                "background-color": "silver"
                             },
-                            //modelLabels:function(val) {return "";},
-                            smooth: false,
-                            css: {
-                                background: {
-                                    "background-color": "silver"
-                                },
-                                before: {
-                                    "background-color": "purple"
-                                },
-                                default: {
-                                    "background-color": "white"
-                                }, // default value: 1px
-                                after: {
-                                    "background-color": "green"
-                                }, // zone after default value
-                                pointer: {
-                                    "background-color": "red"
-                                }, // circle pointer
-                                range: {
-                                    "background-color": "red"
-                                } // use it if double value
+                            before: {
+                                "background-color": "purple"
                             },
-                            scale: []
+                            default: {
+                                "background-color": "white"
+                            }, // default value: 1px
+                            after: {
+                                "background-color": "green"
+                            }, // zone after default value
+                            pointer: {
+                                "background-color": "red"
+                            }, // circle pointer
+                            range: {
+                                "background-color": "red"
+                            } // use it if double value
+                        },
+                        scale: []
 
-                        };
+                    };
 
 
-                        $scope.mycarousel.index = 0;
-                        $scope.ionRange.index = 1;
-                        $scope.eventSpeed = $scope.event.Event.Length/$scope.event.Event.Frames;
-                
-                        //console.log("**Resetting range");
-                        $scope.slides = [];
-                        var i;
-                        for (i = 1; i <= event.Event.Frames; i++) {
-                            var fname = padToN(i, eventImageDigits) + "-capture.jpg";
-                            // console.log ("Building " + fname);
-                            $scope.slides.push({
-                                id: i,
-                                img: fname
+                    $scope.mycarousel.index = 0;
+                    $scope.ionRange.index = 1;
+                    $scope.eventSpeed = $scope.event.Event.Length / $scope.event.Event.Frames;
+
+                    //console.log("**Resetting range");
+                    $scope.slides = [];
+                    var i;
+                    for (i = 1; i <= event.Event.Frames; i++) {
+                        var fname = padToN(i, eventImageDigits) + "-capture.jpg";
+                        // console.log ("Building " + fname);
+                        $scope.slides.push({
+                            id: i,
+                            img: fname
+                        });
+                    }
+
+
+                    // now get event details to show alarm frames
+
+                    $scope.FrameArray = event.Frame;
+                    //  $scope.slider_options.scale=[];
+                    $scope.slider_modal_options.scale = [];
+
+
+                    for (i = 0; i < event.Frame.length; i++) {
+
+                        if (event.Frame[i].Type == "Alarm") {
+
+                            $scope.slider_modal_options.scale.push({
+                                val: event.Frame[i].FrameId,
+                                label: ' '
                             });
+                        } else {
+                            //$scope.slider_options.scale.push(' ');
                         }
 
 
-                        // now get event details to show alarm frames
-
-                        $scope.FrameArray = event.Frame;
-                        //  $scope.slider_options.scale=[];
-                        $scope.slider_modal_options.scale = [];
-
-                        
-                        for (i = 0; i < event.Frame.length; i++) {
-                            
-                            if (event.Frame[i].Type == "Alarm") {
-
-                                $scope.slider_modal_options.scale.push({
-                                    val: event.Frame[i].FrameId,
-                                    label: ' '
-                                });
-                            } else {
-                                //$scope.slider_options.scale.push(' ');
-                            }
-                            
-
-                        }
-                        $scope.totalEventTime = Math.round(parseFloat(event.Event.Length)) - 1;
-                        $scope.currentEventTime = 0;
-                    },
-                    function (err) {
-                        ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
-                        ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
-                    });
+                    }
+                    $scope.totalEventTime = Math.round(parseFloat(event.Event.Length)) - 1;
+                    $scope.currentEventTime = 0;
+                },
+                function (err) {
+                    ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
+                    ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+                });
 
 
-        }
-    
-    
-    if (typeof $scope.ionRange !== 'undefined')
-    {
-         $scope.$watch('ionRange.index', function () {
-          //  
+    }
+
+
+    if (typeof $scope.ionRange !== 'undefined') {
+        $scope.$watch('ionRange.index', function () {
+            //  
             if (carouselUtils.getStop() == true)
-                    return;
-             
+                return;
+
             $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
-           //  console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
+            //  console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
         });
     }
-    
-    if (typeof $scope.mycarousel !== 'undefined')
-    {
+
+    if (typeof $scope.mycarousel !== 'undefined') {
         $scope.$watch('mycarousel.index', function () {
-            
+
             //console.log ("***ION MYCAROUSEL CHANGED");
-            
-            if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames))
-            {
+
+            if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames)) {
                 playbackFinished();
             }
             // end of playback from quick scrub
             // so ignore gapless
-            
-            
-            
-            if ($scope.event && $scope.ionRange.index == parseInt($scope.event.Event.Frames)-1 )
-                {
-                    if (!$scope.modal ||  $scope.modal.isShown()==false)
-                    {
-                        console.log ("quick scrub playback over");
-                        carouselUtils.setStop(true);
-                        $scope.ionRange.index = 0;
-                        $scope.mycarousel.index = 1;
-                    }
-                   
-                }
-            if (carouselUtils.getStop() == true)
-                    return;
-            $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
-           // console.log ("***IONRANGE RANGE CHANGED TO " + $scope.ionRange.index);
 
-          
+
+
+            if ($scope.event && $scope.ionRange.index == parseInt($scope.event.Event.Frames) - 1) {
+                if (!$scope.modal || $scope.modal.isShown() == false) {
+                    console.log("quick scrub playback over");
+                    carouselUtils.setStop(true);
+                    $scope.ionRange.index = 0;
+                    $scope.mycarousel.index = 1;
+                }
+
+            }
+            if (carouselUtils.getStop() == true)
+                return;
+            $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
+            // console.log ("***IONRANGE RANGE CHANGED TO " + $scope.ionRange.index);
+
+
         });
     }
 
@@ -1313,11 +1358,11 @@ $scope.togglePresets = function()
         //console.log ("PADTON: returning " + number);
         return number;
     }
-    
-$scope.$on('modal.shown', function() {
-    currentEvent=$scope.currentEvent;
-    if (currentEvent && currentEvent.Event)
-        prepareModalEvent(currentEvent.Event.Id);
-});
+
+    $scope.$on('modal.shown', function () {
+        currentEvent = $scope.currentEvent;
+        if (currentEvent && currentEvent.Event)
+            prepareModalEvent(currentEvent.Event.Id);
+    });
 
 }]);
