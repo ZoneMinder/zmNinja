@@ -60,7 +60,7 @@ angular.module('zmApp.controllers')
          
          'graphSize':200,
          'minAlarmCount':'1',
-         'montageSize':'10',
+         'montageSize':'3',
          'useNphZms':true,
          'packMontage':true,
          
