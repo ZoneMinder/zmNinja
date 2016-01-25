@@ -5,25 +5,25 @@
     </ion-nav-buttons>
 
 
+
     <ion-nav-buttons side="right">
-        
-        <button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'"
-                ng-click="toggleMontageDisplayOrder();">&nbsp;
+
+        <button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'" ng-click="toggleMontageDisplayOrder();">&nbsp;
         </button>
-        
+
         <span class="rotate-button">
                 <button class="button button-icon button-clear ion-arrow-swap"
                         ng-click="toggleReorder();">
                 </button>
-        </span>   
+        </span>
 
-  
+
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
         </button>
         <!--<button class="button button-icon ion-ios-help-outline" ng-click="popover.show($event)"></button>-->
-        
-        
-        
+
+
+
     </ion-nav-buttons>
 
     <ion-content has-bouncing="false" style="background-color:#444444">
@@ -41,17 +41,20 @@
 
                 </div>
         </span>
+        
+        
+        <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance'} : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
 
-       <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px' } : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
-           
-              <!--<div ng-style="packMontage ? { '-webkit-column-count':slider.monsize, '-webkit-column-gap':'0px','line-height':'0px' } : { 'flex':'display', '-webkit-column-count':slider.monsize }">-->
-            
-            
-            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
-                  ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
+            <!--<div ng-style="packMontage ? { '-webkit-column-count':slider.monsize, '-webkit-column-gap':'0px','line-height':'0px' } : { 'flex':'display', '-webkit-column-count':slider.monsize }">-->
+
+
+            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
      
             <!-- back to ng-src. spinner was not updating when rand changes-->
             <!-- moving to single so I can rely on rand for reloads -->
+                
+                
+                <!--src=" /zm/cgi-bin/nph-zms?source=event&mode=jpeg&event=7664&frame=1&scale=100&rate=100&maxfps=5&replay=gapless&auth=6b8c60f81fa2edff94f80f12bdebd98d&connkey=286643&rand=1453671607"-->
                 
                 <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
                     <div ng-if="!isModalActive">
@@ -84,26 +87,28 @@
                                {{monitor.Monitor.Name}}&nbsp;
                             </div>
                         </span>
-                        
-                        <div id="slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'minimized-alarmed-header animated infinite flash':''" ng-if="minimal"></div>
 
+            <div id="slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'minimized-alarmed-header animated infinite flash':''" ng-if="minimal"></div>
 
-                    </div>
-                </div>
-
-
-            <div ng-if="isModalActive">
-                <img id="img-$index" image-spinner-src="img/pausevideo.png" style="margin-top:0px;
-        width: 100% !important;
-        height: auto !important;" />
-            </div>
-
-
-
-            </span>
-            <!-- ngrepeat -->
 
         </div>
+        </div>
+
+
+        <div ng-if="isModalActive">
+            <img id="img-$index" image-spinner-src="img/pausevideo.png" style="margin-top:0px;
+        width: 100% !important;
+        height: auto !important;" />
+        </div>
+
+
+
+        </span>
+        </div>
+        
+        <!-- ngrepeat -->
+
+
 
 
         <ion-item ng-show="!MontageMonitors.length">
