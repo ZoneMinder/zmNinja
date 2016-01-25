@@ -69,7 +69,9 @@ angular.module('zmApp', [
 })
 
 
-
+// this can be used to route img-src through interceptors. Works well, but when
+// nph-zms streams images it doesn't work as success is never received 
+// (keeps reading data). Hence not using it now
 //credit: http://stackoverflow.com/questions/34958575/intercepting-img-src-via-http-interceptor-as-well-as-not-lose-the-ability-to-kee
 .directive('httpSrc', [
         '$http', 'imageLoadingDataShare', 'ZMDataModel',
@@ -118,62 +120,6 @@ angular.module('zmApp', [
         }
     }
 ])
-
-
- 
-
-
-
-//credit http://stackoverflow.com/questions/20997406/force-http-interceptor-in-dynamic-ngsrc-request
-.directive('httpSrcOld', [
-        '$http', 'imageLoadingDataShare', 'ZMDataModel', function ($http, imageLoadingDataShare, ZMDataModel) {
-            var directive = {
-                link: link,
-                restrict: 'A'
-            };
-            return directive;
-
-            function link(scope, element, attrs) {
-                
-                console.log ("HELLO OLD");
-                
-                    var requestConfig = {
-                        method: 'Get',
-                        url: attrs.httpSrcOld,
-                        responseType: 'arraybuffer',
-                        cache: 'true'
-                    };
-
-                    console.log ("Calling " + requestConfig.url);
-                    imageLoadingDataShare.set(1);
-                    $http(requestConfig)
-                        .success(function(data) {
-                        
-                        console.log ("data got " + JSON.stringify(data));
-                            var arr = new Uint8Array(data);
-
-                            var raw = '';
-                            var i, j, subArray, chunk = 5000;
-                            for (i = 0, j = arr.length; i < j; i += chunk) {
-                                subArray = arr.subarray(i, i + chunk);
-                                raw += String.fromCharCode.apply(null, subArray);
-                            }
-
-                            var b64 = btoa(raw);
-
-                            attrs.$set('src', "data:image/jpeg;base64," + b64);
-                            imageLoadingDataShare.set(0);
-                        })
-                        .error (function(data) {
-                           attrs.$set('src', 'img/novideo.png');
-                            imageLoadingDataShare.set(0);
-                            ZMDataModel.zmDebug ("Inside http-src err");
-                    });
-          
-            }
-
-        }
-    ])
 
 
 //------------------------------------------------------------------
@@ -1253,6 +1199,27 @@ angular.module('zmApp', [
         url: "/first-use",
         templateUrl: "templates/first-use.html",
         controller: 'zmApp.FirstUseCtrl',
+    })
+    
+    .state('montage-history', {
+        data: {
+            requireLogin: true
+        },
+        resolve: {
+            message: function (ZMDataModel) {
+                console.log("Inside app.events resolve");
+                return ZMDataModel.getMonitors(0);
+            }
+
+        },
+        url: "/montage-history",
+        templateUrl: "templates/montage-history.html",
+        controller: 'zmApp.MontageHistoryCtrl',
+        params: {
+            minimal: false,
+            isRefresh: false
+        }
+
     })
 
     .state('montage', {

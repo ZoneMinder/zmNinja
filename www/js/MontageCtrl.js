@@ -748,12 +748,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
     $scope.onHold = function (index) {
         montageIndex = index;
-        isLongPressActive = true;
-        intervalHandleMontage = $interval(function () {
+        //isLongPressActive = true;
+        scaleMontage();
+       
+        /*intervalHandleMontage = $interval(function () {
             scaleMontage();
 
         }.bind(this), zm.montageScaleFrequency);
-        console.log("****Interval handle started **********" + zm.montageScaleFrequency);
+        console.log("****Interval handle started **********" + zm.montageScaleFrequency);*/
     };
 
     //---------------------------------------------------------------------
