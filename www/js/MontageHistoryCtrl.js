@@ -21,7 +21,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         //---------------------------------------
 
         $scope.prettifyDate = function (str) {
-            return moment(str).format('MMM Do, YYYY');
+            return moment(str).format('MMM Do, YYYY h:mma');
         };
 
         function prettifyDate(str) {
@@ -45,9 +45,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     {
         
         window.stop();
+        footerCollapse();
+        
+            
+    };
+    
+    
+    function footerCollapse()
+    {
         
         
+        console.log ("******************COLLAPSE");
         $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
+    
         ZMDataModel.zmDebug ("Playback rate is:"  + $scope.sliderVal.realRate);
         for (var i=0; i< $scope.MontageMonitors.length; i++)
         {
@@ -55,7 +65,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
         }
         
-        var TimeObjectFrom = $scope.sliderVal.year+"-"+$scope.sliderVal.month+"-"+$scope.sliderVal.day+" "+$scope.sliderVal.hour+":"+$scope.sliderVal.min;
+        var TimeObjectFrom = moment($scope.datetimeValue.value).format("YYYY-MM-DD HH:mm");
         
         
         
@@ -148,9 +158,29 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             {
             });
         }
+    }
+    
+    
+    var tdatetimeValue = new Date();
+    tdatetimeValue.setDate(tdatetimeValue.getDate()-1);
+    
+    $scope.datetimeValue = {value:""};
+    $scope.datetimeValue.value = tdatetimeValue; 
+    
+    
+    //console.log ("******************WATCHING ****************");
+    $scope.$watch('datetimeValue.value', function(oldv,newv) {
+        if (newv !== oldv)
+        {
+            ZMDataModel.zmLog(">>>>>>>>>>>>>>>>>>Datetime value changed to " + $scope.datetimeValue.value);
+            window.stop();
+            footerCollapse();
+        }
         
-            
-    };
+        //window.stop();
+        ///footerCollapse();
+   },true);
+    
     
     $scope.displayDateTimeSliders = true;
     $scope.showtimers = true;
@@ -949,6 +979,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
        
         $scope.modal.remove();
+        
           $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");window.stop();},50);
 
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
@@ -1084,6 +1115,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.$on('$destroy', function () {
         console.log("*** CANCELLING INTERVAL ****");
         $interval.cancel(intervalHandle);
+        
+       
+        
+        
     });
 
 
@@ -1106,9 +1141,22 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         loadNotifications();
     });
 
-    $scope.$on('$ionicView.leave', function () {
-        console.log("**VIEW ** Montage Ctrl Left, force removing modal");
+    $scope.$on('$ionicView.beforeLeave', function () {
+        console.log("**VIEW ** Event History Ctrl Left, force removing modal");
         if ($scope.modal) $scope.modal.remove();
+        
+        ZMDataModel.zmLog ("Stopping network pull...");
+        // make sure this is applied in scope digest to stop network pull
+        // cant do window stop here as we are about to transition states
+        // and that causes problems
+        $timeout ( function()
+            {
+                for (var i=0; i< $scope.MontageMonitors.length; i++)
+                {
+                    $scope.MontageMonitors[i].eventUrl = "";
+
+                }
+            },0);
     });
 
     $scope.$on('$ionicView.unloaded', function () {
