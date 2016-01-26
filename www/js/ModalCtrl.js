@@ -847,6 +847,20 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         $scope.isModalActive = false;
         $interval.cancel(intervalModalHandle);
     });
+    
+    
+    $scope.$on('$ionicView.beforeLeave', function () {
+        console.log("**VIEW ** ModalCtrl left");
+        
+        
+        ZMDataModel.zmLog ("Stopping network pull...");
+        // make sure this is applied in scope digest to stop network pull
+        // thats why we are doing it beforeLeave
+        
+        window.stop();
+        /*
+      
+    });
 
     $scope.$on('$ionicView.unloaded', function () {
         $scope.isModalActive = false;

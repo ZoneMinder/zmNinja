@@ -1147,8 +1147,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
         ZMDataModel.zmLog ("Stopping network pull...");
         // make sure this is applied in scope digest to stop network pull
-        // cant do window stop here as we are about to transition states
-        // and that causes problems
+        // thats why we are doing it beforeLeave
+        
+        window.stop();
+        /*
         $timeout ( function()
             {
                 for (var i=0; i< $scope.MontageMonitors.length; i++)
@@ -1156,7 +1158,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     $scope.MontageMonitors[i].eventUrl = "";
 
                 }
-            },0);
+            },0);*/
     });
 
     $scope.$on('$ionicView.unloaded', function () {
