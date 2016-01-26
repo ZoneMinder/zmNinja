@@ -63,9 +63,18 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
         
         
-         var apiurl = ld.apiurl + "/events/index/StartTime >=:"+TimeObjectFrom+"/StartTime <=:"+ TimeObjectTo+".json";
-            
-            console.log ("New URL to get is " + apiurl);
+         var apiurl;
+        
+        if ($scope.sliderVal.exactMatch)
+        {
+            apiurl= ld.apiurl + "/events/index/StartTime =:"+TimeObjectFrom+".json";
+        }
+        
+        else
+        {
+            apiurl= ld.apiurl + "/events/index/StartTime >=:"+TimeObjectFrom+"/StartTime <=:"+ TimeObjectTo+".json";
+        }
+            ZMDataModel.zmLog ("Event timeline API is " + apiurl);
         
             $http.get(apiurl)
             .success( function(data) {
@@ -77,10 +86,36 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     eid = data.events[i].Event.Id;
                     
                    // only take the first one for each monitor
-                   // that's the earliest match and play gapless from there
-                   if ($scope.MontageMonitors[mid].eventUrl == 'img/noevent.png')    
-                       $scope.MontageMonitors[mid].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay=gapless";
-                    console.log ("Monitor " + mid + " url is " + $scope.MontageMonitors[mid].eventUrl);
+                    for (var j=0; j < $scope.MontageMonitors.length; j++)
+                    {
+                       // that's the earliest match and play gapless from there
+                       if ($scope.MontageMonitors[j].Monitor.Id == mid)
+                       {
+                       if ($scope.MontageMonitors[j].eventUrl == 'img/noevent.png')    
+                           $scope.MontageMonitors[j].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+                        
+                       }
+                    }
+                }
+                
+                // now check for monitors with no events and get the closest match
+                if (!$scope.sliderVal.exactMatch)
+                {
+                    ZMDataModel.zmLog ("Exact match is off, so looking for more events");
+                    for (i=0; i<$scope.MontageMonitors.length; i++)
+                    {
+                        if ($scope.MontageMonitors[i].eventUrl=='img/noevent.png')
+                        {
+
+
+                            var indivGrab = ld.apiurl + "/events/index/MonitorId:"+$scope.MontageMonitors[i].Monitor.Id+"/StartTime >=:"+TimeObjectFrom+".json";
+
+                            ZMDataModel.zmDebug("Monitor " + $scope.MontageMonitors[i].Monitor.Id+":"+$scope.MontageMonitors[i].Monitor.Name + " does not have events, trying "+indivGrab);
+
+                            getExpandedEvents(i,indivGrab);
+
+                        }
+                    }
                 }
                 
                
@@ -91,6 +126,28 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 ZMDataModel.zmDebug ("history  ERROR:"+ JSON.stringify(data));
                 
             });
+        
+        
+        function getExpandedEvents(i,indivGrab)
+        {
+            var ld = ZMDataModel.getLogin();
+            console.log ("EXPANDED EVENT " + i + " " + indivGrab);
+            $http.get(indivGrab)
+            .success(function(data)
+            {
+               // console.log ("EXPANDED DATA FOR MONITOR " + i + JSON.stringify(data));
+                if (data.events.length > 0 )
+                {
+                    $scope.MontageMonitors[i].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.events[0].Event.Id+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+                    
+                    ZMDataModel.zmLog ("Found expanded event "+data.events[0].Event.Id+" for monitor " + $scope.MontageMonitors[i].Monitor.Id);
+                }
+                
+            })
+            .error (function(data)
+            {
+            });
+        }
         
             
     };
@@ -107,6 +164,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         rate:1,
         realRate:100,
         hideNoEvents:false,
+        enableGapless:true,
+        exactMatch:false
+        
     };
     
     // start with a day ago

@@ -42,7 +42,7 @@
 
         <span ng-show="!minimal">
             
-            <div class="timeline_text"><b>Timeline starting: {{prettifyDate(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day)}} at {{prettifyTime(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day+" "+sliderVal.hour+":"+sliderVal.min)}}@ {{sliderVal.rate}}x</b></div>
+            <div class="timeline_text"><b>Timeline starting: {{prettifyDate(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day)}} at {{prettifyTime(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day+" "+sliderVal.hour+":"+sliderVal.min)}} @ {{sliderVal.rate}}x</b></div>
         
                 <div class="range range-positive">
                     <i style="color:#bbbbbb" class="icon ion-image"></i>
@@ -169,32 +169,74 @@
                 <ion-toggle ng-model="sliderVal.hideNoEvents"
                             ng-checked="{{sliderVal.hideNoEvents}}"
                             toggle-class="toggle-dark">Hide monitors without events</ion-toggle>
+                
+                <ion-toggle ng-model="sliderVal.enableGapless"
+                            ng-checked="{{sliderVal.enableGapless}}"
+                            toggle-class="toggle-dark">enable gapless playback</ion-toggle>
+                
+                
+                <ion-toggle ng-model="sliderVal.exactMatch"
+                            ng-checked="{{sliderVal.exactMatch}}"
+                            toggle-class="toggle-dark">exact time match</ion-toggle>
             
                 
-                <div class="item item-divider">History at: {{prettifyDate(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day)}} at {{prettifyTime(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day+" "+sliderVal.hour+":"+sliderVal.min)}} </div>
+                <div class="item item-divider">Start at: {{prettifyDate(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day)}} at {{prettifyTime(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day+" "+sliderVal.hour+":"+sliderVal.min)}} </div>
                 
                 
-                <div class="item"><br/><div style="width:90%"><input ng-model="sliderVal.rate" type="text" id="mySlider6" slider options="slider_modal_options_rate"/></div><br/></div>
+                <div class="row">
+                    <div class="col col-90">
+                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.rate" type="text" id="mySlider6" slider options="slider_modal_options_rate"/></div><br/>
+                    </div>
+                    <div class="col col-10" style="background-color:#AEA8D3">
+                     rate  
+                    </div>
+                </div>
                 
-                <div class="item"><br/><div style="width:90%"><input ng-model="sliderVal.min" type="text" id="mySlider5" slider options="slider_modal_options_mm"/></div><br/></div>
+                <div class="row">
+                    <div class="col col-90">
+                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.min" type="text" id="mySlider5" slider options="slider_modal_options_mm"/></div><br/>
+                    </div>
+                    <div class="col col-10" style="background-color:#7f8c8d">
+                      min  
+                    </div>
+                </div>
                 
-                <div class="item"><br/><div style="width:90%"><input ng-model="sliderVal.hour" type="text" id="mySlider4" slider options="slider_modal_options_hh"/></div><br/></div>
+                <div class="row">
+                    <div class="col col-90">
+                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.hour" type="text" id="mySlider4" slider options="slider_modal_options_hh"/></div><br/>
+                    </div>
+                    <div class="col col-10" style="background-color:#7f8c8d">
+                      hr
+                    </div>
+                </div>
                 
-                <div class="item"><br/><div style="width:90%"><input ng-model="sliderVal.day" type="text" id="mySlider3" slider options="slider_modal_options_DD"/></div><br/></div>
+                <div class="row">
+                    <div class="col col-90">
+                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.day" type="text" id="mySlider3" slider options="slider_modal_options_DD"/></div><br/>
+                    </div>
+                    <div class="col col-10" style="background-color:#7f8c8d">
+                      day
+                    </div>
+                </div>
                 
-                <div class="item" ><br/><div style="width:90%"><input ng-model="sliderVal.month" type="text" id="mySlider2" slider options="slider_modal_options_MM"/></div><br/></div>
+                <div class="row">
+                    <div class="col col-90">
+                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.month" type="text" id="mySlider2" slider options="slider_modal_options_MM"/></div><br/>
+                    </div>
+                    <div class="col col-10" style="background-color:#7f8c8d">
+                      mth  
+                    </div>
+                </div>
                 
-                <div class="item" ><br/><div style="width:90%"><input ng-model="sliderVal.year" type="text" id="mySlider1" slider options="slider_modal_options_YY" /></div><br/></div>
-
-                 
-
-
-                 
-
-
-                 
-
-                 
+                <div class="row">
+                    <div class="col col-90">
+                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.year" type="text" id="mySlider1" slider options="slider_modal_options_YY"/></div><br/>
+                    </div>
+                    <div class="col col-10" style="background-color:#7f8c8d">
+                      yr 
+                    </div>
+                </div>
+  
             </div>
         </ion-pull-up-content>
     </ion-pull-up-footer>
