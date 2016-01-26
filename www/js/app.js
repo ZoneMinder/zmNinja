@@ -9,6 +9,7 @@ var appVersion = "0.0.0";
 // core app start stuff
 angular.module('zmApp', [
                             'ionic',
+                            'ion-datetime-picker',
                             'ngIOS9UIWebViewPatch',
                             'tc.chartjs',
                             'zmApp.controllers',
@@ -17,7 +18,8 @@ angular.module('zmApp', [
                             'angularAwesomeSlider',
                             'com.2fdevs.videogular',
 			                 'com.2fdevs.videogular.plugins.controls',
-                            'com.2fdevs.videogular.plugins.overlayplay'
+                            'com.2fdevs.videogular.plugins.overlayplay',
+                            
 
 
                         ])
