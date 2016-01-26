@@ -858,7 +858,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         // thats why we are doing it beforeLeave
         
         window.stop();
-        /*
+        
       
     });
 
