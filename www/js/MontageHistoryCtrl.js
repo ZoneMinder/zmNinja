@@ -4,6 +4,8 @@
 /* global cordova,StatusBar,angular,console,ionic,Masonry,moment */
 
 
+// FIXME: This is a copy of montageCtrl - needs a lot of code cleanup
+
 angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window) {
 
     $controller('zmApp.BaseController', {
@@ -27,7 +29,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         }
 
         $scope.prettifyTime = function (str) {
-            console.log ("got " + str);
+            
             return moment(str).format('h:mm a');
         };
 
@@ -36,33 +38,61 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             return moment(str).format('h:mm:ssa on MMMM Do YYYY');
         };
     
-    $scope.toggleTimeDisplay = function()
-    {
-        console.log ("TOGGLING");
-        $scope.displayDateTimeSliders = !$scope.displayDateTimeSliders;
-        
-        if ($scope.displayDateTimeSliders)
-        {
-            $scope.showtimers=true;
-        }
-        else
-        {
-            $timeout(function()
-                { $scope.showtimers=false; },300);
-        }
     
-        /*var element = angular.element(document.getElementById("historydials"));
+    
+    
+    $scope.footerCollapse = function()
+    {
         
-        if (!$scope.displayDateTimeSliders)
+        window.stop();
+        
+        
+        $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
+        ZMDataModel.zmDebug ("Playback rate is:"  + $scope.sliderVal.realRate);
+        for (var i=0; i< $scope.MontageMonitors.length; i++)
         {
-        
-            element.removeClass("animated fadeInDown");
-            element.addClass("animated fadeOutUp");
-        }
-     */
+            $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
 
+        }
+        
+        var TimeObjectFrom = $scope.sliderVal.year+"-"+$scope.sliderVal.month+"-"+$scope.sliderVal.day+" "+$scope.sliderVal.hour+":"+$scope.sliderVal.min;
         
         
+        
+        var TimeObjectTo = moment(TimeObjectFrom).add(1,'hour').format('YYYY-MM-DD HH:mm');
+        
+        
+        
+         var apiurl = ld.apiurl + "/events/index/StartTime >=:"+TimeObjectFrom+"/StartTime <=:"+ TimeObjectTo+".json";
+            
+            console.log ("New URL to get is " + apiurl);
+        
+            $http.get(apiurl)
+            .success( function(data) {
+                ZMDataModel.zmDebug ("Got new history events:"+ JSON.stringify(data));
+                var eid, mid;
+                for (i=0; i<data.events.length; i++)
+                {
+                    mid = data.events[i].Event.MonitorId;
+                    eid = data.events[i].Event.Id;
+                    
+                   // only take the first one for each monitor
+                   // that's the earliest match and play gapless from there
+                   if ($scope.MontageMonitors[mid].eventUrl == 'img/noevent.png')    
+                       $scope.MontageMonitors[mid].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay=gapless";
+                    console.log ("Monitor " + mid + " url is " + $scope.MontageMonitors[mid].eventUrl);
+                }
+                
+               
+                
+                
+            })
+            .error (function (data) {
+                ZMDataModel.zmDebug ("history  ERROR:"+ JSON.stringify(data));
+                
+            });
+        
+            
     };
     
     $scope.displayDateTimeSliders = true;
@@ -73,8 +103,23 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         month:1,
         day:1,
         hour:0,
-        min:0
+        min:0,
+        rate:1,
+        realRate:100,
+        hideNoEvents:false,
     };
+    
+    // start with a day ago
+    var timenow = moment().subtract('1','day');
+    $scope.sliderVal.year = timenow.format("YYYY");
+    $scope.sliderVal.month = timenow.format("MM");
+    $scope.sliderVal.day = timenow.format("DD");
+    $scope.sliderVal.hour = timenow.format("HH");
+    $scope.sliderVal.min = 0;
+    $scope.sliderVal.rate = 1;
+    $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
+    
+    
     
     var commonCss =  
         {
@@ -98,6 +143,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 "background-color": "red"
             } // use it if double value
         };
+   
+    
+     $scope.slider_modal_options_rate = {
+                        from: 1,
+                        to: 10,
+                        realtime: true,
+                        step: 1,
+                        className: "mySliderClass",
+                        //modelLabels:function(val) {return "";},
+                        smooth: false,
+                        css: commonCss,
+                        dimension:'X'
+                        
+                    };
     
     $scope.slider_modal_options_YY = {
                         from: 2010,
@@ -148,7 +207,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         from: 0,
                         to: 59,
                         realtime: true,
-                        step: 1,
+                        step: 29,
                         className: "mySliderClass",
                         //modelLabels:function(val) {return "";},
                         smooth: false,
@@ -213,6 +272,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     var loginData = ZMDataModel.getLogin();
     
     $scope.packMontage = loginData.packMontage;
+    
+    for (i=0; i< $scope.MontageMonitors.length; i++)
+    {
+        $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
+        
+    }
     
     
     

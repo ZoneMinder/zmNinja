@@ -1,4 +1,4 @@
-<ion-view title="Montage" cache-view="false" hide-nav-bar="{{minimal}}">
+<ion-view title="History" cache-view="false" hide-nav-bar="{{minimal}}">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         
@@ -22,9 +22,9 @@
                 </button>
         </span>   
 
-  
+    <!--
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
-        </button>
+        </button>-->
         <!--<button class="button button-icon ion-ios-help-outline" ng-click="popover.show($event)"></button>-->
         
         
@@ -41,6 +41,9 @@
 
 
         <span ng-show="!minimal">
+            
+            <div class="timeline_text"><b>Timeline starting: {{prettifyDate(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day)}} at {{prettifyTime(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day+" "+sliderVal.hour+":"+sliderVal.min)}}@ {{sliderVal.rate}}x</b></div>
+        
                 <div class="range range-positive">
                     <i style="color:#bbbbbb" class="icon ion-image"></i>
                     <input type="range" ng-model="slider.monsize" min="1"
@@ -58,26 +61,33 @@
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
                   ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
      
-            <!-- back to ng-src. spinner was not updating when rand changes-->
-            <!-- moving to single so I can rely on rand for reloads -->
-                
-                
-                <!--src=" /zm/cgi-bin/nph-zms?source=event&mode=jpeg&event=7664&frame=1&scale=100&rate=100&maxfps=5&replay=gapless&auth=6b8c60f81fa2edff94f80f12bdebd98d&connkey=286643&rand=1453671607"
-
-
-https://arjunrc.ddns.net:8889/zm/api/events/index/StartTime%20=:2016-01-25.json
-
-Events started in X-X+30
-https://arjunrc.ddns.net:8889/zm/api/events/index/StartTime%20%3E=:2016-01-25%2000:00:00/StartTime%20%3C=:2016-01-25%2000:30:00.json
--->
+           
                 
                 <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
                     <div ng-if="!isModalActive">
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
-                            <div ng-if = "!minimal">
-                                <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  image-spinner-loader="lines" style="
+                            <div ng-if = "!minimal && monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
+                                <img id="img-$index" image-spinner-src="{{monitor.eventUrl}}"  image-spinner-loader="lines" style="
         width: 100% !important;
         height: auto !important;" />
+                                <div   style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
+                                 class="header">
+                                &nbsp;<i class="ion-monitor"></i>
+                               {{monitor.Monitor.Name}}&nbsp;
+                                </div>
+                            </div>
+                            
+                            <div ng-if = "!minimal && monitor.eventUrl != 'img/noevent.png'">
+                                <img id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}"  image-spinner-loader="lines" style="
+        width: 100% !important;
+        height: auto !important;" />
+                                
+                                <div   style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
+                                     class="header">
+                                    &nbsp;<i class="ion-monitor"></i>
+                                   {{monitor.Monitor.Name}}&nbsp;
+                                </div>
+                                
                             </div>
                             
                             <div ng-if = "minimal">
@@ -93,6 +103,7 @@ https://arjunrc.ddns.net:8889/zm/api/events/index/StartTime%20%3E=:2016-01-25%20
                             <img id="img-$index" image-spinner-src="img/pausevideo.png" style="width: 100% !important;
   height: auto !important;" />
                         </div>
+                        
                         
 
 
@@ -142,31 +153,48 @@ https://arjunrc.ddns.net:8889/zm/api/events/index/StartTime%20%3E=:2016-01-25%20
 
     </div>
     
-    <ion-pull-up-footer class="bar-dark" on-expand="footerExpand()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand">
+    <ion-pull-up-footer class="bar-dark"  on-minimize="footerCollapse()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand">
      <ion-pull-up-handle width="100" height="25" toggle="ion-chevron-up ion-chevron-down" style="border-radius: 25px 25px 0 0">
             <i class="icon ion-chevron-up"></i>
         </ion-pull-up-handle>
         <ion-pull-up-bar>
-            <h1 class="title" ion-pull-up-trigger>Timeline Browser</h1>
+            <h1 class="title" ion-pull-up-trigger>Event History</h1>
         </ion-pull-up-bar>
         <ion-pull-up-content scroll="true">
            
             
             <div class="list list-inset">
                 
-                <div class="item item-divider">Timeline starting: {{prettifyDate(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day)}} at {{prettifyTime(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day+" "+sliderVal.hour+":"+sliderVal.min)}}</div>
+                   
+                <ion-toggle ng-model="sliderVal.hideNoEvents"
+                            ng-checked="{{sliderVal.hideNoEvents}}"
+                            toggle-class="toggle-dark">Hide monitors without events</ion-toggle>
+            
                 
-                <div class="item" ><br/><input ng-model="sliderVal.year" type="text" id="mySlider1" slider options="slider_modal_options_YY" /><br/></div>
+                <div class="item item-divider">History at: {{prettifyDate(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day)}} at {{prettifyTime(sliderVal.year+"-"+sliderVal.month+"-"+sliderVal.day+" "+sliderVal.hour+":"+sliderVal.min)}} </div>
+                
+                
+                <div class="item"><br/><div style="width:90%"><input ng-model="sliderVal.rate" type="text" id="mySlider6" slider options="slider_modal_options_rate"/></div><br/></div>
+                
+                <div class="item"><br/><div style="width:90%"><input ng-model="sliderVal.min" type="text" id="mySlider5" slider options="slider_modal_options_mm"/></div><br/></div>
+                
+                <div class="item"><br/><div style="width:90%"><input ng-model="sliderVal.hour" type="text" id="mySlider4" slider options="slider_modal_options_hh"/></div><br/></div>
+                
+                <div class="item"><br/><div style="width:90%"><input ng-model="sliderVal.day" type="text" id="mySlider3" slider options="slider_modal_options_DD"/></div><br/></div>
+                
+                <div class="item" ><br/><div style="width:90%"><input ng-model="sliderVal.month" type="text" id="mySlider2" slider options="slider_modal_options_MM"/></div><br/></div>
+                
+                <div class="item" ><br/><div style="width:90%"><input ng-model="sliderVal.year" type="text" id="mySlider1" slider options="slider_modal_options_YY" /></div><br/></div>
 
-                 <div class="item" ><br/><input ng-model="sliderVal.month" type="text" id="mySlider2" slider options="slider_modal_options_MM"/><br/></div>
+                 
 
 
-                 <div class="item"><br/><input ng-model="sliderVal.day" type="text" id="mySlider3" slider options="slider_modal_options_DD"/><br/></div>
+                 
 
 
-                 <div class="item"><br/><input ng-model="sliderVal.hour" type="text" id="mySlider4" slider options="slider_modal_options_hh"/><br/></div>
+                 
 
-                 <div class="item"><br/><input ng-model="sliderVal.min" type="text" id="mySlider5" slider options="slider_modal_options_mm"/><br/></div>
+                 
             </div>
         </ion-pull-up-content>
     </ion-pull-up-footer>
