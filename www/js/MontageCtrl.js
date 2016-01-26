@@ -843,6 +843,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         console.log("**VIEW ** Montage Ctrl Left, force removing modal");
         if ($scope.modal) $scope.modal.remove();
     });
+    
+    
+    $scope.$on('$ionicView.beforeLeave', function () {
+        console.log("**VIEW ** Montage Ctrl Left, force removing modal");
+        
+        
+        ZMDataModel.zmLog ("Stopping network pull...");
+        // make sure this is applied in scope digest to stop network pull
+        // thats why we are doing it beforeLeave
+        
+        window.stop();
+        
+    });
 
     $scope.$on('$ionicView.unloaded', function () {
         // console.log("**************** CLOSING WINDOW ***************************");
