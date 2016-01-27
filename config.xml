@@ -21,6 +21,7 @@
     <preference name="deployment-target" value="7.0" />
     <preference name="SplashScreenDelay" value="2000" />
     <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="BackgroundColor" value="0xff555555"/>
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
