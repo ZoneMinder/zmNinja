@@ -952,8 +952,11 @@ angular.module('zmApp', [
 
             document.addEventListener("pause", function () {
                 console.log("****The application is going into  background");
-                ZMDataModel.zmLog("App is going into background");
+                ZMDataModel.zmLog("ROOT APP:App is going into background");
 
+                ZMDataModel.zmLog("Stopping network pull...");
+                window.stop();
+                
                 var ld = ZMDataModel.getLogin();
                 if ($rootScope.apnsToken && ld.isUseEventServer == "1") {
                     //  ZMDataModel.zmDebug("sending enable push to Event Server");
@@ -966,8 +969,7 @@ angular.module('zmApp', [
                     $rootScope.zmPopup.close();
                 
                 
-                ZMDataModel.zmLog("Stopping network pull...");
-                window.stop();
+                
                 
                 //$ionicPopup.close();
                 
