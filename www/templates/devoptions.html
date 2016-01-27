@@ -24,6 +24,13 @@
                 </label>
             </div>
             
+            <div ng-if="$root.platformOS=='android'">
+                <label>
+                    <ion-toggle ng-model="loginData.exitOnSleep"
+                                ng-checked="{{loginData.exitOnSleep}}"
+                                toggle-class="toggle-calm">exit app in background</ion-toggle>
+                </label>
+            </div>
             
             <label>
                 <ion-toggle ng-model="loginData.useNphZms"

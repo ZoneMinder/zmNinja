@@ -63,6 +63,7 @@ angular.module('zmApp.controllers')
          'montageSize':'3',
          'useNphZms':true,
          'packMontage':true,
+         'exitOnSleep':true,
          
         
     };
@@ -240,6 +241,13 @@ angular.module('zmApp.controllers')
                 {
                     zmDebug ("packMontage does not exist. Setting to true");
                     loginData.packMontage  = true;
+                }
+                
+                
+                if (typeof loginData.exitOnSleep == 'undefined')
+                {
+                    zmDebug ("exitOnSleep does not exist. Setting to true");
+                    loginData.exitOnSleep  = true;
                 }
                 
                 zmLog ("DataModel init recovered this loginData as " + JSON.stringify(loginData));
