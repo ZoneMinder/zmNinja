@@ -44,7 +44,7 @@
             
             
             
-            <div  class="timeline_text" ion-datetime-picker ng-model="datetimeValue.value" >
+            <div  class="timeline_text" ion-datetime-picker ng-model="datetimeValue.value" ng-change="dateChanged()">
                     <b>Tap to change: {{datetimeValue.value | date: "yyyy-MMM-dd hh:mma"}}  @ {{sliderVal.rate}}x</b>
                     
                 </div>

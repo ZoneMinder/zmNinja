@@ -168,18 +168,24 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.datetimeValue.value = tdatetimeValue; 
     
     
+    $scope.dateChanged = function()
+    {
+        window.stop();
+        footerCollapse();
+    };
+    
     //console.log ("******************WATCHING ****************");
-    $scope.$watch('datetimeValue.value', function(oldv,newv) {
+    /*$scope.$watch('datetimeValue.value', function(oldv,newv) {
         if (newv !== oldv)
         {
-            ZMDataModel.zmLog(">>>>>>>>>>>>>>>>>>Datetime value changed to " + $scope.datetimeValue.value);
+            ZMDataModel.zmLog("Datetime value changed to " + $scope.datetimeValue.value);
             window.stop();
             footerCollapse();
         }
         
         //window.stop();
         ///footerCollapse();
-   },true);
+   },true);*/
     
     
     $scope.displayDateTimeSliders = true;

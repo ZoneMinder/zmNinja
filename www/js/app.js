@@ -956,8 +956,16 @@ angular.module('zmApp', [
 
                 ZMDataModel.zmLog("Stopping network pull...");
                 window.stop();
+            
                 
                 var ld = ZMDataModel.getLogin();
+                
+                if (ld.exitOnSleep && $rootScope.platformOS == "android")
+                {
+                    ZMDataModel.zmLog("user exited app");
+                    ionic.Platform.exitApp();   
+                }
+                
                 if ($rootScope.apnsToken && ld.isUseEventServer == "1") {
                     //  ZMDataModel.zmDebug("sending enable push to Event Server");
                     //EventServer.sendMessage('push', {type:'control',enablepush:'1'});
