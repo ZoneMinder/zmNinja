@@ -88,6 +88,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
             $http.get(apiurl)
             .success( function(data) {
+                
+                
                 ZMDataModel.zmDebug ("Got new history events:"+ JSON.stringify(data));
                 var eid, mid;
                 for (i=0; i<data.events.length; i++)
@@ -101,9 +103,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                        // that's the earliest match and play gapless from there
                        if ($scope.MontageMonitors[j].Monitor.Id == mid)
                        {
-                       if ($scope.MontageMonitors[j].eventUrl == 'img/noevent.png')    
-                           $scope.MontageMonitors[j].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
-                        
+                       if ($scope.MontageMonitors[j].eventUrl == 'img/noevent.png')
+                           
+                           if (!ZMDataModel.isBackground())
+                           {
+                                $scope.MontageMonitors[j].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+                           }
+                           else 
+                           {
+                               ZMDataModel.zmLog ("Setting img src to null as we are in background");
+                               $scope.MontageMonitors[j].eventUrl="";
+                           }
                        }
                     }
                 }
@@ -148,9 +158,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                // console.log ("EXPANDED DATA FOR MONITOR " + i + JSON.stringify(data));
                 if (data.events.length > 0 )
                 {
-                    $scope.MontageMonitors[i].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.events[0].Event.Id+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
                     
-                    ZMDataModel.zmLog ("Found expanded event "+data.events[0].Event.Id+" for monitor " + $scope.MontageMonitors[i].Monitor.Id);
+                    if (!ZMDataModel.isBackground())
+                    {
+
+                        $scope.MontageMonitors[i].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.events[0].Event.Id+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+
+                        ZMDataModel.zmLog ("Found expanded event "+data.events[0].Event.Id+" for monitor " + $scope.MontageMonitors[i].Monitor.Id);
+                    }
+                    else
+                    {
+                        $scope.MontageMonitors[i].eventUrl="";
+                        ZMDataModel.zmLog ("Setting img src to null as data received in background");
+                    }
                 }
                 
             })

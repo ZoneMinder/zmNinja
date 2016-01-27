@@ -954,6 +954,7 @@ angular.module('zmApp', [
                 console.log("****The application is going into  background");
                 ZMDataModel.zmLog("ROOT APP:App is going into background");
 
+                ZMDataModel.setBackground(true);
                 ZMDataModel.zmLog("Stopping network pull...");
                 window.stop();
             
@@ -970,7 +971,7 @@ angular.module('zmApp', [
                     //  ZMDataModel.zmDebug("sending enable push to Event Server");
                     //EventServer.sendMessage('push', {type:'control',enablepush:'1'});
                 }
-                ZMDataModel.setBackground(true);
+                
 
                 zmAutoLogin.stop();
                 if ($rootScope.zmPopup)
