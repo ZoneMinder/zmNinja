@@ -108,8 +108,18 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     border-color: #444444;
      border-style: solid;
     border-width:1px;
-    opactity:80%;
+    opacity:80%;
 }
+
+.header-event-id {
+    background: #9b59b6;
+    color:#cccccc;
+    border-color: #9b59b6;
+     border-style: solid;
+    border-width:1px;
+    opacity:80%;
+}
+
 
 .alarmed-header {
     background: #ba3e3e;
@@ -117,7 +127,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     border-color: #ba3e3e;
      border-style: solid;
     border-width:1px;
-    opactity:80%;
+    opacity:80%;
     
 }
 
@@ -127,7 +137,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     border-color: #ba3e3e;
      border-style: solid;
     border-width:5px;
-    opactity:80%;
+    opacity:80%;
     position:absolute;
     top:0px;
     left:0px;
