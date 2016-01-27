@@ -73,7 +73,7 @@
                     <div ng-if="!isModalActive">
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal && monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
-                                <img id="img-$index" image-spinner-src="{{monitor.eventUrl}}"  image-spinner-loader="lines" style="
+                                <img id="img-$index" image-spinner-src="{{isBackground()?'':monitor.eventUrl}}"  image-spinner-loader="lines" style="
         width: 100% !important;
         height: auto !important;" />
                                 <div   style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
@@ -84,11 +84,15 @@
                             </div>
                             
                             <div ng-if = "!minimal && monitor.eventUrl != 'img/noevent.png'">
-                                <img id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}"  image-spinner-loader="lines" style="
+                                <img ng-if="!isBackground()" id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}"  image-spinner-loader="lines" style="
         width: 100% !important;
         height: auto !important;" />
                                 
-                                <div   style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
+                                <img ng-if="isBackground()" id="img-$index" image-spinner-src=""  image-spinner-loader="lines" style="
+        width: 100% !important;
+        height: auto !important;" />
+                                
+                                <div  ng-if="!isBackground()" style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
                                      class="header">
                                     &nbsp;<i class="ion-monitor"></i>
                                    {{monitor.Monitor.Name}}&nbsp;
