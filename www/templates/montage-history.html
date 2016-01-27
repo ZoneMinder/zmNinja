@@ -1,43 +1,42 @@
 <ion-view title="Event Montage" cache-view="false" hide-nav-bar="{{minimal}}">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        
-        
-        
-        
+
+
+
+
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
 
-    
+
 
     <ion-nav-buttons side="right">
-        
-        <button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'"
-                ng-click="toggleMontageDisplayOrder();">&nbsp;
+
+        <button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'" ng-click="toggleMontageDisplayOrder();">&nbsp;
         </button>
-        
+
         <span class="rotate-button">
                 <button class="button button-icon button-clear ion-arrow-swap"
                         ng-click="toggleReorder();">
                 </button>
-        </span>   
+        </span>
 
-    <!--
+        <!--
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
         </button>-->
         <!--<button class="button button-icon ion-ios-help-outline" ng-click="popover.show($event)"></button>-->
-        
-        
-        
+
+
+
     </ion-nav-buttons>
 
     <ion-content has-bouncing="false" style="background-color:#444444">
 
         <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
         </ion-refresher>
-        
-        
-         
+
+
+
 
 
         <span ng-show="!minimal">
@@ -59,18 +58,23 @@
                 </div>
         </span>
 
-       <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance' } : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
-           
-              <!--<div ng-style="packMontage ? { '-webkit-column-count':slider.monsize, '-webkit-column-gap':'0px','line-height':'0px' } : { 'flex':'display', '-webkit-column-count':slider.monsize }">-->
-            
-            
-            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
-                  ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
+        <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance' } : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
+
+            <!--<div ng-style="packMontage ? { '-webkit-column-count':slider.monsize, '-webkit-column-gap':'0px','line-height':'0px' } : { 'flex':'display', '-webkit-column-count':slider.monsize }">-->
+
+
+            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
      
            
-                
+               
                 <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
+                    
+                   
+                    
                     <div ng-if="!isModalActive">
+                        
+                        
+                        
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal && monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
                                 <img id="img-$index" image-spinner-src="{{isBackground()?'':monitor.eventUrl}}"  image-spinner-loader="lines" style="
@@ -84,7 +88,7 @@
                             </div>
                             
                             <div ng-if = "!minimal && monitor.eventUrl != 'img/noevent.png'">
-                                <img ng-if="!isBackground()" id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}"  image-spinner-loader="lines" style="
+                                <img ng-if="!isBackground()" id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}&connkey={{monitor.Monitor.Id}}"  image-spinner-loader="lines" style="
         width: 100% !important;
         height: auto !important;" />
                                 
@@ -98,13 +102,14 @@
                                    {{monitor.Monitor.Name}}&nbsp;
                                 </div>
                                 
+                                <div  ng-if="!isBackground() && sliderVal.showTimeline" style="position:absolute; bottom:15px; right:0%;white-space:nowrap;overflow:hidden;" 
+                                     class="header-event-id">
+                                    &nbsp;<i class="ion-clock"></i>
+                                   {{prettifyDate(monitor.eventUrlTime)}}&nbsp;
+                                </div>
+                                
                             </div>
                             
-                            <div ng-if = "minimal">
-                                <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"   image-spinner-loader="lines" style="margin-top:0px;
-        width: 100% !important;
-        height: auto !important;" />
-                            </div>
                             
 
                         </div>
@@ -115,12 +120,12 @@
                         </div>
                         
                         
-
+                        
 
                     </div>
                 </div>
 
-
+                    
             <div ng-if="isModalActive">
                 <img id="img-$index" image-spinner-src="img/pausevideo.png" style="margin-top:0px;
         width: 100% !important;
@@ -162,53 +167,53 @@
         </span>
 
     </div>
-    
-    <ion-pull-up-footer class="bar-dark"  on-minimize="footerCollapse()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand">
-     <ion-pull-up-handle width="100" height="25" toggle="ion-chevron-up ion-chevron-down" style="border-radius: 25px 25px 0 0">
+
+    <ion-pull-up-footer class="bar-dark" on-minimize="footerCollapse()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand">
+        <ion-pull-up-handle width="100" height="25" toggle="ion-chevron-up ion-chevron-down" style="border-radius: 25px 25px 0 0">
             <i class="icon ion-chevron-up"></i>
         </ion-pull-up-handle>
         <ion-pull-up-bar>
             <h1 class="title" ion-pull-up-trigger>Event History</h1>
         </ion-pull-up-bar>
         <ion-pull-up-content scroll="true">
-           
-            
+
+
             <div class="list list-inset">
+
+
+                <ion-toggle ng-model="sliderVal.hideNoEvents" ng-checked="{{sliderVal.hideNoEvents}}" toggle-class="toggle-dark">Hide monitors without events</ion-toggle>
+
+                <ion-toggle ng-model="sliderVal.enableGapless" ng-checked="{{sliderVal.enableGapless}}" toggle-class="toggle-dark">enable gapless playback</ion-toggle>
+
+
+                <ion-toggle ng-model="sliderVal.exactMatch" ng-checked="{{sliderVal.exactMatch}}" toggle-class="toggle-dark">exact time match</ion-toggle>
                 
-                   
-                <ion-toggle ng-model="sliderVal.hideNoEvents"
-                            ng-checked="{{sliderVal.hideNoEvents}}"
-                            toggle-class="toggle-dark">Hide monitors without events</ion-toggle>
-                
-                <ion-toggle ng-model="sliderVal.enableGapless"
-                            ng-checked="{{sliderVal.enableGapless}}"
-                            toggle-class="toggle-dark">enable gapless playback</ion-toggle>
-                
-                
-                <ion-toggle ng-model="sliderVal.exactMatch"
-                            ng-checked="{{sliderVal.exactMatch}}"
-                            toggle-class="toggle-dark">exact time match</ion-toggle>
-            
-                
-                
-                 <!--<div  class="item item-divider" ion-datetime-picker ng-model="datetimeValue.value">
+                <ion-toggle ng-model="sliderVal.showTimeline" ng-checked="{{sliderVal.showTimeline}}" toggle-class="toggle-dark">show event time <p>(resource intensive)</p></ion-toggle>
+
+
+
+                <!--<div  class="item item-divider" ion-datetime-picker ng-model="datetimeValue.value">
                     Tap to change: {{datetimeValue.value| date: "yyyy-MMM-dd hh:mma"}}
                 </div>-->
-               
-                
-            
 
-                
+
+
+
+
                 <div class="row">
                     <div class="col col-75">
-                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.rate" type="text" id="mySlider6" slider options="slider_modal_options_rate"/></div><br/>
+                        <br/>
+                        <div style="width:90%;color:black;">
+                            <input ng-model="sliderVal.rate" type="text" id="mySlider6" slider options="slider_modal_options_rate" />
+                        </div>
+                        <br/>
                     </div>
                     <div class="col col-25" style="background-color:#AEA8D3;text-align:center">
-                     speed  
+                        speed
                     </div>
                 </div>
-                
-<!--
+
+                <!--
                 <div class="row">
                     <div class="col col-90">
                         <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.min" type="text" id="mySlider5" slider options="slider_modal_options_mm"/></div><br/>
@@ -253,15 +258,15 @@
                       yr 
                     </div>
                 </div>-->
-                
-                
-  
+
+
+
             </div>
         </ion-pull-up-content>
     </ion-pull-up-footer>
-            
-    
-    
-    
+
+
+
+
 
 </ion-view>
