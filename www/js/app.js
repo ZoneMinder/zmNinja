@@ -951,11 +951,12 @@ angular.module('zmApp', [
 
 
             document.addEventListener("pause", function () {
-                console.log("****The application is going into  background");
+                ZMDataModel.setBackground(true);
+            
                 ZMDataModel.zmLog("ROOT APP:App is going into background");
 
                 ZMDataModel.setBackground(true);
-                ZMDataModel.zmLog("Stopping network pull...");
+                ZMDataModel.zmLog("ROOT APP: Stopping network pull...");
                 window.stop();
             
                 
