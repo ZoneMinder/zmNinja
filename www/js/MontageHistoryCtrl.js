@@ -564,6 +564,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     };
     
     
+    $scope.isBackground = function()
+    {
+        return ZMDataModel.isBackground();
+    };
+    
     //----------------------------------------------------------------
     // Alarm emit handling
     //----------------------------------------------------------------
