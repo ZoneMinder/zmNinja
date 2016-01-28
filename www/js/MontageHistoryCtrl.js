@@ -39,6 +39,31 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         };
     
     
+    $scope.togglePause = function (mid)
+    {
+        console.log ("TOGGLE PAUSE " + mid);
+        var m = -1;
+        for (var i=0; i < $scope.MontageMonitors.length; i++)
+        {
+         
+            if ($scope.MontageMonitors[i].Monitor.Id == mid)
+            {
+                m = i;
+                break;
+            }
+        }
+        if (m != -1)
+        {
+            $scope.MontageMonitors[m].isPaused = !$scope.MontageMonitors[m].isPaused;
+            
+            var cmd =  $scope.MontageMonitors[m].isPaused? 1:2;
+            
+            ZMDataModel.zmDebug ("Sending CMD:"+cmd+" for monitor "+$scope.MontageMonitors[m].Monitor.Name);
+            controlEventStream(cmd,"",$scope.MontageMonitors[m].connKey,-1);
+        }
+    };
+    
+    
     $scope.footerCollapse = function()
     {
         
@@ -61,6 +86,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         {
             $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
             $scope.MontageMonitors[i].eventUrlTime="";
+            $scope.MontageMonitors[i].isPaused=false;
+            $scope.MontageMonitors[i].connKey = $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+            
+            
            // $scope.MontageMonitors[i].connkey= i;
 
         }
@@ -107,11 +136,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                        if ($scope.MontageMonitors[j].Monitor.Id == mid)
                        {
                        if ($scope.MontageMonitors[j].eventUrl == 'img/noevent.png')
+                        
                            
                            if (!ZMDataModel.isBackground())
                            {
                                 $scope.MontageMonitors[j].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
                                
+                                
                                 $scope.MontageMonitors[j].eventUrlTime = stime;
                            }
                            else 
@@ -216,7 +247,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             if ($scope.MontageMonitors[i].eventUrl !="" && $scope.MontageMonitors[i].eventUrl !='img/noevent.png')
             {
                 console.log ("Checking event status for " + $scope.MontageMonitors[i].Monitor.Name);
-                controlEventStream('99','',$scope.MontageMonitors[i].Monitor.Id, i);
+                controlEventStream('99','',$scope.MontageMonitors[i].connKey, i);
                 
             }
         }
@@ -289,6 +320,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
             //console.log("POST: " + loginData.url + '/index.php');
 
+            //console.log ("AUTH IS " + $rootScope.authSession);
+        
+            var myauthtoken = $rootScope.authSession.replace("&auth=","");
+        //&auth=
             var req = $http({
                 method: 'POST',
                 /*timeout: 15000,*/
@@ -303,7 +338,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         str.push(encodeURIComponent(p) + "=" +
                             encodeURIComponent(obj[p]));
                     var foo = str.join("&");
-                    // console.log("****RETURNING " + foo);
+                    console.log("****RETURNING " + foo);
                     return foo;
                 },
 
@@ -312,7 +347,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     request: "stream",
                     connkey: connkey,
                     command: cmd,
-                    auth: $rootScope.authSession,
+                    auth: myauthtoken,
                    // user: loginData.username,
                    // pass: loginData.password
                 }
@@ -329,7 +364,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     $http.get (apiurl)
                     .success (function (data)
                     {
-                        $scope.MontageMonitors[ndx].eventUrlTime=data.event.Event.StartTime;
+                        if ($scope.MontageMonitors[ndx].eventUrlTime!=data.event.Event.StartTime)
+                        {
+                            
+                            var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id+"-timeline"));
+                                    element.removeClass ('animated slideInRight');
+                                    element.addClass('animated slideOutRight');
+                                    $timeout (function() {
+                                        element.removeClass ('animated slideOutRight');
+                                         element.addClass('animated slideInRight');
+                                        $scope.MontageMonitors[ndx].eventUrlTime=data.event.Event.StartTime;
+                                    },300);
+                               
+                        }
+                        
                     })
                     .error (function (data)
                     {

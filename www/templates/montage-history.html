@@ -2,9 +2,6 @@
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
 
-
-
-
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
 
@@ -21,124 +18,89 @@
                 </button>
         </span>
 
-        <!--
-        <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
-        </button>-->
-        <!--<button class="button button-icon ion-ios-help-outline" ng-click="popover.show($event)"></button>-->
-
-
 
     </ion-nav-buttons>
 
     <ion-content has-bouncing="false" style="background-color:#444444">
 
-        <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
-        </ion-refresher>
 
 
-
-
-
-        <span ng-show="!minimal">
-            
-            
-            
-            <div  class="timeline_text" ion-datetime-picker ng-model="datetimeValue.value" ng-change="dateChanged()">
-                    <b>Tap to change: {{datetimeValue.value | date: "yyyy-MMM-dd hh:mma"}}  @ {{sliderVal.rate}}x</b>
-                    
-                </div>
-            
-        
-                <div class="range range-positive">
-                    <i style="color:#bbbbbb" class="icon ion-image"></i>
-                    <input type="range" ng-model="slider.monsize" min="1"
-                           max="10" ng-change="sliderChanged(slider.monsize)">
-                    <i style="color:#bbbbbb" class="icon ion-grid"></i>
-
-                </div>
-        </span>
-
-        <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance' } : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
-
-            <!--<div ng-style="packMontage ? { '-webkit-column-count':slider.monsize, '-webkit-column-gap':'0px','line-height':'0px' } : { 'flex':'display', '-webkit-column-count':slider.monsize }">-->
-
-
-            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
-     
-           
-               
-                <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
-                    
-                   
-                    
-                    <div ng-if="!isModalActive">
-                        
-                        
-                        
-                        <div ng-if="$root.authSession!='undefined' && !isBackground()">
-                            <div ng-if = "!minimal && monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
-                                <img id="img-$index" image-spinner-src="{{isBackground()?'':monitor.eventUrl}}"  image-spinner-loader="lines" style="
-        width: 100% !important;
-        height: auto !important;" />
-                                <div   style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
-                                 class="header">
-                                &nbsp;<i class="ion-monitor"></i>
-                               {{monitor.Monitor.Name}}&nbsp;
-                                </div>
-                            </div>
-                            
-                            <div ng-if = "!minimal && monitor.eventUrl != 'img/noevent.png'">
-                                <img ng-if="!isBackground()" id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}&connkey={{monitor.Monitor.Id}}"  image-spinner-loader="lines" style="
-        width: 100% !important;
-        height: auto !important;" />
-                                
-                                <img ng-if="isBackground()" id="img-$index" image-spinner-src=""  image-spinner-loader="lines" style="
-        width: 100% !important;
-        height: auto !important;" />
-                                
-                                <div  ng-if="!isBackground()" style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
-                                     class="header">
-                                    &nbsp;<i class="ion-monitor"></i>
-                                   {{monitor.Monitor.Name}}&nbsp;
-                                </div>
-                                
-                                <div  ng-if="!isBackground() && sliderVal.showTimeline" style="position:absolute; bottom:15px; right:0%;white-space:nowrap;overflow:hidden;" 
-                                     class="header-event-id">
-                                    &nbsp;<i class="ion-clock"></i>
-                                   {{prettifyDate(monitor.eventUrlTime)}}&nbsp;
-                                </div>
-                                
-                            </div>
-                            
-                            
-
-                        </div>
-
-                        <div ng-if="!$root.authSession=='undefined' || isBackground()">
-                            <img id="img-$index" image-spinner-src="img/pausevideo.png" style="width: 100% !important;
-  height: auto !important;" />
-                        </div>
-                        
-                        
-                        
-
-                    </div>
-                </div>
-
-                    
-            <div ng-if="isModalActive">
-                <img id="img-$index" image-spinner-src="img/pausevideo.png" style="margin-top:0px;
-        width: 100% !important;
-        height: auto !important;" />
-            </div>
-
-
-
-            </span>
-            <!-- ngrepeat -->
+        <div class="timeline_text" ion-datetime-picker ng-model="datetimeValue.value" ng-change="dateChanged()">
+            <b>Tap to change: {{datetimeValue.value | date: "yyyy-MMM-dd hh:mma"}}  @ {{sliderVal.rate}}x</b>
 
         </div>
 
+
+        <div class="range range-positive">
+            <i style="color:#bbbbbb" class="icon ion-image"></i>
+            <input type="range" ng-model="slider.monsize" min="1" max="10" ng-change="sliderChanged(slider.monsize)">
+            <i style="color:#bbbbbb" class="icon ion-grid"></i>
+
+        </div>
+
+        <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance' } : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
+
+
+            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'"> 
+                
+                
+                <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
+                     
+                    <div ng-if="$root.authSession!='undefined' && !isBackground()">
+                        <div ng-if = "!minimal && monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
+                            <img id="img-$index" image-spinner-src="{{isBackground()?'':monitor.eventUrl}}"  image-spinner-loader="lines" style="
+                                width: 100% !important;
+                                height: auto !important;" />
+                            <div   style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
+                             class="header">
+                            &nbsp;<i class="ion-monitor"></i>
+                           {{monitor.Monitor.Name}}&nbsp;
+                            </div>
+                        </div>
+
+                        <div ng-if = "!minimal && monitor.eventUrl != 'img/noevent.png' && monitor.connKey">
+
+                            <img ng-if="!isBackground()" id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}&connkey={{monitor.connKey}}"  image-spinner-loader="lines" style="
+                            width: 100% !important;
+                            height: auto !important;" on-tap="togglePause(monitor.Monitor.Id)" />
+
+                            <img ng-if="isBackground()" id="img-$index" image-spinner-src=""  image-spinner-loader="lines" style="
+                            width: 100% !important;
+                            height: auto !important;" />
+
+                            <div  ng-if="!isBackground()" style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
+                             class="header">
+                            &nbsp;<i class="ion-monitor"></i>
+                               {{monitor.Monitor.Name}}&nbsp;
+                            </div>
+
+                             <div  ng-if="!isBackground() && sliderVal.showTimeline" style=" position:absolute; bottom:15px; right:0%;white-space:nowrap;overflow:hidden;" 
+                             class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">
+                            &nbsp;<i class="ion-clock"></i>
+                               {{prettifyDate(monitor.eventUrlTime)}}&nbsp;
+                            </div>
+                            
+                            <div  ng-if="monitor.isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;" 
+                             class="header-paused">
+                            &nbsp;<i class="ion-pause"></i>
+                               paused&nbsp;
+                            </div>
+                            
+                            <!--<div ng-if="!monitor.isPaused"
+                                style="position:absolute; bottom:35px; right:0%;white-space:nowrap;overflow:hidden;" class="header-event-id">paused
+                            </div>-->
+			  
+			  
+                        </div>
+                    </div> <!-- valid auth session &!background -->
+
+                    <div ng-if="!$root.authSession=='undefined' || isBackground()">
+                        <img id="img-$index" image-spinner-src="img/pausevideo.png" 
+                             style="width: 100% !important;height: auto !important;" />
+                    </div>
+                </div>
+            </span>
+        </div>
 
         <ion-item ng-show="!MontageMonitors.length">
             No monitors to display.
@@ -187,8 +149,10 @@
 
 
                 <ion-toggle ng-model="sliderVal.exactMatch" ng-checked="{{sliderVal.exactMatch}}" toggle-class="toggle-dark">exact time match</ion-toggle>
-                
-                <ion-toggle ng-model="sliderVal.showTimeline" ng-checked="{{sliderVal.showTimeline}}" toggle-class="toggle-dark">show event time <p>(resource intensive)</p></ion-toggle>
+
+                <ion-toggle ng-model="sliderVal.showTimeline" ng-checked="{{sliderVal.showTimeline}}" toggle-class="toggle-dark">show event time
+                    <p>(resource intensive)</p>
+                </ion-toggle>
 
 
 
@@ -212,53 +176,6 @@
                         speed
                     </div>
                 </div>
-
-                <!--
-                <div class="row">
-                    <div class="col col-90">
-                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.min" type="text" id="mySlider5" slider options="slider_modal_options_mm"/></div><br/>
-                    </div>
-                    <div class="col col-10" style="background-color:#7f8c8d">
-                      min  
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col col-90">
-                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.hour" type="text" id="mySlider4" slider options="slider_modal_options_hh"/></div><br/>
-                    </div>
-                    <div class="col col-10" style="background-color:#7f8c8d">
-                      hr
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col col-90">
-                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.day" type="text" id="mySlider3" slider options="slider_modal_options_DD"/></div><br/>
-                    </div>
-                    <div class="col col-10" style="background-color:#7f8c8d">
-                      day
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col col-90">
-                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.month" type="text" id="mySlider2" slider options="slider_modal_options_MM"/></div><br/>
-                    </div>
-                    <div class="col col-10" style="background-color:#7f8c8d">
-                      mth  
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col col-90">
-                        <br/><div style="width:90%;color:black;"><input ng-model="sliderVal.year" type="text" id="mySlider1" slider options="slider_modal_options_YY"/></div><br/>
-                    </div>
-                    <div class="col col-10" style="background-color:#7f8c8d">
-                      yr 
-                    </div>
-                </div>-->
-
 
 
             </div>

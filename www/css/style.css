@@ -121,6 +121,20 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 }
 
 
+.header-paused {
+    background: #ba3e3e;
+    color:#cccccc;
+    border-color: #ba3e3e;
+     border-style: solid;
+    border-width:1px;
+    opacity:80%;
+    transform: translate(-50%, -50%);
+    
+}
+
+
+
+
 .alarmed-header {
     background: #ba3e3e;
     color:#ffffff;
