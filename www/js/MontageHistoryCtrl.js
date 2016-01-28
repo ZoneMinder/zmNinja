@@ -221,13 +221,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     }
     
     
-    var tdatetimeValue = new Date();
-    tdatetimeValue.setDate(tdatetimeValue.getDate()-1);
-    
-    $scope.datetimeValue = {value:""};
-    $scope.datetimeValue.value = tdatetimeValue; 
-    
-    var eventQueryInterval;
     
     
     
@@ -420,8 +413,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
     };
     
-    // start with a day ago
-    var timenow = moment().subtract('1','day');
+    // default = start of day
+    var timenow = moment().startOf('day');
     $scope.sliderVal.year = timenow.format("YYYY");
     $scope.sliderVal.month = timenow.format("MM");
     $scope.sliderVal.day = timenow.format("DD");
@@ -430,6 +423,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.sliderVal.rate = 1;
     $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
     
+    
+    //var tdatetimeValue = new Date();
+    //tdatetimeValue.setDate(tdatetimeValue.getDate()-1);
+    
+    $scope.datetimeValue = {value:""};
+    $scope.datetimeValue.value = timenow.toDate(); 
+    
+    var eventQueryInterval;
     
     
     var commonCss =  
