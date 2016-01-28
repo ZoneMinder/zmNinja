@@ -67,7 +67,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.footerCollapse = function()
     {
         
-        window.stop();
+        
         footerCollapse();
         
             
@@ -82,6 +82,27 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
     
         ZMDataModel.zmDebug ("Playback rate is:"  + $scope.sliderVal.realRate);
+        
+        
+       
+        
+        var TimeObjectFrom = moment($scope.datetimeValue.value).format("YYYY-MM-DD HH:mm");
+        var TimeObjectTo = moment(TimeObjectFrom).add(1,'hour').format('YYYY-MM-DD HH:mm');
+        
+
+        if ($scope.datetimeValue.value == $scope.oldTime)
+        {
+            ZMDataModel.zmLog ("********** Date HAS NOT CHANGED");
+            return;
+        }
+        
+        window.stop();
+        
+        
+        $scope.oldTime = $scope.datetimeValue.value;
+         var apiurl;
+        
+        
         for (var i=0; i< $scope.MontageMonitors.length; i++)
         {
             $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
@@ -93,14 +114,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
            // $scope.MontageMonitors[i].connkey= i;
 
         }
-        
-        var TimeObjectFrom = moment($scope.datetimeValue.value).format("YYYY-MM-DD HH:mm");
-        var TimeObjectTo = moment(TimeObjectFrom).add(1,'hour').format('YYYY-MM-DD HH:mm');
-        
-
-        
-         var apiurl;
-        
         if ($scope.sliderVal.exactMatch)
         {
             // grab events that start on or before the time and end on or after the time
@@ -249,7 +262,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     
     $scope.dateChanged = function()
     {
-        window.stop();
+       // window.stop();
         footerCollapse();
     };
     
@@ -422,6 +435,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.sliderVal.min = 0;
     $scope.sliderVal.rate = 1;
     $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
+    $scope.oldTime="";
     
     
     //var tdatetimeValue = new Date();
