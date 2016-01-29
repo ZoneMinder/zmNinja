@@ -64,6 +64,7 @@ angular.module('zmApp.controllers')
          'useNphZms':true,
          'packMontage':true,
          'exitOnSleep':false,
+         'forceNetworkStop':false
          
         
     };
@@ -243,6 +244,13 @@ angular.module('zmApp.controllers')
                     loginData.packMontage  = true;
                 }
                 
+                 if (typeof loginData.forceNetworkStop == 'undefined')
+                {
+                    zmDebug ("forceNetwork does not exist. Setting to false");
+                    loginData.forceNetworkStop  = false;
+                }
+                
+                
                 
                 if (typeof loginData.exitOnSleep == 'undefined')
                 {
@@ -262,6 +270,11 @@ angular.module('zmApp.controllers')
             console.log("Getting out of ZMDataModel init");
             zmDebug ( "loginData structure values: " + JSON.stringify(loginData));
 
+        },
+        
+        isForceNetworkStop: function()
+        {
+            return loginData.forceNetworkStop;
         },
 
         isLoggedIn: function () {
@@ -491,7 +504,7 @@ angular.module('zmApp.controllers')
         
         // need a mid as restricted users won't be able to get
         // auth with just &watch
-        getAuthKey: function (mid)
+        getAuthKey: function (mid, ck)
         {
             var d=$q.defer();
             
@@ -504,7 +517,7 @@ angular.module('zmApp.controllers')
             
             // Skipping monitor number as I only need an auth key
             // so no need to generate an image
-            var myurl =loginData.url+"/index.php?view=watch&mid="+mid;
+            var myurl =loginData.url+"/index.php?view=watch&mid="+mid+"&connkey="+ck;
             zmDebug ("DataModel: Getting auth from " + myurl + " with mid="+mid);
             $http.get (myurl)
             .then (function (success) {
@@ -776,6 +789,10 @@ angular.module('zmApp.controllers')
                         {
                             monitors[i].Monitor.listDisplay='show';
                             monitors[i].Monitor.isAlarmed = 'false';
+                            monitors[i].Monitor.connKey = monitors[i].Monitor.Id.toString() + Math.floor((Math.random() * 100000) + 1);
+                            zmLog("ConnKey for "+monitors[i].Monitor.Id+" is :"+monitors[i].Monitor.connKey);
+                            
+                            
                            // monitors[i].Monitor.sortOrder=i;
                         }
                         d.resolve(monitors);

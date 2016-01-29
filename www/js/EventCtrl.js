@@ -1033,6 +1033,8 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------
 
         function controlEventStream(cmd, disp) {
+            
+            ZMDataModel.zmDebug ("OH CRAP!! THE WORLD HAS COME TO AN END****************");
             // console.log("Command value " + cmd);
 
             if (disp) {

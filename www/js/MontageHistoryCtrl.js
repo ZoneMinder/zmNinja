@@ -59,7 +59,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             var cmd =  $scope.MontageMonitors[m].isPaused? 1:2;
             
             ZMDataModel.zmDebug ("Sending CMD:"+cmd+" for monitor "+$scope.MontageMonitors[m].Monitor.Name);
-            controlEventStream(cmd,"",$scope.MontageMonitors[m].connKey,-1);
+            controlEventStream(cmd,"",$scope.MontageMonitors[m].Monitor.connKey,-1);
         }
     };
     
@@ -79,6 +79,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
         
         console.log ("******************COLLAPSE");
+        window.stop();
         $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
     
         ZMDataModel.zmDebug ("Playback rate is:"  + $scope.sliderVal.realRate);
@@ -90,13 +91,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         var TimeObjectTo = moment(TimeObjectFrom).add(1,'hour').format('YYYY-MM-DD HH:mm');
         
 
-        if ($scope.datetimeValue.value == $scope.oldTime)
+        /*if ($scope.datetimeValue.value == $scope.oldTime)
         {
             ZMDataModel.zmLog ("********** Date HAS NOT CHANGED");
             return;
-        }
+        }*/
         
-        window.stop();
+        if (ZMDataModel.isForceNetworkStop()) window.stop();
         
         
         $scope.oldTime = $scope.datetimeValue.value;
@@ -105,10 +106,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
         for (var i=0; i< $scope.MontageMonitors.length; i++)
         {
-            $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
-            $scope.MontageMonitors[i].eventUrlTime="";
-            $scope.MontageMonitors[i].isPaused=false;
-            $scope.MontageMonitors[i].connKey = $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+            // generate new connKeys if timeline changes
+            if ($scope.MontageMonitors[i].Monitor.connKey)
+            {
+                ZMDataModel.zmLog ("Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey);
+                controlEventStream(17,"",$scope.MontageMonitors[i].Monitor.connKey,-1);
+                $scope.MontageMonitors[i].Monitor.connKey = $scope.MontageMonitors[i].Monitor.Id.toString() + Math.floor((Math.random() * 100000) + 1);
+            }
+              $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
+           // $scope.MontageMonitors[i].eventUrlTime="";
+          //  $scope.MontageMonitors[i].isPaused=false;
+            
             
             
            // $scope.MontageMonitors[i].connkey= i;
@@ -154,6 +162,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                            if (!ZMDataModel.isBackground())
                            {
                                 $scope.MontageMonitors[j].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+                               console.log ("SWITCHING TO " + $scope.MontageMonitors[j].eventUrl);
                                
                                 
                                 $scope.MontageMonitors[j].eventUrlTime = stime;
@@ -213,6 +222,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     {
 
                         $scope.MontageMonitors[i].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.events[0].Event.Id+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+                         console.log ("SWITCHING TO " + $scope.MontageMonitors[i].eventUrl);
                         
                         $scope.MontageMonitors[i].eventUrlTime = data.events[0].Event.StartTime;
 
@@ -253,7 +263,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             if ($scope.MontageMonitors[i].eventUrl !="" && $scope.MontageMonitors[i].eventUrl !='img/noevent.png')
             {
                 console.log ("Checking event status for " + $scope.MontageMonitors[i].Monitor.Name);
-                controlEventStream('99','',$scope.MontageMonitors[i].connKey, i);
+                controlEventStream('99','',$scope.MontageMonitors[i].Monitor.connKey, i);
                 
             }
         }
@@ -373,13 +383,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         if ($scope.MontageMonitors[ndx].eventUrlTime!=data.event.Event.StartTime)
                         {
                             
+                            var ld = ZMDataModel.getLogin();
                             var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id+"-timeline"));
-                                    element.removeClass ('animated slideInRight');
-                                    element.addClass('animated slideOutRight');
+                                    element.removeClass ('animated flipInX');
+                                    element.addClass('animated flipOutX');
                                     $timeout (function() {
-                                        element.removeClass ('animated slideOutRight');
-                                         element.addClass('animated slideInRight');
+                                        element.removeClass ('animated flipOutX');
+                                         element.addClass('animated flipInX');
                                         $scope.MontageMonitors[ndx].eventUrlTime=data.event.Event.StartTime;
+                                        
+                                        $scope.MontageMonitors[ndx].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.event.Event.Id+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
                                     },300);
                                
                         }
@@ -602,7 +615,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     for (i=0; i< $scope.MontageMonitors.length; i++)
     {
         $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
-        
+        $scope.MontageMonitors[i].eventUrlTime="";
+            $scope.MontageMonitors[i].isPaused=false;
+            
     }
     
     
@@ -1218,7 +1233,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
        
         $scope.modal.remove();
         
-          $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");window.stop();},50);
+          $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");if (ZMDataModel.isForceNetworkStop()) window.stop();},50);
 
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $scope.isModalActive = false;
@@ -1395,7 +1410,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
         
-        window.stop();
+        for (var i=0; i<$scope.MontageMonitors.length; i++)
+        {
+            ZMDataModel.zmLog ("Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey);
+            controlEventStream(17,"",$scope.MontageMonitors[i].Monitor.connKey,-1);
+        }
+        
+        //window.stop();
         /*
         $timeout ( function()
             {

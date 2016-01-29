@@ -70,7 +70,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-    ZMDataModel.getAuthKey($rootScope.validMonitorId)
+    ZMDataModel.getAuthKey($rootScope.validMonitorId, $scope.monitors[0].Monitor.connKey)
         .then(function (success) {
                 $ionicLoading.hide();
                 $rootScope.authSession = success;
@@ -309,7 +309,142 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         // ZMDataModel.isBackground());
         return ZMDataModel.isBackground();
     };
+    
+    
+    
+    
+    
+    $scope.controlStream = function (cmd,disp,connkey,ndx)
+    {
+        controlStream(cmd,disp,connkey,ndx);
+    };
+    
+    function controlStream(cmd, disp, connkey, ndx) {
+            // console.log("Command value " + cmd);
 
+            if (disp) {
+                $ionicLoading.hide();
+                $ionicLoading.show({
+                    template: "please wait...",
+                    noBackdrop: true,
+                    duration: zm.loadingTimeout,
+                });
+            }
+            var loginData = ZMDataModel.getLogin();
+
+            /*
+            var CMD_NONE = 0;
+            var CMD_PAUSE = 1;
+            var CMD_PLAY = 2;
+            var CMD_STOP = 3;
+            var CMD_FASTFWD = 4;
+            var CMD_SLOWFWD = 5;
+            var CMD_SLOWREV = 6;
+            var CMD_FASTREV = 7;
+            var CMD_ZOOMIN = 8;
+            var CMD_ZOOMOUT = 9;
+            var CMD_PAN = 10;
+            var CMD_SCALE = 11;
+            var CMD_PREV = 12;
+            var CMD_NEXT = 13;
+            var CMD_SEEK = 14;
+            var CMD_QUIT = 17;
+            var CMD_QUERY = 99;
+            */
+            
+
+
+            // You need to POST commands to control zms
+            // Note that I am url encoding the parameters into the URL
+            // If I leave it as JSON, it gets converted to OPTONS due
+            // to CORS behaviour and ZM/Apache don't seem to handle it
+
+            //console.log("POST: " + loginData.url + '/index.php');
+
+            //console.log ("AUTH IS " + $rootScope.authSession);
+        
+            var myauthtoken = $rootScope.authSession.replace("&auth=","");
+        //&auth=
+            var req = $http({
+                method: 'POST',
+                /*timeout: 15000,*/
+                url: loginData.url + '/index.php',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    //'Accept': '*/*',
+                },
+                transformRequest: function (obj) {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                    var foo = str.join("&");
+                    console.log("****RETURNING " + foo);
+                    return foo;
+                },
+
+                data: {
+                    view: "request",
+                    request: "stream",
+                    connkey: connkey,
+                    command: cmd,
+                    auth: myauthtoken,
+                   // user: loginData.username,
+                   // pass: loginData.password
+                }
+            });
+            req.success(function (resp) {
+
+                console.log("SUCCESS FOR: " + JSON.stringify(resp));
+               
+                if (resp.result=="Ok" && ndx != -1)
+                {   
+                    var ld = ZMDataModel.getLogin();
+                    var apiurl= ld.apiurl + "/events/"+resp.status.event+".json";
+                    console.log ("API " + apiurl);
+                    $http.get (apiurl)
+                    .success (function (data)
+                    {
+                        if ($scope.MontageMonitors[ndx].eventUrlTime!=data.event.Event.StartTime)
+                        {
+                            
+                            var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id+"-timeline"));
+                                    element.removeClass ('animated slideInRight');
+                                    element.addClass('animated slideOutRight');
+                                    $timeout (function() {
+                                        element.removeClass ('animated slideOutRight');
+                                         element.addClass('animated slideInRight');
+                                        $scope.MontageMonitors[ndx].eventUrlTime=data.event.Event.StartTime;
+                                    },300);
+                               
+                        }
+                        
+                    })
+                    .error (function (data)
+                    {
+                        $scope.MontageMonitors[ndx].eventUrlTime="-";
+                    });
+                    
+                }
+                //var str = toast_blurb + "event:" + resp.status.event;
+                // console.log(str);
+                // $ionicLoading.hide();
+
+               
+                
+
+            });
+
+            req.error(function (resp) {
+                //console.log("ERROR: " + JSON.stringify(resp));
+                ZMDataModel.zmLog("Error sending event command " + JSON.stringify(resp), "error");
+            });
+        }
+
+
+
+    
+    
     //-------------------------------------------------------------
     // Send PTZ command to ZM
     // Note: PTZ fails on desktop, don't bother about it
@@ -874,6 +1009,9 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         $scope.isModalActive = false;
         console.log("**MODAL REMOVED: Stopping modal timer");
         $interval.cancel(intervalModalHandle);
+        ZMDataModel.zmDebug ("Modal removed - killing connkey");
+        controlStream(17,"",$scope.connKey,-1);
+        
 
         // Execute action
     });
