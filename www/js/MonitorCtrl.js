@@ -20,6 +20,8 @@ angular.module('zmApp.controllers')
     $scope.monitors = [];
     $scope.monitors = message;
                                    
+    
+                                   
                                    
     if ($scope.monitors.length == 0)
     {
@@ -283,7 +285,7 @@ angular.module('zmApp.controllers')
         console.log("**VIEW ** Monitor Ctrl Unloaded");
     });
 
-    $scope.openModal = function (mid, controllable, controlid) {
+    $scope.openModal = function (mid, controllable, controlid, connKey) {
         ZMDataModel.zmDebug("MonitorCtrl:Open Monitor Modal with monitor Id=" + mid +
             " and Controllable:" + controllable + " with control ID:" + controlid);
 
@@ -293,9 +295,12 @@ angular.module('zmApp.controllers')
         $scope.LoginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        $scope.connKey = connKey;
 
         $scope.ptzMoveCommand = "";
          $scope.presetOn = false;
+        
+        
         
 
         // This is a modal to show the monitor footage
@@ -400,7 +405,7 @@ angular.module('zmApp.controllers')
         // switch off awake, as liveview is finished
         ZMDataModel.setAwake(false);
         $scope.modal.remove();
-        $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");window.stop();},50);
+        $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");if (ZMDataModel.isForceNetworkStop()) window.stop();},50);
     };
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function () {

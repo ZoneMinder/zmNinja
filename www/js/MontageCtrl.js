@@ -61,6 +61,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
    // console.log ("TEMP MONITORS IS " + JSON.stringify(tempMonitors));
     var tempResponse = ZMDataModel.applyMontageMonitorPrefs(message, 0);
     $scope.monitors = tempResponse[0];
+    
+    
+    
     montageOrder = tempResponse[1];
     hiddenOrder = tempResponse[2];
     
@@ -191,7 +194,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     
     //console.log ("MONITORS " + JSON.stringify($scope.monitors));
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-    ZMDataModel.getAuthKey($rootScope.validMonitorId)
+    ZMDataModel.getAuthKey($rootScope.validMonitorId, $scope.monitors[0].Monitor.connKey)
         .then(function (success) {
                 $ionicLoading.hide();
                 console.log(success);
@@ -565,7 +568,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
     // main monitor modal open
     //---------------------------------------------------------------------
-    $scope.openModal = function (mid, controllable, controlid) {
+    $scope.openModal = function (mid, controllable, controlid, connKey) {
         ZMDataModel.zmDebug("MontageCtrl: Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
         // $scope.isModalActive = true;
         // Note: no need to setAwake(true) as its already awake
@@ -589,6 +592,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.ptzMoveCommand = "";
         $scope.ptzStopCommand = "";
         $scope.presetOn = false;
+        $scope.connKey = connKey;
 
         // This is a modal to show the monitor footage
         // We need to switch to always awake if set so the feed doesn't get interrupted
@@ -682,7 +686,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         
        
         $scope.modal.remove();
-          $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");window.stop();},50);
+          $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");if (ZMDataModel.isForceNetworkStop()) window.stop();},50);
 
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $scope.isModalActive = false;
@@ -853,7 +857,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
         
-        window.stop();
+        if (ZMDataModel.isForceNetworkStop()) window.stop();
         
     });
 

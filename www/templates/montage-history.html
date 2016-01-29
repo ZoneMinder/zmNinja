@@ -58,9 +58,9 @@
                             </div>
                         </div>
 
-                        <div ng-if = "!minimal && monitor.eventUrl != 'img/noevent.png' && monitor.connKey">
+                        <div ng-if = "!minimal && monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey">
 
-                            <img ng-if="!isBackground()" id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}&connkey={{monitor.connKey}}"  image-spinner-loader="lines" style="
+                            <img ng-if="!isBackground()" id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}&connkey={{monitor.Monitor.connKey}}"  image-spinner-loader="lines" style="
                             width: 100% !important;
                             height: auto !important;" on-tap="togglePause(monitor.Monitor.Id)" />
 

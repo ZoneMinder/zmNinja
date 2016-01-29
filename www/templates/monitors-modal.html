@@ -15,9 +15,9 @@
                     <div ng-if="$root.authSession!='undefined'">
 
 
-                        <div ng-if="!animationInProgress && !isBackground()">
+                        <div ng-if="!animationInProgress && !isBackground() && connKey">
 
-                            <img style="width:100vw; height:100vh" imageonload="finishedLoadingImage()" image-spinner-loader="lines" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" />
+                            <img style="width:100vw; height:100vh" imageonload="finishedLoadingImage()" image-spinner-loader="lines" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" />
 
                         </div>
                         <div ng-if="animationInProgress || isBackground()">
@@ -57,6 +57,7 @@
         </div>
 
 
+        <button class="button" style="position:absolute;top:50%;left:50%;-index:999" ng-click="killThis()">KILL</button>
         
 
     </ion-modal-view>
