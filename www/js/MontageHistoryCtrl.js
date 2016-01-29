@@ -107,7 +107,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         for (var i=0; i< $scope.MontageMonitors.length; i++)
         {
             // generate new connKeys if timeline changes
-            if ($scope.MontageMonitors[i].Monitor.connKey)
+            if ($scope.MontageMonitors[i].Monitor.connKey &&
+                $scope.MontageMonitors[i].Monitor.Function !='None' &&
+                $scope.MontageMonitors[i].Monitor.lisDisplay!='noshow' &&
+                $scope.MontageMonitors[i].Monitor.Enabled !='0'
+               )
             {
                 ZMDataModel.zmLog ("Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey);
                 controlEventStream(17,"",$scope.MontageMonitors[i].Monitor.connKey,-1);
@@ -260,9 +264,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
         for (var i=0; i<$scope.MontageMonitors.length; i++)
         {
-            if ($scope.MontageMonitors[i].eventUrl !="" && $scope.MontageMonitors[i].eventUrl !='img/noevent.png')
+            if ($scope.MontageMonitors[i].eventUrl !="" && $scope.MontageMonitors[i].eventUrl !='img/noevent.png' && $scope.MontageMonitors[i].Monitor.connKey &&
+                $scope.MontageMonitors[i].Monitor.Function !='None' &&
+                $scope.MontageMonitors[i].Monitor.listDisplay!='noshow' &&
+                $scope.MontageMonitors[i].Monitor.Enabled !='0')
             {
-                console.log ("Checking event status for " + $scope.MontageMonitors[i].Monitor.Name);
+                ZMDataModel.zmDebug ("Checking event status for " + $scope.MontageMonitors[i].Monitor.Name + ":"+$scope.MontageMonitors[i].eventUrl+":"+$scope.MontageMonitors[i].Monitor.Function+":"+$scope.MontageMonitors[i].Monitor.listDisplay);
                 controlEventStream('99','',$scope.MontageMonitors[i].Monitor.connKey, i);
                 
             }
@@ -1412,9 +1419,15 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
         for (var i=0; i<$scope.MontageMonitors.length; i++)
         {
-            ZMDataModel.zmLog ("Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey);
-            controlEventStream(17,"",$scope.MontageMonitors[i].Monitor.connKey,-1);
-        }
+            if ($scope.MontageMonitors[i].Monitor.connKey &&
+                $scope.MontageMonitors[i].Monitor.Function !='None' &&
+                $scope.MontageMonitors[i].Monitor.lisDisplay!='noshow' &&
+                $scope.MontageMonitors[i].Monitor.Enabled !='0')
+            {
+                ZMDataModel.zmLog ("Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey);
+                controlEventStream(17,"",$scope.MontageMonitors[i].Monitor.connKey,-1);
+            }
+        }   
         
         //window.stop();
         /*
