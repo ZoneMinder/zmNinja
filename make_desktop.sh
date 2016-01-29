@@ -9,7 +9,7 @@ APPVER=`cat config.xml | grep "widget id=" | sed 's/.* version=\"\([^\"]*\)\" xm
 APPVER+="D"
 echo "Application version:$APPVER"
 
-declare -a app_ports=("../zmNinja-mac.app/Contents/Resources" "../zmNinja-linux32bit/resources" "../zmNinja-linux64bit/resources" "../zmNinja-win64bit/resources" "../zmNinja-win32bit/resources")
+declare -a app_ports=("../zmNinja-mac.app/Contents/Resources" "../zmNinja-linux32bit/resources" "../zmNinja-linux64bit/resources" "../zmNinja-win64bit/resources" "../zmNinja-win32bit/resources" "../zmNinja-linuxarm/resources")
 
 for i in "${app_ports[@]}"
 do
