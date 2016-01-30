@@ -81,11 +81,18 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             .then (function(data) {
                                 ZMDataModel.zmLog("Got API version: " + data);
                                 var ld = ZMDataModel.getLogin();
-                                 if (versionCompare(data,zm.minAppVersion)==-1 && (ld.url.indexOf("arjunrc.") == -1) && data !="0.0.0")
+                                 if (versionCompare(data,zm.minAppVersion)==-1 && data !="0.0.0")
                                 //if (versionCompare(data,zm.minAppVersion))
                                 {
 
                                     $state.go('lowversion', {"ver":data});
+                                }
+                                
+                                if (versionCompare(data,zm.recommendedAppVersion)==-1 && data !="0.0.0")
+                                //if (versionCompare(data,zm.minAppVersion))
+                                {
+
+                                    $state.go('importantmessage', {"ver":data});
                                 }
                             });
                             EventServer.refresh();

@@ -31,6 +31,7 @@ angular.module('zmApp', [
 
 .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
+    recommendedAppVersion: '1.30',
     minEventServerVersion: '0.5',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
@@ -1117,6 +1118,17 @@ angular.module('zmApp', [
         url: "/lowversion/:ver",
         templateUrl: "templates/lowversion.html",
         controller: 'zmApp.LowVersionCtrl',
+
+    })
+    
+    .state('importantmessage', {
+        data: {
+            requireLogin: false
+        },
+
+        url: "/importantmessage/:ver",
+        templateUrl: "templates/important_message.html",
+        controller: 'zmApp.ImportantMessageCtrl',
 
     })
 
