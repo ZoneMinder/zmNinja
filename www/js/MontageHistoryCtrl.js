@@ -11,34 +11,35 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $controller('zmApp.BaseController', {
         $scope: $scope
     });
-    //---------------------------------------------------------------------
-    // Controller main
-    //---------------------------------------------------------------------
-
+  
     
-       //--------------------------------------
-        // formats events dates in a nice way
-        //---------------------------------------
+   //--------------------------------------
+    // formats events dates in a nice way
+    //---------------------------------------
 
-        $scope.prettifyDate = function (str) {
-            return moment(str).format('MMM Do, YYYY h:mma');
-        };
+    $scope.prettifyDate = function (str) {
+        return moment(str).format('MMM Do, YYYY h:mma');
+    };
 
-        function prettifyDate(str) {
-            return moment(str).format('MMM Do');
-        }
+    function prettifyDate(str) {
+        return moment(str).format('MMM Do');
+    }
 
-        $scope.prettifyTime = function (str) {
-            
-            return moment(str).format('h:mm a');
-        };
+    $scope.prettifyTime = function (str) {
+
+        return moment(str).format('h:mm a');
+    };
 
 
-        $scope.prettify = function (str) {
-            return moment(str).format('h:mm:ssa on MMMM Do YYYY');
-        };
+    $scope.prettify = function (str) {
+        return moment(str).format('h:mm:ssa on MMMM Do YYYY');
+    };
     
     
+     
+   //--------------------------------------
+    // pause/unpause nph-zms
+    //---------------------------------------
     $scope.togglePause = function (mid)
     {
         console.log ("TOGGLE PAUSE " + mid);
@@ -64,6 +65,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     };
     
     
+     
+    //--------------------------------------
+    // Called when ion-footer collapses
+    // note that on init it is also called
+    //---------------------------------------
+    
     $scope.footerCollapse = function()
     {
         
@@ -77,29 +84,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     function footerCollapse()
     {
         
-        
-        console.log ("******************COLLAPSE");
-        window.stop();
+        window.stop(); // force it here - connkey changes - FIXME: investigate why
         $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
-    
         ZMDataModel.zmDebug ("Playback rate is:"  + $scope.sliderVal.realRate);
-        
-        
-       
         
         var TimeObjectFrom = moment($scope.datetimeValue.value).format("YYYY-MM-DD HH:mm");
         var TimeObjectTo = moment(TimeObjectFrom).add(1,'hour').format('YYYY-MM-DD HH:mm');
-        
-
-        /*if ($scope.datetimeValue.value == $scope.oldTime)
-        {
-            ZMDataModel.zmLog ("********** Date HAS NOT CHANGED");
-            return;
-        }*/
-        
-        if (ZMDataModel.isForceNetworkStop()) window.stop();
-        
-        
+      
         $scope.oldTime = $scope.datetimeValue.value;
          var apiurl;
         
@@ -118,13 +109,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 $scope.MontageMonitors[i].Monitor.connKey = $scope.MontageMonitors[i].Monitor.Id.toString() + Math.floor((Math.random() * 100000) + 1);
             }
               $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
-           // $scope.MontageMonitors[i].eventUrlTime="";
-          //  $scope.MontageMonitors[i].isPaused=false;
             
-            
-            
-           // $scope.MontageMonitors[i].connkey= i;
-
         }
         if ($scope.sliderVal.exactMatch)
         {
@@ -247,11 +232,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         }
     }
     
-    
-    
-    
-    
-    
+    //---------------------------------------------------------
+    // This is periodically called to get the current playing 
+    // event by zms. I use this to display a timestamp
+    // Its a 2 step process - get event Id then go a Event
+    // API call to get time stamp. Sucks
+    //---------------------------------------------------------
     
     function checkAllEvents()
     {
@@ -264,6 +250,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
         for (var i=0; i<$scope.MontageMonitors.length; i++)
         {
+            // don't check for monitors that are not shown
+            // because nph connkey won't exist and the response
+            // will fail
             if ($scope.MontageMonitors[i].eventUrl !="" && $scope.MontageMonitors[i].eventUrl !='img/noevent.png' && $scope.MontageMonitors[i].Monitor.connKey &&
                 $scope.MontageMonitors[i].Monitor.Function !='None' &&
                 $scope.MontageMonitors[i].Monitor.listDisplay!='noshow' &&
@@ -283,20 +272,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         footerCollapse();
     };
     
-    //console.log ("******************WATCHING ****************");
-    /*$scope.$watch('datetimeValue.value', function(oldv,newv) {
-        if (newv !== oldv)
-        {
-            ZMDataModel.zmLog("Datetime value changed to " + $scope.datetimeValue.value);
-            window.stop();
-            footerCollapse();
-        }
-        
-        //window.stop();
-        ///footerCollapse();
-   },true);*/
-    
-    
+
+    //--------------------------------------------------------------
+    //  Used to control zms for a connkey. If ndx is not -1,
+    // then it also calls an event API for the returned eid
+    // and stores its time in the montage monitors array
+    //--------------------------------------------------------------
     $scope.controlEventStream = function (cmd,disp,connkey,ndx)
     {
         controlEventStream(cmd,disp,connkey,ndx);
@@ -411,20 +392,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     });
                     
                 }
-                //var str = toast_blurb + "event:" + resp.status.event;
-                // console.log(str);
-                // $ionicLoading.hide();
-
-               
-                
-
-            });
+           });
 
             req.error(function (resp) {
                 //console.log("ERROR: " + JSON.stringify(resp));
                 ZMDataModel.zmLog("Error sending event command " + JSON.stringify(resp), "error");
             });
         }
+
+    //---------------------------------------------------------------------
+    // Controller main
+    //---------------------------------------------------------------------
 
 
     
@@ -504,62 +482,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         
                     };
     
-    $scope.slider_modal_options_YY = {
-                        from: 2010,
-                        to: curYear,
-                        realtime: true,
-                        step: 1,
-                        className: "mySliderClass",
-                        //modelLabels:function(val) {return "";},
-                        smooth: false,
-                        css: commonCss
-                        
-                    };
-    
-    $scope.slider_modal_options_MM = {
-                        from: 1,
-                        to: 12,
-                        realtime: true,
-                        step: 1,
-                        className: "mySliderClass",
-                        //modelLabels:function(val) {return "";},
-                        smooth: false,
-                        css: commonCss
-                    };
-    
-    $scope.slider_modal_options_DD = {
-                        from: 1,
-                        to: 31,
-                        realtime: true,
-                        step: 1,
-                        className: "mySliderClass",
-                        //modelLabels:function(val) {return "";},
-                        smooth: false,
-                        css: commonCss
-                    };
-    
-    $scope.slider_modal_options_hh = {
-                        from: 0,
-                        to: 23,
-                        realtime: true,
-                        step: 1,
-                        className: "mySliderClass",
-                        //modelLabels:function(val) {return "";},
-                        smooth: false,
-                        css: commonCss
-                    };
-    
-    $scope.slider_modal_options_mm = {
-                        from: 0,
-                        to: 59,
-                        realtime: true,
-                        step: 29,
-                        className: "mySliderClass",
-                        //modelLabels:function(val) {return "";},
-                        smooth: false,
-                        css: commonCss
-                    };
-    
+   
     
     var isLongPressActive = false;
     $scope.isReorder = false;
@@ -628,17 +551,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     }
     
     
-    
-    
-    if (0)
-    {
-        var elem = angular.element(document.getElementById('.grid'));
-            var msnry = new Masonry( elem, {
-          // options
-          itemSelector: '.grid-item',
-          columnWidth: 200
-        });
-    }
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
     // close the modal
@@ -796,42 +708,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     {
         return ZMDataModel.isBackground();
     };
-    
-    //----------------------------------------------------------------
-    // Alarm emit handling
-    //----------------------------------------------------------------
-    $rootScope.$on("alarm", function (event, args) {
-        // FIXME: I should probably unregister this instead
-        if (typeof $scope.monitors === undefined)
-            return;
-        //console.log ("***EVENT TRAP***");
-        var alarmMonitors = args.message;
-        for (var i=0; i< alarmMonitors.length; i++)
-        {
-            console.log ("**** TRAPPED EVENT: "+alarmMonitors[i]);
-            
-            for (var j=0; j<$scope.monitors.length; j++)
-            {
-                if ($scope.monitors[j].Monitor.Id == alarmMonitors[i])
-                {
-                    $scope.monitors[j].Monitor.isAlarmed="true";
-                    scheduleRemoveFlash(j);
-                }
-            }
-            
-        }
-      
-        
-    });
-    
-    function scheduleRemoveFlash(id)
-    {
-        ZMDataModel.zmDebug ("Scheduled a 10 sec timer for dis-alarming monitor ID="+id);
-        $timeout( function() {
-            $scope.monitors[id].Monitor.isAlarmed = 'false';
-            ZMDataModel.zmDebug ("dis-alarming monitor ID="+id);
-        },zm.alarmFlashTimer);
-    }
+
 
     //----------------------------------------------------------------
     // Alarm notification handling
@@ -1429,21 +1306,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             }
         }   
         
-        //window.stop();
-        /*
-        $timeout ( function()
-            {
-                for (var i=0; i< $scope.MontageMonitors.length; i++)
-                {
-                    $scope.MontageMonitors[i].eventUrl = "";
-
-                }
-            },0);*/
+        
     });
 
     $scope.$on('$ionicView.unloaded', function () {
-        // console.log("**************** CLOSING WINDOW ***************************");
-        //  $window.close();
+       
     });
 
     //---------------------------------------------------------
