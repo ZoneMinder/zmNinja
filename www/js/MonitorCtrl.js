@@ -406,6 +406,8 @@ angular.module('zmApp.controllers')
         ZMDataModel.setAwake(false);
         $scope.modal.remove();
         $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");if (ZMDataModel.isForceNetworkStop()) window.stop();},50);
+        
+        
     };
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function () {
