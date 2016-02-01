@@ -1,4 +1,4 @@
-/* jshint -W041 */
+ /* jshint -W041 */
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
@@ -149,8 +149,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         $scope.loginData.eventServerMonitors = monstring;
         $scope.loginData.eventServerInterval = intervalstring;
 
-        $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
-        $scope.loginData.disablePush = ($scope.check.disablePush) ? "1" : "0";
+       // $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
+       // $scope.loginData.disablePush = ($scope.check.disablePush) ? "1" : "0";
         
         
         
@@ -161,10 +161,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         
         
                     var pushstate  = "enabled";
-                    if ($scope.loginData.disablePush == "1" || $scope.loginData.isUseEventServer=="0")
+                    if ($scope.loginData.disablePush == true || $scope.loginData.isUseEventServer==false)
                             pushstate  = "disabled";
 
-        if ($scope.loginData.isUseEventServer=="1") {
+        if ($scope.loginData.isUseEventServer==true) {
             EventServer.init()
                 .then(function (data) {
                     console.log("Sending control filter");
@@ -194,6 +194,9 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
                     
                 
                 });
+                // Give the above some time to transmit
+            $timeout (function() {
+                ZMDataModel.setLogin($scope.loginData);},3000);
         }
         else
         {
@@ -224,7 +227,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
     }
 
     //----------------------------------------------------------------
-    // returns domain name in string - 
+    // returns domain name  in string - 
     // http://stackoverflow.com/questions/8498592/extract-root-domain-name-from-string
     //----------------------------------------------------------------
     function extractDomain(url) {
@@ -296,14 +299,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
     }
     
 
-    $scope.check = {
-        isUseEventServer: "",
-        disablePush:false,
-    };
-    $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
     
-    $scope.check.disablePush = ($scope.loginData.disablePush == '1') ? true : false;
-
     var res = $scope.loginData.eventServerMonitors.split(",");
     var minterval = $scope.loginData.eventServerInterval.split(",");
 

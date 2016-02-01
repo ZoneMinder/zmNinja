@@ -15,20 +15,22 @@
          <div class="list list-inset">
         Please make sure your ZM settings are configured and saved before you configure the event server
         </div>
-        <ion-checkbox ng-model="check.isUseEventServer">use event server</ion-checkbox>
+        <ion-checkbox ng-model="loginData.isUseEventServer" ng-checked="{{loginData.isUseEventServer}}">use event server</ion-checkbox>
         
         
         <ion-item  ng-href="" ng-click="selectScreen()">
             on tap, navigate to: {{defScreen}}
         </ion-item>
 
-        <label class="item item-input item-floating-label" ng-if="check.isUseEventServer">
+        <label class="item item-input item-floating-label" ng-if="loginData.isUseEventServer">
             <span class="input-label">Event Server</span>
             <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="Event notification url" ng-model="loginData.eventServer">
 
         </label>
         
-            <ion-toggle ng-if="check.isUseEventServer" ng-model="check.disablePush" toggle-class="toggle-calm" class="item-text-wrap">only use websockets<br/><p>disables APNS/GCM</p></ion-toggle>
+            <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush"  ng-checked="{{loginData.disablePush}}" toggle-class="toggle-calm"  class="item-text-wrap">only use websockets<br/><p>disables APNS/GCM</p></ion-toggle>
+        
+             <ion-toggle  ng-model="loginData.defaultPushSound" toggle-class="toggle-calm" class="item-text-wrap" ng-checked="{{loginData.defaultPushSound}}">use system sound<p>please save and restart app</p></ion-toggle>
         <ion-list>
             <div ng-repeat="monitor in monitors">
             

@@ -64,7 +64,8 @@ angular.module('zmApp.controllers')
          'useNphZms':true,
          'packMontage':true,
          'exitOnSleep':false,
-         'forceNetworkStop':false
+         'forceNetworkStop':false,
+         'defaultPushSound': false,
          
         
     };
@@ -248,6 +249,14 @@ angular.module('zmApp.controllers')
                 {
                     zmDebug ("forceNetwork does not exist. Setting to false");
                     loginData.forceNetworkStop  = false;
+                }
+                
+                
+                
+                 if (typeof loginData.defaultPushSound == 'undefined')
+                {
+                    zmDebug ("defaultPushSound does not exist. Setting to false");
+                    loginData.defaultPushSound  = false;
                 }
                 
                 
