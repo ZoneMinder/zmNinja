@@ -188,7 +188,8 @@ public class GCMIntentService extends GCMBaseIntentService implements PushConsta
          * Notification Sound
          */
         if (soundOption) {
-          // setNotificationSound(context, extras, mBuilder);
+	  /* PP Enable Sound option */
+           setNotificationSound(context, extras, mBuilder);
         }
 
         /*
@@ -224,7 +225,7 @@ public class GCMIntentService extends GCMBaseIntentService implements PushConsta
 	Notification notification = mBuilder.build();
     	//notification.sound = Uri.parse("android.resource://" + context.getPackageName() + "/"+ R.raw.blop);
 	//PP http://stackoverflow.com/questions/15449945/notification-sound-from-uri-parse-does-not-work
-	notification.sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/blop");
+	//notification.sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/blop");
     	//notification.defaults |= Notification.DEFAULT_VIBRATE;
     	mNotificationManager.notify((String) appName, notId, notification);
 	    }

@@ -379,16 +379,40 @@ angular.module('zmApp.controllers')
 
             } else {
                 mediasrc = "/android_asset/www/sounds/blop.mp3";
-                push = PushNotification.init(
+                var android_media_file = "blop";
+                var ld = ZMDataModel.getLogin();
+                
+                
+                if (!ld.defaultPushSound)
+                {
+                    ZMDataModel.zmLog ("Using blop push sound");
+                    push = PushNotification.init(
 
-                    {
-                        "android": {
-                            "senderID": zm.gcmSenderId,
-                            "icon": "ic_stat_notification"
+                        {
+                            "android": {
+                                "senderID": zm.gcmSenderId,
+                                "icon": "ic_stat_notification",
+                                //"sound": android_media_file
+                            }
                         }
-                    }
 
-                );
+                    );
+                }
+                else
+                {
+                    ZMDataModel.zmLog ("Using default push sound");
+                    push = PushNotification.init(
+
+                        {
+                            "android": {
+                                "senderID": zm.gcmSenderId,
+                                "icon": "ic_stat_notification",
+                                "sound": android_media_file
+                            }
+                        }
+
+                    );
+                }
 
             }
 
