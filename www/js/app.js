@@ -921,10 +921,7 @@ angular.module('zmApp', [
             document.addEventListener("resume", function () {
                 ZMDataModel.zmLog("App is resuming from background");
                 var ld = ZMDataModel.getLogin();
-                if ($rootScope.apnsToken && ld.isUseEventServer == true) {
-                    // ZMDataModel.zmDebug("sending enable push to Event Server");
-                    // EventServer.sendMessage('push', {type:'control', enablepush:'0'});
-                }
+                
 
                 ZMDataModel.setBackground(false);
                 // don't animate
@@ -957,6 +954,9 @@ angular.module('zmApp', [
                 ZMDataModel.setBackground(true);
             
                 ZMDataModel.zmLog("ROOT APP:App is going into background");
+                
+                $interval.cancel($rootScope.eventQueryInterval);
+                $interval.cancel($rootScope.intervalHandle);
 
                 ZMDataModel.setBackground(true);
                 ZMDataModel.zmLog("ROOT APP: Stopping network pull...");
@@ -971,10 +971,6 @@ angular.module('zmApp', [
                     ionic.Platform.exitApp();   
                 }
                 
-                if ($rootScope.apnsToken && ld.isUseEventServer == true) {
-                    //  ZMDataModel.zmDebug("sending enable push to Event Server");
-                    //EventServer.sendMessage('push', {type:'control',enablepush:'1'});
-                }
                 
 
                 zmAutoLogin.stop();

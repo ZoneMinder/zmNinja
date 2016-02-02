@@ -230,7 +230,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     }
 
-    var intervalHandle;
+    $rootScope.intervalHandle="";
     $scope.isModalActive = false;
     var modalIntervalHandle;
 
@@ -301,7 +301,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
          $scope.minimal = !$scope.minimal;
         ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
-        $interval.cancel(intervalHandle);
+        $interval.cancel($rootScope.intervalHandle);
         
         if (!$rootScope.isAlarm)
         {
@@ -532,7 +532,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
         console.log("Hide Statusbar");
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
-        $interval.cancel(intervalHandle); //we will renew on reload
+        $interval.cancel($rootScope.intervalHandle); //we will renew on reload
         // We are reloading this view, so we don't want entry animations
         $ionicHistory.nextViewOptions({
             disableAnimate: true,
@@ -576,7 +576,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         ZMDataModel.zmLog("Cancelling montage timer, opening Modal");
         // ZMDataModel.zmLog("Starting Modal timer");
-        $interval.cancel(intervalHandle);
+        $interval.cancel($rootScope.intervalHandle);
 
         // let's start modal timer
         //   modalIntervalHandle= $interval(function () {
@@ -693,8 +693,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         ZMDataModel.zmLog("Restarting montage timer, closing Modal...");
         var ld = ZMDataModel.getLogin();
-        $interval.cancel(intervalHandle);
-        intervalHandle = $interval(function () {
+        $interval.cancel($rootScope.intervalHandle);
+        $rootScope.intervalHandle = $interval(function () {
             loadNotifications();
             //  console.log ("Refreshing Image...");
         }.bind(this), ld.refreshSec * 1000);
@@ -782,7 +782,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     function onPause() {
         ZMDataModel.zmDebug("MontageCtrl: onpause called");
-        $interval.cancel(intervalHandle);
+        $interval.cancel($rootScope.intervalHandle);
         // $interval.cancel(modalIntervalHandle);
 
         // FIXME: Do I need to  setAwake(false) here?
@@ -790,13 +790,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
     function onResume() {
+        
+        /*FIXME: Do we need to resume timers? when you resume, you go to portal and then here
+        
         if (!$scope.isModalActive) {
             var ld = ZMDataModel.getLogin();
             ZMDataModel.zmDebug("MontageCtrl: onresume called");
             ZMDataModel.zmLog("Restarting montage timer on resume");
             $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-            $interval.cancel(intervalHandle);
-            intervalHandle = $interval(function () {
+            $interval.cancel($rootScope.intervalHandle);
+            $rootScope.intervalHandle = $interval(function () {
                 loadNotifications();
                 //  console.log ("Refreshing Image...");
             }.bind(this), ld.refreshSec * 1000);
@@ -806,7 +809,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         }
 
 
-
+*/
 
     }
 
@@ -820,7 +823,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.$on('$destroy', function () {
         console.log("*** CANCELLING INTERVAL ****");
-        $interval.cancel(intervalHandle);
+        $interval.cancel($rootScope.intervalHandle);
     });
 
 
@@ -834,8 +837,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
-        $interval.cancel(intervalHandle);
-        intervalHandle = $interval(function () {
+        $interval.cancel($rootScope.intervalHandle);
+        $rootScope.intervalHandle = $interval(function () {
             loadNotifications();
             //  console.log ("Refreshing Image...");
         }.bind(this), ld.refreshSec * 1000);
