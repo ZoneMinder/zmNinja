@@ -37,7 +37,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     };
 
     $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
-    $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
+    $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
 
     console.log("*************************************************");
 
@@ -76,7 +76,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 
                 
                 $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
-                $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == '1') ? true : false;
+                $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
 
                 ZMDataModel.zmDebug("Retrieved state for this profile:" + JSON.stringify($scope.loginData));
 
@@ -301,7 +301,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
 
         $scope.loginData.isUseAuth = ($scope.check.isUseAuth) ? "1" : "0";
-        $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? "1" : "0";
+        $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? true : false;
 
         if ($scope.loginData.url.slice(-1) == '/') {
             $scope.loginData.url = $scope.loginData.url.slice(0, -1);
@@ -389,7 +389,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         if ($scope.check.isUseEventServer) {
             EventServer.init();
-            if ($rootScope.apnsToken && $scope.loginData.disablePush != '1') {
+            if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
                 ZMDataModel.zmLog("Making sure we get push notifications");
                 EventServer.sendMessage('push', {
                     type: 'token',

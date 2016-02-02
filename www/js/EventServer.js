@@ -52,7 +52,7 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         function openHandshake() {
             var loginData = ZMDataModel.getLogin();
-            if (loginData.isUseEventServer == "0" || loginData.eventServer == "") {
+            if (loginData.isUseEventServer == false || loginData.eventServer == "") {
                 ZMDataModel.zmLog("openHandShake: no event server");
                 return;
             }
@@ -67,7 +67,7 @@ angular.module('zmApp.controllers')
                 var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
                 var ld = ZMDataModel.getLogin();
                 var pushstate = "enabled";
-                if (ld.disablePush == "1")
+                if (ld.disablePush == true)
                     pushstate = "disabled";
 
                 ZMDataModel.zmDebug("openHandShake: state of push is " + pushstate);
@@ -94,7 +94,7 @@ angular.module('zmApp.controllers')
 
             var loginData = ZMDataModel.getLogin();
 
-            if (loginData.isUseEventServer == '0' || !loginData.eventServer) {
+            if (loginData.isUseEventServer == false || !loginData.eventServer) {
                 ZMDataModel.zmLog("No Event Server present. Not initializing");
                 d.reject("false");
                 return d.promise;
@@ -261,7 +261,7 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         function sendMessage(type, obj, isForce) {
             var ld = ZMDataModel.getLogin();
-            if (ld.isUseEventServer == "0" && isForce!=1) {
+            if (ld.isUseEventServer == false && isForce!=1) {
                 ZMDataModel.zmDebug("Not sending WSS message as event server is off");
                 return;
             }
@@ -308,7 +308,7 @@ angular.module('zmApp.controllers')
         function refresh() {
             var loginData = ZMDataModel.getLogin();
 
-            if ((!loginData.eventServer) || (loginData.isUseEventServer == "0")) {
+            if ((!loginData.eventServer) || (loginData.isUseEventServer == false)) {
                 ZMDataModel.zmLog("No Event Server configured, skipping refresh");
 
                 // Let's also make sure that if the socket was open 
@@ -383,40 +383,25 @@ angular.module('zmApp.controllers')
                 var ld = ZMDataModel.getLogin();
                 
                 
-                if (!ld.defaultPushSound)
-                {
-                    ZMDataModel.zmLog ("Using blop push sound");
+                
+                   
                     push = PushNotification.init(
 
                         {
                             "android": {
                                 "senderID": zm.gcmSenderId,
                                 "icon": "ic_stat_notification",
+                                "sound":"true"
                                 //"sound": android_media_file
                             }
                         }
 
                     );
-                }
-                else
-                {
-                    ZMDataModel.zmLog ("Using default push sound");
-                    push = PushNotification.init(
-
-                        {
-                            "android": {
-                                "senderID": zm.gcmSenderId,
-                                "icon": "ic_stat_notification",
-                                "sound": android_media_file
-                            }
-                        }
-
-                    );
-                }
+                
 
             }
 
-            console.log("*********** MEDIA BLOG IS " + mediasrc);
+           // console.log("*********** MEDIA BLOG IS " + mediasrc);
             media = $cordovaMedia.newMedia(mediasrc);
             /* var push = PushNotification.init(
                          { "android": 
@@ -444,7 +429,7 @@ angular.module('zmApp.controllers')
                 var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
                 var ld = ZMDataModel.getLogin();
                 var pushstate = "enabled";
-                if (ld.disablePush == '1')
+                if (ld.disablePush ==true)
                     pushstate = "disabled";
 
                 sendMessage('push', {
@@ -461,7 +446,7 @@ angular.module('zmApp.controllers')
             push.on('notification', function (data) {
 
                 var ld = ZMDataModel.getLogin();
-                if (ld.isUseEventServer == "0") {
+                if (ld.isUseEventServer ==false) {
                     ZMDataModel.zmDebug("received push notification, but event server disabled. Not acting on it");
                     return;
                 }
