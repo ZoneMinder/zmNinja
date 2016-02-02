@@ -404,7 +404,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // Controller main
     //---------------------------------------------------------------------
 
-
+        document.addEventListener("pause", onPause, false);
+        document.addEventListener("resume", onResume, false);
     
     $scope.displayDateTimeSliders = true;
     $scope.showtimers = true;
@@ -442,7 +443,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.datetimeValue = {value:""};
     $scope.datetimeValue.value = timenow.toDate(); 
     
-    var eventQueryInterval;
+   $rootScope.eventQueryInterval="";
     
     
     var commonCss =  
@@ -534,7 +535,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     montageOrder = tempResponse[1];
     hiddenOrder = tempResponse[2];
     
-    ZMDataModel.zmLog("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
+    ZMDataModel.zmLog("Inside MontageHistoryCtrl:We found " + $scope.monitors.length + " monitors");
 
     $scope.MontageMonitors = ZMDataModel.applyMontageMonitorPrefs (message, 1)[0];
     
@@ -584,8 +585,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         }, zm.eventHistoryTimer);
 
 
-    document.addEventListener("pause", onPause, false);
-    document.addEventListener("resume", onResume, false);
+
 
     $scope.showSizeButtons = false;
     $ionicPopover.fromTemplateUrl('templates/help/montage-help.html', {
@@ -636,7 +636,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     $scope.LoginData = ZMDataModel.getLogin();
     $scope.monLimit = $scope.LoginData.maxMontage;
-    console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
+    console.log("********* Inside MontageHistoryCtrl, MAX LIMIT=" + $scope.monLimit);
 
 
     $rootScope.authSession = "undefined";
@@ -666,9 +666,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             function (error) {
 
                 $ionicLoading.hide();
-                ZMDataModel.zmDebug("MontageCtrl: Error in authkey retrieval " + error);
+                ZMDataModel.zmDebug("MontageHistoryCtrl: Error in authkey retrieval " + error);
                 //$rootScope.authSession="";
-                ZMDataModel.zmLog("MontageCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                ZMDataModel.zmLog("MontageHistoryCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
             });
 
 
@@ -729,10 +729,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $rootScope.isAlarm=!$rootScope.isAlarm;
         
          $scope.minimal = !$scope.minimal;
-        ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
+        ZMDataModel.zmDebug("MontageHistoryCtrl: switch minimal is " + $scope.minimal);
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
         $interval.cancel(intervalHandle);
-        $interval.cancel(eventQueryInterval);
+        $interval.cancel($rootScope.eventQueryInterval);
         
         if (!$rootScope.isAlarm)
         {
@@ -929,7 +929,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     function reorderItem(item, from, to, reorderHidden) {
 
-        ZMDataModel.zmDebug("MontageCtrl: Reorder from " + from + " to " + to);
+        ZMDataModel.zmDebug("MontageHistoryCtrl: Reorder from " + from + " to " + to);
         $scope.MontageMonitors.splice(from, 1);
         $scope.MontageMonitors.splice(to, 0, item);
 
@@ -960,7 +960,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //---------------------------------------------------------------------
     $scope.switchMinimal = function () {
         $scope.minimal = !$scope.minimal;
-        ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
+        ZMDataModel.zmDebug("MontageHistoryCtrl: switch minimal is " + $scope.minimal);
         console.log("Hide Statusbar");
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
         $interval.cancel(intervalHandle); //we will renew on reload
@@ -1000,7 +1000,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // main monitor modal open
     //---------------------------------------------------------------------
     $scope.openModal = function (mid, controllable, controlid) {
-        ZMDataModel.zmDebug("MontageCtrl: Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
+        ZMDataModel.zmDebug("MontageHistoryCtrl: Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
         // $scope.isModalActive = true;
         // Note: no need to setAwake(true) as its already awake
         // in montage view
@@ -1030,14 +1030,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
         // if its controllable, lets get the control command
         if (controllable == '1') {
-            ZMDataModel.zmDebug("MontageCtrl: getting controllable data " + myurl);
+            ZMDataModel.zmDebug("MontageHistoryCtrl: getting controllable data " + myurl);
             var apiurl = $scope.LoginData.apiurl;
             var myurl = apiurl + "/controls/" + controlid + ".json";
-            ZMDataModel.zmDebug("MontageCtrl: getting controllable data " + myurl);
+            ZMDataModel.zmDebug("MontageHistoryCtrl: getting controllable data " + myurl);
 
             $http.get(myurl)
                 .success(function (data) {
-                    ZMDataModel.zmDebug("MontageCtrl: control data returned " + JSON.stringify(data));
+                    ZMDataModel.zmDebug("MontageHistoryCtrl: control data returned " + JSON.stringify(data));
                     $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1') ? 'moveCon' : 'move';
                     $scope.ptzStopCommand = "moveStop";
                     console.log("***moveCommand: " + $scope.ptzMoveCommand);
@@ -1109,7 +1109,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //---------------------------------------------------------------------
 
     $scope.closeModal = function () {
-        ZMDataModel.zmDebug("MontageCtrl: Close & Destroy Monitor Modal");
+        ZMDataModel.zmDebug("MontageHistoryCtrl: Close & Destroy Monitor Modal");
         // $scope.isModalActive = false;
         // Note: no need to setAwake(false) as needs to be awake
         // in montage view
@@ -1212,9 +1212,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //---------------------------------------------------------------------
 
     function onPause() {
-        ZMDataModel.zmDebug("MontageCtrl: onpause called");
+        ZMDataModel.zmDebug("MontageHistoryCtrl: onpause called");
+        $interval.cancel($rootScope.eventQueryInterval);
         $interval.cancel(intervalHandle);
-        $interval.cancel(eventQueryInterval);
+      
         // $interval.cancel(modalIntervalHandle);
 
         // FIXME: Do I need to  setAwake(false) here?
@@ -1222,24 +1223,28 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
 
     function onResume() {
+        
+        // FIXME: Do we need to resume timers? when you resume, you go to portal and then here
+      /*
         if (!$scope.isModalActive) {
             var ld = ZMDataModel.getLogin();
             
             
-            ZMDataModel.zmDebug("MontageCtrl: onresume called");
+            ZMDataModel.zmDebug("MontageHistoryCtrl: onresume called");
             ZMDataModel.zmLog("Restarting eventQuery timer on resume");
             
+            console.log ("************** TIMER STARTED INSIDE RESUME ***************");
             
             //$rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-            $interval.cancel(eventQueryInterval);
-            eventQueryInterval = $interval(function () {
+            $interval.cancel($rootScope.eventQueryInterval);
+            $rootScope.eventQueryInterval = $interval(function () {
                 checkAllEvents();
                 //  console.log ("Refreshing Image...");
             }.bind(this),zm.eventHistoryTimer);
         } else // modal is active
         {
             // $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-        }
+        }*/
 
 
 
@@ -1255,8 +1260,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     };
 
     $scope.$on('$destroy', function () {
-        console.log("*** CANCELLING INTERVAL ****");
-        $interval.cancel(intervalHandle);
+       ZMDataModel.zmDebug("Cancelling eventQueryInterval");
+        $interval.cancel($rootScope.eventQueryInterval);
         
        
         
@@ -1265,20 +1270,24 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
 
     $scope.$on('$ionicView.loaded', function () {
-        console.log("**VIEW ** Montage Ctrl Loaded");
+        console.log("**VIEW ** MontageHistoryCtrl Loaded");
     });
 
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** Montage Ctrl Entered, Starting loadNotifications");
+        console.log("**VIEW ** MontageHistory Ctrl Entered, Starting loadNotifications");
         var ld = ZMDataModel.getLogin();
         console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
         
-        $interval.cancel(eventQueryInterval);
-        eventQueryInterval = $interval(function () {
+        $interval.cancel($rootScope.eventQueryInterval);
+        console.log ("****************** TIMER STARTED INSIDE ENTER");
+        $rootScope.eventQueryInterval = $interval(function () {
             checkAllEvents();
             //  console.log ("Refreshing Image...");
         }.bind(this),  zm.eventHistoryTimer);
+        
+        
+        
 
        
     });
@@ -1288,7 +1297,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         if ($scope.modal) $scope.modal.remove();
         
         ZMDataModel.zmLog("Cancelling event query timer");
-        $interval.cancel(eventQueryInterval);
+        $interval.cancel($rootScope.eventQueryInterval);
         
         ZMDataModel.zmLog ("Stopping network pull...");
         // make sure this is applied in scope digest to stop network pull
