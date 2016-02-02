@@ -30,7 +30,9 @@
         
             <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush"  ng-checked="{{loginData.disablePush}}" toggle-class="toggle-calm"  class="item-text-wrap">only use websockets<br/><p>disables APNS/GCM</p></ion-toggle>
         
+        <!--
              <ion-toggle  ng-model="loginData.defaultPushSound" toggle-class="toggle-calm" class="item-text-wrap" ng-checked="{{loginData.defaultPushSound}}">use system sound<p>please save and restart app</p></ion-toggle>
+        -->
         <ion-list>
             <div ng-repeat="monitor in monitors">
             

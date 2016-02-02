@@ -31,7 +31,7 @@ angular.module('zmApp', [
 
 .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
-    recommendedAppVersion: '1.30',
+    recommendedAppVersion: '1.29',
     minEventServerVersion: '0.5',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
@@ -921,7 +921,7 @@ angular.module('zmApp', [
             document.addEventListener("resume", function () {
                 ZMDataModel.zmLog("App is resuming from background");
                 var ld = ZMDataModel.getLogin();
-                if ($rootScope.apnsToken && ld.isUseEventServer == "1") {
+                if ($rootScope.apnsToken && ld.isUseEventServer == true) {
                     // ZMDataModel.zmDebug("sending enable push to Event Server");
                     // EventServer.sendMessage('push', {type:'control', enablepush:'0'});
                 }
@@ -971,7 +971,7 @@ angular.module('zmApp', [
                     ionic.Platform.exitApp();   
                 }
                 
-                if ($rootScope.apnsToken && ld.isUseEventServer == "1") {
+                if ($rootScope.apnsToken && ld.isUseEventServer == true) {
                     //  ZMDataModel.zmDebug("sending enable push to Event Server");
                     //EventServer.sendMessage('push', {type:'control',enablepush:'1'});
                 }

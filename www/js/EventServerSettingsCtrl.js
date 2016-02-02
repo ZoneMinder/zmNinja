@@ -196,7 +196,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
                 });
                 // Give the above some time to transmit
             $timeout (function() {
-                ZMDataModel.setLogin($scope.loginData);},3000);
+                ZMDataModel.setLogin($scope.loginData);},2000);
         }
         else
         {
