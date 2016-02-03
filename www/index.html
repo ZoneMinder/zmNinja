@@ -98,6 +98,7 @@
     <script src="js/EventServerSettingsCtrl.js"></script>
     <script src="js/FirstUseCtrl.js"></script>
     <script src="js/MontageHistoryCtrl.js"></script>
+    <script src="js/NewsCtrl.js"></script>
     <script src="lib/ion-datetime-picker/release/ion-datetime-picker.min.js"></script>
  
     
@@ -222,6 +223,14 @@
                             <span class=" item-icon-left" >
                                 <i class="icon ion-email-unread"></i>
                             </span> <span style="color:#268d3a;">{{$root.newVersionAvailable}}</span>
+                        </ion-item>
+                    </div>
+                    
+                    <div ng-if="$root.showBlog">
+                        <ion-item nav-clear menu-close href="#/news">
+                            <span class=" item-icon-left" >
+                                <i class="icon ion-radio-waves"></i>
+                            </span>news<span style="color:#268d3a;"> {{$root.newBlogPost}}</span>
                         </ion-item>
                     </div>
                     

@@ -66,6 +66,7 @@ angular.module('zmApp.controllers')
          'exitOnSleep':false,
          'forceNetworkStop':false,
          'defaultPushSound': false,
+         'enableBlog':true,
          
         
     };
@@ -267,6 +268,13 @@ angular.module('zmApp.controllers')
                     loginData.exitOnSleep  = false;
                 }
                 
+                if (typeof loginData.enableBlog == 'undefined')
+                {
+                    zmDebug ("enableBlog does not exist. Setting to true");
+                    loginData.enableBlog  = true;
+                    
+                }
+                
                 zmLog ("DataModel init recovered this loginData as " + JSON.stringify(loginData));
             }
             else
@@ -277,6 +285,7 @@ angular.module('zmApp.controllers')
 
             monitorsLoaded = 0;
             //console.log("Getting out of ZMDataModel init");
+            $rootScope.showBlog = loginData.enableBlog;
             zmDebug ( "loginData structure values: " + JSON.stringify(loginData));
 
         },
@@ -396,6 +405,7 @@ angular.module('zmApp.controllers')
         setLogin: function (newLogin) {
             
             setLogin(newLogin);
+            $rootScope.showBlog = newLogin.enableBlog;
             
             
             /*

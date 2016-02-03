@@ -1,0 +1,33 @@
+<ion-view view-title="News">
+
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        
+        <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+        
+    </ion-nav-buttons>
+
+
+    <ion-content >
+        <div class="list">
+            
+            <span ng-repeat = "post in newsItems">
+                <a class="item item-icon-left" ng-click="loadPost(post.url, post.date)" href="">
+                    <i ng-class="isUnread(post.date) ? 'ion-email-unread': 'ion-email'"></i>
+                    {{post.title}}
+                    {{post.date}}
+                    
+                </a>
+                
+            </span>
+            
+            <div ng-if="!newsItems.length">
+                <ion-item>Loading...</ion-item>
+            </div>
+            
+
+        </div>
+
+    </ion-content>
+
+</ion-view>
