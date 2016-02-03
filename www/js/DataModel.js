@@ -121,7 +121,7 @@ angular.module('zmApp.controllers')
             //zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
             
             //$localstorage.setObject($rootScope.currentServerGroup, loginData);
-            console.log ("Saving For " + loginData.serverName);
+            //console.log ("Saving For " + loginData.serverName);
            // console.log ("SERVER GROUP BEFORE IS "  + JSON.stringify(serverGroupList));
             serverGroupList[loginData.serverName]=angular.copy(loginData);
          
@@ -276,7 +276,7 @@ angular.module('zmApp.controllers')
             
 
             monitorsLoaded = 0;
-            console.log("Getting out of ZMDataModel init");
+            //console.log("Getting out of ZMDataModel init");
             zmDebug ( "loginData structure values: " + JSON.stringify(loginData));
 
         },
@@ -359,7 +359,7 @@ angular.module('zmApp.controllers')
         {
 
 
-            console.log ("**** setAwake called with:" + val);
+            //console.log ("**** setAwake called with:" + val);
            // zmLog("Switching screen always on to " + val);
             if (val)
             {
@@ -654,8 +654,8 @@ angular.module('zmApp.controllers')
                     montageOrder[i] = i; // order to show is order ZM returns
                     hiddenOrder[i] = 0; // don't hide them
                 }
-                console.log("Order string is " + montageOrder.toString());
-                console.log("Hiddent string is " + hiddenOrder.toString());
+                //console.log("Order string is " + montageOrder.toString());
+                //console.log("Hiddent string is " + hiddenOrder.toString());
 
                 zmLog("Stored montage order does not exist");
             } else
@@ -756,7 +756,7 @@ angular.module('zmApp.controllers')
         //-----------------------------------------------------------------------------
 
         getMonitors: function (forceReload) {
-            console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
+            //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
             
             
             
@@ -775,11 +775,11 @@ angular.module('zmApp.controllers')
             var d = $q.defer();
             if ((monitorsLoaded == 0) || (forceReload == 1)) // monitors are empty or force reload
             {
-                console.log("ZMDataModel: Invoking HTTP get to load monitors");
+                //console.log("ZMDataModel: Invoking HTTP get to load monitors");
                 zmLog ( (forceReload==1)? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + "/monitors.json";
-                console.log ("API:"+myurl);
+                //console.log ("API:"+myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
                     .success(function (data) {
                         //console.log("HTTP success got " + JSON.stringify(data.monitors));
@@ -807,12 +807,12 @@ angular.module('zmApp.controllers')
                         d.resolve(monitors);
                     })
                     .error(function (err) {
-                        console.log("HTTP Error " + err);
+                        //console.log("HTTP Error " + err);
                         zmLog ("Monitor load failed " + JSON.stringify(err), "error");
                         // To keep it simple for now, I'm translating an error
                         // to imply no monitors could be loaded. FIXME: conver to proper error
                         monitors = [];
-                        console.log("promise resolved inside HTTP fail");
+                        //console.log("promise resolved inside HTTP fail");
                         displayBanner ('error', ['error retrieving monitor list', 'please try again']);
                         d.resolve(monitors);
                         $ionicLoading.hide();
@@ -822,7 +822,7 @@ angular.module('zmApp.controllers')
 
             } else // monitors are loaded
             {
-                console.log("Returning pre-loaded list of " + monitors.length + " monitors");
+                //console.log("Returning pre-loaded list of " + monitors.length + " monitors");
                 zmLog("Returning pre-loaded list of " + monitors.length + " monitors");
                 d.resolve(monitors);
                 $ionicLoading.hide();
@@ -835,7 +835,7 @@ angular.module('zmApp.controllers')
         //
         //-----------------------------------------------------------------------------
         setMonitors: function (mon) {
-            console.log("ZMData setMonitors called with " + mon.length + " monitors");
+            //console.log("ZMData setMonitors called with " + mon.length + " monitors");
             monitors = mon;
         },
 
@@ -848,7 +848,7 @@ angular.module('zmApp.controllers')
         //-----------------------------------------------------------------------------
 
         getEventsPages: function (monitorId,startTime, endTime) {
-            console.log("********** INSIDE EVENTS PAGES ");
+            //console.log("********** INSIDE EVENTS PAGES ");
             var apiurl = loginData.apiurl;
 
             var myurl = apiurl + "/events/index";
@@ -863,7 +863,7 @@ angular.module('zmApp.controllers')
             
             
             myurl = myurl + ".json";
-            console.log (">>>>>Constructed URL " + myurl);
+            //console.log (">>>>>Constructed URL " + myurl);
             
             $ionicLoading.show({
                 template: 'calculating events list size...',
@@ -887,7 +887,7 @@ angular.module('zmApp.controllers')
                 })
                 .error(function (error) {
                     $ionicLoading.hide();
-                    console.log("*** ERROR GETTING TOTAL PAGES ***");
+                   // console.log("*** ERROR GETTING TOTAL PAGES ***");
                     zmLog ("Error retrieving page count of events " + JSON.stringify(error), "error");
                     displayBanner ('error', ['error retrieving event page count', 'please try again']);
                 
@@ -907,7 +907,7 @@ angular.module('zmApp.controllers')
 
         getEvents: function (monitorId, pageId, loadingStr, startTime, endTime) {
 
-            console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
+            //console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
             if (!loadingStr) {
                 loadingStr = "loading events...";
@@ -944,14 +944,14 @@ angular.module('zmApp.controllers')
             if (pageId) {
                 myurl = myurl + "?page=" + pageId;
             } else {
-                console.log("**** PAGE WAS " + pageId);
+                //console.log("**** PAGE WAS " + pageId);
             }
             
             // Simulated data
             
             // myurl = "https://api.myjson.com/bins/4jx44.json";
             
-            console.log (">>>>>Constructed URL " + myurl);
+            //console.log (">>>>>Constructed URL " + myurl);
             
             
 
@@ -965,7 +965,7 @@ angular.module('zmApp.controllers')
                         oldevents = myevents;
                     }
                     //console.log (JSON.stringify(data));
-                    console.log("DataModel Returning " + myevents.length + "events for page" + pageId);
+                   // console.log("DataModel Returning " + myevents.length + "events for page" + pageId);
                     d.resolve(myevents);
                     return d.promise;
 
@@ -973,7 +973,7 @@ angular.module('zmApp.controllers')
                 .error(function (err) {
                     if (loadingStr != 'none') $ionicLoading.hide();
                    displayBanner ('error', ['error retrieving event list', 'please try again']);
-                    console.log("HTTP Events error " + err);
+                    //console.log("HTTP Events error " + err);
                     zmLog("Error fetching events for page " + pageId + " Err: " + JSON.stringify(err), "error");
                     // I need to reject this as I have infinite scrolling
                     // implemented in EventCtrl.js --> and if it does not know
@@ -1011,7 +1011,7 @@ angular.module('zmApp.controllers')
         //
         //-----------------------------------------------------------------------------
         getMonitorsLoaded: function () {
-            console.log("**** Inside promise function ");
+           // console.log("**** Inside promise function ");
             var deferred = $q.defer();
             if (monitorsLoaded != 0) {
                 deferred.resolve(monitorsLoaded);
@@ -1024,7 +1024,7 @@ angular.module('zmApp.controllers')
         //
         //-----------------------------------------------------------------------------
         setMonitorsLoaded: function (loaded) {
-            console.log("ZMData.setMonitorsLoaded=" + loaded);
+           // console.log("ZMData.setMonitorsLoaded=" + loaded);
             monitorsLoaded = loaded;
         },
 

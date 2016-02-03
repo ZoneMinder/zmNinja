@@ -167,7 +167,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         if ($scope.loginData.isUseEventServer==true) {
             EventServer.init()
                 .then(function (data) {
-                    console.log("Sending control filter");
+                   // console.log("Sending control filter");
                     ZMDataModel.zmDebug("Sending Control message 'filter' with monlist="+monstring+" and interval="+intervalstring);
                     EventServer.sendMessage("control", {
                         type: 'filter',

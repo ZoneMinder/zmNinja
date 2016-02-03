@@ -89,7 +89,7 @@ angular.module('zmApp', [
         return directive;
 
         function postLink(scope, element, attrs) {
-            console.log ("HELLO NEW");
+            //console.log ("HELLO NEW");
             var requestConfig = {
                 method: 'GET',
                 //url: attrs.httpSrc,
@@ -109,11 +109,11 @@ angular.module('zmApp', [
             }
             attrs.$observe('httpSrc', function (newValue) {
                 requestConfig.url = newValue;
-                console.log ("requestConfig is " + JSON.stringify(requestConfig));
+                //console.log ("requestConfig is " + JSON.stringify(requestConfig));
                 imageLoadingDataShare.set(1);
                 $http(requestConfig)
                     .success(function (data) {
-                        console.log ("Inside HTTP after Calling " + requestConfig.url);
+                        //console.log ("Inside HTTP after Calling " + requestConfig.url);
                         //console.log ("data got " + JSON.stringify(data));
                     
                        
@@ -647,7 +647,7 @@ angular.module('zmApp', [
             .error(function (error) {
                 $ionicLoading.hide();
                 $rootScope.loggedIntoZm = -1;
-                console.log("**** ZM Login FAILED");
+                //console.log("**** ZM Login FAILED");
                 ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error),
                     "error, but not calling auth-error emit");
                 // bad urls etc come here
@@ -759,7 +759,7 @@ angular.module('zmApp', [
             e.preventDefault();
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
                 $ionicSideMenuDelegate.toggleLeft();
-                console.log("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
+               //console.log("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
             } else {
                 navigator.app.exitApp();
             }
@@ -804,11 +804,11 @@ angular.module('zmApp', [
             var requireLogin = toState.data.requireLogin;
 
             if (ZMDataModel.isLoggedIn()) {
-                console.log("State transition is authorized");
+                //console.log("State transition is authorized");
 
                 return;
             } else {
-                console.log("Not logged in, requested to go to " + JSON.stringify(toState));
+                ZMDataModel.zmLog("Not logged in, requested to go to " + JSON.stringify(toState));
                 // event.preventDefault();
                 // $state.transitionTo('login');
 
@@ -852,7 +852,7 @@ angular.module('zmApp', [
             if ($ionicPlatform.is('android'))
                 $rootScope.platformOS = "android";
 
-            console.log("**** You are running on " + $rootScope.platformOS);
+            ZMDataModel.zmLog("You are running on " + $rootScope.platformOS);
 
             ZMDataModel.init();
             EventServer.init();
@@ -875,7 +875,7 @@ angular.module('zmApp', [
 
                     });
                 } else {
-                    console.log("Log file size is " + resp.size + " bytes");
+                    //console.log("Log file size is " + resp.size + " bytes");
                 }
 
 
@@ -923,8 +923,8 @@ angular.module('zmApp', [
             $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
             $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
 
-            console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" +
-                $rootScope.devHeight);
+            //console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" +
+               // $rootScope.devHeight);
 
             // What I noticed is when I moved the app to the device
             // the montage screens were not redrawn after resuming from background mode
@@ -1018,7 +1018,7 @@ angular.module('zmApp', [
 
             // lets POST so we get a session ID right hre
 
-            console.log("Setting up POST LOGIN timer");
+            ZMDataModel.zmLog("Setting up POST LOGIN timer");
             zmAutoLogin.start();
 
 
@@ -1093,7 +1093,7 @@ angular.module('zmApp', [
         },
         resolve: {
             message: function (ZMDataModel) {
-                console.log("Inside app.montage resolve");
+               // console.log("Inside app.montage resolve");
                 return ZMDataModel.getMonitors(0);
             }
         },
@@ -1109,7 +1109,7 @@ angular.module('zmApp', [
         },
         resolve: {
             message: function (ZMDataModel) {
-                console.log("Inside app.events resolve");
+                //console.log("Inside app.events resolve");
                 return ZMDataModel.getMonitors(0);
             }
         },
@@ -1186,7 +1186,7 @@ angular.module('zmApp', [
         },
         resolve: {
             message: function (ZMDataModel) {
-                console.log("Inside app.events resolve");
+                //console.log("Inside app.events resolve");
                 return ZMDataModel.getMonitors(0);
             }
         },
@@ -1244,7 +1244,7 @@ angular.module('zmApp', [
         },
         resolve: {
             message: function (ZMDataModel) {
-                console.log("Inside app.events resolve");
+                //console.log("Inside app.events resolve");
                 return ZMDataModel.getMonitors(0);
             }
 
@@ -1265,7 +1265,7 @@ angular.module('zmApp', [
         },
         resolve: {
             message: function (ZMDataModel) {
-                console.log("Inside app.events resolve");
+                //console.log("Inside app.events resolve");
                 return ZMDataModel.getMonitors(0);
             }
 

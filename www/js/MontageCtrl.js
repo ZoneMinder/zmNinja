@@ -26,7 +26,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.slider = {};
     
-    console.log ("************ GETTIGN SLIDER AS " + ZMDataModel.getMontageSize());
+    
     $scope.slider.monsize = ZMDataModel.getMontageSize();
     $scope.revMonSize = 11 - parseInt($scope.slider.monsize);
 
@@ -133,7 +133,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var timestamp = new Date().getUTCMilliseconds();
     $scope.minimal = $stateParams.minimal;
     $scope.zmMarginTop = $scope.minimal ? 0:15;
-    console.log ("********* MARGIN IS " + $scope.zmMarginTop);
+
     
     $scope.isRefresh = $stateParams.isRefresh;
     var sizeInProgress = false;
@@ -158,7 +158,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     } else // recover previous settings
     {
         var msize = loginData.montageArraySize;
-        console.log("MontageArrayString is=>" + msize);
+       // console.log("MontageArrayString is=>" + msize);
         $scope.monitorSize = msize.split(":");
         var j;
 
@@ -166,7 +166,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             // convert to number other wise adding to it concatenates :-)
             $scope.monitorSize[j] = parseInt($scope.monitorSize[j]);
             $scope.scaleDirection.push(1);
-            console.log("Montage size for monitor " + j + " is " + $scope.monitorSize[j]);
+           // console.log("Montage size for monitor " + j + " is " + $scope.monitorSize[j]);
 
         }
 
@@ -176,7 +176,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.LoginData = ZMDataModel.getLogin();
     $scope.monLimit = $scope.LoginData.maxMontage;
-    console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
+    //console.log("********* Inside Montage Ctrl, MAX LIMIT=" + $scope.monLimit);
 
 
     $rootScope.authSession = "undefined";
@@ -197,7 +197,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     ZMDataModel.getAuthKey($rootScope.validMonitorId, $scope.monitors[0].Monitor.connKey)
         .then(function (success) {
                 $ionicLoading.hide();
-                console.log(success);
+                //console.log(success);
                 $rootScope.authSession = success;
                 ZMDataModel.zmLog("Stream authentication construction: " +
                     $rootScope.authSession);
@@ -236,7 +236,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
 
     $scope.closeReorderModal = function () {
-        console.log("Close & Destroy Monitor Modal");
+       // console.log("Close & Destroy Monitor Modal");
         // switch off awake, as liveview is finished
         //ZMDataModel.setAwake(false);
         $scope.modal.remove();
@@ -251,11 +251,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         // FIXME: I should probably unregister this instead
         if (typeof $scope.monitors === undefined)
             return;
-        console.log ("***EVENT TRAP***");
+        //console.log ("***EVENT TRAP***");
         var alarmMonitors = args.message;
         for (var i=0; i< alarmMonitors.length; i++)
         {
-            console.log ("**** TRAPPED EVENT: "+alarmMonitors[i]);
+            //console.log ("**** TRAPPED EVENT: "+alarmMonitors[i]);
             
             for (var j=0; j<$scope.monitors.length; j++)
             {
