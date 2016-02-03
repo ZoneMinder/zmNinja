@@ -32,7 +32,7 @@ angular.module('zmApp', [
 .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     recommendedAppVersion: '1.29',
-    minEventServerVersion: '0.5',
+    minEventServerVersion: '0.7',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
     httpTimeout: 15000,
@@ -41,6 +41,7 @@ angular.module('zmApp', [
     authoremail: 'pliablepixels+zmNinja@gmail.com',
     logFileMaxSize: 20000, // after this limit log gets reset
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
+    //loginInterval: 60000,
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
     safeMontageLimit: 10,
@@ -449,7 +450,7 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function ($interval, ZMDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer) {
+.factory('zmAutoLogin', function ($interval, ZMDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory) {
     var zmAutoLoginHandle;
 
     //------------------------------------------------------------------
@@ -492,6 +493,22 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     function doLogin(str) {
+        
+        // recompute rand anyway so even if you don't have auth
+        // your stream should not get frozen
+        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+        
+        var statename = $ionicHistory.currentStateName();
+        
+        if (statename == "montage-history")
+        {
+            ZMDataModel.zmLog ("Skipping login process as we are in montage history. Re-logging will mess up the stream");
+            return;
+        }
+        
+       // console.log ("***** STATENAME IS " + statename);
+        
         var d = $q.defer();
         var ld = ZMDataModel.getLogin();
         if (ld.isUseAuth != "1") {
@@ -594,7 +611,7 @@ angular.module('zmApp', [
                     d.resolve("Login Success");
 
                     $rootScope.$emit('auth-success', data);
-                    $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+                    
                 } else //  this means login error
                 {
                     $rootScope.loggedIntoZm = -1;
@@ -645,7 +662,7 @@ angular.module('zmApp', [
 
     function start() {
         var ld = ZMDataModel.getLogin();
-        if (ld.isUseAuth == '1') {
+        // lets keep this timer irrespective of auth or no auth
             $rootScope.loggedIntoZm = 0;
             $interval.cancel(zmAutoLoginHandle);
             //doLogin();
@@ -655,20 +672,16 @@ angular.module('zmApp', [
             }, zm.loginInterval); // Auto login every 5 minutes
             // PHP timeout is around 10 minutes
             // should be ok?
-        } else {
-            ZMDataModel.zmLog("Authentication not enabled. Skipping Timer");
-        }
+       
     }
 
     function stop() {
         var ld = ZMDataModel.getLogin();
-        if (ld.isUseAuth == '1') {
+       
             $interval.cancel(zmAutoLoginHandle);
             $rootScope.loggedIntoZm = 0;
             ZMDataModel.zmLog("Cancelling zmAutologin timer");
-        } else {
-            ZMDataModel.zmLog("No need to cancel zmAutologin timer. Auth is off");
-        }
+        
     }
 
     return {
