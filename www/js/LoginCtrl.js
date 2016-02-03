@@ -39,7 +39,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
     $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
 
-    console.log("*************************************************");
+    //console.log("*************************************************");
 
 
     availableServers = Object.keys(ZMDataModel.getServerGroups());
@@ -48,7 +48,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         serverbuttons.push({
             text: availableServers[servIter]
         });
-        console.log("ADDING : " + availableServers[servIter]);
+        //console.log("ADDING : " + availableServers[servIter]);
     }
 
     $scope.serverActionSheet = function () {
@@ -196,7 +196,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                     }
                                 },
                                 function (error) {
-                                    console.log("Error inside");
+                                    //console.log("Error inside");
                                     $scope.loginData.usePin = false;
                                 });
                     } else {
@@ -204,7 +204,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     }
                 },
                 function (error) {
-                    console.log("Error outside");
+                    //console.log("Error outside");
                     $scope.loginData.usePin = false;
                 });
 
@@ -270,7 +270,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     function saveItems() {
 
 
-        console.log('Saving login');
+        //console.log('Saving login');
         ZMDataModel.setFirstUse(false);
 
 

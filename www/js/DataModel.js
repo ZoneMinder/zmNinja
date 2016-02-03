@@ -786,7 +786,7 @@ angular.module('zmApp.controllers')
                         monitors = data.monitors;
                         monitors.sort(function(a,b) 
                                       {return parseInt(a.Monitor.Sequence)-parseInt(b.Monitor.Sequence);});
-                        console.log("promise resolved inside HTTP success");
+                        //console.log("promise resolved inside HTTP success");
                         monitorsLoaded = 1;
                         $ionicLoading.hide();
                         zmLog ("Monitor load was successful, loaded " + monitors.length + " monitors");

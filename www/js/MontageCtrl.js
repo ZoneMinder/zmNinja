@@ -330,7 +330,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //-------------------------------------------------------------
 
     $scope.reorderList = function () {
-        console.log("REORDER");
+        //console.log("REORDER");
         $scope.data.showDelete = false;
         $scope.data.showReorder = !$scope.data.showReorder;
     };
@@ -686,7 +686,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         
        
         $scope.modal.remove();
-          $timeout (function() {ZMDataModel.zmLog("Stopping network pull...");if (ZMDataModel.isForceNetworkStop()) window.stop();},50);
+          $timeout (function() {ZMDataModel.zmLog("MontageCtrl:Stopping network pull...");if (ZMDataModel.isForceNetworkStop()) window.stop();},50);
 
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $scope.isModalActive = false;
@@ -856,7 +856,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         console.log("**VIEW ** Montage Ctrl Left, force removing modal");
         
         
-        ZMDataModel.zmLog ("Stopping network pull...");
+        ZMDataModel.zmLog ("MontageCtrl:Stopping network pull...");
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
         

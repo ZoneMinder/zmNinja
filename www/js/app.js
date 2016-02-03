@@ -871,7 +871,7 @@ angular.module('zmApp', [
                 if (parseInt(resp.size) > zm.logFileMaxSize) {
 
                     $fileLogger.deleteLogfile().then(function () {
-                        console.log('Logfile deleted');
+                        ZMDataModel.zmLog('Logfile deleted');
 
                     });
                 } else {
@@ -951,11 +951,12 @@ angular.module('zmApp', [
                         $ionicHistory.currentView().stateParams;
                     ZMDataModel.zmDebug("Last State recorded:" +
                         JSON.stringify($ionicHistory.currentView()));
-
+                    ZMDataModel.zmDebug ("going to portal login");
                     $state.go("zm-portal-login");
                 } else {
                     $rootScope.lastState = "";
                     $rootScope.lastStateParam = "";
+                    ZMDataModel.zmDebug ("reset lastState to null");
                 }
                 //$ionicSideMenuDelegate.toggleLeft(false);
                 //ZMDataModel.validatePin()

@@ -88,7 +88,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     $scope.togglePTZ = function () {
 
-        console.log("PTZ");
+        //console.log("PTZ");
 
         if ($scope.isControllable == '1') {
             //console.log ("iscontrollable is true");
@@ -148,7 +148,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 empty: true,
 
                 onclick: function () {
-                    console.log('About');
+                   // console.log('About');
                 }
             },
 
@@ -183,7 +183,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 content: 'H',
                 empty: true,
                 onclick: function () {
-                    console.log('About');
+                    //console.log('About');
                 }
             },
 
@@ -649,7 +649,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
         function outWithOld() {
 
-            ZMDataModel.zmLog("Stopping network pull...");
+            ZMDataModel.zmLog("ModalCtrl:Stopping network pull...");
             window.stop();
             $scope.rand = Math.floor((Math.random() * 100000) + 1);
             $scope.animationInProgress = true;
@@ -988,7 +988,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         console.log("**VIEW ** ModalCtrl left");
         
         
-        ZMDataModel.zmLog ("Stopping network pull...");
+        ZMDataModel.zmLog ("ModalCtrl:Stopping network pull...");
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
         
@@ -1166,7 +1166,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
         function outWithOld() {
 
-            ZMDataModel.zmLog("Stopping network pull...");
+            ZMDataModel.zmLog("ModalCtrl:Stopping network pull...");
             window.stop();
             $scope.animationInProgress = true;
             // give digest time for image to swap
