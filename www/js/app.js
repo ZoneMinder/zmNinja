@@ -68,6 +68,7 @@ angular.module('zmApp', [
     desktopUrl: "/zm",
     desktopApiUrl: "/api/zm",
     latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
+    blogUrl:"http://pliablepixels.github.io/feed.json",
     nphSwitchTimer:6000,
     eventHistoryTimer:10000,
     
@@ -426,6 +427,40 @@ angular.module('zmApp', [
                     }
                     //console.log ("UPDATE " + zmVersion);
                 });
+            
+            ZMDataModel.zmLog ("Checking for news updates");
+            $http.get(zm.blogUrl)
+            .success (function (data) {
+                $rootScope.newBlogPost = "";
+                if (data.length <=0) 
+                {
+                    $rootScope.newBlogPost="";
+                    return;
+                }
+                
+                var lastDate = $localstorage.get("latestBlogPostChecked");
+                if (!lastDate)
+                {
+                    $rootScope.newBlogPost="(new post)";
+                    return;
+                }
+                
+                 var mLastDate = moment(lastDate);
+                 var mItemDate = moment(data[0].date);
+                
+                if (mItemDate.diff(mLastDate) >0)
+                {
+                    ZMDataModel.zmDebug("New post dated " + data[0].date + " found");
+                    $rootScope.newBlogPost = "(new post)";
+                    
+                }
+                else
+                {
+                    ZMDataModel.zmDebug("Latest post dated " + data[0].date + " but you read " + lastDate);
+                }
+                
+                
+            });
 
         }
     }
@@ -720,6 +755,8 @@ angular.module('zmApp', [
         $rootScope.newVersionAvailable = "";
         $rootScope.userCancelledAuth = false;
         $rootScope.online = true;
+        $rootScope.showBlog = false;
+        $rootScope.newBlogPost="";
         //$rootScope.minAlarmCount = "1";
 
 
@@ -1067,17 +1104,26 @@ angular.module('zmApp', [
             url: "/login",
             templateUrl: "templates/login.html",
             controller: 'zmApp.LoginCtrl',
-        });
+        })
 
-    $stateProvider
-        .state('help', {
+   
+    .state('help', {
             data: {
                 requireLogin: false
             },
             url: "/help",
             templateUrl: "templates/help.html",
             controller: 'zmApp.HelpCtrl',
-        })
+    })
+    
+    .state('news', {
+            data: {
+                requireLogin: false
+            },
+            url: "/news",
+            templateUrl: "templates/news.html",
+            controller: 'zmApp.NewsCtrl',
+    })
 
     .state('app', {
         url: '/',
