@@ -215,7 +215,7 @@ angular.module('zmApp.controllers')
                             if (eventsToDisplay.length > 0) {
 
                                 if (eventsToDisplay.length == 1) {
-                                    console.log("Single Display: " + eventsToDisplay[0]);
+                                    //console.log("Single Display: " + eventsToDisplay[0]);
                                     ZMDataModel.displayBanner('alarm', [eventsToDisplay[0]], 5000, 5000);
                                 } else {
                                     ZMDataModel.displayBanner('alarm', eventsToDisplay, 
@@ -282,8 +282,8 @@ angular.module('zmApp.controllers')
 
                 ws.$on('$open', openHandshake, function () {
 
-                    console.log(" sending " + type + " " +
-                        JSON.stringify(obj));
+                    //console.log(" sending " + type + " " +
+                      //  JSON.stringify(obj));
                     ws.$emit(type, obj);
 
                     ws.$un('$open');
@@ -295,7 +295,7 @@ angular.module('zmApp.controllers')
 
             } else {
                 ws.$emit(type, obj);
-                console.log("sending " + type + " " + JSON.stringify(obj));
+                //console.log("sending " + type + " " + JSON.stringify(obj));
             }
 
 
@@ -444,14 +444,16 @@ angular.module('zmApp.controllers')
 
 
             push.on('notification', function (data) {
+                
+                ZMDataModel.zmDebug ("received push notification");
 
                 var ld = ZMDataModel.getLogin();
                 if (ld.isUseEventServer ==false) {
                     ZMDataModel.zmDebug("received push notification, but event server disabled. Not acting on it");
                     return;
                 }
-                console.log("************* PUSH RECEIVED ******************");
-                console.log(JSON.stringify(data));
+                //console.log("************* PUSH RECEIVED ******************");
+                //console.log(JSON.stringify(data));
 
                 // data.message,
                 // data.title,
@@ -510,7 +512,8 @@ angular.module('zmApp.controllers')
             });
 
             push.on('error', function (e) {
-                console.log("************* PUSH ERROR ******************");
+                ZMDataModel.zmDebug ("Push error: " + JSON.stringify(e));
+               // console.log("************* PUSH ERROR ******************");
             });
         }
 
