@@ -26,7 +26,8 @@
 
 
         <div class="timeline_text" ion-datetime-picker ng-model="datetimeValue.value" ng-change="dateChanged()">
-            <b>Tap to change: {{datetimeValue.value | date: "yyyy-MMM-dd hh:mma"}}  @ {{sliderVal.rate}}x</b>
+            <b>Tap to change: {{datetimeValue.value | date: "yyyy-MMM-dd hh:mma"}}  @ {{sliderVal.rate}}x</b><div ng-if="$root.platformOS != 'ios'">(max of 6 monitors - chrome limit)</div>
+            
 
         </div>
 
@@ -40,7 +41,7 @@
 
         <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance' } : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
 
-
+            <!-- <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng- -->
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'"> 
                 
                 
@@ -63,6 +64,8 @@
                             <img ng-if="!isBackground()" id="img-$index" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}&connkey={{monitor.Monitor.connKey}}"  image-spinner-loader="lines" style="
                             width: 100% !important;
                             height: auto !important;" on-tap="togglePause(monitor.Monitor.Id)" />
+                            
+                            
 
                             <img ng-if="isBackground()" id="img-$index" image-spinner-src=""  image-spinner-loader="lines" style="
                             width: 100% !important;
@@ -143,12 +146,12 @@
             <div class="list list-inset">
 
 
-                <ion-toggle ng-model="sliderVal.hideNoEvents" ng-checked="{{sliderVal.hideNoEvents}}" toggle-class="toggle-dark">Hide monitors without events</ion-toggle>
+                <ion-toggle ng-model="sliderVal.hideNoEvents" ng-checked="{{sliderVal.hideNoEvents}}" toggle-class="toggle-dark"><span class="item-text-wrap">Hide monitors without events</span></ion-toggle>
 
                 <ion-toggle ng-model="sliderVal.enableGapless" ng-checked="{{sliderVal.enableGapless}}" toggle-class="toggle-dark">enable gapless playback</ion-toggle>
 
 
-                <ion-toggle ng-model="sliderVal.exactMatch" ng-checked="{{sliderVal.exactMatch}}" toggle-class="toggle-dark">Only match events active in this time<p>(default: any event on or after this time)</p></ion-toggle>
+                <ion-toggle ng-model="sliderVal.exactMatch" ng-checked="{{sliderVal.exactMatch}}" toggle-class="toggle-dark"><span class="item-text-wrap">Only match events active in this time<p>(default: any event on or after this time)</p></span></ion-toggle>
 
                 <ion-toggle ng-model="sliderVal.showTimeline" ng-checked="{{sliderVal.showTimeline}}" toggle-class="toggle-dark">show event time
                     <p>(resource intensive)</p>
