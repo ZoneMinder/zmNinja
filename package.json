@@ -81,16 +81,11 @@
       "version": "",
       "locator": "ios"
     },
-    "android",
-    {
-      "platform": "android",
-      "version": "",
-      "locator": "android"
-    },
     {
       "platform": "android_temp",
       "version": "",
       "locator": "android_temp"
-    }
+    },
+    "android"
   ]
 }
