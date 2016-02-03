@@ -210,7 +210,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 content: 'K',
                 empty: true,
                 onclick: function () {
-                    console.log('About');
+                    //console.log('About');
                 }
             },
     ]
@@ -280,7 +280,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     $scope.togglePresets = function () {
         $scope.presetOn = !$scope.presetOn;
-        console.log("Changing preset to " + $scope.presetOn);
+        //console.log("Changing preset to " + $scope.presetOn);
 
         var element = angular.element(document.getElementById("presetlist"));
         // bring it in

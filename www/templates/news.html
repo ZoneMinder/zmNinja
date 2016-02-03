@@ -12,10 +12,10 @@
         <div class="list">
             
             <span ng-repeat = "post in newsItems">
-                <a class="item item-icon-left" ng-click="loadPost(post.url, post.date)" href="">
+                <a class="item item-text-wrap item-icon-left" ng-click="loadPost(post.url, post.date)" href="">
                     <i ng-class="isUnread(post.date) ? 'icon ion-email-unread': 'icon ion-ios-email-outline'"></i>
                     {{post.title}}
-                    {{post.date}}
+                    <p>{{post.date}}</p>
                     
                 </a>
                 

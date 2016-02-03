@@ -210,6 +210,14 @@
                             <i class="icon ion-help"></i>
                         </span> Help
                     </ion-item>
+                    
+                    <div ng-if="$root.showBlog">
+                        <ion-item nav-clear menu-close href="#/news">
+                            <span class=" item-icon-left" >
+                                <i class="icon ion-radio-waves"></i>
+                            </span>news<span style="color:#268d3a;"> {{$root.newBlogPost}}</span>
+                        </ion-item>
+                    </div>
 
                     <ion-item nav-clear menu-close href="#/log">
                         <span class=" item-icon-left">
@@ -226,13 +234,7 @@
                         </ion-item>
                     </div>
                     
-                    <div ng-if="$root.showBlog">
-                        <ion-item nav-clear menu-close href="#/news">
-                            <span class=" item-icon-left" >
-                                <i class="icon ion-radio-waves"></i>
-                            </span>news<span style="color:#268d3a;"> {{$root.newBlogPost}}</span>
-                        </ion-item>
-                    </div>
+                    
                     
                     <div ng-if="$root.platformOS=='android'">
                         <ion-item  ng-click="$root.exitApp();">
