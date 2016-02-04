@@ -441,6 +441,7 @@ angular.module('zmApp', [
                 var lastDate = $localstorage.get("latestBlogPostChecked");
                 if (!lastDate)
                 {
+                    
                     $rootScope.newBlogPost="(new post)";
                     return;
                 }
@@ -451,8 +452,14 @@ angular.module('zmApp', [
                 if (mItemDate.diff(mLastDate) >0)
                 {
                     ZMDataModel.zmDebug("New post dated " + data[0].date + " found");
-                    $rootScope.newBlogPost = "(new post)";
-                    
+                    if (data[0].level == "critical" )
+                    {
+                        $rootScope.newBlogPost = "(new post)";
+                    }
+                    else
+                    {
+                        ZMDataModel.zmDebug ("Not showing a notification in menu as this is not critical");
+                    }
                 }
                 else
                 {

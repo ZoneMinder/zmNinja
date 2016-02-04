@@ -285,7 +285,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     
     function controlEventStream(cmd, disp, connkey, ndx) {
             // console.log("Command value " + cmd);
-
+            
             if (disp) {
                 $ionicLoading.hide();
                 $ionicLoading.show({
@@ -358,7 +358,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             });
             req.success(function (resp) {
 
-                //console.log("SUCCESS FOR: " + JSON.stringify(resp));
+                console.log("SUCCESS FOR: " + JSON.stringify(resp));
                
                 if (resp.result=="Ok" && ndx != -1)
                 {   
