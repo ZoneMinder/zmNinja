@@ -56,12 +56,15 @@ angular.module('angular-carousel')
 	var toggleAutoPlay = function() {
 		//scope.rnForceStop = !scope.rnForceStop;
 		carouselUtils.setStop(!carouselUtils.getStop());
+		if (carouselUtils.isStopped())
+			carouselUtils.setIndex (scope.carouselIndex);
 		//console.log ("Autoplay is " + carouselUtils.get());
 		if (scope.autoSlider )
 		{
             // PP - If autoslide was on and we tapped, stop auto slide
 			//scope.rnForceStop = true; //PP
 			carouselUtils.setStop (true);
+			carouselUtils.setIndex (scope.carouselIndex);
 			console.log ("***RN: Stopping Play rnForceStop is "+carouselUtils.getStop());
 			stopAutoPlay();
 		}
@@ -70,6 +73,7 @@ angular.module('angular-carousel')
 			//scope.rnForceStop = false; //PP
 			carouselUtils.setStop (false);
 			console.log ("***RN: Starting Play rnForceStop is "+carouselUtils.getStop());
+			//scope.carouselIndex = carouselUtils.getIndex();
 			restartTimer();
 		}
 	};
@@ -255,6 +259,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
     .factory ('carouselUtils', function() {
 	var isstopped = false;
 	var duration = 0;
+	var stoppedIndex = 0;
 	return {
 
 		setDuration: function (val)
@@ -271,6 +276,20 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 		setStop: function(val)
 		{
 			isstopped = val;
+			if (isstopped)
+			{
+				console.log ("Paused at " + stoppedIndex);
+			}
+		},
+
+		setIndex: function(val)
+		{
+			stoppedIndex = val;
+			console.log ("setting saved index to " + stoppedIndex);
+		},
+		getIndex: function()
+		{
+			return stoppedIndex;
 		},
 		getStop: function()
 		{
@@ -432,15 +451,18 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         }
 
                         scope.nextSlide = function(slideOptions) {
-			   if (carouselUtils.isStopped()==true)
+		           if (carouselUtils.isStopped()==true)
+			   {
+				console.log ("Just updated index, but we are stopped");
 				return;
-			   
-                            var index = scope.carouselIndex + 1;
+			   }
+			    var index = scope.carouselIndex + 1;
                             if (index > currentSlides.length - 1) {
 //PP
                                 index--;
                             }
-			    //console.log ("inside next slide with index = " + index);
+			  
+			 //console.log ("inside next slide with index = " + index);
 			// PP - we keep moving the index but don't load so it looks nicer
 			// and we don't mess up the rate
                           if (imageLoadingDataShare.get() != 1) // PP- If the image is still being loaded, hold on, don't change
@@ -621,6 +643,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                     	}
                                 	}, mydurms);
 				}
+				else	{ console.log ("We are stopped, doing nothing"); }
                             };
                         }
 
@@ -643,7 +666,8 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                             if (angular.isFunction(indexModel.assign)) {
                                 /* check if this property is assignable then watch it */
                                 scope.$watch('carouselIndex', function(newValue) {
-				    if (carouselUtils.isStopped() == false)
+				    //if (carouselUtils.isStopped() == false)
+					//console.log ("Carouselc chanhed 1");
                                     	updateParentIndex(newValue);
                                 });
 				scope.$parent.$watch(function () {
