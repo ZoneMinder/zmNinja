@@ -61,13 +61,13 @@
                     <div ng-if="!isModalActive">
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal">
-                                <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey)" image-spinner-loader="lines" style="
+                                <img id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey)" image-spinner-loader="lines" style="
         width: 100% !important;
         height: auto !important;" />
                             </div>
                             
                             <div ng-if = "minimal">
-                                <img id="img-$index" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey)" image-spinner-loader="lines" style="margin-top:0px;
+                                <img id="{{img-$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey)" image-spinner-loader="lines" style="margin-top:0px;
         width: 100% !important;
         height: auto !important;" />
                             </div>
@@ -76,7 +76,7 @@
                         </div>
 
                         <div ng-if="!$root.authSession=='undefined' || isBackground()">
-                            <img id="img-$index" image-spinner-src="img/pausevideo.png" style="width: 100% !important;
+                            <img image-spinner-src="img/pausevideo.png" style="width: 100% !important;
   height: auto !important;" />
                         </div>
                         
@@ -97,7 +97,7 @@
 
 
         <div ng-if="isModalActive">
-            <img id="img-$index" image-spinner-src="img/pausevideo.png" style="margin-top:0px;
+            <img  image-spinner-src="img/pausevideo.png" style="margin-top:0px;
         width: 100% !important;
         height: auto !important;" />
         </div>
