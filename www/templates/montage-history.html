@@ -49,7 +49,10 @@
                      
                     <div ng-if="$root.authSession!='undefined' && !isBackground()">
                         <div ng-if = "!minimal && monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
-                            <img id="img-{{$index}}" image-spinner-src="{{isBackground()?'':monitor.eventUrl}}"  image-spinner-loader="lines" style="
+                            
+                            <!-- make sure we don't use id here
+                            -- or we lose the handle for cleanup forever!-->
+                            <img  image-spinner-src="{{isBackground()?'':monitor.eventUrl}}"  image-spinner-loader="lines" style="
                                 width: 100% !important;
                                 height: auto !important;" />
                             <div   style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
@@ -98,7 +101,7 @@
                     </div> <!-- valid auth session &!background -->
 
                     <div ng-if="!$root.authSession=='undefined' || isBackground()">
-                        <img id="img-{{$index}}" image-spinner-src="img/pausevideo.png" 
+                        <img  image-spinner-src="img/pausevideo.png" 
                              style="width: 100% !important;height: auto !important;" />
                     </div>
                 </div>
