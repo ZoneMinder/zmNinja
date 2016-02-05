@@ -686,13 +686,16 @@ angular.module('zmApp', [
                 return (d.promise);
 
             })
-            .error(function (error) {
+            .error(function (error, status) {
                 $ionicLoading.hide();
-                $rootScope.loggedIntoZm = -1;
+                
                 //console.log("**** ZM Login FAILED");
-                ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error),
-                    "error, but not calling auth-error emit");
+            
+                // FIXME: Is this sometimes results in null
+                
+                ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error) +  " and status " + status);
                 // bad urls etc come here
+                $rootScope.loggedIntoZm = -1;    
                 $rootScope.$emit('auth-error', error);
 
                 d.reject("Login Error");

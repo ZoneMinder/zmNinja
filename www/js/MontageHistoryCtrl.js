@@ -84,7 +84,22 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     function footerCollapse()
     {
         
-        window.stop(); // force it here - connkey changes - FIXME: investigate why
+        //window.stop(); // force it here - connkey changes - FIXME: investigate why
+        
+        ZMDataModel.zmLog ("Nullifying the streams...");
+        
+        for (i=0; i< $scope.MontageMonitors.length; i++)
+        {
+            var element = document.getElementById("img-"+i);
+            if (element)
+            {
+                ZMDataModel.zmDebug("Nullifying  " + element.src);
+                element.src="";
+            }
+            
+        }
+        
+        
         $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
         ZMDataModel.zmDebug ("Playback rate is:"  + $scope.sliderVal.realRate);
         
@@ -1326,8 +1341,21 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             }
         }   
         
-        ZMDataModel.zmLog ("Forcing a window.stop() here");
-        window.stop();
+        /*ZMDataModel.zmLog ("Forcing a window.stop() here");
+        window.stop();*/
+        
+        ZMDataModel.zmLog ("Nullifying the streams...");
+        
+        for (i=0; i< $scope.MontageMonitors.length; i++)
+        {
+            var element = document.getElementById("img-"+i);
+            if (element)
+            {
+                ZMDataModel.zmDebug("Nullifying  " + element.src);
+                element.src="";
+            }
+            
+        }
         
         
     });

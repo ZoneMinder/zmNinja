@@ -988,12 +988,22 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         console.log("**VIEW ** ModalCtrl left");
         
         
-        ZMDataModel.zmLog ("ModalCtrl:Stopping network pull...");
+        //ZMDataModel.zmLog ("ModalCtrl:Nullifying images..."");
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
         
-        window.stop();
+        //window.stop();
+         ZMDataModel.zmLog ("Nullifying the streams...");
         
+        
+        var element = document.getElementById("singlemonitor");
+        if (element)
+        {
+            ZMDataModel.zmDebug("Nullifying  " + element.src);
+            element.src="";
+        }
+            
+   
       
     });
 
