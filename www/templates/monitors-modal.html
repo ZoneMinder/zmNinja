@@ -67,14 +67,15 @@
         </button>
         <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();">
         </button>
-        <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal();">
-        </button>
+        
     </nav>
 
     <nav mfb-menu position="tr" effect="zoomin" label="collapse" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
         <button mfb-button icon="ion-android-arrow-back" label="previous monitor" ng-click="onTap(monitorId,-1);">
         </button>
         <button mfb-button icon="ion-android-arrow-forward" label="next monitor" ng-click="onTap(monitorId,1);">
+        </button>
+        <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal();">
         </button>
 
     </nav>
