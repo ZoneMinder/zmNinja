@@ -1,25 +1,48 @@
 # Change Log
 
+## [1.0.6](https://github.com/pliablepixels/zmNinja/tree/1.0.6) (2016-02-05)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.5...1.0.6)
+
+**Implemented enhancements:**
+
+- Allow event server to work without SSL - requires zmeventserver upgrade  [\#159](https://github.com/pliablepixels/zmNinja/issues/159)
+- Introduce a montage timeline function (BETA)  [\#154](https://github.com/pliablepixels/zmNinja/issues/154)
+- Addition Next frame/prev frame buttons when viewing event - for fine grained snapshot control. [\#150](https://github.com/pliablepixels/zmNinja/issues/150)
+- Add ability to save a snapshot of an event playback to disk [\#148](https://github.com/pliablepixels/zmNinja/issues/148)
+- Notification icon and sound - add ability to play default sounds - requires event server upgrade [\#135](https://github.com/pliablepixels/zmNinja/issues/135)
+
+**Fixed bugs:**
+
+- 1.0.4 Broke basic auth  [\#147](https://github.com/pliablepixels/zmNinja/issues/147)
+
+**Closed issues:**
+
+- Make exit buttons of live view and events view consistent [\#158](https://github.com/pliablepixels/zmNinja/issues/158)
+- Remove SSL cert requirement [\#157](https://github.com/pliablepixels/zmNinja/issues/157)
+- Closing data leaks - trying to bottle up areas which may result in chrome keeping TCP connections open in background [\#155](https://github.com/pliablepixels/zmNinja/issues/155)
+- xcode fails on linking [\#153](https://github.com/pliablepixels/zmNinja/issues/153)
+- installing ios-deploy ends with an error [\#152](https://github.com/pliablepixels/zmNinja/issues/152)
+- Progress bar is ignored in Event View when playback is paused. [\#149](https://github.com/pliablepixels/zmNinja/issues/149)
+- Viewing events on slow connection basically doesn't work [\#145](https://github.com/pliablepixels/zmNinja/issues/145)
+- zmNinja fails to log in over open internet [\#126](https://github.com/pliablepixels/zmNinja/issues/126)
+
 ## [v1.0.5](https://github.com/pliablepixels/zmNinja/tree/v1.0.5) (2016-01-23)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.3...v1.0.5)
 
 **Implemented enhancements:**
 
-- Add ability to save a snapshot of an event playback to disk [\#148](https://github.com/pliablepixels/zmNinja/issues/148)
 - Allow montage to flow as columns \(packed\) or rows \(not packed\)  [\#144](https://github.com/pliablepixels/zmNinja/issues/144)
 - Reduce android apk size  [\#142](https://github.com/pliablepixels/zmNinja/issues/142)
 - Implement a mechanism to detect when network is on/off [\#127](https://github.com/pliablepixels/zmNinja/issues/127)
 
 **Fixed bugs:**
 
-- 1.0.4 Broke basic auth  [\#147](https://github.com/pliablepixels/zmNinja/issues/147)
 - Basic auth only - no zm auth - app goes to login on restart and says auth fails - app works [\#140](https://github.com/pliablepixels/zmNinja/issues/140)
 - Excessive background data usage [\#131](https://github.com/pliablepixels/zmNinja/issues/131)
 
 **Closed issues:**
 
 - montage display wrap got messed up in newer versions of Chrome [\#146](https://github.com/pliablepixels/zmNinja/issues/146)
-- Viewing events on slow connection basically doesn't work [\#145](https://github.com/pliablepixels/zmNinja/issues/145)
 - CSS montage - implement a better reflow algorithm [\#124](https://github.com/pliablepixels/zmNinja/issues/124)
 - Auto upload successful build to testfairy [\#75](https://github.com/pliablepixels/zmNinja/issues/75)
 - Integrate with Travis [\#72](https://github.com/pliablepixels/zmNinja/issues/72)
