@@ -1464,16 +1464,20 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     if (typeof $scope.ionRange !== 'undefined') {
         $scope.$watch('ionRange.index', function () {
             //  
+            $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
+            
             if (carouselUtils.getStop() == true)
                 return;
 
-            $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
+            
             //  console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
         });
     }
 
     if (typeof $scope.mycarousel !== 'undefined') {
         $scope.$watch('mycarousel.index', function () {
+            
+            
 
             //console.log ("***ION MYCAROUSEL CHANGED");
 
