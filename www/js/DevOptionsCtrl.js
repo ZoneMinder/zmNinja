@@ -80,7 +80,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
         if ((parseInt($scope.loginData.montageQuality) < zm.safeMontageLimit) ||
             (parseInt($scope.loginData.montageQuality) > 70)) {
-            $scope.loginData.montageQuality = zm.defaultMontageQuality.toString();
+            $scope.loginData.montageQuality = 70;
         }
         
         

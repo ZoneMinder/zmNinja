@@ -903,8 +903,8 @@ angular.module('zmApp', [
 
             ZMDataModel.init();
             EventServer.init();
-            if ($rootScope.platformOS == "desktop")
-                zmCheckUpdates.start();
+            //if ($rootScope.platformOS == "desktop")
+            zmCheckUpdates.start();
             // for making sure we canuse $state.go with ng-click
             // needed for views that use popovers
             $rootScope.$state = $state;
