@@ -334,6 +334,12 @@ angular.module('zmApp', [
             if (zmCookie) {
                 config.headers.Cookie = "ZMSESSID=" + zmCookie;
             }
+            
+            else
+            {
+              //  console.log ("No cookie present in " + config.url);
+            }
+            
             if ((config.url.indexOf("/api/states/change/") > -1) ||
                 (config.url.indexOf("getDiskPercent.json") > -1) ||
                 (config.url.indexOf("daemonCheck.json") > -1) ||
@@ -358,7 +364,8 @@ angular.module('zmApp', [
 
                 if (zmSess) {
                     if (zmSess[1]) {
-
+                            
+                       // console.log ("***** SETTING COOKIE TO "  + zmCookie);
                         zmCookie = zmSess[1];
                     }
                 }
@@ -596,13 +603,20 @@ angular.module('zmApp', [
                         title: 'reCaptcha enabled',
                         template: 'Looks like you have enabled reCaptcha. It needs to be turned off for zmNinja to work'
                     });
+                    
+                    
 
                     // close it after 5 seconds
                     $timeout(function () {
 
                         alertPopup.close();
                     }, 5000);
+                    
+                    d.reject ("Error-disable recaptcha");
+                return (d.promise);
                 }
+            
+                
 
             });
 
@@ -662,9 +676,11 @@ angular.module('zmApp', [
                     $rootScope.$emit('auth-error', "incorrect credentials");
 
                     d.reject("Login Error");
+                    return (d.promise);
                 }
 
                 // Now go ahead and re-get auth key 
+                // if login was a success
                 $rootScope.authSession = "undefined";
                 var ld = ZMDataModel.getLogin();
                 ZMDataModel.getAuthKey($rootScope.validMonitorId)

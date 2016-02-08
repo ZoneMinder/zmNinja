@@ -2,15 +2,17 @@
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        
+
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-        
+
     </ion-nav-buttons>
 
 
     <ion-content class="padding">
+  
+
         <div class="list">
-            
+
             <ion-item class="item-text-wrap">
                 <h2><b>Is there an official FAQ?</b> </h2>There sure is. Always check <a href="#" onclick="window.open('https://github.com/pliablepixels/zmNinja/wiki/FAQ', '_blank', 'location=yes'); return false;">here</a> for the most updated help
             </ion-item>
@@ -19,9 +21,15 @@
                 <h2><b> What do I enter for ZM Portal URL, Base path to cgi-bin and ZM API URL?</b> </h2>
                 <ul>
 
-                    <li><i class="ion-android-arrow-dropright"></i> ZM Portal URL: The URL using which you can access ZM <p>(example http://myserver.ddns.net/zm)</p></li>
-                    <li><i class="ion-android-arrow-dropright"></i> CGI  path: The URL using which your cgi-bin path is accessible<p>(example http://myserver.ddns.net/zm/cgi-bin).</p></li>
-                    <li><i class="ion-android-arrow-dropright"></i> API Url: The URL using which your API path is accessible <p>(example:http://myserver.ddns.net/zm/api)</p></li>
+                    <li><i class="ion-android-arrow-dropright"></i> ZM Portal URL: The URL using which you can access ZM
+                        <p>(example http://myserver.ddns.net/zm)</p>
+                    </li>
+                    <li><i class="ion-android-arrow-dropright"></i> CGI path: The URL using which your cgi-bin path is accessible
+                        <p>(example http://myserver.ddns.net/zm/cgi-bin).</p>
+                    </li>
+                    <li><i class="ion-android-arrow-dropright"></i> API Url: The URL using which your API path is accessible
+                        <p>(example:http://myserver.ddns.net/zm/api)</p>
+                    </li>
                 </ul>
             </ion-item>
 
@@ -34,7 +42,7 @@
                 <h2> <b>I do not have authentication enabled but the app keeps asking me to specify authentication</b></h2> If you don't use ZM authentication, just enter an "x" in both user name and password.
             </ion-item>
 
-            
+
             <ion-item class="item-text-wrap">
                 <h2> <b>Everything works! but live streaming does not </b></h2> Check if streaming works in the web interface. If it does not work, zmNinja won't work either. Fix ZM first. If streaming in ZM works, go to zmNinja settings and fix your cgi-bin path. the automatic path that is filled in won't work. Here is a hint, go to zoneminder->options->paths and check the value of the cgi-bin path - your zmNinja path will be "base path of your server" + cgi-bin path.
             </ion-item>
