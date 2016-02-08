@@ -396,7 +396,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                                         $scope.MontageMonitors[ndx].eventUrlTime=data.event.Event.StartTime;
                                         
                                         $scope.MontageMonitors[ndx].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.event.Event.Id+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
-                                    },300);
+                                    },700);
                                
                         }
                         

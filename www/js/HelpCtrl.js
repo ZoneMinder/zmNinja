@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console */
+/* global cordova,StatusBar,angular,console, Masonry */
 
 angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel','$ionicSideMenuDelegate', '$ionicHistory', '$state', function ($scope, $rootScope, $ionicModal, ZMDataModel,$ionicSideMenuDelegate, $ionicHistory, $state) {
 $scope.openMenu = function () {
@@ -33,6 +33,8 @@ $scope.openMenu = function () {
     $scope.$on('$ionicView.enter', function () {
         console.log("**VIEW ** Help Ctrl Entered");
         ZMDataModel.setAwake(false);
+
+        
 
     });
 
