@@ -416,7 +416,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     {
                         var currentEventTime = moment(data.event.Event.StartTime);
                         var maxTime = moment($scope.datetimeValueTo.value);
-                        ZMDataModel.zmDebug ("Monitor: " + $scope.MontageMonitors[ndx].Monitor.Id + " max time="+maxTime + "("+$scope.datetimeValueTo.value+")"+ " current="+currentEventTime + "("+data.event.Event.StartTime+")");
+                        //ZMDataModel.zmDebug ("Monitor: " + $scope.MontageMonitors[ndx].Monitor.Id + " max time="+maxTime + "("+$scope.datetimeValueTo.value+")"+ " current="+currentEventTime + "("+data.event.Event.StartTime+")");
                         if ($scope.MontageMonitors[ndx].eventUrlTime!=data.event.Event.StartTime && currentEventTime.diff(maxTime) <= 0 )
                         {
                             
@@ -437,6 +437,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         {
                             ZMDataModel.zmDebug (">>>>>>>>Monitor " + $scope.MontageMonitors[ndx].Monitor.Id + " event time of " + data.event.Event.StartTime + " exceeds " + $scope.datetimeValueTo.value +" stopping...");
                             subControlStream(17,connkey);
+                            
                             
                         }
                         
