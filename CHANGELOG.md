@@ -1,15 +1,26 @@
 # Change Log
 
-## [1.0.6](https://github.com/pliablepixels/zmNinja/tree/1.0.6) (2016-02-05)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.5...1.0.6)
+## [1.0.7](https://github.com/pliablepixels/zmNinja/tree/1.0.7) (2016-02-09)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.6...1.0.7)
+
+**Implemented enhancements:**
+
+- Refine montage history to accept from/to dates [\#160](https://github.com/pliablepixels/zmNinja/issues/160)
+
+**Closed issues:**
+
+- Build is failing [\#156](https://github.com/pliablepixels/zmNinja/issues/156)
+
+## [v1.0.6](https://github.com/pliablepixels/zmNinja/tree/v1.0.6) (2016-02-05)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.5...v1.0.6)
 
 **Implemented enhancements:**
 
 - Allow event server to work without SSL - requires zmeventserver upgrade  [\#159](https://github.com/pliablepixels/zmNinja/issues/159)
-- Introduce a montage timeline function (BETA)  [\#154](https://github.com/pliablepixels/zmNinja/issues/154)
+- Introduce a montage timeline function  [\#154](https://github.com/pliablepixels/zmNinja/issues/154)
 - Addition Next frame/prev frame buttons when viewing event - for fine grained snapshot control. [\#150](https://github.com/pliablepixels/zmNinja/issues/150)
 - Add ability to save a snapshot of an event playback to disk [\#148](https://github.com/pliablepixels/zmNinja/issues/148)
-- Notification icon and sound - add ability to play default sounds - requires event server upgrade [\#135](https://github.com/pliablepixels/zmNinja/issues/135)
+- Notification icon and sound - add ability to play default sounds [\#135](https://github.com/pliablepixels/zmNinja/issues/135)
 
 **Fixed bugs:**
 
@@ -24,7 +35,6 @@
 - installing ios-deploy ends with an error [\#152](https://github.com/pliablepixels/zmNinja/issues/152)
 - Progress bar is ignored in Event View when playback is paused. [\#149](https://github.com/pliablepixels/zmNinja/issues/149)
 - Viewing events on slow connection basically doesn't work [\#145](https://github.com/pliablepixels/zmNinja/issues/145)
-- zmNinja fails to log in over open internet [\#126](https://github.com/pliablepixels/zmNinja/issues/126)
 
 ## [v1.0.5](https://github.com/pliablepixels/zmNinja/tree/v1.0.5) (2016-01-23)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.3...v1.0.5)
