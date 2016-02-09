@@ -184,14 +184,17 @@
                 
                 <div class="item item-divider">Timeline</div>
                 
-                <div ion-datetime-picker title="From" am-pm ng-model="datetimeValueFrom.value" ng-change="dateChanged()">
+                <ion-item>
+                <div ion-datetime-picker title="From" am-pm ng-model="datetimeValueFrom.value" >
                     <b>From: </b>{{datetimeValueFrom.value | date: "MMM-dd-yyyy hh:mma"}}
                 </div>
-
-                <div  ion-datetime-picker am-pm ng-model="datetimeValueTo.value" ng-change="dateChanged()">
+                </ion-item>
+                
+                <ion-item>
+                <div  ion-datetime-picker am-pm ng-model="datetimeValueTo.value" >
                     <b>To: </b>{{datetimeValueTo.value | date: "MMM-dd-yyyy hh:mma"}}
                 </div>
-
+                </ion-item>
 
             </div>
         </ion-pull-up-content>
