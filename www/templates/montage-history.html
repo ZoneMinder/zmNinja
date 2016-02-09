@@ -25,11 +25,18 @@
 
 
 
-        <div class="timeline_text" ion-datetime-picker ng-model="datetimeValue.value" ng-change="dateChanged()">
-            <b>Tap to change: {{datetimeValue.value | date: "yyyy-MMM-dd hh:mma"}}  @ {{sliderVal.rate}}x</b><div ng-if="$root.platformOS != 'ios'">(max of 6 monitors - chrome limit)</div>
-            
-
+        <div class="timeline_text" ion-datetime-picker title="From" am-pm ng-model="datetimeValueFrom.value"  ng-change="dateChanged()">
+            <b>From: </b>{{datetimeValueFrom.value | date: "yyyy-MMM-dd hh:mma"}}
         </div>
+        
+        <div class="timeline_text" ion-datetime-picker am-pm ng-model="datetimeValueTo.value" ng-change="dateChanged()">
+            <b>To: </b>{{datetimeValueTo.value | date: "yyyy-MMM-dd hh:mma"}}
+        </div>
+        
+        <div class="timeline_text">
+            @ {{sliderVal.rate}}x <div ng-if="$root.platformOS != 'ios'">(max of 6 monitors - chrome limit)</div>
+        </div>
+
 
 
         <div class="range range-positive">
@@ -151,19 +158,11 @@
 
                 <ion-toggle ng-model="sliderVal.hideNoEvents" ng-checked="{{sliderVal.hideNoEvents}}" toggle-class="toggle-dark"><span class="item-text-wrap">Hide monitors without events</span></ion-toggle>
 
-                <ion-toggle ng-model="sliderVal.enableGapless" ng-checked="{{sliderVal.enableGapless}}" toggle-class="toggle-dark">enable gapless playback</ion-toggle>
+             
+               
 
-
-                <ion-toggle ng-model="sliderVal.exactMatch" ng-checked="{{sliderVal.exactMatch}}" toggle-class="toggle-dark"><span class="item-text-wrap">Only match events active in this time<p>(default: any event on or after this time)</p></span></ion-toggle>
-
-                <ion-toggle ng-model="sliderVal.showTimeline" ng-checked="{{sliderVal.showTimeline}}" toggle-class="toggle-dark">show event time
-                    <p>(resource intensive)</p>
-                </ion-toggle>
-
-
-
-                <!--<div  class="item item-divider" ion-datetime-picker ng-model="datetimeValue.value">
-                    Tap to change: {{datetimeValue.value| date: "yyyy-MMM-dd hh:mma"}}
+                <!--<div  class="item item-divider" ion-datetime-picker ng-model="datetimeValueFrom.value">
+                    Tap to change: {{datetimeValueFrom.value| date: "yyyy-MMM-dd hh:mma"}}
                 </div>-->
 
 
@@ -181,6 +180,16 @@
                     <div class="col col-25" style="background-color:#AEA8D3;text-align:center">
                         speed
                     </div>
+                </div>
+                
+                <div class="item item-divider">Timeline</div>
+                
+                <div ion-datetime-picker title="From" am-pm ng-model="datetimeValueFrom.value" ng-change="dateChanged()">
+                    <b>From: </b>{{datetimeValueFrom.value | date: "MMM-dd-yyyy hh:mma"}}
+                </div>
+
+                <div  ion-datetime-picker am-pm ng-model="datetimeValueTo.value" ng-change="dateChanged()">
+                    <b>To: </b>{{datetimeValueTo.value | date: "MMM-dd-yyyy hh:mma"}}
                 </div>
 
 

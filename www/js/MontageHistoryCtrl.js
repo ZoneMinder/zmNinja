@@ -103,10 +103,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
         ZMDataModel.zmDebug ("Playback rate is:"  + $scope.sliderVal.realRate);
         
-        var TimeObjectFrom = moment($scope.datetimeValue.value).format("YYYY-MM-DD HH:mm");
-        var TimeObjectTo = moment(TimeObjectFrom).add(1,'hour').format('YYYY-MM-DD HH:mm');
+        var TimeObjectFrom = moment($scope.datetimeValueFrom.value).format("YYYY-MM-DD HH:mm");
+        var TimeObjectTo = moment($scope.datetimeValueTo.value).format('YYYY-MM-DD HH:mm');
       
-        $scope.oldTime = $scope.datetimeValue.value;
+            
+        
          var apiurl;
         
         
@@ -126,20 +127,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
               $scope.MontageMonitors[i].eventUrl = "img/noevent.png";
             
         }
-        if ($scope.sliderVal.exactMatch)
-        {
-            // grab events that start on or before the time and end on or after the time
+         // grab events that start on or before the time and end on or after the time
             // this should only bring up events that span that time
-            apiurl= ld.apiurl + "/events/index/StartTime <=:"+TimeObjectFrom+"/EndTime >=:"+TimeObjectFrom+".json";
-        }
+            apiurl= ld.apiurl + "/events/index/StartTime >=:"+TimeObjectFrom+"/EndTime <=:"+TimeObjectTo+".json";
         
-        else
-        {
-            // grab events for next hour and then do expanded search later
-            // this is so one monitor does not overwhelm as I'm not reading multiple
-            // pages
-            apiurl= ld.apiurl + "/events/index/StartTime >=:"+TimeObjectFrom+"/StartTime <=:"+ TimeObjectTo+".json";
-        }
             ZMDataModel.zmLog ("Event timeline API is " + apiurl);
         
             $http.get(apiurl)
@@ -165,7 +156,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                            
                            if (!ZMDataModel.isBackground())
                            {
-                                $scope.MontageMonitors[j].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+                                $scope.MontageMonitors[j].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay=gapless";
                                console.log ("SWITCHING TO " + $scope.MontageMonitors[j].eventUrl);
                                
                                 
@@ -181,9 +172,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     }
                 }
                 
-                // now check for monitors with no events and get the closest match
-                if (!$scope.sliderVal.exactMatch)
-                {
+                // make sure we do our best to get that duration for all monitors
+                // in the above call, is possible some did not make the cut in the first page
+               
                     ZMDataModel.zmLog ("Exact match is off, so looking for more events");
                     for (i=0; i<$scope.MontageMonitors.length; i++)
                     {
@@ -191,7 +182,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         {
 
 
-                            var indivGrab = ld.apiurl + "/events/index/MonitorId:"+$scope.MontageMonitors[i].Monitor.Id+"/StartTime >=:"+TimeObjectFrom+".json";
+                            var indivGrab = ld.apiurl + "/events/index/MonitorId:"+$scope.MontageMonitors[i].Monitor.Id+"/StartTime >=:"+TimeObjectFrom+"/EndTime <=:"+TimeObjectTo+".json";
 
                             ZMDataModel.zmDebug("Monitor " + $scope.MontageMonitors[i].Monitor.Id+":"+$scope.MontageMonitors[i].Monitor.Name + " does not have events, trying "+indivGrab);
 
@@ -199,7 +190,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
                         }
                     }
-                }
                 
                
                 
@@ -225,7 +215,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     if (!ZMDataModel.isBackground())
                     {
 
-                        $scope.MontageMonitors[i].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.events[0].Event.Id+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+                        $scope.MontageMonitors[i].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.events[0].Event.Id+"&frame=1&replay=gapless";
                          //console.log ("SWITCHING TO " + $scope.MontageMonitors[i].eventUrl);
                         
                         $scope.MontageMonitors[i].eventUrlTime = data.events[0].Event.StartTime;
@@ -256,11 +246,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     
     function checkAllEvents()
     {
-        if (!$scope.sliderVal.showTimeline)
-        {
-            ZMDataModel.zmDebug ("Event timelines won't be shown, skipping...");
-            return;
-        }
+       
         //console.log ("Events are checked....");
         
         for (var i=0; i<$scope.MontageMonitors.length; i++)
@@ -297,6 +283,51 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     {
         controlEventStream(cmd,disp,connkey,ndx);
     };
+    
+    function subControlStream(cmd,connkey)
+    {
+        var loginData = ZMDataModel.getLogin();
+        var myauthtoken = $rootScope.authSession.replace("&auth=","");
+        //&auth=
+            var req = $http({
+                method: 'POST',
+                /*timeout: 15000,*/
+                url: loginData.url + '/index.php',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    //'Accept': '*/*',
+                },
+                transformRequest: function (obj) {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                    var foo = str.join("&");
+                   // console.log("****RETURNING " + foo);
+                    return foo;
+                },
+
+                data: {
+                    view: "request",
+                    request: "stream",
+                    connkey: connkey,
+                    command: cmd,
+                    auth: myauthtoken,
+                   // user: loginData.username,
+                   // pass: loginData.password
+                }
+            });
+        
+            req.success (function (resp) {
+                ZMDataModel.zmDebug ("subControl success:"+JSON.stringify(resp));
+            });
+        
+        
+            req.error (function (resp) {
+                ZMDataModel.zmDebug ("subControl error:"+JSON.stringify(resp));
+            });
+    }
+    
     
     function controlEventStream(cmd, disp, connkey, ndx) {
             // console.log("Command value " + cmd);
@@ -383,7 +414,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     $http.get (apiurl)
                     .success (function (data)
                     {
-                        if ($scope.MontageMonitors[ndx].eventUrlTime!=data.event.Event.StartTime)
+                        var currentEventTime = moment(data.event.Event.StartTime);
+                        var maxTime = moment($scope.datetimeValueTo.value);
+                        ZMDataModel.zmDebug ("Monitor: " + $scope.MontageMonitors[ndx].Monitor.Id + " max time="+maxTime + "("+$scope.datetimeValueTo.value+")"+ " current="+currentEventTime + "("+data.event.Event.StartTime+")");
+                        if ($scope.MontageMonitors[ndx].eventUrlTime!=data.event.Event.StartTime && currentEventTime.diff(maxTime) <= 0 )
                         {
                             
                             var ld = ZMDataModel.getLogin();
@@ -395,9 +429,15 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                                          element.addClass('animated flipInX');
                                         $scope.MontageMonitors[ndx].eventUrlTime=data.event.Event.StartTime;
                                         
-                                        $scope.MontageMonitors[ndx].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.event.Event.Id+"&frame=1&replay="+($scope.sliderVal.enableGapless?"gapless":"single");
+                                        $scope.MontageMonitors[ndx].eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.event.Event.Id+"&frame=1&replay=gapless";
                                     },700);
                                
+                        }
+                        else if ( currentEventTime.diff(maxTime)>0)
+                        {
+                            ZMDataModel.zmDebug (">>>>>>>>Monitor " + $scope.MontageMonitors[ndx].Monitor.Id + " event time of " + data.event.Event.StartTime + " exceeds " + $scope.datetimeValueTo.value +" stopping...");
+                            subControlStream(17,connkey);
+                            
                         }
                         
                     })
@@ -419,18 +459,15 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // Controller main
     //---------------------------------------------------------------------
 
-        document.addEventListener("pause", onPause, false);
-        document.addEventListener("resume", onResume, false);
+    document.addEventListener("pause", onPause, false);
+    document.addEventListener("resume", onResume, false);
     
     $scope.displayDateTimeSliders = true;
     $scope.showtimers = true;
     var curYear = new Date().getFullYear();
+    
     $scope.sliderVal = {
-        year:2000,
-        month:1,
-        day:1,
-        hour:0,
-        min:0,
+       
         rate:1,
         realRate:100,
         hideNoEvents:false,
@@ -443,22 +480,22 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     
     
     // default = start of day
-    var timenow = moment().startOf('day');
-    $scope.sliderVal.year = timenow.format("YYYY");
-    $scope.sliderVal.month = timenow.format("MM");
-    $scope.sliderVal.day = timenow.format("DD");
-    $scope.sliderVal.hour = timenow.format("HH");
-    $scope.sliderVal.min = 0;
+    var timeto = moment();
+    var timefrom = moment().startOf('day');
+    
     $scope.sliderVal.rate = 1;
     $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
-    $scope.oldTime="";
+   
     
     
-    //var tdatetimeValue = new Date();
-    //tdatetimeValue.setDate(tdatetimeValue.getDate()-1);
+    //var tdatetimeValueFrom = new Date();
+    //tdatetimeValueFrom.setDate(tdatetimeValueFrom.getDate()-1);
     
-    $scope.datetimeValue = {value:""};
-    $scope.datetimeValue.value = timenow.toDate(); 
+    $scope.datetimeValueFrom = {value:""};
+    $scope.datetimeValueTo = {value:""};
+    
+    $scope.datetimeValueFrom.value = timefrom.toDate(); 
+    $scope.datetimeValueTo.value = timeto.toDate(); 
     
    $rootScope.eventQueryInterval="";
     
