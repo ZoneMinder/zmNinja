@@ -86,14 +86,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
         //window.stop(); // force it here - connkey changes - FIXME: investigate why
         
-        ZMDataModel.zmLog ("Nullifying the streams...");
+        ZMDataModel.zmLog ("footerCollapse: Nullifying the streams...");
         
         for (i=0; i< $scope.MontageMonitors.length; i++)
         {
             var element = document.getElementById("img-"+i);
             if (element)
             {
-                ZMDataModel.zmDebug("Nullifying  " + element.src);
+                ZMDataModel.zmDebug("footerCollapse: Nullifying  " + element.src);
                 element.src="";
             }
             
@@ -1382,14 +1382,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         /*ZMDataModel.zmLog ("Forcing a window.stop() here");
         window.stop();*/
         
-        ZMDataModel.zmLog ("Nullifying the streams...");
+        ZMDataModel.zmLog ("BeforeLeave: Nullifying the streams...");
         
         for (i=0; i< $scope.MontageMonitors.length; i++)
         {
             var element = document.getElementById("img-"+i);
             if (element)
             {
-                ZMDataModel.zmDebug("Nullifying  " + element.src);
+                ZMDataModel.zmDebug("BeforeLeave: Nullifying  " + element.src);
                 element.src="";
             }
             
