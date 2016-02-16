@@ -31,7 +31,7 @@
 
         <div class="timeline_text" ion-datetime-picker am-pm ng-model="datetimeValueTo.value" ng-change="dateChanged()">
             <b>To: </b>{{datetimeValueTo.value | date: "yyyy-MMM-dd hh:mma"}} @ {{sliderVal.rate}}x
-            <div ng-if="$root.platformOS != 'ios'">(max of 6 monitors - chrome limit)</div>
+            <div ng-if="$root.platformOS != 'ios'">(max of 5 monitors - chrome limit)</div>
         </div>
 
 
@@ -51,12 +51,12 @@
                 
                 <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
                      
-                    <div ng-if="$root.authSession!='undefined' && !isBackground()">
-                        <div ng-if = "!minimal && monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
-                            
+                    <div ng-if="$root.authSession!='undefined'">
+                        <div ng-if = "monitor.Monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
+                           
                             <!-- make sure we don't use id here
                             -- or we lose the handle for cleanup forever!-->
-                            <img  image-spinner-src="{{isBackground()?'':monitor.eventUrl}}"  image-spinner-loader="lines" style="
+                            <img  image-spinner-src="{{monitor.Monitor.eventUrl}}"  image-spinner-loader="lines" style="
                                 width: 100% !important;
                                 height: auto !important;" />
                             <div   style="position:absolute; bottom:0%; right:0%;white-space:nowrap;overflow:hidden;" 
@@ -66,9 +66,9 @@
                             </div>
                         </div>
 
-                        <div ng-if = "!minimal && monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey">
+                        <div ng-if = "monitor.Monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey !=''">
 
-                            <img ng-if="!isBackground()" id="img-{{$index}}" image-spinner-src="{{monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}&connkey={{monitor.Monitor.connKey}}"  image-spinner-loader="lines" style="
+                            <img ng-if="!isBackground()" id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.eventUrl}}&scale={{LoginData.singleImageQuality}}{{$root.authSession}}&rand={{$root.rand}}&rate={{sliderVal.realRate}}&connkey={{monitor.Monitor.connKey}}"  image-spinner-loader="lines" style="
                             width: 100% !important;
                             height: auto !important;" on-tap="togglePause(monitor.Monitor.Id)" />
                             
@@ -87,7 +87,7 @@
                              <div  ng-if="!isBackground() && sliderVal.showTimeline" style=" position:absolute; bottom:15px; right:0%;white-space:nowrap;overflow:hidden;" 
                              class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">
                             &nbsp;<i class="ion-clock"></i>
-                               {{prettifyDate(monitor.eventUrlTime)}}&nbsp;
+                               {{prettifyDate(monitor.Monitor.eventUrlTime)}}&nbsp;
                             </div>
                             
                             <div  ng-if="monitor.isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;" 

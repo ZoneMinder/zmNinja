@@ -808,8 +808,7 @@ angular.module('zmApp.controllers')
                         {
                             monitors[i].Monitor.listDisplay='show';
                             monitors[i].Monitor.isAlarmed = 'false';
-                            monitors[i].Monitor.connKey = monitors[i].Monitor.Id.toString() + Math.floor((Math.random() * 100000) + 1);
-                            zmLog("ConnKey for "+monitors[i].Monitor.Id+" is :"+monitors[i].Monitor.connKey);
+                            monitors[i].Monitor.connKey = "";
                             
                             
                            // monitors[i].Monitor.sortOrder=i;
