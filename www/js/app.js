@@ -419,7 +419,7 @@ angular.module('zmApp', [
                 .then(function (success) {
 
 
-                    $localstorage.set("lastUpdateCheck", moment().toString());
+                    $localstorage.set("lastUpdateCheck", moment().toISOString());
                     //console.log ("FULL STRING " + success.data.tag_name);
                     var res = success.data.tag_name.match("v(.*)");
                     zmUpdateVersion = res[1];
