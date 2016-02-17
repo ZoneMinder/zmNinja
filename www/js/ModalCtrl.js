@@ -1121,7 +1121,21 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     }
 
 
-
+    $scope.zoomImage = function (val)
+    {
+        var zl = parseInt($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom);
+        if (zl == 1 && val == -1)
+        {
+            ZMDataModel.zmDebug ("Already zoomed out max");
+            return;
+        }
+        
+        
+        zl+=val;
+       ZMDataModel.zmDebug ("Zoom level is " + zl); $ionicScrollDelegate.$getByHandle("imgscroll").zoomTo(zl,true);
+        
+    };
+    
 
     //--------------------------------------------------------
     //Navigate to next/prev event in full screen mode

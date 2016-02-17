@@ -83,6 +83,12 @@
     <span class="camera-icon">
         <a class="button icon ion-ios-camera button-positive" href="" ng-click="saveImageToPhone(monitorId)"></a>
     </span>
+    
+    <span ng-if="$root.platformOS == 'desktop'" class="desktop-zoom-icon">
+        <a class="button icon ion-plus-round button-assertive" href="" ng-click="zoomImage(1)"></a>
+        <a class="button icon ion-minus-round button-assertive" href="" ng-click="zoomImage(-1)"></a>
+        
+    </span>
 
     <span class="modal-alarm-badge">
             <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon ion-ios-bell notification-badge button-assertive" 
