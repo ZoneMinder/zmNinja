@@ -13,7 +13,7 @@ $scope.openMenu = function () {
     // Controller Main
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** FirstUse Ctrl Entered");
+        //console.log("**VIEW ** FirstUse Ctrl Entered");
         $ionicSideMenuDelegate.canDragContent(false);
     
 

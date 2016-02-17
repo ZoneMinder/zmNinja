@@ -119,7 +119,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                         serverbuttons.push({
                             text: availableServers[servIter]
                         });
-                        console.log("ADDING : " + availableServers[servIter]);
+                        //console.log("ADDING : " + availableServers[servIter]);
                     }
 
                 } else {
@@ -163,7 +163,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** LoginCtrl  Entered");
+        //console.log("**VIEW ** LoginCtrl  Entered");
         ZMDataModel.setAwake(false);
 
 

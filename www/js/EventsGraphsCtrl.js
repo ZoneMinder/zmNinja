@@ -9,13 +9,13 @@
 // from the template file
 
 angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$ionicHistory', '$state', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $ionicHistory, $state) {
-    console.log("Inside Graphs controller");
+    //console.log("Inside Graphs controller");
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
 
     $scope.$on('$ionicView.loaded', function () {
-        console.log("**VIEW ** Graph Ctrl Loaded");
+       // console.log("**VIEW ** Graph Ctrl Loaded");
     });
     
     
@@ -41,16 +41,16 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** EventsGraphs Ctrl Entered");
+       // console.log("**VIEW ** EventsGraphs Ctrl Entered");
         ZMDataModel.setAwake(false);
     });
 
     $scope.$on('$ionicView.leave', function () {
-        console.log("**VIEW ** Graph Ctrl Left");
+       // console.log("**VIEW ** Graph Ctrl Left");
     });
 
     $scope.$on('$ionicView.unloaded', function () {
-        console.log("**VIEW ** Graph Ctrl Unloaded");
+      //  console.log("**VIEW ** Graph Ctrl Unloaded");
     });
 
 
@@ -70,7 +70,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
 
     var container = angular.element(document.getElementById('visualization'));
-    console.log(JSON.stringify(container));
+    //console.log(JSON.stringify(container));
     var data = [
         {
             id: 1,
@@ -112,7 +112,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     //---------------------------------------------------
     $scope.handleChartClick = function (event) {
 
-        console.log(JSON.stringify($scope.chartwithbars.getBarsAtEvent(event)));
+        //console.log(JSON.stringify($scope.chartwithbars.getBarsAtEvent(event)));
         //console.log(angular.element[0].getContext('2d'));
         //console.log (JSON.stringify( $scope.chart));
 
@@ -143,7 +143,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             var cur = moment();
             endDate = cur.format("YYYY-MM-DD hh:mm:ss");
             startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD hh:mm:ss");
-            console.log("Start and End " + startDate + "==" + endDate);
+            //console.log("Start and End " + startDate + "==" + endDate);
             ZMDataModel.zmLog("Generating graph for " + startDate + " to " + endDate);
 
         }
@@ -169,7 +169,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             if (adjustedHeight > $rootScope.devHeight) {
 
                 $scope.chart.barHeight = adjustedHeight;
-                console.log("********* BAR HEIGHT TO " + $scope.chart.barHeight);
+                //console.log("********* BAR HEIGHT TO " + $scope.chart.barHeight);
             }
 
             for (var i = 0; i < monitors.length; i++) {

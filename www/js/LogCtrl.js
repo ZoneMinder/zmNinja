@@ -46,7 +46,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         $rootScope.zmPopup.then(function (res) {
             if (res) {
                 $fileLogger.deleteLogfile().then(function () {
-                    console.log('Logfile deleted');
+                    //console.log('Logfile deleted');
                     $fileLogger.setStorageFilename(zm.logFile);
                     $scope.zmLog.logString = "";
                 });
@@ -174,7 +174,7 @@ saveAs(blob, fname);
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** Log Ctrl Entered");
+        //console.log("**VIEW ** Log Ctrl Entered");
         ZMDataModel.setAwake(false);
 
         $scope.zmLog = {
@@ -198,7 +198,7 @@ saveAs(blob, fname);
     
     $scope.$on('$ionicView.leave', function ()
     {
-        console.log ("Deleting Log interval...");
+        //console.log ("Deleting Log interval...");
        // $interval.cancel(intervalLogUpdateHandle);
     });
 

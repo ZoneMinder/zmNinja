@@ -379,7 +379,7 @@ angular.module('zmApp.controllers')
                  }
                  else
                  {
-                     console.log ("Skipping insomnia, cordova does not exist");
+                     //console.log ("Skipping insomnia, cordova does not exist");
                  }
             }
             else
@@ -390,7 +390,7 @@ angular.module('zmApp.controllers')
                  }
                  else
                  {
-                     console.log ("Skipping insomnia, cordova does not exist");
+                     //console.log ("Skipping insomnia, cordova does not exist");
                  }
 
 
@@ -808,7 +808,7 @@ angular.module('zmApp.controllers')
                         {
                             monitors[i].Monitor.listDisplay='show';
                             monitors[i].Monitor.isAlarmed = 'false';
-                            monitors[i].Monitor.connKey = "";
+                            monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                             
                             
                            // monitors[i].Monitor.sortOrder=i;

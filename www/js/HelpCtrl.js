@@ -31,7 +31,7 @@ $scope.openMenu = function () {
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** Help Ctrl Entered");
+        //console.log("**VIEW ** Help Ctrl Entered");
         ZMDataModel.setAwake(false);
 
         

@@ -63,7 +63,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** Montage Ctrl Entered");
+       // console.log("**VIEW ** Montage Ctrl Entered");
         ZMDataModel.setAwake(false);
     });
 
@@ -122,7 +122,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         $scope.myopt = {
             selectedState: ""
         };
-        console.log(JSON.stringify($scope.allStateNames));
+        //console.log(JSON.stringify($scope.allStateNames));
         ZMDataModel.zmLog("List of custom states: " + JSON.stringify($scope.allStateNames));
         $rootScope.zmPopup = $ionicPopup.show({
             scope: $scope,
@@ -152,7 +152,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         // It seems invoking a popup within a popup handler
         // causes issues. Doing this outside due to that reason
         $rootScope.zmPopup.then(function (res) {
-            console.log("GOT : " + JSON.stringify(res));
+           // console.log("GOT : " + JSON.stringify(res));
             if (res == "OK") {
                 if ($scope.myopt.selectedState != "")
                     controlZM($scope.myopt.selectedState);
@@ -182,7 +182,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 },
                 function (error) {
                     $scope.zmDisk = "unknown";
-                    console.log("ERROR:" + JSON.stringify(error));
+                   // console.log("ERROR:" + JSON.stringify(error));
                     ZMDataModel.zmLog("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
                 }
             );
