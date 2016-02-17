@@ -15,7 +15,7 @@
 
 angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory', '$sce', '$stateParams', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce, $stateParams) {
 
-    console.log("Inside Timeline controller");
+    //console.log("Inside Timeline controller");
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -66,7 +66,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
 
     $scope.toggleMinAlarmFrameCount = function () {
-        console.log("Toggling");
+       // console.log("Toggling");
 
         var ld = ZMDataModel.getLogin();
         ld.minAlarmCount = ld.minAlarmCount == "0" ? "1" : "0";
@@ -181,7 +181,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------------------------------
     function onPause() {
         ZMDataModel.zmDebug("TimelineCtrl:onpause called");
-        console.log("*** Moving to Background ***"); // Handle the pause event
+       // console.log("*** Moving to Background ***"); // Handle the pause event
 
         if ($scope.popover) $scope.popover.remove();
 
@@ -224,7 +224,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // graph range
     //-------------------------------------------------
     $scope.$on('$ionicView.afterEnter', function () {
-        console.log("***AFTER ENTER");
+       // console.log("***AFTER ENTER");
 
         var tempMon = message;
 
@@ -238,17 +238,17 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         } else
             $scope.monitors = message;
         if ($rootScope.customTimelineRange) {
-            console.log("***** CUSTOM RANGE");
+           // console.log("***** CUSTOM RANGE");
             if (moment($rootScope.fromString).isValid() &&
                 moment($rootScope.toString).isValid()) {
-                console.log("FROM & TO IS CUSTOM");
+               // console.log("FROM & TO IS CUSTOM");
                 fromDate = $rootScope.fromString;
                 toDate = $rootScope.toString;
                 $scope.fromDate = fromDate;
                 $scope.toDate = toDate;
                 drawGraph(fromDate, toDate, maxItems);
             } else {
-                console.log("FROM & TO IS CUSTOM INVALID");
+              //  console.log("FROM & TO IS CUSTOM INVALID");
             }
         } else {
             drawGraph(fromDate, toDate, maxItems);
@@ -308,7 +308,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.toDate = toDate;
 
 
-    console.log("*********************** TIMELINE MAIN ");
+   // console.log("*********************** TIMELINE MAIN ");
 
     // maxItems will be ignored during timeline draw if its desktop
      var maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
@@ -624,7 +624,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         showDelay: 0,
                                         duration: 1500,
                                     });
-                                    console.log("Zoomed out too far to playback events");
+                                   // console.log("Zoomed out too far to playback events");
                                 }
 
                             });

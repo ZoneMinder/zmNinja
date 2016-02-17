@@ -16,7 +16,7 @@ angular.module('zmApp.controllers')
 
     // var isModalOpen = false;
 
-    console.log("***EVENTS: Waiting for Monitors to load before I proceed");
+   // console.log("***EVENTS: Waiting for Monitors to load before I proceed");
     $scope.monitors = [];
     $scope.monitors = message;
                                    
@@ -38,7 +38,7 @@ angular.module('zmApp.controllers')
     
     var loginData = ZMDataModel.getLogin();
     monitorStateCheck();
-    console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
+    //console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
     ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
                  
     // FIXME: need this as modalctrl uses it. Not needed for monitor
@@ -106,7 +106,7 @@ angular.module('zmApp.controllers')
     //-----------------------------------------------------------------------
     $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
         var checked = false;
-        console.log("called with " + monitorId + ":" + enabled + ":" + func);
+        //console.log("called with " + monitorId + ":" + enabled + ":" + func);
         if (enabled == '1') checked = true;
 
         $scope.monFunctions = [
@@ -251,13 +251,13 @@ angular.module('zmApp.controllers')
 
     // same logic as EventCtrl.js
     $scope.finishedLoadingImage = function () {
-        console.log("***Monitor image FINISHED Loading***");
+       // console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
     };
 
 
     $scope.$on('$ionicView.loaded', function () {
-        console.log("**VIEW ** Monitor Ctrl Loaded");
+      //  console.log("**VIEW ** Monitor Ctrl Loaded");
     });
 
 
@@ -272,17 +272,17 @@ angular.module('zmApp.controllers')
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** Monitor Ctrl Entered");
+       // console.log("**VIEW ** Monitor Ctrl Entered");
         ZMDataModel.setAwake(false);
     });
 
     $scope.$on('$ionicView.leave', function () {
-        console.log("**VIEW ** Monitor Ctrl Left, force removing modal");
+       // console.log("**VIEW ** Monitor Ctrl Left, force removing modal");
         if ($scope.modal) $scope.modal.remove();
     });
 
     $scope.$on('$ionicView.unloaded', function () {
-        console.log("**VIEW ** Monitor Ctrl Unloaded");
+       // console.log("**VIEW ** Monitor Ctrl Unloaded");
     });
 
     $scope.openModal = function (mid, controllable, controlid, connKey) {
@@ -312,7 +312,7 @@ angular.module('zmApp.controllers')
             
             var apiurl = $scope.LoginData.apiurl;
             var myurl = apiurl + "/controls/" + controlid + ".json";
-            console.log("getting control details:" + myurl);
+           // console.log("getting control details:" + myurl);
 
             $http.get(myurl)
                 .success(function (data) {
@@ -362,11 +362,11 @@ angular.module('zmApp.controllers')
                     }
                     
 
-                    console.log("***moveCommand: " + $scope.ptzMoveCommand);
+                   // console.log("***moveCommand: " + $scope.ptzMoveCommand);
                     ZMDataModel.zmLog("ControlDB reports PTZ command to be " + $scope.ptzMoveCommand  + " and " + $scope.ptzStopCommand);
                 })
                 .error(function (data) {
-                    console.log("** Error retrieving move PTZ command");
+                   // console.log("** Error retrieving move PTZ command");
                     ZMDataModel.zmLog("Error retrieving PTZ command  " + JSON.stringify(data), "error");
                     ZMDataModel.displayBanner('error', ['did not get a valid PTZ response', 'Please try again']);
                     $scope.isControllable = '0';
@@ -398,7 +398,7 @@ angular.module('zmApp.controllers')
     };
 
     $scope.closeModal = function () {
-        console.log("Close & Destroy Monitor Modal");
+       // console.log("Close & Destroy Monitor Modal");
         
         // stop networking -nph-zms keeps sucking data
         
@@ -411,7 +411,7 @@ angular.module('zmApp.controllers')
     };
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function () {
-        console.log("Destroy Monitor Modal");
+        //console.log("Destroy Monitor Modal");
         $scope.modal.remove();
     });
 
@@ -488,7 +488,7 @@ angular.module('zmApp.controllers')
     }
 
     $scope.doRefresh = function () {
-        console.log("***Pull to Refresh");
+        //console.log("***Pull to Refresh");
         doRefresh();
 
 

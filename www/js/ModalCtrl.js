@@ -379,7 +379,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                         str.push(encodeURIComponent(p) + "=" +
                             encodeURIComponent(obj[p]));
                     var foo = str.join("&");
-                    console.log("****RETURNING " + foo);
+                    //console.log("****RETURNING " + foo);
                     return foo;
                 },
 
@@ -395,13 +395,13 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             });
             req.success(function (resp) {
 
-                console.log("SUCCESS FOR: " + JSON.stringify(resp));
+                //console.log("SUCCESS FOR: " + JSON.stringify(resp));
                
                 if (resp.result=="Ok" && ndx != -1)
                 {   
                     var ld = ZMDataModel.getLogin();
                     var apiurl= ld.apiurl + "/events/"+resp.status.event+".json";
-                    console.log ("API " + apiurl);
+                    //console.log ("API " + apiurl);
                     $http.get (apiurl)
                     .success (function (data)
                     {
@@ -495,8 +495,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             };
         }
 
-        console.log("Command value " + cmd + " with MID=" + monitorId);
-        console.log("PTZDATA is " + JSON.stringify(ptzData));
+        //console.log("Command value " + cmd + " with MID=" + monitorId);
+        //console.log("PTZDATA is " + JSON.stringify(ptzData));
         $ionicLoading.hide();
         $ionicLoading.show({
             template: "please wait...",
@@ -527,7 +527,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                     str.push(encodeURIComponent(p) + "=" +
                         encodeURIComponent(obj[p]));
                 var foo = str.join("&");
-                console.log("****RETURNING " + foo);
+                //console.log("****RETURNING " + foo);
                 return foo;
             },
             // NOTE: Refer to
@@ -542,7 +542,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
         req.success(function (resp) {
             $ionicLoading.hide();
-            console.log("SUCCESS: " + JSON.stringify(resp));
+            //console.log("SUCCESS: " + JSON.stringify(resp));
 
             // $ionicLoading.hide();
 
@@ -550,7 +550,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
         req.error(function (resp) {
             $ionicLoading.hide();
-            console.log("ERROR: " + JSON.stringify(resp));
+            //console.log("ERROR: " + JSON.stringify(resp));
             ZMDataModel.zmLog("Error sending PTZ:" + JSON.stringify(resp), "error");
         });
     }
@@ -563,9 +563,9 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     };
 
     $scope.getZoomLevel = function () {
-        console.log("ON RELEASE");
+        //console.log("ON RELEASE");
         var zl = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition();
-        console.log(JSON.stringify(zl));
+        //console.log(JSON.stringify(zl));
     };
 
     $scope.onTap = function (m, d) {
@@ -581,7 +581,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         if (!ld.canSwipeMonitors) return;
 
         if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1) {
-            console.log("Image is zoomed in - not honoring swipe");
+            //console.log("Image is zoomed in - not honoring swipe");
             return;
         }
         moveToMonitor(m, d);
@@ -603,7 +603,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         do {
             mid = ZMDataModel.getNextMonitor(m, d);
             m = mid;
-            console.log("Next Monitor is " + m);
+            //console.log("Next Monitor is " + m);
 
 
             found = 0;
@@ -614,7 +614,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                     $scope.monitors[i].Monitor.Function != 'None' &&
                     $scope.monitors[i].Monitor.Enabled != '0') {
                     found = 1;
-                    console.log(mid + "is part of the monitor list");
+                    //console.log(mid + "is part of the monitor list");
                     ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " + mid);
                     break;
                 } else {
@@ -720,7 +720,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             duration: 2000
         });
         ZMDataModel.zmLog("Error saving image: " + e.message);
-        console.log("***ERROR");
+        //console.log("***ERROR");
     }
 
 
@@ -803,8 +803,8 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         var curState = carouselUtils.getStop();
         carouselUtils.setStop(true);
 
-        console.log("Your index is  " + $scope.mycarousel.index);
-        console.log("Associated image is " + $scope.slides[$scope.mycarousel.index].img);
+        //console.log("Your index is  " + $scope.mycarousel.index);
+        //console.log("Associated image is " + $scope.slides[$scope.mycarousel.index].img);
 
         ZMDataModel.zmDebug("ModalCtrl: SaveEventImageToPhone called");
         var canvas, context, imageDataUrl, imageData;
@@ -968,7 +968,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     $scope.scaleImage = function () {
 
         $scope.imageFit = !$scope.imageFit;
-        console.log("Switching image style to " + $scope.imageFit);
+       // console.log("Switching image style to " + $scope.imageFit);
     };
 
     $scope.$on('$ionicView.enter', function () {
@@ -978,14 +978,14 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     });
 
     $scope.$on('$ionicView.leave', function () {
-        console.log("**MODAL: Stopping modal timer");
+       // console.log("**MODAL: Stopping modal timer");
         $scope.isModalActive = false;
         $interval.cancel(intervalModalHandle);
     });
     
     
     $scope.$on('$ionicView.beforeLeave', function () {
-        console.log("**VIEW ** ModalCtrl left");
+        //console.log("**VIEW ** ModalCtrl left");
         
         
         //ZMDataModel.zmLog ("ModalCtrl:Nullifying images..."");
@@ -1009,7 +1009,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     $scope.$on('$ionicView.unloaded', function () {
         $scope.isModalActive = false;
-        console.log("**MODAL UNLOADED: Stopping modal timer");
+        //console.log("**MODAL UNLOADED: Stopping modal timer");
         $interval.cancel(intervalModalHandle);
 
         //   console.log("Modal monitor left");
@@ -1017,7 +1017,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     $scope.$on('modal.removed', function () {
         $scope.isModalActive = false;
-        console.log("**MODAL REMOVED: Stopping modal timer");
+        //console.log("**MODAL REMOVED: Stopping modal timer");
         $interval.cancel(intervalModalHandle);
         ZMDataModel.zmDebug ("Modal removed - killing connkey");
         controlStream(17,"",$scope.connKey,-1);
@@ -1072,7 +1072,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
     $scope.toggleGapless = function () {
-        console.log(">>>>>>>>>>>>>>GAPLESS TOGGLE INSIDE MODAL");
+       // console.log(">>>>>>>>>>>>>>GAPLESS TOGGLE INSIDE MODAL");
         $scope.loginData.gapless = !$scope.loginData.gapless;
         ZMDataModel.setLogin($scope.loginData);
 
@@ -1128,21 +1128,21 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     //--------------------------------------------------------
 
     $scope.onSwipeEvent = function (eid, dirn) {
-        console.log("HERE");
+        //console.log("HERE");
         var ld = ZMDataModel.getLogin();
         if (!ld.canSwipeMonitors) return;
 
         if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1) {
-            console.log("Image is zoomed in - not honoring swipe");
+            //console.log("Image is zoomed in - not honoring swipe");
             return;
         }
-        console.log("JUMPING");
+        //console.log("JUMPING");
         jumpToEvent(eid, dirn);
 
     };
 
     $scope.jumpToEvent = function (eid, dirn) {
-        console.log("jumptoevent");
+       // console.log("jumptoevent");
 
         jumpToEvent(eid, dirn);
 
@@ -1332,7 +1332,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                                 $scope.prevId = success.prev;
                             },
                             function (error) {
-                                console.log(JSON.stringify(error));
+                                //console.log(JSON.stringify(error));
                             });
 
                     $scope.nextId = "...";
@@ -1491,7 +1491,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
             if ($scope.event && $scope.ionRange.index == parseInt($scope.event.Event.Frames) - 1) {
                 if (!$scope.modal || $scope.modal.isShown() == false) {
-                    console.log("quick scrub playback over");
+                   // console.log("quick scrub playback over");
                     carouselUtils.setStop(true);
                     $scope.ionRange.index = 0;
                     $scope.mycarousel.index = 1;

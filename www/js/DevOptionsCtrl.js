@@ -44,7 +44,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** DevOptions Ctrl Entered");
+        //console.log("**VIEW ** DevOptions Ctrl Entered");
         ZMDataModel.setAwake(false);
     });
 

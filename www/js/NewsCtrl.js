@@ -31,7 +31,7 @@ $scope.openMenu = function () {
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** News Ctrl Entered");
+       // console.log("**VIEW ** News Ctrl Entered");
         ZMDataModel.setAwake(false);
         
         
@@ -53,6 +53,8 @@ $scope.openMenu = function () {
     $scope.loadPost = function (item, itemdate)
     {
         var lastDate = $localstorage.get("latestBlogPostChecked");
+        
+        
         if (!lastDate)
         {
             ZMDataModel.zmDebug ("First time checking blog posts, I see");
@@ -89,7 +91,7 @@ $scope.openMenu = function () {
         .success (function(data)
         {
             //console.log ("Here2");
-            console.log (JSON.stringify(data));
+           // console.log (JSON.stringify(data));
             for (var i=0; i<data.length; i++)
             {
                 $scope.newsItems.push({title:data[i].title, url:data[i].url, date:data[i].date});

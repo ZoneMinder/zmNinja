@@ -251,7 +251,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         {
                             $rootScope.tappedNotification = 0;
                             $ionicHistory.nextViewOptions({disableBack: true});		
-                               console.log ("***** NOTIFICATION TAPPED GOING TO EVENTS ");
+                               //console.log ("***** NOTIFICATION TAPPED GOING TO EVENTS ");
                             $state.go("events", {"id": 0}, { reload: true });
                             return;
                             
@@ -259,7 +259,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 
                         if ($rootScope.lastState == 'lowversion') $rootScope.lastState = 'montage';
                         ZMDataModel.zmDebug("Transitioning state to: " + $rootScope.lastState ? $rootScope.lastState : 'montage');
-                        console.log ("*********** GOING TO " + $rootScope.lastState);
+                        //console.log ("*********** GOING TO " + $rootScope.lastState);
                         $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
                     },
                     // coming here means auth error
@@ -298,7 +298,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     //-------------------------------------------------------------------------------
     // Controller Main
     //-------------------------------------------------------------------------------
-    console.log("************* ENTERING PORTAL MAIN ");
+   // console.log("************* ENTERING PORTAL MAIN ");
+    ZMDataModel.zmLog ("Entering Portal Main");
     var loginData = ZMDataModel.getLogin();
      $ionicSideMenuDelegate.canDragContent(false);
 

@@ -14,7 +14,7 @@ $scope.openMenu = function () {
     // Controller Main
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-        console.log("**VIEW ** LowVersion Ctrl Entered");
+        //console.log("**VIEW ** LowVersion Ctrl Entered");
         $ionicSideMenuDelegate.canDragContent(true);
         $scope.requiredVersion = zm.minAppVersion;
         $scope.currentVersion = $stateParams.ver;
