@@ -34,17 +34,17 @@
         
         <span ng-show="!minimal">
                 <div class="range range-positive">
-                    <i style="color:#bbbbbb" class="icon ion-image"></i>
-                    <input type="range" ng-model="slider.monsize" min="1"
-                           max="10" ng-change="sliderChanged(slider.monsize)">
                     <i style="color:#bbbbbb" class="icon ion-grid"></i>
+                    <input type="range" ng-model="slider.monsize" min="1"
+                           max="9" ng-change="sliderChanged(slider.monsize)">
+                    <i style="color:#bbbbbb" class="icon ion-image"></i>
 
                 </div>
         </span>
 
 
 
-        <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance'} : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
+        <div ng-style="packMontage ? { '-webkit-column-count':10-slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance'} : {'-webkit-column-count':10-slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
 
             <!--<div ng-style="packMontage ? { '-webkit-column-count':slider.monsize, '-webkit-column-gap':'0px','line-height':'0px' } : { 'flex':'display', '-webkit-column-count':slider.monsize }">-->
 
@@ -57,7 +57,7 @@
                 
                 <!--src=" /zm/cgi-bin/nph-zms?source=event&mode=jpeg&event=7664&frame=1&scale=100&rate=100&maxfps=5&replay=gapless&auth=6b8c60f81fa2edff94f80f12bdebd98d&connkey=286643&rand=1453671607"-->
                 
-                <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
+                <div style="position: relative;width:{{devWidth/(10-slider.monsize)}}px;">
                     <div ng-if="!isModalActive">
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal">

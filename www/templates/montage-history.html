@@ -37,19 +37,19 @@
 
 
         <div class="range range-positive">
-            <i style="color:#bbbbbb" class="icon ion-image"></i>
-            <input type="range" ng-model="slider.monsize" min="1" max="10" ng-change="sliderChanged(slider.monsize)">
             <i style="color:#bbbbbb" class="icon ion-grid"></i>
+            <input type="range" ng-model="slider.monsize" min="1" max="9" ng-change="sliderChanged(slider.monsize)">
+            <i style="color:#bbbbbb" class="icon ion-image"></i>
 
         </div>
 
-        <div ng-style="packMontage ? { '-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance' } : {'-webkit-column-count':slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
+        <div ng-style="packMontage ? { '-webkit-column-count':10-slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','-webkit-column-fill': 'balance', 'column-fill': 'balance' } : {'-webkit-column-count':10-slider.monsize,'-webkit-column-gap':'0px','line-height':'0px','display':'-webkit-flex','-webkit-flex-direction':'row','flex-direction':'row', 'flex-wrap':'wrap' }">
 
             <!-- <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng- -->
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'"> 
                 
                 
-                <div style="position: relative;width:{{devWidth/slider.monsize}}px;">
+                <div style="position: relative;width:{{devWidth/(10-slider.monsize)}}px;">
                      
                     <div ng-if="$root.authSession!='undefined'">
                         <div ng-if = "monitor.Monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
