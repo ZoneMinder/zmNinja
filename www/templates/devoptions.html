@@ -35,7 +35,13 @@
             <label>
                 <ion-toggle ng-model="loginData.useNphZms"
                             ng-checked="{{loginData.useNphZms}}"
-                            toggle-class="toggle-calm">use ZMS for single stream</ion-toggle>
+                            toggle-class="toggle-calm">use ZMS for single live view</ion-toggle>
+            </label>
+            
+            <label>
+                <ion-toggle ng-model="loginData.useNphZmsForEvents"
+                            ng-checked="{{loginData.useNphZmsForEvents}}"
+                            toggle-class="toggle-calm">use ZMS for events footage</ion-toggle>
             </label>
             
             <div class="item item-input-inset">

@@ -194,7 +194,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     
     //console.log ("MONITORS " + JSON.stringify($scope.monitors));
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-    ZMDataModel.getAuthKey($rootScope.validMonitorId, $scope.monitors[0].Monitor.connKey)
+    ZMDataModel.getAuthKey($rootScope.validMonitorId, (Math.floor((Math.random() * 999999) + 1)).toString())
         .then(function (success) {
                 $ionicLoading.hide();
                 //console.log(success);
@@ -592,7 +592,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.ptzMoveCommand = "";
         $scope.ptzStopCommand = "";
         $scope.presetOn = false;
-        $scope.connKey = connKey;
+        $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
         // This is a modal to show the monitor footage
         // We need to switch to always awake if set so the feed doesn't get interrupted
