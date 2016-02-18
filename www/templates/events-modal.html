@@ -1,4 +1,4 @@
-<div ng-controller="ModalCtrl" ng-cloak>
+    <div ng-controller="EventModalCtrl">
     <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
     <ion-modal-view cache-view="false">
         <ion-content style="background-color:#444444" ng-cloak>
@@ -8,19 +8,16 @@
                 <div  id="full-screen-event" style="height: 100vh;">
 
 
-                    <div ng-if="defaultVideo=='' || loginData.enableh264==false">
+                    <div ng-if="(defaultVideo=='' || loginData.enableh264==false) && !loginData.useNphZmsForEvents">
                         
-                        <!--<ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover  rn-platform="{{$root.platformOS}}">-->
-                            
-                            
-<!--Speed:{{eventSpeed}}-->
-<ul rn-carousel  rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{eventSpeed}}" rn-carousel-pause-on-hover  rn-platform="{{$root.platformOS}}" rn-carousel-buffered >
-    
+                        
+                        <ul rn-carousel  rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{eventSpeed}}" rn-carousel-pause-on-hover  rn-platform="{{$root.platformOS}}" rn-carousel-buffered >
+
 
                             <li ng-repeat="slide in slides">
                                 <div ng-if="!animationInProgress">
                                     <img  style="width:100vw; height:100vh" imageonload="finishedLoadingImage($index)" 
-                                         image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale={{loginData.singleImageQuality}}" 
+                                         image-spinner-src="{{playbackURL}}/index.php?view=image&rand={{$root.rand}}&path={{relativePath}}{{slide.img}}&scale={{loginData.singleImageQuality}}{{$root.authSession}}" 
                                          image-spinner-loader="lines" 
                                          ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" 
                                          
@@ -39,8 +36,20 @@
                             </li>
                         </ul>
                     </div>
+                    
+                    <!-- route via ZMS -->
+                    
+                    <div ng-if="( (defaultVideo=='') || (loginData.enableh264==false)) && (loginData.useNphZmsForEvents==true)">
+                       
+                        <div style="color:white">connkey:{{connKey}}</div>
+                        <div style="width:100vw; height:100vh" >
+                          <img image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay=single&rate=100&connkey={{connKey}}&scale={{loginData.singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"/>
+                          
+                        </div>
+                    </div>
+                    
                     <!-- no default video -->
-
+<!--                    
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
                         <div>
                             <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()">
@@ -62,7 +71,7 @@
                       
                     </div>
                     
-
+-->
                 </div>
                 <!-- 100vh -->
             </ion-scroll>
@@ -102,13 +111,18 @@
 </nav>
     
 
-<div class="events-range-modal" ng-if="defaultVideo==''">
+<div class="events-range-modal" ng-if="(defaultVideo=='' )&& (!loginData.useNphZmsForEvents)">
 
     <div style="width:90%">
         <input ng-model="ionRange.index" type="text" id="mySlider2" slider options="slider_modal_options" />
     </div>
 
 
+</div>
+        
+<div class="events-range-modal" ng-if="(defaultVideo=='' )&& (loginData.useNphZmsForEvents)" style="color:white">
+   <!-- Progress: Event: {{eventId}} - {{progressText}}-->
+    <progress max="{{currentEventDuration}}" value="{{currentProgress}}"></progress>
 </div>
 
 <div class="events-range-modal-text" >showing event: {{eventId}}</div>
@@ -154,4 +168,4 @@
     <progress max="{{totalEventTime}}" value="{{currentEventTime}}"
               class="eventprogress"></progress>
 -->
-    </div>
+</div>

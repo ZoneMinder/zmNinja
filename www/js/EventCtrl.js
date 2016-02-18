@@ -7,7 +7,7 @@
 // and whether the new API has a better mechanism
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q) {
+    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'appModalService', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, appModalService) {
 
         // events in last 5 minutes
         // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -84,7 +84,7 @@ angular.module('zmApp.controllers')
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
-        $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+       // $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
 
         
@@ -1268,6 +1268,7 @@ angular.module('zmApp.controllers')
             //ZMDataModel.zmDebug("EventCtrl: Open Modal with Base path " + relativepath);
 
             $scope.event = event;
+           
             ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
             
             $scope.currentEvent = event;
@@ -1275,6 +1276,14 @@ angular.module('zmApp.controllers')
             
 
            // prepareModalEvent(event.Event.Id);
+            
+         /*   appModalService.show('templates/events-modal.html', 'EventModalCtrl')
+            .then(function(result) {
+     // result from modal controller: $scope.closeModal(result) or <as name here>.closeModal(result) [Only on template]
+            }, function(err) {
+     // error
+            });*/
+            
 
             $ionicModal.fromTemplateUrl('templates/events-modal.html', {
                     scope: $scope,

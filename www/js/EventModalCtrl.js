@@ -4,15 +4,33 @@
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment */
 
 
-angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
+/* FIXME for nph events
+a) timers
+b) sliders
+c) photo save 
+d) gapless
+
+*/
+
+angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
 
 
     // from parent scope
     var currentEvent = $scope.currentEvent;
     var nphTimer;
+    var eventQueryHandle;
+    $scope.loginData = ZMDataModel.getLogin();
+    
+    
+   // $scope.currentEventLength = parseFloat($scope.currentEvent.Event.Length);  
+    //console.log ("Current event duration is " + $scope.currentEventLength);
+    
+    
+    //$scope.currentEventLength = $scope.event.Event.Length;  
 
 
     var eventImageDigits = 5; // failsafe
+    $scope.currentProgress = 0;
     ZMDataModel.getKeyConfigParams(0)
         .then(function (data) {
             //console.log ("***GETKEY: " + JSON.stringify(data));
@@ -52,25 +70,17 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     $scope.currentStreamMode = 'single';
     ZMDataModel.zmLog("Using stream mode " + $scope.currentStreamMode);
 
-    if (ld.useNphZms == true) {
-        ZMDataModel.zmLog("Setting timer to play nph-zms mode");
-        // first 5 seconds, load a snapshot, then switch to real FPS display
-        // this is to avoid initial image load delay
-        // FIXME: 5 seconds fair?
-        $timeout.cancel(nphTimer);
-        nphTimer = $timeout(function () {
-            $scope.currentStreamMode = 'jpeg';
-            ZMDataModel.zmLog("Switching playback via nphzms");
-        }, zm.nphSwitchTimer);
-    }
-
+    ZMDataModel.zmDebug ("EventModalCtrl called from " + $ionicHistory.currentStateName());
+    // This is not needed for event mode
+    
+    
 
 
     ZMDataModel.zmDebug("Setting playback to " + $scope.streamMode);
 
 
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-    ZMDataModel.getAuthKey($rootScope.validMonitorId, $scope.monitors[0].Monitor.connKey)
+    ZMDataModel.getAuthKey($rootScope.validMonitorId,(Math.floor((Math.random() * 999999) + 1)).toString())
         .then(function (success) {
                 $ionicLoading.hide();
                 $rootScope.authSession = success;
@@ -84,6 +94,21 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                 //$rootScope.authSession="";
                 ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
             });
+
+    
+    
+     $rootScope.$on("auth-success", function () {
+
+            ZMDataModel.zmDebug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
+            window.stop();
+            $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
+            $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+            $timeout.cancel(eventQueryHandle);
+            eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+         
+         
+            
+    });
 
 
     $scope.togglePTZ = function () {
@@ -106,264 +131,76 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
     };
 
 
-    $scope.radialMenuOptions = {
-        content: '',
+                                      
 
-        background: '#2F4F4F',
-        isOpen: true,
-        toggleOnClick: false,
-        button: {
-            cssClass: "fa  fa-arrows-alt",
-        },
-        items: [
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Down');
-                }
-            },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'DownLeft');
-                }
-            },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-
-                onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Left');
-                }
-            },
-            {
-                content: 'D',
-                empty: true,
-
-                onclick: function () {
-                   // console.log('About');
-                }
-            },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'UpLeft');
-                }
-            },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Up');
-                }
-            },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'UpRight');
-                }
-            },
-
-            {
-                content: 'H',
-                empty: true,
-                onclick: function () {
-                    //console.log('About');
-                }
-            },
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Right');
-                }
-            },
-
-
-            {
-                content: '',
-                cssClass: 'fa fa-chevron-circle-up',
-                empty: false,
-                onclick: function () {
-                    controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'DownRight');
-                }
-            },
-
-            {
-                content: 'K',
-                empty: true,
-                onclick: function () {
-                    //console.log('About');
-                }
-            },
-    ]
-    };
-
-
-    $interval.cancel(intervalModalHandle);
-
-    if (ld.useNphZms == false) {
-        intervalModalHandle = $interval(function () {
-            loadModalNotifications();
-            //  console.log ("Refreshing Image...");
-        }.bind(this), ld.refreshSec * 1000);
-
-        loadModalNotifications();
-    } else {
-        ZMDataModel.zmLog("Using nph-zms, no timer needed");
-    }
-
-
-
-
-    function onPause() {
-        ZMDataModel.zmDebug("ModalCtrl: onpause called");
-        $interval.cancel(intervalModalHandle);
-        // $interval.cancel(modalIntervalHandle);
-
-        // FIXME: Do I need to  setAwake(false) here?
-    }
-
-
-    function onResume() {
-        ZMDataModel.zmDebug("ModalCtrl: Modal resume called");
-        if ($scope.isModalActive) {
-            ZMDataModel.zmLog("ModalCtrl: Restarting Modal timer on resume");
-
-            $interval.cancel(intervalModalHandle);
-
-            var ld = ZMDataModel.getLogin();
-            if (ld.useNphZms == false) {
-                intervalModalHandle = $interval(function () {
-                    loadModalNotifications();
-                    //  console.log ("Refreshing Image...");
-                }.bind(this), ld.refreshSec * 1000);
-            } else {
-                ZMDataModel.zmLog("using nph - no timers needed");
-            }
-
-            $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-
-        }
-
-
-
-    }
-
-
-    function loadModalNotifications() {
-
-        //console.log ("Inside Modal timer...");
-        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-
-    }
-
-    var intervalModalHandle;
-
-
-    $scope.togglePresets = function () {
-        $scope.presetOn = !$scope.presetOn;
-        //console.log("Changing preset to " + $scope.presetOn);
-
-        var element = angular.element(document.getElementById("presetlist"));
-        // bring it in
-        if ($scope.presetOn) {
-            element.removeClass("animated fadeOutUp");
-
-
-        } else {
-            element.removeClass("animated fadeInDown");
-            element.addClass("animated fadeOutUp");
-        }
-
-
-
-    };
-
-
-    //-------------------------------------------------------------
-    // this is checked to make sure we are not pulling images
-    // when app is in background. This is a problem with Android,
-    // for example
-    //-------------------------------------------------------------
-
-    $scope.isBackground = function () {
-        // console.log ("Is background called from ModalCtrl and returned " +    
-        // ZMDataModel.isBackground());
-        return ZMDataModel.isBackground();
-    };
-    
-    
-    
-    
-    
-    $scope.controlStream = function (cmd,disp,connkey,ndx)
+    function checkEvent()
     {
-        controlStream(cmd,disp,connkey,ndx);
-    };
+        console.log ("Event timer");
+        processEvent('99',$scope.connKey);
+    }
     
-    function controlStream(cmd, disp, connkey, ndx) {
-            // console.log("Command value " + cmd);
+    
+    function sendCommand(cmd,connkey,extras,rq)
+    {
+        var d = $q.defer();
+         var loginData = ZMDataModel.getLogin();
+        var rqtoken = rq? rq:"stream";
+        var myauthtoken = $rootScope.authSession.replace("&auth=","");
+        //&auth=
+            $http({
+                method: 'POST',
+                /*timeout: 15000,*/
+                url: loginData.url + '/index.php',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    //'Accept': '*/*',
+                },
+                transformRequest: function (obj) {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                    var foo = str.join("&");
+                    if (extras)
+                    {
+                            foo = foo + extras;
+                            //console.log("EXTRAS****SUB RETURNING " + foo);
+                    }
+                    return foo;
+                        
+                },
 
-            if (disp) {
-                $ionicLoading.hide();
-                $ionicLoading.show({
-                    template: "please wait...",
-                    noBackdrop: true,
-                    duration: zm.loadingTimeout,
-                });
-            }
-            var loginData = ZMDataModel.getLogin();
-
-            /*
-            var CMD_NONE = 0;
-            var CMD_PAUSE = 1;
-            var CMD_PLAY = 2;
-            var CMD_STOP = 3;
-            var CMD_FASTFWD = 4;
-            var CMD_SLOWFWD = 5;
-            var CMD_SLOWREV = 6;
-            var CMD_FASTREV = 7;
-            var CMD_ZOOMIN = 8;
-            var CMD_ZOOMOUT = 9;
-            var CMD_PAN = 10;
-            var CMD_SCALE = 11;
-            var CMD_PREV = 12;
-            var CMD_NEXT = 13;
-            var CMD_SEEK = 14;
-            var CMD_QUIT = 17;
-            var CMD_QUERY = 99;
-            */
-            
-
-
-            // You need to POST commands to control zms
-            // Note that I am url encoding the parameters into the URL
-            // If I leave it as JSON, it gets converted to OPTONS due
-            // to CORS behaviour and ZM/Apache don't seem to handle it
-
-            //console.log("POST: " + loginData.url + '/index.php');
-
-            //console.log ("AUTH IS " + $rootScope.authSession);
+                data: {
+                    view: "request",
+                    request: rqtoken,
+                    connkey: connkey,
+                    command: cmd,
+                    auth: myauthtoken,
+                   // user: loginData.username,
+                   // pass: loginData.password
+                }
+            })
+            .then (function (resp) {
+               // ZMDataModel.zmDebug ("sendCmd response:"+JSON.stringify(resp));
+                d.resolve(resp);
+                return (d.promise);
+                
+                
+            },
+                function (resp) {
+                ZMDataModel.zmDebug ("sendCmd error:"+JSON.stringify(resp));
+                d.reject (resp);
+                return (d.promise);
+            });
         
-            var myauthtoken = $rootScope.authSession.replace("&auth=","");
+            return (d.promise);
+    }
+    
+    
+    function processEvent(cmd,connkey)
+    {
+        var loginData = ZMDataModel.getLogin();
+        var myauthtoken = $rootScope.authSession.replace("&auth=","");
         //&auth=
             var req = $http({
                 method: 'POST',
@@ -379,7 +216,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                         str.push(encodeURIComponent(p) + "=" +
                             encodeURIComponent(obj[p]));
                     var foo = str.join("&");
-                    //console.log("****RETURNING " + foo);
+                    //console.log("****SUB RETURNING " + foo);
                     return foo;
                 },
 
@@ -393,168 +230,147 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                    // pass: loginData.password
                 }
             });
-            req.success(function (resp) {
-
-                //console.log("SUCCESS FOR: " + JSON.stringify(resp));
-               
-                if (resp.result=="Ok" && ndx != -1)
-                {   
-                    var ld = ZMDataModel.getLogin();
-                    var apiurl= ld.apiurl + "/events/"+resp.status.event+".json";
-                    //console.log ("API " + apiurl);
-                    $http.get (apiurl)
-                    .success (function (data)
+        
+            req.success (function (resp) {
+                ZMDataModel.zmDebug ("processEvent success:"+JSON.stringify(resp));
+                
+                if (resp.result=="Ok")
+                {
+                    
+                    $scope.currentProgress = resp.status.progress;
+                    $scope.eventId = resp.status.event;
+                    
+                    
+                    if ($scope.currentProgress > $scope.currentEventDuration) $scope.currentProgress = $scope.currentEventDuration;
+                    $scope.progressText = "At " + $scope.currentProgress + "s of " + $scope.currentEventDuration+"s";
+                
+                    if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
                     {
-                        if ($scope.MontageMonitors[ndx].eventUrlTime!=data.event.Event.StartTime)
+                        ZMDataModel.zmLog ("Reached end of event " + $scope.eventId);
+                        
+                        
+                        
+                        if (loginData.gapless)
                         {
+                            ZMDataModel.zmLog ("STEP 1: Moving to nextevent as gapless is on");
+                            sendCommand ('13',connkey) // next
+                            .then (function (resp) // 13
+                                   {
+                                
+                                        sendCommand('99',connkey) // query
+                                        .then (function (resp) //99
+                                        {
+                                            console.log ("Output of next move afer query is " + JSON.stringify(resp));
+
+                                            // now get duration;
+                                            // $scope.currentEventDuration = Math.floor($scope.currentEvent.Event.Length);
+                                            var apiurl = loginData.apiurl + "/events/" + resp.data.status.event + ".json";
+                                            ZMDataModel.zmLog ("STEP 2:Getting details for " + apiurl);
+                                            $http.get(apiurl)
+                                            .then (function (data)
+                                            {
+                                                $scope.currentEventDuration = Math.floor(data.data.event.Event.Length);
+                                                
+                                                if (resp.data.status.event != $scope.eventId)
+                                                    $scope.currentProgress = 0; // if = then we are at end
+                                                
+                                                $scope.eventId = resp.data.status.event;
+                                                
+                                                ZMDataModel.zmDebug ("STEP 3: New eid " + $scope.eventId + " duration " + $scope.currentEventDuration);
+                                                eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                                            },
+                                            function (err) //api
+                                            {
+                                                console.log ("Error " + JSON.stringify(err));
+                                                eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+
+                                            });
+                                               
+                                        },
+                                        function (err) // 99
+                                        {
+                                            eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                                            
+                                        });
+                                    },
+                                function(error) { //13
+                                        console.log ("Error of next move is " + JSON.stringify(resp));
+                                        eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                                    } );
+
+                             $scope.currentProgress = 0;
+                      
                             
-                            var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id+"-timeline"));
-                                    element.removeClass ('animated slideInRight');
-                                    element.addClass('animated slideOutRight');
-                                    $timeout (function() {
-                                        element.removeClass ('animated slideOutRight');
-                                         element.addClass('animated slideInRight');
-                                        $scope.MontageMonitors[ndx].eventUrlTime=data.event.Event.StartTime;
-                                    },300);
-                               
+                        }
+                        else // not gapless
+                        {
+                            // keep timer on if its switched to gapless
+                            eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
                         }
                         
-                    })
-                    .error (function (data)
+                    }
+                    else // not at end of playback
                     {
-                        $scope.MontageMonitors[ndx].eventUrlTime="-";
-                    });
+                        console.log ("all good, scheduling next iteration after " + zm.eventPlaybackQuery);
+                       //$timeout (checkEvent(), zm.eventPlaybackQuery);
+                        eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                    }
                     
+                   /* if ((resp.status.paused==1) && ($scope.currentProgress < $scope.currentEventDuration ) && !$scope.isPaused)
+                    {
+                        
+                        //wtf? why?
+                        
+                        //No such file or directory
+                        
+                        ZMDataModel.zmDebug ("ZMS mysteriously paused at " + $scope.currentProgress+ "of " +$scope.currentEventDuration+"seconds , force resuming");
+                        sendCommand (2,connkey);
+                //         $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+                    }*/
                 }
-                //var str = toast_blurb + "event:" + resp.status.event;
-                // console.log(str);
-                // $ionicLoading.hide();
-
-               
+                else
+                    
+                {
+                   ZMDataModel.zmDebug("Hmm I found an error " + JSON.stringify(resp) + 
+"so I can't tell if the playback ended");
+                    $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
+                     $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+                    ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
+                }
+            });
+        
+        
+            req.error (function (resp) {
+                ZMDataModel.zmDebug ("processEvent error:"+JSON.stringify(resp));
                 
-
             });
-
-            req.error(function (resp) {
-                //console.log("ERROR: " + JSON.stringify(resp));
-                ZMDataModel.zmLog("Error sending event command " + JSON.stringify(resp), "error");
-            });
-        }
-
-
-
-    
-    
-    //-------------------------------------------------------------
-    // Send PTZ command to ZM
-    // Note: PTZ fails on desktop, don't bother about it
-    //-------------------------------------------------------------
-
-
-    $scope.controlPTZ = function (monitorId, cmd) {
-        controlPTZ(monitorId, cmd);
-    };
-
-    function controlPTZ(monitorId, cmd) {
-
-        //presetGotoX
-        //presetHome
-        //curl -X POST "http://server.com/zm/index.php?view=request" -d
-        //"request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
-
-        if (!$scope.ptzMoveCommand) {
-            $ionicLoading.show({
-                template: "Not Ready for PTZ",
-                noBackdrop: true,
-                duration: 2000,
-            });
-            return;
-        }
-
-        var ptzData = "";
-        if (cmd.lastIndexOf("preset", 0) === 0) {
-            ZMDataModel.zmDebug("PTZ command is a preset, so skipping xge/lge");
-            ptzData = {
-                view: "request",
-                request: "control",
-                id: monitorId,
-                control: cmd,
-                //  xge: "30", //wtf
-                //  yge: "30", //wtf
-            };
-
-        } else {
-
-            ptzData = {
-                view: "request",
-                request: "control",
-                id: monitorId,
-                control: cmd,
-                xge: "30", //wtf
-                yge: "30", //wtf
-            };
-        }
-
-        //console.log("Command value " + cmd + " with MID=" + monitorId);
-        //console.log("PTZDATA is " + JSON.stringify(ptzData));
-        $ionicLoading.hide();
-        $ionicLoading.show({
-            template: "please wait...",
-            noBackdrop: true,
-            duration: zm.loadingTimeout,
-        });
-
-        var loginData = ZMDataModel.getLogin();
-        $ionicLoading.hide();
-        $ionicLoading.show({
-            template: "Sending PTZ..",
-            noBackdrop: true,
-            duration: zm.loadingTimeout,
-        });
-
-
-        var req = $http({
-            method: 'POST',
-            /*timeout: 15000,*/
-            url: loginData.url + '/index.php',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json',
-            },
-            transformRequest: function (obj) {
-                var str = [];
-                for (var p in obj)
-                    str.push(encodeURIComponent(p) + "=" +
-                        encodeURIComponent(obj[p]));
-                var foo = str.join("&");
-                //console.log("****RETURNING " + foo);
-                return foo;
-            },
-            // NOTE: Refer to
-            // zoneminder/skins/mobile/includes/control_functions.php
-            // for move commands
-            // logic - /zm/api/monitors/X.json, read ControlId = Y
-            // then zm/api/controls/Y.json
-
-            data: ptzData
-
-        });
-
-        req.success(function (resp) {
-            $ionicLoading.hide();
-            //console.log("SUCCESS: " + JSON.stringify(resp));
-
-            // $ionicLoading.hide();
-
-        });
-
-        req.error(function (resp) {
-            $ionicLoading.hide();
-            //console.log("ERROR: " + JSON.stringify(resp));
-            ZMDataModel.zmLog("Error sending PTZ:" + JSON.stringify(resp), "error");
-        });
+        
     }
 
+
+
+    function onPause() {
+       
+        // $interval.cancel(modalIntervalHandle);
+
+        // FIXME: Do I need to  setAwake(false) here?
+    }
+
+
+    function onResume() {
+        ZMDataModel.zmDebug("EventModalCtrl: Modal resume called");
+            
+
+            $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+
+    }
+
+
+
+    
+    
+    
+    
 
     $scope.finishedLoadingImage = function () {
         // console.log("***Monitor image FINISHED Loading***");
@@ -562,141 +378,11 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     };
 
-    $scope.getZoomLevel = function () {
-        //console.log("ON RELEASE");
-        var zl = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition();
-        //console.log(JSON.stringify(zl));
-    };
-
-    $scope.onTap = function (m, d) {
-
-        moveToMonitor(m, d);
-    };
+   
 
 
-
-
-    $scope.onSwipe = function (m, d) {
-        var ld = ZMDataModel.getLogin();
-        if (!ld.canSwipeMonitors) return;
-
-        if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1) {
-            //console.log("Image is zoomed in - not honoring swipe");
-            return;
-        }
-        moveToMonitor(m, d);
-
-
-
-    };
-
-    function moveToMonitor(m, d) {
-        var curstate = $ionicHistory.currentStateName();
-        var found = 0;
-        var mid;
-        mid = ZMDataModel.getNextMonitor(m, d);
-
-
-
-        // FIXME: clean this up - in a situation where
-        // no monitors are enabled, will it loop for ever?
-        do {
-            mid = ZMDataModel.getNextMonitor(m, d);
-            m = mid;
-            //console.log("Next Monitor is " + m);
-
-
-            found = 0;
-            for (var i = 0; i < $scope.monitors.length; i++) {
-                if ($scope.monitors[i].Monitor.Id == mid &&
-                    // if you came from monitors, then ignore noshow
-                    ($scope.monitors[i].Monitor.listDisplay != 'noshow' || curstate == "monitors") &&
-                    $scope.monitors[i].Monitor.Function != 'None' &&
-                    $scope.monitors[i].Monitor.Enabled != '0') {
-                    found = 1;
-                    //console.log(mid + "is part of the monitor list");
-                    ZMDataModel.zmDebug("ModalCtrl: swipe detected, moving to " + mid);
-                    break;
-                } else {
-                    ZMDataModel.zmDebug("skipping " + $scope.monitors[i].Monitor.Id +
-                        " listDisplay=" + $scope.monitors[i].Monitor.listDisplay +
-                        " Function=" + $scope.monitors[i].Monitor.Function +
-                        " Enabled=" + $scope.monitors[i].Monitor.Enabled);
-                }
-            }
-
-
-        }
-        while (found != 1);
-
-
-        var slidein;
-        var slideout;
-        var dirn = d;
-        if (dirn == 1) {
-            slideout = "animated slideOutLeft";
-            slidein = "animated slideInRight";
-        } else {
-            slideout = "animated slideOutRight";
-            slidein = "animated slideInLeft";
-        }
-
-        var element = angular.element(document.getElementById("monitorimage"));
-        element.addClass(slideout)
-            .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
-
-
-
-        function outWithOld() {
-
-            ZMDataModel.zmLog("ModalCtrl:Stopping network pull...");
-            window.stop();
-            $scope.rand = Math.floor((Math.random() * 100000) + 1);
-            $scope.animationInProgress = true;
-
-            $timeout(function () {
-                element.removeClass(slideout);
-                element.addClass(slidein)
-                    .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
-                $scope.monitorId = mid;
-                $scope.monitorName = ZMDataModel.getMonitorName(mid);
-            }, 200);
-        }
-
-        function inWithNew() {
-
-            element.removeClass(slidein);
-            $scope.animationInProgress = false;
-
-            ZMDataModel.zmLog("New image loaded in");
-            var ld = ZMDataModel.getLogin();
-            carouselUtils.setStop(false);
-            if (ld.useNphZms == true) {
-                $scope.currentStreamMode = 'single';
-                ZMDataModel.zmLog("Setting timer to play nph-zms mode");
-                // first 5 seconds, load a snapshot, then switch to real FPS display
-                // this is to avoid initial image load delay
-                // FIXME: 5 seconds fair?
-                $timeout.cancel(nphTimer);
-                nphTimer = $timeout(function () {
-                    $scope.currentStreamMode = 'jpeg';
-                    ZMDataModel.zmLog("Switching playback via nphzms");
-                }, zm.nphSwitchTimer);
-            }
-
-        }
-
-
-        $ionicLoading.hide();
-        $ionicLoading.show({
-            template: "please wait...",
-            noBackdrop: true,
-            duration: zm.loadingTimeout,
-        });
-
-
-    }
-
+  
+    
 
 
     //-----------------------------------------------------------------------
@@ -726,72 +412,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
 
 
-    //-----------------------------------------------------------------------
-    // Saves a snapshot of the monitor image to phone storage
-    //-----------------------------------------------------------------------
-
-    $scope.saveImageToPhone = function (mid) {
-        $ionicLoading.show({
-            template: "saving snapshot...",
-            noBackdrop: true,
-            duration: zm.httpTimeout
-        });
-
-        ZMDataModel.zmDebug("ModalCtrl: SaveImageToPhone called");
-        var canvas, context, imageDataUrl, imageData;
-        var loginData = ZMDataModel.getLogin();
-        var url = loginData.streamingurl +
-            '/zms?mode=single&monitor=' + mid +
-            $rootScope.authSession;
-        ZMDataModel.zmLog("SavetoPhone:Trying to save image from " + url);
-
-        var img = new Image();
-        img.onload = function () {
-            // console.log("********* ONLOAD");
-            canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            context = canvas.getContext('2d');
-            context.drawImage(img, 0, 0);
-
-            imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-            imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
-
-            if ($rootScope.platformOS != "desktop") {
-                try {
-
-                    cordova.exec(
-                        SaveSuccess,
-                        SaveError,
-                        'Canvas2ImagePlugin',
-                        'saveImageDataToLibrary', [imageData]
-                    );
-                } catch (e) {
-
-                    SaveError(e.message);
-                }
-            } else {
-
-
-                var fname = $scope.monitorName + "-" +
-                    moment().format('MMM-DD-YY_HH-mm-ss') + ".png";
-                canvas.toBlob(function (blob) {
-                    saveAs(blob, fname);
-                    SaveSuccess();
-                    
-                });
-            }
-        };
-        try {
-            img.src = url;
-            // console.log ("SAVING IMAGE SOURCE");
-        } catch (e) {
-            SaveError(e.message);
-
-        }
-    };
-
-
+   
 
     //-----------------------------------------------------------------------
     // Saves a snapshot of the monitor image to phone storage
@@ -977,50 +598,57 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     });
 
-    $scope.$on('$ionicView.leave', function () {
-       // console.log("**MODAL: Stopping modal timer");
-        $scope.isModalActive = false;
-        $interval.cancel(intervalModalHandle);
-    });
-    
-    
-    $scope.$on('$ionicView.beforeLeave', function () {
-        //console.log("**VIEW ** ModalCtrl left");
+    $scope.$on('modal.shown', function () {
+        
+        var ld = ZMDataModel.getLogin();
+        $scope.loginData = ZMDataModel.getLogin();
         
         
-        //ZMDataModel.zmLog ("ModalCtrl:Nullifying images..."");
-        // make sure this is applied in scope digest to stop network pull
-        // thats why we are doing it beforeLeave
         
-        //window.stop();
-         ZMDataModel.zmLog ("Nullifying the streams...");
+        currentEvent = $scope.currentEvent;
         
+        console.log ("Current Event " + JSON.stringify(currentEvent));
+        $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
+        console.log ("************* GENERATED CONNKEY " + $scope.connKey);
         
-        var element = document.getElementById("singlemonitor");
-        if (element)
+        $scope.currentFrame = 1;
+        $scope.isPaused = false;
+        //console.log ("CURRENT EVENT " + JSON.stringify($scope.currentEvent));
+        $scope.currentEventDuration = Math.floor($scope.currentEvent.Event.Length);
+        //console.log ($scope.event.Event.Frames);
+        if (currentEvent && currentEvent.Event)
         {
-            ZMDataModel.zmDebug("Nullifying  " + element.src);
-            element.src="";
-        }
+            console.log ("************ CALLING PREPARE MODAL ***********");
+            prepareModalEvent(currentEvent.Event.Id);
+            if (ld.useNphZmsForEvents)
+            {
+           
+                ZMDataModel.zmLog ("Starting checkAllEvents timer");
+                
+                eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
+                /*eventQueryHandle = $interval(function () {
+                    checkEvent();
+                    //  console.log ("Refreshing Image...");
+                }.bind(this),zm.eventPlaybackQuery);*/
+            }
             
-   
-      
+        }
+        
+        
+    
+        
+        
+        
     });
-
-    $scope.$on('$ionicView.unloaded', function () {
-        $scope.isModalActive = false;
-        //console.log("**MODAL UNLOADED: Stopping modal timer");
-        $interval.cancel(intervalModalHandle);
-
-        //   console.log("Modal monitor left");
-    });
+    
 
     $scope.$on('modal.removed', function () {
         $scope.isModalActive = false;
         //console.log("**MODAL REMOVED: Stopping modal timer");
-        $interval.cancel(intervalModalHandle);
+                //$interval.cancel(eventQueryHandle);
+                $timeout.cancel(eventQueryHandle);
         ZMDataModel.zmDebug ("Modal removed - killing connkey");
-        controlStream(17,"",$scope.connKey,-1);
+        sendCommand(17,$scope.connKey);
         
 
         // Execute action
@@ -1150,8 +778,21 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             //console.log("Image is zoomed in - not honoring swipe");
             return;
         }
+        
+        if (ld.useNphZmsForEvents)
+        {
+            ZMDataModel.zmLog("using zms to move ");
+            jumpToEventZms($scope.connKey, dirn);
+           // sendCommand ( dirn==1?'13':'12',$scope.connKey);
+            
+        }
+        else
+        {
+            jumpToEvent(eid, dirn);
+        }
+        
         //console.log("JUMPING");
-        jumpToEvent(eid, dirn);
+        
 
     };
 
@@ -1211,6 +852,57 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
 
     }
 
+        
+        
+    function jumpToEventZms(connkey, dirn) {
+        
+        var cmd = dirn==1?'13':'12';
+        
+        ZMDataModel.zmDebug ("Sending " + cmd + " to " + connkey);
+        
+        $ionicLoading.show({
+             template: "switching events..",
+             noBackdrop: true,
+             duration: zm.httpTimeout
+            });
+        
+        sendCommand ( cmd,connkey)
+        .then (function (success) {$ionicLoading.hide();}, function (error) {$ionicLoading.hide();});
+        var slidein;
+        var slideout;
+        if (dirn == 1) {
+            slideout = "animated slideOutLeft";
+            slidein = "animated slideInRight";
+        } else {
+            slideout = "animated slideOutRight";
+            slidein = "animated slideInLeft";
+        }
+        var element = angular.element(document.getElementById("full-screen-event"));
+        element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
+
+
+
+        function outWithOld() {
+
+            
+            
+            $timeout(function () {
+                element.removeClass(slideout);
+                element.addClass(slidein)
+                    .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
+               
+            }, 200);
+        }
+
+        function inWithNew() {
+            element.removeClass(slidein);
+            
+            
+        }
+
+    }
+    
+        
     //--------------------------------------------------------
     // utility function
     //--------------------------------------------------------
@@ -1318,7 +1010,7 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
             .then(function (success) {
 
 
-
+                   // console.log ("DUCCESS::"+JSON.stringify(success));
                     var event = success.data.event;
                     currentEvent = event;
 
@@ -1338,7 +1030,11 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
                         event.Event.DefaultVideo = "";
 
                     $scope.defaultVideo = event.Event.DefaultVideo;
-
+                    
+                    console.log ("loginData is " + JSON.stringify($scope.loginData));
+                    console.log ("Event ID is " + $scope.eventId);
+                    console.log ("video is " + $scope.defaultVideo);
+            
 
                     neighborEvents(event.Event.Id)
                         .then(function (success) {
@@ -1539,10 +1235,6 @@ angular.module('zmApp.controllers').controller('ModalCtrl', ['$scope', '$rootSco
         return number;
     }
 
-    $scope.$on('modal.shown', function () {
-        currentEvent = $scope.currentEvent;
-        if (currentEvent && currentEvent.Event)
-            prepareModalEvent(currentEvent.Event.Id);
-    });
+    
 
 }]);
