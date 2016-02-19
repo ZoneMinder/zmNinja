@@ -63,7 +63,7 @@ angular.module('zmApp.controllers')
          'montageSize':'3',
          'useNphZms':true,
          'useNphZmsForEvents':false,
-         'packMontage':true,
+         'packMontage':false,
          'exitOnSleep':false,
          'forceNetworkStop':false,
          'defaultPushSound': false,
@@ -249,8 +249,8 @@ angular.module('zmApp.controllers')
                 
                 if (typeof loginData.packMontage == 'undefined')
                 {
-                    zmDebug ("packMontage does not exist. Setting to true");
-                    loginData.packMontage  = true;
+                    zmDebug ("packMontage does not exist. Setting to false");
+                    loginData.packMontage  = false;
                 }
                 
                  if (typeof loginData.forceNetworkStop == 'undefined')
