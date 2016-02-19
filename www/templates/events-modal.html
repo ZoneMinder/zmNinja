@@ -43,13 +43,21 @@
                        
                         <div style="color:white">connkey:{{connKey}}</div>
                         <div style="width:100vw; height:100vh" >
-                          <img image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay=single&rate=100&connkey={{connKey}}&scale={{loginData.singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"/>
+                          <img  ng-click="togglePause()" image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay=single&rate=100&connkey={{connKey}}&scale={{loginData.singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"/>
                           
+                            <div  ng-if="isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999"
+                             class="header-paused">
+                            &nbsp;<i class="ion-pause"></i>
+                               paused&nbsp;
+                            </div>
+                            
                         </div>
+                        
+                        
                     </div>
                     
                     <!-- no default video -->
-<!--                    
+                 
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
                         <div>
                             <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()">
@@ -71,7 +79,7 @@
                       
                     </div>
                     
--->
+
                 </div>
                 <!-- 100vh -->
             </ion-scroll>

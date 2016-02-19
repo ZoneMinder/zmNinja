@@ -110,6 +110,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             
     });
 
+    $scope.togglePause = function ()
+    {
+        $scope.isPaused = !$scope.isPaused;
+        ZMDataModel.zmDebug ("Paused is " + $scope.isPaused);
+        
+        sendCommand ( $scope.isPaused? '1':'2',$scope.connKey);
+        
+    };
 
     $scope.togglePTZ = function () {
 
@@ -418,9 +426,113 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
-    $scope.saveEventImageToPhone = function () {
+    $scope.saveEventImageToPhone = function () 
+    {
         
+        if ($scope.loginData.useNphZmsForEvents)
+        {
+            ZMDataModel.zmLog ("Use ZMS stream to save to phone");
+            saveEventImageToPhoneZms();
+            
+            
+        }
+        else
+        {
+            saveEventImageToPhone();
+        }
+        
+        
+    };
 
+    function saveEventImageToPhoneZms()
+    {
+        // The strategy here is to build the array now so we can grab frames
+        // $scope.currentProgress is the seconds where we are
+            // $scope.eventId is the event Id
+        
+        $scope.isPaused = true;
+        
+        $ionicLoading.show({
+            template: "please wait...",
+            noBackdrop: true,
+            duration: zm.httpTimeout
+        });
+        sendCommand('1',$scope.connKey).
+        then (function (resp)
+        {
+            $ionicLoading.hide();
+            console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
+            $scope.currentProgress = resp.data.status.progress;
+           // console.log ("STEP 0 progress is " + $scope.currentProgress);
+            $scope.slides = [];
+            var apiurl = $scope.loginData.apiurl + "/events/" + $scope.eventId + ".json";
+            ZMDataModel.zmDebug ("prepared to get frame details using " + apiurl);
+            $http.get(apiurl)
+            .then (function (success)
+            {
+                    var event = success.data.event;
+
+                    event.Event.BasePath = computeBasePath(event);
+                    event.Event.relativePath = computeRelativePath(event);
+                    $scope.playbackURL = $scope.loginData.url;
+                    $scope.eventBasePath = event.Event.BasePath;
+                    $scope.relativePath = event.Event.relativePath;
+
+                    // now lets get approx frame #
+
+                    var totalTime = event.Event.Length;
+                    var totalFrames = event.Event.Frames;
+                    
+                    var myFrame = Math.round(totalFrames/totalTime * $scope.currentProgress);
+                
+                  //  console.log ("STEP 0: playback " + $scope.playbackURL + " total time " + totalTime + " frames " + totalFrames);
+
+                    if (myFrame > totalFrames) myFrame = totalFrames;
+                    
+                  //  console.log ("STEP 0 myFrame is " + myFrame);
+
+                    $scope.mycarousel.index = myFrame;
+                   // console.log ("STEP 1 : Computed index as "+  $scope.mycarousel.index);
+                    var i;
+                    for (i = 1; i <= event.Event.Frames; i++) {
+                        var fname = padToN(i, eventImageDigits) + "-capture.jpg";
+                        // console.log ("Building " + fname);
+                        $scope.slides.push({
+                            id: i,
+                            img: fname
+
+                        });
+                    }
+                  //  console.log ("STEP 2 : calling Save Event To Phone");
+                    saveEventImageToPhone();
+
+            },
+                   function (err)
+                   {
+                        ZMDataModel.zmLog ("snapshot API Error: Could not get frames " + JSON.stringify(err));
+                
+                        $ionicLoading.show({
+                            template: "error retrieving frames",
+                            noBackdrop: true,
+                            duration: 4000
+        });
+            });
+        },
+              
+        function (err)
+        {
+            ZMDataModel.zmDebug ("Error pausing stream before snapshot " + JSON.stringify(err));
+           $ionicLoading.hide();
+        }
+             
+        ); // then
+        
+        
+    }
+
+
+    function saveEventImageToPhone()
+    {
         var curState = carouselUtils.getStop();
         carouselUtils.setStop(true);
 
@@ -430,6 +542,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         ZMDataModel.zmDebug("ModalCtrl: SaveEventImageToPhone called");
         var canvas, context, imageDataUrl, imageData;
         var loginData = ZMDataModel.getLogin();
+        
+        
 
         var url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.mycarousel.index].img;
 
@@ -574,10 +688,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                  SaveError(e.message);
              } 
         }
-    };
-
-
-
+    }
 
 
     $scope.reloadView = function () {
@@ -609,7 +720,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         
         console.log ("Current Event " + JSON.stringify(currentEvent));
         $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
-        console.log ("************* GENERATED CONNKEY " + $scope.connKey);
+        ZMDataModel.zmDebug ("Generated Connkey:" + $scope.connKey);
         
         $scope.currentFrame = 1;
         $scope.isPaused = false;
@@ -618,7 +729,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //console.log ($scope.event.Event.Frames);
         if (currentEvent && currentEvent.Event)
         {
-            console.log ("************ CALLING PREPARE MODAL ***********");
+            //console.log ("************ CALLING PREPARE MODAL ***********");
             prepareModalEvent(currentEvent.Event.Id);
             if (ld.useNphZmsForEvents)
             {
@@ -1189,9 +1300,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             
             
 
-            //console.log ("***ION MYCAROUSEL CHANGED");
-
-            if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames)) {
+           // console.log ("***ION MYCAROUSEL CHANGED TO " + $scope.mycarousel.index);
+            
+            //console.log ("*** IONRANGE INDEX IS " + $scope.ionRange.index);
+            
+              //  console.log ("**** CURRENT EVENT frames" + currentEvent.Event.Frames);
+            
+            if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames -1)) {
+            //    console.log ("PLAYBACK FINISHED");
                 playbackFinished();
             }
             // end of playback from quick scrub
