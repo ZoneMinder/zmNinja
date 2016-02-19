@@ -73,6 +73,7 @@ angular.module('zmApp', [
     eventHistoryTimer:10000,
     eventPlaybackQuery:3000,
     
+    
 
 })
 
