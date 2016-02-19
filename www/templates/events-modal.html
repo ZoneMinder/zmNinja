@@ -43,7 +43,7 @@
                        
                         <div style="color:white">connkey:{{connKey}}</div>
                         <div style="width:100vw; height:100vh" >
-                          <img  ng-click="togglePause()" image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay=single&rate=100&connkey={{connKey}}&scale={{loginData.singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"/>
+                          <img  ng-click="togglePause()" image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay={{currentStreamMode}}&rate=100&connkey={{connKey}}&scale={{loginData.singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"/>
                           
                             <div  ng-if="isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999"
                              class="header-paused">
@@ -97,7 +97,7 @@
 </ion-modal-view>
 
 
-<nav mfb-menu position="tr" effect="zoomin" label="collapse" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
+<nav  mfb-menu position="tr" effect="zoomin" label="collapse" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
 
     <a mfb-button icon="ion-arrow-right-c" label="next event" ng-click="jumpToEvent(nextId,1);"></a>
     <a mfb-button icon="ion-arrow-left-c" label="prev. event" ng-click="jumpToEvent(prevId,-1);"></a>
@@ -108,13 +108,24 @@
 </nav>
     
     
-<nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+<nav ng-if="!loginData.useNphZmsForEvents" mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
 
-    <a mfb-button icon="icon-super-speed" label="super speed" ng-click="adjustSpeed('super');"></a>
-    <a mfb-button icon="icon-normal-speed" label="normal speed" ng-click="adjustSpeed('normal');"></a>
+    <a  mfb-button icon="icon-super-speed" label="super speed" ng-click="adjustSpeed('super');"></a>
+    <a  mfb-button icon="icon-normal-speed" label="normal speed" ng-click="adjustSpeed('normal');"></a>
     <a mfb-button icon="icon-faster" label="faster" ng-click="adjustSpeed('faster');"></a>
     
     <a mfb-button icon="icon-slower" label="slower" ng-click="adjustSpeed('slower');"> </a>
+
+</nav>
+        
+        
+<nav ng-if="loginData.useNphZmsForEvents" mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+
+    <a  mfb-button icon="ion-skip-forward" label="fast forward" ng-click="adjustSpeed('ff');"></a>
+    <a  mfb-button icon="ion-skip-backward" label="fast rewind" ng-click="adjustSpeed('fr');"></a>
+    <a mfb-button icon="ion-play" label="normal play" ng-click="adjustSpeed('np');"></a>
+    
+    <a mfb-button icon="ion-pause" label="pause" ng-click="adjustSpeed('p');"> </a>
 
 </nav>
     
