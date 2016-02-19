@@ -4,13 +4,7 @@
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment */
 
 
-/* FIXME for nph events
-a) timers
-b) sliders
-c) photo save 
-d) gapless
 
-*/
 
 angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
 
@@ -22,13 +16,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.loginData = ZMDataModel.getLogin();
     
     
-   // $scope.currentEventLength = parseFloat($scope.currentEvent.Event.Length);  
-    //console.log ("Current event duration is " + $scope.currentEventLength);
-    
-    
-    //$scope.currentEventLength = $scope.event.Event.Length;  
-
-
     var eventImageDigits = 5; // failsafe
     $scope.currentProgress = 0;
     ZMDataModel.getKeyConfigParams(0)
@@ -66,8 +53,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     });
     var ld = ZMDataModel.getLogin();
 
-    $scope.streamMode = ld.useNphZms ? "jpeg" : "single";
-    $scope.currentStreamMode = 'single';
+ 
+    $scope.currentStreamMode = ld.gapless ? 'gapless':'single';
     ZMDataModel.zmLog("Using stream mode " + $scope.currentStreamMode);
 
     ZMDataModel.zmDebug ("EventModalCtrl called from " + $ionicHistory.currentStateName());
@@ -252,11 +239,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     if ($scope.currentProgress > $scope.currentEventDuration) $scope.currentProgress = $scope.currentEventDuration;
                     $scope.progressText = "At " + $scope.currentProgress + "s of " + $scope.currentEventDuration+"s";
                 
-                    if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
+                    // lets not do this and use zms to move forward or back
+                    // as this code conflicts with fast rev etc
+                    //if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
+                    if (0)
                     {
                         ZMDataModel.zmLog ("Reached end of event " + $scope.eventId);
                         
-                        
+                        // lets use zms here as this conflicts with fast rev etc
                         
                         if (loginData.gapless)
                         {
@@ -310,14 +300,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                       
                             
                         }
-                        else // not gapless
+                        else 
                         {
                             // keep timer on if its switched to gapless
                             eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
                         }
                         
                     }
-                    else // not at end of playback
+                    else // if (0)
                     {
                         console.log ("all good, scheduling next iteration after " + zm.eventPlaybackQuery);
                        //$timeout (checkEvent(), zm.eventPlaybackQuery);
@@ -339,8 +329,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 else
                     
                 {
-                   ZMDataModel.zmDebug("Hmm I found an error " + JSON.stringify(resp) + 
-"so I can't tell if the playback ended");
+                   ZMDataModel.zmDebug("Hmm I found an error " + JSON.stringify(resp));
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
                      $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
@@ -768,43 +757,86 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     // Playback speed adjuster
     $scope.adjustSpeed = function (val) {
-        switch (val) {
+        
+        var ld = ZMDataModel.getLogin();
+        
+        if (ld.useNphZmsForEvents)
+        {
+            
+            var cmd;
+            $scope.isPaused = false;
+            switch (val)
+            {
+                case 'ff': cmd= 4; break;
+                case 'fr': cmd= 7; break;
+                case 'np': cmd= 2; break;
+                case 'p' : cmd= 1;  $scope.isPaused = true; break;
+                default  : cmd=0; 
+            }
+            
+            $ionicLoading.show({
+                        template: "please wait...",
+                        noBackdrop: true,
+                        duration: zm.httpTimeout
+                    });
+            
+            sendCommand(cmd, $scope.connKey)
+            .then (function (success)
+                    {
+                        $ionicLoading.hide();
 
-            case "super":
-                $scope.eventSpeed = 20 / $scope.event.Event.Frames;
-                carouselUtils.setDuration($scope.eventSpeed);
-                break;
-            case "normal":
-                $scope.eventSpeed = $scope.event.Event.Length / $scope.event.Event.Frames;
-                //$scope.eventSpeed = 5;
-                carouselUtils.setDuration($scope.eventSpeed);
-
-                break;
-            case "faster":
-                $scope.eventSpeed = $scope.eventSpeed / 2;
-                if ($scope.eventSpeed < 20 / $scope.event.Event.Frames)
-                    $scope.eventSpeed = 10 / $scope.event.Event.Frames;
-                carouselUtils.setDuration($scope.eventSpeed);
-                break;
-            case "slower":
-                $scope.eventSpeed = $scope.eventSpeed * 2;
-                carouselUtils.setDuration($scope.eventSpeed);
-
-                break;
-            default:
-
-
+                    },
+                   function (err)
+                   {
+                        $ionicLoading.hide();
+                        ZMDataModel.zmDebug ("Error in adjust speed: " + JSON.stringify(err));
+                    }
+            );
+            
+            
         }
-        ZMDataModel.zmDebug("Set playback speed to " + $scope.eventSpeed);
+        
+        else // not using nph
+        {
+        
+            switch (val) {
 
-        $ionicLoading.show({
-            template: 'playback interval: ' + $scope.eventSpeed.toFixed(3) + "ms",
-            animation: 'fade-in',
-            showBackdrop: false,
-            duration: 1500,
-            maxWidth: 300,
-            showDelay: 0
-        });
+                    case "super":
+                        $scope.eventSpeed = 20 / $scope.event.Event.Frames;
+                        carouselUtils.setDuration($scope.eventSpeed);
+                        break;
+                    case "normal":
+                        $scope.eventSpeed = $scope.event.Event.Length / $scope.event.Event.Frames;
+                        //$scope.eventSpeed = 5;
+                        carouselUtils.setDuration($scope.eventSpeed);
+
+                        break;
+                    case "faster":
+                        $scope.eventSpeed = $scope.eventSpeed / 2;
+                        if ($scope.eventSpeed < 20 / $scope.event.Event.Frames)
+                            $scope.eventSpeed = 10 / $scope.event.Event.Frames;
+                        carouselUtils.setDuration($scope.eventSpeed);
+                        break;
+                    case "slower":
+                        $scope.eventSpeed = $scope.eventSpeed * 2;
+                        carouselUtils.setDuration($scope.eventSpeed);
+
+                        break;
+                    default:
+
+                }
+            ZMDataModel.zmDebug("Set playback speed to " + $scope.eventSpeed);
+
+            $ionicLoading.show({
+                template: 'playback interval: ' + $scope.eventSpeed.toFixed(3) + "ms",
+                animation: 'fade-in',
+                showBackdrop: false,
+                duration: 1500,
+                maxWidth: 300,
+                showDelay: 0
+            });
+        }
+        
 
 
     };
@@ -814,6 +846,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
        // console.log(">>>>>>>>>>>>>>GAPLESS TOGGLE INSIDE MODAL");
         $scope.loginData.gapless = !$scope.loginData.gapless;
         ZMDataModel.setLogin($scope.loginData);
+        
+        ZMDataModel.zmDebug("EventModalCtrl: gapless has changed resetting everything & re-generating connkey");
+            window.stop();
+            $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
+            $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+            $timeout.cancel(eventQueryHandle);
+            eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+         
 
     };
 
@@ -909,8 +949,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.jumpToEvent = function (eid, dirn) {
        // console.log("jumptoevent");
-
-        jumpToEvent(eid, dirn);
+        var ld = ZMDataModel.getLogin();
+        if (ld.useNphZmsForEvents)
+        {
+            ZMDataModel.zmLog("using zms to move ");
+            jumpToEventZms($scope.connKey, dirn);
+           // sendCommand ( dirn==1?'13':'12',$scope.connKey);
+            
+        }
+        else
+        {
+            jumpToEvent(eid, dirn);
+        }
 
     };
 
