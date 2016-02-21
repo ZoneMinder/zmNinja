@@ -61,7 +61,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     ZMDataModel.zmDebug ("EventModalCtrl called from " + $ionicHistory.currentStateName());
     // This is not needed for event mode
     
-    
 
 
     ZMDataModel.zmDebug("Setting playback to " + $scope.streamMode);
@@ -84,6 +83,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             });
 
     
+    //-------------------------------------------------------
+    // we use this to reload the connkey if authkey changed
+    //------------------------------------------------------
+    
     
      $rootScope.$on("auth-success", function () {
 
@@ -97,6 +100,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
          
             
     });
+    
+    //-------------------------------------------------------
+    // tap to pause
+    //------------------------------------------------------
 
     $scope.togglePause = function ()
     {
@@ -107,27 +114,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         
     };
 
-    $scope.togglePTZ = function () {
-
-        //console.log("PTZ");
-
-        if ($scope.isControllable == '1') {
-            //console.log ("iscontrollable is true");
-            $scope.showPTZ = !$scope.showPTZ;
-        } else {
-            $ionicLoading.show({
-                template: "PTZ not configured for this monitor",
-                noBackdrop: true,
-                duration: 3000,
-            });
-        }
 
 
-
-    };
-
-
-                                      
+             
+    //-------------------------------------------------------
+    // This is what we call every zm.EventQueryInterval
+    // it really only queries to get status to it can display
+    // zms takes care of the display
+    //------------------------------------------------------
 
     function checkEvent()
     {
@@ -245,95 +239,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     // lets not do this and use zms to move forward or back
                     // as this code conflicts with fast rev etc
                     //if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
-                    if (0)
-                    {
-                        ZMDataModel.zmLog ("Reached end of event " + $scope.eventId);
-                        
-                        // lets use zms here as this conflicts with fast rev etc
-                        
-                        if (loginData.gapless)
-                        {
-                            ZMDataModel.zmLog ("STEP 1: Moving to nextevent as gapless is on");
-                            sendCommand ('13',connkey) // next
-                            .then (function (resp) // 13
-                                   {
-                                
-                                        sendCommand('99',connkey) // query
-                                        .then (function (resp) //99
-                                        {
-                                            console.log ("Output of next move afer query is " + JSON.stringify(resp));
-
-                                            // now get duration;
-                                            // $scope.currentEventDuration = Math.floor($scope.currentEvent.Event.Length);
-                                            var apiurl = loginData.apiurl + "/events/" + resp.data.status.event + ".json";
-                                            ZMDataModel.zmLog ("STEP 2:Getting details for " + apiurl);
-                                            $http.get(apiurl)
-                                            .then (function (data)
-                                            {
-                                                $scope.currentEventDuration = Math.floor(data.data.event.Event.Length);
-                                                
-                                                if (resp.data.status.event != $scope.eventId)
-                                                    $scope.currentProgress = 0; // if = then we are at end
-                                                
-                                                $scope.eventId = resp.data.status.event;
-                                                $scope.d_eventId = $scope.eventId;
-                                                
-                                                ZMDataModel.zmDebug ("STEP 3: New eid " + $scope.eventId + " duration " + $scope.currentEventDuration);
-                                                eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-                                            },
-                                            function (err) //api
-                                            {
-                                                console.log ("Error " + JSON.stringify(err));
-                                                eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-
-                                            });
-                                               
-                                        },
-                                        function (err) // 99
-                                        {
-                                            eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-                                            
-                                        });
-                                    },
-                                function(error) { //13
-                                        console.log ("Error of next move is " + JSON.stringify(resp));
-                                        eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-                                    } );
-
-                             $scope.currentProgress = 0;
-                      
-                            
-                        }
-                        else 
-                        {
-                            // keep timer on if its switched to gapless
-                            eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-                        }
-                        
-                    }
-                    else // if (0)
-                    {
-                        console.log ("all good, scheduling next iteration after " + zm.eventPlaybackQuery);
-                       //$timeout (checkEvent(), zm.eventPlaybackQuery);
-                        eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-                    }
                     
-                   /* if ((resp.status.paused==1) && ($scope.currentProgress < $scope.currentEventDuration ) && !$scope.isPaused)
-                    {
-                        
-                        //wtf? why?
-                        
-                        //No such file or directory
-                        
-                        ZMDataModel.zmDebug ("ZMS mysteriously paused at " + $scope.currentProgress+ "of " +$scope.currentEventDuration+"seconds , force resuming");
-                        sendCommand (2,connkey);
-                //         $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
-                    }*/
+                    
+                    console.log ("all good, scheduling next iteration after " + zm.eventPlaybackQuery);
+                   //$timeout (checkEvent(), zm.eventPlaybackQuery);
+                    eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+     
                 }
-                else
+                else // resp.result was messed up
                     
                 {
                    ZMDataModel.zmDebug("Hmm I found an error " + JSON.stringify(resp));
+                    //window.stop();
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
                      $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
