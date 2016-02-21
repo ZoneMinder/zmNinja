@@ -14,6 +14,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var nphTimer;
     var eventQueryHandle;
     $scope.loginData = ZMDataModel.getLogin();
+    $scope.currentRate='-';
     
     
     var eventImageDigits = 5; // failsafe
@@ -234,6 +235,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     
                     $scope.currentProgress = resp.status.progress;
                     $scope.eventId = resp.status.event;
+                    $scope.d_eventId = $scope.eventId;
+                    $scope.currentRate = resp.status.rate;
                     
                     
                     if ($scope.currentProgress > $scope.currentEventDuration) $scope.currentProgress = $scope.currentEventDuration;
@@ -273,6 +276,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                                                     $scope.currentProgress = 0; // if = then we are at end
                                                 
                                                 $scope.eventId = resp.data.status.event;
+                                                $scope.d_eventId = $scope.eventId;
                                                 
                                                 ZMDataModel.zmDebug ("STEP 3: New eid " + $scope.eventId + " duration " + $scope.currentEventDuration);
                                                 eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
@@ -333,12 +337,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
                      $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
+                    eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
                 }
             });
         
         
             req.error (function (resp) {
                 ZMDataModel.zmDebug ("processEvent error:"+JSON.stringify(resp));
+                eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
                 
             });
         
@@ -703,6 +709,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         var ld = ZMDataModel.getLogin();
         $scope.loginData = ZMDataModel.getLogin();
         
+        $scope.singleImageQuality = ld.singleImageQuality;
+        //$scope.singleImageQuality = 100;
+        
+        
         
         
         currentEvent = $scope.currentEvent;
@@ -1018,7 +1028,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     function jumpToEventZms(connkey, dirn) {
         
         var cmd = dirn==1?'13':'12';
-        
+        $scope.d_eventId = "...";
         ZMDataModel.zmDebug ("Sending " + cmd + " to " + connkey);
         
         $ionicLoading.show({
@@ -1182,6 +1192,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     //console.log (JSON.stringify( success));
                     $scope.eventName = event.Event.Name;
                     $scope.eventId = event.Event.Id;
+                    $scope.d_eventId = $scope.eventId;
                     $scope.eFramesNum = event.Event.Frames;
                     $scope.eventDur = Math.round(event.Event.Length);
                     $scope.loginData = ZMDataModel.getLogin();

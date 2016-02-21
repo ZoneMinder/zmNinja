@@ -158,7 +158,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
                                    // console.log ("Old value of event url " + $scope.MontageMonitors[j].eventUrl);
                                //console.log ("ldurl is " + ld.streamingurl);
-                                    $scope.MontageMonitors[j].Monitor.eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay=gapless&rate="+$scope.sliderVal.realRate+"&connkey="+$scope.MontageMonitors[j].Monitor.connKey+"&scale="+ld.singleImageQuality+"&rand="+$rootScope.rand;
+                                    $scope.MontageMonitors[j].Monitor.eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+eid+"&frame=1&replay=gapless&rate="+$scope.sliderVal.realRate+"&connkey="+$scope.MontageMonitors[j].Monitor.connKey+"&scale="+ld.montageHistoryQuality+"&rand="+$rootScope.rand;
                                     //console.log ("Setting event URL to " +$scope.MontageMonitors[j].Monitor.eventUrl);
 
                                    //   console.log ("SWITCHING TO " + $scope.MontageMonitors[j].eventUrl);
@@ -213,7 +213,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     if (!ZMDataModel.isBackground())
                     {
 
-                        $scope.MontageMonitors[i].Monitor.eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.events[0].Event.Id+"&frame=1&replay=gapless&rate="+$scope.sliderVal.realRate+"&connkey="+$scope.MontageMonitors[i].Monitor.connKey+"&scale="+ld.singleImageQuality+"&rand="+$rootScope.rand;
+                        $scope.MontageMonitors[i].Monitor.eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.events[0].Event.Id+"&frame=1&replay=gapless&rate="+$scope.sliderVal.realRate+"&connkey="+$scope.MontageMonitors[i].Monitor.connKey+"&scale="+ld.montageHistoryQuality+"&rand="+$rootScope.rand;
                         
                     
                         
@@ -442,7 +442,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                                          element.addClass('animated flipInX');
                                         $scope.MontageMonitors[ndx].Monitor.eventUrlTime=data.event.Event.StartTime;
                                         
-                                        $scope.MontageMonitors[ndx].Monitor.eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.event.Event.Id+"&frame=1&replay=gapless&rate="+$scope.sliderVal.realRate+"&connkey="+$scope.MontageMonitors[ndx].Monitor.connKey+"&scale="+ld.singleImageQuality+"&rand="+$rootScope.rand;
+                                        $scope.MontageMonitors[ndx].Monitor.eventUrl=ld.streamingurl+"/nph-zms?source=event&mode=jpeg&event="+data.event.Event.Id+"&frame=1&replay=gapless&rate="+$scope.sliderVal.realRate+"&connkey="+$scope.MontageMonitors[ndx].Monitor.connKey+"&scale="+ld.montageHistoryQuality+"&rand="+$rootScope.rand;
                                     },700);
                                
                         }
