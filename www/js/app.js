@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI */
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI, $*/
 
 
 var appVersion = "0.0.0";
@@ -150,6 +150,26 @@ angular.module('zmApp', [
     };
 })
 
+
+.directive('tooltip', function () {
+    return {
+        restrict: 'C',
+        link: function (scope, element, attrs) {
+            if (attrs.title) {
+                var $element = $(element);
+                $element.attr("title", attrs.title);
+                $element.tooltipster({
+                    animation: attrs.animation,
+                    trigger: "click",
+                    position: "right",
+                    positionTracker: true,
+                    maxWidth: 500,
+                    contentAsHTML: true
+                });
+            }
+        }
+    };
+})
 
 
 //------------------------------------------------------------------

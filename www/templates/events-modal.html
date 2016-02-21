@@ -41,9 +41,9 @@
                     
                     <div ng-if="( (defaultVideo=='') || (loginData.enableh264==false)) && (loginData.useNphZmsForEvents==true)">
                        
-                        <div style="color:white">connkey:{{connKey}}</div>
+                        <!--<div style="color:white">connkey:{{connKey}}</div>-->
                         <div style="width:100vw; height:100vh" >
-                          <img  ng-click="togglePause()" image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay={{currentStreamMode}}&rate=100&connkey={{connKey}}&scale={{loginData.singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"/>
+                          <img  ng-click="togglePause()" image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay={{currentStreamMode}}&rate=100&connkey={{connKey}}&scale={{singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"/>
                           
                             <div  ng-if="isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999"
                              class="header-paused">
@@ -121,8 +121,9 @@
         
 <nav ng-if="loginData.useNphZmsForEvents" mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
 
-    <a  mfb-button icon="ion-skip-forward" label="fast forward" ng-click="adjustSpeed('ff');"></a>
+    
     <a  mfb-button icon="ion-skip-backward" label="fast rewind" ng-click="adjustSpeed('fr');"></a>
+    <a  mfb-button icon="ion-skip-forward" label="fast forward" ng-click="adjustSpeed('ff');"></a>
     <a mfb-button icon="ion-play" label="normal play" ng-click="adjustSpeed('np');"></a>
     
     <a mfb-button icon="ion-pause" label="pause" ng-click="adjustSpeed('p');"> </a>
@@ -139,12 +140,9 @@
 
 </div>
         
-<div class="events-range-modal" ng-if="(defaultVideo=='' )&& (loginData.useNphZmsForEvents)" style="color:white">
-   <!-- Progress: Event: {{eventId}} - {{progressText}}-->
-    <progress max="{{currentEventDuration}}" value="{{currentProgress}}"></progress>
-</div>
 
-<div class="events-range-modal-text" >showing event: {{eventId}}</div>
+
+<div class="events-range-modal-text" >showing event: {{d_eventId}}</div>
 
 <span class="event-modal-alarm-badge">
             <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive button-small" 
@@ -187,4 +185,16 @@
     <progress max="{{totalEventTime}}" value="{{currentEventTime}}"
               class="eventprogress"></progress>
 -->
+        
+        <div class="events-range-modal" ng-if="(defaultVideo=='' )&& (loginData.useNphZmsForEvents)" style="color:white">
+   <!-- Progress: Event: {{eventId}} - {{progressText}}-->
+    <div class="row">
+        <div class="col col-75">
+            <progress style="line-height:20px" max="{{currentEventDuration}}" value="{{currentProgress}}"></progress>
+        </div>
+        <div class="col col-25" style="line-height:40px">
+            @{{currentRate}}x
+        </div>
+    </div>
+</div>
 </div>

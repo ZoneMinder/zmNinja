@@ -37,7 +37,8 @@ angular.module('zmApp.controllers')
         'streamingurl': "",
         'maxFPS': "3", // image streaming FPS
         'montageQuality': "50", // montage streaming quality in %
-        'singleImageQuality': "50", // single streaming quality in %
+        'singleImageQuality': "100", // single streaming quality in %
+        'montageHistoryQuality':"50",
         'useSSL':false, // "1" if HTTPS
         'keepAwake':true, // don't dim/dim during live view
         'isUseAuth':true, // true if user wants ZM auth
@@ -279,6 +280,13 @@ angular.module('zmApp.controllers')
                 {
                     zmDebug ("enableBlog does not exist. Setting to true");
                     loginData.enableBlog  = true;
+                    
+                }
+                
+                if (typeof loginData.montageHistoryQuality == 'undefined')
+                {
+                    zmDebug ("montageHistoryQuality does not exist. Setting to 50");
+                    loginData.montageHistoryQuality = "50";
                     
                 }
                 
