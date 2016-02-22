@@ -94,8 +94,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             window.stop();
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
             $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
-            $timeout.cancel(eventQueryHandle);
-            eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+            //$timeout.cancel(eventQueryHandle);
+            //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
          
          
             
@@ -125,7 +125,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function checkEvent()
     {
-        console.log ("Event timer");
+        //console.log ("Event timer");
+        //console.log ("Event timer");
         processEvent('99',$scope.connKey);
     }
     
@@ -222,7 +223,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             });
         
             req.success (function (resp) {
-                ZMDataModel.zmDebug ("processEvent success:"+JSON.stringify(resp));
+               // ZMDataModel.zmDebug ("processEvent success:"+JSON.stringify(resp));
                 
                 if (resp.result=="Ok")
                 {
@@ -241,9 +242,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     //if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
                     
                     
-                    console.log ("all good, scheduling next iteration after " + zm.eventPlaybackQuery);
+                    
                    //$timeout (checkEvent(), zm.eventPlaybackQuery);
-                    eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                    //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
      
                 }
                 else // resp.result was messed up
@@ -254,14 +255,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
                      $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
-                    eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                    //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
                 }
             });
         
         
             req.error (function (resp) {
                 ZMDataModel.zmDebug ("processEvent error:"+JSON.stringify(resp));
-                eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
                 
             });
         
@@ -373,7 +374,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         then (function (resp)
         {
             $ionicLoading.hide();
-            console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
+           // console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
             $scope.currentProgress = resp.data.status.progress;
            // console.log ("STEP 0 progress is " + $scope.currentProgress);
             $scope.slides = [];
@@ -650,13 +651,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if (ld.useNphZmsForEvents)
             {
            
-                ZMDataModel.zmLog ("Starting checkAllEvents timer");
+                ZMDataModel.zmLog ("Starting checkAllEvents interval...");
                 
-                eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
-                /*eventQueryHandle = $interval(function () {
+                //eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
+                $interval.cancel(eventQueryHandle);
+                eventQueryHandle = $interval(function () {
                     checkEvent();
                     //  console.log ("Refreshing Image...");
-                }.bind(this),zm.eventPlaybackQuery);*/
+                }.bind(this),zm.eventPlaybackQuery);
             }
             
         }
@@ -671,9 +673,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.$on('modal.removed', function () {
         $scope.isModalActive = false;
+        window.stop();
         //console.log("**MODAL REMOVED: Stopping modal timer");
-                //$interval.cancel(eventQueryHandle);
-                $timeout.cancel(eventQueryHandle);
+                $interval.cancel(eventQueryHandle);
+                //$timeout.cancel(eventQueryHandle);
         ZMDataModel.zmDebug ("Modal removed - killing connkey");
         sendCommand(17,$scope.connKey);
         
@@ -778,8 +781,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             window.stop();
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
             $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
-            $timeout.cancel(eventQueryHandle);
-            eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+            //$timeout.cancel(eventQueryHandle);
+            //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
          
 
     };
@@ -955,7 +958,23 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             });
         
         sendCommand ( cmd,connkey)
-        .then (function (success) {$ionicLoading.hide();}, function (error) {$ionicLoading.hide();});
+        .then (
+            function (success) 
+            {
+                //console.log ("jump success " + JSON.stringify(success));
+                $ionicLoading.hide();
+            }, 
+            function (error) {
+                
+                    ZMDataModel.zmDebug("Hmm jump  error " + JSON.stringify(error));
+                    window.stop();
+                    $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
+                     $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+                    ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
+                    //$timeout.cancel(eventQueryHandle);
+                   // eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                    $ionicLoading.hide();
+            });
         var slidein;
         var slideout;
         if (dirn == 1) {
