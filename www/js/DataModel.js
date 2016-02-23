@@ -63,7 +63,7 @@ angular.module('zmApp.controllers')
          'minAlarmCount':'1',
          'montageSize':'3',
          'useNphZms':true,
-         'useNphZmsForEvents':false,
+         'useNphZmsForEvents':true,
          'packMontage':false,
          'exitOnSleep':false,
          'forceNetworkStop':false,
@@ -244,8 +244,8 @@ angular.module('zmApp.controllers')
                 
                 if (typeof loginData.useNphZmsForEvents == 'undefined')
                 {
-                    zmDebug ("useNphZmsForEvents does not exist. Setting to false");
-                    loginData.useNphZmsForEvents  = false;
+                    zmDebug ("useNphZmsForEvents does not exist. Setting to true");
+                    loginData.useNphZmsForEvents  = true;
                 }
                 
                 if (typeof loginData.packMontage == 'undefined')
