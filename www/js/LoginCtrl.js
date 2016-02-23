@@ -406,82 +406,108 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         }
 
+        
+        // lets logout
+        ZMDataModel.zmDebug ("Logging out of current session...");
+        $rootScope.authSession = "undefined";
+        $http({
+             method: 'POST',
+                //withCredentials: true,
+                url: $scope.loginData.url + '/index.php',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                },
+                transformRequest: function (obj) {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                    var params = str.join("&");
+                    return params;
+                },
+
+                data: {
+                    action: "logout",
+                    view: "login"
+                }
+            })
+            .finally ( function (ans) 
+            {
+            
+                zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;authenticating...</button>")
+                    // Do the happy menu only if authentication works
+                    // if it does not work, there is an emitter for auth
+                    // fail in app.js that will be called to show an error
+                    // box
+
+                .then(function (data) {
+
+                    // Now let's validate if the API works
+
+                    ZMDataModel.zmLog("Validating APIs at " + apiurl);
+                    $http.get(apiurl)
+                        .success(function (data) {
+
+                            var loginStatus = "Please explore the menu and enjoy zmNinja!";
+                            EventServer.refresh();
 
 
 
+                            // now grab and report PATH_ZMS
+                            ZMDataModel.getPathZms()
+                                .then(function (data) {
+                                    var ld = ZMDataModel.getLogin();
+                                    var zm_cgi = data.toLowerCase();
 
-        zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;authenticating...</button>")
-            // Do the happy menu only if authentication works
-            // if it does not work, there is an emitter for auth
-            // fail in app.js that will be called to show an error
-            // box
+                                    var user_cgi = (ld.streamingurl).toLowerCase();
+                                    ZMDataModel.zmLog("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
 
-        .then(function (data) {
+                                    $http.get(ld.streamingurl + "/zms")
+                                        .success(function (data) {
+                                            ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
+                                            loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path";
+                                            $rootScope.zmPopup = $ionicPopup.alert({
+                                                title: 'Login validated',
+                                                template: loginStatus
+                                            }).then(function (res) {
+                                                $ionicSideMenuDelegate.toggleLeft();
+                                                ZMDataModel.zmDebug("Force reloading monitors...");
+                                                var refresh = ZMDataModel.getMonitors(1);
+                                            });
+                                        })
+                                        .error(function (error, status) {
+                                            // If its 5xx, then the cgi-bin path is valid
+                                            // if its 4xx then the cgi-bin path is not valid
 
-            // Now let's validate if the API works
+                                            if (status < 500) {
+                                                loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path.";
+                                            }
 
-            ZMDataModel.zmLog("Validating APIs at " + apiurl);
-            $http.get(apiurl)
-                .success(function (data) {
-
-                    var loginStatus = "Please explore the menu and enjoy zmNinja!";
-                    EventServer.refresh();
-
-
-
-                    // now grab and report PATH_ZMS
-                    ZMDataModel.getPathZms()
-                        .then(function (data) {
-                            var ld = ZMDataModel.getLogin();
-                            var zm_cgi = data.toLowerCase();
-
-                            var user_cgi = (ld.streamingurl).toLowerCase();
-                            ZMDataModel.zmLog("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
-
-                            $http.get(ld.streamingurl + "/zms")
-                                .success(function (data) {
-                                    ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
-                                    loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path";
-                                    $rootScope.zmPopup = $ionicPopup.alert({
-                                        title: 'Login validated',
-                                        template: loginStatus
-                                    }).then(function (res) {
-                                        $ionicSideMenuDelegate.toggleLeft();
-                                        ZMDataModel.zmDebug("Force reloading monitors...");
-                                        var refresh = ZMDataModel.getMonitors(1);
-                                    });
-                                })
-                                .error(function (error, status) {
-                                    // If its 5xx, then the cgi-bin path is valid
-                                    // if its 4xx then the cgi-bin path is not valid
-
-                                    if (status < 500) {
-                                        loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path.";
-                                    }
-
-                                    $rootScope.zmPopup = $ionicPopup.alert({
-                                        title: 'Login validated',
-                                        template: loginStatus
-                                    }).then(function (res) {
-                                        $ionicSideMenuDelegate.toggleLeft();
-                                        ZMDataModel.zmDebug("Force reloading monitors...");
-                                        var refresh = ZMDataModel.getMonitors(1);
-                                    });
+                                            $rootScope.zmPopup = $ionicPopup.alert({
+                                                title: 'Login validated',
+                                                template: loginStatus
+                                            }).then(function (res) {
+                                                $ionicSideMenuDelegate.toggleLeft();
+                                                ZMDataModel.zmDebug("Force reloading monitors...");
+                                                var refresh = ZMDataModel.getMonitors(1);
+                                            });
 
 
+                                        });
                                 });
+
+
+
+                        })
+                        .error(function (error) {
+                            ZMDataModel.displayBanner('error', ['ZoneMinder API check failed', 'Please check API settings']);
+                            ZMDataModel.zmLog("API login error " + JSON.stringify(error));
+                            $rootScope.zmPopup= $ionicPopup.alert({
+                                title: 'Login validated but API failed',
+                                template: 'Please check your API settings'
+                            });
                         });
-
-
-
-                })
-                .error(function (error) {
-                    ZMDataModel.displayBanner('error', ['ZoneMinder API check failed', 'Please check API settings']);
-                    ZMDataModel.zmLog("API login error " + JSON.stringify(error));
-                    $rootScope.zmPopup= $ionicPopup.alert({
-                        title: 'Login validated but API failed',
-                        template: 'Please check your API settings'
-                    });
                 });
 
 
