@@ -1168,7 +1168,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     });
 
     $scope.$on('$ionicView.enter', function () {
-        //console.log("**VIEW ** MontageHistory Ctrl Entered, Starting loadNotifications");
+        ZMDataModel.zmDebug("**VIEW ** MontageHistory Ctrl Entered, Starting loadNotifications");
         var ld = ZMDataModel.getLogin();
         //console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
