@@ -373,7 +373,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         sendCommand('1',$scope.connKey).
         then (function (resp)
         {
-            $ionicLoading.hide();
+            
            // console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
             $scope.currentProgress = resp.data.status.progress;
            // console.log ("STEP 0 progress is " + $scope.currentProgress);
@@ -383,6 +383,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $http.get(apiurl)
             .then (function (success)
             {
+                
                     var event = success.data.event;
 
                     event.Event.BasePath = computeBasePath(event);
@@ -417,11 +418,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         });
                     }
                   //  console.log ("STEP 2 : calling Save Event To Phone");
+                    $ionicLoading.hide();
                     saveEventImageToPhone();
+                   
 
             },
                    function (err)
                    {
+                        $ionicLoading.hide();
                         ZMDataModel.zmLog ("snapshot API Error: Could not get frames " + JSON.stringify(err));
                 
                         $ionicLoading.show({
