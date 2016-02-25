@@ -226,7 +226,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
 
-        //console.log ("Inside Montage timer...");
+        console.log ("Inside Montage timer...");
 
     }
 
@@ -301,6 +301,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
          $scope.minimal = !$scope.minimal;
         ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
+        console.log ("alarms:Cancelling timer");
         $interval.cancel($rootScope.intervalHandle);
         
         if (!$rootScope.isAlarm)
@@ -532,6 +533,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
        // console.log("Hide Statusbar");
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
+         console.log ("minimal switch:Cancelling timer");
         $interval.cancel($rootScope.intervalHandle); //we will renew on reload
         // We are reloading this view, so we don't want entry animations
         $ionicHistory.nextViewOptions({
@@ -576,6 +578,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         ZMDataModel.zmLog("Cancelling montage timer, opening Modal");
         // ZMDataModel.zmLog("Starting Modal timer");
+         console.log ("openModal:Cancelling timer");
         $interval.cancel($rootScope.intervalHandle);
 
         // let's start modal timer
@@ -693,6 +696,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         ZMDataModel.zmLog("Restarting montage timer, closing Modal...");
         var ld = ZMDataModel.getLogin();
+         console.log ("closeModal: Cancelling timer");
         $interval.cancel($rootScope.intervalHandle);
         $rootScope.intervalHandle = $interval(function () {
             loadNotifications();
@@ -768,6 +772,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.onRelease = function (index) {
       //  console.log("Press release on " + index);
         isLongPressActive = false;
+         console.log ("onRelease:Cancelling timer");
         $interval.cancel(intervalHandleMontage);
     };
 
@@ -823,7 +828,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.$on('$destroy', function () {
       //  console.log("*** CANCELLING INTERVAL ****");
-        $interval.cancel($rootScope.intervalHandle);
+        // console.log ("destroy:Cancelling timer");
+      //  $interval.cancel($rootScope.intervalHandle);
     });
 
 
@@ -837,6 +843,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         //console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
+        console.log ("******************************************** STARTING TIMER ");
         $interval.cancel($rootScope.intervalHandle);
         $rootScope.intervalHandle = $interval(function () {
             loadNotifications();
@@ -855,12 +862,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.$on('$ionicView.beforeLeave', function () {
        // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
         
+        console.log ("beforeLeave:Cancelling timer");
+        $interval.cancel($rootScope.intervalHandle);
         
-        ZMDataModel.zmLog ("MontageCtrl:Stopping network pull...");
+        
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
         
-        if (ZMDataModel.isForceNetworkStop())  ZMDataModel.stopNetwork();
+        if (ZMDataModel.isForceNetworkStop())
+        {
+            ZMDataModel.zmLog ("MontageCtrl:Stopping network pull...");
+            ZMDataModel.stopNetwork();
+            
+        }
         
     });
 
