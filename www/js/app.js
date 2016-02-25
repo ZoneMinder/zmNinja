@@ -1252,6 +1252,16 @@ angular.module('zmApp', [
     $ionicConfigProvider.navBar.alignTitle('center');
 
     $stateProvider
+    .state('app', {
+        url: '/',
+        abstract: true,
+        templateUrl: 'index.html',
+        cache: false,
+        //controller: 'AppCtrl'
+    })
+
+    
+    
         .state('login', {
             data: {
                 requireLogin: false
@@ -1280,14 +1290,7 @@ angular.module('zmApp', [
             controller: 'zmApp.NewsCtrl',
     })
 
-    .state('app', {
-        url: '/',
-        abstract: true,
-        templateUrl: 'index.html',
-        cache: false,
-        //controller: 'AppCtrl'
-    })
-
+    
 
     .state('monitors', {
         data: {
