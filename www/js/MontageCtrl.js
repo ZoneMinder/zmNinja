@@ -843,7 +843,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         //console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
-        console.log ("******************************************** STARTING TIMER ");
+        //console.log ("******************************************** STARTING TIMER ");
         $interval.cancel($rootScope.intervalHandle);
         $rootScope.intervalHandle = $interval(function () {
             loadNotifications();
