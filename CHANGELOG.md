@@ -1,7 +1,30 @@
 # Change Log
 
-## [1.0.7](https://github.com/pliablepixels/zmNinja/tree/1.0.7) (2016-02-09)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.6...1.0.7)
+## [1.0.9](https://github.com/pliablepixels/zmNinja/tree/1.0.9) (2016-02-25)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.7...1.0.9)
+
+**Implemented enhancements:**
+
+- Route event playback via ZMS [\#164](https://github.com/pliablepixels/zmNinja/issues/164)
+- Montage view zoom slider, ergonomy [\#163](https://github.com/pliablepixels/zmNinja/issues/163)
+- \[DESKTOP\] Zooming for non touch screen displays. [\#162](https://github.com/pliablepixels/zmNinja/issues/162)
+- Fix playback speed for long events [\#161](https://github.com/pliablepixels/zmNinja/issues/161)
+
+**Fixed bugs:**
+
+- Desktop: Monitors Freeze when Exiting Full Screen [\#169](https://github.com/pliablepixels/zmNinja/issues/169)
+- changing to invalid credentials after valid credentials continues to work [\#167](https://github.com/pliablepixels/zmNinja/issues/167)
+
+**Closed issues:**
+
+- iOS: Events--\>Filter by Date/Time does not work [\#171](https://github.com/pliablepixels/zmNinja/issues/171)
+- Desktop: Event Footage extremely low resolution [\#168](https://github.com/pliablepixels/zmNinja/issues/168)
+- ionic state restore failed [\#166](https://github.com/pliablepixels/zmNinja/issues/166)
+- Desktop: Montage places last image below rather than alongside previous [\#165](https://github.com/pliablepixels/zmNinja/issues/165)
+- \[DESKTOP\] Playback issue on windows platform [\#151](https://github.com/pliablepixels/zmNinja/issues/151)
+
+## [v1.0.7](https://github.com/pliablepixels/zmNinja/tree/v1.0.7) (2016-02-09)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.6...v1.0.7)
 
 **Implemented enhancements:**
 
