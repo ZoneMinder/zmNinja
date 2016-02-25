@@ -1157,15 +1157,16 @@ angular.module('zmApp', [
 
             document.addEventListener("pause", function () {
                 ZMDataModel.setBackground(true);
+                ZMDataModel.setJustResumed(true); // used for window stop
             
                 ZMDataModel.zmLog("ROOT APP:App is going into background");
                 
                 $interval.cancel($rootScope.eventQueryInterval);
                 $interval.cancel($rootScope.intervalHandle);
 
-                ZMDataModel.setBackground(true);
+                
                 ZMDataModel.zmLog("ROOT APP: Stopping network pull...");
-                window.stop();
+                window.stop(); // dont call stopNetwork - we need to stop here 
             
                 
                 var ld = ZMDataModel.getLogin();
