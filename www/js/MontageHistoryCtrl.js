@@ -90,7 +90,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             return;
         }
         
-        window.stop();
+         ZMDataModel.stopNetwork();
         var ld = ZMDataModel.getLogin();
         
         $scope.sliderVal.realRate = $scope.sliderVal.rate *100;
@@ -1248,7 +1248,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         }   
         
         ZMDataModel.zmLog ("Forcing a window.stop() here");
-        window.stop();
+        ZMDataModel.stopNetwork();
         
         
         

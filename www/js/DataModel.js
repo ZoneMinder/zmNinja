@@ -19,6 +19,7 @@ angular.module('zmApp.controllers')
 
     var zmAppVersion="unknown";
     var isBackground = false;
+    var justResumed = false;
     var monitorsLoaded = 0;
     //var montageSize = 3;
     var monitors = [];
@@ -308,6 +309,26 @@ angular.module('zmApp.controllers')
         isForceNetworkStop: function()
         {
             return loginData.forceNetworkStop;
+        },
+        
+        setJustResumed: function (val)
+        {
+            justResumed = true;
+        },
+        
+        stopNetwork: function()
+        {
+            if (justResumed)
+            {
+                // we don't call stop as we did stop on pause
+                zmLog ("Not calling window stop as we just resumed");
+                justResumed = false;
+            }
+            else
+            {
+                zmLog ("Calling window.stop()");
+                window.stop();
+            }
         },
 
         isLoggedIn: function () {
