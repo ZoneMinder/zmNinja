@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -276,12 +276,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
 
 
-        /*if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
-            $ionicPopup.alert({
-                title: 'Note',
-                template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
-            });
-        }*/
+       
 
         // lets so some basic sanitization of the data
         // I am already adding "/" so lets remove spurious ones
@@ -467,10 +462,14 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                         .success(function (data) {
                                             ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
                                             loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path";
-                                            $rootScope.zmPopup = $ionicPopup.alert({
+                                        
+                                            
+                                            
+                                            $rootScope.zmPopup = SecuredPopups.show('alert',{
                                                 title: 'Login validated',
                                                 template: loginStatus
                                             }).then(function (res) {
+                                               
                                                 $ionicSideMenuDelegate.toggleLeft();
                                                 ZMDataModel.zmDebug("Force reloading monitors...");
                                                 var refresh = ZMDataModel.getMonitors(1);
@@ -483,11 +482,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                             if (status < 500) {
                                                 loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path.";
                                             }
-
-                                            $rootScope.zmPopup = $ionicPopup.alert({
+                                            
+                                            $rootScope.zmPopup = SecuredPopups.show('alert',{
                                                 title: 'Login validated',
                                                 template: loginStatus
                                             }).then(function (res) {
+                                              
                                                 $ionicSideMenuDelegate.toggleLeft();
                                                 ZMDataModel.zmDebug("Force reloading monitors...");
                                                 var refresh = ZMDataModel.getMonitors(1);
@@ -503,7 +503,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                         .error(function (error) {
                             ZMDataModel.displayBanner('error', ['ZoneMinder API check failed', 'Please check API settings']);
                             ZMDataModel.zmLog("API login error " + JSON.stringify(error));
-                            $rootScope.zmPopup= $ionicPopup.alert({
+                            
+                            $rootScope.zmPopup= SecuredPopups.show('alert',{
                                 title: 'Login validated but API failed',
                                 template: 'Please check your API settings'
                             });

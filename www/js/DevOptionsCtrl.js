@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory','$state',  function ($scope, $rootScope, $ionicModal, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state) {
+angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory','$state', 'SecuredPopups', function ($scope, $rootScope, $ionicModal, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups) {
 
 
     $scope.openMenu = function () {
@@ -57,7 +57,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         ZMDataModel.zmDebug("SaveDevOptions: called");
 
         if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
-            $rootScope.zmPopup= $ionicPopup.alert({
+            $rootScope.zmPopup= SecuredPopups.show('alert',{
                 title: 'Note',
                 template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
             });
@@ -99,7 +99,8 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     $scope.saveDevOptions = function () {
             
             saveDevOptions();
-        $rootScope.zmPopup= $ionicPopup.alert({
+        $rootScope.zmPopup.close();
+        $rootScope.zmPopup= SecuredPopups.show('alert',{
             title: 'Settings Saved',
             template: 'Please explore the menu and enjoy zmNinja!'
         }).then(function (res) {
