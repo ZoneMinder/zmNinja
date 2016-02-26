@@ -296,6 +296,55 @@ angular.module('zmApp', [
  
 }])
 
+//credit: https://github.com/driftyco/ionic/issues/3131
+.factory('SecuredPopups', [
+    '$ionicPopup',
+    '$q',
+    function ($ionicPopup, $q) {
+
+        var firstDeferred = $q.defer();
+        firstDeferred.resolve();
+
+        var lastPopupPromise = firstDeferred.promise;
+
+        // Change this var to true if you want that popups will automaticly close before opening another
+        var closeAndOpen = false;
+
+        return {
+            'show': function (method, object) {
+                var deferred = $q.defer();
+                var closeMethod = null;
+                deferred.promise.isOpen = false;
+                deferred.promise.close = function () {
+                    if (deferred.promise.isOpen && angular.isFunction(closeMethod)) {
+                        closeMethod();
+                    }
+                };
+
+                if (closeAndOpen && lastPopupPromise.isOpen) {
+                    lastPopupPromise.close();
+                }
+
+                lastPopupPromise.then(function () {
+                    deferred.promise.isOpen = true;
+                    var popupInstance = $ionicPopup[method](object);
+
+                    closeMethod = popupInstance.close;
+                    popupInstance.then(function (res) {
+                        deferred.promise.isOpen = false;
+                        deferred.resolve(res);
+                    });
+                });
+
+                lastPopupPromise = deferred.promise;
+
+                return deferred.promise;
+            }
+        };
+    }
+])
+
+
 //------------------------------------------------------------------
 // this directive will be called any time an image completes loading 
 // via img tags where this directive is added (I am using this in
