@@ -42,7 +42,7 @@ app.on('activate', function()
 {
 	if (mainWindow==null)
 	{
-  		mainWindow = new BrowserWindow({width:1024, height:900});
+  		mainWindow = new BrowserWindow({ 'node-integration':false, 'width':1024, 'height':900});
 		mainWindow.loadUrl('file://' + __dirname + '/index.html');
   		mainWindow.on('closed', function() {
 
@@ -55,7 +55,7 @@ app.on('activate', function()
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width:1024, height:900});
+  mainWindow = new BrowserWindow({'node-integration':false, 'width':1024, 'height':900});
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/index.html');

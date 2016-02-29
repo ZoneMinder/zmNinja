@@ -1,7 +1,7 @@
 // Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,ionic,Masonry */
+/* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded */
 
 
 angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window) {
@@ -35,6 +35,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     // while original will have a copy of the order returned by ZM
 
     var oldMonitors = []; // To keep old order if user cancels after sort;
+    
+    var pckry = "";
 
     // Montage display order may be different so don't
     // mangle monitors as it will affect other screens
@@ -45,6 +47,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var hiddenOrder = []; // 1 = hide, 0 = don't hide
     
     var tempMonitors = message;
+    
+    
     if (tempMonitors.length == 0)
     {
         $rootScope.zmPopup= $ionicPopup.alert({
@@ -74,19 +78,70 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var loginData = ZMDataModel.getLogin();
     
     $scope.packMontage = loginData.packMontage;
+    //var pckry;
     
     
+    // init packery
     
     
-    if (0)
-    {
-        var elem = angular.element(document.getElementById('.grid'));
-            var msnry = new Masonry( elem, {
-          // options
-          itemSelector: '.grid-item',
-          columnWidth: 200
+  
+
+function initPackery()
+{
+        
+        var progressCalled = false;
+        
+        var elem =  angular.element(document.getElementById("mygrid"));
+        pckry = new Packery('.grid', 
+                             {
+                                itemSelector: '.grid-item',
+                                percentPosition: true,
+                               columnWidth: '.grid-sizer',
+                            });
+         console.log ("**** mygrid is " + JSON.stringify(elem));
+         
+        imagesLoaded(elem).on('progress', function() {
+                console.log ("******** SOME IMAGE LOADED");
+                progressCalled = true;
+                pckry.layout();
         });
+        
+        imagesLoaded(elem).on('always', function() {
+                console.log ("******** ALL IMAGE LOADED");
+                
+                if (!progressCalled)
+                {
+                    // this is a hack - trying to figure out why this 
+                    // problem is occuring - my hack does not work
+                    console.log ("*** BUG SOMECALLED WAS NOT CALLED");
+                   /* pckry.destroy();
+                    pckry = new Packery('.grid', 
+                             {
+                                itemSelector: '.grid-item',
+                                percentPosition: true,
+                               columnWidth: '.grid-sizer',
+                            });
+                    pckry.layout();*/
+                    pckry.reloadItems();
+                    
+                }
+            
+                pckry.getItemElements().forEach(function (itemElem) {
+                      var draggie = new Draggabilly(itemElem);
+                      pckry.bindDraggabillyEvents(draggie);
+                       console.log ("**** MAPPED DRAG");
+                     //  pckry.shiftLayout();
+                });
+                
+               
+        });
+  
+        
     }
+
+    
+    
+   
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
     // close the modal
@@ -378,6 +433,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             montageOrder.toString() +
             " and hidden order as " + hiddenOrder.toString());
         $scope.modal.remove();
+        ZMDataModel.zmLog ("Reloading packery");
+        $timeout (function(){pckry.reloadItems(); pckry.layout();},500);
     };
 
     $scope.cancelReorder = function () {
@@ -702,7 +759,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             loadNotifications();
             //  console.log ("Refreshing Image...");
         }.bind(this), ld.refreshSec * 1000);
-
+        //  }.bind(this), 60 * 1000);
         //$interval.cancel(modalIntervalHandle);
 
 
@@ -859,11 +916,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     });
     
     
+     $scope.$on('$ionicView.afterEnter', function () {
+        console.log("**VIEW ** Montage Ctrl AFTER ENTER");
+        $timeout ( function () {initPackery(); },500);
+        
+    });
+    
+    
     $scope.$on('$ionicView.beforeLeave', function () {
        // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
         
         console.log ("beforeLeave:Cancelling timer");
         $interval.cancel($rootScope.intervalHandle);
+        pckry.destroy();
         
         
         // make sure this is applied in scope digest to stop network pull
@@ -877,6 +942,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         }
         
     });
+    
+    $scope.loadedImage = function()
+    {
+       // console.log ("IMAGE LOADED");
+    };
+    
 
     $scope.$on('$ionicView.unloaded', function () {
         // console.log("**************** CLOSING WINDOW ***************************");
