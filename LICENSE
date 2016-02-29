@@ -10,7 +10,11 @@ software. If you are selling a service based on zoneminder and are either distri
 Be nice, please.
 
 If you have any questions on licensing feel free to contact me.
+-thanks
 
+
+Third Party credits
+=======================
 Ninja icon;
 https://openclipart.org/detail/172393/ninja-logo
 License: https://openclipart.org/share
@@ -18,5 +22,21 @@ License: https://openclipart.org/share
 Blop sound for notifications:
 http://soundbible.com/2067-Blop.html
 
+Version 1.1.0 and above of zmNinja uses Packery.
+http://packery.metafizzy.co
 
--thanks
+A commercial single developer license has been purchased for the same.
+Note that this license allows me (pliablepixels) to use Packery for commercial
+apps that I develop (such as zmNinja). Given that I publish my source under
+CCSA-NC-SA, you can compile the code for your personal use (non commercial purposes)
+and continue to use packery. This is compliant to Packery's license too, where they
+prohibit other developers to build for profit using the license I purchased.
+
+However, in the future, if I allow for commercial use of my source code, you will
+still have to purchase an additional license for packery from David via http://packery.metafizzy.co/#commercial-license
+It's very cheap ($25 for unlimited products by one developer).
+
+
+
+
+
