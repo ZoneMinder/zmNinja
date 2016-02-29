@@ -2,6 +2,8 @@
 <html>
 
 <head>
+    
+  
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <meta http-equiv="Content-Security-Policy" content="img-src * 'self' data:; default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' https://www.google.com 'unsafe-inline' 'unsafe-eval'; ">
@@ -35,13 +37,11 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
-    <!-- ionic/angularjs js -->
-
- 
+    
 
 
      
+    
     <script src="lib/ionic/js/ionic.bundle.min.js"></script>
     
     <script src="external/angular-ios9-uiwebview.patch.js"></script>
@@ -58,12 +58,13 @@
     
   
 
-
-
     <!-- your app's js -->
     
     <!-- files in external/ are 3rd party libraries I modified. The better way is to fork
     and make your mods. I'll get to that eventually -->
+    
+    
+    
     
 <script src="lib/angular-awesome-slider/dist/angular-awesome-slider.min.js">
     </script>
@@ -124,12 +125,27 @@
    <script src="lib/ionic-content-banner/dist/ionic.content.banner.min.js"></script>
     <script src="external/FileSaver.min.js"></script>
     <script src="external/canvas-toBlob.js"></script>
+    
+    <script src="external/imagesloaded.pkgd.js"></script>
+     <script src="external/packery.pkgd.js" ></script>
+   <script src="external/draggabilly.pkgd.js" ></script>
+    
+   <!-- <script src="external/imagesloaded.pkgd.js"></script>-->
+    
+   
+    
+    
+    
 </head>
+ 
+    
+    
 
 
 <!-- <body ng-app="starter" > -->
 <!-- I want to start angular only after cordova device is ready, so I'll tag it on device ready -->
 
+    
 <body bgcolor="#555555">
 
     <!-- For some reason - which I haven't debugged yet, when I was using the ionic side menu template
@@ -266,7 +282,10 @@
             angular.bootstrap(document, ['zmApp']);
         });
     </script>
+    
+    
 
+   
 
 </body>
 

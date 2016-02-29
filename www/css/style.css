@@ -194,6 +194,43 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 }
 
 
+figure {
+     position: relative;
+}
+
+figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+figcaption {
+    
+}
+
+.normal-figcaption {
+    background: #575656;
+    color: #FFF;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity:0.7;
+}
+
+.alarmed-figcaption {
+    
+    background: #ba3e3e;
+    color:#ffffff;
+    position:absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity:0.7;
+    
+
+}
+
+
 
 
 /* modified from:
@@ -738,3 +775,50 @@ input[type=range]::-webkit-slider-thumb {
     -webkit-animation-delay: 1s;
 }
 
+/* packery stuff */
+
+
+
+* { box-sizing: border-box; } 
+
+body { font-family: sans-serif; }
+
+/* ---- grid ---- */
+
+
+.grid-sizer,
+.grid-item { width: 20%; }
+
+.
+/* clear fix */
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+
+.grid-item img {
+  display: block;
+  max-width: 100%;
+}
+/* ---- .grid-item ---- */
+
+
+.grid-item:hover {
+  border-color: hsla(0, 0%, 100%, 0.5);
+  cursor: move;
+}
+
+.grid-item.is-dragging,
+.grid-item.is-positioning-post-drag {
+  background: #C90;
+  z-index: 2;
+}
+
+.packery-drop-placeholder {
+  outline: 3px dashed hsla(0, 0%, 0%, 0.5);
+  outline-offset: -6px;
+  -webkit-transition: -webkit-transform 0.2s;
+          transition: transform 0.2s;
+}
