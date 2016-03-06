@@ -393,8 +393,8 @@ angular.module('zmApp.controllers')
 
         $scope.filterTapped = function () {
             //console.log("FILTER TAPPED");
-            var myFrom = moment($rootScope.fromString).format("MMM/DD/YYYY hh:mm a").toString();
-            var toString = moment($rootScope.toString).format("MMM/DD/YYYY hh:mm a").toString();
+            var myFrom = moment($rootScope.fromString).format("MMM/DD/YYYY "+ZMDataModel.getTimeFormat()).toString();
+            var toString = moment($rootScope.toString).format("MMM/DD/YYYY "+ZMDataModel.getTimeFormat()).toString();
 
             $rootScope.zmPopup = $ionicPopup.confirm({
                 title: 'Filter settings',
@@ -1484,12 +1484,12 @@ angular.module('zmApp.controllers')
         }
 
         $scope.prettifyTime = function (str) {
-            return moment(str).format('h:mm:ssa');
+            return moment(str).format(ZMDataModel.getTimeFormat());
         };
 
 
         $scope.prettify = function (str) {
-            return moment(str).format('h:mm:ssa on MMMM Do YYYY');
+            return moment(str).format(ZMDataModel.getTimeFormat()+' on MMMM Do YYYY');
         };
         //--------------------------------------------------------
         // For consistency we are keeping the refresher list

@@ -24,6 +24,13 @@
                 </label>
             </div>
             
+            
+            <label>
+                <ion-toggle ng-model="loginData.use24hr"
+                            ng-checked="{{loginData.use24hr}}"
+                            toggle-class="toggle-calm">enable 24hr time format</ion-toggle>
+            </label>
+            
             <div ng-if="$root.platformOS=='android'">
                 <label>
                     <ion-toggle ng-model="loginData.exitOnSleep"

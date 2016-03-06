@@ -1128,7 +1128,8 @@ angular.module('zmApp', [
             // paths etc.https://github.com/pbakondy/filelogger
             $fileLogger.setStorageFilename(zm.logFile);
             // easier tz reading
-            $fileLogger.setTimestampFormat('medium');
+           // $fileLogger.setTimestampFormat('medium');
+            $fileLogger.setTimestampFormat('MMM d, y '+ZMDataModel.getTimeFormat());
 
             ZMDataModel.zmLog("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
 

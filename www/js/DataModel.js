@@ -70,6 +70,7 @@ angular.module('zmApp.controllers')
          'forceNetworkStop':false,
          'defaultPushSound': false,
          'enableBlog':true,
+         'use24hr':false,
          
         
     };
@@ -284,6 +285,13 @@ angular.module('zmApp.controllers')
                     
                 }
                 
+                if (typeof loginData.use24hr == 'undefined')
+                {
+                    zmDebug ("use24hr does not exist. Setting to false");
+                    loginData.use24hr  = false;
+                    
+                }
+                
                 if (typeof loginData.montageHistoryQuality == 'undefined')
                 {
                     zmDebug ("montageHistoryQuality does not exist. Setting to 50");
@@ -395,7 +403,10 @@ angular.module('zmApp.controllers')
             
         },
 
-
+        getTimeFormat: function()
+        {
+            return (loginData.use24hr ? "HH:mm": "hh:mm a");
+        },
 
         //------------------------------------------------------------------
         // switches screen to 'always on' or 'auto'
