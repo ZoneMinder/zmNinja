@@ -4,7 +4,7 @@
 /* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window',  '$localstorage', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage) {
 
     $controller('zmApp.BaseController', {
         $scope: $scope
@@ -43,6 +43,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var draggies;
     $scope.isDragabillyOn = false;
     $scope.gridScale = "grid-item-20";
+    $scope.animateMonitor="";
     
     $scope.changeScale = function()
     {
@@ -123,25 +124,47 @@ function initPackery()
         
         var progressCalled = false;
         draggies = [];
+    
+        var layouttype = true;
+        var ld = ZMDataModel.getLogin();
+    
+        
+        var positionsStr = ld.packeryPositions;
+        var positions={};
+    
+        if (positionsStr == '')
+        {
+            ZMDataModel.zmLog ("Did NOT find a packery layout");
+            layouttype  = true;
+        }
+        else
+        {
+            console.log ("POSITION STR IS " + positionsStr);
+            positions = JSON.parse(positionsStr);
+            ZMDataModel.zmLog ("found a packery layout");
+            layouttype = false;
+        }
         
         var elem =  angular.element(document.getElementById("mygrid"));
         pckry = new Packery('.grid', 
                              {
                                 itemSelector: '.grid-item',
                                 percentPosition: true,
-                               columnWidth: '.grid-sizer',
-                                initLayout: true,
+                                columnWidth: '.grid-sizer',
+                                gutter:0,
+                                initLayout:layouttype
+                                
                             });
-         console.log ("**** mygrid is " + JSON.stringify(elem));
+         //console.log ("**** mygrid is " + JSON.stringify(elem));
          
         imagesLoaded(elem).on('progress', function() {
                 console.log ("******** SOME IMAGE LOADED");
                 progressCalled = true;
-                pckry.layout();
+                if (layouttype) $timeout (function(){pckry.shiftLayout();},50);
         });
         
         imagesLoaded(elem).on('always', function() {
-                console.log ("******** ALL IMAGE LOADED");
+                console.log ("******** ALL IMAGES LOADED");
                 
                 if (!progressCalled)
                 {
@@ -156,8 +179,17 @@ function initPackery()
                       draggies.push(draggie);
                       draggie.disable();
                 });
-            
+                
                 pckry.on( 'dragItemPositioned', itemDragged );
+            
+                
+               
+                if (!isEmpty(positions))
+                {
+                    ZMDataModel.zmLog ("Arranging as per packery grid");
+                    $timeout(function(){pckry.initShiftLayout(positions, 'data-item-id');},500);
+                    //$grid.packery( 'initShiftLayout', initPositions, 'data-item-id' );
+                }
                
         });
     
@@ -167,16 +199,27 @@ function initPackery()
             
             pckry.getItemElements().forEach(function (itemElem) {
              
-                //itemElem.attr('data-module-index', i);   
-                console.log (itemElem.attributes['data-item-id'].value);
+                console.log (itemElem.attributes['data-item-id'].value+" size  "+itemElem.attributes['data-item-size'].value );
             });
             
+            var positions = pckry.getShiftPositions('data-item-id');
+             console.log ("POSITIONS MAP " + JSON.stringify(positions));
+             var ld = ZMDataModel.getLogin();
+             ld.packeryPositions = JSON.stringify(positions);
+             ZMDataModel.setLogin(ld);
         }
   
         
     }
 
     
+    function isEmpty( obj ) 
+    { 
+      for ( var prop in obj ) { 
+        return false; 
+      } 
+      return true; 
+}
     
    
     // --------------------------------------------------------
@@ -471,7 +514,7 @@ function initPackery()
             " and hidden order as " + hiddenOrder.toString());
         $scope.modal.remove();
         ZMDataModel.zmLog ("Reloading packery");
-        $timeout (function(){pckry.reloadItems(); pckry.layout();},500);
+        $timeout (function(){pckry.reloadItems(); pckry.shiftLayout();},50);
     };
 
     $scope.cancelReorder = function () {
@@ -668,6 +711,7 @@ function initPackery()
         ZMDataModel.zmDebug ("setting dragabilly to " + $scope.isDragabillyOn);
         if ($scope.isDragabillyOn)  
         {
+            $scope.dragBorder="dragborder";
             ZMDataModel.zmDebug ("Enabling drag for " + draggies.length + " items");
             for (i=0; i < draggies.length; i++)
             {
@@ -677,6 +721,7 @@ function initPackery()
         }
         else
         {
+            $scope.dragBorder="";
             ZMDataModel.zmDebug ("Disabling drag for " + draggies.length + " items");
             for ( i=0; i < draggies.length; i++)
             {
@@ -1073,13 +1118,27 @@ function initPackery()
     //---------------------------------------------------------
 
     $scope.sliderChanged = function () {
+        
+        
 
          //pckry.destroy();
          $scope.gridScale = "grid-item-" + ($scope.slider.monsize * 10).toString();
-         console.log("**** CSS IS " + $scope.gridScale);
-         setTimeout(function () {
-             pckry.layout();
-         });
+         //console.log("**** CSS IS " + $scope.gridScale);
+         $timeout(function () {
+             pckry.shiftLayout();
+             pckry.getItemElements().forEach(function (itemElem) {
+             
+                console.log (itemElem.attributes['data-item-id'].value+" size  "+itemElem.attributes['data-item-size'].value );
+                 
+                     
+            });
+              var positions = pckry.getShiftPositions('data-item-id');
+             console.log ("POSITIONS MAP " + JSON.stringify(positions));
+             var ld = ZMDataModel.getLogin();
+             ld.packeryPositions = JSON.stringify(positions);
+             ZMDataModel.setLogin(ld);
+          
+         },50);
        // pckry.destroy();
      //   $timeout ( function () {initPackery(); },500);
           //pckry.reloadItems();

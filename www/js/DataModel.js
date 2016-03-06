@@ -71,6 +71,7 @@ angular.module('zmApp.controllers')
          'defaultPushSound': false,
          'enableBlog':true,
          'use24hr':false,
+         'packeryPositions':''
          
         
     };
@@ -282,6 +283,13 @@ angular.module('zmApp.controllers')
                 {
                     zmDebug ("enableBlog does not exist. Setting to true");
                     loginData.enableBlog  = true;
+                    
+                }
+                
+                if (typeof loginData.packeryPositions == 'undefined')
+                {
+                    zmDebug ("packeryPositions does not exist. Setting to empty");
+                    loginData.packeryPositions  = "";
                     
                 }
                 
