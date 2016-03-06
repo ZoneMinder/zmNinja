@@ -8,14 +8,20 @@
 
     <ion-nav-buttons side="right">
 
-        <button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'" ng-click="toggleMontageDisplayOrder();">&nbsp;
+        <button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'" ng-click="dragToggle();">&nbsp;
         </button>
-
+        
         <span class="rotate-button">
+                <button class="button button-icon button-clear ion-arrow-swap"
+                        ng-click="changeScale();">
+                </button>
+        </span>
+
+        <!--<span class="rotate-button">
                 <button class="button button-icon button-clear ion-arrow-swap"
                         ng-click="toggleReorder();">
                 </button>
-        </span>
+        </span>-->
 
 
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
@@ -31,8 +37,8 @@
         <span ng-show="!minimal">
                 <div class="range range-positive">
                     <i style="color:#bbbbbb" class="icon ion-grid"></i>
-                    <input type="range" ng-model="slider.monsize" min="1"
-                           max="5" ng-change="sliderChanged(slider.monsize)">
+                    <input type="range" ng-model="slider.monsize" min="2"
+                           max="10" ng-change="sliderChanged(slider.monsize)">
                     <i style="color:#bbbbbb" class="icon ion-image"></i>
 
                 </div>
@@ -40,15 +46,15 @@
 
 
         <div class="grid" id="mygrid">
-            <div class="grid-sizer"></div>
+            <div class="grid-sizer {{gridScale}}"></div>
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
-            <div class="grid-item">
+            <div class="grid-item {{gridScale}}" data-item-id="{{monitor.Monitor.Id}}">
                 <figure>
                     <div ng-if="!isModalActive" >
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal">
                                 
-                                <img id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey)" image-spinner-loader="lines" />
+                                <img   id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey)" image-spinner-loader="lines" />
                                 
                             </div> 
 

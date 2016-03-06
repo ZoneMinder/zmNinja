@@ -25,6 +25,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.scaleDirection = []; // 1 = increase -1 = decrease
 
     $scope.slider = {};
+
+    
+    
     
     
     $scope.slider.monsize = ZMDataModel.getMontageSize();
@@ -36,7 +39,36 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     var oldMonitors = []; // To keep old order if user cancels after sort;
     
-    var pckry = "";
+    var pckry, draggie;
+    var draggies;
+    $scope.isDragabillyOn = false;
+    $scope.gridScale = "grid-item-20";
+    
+    $scope.changeScale = function()
+    {
+        if ($scope.gridScale=="")
+                $scope.gridScale = "grid-item-40";
+        
+        else if ($scope.gridScale=="grid-item-40")
+                $scope.gridScale="grid-item-60";
+        
+         else if ($scope.gridScale=="grid-item-60")
+                $scope.gridScale="grid-item-80";
+        
+        
+        else if ($scope.gridScale =="grid-item-80")
+                $scope.gridScale = "grid-item-100";
+        
+        
+        else if ($scope.gridScale =="grid-item-100")
+                $scope.gridScale = "";
+        
+        ZMDataModel.zmLog ("Changing scale to " + $scope.gridScale);
+        pckry.destroy();
+        $timeout ( function () {initPackery(); },500);
+        
+        
+    };
 
     // Montage display order may be different so don't
     // mangle monitors as it will affect other screens
@@ -90,6 +122,7 @@ function initPackery()
 {
         
         var progressCalled = false;
+        draggies = [];
         
         var elem =  angular.element(document.getElementById("mygrid"));
         pckry = new Packery('.grid', 
@@ -97,6 +130,7 @@ function initPackery()
                                 itemSelector: '.grid-item',
                                 percentPosition: true,
                                columnWidth: '.grid-sizer',
+                                initLayout: true,
                             });
          console.log ("**** mygrid is " + JSON.stringify(elem));
          
@@ -111,30 +145,33 @@ function initPackery()
                 
                 if (!progressCalled)
                 {
-                    // this is a hack - trying to figure out why this 
-                    // problem is occuring - my hack does not work
-                    console.log ("*** BUG SOMECALLED WAS NOT CALLED");
-                   /* pckry.destroy();
-                    pckry = new Packery('.grid', 
-                             {
-                                itemSelector: '.grid-item',
-                                percentPosition: true,
-                               columnWidth: '.grid-sizer',
-                            });
-                    pckry.layout();*/
+                    ZMDataModel.zmlog ("*** BUG PROGRESS WAS NOT CALLED");
                     pckry.reloadItems();
                     
                 }
             
-                pckry.getItemElements().forEach(function (itemElem) {
-                      var draggie = new Draggabilly(itemElem);
+                 pckry.getItemElements().forEach(function (itemElem) {
+                      draggie = new Draggabilly(itemElem);
                       pckry.bindDraggabillyEvents(draggie);
-                       console.log ("**** MAPPED DRAG");
-                     //  pckry.shiftLayout();
+                      draggies.push(draggie);
+                      draggie.disable();
                 });
-                
+            
+                pckry.on( 'dragItemPositioned', itemDragged );
                
         });
+    
+        function itemDragged(item)
+        {
+            ZMDataModel.zmDebug ("drag complete");
+            
+            pckry.getItemElements().forEach(function (itemElem) {
+             
+                //itemElem.attr('data-module-index', i);   
+                console.log (itemElem.attributes['data-item-id'].value);
+            });
+            
+        }
   
         
     }
@@ -623,6 +660,32 @@ function initPackery()
         $scope.monitors[otherIndex] = otherObj;
     };
 
+    
+    $scope.dragToggle = function()
+    {
+        var i;
+        $scope.isDragabillyOn = !$scope.isDragabillyOn;
+        ZMDataModel.zmDebug ("setting dragabilly to " + $scope.isDragabillyOn);
+        if ($scope.isDragabillyOn)  
+        {
+            ZMDataModel.zmDebug ("Enabling drag for " + draggies.length + " items");
+            for (i=0; i < draggies.length; i++)
+            {
+                draggies[i].enable();
+            }
+           
+        }
+        else
+        {
+            ZMDataModel.zmDebug ("Disabling drag for " + draggies.length + " items");
+            for ( i=0; i < draggies.length; i++)
+            {
+                draggies[i].disable();
+            }
+            
+        }
+    };
+    
 
     //---------------------------------------------------------------------
     // main monitor modal open
@@ -1010,7 +1073,24 @@ function initPackery()
     //---------------------------------------------------------
 
     $scope.sliderChanged = function () {
-        processSliderChanged($scope.slider.monsize);
+
+         //pckry.destroy();
+         $scope.gridScale = "grid-item-" + ($scope.slider.monsize * 10).toString();
+         console.log("**** CSS IS " + $scope.gridScale);
+         setTimeout(function () {
+             pckry.layout();
+         });
+       // pckry.destroy();
+     //   $timeout ( function () {initPackery(); },500);
+          //pckry.reloadItems();
+       // console.log ("calling layout");
+        //  pckry.shiftLayout();
+         /* pckry.once( 'layoutComplete', function() {
+                console.log('layout done, just this one time');
+          });*/
+          //$timeout ( function () {initPackery(); },50);
+        
+      //  processSliderChanged($scope.slider.monsize);
         
         
     };
