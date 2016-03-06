@@ -49,7 +49,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // Used to display date range for timeline
     //-----------------------------------------------------------
     $scope.prettify = function (str) {
-        return moment(str).format('MMMM Do YYYY, h:mm:ssa');
+        return moment(str).format('MMMM Do YYYY, '+ZMDataModel.getTimeFormat());
     };
 
     //-----------------------------------------------------------
@@ -475,12 +475,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             stack: false,
             format: {
                 minorLabels: {
-                    minute: "hh:mm a",
-                    hour: 'hh:mm a',
+                    minute: ZMDataModel.getTimeFormat(),
+                    hour: ZMDataModel.getTimeFormat(),
                     second: 's',
                 },
                 majorLabels: {
-                    second: "D MMM hh:mm a",
+                    second: "D MMM "+ZMDataModel.getTimeFormat(),
                 }
             },
 

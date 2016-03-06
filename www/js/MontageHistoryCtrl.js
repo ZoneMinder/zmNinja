@@ -18,7 +18,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //---------------------------------------
 
     $scope.prettifyDate = function (str) {
-        return moment(str).format('MMM Do, YYYY h:mma');
+        return moment(str).format('MMM Do, YYYY '+ZMDataModel.getTimeFormat());
     };
 
     function prettifyDate(str) {
@@ -32,7 +32,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
 
     $scope.prettify = function (str) {
-        return moment(str).format('h:mm:ssa on MMMM Do YYYY');
+        return moment(str).format(ZMDataModel.getTimeFormat()+' on MMMM Do YYYY');
     };
     
     

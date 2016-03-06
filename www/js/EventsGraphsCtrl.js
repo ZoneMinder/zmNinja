@@ -141,8 +141,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         if (hrs) {
             // Apply a time based filter if I am not watching all events
             var cur = moment();
-            endDate = cur.format("YYYY-MM-DD hh:mm:ss");
-            startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD hh:mm:ss");
+            endDate = cur.format("YYYY-MM-DD "+ZMDataModel.getTimeFormat());
+            startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD "+ZMDataModel.getTimeFormat());
             //console.log("Start and End " + startDate + "==" + endDate);
             ZMDataModel.zmLog("Generating graph for " + startDate + " to " + endDate);
 
