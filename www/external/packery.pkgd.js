@@ -2750,6 +2750,7 @@ Packery.prototype.getShiftPositions = function( attrName ) {
   return this.items.map( function( item ) {
     return {
       attr: item.element.getAttribute( attrName ),
+      size: item.element.getAttribute ("data-item-size"),
       x: item.rect.x / _this.packer.width
     }
   });

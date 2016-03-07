@@ -11,6 +11,10 @@
         <button class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp;
         </button>
         
+        <button class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
+        </button>
+        
+        
         <!--<button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'" ng-click="dragToggle();">&nbsp;
         </button>-->
         
@@ -49,20 +53,20 @@
 
 
         <div class="grid" id="mygrid">
-            <div class="grid-sizer {{gridScale}} {{dragborder}}"></div>
+            <div class="grid-sizer grid-item-10"></div>
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
-            <div class="grid-item {{gridScale}} {{dragBorder}}" data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{gridScale}}" >
+            <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} {{dragBorder}}" data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{gridScale}}" >
                 <figure>
                     <div ng-if="!isModalActive" >
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal">
                                 
-                                <img   id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey)" image-spinner-loader="lines"  />
+                                <img   class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines"  />
                                 
                             </div> 
 
                             <div ng-if = "minimal">
-                                <img id="{{img-$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey)" image-spinner-loader="lines"  />
+                                <img id="{{img-$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines"  />
                             </div>
                         </div>
 

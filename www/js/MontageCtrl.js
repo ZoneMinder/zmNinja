@@ -31,6 +31,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     
     
     $scope.slider.monsize = ZMDataModel.getMontageSize();
+    
+    var oldSliderVal = $scope.slider.monsize;
     $scope.revMonSize = 11 - parseInt($scope.slider.monsize);
 
     // The difference between old and original is this:
@@ -108,6 +110,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.MontageMonitors = ZMDataModel.applyMontageMonitorPrefs (message, 1)[0];
     
+    for (i=0; i < $scope.MontageMonitors.length; i++)
+    {
+        $scope.MontageMonitors[i].Monitor.gridScale="20";
+        $scope.MontageMonitors[i].Monitor.selectStyle="";
+        
+    }
+    
     var loginData = ZMDataModel.getLogin();
     
     $scope.packMontage = loginData.packMontage;
@@ -160,7 +169,7 @@ function initPackery()
         imagesLoaded(elem).on('progress', function() {
                 console.log ("******** SOME IMAGE LOADED");
                 progressCalled = true;
-                if (layouttype) $timeout (function(){pckry.shiftLayout();},50);
+                if (layouttype) $timeout (function(){pckry.layout();},50);
         });
         
         imagesLoaded(elem).on('always', function() {
@@ -514,7 +523,7 @@ function initPackery()
             " and hidden order as " + hiddenOrder.toString());
         $scope.modal.remove();
         ZMDataModel.zmLog ("Reloading packery");
-        $timeout (function(){pckry.reloadItems(); pckry.shiftLayout();},50);
+        $timeout (function(){pckry.reloadItems(); pckry.layout();},50);
     };
 
     $scope.cancelReorder = function () {
@@ -694,6 +703,24 @@ function initPackery()
        // console.log("dragging");
     };
 
+    $scope.noop = function()
+    {
+        console.log ("Ignoring tap, drag on");
+    };
+    
+    $scope.toggleSelectItem = function(ndx)
+    {
+       
+         if ($scope.MontageMonitors[ndx].Monitor.selectStyle !== "undefined" && $scope.MontageMonitors[ndx].Monitor.selectStyle=="dragborder-selected")
+         {
+             $scope.MontageMonitors[ndx].Monitor.selectStyle="";
+         }
+         else
+         {
+             $scope.MontageMonitors[ndx].Monitor.selectStyle="dragborder-selected";
+         }
+        console.log ("Switched value to " + $scope.MontageMonitors[ndx].Monitor.selectStyle);
+    };
 
     $scope.onDropComplete = function (index, obj, event) {
        // console.log("dragged");
@@ -717,6 +744,7 @@ function initPackery()
             {
                 draggies[i].enable();
             }
+            
            
         }
         else
@@ -726,6 +754,10 @@ function initPackery()
             for ( i=0; i < draggies.length; i++)
             {
                 draggies[i].disable();
+            }
+            for (i=0; i < $scope.MontageMonitors.length; i++)
+            {
+                $scope.MontageMonitors[i].Monitor.selectStyle="";
             }
             
         }
@@ -1109,6 +1141,18 @@ function initPackery()
         processSliderChanged($scope.slider.monsize);
 
     };
+    
+    $scope.resetSizes = function()
+    {
+        for (var i=0; i< $scope.MontageMonitors.length; i++)
+        {
+            $scope.MontageMonitors[i].Monitor.gridScale="20";
+        }
+        $timeout (function(){pckry.layout();},50);
+        $scope.slider.monsize = 2;
+        
+    };
+    
 
     //---------------------------------------------------------
     // slider is tied to the view slider for montage
@@ -1119,13 +1163,43 @@ function initPackery()
 
     $scope.sliderChanged = function () {
         
+        if (oldSliderVal == $scope.slider.monsize) return;
         
-
+        var dirn = (oldSliderVal > $scope.slider.monsize) ? -1:1;
          //pckry.destroy();
-         $scope.gridScale = "grid-item-" + ($scope.slider.monsize * 10).toString();
+         //$scope.gridScale = "grid-item-" + ($scope.slider.monsize * 10).toString();
+        
+        
+        
+          for (var i=0; i< $scope.MontageMonitors.length; i++)
+          {
+              var curVal = parseInt($scope.MontageMonitors[i].Monitor.gridScale);
+              curVal = curVal + (10 * dirn);
+              if (curVal  < 20) curVal=20;
+              if (curVal >100) curVal = 100;
+              console.log ("For Index: " + i + " From: " + $scope.MontageMonitors[i].Monitor.gridScale + " To: " + curVal);
+              
+              if ($scope.isDragabillyOn)
+              {
+                // only do this for selected monitors
+                if ($scope.MontageMonitors[i].Monitor.selectStyle=="dragborder-selected")
+                {
+                    
+                    $scope.MontageMonitors[i].Monitor.gridScale= curVal;
+                }
+              }
+              else
+              {
+                  $scope.MontageMonitors[i].Monitor.gridScale= curVal;
+                  
+              }
+              oldSliderVal = $scope.slider.monsize;
+          }
+        
+        
          //console.log("**** CSS IS " + $scope.gridScale);
          $timeout(function () {
-             pckry.shiftLayout();
+             pckry.layout();
              pckry.getItemElements().forEach(function (itemElem) {
              
                 console.log (itemElem.attributes['data-item-id'].value+" size  "+itemElem.attributes['data-item-size'].value );
