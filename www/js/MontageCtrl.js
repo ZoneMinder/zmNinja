@@ -82,7 +82,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var hiddenOrder = []; // 1 = hide, 0 = don't hide
     
     var tempMonitors = message;
-    
+    $scope.sliderChanging = false;
     
     if (tempMonitors.length == 0)
     {
@@ -148,7 +148,7 @@ function initPackery()
         }
         else
         {
-            console.log ("POSITION STR IS " + positionsStr);
+            //console.log ("POSITION STR IS " + positionsStr);
             positions = JSON.parse(positionsStr);
             ZMDataModel.zmLog ("found a packery layout");
             layouttype = false;
@@ -169,7 +169,7 @@ function initPackery()
         imagesLoaded(elem).on('progress', function() {
                 console.log ("******** SOME IMAGE LOADED");
                 progressCalled = true;
-                if (layouttype) $timeout (function(){pckry.layout();},50);
+                if (layouttype) $timeout (function(){pckry.layout();},100);
         });
         
         imagesLoaded(elem).on('always', function() {
@@ -196,7 +196,20 @@ function initPackery()
                 if (!isEmpty(positions))
                 {
                     ZMDataModel.zmLog ("Arranging as per packery grid");
-                    $timeout(function(){pckry.initShiftLayout(positions, 'data-item-id');},500);
+                    
+                    for (var i =0; i< $scope.MontageMonitors.length; i++)
+                    {
+                        for (var j=0; j < positions.length; j++)
+                        {
+                            if ($scope.MontageMonitors[i].Monitor.Id == positions[j].attr)
+                            {
+                                $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
+                                ZMDataModel.zmDebug ("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " +positions[j].size);
+                            }
+                            //console.log ("Index:"+positions[j].attr+ " with size: " + positions[j].size);
+                        }
+                    }
+                    $timeout(function(){pckry.initShiftLayout(positions, 'data-item-id');},100);
                     //$grid.packery( 'initShiftLayout', initPositions, 'data-item-id' );
                 }
                
@@ -212,7 +225,7 @@ function initPackery()
             });
             
             var positions = pckry.getShiftPositions('data-item-id');
-             console.log ("POSITIONS MAP " + JSON.stringify(positions));
+             //console.log ("POSITIONS MAP " + JSON.stringify(positions));
              var ld = ZMDataModel.getLogin();
              ld.packeryPositions = JSON.stringify(positions);
              ZMDataModel.setLogin(ld);
@@ -523,7 +536,7 @@ function initPackery()
             " and hidden order as " + hiddenOrder.toString());
         $scope.modal.remove();
         ZMDataModel.zmLog ("Reloading packery");
-        $timeout (function(){pckry.reloadItems(); pckry.layout();},50);
+        $timeout (function(){pckry.reloadItems(); pckry.layout();},500);
     };
 
     $scope.cancelReorder = function () {
@@ -1146,11 +1159,33 @@ function initPackery()
     {
         for (var i=0; i< $scope.MontageMonitors.length; i++)
         {
-            $scope.MontageMonitors[i].Monitor.gridScale="20";
+            if ($scope.isDragabillyOn)
+            {
+             if ($scope.MontageMonitors[i].Monitor.selectStyle=="dragborder-selected")
+                $scope.MontageMonitors[i].Monitor.gridScale="20"; 
+            }
+            else
+            {
+                $scope.MontageMonitors[i].Monitor.gridScale="20";
+            }
         }
-        $timeout (function(){pckry.layout();},50);
-        $scope.slider.monsize = 2;
-        
+        $timeout (function()
+            {
+                
+                pckry.once( 'layoutComplete', function() {
+                    console.log ("Layout complete");
+                    var positions = pckry.getShiftPositions('data-item-id');
+                   // console.log ("POSITIONS MAP " + JSON.stringify(positions));
+                    var ld = ZMDataModel.getLogin();
+                    ld.packeryPositions = JSON.stringify(positions);
+                    ZMDataModel.setLogin(ld);
+                    $scope.slider.monsize = 2;
+                });
+                pckry.layout();
+                $timeout(function(){pckry.layout(); },100);// don't ask
+            
+            },100);
+ 
     };
     
 
@@ -1161,11 +1196,19 @@ function initPackery()
     // a copy and the value never changes
     //---------------------------------------------------------
 
-    $scope.sliderChanged = function () {
+    $scope.sliderChanged = function (dirn) {
         
-        if (oldSliderVal == $scope.slider.monsize) return;
+        if ($scope.sliderChanging)
+        {
+           // console.log ("too fast my friend");
+            //$scope.slider.monsize = oldSliderVal;
+           // return;
+        }
         
-        var dirn = (oldSliderVal > $scope.slider.monsize) ? -1:1;
+        $scope.sliderChanging = true;
+        
+        
+       // var dirn = (oldSliderVal > $scope.slider.monsize) ? -1:1;
          //pckry.destroy();
          //$scope.gridScale = "grid-item-" + ($scope.slider.monsize * 10).toString();
         
@@ -1193,26 +1236,24 @@ function initPackery()
                   $scope.MontageMonitors[i].Monitor.gridScale= curVal;
                   
               }
-              oldSliderVal = $scope.slider.monsize;
+              //oldSliderVal = $scope.slider.monsize;
           }
         
         
          //console.log("**** CSS IS " + $scope.gridScale);
          $timeout(function () {
-             pckry.layout();
-             pckry.getItemElements().forEach(function (itemElem) {
              
-                console.log (itemElem.attributes['data-item-id'].value+" size  "+itemElem.attributes['data-item-size'].value );
-                 
-                     
-            });
-              var positions = pckry.getShiftPositions('data-item-id');
-             console.log ("POSITIONS MAP " + JSON.stringify(positions));
-             var ld = ZMDataModel.getLogin();
-             ld.packeryPositions = JSON.stringify(positions);
-             ZMDataModel.setLogin(ld);
-          
-         },50);
+               pckry.once( 'layoutComplete', function() {
+                    var positions = pckry.getShiftPositions('data-item-id');
+                    //console.log ("POSITIONS MAP " + JSON.stringify(positions));
+                    var ld = ZMDataModel.getLogin();
+                    ld.packeryPositions = JSON.stringify(positions);
+                    ZMDataModel.setLogin(ld);
+                   $ionicLoading.hide();
+                   $scope.sliderChanging = false;
+                });
+                pckry.layout();
+        },100);
        // pckry.destroy();
      //   $timeout ( function () {initPackery(); },500);
           //pckry.reloadItems();

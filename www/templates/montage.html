@@ -42,20 +42,20 @@
         </ion-refresher>-->
 
         <span ng-show="!minimal">
-                <div class="range range-positive">
-                    <i style="color:#bbbbbb" class="icon ion-grid"></i>
-                    <input type="range" ng-model="slider.monsize" min="2"
-                           max="10" ng-change="sliderChanged(slider.monsize)">
-                    <i style="color:#bbbbbb" class="icon ion-image"></i>
-
-                </div>
+            
+            <span ng-click="sliderChanged(1)" style="float:right;margin-top:0px;padding-top:2px;background-color:#6d0909;color:#fff;font-size:25px;opacity:1;width:40px;height:30px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;</i></span>
+            
+            <span ng-click="sliderChanged(-1)" style="float:left;margin-top:0px;padding-top:2px;background-color:#6d0909;color:#fff;font-size:22px;opacity:1;width:40px;height:30px;border-radius: 0px 0px 5px 0px;">&nbsp;<i class="ion-minus-circled">&nbsp;</i></span>
+            <br/><br/>
+                
+                
         </span>
-
+        
 
         <div class="grid" id="mygrid">
             <div class="grid-sizer grid-item-10"></div>
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
-            <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} {{dragBorder}}" data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{gridScale}}" >
+            <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} {{dragBorder}}" data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" >
                 <figure>
                     <div ng-if="!isModalActive" >
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
