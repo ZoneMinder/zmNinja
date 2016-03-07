@@ -1641,7 +1641,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         console.log ("************* GENERATED CONNKEY " + $scope.connKey);
         $scope.currentFrame = 1;
         console.log ("CURRENT EVENT " + JSON.stringify($scope.currentEvent));
-        $scope.currentEventDuration = parseFloat($scope.currentEvent.Event.Length);
+        //$scope.currentEventDuration = parseFloat($scope.currentEvent.Event.Length);
         //console.log ($scope.event.Event.Frames);
         if (currentEvent && currentEvent.Event)
             prepareModalEvent(currentEvent.Event.Id);

@@ -791,7 +791,12 @@ body { font-family: sans-serif; }
     border:2px dotted #3498db;
 }
 
-.grid-sizer,
+.dragborder-selected
+{
+    border:4px solid #e74c3c;
+}
+
+.grid-sizer {width:10%; }
 .grid-item { width: 20%; }
 .grid-item-20 { width: 20%; }
 .grid-item-30 { width: 30%; }
