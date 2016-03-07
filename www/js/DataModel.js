@@ -124,7 +124,7 @@ angular.module('zmApp.controllers')
          
          
           
-            zmLog("Saving all parameters to storage");
+            //zmLog("Saving all parameters to storage");
             //zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
             
             //$localstorage.setObject($rootScope.currentServerGroup, loginData);

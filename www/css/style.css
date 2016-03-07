@@ -196,6 +196,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 figure {
      position: relative;
+    
 }
 
 figure img {
@@ -204,6 +205,9 @@ figure img {
     height: auto;
 }
 figcaption {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
     
 }
 
