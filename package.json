@@ -86,6 +86,11 @@
       "version": "",
       "locator": "android_temp"
     },
-    "android"
+    "android",
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    }
   ]
 }
