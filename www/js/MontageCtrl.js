@@ -173,7 +173,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                    $ionicLoading.hide();
                    $scope.sliderChanging = false;
                 });
-                pckry.layout();
+                
+                layout(pckry);
         },100);
         
         
@@ -222,7 +223,7 @@ function initPackery()
         imagesLoaded(elem).on('progress', function() {
                 //console.log ("******** SOME IMAGE LOADED");
                 progressCalled = true;
-                if (layouttype) $timeout (function(){pckry.layout();},100);
+                if (layouttype) $timeout (function(){layout(pckry);},100);
         });
         
         imagesLoaded(elem).on('always', function() {
@@ -764,13 +765,18 @@ function initPackery()
                     ZMDataModel.setLogin(ld);
                     $scope.slider.monsize = 2;
                 });
-                pckry.layout();
-                $timeout(function(){pckry.layout(); },100);// don't ask
+                layout(pckry);
+                $timeout(function(){layout(pckry); },100);// don't ask
             
             },100);
  
     };
     
+    
+    function layout(pckry)
+    {
+        pckry.shiftLayout();
+    }
 
     //---------------------------------------------------------
     // slider is tied to the view slider for montage
@@ -843,7 +849,7 @@ function initPackery()
                    $ionicLoading.hide();
                    $scope.sliderChanging = false;
                 });
-                pckry.layout();
+                layout(pckry);
         },100);
       
         
