@@ -48,7 +48,8 @@
                             <div ng-if = "!minimal">
                                 <div>
                                 <img   class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines"  />
-                                <div style="position:absolute;top:40%; left:50%;opacity:0.5;"><button  ng-class="monitor.Monitor.listDisplay=='show'?'button button-positive button-small icon  ion-ios-eye':'button button-assertive button-small icon  ion-eye-disabled'" ng-click="toggleHide(monitor)" ng-if="isDragabillyOn"></button></div>
+                                <!--
+                                <div style="position:absolute;top:40%; left:50%;opacity:0.5;"><button  ng-class="monitor.Monitor.listDisplay=='show'?'button button-positive button-small icon  ion-ios-eye':'button button-assertive button-small icon  ion-eye-disabled'" ng-click="toggleHide(monitor)" ng-if="isDragabillyOn"></button></div>-->
                                 </div>
                                 
                                 
