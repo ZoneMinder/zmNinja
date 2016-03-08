@@ -480,6 +480,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.showtimers = true;
     var curYear = new Date().getFullYear();
     var readyToRun = false;
+    var i;
     
     $scope.sliderVal = {
        
@@ -691,7 +692,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
    // if (window.localStorage.getItem("montageArraySize") == undefined) {
     if (loginData.montageArraySize == '0') {
 
-        for (var i = 0; i < $scope.monitors.length; i++) {
+        for ( i = 0; i < $scope.monitors.length; i++) {
             $scope.monitorSize.push(ZMDataModel.getMontageSize());
             $scope.scaleDirection.push(1);
         }
@@ -1233,7 +1234,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
         
-        for (var i=0; i<$scope.MontageMonitors.length; i++)
+        for ( i=0; i<$scope.MontageMonitors.length; i++)
         {
             if ($scope.MontageMonitors[i].Monitor.connKey !='' &&
                 $scope.MontageMonitors[i].Monitor.eventUrl !='img/noevent.png' &&

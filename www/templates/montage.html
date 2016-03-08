@@ -15,22 +15,7 @@
         </button>
         
         
-        <!--<button ng-class="packMontage?'button button-icon button-clear ion-android-more-vertical':'button button-icon button-clear ion-android-more-horizontal'" ng-click="dragToggle();">&nbsp;
-        </button>-->
-        
-        <!--<span class="rotate-button">
-                <button class="button button-icon button-clear ion-arrow-swap"
-                        ng-click="changeScale();">
-                </button>
-        </span>-->
-
-        <!--<span class="rotate-button">
-                <button class="button button-icon button-clear ion-arrow-swap"
-                        ng-click="toggleReorder();">
-                </button>
-        </span>-->
-
-
+      
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
         </button>
 
@@ -54,14 +39,18 @@
 
         <div class="grid" id="mygrid">
             <div class="grid-sizer grid-item-10"></div>
-            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng-if="monitor.Monitor.Function!='None' && monitor.Monitor.listDisplay!='noshow' && monitor.Monitor.Enabled !='0'">
-            <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} {{dragBorder}}" data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" >
+            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
+                  ng-if="monitor.Monitor.Function!='None' &&  monitor.Monitor.Enabled !='0' ">
+            <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} {{dragBorder}}" data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}" >
                 <figure>
                     <div ng-if="!isModalActive" >
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal">
-                                
+                                <div>
                                 <img   class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines"  />
+                                <div style="position:absolute;top:40%; left:50%;opacity:0.5;"><button  ng-class="monitor.Monitor.listDisplay=='show'?'button button-positive button-small icon  ion-ios-eye':'button button-assertive button-small icon  ion-eye-disabled'" ng-click="toggleHide(monitor)" ng-if="isDragabillyOn"></button></div>
+                                </div>
+                                
                                 
                             </div> 
 
@@ -74,6 +63,7 @@
                             <img image-spinner-src="img/pausevideo.png" />
                         </div>
 
+                        
                      
 
                         <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >
