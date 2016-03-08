@@ -2751,6 +2751,7 @@ Packery.prototype.getShiftPositions = function( attrName ) {
     return {
       attr: item.element.getAttribute( attrName ),
       size: item.element.getAttribute ("data-item-size"),
+      display: item.element.getAttribute ("data-item-listdisplay"),
       x: item.rect.x / _this.packer.width
     }
   });
