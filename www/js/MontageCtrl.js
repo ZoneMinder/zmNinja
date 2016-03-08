@@ -745,10 +745,10 @@ function initPackery()
             else
             {
                 $scope.MontageMonitors[i].Monitor.gridScale="20";
-                somethingReset = true;
+               // somethingReset = true;
             }
         }
-        if (!somethingReset) // nothing was selected
+        if (!somethingReset && $scope.isDragabillyOn) // nothing was selected
         {
             for (i=0; i< $scope.MontageMonitors.length; i++){$scope.MontageMonitors[i].Monitor.gridScale="20";}
         }
@@ -765,8 +765,9 @@ function initPackery()
                     ZMDataModel.setLogin(ld);
                     $scope.slider.monsize = 2;
                 });
-                layout(pckry);
-                $timeout(function(){layout(pckry); },100);// don't ask
+                //layout(pckry);
+                pckry.layout(); // force here - no shiftlayout
+                $timeout(function(){pckry.layout(); },100);// don't ask
             
             },100);
  
@@ -819,12 +820,12 @@ function initPackery()
               else
               {
                   $scope.MontageMonitors[i].Monitor.gridScale= curVal;
-                  somethingReset = true;
+                  //somethingReset = true;
                   
               }
         
           }
-          if (!somethingReset) // nothing was selected
+          if (!somethingReset && $scope.isDragabillyOn) // nothing was selected
             {
                 for (i=0; i< $scope.MontageMonitors.length; i++)
                 {
@@ -849,7 +850,10 @@ function initPackery()
                    $ionicLoading.hide();
                    $scope.sliderChanging = false;
                 });
-                layout(pckry);
+                if (!somethingReset) 
+                    pckry.layout();
+                else
+                    layout(pckry);
         },100);
       
         
