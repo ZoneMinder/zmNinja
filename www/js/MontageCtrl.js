@@ -83,7 +83,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var modalIntervalHandle;
 
 
-    $ionicSideMenuDelegate.canDragContent(false);
+    $ionicSideMenuDelegate.canDragContent($scope.minimal? true: false);
 
     
     $rootScope.authSession = "undefined";
