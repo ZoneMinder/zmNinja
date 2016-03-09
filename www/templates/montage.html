@@ -21,7 +21,7 @@
 
     </ion-nav-buttons>
 
-    <ion-content ng-cloak has-bouncing="false" style="background-color:#444444">
+    <ion-content ng-cloak has-bouncing="false" style="background-color:#444444" >
 
         <!--<ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
         </ion-refresher>-->
@@ -110,7 +110,8 @@
             <button mfb-button icon="ion-close" label="exit full screen" ng-click="switchMinimal()">
             </button>
         </nav>
-
+        
+        
         <span class="modal-alarm-badge">
             <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive" 
                     ng-click="handleAlarmsWhileMinimized();" ng-if="$root.isAlarm"></a>
