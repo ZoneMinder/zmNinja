@@ -20,14 +20,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var isLongPressActive = false;
     $scope.isReorder = false;
     var intervalHandleMontage; // will hold image resize timer on long press
-    var montageIndex = 0; // will hold monitor ID to scale in timer
+   
     
     var gridcontainer;
-
-    $scope.monitorSize = []; // array with montage sizes per monitor
-    $scope.scaleDirection = []; // 1 = increase -1 = decrease
-    $scope.slider = {};
-
     var pckry, draggie;
     var draggies;
     $scope.isDragabillyOn = false;
@@ -776,7 +771,7 @@ function initPackery()
     
     function layout(pckry)
     {
-        pckry.shiftLayout();
+        pckry.layout();
     }
 
     //---------------------------------------------------------
