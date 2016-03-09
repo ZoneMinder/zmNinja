@@ -66,7 +66,7 @@
                             </div>
                         </div>
 
-                        <div ng-if = "monitor.Monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey !=''">
+                        <div style="position:relative" ng-if = "monitor.Monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey !=''">
 
                             <img  id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.eventUrl}}{{$root.authSession}}"  image-spinner-loader="lines" style="
                             width: 100% !important;
@@ -80,7 +80,7 @@
                                {{monitor.Monitor.Name}}&nbsp;
                             </div>
 
-                             <div  ng-if="sliderVal.showTimeline" style=" position:absolute; bottom:15px; right:0%;white-space:nowrap;overflow:hidden;" 
+                             <div  ng-if="sliderVal.showTimeline" style=" position:absolute; bottom:15px; right:0%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;" 
                              class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">
                             &nbsp;<i class="ion-clock"></i>
                                {{prettifyDate(monitor.Monitor.eventUrlTime)}}&nbsp;
