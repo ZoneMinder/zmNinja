@@ -110,6 +110,31 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     };
 
+    //-----------------------------------------
+    // Move by X days 
+    //-----------------------------------------
+    $scope.moveDays = function (d)
+    {
+        var range = timeline.getWindow();
+        var ds = moment(range.start);
+        if (d>0) 
+            ds.add(d, 'days'); 
+        else
+            ds.subtract(Math.abs(d), 'days');
+
+        var es = moment(ds); // clone it!
+        es.add (1, 'day');
+        
+        fromDate = ds.format("YYYY-MM-DD HH:mm:ss");
+        toDate = es.format("YYYY-MM-DD HH:mm:ss");
+
+        $scope.fromDate = fromDate;
+        $scope.toDate = toDate;
+        $rootScope.customTimelineRange = false;
+        ZMDataModel.zmLog ("moving by " + d + " day to " + fromDate + " upto " + toDate);
+        drawGraph(fromDate, toDate, maxItems);
+       
+    };
 
 
 

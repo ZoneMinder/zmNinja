@@ -3,9 +3,9 @@
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
 
-        <!-- &nbsp;
-         <button class="button button-icon button-clear ion-arrow-left-c" ng-click="move(0.2)"></button>
-        <button class="button button-icon button-clear ion-arrow-right-c" ng-click="move(-0.2)"></button>-->
+         &nbsp;
+         <button class="button button-icon button-clear ion-arrow-left-c" ng-click="moveDays(-1);"></button>
+        <button class="button button-icon button-clear ion-arrow-right-c" ng-click="moveDays(1);"></button>
 
 
 <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
