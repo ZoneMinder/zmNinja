@@ -273,11 +273,6 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         //console.log('Saving login');
         ZMDataModel.setFirstUse(false);
 
-
-
-
-       
-
         // lets so some basic sanitization of the data
         // I am already adding "/" so lets remove spurious ones
         // though webkit has no problems. Even so, this is to avoid

@@ -60,7 +60,7 @@ angular.module('zmApp.controllers')
          'montageHiddenOrder':'',
          'montageArraySize':'0',
          
-         'graphSize':200,
+         'graphSize':2000,
          'minAlarmCount':'1',
          'montageSize':'3',
          'useNphZms':true,
@@ -215,6 +215,26 @@ angular.module('zmApp.controllers')
             zmLog("ZMData init: checking for stored variables & setting up log file");
             
             serverGroupList = $localstorage.getObject("serverGroupList");
+            
+            var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"minAlarmCount\":\"1\",\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
+            var demoS = JSON.parse(demoServer);
+            console.log ("JSON parsed demo" + JSON.stringify(demoS));
+            
+            var isFoundDemo = false;
+            var as = Object.keys (serverGroupList);
+            for (var x=0; x<as.length; x++)
+            {
+                if (as[x] == 'zmNinjaDemo')
+                        isFoundDemo = true;
+                //console.log ("************ FOUND SERVER NAME " + as[x]);
+               // if serverGroupList[x]
+            }
+            if (!isFoundDemo)
+            {
+                zmDebug ("Pushing demo server config to server groups");
+                //serverGroupList.push(demoS);
+                serverGroupList[demoS.serverName] = angular.copy(demoS);
+            }
             
             var sname = 
                 $localstorage.get("defaultServerName");
