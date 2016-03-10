@@ -476,9 +476,15 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
     
+    $scope.timeFormat = "yyyy-MM-dd "+ZMDataModel.getTimeFormat();
     $scope.displayDateTimeSliders = true;
     $scope.showtimers = true;
+    $scope.loginData = ZMDataModel.getLogin();
+
+     
+    
     var curYear = new Date().getFullYear();
+    
     var readyToRun = false;
     var i;
     

@@ -202,6 +202,14 @@ function initPackery()
             ZMDataModel.zmLog ("found a packery layout");
             layouttype = false;
         }
+    
+    if ($scope.MontageMonitors.length != positions.length)
+    {
+        ZMDataModel.zmLog ("Monitors found:"+$scope.MontageMonitors.length+" but layout says:"+positions.length);
+        ZMDataModel.zmLog ("Whoops!! Monitors have changed. I'm resetting layouts, sorry!");
+        layouttype = true;
+        positions = {};
+    }
         
         var elem =  angular.element(document.getElementById("mygrid"));
         pckry = new Packery('.grid', 
