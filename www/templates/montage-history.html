@@ -25,11 +25,11 @@
 
 
 
-        <div class="timeline_text" ion-datetime-picker title="From" ng-attr-am-pm="!loginData.use24hr" ng-model="datetimeValueFrom.value" ng-change="dateChanged()">
+        <div class="timeline_text" ion-datetime-picker title="From" am-pm={{!loginData.use24hr}} ng-model="datetimeValueFrom.value" ng-change="dateChanged()">
             <b>From: </b>{{datetimeValueFrom.value | date: timeFormat}}
         </div>
 
-        <div class="timeline_text" ion-datetime-picker ng-attr-am-pm="!loginData.use24hr" ng-model="datetimeValueTo.value" ng-change="dateChanged()">
+        <div class="timeline_text" ion-datetime-picker am-pm={{!loginData.use24hr}} ng-model="datetimeValueTo.value" ng-change="dateChanged()">
             <b>To: </b>{{datetimeValueTo.value | date: timeFormat}} @ {{sliderVal.rate}}x
             <div ng-if="$root.platformOS != 'ios'">(max of 5 monitors - chrome limit)</div>
         </div>
@@ -178,14 +178,14 @@
                 <div class="item item-divider">Timeline</div>
 
                 <ion-item>
-                    <div ion-datetime-picker title="From" ng-attr-am-pm="!loginData.use24hr" ng-model="datetimeValueFrom.value">
-                        <b>From: </b>{{datetimeValueFrom.value | date: timeFormat}}
+                    <div ion-datetime-picker title="From" am-pm={{!loginData.use24hr}} ng-model="datetimeValueFrom.value">
+                        <b>VALUE:{{!loginData.use24hr}} From: </b>{{datetimeValueFrom.value | date: timeFormat}}
                     </div>
                 </ion-item>
 
                 <ion-item>
-                    <div ion-datetime-picker ng-attr-am-pm="!loginData.use24hr" ng-model="datetimeValueTo.value">
-                        <b>To: </b>{{datetimeValueTo.value | date: timeFormat}}
+                    <div ion-datetime-picker am-pm={{!loginData.use24hr}} ng-model="datetimeValueTo.value">
+                        <b>VALUE:{{!loginData.use24hr}} To: </b>{{datetimeValueTo.value | date: timeFormat}}
                     </div>
                 </ion-item>
 
