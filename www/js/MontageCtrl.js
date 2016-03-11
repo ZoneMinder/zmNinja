@@ -197,6 +197,7 @@ function initPackery()
         }
         else
         {
+            
             console.log ("POSITION STR IS " + positionsStr);
             positions = JSON.parse(positionsStr);
             ZMDataModel.zmLog ("found a packery layout");
@@ -766,7 +767,7 @@ function initPackery()
                     var ld = ZMDataModel.getLogin();
                     ld.packeryPositions = JSON.stringify(positions);
                     ZMDataModel.setLogin(ld);
-                    $scope.slider.monsize = 2;
+                   // $scope.slider.monsize = 2;
                 });
                 //layout(pckry);
                 pckry.layout(); // force here - no shiftlayout
