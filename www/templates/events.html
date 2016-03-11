@@ -135,7 +135,7 @@
                         <div ng-if="groupType=='alarms'">
                             <br/><br/>
                           
-                            <div style="height:190px">
+                            <div style="height:190px;">
                                 <p>scroll <i class="icon ion-arrow-left-c"></i>
                                 <i class="icon ion-arrow-right-c"></i></p>
                                 <ion-scroll direction="x" >
@@ -144,7 +144,7 @@
                                                  
                                             <figure style="display:inline-block">
                                                 <figcaption><p>frame:{{alarm.id}} score:{{alarm.score}}</p></figcaption>       
-                                                  <img  image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"  height="170px" />
+                                                  <img  image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" />
                                                   
                                                 
                                                 </figure>
