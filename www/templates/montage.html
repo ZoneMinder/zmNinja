@@ -21,7 +21,7 @@
 
     </ion-nav-buttons>
 
-    <ion-content ng-cloak has-bouncing="false" style="background-color:#444444" >
+    <ion-content ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate" >
 
         <!--<ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
         </ion-refresher>-->
@@ -47,7 +47,7 @@
                         <div ng-if="$root.authSession!='undefined' && !isBackground()">
                             <div ng-if = "!minimal">
                                 <div>
-                                <img   class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines"  />
+                                <img   class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines" on-swipe-up="swipeUp()" on-swipe-down="swipeDown()"  />
                                 <!--
                                 <div style="position:absolute;top:40%; left:50%;opacity:0.5;"><button  ng-class="monitor.Monitor.listDisplay=='show'?'button button-positive button-small icon  ion-ios-eye':'button button-assertive button-small icon  ion-eye-disabled'" ng-click="toggleHide(monitor)" ng-if="isDragabillyOn"></button></div>-->
                                 </div>
@@ -56,7 +56,7 @@
                             </div> 
 
                             <div ng-if = "minimal">
-                                <img id="{{img-$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines"  />
+                                <img id="{{img-$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines" swipe-up="swipeUp()" on-swipe-down="swipeDown()"   />
                             </div>
                         </div>
 
