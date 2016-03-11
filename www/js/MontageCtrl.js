@@ -181,6 +181,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 function initPackery()
 {
         
+        
+        $ionicLoading.show({
+                    template: "arranging images...",
+                    noBackdrop: true,
+                    duration: zm.loadingTimeout
+                });
+    
         var progressCalled = false;
         draggies = [];
         var layouttype = true;
@@ -231,7 +238,9 @@ function initPackery()
         });
         
         imagesLoaded(elem).on('always', function() {
-                console.log ("******** ALL IMAGES LOADED");
+                //console.log ("******** ALL IMAGES LOADED");
+                ZMDataModel.zmDebug ("All images loaded");
+                $ionicLoading.hide();
                 
                 if (!progressCalled)
                 {
@@ -794,7 +803,7 @@ function initPackery()
     
     function layout(pckry)
     {
-        pckry.layout();
+        pckry.shiftLayout();
     }
 
     //---------------------------------------------------------
