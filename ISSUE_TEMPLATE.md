@@ -5,7 +5,6 @@ Which platform are you reporting about:
 - [ ] iOS
 - [ ] Desktop
 
-
 **The version of the app you are reporting:**
 
 **Expected Behavior:**
