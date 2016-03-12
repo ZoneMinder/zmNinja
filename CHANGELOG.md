@@ -1,7 +1,33 @@
 # Change Log
 
-## [1.0.9](https://github.com/pliablepixels/zmNinja/tree/1.0.9) (2016-02-25)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.7...1.0.9)
+## [1.1.0](https://github.com/pliablepixels/zmNinja/tree/1.1.0) (2016-03-12)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.9...1.1.0)
+
+**Implemented enhancements:**
+
+- Add a pre-configured demo account for people to test around with [\#187](https://github.com/pliablepixels/zmNinja/issues/187)
+- Add gesture to open left menu while in full screen live view [\#185](https://github.com/pliablepixels/zmNinja/issues/185)
+- Add touch gesture to exit live view [\#182](https://github.com/pliablepixels/zmNinja/issues/182)
+- add dynamic drag and drop and multiple size options to montage - make it awesome and more consistent [\#179](https://github.com/pliablepixels/zmNinja/issues/179)
+- Prev day/next day for timeline [\#177](https://github.com/pliablepixels/zmNinja/issues/177)
+- 12/24 hours scheme settings  [\#175](https://github.com/pliablepixels/zmNinja/issues/175)
+
+**Fixed bugs:**
+
+- switching server profiles causes inconsistency if you go to developer options [\#189](https://github.com/pliablepixels/zmNinja/issues/189)
+- changing timeline limit does not go into effect until app restart [\#188](https://github.com/pliablepixels/zmNinja/issues/188)
+- Desktop \(possibly others\): Inescapable UI pattern [\#174](https://github.com/pliablepixels/zmNinja/issues/174)
+
+**Closed issues:**
+
+- No image for monitors nor events [\#181](https://github.com/pliablepixels/zmNinja/issues/181)
+- Android build fails [\#180](https://github.com/pliablepixels/zmNinja/issues/180)
+- iPhone stopped working [\#178](https://github.com/pliablepixels/zmNinja/issues/178)
+- non-free license [\#173](https://github.com/pliablepixels/zmNinja/issues/173)
+- iOS: Montage View arrange views \(third icon from top-right\) does not function [\#172](https://github.com/pliablepixels/zmNinja/issues/172)
+
+## [v1.0.9](https://github.com/pliablepixels/zmNinja/tree/v1.0.9) (2016-02-25)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.7...v1.0.9)
 
 **Implemented enhancements:**
 
