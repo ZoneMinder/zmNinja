@@ -8,7 +8,7 @@ Before you submit an issue, please make sure you fill up the template.
 **The version of the app you are reporting:**
 (example only, please edit this line) 1.1
 
-**Device details **
+**Device details:**
 (example only, please edit this line) Moto G
 
 **Expected Behavior:**
