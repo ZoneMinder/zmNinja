@@ -13,4 +13,4 @@ Which platform are you reporting about:
 
 **Steps to reproduce:**
 
-
+Thanks
