@@ -11,14 +11,11 @@ Before you submit an issue, please make sure you fill up the template.
 **Device details:**
 (example only, please edit this line) Moto G
 
-**Expected Behavior:**
-(example only, please edit this line and describe what should happen)
+**What is the nature of your issue**
+(one of Bug, Enhancement, Question)
 
-**Actual Behavior:**
-(example only, please edit this line and describe what is happening)
-
-**Steps to reproduce:**
-(example only, please edit this line and describe if there are any steps I need to do to reproduce)
+**Details**
+Describe in detail. If its a bug, please describe what is happening, what should happen and how to reproduce if its not obvious
 
 
 Thanks!
