@@ -1169,7 +1169,7 @@ angular.module('zmApp', [
                 if (window.cordova) {
                     $cordovaSplashscreen.hide();
                 }
-            }, 1500);
+            }, 300);
 
             /*if(window.navigator && window.navigator.splashscreen) {
                 window.navigator.splashscreen.hide();
