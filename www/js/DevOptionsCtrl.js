@@ -45,6 +45,8 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
         //console.log("**VIEW ** DevOptions Ctrl Entered");
+        $scope.loginData = ZMDataModel.getLogin();
+   
         ZMDataModel.setAwake(false);
     });
 
@@ -113,7 +115,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     //------------------------------------------------------------------
 
 
-    $scope.loginData = ZMDataModel.getLogin();
+    
 
 
 
