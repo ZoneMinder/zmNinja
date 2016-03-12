@@ -1,14 +1,16 @@
-Before you submit an issue, please make sure you fill up the template. Tip: switch to preview mode to see how the issue will look like after you hit submit.
+Tip: switch to preview mode to see how the issue will look like after you hit submit.
 
-Which platform are you reporting about:
-- [ ] Android
-- [ ] iOS
-- [ ] Desktop
+Before you submit an issue, please make sure you fill up the template. 
 
-Are you  reporting a:
-- [ ] Bug
-- [ ] Feature Request
-- [ ] Request for clarification
+Which platform are you reporting about (please put an x next to the platform(s) making sure there are no spaces):
+- [] Android
+- [] iOS
+- [] Desktop
+
+Are you  reporting a (please put an x next to the platform(s) making sure there are no spaces):
+- [] Bug
+- [] Feature Request
+- [] Request for clarification
 
 **The version of the app you are reporting:**
 
