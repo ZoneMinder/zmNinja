@@ -238,6 +238,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         //console.log("**Destroying Timeline");
         //timeline.destroy();
     });
+    
+    
+     $scope.$on('$ionicView.enter', function () {
+        
+         
+         var ld = ZMDataModel.getLogin();
+         maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
+          maxItems = ld.graphSize || maxItemsConf;
+         ZMDataModel.zmLog("Graph items to draw is " + maxItems);
+        $scope.maxItems = maxItems;
+        $scope.graphLoaded = false;
+        ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
+     });
 
     //-------------------------------------------------
     // FIXME: shitty hackery -- Im using a rootScope
@@ -298,9 +311,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.ionRange = {
         index: 1
     };
-    //var currentEvent="";
-
-    // keep a record for redraw 
+   
     var curFromDate, curToDate, curCount;
 
     // Make sure sliding for menu is disabled so it
@@ -323,28 +334,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var toDate = moment().endOf('day').format("YYYY-MM-DD HH:mm:ss");
 
 
-    //Simulated data
-    /*
-    fromDate = "2015-08-18 00:00:00";
-    toDate = "2015-08-18 23:59:59";
-    */
 
     $scope.fromDate = fromDate;
     $scope.toDate = toDate;
 
 
-   // console.log("*********************** TIMELINE MAIN ");
-
     // maxItems will be ignored during timeline draw if its desktop
-     var maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
+     var maxItemsConf;
     
     var ld = ZMDataModel.getLogin();
-    var maxItems = ld.graphSize || maxItemsConf;
+    var maxItems;
 
-    ZMDataModel.zmLog("Graph items to draw is " + maxItems);
-    $scope.maxItems = maxItems;
-    $scope.graphLoaded = false;
-    ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
+    
 
     //flat colors for graph - https://flatuicolors.com http://www.flatuicolorpicker.com
     var colors = ['#3498db', '#D2527F', '#f39c12', '#9b59b6', '#e74c3c', '#7A942E', ];
