@@ -10,6 +10,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
         function () {
 
             ZMDataModel.zmDebug("Inside Portal login Enter handler");
+        
+            loginData = ZMDataModel.getLogin();
 
 
             $ionicHistory.nextViewOptions({
@@ -133,7 +135,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         disableAnimate: true,
                                     disableBack: true
                                     });
-                                    $state.go('login');
+                                  //  $state.go('login');
                             }
                             else   
                             {
@@ -273,7 +275,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     disableAnimate: true,
                                 disableBack: true
                                 });
-                                $state.go('login');
+                                //$state.go('login');
                         }
                         else   
                         {
@@ -300,7 +302,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     //-------------------------------------------------------------------------------
    // console.log("************* ENTERING PORTAL MAIN ");
     ZMDataModel.zmLog ("Entering Portal Main");
-    var loginData = ZMDataModel.getLogin();
+    var loginData;
      $ionicSideMenuDelegate.canDragContent(false);
 
         
