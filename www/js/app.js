@@ -1094,6 +1094,14 @@ angular.module('zmApp', [
         //---------------------------------------------------------------------
 
         $ionicPlatform.ready(function () {
+            
+            
+           
+                if (window.cordova) {
+                    $cordovaSplashscreen.hide();
+                }
+          
+            
             $rootScope.platformOS = "desktop";
 
 
@@ -1165,11 +1173,7 @@ angular.module('zmApp', [
 
             }
 
-            setTimeout(function () {
-                if (window.cordova) {
-                    $cordovaSplashscreen.hide();
-                }
-            }, 300);
+            
 
             /*if(window.navigator && window.navigator.splashscreen) {
                 window.navigator.splashscreen.hide();
