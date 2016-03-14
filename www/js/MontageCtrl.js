@@ -215,7 +215,7 @@ function initPackery()
     var cnt=0;
     $scope.MontageMonitors.forEach(function(elem) 
         { 
-            if ((elem.Monitor.Elabled!='0') && (elem.Monitor.Function!='None'))
+            if ((elem.Monitor.Enabled!='0') && (elem.Monitor.Function!='None'))
                 cnt++;
         });
     
