@@ -211,9 +211,19 @@ function initPackery()
             layouttype = false;
         }
     
-    if ($scope.MontageMonitors.length != positions.length)
+    
+    var cnt=0;
+    $scope.MontageMonitors.forEach(function(elem) 
+        { 
+            if ((elem.Monitor.Elabled!='0') && (elem.Monitor.Function!='None'))
+                cnt++;
+        });
+    
+    ZMDataModel.zmLog ("Monitors that are active: " + cnt + " while grid has " + positions.length);
+    
+    if (cnt!= positions.length)
     {
-        ZMDataModel.zmLog ("Monitors found:"+$scope.MontageMonitors.length+" but layout says:"+positions.length);
+       
         ZMDataModel.zmLog ("Whoops!! Monitors have changed. I'm resetting layouts, sorry!");
         layouttype = true;
         positions = {};
