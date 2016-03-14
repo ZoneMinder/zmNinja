@@ -1,7 +1,19 @@
 # Change Log
 
-## [1.1.0](https://github.com/pliablepixels/zmNinja/tree/1.1.0) (2016-03-12)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.9...1.1.0)
+## [1.1.1](https://github.com/pliablepixels/zmNinja/tree/1.1.1) (2016-03-14)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.0...1.1.1)
+
+**Fixed bugs:**
+
+- The new montage function resets montage layout if there are hidden or disabled monitors [\#194](https://github.com/pliablepixels/zmNinja/issues/194)
+
+**Closed issues:**
+
+- decrease splash screen delay \(reduce startup delay\) [\#190](https://github.com/pliablepixels/zmNinja/issues/190)
+- Android build fails ref \#180 [\#184](https://github.com/pliablepixels/zmNinja/issues/184)
+
+## [v1.1.0](https://github.com/pliablepixels/zmNinja/tree/v1.1.0) (2016-03-12)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.9...v1.1.0)
 
 **Implemented enhancements:**
 
