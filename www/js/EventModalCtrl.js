@@ -1295,7 +1295,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 return;
 
             
-             console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
+             //console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
         });
     }
 
