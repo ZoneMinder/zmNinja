@@ -31,6 +31,7 @@ angular.module('zmApp.controllers')
         'serverName':'',
         'username': '',
         'password': '',
+        'fallbackConfiguration': '',
         'url': '', // This is the ZM portal path
         'apiurl': '', // This is the API path
         'eventServer':'', //experimental Event server address
@@ -208,6 +209,110 @@ angular.module('zmApp.controllers')
             return defaultLoginData;
         },
         
+        
+        getReachableConfig: function ()
+        {
+            var d = $q.defer();
+            if (loginData.serverName=="")
+            {
+                zmLog("Reachable: No server name configured, likely first use?");
+                d.reject ("No servers");
+                return d.promise;
+            }
+            
+            var chainURLs = [ {url:'http://1.ozone.network',server: 'o1'},
+                              {url:'http://2.ozone.network',server: 'o2'},
+                              {url:'http://3.ozone.network',server: 'o3'},
+                                    
+                                   ];
+            var savedLoginData = angular.copy(loginData);
+            
+            //zmLog ("Making sure " + loginData.serverName + " is reachable...");
+            var tLd = serverGroupList[loginData.serverName];
+            
+            var keepBuilding = true;
+            while (keepBuilding==true)
+            {
+                if (arrayObjectIndexOf(chainURLs,tLd.url,"url") == -1 ) // no loop
+                {
+                    zmLog ("Adding to chain stack: " + tLd.serverName + ">"+tLd.url);
+                    chainURLs.push ({url:tLd.url, server:tLd.serverName});
+                    zmLog ("Fallback of " + tLd.serverName + " is " + tLd.fallbackConfiguration);
+                    if (tLd.fallbackConfiguration)
+                    {
+                        tLd = serverGroupList [tLd.fallbackConfiguration];
+                    }
+                    else   
+                    {
+                        zmLog ("reached end of chain loop");
+                    }
+                }
+                else
+                {
+                    zmLog ("detected loop when " + tLd.serverName + " fallsback to " + tLd.fallbackConfiguration);
+                    keepBuilding = false;
+                }
+            }
+                
+   
+            
+            //contactedServers.push(loginData.serverName);
+            findFirstReachableUrl(chainURLs).then(function (firstReachableUrl) {
+                d.resolve (firstReachableUrl);
+                // also make sure loginData points to this now
+                
+                loginData = serverGroupList[firstReachableUrl.server];
+                
+                console.log ("set login Data to " + JSON.stringify(loginData));
+                                
+                return d.promise;
+                // OK: do something with firstReachableUrl
+                }, function () {
+                d.reject ("No servers reachable");
+                return d.promise;
+                // KO: no url could be reached
+            });
+            
+            
+            function arrayObjectIndexOf(myArray, searchTerm, property) 
+            {
+                for(var i = 0, len = myArray.length; i < len; i++) 
+                {
+                    if (myArray[i][property] === searchTerm) 
+                        return i;
+                }
+                return -1;
+            }
+            
+            function findFirstReachableUrl (urls)
+            {
+                if (urls.length > 0)
+                {
+                     $ionicLoading.show({template: 'trying ' + urls[0].server});
+                    zmLog ("Reachability test.." + urls[0].url);
+                    return $http.get(urls[0].url).then(function () {
+                        zmLog ("Success: reachability on "+ urls[0].url);
+                        $ionicLoading.hide();
+                        return urls[0];
+                    }, function() {
+                        zmLog ("Failed reachability on "+ urls[0].url);
+                        return findFirstReachableUrl(urls.slice(1));
+                    });
+                }
+                else
+                {
+                    $ionicLoading.hide();
+                    return $q.reject("No reachable URL");
+                    
+                }
+                
+               
+            }
+            
+            return d.promise;
+            
+            
+        },
         
         init: function () {
            // console.log("****** DATAMODEL INIT SERVICE CALLED ********");
@@ -490,49 +595,6 @@ angular.module('zmApp.controllers')
             
             setLogin(newLogin);
             $rootScope.showBlog = newLogin.enableBlog;
-            
-            
-            /*
-            window.localStorage.setItem("username", loginData.username);
-            window.localStorage.setItem("password", loginData.password);
-            window.localStorage.setItem("url", loginData.url);
-            window.localStorage.setItem("apiurl", loginData.apiurl);
-            window.localStorage.setItem("streamingurl", loginData.streamingurl);
-            window.localStorage.setItem("eventServer", loginData.eventServer);
-            window.localStorage.setItem("eventServerMonitors", loginData.eventServerMonitors);
-            window.localStorage.setItem("eventServerInterval", loginData.eventServerInterval);
-             window.localStorage.setItem("maxFPS", loginData.maxFPS);
-            
-            
-            
-            window.localStorage.setItem("useSSL", loginData.useSSL?"1":"0");
-            window.localStorage.setItem("usePin", loginData.usePin?"1":"0");
-            window.localStorage.setItem("canSwipeMonitors", loginData.canSwipeMonitors?"1":"0");
-            window.localStorage.setItem("persistMontageOrder", loginData.persistMontageOrder?"1":"0");
-            
-            window.localStorage.setItem("enableh264", loginData.enableh264?"1":"0");
-            window.localStorage.setItem("gapless", loginData.gapless?"1":"0");
-            
-            window.localStorage.setItem("pinCode", loginData.pinCode);
-            
-            
-            window.localStorage.setItem("enableDebug", loginData.enableDebug?"1":"0");
-            window.localStorage.setItem("keepAwake", loginData.keepAwake?"1":"0");
-            window.localStorage.setItem("maxMontage", loginData.maxMontage);
-            window.localStorage.setItem("montageQuality", loginData.montageQuality);
-              window.localStorage.setItem("singleImageQuality", loginData.singleImageQuality);
-            window.localStorage.setItem("refreshSec", loginData.refreshSec);
-            
-            
-            window.localStorage.setItem("isUseAuth", loginData.isUseAuth);
-            window.localStorage.setItem("isUseEventServer", loginData.isUseEventServer);
-            window.localStorage.setItem("disablePush", loginData.disablePush);
-            window.localStorage.setItem("onTapScreen", loginData.onTapScreen);
-              
-            
-            console.log ("***** SETTING ISUSEAUTH TO " + loginData.isUseAuth);
-            */
-
             
         },
         
