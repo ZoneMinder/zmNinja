@@ -220,11 +220,7 @@ angular.module('zmApp.controllers')
                 return d.promise;
             }
             
-            var chainURLs = [ {url:'http://1.ozone.network',server: 'o1'},
-                              {url:'http://2.ozone.network',server: 'o2'},
-                              {url:'http://3.ozone.network',server: 'o3'},
-                                    
-                                   ];
+            var chainURLs = [];
             var savedLoginData = angular.copy(loginData);
             
             //zmLog ("Making sure " + loginData.serverName + " is reachable...");
@@ -262,7 +258,9 @@ angular.module('zmApp.controllers')
                 // also make sure loginData points to this now
                 
                 loginData = serverGroupList[firstReachableUrl.server];
+                $localstorage.set("defaultServerName",firstReachableUrl.server);
                 
+                zmLog ("Based on reachability, first serverName will be " + firstReachableUrl.server);
                 console.log ("set login Data to " + JSON.stringify(loginData));
                                 
                 return d.promise;
