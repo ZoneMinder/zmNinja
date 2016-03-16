@@ -1213,6 +1213,12 @@ angular.module('zmApp', [
                         $ionicHistory.currentView().stateParams;
                     ZMDataModel.zmDebug("Last State recorded:" +
                         JSON.stringify($ionicHistory.currentView()));
+                    
+                    if ($rootScope.lastState == "zm-portal-login") {
+                        ZMDataModel.zmDebug("Last state was portal-login, so forcing montage");
+                        $rootScope.lastState = "montage";
+                    }
+                    
                     ZMDataModel.zmDebug ("going to portal login");
                     $state.go("zm-portal-login");
                 } else {
@@ -1220,6 +1226,9 @@ angular.module('zmApp', [
                     $rootScope.lastStateParam = "";
                     ZMDataModel.zmDebug ("reset lastState to null");
                 }
+                
+                
+                
                 //$ionicSideMenuDelegate.toggleLeft(false);
                 //ZMDataModel.validatePin()
 
