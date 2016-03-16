@@ -737,181 +737,189 @@ angular.module('zmApp', [
 
     function doLogin(str) {
         
-        // recompute rand anyway so even if you don't have auth
-        // your stream should not get frozen
-        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-        
-        var statename = $ionicHistory.currentStateName();
-        
-        if (statename == "montage-history")
-        {
-            ZMDataModel.zmLog ("Skipping login process as we are in montage history. Re-logging will mess up the stream");
-            return;
-        }
-        
-       // console.log ("***** STATENAME IS " + statename);
-        
         var d = $q.defer();
-        var ld = ZMDataModel.getLogin();
-        if (ld.isUseAuth != "1") {
-            $ionicLoading.hide();
-            ZMDataModel.zmLog("Authentication is disabled. Skipping login");
-            ZMDataModel.zmLog("However, still doing a reachability check...");
+        
+          var statename = $ionicHistory.currentStateName();
 
-            ZMDataModel.zmDebug ("LD.url is " + ld.url);
-            $http.get(ld.url)
-                .then(function (success) {
-                        ZMDataModel.zmLog(ld.url + " is reachable.");
-                        d.resolve("Login success - no auth");
-                        return d.promise;
-
-                    },
-                    function (error) {
-                        ZMDataModel.zmLog(ld.url + " is NOT reachable.");
-                        d.reject("Login Error - not reachable");
-                        $rootScope.$emit('auth-error', "not reachable");
-                        return d.promise;
-                    });
-
-            return d.promise;
-        }
-
-        ZMDataModel.zmLog("zmAutologin called");
-
-        if (str) {
-            $ionicLoading.show({
-                template: str,
-                noBackdrop: true,
-                duration: zm.httpTimeout
-            });
-        }
-
-        ZMDataModel.isReCaptcha()
-            .then(function (result) {
-                if (result == true) {
-                    $ionicLoading.hide();
-                    ZMDataModel.displayBanner('error', ['reCaptcha must be disabled',
-                                        ], "", 8000);
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'reCaptcha enabled',
-                        template: 'Looks like you have enabled reCaptcha. It needs to be turned off for zmNinja to work'
-                    });
-                    
-                    
-
-                    // close it after 5 seconds
-                    $timeout(function () {
-
-                        alertPopup.close();
-                    }, 5000);
-                    
-                    d.reject ("Error-disable recaptcha");
-                return (d.promise);
-                }
-            
+            if (statename == "montage-history")
+            {
+                ZMDataModel.zmLog ("Skipping login process as we are in montage history. Re-logging will mess up the stream");
+                d.resolve("success");
+                return d.promise;
                 
+            }
+        
+        
+        ZMDataModel.getReachableConfig()
+        .then (function (data)
+               {
+                    ZMDataModel.zmLog ("REACHABILITY SUCCESS " + JSON.stringify(data));
+                    proceedWithLogin()
+                    .then (function(success)
+                           { d.resolve(success); return d.promise;},
+                           function(error)
+                           {  d.reject(error); return d.promise;});
+                   
+               },
+               function (error)
+               {
+                    ZMDataModel.zmLog ("REACHABILITY ERROR " + JSON.stringify(error));
+                    d.reject (error);
+                    return d.promise;
+               });
+        return d.promise;
+        
+               
+        function proceedWithLogin()
+        {
+                // recompute rand anyway so even if you don't have auth
+            // your stream should not get frozen
+            $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+            $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
 
-            });
+          
 
+           // console.log ("***** STATENAME IS " + statename);
 
+            var d = $q.defer();
+            var ld = ZMDataModel.getLogin();
+            ZMDataModel.zmLog("zmAutologin called");
 
-        var loginData = ZMDataModel.getLogin();
-        //ZMDataModel.zmDebug ("*** AUTH LOGIN URL IS " + loginData.url);
-        $http({
-                method: 'POST',
-                //withCredentials: true,
-                url: loginData.url + '/index.php',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json',
-                },
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" +
-                            encodeURIComponent(obj[p]));
-                    var params = str.join("&");
-                    return params;
-                },
+            if (str) {
+                $ionicLoading.show({
+                    template: str,
+                    noBackdrop: true,
+                    duration: zm.httpTimeout
+                });
+            }
 
-                data: {
-                    username: loginData.username,
-                    password: loginData.password,
-                    action: "login",
-                    view: "console"
-                }
-            })
-            .success(function (data, status, headers) {
-                $ionicLoading.hide();
-
-                // Coming here does not mean success
-                // it could also be a bad login, but
-                // ZM returns you to login.php and returns 200 OK
-                // so we will check if the data has
-                // <title>ZM - Login</title> -- it it does then its the login page
-
-
-                if (data.indexOf(zm.loginScreenString) == -1) {
-                    //eventServer.start();
-                    $rootScope.loggedIntoZm = 1;
-
-                    ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
-
-                    d.resolve("Login Success");
-
-                    $rootScope.$emit('auth-success', data);
-                    
-                } else //  this means login error
-                {
-                    $rootScope.loggedIntoZm = -1;
-                    //console.log("**** ZM Login FAILED");
-                    ZMDataModel.zmLog("zmAutologin Error: Bad Credentials ", "error");
-                    $rootScope.$emit('auth-error', "incorrect credentials");
-
-                    d.reject("Login Error");
-                    return (d.promise);
-                }
-
-                // Now go ahead and re-get auth key 
-                // if login was a success
-                $rootScope.authSession = "undefined";
-                var ld = ZMDataModel.getLogin();
-                ZMDataModel.getAuthKey($rootScope.validMonitorId)
-                    .then(function (success) {
-
-                            //console.log(success);
-                            $rootScope.authSession = success;
-                            ZMDataModel.zmLog("Stream authentication construction: " +
-                                $rootScope.authSession);
-
-                        },
-                        function (error) {
-                            //console.log(error);
-
-                            ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-                            ZMDataModel.zmDebug("Error was: " + JSON.stringify(error));
+            ZMDataModel.isReCaptcha()
+                .then(function (result) {
+                    if (result == true) {
+                        $ionicLoading.hide();
+                        ZMDataModel.displayBanner('error', ['reCaptcha must be disabled',
+                                            ], "", 8000);
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'reCaptcha enabled',
+                            template: 'Looks like you have enabled reCaptcha. It needs to be turned off for zmNinja to work'
                         });
 
-                return (d.promise);
 
-            })
-            .error(function (error, status) {
-                $ionicLoading.hide();
-                
-                //console.log("**** ZM Login FAILED");
-            
-                // FIXME: Is this sometimes results in null
-                
-                ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error) +  " and status " + status);
-                // bad urls etc come here
-                $rootScope.loggedIntoZm = -1;    
-                $rootScope.$emit('auth-error', error);
 
-                d.reject("Login Error");
-                return d.promise;
-            });
-        return d.promise;
+                        // close it after 5 seconds
+                        $timeout(function () {
+
+                            alertPopup.close();
+                        }, 5000);
+
+                        d.reject ("Error-disable recaptcha");
+                    return (d.promise);
+                    }
+
+
+
+                });
+
+
+
+            var loginData = ZMDataModel.getLogin();
+            //ZMDataModel.zmDebug ("*** AUTH LOGIN URL IS " + loginData.url);
+            $http({
+                    method: 'POST',
+                    //withCredentials: true,
+                    url: loginData.url + '/index.php',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json',
+                    },
+                    transformRequest: function (obj) {
+                        var str = [];
+                        for (var p in obj)
+                            str.push(encodeURIComponent(p) + "=" +
+                                encodeURIComponent(obj[p]));
+                        var params = str.join("&");
+                        return params;
+                    },
+
+                    data: {
+                        username: loginData.username,
+                        password: loginData.password,
+                        action: "login",
+                        view: "console"
+                    }
+                })
+                .success(function (data, status, headers) {
+                    $ionicLoading.hide();
+
+                    // Coming here does not mean success
+                    // it could also be a bad login, but
+                    // ZM returns you to login.php and returns 200 OK
+                    // so we will check if the data has
+                    // <title>ZM - Login</title> -- it it does then its the login page
+
+
+                    if (data.indexOf(zm.loginScreenString) == -1) {
+                        //eventServer.start();
+                        $rootScope.loggedIntoZm = 1;
+
+                        ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
+
+                        d.resolve("Login Success");
+
+                        $rootScope.$emit('auth-success', data);
+
+                    } else //  this means login error
+                    {
+                        $rootScope.loggedIntoZm = -1;
+                        //console.log("**** ZM Login FAILED");
+                        ZMDataModel.zmLog("zmAutologin Error: Bad Credentials ", "error");
+                        $rootScope.$emit('auth-error', "incorrect credentials");
+
+                        d.reject("Login Error");
+                        return (d.promise);
+                    }
+
+                    // Now go ahead and re-get auth key 
+                    // if login was a success
+                    $rootScope.authSession = "undefined";
+                    var ld = ZMDataModel.getLogin();
+                    ZMDataModel.getAuthKey($rootScope.validMonitorId)
+                        .then(function (success) {
+
+                                //console.log(success);
+                                $rootScope.authSession = success;
+                                ZMDataModel.zmLog("Stream authentication construction: " +
+                                    $rootScope.authSession);
+
+                            },
+                            function (error) {
+                                //console.log(error);
+
+                                ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                                ZMDataModel.zmDebug("Error was: " + JSON.stringify(error));
+                            });
+
+                    return (d.promise);
+
+                })
+                .error(function (error, status) {
+                    $ionicLoading.hide();
+
+                    //console.log("**** ZM Login FAILED");
+
+                    // FIXME: Is this sometimes results in null
+
+                    ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error) +  " and status " + status);
+                    // bad urls etc come here
+                    $rootScope.loggedIntoZm = -1;    
+                    $rootScope.$emit('auth-error', error);
+
+                    d.reject("Login Error");
+                    return d.promise;
+                });
+            return d.promise;
+        }
+        
 
     }
 

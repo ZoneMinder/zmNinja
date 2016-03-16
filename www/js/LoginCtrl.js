@@ -10,6 +10,15 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     var serverbuttons = [];
     var availableServers;
+    $scope.loginData = ZMDataModel.getLogin();
+
+    $scope.check = {
+        isUseAuth: "",
+        isUseEventServer: ""
+    };
+
+    $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
+    $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
 
     //----------------------------------------------------------------
     // Alarm notification handling
@@ -29,15 +38,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
     };
 
-    $scope.loginData = ZMDataModel.getLogin();
-
-    $scope.check = {
-        isUseAuth: "",
-        isUseEventServer: ""
-    };
-
-    $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
-    $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
+    
 
     //console.log("*************************************************");
 
@@ -50,6 +51,43 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         });
         //console.log("ADDING : " + availableServers[servIter]);
     }
+    
+    
+    $scope.selectFallback = function () 
+    {
+        var as = Object.keys(ZMDataModel.getServerGroups());
+        if (as.length < 2)
+        {
+            $rootScope.zmPopup= SecuredPopups.show('alert',{
+                                title: 'Error',
+                                template: 'You need to have at least 2 distinct configurations created for a fallback'
+                            });
+            return;
+            
+        }
+        var ab = [{text:'Clear'}];
+        var ld = ZMDataModel.getLogin();
+        as.forEach(function(item) { if (item != ld.serverName) ab.push({text:item});});
+        var sheet = $ionicActionSheet.show({
+            buttons: ab,
+            titleText: 'Select fallback',
+            cancelText: 'Cancel',
+            cancel: function() {},
+            buttonClicked: function (index)
+            {
+                console.log ("YOU WANT " + ab[index].text + index);
+                if (index==0)
+                    $scope.loginData.fallbackConfiguration="";
+                else
+                    $scope.loginData.fallbackConfiguration = ab[index].text;
+                ZMDataModel.setLogin($scope.loginData);
+                return true;
+            }
+        });
+            
+        
+        
+    };
 
     $scope.serverActionSheet = function () {
         var hideSheet = $ionicActionSheet.show({

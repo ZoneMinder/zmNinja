@@ -73,14 +73,17 @@
                        ng-model="loginData.apiurl">
             </label>
             
+            <a class="item item-icon-right" href="" ng-click="selectFallback()">
+                <i class="icon ion-ios-arrow-right">
+                </i>
+                Fallback configuration<p>{{loginData.fallbackConfiguration}}</p>
+            </a>     
+            
             <a class="item item-icon-right" href="" ng-click="eventServerSettings()">
                 <i class="icon ion-ios-arrow-right">
                 </i>
-                Event Server
+                Event Server 
             </a>
-            
-            
-            
             
             
             <div ng-if="$root.platformOS != 'desktop'">
