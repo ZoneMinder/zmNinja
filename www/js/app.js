@@ -727,7 +727,11 @@ angular.module('zmApp', [
     });
 
 
-
+    $rootScope.getProfileName = function()
+    {
+        var ld = ZMDataModel.getLogin();
+        return (ld.serverName || '(none)');
+    };
 
     //------------------------------------------------------------------
     // doLogin() is the function that tries to login to ZM
