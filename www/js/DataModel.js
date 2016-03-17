@@ -119,24 +119,10 @@ angular.module('zmApp.controllers')
     
      function setLogin(newLogin)
      {
-         loginData = newLogin;
-         
-         
-         
-         
-          
-            //zmLog("Saving all parameters to storage");
-            //zmDebug ("DataModel/setLogin: writing " + JSON.stringify(newLogin));
-            
-            //$localstorage.setObject($rootScope.currentServerGroup, loginData);
-            //console.log ("Saving For " + loginData.serverName);
-           // console.log ("SERVER GROUP BEFORE IS "  + JSON.stringify(serverGroupList));
-            serverGroupList[loginData.serverName]=angular.copy(loginData);
-         
-          //  console.log ("SERVER GROUP AFTER IS "  + JSON.stringify(serverGroupList));
-            //console.log (JSON.stringify(serverGroupList));
-            $localstorage.setObject("serverGroupList", serverGroupList);
-            $localstorage.set("defaultServerName",loginData.serverName);
+        loginData = angular.copy(newLogin);
+        serverGroupList[loginData.serverName]=angular.copy(loginData);
+        $localstorage.setObject("serverGroupList", serverGroupList);
+        $localstorage.set("defaultServerName",loginData.serverName);
         // console.log ("SAVING " + loginData.serverName);
         // console.log ("DATA IS " + JSON.stringify(loginData));
          
@@ -206,7 +192,7 @@ angular.module('zmApp.controllers')
         // used when an empty server profile is created
         getDefaultLoginObject: function()
         {
-            return defaultLoginData;
+            return angular.copy(defaultLoginData);
         },
         
         
@@ -257,7 +243,8 @@ angular.module('zmApp.controllers')
                 d.resolve (firstReachableUrl);
                 // also make sure loginData points to this now
                 
-                loginData = serverGroupList[firstReachableUrl.server];
+                loginData = angular.copy(serverGroupList[firstReachableUrl.server]);
+                
                 $localstorage.set("defaultServerName",firstReachableUrl.server);
                 
                 zmLog ("Based on reachability, first serverName will be " + firstReachableUrl.server);
@@ -498,11 +485,11 @@ angular.module('zmApp.controllers')
         getLogin: function () {
             
             
-            return loginData;
+            return angular.copy(loginData);
         },
         
         getServerGroups: function() {
-            return serverGroupList;
+            return angular.copy(serverGroupList);
         },
         
         setServerGroups: function(sg) 
