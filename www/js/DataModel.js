@@ -213,7 +213,7 @@ angular.module('zmApp.controllers')
             var tLd = serverGroupList[loginData.serverName];
             
             var keepBuilding = true;
-            while (keepBuilding==true)
+            while (keepBuilding==true && tLd)
             {
                 if (arrayObjectIndexOf(chainURLs,tLd.url,"url") == -1 ) // no loop
                 {
@@ -223,6 +223,11 @@ angular.module('zmApp.controllers')
                     if (tLd.fallbackConfiguration)
                     {
                         tLd = serverGroupList [tLd.fallbackConfiguration];
+                        if (tLd == undefined)
+                        {
+                            // This can happen if the fallback profile was deleted
+                            zmLog ("Looks like a server object was deleted, but is still in fallback");
+                        }
                     }
                     else   
                     {
@@ -320,7 +325,11 @@ angular.module('zmApp.controllers')
                 //console.log ("************ FOUND SERVER NAME " + as[x]);
                // if serverGroupList[x]
             }
-            if (!isFoundDemo)
+            
+            // Don't add the demo if there is another server
+            // because this means the user deleted it 
+            
+            if (!isFoundDemo &&  as.length == 0)
             {
                 zmDebug ("Pushing demo server config to server groups");
                 //serverGroupList.push(demoS);
