@@ -690,7 +690,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     var sizeInProgress = false;
     $scope.imageStyle = true;
 
-    $ionicSideMenuDelegate.canDragContent(false);
+    $ionicSideMenuDelegate.canDragContent(true);
 
   
 
