@@ -14,7 +14,7 @@ $scope.openMenu = function () {
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
         //console.log("**VIEW ** FirstUse Ctrl Entered");
-        $ionicSideMenuDelegate.canDragContent(false);
+        $ionicSideMenuDelegate.canDragContent(true);
     
 
     });
