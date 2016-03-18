@@ -332,13 +332,13 @@ function initPackery()
 
     $scope.swipeUp = function()
     {
-        console.log ("SWIPE UP");
+        //console.log ("SWIPE UP");
         $ionicScrollDelegate.$getByHandle("montage-delegate").scrollBy(0, $rootScope.devHeight/2, true);
     };
     
     $scope.swipeDown = function()
     {
-        console.log ("SWIPE DOWN");
+        //console.log ("SWIPE DOWN");
         $ionicScrollDelegate.$getByHandle("montage-delegate").scrollBy(0, -($rootScope.devHeight/2), true);
     };
     

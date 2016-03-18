@@ -39,20 +39,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
     };
 
-    
-
-    //console.log("*************************************************");
-
-
-    availableServers = Object.keys(ZMDataModel.getServerGroups());
-    serverbuttons = [{text:"Add..."}];
-    for (var servIter = 0; servIter < availableServers.length; servIter++) {
-        serverbuttons.push({
-            text: availableServers[servIter]
-        });
-        //console.log("ADDING : " + availableServers[servIter]);
-    }
-    
+    //----------------------------------------------------------------
+    // Specifies a linked profile to try if this profile fails
+    //----------------------------------------------------------------
     
     $scope.selectFallback = function () 
     {
@@ -89,6 +78,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         
         
     };
+    
+    //----------------------------------------------------------------
+    // This is called when the user changes profiles
+    //----------------------------------------------------------------
 
     $scope.serverActionSheet = function () {
         var hideSheet = $ionicActionSheet.show({
@@ -172,7 +165,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     };
 
 
-
+    //----------------------------------------------------------------
+    // This is when you tap on event server settings
+    //----------------------------------------------------------------
+    
     $scope.eventServerSettings = function () {
         ZMDataModel.zmDebug("Saving settings before going to Event Server settings");
         //console.log ( "My loginData saved " + JSON.stringify($scope.loginData));
@@ -196,6 +192,15 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         var ld = ZMDataModel.getLogin();
         oldName = ld.serverName;
         
+        availableServers = Object.keys(ZMDataModel.getServerGroups());
+        serverbuttons = [{text:"Add..."}];
+        for (var servIter = 0; servIter < availableServers.length; servIter++) {
+            serverbuttons.push({
+            text: availableServers[servIter]
+        });
+        
+        }
+        
     });
     
     
@@ -205,6 +210,17 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
              
         
     });
+    
+    //----------------------------------------------------------------
+    // We need to make sure that if the user changes a profile, that
+    // its saved, which involves re-auth. Not doing this will mess 
+    // up monitors. We can't automatically do it, because we really
+    // don't want re-auth delays each time a user taps on a new profile
+    // especially if they switch back
+    //
+    // So instead, if check if the profile name has changed - if it has
+    // we block state change and ask the user to save
+    //----------------------------------------------------------------
     
     // credit: http://stackoverflow.com/questions/33385610/ionic-prevent-navigation-on-leave
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) 
@@ -282,17 +298,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         if (/^https:\/\//i.test($scope.loginData.url)) {
             $scope.loginData.useSSL = true;
         }
-        // if ($scope.loginData.streamingurl.indexOf($scope.loginData.url) !=0)
+   
         $scope.loginData.streamingurl = $scope.loginData.url;
 
-        // Changed Sep 16 2015: Seems cgi-bin will now have /zm/cgi-bin by
-        // default in packages instead of /cgi-bin
-        //if ($scope.loginData.streamingurl.slice(-3).toLowerCase() == '/zm') {
-        //$scope.loginData.streamingurl = $scope.loginData.streamingurl.slice(0, -3);
-        //}
-
-
-        // if ($scope.loginData.apiurl.indexOf($scope.loginData.url) !=0)
         $scope.loginData.apiurl = $scope.loginData.url + "/api";
     };
     //-------------------------------------------------------------------------------
@@ -575,6 +583,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         });
     }
+    
+    // ----------------------------------------------
+    // Saves the current profile. Note that
+    // calling saveItems also updates the defaultServer
+    //-----------------------------------------------
 
     $scope.saveItems = function () {
 
@@ -594,7 +607,6 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 serverbuttons.push({
                     text: availableServers[servIter]
                 });
-                // console.log ("ADDING : "+availableServers[servIter]);
             }
 
         }
