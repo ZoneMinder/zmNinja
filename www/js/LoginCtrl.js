@@ -105,6 +105,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 var zmServers = ZMDataModel.getServerGroups();
                 $scope.loginData = zmServers[serverbuttons[index].text];
                 
+                console.log ("NEW LOOGIN OBJECT IS " + JSON.stringify($scope.loginData));
                 
                 
                 $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
@@ -336,6 +337,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     function saveItems(showalert) {
 
 
+        console.log ("*********** SAVE ITEMS CALLED ");
         //console.log('Saving login');
         ZMDataModel.setFirstUse(false);
 
@@ -418,7 +420,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         if ($scope.check.isUseAuth) {
             if (!$scope.loginData.username) $scope.loginData.username = "x";
             if (!$scope.loginData.password) $scope.loginData.password = "x";
-            ZMDataModel.zmLog("Authentication is disabled, setting dummy user & pass");
+            //ZMDataModel.zmLog("Authentication is disabled, setting dummy user & pass");
         }
 
         if (parseInt($scope.loginData.maxMontage) <= 0) {
@@ -501,6 +503,18 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 .then(function (data) {
 
                     // Now let's validate if the API works
+                    
+                    // note that due to reachability, it might have switched to another server
+                    
+                    if ($scope.loginData.serverName != ZMDataModel.getLogin().serverName)
+                    {
+                        ZMDataModel.zmDebug (">>> Server information has changed, likely a fallback took over!");
+                        $scope.loginData = ZMDataModel.getLogin();
+                        apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
+                        portalurl = $scope.loginData.url + '/index.php';
+                    }
+                    
+                    
 
                     ZMDataModel.zmLog("Validating APIs at " + apiurl);
                     $http.get(apiurl)

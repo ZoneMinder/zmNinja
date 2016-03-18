@@ -254,7 +254,7 @@ function initPackery()
                 
                 if (!progressCalled)
                 {
-                    ZMDataModel.zmlog ("*** BUG PROGRESS WAS NOT CALLED");
+                    ZMDataModel.zmLog ("*** BUG PROGRESS WAS NOT CALLED");
                     pckry.reloadItems();
                     
                 }
@@ -287,7 +287,8 @@ function initPackery()
                             //console.log ("Index:"+positions[j].attr+ " with size: " + positions[j].size);
                         }
                     }
-                    $timeout(function(){pckry.initShiftLayout(positions, 'data-item-id'); },100);
+                    $timeout(function(){ZMDataModel.zmDebug ("All images loaded, doing image layout");pckry.initShiftLayout(positions, 'data-item-id'); },100);
+                    $timeout(function(){ZMDataModel.zmDebug ("Re-doing layout again - to overcome odd layout...");pckry.initShiftLayout(positions, 'data-item-id'); },200);
                     //$grid.packery( 'initShiftLayout', initPositions, 'data-item-id' );
                 }
                
@@ -664,7 +665,8 @@ function initPackery()
         //  }.bind(this), 60 * 1000);
         //$interval.cancel(modalIntervalHandle);
 
-
+       
+        
 
     };
 
@@ -911,7 +913,6 @@ function initPackery()
     };
 
     $scope.doRefresh = function () {
-
 
 
        // console.log("***Pull to Refresh, recomputing Rand");

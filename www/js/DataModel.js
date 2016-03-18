@@ -245,7 +245,8 @@ angular.module('zmApp.controllers')
                 
                 loginData = angular.copy(serverGroupList[firstReachableUrl.server]);
                 
-                $localstorage.set("defaultServerName",firstReachableUrl.server);
+                setLogin(loginData);
+                //$localstorage.set("defaultServerName",firstReachableUrl.server);
                 
                 zmLog ("Based on reachability, first serverName will be " + firstReachableUrl.server);
                 console.log ("set login Data to " + JSON.stringify(loginData));
