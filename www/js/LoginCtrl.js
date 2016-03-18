@@ -216,8 +216,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         {
             event.preventDefault();
             $rootScope.zmPopup = SecuredPopups.show('alert',{
-                title: 'Error',
-                template: 'Please save this profile first so re-authentication can occur.'
+                title: 'Please Save',
+                template: 'You have changed from ' + oldName + ' to ' + ld.serverName + '. Please save this profile first.'
             });
             
         }
