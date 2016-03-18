@@ -252,7 +252,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
    // console.log("************* ENTERING PORTAL MAIN ");
     ZMDataModel.zmLog ("Entering Portal Main");
     var loginData;
-     $ionicSideMenuDelegate.canDragContent(false);
+     $ionicSideMenuDelegate.canDragContent(true);
 
         
 

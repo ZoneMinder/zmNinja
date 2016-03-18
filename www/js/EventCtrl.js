@@ -713,7 +713,7 @@ angular.module('zmApp.controllers')
                     $scope.currentEvent = "";
                     $scope.event = event;
                     //$ionicScrollDelegate.freezeScroll(true);
-                    $ionicSideMenuDelegate.canDragContent(false);
+                    $ionicSideMenuDelegate.canDragContent(true);
                     $scope.slider_options = {
                         from: 1,
                         to: event.Event.Frames,
