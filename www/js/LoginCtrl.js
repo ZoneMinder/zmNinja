@@ -8,6 +8,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     };
 
 
+    var oldName;
     var serverbuttons = [];
     var availableServers;
     $scope.loginData = ZMDataModel.getLogin();
@@ -180,18 +181,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     };
 
-    //----------------------------------------------------------------
-    // Save anyway when you exit
-    //----------------------------------------------------------------
-
-    $scope.$on('$ionicView.beforeLeave', function () {
-        // Don't do this -- it will try to login to ZM
-        // and go back to the menu
-        //saveItems();
-
-
-    });
-
+   
 
     //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
@@ -203,10 +193,40 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.$on('$ionicView.enter', function () {
         //console.log("**VIEW ** LoginCtrl  Entered");
         ZMDataModel.setAwake(false);
-
-
-
+        var ld = ZMDataModel.getLogin();
+        oldName = ld.serverName;
+        
     });
+    
+    
+    $scope.$on('$ionicView.beforeLeave', function () {
+        //console.log("**VIEW ** LoginCtrl  Entered");
+        
+             
+        
+    });
+    
+    // credit: http://stackoverflow.com/questions/33385610/ionic-prevent-navigation-on-leave
+    $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) 
+    {
+        ZMDataModel.setAwake(false);
+        var ld = ZMDataModel.getLogin();
+        
+        if(ld.serverName != oldName )
+        {
+            event.preventDefault();
+            $rootScope.zmPopup = SecuredPopups.show('alert',{
+                title: 'Error',
+                template: 'Please save this profile first so re-authentication can occur.'
+            });
+            
+        }
+    });
+    
+    $rootScope.$on('$stateChangeSuccess', function(){
+    $scope.ignoreDirty = false;
+    });
+    
 
 
     //--------------------------------------------------------------------------
@@ -305,7 +325,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     // Perform the login action when the user submits the login form
     //-----------------------------------------------------------------------------
 
-    function saveItems() {
+    function saveItems(showalert) {
 
 
         //console.log('Saving login');
@@ -414,6 +434,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
 
         ZMDataModel.setLogin($scope.loginData);
+        oldName = $scope.loginData.serverName;
 
         if ($scope.check.isUseEventServer) {
             EventServer.init();
@@ -496,17 +517,20 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                             ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
                                             loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path";
                                         
+                                            var refresh = ZMDataModel.getMonitors(1);
                                             
-                                            
-                                            $rootScope.zmPopup = SecuredPopups.show('alert',{
-                                                title: 'Login validated',
-                                                template: loginStatus
-                                            }).then(function (res) {
-                                               
-                                                $ionicSideMenuDelegate.toggleLeft();
-                                                ZMDataModel.zmDebug("Force reloading monitors...");
-                                                var refresh = ZMDataModel.getMonitors(1);
-                                            });
+                                            if (showalert)
+                                            {
+                                                $rootScope.zmPopup = SecuredPopups.show('alert',{
+                                                    title: 'Login validated',
+                                                    template: loginStatus
+                                                }).then(function (res) {
+
+                                                    $ionicSideMenuDelegate.toggleLeft();
+                                                    ZMDataModel.zmDebug("Force reloading monitors...");
+
+                                                });
+                                            }
                                         })
                                         .error(function (error, status) {
                                             // If its 5xx, then the cgi-bin path is valid
@@ -516,16 +540,19 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                                 loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path.";
                                             }
                                             
-                                            $rootScope.zmPopup = SecuredPopups.show('alert',{
-                                                title: 'Login validated',
-                                                template: loginStatus
-                                            }).then(function (res) {
-                                              
-                                                $ionicSideMenuDelegate.toggleLeft();
-                                                ZMDataModel.zmDebug("Force reloading monitors...");
-                                                var refresh = ZMDataModel.getMonitors(1);
-                                            });
+                                            if (showalert)
+                                            {
+                                                $rootScope.zmPopup = SecuredPopups.show('alert',{
+                                                    title: 'Login validated',
+                                                    template: loginStatus
+                                                }).then(function (res) {
 
+                                                    $ionicSideMenuDelegate.toggleLeft();
+                                                    ZMDataModel.zmDebug("Force reloading monitors...");
+                                                   
+                                                });
+                                            }
+                                            var refresh = ZMDataModel.getMonitors(1);
 
                                         });
                                 });
@@ -560,7 +587,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     return;
                 });
         } else {
-            saveItems();
+            saveItems(true);
             availableServers = Object.keys(ZMDataModel.getServerGroups());
             serverbuttons = [];
             for (var servIter = 0; servIter < availableServers.length; servIter++) {
