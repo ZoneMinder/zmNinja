@@ -23,7 +23,6 @@
   "cordovaPlugins": [
     "org.apache.cordova.device",
     "org.apache.cordova.console",
-    "com.ionic.keyboard",
     "org.apache.cordova.statusbar",
     "cordova-plugin-whitelist",
     "cordova-plugin-inappbrowser",
@@ -72,7 +71,8 @@
     {
       "locator": "https://github.com/pliablepixels/cordova-plugin-media.git",
       "id": "org.apache.cordova.media"
-    }
+    },
+    "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
     "ios",
@@ -86,6 +86,11 @@
       "version": "",
       "locator": "android_temp"
     },
-    "android"
+    "android",
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    }
   ]
 }
