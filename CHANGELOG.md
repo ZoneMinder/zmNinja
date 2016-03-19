@@ -1,7 +1,26 @@
 # Change Log
 
-## [1.1.1](https://github.com/pliablepixels/zmNinja/tree/1.1.1) (2016-03-14)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.0...1.1.1)
+## [1.1.2](https://github.com/pliablepixels/zmNinja/tree/1.1.2) (2016-03-18)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.1...1.1.2)
+
+**Implemented enhancements:**
+
+- Left drawer should open with swipe gesture in any view not just fullscreen [\#202](https://github.com/pliablepixels/zmNinja/issues/202)
+- Local and External Server configuration \[$5\] [\#133](https://github.com/pliablepixels/zmNinja/issues/133)
+
+**Fixed bugs:**
+
+- quick scrub drag slider stopped working  [\#196](https://github.com/pliablepixels/zmNinja/issues/196)
+
+**Closed issues:**
+
+- Add gesture to exit any fullscreen [\#203](https://github.com/pliablepixels/zmNinja/issues/203)
+- Demo Account Autocreating itself [\#200](https://github.com/pliablepixels/zmNinja/issues/200)
+- ionic state restore not creating platforms/android directory [\#198](https://github.com/pliablepixels/zmNinja/issues/198)
+- Authentication Failed [\#195](https://github.com/pliablepixels/zmNinja/issues/195)
+
+## [v1.1.1](https://github.com/pliablepixels/zmNinja/tree/v1.1.1) (2016-03-14)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.0...v1.1.1)
 
 **Fixed bugs:**
 
@@ -9,6 +28,8 @@
 
 **Closed issues:**
 
+- Testing issue template \(dummy issue\) [\#192](https://github.com/pliablepixels/zmNinja/issues/192)
+- testing issue template [\#191](https://github.com/pliablepixels/zmNinja/issues/191)
 - decrease splash screen delay \(reduce startup delay\) [\#190](https://github.com/pliablepixels/zmNinja/issues/190)
 - Android build fails ref \#180 [\#184](https://github.com/pliablepixels/zmNinja/issues/184)
 
