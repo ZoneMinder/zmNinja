@@ -11,14 +11,6 @@
             "id": "org.apache.cordova.console"
         }
     },
-    "com.ionic.keyboard": {
-        "source": {
-            "type": "registry",
-            "id": "com.ionic.keyboard"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "org.apache.cordova.statusbar": {
         "source": {
             "type": "registry",
@@ -203,6 +195,14 @@
             "url": "https://github.com/pliablepixels/cordova-plugin-media.git",
             "subdir": ".",
             "ref": "playback-only"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "ionic-plugin-keyboard": {
+        "source": {
+            "type": "registry",
+            "id": "ionic-plugin-keyboard"
         },
         "is_top_level": true,
         "variables": {}
