@@ -1291,7 +1291,7 @@ angular.module('zmApp', [
 
 
             if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                //cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
                 // solves screen bouncing on form input
                 // since I am using JS Scroll
                 cordova.plugins.Keyboard.disableScroll(true);
