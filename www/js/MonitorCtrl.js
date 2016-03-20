@@ -275,6 +275,7 @@ angular.module('zmApp.controllers')
        // console.log("**VIEW ** Monitor Ctrl Entered");
         ZMDataModel.setAwake(false);
         $ionicSideMenuDelegate.canDragContent(true);
+        $scope.areImagesLoading = true;
     });
 
     $scope.$on('$ionicView.leave', function () {

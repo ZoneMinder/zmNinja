@@ -252,6 +252,7 @@ function initPackery()
                 ZMDataModel.zmDebug ("All images loaded");
                 $ionicLoading.hide();
                 
+                
                 if (!progressCalled)
                 {
                     ZMDataModel.zmLog ("*** BUG PROGRESS WAS NOT CALLED");
@@ -287,9 +288,18 @@ function initPackery()
                             //console.log ("Index:"+positions[j].attr+ " with size: " + positions[j].size);
                         }
                     }
+                    
+                    
                     $timeout(function(){ZMDataModel.zmDebug ("All images loaded, doing image layout");pckry.initShiftLayout(positions, 'data-item-id'); },100);
-                    $timeout(function(){ZMDataModel.zmDebug ("Re-doing layout again - to overcome odd layout...");pckry.initShiftLayout(positions, 'data-item-id'); },200);
+                    
+                    $timeout(function(){ZMDataModel.zmLog ("Force calling resize"); pckry.onresize();},300);// don't ask
+                    
+                   
+                   // $timeout(function(){ZMDataModel.zmDebug ("Re-doing layout again - to overcome odd layout...");pckry.initShiftLayout(positions, 'data-item-id'); },200);
                     //$grid.packery( 'initShiftLayout', initPositions, 'data-item-id' );
+                    
+                
+                    
                 }
                
         });
@@ -488,6 +498,9 @@ function initPackery()
     {
         var i;
         $scope.isDragabillyOn = !$scope.isDragabillyOn;
+        
+        $ionicSideMenuDelegate.canDragContent($scope.isDragabillyOn? false: true);
+        
         //$timeout(function(){pckry.reloadItems();},10);
         ZMDataModel.zmDebug ("setting dragabilly to " + $scope.isDragabillyOn);
         if ($scope.isDragabillyOn)  
@@ -715,6 +728,7 @@ function initPackery()
 
     $scope.$on('$ionicView.enter', function () {
       
+        //$scope.areImagesLoading = true;
         var ld = ZMDataModel.getLogin();
         //console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
@@ -794,6 +808,7 @@ function initPackery()
         
         $timeout (function()
             {
+                pckry.reloadItems();
                 
                 pckry.once( 'layoutComplete', function() {
                     console.log ("Layout complete");
@@ -805,9 +820,9 @@ function initPackery()
                    // $scope.slider.monsize = 2;
                 });
                 //layout(pckry);
-                pckry.layout(); // force here - no shiftlayout
-                $timeout(function(){pckry.layout(); },100);// don't ask
-            
+                $timeout (function(){pckry.layout();}); // force here - no shiftlayout
+               
+               
             },100);
  
     };
