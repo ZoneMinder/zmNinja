@@ -77,11 +77,6 @@
   "cordovaPlatforms": [
     "ios",
     {
-      "platform": "ios",
-      "version": "",
-      "locator": "ios"
-    },
-    {
       "platform": "android_temp",
       "version": "",
       "locator": "android_temp"
