@@ -26,7 +26,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var pckry, draggie;
     var draggies;
     $scope.isDragabillyOn = false;
-    $scope.gridScale = "grid-item-20";
+    
+    $scope.gridScale = "grid-item-30";
     
     var loginData = ZMDataModel.getLogin();
     $scope.LoginData = ZMDataModel.getLogin();
@@ -55,10 +56,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     
     ZMDataModel.zmLog("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
 
-    // set them all at 20% for packery
+    // set them all at 30% for packery
     for (var i=0; i < $scope.MontageMonitors.length; i++)
     {
-        $scope.MontageMonitors[i].Monitor.gridScale="20";
+        $scope.MontageMonitors[i].Monitor.gridScale="30";
         $scope.MontageMonitors[i].Monitor.selectStyle="";
         
     }
@@ -291,16 +292,12 @@ function initPackery()
                     
                     
                     $timeout(function(){ZMDataModel.zmDebug ("All images loaded, doing image layout");pckry.initShiftLayout(positions, 'data-item-id'); },100);
-                    
-                    $timeout(function(){ZMDataModel.zmLog ("Force calling resize"); pckry.onresize();},300);// don't ask
+                }
+                $timeout(function(){ZMDataModel.zmLog ("Force calling resize"); pckry.onresize();},300);// don't ask
                     
                    
-                   // $timeout(function(){ZMDataModel.zmDebug ("Re-doing layout again - to overcome odd layout...");pckry.initShiftLayout(positions, 'data-item-id'); },200);
-                    //$grid.packery( 'initShiftLayout', initPositions, 'data-item-id' );
-                    
+                   
                 
-                    
-                }
                
         });
     
@@ -791,19 +788,19 @@ function initPackery()
             {
              if ($scope.MontageMonitors[i].Monitor.selectStyle=="dragborder-selected")
              {
-                $scope.MontageMonitors[i].Monitor.gridScale="20"; 
+                $scope.MontageMonitors[i].Monitor.gridScale="30"; 
                  somethingReset = true;
              }
             }
             else
             {
-                $scope.MontageMonitors[i].Monitor.gridScale="20";
+                $scope.MontageMonitors[i].Monitor.gridScale="30";
                // somethingReset = true;
             }
         }
         if (!somethingReset && $scope.isDragabillyOn) // nothing was selected
         {
-            for (i=0; i< $scope.MontageMonitors.length; i++){$scope.MontageMonitors[i].Monitor.gridScale="20";}
+            for (i=0; i< $scope.MontageMonitors.length; i++){$scope.MontageMonitors[i].Monitor.gridScale="30";}
         }
         
         $timeout (function()
