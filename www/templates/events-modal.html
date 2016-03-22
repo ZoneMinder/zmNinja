@@ -155,7 +155,11 @@
 </span>
     
  <span class="events-modal-camera-icon" ng-if="defaultVideo==''">
-        <a class="button button-small icon ion-ios-camera button-positive" href="" ng-click="saveEventImageToPhone()"></a>
+        <a class="button button-small icon ion-ios-camera button-positive" href="" ng-click="saveEventImageToPhone(false)"></a>
+</span>
+        
+<span class="events-modal-onlyalarms-icon" ng-if="defaultVideo==''">
+        <a class="button button-small icon ion-android-notifications button-positive" href="" ng-click="saveEventImageToPhone(true)"></a>
 </span>
 
 <!--
