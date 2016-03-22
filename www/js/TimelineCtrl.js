@@ -587,10 +587,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     if (idfound) {
 
                                         if (typeof myevents[i].Event.DefaultVideo === 'undefined')
+                                            console.log (JSON.stringify(myevents[i]));
                                             myevents[i].Event.DefaultVideo = "";
                                         graphData.add({
                                             id: graphIndex,
-                                            content: "<span class='my-vis-font'>" + myevents[i].Event.Notes + "</span>",
+                                            content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>"+myevents[i].Event.AlarmFrames+") "+myevents[i].Event.Notes + "</span>",
                                             start: myevents[i].Event.StartTime,
                                             end: myevents[i].Event.EndTime,
                                             group: myevents[i].Event.MonitorId,
@@ -633,7 +634,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             $scope.graphLoaded = true;
                             ZMDataModel.zmDebug("graph loaded: " + $scope.graphLoaded);
                             $scope.navControls = false;
+                    
+                           
+                            
                             timeline.on('select', function (properties) {
+                                //console.log ("CLICK");
+                               // console.log ("EVENT IS " + JSON.stringify(properties.event));
                                 if (properties.items && !isNaN(properties.items[0])) {
                                     ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + properties.items);
                                     var item = graphData.get(properties.items);
@@ -653,6 +659,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                    // console.log("Zoomed out too far to playback events");
                                 }
 
+                            });
+                    
+                             timeline.on ('doubleClick', function (p) {
+                                console.log ("DOUBLE");
                             });
                         },
                         function (error) {

@@ -342,25 +342,25 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
-    $scope.saveEventImageToPhone = function () 
+    $scope.saveEventImageToPhone = function (onlyAlarms) 
     {
         
         if ($scope.loginData.useNphZmsForEvents)
         {
             ZMDataModel.zmLog ("Use ZMS stream to save to phone");
-            saveEventImageToPhoneZms();
+            saveEventImageToPhoneZms(onlyAlarms);
             
             
         }
         else
         {
-            saveEventImageToPhone();
+            saveEventImageToPhone(onlyAlarms);
         }
         
         
     };
 
-    function saveEventImageToPhoneZms()
+    function saveEventImageToPhoneZms(onlyAlarms)
     {
         // The strategy here is to build the array now so we can grab frames
         // $scope.currentProgress is the seconds where we are
@@ -381,6 +381,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $scope.currentProgress = resp.data.status.progress;
            // console.log ("STEP 0 progress is " + $scope.currentProgress);
             $scope.slides = [];
+           //  myurl = myurl + "/AlarmFrames >=:" + loginData.minAlarmCount;
             var apiurl = $scope.loginData.apiurl + "/events/" + $scope.eventId + ".json";
             ZMDataModel.zmDebug ("prepared to get frame details using " + apiurl);
             $http.get(apiurl)
@@ -407,22 +408,37 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     if (myFrame > totalFrames) myFrame = totalFrames;
                     
                   //  console.log ("STEP 0 myFrame is " + myFrame);
-
+                   // console.log ("DUMPING " + JSON.stringify(event));
                     $scope.mycarousel.index = myFrame;
                    // console.log ("STEP 1 : Computed index as "+  $scope.mycarousel.index);
                     var i;
-                    for (i = 1; i <= event.Event.Frames; i++) {
+                    for (i = 1; i <= event.Frame.length; i++) {
                         var fname = padToN(i, eventImageDigits) + "-capture.jpg";
                         // console.log ("Building " + fname);
-                        $scope.slides.push({
-                            id: i,
-                            img: fname
-
-                        });
+                        
+                       // console.log ("DUMPING ONE " + JSON.stringify(event.Frame[i-1]));
+                        // onlyAlarms means only copy alarmed frames
+                        if (onlyAlarms)
+                        {
+                            if (event.Frame[i-1] && event.Frame[i-1].Type == 'Alarm')
+                            {
+                                $scope.slides.push({
+                                    id: i,
+                                    img: fname,
+                                });
+                            }
+                        }
+                        else // push all frames
+                        {
+                            $scope.slides.push({
+                                id: i,
+                                img: fname,
+                            });
+                        }
                     }
                   //  console.log ("STEP 2 : calling Save Event To Phone");
                     $ionicLoading.hide();
-                    saveEventImageToPhone();
+                    saveEventImageToPhone(onlyAlarms);
                    
 
             },
@@ -451,7 +467,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
 
-    function saveEventImageToPhone()
+    function saveEventImageToPhone(onlyAlarms)
     {
         var curState = carouselUtils.getStop();
         carouselUtils.setStop(true);
@@ -464,7 +480,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         var loginData = ZMDataModel.getLogin();
         
         
-
+        // for alarms only
+        if (onlyAlarms) $scope.mycarousel.index = 0;
         var url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.mycarousel.index].img;
 
 
