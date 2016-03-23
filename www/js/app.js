@@ -768,8 +768,17 @@ angular.module('zmApp', [
                function (error)
                {
                     ZMDataModel.zmLog ("REACHABILITY ERROR " + JSON.stringify(error));
+                    ZMDataModel.zmLog ("Still trying to proceed with " + ZMDataModel.getLogin().serverName);
+                    /*
                     d.reject (error);
-                    return d.promise;
+                    return d.promise;*/
+                    proceedWithLogin()
+                    .then (function(success)
+                           { d.resolve(success); return d.promise;},
+                           function(error)
+                           {  d.reject(error); return d.promise;});
+                   
+                    
                });
         return d.promise;
         

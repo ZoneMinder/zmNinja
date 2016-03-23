@@ -260,6 +260,7 @@ angular.module('zmApp.controllers')
                 // OK: do something with firstReachableUrl
                 }, function () {
                 d.reject ("No servers reachable");
+                loginData = savedLoginData;
                 return d.promise;
                 // KO: no url could be reached
             });
@@ -285,8 +286,8 @@ angular.module('zmApp.controllers')
                         zmLog ("Success: reachability on "+ urls[0].url);
                         $ionicLoading.hide();
                         return urls[0];
-                    }, function() {
-                        zmLog ("Failed reachability on "+ urls[0].url);
+                    }, function(err) {
+                        zmLog ("Failed reachability on "+ urls[0].url+ " with error " + JSON.stringify(err));
                         return findFirstReachableUrl(urls.slice(1));
                     });
                 }
