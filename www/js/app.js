@@ -752,9 +752,35 @@ angular.module('zmApp', [
                 return d.promise;
                 
             }
+        // first try to login, if it works, good
+        // else try to do reachability
+        proceedWithLogin()
+        .then (function (success)
+               {
+                    d.resolve (success);
+                    return d.promise;
+               },
+               function (error)
+               // login to main failed, so try others
+               {
+                    ZMDataModel.getReachableConfig()
+                    .then (function (data)
+                    {
+                        proceedWithLogin()
+                        .then (function(success)
+                           { d.resolve(success); return d.promise;},
+                           function(error)
+                           {  d.reject(error); return d.promise;});
+                        
+                    },
+                    function (error)
+                    {
+                        d.reject(error); return d.promise;
+                    });
+                        
+                });
         
-        
-        ZMDataModel.getReachableConfig()
+        /*ZMDataModel.getReachableConfig()
         .then (function (data)
                {
                     ZMDataModel.zmLog ("REACHABILITY SUCCESS " + JSON.stringify(data));
@@ -769,9 +795,7 @@ angular.module('zmApp', [
                {
                     ZMDataModel.zmLog ("REACHABILITY ERROR " + JSON.stringify(error));
                     ZMDataModel.zmLog ("Still trying to proceed with " + ZMDataModel.getLogin().serverName);
-                    /*
-                    d.reject (error);
-                    return d.promise;*/
+                    
                     proceedWithLogin()
                     .then (function(success)
                            { d.resolve(success); return d.promise;},
@@ -779,7 +803,7 @@ angular.module('zmApp', [
                            {  d.reject(error); return d.promise;});
                    
                     
-               });
+               });*/
         return d.promise;
         
                
