@@ -494,7 +494,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         $rootScope.zmPopup = $ionicPopup.show({
             template: '<center>Frame: {{slideIndex+1}} of {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  />',
-            title: 'Select frame to save',
+            title: 'Select '+ (onlyAlarms?'Alarmed ':'')+'frame to save',
             subTitle: 'use left and right arrows to change',
             scope: $scope,
             cssClass: 'popup80',
