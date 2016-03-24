@@ -136,6 +136,24 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
        
     };
 
+    
+    function eventDetails(ev)
+    {
+        $scope.event = ev;
+         $ionicModal.fromTemplateUrl('templates/timeline-modal.html', {
+                scope: $scope, // give ModalCtrl access to this scope
+                animation: 'slide-in-up'
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
+                
+
+               
+
+                $scope.modal.show();
+
+            });
+    }
 
 
 
@@ -587,7 +605,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     if (idfound) {
 
                                         if (typeof myevents[i].Event.DefaultVideo === 'undefined')
-                                            console.log (JSON.stringify(myevents[i]));
+                                           // console.log (JSON.stringify(myevents[i]));
                                             myevents[i].Event.DefaultVideo = "";
                                         graphData.add({
                                             id: graphIndex,
@@ -634,35 +652,71 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             $scope.graphLoaded = true;
                             ZMDataModel.zmDebug("graph loaded: " + $scope.graphLoaded);
                             $scope.navControls = false;
+                            var dblclick = false;
                     
                            
                             
-                            timeline.on('select', function (properties) {
-                                //console.log ("CLICK");
-                               // console.log ("EVENT IS " + JSON.stringify(properties.event));
-                                if (properties.items && !isNaN(properties.items[0])) {
-                                    ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + properties.items);
-                                    var item = graphData.get(properties.items);
-                                    ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
-                                    showEvent(item[0].myevent);
+                            timeline.on('click', function (prop) {
+                                $timeout (function() {
+                                    if (dblclick)
+                                    {
+                                        console.log ("IGNORING CLICK AS DBL CLICK");
+                                        $timeout (function(){dblclick =  false;},400);
+                                        return;
+                                    }
+                                    console.log ("CLICK");
+                                    //console.log ("I GOT " + JSON.stringify(prop));
+                                   // console.log ("EVENT IS " + JSON.stringify(properties.event));
+                                    //var properties =  timeline.getEventProperties(prop);
+                                   // console.log ( "I GOT " + properties);
+                                    var itm = prop.item;
+                                    //console.log ("ITEM CLICKED " + itm);
+                                    if (itm && !isNaN(itm)) {
+                                        ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + itm);
+                                        var item = graphData.get(itm);
+                                        ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
+                                        showEvent(item.myevent);
 
 
-                                } else {
-                                    $ionicLoading.show({
-                                        template: "Zoom in more to scrub events...",
-                                        animation: 'fade-in',
-                                        showBackdrop: true,
-                                        maxWidth: 200,
-                                        showDelay: 0,
-                                        duration: 1500,
-                                    });
-                                   // console.log("Zoomed out too far to playback events");
-                                }
+                                    } else {
+                                        $ionicLoading.show({
+                                            template: "Zoom in more to scrub events...",
+                                            animation: 'fade-in',
+                                            showBackdrop: true,
+                                            maxWidth: 200,
+                                            showDelay: 0,
+                                            duration: 1500,
+                                        });
+                                       // console.log("Zoomed out too far to playback events");
+                                    }
+                                },400);
 
                             });
                     
-                             timeline.on ('doubleClick', function (p) {
+                             timeline.on ('doubleClick', function (prop) {
                                 console.log ("DOUBLE");
+                                dblclick = true;
+                                 var itm = prop.item;
+                                    //console.log ("ITEM CLICKED " + itm);
+                                    if (itm && !isNaN(itm)) {
+                                        ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + itm);
+                                        var item = graphData.get(itm);
+                                        ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
+                                        eventDetails(item.myevent);
+
+
+                                    } else {
+                                        $ionicLoading.show({
+                                            template: "Zoom in more to scrub events...",
+                                            animation: 'fade-in',
+                                            showBackdrop: true,
+                                            maxWidth: 200,
+                                            showDelay: 0,
+                                            duration: 1500,
+                                        });
+                                       // console.log("Zoomed out too far to playback events");
+                                    }
+                                
                             });
                         },
                         function (error) {
