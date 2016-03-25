@@ -2,13 +2,11 @@
     <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
     <ion-modal-view cache-view="false">
         <ion-content  ng-cloak on-double-tap="closeModal()">
-          <div ng-if="dataReady">
-              <canvas tc-chartjs-line chart-options="options" chart-data="data" auto-legend></canvas>
-                {{json_data}}
-          </div>
-          <div ng-if = "!dataReady">
-           Waiting for data...
-          </div>
+         
+              <div id="timeline-alarm-vis"></div>
+                
+         
+         
         </ion-content>
         
     </ion-modal-view>
