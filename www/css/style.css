@@ -850,3 +850,8 @@ body { font-family: sans-serif; }
           transition: transform 0.2s;
 }
 
+
+.wide-as-needed {
+  overflow: scroll;
+  white-space: nowrap;
+}

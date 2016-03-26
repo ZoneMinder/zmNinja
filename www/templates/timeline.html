@@ -29,6 +29,8 @@
         {{prettify(fromDate)}} - {{prettify(toDate)}} (only displaying last {{maxItems}} events) 
             </div>
 
+        <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!graphLoaded"></ion-spinner>  
+        
         <div ng-if="!graphLoaded">
             <br/><br/>
             <center>

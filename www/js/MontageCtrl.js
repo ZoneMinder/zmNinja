@@ -222,6 +222,12 @@ function initPackery()
     
     ZMDataModel.zmLog ("Monitors that are active: " + cnt + " while grid has " + positions.length);
     
+    if (cnt > ZMDataModel.getLogin().maxMontage )
+    {
+        cnt = ZMDataModel.getLogin().maxMontage;
+        ZMDataModel.zmLog ("restricting monitor count to " + cnt + " due to max-montage setting");
+    }
+    
     if (cnt!= positions.length)
     {
        
