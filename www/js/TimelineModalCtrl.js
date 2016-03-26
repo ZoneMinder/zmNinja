@@ -6,13 +6,14 @@
 
 
 
-angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', 'Hello', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup,Hello) {
+angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
 
     
     
 
     var Graph2d;
     var eventImageDigits=5;
+    $scope.errorDetails="";
     //----------------------------------------------------------------
         // Alarm notification handling
         //----------------------------------------------------------------
@@ -46,6 +47,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     });
     
     
+    //-------------------------------------------------------
+    // Tapping on a frame shows this image
+    //------------------------------------------------------
+    
     $scope.showImage = function (p,r,f, fid)
     {
         var img = "<img width='100%' ng-src='"+p+"/index.php?view=image&path="+r+f+"'>";
@@ -59,6 +64,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         // Execute action
     });
 
+    //-------------------------------------------------------
+    // init drawing here
+    //------------------------------------------------------
+    
      $scope.$on('modal.shown', function () {
          
          $scope.dataReady = false;
@@ -76,6 +85,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
      });
         
     
+    //-------------------------------------------------------
+    // okay, really init drawing here
+    //------------------------------------------------------
+    
     function processEvent()
     {
         var eid = $scope.event.Event.Id;
@@ -85,15 +98,21 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         $http.get (apiurl)
         .then (function (success)
                {
-                    $scope.eventdetails = JSON.stringify(success);
+                    //$scope.eventdetails = JSON.stringify(success);
                     drawGraph(success.data);
         },
                function (error)
                {
-                    $scope.eventdetails = JSON.stringify(error);
+                    $scope.errorDetails = "there was an error rendering the graph. Please see logs";
+                    ZMDataModel.zmLog ("Error in timeline frames " + JSON.stringify(error));
         });
     }
     
+    
+    //-------------------------------------------------------
+    // I was kidding, this is where it really is drawn
+    // scout's promise
+    //------------------------------------------------------
     
     function drawGraph(event)
     {
@@ -121,33 +140,38 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         
         
         var dataset = new vis.DataSet(items);
-      var options = {
-          autoResize:true,
-          height: Math.floor($rootScope.devHeight/2),
-          
-          style:'bar',
-          start: event.event.Frame[0].TimeStamp,
-          end: event.event.Frame[event.event.Frame.length-1].TimeStamp,
-          max: event.event.Frame[event.event.Frame.length-1].TimeStamp,
-          min: event.event.Frame[0].TimeStamp,
-          
-          barChart:
-          {
-             width: 50,
-             sideBySide:false,
-             align:'center'
-          },
-          dataAxis:
-          {
-              left: {title: {text:'score'}},
-          }
-      };
+          var options = {
+              autoResize:true,
+              height: Math.floor($rootScope.devHeight/2),
+              //clickToUse:true,
+
+              style:'bar',
+              start: event.event.Frame[0].TimeStamp,
+              end: event.event.Frame[event.event.Frame.length-1].TimeStamp,
+              max: event.event.Frame[event.event.Frame.length-1].TimeStamp,
+              min: event.event.Frame[0].TimeStamp,
+
+              barChart:
+              {
+                 width: 50,
+                 sideBySide:false,
+                 align:'center'
+              },
+              dataAxis:
+              {
+                  left: {title: {text:'score'}},
+              }
+          };
         var container = document.getElementById('timeline-alarm-vis');
         Graph2d = new vis.Graph2d(container, dataset, groups, options);
         $scope.dataReady = true;
-        $scope.alarm_data = Hello.get();
+       
         
         
+        //-------------------------------------------------------
+        // When you tap on a data node
+        //------------------------------------------------------
+    
         Graph2d.on('click',function (prop) {
             
             $timeout( function() {
@@ -155,22 +179,27 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                 
                 $scope.playbackURL = ZMDataModel.getLogin().url;
                 var t = moment(prop.time);
-                //console.log ("x="+prop.x);
-               // console.log ("val="+JSON.stringify(prop.value));
+               
                 console.log ("date="+t.format("YYYY-MM-DD HH:mm:ss"));
                 var tformat = t.format ("YYYY-MM-DD HH:mm:ss");
-                //console.log ("event="+JSON.stringify(prop.event));
+                
 
                 for (var i=0; i<items.length; i++)
                 {
                     if (items[i].x == tformat)
                     {
-                        //console.log ("ITEM " + i + " matches, relative path=" + items[i].relativePath);
-                        $scope.alarm_images.push({relativePath:items[i].relativePath, fid:items[i].fid, fname:items[i].fname, score:items[i].score, eid:items[i].eid});
+                       
+                        $scope.alarm_images.push({
+                            relativePath:items[i].relativePath, 
+                            fid:items[i].fid, 
+                            fname:items[i].fname, 
+                            score:items[i].score,
+                            time:moment(items[i].x).format("MMM D,"+ZMDataModel.getTimeFormat()),
+                            eid:items[i].eid});
 
                     }
                 }
-                //console.log ("I PUSHED " + $scope.alarm_images.length);
+               
             });
             
         });
@@ -252,13 +281,4 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
 }]);
 
-angular.module('zmApp.controllers')
-.factory('Hello', function()
-{
-    var data = 12;
-    return {
-        'set': function(val) {data=val;},
-        'get': function() {return data;}
-    };
-    
-});
+
