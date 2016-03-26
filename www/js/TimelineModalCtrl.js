@@ -88,8 +88,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         {
             console.log ("Pushing " + event.event.Frame[i].TimeStamp +":"+ event.event.Frame[i].Score);
             items.push ({x:event.event.Frame[i].TimeStamp,
-                         y:event.event.Frame[i].Score}
-                        );
+                         y:event.event.Frame[i].Score,
+                         eid: event.event.Event.Id,
+                         fid: event.event.Frame[i].FrameId
+                        });
         }
         
         
@@ -114,6 +116,12 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         var container = document.getElementById('timeline-alarm-vis');
         var Graph2d = new vis.Graph2d(container, dataset, options);
         $scope.dataReady = true;
+        
+        Graph2d.on('click',function (prop) {
+            console.log ("x="+prop.x);
+            console.log ("val="+JSON.stringify(prop.value));
+            
+        });
 
     }
     
