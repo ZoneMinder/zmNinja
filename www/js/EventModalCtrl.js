@@ -697,7 +697,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.$on('modal.removed', function () {
         $scope.isModalActive = false;
-         ZMDataModel.stopNetwork();
+         $timeout (function(){ZMDataModel.stopNetwork();},300);
         //console.log("**MODAL REMOVED: Stopping modal timer");
                 $interval.cancel(eventQueryHandle);
                 //$timeout.cancel(eventQueryHandle);
