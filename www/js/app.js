@@ -763,7 +763,7 @@ angular.module('zmApp', [
                function (error)
                // login to main failed, so try others
                {
-                    ZMDataModel.getReachableConfig()
+                    ZMDataModel.getReachableConfig(true)
                     .then (function (data)
                     {
                         proceedWithLogin()
@@ -1327,7 +1327,7 @@ angular.module('zmApp', [
                 //cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
                 // solves screen bouncing on form input
                 // since I am using JS Scroll
-                //cordova.plugins.Keyboard.disableScroll(true);
+                cordova.plugins.Keyboard.disableScroll(true);
             }
             if (window.StatusBar) {
                 // org.apache.cordova.statusbar required

@@ -196,7 +196,7 @@ angular.module('zmApp.controllers')
         },
         
         
-        getReachableConfig: function ()
+        getReachableConfig: function (skipFirst)
         {
             var d = $q.defer();
             if (loginData.serverName=="")
@@ -211,11 +211,24 @@ angular.module('zmApp.controllers')
             
             //zmLog ("Making sure " + loginData.serverName + " is reachable...");
             var tLd = serverGroupList[loginData.serverName];
+            if (skipFirst && tLd.fallbackConfiguration)
+            {
+                tLd = serverGroupList[tLd.fallbackConfiguration];
+                if (!tLd)
+                {
+                    d.reject ("No available severs");
+                    loginData = savedLoginData;
+                    return d.promise;
+                    
+                }
+            }
+            
+            
             
             var keepBuilding = true;
             while (keepBuilding==true && tLd)
             {
-                if (arrayObjectIndexOf(chainURLs,tLd.url+"/index.php","url") == -1 ) // no loop
+                if (arrayObjectIndexOf(chainURLs,tLd.url+"/index.php","url") == -1 && tLd.url!==undefined && tLd.url!='' ) // no loop
                 {
                     zmLog ("Adding to chain stack: " + tLd.serverName + ">"+tLd.url);
                     chainURLs.push ({url:tLd.url+"/index.php", server:tLd.serverName});
@@ -223,10 +236,11 @@ angular.module('zmApp.controllers')
                     if (tLd.fallbackConfiguration)
                     {
                         tLd = serverGroupList [tLd.fallbackConfiguration];
-                        if (tLd == undefined)
+                        if (tLd === undefined)
                         {
                             // This can happen if the fallback profile was deleted
                             zmLog ("Looks like a server object was deleted, but is still in fallback");
+                            keepBuilding = false;
                         }
                     }
                     else   
