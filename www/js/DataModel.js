@@ -215,10 +215,10 @@ angular.module('zmApp.controllers')
             var keepBuilding = true;
             while (keepBuilding==true && tLd)
             {
-                if (arrayObjectIndexOf(chainURLs,tLd.url,"url") == -1 ) // no loop
+                if (arrayObjectIndexOf(chainURLs,tLd.url+"/index.php","url") == -1 ) // no loop
                 {
                     zmLog ("Adding to chain stack: " + tLd.serverName + ">"+tLd.url);
-                    chainURLs.push ({url:tLd.url, server:tLd.serverName});
+                    chainURLs.push ({url:tLd.url+"/index.php", server:tLd.serverName});
                     zmLog ("Fallback of " + tLd.serverName + " is " + tLd.fallbackConfiguration);
                     if (tLd.fallbackConfiguration)
                     {
