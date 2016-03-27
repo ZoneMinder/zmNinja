@@ -220,7 +220,7 @@ function initPackery()
     var cnt=0;
     $scope.MontageMonitors.forEach(function(elem) 
         { 
-            if ((elem.Monitor.Enabled!='0') && (elem.Monitor.Function!='None') && (elem.Monitor.listDisplay!="noshow"))
+            if ((elem.Monitor.Enabled!='0') && (elem.Monitor.Function!='None') )
                 cnt++;
         });
     
