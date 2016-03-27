@@ -153,12 +153,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
     $scope.toggleHide = function(mon)
     {
+        
+         //pckry.getItemElements().forEach(function (itemElem) {itemElem.hide();
+         //});
+    //pckry.hide();
         if (mon.Monitor.listDisplay == 'noshow')
             mon.Monitor.listDisplay = 'show';
         else
             mon.Monitor.listDisplay = 'noshow';
         
-        $timeout(function () {
+        /*$timeout(function () {
              
                pckry.once( 'layoutComplete', function() {
                     var positions = pckry.getShiftPositions('data-item-id');
@@ -171,7 +175,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 });
                 
                 layout(pckry);
-        },100);
+        },100);*/
         
         
     };
@@ -216,11 +220,11 @@ function initPackery()
     var cnt=0;
     $scope.MontageMonitors.forEach(function(elem) 
         { 
-            if ((elem.Monitor.Enabled!='0') && (elem.Monitor.Function!='None'))
+            if ((elem.Monitor.Enabled!='0') && (elem.Monitor.Function!='None') && (elem.Monitor.listDisplay!="noshow"))
                 cnt++;
         });
     
-    ZMDataModel.zmLog ("Monitors that are active: " + cnt + " while grid has " + positions.length);
+    ZMDataModel.zmLog ("Monitors that are active and not DOM hidden: " + cnt + " while grid has " + positions.length);
     
     if (cnt > ZMDataModel.getLogin().maxMontage )
     {
@@ -260,7 +264,7 @@ function initPackery()
                 $ionicLoading.hide();
                 
                 
-                if (!progressCalled)
+                if (!progressCalled)    
                 {
                     ZMDataModel.zmLog ("*** BUG PROGRESS WAS NOT CALLED");
                     pckry.reloadItems();
@@ -343,7 +347,61 @@ function initPackery()
 
     }
 
+    $scope.cancelReorder = function()
+    {
+         $scope.modal.remove();
+    };
+    
+    $scope.saveReorder = function()
+    {
+        console.log (">>>>>>>>>> SAVING");
+        $scope.MontageMonitors = $scope.copyMontage;
+        $scope.modal.remove();
+        $timeout( function() {pckry.reloadItems();},400);
+        $timeout( function() {
+            draggies = [];
+            pckry.getItemElements().forEach(function (itemElem) {
+                      draggie = new Draggabilly(itemElem);
+                      pckry.bindDraggabillyEvents(draggie);
+                      draggies.push(draggie);
+                      draggie.disable();
+                });
+            pckry.layout();
+            
+        },800);
+        
+        
+        
+    };
 
+    $scope.toggleDelete = function (i)
+    {
+        
+        if ($scope.copyMontage[i].Monitor.listDisplay == 'show')
+            $scope.copyMontage[i].Monitor.listDisplay = 'noshow';
+        else
+            $scope.copyMontage[i].Monitor.listDisplay = 'show';
+            
+        ZMDataModel.zmDebug ("index " + i + " is now " +  $scope.copyMontage[i].Monitor.listDisplay);
+    };
+    
+    $scope.hideUnhide = function()
+    {
+        if ($scope.isDragabillyOn)
+        {
+         dragToggle();   
+        }
+        $scope.copyMontage = angular.copy ($scope.MontageMonitors);
+        $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
+                $scope.modal.show();
+            });
+    };
+    
     $scope.swipeUp = function()
     {
         //console.log ("SWIPE UP");
@@ -499,6 +557,13 @@ function initPackery()
    
     $scope.dragToggle = function()
     {
+        dragToggle();
+        
+        
+    };
+    
+    function dragToggle()
+    {
         var i;
         $scope.isDragabillyOn = !$scope.isDragabillyOn;
         
@@ -538,9 +603,7 @@ function initPackery()
              ZMDataModel.setLogin(ld);},300);},100);
             
         }
-        
-        
-    };
+    }
     
 
     //---------------------------------------------------------------------

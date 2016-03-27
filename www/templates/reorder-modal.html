@@ -2,18 +2,11 @@
     <ion-modal-view cache-view="false" style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;" >
         
     <ion-header-bar class="bar-stable">
-      <div class="buttons">
-        <button class="button button-icon icon ion-ios-minus-outline"
-          ng-click="deleteList();"></button>
-          <button class="button button-icon icon ion-ios-drag" ng-click="reorderList();">
-            
-        </button>
-      </div>
+    
         
       <h1 class="title"></h1>
       <div class="buttons">
         
-          <button class="button button-icon icon ion-refresh" ng-click="reloadReorder()"></button>
           
           <button class="button button-icon icon ion-checkmark" ng-click="saveReorder()"></button>
           
@@ -24,13 +17,15 @@
         
         
         <ion-content >
-            <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
-                <ion-item  ng-repeat="item in MontageMonitors">
-                    {{item.Monitor.Name}}<ion-delete-button ng-class="{'ion-eye':item.Monitor.listDisplay=='show','ion-eye-disabled':item.Monitor.listDisplay!='show'}" ng-click="deleteItem($index)"></ion-delete-button>
-                    
-                    <ion-reorder-button class="ion-navicon" on-reorder="reorderItem(item,$fromIndex, $toIndex)"></ion-reorder-button>
-                </ion-item>
-            </ion-list>
+            <div class="list">
+                <span  ng-repeat="item in copyMontage">
+                    <a class="item item-icon-left" ng-click="toggleDelete($index)" href="">
+                        <i ng-class="{'icon ion-eye':item.Monitor.listDisplay=='show','icon ion-eye-disabled':item.Monitor.listDisplay!='show'}"> </i>
+                        {{item.Monitor.Name}}
+                    </a>
+                        
+                </span>
+            </div>
             
  
         </ion-content>

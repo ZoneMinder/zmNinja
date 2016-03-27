@@ -1,7 +1,10 @@
 <ion-view title="Montage" cache-view="false" hide-nav-bar="{{minimal}}">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+         <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
+        </button>
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+        
     </ion-nav-buttons>
 
 
@@ -13,6 +16,8 @@
         
         <button class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
         </button>
+        
+       
         
         
       
@@ -41,16 +46,16 @@
             <div class="grid-sizer grid-item-10"></div>
             <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
                   ng-if="monitor.Monitor.Function!='None' &&  monitor.Monitor.Enabled !='0' ">
-            <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} {{dragBorder}}" data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}" >
-                <figure>
+            <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}" >
+                <figure class="{{dragBorder}}" ng-show=" monitor.Monitor.listDisplay!='noshow'">
                     <div ng-if="!isModalActive" >
                         <div ng-if="$root.authSession!='undefined' && !isBackground() && !areImagesLoading">
                             <div ng-if = "!minimal">
                                 <div>
                                 <img   class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{LoginData.streamingurl}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey):toggleSelectItem($index);" image-spinner-loader="lines" on-swipe-up="swipeUp()" on-swipe-down="swipeDown()"  />
-                                <!--
-                                <div style="position:absolute;top:40%; left:50%;opacity:0.5;"><button  ng-class="monitor.Monitor.listDisplay=='show'?'button button-positive button-small icon  ion-ios-eye':'button button-assertive button-small icon  ion-eye-disabled'" ng-click="toggleHide(monitor)" ng-if="isDragabillyOn"></button></div>-->
-                                </div>
+                                
+                                <!--<div style="position:absolute;top:40%; left:50%;opacity:0.5;"><button  ng-class="monitor.Monitor.listDisplay=='show'?'button button-positive button-small icon  ion-ios-eye':'button button-assertive button-small icon  ion-eye-disabled'" ng-click="toggleHide(monitor)" ng-if="isDragabillyOn"></button></div>
+                                </div>-->
                                 
                                 
                             </div> 
