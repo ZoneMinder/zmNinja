@@ -354,12 +354,27 @@ function initPackery()
     
     $scope.saveReorder = function()
     {
-        console.log (">>>>>>>>>> SAVING");
+        ZMDataModel.zmDebug ("Saving monitor hide/unhide and sizes");
         $scope.MontageMonitors = $scope.copyMontage;
         $scope.modal.remove();
         $timeout( function() {pckry.reloadItems();},400);
         $timeout( function() {
+            
+            draggies.forEach(function (drag) {
+                drag.destroy();
+            });
+            
             draggies = [];
+            
+            pckry.once( 'layoutComplete', function() {
+                console.log('Saving packery order now, layout rendered');
+                $timeout(function() {var positions = pckry.getShiftPositions('data-item-id');
+             ZMDataModel.zmDebug ("POSITIONS MAP " + JSON.stringify(positions));
+             var ld = ZMDataModel.getLogin();
+             ld.packeryPositions = JSON.stringify(positions);
+             ZMDataModel.setLogin(ld);});
+            });
+            
             pckry.getItemElements().forEach(function (itemElem) {
                       draggie = new Draggabilly(itemElem);
                       pckry.bindDraggabillyEvents(draggie);
@@ -816,9 +831,16 @@ function initPackery()
     
      $scope.$on('$ionicView.afterEnter', function () {
         console.log("**VIEW ** Montage Ctrl AFTER ENTER");
+          window.addEventListener("resize", orientationChanged, false);
         $timeout ( function () {initPackery(); },500);
         
     });
+    
+    function orientationChanged()
+    {
+        ZMDataModel.zmDebug ("Detected orientation change, redoing packery resize");
+        $timeout(function(){pckry.onresize();});
+    }
     
     
     $scope.$on('$ionicView.beforeLeave', function () {
@@ -827,6 +849,7 @@ function initPackery()
         console.log ("beforeLeave:Cancelling timer");
         $interval.cancel($rootScope.intervalHandle);
         pckry.destroy();
+         window.removeEventListener("resize", orientationChanged, false);
         
         
         // make sure this is applied in scope digest to stop network pull
