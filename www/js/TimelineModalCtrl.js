@@ -12,6 +12,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     
 
     var Graph2d;
+    var items;
+    var groups;
     var eventImageDigits=5;
     $scope.errorDetails="";
     //----------------------------------------------------------------
@@ -117,9 +119,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     function drawGraph(event)
     {
         console.log ("EVENT IS  " + JSON.stringify(event));
-        // Chart.js Data
-        var items = [];
-        var groups = new vis.DataSet();
+        items = [];
+        groups = new vis.DataSet();
         $scope.eid = event.event.Event.Id;
         for (var i=0; i< event.event.Frame.length; i++)
         {
@@ -135,6 +136,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                          relativePath:computeRelativePath(event.event),
                          score:event.event.Frame[i].Score,
                          fname: padToN(event.event.Frame[i].FrameId,eventImageDigits)+"-capture.jpg",
+                         tap_selected:false
                         });
         }
         
@@ -151,6 +153,30 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
               max: event.event.Frame[event.event.Frame.length-1].TimeStamp,
               min: event.event.Frame[0].TimeStamp,
 
+              drawPoints:function (item,group)
+                  {
+                      //ITEM IS {"screen_x":1199.0266666666666,"screen_y":232,"x":"2016-03-28T09:27:46.000Z","y":0,"groupId":"__ungrouped__"}
+                      var taps = false;
+                      for (var i=0; i<items.length; i++)
+                      {
+                          
+                          if (moment(items[i].x).format("YYYY-MM-DD HH:mm:ss") == moment(item.x).format("YYYY-MM-DD HH:mm:ss"))
+                          {
+                              taps = items[i].tap_selected;
+                              if (taps)
+                              {
+                                  console.log (">>Item " +i + " is true");
+                              }
+                              //break;
+                          }
+                      }
+                      
+                     
+                      var style_sel = {size:30, style:'circle', className:'visred'};
+                      var style = {size:20, style:'circle'};
+                     
+                      return (taps ? style_sel: style);
+                  },
               barChart:
               {
                  width: 50,
@@ -186,9 +212,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
                 for (var i=0; i<items.length; i++)
                 {
-                    if (items[i].x == tformat)
+                    if (moment(items[i].x).format("YYYY-MM-DD HH:mm:ss") == tformat)
                     {
-                       
+                   
+                       items[i].tap_selected = true;
                         $scope.alarm_images.push({
                             relativePath:items[i].relativePath, 
                             fid:items[i].fid, 
@@ -196,9 +223,17 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                             score:items[i].score,
                             time:moment(items[i].x).format("MMM D,"+ZMDataModel.getTimeFormat()),
                             eid:items[i].eid});
+                         console.log ("setting " + i + " to " +  items[i].tap_selected);
 
                     }
+                    else
+                    {
+                        items[i].tap_selected = false;
+                    }
                 }
+                Graph2d.setItems(items);
+                //Graph2d.redraw();
+                console.log ("REDRAW");
                
             });
             
