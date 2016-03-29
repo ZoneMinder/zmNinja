@@ -5,9 +5,14 @@
         <ion-content  ng-cloak on-double-tap="closeModal()">
 <div ng-controller="TimelineModalCtrl">   
             <br/>
-            <center> <h5>Showing for Event: {{eid}} (double-tap to exit)</h5></center>
+            <center> <h5>Showing Event: {{eid}} (double-tap to exit)</h5>
                {{errorDetails}}
-              <div id="timeline-alarm-vis" ></div>
+                <p>please zoom in for more precise control</p>
+                </center>
+                
+               <div style="padding-left:15px; padding-right:15px;">
+                <div id="timeline-alarm-vis" ></div>
+               </div>
                 
               <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!dataReady"></ion-spinner>     
     
