@@ -118,7 +118,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     
     function drawGraph(event)
     {
-        console.log ("EVENT IS  " + JSON.stringify(event));
+        //console.log ("EVENT IS  " + JSON.stringify(event));
         items = [];
         groups = new vis.DataSet();
         $scope.eid = event.event.Event.Id;
@@ -165,9 +165,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                               taps = items[i].tap_selected;
                               if (taps)
                               {
-                                  console.log (">>Item " +i + " is true");
+                                
+                                  //console.log (">>Item " +i + " is true");
                               }
-                              //break;
+                              break;
                           }
                       }
                       
@@ -206,7 +207,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                 $scope.playbackURL = ZMDataModel.getLogin().url;
                 var t = moment(prop.time);
                
-                console.log ("date="+t.format("YYYY-MM-DD HH:mm:ss"));
+                //console.log ("date="+t.format("YYYY-MM-DD HH:mm:ss"));
                 var tformat = t.format ("YYYY-MM-DD HH:mm:ss");
                 
 
@@ -215,6 +216,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                     if (moment(items[i].x).format("YYYY-MM-DD HH:mm:ss") == tformat)
                     {
                    
+                         ZMDataModel.zmDebug ("Item " + i + " is tapped with timestamp of "+items[i].x);
                        items[i].tap_selected = true;
                         $scope.alarm_images.push({
                             relativePath:items[i].relativePath, 
@@ -223,7 +225,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                             score:items[i].score,
                             time:moment(items[i].x).format("MMM D,"+ZMDataModel.getTimeFormat()),
                             eid:items[i].eid});
-                         console.log ("setting " + i + " to " +  items[i].tap_selected);
+                        // console.log ("setting " + i + " to " +  items[i].tap_selected);
 
                     }
                     else
@@ -233,7 +235,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                 }
                 Graph2d.setItems(items);
                 //Graph2d.redraw();
-                console.log ("REDRAW");
+                //console.log ("REDRAW");
                
             });
             
