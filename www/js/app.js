@@ -504,9 +504,12 @@ angular.module('zmApp', [
 // Also remember you need to add it to .config
 //------------------------------------------------------------------
 .factory('timeoutHttpIntercept', ['$rootScope', '$q', 'zm', '$injector', function ($rootScope, $q, zm, $injector) {
-    var zmCookie = "";
+    $rootScope.zmCookie = "";
 
     return {
+        
+       
+        
         'request': function (config) {
 
             
@@ -525,8 +528,8 @@ angular.module('zmApp', [
             }
             
 
-            if (zmCookie) {
-                config.headers.Cookie = "ZMSESSID=" + zmCookie;
+            if ($rootScope.zmCookie) {
+                config.headers.Cookie = "ZMSESSID=" + $rootScope.zmCookie;
             }
             
             else
@@ -560,7 +563,7 @@ angular.module('zmApp', [
                     if (zmSess[1]) {
                             
                        // console.log ("***** SETTING COOKIE TO "  + zmCookie);
-                        zmCookie = zmSess[1];
+                        $rootScope.zmCookie = zmSess[1];
                     }
                 }
             }
@@ -741,6 +744,8 @@ angular.module('zmApp', [
 
     function doLogin(str) {
         
+        
+        
         var d = $q.defer();
         
           var statename = $ionicHistory.currentStateName();
@@ -752,6 +757,9 @@ angular.module('zmApp', [
                 return d.promise;
                 
             }
+        
+        ZMDataModel.zmDebug ("Resetting zmCookie...");
+        $rootScope.zmCookie='';
         // first try to login, if it works, good
         // else try to do reachability
         proceedWithLogin()
