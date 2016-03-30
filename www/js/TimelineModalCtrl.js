@@ -49,6 +49,18 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     });
     
     
+     $scope.scrollUp = function()
+    {
+        //console.log ("SWIPE UP");
+        $ionicScrollDelegate.$getByHandle("timeline-modal-delegate").scrollTop(true);
+    };
+    
+    $scope.scrollDown = function()
+    {
+        //console.log ("SWIPE DOWN");
+        $ionicScrollDelegate.$getByHandle("timeline-modal-delegate").scrollBottom(true);
+    };
+    
     //-------------------------------------------------------
     // Tapping on a frame shows this image
     //------------------------------------------------------
