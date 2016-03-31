@@ -159,6 +159,12 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
     // Chart.js Options
       options =  {
+          
+        scales: {
+            xAxes:[{
+                display:false
+            }]
+        },
 
       responsive: true,
       scaleBeginAtZero : true,
@@ -171,6 +177,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
       barDatasetSpacing : 1,
       pointDot:true,
       pointDotRadius : 4,
+      
       hover: 
         {
             mode:'single',
@@ -188,6 +195,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         for (var i=0; i< event.event.Frame.length; i++)
         {
             data.labels.push(event.event.Frame[i].TimeStamp);
+            //data.labels.push(' ');
             data.datasets[0].data.push(event.event.Frame[i].Score);
             data.datasets[0].frames.push({x:event.event.Frame[i].TimeStamp,
                          y:event.event.Frame[i].Score,
