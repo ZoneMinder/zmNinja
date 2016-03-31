@@ -559,6 +559,11 @@ angular.module('zmApp.controllers')
         {
             return (loginData.use24hr ? "HH:mm": "hh:mm a");
         },
+        
+        getTimeFormatSec: function()
+        {
+            return (loginData.use24hr ? "HH:mm:ss": "hh:mm:ss a");
+        },
 
         //------------------------------------------------------------------
         // switches screen to 'always on' or 'auto'

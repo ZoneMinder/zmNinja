@@ -1,7 +1,7 @@
 // Common Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,ionic, moment, vis */
+/* global saveAs, cordova,StatusBar,angular,console,ionic, moment, vis , Chart, DJS*/
 
 
 
@@ -12,10 +12,19 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     
 
     var Graph2d;
+    var tcGraph;
     var items;
     var groups;
     var eventImageDigits=5;
+    var cv;
+    var ctx;
+    var options;
+    var data;
+    
     $scope.errorDetails="";
+    
+    
+   
     //----------------------------------------------------------------
         // Alarm notification handling
         //----------------------------------------------------------------
@@ -74,7 +83,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
     $scope.$on('modal.removed', function () {
        
-        Graph2d.destroy();
+        //Graph2d.destroy();
+        tcGraph.destroy();
         // Execute action
     });
 
@@ -113,7 +123,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         .then (function (success)
                {
                     //$scope.eventdetails = JSON.stringify(success);
-                    drawGraph(success.data);
+                    drawGraphTC(success.data);
         },
                function (error)
                {
@@ -128,6 +138,109 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     // scout's promise
     //------------------------------------------------------
     
+    function drawGraphTC(event)
+    {
+       
+      data = {
+      labels: [],
+      datasets: [
+        {
+          label: 'Score',
+          backgroundColor: 'rgba(129, 207, 224, 1.0)',
+          borderColor: 'rgba(129, 207, 224, 1.0)',
+          hoverBackgroundColor: 'rgba(248, 148, 6,1.0)',
+          hoverBorderColor: 'rgba(248, 148, 6,1.0)',
+          data: [],
+          frames: []
+        },
+        
+      ]
+    };
+
+    // Chart.js Options
+      options =  {
+
+      responsive: true,
+      scaleBeginAtZero : true,
+      scaleShowGridLines : true,
+      scaleGridLineColor : "rgba(0,0,0,.05)",
+      scaleGridLineWidth : 1,
+      barShowStroke : true,
+      barStrokeWidth : 2,
+      barValueSpacing : 5,
+      barDatasetSpacing : 1,
+      pointDot:true,
+      pointDotRadius : 4,
+      hover: 
+        {
+            mode:'single',
+            onHover:function(obj)
+            {
+                if (obj.length > 0)
+                tapOrHover(obj[0]._index);
+            }
+        },
+
+      //String - A legend template
+      legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
+    };
+        
+        for (var i=0; i< event.event.Frame.length; i++)
+        {
+            data.labels.push(event.event.Frame[i].TimeStamp);
+            data.datasets[0].data.push(event.event.Frame[i].Score);
+            data.datasets[0].frames.push({x:event.event.Frame[i].TimeStamp,
+                         y:event.event.Frame[i].Score,
+                         eid: event.event.Event.Id,
+                         fid: event.event.Frame[i].FrameId,
+                         //group:i,
+                         relativePath:computeRelativePath(event.event),
+                         score:event.event.Frame[i].Score,
+                         fname: padToN(event.event.Frame[i].FrameId,eventImageDigits)+"-capture.jpg",
+                         
+                        });
+            
+        }
+        
+        $scope.dataReady = true;
+        
+         cv = document.getElementById("tcchart");
+         ctx = cv.getContext("2d");
+        tcGraph = new Chart(ctx,{type:'bar', data: data, options:options});
+            
+        cv.onclick = function(e)
+        {
+            var  b = tcGraph.getElementAtEvent(e); 
+            if (b.length > 0)
+            {
+                tapOrHover(b[0]._index);
+            }
+        };
+    }
+    
+    function tapOrHover(ndx)
+    {
+        
+            $timeout (function() {
+            
+                
+                //console.log ("You tapped " + ndx);
+                      $scope.alarm_images=[];
+                    $scope.playbackURL = ZMDataModel.getLogin().url;
+                var items = data.datasets[0].frames[ndx];
+                            $scope.alarm_images.push({
+                            relativePath:items.relativePath, 
+                            fid:items.fid, 
+                            fname:items.fname, 
+                            score:items.score,
+                            time:moment(items.x).format("MMM D,"+ZMDataModel.getTimeFormatSec()),
+                            eid:items.eid});
+            });
+            
+    }
+    
+   
+    /*
     function drawGraph(event)
     {
         //console.log ("EVENT IS  " + JSON.stringify(event));
@@ -254,6 +367,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         });
 
     }
+    */
     
     //--------------------------------------------------------
     // utility function
