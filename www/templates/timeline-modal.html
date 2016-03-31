@@ -27,8 +27,13 @@
                 
                <div style="padding-left:15px; padding-right:15px;">
                 <div id="timeline-alarm-vis" ></div>
+                   
+                 <!--<canvas id="tc" tc-chartjs-bar chart-options="options" chart-data="data" auto-legend ng-if="dataReady" chart="tcchart" ng-click="chartClick($event)"></canvas>-->
+                   
+                <canvas id="tcchart"></canvas>
                </div>
                 
+    
               <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!dataReady"></ion-spinner>     
     
             <div style="height:190px;">

@@ -697,13 +697,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.$on('modal.removed', function () {
         $scope.isModalActive = false;
-         $timeout (function(){ZMDataModel.stopNetwork();},300);
+         
         //console.log("**MODAL REMOVED: Stopping modal timer");
                 $interval.cancel(eventQueryHandle);
                 //$timeout.cancel(eventQueryHandle);
         ZMDataModel.zmDebug ("Modal removed - killing connkey");
         sendCommand(17,$scope.connKey);
-        
+        $timeout (function(){ZMDataModel.stopNetwork();},400);
 
         // Execute action
     });
