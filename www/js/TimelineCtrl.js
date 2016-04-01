@@ -203,6 +203,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         // $interval.cancel(eventsInterval);
         //$interval.cancel(segmentHandle);
         ZMDataModel.zmDebug("TimelineCtrl:Close & Destroy Modal");
+        ZMDataModel.stopNetwork("TimelineCtrl: closeModal");
         ZMDataModel.setAwake(false);
         if ($scope.modal !== undefined) {
             $scope.modal.remove();

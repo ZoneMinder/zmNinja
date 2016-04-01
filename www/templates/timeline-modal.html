@@ -19,25 +19,32 @@
                 <i class="ion-chevron-down"></i>
                 </button>
                 
-                
-                
                {{errorDetails}}
-                <p>please zoom in for more precise control</p>
+                <!--<p>scroll left/right if needed</p>-->
                 </center>
                 
                <div style="padding-left:15px; padding-right:15px;">
                 <div id="timeline-alarm-vis" ></div>
                    
                  <!--<canvas id="tc" tc-chartjs-bar chart-options="options" chart-data="data" auto-legend ng-if="dataReady" chart="tcchart" ng-click="chartClick($event)"></canvas>-->
+                
+                	
+                   <!-- <ion-scroll direction="x" >
+                    <div style="width:{{graphWidth}}px;">-->
+                        <canvas id="tcchart"></canvas>
+                    <!--</div>
+                   </ion-scroll>-->
                    
-                <canvas id="tcchart"></canvas>
+                   
+                   
+                   
                </div>
                 
     
               <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!dataReady"></ion-spinner>     
     
             <div style="height:190px;">
-                <ion-scroll direction="x"  class="wide-as-needed">
+                <!-- <ion-scroll direction="x"  class="wide-as-needed">-->
                         <span ng-repeat="alarm in alarm_images">
                                
                                 
@@ -50,7 +57,7 @@
 
                         </span>
 
-                </ion-scroll>
+                <!--</ion-scroll>-->
             </div>
          </div>
         </ion-content>
