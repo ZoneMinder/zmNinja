@@ -74,6 +74,7 @@ angular.module('zmApp.controllers')
          'use24hr':false,
          'packeryPositions':'',
          'packerySizes':'',
+         'timelineModalGraphType':'alarmed',
          
         
     };
@@ -443,6 +444,13 @@ angular.module('zmApp.controllers')
                     loginData.use24hr  = false;
                     
                 }
+                
+                if (typeof timelineModalGraphType == 'undefined')
+                {
+                    zmDebug ("timeline graph type not set. Setting to alarmed");
+                    loginData.timelineModalGraphType = 'alarmed';
+                }
+                
                 
                 if (typeof loginData.montageHistoryQuality == 'undefined')
                 {

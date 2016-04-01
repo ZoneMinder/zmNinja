@@ -20,7 +20,11 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     var ctx;
     var options;
     var data;
+    var onlyalarm_data;
+    var current_data;
     
+    $scope.graphType = ZMDataModel.getLogin().timelineModalGraphType;
+    //$scope.graphType = "all";
     $scope.errorDetails="";
     
     
@@ -70,6 +74,40 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         $ionicScrollDelegate.$getByHandle("timeline-modal-delegate").scrollBottom(true);
     };
     
+    
+    $scope.switchType = function()
+    {
+        if ($scope.graphType == "all")
+        {
+            current_data = onlyalarm_data;
+            $scope.graphType = "alarmed";
+             ZMDataModel.zmDebug ("Alarm array has " + onlyalarm_data.labels.length+ " frames");
+            //console.log (JSON.stringify(onlyalarm_data));
+            
+        }
+        else
+        {
+            current_data = data;
+           // tcGraph.data = 
+            $scope.graphType = "all";
+        }
+        
+        ZMDataModel.zmLog ("Switching graph type to "+$scope.graphType);
+        
+        var ld = ZMDataModel.getLogin();
+        ld.timelineModalGraphType = $scope.graphType;
+        ZMDataModel.setLogin(ld);
+        
+        $timeout (function() {
+            tcGraph.destroy();
+            tcGraph = new Chart(ctx,{type:'bar', data: current_data, options:options});
+    });
+        
+        
+    
+    };
+    
+    
     //-------------------------------------------------------
     // Tapping on a frame shows this image
     //------------------------------------------------------
@@ -118,6 +156,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     function processEvent()
     {
         var eid = $scope.event.Event.Id;
+        //eid = 22302;
         var ld = ZMDataModel.getLogin();
         var apiurl = ld.apiurl + "/events/"+eid+".json";
         ZMDataModel.zmLog ("Getting " + apiurl);
@@ -142,8 +181,26 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     
     function drawGraphTC(event)
     {
+        
+      $scope.eid = event.event.Event.Id;
        
       data = {
+      labels: [],
+      datasets: [
+        {
+          label: 'Score',
+          backgroundColor: 'rgba(129, 207, 224, 1.0)',
+          borderColor: 'rgba(129, 207, 224, 1.0)',
+          hoverBackgroundColor: 'rgba(248, 148, 6,1.0)',
+          hoverBorderColor: 'rgba(248, 148, 6,1.0)',
+          data: [],
+          frames: []
+        },
+        
+      ]
+    };
+        
+    onlyalarm_data = {
       labels: [],
       datasets: [
         {
@@ -163,6 +220,9 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
       options =  {
           
         scales: {
+            yAxes:[{
+                ticks: {beginAtZero:true},
+            }],
             xAxes:[{
                 display:false
             }]
@@ -198,7 +258,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         if ($scope.graphWidth < $rootScope.devWidth)
             $scope.graphWidth = $rootScope.devWidth;
             
-        ZMDataModel.zmLog ("Changing graph width to " + $scope.graphWidth);
+       // ZMDataModel.zmLog ("Changing graph width to " + $scope.graphWidth);
         
         for (var i=0; i< event.event.Frame.length; i++)
         {
@@ -216,14 +276,37 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                          
                         });
             
+            if (event.event.Frame[i].Type=="Alarm")
+            {
+            
+                onlyalarm_data.labels.push(event.event.Frame[i].TimeStamp);
+                //data.labels.push(' ');
+                onlyalarm_data.datasets[0].data.push(event.event.Frame[i].Score);
+                onlyalarm_data.datasets[0].frames.push({x:event.event.Frame[i].TimeStamp,
+                             y:event.event.Frame[i].Score,
+                             eid: event.event.Event.Id,
+                             fid: event.event.Frame[i].FrameId,
+                             //group:i,
+                             relativePath:computeRelativePath(event.event),
+                             score:event.event.Frame[i].Score,
+                             fname: padToN(event.event.Frame[i].FrameId,eventImageDigits)+"-capture.jpg",
+
+                            });
+            }
+            
         }
         
         $scope.dataReady = true;
         
          cv = document.getElementById("tcchart");
          ctx = cv.getContext("2d");
+        
+        if (ZMDataModel.getLogin().timelineModalGraphType == 'all')
+            current_data = data;
+        else    
+            current_data = onlyalarm_data;
         $timeout(function() {
-        tcGraph = new Chart(ctx,{type:'bar', data: data, options:options});});
+        tcGraph = new Chart(ctx,{type:'bar', data: current_data, options:options});});
             
         cv.onclick = function(e)
         {
@@ -244,7 +327,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                 //console.log ("You tapped " + ndx);
                       $scope.alarm_images=[];
                     $scope.playbackURL = ZMDataModel.getLogin().url;
-                var items = data.datasets[0].frames[ndx];
+                var items = current_data.datasets[0].frames[ndx];
                             $scope.alarm_images.push({
                             relativePath:items.relativePath, 
                             fid:items.fid, 

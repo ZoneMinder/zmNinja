@@ -9,15 +9,14 @@
             
     
             <br/>
-            <center> <h5>Showing Event: {{eid}} (double-tap to exit)</h5>
+            <center> <h5>Showing {{graphType}} frames of Event:{{eid}} </h5>
+                <p>double-tap exits. touch/mouse-over and drag over bars to see frames</p>
                 
-                <button class="button icon-left button-small  button-positive" style="z-index:999;bottom:2%;right:20px;position:absolute; opacity:0.7" ng-click="scrollUp()">
+                <!--<button class="button icon-left button-small  button-positive" style="z-index:999;bottom:2%;right:20px;position:absolute; opacity:0.7" ng-click="scrollUp()">
                 <i class="ion-chevron-up"></i>
-                </button>
+                </button>-->
                 
-                <button class="button icon-left button-small  button-positive" style="top:30px;right:20px;position:absolute; opacity:0.7" ng-click="scrollDown()">
-                <i class="ion-chevron-down"></i>
-                </button>
+                <button class="button icon-left button-small  button-positive" style="top:30px;right:20px;position:absolute; opacity:0.7" ng-click="switchType()"><i class="ion-shuffle"></i></button>
                 
                {{errorDetails}}
                 <!--<p>scroll left/right if needed</p>-->
