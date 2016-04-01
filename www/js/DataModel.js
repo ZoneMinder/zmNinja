@@ -476,17 +476,19 @@ angular.module('zmApp.controllers')
             justResumed = true;
         },
         
-        stopNetwork: function()
+        stopNetwork: function(str)
         {
+            var s = "";
+            if (str) s=str+":";
             if (justResumed)
             {
                 // we don't call stop as we did stop on pause
-                zmLog ("Not calling window stop as we just resumed");
+                zmLog (s+" Not calling window stop as we just resumed");
                 justResumed = false;
             }
             else
             {
-                zmLog ("Calling window.stop()");
+                zmLog (s+" Calling window.stop()");
                 window.stop();
             }
         },
