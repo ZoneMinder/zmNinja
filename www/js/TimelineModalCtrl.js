@@ -94,6 +94,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     
      $scope.$on('modal.shown', function () {
          
+         $scope.graphWidth=$rootScope.devWidth-30;
+         ZMDataModel.zmLog ("Setting init graph width to " + $scope.graphWidth);
          $scope.dataReady = false;
          
          ZMDataModel.getKeyConfigParams(0)
@@ -192,6 +194,12 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
       legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
     };
         
+        $scope.graphWidth = event.event.Frame.length * 10;
+        if ($scope.graphWidth < $rootScope.devWidth)
+            $scope.graphWidth = $rootScope.devWidth;
+            
+        ZMDataModel.zmLog ("Changing graph width to " + $scope.graphWidth);
+        
         for (var i=0; i< event.event.Frame.length; i++)
         {
             data.labels.push(event.event.Frame[i].TimeStamp);
@@ -214,7 +222,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         
          cv = document.getElementById("tcchart");
          ctx = cv.getContext("2d");
-        tcGraph = new Chart(ctx,{type:'bar', data: data, options:options});
+        $timeout(function() {
+        tcGraph = new Chart(ctx,{type:'bar', data: data, options:options});});
             
         cv.onclick = function(e)
         {
