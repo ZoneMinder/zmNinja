@@ -110,7 +110,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $rootScope.$on("auth-success", function () {
 
             ZMDataModel.zmDebug("MonitorModalCtrl: Re-login detected, resetting everything & re-generating connkey");
-             ZMDataModel.stopNetwork();
+             ZMDataModel.stopNetwork("MonitorModal-auth success");
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
             
             
@@ -743,7 +743,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         function outWithOld() {
 
             ZMDataModel.zmLog("ModalCtrl:Stopping network pull...");
-            ZMDataModel.stopNetwork();
+            ZMDataModel.stopNetwork("MonitorModal-outwithOld");
             $scope.rand = Math.floor((Math.random() * 100000) + 1);
             $scope.animationInProgress = true;
 
@@ -1285,7 +1285,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         function outWithOld() {
 
             ZMDataModel.zmLog("ModalCtrl:Stopping network pull...");
-             ZMDataModel.stopNetwork();
+             ZMDataModel.stopNetwork("MonitorModal-outwithOld");
             $scope.animationInProgress = true;
             // give digest time for image to swap
             // 100 should be enough

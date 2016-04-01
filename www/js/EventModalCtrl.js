@@ -91,7 +91,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
      $rootScope.$on("auth-success", function () {
 
             ZMDataModel.zmDebug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
-             ZMDataModel.stopNetwork();
+             ZMDataModel.stopNetwork("Auth-Success inside EventModalCtrl");
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
             $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
             //$timeout.cancel(eventQueryHandle);
@@ -641,6 +641,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     };
 
     $scope.$on('$ionicView.enter', function () {
+        //console.log (">>>>>>>>>>>>>>>>>>>> MODAL VIEW ENTER");
 
 
 
@@ -703,7 +704,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 //$timeout.cancel(eventQueryHandle);
         ZMDataModel.zmDebug ("Modal removed - killing connkey");
         sendCommand(17,$scope.connKey);
-        $timeout (function(){ZMDataModel.stopNetwork();},400);
+        //$timeout (function(){ZMDataModel.stopNetwork("Modal removed inside EventModalCtrl");},400);
 
         // Execute action
     });
@@ -802,7 +803,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         ZMDataModel.setLogin($scope.loginData);
         
         ZMDataModel.zmDebug("EventModalCtrl: gapless has changed resetting everything & re-generating connkey");
-             ZMDataModel.stopNetwork();
+             ZMDataModel.stopNetwork("EventModalCtrl-toggle gapless");
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
             $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
             //$timeout.cancel(eventQueryHandle);
@@ -947,7 +948,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         function outWithOld() {
 
             ZMDataModel.zmLog("ModalCtrl:Stopping network pull...");
-             ZMDataModel.stopNetwork();
+             ZMDataModel.stopNetwork("EventModalCtrl-out with old");
             $scope.animationInProgress = true;
             // give digest time for image to swap
             // 100 should be enough
@@ -991,7 +992,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             function (error) {
                 
                     ZMDataModel.zmDebug("Hmm jump  error " + JSON.stringify(error));
-                     ZMDataModel.stopNetwork();
+                     ZMDataModel.stopNetwork("EventModalCtrl-jumptoEventZms error");
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
                      $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);

@@ -407,7 +407,7 @@ angular.module('zmApp.controllers')
         // switch off awake, as liveview is finished
         ZMDataModel.setAwake(false);
         $scope.modal.remove();
-        $timeout (function() {ZMDataModel.zmLog("MonitorCtrl:Stopping network pull...");if (ZMDataModel.isForceNetworkStop())  ZMDataModel.stopNetwork();},300);
+        $timeout (function() {ZMDataModel.zmLog("MonitorCtrl:Stopping network pull...");if (ZMDataModel.isForceNetworkStop())  ZMDataModel.stopNetwork("MonitorCtrl-closeModal");},300);
         
         
     };
