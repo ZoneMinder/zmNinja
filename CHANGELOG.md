@@ -1,7 +1,28 @@
 # Change Log
 
-## [1.1.2](https://github.com/pliablepixels/zmNinja/tree/1.1.2) (2016-03-18)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.1...1.1.2)
+## [1.1.3](https://github.com/pliablepixels/zmNinja/tree/1.1.3) (2016-04-02)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.2...1.1.3)
+
+**Implemented enhancements:**
+
+- new feature to analyze frames quickly from event list  [\#215](https://github.com/pliablepixels/zmNinja/issues/215)
+- re-introduce ability to hide monitors with new drag/drop montage [\#213](https://github.com/pliablepixels/zmNinja/issues/213)
+- Enhance timeline graph to allow for event frame scrubbing [\#209](https://github.com/pliablepixels/zmNinja/issues/209)
+- Allow ability to only browse alarm frames while in full screen footage view [\#206](https://github.com/pliablepixels/zmNinja/issues/206)
+
+**Fixed bugs:**
+
+- zmNinja build from source does not load on iOS 9.x - hangs on splashscreen [\#212](https://github.com/pliablepixels/zmNinja/issues/212)
+- Some SSL users are facing issues with reachability returning no servers reachable [\#208](https://github.com/pliablepixels/zmNinja/issues/208)
+
+**Closed issues:**
+
+- zmNinja 1.1.3 build from source - Push registration failed  [\#214](https://github.com/pliablepixels/zmNinja/issues/214)
+- No live view video playback, cgi path is set. [\#211](https://github.com/pliablepixels/zmNinja/issues/211)
+- Fix layout for first run when no layout config exists - check demo acct [\#205](https://github.com/pliablepixels/zmNinja/issues/205)
+
+## [v1.1.2](https://github.com/pliablepixels/zmNinja/tree/v1.1.2) (2016-03-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.1...v1.1.2)
 
 **Implemented enhancements:**
 
