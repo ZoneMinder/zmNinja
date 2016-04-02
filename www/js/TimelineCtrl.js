@@ -162,6 +162,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // FIXME : code repeat from Events
     //--------------------------------------------------------
     function openModal(event) {
+        
+        if ($scope.modalFromTimelineIsOpen == true)
+        {
+            // don't know why but some conflict from angular to timeline lib
+            // results in double modals at times
+            ZMDataModel.zmLog (">>-- duplicate modal detected, preventing");
+        }
+        
+        $scope.modalFromTimelineIsOpen = true;
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
         // pass this event to ModalCtrl
@@ -200,6 +209,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // it on open
     //--------------------------------------------------------
     $scope.closeModal = function () {
+        $scope.modalFromTimelineIsOpen = false;
         // $interval.cancel(eventsInterval);
         //$interval.cancel(segmentHandle);
         ZMDataModel.zmDebug("TimelineCtrl:Close & Destroy Modal");
@@ -239,8 +249,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     function showEvent(event) {
 
+        // in context of angular
 
-        openModal(event);
+        $timeout ( function () {
+        openModal(event);});
 
     }
 
@@ -283,6 +295,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.$on('$ionicView.afterEnter', function () {
        // console.log("***AFTER ENTER");
 
+        $scope.modalFromTimelineIsOpen = false;
         var tempMon = message;
 
         //console.log ("TIMELINE MONITORS: " + JSON.stringify(message));
