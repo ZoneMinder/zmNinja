@@ -142,7 +142,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         $scope.event = ev;
          $ionicModal.fromTemplateUrl('templates/timeline-modal.html', {
                 scope: $scope, // give ModalCtrl access to this scope
-                animation: 'slide-in-up'
+                animation: 'slide-in-up',
+                id:'analyze',
+             
             })
             .then(function (modal) {
                 $scope.modal = modal;

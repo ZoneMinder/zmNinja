@@ -107,6 +107,11 @@
 
                     <span style="float:right">
                                 <div ng-if="event.Event.EndTime">
+                                    
+                                    <button class="button button-small icon icon-left ion-stats-bars"
+                                            ng-click="closeIfOpen(event);analyzeEvent(event)" >  Analyze
+                                    </button>
+                                    
                                     <button class="button button-small icon icon-left ion-ios-eye"
                                             ng-click="toggleGroupScrub(event,$index,event.Event.Frames)" >  Scrub
                                     </button>

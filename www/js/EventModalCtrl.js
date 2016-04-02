@@ -647,7 +647,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     });
 
-    $scope.$on('modal.shown', function () {
+    $scope.$on('modal.shown', function (e,m) {
+        
+        if (m.id != 'footage')
+            return;
         
         var ld = ZMDataModel.getLogin();
         $scope.loginData = ZMDataModel.getLogin();
@@ -696,7 +699,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     });
     
 
-    $scope.$on('modal.removed', function () {
+    $scope.$on('modal.removed', function (e,m) {
+        
+        if (m.id != 'footage')
+            return;
+        
         $scope.isModalActive = false;
          
         //console.log("**MODAL REMOVED: Stopping modal timer");

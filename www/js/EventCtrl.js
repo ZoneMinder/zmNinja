@@ -1255,6 +1255,24 @@ angular.module('zmApp.controllers')
             return basePath;
         }
 
+        $scope.analyzeEvent = function(ev)
+        {
+            $scope.event = ev;
+         $ionicModal.fromTemplateUrl('templates/timeline-modal.html', {
+                scope: $scope, // give ModalCtrl access to this scope
+                animation: 'slide-in-up',
+                id:'analyze',
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
+                
+
+               
+
+                $scope.modal.show();
+
+            });
+        };
         
         //--------------------------------------------------------
         //This is called when we first tap on an event to see
@@ -1265,6 +1283,7 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------
 
         $scope.openModal = function (event) {
+        
             //ZMDataModel.zmDebug("EventCtrl: Open Modal with Base path " + relativepath);
 
             $scope.event = event;
@@ -1287,7 +1306,8 @@ angular.module('zmApp.controllers')
 
             $ionicModal.fromTemplateUrl('templates/events-modal.html', {
                     scope: $scope,
-                    animation: 'slide-in-up'
+                    animation: 'slide-in-up',
+                    id:'footage',
                 })
                 .then(function (modal) {
                     $scope.modal = modal;
