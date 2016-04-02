@@ -1,43 +1,33 @@
 
 
     <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
-    <ion-modal-view cache-view="false">
+    <ion-modal-view cache-view="false" >
+    
         <ion-content  ng-cloak on-double-tap="closeModal()" delegate-handle="timeline-modal-delegate">
 <div ng-controller="TimelineModalCtrl" >   
-    
-           
-            
-    
             <br/>
-            <center> <h5>Showing {{graphType}} frames of Event:{{eid}} </h5>
+            <div class="item item-divider">Event: {{eid}}
+                  <button class="button icon-left button-small  button-positive" style="float:right; opacity:0.7" ng-click="switchType()">
+                <i class="ion-shuffle"></i>
+                </button>
+                
+            </div>
+          
+            <center> <h5>Showing {{graphType}} frames </h5>
                 <p>double-tap exits. touch/mouse-over and drag over bars to see frames</p>
-                
-                <!--<button class="button icon-left button-small  button-positive" style="z-index:999;bottom:2%;right:20px;position:absolute; opacity:0.7" ng-click="scrollUp()">
-                <i class="ion-chevron-up"></i>
-                </button>-->
-                
-                <button class="button icon-left button-small  button-positive" style="top:30px;right:20px;position:absolute; opacity:0.7" ng-click="switchType()"><i class="ion-shuffle"></i></button>
+             
                 
                {{errorDetails}}
                 <!--<p>scroll left/right if needed</p>-->
                 </center>
-                
-               <div style="padding-left:15px; padding-right:15px;">
-                <div id="timeline-alarm-vis" ></div>
-                   
-                 <!--<canvas id="tc" tc-chartjs-bar chart-options="options" chart-data="data" auto-legend ng-if="dataReady" chart="tcchart" ng-click="chartClick($event)"></canvas>-->
-                
-                	
-                   <!-- <ion-scroll direction="x" >
-                    <div style="width:{{graphWidth}}px;">-->
-                        <canvas id="tcchart"></canvas>
-                    <!--</div>
-                   </ion-scroll>-->
+              
+                <canvas id="tcchart" width="auto" height="70%"></canvas>
+                 
                    
                    
                    
                    
-               </div>
+            
                 
     
               <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!dataReady"></ion-spinner>     
