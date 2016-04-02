@@ -98,7 +98,15 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         ld.timelineModalGraphType = $scope.graphType;
         ZMDataModel.setLogin(ld);
         
+        
         $timeout (function() {
+           
+            /*
+            if ($scope.graphType == 'alarmed')
+                    tcGraph.data = data;
+            else
+                    tcGraph.data = onlyalarm_data;
+            tcGraph.update();*/
             tcGraph.destroy();
             tcGraph = new Chart(ctx,{type:'bar', data: current_data, options:options});
     });
