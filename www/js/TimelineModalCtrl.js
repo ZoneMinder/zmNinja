@@ -22,6 +22,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     var data;
     var onlyalarm_data;
     var current_data;
+    var current_options;
+    var btype;
     
     $scope.graphType = ZMDataModel.getLogin().timelineModalGraphType;
     //$scope.graphType = "all";
@@ -77,11 +79,13 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     
     $scope.switchType = function()
     {
+        
         if ($scope.graphType == "all")
         {
             current_data = onlyalarm_data;
             $scope.graphType = "alarmed";
              ZMDataModel.zmDebug ("Alarm array has " + onlyalarm_data.labels.length+ " frames");
+            btype='bar';
             //console.log (JSON.stringify(onlyalarm_data));
             
         }
@@ -90,6 +94,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
             current_data = data;
            // tcGraph.data = 
             $scope.graphType = "all";
+            btype='line';
         }
         
         ZMDataModel.zmLog ("Switching graph type to "+$scope.graphType);
@@ -108,7 +113,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                     tcGraph.data = onlyalarm_data;
             tcGraph.update();*/
             tcGraph.destroy();
-            tcGraph = new Chart(ctx,{type:'bar', data: current_data, options:options});
+            console.log ("GRAPH TYPE IS " + btype);
+            tcGraph = new Chart(ctx,{type:btype, data: current_data, options:options});
     });
         
         
@@ -192,15 +198,49 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         
       $scope.eid = event.event.Event.Id;
        
-      data = {
+      /*data = {
       labels: [],
       datasets: [
         {
           label: 'Score',
+          fill:true,
+          borderJoinStyle: 'miter',
+          pointBorderColor: "rgba(220,220,220,1)",
+          pointBackgroundColor: "#e74c3c",
           backgroundColor: 'rgba(129, 207, 224, 1.0)',
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "#40d47e",
+          pointHoverBorderWidth: 2,
+          tension: 0.1,
           borderColor: 'rgba(129, 207, 224, 1.0)',
           hoverBackgroundColor: 'rgba(248, 148, 6,1.0)',
           hoverBorderColor: 'rgba(248, 148, 6,1.0)',
+          data: [],
+          frames: []
+        },
+        
+      ]
+    };*/
+        
+    
+    data = {
+      labels: [],
+      datasets: [
+        {
+          label: 'Score',
+          fill:true,
+          backgroundColor: 'rgba(129, 207, 224, 1.0)',
+          borderColor: 'rgb(92, 147, 159)',
+          borderCapStyle: 'butt',
+          borderJoinStyle: 'miter',
+          pointBorderColor: "rgba(220,220,220,1)",
+          pointBackgroundColor: "#e74c3c",
+          
+          pointHoverRadius: 10,
+          pointHoverBackgroundColor: "#f39c12",
+          pointHoverBorderWidth: 1,
+          tension: 0.1,
+        
           data: [],
           frames: []
         },
@@ -229,7 +269,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
           
         scales: {
             yAxes:[{
-                ticks: {beginAtZero:true},
+                ticks: {
+                   // beginAtZero:true,
+                    min:-1,
+                },
             }],
             xAxes:[{
                 display:false
@@ -241,12 +284,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
       scaleShowGridLines : true,
       scaleGridLineColor : "rgba(0,0,0,.05)",
       scaleGridLineWidth : 1,
-      barShowStroke : true,
-      barStrokeWidth : 2,
-      barValueSpacing : 5,
-      barDatasetSpacing : 1,
-      pointDot:true,
-      pointDotRadius : 4,
+      
       
       hover: 
         {
@@ -270,6 +308,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         
         for (var i=0; i< event.event.Frame.length; i++)
         {
+            
+            
             data.labels.push(event.event.Frame[i].TimeStamp);
             //data.labels.push(' ');
             data.datasets[0].data.push(event.event.Frame[i].Score);
@@ -310,11 +350,17 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
          ctx = cv.getContext("2d");
         
         if (ZMDataModel.getLogin().timelineModalGraphType == 'all')
+        {
+            btype = 'line';
             current_data = data;
+        }
         else    
+        {
+            btype = 'bar';
             current_data = onlyalarm_data;
+        }
         $timeout(function() {
-        tcGraph = new Chart(ctx,{type:'bar', data: current_data, options:options});});
+        tcGraph = new Chart(ctx,{type:btype, data: current_data, options:options});});
             
         cv.onclick = function(e)
         {
