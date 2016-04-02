@@ -74,7 +74,7 @@ angular.module('zmApp.controllers')
          'use24hr':false,
          'packeryPositions':'',
          'packerySizes':'',
-         'timelineModalGraphType':'alarmed',
+         'timelineModalGraphType':'all',
          
         
     };
@@ -447,8 +447,8 @@ angular.module('zmApp.controllers')
                 
                 if (typeof timelineModalGraphType == 'undefined')
                 {
-                    zmDebug ("timeline graph type not set. Setting to alarmed");
-                    loginData.timelineModalGraphType = 'alarmed';
+                    zmDebug ("timeline graph type not set. Setting to all");
+                    loginData.timelineModalGraphType = 'all';
                 }
                 
                 

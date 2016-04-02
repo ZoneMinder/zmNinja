@@ -133,8 +133,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     };
     
 
-    $scope.$on('modal.removed', function () {
+    $scope.$on('modal.removed', function (e,m) {
        
+        if (m.id != 'analyze')
+            return;
         //Graph2d.destroy();
         tcGraph.destroy();
         // Execute action
@@ -144,7 +146,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     // init drawing here
     //------------------------------------------------------
     
-     $scope.$on('modal.shown', function () {
+     $scope.$on('modal.shown', function (e,m) {
+         
+         if (m.id != 'analyze')
+            return;
          
          $scope.graphWidth=$rootScope.devWidth-30;
          ZMDataModel.zmLog ("Setting init graph width to " + $scope.graphWidth);
