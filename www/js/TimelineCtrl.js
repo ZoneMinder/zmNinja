@@ -276,6 +276,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
      $scope.$on('$ionicView.enter', function () {
         
          
+         
+    // Make sure sliding for menu is disabled so it
+    // does not interfere with graph panning
+    $ionicSideMenuDelegate.canDragContent(false);
          var ld = ZMDataModel.getLogin();
          maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
           maxItems = ld.graphSize || maxItemsConf;
@@ -348,9 +352,6 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
    
     var curFromDate, curToDate, curCount;
 
-    // Make sure sliding for menu is disabled so it
-    // does not interfere with graph panning
-    $ionicSideMenuDelegate.canDragContent(false);
 
     document.addEventListener("pause", onPause, false);
 
