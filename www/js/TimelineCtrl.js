@@ -185,7 +185,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         $ionicModal.fromTemplateUrl('templates/events-modal.html', {
                 scope: $scope, // give ModalCtrl access to this scope
-                animation: 'slide-in-up'
+                animation: 'slide-in-up',
+                id:'footage'
             })
             .then(function (modal) {
                 $scope.modal = modal;
@@ -193,7 +194,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 $ionicLoading.show({
                     template: "please wait...",
                     noBackdrop: true,
-                    duration: 10000
+                    duration: 10000,
+                    
                 });
 
                 $scope.modal.show();
