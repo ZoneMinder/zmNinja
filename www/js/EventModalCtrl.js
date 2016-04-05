@@ -650,6 +650,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.$on('modal.shown', function (e,m) {
         
         if (m.id != 'footage')
+      
             return;
         
         var ld = ZMDataModel.getLogin();
