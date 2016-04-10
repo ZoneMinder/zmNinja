@@ -1,6 +1,6 @@
 {
     "name": "ion-datetime-picker",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "authors": [
         "Kate Miháliková <kate@katemihalikova.cz>"
     ],
@@ -25,6 +25,6 @@
         "node_modules"
     ],
     "dependencies": {
-        "ionic": ">=1.0.0-beta.9"
+        "ionic": "^1.0.0-beta.9"
     }
 }

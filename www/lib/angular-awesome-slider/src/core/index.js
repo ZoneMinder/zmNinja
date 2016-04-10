@@ -43,13 +43,13 @@
 
           var initialized = false;
 
-          var init = function() {
+          var init = function(value) {
             scope.from = ''+scope.options.from;
             scope.to = ''+scope.options.to;
-            if (scope.options.calculate && typeof scope.options.calculate === 'function') {
+            if (scope.options.calculate && angular.isFunction(scope.options.calculate)) {
               scope.from = scope.options.calculate(scope.from);
               scope.to = scope.options.calculate(scope.to);
-            }            
+            }
 
             var OPTIONS = {
               from: !scope.options.round ? parseInt(scope.options.from, 10) : parseFloat(scope.options.from),
@@ -58,8 +58,8 @@
               smooth: scope.options.smooth,
               limits: scope.options.limits,
               round: scope.options.round || false,
-              value: ngModel.$viewValue,
-              dimension: "",
+              value: value || ngModel.$viewValue,
+              dimension: '',
               scale: scope.options.scale,
               modelLabels: scope.options.modelLabels,
               vertical: scope.options.vertical,
@@ -88,7 +88,7 @@
 
             if (scope.ngDisabled) {
               disabler(scope.ngDisabled);
-            }            
+            }
 
             initialized = true;
           };
@@ -113,8 +113,11 @@
               ngModel.$viewValue = ''+ngModel.$viewValue;
             }
 
-            if( !ngModel.$viewValue.split(";")[1]) {
+            if( !ngModel.$viewValue.split(';')[1]) {
               scope.mainSliderClass += ' jslider-single';
+            }
+            else {
+              scope.mainSliderClass = scope.mainSliderClass.replace(' jslider-single', '');
             }
 
             if (scope.slider) {
@@ -123,13 +126,21 @@
               if (vals[1]) {
                 scope.slider.getPointers()[1].set(vals[1], true);
                 //if moving left to right with two pointers
-                //we need to "finish" moving the first 
+                //we need to "finish" moving the first
                 if(parseInt(vals[1]) > parseInt(vals[0])){
                   scope.slider.getPointers()[0].set(vals[0], true);
                 }
-              }
+              }              
             }
+
           };
+
+          scope.$on('slider-value-update', function(e, msg){            
+            init(msg.value);  
+            timeout(function(){
+              scope.slider.redrawPointers();
+            });          
+          });
 
           // view -> model
           var forceApply = function(value, released) {
@@ -161,14 +172,14 @@
 
           scope.$watch('ngDisabled', function(value) {
             disabler(value);
-          });                    
+          });
 
           scope.limitValue = function(value) {
             if (scope.options.modelLabels) {
               if (angular.isFunction(scope.options.modelLabels)) {
                 return scope.options.modelLabels(value);
-              }              
-              return scope.options.modelLabels[value] !== undefined ? scope.options.modelLabels[value] : value;              
+              }
+              return scope.options.modelLabels[value] !== undefined ? scope.options.modelLabels[value] : value;
             }
             return value;
           };

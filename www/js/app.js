@@ -134,17 +134,17 @@ angular.module('zmApp', [
 //------------------------------------------------------------------
 // switch between collection repeat or ng-repeat
 //-------------------------------------------------------------------
-.directive('repeat', function ($compile, $rootScope) {
+.directive('repeatsmart', function ($compile, $rootScope) {
     return {
         restrict: 'A',
         priority: 2000,
         terminal: true,
         link: function (scope, element) {
             var repeatDirective = ($rootScope.platformOS == 'desktop') ? 'ng-repeat' : 'collection-repeat';
-            //console.log ("*********** REPEAT SCROLL IS " + repeatDirective);
+            console.log ("*********** REPEAT SCROLL IS " + repeatDirective);
 
-            element.attr(repeatDirective, element.attr('repeat'));
-            element.removeAttr('repeat');
+            element.attr(repeatDirective, element.attr('repeatsmart'));
+            element.removeAttr('repeatsmart');
             $compile(element)(scope);
         }
     };
@@ -1383,6 +1383,7 @@ angular.module('zmApp', [
     //$httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
     $ionicConfigProvider.navBar.alignTitle('center');
+    //$ionicConfigProvider.scrolling.jsScrolling(false);
 
     $stateProvider
     .state('app', {

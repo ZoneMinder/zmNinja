@@ -21,6 +21,11 @@
   background-repeat: no-repeat;
   -webkit-appearance: none;
 
+  &::-moz-focus-outer {
+    /* hide the focus outline in Firefox */
+    border: 0;
+  }
+
   &::-webkit-slider-thumb {
     position: relative;
     width: $range-slider-width;
@@ -54,6 +59,11 @@
     //background: red;
     //opacity: .5;
   }
+   &::-ms-fill-lower{
+     height: $range-track-height;
+     background:$dark;
+   }
+  /*
    &::-ms-track{
      background: transparent;
      border-color: transparent;
@@ -72,14 +82,11 @@
      margin-right:1px;
      outline:none;
    }
-   &::-ms-fill-lower{
-     height: $range-track-height;
-     background:$dark;
-   }
    &::-ms-fill-upper {
      height: $range-track-height;
      background:$range-default-track-bg;
    }
+   */
 }
 
 .range {

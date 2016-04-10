@@ -1,10 +1,11 @@
 /*!
  * fileLogger
- * Copyright 2015 Peter Bakondy https://github.com/pbakondy
+ * Copyright 2016 Peter Bakondy https://github.com/pbakondy
  * See LICENSE in this repository for license information
  */
 (function(){
 /* global angular, console, cordova */
+/* eslint no-console:0 */
 
 // install    : cordova plugin add cordova-plugin-file
 // date format: https://docs.angularjs.org/api/ng/filter/date
@@ -57,7 +58,9 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
           try {
             // avoid "TypeError: Converting circular structure to JSON"
             text = JSON.stringify(messages[i]);
-          } catch(e) {}
+          } catch(e) {
+            // do nothing
+          }
           message.push(text);
         }
         else if (angular.isObject(messages[i])) {
@@ -65,7 +68,9 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
           try {
             // avoid "TypeError: Converting circular structure to JSON"
             text = JSON.stringify(messages[i]);
-          } catch(e) {}
+          } catch(e) {
+            // do nothing
+          }
           message.push(text);
         }
         else {
@@ -167,6 +172,11 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
 
       } else {
 
+        if (!$window.cordova || !$window.cordova.file || !$window.cordova.file.dataDirectory) {
+          q.reject('cordova.file.dataDirectory is not available');
+          return q.promise;
+        }
+
         $cordovaFile.checkFile(cordova.file.dataDirectory, storageFilename).then(
           function() {
             // writeExistingFile(path, fileName, text)
@@ -204,6 +214,12 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
       if (isBrowser()) {
         q.resolve($window.localStorage[storageFilename]);
       } else {
+
+        if (!$window.cordova || !$window.cordova.file || !$window.cordova.file.dataDirectory) {
+          q.reject('cordova.file.dataDirectory is not available');
+          return q.promise;
+        }
+
         $cordovaFile.readAsText(cordova.file.dataDirectory, storageFilename).then(
           function(result) {
             q.resolve(result);
@@ -225,6 +241,12 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
         $window.localStorage.removeItem(storageFilename);
         q.resolve();
       } else {
+
+        if (!$window.cordova || !$window.cordova.file || !$window.cordova.file.dataDirectory) {
+          q.reject('cordova.file.dataDirectory is not available');
+          return q.promise;
+        }
+
         $cordovaFile.removeFile(cordova.file.dataDirectory, storageFilename).then(
           function(result) {
             q.resolve(result);
@@ -275,6 +297,11 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
         });
 
       } else {
+
+        if (!$window.cordova || !$window.cordova.file || !$window.cordova.file.dataDirectory) {
+          q.reject('cordova.file.dataDirectory is not available');
+          return q.promise;
+        }
 
         $cordovaFile.checkFile(cordova.file.dataDirectory, storageFilename).then(function(fileEntry) {
           fileEntry.file(q.resolve, q.reject);

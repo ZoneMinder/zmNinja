@@ -33,6 +33,7 @@
     Draggable.prototype._init = function() {
       if( arguments.length > 0 ){
         this.ptr = arguments[0];
+        this.label = arguments[3];
         this.parent = arguments[2];
 
         if (!this.ptr)
@@ -107,6 +108,14 @@
         self._mouseup(event);        
       });
 
+      this._bindEvent( this.label, 'down', function(event) {
+        self._mousedown( event );
+        return false;
+      });
+      this._bindEvent( this.label, 'up', function(event) {
+        self._mouseup( event );
+      });      
+     
       this._bindEvent( this.ptr, 'down', function(event) {
         self._mousedown( event );
         return false;

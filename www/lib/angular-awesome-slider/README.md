@@ -162,6 +162,8 @@ bower install angular-awesome-slider
 RELEASE
 -------------
 
+* 2.4.4: move by grabbing the label
+* 2.4.3: fix label + switch from range <=> one value
 * 2.4.2: update angular version + fix for programmatic movement of slider (double value)
 * 2.4.1: non-minified version added + bower update
 * 2.4.0: fix while updating both range values from code
