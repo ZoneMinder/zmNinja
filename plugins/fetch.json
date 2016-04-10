@@ -1,45 +1,43 @@
 {
-    "org.apache.cordova.device": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.device"
-        }
-    },
-    "org.apache.cordova.console": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.console"
-        }
-    },
-    "org.apache.cordova.statusbar": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.statusbar"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-whitelist": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-whitelist"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-inappbrowser": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-inappbrowser"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "nl.x-services.plugins.insomnia": {
+    "org.pbernasconi.progressindicator": {
         "source": {
             "type": "git",
-            "url": "https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git",
+            "url": "https://github.com/pbernasconi/cordova-progressIndicator.git",
             "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "org.apache.cordova.file": {
+        "source": {
+            "type": "registry",
+            "id": "org.apache.cordova.file"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-app-event": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-app-event"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "phonegap-plugin-push": {
+        "source": {
+            "type": "registry",
+            "id": "phonegap-plugin-push"
+        },
+        "is_top_level": true,
+        "variables": {
+            "SENDER_ID": "710936220256"
+        }
+    },
+    "cordova-plugin-app-version": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-app-version"
         },
         "is_top_level": true,
         "variables": {}
@@ -52,29 +50,75 @@
         "is_top_level": true,
         "variables": {}
     },
-    "de.appplant.cordova.plugin.email-composer": {
+    "cordova-plugin-inappbrowser": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-inappbrowser"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-ios-longpress-fix": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-ios-longpress-fix"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-splashscreen": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-splashscreen"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-touchid": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-touchid"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-websocket": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-websocket"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "ionic-plugin-keyboard": {
+        "source": {
+            "type": "registry",
+            "id": "ionic-plugin-keyboard"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-insomnia": {
         "source": {
             "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-email-composer.git",
+            "url": "https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git",
             "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
     },
-    "uk.co.whiteoctober.cordova.appversion": {
+    "cordova-plugin-pin-dialog": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/whiteoctober/cordova-plugin-app-version.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "org.pbernasconi.progressindicator": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/pbernasconi/cordova-progressIndicator.git",
-            "subdir": "."
+            "type": "registry",
+            "id": "cordova-plugin-pin-dialog"
         },
         "is_top_level": true,
         "variables": {}
@@ -88,121 +132,19 @@
         "is_top_level": true,
         "variables": {}
     },
-    "com.phonegap.plugins.OrientationLock": {
+    "cordova-plugin-statusbar": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-statusbar"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-media": {
         "source": {
             "type": "git",
-            "url": "https://github.com/cogitor/PhoneGap-OrientationLock.git",
+            "url": "https://github.com/pliablepixels/cordova-plugin-media",
             "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-splashscreen": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-splashscreen"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "hu.dpal.phonegap.plugins.PinDialog": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Paldom/PinDialog.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-touchid": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/leecrossley/cordova-plugin-touchid.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-ios-longpress-fix": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-ios-longpress-fix"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-websocket": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-websocket"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "de.appplant.cordova.plugin.local-notification": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-local-notifications.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-device": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-device"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "de.appplant.cordova.common.registerusernotificationsettings": {
-        "source": {
-            "type": "registry",
-            "id": "de.appplant.cordova.common.registerusernotificationsettings"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "de.appplant.cordova.plugin.badge": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-badge.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "phonegap-plugin-push": {
-        "source": {
-            "type": "registry",
-            "id": "phonegap-plugin-push"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "org.apache.cordova.file": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.file"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "org.apache.cordova.media": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/pliablepixels/cordova-plugin-media.git",
-            "subdir": ".",
-            "ref": "playback-only"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "ionic-plugin-keyboard": {
-        "source": {
-            "type": "registry",
-            "id": "ionic-plugin-keyboard"
         },
         "is_top_level": true,
         "variables": {}

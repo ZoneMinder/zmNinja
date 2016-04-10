@@ -1,3 +1,6 @@
+# v1.0.3
+Fixes issue #1 where component height was wrong after changing device orientation
+
 # v1.0.2
 
 ## Breaking change

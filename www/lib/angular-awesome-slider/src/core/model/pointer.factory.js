@@ -9,7 +9,7 @@
 
     SliderPointer.prototype = new Draggable();
 
-    SliderPointer.prototype.oninit = function( ptr, id, vertical, _constructor ) {
+    SliderPointer.prototype.oninit = function( ptr, id, vertical, label, _constructor ) {
       this.uid = id;
       this.parent = _constructor;
       this.value = {};

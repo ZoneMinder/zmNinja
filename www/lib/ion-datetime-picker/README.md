@@ -7,11 +7,6 @@
 
 > Date and/or time picker for awesome [Ionic framework](http://ionicframework.com/)
 
-# Demo
-
-Demo app is available - enter code `8d75a0ec` into [Ionic View](http://view.ionic.io/).
-Live demo is available on [Codepen](http://codepen.io/katemihalikova/full/dYvjzP/).
-
 # Introduction
 
 I made this component because of poor implementation of native datetime picker in Android webview. How funny it was when I discovered that I can only pick a time between 0:00 and 11:59 on my 24-hour clock phone :)
@@ -25,6 +20,17 @@ The ion-datetime-picker component has these features:
 - Pick time with or without seconds
 - Configure popup title and button labels
 - Configure i18n to get weekdays and months in your language
+
+# Demo
+
+Demo app is available - enter code `8d75a0ec` into [Ionic View](http://view.ionic.io/).
+Live demo is available on [Codepen](http://codepen.io/katemihalikova/full/dYvjzP/).
+
+#Screenshots
+
+<img src="/../screenshots/date.png?raw=true" alt="Date picker" width="239">
+<img src="/../screenshots/time.png?raw=true" alt="Time picker" width="239">
+<img src="/../screenshots/datetime.png?raw=true" alt="Datetime picker" width="239">
 
 # Installation
 
@@ -75,6 +81,8 @@ By default, in the time picker, I use 24-hour clock. Set this attribute to chang
 
 Configure the title and sub title of the popup with the picker.
 
+_HINT: Use `data-title` instead of `title` if you are going to use the app in the desktop browser to prevent leaking of the text into a mouseover tooltip._
+
 ### `button-ok` and `button-cancel` attributes
 
 Configure the text of buttons at the bottom of the picker.
@@ -85,15 +93,25 @@ Simple internationalization option. Inject the `$ionicPickerI18n` factory into y
 
 ### `weekdays` key
 
-Array of weekdays abbreviations. `0` is Sunday. If `moment` is installed, I try to get localized data from it, otherwise English ones are used.
+Array of weekdays abbreviations. `0` is Sunday. If `moment` is installed, I try to get localized data from it, otherwise English ones are used as default.
 
 ### `months` key
 
-Array of months names. `0` is January. If `moment` is installed, I try to get localized data from it, otherwise English ones are used.
+Array of months names. `0` is January. If `moment` is installed, I try to get localized data from it, otherwise English ones are used as default.
 
 ### `ok` and `cancel` keys
 
 Default, global labels of the buttons at the bottom of the picker.
+
+```js
+angular.module("myApp")
+    .run(function($ionicPickerI18n) {
+        $ionicPickerI18n.weekdays = ["Нд", "Lu", "Út", "Mi", "To", "금", "Sá"];
+        $ionicPickerI18n.months = ["Janvier", "Febrero", "März", "四月", "Maio", "Kesäkuu", "Červenec", "अगस्त", "Вересень", "Październik", "Νοέμβριος", "డిసెంబర్"];
+        $ionicPickerI18n.ok = "オーケー";
+        $ionicPickerI18n.cancel = "Cancelar";
+    });
+```
 
 ## Daylight saving time
 

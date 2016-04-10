@@ -1,9 +1,9 @@
-Cordova File Logger
+Ionic File Logger
 ==========
 
 [![Bower](http://img.shields.io/badge/bower-filelogger-FFCC2F.svg?style=flat)](http://bower.io/search/?q=filelogger)
 
-Logger module for Cordova/Ionic projects.
+Logger module for Ionic projects.
 
 When you run your application in device the Logger writes in the local filesystem (with cordova-plugin-file) and the system logs (with console.log).
 
@@ -11,7 +11,7 @@ When you run your application in browser with „ionic serve” the Logger uses 
 
 ## Dependencies
 
-- [ngCordova](http://ngcordova.com/) ( required version v0.1.14-alpha )
+- [ngCordova](http://ngcordova.com/) ( required version v0.1.24-alpha )
 - [cordova-plugin-file](https://github.com/apache/cordova-plugin-file)
 
 ## Installation
@@ -26,6 +26,12 @@ Install manually, or from bower:
 
 ```bash
 $ bower install filelogger
+```
+
+Install with npm:
+
+```bash
+$ npm install ionic-filelogger
 ```
 
 Include *filelogger.min.js* and ng-cordova.js or *ng-cordova.min.js* in your index.html file before cordova.js and after your AngularJS / Ionic file (since ngCordova depends on AngularJS).
@@ -181,4 +187,4 @@ angular.module('starter', ['ionic', 'fileLogger'])
 
 ## LICENSE
 
-Cordova File Logger is licensed under the MIT Open Source license. For more information, see the LICENSE file in this repository.
+Ionic File Logger is licensed under the MIT Open Source license. For more information, see the LICENSE file in this repository.

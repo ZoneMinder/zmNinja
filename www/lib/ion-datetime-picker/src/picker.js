@@ -24,6 +24,7 @@ angular.module("ion-datetime-picker", ["ionic"])
                         title: $scope.title || ("Pick " + ($scope.dateEnabled ? "a date" : "") + ($scope.dateEnabled && $scope.timeEnabled ? " and " : "") + ($scope.timeEnabled ? "a time" : "")),
                         subTitle: $scope.subTitle || "",
                         scope: $scope,
+                        cssClass: 'ion-datetime-picker-popup',
                         buttons: [
                             {
                                 text: $scope.buttonOk || $scope.i18n.ok,

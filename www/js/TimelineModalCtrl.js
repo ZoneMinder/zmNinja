@@ -202,6 +202,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     {
         
       $scope.eid = event.event.Event.Id;
+        
+       $scope.alarm_images=[];
        
       /*data = {
       labels: [],
@@ -504,7 +506,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                        items[i].tap_selected = true;
                         $scope.alarm_images.push({
                             relativePath:items[i].relativePath, 
-                            fid:items[i].fid, 
+                            fid:ite
+                            ms[i].fid, 
                             fname:items[i].fname, 
                             score:items[i].score,
                             time:moment(items[i].x).format("MMM D,"+ZMDataModel.getTimeFormat()),

@@ -8,13 +8,13 @@ echo Pliable Pixels build pre-preprocessing
 echo ----------------------------------------------------
 echo Curr Dir: `pwd`
 
-if [ -d "plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/" ]; then
-	echo "Copying Modified GCMIntentService for custom sound"
-	exe cp www/external/GCMIntentService.java plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/
-	exe cp www/external/GCMIntentService.java platforms/android/src/com/adobe/phonegap/push
-else
-	echo "Directory plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/ does not exist, skipping..."
-fi
+#if [ -d "plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/" ]; then
+#	echo "Copying Modified GCMIntentService for custom sound"
+#	exe cp www/external/GCMIntentService.java plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/
+#	exe cp www/external/GCMIntentService.java platforms/android/src/com/adobe/phonegap/push
+#else
+#	echo "Directory plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/ does not exist, skipping..."
+#fi
 
 echo "Copying custom sound"
 echo "---------------------"

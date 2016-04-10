@@ -1,6 +1,6 @@
 {
   "name": "ion-datetime-picker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "authors": [
     "Kate Miháliková <kate@katemihalikova.cz>"
   ],
@@ -25,16 +25,15 @@
     "node_modules"
   ],
   "dependencies": {
-    "ionic": ">=1.0.0-beta.9"
+    "ionic": "^1.0.0-beta.9"
   },
-  "_release": "0.1.1",
+  "_release": "0.1.2",
   "_resolution": {
     "type": "version",
-    "tag": "v0.1.1",
-    "commit": "2b0731676eee56ed16468d90a3c18f135ebcebf5"
+    "tag": "v0.1.2",
+    "commit": "0e87b4eab53bebea66d3ce751e3c8f1770f3ea49"
   },
-  "_source": "git://github.com/katemihalikova/ion-datetime-picker.git",
+  "_source": "https://github.com/katemihalikova/ion-datetime-picker.git",
   "_target": "~0.1.1",
-  "_originalSource": "ion-datetime-picker",
-  "_direct": true
+  "_originalSource": "ion-datetime-picker"
 }

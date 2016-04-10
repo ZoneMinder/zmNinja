@@ -2,7 +2,7 @@
   "name": "zmNinja",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.1.0"
+    "ionic": "driftyco/ionic-bower#1.2.4"
   },
   "dependencies": {
     "ng-mfb": "~0.4.0"

@@ -62,7 +62,7 @@ You will also want to give the chart some `data` and `options`. These can be pro
 by assigning $scope variables to `chart-options` and `chart-data` attributes on the same canvas element.
 
 ```html
-<canvas tc-chartjs-doughnut chart-data="myData" chart-options="myOptions" width="350" height="350"></canvas>
+<canvas tc-chartjs-doughnut chart-data="myData" chart-options="myOptions" chart-click="onChartClick(data, event)" width="350" height="350"></canvas>
 ```
 ```javascript
 $scope.myData = [
@@ -75,6 +75,11 @@ $scope.myData = [
 $scope.myOptions =  {
   // Chart.js options can go here.
 };
+
+$scope.onChartClick = function (data, event) {
+  console.log(data, event);
+};
+
 ```
 
 Using the `tc-chartjs` directive

@@ -1,6 +1,6 @@
 {
   "name": "angular-awesome-slider",
-  "version": "2.4.2",
+  "version": "2.4.4",
   "author": {
     "name": "Julien Valéry",
     "email": "darul75@gmail.com"
@@ -18,7 +18,8 @@
   ],
   "main": [
     "./dist/angular-awesome-slider.js",
-    "./dist/css/angular-awesome-slider.min.css"
+    "./dist/css/angular-awesome-slider.min.css",
+    "./dist/img/*"
   ],
   "dependencies": {
     "angular": "^1.3.x"
@@ -39,13 +40,13 @@
     "test",
     "tests"
   ],
-  "_release": "2.4.2",
+  "_release": "2.4.4",
   "_resolution": {
     "type": "version",
-    "tag": "2.4.2",
-    "commit": "792736e1c5a91616c58f24c5644c98e859451099"
+    "tag": "2.4.4",
+    "commit": "1ceb23fbc755a99a9c625dabacf7b182bbe9f9f5"
   },
-  "_source": "git://github.com/darul75/angular-awesome-slider.git",
+  "_source": "https://github.com/darul75/angular-awesome-slider.git",
   "_target": "~2.4.0",
   "_originalSource": "angular-awesome-slider"
 }

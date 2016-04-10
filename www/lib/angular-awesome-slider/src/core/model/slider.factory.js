@@ -7,18 +7,20 @@
       return this.init.apply(this, arguments);
     }
 
-    Slider.prototype.init = function( inputNode, templateNode, settings ){   
-      this.settings = settings;            
+    Slider.prototype.init = function( inputNode, templateNode, settings ){
+      this.settings = settings;
       this.inputNode = inputNode;
-      this.inputNode.addClass("ng-hide");
+      this.inputNode.addClass('ng-hide');
 
       this.settings.interval = this.settings.to-this.settings.from;
-      
-      if(this.settings.calculate && angular.isFunction(this.settings.calculate))
-        this.nice = this.settings.calculate;
 
-      if(this.settings.onstatechange && angular.isFunction(this.settings.onstatechange))
+      if(this.settings.calculate && angular.isFunction(this.settings.calculate)) {
+        this.nice = this.settings.calculate;
+      }
+        
+      if(this.settings.onstatechange && angular.isFunction(this.settings.onstatechange)) {
         this.onstatechange = this.settings.onstatechange;
+      }
 
       this.css = sliderConstants.SLIDER.css;
       this.is = {init: false};
@@ -27,7 +29,7 @@
       this.isAsc = settings.from < settings.to;
 
       this.create(templateNode);
-      
+
       return this;
     };
 
@@ -56,20 +58,21 @@
           indicator2 = angElt(is[4]),
           indicator3 = angElt(is[5]),
           indicator4 = angElt(is[6]),
-          pointers = [pointer1, pointer2],          
+          labels = [pointerLabel1, pointerLabel2],
+				 	pointers = [pointer1, pointer2],
           off = utils.offset(this.domNode),
           offset = {
             left: off.left,
             top: off.top,
             width: this.domNode[0].clientWidth,
             height: this.domNode[0].clientHeight
-          },          
+          },
           values = self.settings.value.split(';');
 
-      this.sizes = { 
+      this.sizes = {
         domWidth: this.domNode[0].clientWidth,
         domHeight: this.domNode[0].clientHeight,
-        domOffset: offset 
+        domOffset: offset
       };
 
       // find some objects
@@ -87,12 +90,14 @@
       angExt(this.o.labels[1], {
         value: this.o.labels[1].o.find("span")
       });
-      
+
       // single pointer
-      this.settings.single = !self.settings.value.split(";")[1];       
+      this.settings.single = !self.settings.value.split(";")[1];
 
       if (this.settings.single) {
         range.addClass('ng-hide');
+      } else {
+        range.removeClass('ng-hide');
       }
 
       angForEach(pointers, function(pointer, key) {
@@ -106,7 +111,7 @@
             offset;
 
         if(value) {
-          self.o.pointers[key] = new SliderPointer(pointer, key, self.settings.vertical, self);
+          self.o.pointers[key] = new SliderPointer(pointer, key, self.settings.vertical, labels[key], self);
 
           prev = values[key-1];
           prevValue = prev ? parseInt(prev, 10 ) : undefined;
@@ -121,51 +126,48 @@
 /*          test = self.isAsc ? value < self.settings.from : value > self.settings.from,
           value1 = test ? self.settings.from : value;              */
 
-          test = self.isAsc ? value > self.settings.to : value < self.settings.to;        
+          test = self.isAsc ? value > self.settings.to : value < self.settings.to;
           value1 = test ? self.settings.to : value;
 
           self.o.pointers[key].set( value1, true );
-          
+
           // reinit position d
           offset = utils.offset(self.o.pointers[key].ptr);
 
           self.o.pointers[key].d = {
             left: offset.left,
             top: offset.top
-          };          
-        }        
+          };
+        }
       });
 
       self.domNode.bind('mousedown', self.clickHandler.apply(self));
 
-      this.o.value = angElt(this.domNode.find("i")[2]);      
+      this.o.value = angElt(this.domNode.find("i")[2]);
       this.is.init = true;
 
       // CSS SKIN
-      if (this.settings.css) {        
+      if (this.settings.css) {
         indicatorLeft.css(this.settings.css.background ? this.settings.css.background : {});
         indicatorRight.css(this.settings.css.background ? this.settings.css.background : {});
         if (!this.o.pointers[1]) {
-          indicator1.css(this.settings.css.before ? this.settings.css.before : {});          
+          indicator1.css(this.settings.css.before ? this.settings.css.before : {});
           indicator4.css(this.settings.css.after ? this.settings.css.after : {});
         }
 
-        indicator2.css(this.settings.css.default ? this.settings.css.default : {});  
+        indicator2.css(this.settings.css.default ? this.settings.css.default : {});
         indicator3.css(this.settings.css.default ? this.settings.css.default : {});
-        
+
         range.css(this.settings.css.range ? this.settings.css.range : {});
         pointer1.css(this.settings.css.pointer ? this.settings.css.pointer : {});
         pointer2.css(this.settings.css.pointer ? this.settings.css.pointer : {});
-      }
-
-      angForEach(this.o.pointers, function(pointer, key){
-        self.redraw(pointer);
-      });
-
+      }      
+      
+      this.redrawPointers();
     };
 
     Slider.prototype.clickHandler = function() {
-      var self = this;      
+      var self = this;
 
       // in case of showing/hiding
       var resetPtrSize = function( ptr ) {
@@ -191,51 +193,51 @@
 
       return function(evt) {
         if (self.disabled)
-          return;        
+          return;
         var vertical = self.settings.vertical,
             targetIdx = 0,
             _off = utils.offset(self.domNode),
             firstPtr = self.o.pointers[0],
             secondPtr = self.o.pointers[1] ? self.o.pointers[1] : null,
-            tmpPtr,            
+            tmpPtr,
             evtPosition = evt.originalEvent ? evt.originalEvent: evt,
-            mouse = vertical ? evtPosition.pageY : evtPosition.pageX,            
+            mouse = vertical ? evtPosition.pageY : evtPosition.pageX,
             css = vertical ? 'top' : 'left',
             offset = { left: _off.left, top: _off.top, width: self.domNode[0].clientWidth, height: self.domNode[0].clientHeight },
             targetPtr = self.o.pointers[targetIdx];
-        
+
         if (secondPtr) {
           if (!secondPtr.d.width) {
             resetPtrSize();
-          }         
+          }
           var firstPtrPosition = utils.offset(firstPtr.ptr)[css];
           var secondPtrPosition = utils.offset(secondPtr.ptr)[css];
-          var middleGap = Math.abs((secondPtrPosition - firstPtrPosition) / 2);                    
+          var middleGap = Math.abs((secondPtrPosition - firstPtrPosition) / 2);
           var testSecondPtrToMove = mouse >= secondPtrPosition || mouse >= (secondPtrPosition - middleGap);
           if (testSecondPtrToMove) {
             targetPtr = secondPtr;
           }
         }
         targetPtr._parent = {offset: offset, width: offset.width, height: offset.height};
-        var coords = firstPtr._getPageCoords( evt );          
+        var coords = firstPtr._getPageCoords( evt );
         targetPtr.cx = coords.x - targetPtr.d.left;
-        targetPtr.cy = coords.y - targetPtr.d.top;      
+        targetPtr.cy = coords.y - targetPtr.d.top;
         targetPtr.onmousemove( evt, coords.x, coords.y);
-        targetPtr.onmouseup();        
+        targetPtr.onmouseup();
         angular.extend(targetPtr.d, {
            left: coords.x,
-           top: coords.y          
-        });        
-        
+           top: coords.y
+        });
+
         self.redraw(targetPtr);
         return false;
       };
     };
 
 
-    Slider.prototype.disable = function( bool ) {   
+    Slider.prototype.disable = function( bool ) {
       this.disabled = bool;
-    };    
+    };
 
     Slider.prototype.nice = function( value ){
       return value;
@@ -260,7 +262,7 @@
       if(x > 100) x = 100;
 
       return Math.round(x*10) / 10;
-    };    
+    };
 
     Slider.prototype.getPointers = function(){
       return this.o.pointers;
@@ -278,12 +280,12 @@
             position = this.settings.vertical ? 'top' : 'left',
             i=0;
         for(; i < s.length; i++) {
-          if (!s[i].val) {
+          if (!angular.isDefined(s[i].val)) {
              prc = (100/(s.length-1)).toFixed(2);
              str += '<span style="'+ position + ': ' + i*prc + '%">' + ( s[i] != '|' ? '<ins>' + s[i] + '</ins>' : '' ) + '</span>';
           }
 
-          if (s[i].val <= this.settings.to && s[i].val >= this.settings.from &&  ! duplicate[s[i].val]) {            
+          if (s[i].val <= this.settings.to && s[i].val >= this.settings.from &&  ! duplicate[s[i].val]) {
             duplicate[s[i].val] = true;
             prc = this.valueToPrc(s[i].val);
             label = s[i].label ? s[i].label : s[i].val;
@@ -310,23 +312,28 @@
         }
       };
 
-      angular.forEach(this.o.pointers, function(ptr, key) {
-        self.redraw(ptr);
-      });
+      this.redrawPointers();
     };
 
     Slider.prototype.update = function(){
       this.onresize();
       this.drawScale();
-    };    
+    };
 
     Slider.prototype.drawScale = function( scaleDiv ){
       angular.forEach(angular.element(scaleDiv).find('ins'), function(scaleLabel, key) {
         scaleLabel.style.marginLeft = - scaleLabel.clientWidth / 2;
       });
-    };    
+    };
 
-    Slider.prototype.redraw = function( pointer ){      
+    Slider.prototype.redrawPointers = function() {
+
+      angular.forEach(this.o.pointers, function(pointer){
+        this.redraw(pointer);
+      }, this);
+    };
+
+    Slider.prototype.redraw = function( pointer ){
       if(!this.is.init) {
         // this.settings.single
         if(this.o.pointers[0] && !this.o.pointers[1]) {
@@ -348,13 +355,13 @@
       var newPos,
           newWidth;
 
-      // redraw range line      
+      // redraw range line
       if(this.o.pointers[0] && this.o.pointers[1]) {
-        newPos = !this.settings.vertical ? 
+        newPos = !this.settings.vertical ?
           { left: this.o.pointers[0].value.prc + "%", width: ( this.o.pointers[1].value.prc - this.o.pointers[0].value.prc ) + "%" }
           :
           { top: this.o.pointers[0].value.prc + "%", height: ( this.o.pointers[1].value.prc - this.o.pointers[0].value.prc ) + "%" };
-        
+
         this.o.value.css(newPos);
 
         // both pointer overlap on limits
@@ -363,7 +370,7 @@
         }
 
       }
-      
+
       if(this.o.pointers[0] && !this.o.pointers[1]) {
         newWidth = this.o.pointers[0].value.prc - this.originValue;
         if (newWidth >= 0) {
@@ -378,9 +385,9 @@
         }
         else {
           this.o.indicators[0].css(!this.settings.vertical ? {width: this.originValue + "%"} : {height: this.originValue + "%"});
-        }        
+        }
 
-      }      
+      }
 
       var value = this.nice(pointer.value.origin);
       if (this.settings.modelLabels) {
@@ -391,8 +398,8 @@
           value = this.settings.modelLabels[value] !== undefined ? this.settings.modelLabels[value] : value;
         }
       }
-      
-      this.o.labels[pointer.uid].value.html(value);            
+
+      this.o.labels[pointer.uid].value.html(value);
 
       // redraw position of labels
       this.redrawLabels( pointer );
@@ -415,10 +422,10 @@
             sizes.margin = 0;
             sizes.right = true;
           } else
-          sizes.right = false;  
-        }        
+          sizes.right = false;
+        }
 
-        if (!self.settings.vertical)        
+        if (!self.settings.vertical)
           label.o.css({ left: prc + "%", marginLeft: sizes.margin+"px", right: "auto" });
         else
           label.o.css({ top: prc + "%", marginLeft: "20px", marginTop: sizes.margin, bottom: "auto" });
@@ -436,9 +443,9 @@
           prc = pointer.value.prc,
           // case hidden
           labelWidthSize = label.o[0].offsetWidth === 0 ? (label.o[0].textContent.length)*7 : label.o[0].offsetWidth;
-      
+
       this.sizes.domWidth = this.domNode[0].clientWidth;
-      this.sizes.domHeight = this.domNode[0].clientHeight;      
+      this.sizes.domHeight = this.domNode[0].clientHeight;
 
       var sizes = {
         label: !self.settings.vertical ? labelWidthSize : label.o[0].offsetHeight,
@@ -448,12 +455,12 @@
 
       var anotherIdx = pointer.uid === 0 ? 1:0,
           anotherLabel,
-          anotherPtr;          
+          anotherPtr;
 
       if (!this.settings.single && !this.settings.vertical){
-        // glue if near;        
+        // glue if near;
         anotherLabel = this.o.labels[anotherIdx];
-        anotherPtr = this.o.pointers[anotherIdx];          
+        anotherPtr = this.o.pointers[anotherIdx];
         var label1 = this.o.labels[0],
             label2 = this.o.labels[1],
             ptr1 = this.o.pointers[0],
@@ -465,27 +472,27 @@
         label2.o.css(this.css.visible);
 
         value = this.getLabelValue(value);
-        
+
         if (gapBetweenLabel + 10 < label1.o[0].offsetWidth+label2.o[0].offsetWidth) {
           anotherLabel.o.css(this.css.hidden);
-          
+
           anotherLabel.value.html(value);
           prc = (anotherPtr.value.prc - prc) / 2 + prc;
           if(anotherPtr.value.prc != pointer.value.prc){
             value = this.nice(this.o.pointers[0].value.origin);
             var value1 = this.nice(this.o.pointers[1].value.origin);
             value = this.getLabelValue(value);
-            value1 = this.getLabelValue(value1);             
-            
+            value1 = this.getLabelValue(value1);
+
             label.value.html(value + "&nbsp;&ndash;&nbsp;" + value1);
             sizes.label = label.o[0].offsetWidth;
             sizes.border = (prc * domSize) / 100;
           }
         }
-        else {          
+        else {
           anotherLabel.value.html(value);
           anotherLabel.o.css(this.css.visible);
-        }              
+        }
       }
 
       sizes = setPosition(label, sizes, prc);
@@ -503,9 +510,9 @@
         };
         sizes = setPosition(anotherLabel, sizes2, anotherPtr.value.prc);
       }
-      
+
       this.redrawLimits();
-    };    
+    };
 
     Slider.prototype.redrawLimits = function() {
       if (this.settings.limits) {
@@ -528,19 +535,19 @@
 
             limit = this.o.limits[1];
             if(label_left + label.o[0].clientWidth > this.sizes.domWidth - limit[0].clientWidth){
-              limits[1] = false;  
+              limits[1] = false;
             }
-              
+
           }
         }
 
         for(; i < limits.length; i++){
           if(limits[i]){ // TODO animate
-            angular.element(this.o.limits[i]).addClass("animate-show");          
+            angular.element(this.o.limits[i]).addClass("animate-show");
           }
           else{
             angular.element(this.o.limits[i]).addClass("animate-hidde");
-          }  
+          }
         }
       }
     };
@@ -557,7 +564,7 @@
 
       var value = "";
       angular.forEach(this.o.pointers, function(pointer, key){
-        if(pointer.value.prc !== undefined && !isNaN(pointer.value.prc)) 
+        if(pointer.value.prc !== undefined && !isNaN(pointer.value.prc))
           value += (key > 0 ? ";" : "") + $this.prcToValue(pointer.value.prc);
       });
       return value;
@@ -565,14 +572,14 @@
 
     Slider.prototype.getLabelValue = function(value){
       if (this.settings.modelLabels) {
-        if (angular.isFunction(this.settings.modelLabels)) {                
+        if (angular.isFunction(this.settings.modelLabels)) {
           return this.settings.modelLabels(value);
         }
         else {
           return this.settings.modelLabels[value] !== undefined ? this.settings.modelLabels[value] : value;
         }
-      }  
-      
+      }
+
       return value;
     };
 
@@ -590,7 +597,7 @@
 
     Slider.prototype.prcToValue = function( prc ){
       var value;
-      if (this.settings.heterogeneity && this.settings.heterogeneity.length > 0){        
+      if (this.settings.heterogeneity && this.settings.heterogeneity.length > 0){
         var h = this.settings.heterogeneity,
             _start = 0,
             _from = this.settings.round ? parseFloat(this.settings.from) : parseInt(this.settings.from, 10),
@@ -599,7 +606,7 @@
 
         for (; i <= h.length; i++){
           var v;
-          if(h[i]) 
+          if(h[i])
             v = h[i].split('/');
           else
             v = [100, _to];
@@ -614,10 +621,10 @@
           _start = v1;
           _from = v2;
         }
-      } 
+      }
       else {
         value = this.settings.from + (prc * this.settings.interval) / 100;
-      }   
+      }
 
       return this.round(value);
     };
@@ -625,10 +632,10 @@
     Slider.prototype.valueToPrc = function( value, pointer ){
       var prc,
           _from = this.settings.round ? parseFloat(this.settings.from) : parseInt(this.settings.from, 10);
-          
+
       if (this.settings.heterogeneity && this.settings.heterogeneity.length > 0){
         var h = this.settings.heterogeneity,
-            _start = 0,            
+            _start = 0,
             i = 0;
 
         for (; i <= h.length; i++) {
@@ -636,7 +643,7 @@
           if(h[i])
             v = h[i].split('/');
           else
-            v = [100, this.settings.to];        
+            v = [100, this.settings.to];
 
           var v1 = this.settings.round ? parseFloat(v[0]) : parseInt(v[0], 10);
           var v2 = this.settings.round ? parseFloat(v[1]) : parseInt(v[1], 10);
@@ -666,11 +673,11 @@
     Slider.prototype.round = function( value ){
       value = Math.round(value / this.settings.step) * this.settings.step;
 
-      if(this.settings.round) 
+      if(this.settings.round)
         value = Math.round(value * Math.pow(10, this.settings.round)) / Math.pow(10, this.settings.round);
-      else 
+      else
         value = Math.round(value);
-      return value;      
+      return value;
     };
 
     return Slider;
