@@ -276,6 +276,7 @@ function initPackery()
                       pckry.bindDraggabillyEvents(draggie);
                       draggies.push(draggie);
                       draggie.disable();
+                      draggie.unbindHandles();
                 });
                 
                 pckry.on( 'dragItemPositioned', itemDragged );
@@ -417,7 +418,7 @@ function initPackery()
             });
     };
     
-    $scope.swipeUp = function()
+   /* $scope.swipeUp = function()
     {
         //console.log ("SWIPE UP");
         $ionicScrollDelegate.$getByHandle("montage-delegate").scrollBy(0, $rootScope.devHeight/2, true);
@@ -427,7 +428,7 @@ function initPackery()
     {
         //console.log ("SWIPE DOWN");
         $ionicScrollDelegate.$getByHandle("montage-delegate").scrollBy(0, -($rootScope.devHeight/2), true);
-    };
+    };*/
     
     
     
@@ -593,6 +594,7 @@ function initPackery()
             for (i=0; i < draggies.length; i++)
             {
                 draggies[i].enable();
+                draggies[i].bindHandles();
             }
             
            // reflow and reload as some may be hidden
@@ -605,6 +607,7 @@ function initPackery()
             for ( i=0; i < draggies.length; i++)
             {
                 draggies[i].disable();
+                draggies[i].unbindHandles();
             }
             for (i=0; i < $scope.MontageMonitors.length; i++)
             {
