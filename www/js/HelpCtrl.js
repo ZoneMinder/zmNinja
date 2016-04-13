@@ -33,6 +33,7 @@ $scope.openMenu = function () {
     $scope.$on('$ionicView.enter', function () {
         //console.log("**VIEW ** Help Ctrl Entered");
         ZMDataModel.setAwake(false);
+        $scope.zmAppVersion = ZMDataModel.getAppVersion();
 
         
 
