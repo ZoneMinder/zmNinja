@@ -667,10 +667,30 @@ function initPackery()
 
             $http.get(myurl)
                 .success(function (data) {
+                
+                    $scope.ptzMoveCommand = "move"; // start with as move;
+                    $scope.ptzStopCommand = "";
+
+                
                     ZMDataModel.zmDebug("MontageCtrl: control data returned " + JSON.stringify(data));
-                    $scope.ptzMoveCommand = (data.control.Control.CanMoveCon == '1') ? 'moveCon' : 'move';
-                    $scope.ptzStopCommand = "moveStop";
-                    //console.log("***moveCommand: " + $scope.ptzMoveCommand);
+                
+                    if (data.control.Control.CanMoveRel == '1')
+                    {
+                        
+                        $scope.ptzMoveCommand = "moveRel";
+                        $scope.ptzStopCommand = "moveStop";
+                    }
+
+                    // Prefer con over rel if both enabled
+                    // I've tested con
+                
+                    if (data.control.Control.CanMoveCon == '1')
+                    {
+                        
+                        $scope.ptzMoveCommand = "moveCon";
+                        $scope.ptzStopCommand = "moveStop";
+                    }
+                
                 
                 
                 // presets

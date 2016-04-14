@@ -322,17 +322,22 @@ angular.module('zmApp.controllers')
                     $scope.ptzMoveCommand = "move"; // start with as move;
                     $scope.ptzStopCommand = "";
 
+                    ZMDataModel.zmDebug ("control PTZ details are " + JSON.stringify(data));
 
+                    
                     if (data.control.Control.CanMoveRel == '1')
                     {
+                        
                         $scope.ptzMoveCommand = "moveRel";
                         $scope.ptzStopCommand = "moveStop";
                     }
 
                     // Prefer con over rel if both enabled
                     // I've tested con
+                
                     if (data.control.Control.CanMoveCon == '1')
                     {
+                        
                         $scope.ptzMoveCommand = "moveCon";
                         $scope.ptzStopCommand = "moveStop";
                     }
