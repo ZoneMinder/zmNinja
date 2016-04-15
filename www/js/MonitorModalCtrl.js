@@ -689,7 +689,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         var mid;
         mid = ZMDataModel.getNextMonitor(m, d);
 
-
+        $scope.showPTZ = false;
 
         // FIXME: clean this up - in a situation where
         // no monitors are enabled, will it loop for ever?
@@ -753,6 +753,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
                 $scope.monitorId = mid;
                 $scope.monitorName = ZMDataModel.getMonitorName(mid);
+                configurePTZ($scope.monitorId);
             }, 200);
         }
 
@@ -1632,6 +1633,140 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //console.log ("PADTON: returning " + number);
         return number;
     }
+    
+    // make sure following are correct:
+    // $scope.isControllable 
+    // $scope.controlid
+    // 
+    function configurePTZ(mid)
+    {
+        $scope.ptzMoveCommand = "";
+        $scope.ptzStopCommand = "";
+        
+        $scope.zoomInCommand = "";
+        $scope.zoomOutCommand = "";
+        $scope.zoomStopCommand = "zoomStop";
+        $scope.canZoom = false;
+        
+        $scope.presetOn = false;
+        
+        ZMDataModel.zmDebug ("configurePTZ: called with mid="+mid);
+        var ld = ZMDataModel.getLogin();
+        var url = ld.apiurl+"/monitors/"+mid+".json";
+        $http.get (url)
+        .success (function (data)
+         {
+            $scope.isControllable = data.monitor.Monitor.Controllable;
+            $scope.controlid = data.monitor.Monitor.ControlId;
+            if ($scope.isControllable=='1')
+            {
+                var apiurl = ZMDataModel.getLogin().apiurl;
+                var myurl = apiurl + "/controls/" + $scope.controlid + ".json";
+                ZMDataModel.zmDebug("configurePTZ : getting controllable data " + myurl);
+
+                $http.get(myurl)
+                    .success(function (data) {
+
+                    $scope.ptzMoveCommand = "move"; // start with as move;
+                    $scope.ptzStopCommand = "";
+                
+                    if (data.control.Control.CanZoom=='1')
+                    {
+                        $scope.canZoom = true;
+                        if (data.control.Control.CanZoomCon == '1')
+                        {
+                            $scope.zoomInCommand = "zoomConTele";
+                            $scope.zoomOutCommand = "zoomConWide";
+                            
+                        }
+                        else if (data.control.Control.CanZoomRel == '1')
+                        {
+                            $scope.zoomInCommand = "zoomRelTele";
+                            $scope.zoomOutCommand = "zoomRelWide";
+                        }
+                        
+                        else if (data.control.Control.CanZoomAbs == '1')
+                        {
+                            $scope.zoomInCommand = "zoomRelAbs";
+                            $scope.zoomOutCommand = "zoomRelAbs";
+                        }
+                    }
+
+                
+                    ZMDataModel.zmDebug("configurePTZ: control data returned " + JSON.stringify(data));
+                
+                    if (data.control.Control.CanMoveRel == '1')
+                    {
+                        
+                        $scope.ptzMoveCommand = "moveRel";
+                        $scope.ptzStopCommand = "moveStop";
+                    }
+
+                    // Prefer con over rel if both enabled
+                    // I've tested con
+                
+                    if (data.control.Control.CanMoveCon == '1')
+                    {
+                        
+                        $scope.ptzMoveCommand = "moveCon";
+                        $scope.ptzStopCommand = "moveStop";
+                    }
+                
+                
+                
+                // presets
+                    ZMDataModel.zmDebug ("ConfigurePTZ Preset value is " +data.control.Control.HasPresets);
+                
+                    if (data.control.Control.HasPresets == '1')
+                    {
+                        $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
+                         
+                        ZMDataModel.zmDebug ("ConfigurePTZ Number of presets is " + $scope.ptzPresetCount);
+                        
+                        $scope.ptzPresets = [];
+                        for (var p=0; p<$scope.ptzPresetCount; p++)
+                        {
+                            $scope.ptzPresets.push ({name:(p+1).toString(), icon:'', cmd:"presetGoto"+(p+1).toString()});
+                           // $scope.ptzPresets[p].name = "Arjun " + p;
+                          //  console.log ("Name to " + $scope.ptzPresets[p].name);
+                        }
+                        
+                        if (data.control.Control.HasHomePreset == '1')
+                        {
+                            $scope.ptzPresets.unshift({name:'', icon:"ion-ios-home", cmd:'presetHome'});
+                            
+                            $scope.ptzPresetCount++;
+                        }
+                        
+                    }
+                
+                
+                    ZMDataModel.zmLog("ConfigurePTZ Modal: ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
+                })
+                .error(function (data) {
+                  //  console.log("** Error retrieving move PTZ command");
+                    ZMDataModel.zmLog("ConfigurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
+                });
+      
+            }
+            else
+            {
+                ZMDataModel.zmLog ("configurePTZ " + mid+" is not PTZ controllable");
+            }
+        })
+        .error(function (data) {
+            //  console.log("** Error retrieving move PTZ command");
+            ZMDataModel.zmLog("configurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
+        });
+        
+        
+                // if its controllable, lets get the control command
+        if ($scope.isControllable == '1') {
+           
+           
+        }
+        
+    }
 
     $scope.$on('modal.shown', function () {
         
@@ -1656,6 +1791,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 //  console.log ("Refreshing Image...");
             }.bind(this),zm.eventPlaybackQuery);
         }
+        
+        configurePTZ($scope.monitorId);
+
+       // monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId
     
         
         
