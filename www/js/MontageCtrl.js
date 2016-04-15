@@ -644,8 +644,10 @@ function initPackery()
         //  console.log ("Refreshing Image...");
         //  }.bind(this), 1000);
 
+        $scope.showPTZ = false;
         $scope.monitorId = mid;
         $scope.monitorName = ZMDataModel.getMonitorName(mid);
+        $scope.controlid = controlid;
 
         $scope.LoginData = ZMDataModel.getLogin();
         $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
@@ -660,102 +662,13 @@ function initPackery()
         $scope.presetOn = false;
         
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+       $scope.isControllable = controllable;
 
         // This is a modal to show the monitor footage
         // We need to switch to always awake if set so the feed doesn't get interrupted
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
-        // if its controllable, lets get the control command
-        if (controllable == '1') {
-            ZMDataModel.zmDebug("MontageCtrl: getting controllable data " + myurl);
-            var apiurl = $scope.LoginData.apiurl;
-            var myurl = apiurl + "/controls/" + controlid + ".json";
-            ZMDataModel.zmDebug("MontageCtrl: getting controllable data " + myurl);
-
-            $http.get(myurl)
-                .success(function (data) {
-                
-                    $scope.ptzMoveCommand = "move"; // start with as move;
-                    $scope.ptzStopCommand = "";
-                
-                    if (data.control.Control.CanZoom=='1')
-                    {
-                        $scope.canZoom = true;
-                        if (data.control.Control.CanZoomCon == '1')
-                        {
-                            $scope.zoomInCommand = "zoomConTele";
-                            $scope.zoomOutCommand = "zoomConWide";
-                            
-                        }
-                        else if (data.control.Control.CanZoomRel == '1')
-                        {
-                            $scope.zoomInCommand = "zoomRelTele";
-                            $scope.zoomOutCommand = "zoomRelWide";
-                        }
-                        
-                        else if (data.control.Control.CanZoomAbs == '1')
-                        {
-                            $scope.zoomInCommand = "zoomRelAbs";
-                            $scope.zoomOutCommand = "zoomRelAbs";
-                        }
-                    }
-
-                
-                    ZMDataModel.zmDebug("MontageCtrl: control data returned " + JSON.stringify(data));
-                
-                    if (data.control.Control.CanMoveRel == '1')
-                    {
-                        
-                        $scope.ptzMoveCommand = "moveRel";
-                        $scope.ptzStopCommand = "moveStop";
-                    }
-
-                    // Prefer con over rel if both enabled
-                    // I've tested con
-                
-                    if (data.control.Control.CanMoveCon == '1')
-                    {
-                        
-                        $scope.ptzMoveCommand = "moveCon";
-                        $scope.ptzStopCommand = "moveStop";
-                    }
-                
-                
-                
-                // presets
-                    ZMDataModel.zmDebug ("Preset value is " +data.control.Control.HasPresets);
-                
-                    if (data.control.Control.HasPresets == '1')
-                    {
-                        $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
-                         
-                        ZMDataModel.zmDebug ("Number of presets is " + $scope.ptzPresetCount);
-                        
-                        $scope.ptzPresets = [];
-                        for (var p=0; p<$scope.ptzPresetCount; p++)
-                        {
-                            $scope.ptzPresets.push ({name:(p+1).toString(), icon:'', cmd:"presetGoto"+(p+1).toString()});
-                           // $scope.ptzPresets[p].name = "Arjun " + p;
-                          //  console.log ("Name to " + $scope.ptzPresets[p].name);
-                        }
-                        
-                        if (data.control.Control.HasHomePreset == '1')
-                        {
-                            $scope.ptzPresets.unshift({name:'', icon:"ion-ios-home", cmd:'presetHome'});
-                            
-                            $scope.ptzPresetCount++;
-                        }
-                        
-                    }
-                
-                
-                    ZMDataModel.zmLog("ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
-                })
-                .error(function (data) {
-                  //  console.log("** Error retrieving move PTZ command");
-                    ZMDataModel.zmLog("Error retrieving PTZ command  " + JSON.stringify(data), "error");
-                });
-        }
+        
 
         // This is a modal to show the monitor footage
         $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
@@ -771,8 +684,8 @@ function initPackery()
                     noBackdrop: true,
                     duration: zm.loadingTimeout
                 });
-                $scope.isControllable = controllable;
-                $scope.showPTZ = false;
+               
+              
 
                 $scope.isModalActive = true;
 
