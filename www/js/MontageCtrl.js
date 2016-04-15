@@ -651,7 +651,14 @@ function initPackery()
         $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         $scope.ptzMoveCommand = "";
         $scope.ptzStopCommand = "";
+        
+        $scope.zoomInCommand = "";
+        $scope.zoomOutCommand = "";
+        $scope.zoomStopCommand = "zoomStop";
+        $scope.canZoom = false;
+        
         $scope.presetOn = false;
+        
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
         // This is a modal to show the monitor footage
@@ -670,6 +677,28 @@ function initPackery()
                 
                     $scope.ptzMoveCommand = "move"; // start with as move;
                     $scope.ptzStopCommand = "";
+                
+                    if (data.control.Control.CanZoom=='1')
+                    {
+                        $scope.canZoom = true;
+                        if (data.control.Control.CanZoomCon == '1')
+                        {
+                            $scope.zoomInCommand = "zoomConTele";
+                            $scope.zoomOutCommand = "zoomConWide";
+                            
+                        }
+                        else if (data.control.Control.CanZoomRel == '1')
+                        {
+                            $scope.zoomInCommand = "zoomRelTele";
+                            $scope.zoomOutCommand = "zoomRelWide";
+                        }
+                        
+                        else if (data.control.Control.CanZoomAbs == '1')
+                        {
+                            $scope.zoomInCommand = "zoomRelAbs";
+                            $scope.zoomOutCommand = "zoomRelAbs";
+                        }
+                    }
 
                 
                     ZMDataModel.zmDebug("MontageCtrl: control data returned " + JSON.stringify(data));

@@ -302,7 +302,10 @@ angular.module('zmApp.controllers')
         $scope.ptzMoveCommand = "";
          $scope.presetOn = false;
         
-        
+        $scope.zoomInCommand = "";
+        $scope.zoomOutCommand = "";
+        $scope.zoomStopCommand = "zoomStop";
+        $scope.canZoom = false;
         
 
         // This is a modal to show the monitor footage
@@ -321,6 +324,28 @@ angular.module('zmApp.controllers')
 
                     $scope.ptzMoveCommand = "move"; // start with as move;
                     $scope.ptzStopCommand = "";
+                
+                    if (data.control.Control.CanZoom=='1')
+                    {
+                        $scope.canZoom = true;
+                        if (data.control.Control.CanZoomCon == '1')
+                        {
+                            $scope.zoomInCommand = "zoomConTele";
+                            $scope.zoomOutCommand = "zoomConWide";
+                            
+                        }
+                        else if (data.control.Control.CanZoomRel == '1')
+                        {
+                            $scope.zoomInCommand = "zoomRelTele";
+                            $scope.zoomOutCommand = "zoomRelWide";
+                        }
+                        
+                        else if (data.control.Control.CanZoomAbs == '1')
+                        {
+                            $scope.zoomInCommand = "zoomRelAbs";
+                            $scope.zoomOutCommand = "zoomRelAbs";
+                        }
+                    }
 
                     ZMDataModel.zmDebug ("control PTZ details are " + JSON.stringify(data));
 
