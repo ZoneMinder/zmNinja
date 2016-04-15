@@ -52,6 +52,13 @@
 
 
             <div class="ptzcenteredbutton">
+                <div ng-if="canZoom">
+                    <a class="button button-small button-positive" href="" ng-click="controlPTZ(monitorId, zoomInCommand);">zoom in</a>
+                    <a class="button button-small icon  button-positive" href="" ng-click="controlPTZ(monitorId, zoomOutCommand);">zoom out</a>
+                    <a class="button button-small icon  button-positive" href="" ng-click="controlPTZ(monitorId, zoomStopCommand);">zoom stop</a>
+                    
+                </div>
+                <br/>
                 <a class="button button-small icon ion-stop  button-assertive" href="" ng-click="controlPTZ(monitorId, ptzStopCommand);"></a>
                 <a class="button button-small button-royal" href="" ng-click="togglePresets();">presets</a>
             </div>
