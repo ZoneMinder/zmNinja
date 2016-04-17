@@ -1248,38 +1248,42 @@ angular.module('zmApp', [
             // from foreground to background and back
             document.addEventListener("resume", function () {
                 ZMDataModel.zmLog("App is resuming from background");
-                var ld = ZMDataModel.getLogin();
+                var forceDelay = ZMDataModel.getLogin().resumeDelay;
+                ZMDataModel.zmLog (">>> Resume delayed for " + forceDelay + " ms, to wait for network stack...");
                 
+                $timeout (function () {
+                    var ld = ZMDataModel.getLogin();
 
-                ZMDataModel.setBackground(false);
-                // don't animate
-                $ionicHistory.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
-                });
 
-                // remember the last state so we can 
-                // go back there after auth
-                if ($ionicHistory.currentView) {
-                    $rootScope.lastState = $ionicHistory.currentView().stateName;
-                    $rootScope.lastStateParam =
-                        $ionicHistory.currentView().stateParams;
-                    ZMDataModel.zmDebug("Last State recorded:" +
-                        JSON.stringify($ionicHistory.currentView()));
-                    
-                    if ($rootScope.lastState == "zm-portal-login") {
-                        ZMDataModel.zmDebug("Last state was portal-login, so forcing montage");
-                        $rootScope.lastState = "montage";
+                    ZMDataModel.setBackground(false);
+                    // don't animate
+                    $ionicHistory.nextViewOptions({
+                        disableAnimate: true,
+                        disableBack: true
+                    });
+
+                    // remember the last state so we can 
+                    // go back there after auth
+                    if ($ionicHistory.currentView) {
+                        $rootScope.lastState = $ionicHistory.currentView().stateName;
+                        $rootScope.lastStateParam =
+                            $ionicHistory.currentView().stateParams;
+                        ZMDataModel.zmDebug("Last State recorded:" +
+                            JSON.stringify($ionicHistory.currentView()));
+
+                        if ($rootScope.lastState == "zm-portal-login") {
+                            ZMDataModel.zmDebug("Last state was portal-login, so forcing montage");
+                            $rootScope.lastState = "montage";
+                        }
+
+                        ZMDataModel.zmDebug ("going to portal login");
+                        $state.go("zm-portal-login");
+                    } else {
+                        $rootScope.lastState = "";
+                        $rootScope.lastStateParam = "";
+                        ZMDataModel.zmDebug ("reset lastState to null");
                     }
-                    
-                    ZMDataModel.zmDebug ("going to portal login");
-                    $state.go("zm-portal-login");
-                } else {
-                    $rootScope.lastState = "";
-                    $rootScope.lastStateParam = "";
-                    ZMDataModel.zmDebug ("reset lastState to null");
-                }
-                
+                }, forceDelay);
                 
                 
                 //$ionicSideMenuDelegate.toggleLeft(false);
@@ -1357,7 +1361,7 @@ angular.module('zmApp', [
 //------------------------------------------------------------------
 
 // My route map connecting menu options to their respective templates and controllers
-.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide) {
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide,$compileProvider) {
 
 
     // This is an exception interceptor so it can show up in app logs 
@@ -1383,7 +1387,8 @@ angular.module('zmApp', [
     //$httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
     $ionicConfigProvider.navBar.alignTitle('center');
-    //$ionicConfigProvider.scrolling.jsScrolling(false);
+    $ionicConfigProvider.scrolling.jsScrolling(false);
+    $compileProvider.debugInfoEnabled(false);
 
     $stateProvider
     .state('app', {

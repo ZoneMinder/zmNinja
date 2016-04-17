@@ -75,6 +75,7 @@ angular.module('zmApp.controllers')
          'packeryPositions':'',
          'packerySizes':'',
          'timelineModalGraphType':'all',
+         'resumeDelay':300,
          
         
     };
@@ -450,6 +451,14 @@ angular.module('zmApp.controllers')
                     zmDebug ("timeline graph type not set. Setting to all");
                     loginData.timelineModalGraphType = 'all';
                 }
+                
+                if (typeof loginData.resumeDelay == 'undefined')
+                {
+                    zmDebug ("resumeDelay does not exist. Setting to 0");
+                    loginData.resumeDelay = "0";
+                    
+                }
+                
                 
                 
                 if (typeof loginData.montageHistoryQuality == 'undefined')
