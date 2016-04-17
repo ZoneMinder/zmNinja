@@ -21,7 +21,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         {
             $rootScope.alarmCount="0";
             $ionicHistory.nextViewOptions({disableBack: true});		
-            $state.go("events", {"id": 0}, { reload: true });
+            ZMDataModel.zmStateGo("events", {"id": 0}, { reload: true });
         }
     };
     

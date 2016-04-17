@@ -7,7 +7,7 @@
 
     </ion-nav-buttons>
 
-    <ion-content>
+    <ion-content overflow-scroll="false">
        <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
         </ion-refresher>
             <div class="list card" ng-repeat="monitor in monitors">

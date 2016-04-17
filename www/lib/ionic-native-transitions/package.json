@@ -1,0 +1,66 @@
+{
+    "name": "ionic-native-transitions",
+    "version": "1.0.0-rc9",
+    "description": "Native transitions for Ionic applications",
+    "main": "dist/ionic-native-transitions.js",
+    "scripts": {
+        "devserver": "webpack-dev-server --port 8080 --json --progress",
+        "build": "npm run dumpdev && npm run dumpprod",
+        "watch": "webpack --watch --progress --colors --config webpack.config.dist.js -d",
+        "dumpdev": "webpack --progress --colors --config webpack.config.dist.js -d",
+        "dumpprod": "webpack --progress --colors --config webpack.config.dist.min.js -p",
+        "dumpTestDev": "webpack --progress --colors -d",
+        "dumpTestProd": "webpack --progress --colors -p",
+        "android": "npm run dumpdev && npm run dumpTestDev && cordova run android",
+        "iosEmulator": "npm run dumpdev && npm run dumpTestDev && cordova run ios",
+        "ios": "npm run dumpdev && npm run dumpTestDev && cordova run ios --device",
+        "runAllDevice": "npm run dumpdev && npm run dumpTestDev && cordova run android && cordova run ios --device",
+        "installCordova": "npm run platformAddAll && npm run pluginAddAll",
+        "platformAddAndroid": "cordova platform add android",
+        "platformAddIOS": "cordova platform add ios",
+        "platformAddAll": "npm run platformAddAndroid && npm run platformAddIOS",
+        "pluginAddAll": "cordova plugin add cordova-plugin-crosswalk-webview@1.3.1 https://github.com/Telerik-Verified-Plugins/NativePageTransitions#0.5.5"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/shprink/ionic-native-transitions"
+    },
+    "keywords": [
+        "ionic",
+        "cordova",
+        "telerik",
+        "angular",
+        "angularjs",
+        "native",
+        "transition",
+        "transitions"
+    ],
+    "author": "shprink <contact@julienrenaux.fr>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/shprink/ionic-native-transitions/issues"
+    },
+    "homepage": "https://github.com/shprink/ionic-native-transitions",
+    "pearDependencies": {
+        "restangular": "^1.4.0"
+    },
+    "devDependencies": {
+        "babel-core": "^5.6.15",
+        "babel-loader": "^5.2.2",
+        "cordova": "~5.3.0",
+        "css-loader": "^0.19.0",
+        "exports-loader": "^0.6.2",
+        "expose-loader": "^0.6.0",
+        "file-loader": "^0.8.4",
+        "html-webpack-plugin": "^1.6.1",
+        "json-loader": "^0.5.2",
+        "ng-annotate-loader": "~0.0.6",
+        "path": "^0.4.9",
+        "style-loader": "^0.12.4",
+        "util": "^0.10.3",
+        "webpack": "~1.10.0",
+        "webpack-dev-server": "~1.10.0",
+        "ionic-sdk": "^1.1.0",
+        "angular-ui-router": "^0.2.15"
+    }
+}
