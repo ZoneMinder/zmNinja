@@ -1482,11 +1482,14 @@ angular.module('zmApp.controllers')
         };
         
         $scope.toggleMinAlarmFrameCount = function () {
-           // console.log ("Toggling");
+           
             
             var ld = ZMDataModel.getLogin();
+            
+            console.log ("Toggling " + ld.minAlarmCount);
             ld.minAlarmCount = ld.minAlarmCount=='0'?'1':'0';
             ZMDataModel.setLogin(ld);
+            $scope.loginData = ZMDataModel.getLogin();
             doRefresh();
         };
 
