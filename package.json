@@ -22,61 +22,54 @@
     "uglify-js": "^2.4.24"
   },
   "cordovaPlugins": [
-    "org.apache.cordova.console",
-    "org.apache.cordova.statusbar",
-    "cordova-plugin-whitelist",
+    {
+      "id": "phonegap-plugin-push",
+      "locator": "phonegap-plugin-push",
+      "variables": {
+        "SENDER_ID": "710936220256"
+      }
+    },
+    "cordova-plugin-app-version",
+    "cordova-plugin-file",
     "cordova-plugin-inappbrowser",
+    "cordova-plugin-ios-longpress-fix",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-touchid",
+    "cordova-plugin-websocket",
+    "cordova-plugin-whitelist",
+    "ionic-plugin-keyboard",
     {
       "locator": "https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git",
-      "id": "nl.x-services.plugins.insomnia"
+      "id": "cordova-plugin-insomnia"
     },
-    "cordova-plugin-file",
-    {
-      "locator": "https://github.com/katzer/cordova-plugin-email-composer.git",
-      "id": "de.appplant.cordova.plugin.email-composer"
-    },
-    {
-      "locator": "https://github.com/whiteoctober/cordova-plugin-app-version.git",
-      "id": "uk.co.whiteoctober.cordova.appversion"
-    },
+    "cordova-plugin-pin-dialog",
     {
       "locator": "https://github.com/devgeeks/Canvas2ImagePlugin.git",
       "id": "org.devgeeks.Canvas2ImagePlugin"
     },
+    "cordova-plugin-statusbar",
     {
-      "locator": "https://github.com/cogitor/PhoneGap-OrientationLock.git",
-      "id": "com.phonegap.plugins.OrientationLock"
-    },
-    "cordova-plugin-splashscreen",
-    {
-      "locator": "https://github.com/Paldom/PinDialog.git",
-      "id": "hu.dpal.phonegap.plugins.PinDialog"
+      "locator": "https://github.com/pliablepixels/cordova-plugin-media",
+      "id": "cordova-plugin-media"
     },
     {
-      "locator": "https://github.com/leecrossley/cordova-plugin-touchid.git",
-      "id": "cordova-plugin-touchid"
-    },
-    "cordova-plugin-ios-longpress-fix",
-    "cordova-plugin-websocket",
-    {
-      "locator": "https://github.com/katzer/cordova-plugin-local-notifications.git",
-      "id": "de.appplant.cordova.plugin.local-notification"
-    },
-    "de.appplant.cordova.common.registerusernotificationsettings",
-    {
-      "locator": "https://github.com/katzer/cordova-plugin-badge.git",
-      "id": "de.appplant.cordova.plugin.badge"
-    },
-    "phonegap-plugin-push",
-    {
-      "locator": "https://github.com/pliablepixels/cordova-plugin-media.git",
-      "id": "org.apache.cordova.media"
-    },
-    "ionic-plugin-keyboard"
+      "locator": "https://github.com/Telerik-Verified-Plugins/NativePageTransitions",
+      "id": "com.telerik.plugins.nativepagetransitions"
+    }
   ],
   "cordovaPlatforms": [
     {},
     "ios",
-    "android"
+    "android",
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    },
+    {
+      "platform": "ios",
+      "version": "",
+      "locator": "ios"
+    }
   ]
 }
