@@ -11,11 +11,11 @@
 angular.module('zmApp.controllers')
     
 .service('ZMDataModel', 
-['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout','$cordovaPinDialog', '$ionicPopup', '$localstorage',
+['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout','$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions',
  function 
  ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,
   zm, $rootScope,$ionicContentBanner, $timeout, $cordovaPinDialog, 
-   $ionicPopup, $localstorage) {
+   $ionicPopup, $localstorage, $state, $ionicNativeTransitions) {
 
     var zmAppVersion="unknown";
     var isBackground = false;
@@ -190,6 +190,14 @@ angular.module('zmApp.controllers')
         // the ZM authors fix this and streamline the access of images
         // from APIs, I don't have an option
         
+        
+        zmStateGo: function(state,p1,p2)
+        {
+            if ($rootScope.platformOS == 'desktop')
+                $state.go(state,p1,p2);
+            else
+                $ionicNativeTransitions.stateGo(state,p1,p2);
+        },
         
         // used when an empty server profile is created
         getDefaultLoginObject: function()

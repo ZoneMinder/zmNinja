@@ -19,6 +19,7 @@ angular.module('zmApp', [
                             'com.2fdevs.videogular',
 			                 'com.2fdevs.videogular.plugins.controls',
                             'com.2fdevs.videogular.plugins.overlayplay',
+                            'ionic-native-transitions'
                             
 
 
@@ -187,6 +188,8 @@ angular.module('zmApp', [
         }
     };
 })
+
+
 
 
 //------------------------------------------------------------------
@@ -1005,7 +1008,7 @@ angular.module('zmApp', [
 //====================================================================
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions) {
 
 
 
@@ -1149,7 +1152,8 @@ angular.module('zmApp', [
         $ionicPlatform.ready(function () {
             
             
-           
+           $ionicNativeTransitions.enable(true, false);
+            
                 if (window.cordova) {
                     $cordovaSplashscreen.hide();
                 }
@@ -1361,7 +1365,7 @@ angular.module('zmApp', [
 //------------------------------------------------------------------
 
 // My route map connecting menu options to their respective templates and controllers
-.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide,$compileProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide,$compileProvider, $ionicNativeTransitionsProvider) {
 
 
     // This is an exception interceptor so it can show up in app logs 
@@ -1387,8 +1391,16 @@ angular.module('zmApp', [
     //$httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
     $ionicConfigProvider.navBar.alignTitle('center');
-    $ionicConfigProvider.scrolling.jsScrolling(false);
+    // use overflow-scroll=false in ion-content
+    // removing it here doesn't allow you to enable it per view
+    // so it messes up scrolldelegate zoom and possibly others
+    //$ionicConfigProvider.scrolling.jsScrolling(false);
     $compileProvider.debugInfoEnabled(false);
+    
+     $ionicNativeTransitionsProvider.setDefaultOptions({
+         duration: 250,
+     });
+    
 
     $stateProvider
     .state('app', {
@@ -1396,6 +1408,7 @@ angular.module('zmApp', [
         abstract: true,
         templateUrl: 'index.html',
         cache: false,
+        
         //controller: 'AppCtrl'
     })
 
@@ -1408,6 +1421,7 @@ angular.module('zmApp', [
             url: "/login",
             templateUrl: "templates/login.html",
             controller: 'zmApp.LoginCtrl',
+        
         })
 
    
@@ -1418,6 +1432,7 @@ angular.module('zmApp', [
             url: "/help",
             templateUrl: "templates/help.html",
             controller: 'zmApp.HelpCtrl',
+       
     })
     
     .state('news', {
@@ -1427,6 +1442,7 @@ angular.module('zmApp', [
             url: "/news",
             templateUrl: "templates/news.html",
             controller: 'zmApp.NewsCtrl',
+        
     })
 
     
@@ -1444,6 +1460,7 @@ angular.module('zmApp', [
         url: "/monitors",
         templateUrl: "templates/monitors.html",
         controller: 'zmApp.MonitorCtrl',
+        
 
     })
 
@@ -1461,6 +1478,7 @@ angular.module('zmApp', [
         templateUrl: "templates/events.html",
         controller: 'zmApp.EventCtrl',
 
+
     })
 
     .state('lowversion', {
@@ -1471,6 +1489,7 @@ angular.module('zmApp', [
         url: "/lowversion/:ver",
         templateUrl: "templates/lowversion.html",
         controller: 'zmApp.LowVersionCtrl',
+        
 
     })
     
@@ -1482,6 +1501,7 @@ angular.module('zmApp', [
         url: "/importantmessage/:ver",
         templateUrl: "templates/important_message.html",
         controller: 'zmApp.ImportantMessageCtrl',
+        
 
     })
 
@@ -1494,6 +1514,7 @@ angular.module('zmApp', [
         url: "/events-graphs",
         templateUrl: "templates/events-graphs.html",
         controller: 'zmApp.EventsGraphsCtrl',
+       
     })
 
 
@@ -1504,6 +1525,7 @@ angular.module('zmApp', [
         url: "/events-date-time-filter",
         templateUrl: "templates/events-date-time-filter.html",
         controller: 'zmApp.EventDateTimeFilterCtrl',
+        
     })
 
     .state('state', {
@@ -1513,6 +1535,7 @@ angular.module('zmApp', [
         url: "/state",
         templateUrl: "templates/state.html",
         controller: 'zmApp.StateCtrl',
+       
     })
 
     .state('devoptions', {
@@ -1537,6 +1560,7 @@ angular.module('zmApp', [
         url: "/timeline",
         templateUrl: "templates/timeline.html",
         controller: 'zmApp.TimelineCtrl',
+        
     })
 
     .state('eventserversettings', {
@@ -1551,6 +1575,7 @@ angular.module('zmApp', [
         url: "/eventserversettings",
         templateUrl: "templates/eventserversettings.html",
         controller: 'zmApp.EventServerSettingsCtrl',
+        
     })
 
     .state('log', {
@@ -1560,6 +1585,7 @@ angular.module('zmApp', [
         url: "/log",
         templateUrl: "templates/log.html",
         controller: 'zmApp.LogCtrl',
+       
     })
 
 
@@ -1571,6 +1597,7 @@ angular.module('zmApp', [
         url: "/zm-portal-login",
         templateUrl: "templates/zm-portal-login.html",
         controller: 'zmApp.PortalLoginCtrl',
+       
     })
 
     .state('first-use', {
@@ -1580,6 +1607,7 @@ angular.module('zmApp', [
         url: "/first-use",
         templateUrl: "templates/first-use.html",
         controller: 'zmApp.FirstUseCtrl',
+        
     })
     
     .state('montage-history', {
@@ -1599,7 +1627,8 @@ angular.module('zmApp', [
         params: {
             minimal: false,
             isRefresh: false
-        }
+        },
+        
 
     })
 
@@ -1620,7 +1649,8 @@ angular.module('zmApp', [
         params: {
             minimal: false,
             isRefresh: false
-        }
+        },
+        
 
     });
 
