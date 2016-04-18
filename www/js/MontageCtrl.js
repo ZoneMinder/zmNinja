@@ -453,11 +453,12 @@ function initPackery()
         {
             //console.log ("**** TRAPPED EVENT: "+alarmMonitors[i]);
             
-            for (var j=0; j<$scope.monitors.length; j++)
+            for (var j=0; j<$scope.MontageMonitors.length; j++)
             {
-                if ($scope.monitors[j].Monitor.Id == alarmMonitors[i])
+                if ($scope.MontageMonitors[j].Monitor.Id == alarmMonitors[i])
                 {
-                    $scope.monitors[j].Monitor.isAlarmed="true";
+                    ZMDataModel.zmDebug ("Enabling alarm for Monitor:"+$scope.monitors[j].Monitor.Id );
+                    $scope.MontageMonitors[j].Monitor.isAlarmed=true;
                     scheduleRemoveFlash(j);
                 }
             }
@@ -469,10 +470,10 @@ function initPackery()
     
     function scheduleRemoveFlash(id)
     {
-        ZMDataModel.zmDebug ("Scheduled a 10 sec timer for dis-alarming monitor ID="+id);
+        ZMDataModel.zmDebug ("Scheduled a "+zm.alarmFlashTimer+"ms timer for dis-alarming monitor ID:"+$scope.MontageMonitors[id].Monitor.Id);
         $timeout( function() {
-            $scope.monitors[id].Monitor.isAlarmed = 'false';
-            ZMDataModel.zmDebug ("dis-alarming monitor ID="+id);
+            $scope.MontageMonitors[id].Monitor.isAlarmed = false;
+            ZMDataModel.zmDebug ("dis-alarming monitor ID:"+$scope.MontageMonitors[id].Monitor.Id);
         },zm.alarmFlashTimer);
     }
 

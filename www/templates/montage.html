@@ -76,10 +76,10 @@
 
 
 
-                            <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed=='true'?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >
+                            <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >
 
                                     &nbsp;<i class="ion-monitor"></i>
-                                   {{monitor.Monitor.Name}}&nbsp;
+                                   {{monitor.Monitor.isAlarmed}}:{{monitor.Monitor.Name}}&nbsp;
 
                             </figcaption>
 
