@@ -41,9 +41,9 @@
                 <ion-item collection-repeat="event in events| filter:search.text" item-height="event.Event.height" id="item-{{$index}}"  >
                     
                     
-                    <span style="float:right;margin-top:-18px;background-color:#6d0909;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-clock"></i>&nbsp;&nbsp;{{::prettifyTime(event.Event.StartTime)}}</span>
+                    <span style="float:right;margin-top:-18px;background-color:#6d0909;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}</span>
 
-                    <span style="float:left;margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{::prettifyDate(event.Event.StartTime)}}</span>
+                    <span style="float:left;margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}}</span>
 
 
                     <div class="row">
@@ -80,27 +80,27 @@
 
                             <br/>
                             <span style="font-size:80%; color:rgb(110,110,110)">
-                                {{::event.Event.Length}}s
+                                {{event.Event.Length}}s
                             </span>
                         </div>
                         <!-- col col left-->
                         <div class="col col-80">
                             <div class="item-text-wrap">
                                 <i class="ion-monitor"></i>
-                                <b>{{::event.Event.MonitorName}}</b> ({{::event.Event.Name}})
+                                <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}})
                             </div>
 
-                            <i class="ion-images"></i> {{::event.Event.Frames}} &nbsp;
-                            <i class="ion-ios-bell-outline"></i> {{::event.Event.AlarmFrames}} &nbsp;
-                            <i class="ion-arrow-graph-up-right"></i> {{::event.Event.TotScore}}
+                            <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
+                            <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
+                            <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
                         </div>
                     </div>
                     <!--row-->
 
                     <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-                        <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp; {{::prettify(event.Event.StartTime)}}
+                        <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp; {{prettify(event.Event.StartTime)}}
                             <br/>
-                            <i class="ion-clipboard"></i>&nbsp; {{::event.Event.Notes}}
+                            <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
                             <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
                         </div>
                     </div>

@@ -389,6 +389,11 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     width:80% !important;
 }
 
+.popup90 .popup
+{
+    width:90% !important;
+}
+
 .events-modal-camera-icon
 {
     position:absolute;

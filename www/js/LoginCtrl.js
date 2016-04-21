@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console */
+/* global cordova,StatusBar,angular,console,alert,URI */
 
 angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$localstorage', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $localstorage) {
     $scope.openMenu = function () {
@@ -245,7 +245,62 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.ignoreDirty = false;
     });
     
+    // Make a noble attempt at deciphering 
 
+    $scope.detectCgi = function()
+    {
+        var text = "Typical values:<br/><b>ubuntu:</b> http://server/zm/cgi-bin<br/><b>centos/fedora:</b> http://server/zm/cgi-bin-zm/";
+        
+         if ($scope.loginData.url.slice(-1) == '/') {
+            $scope.loginData.url = $scope.loginData.url.slice(0, -1);
+
+        }
+        
+        ZMDataModel.getPathZms()
+        .then (function (data)
+            {
+                var c=URI.parse($scope.loginData.url);
+                var p1,p2,p3;
+                p1 ="";
+                p2 ="";
+               
+                if (c.userinfo)
+                    p1 = c.userinfo+"@";
+                if (c.port)
+                    p2 = ":"+c.port;
+                
+                var baseUri = c.scheme+"://"+p1+c.host+p2;
+                var dtext = baseUri + data.toLowerCase().trim();
+                dtext = dtext.substr(0, dtext.lastIndexOf("/"));
+                
+                 text = "Your cgi-bin path may be " + dtext + "<br/><br/>" + text;
+
+                $rootScope.zmPopup = SecuredPopups.show('show',{
+                    title: 'cgi-bin settings',
+                    cssClass: 'popup90',
+                    template: text,
+                    buttons: [{text: 'Ok'},{text:'Use suggestion', onTap:function(e) {$scope.loginData.streamingurl=dtext;}}]
+                               
+                });
+            
+                
+            },
+            function (error)
+            {
+                ZMDataModel.zmDebug ("Could not get PATH_ZMS:"+JSON.stringify(error));
+                text = "(could not detect cgi-path, try coming back here after setting up your portal url and credentials correctly)<br/><br/>"+text;
+                 $rootScope.zmPopup = SecuredPopups.show('alert',{
+                    title: 'cgi-bin settings',
+                    cssClass: 'popup90',
+
+                    template: text
+                });   
+                
+            });
+        
+            
+                                     
+    };
 
     //--------------------------------------------------------------------------
     // When PIN is enabled, this is called to specify a PIN
