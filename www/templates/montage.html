@@ -79,7 +79,7 @@
                             <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >
 
                                     &nbsp;<i class="ion-monitor"></i>
-                                   {{monitor.Monitor.isAlarmed}}:{{monitor.Monitor.Name}}&nbsp;
+                                   {{monitor.Monitor.Name}}&nbsp;
 
                             </figcaption>
 
@@ -111,9 +111,9 @@
     <div ng-show="minimal">
         <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
 
-            <button mfb-button icon="ion-arrow-expand" label="increase size" ng-click="changeSize(1)">
+            <button mfb-button icon="ion-arrow-expand" label="increase size" ng-click="sliderChanged(1)">
             </button>
-            <button mfb-button icon="ion-arrow-shrink" label="decrease size" ng-click="changeSize(-1)">
+            <button mfb-button icon="ion-arrow-shrink" label="decrease size" ng-click="sliderChanged(-1)">
             </button>
             <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
             </button>
