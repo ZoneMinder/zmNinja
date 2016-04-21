@@ -281,6 +281,17 @@ angular.module('zmApp.controllers')
             });
         
         
+        
+    //-------------------------------------------------------
+    // Tapping on a frame shows this image
+    //------------------------------------------------------
+    
+    $scope.showImage = function (p,r,f, fid,e)
+    {
+        var img = "<img width='100%' ng-src='"+p+"/index.php?view=image&path="+r+f+"'>";
+        $rootScope.zmPopup = $ionicPopup.alert({title: 'frame:'+fid+'/Event:'+e,template:img,  cssClass:'popup80'});
+    };
+    
     
 
         // not explictly handling error --> I have a default "No events found" message
