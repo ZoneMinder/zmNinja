@@ -670,6 +670,7 @@ angular.module('zmApp.controllers')
             
              if (event.Event.ShowScrub == true)  // turn on display now
              {
+                 
                  if (groupType == 'alarms')
                  {
                     $scope.alarm_images=[];
@@ -713,7 +714,7 @@ angular.module('zmApp.controllers')
                     $scope.currentEvent = "";
                     $scope.event = event;
                     //$ionicScrollDelegate.freezeScroll(true);
-                    $ionicSideMenuDelegate.canDragContent(true);
+                    $ionicSideMenuDelegate.canDragContent(false);
                     $scope.slider_options = {
                         from: 1,
                         to: event.Event.Frames,
