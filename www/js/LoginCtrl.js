@@ -249,7 +249,33 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $scope.detectCgi = function()
     {
-        var text = "Typical values:<br/><b>ubuntu:</b> http://server/zm/cgi-bin<br/><b>centos/fedora:</b> http://server/zm/cgi-bin-zm/";
+        
+        if ($scope.loginData.url == "")
+        {
+            $rootScope.zmPopup = SecuredPopups.show('show',{
+                    title: 'Portal not configured',
+                    cssClass: 'popup90',
+                    template: "Please fill in your login details as well as portal URL and save it before you try to detect the cgi-path",
+                    buttons: [{text: 'Ok'}]
+                               
+                    });
+            return;
+            
+        }
+        
+        if ( $rootScope.authSession == 'undefined')
+        {
+            $rootScope.zmPopup = SecuredPopups.show('show',{
+                    title: 'Not logged in',
+                    cssClass: 'popup90',
+                    template: "It doesn't look like you are logged in. For detection to work, you must fill in your login details, portal URL and then tap on Save. Then come back to this feature.",
+                    buttons: [{text: 'Ok'}]
+                               
+                    });
+            return;
+        }
+        
+        var defaultText = "<br/><br/>Typical values:<br/><b>ubuntu:</b> http://server/zm/cgi-bin<br/><b>centos/fedora:</b> http://server/zm/cgi-bin-zm/";
         
          if ($scope.loginData.url.slice(-1) == '/') {
             $scope.loginData.url = $scope.loginData.url.slice(0, -1);
@@ -259,8 +285,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         ZMDataModel.getPathZms()
         .then (function (data)
             {
+                // coming here means we were able to login 
                 var c=URI.parse($scope.loginData.url);
-                var p1,p2,p3;
+                var p1,p2,p3,text;
                 p1 ="";
                 p2 ="";
                
@@ -273,22 +300,41 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 var dtext = baseUri + data.toLowerCase().trim();
                 dtext = dtext.substr(0, dtext.lastIndexOf("/"));
                 
-                 text = "Your cgi-bin path may be " + dtext + "<br/><br/>" + text;
-
-                $rootScope.zmPopup = SecuredPopups.show('show',{
+                // have we already set the right path?
+                if (dtext == $scope.loginData.streamingurl.toLowerCase())
+                {
+                     text = "It looks like you have already set your cgi-path correctly to <b>" + dtext +"</b>, which is what ZoneMinder reports too";
+                    
+                    $rootScope.zmPopup = SecuredPopups.show('show',{
                     title: 'cgi-bin settings',
                     cssClass: 'popup90',
                     template: text,
-                    buttons: [{text: 'Ok'},{text:'Use suggestion', onTap:function(e) {$scope.loginData.streamingurl=dtext;}}]
+                    buttons: [{text: 'Ok'}]
                                
-                });
+                    });
+                    
+                }
+                else
+                {
+                     text = "Zoneminder reports your cgi-bin path as <b>"+dtext+"</b>, while you have it set as "+$scope.loginData.streamingurl.toLowerCase();
+                    
+                    $rootScope.zmPopup = SecuredPopups.show('show',{
+                    title: 'cgi-bin settings',
+                    cssClass: 'popup90',
+                    template: text,
+                    buttons: [{text: 'Ok'},{text:'Use suggestion', onTap:function(e) {$scope.loginData.streamingurl=dtext;}}, /*{text:'try harder', onTap:function(e) {tryHarder();}}*/]
+                               
+                    });
+                }
+
+                
             
                 
             },
             function (error)
             {
                 ZMDataModel.zmDebug ("Could not get PATH_ZMS:"+JSON.stringify(error));
-                text = "(could not detect cgi-path, try coming back here after setting up your portal url and credentials correctly)<br/><br/>"+text;
+                var text = "(could not detect cgi-path, try coming back here after setting up your portal url and credentials correctly, and saving)<br/><br/>"+defaultText;
                  $rootScope.zmPopup = SecuredPopups.show('alert',{
                     title: 'cgi-bin settings',
                     cssClass: 'popup90',
@@ -301,6 +347,15 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             
                                      
     };
+    
+    function tryHarder()
+    {
+        $rootScope.zmPopup = SecuredPopups.show('alert',{
+                    title: 'Harder',
+                    cssClass: 'popup90',
+                  template: "trying harder"
+                });   
+    }
 
     //--------------------------------------------------------------------------
     // When PIN is enabled, this is called to specify a PIN
