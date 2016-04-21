@@ -821,7 +821,7 @@ angular.module('zmApp.controllers')
             })
             .error (function(error) {
                 zmLog("Error retrieving ZM_PATH_ZMS: " + JSON.stringify(error));
-                d.resolve("");
+                d.reject("");
                 return (d.promise);
             });
             return (d.promise);
