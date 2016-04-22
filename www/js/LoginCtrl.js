@@ -322,7 +322,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     title: 'cgi-bin settings',
                     cssClass: 'popup90',
                     template: text,
-                    buttons: [{text: 'Ok'},{text:'Use suggestion', onTap:function(e) {$scope.loginData.streamingurl=dtext;}}, /*{text:'try harder', onTap:function(e) {tryHarder();}}*/]
+                    buttons: [{text: 'Ok', type:'button-positive'},{text:'Use suggestion',type:'button-balanced', onTap:function(e) {$scope.loginData.streamingurl=dtext;}}, /*{text:'try harder', onTap:function(e) {tryHarder();}}*/]
                                
                     });
                 }
@@ -648,7 +648,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                     $http.get(ld.streamingurl + "/zms")
                                         .success(function (data) {
                                             ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
-                                            loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path";
+                                            loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path or try using the discover feature";
                                         
                                             var refresh = ZMDataModel.getMonitors(1);
                                             
@@ -670,7 +670,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                             // if its 4xx then the cgi-bin path is not valid
 
                                             if (status < 500) {
-                                                loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path.";
+                                                loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path or try using the discover feature.";
                                             }
                                             
                                             if (showalert)
