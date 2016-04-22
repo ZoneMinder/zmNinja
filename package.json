@@ -55,7 +55,8 @@
     {
       "locator": "https://github.com/Telerik-Verified-Plugins/NativePageTransitions",
       "id": "com.telerik.plugins.nativepagetransitions"
-    }
+    },
+    "cordova-plugin-email-composer"
   ],
   "cordovaPlatforms": [
     {},
@@ -65,6 +66,11 @@
       "version": "",
       "locator": "ios"
     },
-    "android"
+    "android",
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    }
   ]
 }
