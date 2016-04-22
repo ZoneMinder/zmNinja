@@ -676,6 +676,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                            
                             
                             timeline.on('click', function (prop) {
+                                
+                                
                                 $timeout (function() {
                                     if (dblclick)
                                     {
@@ -698,14 +700,43 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
 
                                     } else {
-                                        $ionicLoading.show({
-                                            template: "Zoom in more to scrub events...",
-                                            animation: 'fade-in',
-                                            showBackdrop: true,
-                                            maxWidth: 200,
-                                            showDelay: 0,
-                                            duration: 1500,
-                                        });
+                                        ZMDataModel.zmDebug ("exact match not found, guessing item with co-ordinates X="+prop.x+" group="+prop.group);
+                                        if (prop.group)
+                                        {
+                                            var visible = timeline.getVisibleItems();
+                                            ZMDataModel.zmDebug ("Visible items="+JSON.stringify(visible));
+                                            var closestItem;
+                                            var minDist =99999;
+                                            for (var x = 0; x < visible.length; x++)
+                                            {
+                                                 var _item = timeline.itemSet.items[x];
+                                                 if (_item.data.group == prop.group)
+                                                 {
+                                                     if (Math.abs(_item.left - prop.x) < minDist)
+                                                         {
+                                                            closestItem = _item;
+                                                            minDist = Math.abs(_item.left - prop.x);
+                                                            ZMDataModel.zmDebug ("Temporary closest "+_item.left);
+                                                            //console.log (_item);
+                                                         }
+                                                 }
+
+                                            }
+                                            ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
+                                            showEvent(closestItem.data.myevent);
+                                        }
+                                        else // no group row tapped, do nothing
+                                        {
+                                        
+                                            /*$ionicLoading.show({
+                                                template: "",
+                                                animation: 'fade-in',
+                                                showBackdrop: true,
+                                                maxWidth: 200,
+                                                showDelay: 0,
+                                                duration: 1500,
+                                            });*/
+                                        }
                                        // console.log("Zoomed out too far to playback events");
                                     }
                                 },400);
