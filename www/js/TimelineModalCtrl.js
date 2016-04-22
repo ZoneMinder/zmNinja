@@ -151,6 +151,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
          if (m.id != 'analyze')
             return;
          
+         $scope.alarm_images=[];
          $scope.graphWidth=$rootScope.devWidth-30;
          ZMDataModel.zmLog ("Setting init graph width to " + $scope.graphWidth);
          $scope.dataReady = false;
