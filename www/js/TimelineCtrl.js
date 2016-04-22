@@ -705,11 +705,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         {
                                             var visible = timeline.getVisibleItems();
                                             ZMDataModel.zmDebug ("Visible items="+JSON.stringify(visible));
-                                            var closestItem="";
+                                            var closestItem=null;
                                             var minDist =99999;
+                                            var _item;
                                             for (var x = 0; x < visible.length; x++)
                                             {
-                                                 var _item = timeline.itemSet.items[x];
+                                                _item = timeline.itemSet.items[x];
                                                  if (_item.data.group == prop.group)
                                                  {
                                                      if (Math.abs(_item.left - prop.x) < minDist)
@@ -722,8 +723,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                                  }
 
                                             }
-                                            ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
-                                            if (!closestItem) showEvent(closestItem.data.myevent);
+                                            
+                                            if (closestItem!=null)
+                                            {
+                                                ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
+                                                showEvent(closestItem.data.myevent);
+                                            }
+                                            else
+                                            {
+                                                ZMDataModel.zmLog ("Did not find a visible item match");
+                                            }
                                         }
                                         else // no group row tapped, do nothing
                                         {
@@ -762,11 +771,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         {
                                             var visible = timeline.getVisibleItems();
                                             ZMDataModel.zmDebug ("Visible items="+JSON.stringify(visible));
-                                            var closestItem="";
+                                            var closestItem=null;
                                             var minDist =99999;
+                                            var _item;
                                             for (var x = 0; x < visible.length; x++)
                                             {
-                                                 var _item = timeline.itemSet.items[x];
+                                                 _item = timeline.itemSet.items[x];
                                                  if (_item.data.group == prop.group)
                                                  {
                                                      if (Math.abs(_item.left - prop.x) < minDist)
@@ -780,7 +790,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                             }
                                             ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
-                                            if (!closestItem) eventDetails(closestItem.data.myevent);
+                                            if (closestItem!=null)
+                                            {
+                                                ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
+                                                showEvent(closestItem.data.myevent);
+                                            }
+                                            else
+                                            {
+                                                ZMDataModel.zmLog ("Did not find a visible item match");
+                                            }
                                         }
                                         
                                        // console.log("Zoomed out too far to playback events");
