@@ -705,7 +705,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         {
                                             var visible = timeline.getVisibleItems();
                                             ZMDataModel.zmDebug ("Visible items="+JSON.stringify(visible));
-                                            var closestItem;
+                                            var closestItem="";
                                             var minDist =99999;
                                             for (var x = 0; x < visible.length; x++)
                                             {
@@ -723,7 +723,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                             }
                                             ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
-                                            showEvent(closestItem.data.myevent);
+                                            if (!closestItem) showEvent(closestItem.data.myevent);
                                         }
                                         else // no group row tapped, do nothing
                                         {
@@ -762,7 +762,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         {
                                             var visible = timeline.getVisibleItems();
                                             ZMDataModel.zmDebug ("Visible items="+JSON.stringify(visible));
-                                            var closestItem;
+                                            var closestItem="";
                                             var minDist =99999;
                                             for (var x = 0; x < visible.length; x++)
                                             {
@@ -780,7 +780,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                             }
                                             ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
-                                            eventDetails(closestItem.data.myevent);
+                                            if (!closestItem) eventDetails(closestItem.data.myevent);
                                         }
                                         
                                        // console.log("Zoomed out too far to playback events");
