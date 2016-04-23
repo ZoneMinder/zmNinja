@@ -286,6 +286,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         .then (function (data)
             {
                 // coming here means we were able to login 
+                $scope.loginData.url = addhttp($scope.loginData.url);
+            if ($scope.loginData.useSSL) 
+                $scope.loginData.url = $scope.loginData.url.replace("http:", "https:");
+            
                 var c=URI.parse($scope.loginData.url);
                 var p1,p2,p3,text;
                 p1 ="";
