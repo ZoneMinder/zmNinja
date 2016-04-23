@@ -1,7 +1,7 @@
 // Common Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,ionic, moment */
+/* global saveAs, cordova,StatusBar,angular,console,ionic, moment, imagesLoaded */
 
 
 /* FIXME for nph events
@@ -19,6 +19,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var currentEvent = $scope.currentEvent;
     var nphTimer;
     var eventQueryHandle;
+    var imgLoad;
     
     
    // $scope.currentEventLength = parseFloat($scope.currentEvent.Event.Length);  
@@ -648,10 +649,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         });
     }
 
+    // lets switch to nph the moment snapshot succeeds
 
-    $scope.finishedLoadingImage = function () {
-        // console.log("***Monitor image FINISHED Loading***");
+    $scope.finishedModalLoadingImage = function () {
+        ZMDataModel.zmDebug("Monitor image loaded, switching to nph");
+        $timeout.cancel(nphTimer);
+        //console.log("***Monitor image FINISHED Loading***");
         $ionicLoading.hide();
+        $scope.currentStreamMode = 'jpeg';
 
     };
 
@@ -666,6 +671,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         moveToMonitor(m, d);
     };
 
+    
+     $scope.finishedModalLoadingImage = function () {
+       // console.log("***Monitor image FINISHED Loading***");
+        $ionicLoading.hide();
+    };
 
 
 
@@ -1067,7 +1077,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.$on('$ionicView.enter', function () {
 
-
+        
 
     });
 
@@ -1767,9 +1777,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         }
         
     }
+    
+   
 
     $scope.$on('modal.shown', function () {
-        
+      
         var ld = ZMDataModel.getLogin();
         currentEvent = $scope.currentEvent;
         $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
