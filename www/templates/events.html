@@ -38,6 +38,7 @@
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
       
         <div ng-if="!eventsBeingLoaded">
+            
             <ion-list show-delete="eventList.showDelete">
                 <ion-item collection-repeat="event in events| filter:search.text" item-height="event.Event.height" id="item-{{$index}}"  >
                     
