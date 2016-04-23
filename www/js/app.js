@@ -70,7 +70,7 @@ angular.module('zmApp', [
     desktopApiUrl: "/api/zm",
     latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
     blogUrl:"http://pliablepixels.github.io/feed.json",
-    nphSwitchTimer:6000,
+    nphSwitchTimer:3000,
     eventHistoryTimer:10000,
     eventPlaybackQuery:3000,
     
