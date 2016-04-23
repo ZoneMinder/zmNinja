@@ -1,7 +1,36 @@
 # Change Log
 
-## [1.1.3](https://github.com/pliablepixels/zmNinja/tree/1.1.3) (2016-04-02)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.2...1.1.3)
+## [1.1.7](https://github.com/pliablepixels/zmNinja/tree/1.1.7) (2016-04-23)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.4...1.1.7)
+
+**Implemented enhancements:**
+
+- Add option to tap on alarm events in events view to see a larger version [\#229](https://github.com/pliablepixels/zmNinja/issues/229)
+- Add a helper function to automatically detect cgi-bin [\#228](https://github.com/pliablepixels/zmNinja/issues/228)
+- PTZ zoom support [\#224](https://github.com/pliablepixels/zmNinja/issues/224)
+
+**Fixed bugs:**
+
+- Not possible to control PTZ after swipe from non-PTZ camera [\#223](https://github.com/pliablepixels/zmNinja/issues/223)
+- PTZ with moveRel \(Axis PTZ as an example\) does not work when navigated from Montage view [\#222](https://github.com/pliablepixels/zmNinja/issues/222)
+- montage natural scrolling does not work  [\#218](https://github.com/pliablepixels/zmNinja/issues/218)
+- when dragging around in analyze graph, don't scroll the screen [\#217](https://github.com/pliablepixels/zmNinja/issues/217)
+- full screen in montage does not work [\#216](https://github.com/pliablepixels/zmNinja/issues/216)
+
+**Closed issues:**
+
+- improve timeline taps - make a closest guess  [\#230](https://github.com/pliablepixels/zmNinja/issues/230)
+- iOS and Android: introduce native transitions and scrolling \[performance\] [\#226](https://github.com/pliablepixels/zmNinja/issues/226)
+- Email notifications with animated GIF attachements [\#225](https://github.com/pliablepixels/zmNinja/issues/225)
+- Add version number to help page [\#220](https://github.com/pliablepixels/zmNinja/issues/220)
+- Upgrade code-base to new plugins, ionic 1.2.4, etc. [\#219](https://github.com/pliablepixels/zmNinja/issues/219)
+- Error: Hook failed with error code ENOENT: [\#210](https://github.com/pliablepixels/zmNinja/issues/210)
+
+## [v1.1.4](https://github.com/pliablepixels/zmNinja/tree/v1.1.4) (2016-04-05)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.3...v1.1.4)
+
+## [v1.1.3](https://github.com/pliablepixels/zmNinja/tree/v1.1.3) (2016-04-02)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.2...v1.1.3)
 
 **Implemented enhancements:**
 
