@@ -287,7 +287,7 @@ angular.module('zmApp.controllers')
        // console.log("**VIEW ** Monitor Ctrl Unloaded");
     });
 
-    $scope.openModal = function (mid, controllable, controlid, connKey) {
+    $scope.openModal = function (mid, controllable, controlid, connKey, orient) {
         ZMDataModel.zmDebug("MonitorCtrl:Open Monitor Modal with monitor Id=" + mid +
             " and Controllable:" + controllable + " with control ID:" + controlid);
 
@@ -296,6 +296,8 @@ angular.module('zmApp.controllers')
         $scope.monitorName = ZMDataModel.getMonitorName(mid);
         $scope.LoginData = ZMDataModel.getLogin();
         $scope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+        $scope.orientation = orient || '0';
+        ZMDataModel.zmLog("Monitor Orientation is: " + $scope.orientation);
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         
 

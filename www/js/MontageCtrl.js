@@ -628,7 +628,7 @@ function initPackery()
     //---------------------------------------------------------------------
     // main monitor modal open - if drag is not on, this is called on touch
     //---------------------------------------------------------------------
-    $scope.openModal = function (mid, controllable, controlid, connKey) {
+    $scope.openModal = function (mid, controllable, controlid, connKey, orient) {
         ZMDataModel.zmDebug("MontageCtrl: Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
         // $scope.isModalActive = true;
         // Note: no need to setAwake(true) as its already awake
@@ -664,6 +664,8 @@ function initPackery()
         
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
        $scope.isControllable = controllable;
+         $scope.orientation = orient || '0';
+          ZMDataModel.zmLog("Monitor Orientation is: " + $scope.orientation);
 
         // This is a modal to show the monitor footage
         // We need to switch to always awake if set so the feed doesn't get interrupted
