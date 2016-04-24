@@ -956,6 +956,8 @@ angular.module('zmApp.controllers')
                 $scope.popover = popover;
             });
 
+            
+            
             //reset badge count
             if (window.cordova && window.cordova.plugins.notification) {
                 $cordovaBadge.set(0).then(function () {
@@ -1266,10 +1268,29 @@ angular.module('zmApp.controllers')
                 sec + "/";
             return basePath;
         }
+        
+        $scope.modalGraph = function()
+        {
+            $ionicModal.fromTemplateUrl('templates/events-modalgraph.html', {
+                scope: $scope, // give ModalCtrl access to this scope
+                animation: 'slide-in-up',
+                id:'modalgraph',
+               
+            })
+            .then(function (modal) {
+                $scope.modal = modal;
+                
+
+               
+
+                $scope.modal.show();
+
+            });
+        };
 
         $scope.analyzeEvent = function(ev)
         {
-            $scope.event = ev;
+         $scope.event = ev;
          $ionicModal.fromTemplateUrl('templates/timeline-modal.html', {
                 scope: $scope, // give ModalCtrl access to this scope
                 animation: 'slide-in-up',
