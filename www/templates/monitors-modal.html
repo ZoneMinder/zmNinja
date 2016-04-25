@@ -3,7 +3,7 @@
     <!--style="background-color:#444444;width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
 
     <ion-modal-view cache-view="false" style="background-color:#444444"  >
-        <ion-content  >
+        <ion-content on-double-tap="closeModal();"  >
             <!-- <div style="background-color:red; color:white"> Modal Rand:{{$root.modalRand}} </div>-->
             <ion-scroll delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%;"  >
                 <!-- android needs this 100vh - otherwise max- does not work -->

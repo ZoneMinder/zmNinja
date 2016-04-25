@@ -1778,10 +1778,43 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         
     }
     
-   
+    //http://stackoverflow.com/questions/10245220/java-image-resize-maintain-aspect-ratio
+    $scope.getScale = function(ow,oh,bw,bh)
+    {
+        
+        var  original_width = ow;
+        var  original_height = oh;
+        var  bound_width = bw;
+        var bound_height = bh;
+        var new_width = original_width;
+        var  new_height = original_height;
+        if (original_width > bound_width) {
+        //scale width to fit
+        new_width = bound_width;
+        //scale height to maintain aspect ratio
+        new_height = (new_width * original_height) / original_width;
+    }
+
+    // then check if we need to scale even with the new height
+        if (new_height > bound_height) {
+            //scale height to fit instead
+            new_height = bound_height;
+            //scale width to maintain aspect ratio
+            new_width = (new_height * original_width) / original_height;
+        }
+        return ({w:new_width, h:new_height});
+
+    };
+    
 
     $scope.$on('modal.shown', function () {
       
+        $scope.mw = $scope.refMonitor.Monitor.Orientation == '0' ? $scope.refMonitor.Monitor.Width: $scope.refMonitor.Monitor.Height;
+        
+         $scope.mh = $scope.refMonitor.Monitor.Orientation == '0' ? $scope.refMonitor.Monitor.Height: $scope.refMonitor.Monitor.Width;
+    
+        
+        
         var ld = ZMDataModel.getLogin();
         currentEvent = $scope.currentEvent;
         $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();

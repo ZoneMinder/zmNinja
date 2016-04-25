@@ -252,15 +252,19 @@ function initPackery()
                             });
          //console.log ("**** mygrid is " + JSON.stringify(elem));
          
-        imagesLoaded(elem).on('progress', function() {
+        imagesLoaded(elem).on('progress', function(instance, img) {
                 //console.log ("******** SOME IMAGE LOADED");
+                console.log ("IMAGE PROGRESS " + JSON.stringify(img.img));
                 progressCalled = true;
+                
                 if (layouttype) $timeout (function(){layout(pckry);},100);
         });
         
         imagesLoaded(elem).on('always', function() {
                 //console.log ("******** ALL IMAGES LOADED");
                 ZMDataModel.zmDebug ("All images loaded");
+            
+                
                 $ionicLoading.hide();
                 
                 
@@ -624,11 +628,70 @@ function initPackery()
         }
     }
     
+    $scope.getW = function(monitor)
+    {
+        var w,h;
+        if (monitor.Monitor.Orientation == '0')
+                w = monitor.Monitor.Width;
+        else 
+                w = monitor.Monitor.Height;
+        
+         if (monitor.Monitor.Orientation == '0')
+                h = monitor.Monitor.Height;
+        else 
+                h = monitor.Monitor.Width;
+        return (getScale (w,h, $rootScope.devWidth, $rootScope.devHeight).w);
+        
+    };
+    
+    $scope.getH= function(monitor)
+    {
+        var w,h;
+        if (monitor.Monitor.Orientation == '0')
+                w = monitor.Monitor.Width;
+        else 
+                w = monitor.Monitor.Height;
+        
+         if (monitor.Monitor.Orientation == '0')
+                h = monitor.Monitor.Height;
+        else 
+                h = monitor.Monitor.Width;
+        return (getScale (w,h, $rootScope.devWidth, $rootScope.devHeight).h);
+        
+    };
+    
+    
+   function getScale(ow,oh,bw,bh)
+    {
+        
+        var  original_width = ow;
+        var  original_height = oh;
+        var  bound_width = bw;
+        var bound_height = bh;
+        var new_width = original_width;
+        var  new_height = original_height;
+        if (original_width > bound_width) {
+        //scale width to fit
+        new_width = bound_width;
+        //scale height to maintain aspect ratio
+        new_height = (new_width * original_height) / original_width;
+    }
+
+    // then check if we need to scale even with the new height
+        if (new_height > bound_height) {
+            //scale height to fit instead
+            new_height = bound_height;
+            //scale width to maintain aspect ratio
+            new_width = (new_height * original_width) / original_height;
+        }
+        return ({w:Math.round(new_width), h:Math.round(new_height)});
+
+    }
 
     //---------------------------------------------------------------------
     // main monitor modal open - if drag is not on, this is called on touch
     //---------------------------------------------------------------------
-    $scope.openModal = function (mid, controllable, controlid, connKey, orient) {
+    $scope.openModal = function (mid, controllable, controlid, connKey, monitor) {
         ZMDataModel.zmDebug("MontageCtrl: Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
         // $scope.isModalActive = true;
         // Note: no need to setAwake(true) as its already awake
@@ -664,8 +727,8 @@ function initPackery()
         
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
        $scope.isControllable = controllable;
-         $scope.orientation = orient || '0';
-          ZMDataModel.zmLog("Monitor Orientation is: " + $scope.orientation);
+        $scope.refMonitor = monitor;
+         
 
         // This is a modal to show the monitor footage
         // We need to switch to always awake if set so the feed doesn't get interrupted
