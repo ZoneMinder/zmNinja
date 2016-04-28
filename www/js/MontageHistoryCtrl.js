@@ -67,6 +67,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // note that on init it is also called
     //---------------------------------------
     
+    $scope.footerExpand = function()
+    {
+        console.log ("**************** EXPAND CALLED ***************");
+        $ionicSideMenuDelegate.canDragContent(false);
+    };
+    
     $scope.footerCollapse = function()
     {
         
@@ -80,11 +86,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     /* Note this is also called when the view is first loaded */
     function footerCollapse()
     {
+        console.log ("**************** COLLAPSE CALLED ***************");
         if (readyToRun == false)
         {
             ZMDataModel.zmDebug ("fake call to footerCollapse - ignoring");
             return;
         }
+        
+        $ionicSideMenuDelegate.canDragContent(true);
         
          ZMDataModel.stopNetwork("MontageHistory-footerCollapse");
         var ld = ZMDataModel.getLogin();
