@@ -254,7 +254,7 @@ function initPackery()
          
         imagesLoaded(elem).on('progress', function(instance, img) {
                 //console.log ("******** SOME IMAGE LOADED");
-                console.log ("IMAGE PROGRESS " + JSON.stringify(img.img));
+                console.log ("IMAGE PROGRESS " + JSON.stringify(img) );
                 progressCalled = true;
                 
                 if (layouttype) $timeout (function(){layout(pckry);},100);
