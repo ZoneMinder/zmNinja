@@ -792,11 +792,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
 
         $ionicLoading.hide();
-        $ionicLoading.show({
+        /*$ionicLoading.show({
             template: "please wait...",
             noBackdrop: true,
             duration: zm.loadingTimeout,
-        });
+        });*/
 
 
     }
