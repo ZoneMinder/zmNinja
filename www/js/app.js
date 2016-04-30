@@ -19,7 +19,8 @@ angular.module('zmApp', [
                             'com.2fdevs.videogular',
 			                 'com.2fdevs.videogular.plugins.controls',
                             'com.2fdevs.videogular.plugins.overlayplay',
-                            'ionic-native-transitions'
+                            'ionic-native-transitions',
+                            'mgo-angular-wizard'
                             
 
 
@@ -1588,7 +1589,15 @@ angular.module('zmApp', [
        
     })
 
-
+        .state('wizard', {
+        data: {
+            requireLogin: false
+        },
+        url: "/wizard",
+        templateUrl: "templates/wizard.html",
+        controller: 'zmApp.WizardCtrl',
+       
+    })    
 
     .state('zm-portal-login', {
         data: {

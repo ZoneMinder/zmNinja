@@ -1,0 +1,91 @@
+<ion-view view-title="Wizard" ng-cloak cache-view="false" >
+
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+
+        
+    </ion-nav-buttons>
+
+
+    <ion-content class="padding" overflow-scroll="false">
+  
+    <wizard on-finish="finishedWizard()"> 
+        
+        <wz-step wz-title="1" canexit="exitPortal">
+            <h4>Welcome to zmWizard</h4>
+            <p>Configuring ZoneMinder can be a pain. Lets see if zmWizard can help. In the next few screens, I will ask you some simple questions and do my best to guess the settings for you.</p>
+
+            <h4>What is your Zoneminder portal url?</h4>
+            <label class="item item-input">
+                <input type="text" placeholder="typically http://server/zm" ng-model="wizard.portalurl">
+            </label>
+
+            <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="toggleTip()">{{wizard.tiptext}}</a>
+
+
+            <div class="wizardtip" ng-show="wizard.tipshow">
+                <b>Tip: </b>Confused? You can easily find out your portal URL by noting down the url you see on your browser when accessing ZoneMinder Console.
+
+                <img src="img/portalurl.png" width="30%">
+            </div>
+
+            <br/><input type="button" wz-next value="Next" />
+
+        </wz-step>
+            
+   
+            
+        <wz-step wz-title="2" canexit="exitAuth" >
+            <h4>Portal Authentication</h4>
+            <p>Lets talk about how you have configured authentication If you have enabled authentication, toggle this button</p>
+            <ion-toggle ng-change="toggleAuth" ng-model="wizard.useauth" toggle-class="toggle-calm">I use authentication</ion-toggle>
+
+            <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usezmauth" toggle-class="toggle-calm">I use ZM authentication</ion-toggle>
+            <label class="item item-input item-floating-label" ng-show="wizard.usezmauth">
+                <span class="input-label">user name</span>
+                <input type="text" ng-model="wizard.zmuser" placeholder="zm auth username" >
+            </label>
+            <label class="item item-input item-floating-label" ng-show="wizard.usezmauth">
+                <span class="input-label">password</span>
+                <input type="password" ng-model="wizard.zmpassword" placeholder="zm auth password" >
+            </label>
+
+
+            <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" toggle-class="toggle-calm">I use Basic authentication</ion-toggle>
+            <label class="item item-input item-floating-label" ng-show="wizard.usebasicauth">
+                <span class="input-label">user name</span>
+                <input type="text" ng-model="wizard.basicuser" placeholder="basic auth username" >
+            </label>
+            <label class="item item-input item-floating-label" ng-show="wizard.usebasicauth">
+                <span class="input-label">password</span>
+                <input type="password" ng-model="wizard.basicpassword" placeholder="basic auth password" >
+            </label>
+
+
+            <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="toggleTip()">{{wizard.tiptext}}</a>
+
+
+            <div class="wizardtip" ng-show="wizard.tipshow">
+                <b>Tip: </b>Confused? <i>ZM Auth</i> is the authentication used when you enable OPT_USE_AUTH in the ZM console options screen.<br/>
+                <i>Basic Auth</i> is when you configure a username and password in your webserver. If you are using LDAP authentication, its likely basic auth.
+            </div>
+
+           <br/>
+            <input type="button" wz-previous  value="Prev" />
+            <input type="button" wz-next value="Next"   />
+            
+    </wz-step>
+            
+            
+    <wz-step wz-title="3">
+        <h4>Lets try and validate your inputs</h4>
+        <p>I am now going to try and log into the portal using:
+        <br/>Portal: {{wizard.portalurl}}
+        
+        </p>
+        <input type="button" wz-next value="Finish now" />
+    </wz-step>
+</wizard>
+    </ion-content>
+
+</ion-view>
