@@ -9,6 +9,10 @@ $scope.openMenu = function () {
 
     
     
+    
+    //--------------------------------------------------------------------------
+    // tags a protocol
+    //--------------------------------------------------------------------------
     function addhttp(url) {
 
         if ((!/^(f|ht)tps?:\/\//i.test(url)) && (url != "")) {
@@ -17,16 +21,10 @@ $scope.openMenu = function () {
         return url;
     }
     
-    function validURL(url)
-    {
-        if (!url)
     
-            return ({status:false, code:"URL cannot be empty"});
-        url = addhttp(url);
-        return ({status:true, code:""});
-
-    }
-    
+    //--------------------------------------------------------------------------
+    // exit validator for auth wizard
+    //--------------------------------------------------------------------------
     
     $scope.exitAuth = function()
     {
@@ -74,6 +72,10 @@ $scope.openMenu = function () {
         return true;
         
     };
+    
+    //--------------------------------------------------------------------------
+    // validator for portal url wizard
+    //--------------------------------------------------------------------------
     
     $scope.exitPortal = function()
     {
@@ -125,6 +127,9 @@ $scope.openMenu = function () {
         return true;
     };
     
+    //--------------------------------------------------------------------------
+    // part of auth wizard - toggles display of auth components
+    //--------------------------------------------------------------------------
     $scope.toggleAuth = function()
     {
         $scope.wizard.useauth = !$scope.wizard.useauth;
@@ -136,6 +141,9 @@ $scope.openMenu = function () {
     };
     
     
+    //--------------------------------------------------------------------------
+    // global tip toggler for all wizard steps
+    //--------------------------------------------------------------------------
     $scope.toggleTip = function()
     {
         $scope.wizard.tipshow = !$scope.wizard.tipshow;
@@ -146,7 +154,10 @@ $scope.openMenu = function () {
     };
     
    
-    $scope.$on('$ionicView.enter', function () {
+    //--------------------------------------------------------------------------
+    // initial
+    //--------------------------------------------------------------------------
+    $scope.$on('$ionicView.beforeEnter', function () {
         //console.log("**VIEW ** Help Ctrl Entered");
     
         $scope.wizard = {

@@ -2,8 +2,6 @@
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-
-        
     </ion-nav-buttons>
 
 
@@ -11,6 +9,7 @@
   
     <wizard on-finish="finishedWizard()"> 
         
+        <!-- portal url -->
         <wz-step wz-title="1" canexit="exitPortal">
             <h4>Welcome to zmWizard</h4>
             <p>Configuring ZoneMinder can be a pain. Lets see if zmWizard can help. In the next few screens, I will ask you some simple questions and do my best to guess the settings for you.</p>
@@ -34,7 +33,7 @@
         </wz-step>
             
    
-            
+        <!-- auth mode -->  
         <wz-step wz-title="2" canexit="exitAuth" >
             <h4>Portal Authentication</h4>
             <p>Lets talk about how you have configured authentication If you have enabled authentication, toggle this button</p>
@@ -76,7 +75,7 @@
             
     </wz-step>
             
-            
+    <!-- validate url with auth -->
     <wz-step wz-title="3">
         <h4>Lets try and validate your inputs</h4>
         <p>I am now going to try and log into the portal using:
