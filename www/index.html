@@ -28,6 +28,7 @@
     <!--<link rel="stylesheet" href="external/ionic.content.banner.css">-->
     <link rel="stylesheet" href="external/radio.css">
     <link rel="stylesheet" href="lib/ion-datetime-picker/release/ion-datetime-picker.min.css">
+    <link rel="stylesheet" href="lib/angular-wizard/dist/angular-wizard.min.css">
     
     
 
@@ -55,6 +56,7 @@
     <script src="cordova.js"></script>
     <script src="js/ionicUtils.js"></script>
     <script src="lib/ionic-native-transitions/dist/ionic-native-transitions.min.js"></script>
+    <script src="lib/angular-wizard/dist/angular-wizard.min.js"></script>
   
 
     <!-- your app's js -->
@@ -102,6 +104,8 @@
     <script src="js/MontageHistoryCtrl.js"></script>
     <script src="js/NewsCtrl.js"></script>
     <script src="js/TimelineModalCtrl.js"></script>
+    <script src="js/WizardCtrl.js"></script>
+    
     <script src="lib/ion-datetime-picker/release/ion-datetime-picker.min.js"></script>
     <script src="js/EventsModalGraphCtrl.js"></script>
    
@@ -233,6 +237,12 @@
                         <span class=" item-icon-left">
                             <i class="icon ion-help"></i>
                         </span> Help
+                    </ion-item>
+
+                     <ion-item nav-clear menu-close href="#/wizard">
+                        <span class=" item-icon-left">
+                            <i class="icon ion-help"></i>
+                        </span> wizard
                     </ion-item>
                     
                     <div ng-if="$root.showBlog">

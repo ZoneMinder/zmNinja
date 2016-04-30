@@ -867,3 +867,20 @@ body { font-family: sans-serif; }
 .visred {
   fill:#FF0000;
 }
+
+.wizardtip
+{
+    margin-left:5px;
+    margin-right:5px;
+    margin-top:10px;
+    margin-bottom:5px;
+    padding: 5px 5px 5px 5px;
+    background-color: #cccccc;
+    color:#333232;
+    border-radius: 10px;
+    border-width: 3px;
+    border-color:#6f6d6d;
+    border-style: solid;
+}
+
+
