@@ -70,6 +70,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
     }
     
+    //--------------------------------------------------------------------------
+    // we need a monitor ID to do cgi-bin detection - if you don't have 
+    // monitors configured, cgi-bin won't work
+    //--------------------------------------------------------------------------
     
     function getFirstMonitor()
     {
@@ -128,7 +132,12 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
         return d.promise;
 
-}
+    }
+    
+    //--------------------------------------------------------------------------
+    // tries to detect cgi-bin
+    //--------------------------------------------------------------------------
+   
     function detectcgi()
     {
         var d = $q.defer();
@@ -152,7 +161,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var urls = [a1,a2,a3];
         
         
-        ZMDataModel.getPathZms()
+        ZMDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
         .then (function(data){
             urls.push (baseUri.trim()+data.trim());
              ZMDataModel.zmLog ("zmWizard: getPathZMS succeeded, adding "+baseUri+data.trim()+" to things to try");
@@ -163,6 +172,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             continueCgi(urls);
         });
         
+        // Well, PATH_ZMS or not, lets call this function and brute force it
         function continueCgi (urls)
         {
             $ionicLoading.show({
@@ -304,7 +314,11 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
     }
     
-    
+    //--------------------------------------------------------------------------
+    // clears all status updates in the verify results page - if you 
+    // get back to it
+    //--------------------------------------------------------------------------
+   
     $scope.enterResults = function()
     {
         $scope.portalValidText = "";
@@ -316,7 +330,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     //--------------------------------------------------------------------------
     // tries to log into the portal and then discover api and cgi-bin
     //--------------------------------------------------------------------------
-   
 
     $scope.exitValidate = function () {
         $rootScope.authSession = 'undefined';
