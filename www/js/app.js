@@ -1106,7 +1106,7 @@ angular.module('zmApp', [
                 disableBack: true
             });
             $rootScope.userCancelledAuth = true;
-            $state.go("login");
+            $state.go("login" ,{"wizard": false});
 
         };
 
@@ -1419,7 +1419,7 @@ angular.module('zmApp', [
             data: {
                 requireLogin: false
             },
-            url: "/login",
+            url: "/login/:wizard",
             templateUrl: "templates/login.html",
             controller: 'zmApp.LoginCtrl',
         

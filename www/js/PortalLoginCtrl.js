@@ -89,7 +89,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 disableAnimate: true,
                             disableBack: true
                             });
-                            $state.go('login');
+                            $state.go("login" ,{"wizard": false});
                     }
                     else   
                     {
@@ -221,13 +221,13 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 disableAnimate: true,
                             disableBack: true
                             });
-                            $state.go('login');
+                            $state.go("login" ,{"wizard": false});
                     }
                     else   
                     {
                         // if user cancelled auth I guess we go to login
                         $rootScope.userCancelledAuth = false;
-                        $state.go('login');
+                        $state.go("login" ,{"wizard": false});
                     }
                 });
         } 

@@ -32,7 +32,7 @@ angular.module('zmApp.controllers')
         $ionicHistory.nextViewOptions({
                     disableBack: true
         });
-        $state.go("login");
+        $state.go("login" ,{"wizard": false});
         return;
     }
     

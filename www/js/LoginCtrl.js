@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,alert,URI */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$localstorage', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $localstorage) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$localstorage', '$stateParams', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $localstorage, $stateParams) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -105,7 +105,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 var zmServers = ZMDataModel.getServerGroups();
                 $scope.loginData = zmServers[serverbuttons[index].text];
                 
-                console.log ("NEW LOOGIN OBJECT IS " + JSON.stringify($scope.loginData));
+                console.log ("NEW LOGIN OBJECT IS " + JSON.stringify($scope.loginData));
                 
                 
                 $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
@@ -202,6 +202,28 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         });
         
         }
+        
+        ZMDataModel.zmDebug ("Does login need to hear the wizard? "  + $stateParams.wizard);
+        
+        if ($stateParams.wizard == "true")
+        {
+            ZMDataModel.zmLog ("Creating new login entry for wizard");
+            $scope.loginData = angular.copy(ZMDataModel.getDefaultLoginObject());
+            $scope.loginData.url = $rootScope.wizard.loginURL;
+            $scope.loginData.apiurl = $rootScope.wizard.apiURL;
+            $scope.loginData.streamingurl = $rootScope.wizard.streamingURL;
+            if ($rootScope.wizard.useauth && $rootScope.wizard.usezmauth)
+            {
+                $scope.loginData.username = $rootScope.wizard.zmuser;
+                $scope.loginData.password = $rootScope.wizard.zmpassword;
+                if ((/^https:\/\//i.test($scope.loginData.url)))
+                {
+                    $scope.loginData.useSSL = true;
+                }
+            }
+            
+        }
+        
         
     });
     
