@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry, URI */
 
-angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm) {
+angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm','$ionicLoading', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -165,16 +165,29 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         
         function continueCgi (urls)
         {
+            $ionicLoading.show({
+                template: "discovering...",
+                noBackdrop: true,
+                duration: zm.httpTimeout
+                });
             getFirstMonitor()
             .then (function (success){
-                   
+                $ionicLoading.hide();
                 var tail = "/nph-zms?mode=single&monitor="+success;
                 if ($scope.wizard.useauth && $scope.wizard.usezmauth)
                 {
                     tail+= "&user="+$scope.wizard.zmuser+"&pass="+$scope.wizard.zmpassword;
                 }
+                
+                $ionicLoading.show({
+                template: "discovering...",
+                noBackdrop: true,
+                duration: zm.httpTimeout
+                });
+                
                 findFirstReachableUrl(urls,tail )
                 .then (function (success) {
+                    $ionicLoading.hide();
                     ZMDataModel.zmLog ("Valid cgi-bin found with: " + success);
                     $scope.wizard.streamingURL = success;
                     $scope.wizard.streamingValidText = "cgi-bin detection succeeded: "+$scope.wizard.streamingURL;
@@ -184,6 +197,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
                 },
                 function (error) {
+                    $ionicLoading.hide();
                     console.log ("No cgi-bin found: " + error);
                     $scope.wizard.streamingValidText = "cgi-bin detection failed";
                     $scope.wizard.streamingColor = "#e74c3c";
@@ -192,6 +206,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 });
             },
             function (error){
+                $ionicLoading.hide();
                 $scope.wizard.streamingValidText = "cgi-bin detection failed. No configured monitor found.";
                     $scope.wizard.streamingColor = "#e74c3c";
                     d.reject (false);
@@ -348,33 +363,60 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         // logout first for the adventurers amongst us who must
         // use it even after logging in
         ZMDataModel.zmLog("zmWizard: logging out");
+        $ionicLoading.show({
+                template: "cleaning up...",
+                noBackdrop: true,
+                duration: zm.httpTimeout
+                });
         logout(u)
             .then(function (ans) {
                 // login now
+                $ionicLoading.hide();
                 ZMDataModel.zmLog("zmWizard: logging in with " + u + " " + zmu + ":" + zmp);
             
                 // The logic will be:
                 // Login then do an api detect and cgi-detect together
+                $ionicLoading.show({
+                template: "discovering portal...",
+                noBackdrop: true,
+                duration: zm.httpTimeout
+                });
                 login(u, zmu, zmp)
                     .then(function (success) {
+                            $ionicLoading.hide();
                             ZMDataModel.zmLog("zmWizard: login succeeded");
                             
                             // API Detection
+                            $ionicLoading.show({
+                            template: "discovering api...",
+                            noBackdrop: true,
+                            duration: zm.httpTimeout
+                            });
                             detectapi()
                             .then (function (success) {
+                                $ionicLoading.hide();
                                 ZMDataModel.zmLog ("zmWizard: API succeeded");
+                                
+                                $ionicLoading.show({
+                                template: "discovering cgi-bin...",
+                                noBackdrop: true,
+                                duration: zm.httpTimeout
+                                });
                                 // CGI detection
                                 detectcgi ()
                                 .then (function (success) {
+                                    $ionicLoading.hide();
                                     // return true here because we want to progress
                                     return d.resolve(true);
                                 },
                                 function (error) {
+                                    $ionicLoading.hide();
                                     // return true here because we want to progress
                                     return d.resolve(true);
                                 });
                             },
                             function (error) {
+                                $ionicLoading.hide();
                                 ZMDataModel.zmLog("zmWizard: api failed");
                                 
                                 // return true here because we want to progress
@@ -386,6 +428,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                           
                         // if login failed, don't progress in the wizard
                         function (error) {
+                            $ionicLoading.hide();
                             ZMDataModel.zmLog("zmWizard: login failed");
                             $scope.wizard.portalValidText = "Portal login was unsuccessful. Please go back and review your settings";
                             $scope.wizard.portalColor = "#e74c3c";
