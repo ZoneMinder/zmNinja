@@ -82,9 +82,6 @@
         <h4>Lets try and validate your inputs</h4>
         <p>I am now going to try and log into the ZM portal
         <br/>
-        <span style="color:{{wizard.portalColor}};">{{wizard.portalValidText}}</span>
-        <span style="color:{{wizard.apiColor}};">{{wizard.apiValidateText}}</span>
-        <span style="color:{{wizard.streamingColor}};">{{wizard.streamingValidateText}}</span>
         
         </p>
         <button class="button icon icon-left ion-chevron-left" wz-previous>Prev</button>
@@ -92,14 +89,15 @@
     </wz-step>
         
     <wz-step wz-title="4" >
-        <h4>Sone</h4>
-        <p>I am now going to try and log into the ZM portal
-        <br/>Portal: {{wizard.portalurl}}
-        {{wizard.portalValidText}}
-        {{wizard.apiValidateText}}
-        {{wizard.streamingValidateText}}
+        <h4>Results of auto-detection</h4>
+    
+        <span style="color:{{wizard.portalColor}};"><i ng-class="wizard.portalColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.portalValidText}}</span><br/>
         
-        </p>
+        <span style="color:{{wizard.apiColor}};"><i ng-class=" wizard.apiColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.apiValidText}}</span><br/>
+        
+        <span style="color:{{wizard.streamingColor}};"><i ng-class="wizard.streamingColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.streamingValidText}}</span>
+        <br/>
+    
         <button class="button icon icon-left ion-chevron-left" wz-previous>Prev</button>
         <button class="button icon icon-right ion-chevron-right" wz-next>Validate</button>
     </wz-step>
