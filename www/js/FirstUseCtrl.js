@@ -25,7 +25,7 @@ $scope.openMenu = function () {
                     disableAnimate: false,
                     disableBack: true
                 });
-        $state.go ("login");
+        $state.go("login" ,{"wizard": false});
     };
     
     

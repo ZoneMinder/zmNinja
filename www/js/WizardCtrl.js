@@ -56,12 +56,44 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     d.reject(false);
                     return d.promise;
                 }
-            });
+            })
+            .error (function (error) {
+            console.log("************ERROR");
+                    $scope.wizard.portalValidText = "Portal login was unsuccessful";
+                    $scope.wizard.portalColor = "#e74c3c";
+                    d.reject(false);
+                    return d.promise;
+            
+        });
 
         return d.promise;
 
     }
     
+    
+    function getFirstMonitor()
+    {
+       var d=$q.defer(); $http.get($scope.wizard.apiURL+"/monitors.json")
+        .then (function (success) {
+            if (success.data.monitors.length > 0)
+            {
+               
+                ZMDataModel.zmDebug("zmWizard - getFirstMonitor returned " + success.data.monitors[0].Monitor.Id); d.resolve(success.data.monitors[0].Monitor.Id);
+                return d.promise;
+                
+            }
+           else
+           {
+               d.reject(false);
+               return d.promise;
+           }
+        },
+        function (error) {
+           d.reject(false);
+            return d.promise;
+        });
+        return d.promise;
+    }
     
     //--------------------------------------------------------------------------
     // Utility function - iterates through a list of URLs 
@@ -133,27 +165,38 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         
         function continueCgi (urls)
         {
-            var tail = "/nph-zms?mode=single&monitor=1";
-            if ($scope.wizard.useauth && $scope.wizard.usezmauth)
-            {
-                tail+= "&user="+$scope.wizard.zmuser+"&pass="+$scope.wizard.zmpassword;
-            }
-            findFirstReachableUrl(urls,tail )
-            .then (function (success) {
-                ZMDataModel.zmLog ("Valid cgi-bin found with: " + success);
-                $scope.wizard.streamingURL = success;
-                $scope.wizard.streamingValidText = "cgi-bin detection succeeded: "+$scope.wizard.streamingURL;
-                $scope.wizard.streamingColor = "#16a085";
-                d.resolve(true);
-                return d.promise;
-                
+            getFirstMonitor()
+            .then (function (success){
+                   
+                var tail = "/nph-zms?mode=single&monitor="+success;
+                if ($scope.wizard.useauth && $scope.wizard.usezmauth)
+                {
+                    tail+= "&user="+$scope.wizard.zmuser+"&pass="+$scope.wizard.zmpassword;
+                }
+                findFirstReachableUrl(urls,tail )
+                .then (function (success) {
+                    ZMDataModel.zmLog ("Valid cgi-bin found with: " + success);
+                    $scope.wizard.streamingURL = success;
+                    $scope.wizard.streamingValidText = "cgi-bin detection succeeded: "+$scope.wizard.streamingURL;
+                    $scope.wizard.streamingColor = "#16a085";
+                    d.resolve(true);
+                    return d.promise;
+
+                },
+                function (error) {
+                    console.log ("No cgi-bin found: " + error);
+                    $scope.wizard.streamingValidText = "cgi-bin detection failed";
+                    $scope.wizard.streamingColor = "#e74c3c";
+                    d.reject (false);
+                    return (d.promise);
+                });
             },
-            function (error) {
-                console.log ("No cgi-bin found: " + error);
-                $scope.wizard.streamingValidText = "cgi-bin detection failed";
-                $scope.wizard.streamingColor = "#e74c3c";
-                d.reject (false);
-                return (d.promise);
+            function (error){
+                $scope.wizard.streamingValidText = "cgi-bin detection failed. No configured monitor found.";
+                    $scope.wizard.streamingColor = "#e74c3c";
+                    d.reject (false);
+                    return (d.promise);
+                
             });
         }
         
@@ -172,7 +215,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     {
         var u  = $scope.wizard.loginURL;
         var d  = $q.defer();
-        var api1 = u ;
+        var api1 = u+"/api" ;
         var c = URI.parse(u);
         
         // lets also try without the path
@@ -180,16 +223,20 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         if (c.userinfo) api2+= c.userinfo+"@";
         api2 +=c.host;
         if (c.port) api2+= ":"+c.port;
+        api2+="/api";
         
         
         
         // lets try both /zm/api and /api. What else is there?
         var apilist = [api1, api2];
         
-        findFirstReachableUrl(apilist, '/api/host/getVersion.json')
+        findFirstReachableUrl(apilist, '/host/getVersion.json')
         .then (function (success) {
             ZMDataModel.zmLog ("Valid API response found with:" + success);
             $scope.wizard.apiURL = success;
+            
+            
+            
             $scope.wizard.apiValidText = "API detection succeeded: "+$scope.wizard.apiURL;
             $scope.wizard.apiColor = "#16a085";
             d.resolve(true);
@@ -235,16 +282,22 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     view: "login"
                 }
             })
-            .finally(function (ans) {
-                return d.resolve(true);
-
-            });
-
+            .then (function (success) {console.log ("ZMlogout success"); d.resolve(true); return d.promise;}, function (error) {console.log ("ZMlogout success");d.resolve(true); return d.promise;});
+            
 
         return d.promise;
 
     }
     
+    
+    $scope.enterResults = function()
+    {
+        $scope.portalValidText = "";
+        $scope.apiValidateText = "";
+        $scope.streamingValidateText = "";
+        $scope.wizard.fqportal = "";
+        return true;
+    };
     //--------------------------------------------------------------------------
     // tries to log into the portal and then discover api and cgi-bin
     //--------------------------------------------------------------------------
@@ -310,7 +363,16 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                             detectapi()
                             .then (function (success) {
                                 ZMDataModel.zmLog ("zmWizard: API succeeded");
-                                return d.resolve(true);
+                                // CGI detection
+                                detectcgi ()
+                                .then (function (success) {
+                                    // return true here because we want to progress
+                                    return d.resolve(true);
+                                },
+                                function (error) {
+                                    // return true here because we want to progress
+                                    return d.resolve(true);
+                                });
                             },
                             function (error) {
                                 ZMDataModel.zmLog("zmWizard: api failed");
@@ -319,16 +381,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                                 return d.resolve(true);
                             });
                     
-                            // CGI detection
-                            detectcgi ()
-                            .then (function (success) {
-                                // return true here because we want to progress
-                                return d.resolve(true);
-                            },
-                            function (error) {
-                                // return true here because we want to progress
-                                return d.resolve(true);
-                            });
+                            
                         },
                           
                         // if login failed, don't progress in the wizard
@@ -336,7 +389,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                             ZMDataModel.zmLog("zmWizard: login failed");
                             $scope.wizard.portalValidText = "Portal login was unsuccessful. Please go back and review your settings";
                             $scope.wizard.portalColor = "#e74c3c";
-                            return d.resolve(false);
+                            return d.resolve(true);
 
                         });
 
@@ -499,6 +552,14 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             $scope.wizard.tiptext = "show tip";
     };
 
+    $scope.gotoLoginState = function()
+    {
+        $rootScope.wizard = angular.copy($scope.wizard);
+        $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+        $state.go("login", {"wizard":true});
+    };
 
     //--------------------------------------------------------------------------
     // initial
@@ -506,6 +567,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     $scope.$on('$ionicView.beforeEnter', function () {
         //console.log("**VIEW ** Help Ctrl Entered");
 
+        var monId = -1;
         $scope.wizard = {
             tipshow: false,
             tiptext: "show tip",

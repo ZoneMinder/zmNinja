@@ -29,7 +29,7 @@
             </div>
 
             <br/>
-            <button class="button icon icon-right ion-chevron-right" wz-next>Next</button>
+            <button class="button button-small icon icon-right ion-chevron-right" wz-next>Next</button>
             
 
         </wz-step>
@@ -72,34 +72,43 @@
             </div>
 
            <br/>
-            <button class="button icon icon-left ion-chevron-left" wz-previous>Prev</button>
-            <button class="button icon icon-right ion-chevron-right" wz-next>Next</button>
+            <button class="button button-small icon icon-left ion-chevron-left" wz-previous>Prev</button>
+            <button class="button button-small icon icon-right ion-chevron-right" wz-next>Next</button>
             
     </wz-step>
             
     <!-- validate url with auth -->
-    <wz-step wz-title="3" canexit="exitValidate">
+    <wz-step wz-title="3" canexit="exitValidate" canenter="enterResults">
         <h4>Lets try and validate your inputs</h4>
         <p>I am now going to try and log into the ZM portal
+        <br/>Tap on Next to start.
         <br/>
         
         </p>
-        <button class="button icon icon-left ion-chevron-left" wz-previous>Prev</button>
-        <button class="button icon icon-right ion-chevron-right" wz-next>Next</button>
+        <button class="button  button-small icon icon-left ion-chevron-left" wz-previous>Prev</button>
+        <button class="button button-small icon icon-right ion-chevron-right" wz-next>Next</button>
     </wz-step>
         
-    <wz-step wz-title="4" >
+    <wz-step wz-title="4"  >
         <h4>Results of auto-detection</h4>
     
-        <span style="color:{{wizard.portalColor}};"><i ng-class="wizard.portalColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.portalValidText}}</span><br/>
+        <span ng-if="wizard.portalValidText" style="color:{{wizard.portalColor}};"><i ng-class="wizard.portalColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.portalValidText}}<br/></span>
         
-        <span style="color:{{wizard.apiColor}};"><i ng-class=" wizard.apiColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.apiValidText}}</span><br/>
+        <span ng-if="wizard.apiValidText" style="color:{{wizard.apiColor}};"><i ng-class=" wizard.apiColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.apiValidText}}<br/></span>
         
-        <span style="color:{{wizard.streamingColor}};"><i ng-class="wizard.streamingColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.streamingValidText}}</span>
+        <span ng-if="wizard.streamingValidText" style="color:{{wizard.streamingColor}};"><i ng-class="wizard.streamingColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.streamingValidText}}<br/></span>
+        
         <br/>
-    
-        <button class="button icon icon-left ion-chevron-left" wz-previous>Prev</button>
-        <button class="button icon icon-right ion-chevron-right" wz-next>Validate</button>
+        <div class="wizardtip">
+            zmWizard has tried its best to autodetect what it could. You could either:
+            <ul>
+                <li>Go back to previous steps and re-do</li>
+                <li>Go to the login screen with these findings auto filled in</li>
+            </ul>
+        </div>
+        <br/><br/>
+        <button class="button button-small icon icon-left ion-chevron-left" wz-previous>Prev</button>
+        <button class="button button-small icon icon-right ion-chevron-right" ng-click="gotoLoginState()">Go to Login Screen</button>
     </wz-step>
         
         
