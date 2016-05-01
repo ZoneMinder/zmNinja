@@ -11,7 +11,7 @@
         
         <!-- portal url -->
         <wz-step wz-title="1" canexit="exitPortal">
-            <h4>Welcome to zmWizard</h4>
+            <h4><i class="icon ion-wizard"></i> Welcome to zmWizard</h4>
             <p>Configuring ZoneMinder can be a pain. Lets see if zmWizard can help. In the next few screens, I will ask you some simple questions and do my best to guess the settings for you.</p>
 
             <h4>What is your Zoneminder portal url?</h4>
@@ -28,7 +28,9 @@
                 <img src="img/portalurl.png" width="30%">
             </div>
 
-            <br/><input type="button" wz-next value="Next" />
+            <br/>
+            <button class="button icon icon-right ion-chevron-right" wz-next>Next</button>
+            
 
         </wz-step>
             
@@ -70,20 +72,39 @@
             </div>
 
            <br/>
-            <input type="button" wz-previous  value="Prev" />
-            <input type="button" wz-next value="Next"   />
+            <button class="button icon icon-left ion-chevron-left" wz-previous>Prev</button>
+            <button class="button icon icon-right ion-chevron-right" wz-next>Next</button>
             
     </wz-step>
             
     <!-- validate url with auth -->
-    <wz-step wz-title="3">
+    <wz-step wz-title="3" canexit="exitValidate">
         <h4>Lets try and validate your inputs</h4>
-        <p>I am now going to try and log into the portal using:
-        <br/>Portal: {{wizard.portalurl}}
+        <p>I am now going to try and log into the ZM portal
+        <br/>
+        <span style="color:{{wizard.portalColor}};">{{wizard.portalValidText}}</span>
+        <span style="color:{{wizard.apiColor}};">{{wizard.apiValidateText}}</span>
+        <span style="color:{{wizard.streamingColor}};">{{wizard.streamingValidateText}}</span>
         
         </p>
-        <input type="button" wz-next value="Finish now" />
+        <button class="button icon icon-left ion-chevron-left" wz-previous>Prev</button>
+        <button class="button icon icon-right ion-chevron-right" wz-next>Next</button>
     </wz-step>
+        
+    <wz-step wz-title="4" >
+        <h4>Sone</h4>
+        <p>I am now going to try and log into the ZM portal
+        <br/>Portal: {{wizard.portalurl}}
+        {{wizard.portalValidText}}
+        {{wizard.apiValidateText}}
+        {{wizard.streamingValidateText}}
+        
+        </p>
+        <button class="button icon icon-left ion-chevron-left" wz-previous>Prev</button>
+        <button class="button icon icon-right ion-chevron-right" wz-next>Validate</button>
+    </wz-step>
+        
+        
 </wizard>
     </ion-content>
 
