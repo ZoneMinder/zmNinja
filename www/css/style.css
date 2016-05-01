@@ -883,4 +883,8 @@ body { font-family: sans-serif; }
     border-style: solid;
 }
 
+.wiz-list {
+  list-style-type: disc;
+  list-style-position: inside;
+}
 

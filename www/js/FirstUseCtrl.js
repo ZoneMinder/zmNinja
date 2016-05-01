@@ -28,6 +28,15 @@ $scope.openMenu = function () {
         $state.go("login" ,{"wizard": false});
     };
     
+    $scope.goToWizard = function()
+    {
+        $ionicHistory.nextViewOptions({
+                    disableAnimate: false,
+                    disableBack: true
+                });
+        $state.go("wizard" );
+    };
+    
     
 
 }]);
