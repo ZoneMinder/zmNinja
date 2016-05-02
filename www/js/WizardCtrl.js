@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry, URI */
 
-angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm','$ionicLoading', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading) {
+angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm','$ionicLoading', 'WizardHandler', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading, WizardHandler) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -331,18 +331,26 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     // tries to log into the portal and then discover api and cgi-bin
     //--------------------------------------------------------------------------
 
-    $scope.exitValidate = function () {
+    function validateData() {
         $rootScope.authSession = 'undefined';
         $rootScope.zmCookie = '';
 
-        $scope.portalValidText = "";
-        $scope.apiValidateText = "";
-        $scope.streamingValidateText = "";
+        $scope.wizard.portalValidText = "";
+        $scope.wizard.apiValidText = "";
+        $scope.wizard.streamingValidText = "";
         $scope.wizard.fqportal = "";
-
+        $scope.wizard.loginURL= "";
+        $scope.wizard.apiURL= "";
+        $scope.wizard.streamingURL= "";
+        $scope.wizard.serverName = "";
+        
         var d = $q.defer();
 
         var c = URI.parse($scope.wizard.portalurl);
+        
+        $scope.wizard.serverName = c.host;
+        if (c.port) 
+            $scope.wizard.serverName += "-"+c.port;
 
         var b = "";
         if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
@@ -452,7 +460,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
             }); //finally
         return d.promise;
-    };
+    }
 
 
     //--------------------------------------------------------------------------
@@ -514,7 +522,11 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 }
             }
         }
-        return true;
+        // Coming here means we can go to the next step
+        // load the step
+        WizardHandler.wizard().next();
+        // start discovery;
+        validateData();
 
     };
 
@@ -589,7 +601,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     // part of auth wizard - toggles display of auth components
     //--------------------------------------------------------------------------
     $scope.toggleAuth = function () {
-        $scope.wizard.useauth = !$scope.wizard.useauth;
+     
         if (!$scope.wizard.useauth) {
             $scope.wizard.usebasicauth = false;
             $scope.wizard.usezmauth = false;
@@ -646,6 +658,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             apiColor: "",
             streamingValidText: "",
             streamingColor: "",
+            serverName: "",
 
 
         };

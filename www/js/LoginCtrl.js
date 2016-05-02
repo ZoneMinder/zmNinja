@@ -209,6 +209,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         {
             ZMDataModel.zmLog ("Creating new login entry for wizard");
             $scope.loginData = angular.copy(ZMDataModel.getDefaultLoginObject());
+            $scope.loginData.serverName = $rootScope.wizard.serverName;
             $scope.loginData.url = $rootScope.wizard.loginURL;
             $scope.loginData.apiurl = $rootScope.wizard.apiURL;
             $scope.loginData.streamingurl = $rootScope.wizard.streamingURL;

@@ -36,23 +36,25 @@
             
    
         <!-- auth mode -->  
-        <wz-step wz-title="2" canexit="exitAuth" >
+        <wz-step wz-title="2"  >
             <h4>Portal Authentication</h4>
             <p>Lets talk about how you have configured authentication If you have enabled authentication, toggle this button</p>
-            <ion-toggle ng-change="toggleAuth" ng-model="wizard.useauth" toggle-class="toggle-calm">I use authentication</ion-toggle>
+            <ion-toggle ng-change="toggleAuth()" ng-model="wizard.useauth" ng-checked="wizard.useauth" toggle-class="toggle-calm">I use authentication</ion-toggle>
 
-            <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usezmauth" toggle-class="toggle-calm">I use ZM authentication</ion-toggle>
-            <label class="item item-input item-floating-label" ng-show="wizard.usezmauth">
-                <span class="input-label">user name</span>
-                <input autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.zmuser" placeholder="zm auth username" >
-            </label>
-            <label class="item item-input item-floating-label" ng-show="wizard.usezmauth">
-                <span class="input-label">password</span>
-                <input type="password" ng-model="wizard.zmpassword" placeholder="zm auth password" >
-            </label>
+            <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usezmauth" ng-checked="wizard.usezmauth" toggle-class="toggle-calm">I use ZM authentication</ion-toggle>
+            
+            <div ng-if="wizard.usezmauth">
+                <label class="item item-input item-floating-label" >
+                    <span class="input-label">user name</span>
+                    <input autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.zmuser" placeholder="zm auth username" >
+                </label>
+                <label class="item item-input item-floating-label" >
+                    <span class="input-label">password</span>
+                    <input type="password" ng-model="wizard.zmpassword" placeholder="zm auth password" >
+                </label>
+            </div>
 
-
-            <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" toggle-class="toggle-calm">I use Basic authentication</ion-toggle>
+            <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" ng-checked="wizard.usebasicauth" toggle-class="toggle-calm">I use Basic authentication</ion-toggle>
             <label class="item item-input item-floating-label" ng-show="wizard.usebasicauth">
                 <span class="input-label">user name</span>
                 <input autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.basicuser" placeholder="basic auth username" >
@@ -73,23 +75,12 @@
 
            <br/>
             <button class="button button-small icon icon-left ion-chevron-left" wz-previous>Prev</button>
-            <button class="button button-small icon icon-right ion-chevron-right" wz-next>Next</button>
+            <button class="button button-small icon icon-right ion-chevron-right" ng-click="exitAuth()">Next</button>
             
     </wz-step>
             
-    <!-- validate url with auth -->
-    <wz-step wz-title="3" canexit="exitValidate" canenter="enterResults">
-        <h4>Lets try and validate your inputs</h4>
-        <p>I am now going to try and log into the ZM portal
-        <br/>Tap on Next to start.
-        <br/>
         
-        </p>
-        <button class="button  button-small icon icon-left ion-chevron-left" wz-previous>Prev</button>
-        <button class="button button-small icon icon-right ion-chevron-right" wz-next>Next</button>
-    </wz-step>
-        
-    <wz-step wz-title="4"  >
+    <wz-step wz-title="3"  >
         <h4>Results of auto-detection</h4>
     
         <span ng-if="wizard.portalValidText" style="color:{{wizard.portalColor}};"><i ng-class="wizard.portalColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.portalValidText}}<br/></span>
