@@ -360,6 +360,10 @@ function initPackery()
     $scope.saveReorder = function()
     {
         ZMDataModel.zmDebug ("Saving monitor hide/unhide and sizes");
+        
+       
+   
+    
         $scope.MontageMonitors = $scope.copyMontage;
         $scope.modal.remove();
         $timeout( function() {pckry.reloadItems();},400);
@@ -390,7 +394,7 @@ function initPackery()
             
         },800);
         
-        
+         $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
         
     };
 
