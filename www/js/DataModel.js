@@ -2,7 +2,7 @@
 
 
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console */
+/* global cordova,StatusBar,angular,console, URI */
 
 // This is my central data respository and common functions
 // that many other controllers use
@@ -23,6 +23,7 @@ angular.module('zmApp.controllers')
     var monitorsLoaded = 0;
     //var montageSize = 3;
     var monitors = [];
+    var multiservers = [];
     var oldevents = [];
      
      var serverGroupList={};
@@ -986,22 +987,91 @@ angular.module('zmApp.controllers')
                                       {return parseInt(a.Monitor.Sequence)-parseInt(b.Monitor.Sequence);});
                         //console.log("promise resolved inside HTTP success");
                         monitorsLoaded = 1;
+                        console.log ("*********************** HOOOO");
+                        $http.get (apiurl+"/servers.json") 
+                        .success (function(data){
+                            // We found a server list API, so lets make sure
+                            // we get the hostname as it will be needed for playback
+                            zmLog ("multi server list loaded"+ JSON.stringify(data));
+                            multiservers = data.servers;
+                            
+                            for ( var i = 0; i< monitors.length; i++)
+                            {
+                                monitors[i].Monitor.listDisplay='show';
+                                monitors[i].Monitor.isAlarmed = false;
+                                monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                                
+                                var serverFound = false;
+                                for (var j = 0; j < multiservers.length; j++)
+                                {
+                                    //console.log ("Comparing " + multiservers[j].Server.Id + " AND " + monitors[i].Monitor.ServerId);
+                                    if (multiservers[j].Server.Id == monitors[i].Monitor.ServerId)
+                                    {
+                                        //console.log ("Found match");
+                                        serverFound = true;
+                                        break;
+                                    }
+                                    
+                                }
+                                if (serverFound)
+                                {
+
+                                    zmDebug ("Monitor " +i + " has a server hostname of " + multiservers[j].Server.Hostname);
+
+                                    // Now here is the logic, I need to retrieve serverhostname,
+                                    // and slap on the host protocol and path. Meh.
+
+                                    var p= URI.parse (loginData.streamingurl);
+                                    var s = URI.parse (multiservers[j].Server.Hostname);
+                                    
+                                    zmDebug ("server parsed is " + JSON.stringify(s));
+                                    zmDebug ("portal  parsed is " + JSON.stringify(p));
+
+                                    var st = "";
+                                    st+= (s.scheme? s.scheme: p.scheme)+"://"; // server scheme overrides 
+                                    
+                                    // if server doesn't have a protocol, what we want is in path
+                                    if (!s.host) 
+                                    {
+                                        s.host = s.path;
+                                        s.path = undefined;
+                                    }
+                                    
+                                    st+=s.host;
+                                    if (p.port || s.port)
+                                    {
+                                        st+= (s.port ? ":"+s.port: ":"+p.port);
+                                    }
+                                    st+= (s.path? s.path: p.path);
+                                    monitors[i].Monitor.streamingURL = st;
+                                    zmDebug ("Streaming URL for Monitor " + i + " is " + monitors[i].Monitor.streamingURL );
+                                    
+                                }
+                            }
+                            d.resolve(monitors);
+                        })
+                        .error (function (err) {
+                            zmLog ("multi server list loading error");
+                            multiservers = [];
+                            
+                            for ( var i = 0; i< monitors.length; i++)
+                            {
+                                monitors[i].Monitor.listDisplay='show';
+                                monitors[i].Monitor.isAlarmed = false;
+                                monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                                monitors[i].Monitor.streamingURL = loginData.streamingurl;
+
+
+                            }
+                            d.resolve(monitors);
+                            
+                        });
+                                
                         $ionicLoading.hide();
                         zmLog ("Monitor load was successful, loaded " + monitors.length + " monitors");
 
-                        // FIXME: This really should not be here.
-                        var i;
-
-                        for ( i = 0; i< monitors.length; i++)
-                        {
-                            monitors[i].Monitor.listDisplay='show';
-                            monitors[i].Monitor.isAlarmed = false;
-                            monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-                            
-                            
-                           // monitors[i].Monitor.sortOrder=i;
-                        }
-                        d.resolve(monitors);
+                        
+                        
                     })
                     .error(function (err) {
                         //console.log("HTTP Error " + err);

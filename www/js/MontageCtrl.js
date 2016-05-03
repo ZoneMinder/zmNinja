@@ -711,7 +711,8 @@ function initPackery()
         //    modalLoadNotifications();
         //  console.log ("Refreshing Image...");
         //  }.bind(this), 1000);
-
+        
+        $scope.monitor = monitor;
         $scope.showPTZ = false;
         $scope.monitorId = mid;
         $scope.monitorName = ZMDataModel.getMonitorName(mid);
