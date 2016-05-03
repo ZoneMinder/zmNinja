@@ -300,6 +300,7 @@ angular.module('zmApp.controllers')
         ZMDataModel.zmLog("Monitor Orientation is: " + $scope.orientation);
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         
+         $scope.monitor = monitor;
 
         $scope.showPTZ = false;
         $scope.monitorId = mid;
