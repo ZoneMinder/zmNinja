@@ -41,7 +41,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             })
             .success(function (data, status, headers) {
                 console.log("LOOKING FOR " + zm.loginScreenString);
-                //console.log ("DATA RECEIVED " + JSON.stringify(data));
+                console.log ("DATA RECEIVED " + JSON.stringify(data));
                 if (data.indexOf(zm.loginScreenString) == -1) {
                     
                     $scope.wizard.loginURL = $scope.wizard.fqportal;
@@ -241,6 +241,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var u  = $scope.wizard.loginURL;
         var d  = $q.defer();
         var api1 = u+"/api" ;
+        var api3 = u+"/zm/api";
         var c = URI.parse(u);
         
         // lets also try without the path
@@ -253,7 +254,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         
         
         // lets try both /zm/api and /api. What else is there?
-        var apilist = [api1, api2];
+        var apilist = [api1, api2, api3];
         
         findFirstReachableUrl(apilist, '/host/getVersion.json')
         .then (function (success) {
