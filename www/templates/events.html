@@ -150,13 +150,13 @@
                                 <p>scroll <i class="icon ion-arrow-left-c"></i>
                                 <i class="icon ion-arrow-right-c"></i></p>
                                 <ion-scroll direction="x" overflow-scroll="false">
-                                    
+                                    baseURL {{event.Event.baseURL}}
                                         <span ng-repeat="alarm in alarm_images">
                                                  
                                             <figure style="display:inline-block">
                                                 
                                                 <figcaption><p>frame:{{alarm.id}} score:{{alarm.score}}</p></figcaption>       
-                                                  <img  image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(playbackURL,event.Event.relativePath,alarm.fname, alarm.id, event.Event.Id)"/>
+                                                  <img  image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.id, event.Event.Id)"/>
                                                   
                                                 
                                                 </figure>
@@ -194,7 +194,7 @@
                                             <!-- <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/> -->
                                             
                                              
-                                            <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
+                                            <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
                                             
                                             <br/>
 

@@ -1028,7 +1028,10 @@ angular.module('zmApp.controllers')
                                     zmDebug ("portal  parsed is " + JSON.stringify(p));
 
                                     var st = "";
+                                    var baseurl = "";
+                                    
                                     st+= (s.scheme? s.scheme: p.scheme)+"://"; // server scheme overrides 
+                                    
                                     
                                     // if server doesn't have a protocol, what we want is in path
                                     if (!s.host) 
@@ -1038,13 +1041,22 @@ angular.module('zmApp.controllers')
                                     }
                                     
                                     st+=s.host;
+                                    
+                                    
                                     if (p.port || s.port)
                                     {
                                         st+= (s.port ? ":"+s.port: ":"+p.port);
+                                        
                                     }
+                                    
+                                    baseurl = st;
+                                    
                                     st+= (s.path? s.path: p.path);
                                     monitors[i].Monitor.streamingURL = st;
+                                    monitors[i].Monitor.baseURL = baseurl;
+                                    
                                     zmDebug ("Streaming URL for Monitor " + i + " is " + monitors[i].Monitor.streamingURL );
+                                    zmDebug ("Base URL for Monitor " + i + " is " + monitors[i].Monitor.baseURL );
                                     
                                 }
                             }
@@ -1060,7 +1072,9 @@ angular.module('zmApp.controllers')
                                 monitors[i].Monitor.isAlarmed = false;
                                 monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                                 monitors[i].Monitor.streamingURL = loginData.streamingurl;
+                                monitors[i].Monitor.baseURL = loginData.url;
 
+                                
 
                             }
                             d.resolve(monitors);
@@ -1343,6 +1357,31 @@ angular.module('zmApp.controllers')
             }
             return "(Unknown)";
         },
+        
+        getStreamingURL: function (id) {
+            var idnum = parseInt(id);
+            for (var i = 0; i < monitors.length; i++) {
+                if (parseInt(monitors[i].Monitor.Id) == idnum) {
+                    // console.log ("Matched, exiting getMonitorname");
+                    return monitors[i].Monitor.streamingURL;
+                }
+
+            }
+            return "(Unknown)";
+        },
+        
+        getBaseURL: function (id) {
+            var idnum = parseInt(id);
+            for (var i = 0; i < monitors.length; i++) {
+                if (parseInt(monitors[i].Monitor.Id) == idnum) {
+                    // console.log ("Matched, exiting getMonitorname");
+                    return monitors[i].Monitor.baseURL;
+                }
+
+            }
+            return "(Unknown)";
+        },
+        
 
     };
 }]);
