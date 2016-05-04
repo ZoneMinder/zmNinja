@@ -184,8 +184,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                     if ($rootScope.tappedNotification)
                     {
+                       
                         var ld = ZMDataModel.getLogin();
-
+                         ZMDataModel.zmLog ("Came via push tap. onTapScreen="+ld.onTapScreen);
                         //console.log ("***** NOTIFICATION TAPPED  ");
                         $rootScope.tappedNotification = 0;
                         $ionicHistory.nextViewOptions({disableBack: true});	

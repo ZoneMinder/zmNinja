@@ -69,34 +69,25 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
             buttons: [
                 {
                     text: 'Cancel',
-                    onTap: function (e) {
-                        return "CANCEL";
-                    }
+                    
 
                 },
                 {
                     text: 'OK',
                     onTap: function (e) {
-                        return "OK";
+                        
+                        ld.onTapScreen = $scope.myopt.selectedState;
+                        ZMDataModel.zmLog("Setting new onTap State:"+ld.onTapScreen);
+                        ZMDataModel.setLogin(ld);
+                        $scope.defScreen = $scope.myopt.selectedState;
+                        
 
                     }
                }
            ]
         });
 
-        // It seems invoking a popup within a popup handler
-        // causes issues. Doing this outside due to that reason
-        $rootScope.zmPopup.then(function (res) {
-            
-            if (res == "OK") {
-                ld.onTapScreen = $scope.myopt.selectedState;
-                ZMDataModel.zmDebug("Setting new onTap State:");
-                ZMDataModel.setLogin(ld);
-                $scope.defScreen = $scope.myopt.selectedState;
-               // if ($scope.myopt.selectedState != "")
-                   // controlZM($scope.myopt.selectedState);
-            }
-        });
+       
     };
     
     //----------------------------------------------------------------

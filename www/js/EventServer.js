@@ -471,6 +471,17 @@ angular.module('zmApp.controllers')
                     $rootScope.alarmCount = "0";
                     $rootScope.isAlarm = 0;
                     $rootScope.tappedNotification = 1;
+                    
+                    if ($rootScope.platformOS == 'ios')
+                    {
+                        ZMDataModel.zmDebug ("iOS only: clearing background push");
+                        push.finish(function() {
+                            ZMDataModel.zmDebug ("Finished background push");
+                        }, function() {
+                            ZMDataModel.zmDebug ("background push error");
+                        }, 'push-1');
+                    }
+                    
                 } else {
                     
                     // this flag honors the HW mute button. Go figure
