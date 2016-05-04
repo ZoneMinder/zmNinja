@@ -84,6 +84,7 @@ angular.module('zmApp.controllers')
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
+        
        // $scope.connKey = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
 
@@ -121,7 +122,7 @@ angular.module('zmApp.controllers')
             title: ""
         };
         $scope.search = {
-            text: ""
+            
         };
         $scope.myfilter = "";
         $scope.eventCommands = eventCommands;
@@ -203,7 +204,7 @@ angular.module('zmApp.controllers')
                     .then(function (data) {
                        // console.log("EventCtrl Got events");
                         //var events = [];
-
+                        console.log ("********** MULTISERVER");
                         var myevents = data;
                         ZMDataModel.zmDebug("EventCtrl: success, got " + myevents.length + " events");
                         var loginData = ZMDataModel.getLogin();
@@ -214,7 +215,7 @@ angular.module('zmApp.controllers')
                                 idfound = false;
                                 for (var ii = 0; ii < $scope.monitors.length; ii++) {
                                     if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId) {
-
+                                        
                                         //console.log ( $scope.monitors[ii].Monitor.Id + " MATCHES " + myevents[i].Event.MonitorId);
                                         idfound = true;
                                         break;
@@ -223,6 +224,12 @@ angular.module('zmApp.controllers')
                             }
 
 
+                            myevents[i].Event.streamingURL = ZMDataModel.getStreamingURL (myevents[i].Event.MonitorId);
+                            myevents[i].Event.baseURL = ZMDataModel.getBaseURL (myevents[i].Event.MonitorId);
+                            console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
+                            
+                            console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
+                            
                             myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
                             myevents[i].Event.ShowScrub = false;
                             myevents[i].Event.height = zm.eventsListDetailsHeight;
@@ -237,7 +244,7 @@ angular.module('zmApp.controllers')
                             var min = moment(str).format('mm');
                             var sec = moment(str).format('ss');
 
-                            myevents[i].Event.BasePath = loginData.url + "/events/" +
+                            myevents[i].Event.BasePath = myevents[i].Event.baseURL + "/events/" +
                                 myevents[i].Event.MonitorId + "/" +
                                 yy + "/" +
                                 mm + "/" +
@@ -797,7 +804,7 @@ angular.module('zmApp.controllers')
                         event.Event.DefaultVideo = "";
                     // grab video details
                     event.Event.video = {};
-                    var videoURL = loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
+                    var videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
 
                    // console.log("************** VIDEO IS " + videoURL);
                     event.Event.video.config = {
@@ -1258,7 +1265,7 @@ angular.module('zmApp.controllers')
             var min = moment(str).format('mm');
             var sec = moment(str).format('ss');
 
-            basePath = loginData.url + "/events/" +
+            basePath = event.Event.baseURL + "/events/" +
                 event.Event.MonitorId + "/" +
                 yy + "/" +
                 mm + "/" +
@@ -1472,6 +1479,7 @@ angular.module('zmApp.controllers')
 
                                         //console.log ( $scope.monitors[ii].Monitor.Id + " MATCHES " + myevents[i].Event.MonitorId);
                                         idfound = true;
+                                        
                                         break;
                                     }
                                 }

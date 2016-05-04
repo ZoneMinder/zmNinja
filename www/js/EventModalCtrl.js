@@ -141,7 +141,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $http({
                 method: 'POST',
                 /*timeout: 15000,*/
-                url: loginData.url + '/index.php',
+                url: $scope.commandURL + '/index.php',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     //'Accept': '*/*',
@@ -660,7 +660,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //$scope.singleImageQuality = 100;
         
         
-        
+        $scope.commandURL = $scope.currentEvent.Event.baseURL;
+        ZMDataModel.zmLog (">>>>>>>>>>>>>>>>>>ZMS url command is " + $scope.commandURL);
         
         currentEvent = $scope.currentEvent;
         
