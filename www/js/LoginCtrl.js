@@ -562,7 +562,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
 
         if (parseInt($scope.loginData.maxMontage) <= 0) {
-            $scope.loginData.maxMontage = "10";
+            $scope.loginData.maxMontage = "100";
         }
 
 
