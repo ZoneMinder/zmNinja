@@ -127,14 +127,30 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
         //console.log ("Event timer");
         //console.log ("Event timer");
-        processEvent('99',$scope.connKey);
+        if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='')
+        {
+            console.log ("playing video, not using zms, skipping event commands");
+        }
+        else
+        {
+            processEvent('99',$scope.connKey);
+        }
     }
     
     
     function sendCommand(cmd,connkey,extras,rq)
     {
-        console.log ("Sending CGI command to " + $scope.commandURL);
         var d = $q.defer();
+        
+        if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='')
+        {
+            console.log ("playing video, not using zms, skipping event commands");
+            d.resolve(true);
+            return (d.promise);
+        }
+        
+        console.log ("Sending CGI command to " + $scope.commandURL);
+        
          var loginData = ZMDataModel.getLogin();
         var rqtoken = rq? rq:"stream";
         var myauthtoken = $rootScope.authSession.replace("&auth=","");
@@ -1162,7 +1178,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     event.Event.BasePath = computeBasePath(event);
                     event.Event.relativePath = computeRelativePath(event);
-
+                    
+                    event.Event.streamingURL = ZMDataModel.getStreamingURL (event.Event.MonitorId);
+                  //  event.Event.baseURL = ZMDataModel.getBaseURL (event.Event.MonitorId);
+                    event.Event.baseURL = loginData.url;
+                    event.Event.imageMode = ZMDataModel.getImageMode (event.Event.MonitorId);
 
                     //console.log (JSON.stringify( success));
                     $scope.eventName = event.Event.Name;
