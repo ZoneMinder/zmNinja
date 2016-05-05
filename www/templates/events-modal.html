@@ -59,7 +59,7 @@
                     <!-- no default video -->
                  
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
-                        <div>
+                        <div  on-double-tap="closeModal();">
                             <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()">
                                      <vg-controls>
                                             <vg-play-pause-button></vg-play-pause-button>
