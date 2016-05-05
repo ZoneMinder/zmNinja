@@ -706,6 +706,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if (m.id != 'footage')
             return;
         
+        //console.log ("************** MODAL INSIDE FOOTAGE CLOSED");
         $scope.isModalActive = false;
          
         //console.log("**MODAL REMOVED: Stopping modal timer");
@@ -1194,7 +1195,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
 
                     event.Event.video = {};
-                    var videoURL = $scope.loginData.url + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
+                    var videoURL;
+                    
+                    if (event.Event.imageMode == 'path')
+                        videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
+                    else
+                        videoURL = event.Event.baseURL + "/index.php?view=view_video&eid="+event.Event.Id;
+
+                   console.log("************** VIDEO IS " + videoURL);
 
                     //console.log("************** VIDEO IS " + videoURL);
                     event.Event.video.config = {
@@ -1328,23 +1336,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     if (typeof $scope.mycarousel !== 'undefined') {
         $scope.$watch('mycarousel.index', function () {
-            
-            
-
-           // console.log ("***ION MYCAROUSEL CHANGED TO " + $scope.mycarousel.index);
-            
-            //console.log ("*** IONRANGE INDEX IS " + $scope.ionRange.index);
-            
-              //  console.log ("**** CURRENT EVENT frames" + currentEvent.Event.Frames);
-            
+      
             if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames -1)) {
-            //    console.log ("PLAYBACK FINISHED");
                 playbackFinished();
             }
             // end of playback from quick scrub
             // so ignore gapless
-
-
 
             if ($scope.event && $scope.ionRange.index == parseInt($scope.event.Event.Frames) - 1) {
                 if (!$scope.modal || $scope.modal.isShown() == false) {

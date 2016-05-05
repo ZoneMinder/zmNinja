@@ -126,11 +126,23 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     // Tapping on a frame shows this image
     //------------------------------------------------------
     
-    $scope.showImage = function (p,r,f, fid)
+     $scope.showImage = function (p,r,f, fid,e, imode, id)
     {
-        var img = "<img width='100%' ng-src='"+p+"/index.php?view=image&path="+r+f+"'>";
-        $rootScope.zmPopup = $ionicPopup.alert({title: 'frame:'+fid+'/Event:'+$scope.eid,template:img,  cssClass:'popup80'});
+        var img;
+        console.log ("Image Mode " + imode);
+        if (imode=='path') 
+        
+            img = "<img width='100%' ng-src='"+p+"/index.php?view=image&path="+r+f+"'>";
+        else
+        {
+            img = "<img width='100%' ng-src='"+p+"/index.php?view=image&fid="+id+"'>";
+           // console.log ("IS MULTISERVER SO IMAGE IS " + img);
+        }
+        $rootScope.zmPopup = $ionicPopup.alert({title: 'frame:'+fid+'/Event:'+e,template:img,  cssClass:'popup80'});
     };
+    
+    
+   
     
 
     $scope.$on('modal.removed', function (e,m) {
@@ -325,6 +337,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                          y:event.event.Frame[i].Score,
                          eid: event.event.Event.Id,
                          fid: event.event.Frame[i].FrameId,
+                         id: event.event.Frame[i].Id,
                          //group:i,
                          relativePath:computeRelativePath(event.event),
                          score:event.event.Frame[i].Score,
@@ -346,6 +359,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                              relativePath:computeRelativePath(event.event),
                              score:event.event.Frame[i].Score,
                              fname: padToN(event.event.Frame[i].FrameId,eventImageDigits)+"-capture.jpg",
+                             id: event.event.Frame[i].Id,
 
                             });
             }
@@ -388,11 +402,12 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                 
                 //console.log ("You tapped " + ndx);
                       $scope.alarm_images=[];
-                    $scope.playbackURL = ZMDataModel.getLogin().url;
+                    $scope.playbackURL = $scope.event.Event.baseURL;
                 var items = current_data.datasets[0].frames[ndx];
                             $scope.alarm_images.push({
                             relativePath:items.relativePath, 
                             fid:items.fid, 
+                            id: items.id,
                             fname:items.fname, 
                             score:items.score,
                             time:moment(items.x).format("MMM D,"+ZMDataModel.getTimeFormatSec()),
@@ -402,136 +417,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     }
     
    
-    /*
-    function drawGraph(event)
-    {
-        //console.log ("EVENT IS  " + JSON.stringify(event));
-        items = [];
-        groups = new vis.DataSet();
-        $scope.eid = event.event.Event.Id;
-        for (var i=0; i< event.event.Frame.length; i++)
-        {
-            
-          //  groups.add({id:i, content:'', //className:'c-'+i
-                    //   });
-           // console.log ("Pushing " + event.event.Frame[i].TimeStamp +":"+ event.event.Frame[i].Score);
-            items.push ({x:event.event.Frame[i].TimeStamp,
-                         y:event.event.Frame[i].Score,
-                         eid: event.event.Event.Id,
-                         fid: event.event.Frame[i].FrameId,
-                         //group:i,
-                         relativePath:computeRelativePath(event.event),
-                         score:event.event.Frame[i].Score,
-                         fname: padToN(event.event.Frame[i].FrameId,eventImageDigits)+"-capture.jpg",
-                         tap_selected:false
-                        });
-        }
-        
-        
-        var dataset = new vis.DataSet(items);
-          var options = {
-              autoResize:true,
-              height: Math.floor($rootScope.devHeight/2),
-              //clickToUse:true,
-
-              style:'bar',
-              start: event.event.Frame[0].TimeStamp,
-              end: event.event.Frame[event.event.Frame.length-1].TimeStamp,
-              max: event.event.Frame[event.event.Frame.length-1].TimeStamp,
-              min: event.event.Frame[0].TimeStamp,
-
-              drawPoints:function (item,group)
-                  {
-                      //ITEM IS {"screen_x":1199.0266666666666,"screen_y":232,"x":"2016-03-28T09:27:46.000Z","y":0,"groupId":"__ungrouped__"}
-                      var taps = false;
-                      for (var i=0; i<items.length; i++)
-                      {
-                          
-                          if (moment(items[i].x).format("YYYY-MM-DD HH:mm:ss") == moment(item.x).format("YYYY-MM-DD HH:mm:ss"))
-                          {
-                              taps = items[i].tap_selected;
-                              if (taps)
-                              {
-                                
-                                  //console.log (">>Item " +i + " is true");
-                              }
-                              break;
-                          }
-                      }
-                      
-                     
-                      var style_sel = {size:30, style:'circle', className:'visred'};
-                      var style = {size:20, style:'circle'};
-                     
-                      return (taps ? style_sel: style);
-                  },
-              barChart:
-              {
-                 width: 50,
-                 sideBySide:false,
-                 align:'center'
-              },
-              dataAxis:
-              {
-                  left: {title: {text:'score'}},
-              }
-          };
-        var container = document.getElementById('timeline-alarm-vis');
-        Graph2d = new vis.Graph2d(container, dataset, groups, options);
-        $scope.dataReady = true;
-       
-        
-        
-        //-------------------------------------------------------
-        // When you tap on a data node
-        //------------------------------------------------------
-    
-        Graph2d.on('click',function (prop) {
-            
-            $timeout( function() {
-                $scope.alarm_images=[];
-                
-                $scope.playbackURL = ZMDataModel.getLogin().url;
-                var t = moment(prop.time);
-               
-                //console.log ("date="+t.format("YYYY-MM-DD HH:mm:ss"));
-                var tformat = t.format ("YYYY-MM-DD HH:mm:ss");
-                
-
-                for (var i=0; i<items.length; i++)
-                {
-                    if (moment(items[i].x).format("YYYY-MM-DD HH:mm:ss") == tformat)
-                    {
-                   
-                         ZMDataModel.zmDebug ("Item " + i + " is tapped with timestamp of "+items[i].x);
-                       items[i].tap_selected = true;
-                        $scope.alarm_images.push({
-                            relativePath:items[i].relativePath, 
-                            fid:ite
-                            ms[i].fid, 
-                            fname:items[i].fname, 
-                            score:items[i].score,
-                            time:moment(items[i].x).format("MMM D,"+ZMDataModel.getTimeFormat()),
-                            eid:items[i].eid});
-                        // console.log ("setting " + i + " to " +  items[i].tap_selected);
-
-                    }
-                    else
-                    {
-                        items[i].tap_selected = false;
-                    }
-                }
-                Graph2d.setItems(items);
-                //Graph2d.redraw();
-                //console.log ("REDRAW");
-               
-            });
-            
-        });
-
-    }
-    */
-    
+   
     //--------------------------------------------------------
     // utility function
     //--------------------------------------------------------

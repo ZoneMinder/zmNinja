@@ -138,6 +138,27 @@ angular.module('zmApp.controllers')
             $fileLogger.debug(val);
     }
     
+     //credit: https://gist.github.com/alexey-bass/1115557
+    function versionCompare(left, right) {
+        if (typeof left + typeof right != 'stringstring')
+            return false;
+
+        var a = left.split('.');
+        var  b = right.split('.');
+        var i = 0;
+        var len = Math.max(a.length, b.length);
+
+        for (; i < len; i++) {
+            if ((a[i] && !b[i] && parseInt(a[i]) > 0) || (parseInt(a[i]) > parseInt(b[i]))) {
+                return 1;
+            } else if ((b[i] && !a[i] && parseInt(b[i]) > 0) || (parseInt(a[i]) < parseInt(b[i]))) {
+                return -1;
+            }
+        }
+
+        return 0;
+}
+    
    
     //--------------------------------------------------------------------------
     // Banner display of messages
@@ -987,7 +1008,7 @@ angular.module('zmApp.controllers')
                                       {return parseInt(a.Monitor.Sequence)-parseInt(b.Monitor.Sequence);});
                         //console.log("promise resolved inside HTTP success");
                         monitorsLoaded = 1;
-                        console.log ("*********************** HOOOO");
+                        zmDebug ("Now trying to get multi-server data, if present");
                         $http.get (apiurl+"/servers.json") 
                         .success (function(data){
                             // We found a server list API, so lets make sure
@@ -1016,7 +1037,7 @@ angular.module('zmApp.controllers')
                                 if (serverFound)
                                 {
 
-                                    zmDebug ("Monitor " +i + " has a server hostname of " + multiservers[j].Server.Hostname);
+                                    zmDebug ("Monitor " +monitors[i].Monitor.Id + " has a server hostname of " + multiservers[j].Server.Hostname);
 
                                     // Now here is the logic, I need to retrieve serverhostname,
                                     // and slap on the host protocol and path. Meh.
@@ -1054,9 +1075,13 @@ angular.module('zmApp.controllers')
                                     st+= (s.path? s.path: p.path);
                                     monitors[i].Monitor.streamingURL = st;
                                     monitors[i].Monitor.baseURL = baseurl;
+                                    // starting 1.30 we have fid=xxx mode to return images
+                                    monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion,"1.30")==-1) ? "path":"fid"; 
+                                    zmDebug ("API " +$rootScope.apiVersion+  ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access" );
                                     
-                                    zmDebug ("Streaming URL for Monitor " + i + " is " + monitors[i].Monitor.streamingURL );
-                                    zmDebug ("Base URL for Monitor " + i + " is " + monitors[i].Monitor.baseURL );
+                                    //zmDebug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
+                                    //zmDebug ("Base URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.baseURL );
+                                    
                                     
                                 }
                             }
@@ -1073,6 +1098,9 @@ angular.module('zmApp.controllers')
                                 monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                                 monitors[i].Monitor.streamingURL = loginData.streamingurl;
                                 monitors[i].Monitor.baseURL = loginData.url;
+                                monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion,"1.30")==-1) ? "path":"fid"; 
+                                zmDebug ("API " +$rootScope.apiVersion+ ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access" );
+                                
 
                                 
 
@@ -1352,6 +1380,18 @@ angular.module('zmApp.controllers')
                 if (parseInt(monitors[i].Monitor.Id) == idnum) {
                     // console.log ("Matched, exiting getMonitorname");
                     return monitors[i].Monitor.Name;
+                }
+
+            }
+            return "(Unknown)";
+        },
+        
+        getImageMode: function (id) {
+            var idnum = parseInt(id);
+            for (var i = 0; i < monitors.length; i++) {
+                if (parseInt(monitors[i].Monitor.Id) == idnum) {
+                    // console.log ("Matched, exiting getMonitorname");
+                    return monitors[i].Monitor.imageMode;
                 }
 
             }
