@@ -140,7 +140,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
    
     function stripProto(u)
     {
-        if (u.indexOf('://'))
+        if (u.indexOf('://')!=-1)
              return u.substr(u.indexOf('://')+3);
         else
             return u;
