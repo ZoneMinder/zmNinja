@@ -265,10 +265,10 @@ angular.module('zmApp.controllers')
                                 // in multiserver BasePath is login url for frames 
                                 // http://login.url/index.php?view=frame&eid=19696772&fid=21
                                 
-                                console.log ("COMPARING "+ZMDataModel.getLogin().url+ " TO " +myevents[i].Event.baseURL);
+                              //  console.log ("COMPARING "+ZMDataModel.getLogin().url+ " TO " +myevents[i].Event.baseURL);
                                 if (ZMDataModel.getLogin().url != myevents[i].Event.baseURL)
                                 {
-                                    ZMDataModel.zmDebug ("Multi server, changing base");
+                                    //ZMDataModel.zmDebug ("Multi server, changing base");
                                     myevents[i].Event.baseURL = ZMDataModel.getLogin().url;
                                    
                                 }
