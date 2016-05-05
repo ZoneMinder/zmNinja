@@ -177,6 +177,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         // pass this event to ModalCtrl
         $scope.currentEvent = event;
+      
         $scope.event = event;
         // in Timeline view, make sure events stick to same monitor
         $scope.followSameMonitor = "1";
@@ -620,6 +621,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                             }
                                         }
                                     }
+                                    
+                                    myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
+                            // now construct base path
+
+                            myevents[i].Event.streamingURL = ZMDataModel.getStreamingURL (myevents[i].Event.MonitorId);
+                            myevents[i].Event.baseURL = ZMDataModel.getBaseURL (myevents[i].Event.MonitorId);
+                            myevents[i].Event.imageMode = ZMDataModel.getImageMode (myevents[i].Event.MonitorId);
+                           // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
+
+                          //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
+                            
+                 
+                            
 
                                     if (idfound) {
 
