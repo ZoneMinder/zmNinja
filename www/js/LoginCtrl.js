@@ -677,7 +677,17 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                             ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
                                             loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path or try using the discover feature";
                                         
-                                            var refresh = ZMDataModel.getMonitors(1);
+                                            ZMDataModel.zmDebug ("refreshing API version...");
+                                            ZMDataModel.getAPIversion()
+                                            .then (function (data) {
+                                                var refresh = ZMDataModel.getMonitors(1);
+                                                $rootScope.apiVersion = data;
+                                            }, 
+                                                   function (error) {
+                                                    var refresh = ZMDataModel.getMonitors(1);
+                                                    $rootScope.apiVersion = "0.0.0";
+                                                    ZMDataModel.zmDebug ("Error, failed API version, setting to " +$rootScope.apiVersion);
+                                            });
                                             
                                             if (showalert)
                                             {
@@ -712,7 +722,17 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                                    
                                                 });
                                             }
-                                            var refresh = ZMDataModel.getMonitors(1);
+                                            ZMDataModel.zmDebug ("refreshing API version...");
+                                            ZMDataModel.getAPIversion()
+                                            .then (function (data) {
+                                                var refresh = ZMDataModel.getMonitors(1);
+                                                $rootScope.apiVersion = data;
+                                            }, 
+                                                   function (error) {
+                                                    var refresh = ZMDataModel.getMonitors(1);
+                                                    $rootScope.apiVersion = "0.0.0";
+                                                    ZMDataModel.zmDebug ("Error, failed API version, setting to " +$rootScope.apiVersion);
+                                            });
 
                                         });
                                 });
