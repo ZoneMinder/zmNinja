@@ -135,6 +135,18 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     }
     
     //--------------------------------------------------------------------------
+    // removes proto scheme from string
+    //--------------------------------------------------------------------------
+   
+    function stripProto(u)
+    {
+        if (u.indexOf('://'))
+             return u.substr(u.indexOf('://')+3);
+        else
+            return u;
+    }
+    
+    //--------------------------------------------------------------------------
     // tries to detect cgi-bin
     //--------------------------------------------------------------------------
    
@@ -551,11 +563,24 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         }
 
         if (!checkscheme($scope.wizard.portalurl)) {
-            $rootScope.zmPopup = SecuredPopups.show('show', {
-                title: 'Whoops!',
-                template: 'Please specify http:// or https:// in the url',
+            
+            $scope.portalproto = [ {text:"http",value:"http://"}, {text:"https",value:"https://"}];
+            $scope.myproto = {proto:""};
+            
+            
+            
+            $rootScope.zmPopup = $ionicPopup.show({
+                title: 'No protocol specified',
+                scope: $scope,
+                template: 'Please select: <ion-radio-fix ng-repeat="item in portalproto" ng-value="item.value" ng-model="myproto.proto">{{item.text}}</ion-radio-fix>',
                 buttons: [{
-                    text: 'Ok'
+                    text: 'Ok',
+                    onTap: function(e)
+                    {
+                        ZMDataModel.zmDebug ("Protocol selected:" + $scope.myproto.proto);
+                        $scope.wizard.portalurl = $scope.myproto.proto+stripProto($scope.wizard.portalurl);
+                    }
+                    
                 }]
 
             });
