@@ -652,8 +652,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                         portalurl = $scope.loginData.url + '/index.php';
                     }
                     
+                    // possible image digits changed between servers
+                    ZMDataModel.getKeyConfigParams(0);
                     
-
                     ZMDataModel.zmLog("Validating APIs at " + apiurl);
                     $http.get(apiurl)
                         .success(function (data) {
