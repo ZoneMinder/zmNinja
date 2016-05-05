@@ -133,6 +133,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     
     function sendCommand(cmd,connkey,extras,rq)
     {
+        console.log ("Sending CGI command to " + $scope.commandURL);
         var d = $q.defer();
          var loginData = ZMDataModel.getLogin();
         var rqtoken = rq? rq:"stream";
@@ -157,6 +158,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                             foo = foo + extras;
                             //console.log("EXTRAS****SUB RETURNING " + foo);
                     }
+                    console.log ("CGI subcommand="+foo);
                     return foo;
                         
                 },
@@ -190,7 +192,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     
     function processEvent(cmd,connkey)
     {
+   
         var loginData = ZMDataModel.getLogin();
+         console.log ("sending process Event command to " + loginData.url);
         var myauthtoken = $rootScope.authSession.replace("&auth=","");
         //&auth=
             var req = $http({

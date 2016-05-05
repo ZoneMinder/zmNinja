@@ -292,6 +292,8 @@ angular.module('zmApp.controllers')
             " and Controllable:" + controllable + " with control ID:" + controlid);
 
 
+        $scope.monitor = monitor;
+        //console.log (">>>>>>>>>>>> MONITOR CRL " + $scope.monitor.
         $scope.monitorId = mid;
         $scope.monitorName = ZMDataModel.getMonitorName(mid);
         $scope.LoginData = ZMDataModel.getLogin();
@@ -300,7 +302,7 @@ angular.module('zmApp.controllers')
         ZMDataModel.zmLog("Monitor Orientation is: " + $scope.orientation);
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         
-         $scope.monitor = monitor;
+    
 
         $scope.showPTZ = false;
         $scope.monitorId = mid;

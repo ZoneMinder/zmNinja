@@ -1386,6 +1386,18 @@ angular.module('zmApp.controllers')
             return "(Unknown)";
         },
         
+        getMonitorObject: function (id) {
+            var idnum = parseInt(id);
+            for (var i = 0; i < monitors.length; i++) {
+                if (parseInt(monitors[i].Monitor.Id) == idnum) {
+                    // console.log ("Matched, exiting getMonitorname");
+                    return monitors[i];
+                }
+
+            }
+            return "(Unknown)";
+        },
+        
         getImageMode: function (id) {
             var idnum = parseInt(id);
             for (var i = 0; i < monitors.length; i++) {

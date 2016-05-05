@@ -763,6 +763,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
                 $scope.monitorId = mid;
                 $scope.monitorName = ZMDataModel.getMonitorName(mid);
+                $scope.monitor = ZMDataModel.getMonitorObject(mid);
                 configurePTZ($scope.monitorId);
             }, 200);
         }
