@@ -371,7 +371,8 @@ angular.module('zmApp.controllers')
                         "ios": {
                             "alert": "true",
                             "badge": "true",
-                            "sound": "true"
+                            "sound": "true",
+                            "clearBadge": "true"
                         }
                     }
 
@@ -475,11 +476,9 @@ angular.module('zmApp.controllers')
                     if ($rootScope.platformOS == 'ios')
                     {
                         ZMDataModel.zmDebug ("iOS only: clearing background push");
-                        push.finish(function() {
-                            ZMDataModel.zmDebug ("Finished background push");
-                        }, function() {
-                            ZMDataModel.zmDebug ("background push error");
-                        }, 'push-1');
+                         push.finish(function() {
+                            ZMDataModel.zmDebug("processing of push data is finished");
+                        });
                     }
                     
                 } else {
