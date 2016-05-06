@@ -36,7 +36,7 @@ angular.module('zmApp.controllers')
         'url': '', // This is the ZM portal path
         'apiurl': '', // This is the API path
         'eventServer':'', //experimental Event server address
-        'maxMontage': "10", //total # of monitors to display in montage
+        'maxMontage': "100", //total # of monitors to display in montage
         'streamingurl': "",
         'maxFPS': "3", // image streaming FPS
         'montageQuality': "50", // montage streaming quality in %

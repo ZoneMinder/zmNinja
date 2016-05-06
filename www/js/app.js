@@ -46,7 +46,7 @@ angular.module('zmApp', [
     //loginInterval: 30000,
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
-    safeMontageLimit: 10,
+    safeMontageLimit: 100,
     safeImageQuality: 10,
     maxFPS: 30,
     defaultFPS: 3,
@@ -1108,6 +1108,7 @@ angular.module('zmApp', [
             });
             $rootScope.userCancelledAuth = true;
             window.stop();
+            
             $state.go("login" ,{"wizard": false});
 
         };

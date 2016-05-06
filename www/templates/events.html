@@ -277,7 +277,7 @@
 
             <div class="list list-inset">
                 <div class="item item-divider">1 hour summary</div>
-                <div ng-repeat="hour in hours" id="hour-{{$index}}">
+                <div ng-repeat="hour in hours|filter:{ monitor: '!'+'(Unknown)'}" id="hour-{{$index}}">
 
                     <span style="color:black">
                     <a class="item item-icon-right" href="" 
@@ -292,7 +292,7 @@
 
             <div class="list list-inset">
                 <div class="item item-divider">1 day summary</div>
-                <div ng-repeat="day in days" id="day-{{$index}}">
+                <div ng-repeat="day in days|filter:{ monitor: '!'+'(Unknown)'}" id="day-{{$index}}">
 
                     <span style="color:black">
                     <a class="item item-icon-right" href="" 
@@ -308,7 +308,7 @@
 
             <div class="list list-inset">
                 <div class="item item-divider">1 week summary</div>
-                <div ng-repeat="week in weeks" id="week-{{$index}}">
+                <div ng-repeat="week in weeks|filter:{ monitor: '!'+'(Unknown)'}" id="week-{{$index}}">
 
                     <span style="color:black">
                     <a class="item item-icon-right" href="" 
@@ -323,7 +323,7 @@
 
             <div class="list list-inset">
                 <div class="item item-divider">1 month summary</div>
-                <div ng-repeat="month in months" id="month-{{$index}}">
+                <div ng-repeat="month in months|filter:{ monitor: '!'+'(Unknown)'}" id="month-{{$index}}">
 
                     <span style="color:black">
                     <a class="item item-icon-right" href="" 

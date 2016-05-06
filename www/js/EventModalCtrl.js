@@ -93,6 +93,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             ZMDataModel.zmDebug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
              ZMDataModel.stopNetwork("Auth-Success inside EventModalCtrl");
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
+            //console.log ("********* OFFSET FROM AUTH SUCC");
             $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
             //$timeout.cancel(eventQueryHandle);
             //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
@@ -109,6 +110,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
         $scope.isPaused = !$scope.isPaused;
         ZMDataModel.zmDebug ("Paused is " + $scope.isPaused);
+        
         
         sendCommand ( $scope.isPaused? '1':'2',$scope.connKey);
         
@@ -149,16 +151,17 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             return (d.promise);
         }
         
-        console.log ("Sending CGI command to " + $scope.commandURL);
+        
         
          var loginData = ZMDataModel.getLogin();
+        console.log ("Sending CGI command to " + loginData.url);
         var rqtoken = rq? rq:"stream";
         var myauthtoken = $rootScope.authSession.replace("&auth=","");
         //&auth=
             $http({
                 method: 'POST',
                 /*timeout: 15000,*/
-                url: $scope.commandURL + '/index.php',
+                url: loginData.url + '/index.php',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     //'Accept': '*/*',
@@ -227,7 +230,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         str.push(encodeURIComponent(p) + "=" +
                             encodeURIComponent(obj[p]));
                     var foo = str.join("&");
-                    //console.log("****SUB RETURNING " + foo);
+                    console.log("****processEvent subcommands RETURNING " + foo);
                     return foo;
                 },
 
@@ -273,8 +276,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                    ZMDataModel.zmDebug("Hmm I found an error " + JSON.stringify(resp));
                     //window.stop();
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
+                      
+                       // console.log (JSON.stringify(resp));
                      $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
-                    ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
+                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
                     //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
                 }
             });
@@ -680,8 +685,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //$scope.singleImageQuality = 100;
         
         
-        $scope.commandURL = $scope.currentEvent.Event.baseURL;
-        ZMDataModel.zmLog (">>>>>>>>>>>>>>>>>>ZMS url command is " + $scope.commandURL);
+        
+        //$scope.commandURL = $scope.currentEvent.Event.baseURL+"/index.php";
+       // ZMDataModel.zmLog (">>>>>>>>>>>>>>>>>>ZMS url command is " + $scope.commandURL);
         
         currentEvent = $scope.currentEvent;
         
@@ -700,7 +706,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             prepareModalEvent(currentEvent.Event.Id);
             if (ld.useNphZmsForEvents)
             {
-           
+                $timeout (function() {
                 ZMDataModel.zmLog ("Starting checkAllEvents interval...");
                 
                 //eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
@@ -709,6 +715,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     checkEvent();
                     //  console.log ("Refreshing Image...");
                 }.bind(this),zm.eventPlaybackQuery);
+                },5000);
             }
             
         }
@@ -742,6 +749,17 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     // Playback speed adjuster
     $scope.adjustSpeed = function (val) {
+        
+        if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='' )
+        {
+            
+            $ionicLoading.show({
+            template: "Please use video player controls for H264 events. ZoneMinder doesn't yet support zms controls",
+            noBackdrop: true,
+            duration: 3000
+            });
+            return;
+        }
         
         var ld = ZMDataModel.getLogin();
         
@@ -834,6 +852,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         
         ZMDataModel.zmDebug("EventModalCtrl: gapless has changed resetting everything & re-generating connkey");
              ZMDataModel.stopNetwork("EventModalCtrl-toggle gapless");
+            ZMDataModel.zmDebug ("Regenerating connkey as gapless has changed");
+            // console.log ("********* OFFSET FROM TOGGLE GAPLESS");
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
             $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
             //$timeout.cancel(eventQueryHandle);
@@ -1002,6 +1022,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         
     function jumpToEventZms(connkey, dirn) {
         
+        
+        if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='' )
+        {
+            
+            $ionicLoading.show({
+            template: "Event navigation is not available with video feeds. ZoneMinder doesn't yet support them",
+            noBackdrop: true,
+            duration: 3000
+            });
+            return;
+            
+        }
         var cmd = dirn==1?'13':'12';
         $scope.d_eventId = "...";
         ZMDataModel.zmDebug ("Sending " + cmd + " to " + connkey);
@@ -1012,6 +1044,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
              duration: zm.httpTimeout
             });
         
+        console.log ("Send command connkey: "+connkey);
         sendCommand ( cmd,connkey)
         .then (
             function (success) 
@@ -1020,10 +1053,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 $ionicLoading.hide();
             }, 
             function (error) {
-                
+                    
                     ZMDataModel.zmDebug("Hmm jump  error " + JSON.stringify(error));
                      ZMDataModel.stopNetwork("EventModalCtrl-jumptoEventZms error");
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
+                   //  console.log ("********* OFFSET FROM JUMPTOEVENTZMS ERROR");
                      $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
                     //$timeout.cancel(eventQueryHandle);
