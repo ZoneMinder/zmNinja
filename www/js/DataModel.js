@@ -324,7 +324,7 @@ angular.module('zmApp.controllers')
             
             function findFirstReachableUrl (urls)
             {
-                if (urls.length > 0)
+                if (urls.length > 0 && $rootScope.userCancelledAuth != true)
                 {
                      $ionicLoading.show({template: 'trying ' + urls[0].server});
                     zmLog ("Reachability test.." + urls[0].url);
