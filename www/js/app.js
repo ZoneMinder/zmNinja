@@ -1107,6 +1107,7 @@ angular.module('zmApp', [
                 disableBack: true
             });
             $rootScope.userCancelledAuth = true;
+            window.stop();
             $state.go("login" ,{"wizard": false});
 
         };
