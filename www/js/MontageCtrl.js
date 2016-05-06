@@ -26,6 +26,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var pckry, draggie;
     var draggies;
     $scope.isDragabillyOn = false;
+    $scope.allImagesLoaded = false;
+    
     
     $scope.gridScale = "grid-item-30";
     
@@ -263,6 +265,7 @@ function initPackery()
         imagesLoaded(elem).on('always', function() {
                 //console.log ("******** ALL IMAGES LOADED");
                 ZMDataModel.zmDebug ("All images loaded");
+                $scope.allImagesLoaded = true;
             
                 
                 $ionicLoading.hide();
@@ -345,7 +348,13 @@ function initPackery()
 }
     
     function loadNotifications() {
-
+        
+        if (!$scope.allImagesLoaded)
+        {
+            ZMDataModel.zmDebug ("skipping image refresh, packery is still loading");
+            return;
+        }
+       
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
 
         //console.log ("Inside Montage timer...");
@@ -353,7 +362,7 @@ function initPackery()
     }
 
     $scope.cancelReorder = function()
-    {
+    { 
          $scope.modal.remove();
     };
     
@@ -877,7 +886,11 @@ function initPackery()
         ZMDataModel.zmDebug ("Detected orientation change, redoing packery resize");
         $timeout(function(){pckry.onresize();});
     }
-    
+ 
+       $scope.$on('$ionicView.beforeEnter', function () {
+           ZMDataModel.zmDebug ("Setting image mode to snapshot, will change to image when packery is all done");
+           $scope.allImagesLoaded = false;
+       });
     
     $scope.$on('$ionicView.beforeLeave', function () {
        // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
