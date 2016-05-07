@@ -628,6 +628,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             myevents[i].Event.streamingURL = ZMDataModel.getStreamingURL (myevents[i].Event.MonitorId);
                             myevents[i].Event.baseURL = ZMDataModel.getBaseURL (myevents[i].Event.MonitorId);
                             myevents[i].Event.imageMode = ZMDataModel.getImageMode (myevents[i].Event.MonitorId);
+                            if (ZMDataModel.getLogin().url != myevents[i].Event.baseURL)
+                            {
+                                //ZMDataModel.zmDebug ("Multi server, changing base");
+                                myevents[i].Event.baseURL = ZMDataModel.getLogin().url;
+                                   
+                            }
                            // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
 
                           //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
