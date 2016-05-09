@@ -470,8 +470,13 @@ angular.module('zmApp.controllers')
         $scope.footerExpand = function () {
             //https://server/zm/api/events/consoleEvents/5%20minute.json
             var ld = ZMDataModel.getLogin();
+            
+            var af = "/AlarmFrames >=: " + ld.minAlarmCount;
 
-            var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour.json";
+            var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour"+af+".json";
+            ZMDataModel.zmDebug ("consoleEvents API:"+apiurl);
+            
+            
             $http.get(apiurl)
                 .success(function (data) {
                     ZMDataModel.zmDebug(JSON.stringify(data));
@@ -506,7 +511,8 @@ angular.module('zmApp.controllers')
                 });
 
 
-            apiurl = ld.apiurl + "/events/consoleEvents/1%20day.json";
+            apiurl = ld.apiurl + "/events/consoleEvents/1%20day"+af+".json";
+            ZMDataModel.zmDebug ("consoleEvents API:"+apiurl);
             $http.get(apiurl)
                 .success(function (data) {
                     ZMDataModel.zmDebug(JSON.stringify(data));
@@ -539,7 +545,8 @@ angular.module('zmApp.controllers')
 
 
 
-            apiurl = ld.apiurl + "/events/consoleEvents/1%20week.json";
+            apiurl = ld.apiurl + "/events/consoleEvents/1%20week"+af+".json";
+            ZMDataModel.zmDebug ("consoleEvents API:"+apiurl);
             $http.get(apiurl)
                 .success(function (data) {
                     ZMDataModel.zmDebug(JSON.stringify(data));
@@ -572,7 +579,8 @@ angular.module('zmApp.controllers')
                 });
 
 
-            apiurl = ld.apiurl + "/events/consoleEvents/1%20month.json";
+            apiurl = ld.apiurl + "/events/consoleEvents/1%20month"+af+".json";
+            ZMDataModel.zmDebug ("consoleEvents API:"+apiurl);
             $http.get(apiurl)
                 .success(function (data) {
                     ZMDataModel.zmDebug(JSON.stringify(data));
