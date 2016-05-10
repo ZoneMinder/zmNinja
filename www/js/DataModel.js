@@ -1037,7 +1037,7 @@ angular.module('zmApp.controllers')
                                 if (serverFound)
                                 {
 
-                                    zmDebug ("Monitor " +monitors[i].Monitor.Id + " has a server hostname of " + multiservers[j].Server.Hostname);
+                                    zmDebug ("Monitor " +monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
 
                                     // Now here is the logic, I need to retrieve serverhostname,
                                     // and slap on the host protocol and path. Meh.
@@ -1045,7 +1045,7 @@ angular.module('zmApp.controllers')
                                     var p= URI.parse (loginData.streamingurl);
                                     var s = URI.parse (multiservers[j].Server.Hostname);
                                     
-                                    zmDebug ("server parsed is " + JSON.stringify(s));
+                                    zmDebug ("recording server parsed is " + JSON.stringify(s));
                                     zmDebug ("portal  parsed is " + JSON.stringify(p));
 
                                     var st = "";
