@@ -12,7 +12,7 @@ d) gapless
 
 */
 
-angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
+angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', 'SecuredPopups', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, SecuredPopups) {
 
 
     // from parent scope
@@ -829,6 +829,72 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     }
 
 
+    $scope.enableAlarm = function(mid,mode)
+    {
+        
+        if (mode) // trigger alarm
+        {
+             $rootScope.zmPopup = SecuredPopups.show('show',{
+                    title: 'Confirm',
+                    template: "Are you sure you want to force an alarm for Monitor:"+$scope.monitorName+"?",
+                    buttons: [
+                        {
+                            text: 'Yes',
+                            onTap: function(e)
+                            {
+                                enableAlarm(mid, mode);
+                            }
+                        },
+                        {
+                            text: 'No',
+                            onTap: function (e)
+                            {
+                                return;
+                            }
+                        }
+                    ]
+                               
+                    });
+        }
+        else
+            enableAlarm(mid,mode);
+        
+        function enableAlarm(mid,mode)
+        {
+            var apiurl = ZMDataModel.getLogin().apiurl;
+            var c = mode? "on":"off";
+            var alarmurl = apiurl+"/monitors/alarm/id:"+mid+"/command:"+c+".json";
+            ZMDataModel.zmLog ("Invoking " + alarmurl);
+            
+            var status = mode? "forcing alarm": "cancelling alarm";
+            $ionicLoading.show({
+                            template: status,
+                            noBackdrop: true,
+                            duration: zm.largeHttpTimeout,
+                        });
+            
+            $http.get(alarmurl)
+            .then (function (data) {
+                $ionicLoading.show({
+                            template: "success",
+                            noBackdrop: true,
+                            duration: 2000,
+                        });
+            }, 
+                function (error) {
+                
+                $ionicLoading.show({
+                            template: "error - please make sure your API supports this feature",
+                            noBackdrop: true,
+                            duration: 3000,
+                        });
+                ZMDataModel.zmDebug ("Error in enableAlarm " + JSON.stringify(error));
+            });
+        }
+        
+        
+        
+    };
 
 
     //-----------------------------------------------------------------------
