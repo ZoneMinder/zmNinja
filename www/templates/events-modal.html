@@ -143,12 +143,34 @@
 
 
 <div class="events-range-modal-text" >showing event: {{d_eventId}}</div>
+        
+        
+<div id="flyoutmenu" style="position:absolute;bottom:80px;left:10px">
+    <ul>
+        <li ng-if="defaultVideo==''">
+            <a href="" ng-click="toggleGapless()"> <i class="ion-ios-loop-strong"></i>-{{loginData.gapless?"on":"off"}}</a>
+        </li>
+        
+        <li ng-if="defaultVideo==''">
+            <a href="" ng-click="saveEventImageToPhone(false)"> <i class="ion-ios-camera"></i></a>
+        </li>
+        
+        <li ng-if="defaultVideo==''">
+            <a href="" ng-click="saveEventImageToPhone(true)"> <i class="ion-android-notifications"></i></a>
+        </li>
+        
+        <li ng-if="$root.isAlarm">
+            <a data-badge="{{$root.alarmCount}}" class="notification-badge animated infinite tada" href="" ng-click="handleAlarms()"><i class="ion-ios-bell"></i></a>
+        </li>
+        
+        
+        
+    </ul>
+    
+</div>
 
-<span class="event-modal-alarm-badge">
-            <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive button-small" 
-                    ng-click="handleAlarms();" ng-if="$root.isAlarm" ></a>
-</span>
 
+<!--
 
 <span class="events-modal-gapless-icon" ng-if="defaultVideo==''">
         <a ng-class="loginData.gapless? 'button button-small button-stable' : 'button button-small button-assertive' " href="" ng-click="toggleGapless()">gapless: {{loginData.gapless?"on":"off"}}</a>
@@ -162,7 +184,7 @@
         <a class="button button-small icon ion-android-notifications button-positive" href="" ng-click="saveEventImageToPhone(true)"></a>
 </span>
 
-
+-->
         <div class="events-range-modal" ng-if="(defaultVideo=='' )&& (loginData.useNphZmsForEvents)" style="color:white">
    <!-- Progress: Event: {{eventId}} - {{progressText}}-->
     <div class="row">
