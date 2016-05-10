@@ -901,7 +901,15 @@ body { font-family: sans-serif; }
   color:white;
   z-index:99;
  
-    font-size: 1.5em;
+    font-size: 0.7em;
+    font-family: sans-serif;
+    text-transform: uppercase;
+}
+
+
+#flyoutmenu ul li a i {
+  
+    font-size: 2.5em;
     font-family: sans-serif;
     text-transform: uppercase;
 }
@@ -909,7 +917,9 @@ body { font-family: sans-serif; }
 #flyoutmenu li {
   display: inline-block;
    margin-bottom: .2em;
-    padding:0.5em;
+   padding:0.7em;
+   margin-right: 4px;
+    
     line-height: 100%;
 }
 
