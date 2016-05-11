@@ -596,6 +596,10 @@ angular.module('zmApp.controllers')
             
         },
         
+        versionCompare: function (l,r) {
+            return versionCompare(l,r);
+        },
+        
         //-----------------------------------------------------------------
         // Allow the option to reset first use if I need it in future
         //-----------------------------------------------------------------
