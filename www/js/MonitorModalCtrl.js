@@ -9,8 +9,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
 
  
-    document.addEventListener("pause", onPause, false);
-    document.addEventListener("resume", onResume, false);
+ 
 
     $scope.animationInProgress = false;
     $scope.imageFit = true;
@@ -254,6 +253,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // Queries the 1.30 API for recording state of current monitor
     //-------------------------------------------------------------
     function loadModalNotifications() {
+        
+        if (ZMDataModel.versionCompare($rootScope.apiVersion,"1.30")==-1)
+        {
+            
+            return;
+        }
 
         var status = ["idle", "pre-alarm","alarmed","alert","record"];
         console.log ("Inside Modal timer...");
@@ -261,9 +266,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         var alarmurl = apiurl+"/monitors/alarm/id:"+$scope.monitorId+"/command:status.json";
             ZMDataModel.zmLog ("Invoking " + alarmurl);
         
+                
         $http.get(alarmurl)
             .then (function (data) {
-                 ZMDataModel.zmDebug ("Success in monitor alarmed status " + JSON.stringify(data));
+               //  ZMDataModel.zmDebug ("Success in monitor alarmed status " + JSON.stringify(data));
                  
                  $scope.monStatus = status[parseInt(data.data.status)];
                
@@ -272,7 +278,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 
                 
                      $scope.monStatus = "";
-                    ZMDataModel.zmDebug ("Error in monitor alarmed status " + JSON.stringify(error));
+                     ZMDataModel.zmDebug ("Error in monitor alarmed status ");
             });
         
 
@@ -660,7 +666,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     
     $scope.stateColor = function()
     {
-        console.log ("***MONSTATUS**"+$scope.monStatus+"**");
+        //console.log ("***MONSTATUS**"+$scope.monStatus+"**");
         var color="";
         switch ($scope.monStatus)
         {
@@ -774,8 +780,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     };
 
     $scope.$on('$ionicView.enter', function () {
-        $scope.monStatus = "";
-        
+            
 
     });
 
@@ -1085,6 +1090,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         
     $scope.$on('modal.shown', function () {
           
+        $scope.monStatus = "";
+        document.addEventListener("pause", onPause, false);
+        document.addEventListener("resume", onResume, false);
+        
         var ld = ZMDataModel.getLogin();
         //currentEvent = $scope.currentEvent;
         $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
