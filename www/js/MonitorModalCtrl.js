@@ -367,13 +367,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             .then (function (data) {
                  ZMDataModel.zmDebug ("Success in monitor alarmed status " + JSON.stringify(data));
                  
-                 $scope.monStatus = " - state:"+ status[parseInt(data.data.status)];
+                 $scope.monStatus = " - "+ status[parseInt(data.data.status)];
                
             }, 
                 function (error) {
                 
                 
-                     $scope.monStatus = " - state:unknown";
+                     $scope.monStatus = "";
                     ZMDataModel.zmDebug ("Error in monitor alarmed status " + JSON.stringify(error));
             });
         
