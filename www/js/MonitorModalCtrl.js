@@ -22,6 +22,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var imgLoad;
     
     
+    
    // $scope.currentEventLength = parseFloat($scope.currentEvent.Event.Length);  
     //console.log ("Current event duration is " + $scope.currentEventLength);
     
@@ -250,17 +251,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
 
     $interval.cancel(intervalModalHandle);
-
-    if (ld.useNphZms == false && $ionicHistory.currentStateName() != 'events' && 
-        $ionicHistory.currentStateName() != 'timeline') {
+ {
         intervalModalHandle = $interval(function () {
             loadModalNotifications();
             //  console.log ("Refreshing Image...");
-        }.bind(this), ld.refreshSec * 1000);
+        }.bind(this), 5000);
 
-        loadModalNotifications();
-    } else {
-        ZMDataModel.zmLog("Using nph-zms or not live view, no timer needed");
+    
         
             
     }
@@ -341,16 +338,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             $interval.cancel(intervalModalHandle);
 
             var ld = ZMDataModel.getLogin();
-            if (ld.useNphZms == false && $ionicHistory.currentStateName() != 'events' && 
-        $ionicHistory.currentStateName() != 'timeline') {
+            
                 intervalModalHandle = $interval(function () {
                     loadModalNotifications();
                     //  console.log ("Refreshing Image...");
-                }.bind(this), ld.refreshSec * 1000);
-            } else {
-                ZMDataModel.zmLog("using nph or not live view - no timers needed");
-            }
-            
+                }.bind(this),5000);
+           
             
 
             $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
@@ -364,8 +357,26 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     function loadModalNotifications() {
 
-        //console.log ("Inside Modal timer...");
-        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+        var status = ["idle", "pre-alarm","alarmed","alert","record"];
+        console.log ("Inside Modal timer...");
+        var apiurl = ZMDataModel.getLogin().apiurl;
+        var alarmurl = apiurl+"/monitors/alarm/id:"+$scope.monitorId+"/command:status.json";
+            ZMDataModel.zmLog ("Invoking " + alarmurl);
+        
+        $http.get(alarmurl)
+            .then (function (data) {
+                 ZMDataModel.zmDebug ("Success in monitor alarmed status " + JSON.stringify(data));
+                 
+                 $scope.monStatus = " - state:"+ status[parseInt(data.data.status)];
+               
+            }, 
+                function (error) {
+                
+                
+                     $scope.monStatus = " - state:unknown";
+                    ZMDataModel.zmDebug ("Error in monitor alarmed status " + JSON.stringify(error));
+            });
+        
 
     }
 
@@ -687,6 +698,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             //console.log("Image is zoomed in - not honoring swipe");
             return;
         }
+        $scope.monStatus = "";
         moveToMonitor(m, d);
 
 
@@ -1143,7 +1155,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     };
 
     $scope.$on('$ionicView.enter', function () {
-
+        $scope.monStatus = "";
         
 
     });
