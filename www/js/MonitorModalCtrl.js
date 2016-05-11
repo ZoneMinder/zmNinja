@@ -265,7 +265,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             .then (function (data) {
                  ZMDataModel.zmDebug ("Success in monitor alarmed status " + JSON.stringify(data));
                  
-                 $scope.monStatus = " - "+ status[parseInt(data.data.status)];
+                 $scope.monStatus = status[parseInt(data.data.status)];
                
             }, 
                 function (error) {
@@ -651,6 +651,40 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         
         
         
+    };
+    
+    
+    //-----------------------------------------------------------------------
+    // color for monitor state
+    //-----------------------------------------------------------------------
+    
+    $scope.stateColor = function()
+    {
+        console.log ("***MONSTATUS**"+$scope.monStatus+"**");
+        var color="";
+        switch ($scope.monStatus)
+        {
+            case "":
+                color="background-color:none";
+                break;
+            case "idle":
+                color="background-color:#4B77BE";
+                break;
+            case "pre-alarm":
+                color="background-color:#e67e22";
+                break;
+            case "alarmed":
+                color="background-color:#D91E18";
+                break;
+            case "alert":
+                color="background-color:#e67e22";
+                break;
+            case "record":
+                color="background-color:#26A65B";
+                break;
+        }
+            
+        return "padding-left:4px;padding-right:4px;"+color;
     };
 
 
@@ -1056,7 +1090,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
         console.log ("************* GENERATED CONNKEY " + $scope.connKey);
         $scope.currentFrame = 1;
-      
+        $scope.monStatus = "";
        
         configurePTZ($scope.monitorId);
 
