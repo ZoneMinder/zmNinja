@@ -1022,6 +1022,7 @@ angular.module('zmApp.controllers')
                             
                             for ( var i = 0; i< monitors.length; i++)
                             {
+                               
                                 monitors[i].Monitor.listDisplay='show';
                                 monitors[i].Monitor.isAlarmed = false;
                                 monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
