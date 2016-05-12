@@ -14,113 +14,28 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     //---------------------------------------------------------------------
 
     
-    document.addEventListener("pause", onPause, false);
-    document.addEventListener("resume", onResume, false);
     
-    var isLongPressActive = false;
-    $scope.isReorder = false;
-    var intervalHandleMontage; // will hold image resize timer on long press
+
+    var intervalHandleMontage; // image re-load handler
+    var intervalHandleAlarmStatus; // status of each alarm state
+    
    
     
     var gridcontainer;
     var pckry, draggie;
     var draggies;
-    $scope.isDragabillyOn = false;
-    $scope.allImagesLoaded = false;
-    
-    
-    $scope.gridScale = "grid-item-30";
-    
-    var loginData = ZMDataModel.getLogin();
-    $scope.LoginData = ZMDataModel.getLogin();
-    $scope.monLimit = $scope.LoginData.maxMontage;
-    
-    // in edit mode, this is called to add or remove a monitor
-    
-    
-    $scope.monitors = message;
-    $scope.MontageMonitors = angular.copy(message);
-    $scope.sliderChanging = false;
-    
-    if ($scope.MontageMonitors.length == 0)
-    {
-        $rootScope.zmPopup= $ionicPopup.alert({
-                    title: "No Monitors found",
-                    template: "Please check your credentials"
-        });
-        $ionicHistory.nextViewOptions({
-                    disableBack: true
-        });
-        $state.go("login" ,{"wizard": false});
-        return;
-    }
-
-    
-    ZMDataModel.zmLog("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
-
-    // set them all at 30% for packery
-    for (var i=0; i < $scope.MontageMonitors.length; i++)
-    {
-        $scope.MontageMonitors[i].Monitor.gridScale="30";
-        $scope.MontageMonitors[i].Monitor.selectStyle="";
-        
-    }
-    
-
-    $ionicPopover.fromTemplateUrl('templates/help/montage-help.html', {
-        scope: $scope,
-    }).then(function (popover) {
-        $scope.popover = popover;
-    });
-
-    var timestamp = new Date().getUTCMilliseconds();
-    $scope.minimal = $stateParams.minimal;
-    $scope.zmMarginTop = $scope.minimal ? 0:15;
-
-    
-    $scope.isRefresh = $stateParams.isRefresh;
-    var sizeInProgress = false;
-    $scope.imageStyle = true;
-    $rootScope.intervalHandle="";
-    $scope.isModalActive = false;
+    var loginData;
+    var timestamp;
+    var sizeInProgress;
     var modalIntervalHandle;
-
-
-    $ionicSideMenuDelegate.canDragContent($scope.minimal? true: true);
-
+    var ld;
     
-    $rootScope.authSession = "undefined";
-    $ionicLoading.show({
-        template: 'negotiating stream authentication...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        duration: zm.loadingTimeout,
-        maxWidth: 300,
-        showDelay: 0
-    });
-
-
-    var ld = ZMDataModel.getLogin();
     
-    //console.log ("MONITORS " + JSON.stringify($scope.monitors));
-    $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-    ZMDataModel.getAuthKey($rootScope.validMonitorId, (Math.floor((Math.random() * 999999) + 1)).toString())
-        .then(function (success) {
-                $ionicLoading.hide();
-                //console.log(success);
-                $rootScope.authSession = success;
-                ZMDataModel.zmLog("Stream authentication construction: " +
-                    $rootScope.authSession);
+    
 
-            },
-            function (error) {
 
-                $ionicLoading.hide();
-                ZMDataModel.zmDebug("MontageCtrl: Error in authkey retrieval " + error);
-                //$rootScope.authSession="";
-                ZMDataModel.zmLog("MontageCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-            });
-
+   
+   
       // --------------------------------------------------------
     // Handling of back button in case modal is open should
     // close the modal
@@ -156,28 +71,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.toggleHide = function(mon)
     {
         
-         //pckry.getItemElements().forEach(function (itemElem) {itemElem.hide();
-         //});
-    //pckry.hide();
+    
         if (mon.Monitor.listDisplay == 'noshow')
             mon.Monitor.listDisplay = 'show';
         else
             mon.Monitor.listDisplay = 'noshow';
-        
-        /*$timeout(function () {
-             
-               pckry.once( 'layoutComplete', function() {
-                    var positions = pckry.getShiftPositions('data-item-id');
-                    console.log ("POSITIONS MAP " + JSON.stringify(positions));
-                    var ld = ZMDataModel.getLogin();
-                    ld.packeryPositions = JSON.stringify(positions);
-                    ZMDataModel.setLogin(ld);
-                   $ionicLoading.hide();
-                   $scope.sliderChanging = false;
-                });
-                
-                layout(pckry);
-        },100);*/
+
         
         
     };
@@ -345,7 +244,111 @@ function initPackery()
         return false; 
       } 
       return true; 
-}
+    }
+    
+    //-----------------------------------------------------------------------
+    // color for monitor state in montage 
+    //-----------------------------------------------------------------------
+    
+    $scope.stateColor = function()
+    {
+        console.log ("***MONSTATUS**"+$scope.monStatus+"**");
+        var attr="";
+        switch ($scope.monStatus)
+        {
+            case "":
+                attr="color:rgba(0, 0, 0, 0)";
+                break;
+            case "idle":
+                attr="color:rgba(0, 0, 0, 0)";
+                break;
+            case "pre-alarm":
+                attr="color:#e67e22";
+                break;
+            case "alarmed":
+                attr="color:#D91E18";
+                break;
+            case "alert":
+                attr="color:#e67e22";
+                break;
+            case "record":
+                attr="color:#26A65B";
+                break;
+        }
+            
+        return attr;
+    };
+
+    //-----------------------------------------------------------------------
+    // cycle through all displayed monitors and check alarm status
+    //-----------------------------------------------------------------------
+    
+    function loadAlarmStatus()
+    {
+       
+        for (var i=0; i < $scope.MontageMonitors.length; i++)
+        {
+            if  (($scope.MontageMonitors[i].Monitor.Function == 'None') || 
+                ($scope.MontageMonitors[i].Monitor.Enabled == '0') ||
+                ($scope.MontageMonitors[i].Monitor.listDisplay == 'noshow'))
+            {
+                continue;
+            }
+            getAlarmStatus($scope.MontageMonitors[i]);
+                
+        }
+        
+    }
+    
+     //-----------------------------------------------------------------------
+    // get alarm status over HTTP for a single monitor
+    //-----------------------------------------------------------------------
+    function getAlarmStatus(monitor)
+    {
+        var apiurl = ZMDataModel.getLogin().apiurl;
+        //console.log ("ALARM CALLED WITH " +JSON.stringify(monitor));
+        
+        var alarmurl = apiurl+"/monitors/alarm/id:"+monitor.Monitor.Id+"/command:status.json";
+          //  console.log("Alarm Check: Invoking " + alarmurl);
+        
+        
+        $http.get(alarmurl)
+            .then (function (data) {
+               //  ZMDataModel.zmDebug ("Success in monitor alarmed status " + JSON.stringify(data));
+                 
+                 var sid  = parseInt(data.data.status);
+                 switch (sid) {
+                    case 0: // idle
+                         monitor.Monitor.alarmState = 'color:rgba(0,0,0,0);';
+                         break;
+                    case 1:// pre alarm
+                         monitor.Monitor.alarmState = 'color:#e67e22;';
+                         break;
+                    case 2: // alarm
+                         monitor.Monitor.alarmState = 'color:#D91E18;';
+                         break;
+                    case 3: // alert
+                         monitor.Monitor.alarmState = 'color:#e67e22;';
+                         break;
+                    case 4:
+                         monitor.Monitor.alarmState = 'color:#26A65B;';
+                         break;
+                    
+                 }
+               
+            }, 
+                function (error) {
+                
+                
+                     monitor.Monitor.alarmState = 'color:rgba(0,0,0,0);';
+                     ZMDataModel.zmDebug ("Error in monitor alarmed status ");
+            });
+    }
+    
+    
+     //-----------------------------------------------------------------------
+    // re-compute rand so snapshot in montage reloads
+    //-----------------------------------------------------------------------
     
     function loadNotifications() {
         
@@ -516,7 +519,8 @@ function initPackery()
         ZMDataModel.zmDebug("MontageCtrl: switch minimal is " + $scope.minimal);
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
         console.log ("alarms:Cancelling timer");
-        $interval.cancel($rootScope.intervalHandle);
+        $interval.cancel(intervalHandleMontage);
+        $interval.cancel(intervalHandleAlarmStatus);
         
         if (!$rootScope.isAlarm)
         {
@@ -550,7 +554,8 @@ function initPackery()
        // console.log("Hide Statusbar");
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
          console.log ("minimal switch:Cancelling timer");
-        $interval.cancel($rootScope.intervalHandle); //we will renew on reload
+        $interval.cancel(intervalHandleMontage); //we will renew on reload
+        $interval.cancel(intervalHandleAlarmStatus);
         // We are reloading this view, so we don't want entry animations
         $ionicHistory.nextViewOptions({
             disableAnimate: true,
@@ -641,65 +646,7 @@ function initPackery()
         }
     }
     
-    $scope.getW = function(monitor)
-    {
-        var w,h;
-        if (monitor.Monitor.Orientation == '0')
-                w = monitor.Monitor.Width;
-        else 
-                w = monitor.Monitor.Height;
-        
-         if (monitor.Monitor.Orientation == '0')
-                h = monitor.Monitor.Height;
-        else 
-                h = monitor.Monitor.Width;
-        return (getScale (w,h, $rootScope.devWidth, $rootScope.devHeight).w);
-        
-    };
-    
-    $scope.getH= function(monitor)
-    {
-        var w,h;
-        if (monitor.Monitor.Orientation == '0')
-                w = monitor.Monitor.Width;
-        else 
-                w = monitor.Monitor.Height;
-        
-         if (monitor.Monitor.Orientation == '0')
-                h = monitor.Monitor.Height;
-        else 
-                h = monitor.Monitor.Width;
-        return (getScale (w,h, $rootScope.devWidth, $rootScope.devHeight).h);
-        
-    };
-    
-    
-   function getScale(ow,oh,bw,bh)
-    {
-        
-        var  original_width = ow;
-        var  original_height = oh;
-        var  bound_width = bw;
-        var bound_height = bh;
-        var new_width = original_width;
-        var  new_height = original_height;
-        if (original_width > bound_width) {
-        //scale width to fit
-        new_width = bound_width;
-        //scale height to maintain aspect ratio
-        new_height = (new_width * original_height) / original_width;
-    }
-
-    // then check if we need to scale even with the new height
-        if (new_height > bound_height) {
-            //scale height to fit instead
-            new_height = bound_height;
-            //scale width to maintain aspect ratio
-            new_width = (new_height * original_width) / original_height;
-        }
-        return ({w:Math.round(new_width), h:Math.round(new_height)});
-
-    }
+   
 
     //---------------------------------------------------------------------
     // main monitor modal open - if drag is not on, this is called on touch
@@ -713,7 +660,8 @@ function initPackery()
         ZMDataModel.zmLog("Cancelling montage timer, opening Modal");
         // ZMDataModel.zmLog("Starting Modal timer");
          console.log ("openModal:Cancelling timer");
-        $interval.cancel($rootScope.intervalHandle);
+        $interval.cancel(intervalHandleMontage);
+        $interval.cancel(intervalHandleAlarmStatus);
 
         // let's start modal timer
         //   modalIntervalHandle= $interval(function () {
@@ -796,11 +744,21 @@ function initPackery()
         ZMDataModel.zmLog("Restarting montage timer, closing Modal...");
         var ld = ZMDataModel.getLogin();
          console.log ("closeModal: Cancelling timer");
-        $interval.cancel($rootScope.intervalHandle);
-        $rootScope.intervalHandle = $interval(function () {
+        $interval.cancel(intervalHandleMontage);
+        $interval.cancel(intervalHandleAlarmStatus);
+        
+        intervalHandleMontage = $interval(function () {
             loadNotifications();
             //  console.log ("Refreshing Image...");
         }.bind(this), ld.refreshSec * 1000);
+        
+        intervalHandleAlarmStatus = $interval(function () {
+            loadAlarmStatus();
+            //  console.log ("Refreshing Image...");
+        }.bind(this), 5000);
+        
+        
+        
         //  }.bind(this), 60 * 1000);
         //$interval.cancel(modalIntervalHandle);
 
@@ -821,7 +779,8 @@ function initPackery()
 
     function onPause() {
         ZMDataModel.zmDebug("MontageCtrl: onpause called");
-        $interval.cancel($rootScope.intervalHandle);
+        $interval.cancel(intervalHandleMontage);
+        $interval.cancel(intervalHandleAlarmStatus);
         // $interval.cancel(modalIntervalHandle);
 
         // FIXME: Do I need to  setAwake(false) here?
@@ -844,7 +803,7 @@ function initPackery()
     $scope.$on('$destroy', function () {
       //  console.log("*** CANCELLING INTERVAL ****");
         // console.log ("destroy:Cancelling timer");
-      //  $interval.cancel($rootScope.intervalHandle);
+      //  $interval.cancel(intervalHandleMontage);
     });
 
 
@@ -859,11 +818,19 @@ function initPackery()
         //console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
-        $interval.cancel($rootScope.intervalHandle);
-        $rootScope.intervalHandle = $interval(function () {
+        $interval.cancel(intervalHandleMontage);
+        $interval.cancel(intervalHandleAlarmStatus);
+        
+        intervalHandleMontage = $interval(function () {
             loadNotifications();
             //  console.log ("Refreshing Image...");
         }.bind(this), ld.refreshSec * 1000);
+        
+        intervalHandleAlarmStatus = $interval(function () {
+            loadAlarmStatus();
+            //  console.log ("Refreshing Image...");
+        }.bind(this), 5000);
+        
 
         loadNotifications();
     });
@@ -876,27 +843,114 @@ function initPackery()
     
      $scope.$on('$ionicView.afterEnter', function () {
         console.log("**VIEW ** Montage Ctrl AFTER ENTER");
-          window.addEventListener("resize", orientationChanged, false);
+        window.addEventListener("resize", orientationChanged, false);
         $timeout ( function () {initPackery(); },500);
+        document.addEventListener("pause", onPause, false);
+        document.addEventListener("resume", onResume, false);
         
     });
     
-    function orientationChanged()
-    {
-        ZMDataModel.zmDebug ("Detected orientation change, redoing packery resize");
-        $timeout(function(){pckry.onresize();});
+    function orientationChanged() {
+    ZMDataModel.zmDebug("Detected orientation change, redoing packery resize");
+    $timeout(function () {
+        pckry.onresize();
+    });
+}
+
+$scope.$on('$ionicView.enter', function () {
+    ZMDataModel.zmDebug("Setting image mode to snapshot, will change to image when packery is all done");
+    $scope.allImagesLoaded = false;
+    $scope.isDragabillyOn = false;
+    $scope.allImagesLoaded = false;
+    $scope.gridScale = "grid-item-30";
+    $scope.LoginData = ZMDataModel.getLogin();
+    $scope.monLimit = $scope.LoginData.maxMontage;
+    $scope.minimal = $stateParams.minimal;
+    $scope.zmMarginTop = $scope.minimal ? 0 : 15;
+
+    $scope.monitors = message;
+    $scope.MontageMonitors = angular.copy(message);
+    $scope.sliderChanging = false;
+    loginData = ZMDataModel.getLogin();
+
+    $scope.isRefresh = $stateParams.isRefresh;
+    sizeInProgress = false;
+    $scope.imageStyle = true;
+    intervalHandleMontage = "";
+    $scope.isModalActive = false;
+    $scope.isReorder = false;
+
+    $ionicSideMenuDelegate.canDragContent($scope.minimal ? true : true);
+
+
+    if ($scope.MontageMonitors.length == 0) {
+        $rootScope.zmPopup = $ionicPopup.alert({
+            title: "No Monitors found",
+            template: "Please check your credentials"
+        });
+        $ionicHistory.nextViewOptions({
+            disableBack: true
+        });
+        $state.go("login", {
+            "wizard": false
+        });
+        return;
     }
- 
-       $scope.$on('$ionicView.beforeEnter', function () {
-           ZMDataModel.zmDebug ("Setting image mode to snapshot, will change to image when packery is all done");
-           $scope.allImagesLoaded = false;
-       });
+
+    ld = ZMDataModel.getLogin();
+
+    $rootScope.authSession = "undefined";
+    $ionicLoading.show({
+        template: 'negotiating stream authentication...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        duration: zm.loadingTimeout,
+        maxWidth: 300,
+        showDelay: 0
+    });
+
+
+    ZMDataModel.zmLog("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
+
+    // set them all at 30% for packery
+    for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+        $scope.MontageMonitors[i].Monitor.gridScale = "30";
+        $scope.MontageMonitors[i].Monitor.selectStyle = "";
+        $scope.MontageMonitors[i].Monitor.alarmState='color:rgba(0,0,0,0);';
+
+    }
+
+
+
+    //console.log ("MONITORS " + JSON.stringify($scope.monitors));
+    $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
+    ZMDataModel.getAuthKey($rootScope.validMonitorId, (Math.floor((Math.random() * 999999) + 1)).toString())
+        .then(function (success) {
+                $ionicLoading.hide();
+                //console.log(success);
+                $rootScope.authSession = success;
+                ZMDataModel.zmLog("Stream authentication construction: " +
+                    $rootScope.authSession);
+
+            },
+            function (error) {
+
+                $ionicLoading.hide();
+                ZMDataModel.zmDebug("MontageCtrl: Error in authkey retrieval " + error);
+                //$rootScope.authSession="";
+                ZMDataModel.zmLog("MontageCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+            });
+
+
+
+});
     
     $scope.$on('$ionicView.beforeLeave', function () {
        // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
         
         console.log ("beforeLeave:Cancelling timer");
-        $interval.cancel($rootScope.intervalHandle);
+        $interval.cancel(intervalHandleMontage);
+        $interval.cancel(intervalHandleAlarmStatus);
         pckry.destroy();
          window.removeEventListener("resize", orientationChanged, false);
         
