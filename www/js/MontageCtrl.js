@@ -6,21 +6,14 @@
 
 angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window',  '$localstorage', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage) {
 
-   /* $controller('zmApp.BaseController', {
-        $scope: $scope
-    });*/
     //---------------------------------------------------------------------
     // Controller main
     //---------------------------------------------------------------------
-
-    
-    
 
     var intervalHandleMontage; // image re-load handler
     var intervalHandleAlarmStatus; // status of each alarm state
     
    
-    
     var gridcontainer;
     var pckry, draggie;
     var draggies;
@@ -31,11 +24,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var ld;
     
     
-    
-
-
-   
-   
       // --------------------------------------------------------
     // Handling of back button in case modal is open should
     // close the modal
@@ -68,7 +56,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
             
         }, 1000);
 
-    $scope.toggleHide = function(mon)
+    /*$scope.toggleHide = function(mon)
     {
         
     
@@ -79,7 +67,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         
         
-    };
+    };*/
     
     
 
@@ -154,8 +142,7 @@ function initPackery()
          //console.log ("**** mygrid is " + JSON.stringify(elem));
          
         imagesLoaded(elem).on('progress', function(instance, img) {
-                //console.log ("******** SOME IMAGE LOADED");
-                //console.log ("IMAGE PROGRESS " + JSON.stringify(img) );
+              
                 progressCalled = true;
                 
                 if (layouttype) $timeout (function(){layout(pckry);},100);
@@ -294,7 +281,7 @@ function initPackery()
             {
                 continue;
             }
-            getAlarmStatus($scope.MontageMonitors[i]);
+          //  getAlarmStatus($scope.MontageMonitors[i]);
                 
         }
         
@@ -410,6 +397,7 @@ function initPackery()
         
     };
 
+    /*
     $scope.toggleDelete = function (i)
     {
         
@@ -419,7 +407,7 @@ function initPackery()
             $scope.copyMontage[i].Monitor.listDisplay = 'show';
             
         ZMDataModel.zmDebug ("index " + i + " is now " +  $scope.copyMontage[i].Monitor.listDisplay);
-    };
+    };*/
     
     $scope.hideUnhide = function()
     {
@@ -438,27 +426,15 @@ function initPackery()
             });
     };
     
-   /* $scope.swipeUp = function()
-    {
-        //console.log ("SWIPE UP");
-        $ionicScrollDelegate.$getByHandle("montage-delegate").scrollBy(0, $rootScope.devHeight/2, true);
-    };
+   
     
-    $scope.swipeDown = function()
-    {
-        //console.log ("SWIPE DOWN");
-        $ionicScrollDelegate.$getByHandle("montage-delegate").scrollBy(0, -($rootScope.devHeight/2), true);
-    };*/
-    
-    
-    
-
+/*
     $scope.closeReorderModal = function () {
       
         $scope.modal.remove();
 
     };
-    
+  */  
     
     //----------------------------------------------------------------
     // Alarm emit handling
@@ -663,12 +639,6 @@ function initPackery()
         $interval.cancel(intervalHandleMontage);
         $interval.cancel(intervalHandleAlarmStatus);
 
-        // let's start modal timer
-        //   modalIntervalHandle= $interval(function () {
-        //    modalLoadNotifications();
-        //  console.log ("Refreshing Image...");
-        //  }.bind(this), 1000);
-        
         $scope.monitor = monitor;
         $scope.showPTZ = false;
         $scope.monitorId = mid;
@@ -758,13 +728,6 @@ function initPackery()
         }.bind(this), 5000);
         
         
-        
-        //  }.bind(this), 60 * 1000);
-        //$interval.cancel(modalIntervalHandle);
-
-       
-        
-
     };
 
   
@@ -801,9 +764,7 @@ function initPackery()
     };
 
     $scope.$on('$destroy', function () {
-      //  console.log("*** CANCELLING INTERVAL ****");
-        // console.log ("destroy:Cancelling timer");
-      //  $interval.cancel(intervalHandleMontage);
+    
     });
 
 
@@ -862,7 +823,7 @@ $scope.$on('$ionicView.enter', function () {
     $scope.allImagesLoaded = false;
     $scope.isDragabillyOn = false;
     $scope.allImagesLoaded = false;
-    $scope.gridScale = "grid-item-30";
+    $scope.gridScale = "grid-item-50";
     $scope.LoginData = ZMDataModel.getLogin();
     $scope.monLimit = $scope.LoginData.maxMontage;
     $scope.minimal = $stateParams.minimal;
@@ -920,9 +881,6 @@ $scope.$on('$ionicView.enter', function () {
 
     }
 
-
-
-    //console.log ("MONITORS " + JSON.stringify($scope.monitors));
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
     ZMDataModel.getAuthKey($rootScope.validMonitorId, (Math.floor((Math.random() * 999999) + 1)).toString())
         .then(function (success) {
@@ -983,19 +941,19 @@ $scope.$on('$ionicView.enter', function () {
             {
              if ($scope.MontageMonitors[i].Monitor.selectStyle=="dragborder-selected")
              {
-                $scope.MontageMonitors[i].Monitor.gridScale="30"; 
+                $scope.MontageMonitors[i].Monitor.gridScale="50"; 
                  somethingReset = true;
              }
             }
             else
             {
-                $scope.MontageMonitors[i].Monitor.gridScale="30";
+                $scope.MontageMonitors[i].Monitor.gridScale="50";
                // somethingReset = true;
             }
         }
         if (!somethingReset && $scope.isDragabillyOn) // nothing was selected
         {
-            for (i=0; i< $scope.MontageMonitors.length; i++){$scope.MontageMonitors[i].Monitor.gridScale="30";}
+            for (i=0; i< $scope.MontageMonitors.length; i++){$scope.MontageMonitors[i].Monitor.gridScale="50";}
         }
         
         $timeout (function()
@@ -1084,7 +1042,6 @@ $scope.$on('$ionicView.enter', function () {
             }
         
         
-     
          $timeout(function () {
              
                pckry.once( 'layoutComplete', function() {
