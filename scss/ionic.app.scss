@@ -1,4 +1,7 @@
 /*
+
+sass ionic.app.scss --style compressed >../www/css/ionic.app.min.css
+
 To customize the look and feel of Ionic, you can override the variables
 in ionic's _variables.scss file.
 
@@ -19,31 +22,31 @@ $dark:                            #444 !default;
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 
-$stable:                        #00A0A0 !default;
-$positive:                      #367588 !default;
+$stable:                        #2980b9 !default;
+$positive:                      #2980b9 !default;
 $assertive:                     #cd5c5c !default;
-$balanced:                      #66cdaa !default;
+$balanced:                      #3498DB !default;
 
 
-$button-stable-active-bg:       #00B0B0 !default;
-$button-stable-active-border:   #00B0B0 !default;
+$button-stable-active-bg:       #2980b9 !default;
+$button-stable-active-border:   #2980b9 !default;
 
-$dark:                        #008080 !default;
+$dark:                        #256e9f !default;
 $button-stable-text:	      #FFFFFF !default;
 
-$button-border-radius:            15px !default;
-$button-stable-border:            #00A0A0 !default;
-$button-dark-border:		#008080 !default;
-$button-dark-active-border:		#008080 !default;
+$button-border-radius:            8px !default;
+$button-stable-border:            #2980b9 !default;
+$button-dark-border:		#256e9f !default;
+$button-dark-active-border:		#256e9f !default;
 
 $input-color-placeholder:        #BBBBBB !default;
 
 $range-slider-box-shadow:   0 0 0px rgba(0,0,0,.3), 0 0px 0px rgba(0,0,0,0.2) !default;
 //$range-slider-border-radius:      10% !default;
-$range-positive-track-bg:  #00A0A0 !default;
+$range-positive-track-bg:  #2980b9 !default;
 
 $font-family-sans-serif: -apple-system-font, "Helvetica Neue", HelveticaNeue, "Roboto", "Segoe UI", sans-serif !default;
 
 // Include all of Ionic
-@import "www/lib/ionic/scss/ionic";
+@import "../www/lib/ionic/scss/ionic";
 

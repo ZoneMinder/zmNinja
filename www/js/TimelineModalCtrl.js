@@ -249,15 +249,15 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         {
           label: 'Score',
           fill:true,
-          backgroundColor: 'rgba(129, 207, 224, 1.0)',
-          borderColor: 'rgb(92, 147, 159)',
+          backgroundColor: 'rgba(52, 152, 219, 1.0)',
+          borderColor: 'rgba(52, 152, 219, 1.0)',
           borderCapStyle: 'butt',
           borderJoinStyle: 'miter',
-          pointBorderColor: "rgba(220,220,220,1)",
+          pointBorderColor: "#e74c3c",
           pointBackgroundColor: "#e74c3c",
           
           pointHoverRadius: 10,
-          pointHoverBackgroundColor: "#f39c12",
+          pointHoverBackgroundColor: "rgba(249, 105, 14,1.0)",
           pointHoverBorderWidth: 1,
           tension: 0.1,
         
@@ -273,10 +273,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
       datasets: [
         {
           label: 'Score',
-          backgroundColor: 'rgba(129, 207, 224, 1.0)',
-          borderColor: 'rgba(129, 207, 224, 1.0)',
-          hoverBackgroundColor: 'rgba(248, 148, 6,1.0)',
-          hoverBorderColor: 'rgba(248, 148, 6,1.0)',
+          backgroundColor: 'rgba(52, 152, 219, 1.0)',
+          borderColor: 'rgba(52, 152, 219, 1.0)',
+          hoverBackgroundColor: 'rgba(249, 105, 14,1.0)',
+          hoverBorderColor: 'rgba(249, 105, 14,1.0)',
           data: [],
           frames: []
         },

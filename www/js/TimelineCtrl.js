@@ -386,7 +386,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     
 
     //flat colors for graph - https://flatuicolors.com http://www.flatuicolorpicker.com
-    var colors = ['#3498db', '#D2527F', '#f39c12', '#9b59b6', '#e74c3c', '#7A942E', ];
+    var colors = ['#3498db', '#E57373', '#EB974E', '#95A5A6', '#e74c3c', '#03C9A9', ];
 
     var container;
     container = angular.element(document.getElementById('visualization'));
