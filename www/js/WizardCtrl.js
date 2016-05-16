@@ -81,9 +81,29 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         .then (function (success) {
             if (success.data.monitors.length > 0)
             {
-               
-                ZMDataModel.zmDebug("zmWizard - getFirstMonitor returned " + success.data.monitors[0].Monitor.Id); d.resolve(success.data.monitors[0].Monitor.Id);
-                return d.promise;
+                var foundMid = -1;
+                for (var i=0; i< success.data.monitors.length; i++)
+                {
+                    if ( success.data.monitors[i].Monitor.Function != 'None' &&
+                         success.data.monitors[i].Monitor.Enabled == '1')
+                    {
+                        foundMid = success.data.monitors[i].Monitor.Id;
+                        break;
+                    }
+                }
+                
+                if (foundMid != -1)
+                {
+                    ZMDataModel.zmDebug("zmWizard - getFirstMonitor returned " + foundMid); d.resolve(foundMid);
+                    return d.promise;    
+                }
+                else
+                {
+                    d.reject(false);
+                    return d.promise;
+                }
+                
+                
                 
             }
            else
@@ -229,7 +249,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             },
             function (error){
                 $ionicLoading.hide();
-                $scope.wizard.streamingValidText = "cgi-bin detection failed. No configured monitor found.";
+                $scope.wizard.streamingValidText = "cgi-bin detection failed. No configured/enabled monitor found.";
                     $scope.wizard.streamingColor = "#e74c3c";
                     d.reject (false);
                     return (d.promise);
