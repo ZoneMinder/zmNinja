@@ -690,7 +690,7 @@ margin-top:-8px;
 input[type=range]::-webkit-slider-thumb {
 
 
-  background: #007272;
+  background: #2980b9;
 
 }
 
@@ -888,6 +888,11 @@ body { font-family: sans-serif; }
   list-style-position: inside;
 }
 
+
+.zmPullup
+{
+    background-color:#EB9532;
+}
 
 #flyoutmenu {
   z-index:99;

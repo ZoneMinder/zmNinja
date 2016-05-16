@@ -157,7 +157,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
             zmAutoLogin.start();
             
             // PIN is fine, or not set so lets login
-            zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;authenticating...</button>")
+            zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;authenticating...</button>")
                 .then(function (data) // success
                 {
                     ZMDataModel.zmDebug("PortalLogin: auth success");
