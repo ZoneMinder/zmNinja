@@ -45,13 +45,13 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 if (data.indexOf(zm.loginScreenString) == -1) {
                     
                     $scope.wizard.loginURL = $scope.wizard.fqportal;
-                    $scope.wizard.portalValidText = "Portal login was successful: "+$scope.wizard.loginURL;
+                    $scope.wizard.portalValidText = "Portal: "+$scope.wizard.loginURL;
                     $scope.wizard.portalColor = "#16a085";
                     d.resolve(true);
                     return d.promise;
                 } else {
                     console.log("************ERROR");
-                    $scope.wizard.portalValidText = "Portal login was unsuccessful";
+                    $scope.wizard.portalValidText = "Portal: detection failed";
                     $scope.wizard.portalColor = "#e74c3c";
                     d.reject(false);
                     return d.promise;
@@ -59,7 +59,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             })
             .error (function (error) {
             console.log("************ERROR");
-                    $scope.wizard.portalValidText = "Portal login was unsuccessful";
+                    $scope.wizard.portalValidText = "Portal: detection failed";
                     $scope.wizard.portalColor = "#e74c3c";
                     d.reject(false);
                     return d.promise;
@@ -212,7 +212,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     $ionicLoading.hide();
                     ZMDataModel.zmLog ("Valid cgi-bin found with: " + success);
                     $scope.wizard.streamingURL = success;
-                    $scope.wizard.streamingValidText = "cgi-bin detection succeeded: "+$scope.wizard.streamingURL;
+                    $scope.wizard.streamingValidText = "cgi-bin: "+$scope.wizard.streamingURL;
                     $scope.wizard.streamingColor = "#16a085";
                     d.resolve(true);
                     return d.promise;
@@ -275,7 +275,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             
             
             
-            $scope.wizard.apiValidText = "API detection succeeded: "+$scope.wizard.apiURL;
+            $scope.wizard.apiValidText = "API: "+$scope.wizard.apiURL;
             $scope.wizard.apiColor = "#16a085";
             d.resolve(true);
             return d.promise;

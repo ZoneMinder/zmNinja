@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -152,17 +152,21 @@ saveAs(blob, fname);
     {
         //console.log ("GETTING LOGS");
         
+         $ionicLoading.show({
+                    template: "retrieving logs...",
+                    noBackdrop: true,
+                    duration: zm.loadingTimeout
+                });
         
         $fileLogger.getLogfile().then(function (l) {
 
                 
                 $scope.zmLog.logString = l.split('\n').reverse().join('\n');
-                //$scope.zmLog.logString = Math.random() + $scope.zmLog.logString;
-           // console.log ("UPDATING LOGS");
-                //console.log ("LOGS" + logstring);
+                $ionicLoading.hide();
             },
             function (error) {
                 $scope.zmLog.logString = "Error getting log: " + JSON.stringify(error);
+                $ionicLoading.hide();
             });
     }
 
