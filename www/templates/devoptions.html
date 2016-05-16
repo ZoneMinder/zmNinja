@@ -1,11 +1,11 @@
 <ion-view view-title="Dev. Settings">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        
+
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-        
+
     </ion-nav-buttons>
-    
+
     <ion-nav-buttons side="right">
         <button class="button button-clear" ng-click="saveDevOptions()">Save</button>
     </ion-nav-buttons>
@@ -17,28 +17,24 @@
                 <i class="ion-android-settings" style="font-size:150%"></i> Developer Options for {{loginData.serverName}}
             </span>
 
-             <div class="item item-input-inset">
+            <div class="item item-input-inset">
                 Frame update (sec.)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="min is 1s" ng-model="loginData.refreshSec">
                 </label>
             </div>
-            
-            
+
+
             <label>
-                <ion-toggle ng-model="loginData.use24hr"
-                            ng-checked="{{loginData.use24hr}}"
-                            toggle-class="toggle-calm">enable 24hr time format</ion-toggle>
+                <ion-toggle ng-model="loginData.use24hr" ng-checked="{{loginData.use24hr}}" toggle-class="toggle-calm">enable 24hr time format</ion-toggle>
             </label>
-            
+
             <div ng-if="$root.platformOS=='android'">
                 <label>
-                    <ion-toggle ng-model="loginData.exitOnSleep"
-                                ng-checked="{{loginData.exitOnSleep}}"
-                                toggle-class="toggle-calm">exit app in background</ion-toggle>
+                    <ion-toggle ng-model="loginData.exitOnSleep" ng-checked="{{loginData.exitOnSleep}}" toggle-class="toggle-calm">exit app in background</ion-toggle>
                 </label>
             </div>
-            
+
             <!--
             <label>
                 <ion-toggle ng-model="loginData.useNphZms"
@@ -52,7 +48,7 @@
                             toggle-class="toggle-calm">use ZMS for events footage</ion-toggle>
             </label>
             -->
-            
+
             <div class="item item-input-inset">
                 Max monitors in montage&nbsp;
                 <label class="item-input-wrapper">
@@ -75,81 +71,77 @@
                     <input type="tel" placeholder="max is 70" ng-model="loginData.montageQuality">
                 </label>
             </div>
-            
+
             <div class="item item-input-inset">
-                 Event single image scale(%)&nbsp;
+                Event single image scale(%)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.singleImageQuality">
                 </label>
             </div>
-            
+
             <div class="item item-input-inset">
-                 resume delay(ms)&nbsp;
+                resume delay(ms)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.resumeDelay">
-                
+
                 </label>
-                
+
             </div>
-            
+
             <div class="item item-input-inset">
-                 Event Montage image scale(%)&nbsp;
+                Event Montage image scale(%)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.montageHistoryQuality">
                 </label>
             </div>
-            
+
             <div class="item item-input-inset">
-                 Max. items for Timeline&nbsp;
+                Max. items for Timeline&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.graphSize">
                     <br/>
-            
+
                 </label>
                 <br/>
-        
+
             </div>
-            
+
             <div class="item" style="background-color:#C8F7C5" ng-if="loginData.graphSize > 5000">
-                <label class="animated fadeInDown item-text-wrap" >
-                    
-                A large value can affect timeline performance. If you find timeline performance slow, try reducing the value to 200 and work your way up from there.
-                    
+                <label class="animated fadeInDown item-text-wrap">
+
+                    A large value can affect timeline performance. If you find timeline performance slow, try reducing the value to 200 and work your way up from there.
+
                 </label>
             </div>
-            
+
             <label>
-            <ion-toggle ng-model="loginData.enableDebug"
-                        ng-checked="{{loginData.enableDebug}}"
-                        toggle-class="toggle-calm">Enable debug logs</ion-toggle>
-            </label>
-            
-            <label>
-            <ion-toggle ng-model="loginData.canSwipeMonitors"
-                        ng-checked="{{loginData.canSwipeMonitors}}"
-                        toggle-class="toggle-calm">Swipe to change monitors</ion-toggle>
-            </label>
-            
-            <label>
-            <ion-toggle ng-model="loginData.persistMontageOrder"
-                        ng-checked="{{loginData.persistMontageOrder}}"
-                        toggle-class="toggle-calm">Persist hidden monitors</ion-toggle>
-            </label>
-            
-            
-            <label>
-                <ion-toggle ng-model="loginData.enableh264"
-                        ng-checked="{{loginData.enableh264}}"
-                        toggle-class="toggle-calm"> H264 Video support</ion-toggle>
-            </label>
-            
-            <label>
-                <ion-toggle ng-model="loginData.enableBlog"
-                        ng-checked="{{loginData.enableBlog}}"
-                        toggle-class="toggle-calm"> enable news updates</ion-toggle>
+
+                <ion-toggle ng-model="loginData.enableLogs" ng-checked="{{loginData.enableLogs}}" toggle-class="toggle-calm">Enable logs</ion-toggle>
             </label>
 
-            
+            <label>
+
+                <ion-toggle ng-if="loginData.enableLogs" ng-model="loginData.enableDebug" ng-checked="{{loginData.enableDebug}}" toggle-class="toggle-calm">Enable debug logs</ion-toggle>
+            </label>
+
+            <label>
+                <ion-toggle ng-model="loginData.canSwipeMonitors" ng-checked="{{loginData.canSwipeMonitors}}" toggle-class="toggle-calm">Swipe to change monitors</ion-toggle>
+            </label>
+
+            <label>
+                <ion-toggle ng-model="loginData.persistMontageOrder" ng-checked="{{loginData.persistMontageOrder}}" toggle-class="toggle-calm">Persist hidden monitors</ion-toggle>
+            </label>
+
+
+            <label>
+                <ion-toggle ng-model="loginData.enableh264" ng-checked="{{loginData.enableh264}}" toggle-class="toggle-calm"> H264 Video support</ion-toggle>
+            </label>
+
+            <label>
+                <ion-toggle ng-model="loginData.enableBlog" ng-checked="{{loginData.enableBlog}}" toggle-class="toggle-calm"> enable news updates</ion-toggle>
+            </label>
+
+
         </div>
     </ion-content>
 </ion-view>

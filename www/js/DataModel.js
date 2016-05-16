@@ -50,6 +50,7 @@ angular.module('zmApp.controllers')
          'eventServerMonitors':'', // list of monitors to notify from ES
         'eventServerInterval':'', // list of intervals for all monitors
         'refreshSec':'2', // timer value for frame change in sec
+        'enableLogs':true,
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,
         'pinCode':'',
@@ -116,7 +117,8 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
     function zmLog(val,logtype)
     {
-        $fileLogger.log(logtype, val);
+        if (loginData.enableLogs)
+            $fileLogger.log(logtype, val);
     }
      
     
@@ -134,7 +136,7 @@ angular.module('zmApp.controllers')
     // separate out a debug so we don't do this if comparison for normal logs
     function zmDebug(val)
     {
-        if (loginData.enableDebug)
+     if (loginData.enableDebug && loginData.enableLogs)
             $fileLogger.debug(val);
     }
     
@@ -425,10 +427,16 @@ angular.module('zmApp.controllers')
                     loginData.packMontage  = false;
                 }
                 
-                 if (typeof loginData.forceNetworkStop == 'undefined')
+                if (typeof loginData.forceNetworkStop == 'undefined')
                 {
                     zmDebug ("forceNetwork does not exist. Setting to false");
                     loginData.forceNetworkStop  = false;
+                }
+                
+                if (typeof loginData.enableLogs == 'undefined')
+                {
+                    zmDebug ("enableLogs does not exist. Setting to true");
+                    loginData.enableLogs  = true;
                 }
                 
                 

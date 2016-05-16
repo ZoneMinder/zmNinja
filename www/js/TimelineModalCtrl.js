@@ -249,7 +249,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         {
           label: 'Score',
           fill:true,
-          backgroundColor: 'rgba(52, 152, 219, 1.0)',
+          backgroundColor: 'rgba(89, 171, 227, 1.0)',
           borderColor: 'rgba(52, 152, 219, 1.0)',
           borderCapStyle: 'butt',
           borderJoinStyle: 'miter',

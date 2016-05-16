@@ -272,6 +272,12 @@ function initPackery()
     
     function loadAlarmStatus()
     {
+        
+        if (ZMDataModel.versionCompare($rootScope.apiVersion,"1.30")==-1)
+        {
+            
+            //return;
+        }
        
         for (var i=0; i < $scope.MontageMonitors.length; i++)
         {
@@ -281,7 +287,7 @@ function initPackery()
             {
                 continue;
             }
-          //  getAlarmStatus($scope.MontageMonitors[i]);
+            getAlarmStatus($scope.MontageMonitors[i]);
                 
         }
         
@@ -397,7 +403,7 @@ function initPackery()
         
     };
 
-    /*
+    
     $scope.toggleDelete = function (i)
     {
         
@@ -407,7 +413,7 @@ function initPackery()
             $scope.copyMontage[i].Monitor.listDisplay = 'show';
             
         ZMDataModel.zmDebug ("index " + i + " is now " +  $scope.copyMontage[i].Monitor.listDisplay);
-    };*/
+    };
     
     $scope.hideUnhide = function()
     {
@@ -772,9 +778,64 @@ function initPackery()
       //  console.log("**VIEW ** Montage Ctrl Loaded");
     });
 
-    $scope.$on('$ionicView.enter', function () {
-      
-        //$scope.areImagesLoading = true;
+ 
+
+    $scope.$on('$ionicView.leave', function () {
+       // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
+        if ($scope.modal) $scope.modal.remove();
+    });
+    
+    
+    
+    function orientationChanged() {
+    ZMDataModel.zmDebug("Detected orientation change, redoing packery resize");
+    $timeout(function () {
+        pckry.onresize();
+    });
+}
+    
+$scope.toggleSizeButtons = function()
+{
+    
+    $scope.showSizeButtons = !$scope.showSizeButtons;
+    ZMDataModel.zmDebug ("toggling size buttons:"+$scope.showSizeButtons);
+};
+
+// minimal has to be beforeEnter or header won't hide
+$scope.$on ('$ionicView.beforeEnter', function() {
+    $scope.minimal = $stateParams.minimal;
+    //console.log ("**************** MINIMAL ENTER " + $scope.minimal);
+    $scope.zmMarginTop = $scope.minimal ? 0 : 15;
+});
+    
+
+$scope.$on('$ionicView.afterEnter', function () {
+    ZMDataModel.zmDebug("Setting image mode to snapshot, will change to image when packery is all done");
+    $scope.allImagesLoaded = false;
+    $scope.isDragabillyOn = false;
+    $scope.allImagesLoaded = false;
+    $scope.gridScale = "grid-item-50";
+    $scope.LoginData = ZMDataModel.getLogin();
+    $scope.monLimit = $scope.LoginData.maxMontage;
+    $scope.showSizeButtons = false;
+    
+
+    $scope.monitors = message;
+    $scope.MontageMonitors = angular.copy(message);
+    $scope.sliderChanging = false;
+    loginData = ZMDataModel.getLogin();
+
+    $scope.isRefresh = $stateParams.isRefresh;
+    sizeInProgress = false;
+    $scope.imageStyle = true;
+    intervalHandleMontage = "";
+    $scope.isModalActive = false;
+    $scope.isReorder = false;
+
+    $ionicSideMenuDelegate.canDragContent($scope.minimal ? true : true);
+    
+    
+     //$scope.areImagesLoading = true;
         var ld = ZMDataModel.getLogin();
         //console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
@@ -794,55 +855,6 @@ function initPackery()
         
 
         loadNotifications();
-    });
-
-    $scope.$on('$ionicView.leave', function () {
-       // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
-        if ($scope.modal) $scope.modal.remove();
-    });
-    
-    
-     $scope.$on('$ionicView.afterEnter', function () {
-        console.log("**VIEW ** Montage Ctrl AFTER ENTER");
-        window.addEventListener("resize", orientationChanged, false);
-        $timeout ( function () {initPackery(); },500);
-        document.addEventListener("pause", onPause, false);
-        document.addEventListener("resume", onResume, false);
-        
-    });
-    
-    function orientationChanged() {
-    ZMDataModel.zmDebug("Detected orientation change, redoing packery resize");
-    $timeout(function () {
-        pckry.onresize();
-    });
-}
-
-$scope.$on('$ionicView.enter', function () {
-    ZMDataModel.zmDebug("Setting image mode to snapshot, will change to image when packery is all done");
-    $scope.allImagesLoaded = false;
-    $scope.isDragabillyOn = false;
-    $scope.allImagesLoaded = false;
-    $scope.gridScale = "grid-item-50";
-    $scope.LoginData = ZMDataModel.getLogin();
-    $scope.monLimit = $scope.LoginData.maxMontage;
-    $scope.minimal = $stateParams.minimal;
-    $scope.zmMarginTop = $scope.minimal ? 0 : 15;
-
-    $scope.monitors = message;
-    $scope.MontageMonitors = angular.copy(message);
-    $scope.sliderChanging = false;
-    loginData = ZMDataModel.getLogin();
-
-    $scope.isRefresh = $stateParams.isRefresh;
-    sizeInProgress = false;
-    $scope.imageStyle = true;
-    intervalHandleMontage = "";
-    $scope.isModalActive = false;
-    $scope.isReorder = false;
-
-    $ionicSideMenuDelegate.canDragContent($scope.minimal ? true : true);
-
 
     if ($scope.MontageMonitors.length == 0) {
         $rootScope.zmPopup = $ionicPopup.alert({
@@ -899,7 +911,11 @@ $scope.$on('$ionicView.enter', function () {
                 ZMDataModel.zmLog("MontageCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
             });
 
-
+ console.log("**VIEW ** Montage Ctrl AFTER ENTER");
+        window.addEventListener("resize", orientationChanged, false);
+        $timeout ( function () {initPackery(); },500);
+        document.addEventListener("pause", onPause, false);
+        document.addEventListener("resume", onResume, false);
 
 });
     

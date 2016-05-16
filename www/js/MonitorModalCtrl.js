@@ -261,7 +261,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         }
 
         var status = ["idle", "pre-alarm","alarmed","alert","record"];
-        console.log ("Inside Modal timer...");
+        //console.log ("Inside Modal timer...");
         var apiurl = ZMDataModel.getLogin().apiurl;
         var alarmurl = apiurl+"/monitors/alarm/id:"+$scope.monitorId+"/command:status.json";
             ZMDataModel.zmLog ("Invoking " + alarmurl);

@@ -1369,9 +1369,11 @@ angular.module('zmApp', [
 //------------------------------------------------------------------
 
 // My route map connecting menu options to their respective templates and controllers
-.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide,$compileProvider, $ionicNativeTransitionsProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide,$compileProvider, $ionicNativeTransitionsProvider, $logProvider) {
 
-
+    //$logProvider.debugEnabled(false);
+    //$compileProvider.debugInfoEnabled(false);
+    
     // This is an exception interceptor so it can show up in app logs 
     // if they occur. I suspect digest and other errors will be useful
     // for me to see

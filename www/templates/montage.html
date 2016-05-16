@@ -3,6 +3,11 @@
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
          <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
         </button>
+        
+        
+        <button class="button button-icon button-clear ion-arrow-resize" ng-click="toggleSizeButtons();">&nbsp;
+        </button>
+        
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
         
     </ion-nav-buttons>
@@ -24,14 +29,13 @@
 
     <ion-content ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate"  >
     
-    
 
-        <span ng-show="!minimal">
+        <span ng-show="!minimal && showSizeButtons">
             <!-- this is header -->
             
-            <span ng-click="sliderChanged(1)" style="float:right;margin-top:0px;padding-top:8px;background-color:#6d0909;color:#fff;font-size:25px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;</i></span>
+            <span ng-click="sliderChanged(1)" style="float:right;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:25px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;</i></span>
             
-            <span ng-click="sliderChanged(-1)" style="float:left;margin-top:0px;padding-top:8px;background-color:#6d0909;color:#fff;font-size:22px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 5px 0px;">&nbsp;<i class="ion-minus-circled">&nbsp;</i></span>
+            <span ng-click="sliderChanged(-1)" style="float:left;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:22px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 5px 0px;">&nbsp;<i class="ion-minus-circled">&nbsp;</i></span>
             <br/><br/>
         </span>
         
@@ -115,7 +119,7 @@
             </button>
             <button mfb-button icon="ion-arrow-shrink" label="decrease size" ng-click="sliderChanged(-1)">
             </button>
-            <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
+            <button mfb-button icon="ion-refresh" label="refresh" ng-click="resetSizes();">
             </button>
             <button mfb-button icon="ion-close" label="exit full screen" ng-click="switchMinimal()">
             </button>
