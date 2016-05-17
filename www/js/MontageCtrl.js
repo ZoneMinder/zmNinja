@@ -276,7 +276,7 @@ function initPackery()
         if (ZMDataModel.versionCompare($rootScope.apiVersion,"1.30")==-1)
         {
             
-            //return;
+            return;
         }
        
         for (var i=0; i < $scope.MontageMonitors.length; i++)
