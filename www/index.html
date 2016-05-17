@@ -295,7 +295,19 @@
         });
     </script>
     
+    <!-- keyboard input jump fix 
+    https://forum.ionicframework.com/t/ionic-keyboard-scroll-issue-ios/34420/2?u=pliablepixels
+    -->
     
+    <script>
+    window.addEventListener('native.keyboardshow', keyboardShowHandler);
+
+    function keyboardShowHandler(e) {
+        setTimeout(function () {
+            $('html, body').animate({ scrollTop: 0 }, 1000);
+        }, 0);
+    }
+</script>
 
    
 
