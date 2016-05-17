@@ -404,6 +404,12 @@ angular.module('zmApp.controllers')
                     loginData.enableAlarmCount  = true;
                 }
                 
+                if (typeof loginData.minAlarmCount === 'undefined')
+                {
+                    zmDebug ("minAlarmCount does not exist, setting to true");
+                    loginData.minAlarmCount  = 1;
+                }
+                
                 
                 if (typeof loginData.montageSize == 'undefined')
                 {
