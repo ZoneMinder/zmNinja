@@ -64,7 +64,8 @@ angular.module('zmApp.controllers')
          'montageArraySize':'0',
          
          'graphSize':2000,
-         'minAlarmCount':'1',
+         'enableAlarmCount':true,
+         'minAlarmCount':1,
          'montageSize':'3',
          'useNphZms':true,
          'useNphZmsForEvents':true,
@@ -78,6 +79,7 @@ angular.module('zmApp.controllers')
          'packerySizes':'',
          'timelineModalGraphType':'all',
          'resumeDelay':300,
+         
          
         
     };
@@ -361,7 +363,7 @@ angular.module('zmApp.controllers')
             
             serverGroupList = $localstorage.getObject("serverGroupList");
             
-            var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"minAlarmCount\":\"1\",\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
+            var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"enableAlarmCount\":true,\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
             var demoS = JSON.parse(demoServer);
             console.log ("JSON parsed demo" + JSON.stringify(demoS));
             
@@ -396,10 +398,10 @@ angular.module('zmApp.controllers')
                 
                 // old version hacks for new variables
                 
-                if (typeof loginData.minAlarmCount === 'undefined')
+                if (typeof loginData.enableAlarmCount === 'undefined')
                 {
-                    zmDebug ("minAlarmCount does not exist, setting to 1");
-                    loginData.minAlarmCount  = '1';
+                    zmDebug ("enableAlarmCount does not exist, setting to true");
+                    loginData.enableAlarmCount  = true;
                 }
                 
                 
@@ -1181,7 +1183,7 @@ angular.module('zmApp.controllers')
             if (endTime)
                 myurl = myurl + "/EndTime <=:"+endTime;
             
-            myurl = myurl + "/AlarmFrames >=:" + loginData.minAlarmCount;
+            myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount?loginData.minAlarmCount:0);
             
             
             myurl = myurl + ".json";
@@ -1259,7 +1261,7 @@ angular.module('zmApp.controllers')
             if (endTime)
                 myurl = myurl + "/EndTime <=:"+endTime;
             
-            myurl = myurl + "/AlarmFrames >=:" + loginData.minAlarmCount;
+            myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount?loginData.minAlarmCount:0);
             myurl = myurl + ".json";
 
 
