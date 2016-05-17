@@ -406,7 +406,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $scope.currentProgress = resp.data.status.progress;
            // console.log ("STEP 0 progress is " + $scope.currentProgress);
             $scope.slides = [];
-           //  myurl = myurl + "/AlarmFrames >=:" + loginData.minAlarmCount;
+          
             var apiurl = $scope.loginData.apiurl + "/events/" + $scope.eventId + ".json";
             ZMDataModel.zmDebug ("prepared to get frame details using " + apiurl);
             $http.get(apiurl)

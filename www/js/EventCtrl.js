@@ -471,7 +471,7 @@ angular.module('zmApp.controllers')
             //https://server/zm/api/events/consoleEvents/5%20minute.json
             var ld = ZMDataModel.getLogin();
             
-            var af = "/AlarmFrames >=: " + ld.minAlarmCount;
+            var af = "/AlarmFrames >=: " + ld.enableAlarmCount;
 
             var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour"+af+".json";
             ZMDataModel.zmDebug ("consoleEvents API:"+apiurl);
@@ -1394,8 +1394,8 @@ angular.module('zmApp.controllers')
             
             var ld = ZMDataModel.getLogin();
             
-            console.log ("Toggling " + ld.minAlarmCount);
-            ld.minAlarmCount = ld.minAlarmCount=='0'?'1':'0';
+            console.log ("Toggling " + ld.enableAlarmCount);
+            ld.enableAlarmCount = !ld.enableAlarmCount;
             ZMDataModel.setLogin(ld);
             $scope.loginData = ZMDataModel.getLogin();
             doRefresh();
