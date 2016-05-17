@@ -218,8 +218,11 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 var tail = "/nph-zms?mode=single&monitor="+success;
                 if ($scope.wizard.useauth && $scope.wizard.usezmauth)
                 {
+                    
                     tail+= "&user="+$scope.wizard.zmuser+"&pass="+$scope.wizard.zmpassword;
+                    console.log ("****CDING " + tail);
                 }
+                
                 
                 $ionicLoading.show({
                 template: "discovering...",
