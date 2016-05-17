@@ -33,8 +33,17 @@ angular.module('zmApp.controllers')
         // initial code
         //---------------------------------------------------
         
+        
+        $scope.$on('$ionicView.afterEnter', function () {
+            console.log ("********* AFTER ENTER");
+            $scope.events = [];
+            getInitialEvents();
+            setupWatchers();
+        });
+        
         $scope.$on('$ionicView.beforeEnter', function () {
             
+            console.log ("********* BEFORE ENTER");
             document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
             $scope.id = parseInt($stateParams.id, 10);
@@ -91,11 +100,9 @@ angular.module('zmApp.controllers')
 
             $scope.loginData = ZMDataModel.getLogin();
             $scope.playbackURL = $scope.loginData.url;
-            getInitialEvents();
-            setupWatchers();
-
             
-        });
+   });
+         
         
       
         
@@ -624,7 +631,7 @@ angular.module('zmApp.controllers')
         $scope.scrollPosition = function () {
             var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
             var item = Math.round(scrl / zm.eventsListDetailsHeight);
-            if ($scope.events[item] == undefined) {
+            if ($scope.events == undefined || !$scope.events.length || $scope.events[item] == undefined) {
                 return "";
             } else {
                 return prettifyDate($scope.events[item].Event.StartTime);
