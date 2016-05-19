@@ -8,7 +8,7 @@
                 <div  id="full-screen-event" style="height: 100vh;">
 
 
-                    <div ng-if="(defaultVideo=='' || loginData.enableh264==false) && !loginData.useNphZmsForEvents">
+                    <!--<div ng-if="(defaultVideo=='' || loginData.enableh264==false) && !loginData.useNphZmsForEvents">
                         
                         
                         <ul rn-carousel  rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{eventSpeed}}" rn-carousel-pause-on-hover  rn-platform="{{$root.platformOS}}" rn-carousel-buffered >
@@ -35,14 +35,14 @@
 
                             </li>
                         </ul>
-                    </div>
+                    </div>-->
                     
                     <!-- route via ZMS -->
                     
                     <div ng-if="( (defaultVideo=='') || (loginData.enableh264==false)) && (loginData.useNphZmsForEvents==true)">
                        
                         <!--<div style="color:white">connkey:{{connKey}}</div>-->
-                        <div style="width:100vw; height:100vh" >
+                        <div style="width:100vw; height:100vh;" >
                           <img   image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay={{currentStreamMode}}&rate=100&connkey={{connKey}}&scale={{singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"/>
                           
                             <div  ng-if="isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999"
@@ -108,7 +108,7 @@
 </nav>
     
     
-<nav ng-if="!loginData.useNphZmsForEvents" mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+<!--<nav ng-if="!loginData.useNphZmsForEvents" mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
 
     <a  mfb-button icon="icon-super-speed" label="super speed" ng-click="adjustSpeed('super');"></a>
     <a  mfb-button icon="icon-normal-speed" label="normal speed" ng-click="adjustSpeed('normal');"></a>
@@ -116,7 +116,7 @@
     
     <a mfb-button icon="icon-slower" label="slower" ng-click="adjustSpeed('slower');"> </a>
 
-</nav>
+</nav>-->
         
         
 <nav ng-if="loginData.useNphZmsForEvents" mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
@@ -131,21 +131,11 @@
 </nav>
     
 
-<div class="events-range-modal" ng-if="(defaultVideo=='' )&& (!loginData.useNphZmsForEvents)">
-
-    <div style="width:90%">
-        <input ng-model="ionRange.index" type="text" id="mySlider2" slider options="slider_modal_options" />
-    </div>
-
-
-</div>
-        
-
 
 <div class="events-range-modal-text" >showing event: {{d_eventId}}</div>
         
         
-<div id="flyoutmenu" style="position:absolute;bottom:80px;left:10px">
+<div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
     <ul>
         <li ng-if="defaultVideo==''">
             <a href="" ng-click="toggleGapless()"> <i class="ion-ios-loop-strong"></i>-{{loginData.gapless?"on":"off"}}</a>
@@ -170,30 +160,44 @@
 </div>
 
 
-<!--
 
-<span class="events-modal-gapless-icon" ng-if="defaultVideo==''">
-        <a ng-class="loginData.gapless? 'button button-small button-stable' : 'button button-small button-assertive' " href="" ng-click="toggleGapless()">gapless: {{loginData.gapless?"on":"off"}}</a>
-</span>
-    
- <span class="events-modal-camera-icon" ng-if="defaultVideo==''">
-        <a class="button button-small icon ion-ios-camera button-positive" href="" ng-click="saveEventImageToPhone(false)"></a>
-</span>
+
+        <div id="event_canvas">
+            <canvas style="padding-left:23px;
+  padding-right:23px;" id="eventchart" width="auto" height="20px"></canvas>
+        </div>
         
-<span class="events-modal-onlyalarms-icon" ng-if="defaultVideo==''">
-        <a class="button button-small icon ion-android-notifications button-positive" href="" ng-click="saveEventImageToPhone(true)"></a>
-</span>
-
--->
-        <div class="events-range-modal" ng-if="(defaultVideo=='' )&& (loginData.useNphZmsForEvents)" style="color:white">
-   <!-- Progress: Event: {{eventId}} - {{progressText}}-->
-    <div class="row">
-        <div class="col col-75">
-            <progress style="line-height:20px" max="{{currentEventDuration}}" value="{{currentProgress}}"></progress>
+        <div id="event_slider">
+            <div class="range" >
+                        <input ng-change="youChangedSlider()" type="range"  min="0" max="{{currentEventDuration}}" ng-model="sliderProgress.progress">
+                        </div>
         </div>
-        <div class="col col-25" style="line-height:40px">
+        
+        <div id="event_rate_text">
+            @{{currentRate}}x at:{{currentProgress.progress}}s
+        </div>
+  
+    <!--<div class="row">
+        
+       
+            
+                <div id="event_canvas">
+                    <canvas style="padding-left:23px;
+  padding-right:23px;" id="eventchart" width="auto" height="20px"></canvas>
+                   
+                    <div id="event_slider">
+                        <div class="range" >
+                        <input ng-change="youChangedSlider()" type="range"  min="0" max="{{currentEventDuration}}" ng-model="sliderProgress.progress">
+                        </div>
+                    </div>
+                </div>
+           
+            
+        </div>
+        <div class="col col-25" style="line-height:70px">
+            
             @{{currentRate}}x
+            at:{{currentProgress.progress}}s
         </div>
-    </div>
-</div>
+    </div>-->
 </div>

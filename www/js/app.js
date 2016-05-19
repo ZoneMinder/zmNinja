@@ -1035,7 +1035,7 @@ angular.module('zmApp', [
         $rootScope.showBlog = false;
         $rootScope.newBlogPost="";
         $rootScope.apiVersion = "";
-        //$rootScope.minAlarmCount = "1";
+   
 
 
         // only for android

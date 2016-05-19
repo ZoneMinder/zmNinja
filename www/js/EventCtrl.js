@@ -678,6 +678,7 @@ angular.module('zmApp.controllers')
         };
 
 
+        
 
         //-------------------------------------------------------------------------
         // This function is called when a user enables or disables

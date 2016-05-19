@@ -428,7 +428,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     bottom:30px;
     left:30px;
     z-index:99;
-    opacity:0.7;
+    opacity:1;
     width:70%;
 }
 
@@ -970,6 +970,59 @@ body { font-family: sans-serif; }
     color:white;
 }
 
+/* Overlay graph in event footage */
+#event_canvas {
+  position:absolute;
+  width: 80%;
+  height: 20px;
+  bottom:70px;
+  left:20px;
+  opacity:1;
+  z-index:99;
+   
+}
+
+#event_slider {
+  position:absolute;
+  width: 80%;
+  height: 20px;
+  bottom:50px;
+  left:20px;
+  opacity:1;
+   z-index:100;
+      
+   
+}
+
+#event_rate_text {
+  position:absolute;
+  width: 80%;
+  bottom:10px;
+  left:43px;
+  opacity:1;
+  color:#fff;
+  z-index:100;
+      
+   
+}
+/*
+#event_slider {
+    width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 0;
+}
+
+#event_canvas
+{
+position:absolute;
+    bottom:30px;
+    left:30px;
+    z-index:99;
+    opacity:1;
+    width:100%;
+}*/
 
 
 

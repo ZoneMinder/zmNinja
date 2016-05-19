@@ -1,7 +1,7 @@
 // Common Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,ionic, moment */
+/* global saveAs, cordova,StatusBar,angular,console,ionic, moment, Chart */
 
 
 
@@ -15,10 +15,26 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var eventQueryHandle;
     $scope.loginData = ZMDataModel.getLogin();
     $scope.currentRate='-';
+    var timeFormat = 'MM/DD/YYYY HH:mm:ss';
+
+    
+    var framearray = {
+        
+        labels:[],
+        datasets: [{
+            //label: '# of Votes',
+            backgroundColor: 'rgba(242, 12, 12, 0.5)',
+            borderColor: 'rgba(242, 12, 12, 0.5)',
+            data: [],
+            }]
+        };
+    
+    var frameoptions=[];
     
     
     var eventImageDigits = 5; // failsafe
-    $scope.currentProgress = 0;
+    $scope.currentProgress = {progress:0};
+    $scope.sliderProgress = {progress:0};
     ZMDataModel.getKeyConfigParams(0)
         .then(function (data) {
             //console.log ("***GETKEY: " + JSON.stringify(data));
@@ -83,6 +99,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             });
 
     
+   
     //-------------------------------------------------------
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------
@@ -94,7 +111,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
              ZMDataModel.stopNetwork("Auth-Success inside EventModalCtrl");
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
             //console.log ("********* OFFSET FROM AUTH SUCC");
-            $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+            $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
             //$timeout.cancel(eventQueryHandle);
             //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
          
@@ -193,7 +210,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 }
             })
             .then (function (resp) {
-               // ZMDataModel.zmDebug ("sendCmd response:"+JSON.stringify(resp));
+                ZMDataModel.zmDebug ("sendCmd response:"+JSON.stringify(resp));
                 d.resolve(resp);
                 return (d.promise);
                 
@@ -251,14 +268,16 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 if (resp.result=="Ok")
                 {
                     
-                    $scope.currentProgress = resp.status.progress;
+                    $scope.currentProgress.progress = resp.status.progress;
                     $scope.eventId = resp.status.event;
                     $scope.d_eventId = $scope.eventId;
                     $scope.currentRate = resp.status.rate;
                     
                     
-                    if ($scope.currentProgress > $scope.currentEventDuration) $scope.currentProgress = $scope.currentEventDuration;
-                    $scope.progressText = "At " + $scope.currentProgress + "s of " + $scope.currentEventDuration+"s";
+                    if ($scope.currentProgress.progress > $scope.currentEventDuration) $scope.currentProgress.progress = $scope.currentEventDuration;
+                    $scope.progressText = "At " + $scope.currentProgress.progress + "s of " + $scope.currentEventDuration+"s";
+                    
+                    $scope.sliderProgress.progress = $scope.currentProgress.progress;
                 
                     // lets not do this and use zms to move forward or back
                     // as this code conflicts with fast rev etc
@@ -278,7 +297,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
                       
                        // console.log (JSON.stringify(resp));
-                     $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+                     $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
                      ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
                     //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
                 }
@@ -328,9 +347,15 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     };
 
    
+    $scope.youChangedSlider = function()
+    {
+        console.log("YOU changed " + $scope.sliderProgress.progress);
+        $scope.currentProgress.progress = $scope.sliderProgress.progress;
+        $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
+        
+    };
 
-
-  
+   
     
 
 
@@ -359,7 +384,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
 
-
+    $scope.jumpToOffsetInEvent = function()
+    {
+        // streamReq.send( streamParms+"&command="+CMD_SEEK+"&offset="+offset );
+    };
 
    
 
@@ -388,7 +416,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     function saveEventImageToPhoneZms(onlyAlarms)
     {
         // The strategy here is to build the array now so we can grab frames
-        // $scope.currentProgress is the seconds where we are
+        // $scope.currentProgress.progress is the seconds where we are
             // $scope.eventId is the event Id
         
         $scope.isPaused = true;
@@ -403,8 +431,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         {
             
            // console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
-            $scope.currentProgress = resp.data.status.progress;
-           // console.log ("STEP 0 progress is " + $scope.currentProgress);
+            $scope.currentProgress.progress = resp.data.status.progress;
+           // console.log ("STEP 0 progress is " + $scope.currentProgress.progress);
             $scope.slides = [];
           
             var apiurl = $scope.loginData.apiurl + "/events/" + $scope.eventId + ".json";
@@ -426,7 +454,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     var totalTime = event.Event.Length;
                     var totalFrames = event.Event.Frames;
                     
-                    var myFrame = Math.round(totalFrames/totalTime * $scope.currentProgress);
+                    var myFrame = Math.round(totalFrames/totalTime * $scope.currentProgress.progress);
                 
                   //  console.log ("STEP 0: playback " + $scope.playbackURL + " total time " + totalTime + " frames " + totalFrames);
 
@@ -727,6 +755,63 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         
     });
     
+    //var current_data;
+    function drawGraph()
+    {
+       
+         
+        var cv = document.getElementById("eventchart");
+        var ctx = cv.getContext("2d");
+        
+        
+        frameoptions = {
+        responsive:true,
+        legend:false,
+        title: {display:false, text: ""},
+        scales: {
+            yAxes: [{
+                display:false,
+                scaleLabel: { 
+                    display:false,
+                    labelString:'value',
+                }
+                
+            }],
+            xAxes: [{
+               type:'time',
+                display:false,
+                time: {
+                  
+                    format:timeFormat,
+                    tooltipFormat: 'll HH:mm',
+                    min:framearray.datasets[0].data[0].x,
+                    max:framearray.datasets[0].data[framearray.datasets[0].data.length-1].x ,
+                    displayFormats: {
+                        
+                    }
+                },
+                scaleLabel: {
+							display: false,
+							labelString: ''
+						}
+                    
+                }]
+            }
+        };
+        
+       
+        $timeout(function() {
+            
+            
+          var myChart = new Chart(ctx, {
+              type: 'line',
+              data: framearray,
+              options: frameoptions,
+          });
+
+        });
+    }
+    
 
     $scope.$on('modal.removed', function (e,m) {
         
@@ -855,7 +940,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             ZMDataModel.zmDebug ("Regenerating connkey as gapless has changed");
             // console.log ("********* OFFSET FROM TOGGLE GAPLESS");
             $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
-            $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+            $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
             //$timeout.cancel(eventQueryHandle);
             //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
          
@@ -1058,7 +1143,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                      ZMDataModel.stopNetwork("EventModalCtrl-jumptoEventZms error");
                     $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
                    //  console.log ("********* OFFSET FROM JUMPTOEVENTZMS ERROR");
-                     $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress);},500);
+                     $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
                     //$timeout.cancel(eventQueryHandle);
                    // eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
@@ -1194,6 +1279,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     // Note that openModal is called with the top level event
     // API. Some parameters are repeated across both
     //--------------------------------------------------------
+
+
 
 
     function prepareModalEvent(eid) {
@@ -1348,27 +1435,27 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     // now get event details to show alarm frames
 
-                    $scope.FrameArray = event.Frame;
+                    //$scope.FrameArray = event.Frame;
                     //  $scope.slider_options.scale=[];
-                    $scope.slider_modal_options.scale = [];
+                   // $scope.slider_modal_options.scale = [];
 
-
+                    // lets 
+                    framearray.datasets[0].data = [];
                     for (i = 0; i < event.Frame.length; i++) {
-
-                        if (event.Frame[i].Type == "Alarm") {
-
-                            $scope.slider_modal_options.scale.push({
-                                val: event.Frame[i].FrameId,
-                                label: ' '
-                            });
-                        } else {
-                            //$scope.slider_options.scale.push(' ');
-                        }
-
-
+                        
+                        var ts=moment(event.Frame[i].TimeStamp).format(timeFormat);
+                      
+                        //console.log ("pushing s:" + event.Frame[i].Score+" t:"+ts);
+                       
+                        framearray.datasets[0].data.push({x:ts, y:event.Frame[i].Score});
+                        framearray.labels.push("");
+             
+        
                     }
                     $scope.totalEventTime = Math.round(parseFloat(event.Event.Length)) - 1;
                     $scope.currentEventTime = 0;
+            
+                    $timeout (function() {drawGraph();},500);
                 },
                 function (err) {
                     ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));

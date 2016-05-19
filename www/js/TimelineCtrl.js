@@ -69,7 +69,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
        // console.log("Toggling");
 
         var ld = ZMDataModel.getLogin();
-        ld.enableAlarmCount = ld.enableAlarmCount == "0" ? "1" : "0";
+        ld.enableAlarmCount = !ld.enableAlarmCount;
+        
         ZMDataModel.setLogin(ld);
 
 
