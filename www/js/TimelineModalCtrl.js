@@ -286,7 +286,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
     // Chart.js Options
       options =  {
-          
+        legend:false,
         scales: {
             yAxes:[{
                 ticks: {
