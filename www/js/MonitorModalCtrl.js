@@ -981,6 +981,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         .success (function (data)
          {
             $scope.isControllable = data.monitor.Monitor.Controllable;
+            // for testing only
+            // $scope.isControllable = 1;
             $scope.controlid = data.monitor.Monitor.ControlId;
             if ($scope.isControllable=='1')
             {
