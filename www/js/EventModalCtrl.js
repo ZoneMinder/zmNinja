@@ -146,6 +146,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
         //console.log ("Event timer");
         //console.log ("Event timer");
+        $scope.checkEventOn = true;
         if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='')
         {
             console.log ("playing video, not using zms, skipping event commands");
@@ -228,6 +229,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     
     function processEvent(cmd,connkey)
     {
+        
+        if ($scope.blockSlider)
+        {
+            console.log ("Not doing ZMS Command as slider is depressed...");
+            return;
+        }
    
         var loginData = ZMDataModel.getLogin();
          console.log ("sending process Event command to " + loginData.url);
@@ -346,12 +353,19 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     };
 
+    $scope.enableSliderBlock = function()
+    {
+        $scope.blockSlider = true;
+    };
    
     $scope.youChangedSlider = function()
     {
+        
         console.log("YOU changed " + $scope.sliderProgress.progress);
         $scope.currentProgress.progress = $scope.sliderProgress.progress;
         $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
+        // give this command some time to complete
+        $timeout (function(){$scope.blockSlider = false;},1500);
         
     };
 
@@ -710,6 +724,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.loginData = ZMDataModel.getLogin();
         
         $scope.singleImageQuality = ld.singleImageQuality;
+        $scope.blockSlider = false;
+        $scope.checkEventOn = false;
         //$scope.singleImageQuality = 100;
         
         
@@ -814,16 +830,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     
 
     $scope.$on('modal.removed', function (e,m) {
-        
+        $interval.cancel(eventQueryHandle);
         if (m.id != 'footage')
             return;
         
-        //console.log ("************** MODAL INSIDE FOOTAGE CLOSED");
+      
         $scope.isModalActive = false;
-         
-        //console.log("**MODAL REMOVED: Stopping modal timer");
-                $interval.cancel(eventQueryHandle);
-                //$timeout.cancel(eventQueryHandle);
+        
         ZMDataModel.zmDebug ("Modal removed - killing connkey");
         sendCommand(17,$scope.connKey);
         //$timeout (function(){ZMDataModel.stopNetwork("Modal removed inside EventModalCtrl");},400);
