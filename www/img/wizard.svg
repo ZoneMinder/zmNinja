@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:cc="http://web.resource.org/cc/"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    id="svg2"
+    sodipodi:docname="papapishu_wizard_in_blue_hat.svg"
+    inkscape:export-filename="D:\Documents and Settings\Joanna\My Documents\My Pictures\graph_vector\papapishu_wizard_1.png"
+    viewBox="0 0 233.63 317"
+    sodipodi:version="0.32"
+    inkscape:export-xdpi="152.02286"
+    version="1.0"
+    inkscape:output_extension="org.inkscape.output.svg.inkscape"
+    inkscape:export-ydpi="152.02286"
+    inkscape:version="0.45.1"
+    sodipodi:docbase="D:\Documents and Settings\Joanna\My Documents\My Pictures\graph_vector"
+  >
+  <defs
+      id="defs4"
+    >
+    <linearGradient
+        id="linearGradient2225"
+      >
+      <stop
+          id="stop2227"
+          style="stop-color:#000079"
+          offset="0"
+      />
+      <stop
+          id="stop2282"
+          style="stop-color:#000079"
+          offset="1"
+      />
+    </linearGradient
+    >
+    <linearGradient
+        id="linearGradient5501"
+        y2="633.04"
+        gradientUnits="userSpaceOnUse"
+        x2="585.08"
+        gradientTransform="matrix(.31234 0 0 .18977 -754.44 492.38)"
+        y1="586.87"
+        x1="160.36"
+        inkscape:collect="always"
+      >
+      <stop
+          id="stop2215"
+          style="stop-color:#000000"
+          offset="0"
+      />
+      <stop
+          id="stop2223"
+          style="stop-color:#000000"
+          offset=".5"
+      />
+      <stop
+          id="stop2217"
+          style="stop-color:#000000"
+          offset="1"
+      />
+    </linearGradient
+    >
+    <linearGradient
+        id="linearGradient5504"
+        y2="535.71"
+        xlink:href="#linearGradient2225"
+        gradientUnits="userSpaceOnUse"
+        x2="695.65"
+        gradientTransform="matrix(.31234 0 0 .25489 -754.44 443.65)"
+        y1="505.89"
+        x1="101.58"
+        inkscape:collect="always"
+    />
+    <linearGradient
+        id="linearGradient5544"
+        y2="658.74"
+        xlink:href="#linearGradient2225"
+        gradientUnits="userSpaceOnUse"
+        x2="477.51"
+        gradientTransform="matrix(.31234 0 0 .36907 -754.84 368.47)"
+        y1="1015.8"
+        x1="431.39"
+        inkscape:collect="always"
+    />
+  </defs
+  >
+  <sodipodi:namedview
+      id="base"
+      bordercolor="#666666"
+      inkscape:pageshadow="2"
+      guidetolerance="10"
+      pagecolor="#ffffff"
+      gridtolerance="10000"
+      inkscape:window-height="964"
+      inkscape:zoom="1.9049386"
+      objecttolerance="10"
+      borderopacity="1.0"
+      inkscape:current-layer="layer1"
+      inkscape:cx="116.81485"
+      inkscape:cy="158.50096"
+      inkscape:window-y="26"
+      inkscape:window-x="0"
+      inkscape:window-width="1280"
+      inkscape:pageopacity="0.0"
+      inkscape:document-units="px"
+  />
+  <g
+      id="layer1"
+      inkscape:label="Layer 1"
+      inkscape:groupmode="layer"
+      transform="translate(755.13 -455.33)"
+    >
+    <path
+        id="path2183"
+        sodipodi:nodetypes="csscccc"
+        style="fill-rule:evenodd;stroke:#000000;stroke-width:2;fill:url(#linearGradient5504)"
+        d="m-700.02 622.52s35.1-116.67 68.34-150.35c13.84-14.02 30.89-9.12 35.68-5.55 13.87 10.31 18.98 25.17 26.49 37.73-22.01-5.32-14.63-15.61-38.86-13.48l14.39 132.23-106.04-0.58z"
+    />
+    <path
+        id="path2185"
+        sodipodi:nodetypes="ccccc"
+        style="fill-rule:evenodd;fill:url(#linearGradient5501)"
+        d="m-701.34 628.5l10.55-35.53c15.7-5.66 49.49-5.35 93.58 5.81l4.3 34.05-108.43-4.33z"
+    />
+    <path
+        id="path2187"
+        sodipodi:nodetypes="ccccccccccccccc"
+        style="fill-rule:evenodd;stroke:#000000;fill:#ffcd00"
+        d="m-632.8 620.66l0.33-30.74 3.11-1.36c10.58 0.18 19.2 1.81 25.85 4.87l3.76 29.58-3.76 1.62-29.29-3.97zm9.66-26.81l1.14 18.84 13.54 2.04-1.07-6.19-10.97-5.05 9.73-1.92-0.86-5.82c-3.84-1.74-7.67-2.08-11.51-1.9z"
+    />
+    <path
+        id="path2201"
+        style="fill-rule:evenodd;stroke:#000000;fill:#bc9500"
+        d="m-632.45 590.01l3.35-1.43 0.65 30.51-4.22 1.61 0.22-30.69z"
+    />
+    <path
+        id="path2203"
+        sodipodi:nodetypes="ccccccc"
+        style="fill-rule:evenodd;stroke:#000000;fill:#bc9500"
+        d="m-623.28 592.09l0.05 1.77c3.19-0.27 6.91-0.08 11.62 1.79l0.79 5.82 2.79-0.7-1.24-6.3c-5.32-2.42-9.7-2.67-14.01-2.38z"
+    />
+    <path
+        id="path2205"
+        sodipodi:nodetypes="cccccc"
+        style="fill-rule:evenodd;stroke:#000000;fill:#bc9500"
+        d="m-620.03 603.53l10.45 4.45 1.3 6.9 2.78 0.53-1.88-9.51-12.65-2.37z"
+    />
+    <path
+        id="path1308"
+        sodipodi:nodetypes="csscszsz"
+        style="fill-rule:evenodd;stroke:#000000;stroke-width:2;fill:#377cff"
+        d="m-701.36 640.34c31.03 3.14 68.81-1.9 117.9 1.37 13.51 0.9 30.69 1.03 44.03-9.14 2.38-1.81 6.28-7.04-4.05-8.68-2.88-1.04-2.87 5.28-29.23 1.92-34.21-4.36-68.59-16.23-98.08-18.64-29.5-2.41-54.36-2.55-66.18 10.97-10.53 12.03 4.58 19.06 35.61 22.2z"
+    />
+    <path
+        id="path2237"
+        sodipodi:nodetypes="ccccccccccc"
+        style="fill-rule:evenodd;stroke:#000000;stroke-width:2;fill:url(#linearGradient5544)"
+        d="m-702.86 612.35c-9.67 0.34-19.66 0.63-28.76 4.78-3.31 1.4-5.84 4.47-7.17 8.28-1.99 4.31-1.6 10.12 1.56 13.55 5.52 6.28 13.3 8.49 20.52 10.6 23.7 6.33 48.22 4.42 72.34 3.72 21.03-0.78 42.11-0.63 63.09 1.41 26.26-1.11 36.13-6.74 42.59-22.55-17.11 6.21-19.27 10.51-50.75 4.34-25.62-6.45-50.31-17.84-76.37-21.8-12.27-1.55-24.68-2.5-37.05-2.33z"
+    />
+    <path
+        id="path5447"
+        sodipodi:nodetypes="csc"
+        style="stroke:#000000;stroke-width:2;fill:none"
+        d="m-608.18 491.51c-1.24-3.43-2.7-6.9-1.35-8.76 1.75-2.41 5.96-3.4 4.04 2.98"
+    />
+  </g
+  >
+  <g
+      id="layer2"
+      inkscape:label="wyz"
+      inkscape:groupmode="layer"
+    >
+    <path
+        id="path2288"
+        sodipodi:nodetypes="cccccccccccccsscccccccccccccc"
+        style="fill:#000000"
+        d="m104.79 302.04c-6.031-1.33-11.31-4.82-15.721-9-4.449-0.85 0.124 10-5.348 5.82-8.601-4-17.129-8.59-23.693-15.59-2.935-2.63-5.88-6.48-8.974-8.1-0.042 2.51-0.462 8.3-3.497 3.9-4.552-5.18-7.878-11.43-9.05-18.27-1.271-5.04-2.171-10.47-2.919-15.44-2.144 2.09-6.035 7.01-5.67 0.7-0.429-10.58 0.836-22.06 8.082-30.37 3.037-4.14 7.525-7.04 10.363-11.3-4.088-2.59 0.583-6.62 3.704-8.24 1.606-0.84 9-5.82 15.905-6.59 4.862-16.27 24.772-21.45 29.058-22.29 6.67-1.3 9.99-2.78 30.11 0.51 13.15 2.15 26.54 19.49 29.8 27.98 6.51 4.02 12.64 8.85 16.84 15.36 1.74 1.78 5.12 8.34 0.2 4.52-1.4-1.71-6.57-3.65-7.18-2.31 6.22 5.87 8.14 14.64 9.26 22.8 0.75 8.09 1.26 16.38-0.37 24.39-1.78 4.98-4.21-6.82-5.41-0.81-2.48 7.79-5.87 15.37-10.35 22.22-3.09 2.76-3.7-8.85-6.53-2.41-4.25 5.43-7.83 11.46-12.84 16.24-2.47-0.46-2.25-4.63-2.92-6.88 0.15-2.82-1.35-1.05-2.6 0.03-7.63 6.41-16.05 13.53-26.54 13.56-1.25-0.02-2.5-0.17-3.71-0.43z"
+    />
+    <path
+        id="path2286"
+        style="fill:#ffffff"
+        d="m119.83 297.69c6.37-3.1 11.34-8.2 16.95-12.38 3.75-0.96 1.73 11.77 6.05 5.49 4.3-5.1 8.01-10.66 11.87-16.08 3.4-2.82 3.25 9.26 5.98 3.22 3.58-6.91 6.72-14.09 8.96-21.55 1.82-4.53 5.14 6.17 5.27-0.37 1.64-11.91-0.17-24.28-4.68-35.39-0.55-3.32-4.72-5.33-5.17-7.91 2.4-1.31 5.26-0.94 7.89-1.28-5.8-5.42-11.03-12.33-19.06-14.34-4.25-0.93-8.4 0.72-12.35 2.12 5.49 2 11.21 5.14 13.16 11.04 3.49 8.61-1.47 19.46-10.44 22.14-3.76 0.48-9.6 0.09-7.19 5.84 2.4 4.22 3.71 9.35-1.6 12.11-5.58 3.63-13.65 5.16-19.15 0.52-3.09-2.43-7.1-6.38-10.4-1.8-7.111 5.1-18.297 6.63-24.803-0.27-1.188-1.12-3.002-2.16-1.201-3.67 2.387-3.57 3.73-8.36 2.323-12.49-4.843-1.7-10.746-2.29-13.872-7.12-6.294-7.69-4.291-20.15 3.833-25.73 1.493-2.31 6.584-2.24 7.244-3.58-5.712-2.85-12.599-4.67-18.791-2.2-4.636 1.43-8.964 3.94-12.039 7.74 2.209 0.18 6.462 3 2.166 3.67-6.147 4.69-11.393 10.7-15.288 17.38-4.347 6.74-3.199 14.95-3.764 22.56-0.387 2.42 1.401-1.13 2.091-1.67 1.166-2.74 4.556-3.31 3.927 0.53 0.115 11.59 3.055 23.56 10.064 32.96 1.135 2.1 1.799 2.45 1.65-0.22 0.025-2.6 0.505-8.54 3.436-4.03 5.318 6.57 11.029 13 18.409 17.32 4.575 2.81 9.332 5.33 14.154 7.69 1.149-2.54-1.344-10.65 2.684-9.13 4.975 6.98 13.317 12.24 22.097 11.96 3.4-0.2 6.59-1.55 9.59-3.08z"
+    />
+    <path
+        id="path2284"
+        style="fill:#ffffff"
+        d="m100.41 250.34c3.64-1.46 6.61-4.04 9.36-6.76 4.83 4.82 11.25 9.53 18.47 7.97 3.78-1.08 11.17-3.4 9.16-8.44-4.1-5.84-1.01-13.98-4.97-19.9-3.41-4.43-9.24-4.56-13.93-2.3-7.84 2.34-16.35 0.21-22.983-4.32-4.558-0.54-8.498 4.56-10.34 8.32-2.605 6.29-0.042 13.5-2.86 19.68-2.666 3.81 3.736 6.06 6.669 6.83 3.799 0.83 7.84 0.4 11.424-1.08z"
+    />
+    <path
+        id="path2282"
+        style="fill:#ffe7c6"
+        d="m145.51 229.97c7.02-3.13 11.39-12.32 7.41-19.38-2.04-4.92-6.6-8.73-12.04-9-3.89-0.27-9.66-0.49-11.5 3.61 1.32 4.52-1.12 8.92-2.2 12.61 5.53 0.51 8.6 6.64 9.43 11.55 1.08 4.73 6.17 1.69 8.9 0.61z"
+    />
+    <path
+        id="path2280"
+        style="fill:#ffe7c6"
+        d="m82.785 227.31c0.448-5.71 4.962-9.93 9.31-13.06 1.684-4.15 2.553-10.73-2.493-12.94-7.14-5.36-18.53-2.24-21.913 6.03-5.079 8.91 1.442 22 11.829 22.6 1.818 0.27 3.73-0.44 3.267-2.63z"
+    />
+    <path
+        id="path2278"
+        style="fill:#ffe7c6"
+        d="m121.64 218.01c3.92-1.46 7.37-5.23 6.21-9.67-1.89-6.67-9.7-9.37-16-9.4-6.47-0.02-14.608 2.17-16.811 9.05-1.295 6.09 5.071 10.48 10.351 11.44 5.36 0.81 11.21 0.76 16.25-1.42z"
+    />
+    <path
+        id="path2276"
+        style="fill:#ffe7c6"
+        d="m100.39 199.95c6.22-3.54 14.05-4.11 20.47-0.78 4.45 3.34 9.51 3.42 14.21 0.68 2.46-0.23 7-1.92 2.29-3.4-2.65-1.31-8.4-4.77-7.82 0.87-2.04 4.77-7.29 1.23-8.84-1.76-2.49 3.4-4.12-1.01-0.72-1.98 4.47-3.24 10.44-3.29 15.14-0.47 0.94 0.25 4.21 2.65 3.35 1.25-2.82-4.55-6.16-10.3-12.1-10.59-5.07 0.13-6.74 5.64-9.9 8.56-4.91 1.85-1.79-6.89-1.58-9.52 1.26-4.51 3.01-9.9 7.79-11.74 0.01-2.73-7.27-1.55-9.97-2.05-3.11-0.04-6.21-0.05-9.32-0.08 3.62 3.91 8.28 7.77 8.29 13.57-0.25 2.97 1.6 10.81-3.18 9.81-4.37-2.35-7-7.99-12.321-8.36-3.066 0.37-8.095 3.3-7.278 6.47 4.689 0.41 9.54 0.05 14.059 1.72 2.16-0.28 7.47 4.18 2.65 3.54-2.79-1.14-8.494-5.19-8.172 0.75-2.649 4.88-8.363 1.85-8.022-2.94-2.536-0.66-5.111 1.3-7.628 1.94-0.657 0.68 3.703 1.17 4.593 1.99 4.482 1.41 7.585 8.11 12.262 3.4 0.584-0.29 1.168-0.58 1.747-0.88z"
+    />
+    <path
+        id="path2274"
+        style="fill:#ffffff"
+        d="m143.85 194c-3.31-3.86-3.67-9.13-4.76-13.82-2.9-5.93-10.98-10.65-17.19-6.76-4.72 3.66-6.01 10.1-6.71 15.69 1.04 4.87 2.88-3.51 5.11-4.08 2.96-3.26 8.29-4.19 11.78-1.21 4.52 2.95 5.92 8.74 10.22 11.81 1.93 0.54 4.5 0.73 1.55-1.63z"
+    />
+    <path
+        id="path2272"
+        style="fill:#ffe7c6"
+        d="m151.6 190.75c-3.41-5.73-8.18-10.44-12.67-15.31 1.88 5.8 2.99 11.95 5.97 17.32 2.03 2.95 5.94 1.96 9.01 2.18-0.77-1.4-1.54-2.79-2.31-4.19z"
+    />
+    <path
+        id="path2268"
+        style="fill:#ffe7c6"
+        d="m80.631 187.38c1.139-4.54 3.154-8.77 4.817-13.11-3.77 0.91-6.711 4.18-9.689 6.62-2.654 2.5-8.877 9.05-2.968 11.08 3.338 0.84 6.569-1.64 7.84-4.59z"
+    />
+    <path
+        id="path2266"
+        style="fill:#ffffff"
+        d="m87.519 188.02c2.794-3.46 7.471-7.52 12.153-5.03 4.088 0.92 6.188 8.26 10.068 6.95 2.34-4.96-0.08-10.78-2.87-15.05-2.92-4.79-9.586-6.38-14.33-3.32-4.974 2.39-7.815 7.38-9.093 12.56-0.089 3.18-4.033 6.64-3.876 8.77 3.473 0.59 5.857-2.67 7.948-4.88z"
+    />
+  </g
+  >
+  <metadata
+    >
+    <rdf:RDF
+      >
+      <cc:Work
+        >
+        <dc:format
+          >image/svg+xml</dc:format
+        >
+        <dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        />
+        <cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        />
+        <dc:publisher
+          >
+          <cc:Agent
+              rdf:about="http://openclipart.org/"
+            >
+            <dc:title
+              >Openclipart</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:publisher
+        >
+        <dc:title
+          >Wizard in blue hat</dc:title
+        >
+        <dc:date
+          >2007-08-13T21:32:43</dc:date
+        >
+        <dc:description
+          >Just joining a Santa head to a hat.</dc:description
+        >
+        <dc:source
+          >https://openclipart.org/detail/4795/wizard-in-blue-hat-by-papapishu-4795</dc:source
+        >
+        <dc:creator
+          >
+          <cc:Agent
+            >
+            <dc:title
+              >papapishu</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:creator
+        >
+        <dc:subject
+          >
+          <rdf:Bag
+            >
+            <rdf:li
+              >face</rdf:li
+            >
+            <rdf:li
+              >fairy tale</rdf:li
+            >
+            <rdf:li
+              >fantasy</rdf:li
+            >
+            <rdf:li
+              >hat</rdf:li
+            >
+            <rdf:li
+              >magic</rdf:li
+            >
+            <rdf:li
+              >old man</rdf:li
+            >
+            <rdf:li
+              >remix</rdf:li
+            >
+            <rdf:li
+              >wizard</rdf:li
+            >
+          </rdf:Bag
+          >
+        </dc:subject
+        >
+      </cc:Work
+      >
+      <cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        >
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        />
+      </cc:License
+      >
+    </rdf:RDF
+    >
+  </metadata
+  >
+</svg
+>

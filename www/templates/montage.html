@@ -30,7 +30,7 @@
     <ion-content ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate"  >
     
 
-        <span ng-show="!minimal && showSizeButtons">
+        <span  ng-if="!minimal && showSizeButtons">
             <!-- this is header -->
             
             <span ng-click="sliderChanged(1)" style="float:right;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:25px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;</i></span>

@@ -11,7 +11,9 @@
         
         <!-- portal url -->
         <wz-step wz-title="1" canexit="exitPortal">
-            <h4><i class="ion-wand"></i> Welcome to zmWizard</h4>
+            
+            <h4><i class="ion-wand" style="font-size:2em"></i> Welcome to zmWizard</h4>
+            <img src="img/wizard.svg" width="100px" style="float:left"/>
             <p>Configuring ZoneMinder can be a pain. Let's see if zmWizard can help.</p>
 
             <h4>What is your Zoneminder portal url?</h4>
@@ -38,6 +40,7 @@
         <!-- auth mode -->  
         <wz-step wz-title="2"  >
             <h4>Portal Authentication</h4>
+            <!--<img src="img/wizard.svg" width="100px" style="float:left"/>-->
             <p>Lets talk about how you have configured authentication If you have enabled authentication, toggle this button</p>
             <ion-toggle ng-change="toggleAuth()" ng-model="wizard.useauth" ng-checked="wizard.useauth" toggle-class="toggle-calm">I use authentication</ion-toggle>
 
