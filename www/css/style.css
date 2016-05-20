@@ -877,9 +877,9 @@ body { font-family: sans-serif; }
     padding: 5px 5px 5px 5px;
     background-color: #cccccc;
     color:#333232;
-    border-radius: 10px;
-    border-width: 3px;
-    border-color:#6f6d6d;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color:#8b8888;
     border-style: solid;
 }
 
