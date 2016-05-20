@@ -27,7 +27,7 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
 	echo "Building Release mode for Xwalk android..."
 	echo "--------------------------------------------"
 	echo "Adding crosswalk..."
-	ionic browser add crosswalk@15.44.384.9
+	ionic browser add crosswalk
 	cp "$NINJAKEYSTORE" platforms/android
 	ionic build android --release
 
