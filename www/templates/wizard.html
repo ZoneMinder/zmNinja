@@ -12,7 +12,7 @@
         <!-- portal url -->
         <wz-step wz-title="1" canexit="exitPortal">
             
-            <h4><i class="ion-wand" style="font-size:2em"></i> Welcome to zmWizard</h4>
+            <h4><i id="transition-delay" class="animated swing ion-wand" style="font-size:2em"></i> Welcome to zmWizard</h4>
             <img src="img/wizard.svg" width="100px" style="float:left"/>
             <p>Configuring ZoneMinder can be a pain. Let's see if zmWizard can help.</p>
 
@@ -66,6 +66,7 @@
             <label class="item item-input item-floating-label" ng-show="wizard.usebasicauth">
                 <span class="input-label">password</span>
                 <input type="password" ng-model="wizard.basicpassword" placeholder="basic auth password" >
+                <p>note: if your password has # or ? in it, the wizard will fail cgi detection.</p>
             </label>
 
 
