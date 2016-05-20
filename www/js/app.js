@@ -402,8 +402,13 @@ angular.module('zmApp', [
             },
             link: function ($scope, $element, $attributes) {
 
+                /*if ($attributes.imageSpinnerLoader) {
+                    var loader = $compile('<div class="image-loader-container"><ion-spinner  class="image-loader" icon="' + $attributes.imageSpinnerLoader + '"></ion-spinner></div>')($scope);
+                    $element.after(loader);
+                }*/
+                
                 if ($attributes.imageSpinnerLoader) {
-                    var loader = $compile('<div class="image-loader-container"><ion-spinner style="position:fixed;top:5%;right:5%" class="image-loader" icon="' + $attributes.imageSpinnerLoader + '"></ion-spinner></div>')($scope);
+                    var loader = $compile('<div class="image-loader-container"><ion-spinner  class="image-loader" icon="' + 'bubbles'+ '"></ion-spinner></div>')($scope);
                     $element.after(loader);
                 }
                 imageLoadingDataShare.set(1);
