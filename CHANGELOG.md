@@ -1,7 +1,43 @@
 # Change Log
 
-## [1.1.7](https://github.com/pliablepixels/zmNinja/tree/1.1.7) (2016-04-23)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.4...1.1.7)
+## [1.1.9](https://github.com/pliablepixels/zmNinja/tree/1.1.9) (2016-05-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.7...1.1.9)
+
+**Implemented enhancements:**
+
+- Add ability to jump to specific timeframe during event playback [\#252](https://github.com/pliablepixels/zmNinja/issues/252)
+- Allow users to specify a minimum alarm frame count for the events page [\#250](https://github.com/pliablepixels/zmNinja/issues/250)
+- Implement new color scheme  [\#249](https://github.com/pliablepixels/zmNinja/issues/249)
+- Show recording state in monitors \(alert/alarm/recording/idle\) [\#248](https://github.com/pliablepixels/zmNinja/issues/248)
+- add ability to force trigger alarms \(needs API upgrade\) [\#245](https://github.com/pliablepixels/zmNinja/issues/245)
+- support multi-server feeds and the new server API [\#241](https://github.com/pliablepixels/zmNinja/issues/241)
+- Write a configuration wizard [\#234](https://github.com/pliablepixels/zmNinja/issues/234)
+
+**Fixed bugs:**
+
+- Fix keyboard jump on certain fields/iOS [\#251](https://github.com/pliablepixels/zmNinja/issues/251)
+- clean up buttons so they don't overlap in many views [\#246](https://github.com/pliablepixels/zmNinja/issues/246)
+- Switching between profiles fails to discover monitors [\#244](https://github.com/pliablepixels/zmNinja/issues/244)
+- Event Graphs issue [\#239](https://github.com/pliablepixels/zmNinja/issues/239)
+- Event server customization [\#238](https://github.com/pliablepixels/zmNinja/issues/238)
+- Push notification issue [\#237](https://github.com/pliablepixels/zmNinja/issues/237)
+- Fix the monitor orientation code for rotated cameras [\#232](https://github.com/pliablepixels/zmNinja/issues/232)
+- protocol bug - cgi-bin discover [\#231](https://github.com/pliablepixels/zmNinja/issues/231)
+
+**Closed issues:**
+
+- . [\#253](https://github.com/pliablepixels/zmNinja/issues/253)
+- clean up monitorCtrl - remove Event crap - we now have different controllers [\#247](https://github.com/pliablepixels/zmNinja/issues/247)
+- switching between fid mode playback \(api 1.30+\) and path mode causes issues if I don't restart app [\#243](https://github.com/pliablepixels/zmNinja/issues/243)
+- video .mp4 event issue [\#242](https://github.com/pliablepixels/zmNinja/issues/242)
+- check if android is exiting on background [\#240](https://github.com/pliablepixels/zmNinja/issues/240)
+- Enhancement: zmNinja as surveillance solution [\#236](https://github.com/pliablepixels/zmNinja/issues/236)
+- Application not recorvering from connection errors [\#199](https://github.com/pliablepixels/zmNinja/issues/199)
+- Event Montage unstable [\#183](https://github.com/pliablepixels/zmNinja/issues/183)
+- \[DESKTOP\] Playback control bar lost some features in 1.0.9 [\#176](https://github.com/pliablepixels/zmNinja/issues/176)
+
+## [v1.1.7](https://github.com/pliablepixels/zmNinja/tree/v1.1.7) (2016-04-23)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.4...v1.1.7)
 
 **Implemented enhancements:**
 
