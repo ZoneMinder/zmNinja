@@ -1016,10 +1016,19 @@ body { font-family: sans-serif; }
   opacity:1;
   color:#fff;
   z-index:9998;
-      
    
 }
 
+.smallnote
+{
+    font-size:9px;
+    text-align:center;
+    background-color: rgba(0,0,0,0.3);
+    color:rgb(0,0,0);
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+    
+}
 
 
 
