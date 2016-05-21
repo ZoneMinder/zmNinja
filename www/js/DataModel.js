@@ -1105,6 +1105,16 @@ angular.module('zmApp.controllers')
                                     
                                     
                                 }
+                                else
+                                {
+                                    monitors[i].Monitor.listDisplay='show';
+                                monitors[i].Monitor.isAlarmed = false;
+                                monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                                monitors[i].Monitor.streamingURL = loginData.streamingurl;
+                                monitors[i].Monitor.baseURL = loginData.url;
+                                monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion,"1.30")==-1) ? "path":"fid"; 
+                                zmDebug ("API " +$rootScope.apiVersion+ ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access" );
+                                }
                             }
                             d.resolve(monitors);
                         })
