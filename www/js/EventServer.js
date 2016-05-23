@@ -20,32 +20,7 @@ angular.module('zmApp.controllers')
         var localNotificationId = 0;
 
 
-        //--------------------------------------------------------------------------
-        // used to compare versions of event server 
-        //--------------------------------------------------------------------------
-
-        //credit: https://gist.github.com/alexey-bass/1115557
-
-        function versionCompare(left, right) {
-            if (typeof left + typeof right != 'stringstring')
-                return false;
-
-            var a = left.split('.');
-            var b = right.split('.');
-            var i = 0;
-            var len = Math.max(a.length, b.length);
-
-            for (; i < len; i++) {
-                if ((a[i] && !b[i] && parseInt(a[i]) > 0) || (parseInt(a[i]) > parseInt(b[i]))) {
-                    return 1;
-                } else if ((b[i] && !a[i] && parseInt(b[i]) > 0) || (parseInt(a[i]) < parseInt(b[i]))) {
-                    return -1;
-                }
-            }
-
-            return 0;
-        }
-
+        
 
         //--------------------------------------------------------------------------
         // called when the websocket is opened
@@ -152,7 +127,7 @@ angular.module('zmApp.controllers')
                 if (str.status == 'Success' && (str.event == 'auth')) {
                     if (str.version == undefined)
                         str.version = "0.1";
-                    if (versionCompare(str.version, zm.minEventServerVersion) == -1) {
+                    if (ZMDataModel.versionCompare(str.version, zm.minEventServerVersion) == -1) {
                         $rootScope.zmPopup= $ionicPopup.alert({
                             title: 'Event Server version not supported',
                             template: 'You are running version ' + str.version + ". Please upgrade to " +
@@ -404,25 +379,7 @@ angular.module('zmApp.controllers')
 
            // console.log("*********** MEDIA BLOG IS " + mediasrc);
             media = $cordovaMedia.newMedia(mediasrc);
-            /* var push = PushNotification.init(
-                         { "android": 
-                          {"senderID":zm.gcmSenderId,
-                           "icon":"ic_stat_notification"
-                          }
-                         },
-                          
-                          { "ios": 
-                          {"alert": "true", 
-                           "badge": "true", 
-                           "sound": "true"}
-                         }  
-                          
-                     );*/
-
-
-
-
-
+           
             push.on('registration', function (data) {
                 ZMDataModel.zmDebug("Push Notification registration ID received: " + JSON.stringify(data));
                 $rootScope.apnsToken = data.registrationId;
@@ -453,17 +410,7 @@ angular.module('zmApp.controllers')
                     ZMDataModel.zmDebug("received push notification, but event server disabled. Not acting on it");
                     return;
                 }
-                //console.log("************* PUSH RECEIVED ******************");
-                //console.log(JSON.stringify(data));
-
-                // data.message,
-                // data.title,
-                // data.count,
-                // data.sound,
-                // data.image,
-                // data.additionalData
-
-
+              
 
                 if (data.additionalData.foreground == false) {
                     // This means push notification tap in background
@@ -492,18 +439,7 @@ angular.module('zmApp.controllers')
                     // console.log ("***STRING: " + str + " " +str.status);
                     var eventsToDisplay = [];
 
-                    /*console.log ("PUSH IS " + JSON.stringify(str.events));
-                    var alarmtext = "";
-                    for (var iter=0; iter<str.events.length; iter++)
-                    {
-                          // lets stack the display so they don't overwrite
-                        console.log ("PUSHING " + str.events[iter].Name+": new event ("+str.events[iter].EventId+")"); 
-                        
-                        var evtstr  = str.events[iter].Name+": new event ("+str.events[iter].EventId+")";
-                       eventsToDisplay.push(evtstr);
-                        
-                    }*/
-
+                  
 
                     ZMDataModel.displayBanner('alarm', [str], 0, 5000 * eventsToDisplay.length);
 

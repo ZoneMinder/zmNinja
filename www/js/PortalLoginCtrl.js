@@ -119,27 +119,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
         unlock(false);
     };
     
-    //credit: https://gist.github.com/alexey-bass/1115557
-    function versionCompare(left, right) {
-        if (typeof left + typeof right != 'stringstring')
-            return false;
-
-        var a = left.split('.');
-        var  b = right.split('.');
-        var i = 0;
-        var len = Math.max(a.length, b.length);
-
-        for (; i < len; i++) {
-            if ((a[i] && !b[i] && parseInt(a[i]) > 0) || (parseInt(a[i]) > parseInt(b[i]))) {
-                return 1;
-            } else if ((b[i] && !a[i] && parseInt(b[i]) > 0) || (parseInt(a[i]) < parseInt(b[i]))) {
-                return -1;
-            }
-        }
-
-        return 0;
-}
-    
+        
     
 
     function unlock(idVerified) {
@@ -169,13 +149,13 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         ZMDataModel.zmLog("Got API version: " + data);
                         $rootScope.apiVersion = data;
                         var ld = ZMDataModel.getLogin();
-                         if (versionCompare(data,zm.minAppVersion)==-1 && data !="0.0.0")
+                         if (ZMDataModel.versionCompare(data,zm.minAppVersion)==-1 && data !="0.0.0")
                         {
 
                             $state.go('lowversion', {"ver":data});
                         }
 
-                        if (versionCompare(data,zm.recommendedAppVersion)==-1 && data !="0.0.0")
+                        if (ZMDataModel.versionCompare(data,zm.recommendedAppVersion)==-1 && data !="0.0.0")
                         {
 
                             $state.go('importantmessage', {"ver":data});
