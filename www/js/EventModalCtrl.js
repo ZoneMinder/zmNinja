@@ -751,14 +751,24 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if (ld.useNphZmsForEvents)
             {
                 $timeout (function() {
-                ZMDataModel.zmLog ("Starting checkAllEvents interval...");
-                
-                //eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
-                $interval.cancel(eventQueryHandle);
-                eventQueryHandle = $interval(function () {
-                    checkEvent();
-                    //  console.log ("Refreshing Image...");
-                }.bind(this),zm.eventPlaybackQuery);
+                    
+                    if ($scope.modal.isShown())
+                    {
+                        ZMDataModel.zmLog (">>>Starting checkAllEvents interval...");
+
+                        //eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
+
+                        $interval.cancel(eventQueryHandle);
+                        eventQueryHandle = $interval(function () {
+                            checkEvent();
+                            //  console.log ("Refreshing Image...");
+                        }.bind(this),zm.eventPlaybackQuery);
+                    }
+                    else
+                    {
+                        ZMDataModel.zmLog (">>>Modal was exited, not starting checkAllEvents");
+                    }
+                    
                 },5000);
             }
             
