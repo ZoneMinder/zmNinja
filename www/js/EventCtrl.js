@@ -1252,7 +1252,7 @@ angular.module('zmApp.controllers')
         // it on open
         //--------------------------------------------------------
         $scope.closeModal = function () {
-            ZMDataModel.zmDebug("EventCtrl:Close & Destroy Modal");
+            ZMDataModel.zmDebug(">>>EventCtrl:Close & Destroy Modal");
             ZMDataModel.setAwake(false);
             if ($scope.modal !== undefined) {
                 $scope.modal.remove();
