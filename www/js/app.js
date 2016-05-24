@@ -20,7 +20,8 @@ angular.module('zmApp', [
 			                 'com.2fdevs.videogular.plugins.controls',
                             'com.2fdevs.videogular.plugins.overlayplay',
                             'ionic-native-transitions',
-                            'mgo-angular-wizard'
+                            'mgo-angular-wizard',
+                            'pascalprecht.translate'
 
 
 
@@ -1022,9 +1023,10 @@ angular.module('zmApp', [
 //====================================================================
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions, $translate) {
 
 
+        
 
         $rootScope.zmGlobalCookie = "";
         $rootScope.isEventFilterOn = false;
@@ -1181,6 +1183,23 @@ angular.module('zmApp', [
 
 
             $ionicNativeTransitions.enable(true, false);
+            
+            
+            
+            if(typeof navigator.globalization !== "undefined") {
+                navigator.globalization.getPreferredLanguage(function(language) {
+                    $translate.use((language.value).split("-")[0]).then(function(data) {
+                        ZMDataModel.zmLog("Device Language is:" + data);
+                        moment.locale(data);
+                    }, function(error) {
+                        ZMDataModel.zmLog("Device Language error: " + error);
+                    });
+                }, null);
+            }
+            
+            ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
+            moment.locale($translate.proposedLanguage());
+           
 
             if (window.cordova) {
                 $cordovaSplashscreen.hide();
@@ -1392,7 +1411,7 @@ angular.module('zmApp', [
 //------------------------------------------------------------------
 
 // My route map connecting menu options to their respective templates and controllers
-.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, $ionicNativeTransitionsProvider, $logProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, $ionicNativeTransitionsProvider, $logProvider, $translateProvider) {
 
     //$logProvider.debugEnabled(false);
     //$compileProvider.debugInfoEnabled(false);
@@ -1429,7 +1448,32 @@ angular.module('zmApp', [
     $ionicNativeTransitionsProvider.setDefaultOptions({
         duration: 250,
     });
+    
+    $translateProvider.useStaticFilesLoader({
+    prefix: 'lang/locale-',
+    suffix: '.json'
+   });
+    
+    //$translateProvider.useLocalStorage();
+    
+    
+    $translateProvider.registerAvailableLanguageKeys(['en', 'de','es', 'fr', 'it', 'ja', 'ko', 'zh', 'zh_CN', 'zh_TW'], {
+             'en*': 'en',
+             'de*': 'de',
+             'es*': 'es',
+             'fr*': 'fr',
+             'it*': 'it',
+             'ja*': 'ja',
+             'ko*': 'ko',
+               '*': 'en' // must be last
+         });
+    
+    
 
+    $translateProvider.determinePreferredLanguage();
+    $translateProvider.preferredLanguage("en");
+    $translateProvider.fallbackLanguage("en");
+    $translateProvider.useSanitizeValueStrategy('sanitize');
 
     $stateProvider
         .state('app', {

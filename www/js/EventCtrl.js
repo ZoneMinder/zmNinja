@@ -7,7 +7,7 @@
 // and whether the new API has a better mechanism
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'appModalService', 'carouselUtils', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, appModalService, carouselUtils) {
+    .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'appModalService', 'carouselUtils', '$translate', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, appModalService, carouselUtils, $translate) {
 
         // events in last 5 minutes
         // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -206,9 +206,10 @@ angular.module('zmApp.controllers')
 
             if ($scope.monitors.length == 0)
             {
+                var pTitle = $translate.instant('kNoMonitors');
                 $ionicPopup.alert({
-                            title: "No Monitors found",
-                            template: "Please check your credentials"
+                            title: pTitle,
+                            template: "{{'kCheckCredentials' | translate }}"
                 });
                 $ionicHistory.nextViewOptions({
                             disableBack: true
@@ -324,7 +325,12 @@ angular.module('zmApp.controllers')
             img = "<img width='100%' ng-src='"+p+"/index.php?view=image&fid="+id+"'>";
            // console.log ("IS MULTISERVER SO IMAGE IS " + img);
         }
-        $rootScope.zmPopup = $ionicPopup.alert({title: 'frame:'+fid+'/Event:'+e,template:img,  cssClass:'popup80'});
+        
+        var kFrame = $translate.instant ('kFrame');
+        var kEvent = $translate.instant ('kEvent');
+        
+        
+        $rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
     };
     
     
@@ -409,7 +415,7 @@ angular.module('zmApp.controllers')
             ZMDataModel.zmLog("Delete event " + apiDelete);
 
             $ionicLoading.show({
-                template: "deleting event...",
+                template: "{{'kDeletingEvent' | translate}}...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
             });
@@ -418,7 +424,7 @@ angular.module('zmApp.controllers')
                 .success(function (data) {
                     $ionicLoading.hide();
                     ZMDataModel.zmDebug("delete success: " + JSON.stringify(data));
-                    ZMDataModel.displayBanner('info', ['deleted event'], 2000, 2000);
+                    ZMDataModel.displayBanner('info', [$translate.instant('kDeleteEventSuccess')], 2000, 2000);
 
                     $scope.events.splice(itemid, 1);
                     //doRefresh();
@@ -427,7 +433,7 @@ angular.module('zmApp.controllers')
                 .error(function (data) {
                     $ionicLoading.hide();
                     ZMDataModel.zmDebug("delete error: " + JSON.stringify(data));
-                    ZMDataModel.displayBanner('error', ['could not delete event', 'please check logs']);
+                    ZMDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);
                 });
 
 
@@ -443,8 +449,8 @@ angular.module('zmApp.controllers')
             var toString = moment($rootScope.toString).format("MMM/DD/YYYY "+ZMDataModel.getTimeFormat()).toString();
 
             $rootScope.zmPopup = $ionicPopup.confirm({
-                title: 'Filter settings',
-                template: 'You are viewing Events between:<br/> <b>' + myFrom + "</b> to <b>" + toString + '</b><br/>Do you want to delete this filter?'
+                title: $translate.instant('kFilterSettings'),
+                template: $translate.instant('kFilterEventsBetween1')+':<br/> <b>' + myFrom + "</b> "+$translate.instant('kTo')+" <b>" + toString + '</b><br/>' + $translate.instant('kFilterEventsBetween2')
             });
             $rootScope.zmPopup.then(function (res) {
                 if (res) {
