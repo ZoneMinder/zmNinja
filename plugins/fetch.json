@@ -1,30 +1,5 @@
 {
-    "org.pbernasconi.progressindicator": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/pbernasconi/cordova-progressIndicator.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "org.apache.cordova.file": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.file"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "cordova-plugin-app-event": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-app-event"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "phonegap-plugin-push": {
+        "phonegap-plugin-push": {
         "source": {
             "type": "registry",
             "id": "phonegap-plugin-push"
