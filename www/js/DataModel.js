@@ -423,6 +423,9 @@ angular.module('zmApp.controllers')
                     loginData.useNphZms  = true;
                 }
                 
+                // and now, force enable it
+                loginData.useNphZms = true;
+                
                 if (typeof loginData.useNphZmsForEvents == 'undefined')
                 {
                     zmDebug ("useNphZmsForEvents does not exist. Setting to true");
