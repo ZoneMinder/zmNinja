@@ -87,7 +87,7 @@ angular.module('zmApp', [
       link: function($scope, $element, $attrs) {
         var onMouseWheel, scrollCtrl;
         scrollCtrl = $element.controller('$ionicScroll');
-        console.log(scrollCtrl);
+        //console.log(scrollCtrl);
         if (!scrollCtrl) {
           return console.error('mouseWheelScroll must be attached to a $ionicScroll controller.');
         }
