@@ -29,7 +29,7 @@
 
             <label class="item-input-wrapper">
                 <i class="icon ion-ios7-search placeholder-icon"></i>
-                <input type="search" placeholder="Search" ng-model="search.text" autocorrect="off" autocomplete="off">
+                <input type="search" placeholder="{{'kSearch'|translate}}" ng-model="search.text" autocorrect="off" autocomplete="off">
             </label>
         </ion-header-bar>
     </div>
@@ -113,25 +113,25 @@
                                 <div ng-if="event.Event.EndTime">
                                     
                                     <button class="button button-small button-outline icon icon-left ion-stats-bars"
-                                            ng-click="closeIfOpen(event);analyzeEvent(event)" >  Analyze
+                                            ng-click="closeIfOpen(event);analyzeEvent(event)" >  {{'kAnalyze' | translate }}
                                     </button>
                                     
                                     <button class="button button-outline button-small icon icon-left ion-ios-eye"
-                                            ng-click="toggleGroupScrub(event,$index,event.Event.Frames)" >  Scrub
+                                            ng-click="toggleGroupScrub(event,$index,event.Event.Frames)" >  {{'kScrub' | translate }}
                                     </button>
                                     
                                     <button  ng-if="event.Event.AlarmFrames > 0" class="button button-outline button-small icon icon-left ion-ios-bell"
-                                            ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)" >  alarms
+                                            ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)" >  {{'kAlarms' | translate }}
                                     </button>
 
 
                                     <button class="button button-outline button-small icon icon-left ion-ios-eye"
-                                            ng-click="closeIfOpen(event);openModal(event)" > Footage
+                                            ng-click="closeIfOpen(event);openModal(event)" > {{'kFootage' | translate }}
                                     </button>
                                 </div>
                               
                                 <div ng-if="!event.Event.EndTime">
-                                    <p>recording in progress</p>
+                                    <p>{{'kRecordingProgress'|translate}}</p>
                                 </div>
                     </span>
 
@@ -153,7 +153,7 @@
                                                  
                                             <figure  style="display:inline-block">
                                                 <!--{{event.Event.baseURL}} p:{{event.Event.imageMode}}-->
-                                                <figcaption class="smallnote">frame:{{alarm.frameid}} score:{{alarm.score}}</figcaption>       
+                                                <figcaption class="smallnote">{{ 'frame' | translate}} :{{alarm.frameid}} {{ 'score' | translate }} :{{alarm.score}}</figcaption>       
                                                   <img ng-if="event.Event.imageMode=='path'" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.frameid, event.Event.Id, event.Event.imageMode, alarm.id)" />
                                                 
                                                 <img ng-if="event.Event.imageMode=='fid'" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&fid={{alarm.id}}"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.frameid, event.Event.Id, event.Event.imageMode, alarm.id)" />
@@ -183,17 +183,13 @@
 
 
 
-                                <p>{{mycarousel.index+1}}/{{event.Event.Frames}} Type: {{FrameArray[mycarousel.index].Type}}</p>
+                                <p>{{mycarousel.index+1}}/{{event.Event.Frames}} {{'kType'|translate}}: {{FrameArray[mycarousel.index].Type}}</p>
 
                                 <div style="height:190px">
 
 
                                     <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index" rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover rn-platform="{{$root.platformOS}}">
                                         <li ng-repeat="slide in slides">
-                                            <!-- Linwood scaling -->
-                                            
-                                            
-                                            <!-- <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{playbackURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/> -->
                                             
                                              
                                             <img ng-if="event.Event.imageMode=='path'" imageonload="finishedLoadingImage($index)" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380" image-spinner-loader="lines" height="190px" ;/>
@@ -255,7 +251,7 @@
         </div>
 
         <ion-item ng-show="!events.length">
-            No events to display.
+            {{ 'kNoEvents' | translate }}
         </ion-item>
 
         <div ng-if="!eventsBeingLoaded">
@@ -263,7 +259,7 @@
             </ion-infinite-scroll>
         </div>
     </ion-content>
-    <div class="events-float-filter" ng-if="isEventFilterOn" on-tap="filterTapped();">Filter On</div>
+    <div class="events-float-filter" ng-if="isEventFilterOn" on-tap="filterTapped();">{{'kFilterOn'|translate}}</div>
 
     <ion-pull-up-footer class="zmPullup" on-expand="footerExpand()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand">
 
@@ -271,18 +267,18 @@
             <i class="icon ion-chevron-up"></i>
         </ion-pull-up-handle>
         <ion-pull-up-bar>
-            <h1 class="title" ion-pull-up-trigger>Latest Events</h1>
+            <h1 class="title" ion-pull-up-trigger>{{'kLatestEvents' | translate}}</h1>
         </ion-pull-up-bar>
         <ion-pull-up-content scroll="true">
 
             <div class="list list-inset">
-                <div class="item item-divider">1 hour summary</div>
+                <div class="item item-divider">{{'k1HourSummary' | translate }}</div>
                 <div ng-repeat="hour in hours|filter:{ monitor: '!'+'(Unknown)'}" id="hour-{{$index}}">
 
                     <span style="color:black">
                     <a class="item item-icon-right" href="" 
                        ng-click="showEvents('1', 'hour',hour.mid);">
-                        <b>{{hour.monitor}}</b> {{hour.events}} events
+                        <b>{{hour.monitor}}</b> {{hour.events}} {{'kEvents' | translate }}
                         <i class="icon ion-android-arrow-dropright"></i>
                     </a>
                     </span>
@@ -291,13 +287,13 @@
             </div>
 
             <div class="list list-inset">
-                <div class="item item-divider">1 day summary</div>
+                <div class="item item-divider">{{'k1DaySummary' | translate }}</div>
                 <div ng-repeat="day in days|filter:{ monitor: '!'+'(Unknown)'}" id="day-{{$index}}">
 
                     <span style="color:black">
                     <a class="item item-icon-right" href="" 
                        ng-click="showEvents('1', 'day',day.mid);">
-                        <b>{{day.monitor}}</b> {{day.events}} events
+                        <b>{{day.monitor}}</b> {{day.events}} {{'kEvents' | translate}}
                         <i class="icon ion-android-arrow-dropright"></i>
                     </a>
                     </span>
@@ -307,13 +303,13 @@
 
 
             <div class="list list-inset">
-                <div class="item item-divider">1 week summary</div>
+                <div class="item item-divider">{{'k1WeekSummary' | translate }}</div>
                 <div ng-repeat="week in weeks|filter:{ monitor: '!'+'(Unknown)'}" id="week-{{$index}}">
 
                     <span style="color:black">
                     <a class="item item-icon-right" href="" 
                        ng-click="showEvents('1', 'week',week.mid);">
-                        <b>{{week.monitor}}</b> {{week.events}} events
+                        <b>{{week.monitor}}</b> {{week.events}} {{'kEvents' | translate}}
                         <i class="icon ion-android-arrow-dropright"></i>
                     </a>
                     </span>
@@ -322,13 +318,13 @@
             </div>
 
             <div class="list list-inset">
-                <div class="item item-divider">1 month summary</div>
+                <div class="item item-divider">{{'k1MonthSummary' | translate}}</div>
                 <div ng-repeat="month in months|filter:{ monitor: '!'+'(Unknown)'}" id="month-{{$index}}">
 
                     <span style="color:black">
                     <a class="item item-icon-right" href="" 
                        ng-click="showEvents('1', 'months',month.mid);">
-                        <b>{{month.monitor}}</b> {{month.events}} events
+                        <b>{{month.monitor}}</b> {{month.events}} {{'kEvents' | translate }}
                         <i class="icon ion-android-arrow-dropright"></i>
                     </a>
                     </span>

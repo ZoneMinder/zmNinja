@@ -1,0 +1,34 @@
+{
+ 
+    "kEvents":                      "events",
+    "kEvent":                       "event",
+    "kSearch":                      "search",
+    "kAnalyze":                     "Analyze",
+    "kScrub":                       "Scrub",
+    "kAlarms":                      "Alarms",
+    "kFootage":                     "Footage",
+    "kRecordingProgress":           "recording in progress",
+    "kFrame":                       "frame",
+    "kScore":                       "score",
+    "kType":                        "type",
+    "kNoEvents":                    "No events to display",
+    "kFilterOn":                    "Filter On",
+    "kLatestEvents":                "Latest Events",
+    "k1HourSummary":                "1 hour summary",
+    "k1DaySummary":                 "1 day summary",
+    "k1WeekSummary":                "1 week summary",
+    "k1MonthSummary":               "1 month summary",
+    "kNoMonitors":                  "No Monitors found",
+    "kCheckCredentials":            "Please check your credentials",
+    "kDeletingEvent":               "deleting event",
+    "kDeleteEventSuccess":          "deleted event",
+    "kDeleteEventError1":           "could  not delete event",
+    "kDeleteEventError2":           "please check logs",
+    "kFilterSettings":              "Filter Settings",
+    "kFilterEventsBetween1":        "You are viewing events between",
+    "kTo":                          "to",
+    "kFilterEventsBetween2":        "Do you want to delete this filter?"
+    
+    
+    
+}
