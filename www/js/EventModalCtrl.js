@@ -14,27 +14,31 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var nphTimer;
     var eventQueryHandle;
     $scope.loginData = ZMDataModel.getLogin();
-    $scope.currentRate='-';
+    $scope.currentRate = '-';
     var timeFormat = 'MM/DD/YYYY HH:mm:ss';
 
-    
+
     var framearray = {
-        
-        labels:[],
+
+        labels: [],
         datasets: [{
             //label: '# of Votes',
             backgroundColor: 'rgba(242, 12, 12, 0.5)',
             borderColor: 'rgba(242, 12, 12, 0.5)',
             data: [],
             }]
-        };
-    
-    var frameoptions=[];
-    
-    
+    };
+
+    var frameoptions = [];
+
+
     var eventImageDigits = 5; // failsafe
-    $scope.currentProgress = {progress:0};
-    $scope.sliderProgress = {progress:0};
+    $scope.currentProgress = {
+        progress: 0
+    };
+    $scope.sliderProgress = {
+        progress: 0
+    };
     ZMDataModel.getKeyConfigParams(0)
         .then(function (data) {
             //console.log ("***GETKEY: " + JSON.stringify(data));
@@ -70,20 +74,20 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     });
     var ld = ZMDataModel.getLogin();
 
- 
-    $scope.currentStreamMode = ld.gapless ? 'gapless':'single';
+
+    $scope.currentStreamMode = ld.gapless ? 'gapless' : 'single';
     ZMDataModel.zmLog("Using stream mode " + $scope.currentStreamMode);
 
-    ZMDataModel.zmDebug ("EventModalCtrl called from " + $ionicHistory.currentStateName());
+    ZMDataModel.zmDebug("EventModalCtrl called from " + $ionicHistory.currentStateName());
     // This is not needed for event mode
-    
+
 
 
     ZMDataModel.zmDebug("Setting playback to " + $scope.streamMode);
 
 
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-    ZMDataModel.getAuthKey($rootScope.validMonitorId,(Math.floor((Math.random() * 999999) + 1)).toString())
+    ZMDataModel.getAuthKey($rootScope.validMonitorId, (Math.floor((Math.random() * 999999) + 1)).toString())
         .then(function (success) {
                 $ionicLoading.hide();
                 $rootScope.authSession = success;
@@ -98,85 +102,80 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
             });
 
-    
-   
+
+
     //-------------------------------------------------------
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------
-    
-    
-     $rootScope.$on("auth-success", function () {
 
-            ZMDataModel.zmDebug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
-             ZMDataModel.stopNetwork("Auth-Success inside EventModalCtrl");
-            $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
-            //console.log ("********* OFFSET FROM AUTH SUCC");
-            $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
-            //$timeout.cancel(eventQueryHandle);
-            //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-         
-         
-            
+
+    $rootScope.$on("auth-success", function () {
+
+        ZMDataModel.zmDebug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
+        ZMDataModel.stopNetwork("Auth-Success inside EventModalCtrl");
+        $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+        //console.log ("********* OFFSET FROM AUTH SUCC");
+        $timeout(function () {
+            sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
+        }, 500);
+        //$timeout.cancel(eventQueryHandle);
+        //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+
+
+
     });
-    
+
     //-------------------------------------------------------
     // tap to pause
     //------------------------------------------------------
 
-    $scope.togglePause = function ()
-    {
+    $scope.togglePause = function () {
         $scope.isPaused = !$scope.isPaused;
-        ZMDataModel.zmDebug ("Paused is " + $scope.isPaused);
-        
-        
-        sendCommand ( $scope.isPaused? '1':'2',$scope.connKey);
-        
+        ZMDataModel.zmDebug("Paused is " + $scope.isPaused);
+
+
+        sendCommand($scope.isPaused ? '1' : '2', $scope.connKey);
+
     };
 
 
 
-             
+
     //-------------------------------------------------------
     // This is what we call every zm.EventQueryInterval
     // it really only queries to get status to it can display
     // zms takes care of the display
     //------------------------------------------------------
 
-    function checkEvent()
-    {
+    function checkEvent() {
         //console.log ("Event timer");
         //console.log ("Event timer");
         $scope.checkEventOn = true;
-        if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='')
-        {
-            console.log ("playing video, not using zms, skipping event commands");
-        }
-        else
-        {
-            processEvent('99',$scope.connKey);
+        if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
+            console.log("playing video, not using zms, skipping event commands");
+        } else {
+            processEvent('99', $scope.connKey);
         }
     }
-    
-    
-    function sendCommand(cmd,connkey,extras,rq)
-    {
+
+
+    function sendCommand(cmd, connkey, extras, rq) {
         var d = $q.defer();
-        
-        if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='')
-        {
-            console.log ("playing video, not using zms, skipping event commands");
+
+        if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
+            console.log("playing video, not using zms, skipping event commands");
             d.resolve(true);
             return (d.promise);
         }
-        
-        
-        
-         var loginData = ZMDataModel.getLogin();
-        console.log ("Sending CGI command to " + loginData.url);
-        var rqtoken = rq? rq:"stream";
-        var myauthtoken = $rootScope.authSession.replace("&auth=","");
+
+
+
+        var loginData = ZMDataModel.getLogin();
+        console.log("Sending CGI command to " + loginData.url);
+        var rqtoken = rq ? rq : "stream";
+        var myauthtoken = $rootScope.authSession.replace("&auth=", "");
         //&auth=
-            $http({
+        $http({
                 method: 'POST',
                 /*timeout: 15000,*/
                 url: loginData.url + '/index.php',
@@ -190,14 +189,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         str.push(encodeURIComponent(p) + "=" +
                             encodeURIComponent(obj[p]));
                     var foo = str.join("&");
-                    if (extras)
-                    {
-                            foo = foo + extras;
-                            //console.log("EXTRAS****SUB RETURNING " + foo);
+                    if (extras) {
+                        foo = foo + extras;
+                        //console.log("EXTRAS****SUB RETURNING " + foo);
                     }
-                    console.log ("CGI subcommand="+foo);
+                    console.log("CGI subcommand=" + foo);
                     return foo;
-                        
+
                 },
 
                 data: {
@@ -206,146 +204,144 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     connkey: connkey,
                     command: cmd,
                     auth: myauthtoken,
-                   // user: loginData.username,
-                   // pass: loginData.password
+                    // user: loginData.username,
+                    // pass: loginData.password
                 }
             })
-            .then (function (resp) {
-                ZMDataModel.zmDebug ("sendCmd response:"+JSON.stringify(resp));
-                d.resolve(resp);
-                return (d.promise);
-                
-                
-            },
+            .then(function (resp) {
+                    ZMDataModel.zmDebug("sendCmd response:" + JSON.stringify(resp));
+                    d.resolve(resp);
+                    return (d.promise);
+
+
+                },
                 function (resp) {
-                ZMDataModel.zmDebug ("sendCmd error:"+JSON.stringify(resp));
-                d.reject (resp);
-                return (d.promise);
-            });
-        
-            return (d.promise);
+                    ZMDataModel.zmDebug("sendCmd error:" + JSON.stringify(resp));
+                    d.reject(resp);
+                    return (d.promise);
+                });
+
+        return (d.promise);
     }
-    
-    
-    function processEvent(cmd,connkey)
-    {
-        
-        if ($scope.blockSlider)
-        {
-            console.log ("Not doing ZMS Command as slider is depressed...");
+
+
+    function processEvent(cmd, connkey) {
+
+        if ($scope.blockSlider) {
+            console.log("Not doing ZMS Command as slider is depressed...");
             return;
         }
-   
-        var loginData = ZMDataModel.getLogin();
-         console.log ("sending process Event command to " + loginData.url);
-        var myauthtoken = $rootScope.authSession.replace("&auth=","");
-        //&auth=
-            var req = $http({
-                method: 'POST',
-                /*timeout: 15000,*/
-                url: loginData.url + '/index.php',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    //'Accept': '*/*',
-                },
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" +
-                            encodeURIComponent(obj[p]));
-                    var foo = str.join("&");
-                    console.log("****processEvent subcommands RETURNING " + foo);
-                    return foo;
-                },
 
-                data: {
-                    view: "request",
-                    request: "stream",
-                    connkey: connkey,
-                    command: cmd,
-                    auth: myauthtoken,
-                   // user: loginData.username,
-                   // pass: loginData.password
-                }
-            });
-        
-            req.success (function (resp) {
-               // ZMDataModel.zmDebug ("processEvent success:"+JSON.stringify(resp));
-                
-                if (resp.result=="Ok")
-                {
-                    
-                    $scope.currentProgress.progress = resp.status.progress;
-                    $scope.eventId = resp.status.event;
-                    $scope.d_eventId = $scope.eventId;
-                    $scope.currentRate = resp.status.rate;
-                    
-                    
-                    if ($scope.currentProgress.progress > $scope.currentEventDuration) $scope.currentProgress.progress = $scope.currentEventDuration;
-                    $scope.progressText = "At " + $scope.currentProgress.progress + "s of " + $scope.currentEventDuration+"s";
-                    
-                    $scope.sliderProgress.progress = $scope.currentProgress.progress;
-                
-                    // lets not do this and use zms to move forward or back
-                    // as this code conflicts with fast rev etc
-                    //if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
-                    
-                    
-                    
-                   //$timeout (checkEvent(), zm.eventPlaybackQuery);
-                    //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-     
-                }
-                else // resp.result was messed up
-                    
-                {
-                   ZMDataModel.zmDebug("Hmm I found an error " + JSON.stringify(resp));
-                    //window.stop();
-                    $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
-                      
-                       // console.log (JSON.stringify(resp));
-                     $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
-                     ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
-                    //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-                }
-            });
-        
-        
-            req.error (function (resp) {
-                ZMDataModel.zmDebug ("processEvent error:"+JSON.stringify(resp));
+        var loginData = ZMDataModel.getLogin();
+        console.log("sending process Event command to " + loginData.url);
+        var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+        //&auth=
+        var req = $http({
+            method: 'POST',
+            /*timeout: 15000,*/
+            url: loginData.url + '/index.php',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                //'Accept': '*/*',
+            },
+            transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                    str.push(encodeURIComponent(p) + "=" +
+                        encodeURIComponent(obj[p]));
+                var foo = str.join("&");
+                console.log("****processEvent subcommands RETURNING " + foo);
+                return foo;
+            },
+
+            data: {
+                view: "request",
+                request: "stream",
+                connkey: connkey,
+                command: cmd,
+                auth: myauthtoken,
+                // user: loginData.username,
+                // pass: loginData.password
+            }
+        });
+
+        req.success(function (resp) {
+            // ZMDataModel.zmDebug ("processEvent success:"+JSON.stringify(resp));
+
+            if (resp.result == "Ok") {
+
+                $scope.currentProgress.progress = resp.status.progress;
+                $scope.eventId = resp.status.event;
+                $scope.d_eventId = $scope.eventId;
+                $scope.currentRate = resp.status.rate;
+
+
+                if ($scope.currentProgress.progress > $scope.currentEventDuration) $scope.currentProgress.progress = $scope.currentEventDuration;
+                $scope.progressText = "At " + $scope.currentProgress.progress + "s of " + $scope.currentEventDuration + "s";
+
+                $scope.sliderProgress.progress = $scope.currentProgress.progress;
+
+                // lets not do this and use zms to move forward or back
+                // as this code conflicts with fast rev etc
+                //if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
+
+
+
+                //$timeout (checkEvent(), zm.eventPlaybackQuery);
                 //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-                
-            });
-        
+
+            } else // resp.result was messed up
+
+            {
+                ZMDataModel.zmDebug("Hmm I found an error " + JSON.stringify(resp));
+                //window.stop();
+                $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+
+                // console.log (JSON.stringify(resp));
+                $timeout(function () {
+                    sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
+                }, 500);
+                ZMDataModel.zmDebug("so I'm regenerating Connkey to " + $scope.connKey);
+                //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+            }
+        });
+
+
+        req.error(function (resp) {
+            ZMDataModel.zmDebug("processEvent error:" + JSON.stringify(resp));
+            //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+
+        });
+
     }
 
 
 
     function onPause() {
-       
+
         // $interval.cancel(modalIntervalHandle);
 
         // FIXME: Do I need to  setAwake(false) here?
         $interval.cancel(eventQueryHandle);
-        ZMDataModel.zmLog ("EventModalCtrl: paused, killing timer");
-        
+        ZMDataModel.zmLog("EventModalCtrl: paused, killing timer");
+
     }
 
 
     function onResume() {
         ZMDataModel.zmDebug("EventModalCtrl: Modal resume called");
-            
 
-            $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+
+        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
 
     }
 
 
 
-    
-    
-    
-    
+
+
+
+
 
     $scope.finishedLoadingImage = function () {
         // console.log("***Monitor image FINISHED Loading***");
@@ -353,24 +349,26 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     };
 
-    $scope.enableSliderBlock = function()
-    {
+    $scope.enableSliderBlock = function () {
         $scope.blockSlider = true;
     };
-   
-    $scope.youChangedSlider = function()
-    {
-        
+
+    $scope.youChangedSlider = function () {
+
         console.log("YOU changed " + $scope.sliderProgress.progress);
         $scope.currentProgress.progress = $scope.sliderProgress.progress;
-        $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
+        $timeout(function () {
+            sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
+        }, 500);
         // give this command some time to complete
-        $timeout (function(){$scope.blockSlider = false;},1500);
-        
+        $timeout(function () {
+            $scope.blockSlider = false;
+        }, 1500);
+
     };
 
-   
-    
+
+
 
 
     //-----------------------------------------------------------------------
@@ -398,144 +396,130 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
 
-    $scope.jumpToOffsetInEvent = function()
-    {
+    $scope.jumpToOffsetInEvent = function () {
         // streamReq.send( streamParms+"&command="+CMD_SEEK+"&offset="+offset );
     };
 
-   
+
 
     //-----------------------------------------------------------------------
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
-    $scope.saveEventImageToPhone = function (onlyAlarms) 
-    {
-        
-        if ($scope.loginData.useNphZmsForEvents)
-        {
-            ZMDataModel.zmLog ("Use ZMS stream to save to phone");
+    $scope.saveEventImageToPhone = function (onlyAlarms) {
+
+        if ($scope.loginData.useNphZmsForEvents) {
+            ZMDataModel.zmLog("Use ZMS stream to save to phone");
             saveEventImageToPhoneZms(onlyAlarms);
-            
-            
-        }
-        else
-        {
+
+
+        } else {
             saveEventImageToPhone(onlyAlarms);
         }
-        
-        
+
+
     };
 
-    function saveEventImageToPhoneZms(onlyAlarms)
-    {
+    function saveEventImageToPhoneZms(onlyAlarms) {
         // The strategy here is to build the array now so we can grab frames
         // $scope.currentProgress.progress is the seconds where we are
-            // $scope.eventId is the event Id
-        
+        // $scope.eventId is the event Id
+
         $scope.isPaused = true;
-        
+
         $ionicLoading.show({
             template: "please wait...",
             noBackdrop: true,
             duration: zm.httpTimeout
         });
-        sendCommand('1',$scope.connKey).
-        then (function (resp)
-        {
-            
-           // console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
-            $scope.currentProgress.progress = resp.data.status.progress;
-           // console.log ("STEP 0 progress is " + $scope.currentProgress.progress);
-            $scope.slides = [];
-          
-            var apiurl = $scope.loginData.apiurl + "/events/" + $scope.eventId + ".json";
-            ZMDataModel.zmDebug ("prepared to get frame details using " + apiurl);
-            $http.get(apiurl)
-            .then (function (success)
-            {
-                
-                    var event = success.data.event;
+        sendCommand('1', $scope.connKey).
+        then(function (resp) {
 
-                    event.Event.BasePath = computeBasePath(event);
-                    event.Event.relativePath = computeRelativePath(event);
-                    $scope.playbackURL = $scope.loginData.url;
-                    $scope.eventBasePath = event.Event.BasePath;
-                    $scope.relativePath = event.Event.relativePath;
+                // console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
+                $scope.currentProgress.progress = resp.data.status.progress;
+                // console.log ("STEP 0 progress is " + $scope.currentProgress.progress);
+                $scope.slides = [];
 
-                    // now lets get approx frame #
+                var apiurl = $scope.loginData.apiurl + "/events/" + $scope.eventId + ".json";
+                ZMDataModel.zmDebug("prepared to get frame details using " + apiurl);
+                $http.get(apiurl)
+                    .then(function (success) {
 
-                    var totalTime = event.Event.Length;
-                    var totalFrames = event.Event.Frames;
-                    
-                    var myFrame = Math.round(totalFrames/totalTime * $scope.currentProgress.progress);
-                
-                  //  console.log ("STEP 0: playback " + $scope.playbackURL + " total time " + totalTime + " frames " + totalFrames);
+                            var event = success.data.event;
 
-                    if (myFrame > totalFrames) myFrame = totalFrames;
-                    
-                  //  console.log ("STEP 0 myFrame is " + myFrame);
-                   // console.log ("DUMPING " + JSON.stringify(event));
-                    $scope.mycarousel.index = myFrame;
-                   // console.log ("STEP 1 : Computed index as "+  $scope.mycarousel.index);
-                    var i;
-                    for (i = 1; i <= event.Frame.length; i++) {
-                        var fname = padToN(i, eventImageDigits) + "-capture.jpg";
-                        // console.log ("Building " + fname);
-                        
-                       // console.log ("DUMPING ONE " + JSON.stringify(event.Frame[i-1]));
-                        // onlyAlarms means only copy alarmed frames
-                        if (onlyAlarms)
-                        {
-                            if (event.Frame[i-1] && event.Frame[i-1].Type == 'Alarm')
-                            {
-                                $scope.slides.push({
-                                    id: i,
-                                    img: fname,
-                                });
+                            event.Event.BasePath = computeBasePath(event);
+                            event.Event.relativePath = computeRelativePath(event);
+                            $scope.playbackURL = $scope.loginData.url;
+                            $scope.eventBasePath = event.Event.BasePath;
+                            $scope.relativePath = event.Event.relativePath;
+
+                            // now lets get approx frame #
+
+                            var totalTime = event.Event.Length;
+                            var totalFrames = event.Event.Frames;
+
+                            var myFrame = Math.round(totalFrames / totalTime * $scope.currentProgress.progress);
+
+                            //  console.log ("STEP 0: playback " + $scope.playbackURL + " total time " + totalTime + " frames " + totalFrames);
+
+                            if (myFrame > totalFrames) myFrame = totalFrames;
+
+                            //  console.log ("STEP 0 myFrame is " + myFrame);
+                            // console.log ("DUMPING " + JSON.stringify(event));
+                            $scope.mycarousel.index = myFrame;
+                            // console.log ("STEP 1 : Computed index as "+  $scope.mycarousel.index);
+                            var i;
+                            for (i = 1; i <= event.Frame.length; i++) {
+                                var fname = padToN(i, eventImageDigits) + "-capture.jpg";
+                                // console.log ("Building " + fname);
+
+                                // console.log ("DUMPING ONE " + JSON.stringify(event.Frame[i-1]));
+                                // onlyAlarms means only copy alarmed frames
+                                if (onlyAlarms) {
+                                    if (event.Frame[i - 1] && event.Frame[i - 1].Type == 'Alarm') {
+                                        $scope.slides.push({
+                                            id: i,
+                                            img: fname,
+                                        });
+                                    }
+                                } else // push all frames
+                                {
+                                    $scope.slides.push({
+                                        id: i,
+                                        img: fname,
+                                    });
+                                }
                             }
-                        }
-                        else // push all frames
-                        {
-                            $scope.slides.push({
-                                id: i,
-                                img: fname,
-                            });
-                        }
-                    }
-                  //  console.log ("STEP 2 : calling Save Event To Phone");
-                    $ionicLoading.hide();
-                    saveEventImageToPhone(onlyAlarms);
-                   
+                            //  console.log ("STEP 2 : calling Save Event To Phone");
+                            $ionicLoading.hide();
+                            saveEventImageToPhone(onlyAlarms);
 
+
+                        },
+                        function (err) {
+                            $ionicLoading.hide();
+                            ZMDataModel.zmLog("snapshot API Error: Could not get frames " + JSON.stringify(err));
+
+                            $ionicLoading.show({
+                                template: "error retrieving frames",
+                                noBackdrop: true,
+                                duration: 4000
+                            });
+                        });
             },
-                   function (err)
-                   {
-                        $ionicLoading.hide();
-                        ZMDataModel.zmLog ("snapshot API Error: Could not get frames " + JSON.stringify(err));
-                
-                        $ionicLoading.show({
-                            template: "error retrieving frames",
-                            noBackdrop: true,
-                            duration: 4000
-        });
-            });
-        },
-              
-        function (err)
-        {
-            ZMDataModel.zmDebug ("Error pausing stream before snapshot " + JSON.stringify(err));
-           $ionicLoading.hide();
-        }
-             
+
+            function (err) {
+                ZMDataModel.zmDebug("Error pausing stream before snapshot " + JSON.stringify(err));
+                $ionicLoading.hide();
+            }
+
         ); // then
-        
-        
+
+
     }
 
 
-    function saveEventImageToPhone(onlyAlarms)
-    {
+    function saveEventImageToPhone(onlyAlarms) {
         var curState = carouselUtils.getStop();
         carouselUtils.setStop(true);
 
@@ -545,8 +529,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         ZMDataModel.zmDebug("ModalCtrl: SaveEventImageToPhone called");
         var canvas, context, imageDataUrl, imageData;
         var loginData = ZMDataModel.getLogin();
-        
-        
+
+
         // for alarms only
         if (onlyAlarms) $scope.mycarousel.index = 0;
         var url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.mycarousel.index].img;
@@ -561,7 +545,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         $rootScope.zmPopup = $ionicPopup.show({
             template: '<center>Frame: {{slideIndex+1}} of {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  />',
-            title: 'Select '+ (onlyAlarms?'Alarmed ':'')+'frame to save',
+            title: 'Select ' + (onlyAlarms ? 'Alarmed ' : '') + 'frame to save',
             subTitle: 'use left and right arrows to change',
             scope: $scope,
             cssClass: 'popup80',
@@ -635,62 +619,61 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 }]
         });
 
-        function saveNow()
-        {
+        function saveNow() {
             $ionicLoading.show({
-             template: "saving snapshot...",
-             noBackdrop: true,
-             duration: zm.httpTimeout
+                template: "saving snapshot...",
+                noBackdrop: true,
+                duration: zm.httpTimeout
             });
             var url = $scope.selectEventUrl;
-            ZMDataModel.zmLog ("saveNow: File path to grab is " + url);
+            ZMDataModel.zmLog("saveNow: File path to grab is " + url);
 
-             var img = new Image();
-             img.onload = function () {
+            var img = new Image();
+            img.onload = function () {
                 // console.log("********* ONLOAD");
-                 canvas = document.createElement('canvas');
-                 canvas.width = img.width;
-                 canvas.height = img.height;
-                 context = canvas.getContext('2d');
-                 context.drawImage(img, 0, 0);
+                canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                context = canvas.getContext('2d');
+                context.drawImage(img, 0, 0);
 
-                 imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-                 imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+                imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+                imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
 
-                 if ($rootScope.platformOS != "desktop") {
-                     try {
+                if ($rootScope.platformOS != "desktop") {
+                    try {
 
-                         cordova.exec(
-                             SaveSuccess,
-                             SaveError,
-                             'Canvas2ImagePlugin',
-                             'saveImageDataToLibrary', [imageData]
-                         );
+                        cordova.exec(
+                            SaveSuccess,
+                            SaveError,
+                            'Canvas2ImagePlugin',
+                            'saveImageDataToLibrary', [imageData]
+                        );
                         // carouselUtils.setStop(curState);
-                     } catch (e) {
+                    } catch (e) {
 
-                         SaveError(e.message);
+                        SaveError(e.message);
                         // carouselUtils.setStop(curState);
-                     }
-                 } else {
+                    }
+                } else {
 
 
-                     var fname = $scope.relativePath+$scope.slides[$scope.slideIndex].img + ".png";
-                     fname = fname.replace(/\//,"-");
-                      fname = fname.replace(/\.jpg/,'');
+                    var fname = $scope.relativePath + $scope.slides[$scope.slideIndex].img + ".png";
+                    fname = fname.replace(/\//, "-");
+                    fname = fname.replace(/\.jpg/, '');
 
-                     canvas.toBlob(function (blob) {
-                         saveAs(blob, fname);
-                         SaveSuccess();
-                     });
-                 }
-             };
-             try {
-                 img.src = url;
+                    canvas.toBlob(function (blob) {
+                        saveAs(blob, fname);
+                        SaveSuccess();
+                    });
+                }
+            };
+            try {
+                img.src = url;
                 // console.log ("SAVING IMAGE SOURCE");
-             } catch (e) {
-                 SaveError(e.message);
-             } 
+            } catch (e) {
+                SaveError(e.message);
+            }
         }
     }
 
@@ -704,7 +687,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.scaleImage = function () {
 
         $scope.imageFit = !$scope.imageFit;
-       // console.log("Switching image style to " + $scope.imageFit);
+        // console.log("Switching image style to " + $scope.imageFit);
     };
 
     $scope.$on('$ionicView.enter', function () {
@@ -714,47 +697,44 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     });
 
-    $scope.$on('modal.shown', function (e,m) {
-        
+    $scope.$on('modal.shown', function (e, m) {
+
         if (m.id != 'footage')
-      
+
             return;
-        
+
         var ld = ZMDataModel.getLogin();
         $scope.loginData = ZMDataModel.getLogin();
-        
+
         $scope.singleImageQuality = ld.singleImageQuality;
         $scope.blockSlider = false;
         $scope.checkEventOn = false;
         //$scope.singleImageQuality = 100;
-        
-        
-        
+
+
+
         //$scope.commandURL = $scope.currentEvent.Event.baseURL+"/index.php";
-       // ZMDataModel.zmLog (">>>>>>>>>>>>>>>>>>ZMS url command is " + $scope.commandURL);
-        
+        // ZMDataModel.zmLog (">>>>>>>>>>>>>>>>>>ZMS url command is " + $scope.commandURL);
+
         currentEvent = $scope.currentEvent;
-        
-        console.log ("Current Event " + JSON.stringify(currentEvent));
-        $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
-        ZMDataModel.zmDebug ("Generated Connkey:" + $scope.connKey);
-        
+
+        console.log("Current Event " + JSON.stringify(currentEvent));
+        $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+        ZMDataModel.zmDebug("Generated Connkey:" + $scope.connKey);
+
         $scope.currentFrame = 1;
         $scope.isPaused = false;
         //console.log ("CURRENT EVENT " + JSON.stringify($scope.currentEvent));
         $scope.currentEventDuration = Math.floor($scope.currentEvent.Event.Length);
         //console.log ($scope.event.Event.Frames);
-        if (currentEvent && currentEvent.Event)
-        {
+        if (currentEvent && currentEvent.Event) {
             //console.log ("************ CALLING PREPARE MODAL ***********");
             prepareModalEvent(currentEvent.Event.Id);
-            if (ld.useNphZmsForEvents)
-            {
-                $timeout (function() {
-                    
-                    if ($scope.modal.isShown())
-                    {
-                        ZMDataModel.zmLog (">>>Starting checkAllEvents interval...");
+            if (ld.useNphZmsForEvents) {
+                $timeout(function () {
+
+                    if ($scope.modal.isShown()) {
+                        ZMDataModel.zmLog(">>>Starting checkAllEvents interval...");
 
                         //eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
 
@@ -762,93 +742,93 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         eventQueryHandle = $interval(function () {
                             checkEvent();
                             //  console.log ("Refreshing Image...");
-                        }.bind(this),zm.eventPlaybackQuery);
+                        }.bind(this), zm.eventPlaybackQuery);
+                    } else {
+                        ZMDataModel.zmLog(">>>Modal was exited, not starting checkAllEvents");
                     }
-                    else
-                    {
-                        ZMDataModel.zmLog (">>>Modal was exited, not starting checkAllEvents");
-                    }
-                    
-                },5000);
+
+                }, 5000);
             }
-            
+
         }
-        
-        
-    
-        
-        
-        
+
+
+
+
+
+
     });
-    
+
     //var current_data;
-    function drawGraph()
-    {
-       
-         
+    function drawGraph() {
+
+
         var cv = document.getElementById("eventchart");
         var ctx = cv.getContext("2d");
-        
-        
+
+
         frameoptions = {
-        responsive:true,
-        legend:false,
-        title: {display:false, text: ""},
-        scales: {
-            yAxes: [{
-                display:false,
-                scaleLabel: { 
-                    display:false,
-                    labelString:'value',
-                }
-                
-            }],
-            xAxes: [{
-               type:'time',
-                display:false,
-                time: {
-                  
-                    format:timeFormat,
-                    tooltipFormat: 'll HH:mm',
-                    min:framearray.datasets[0].data[0].x,
-                    max:framearray.datasets[0].data[framearray.datasets[0].data.length-1].x ,
-                    displayFormats: {
-                        
+            responsive: true,
+            legend: false,
+            title: {
+                display: false,
+                text: ""
+            },
+            scales: {
+                yAxes: [{
+                    display: false,
+                    scaleLabel: {
+                        display: false,
+                        labelString: 'value',
                     }
-                },
-                scaleLabel: {
-							display: false,
-							labelString: ''
-						}
-                    
+
+            }],
+                xAxes: [{
+                    type: 'time',
+                    display: false,
+                    time: {
+
+                        format: timeFormat,
+                        tooltipFormat: 'll HH:mm',
+                        min: framearray.datasets[0].data[0].x,
+                        max: framearray.datasets[0].data[framearray.datasets[0].data.length - 1].x,
+                        displayFormats: {
+
+                        }
+                    },
+                    scaleLabel: {
+                        display: false,
+                        labelString: ''
+                    }
+
                 }]
             }
         };
-        
-       
-        $timeout(function() {
-            
-            
-          var myChart = new Chart(ctx, {
-              type: 'line',
-              data: framearray,
-              options: frameoptions,
-          });
+
+
+        $timeout(function () {
+
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: framearray,
+                options: frameoptions,
+            });
 
         });
     }
-    
 
-    $scope.$on('modal.removed', function (e,m) {
+
+    $scope.$on('modal.removed', function (e, m) {
         $interval.cancel(eventQueryHandle);
         if (m.id != 'footage')
             return;
-        
-      
+
+
         $scope.isModalActive = false;
-        
-        ZMDataModel.zmDebug ("Modal removed - killing connkey");
-        sendCommand(17,$scope.connKey);
+
+        ZMDataModel.zmDebug("Modal removed - killing connkey");
+        sendCommand(17, $scope.connKey);
         //$timeout (function(){ZMDataModel.stopNetwork("Modal removed inside EventModalCtrl");},400);
 
         // Execute action
@@ -857,85 +837,88 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     // Playback speed adjuster
     $scope.adjustSpeed = function (val) {
-        
-        if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='' )
-        {
-            
+
+        if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
+
             $ionicLoading.show({
-            template: "Please use video player controls for H264 events. ZoneMinder doesn't yet support zms controls",
-            noBackdrop: true,
-            duration: 3000
+                template: "Please use video player controls for H264 events. ZoneMinder doesn't yet support zms controls",
+                noBackdrop: true,
+                duration: 3000
             });
             return;
         }
-        
+
         var ld = ZMDataModel.getLogin();
-        
-        if (ld.useNphZmsForEvents)
-        {
-            
+
+        if (ld.useNphZmsForEvents) {
+
             var cmd;
             $scope.isPaused = false;
-            switch (val)
-            {
-                case 'ff': cmd= 4; break;
-                case 'fr': cmd= 7; break;
-                case 'np': cmd= 2; break;
-                case 'p' : cmd= 1;  $scope.isPaused = true; break;
-                default  : cmd=0; 
+            switch (val) {
+                case 'ff':
+                    cmd = 4;
+                    break;
+                case 'fr':
+                    cmd = 7;
+                    break;
+                case 'np':
+                    cmd = 2;
+                    break;
+                case 'p':
+                    cmd = 1;
+                    $scope.isPaused = true;
+                    break;
+                default:
+                    cmd = 0;
             }
-            
+
             $ionicLoading.show({
-                        template: "please wait...",
-                        noBackdrop: true,
-                        duration: zm.httpTimeout
-                    });
-            
+                template: "please wait...",
+                noBackdrop: true,
+                duration: zm.httpTimeout
+            });
+
             sendCommand(cmd, $scope.connKey)
-            .then (function (success)
-                    {
+                .then(function (success) {
                         $ionicLoading.hide();
 
                     },
-                   function (err)
-                   {
+                    function (err) {
                         $ionicLoading.hide();
-                        ZMDataModel.zmDebug ("Error in adjust speed: " + JSON.stringify(err));
+                        ZMDataModel.zmDebug("Error in adjust speed: " + JSON.stringify(err));
                     }
-            );
-            
-            
-        }
-        
-        else // not using nph
+                );
+
+
+        } else // not using nph
         {
-        
+
             switch (val) {
 
-                    case "super":
-                        $scope.eventSpeed = 20 / $scope.event.Event.Frames;
-                        carouselUtils.setDuration($scope.eventSpeed);
-                        break;
-                    case "normal":
-                        $scope.eventSpeed = $scope.event.Event.Length / $scope.event.Event.Frames;
-                        //$scope.eventSpeed = 5;
-                        carouselUtils.setDuration($scope.eventSpeed);
+                case "super":
+                    $scope.eventSpeed = 20 / $scope.event.Event.Frames;
+                    carouselUtils.setDuration($scope.eventSpeed);
+                    break;
+                case "normal":
+                    $scope.eventSpeed = $scope.event.Event.Length / $scope.event.Event.Frames;
+                    //$scope.eventSpeed = 5;
+                    carouselUtils.setDuration($scope.eventSpeed);
 
-                        break;
-                    case "faster":
-                        $scope.eventSpeed = $scope.eventSpeed / 2;
-                        if ($scope.eventSpeed < 20 / $scope.event.Event.Frames)
-                            $scope.eventSpeed = 10 / $scope.event.Event.Frames;
-                        carouselUtils.setDuration($scope.eventSpeed);
-                        break;
-                    case "slower":
-                        $scope.eventSpeed = $scope.eventSpeed * 2;
-                        carouselUtils.setDuration($scope.eventSpeed);
+                    break;
+                case "faster":
+                    $scope.eventSpeed = $scope.eventSpeed / 2;
+                    if ($scope.eventSpeed < 20 / $scope.event.Event.Frames)
+                        $scope.eventSpeed = 10 / $scope.event.Event.Frames;
+                    carouselUtils.setDuration($scope.eventSpeed);
+                    break;
+                case "slower":
+                    $scope.eventSpeed = $scope.eventSpeed * 2;
+                    carouselUtils.setDuration($scope.eventSpeed);
 
-                        break;
-                    default:
+                    break;
+                default:
 
-                }
+            }
             ZMDataModel.zmDebug("Set playback speed to " + $scope.eventSpeed);
 
             $ionicLoading.show({
@@ -947,26 +930,28 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 showDelay: 0
             });
         }
-        
+
 
 
     };
 
 
     $scope.toggleGapless = function () {
-       // console.log(">>>>>>>>>>>>>>GAPLESS TOGGLE INSIDE MODAL");
+        // console.log(">>>>>>>>>>>>>>GAPLESS TOGGLE INSIDE MODAL");
         $scope.loginData.gapless = !$scope.loginData.gapless;
         ZMDataModel.setLogin($scope.loginData);
-        
+
         ZMDataModel.zmDebug("EventModalCtrl: gapless has changed resetting everything & re-generating connkey");
-             ZMDataModel.stopNetwork("EventModalCtrl-toggle gapless");
-            ZMDataModel.zmDebug ("Regenerating connkey as gapless has changed");
-            // console.log ("********* OFFSET FROM TOGGLE GAPLESS");
-            $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
-            $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
-            //$timeout.cancel(eventQueryHandle);
-            //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-         
+        ZMDataModel.stopNetwork("EventModalCtrl-toggle gapless");
+        ZMDataModel.zmDebug("Regenerating connkey as gapless has changed");
+        // console.log ("********* OFFSET FROM TOGGLE GAPLESS");
+        $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+        $timeout(function () {
+            sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
+        }, 500);
+        //$timeout.cancel(eventQueryHandle);
+        //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+
 
     };
 
@@ -1013,21 +998,20 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
 
-    $scope.zoomImage = function (val)
-    {
+    $scope.zoomImage = function (val) {
         var zl = parseInt($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom);
-        if (zl == 1 && val == -1)
-        {
-            ZMDataModel.zmDebug ("Already zoomed out max");
+        if (zl == 1 && val == -1) {
+            ZMDataModel.zmDebug("Already zoomed out max");
             return;
         }
-        
-        
-        zl+=val;
-       ZMDataModel.zmDebug ("Zoom level is " + zl); $ionicScrollDelegate.$getByHandle("imgscroll").zoomTo(zl,true);
-        
+
+
+        zl += val;
+        ZMDataModel.zmDebug("Zoom level is " + zl);
+        $ionicScrollDelegate.$getByHandle("imgscroll").zoomTo(zl, true);
+
     };
-    
+
 
     //--------------------------------------------------------
     //Navigate to next/prev event in full screen mode
@@ -1042,36 +1026,30 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             //console.log("Image is zoomed in - not honoring swipe");
             return;
         }
-        
-        if (ld.useNphZmsForEvents)
-        {
+
+        if (ld.useNphZmsForEvents) {
             ZMDataModel.zmLog("using zms to move ");
             jumpToEventZms($scope.connKey, dirn);
-           // sendCommand ( dirn==1?'13':'12',$scope.connKey);
-            
-        }
-        else
-        {
+            // sendCommand ( dirn==1?'13':'12',$scope.connKey);
+
+        } else {
             jumpToEvent(eid, dirn);
         }
-        
+
         //console.log("JUMPING");
-        
+
 
     };
 
     $scope.jumpToEvent = function (eid, dirn) {
-       // console.log("jumptoevent");
+        // console.log("jumptoevent");
         var ld = ZMDataModel.getLogin();
-        if (ld.useNphZmsForEvents)
-        {
+        if (ld.useNphZmsForEvents) {
             ZMDataModel.zmLog("using zms to move ");
             jumpToEventZms($scope.connKey, dirn);
-           // sendCommand ( dirn==1?'13':'12',$scope.connKey);
-            
-        }
-        else
-        {
+            // sendCommand ( dirn==1?'13':'12',$scope.connKey);
+
+        } else {
             jumpToEvent(eid, dirn);
         }
 
@@ -1106,7 +1084,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         function outWithOld() {
 
             ZMDataModel.zmLog("ModalCtrl:Stopping network pull...");
-             ZMDataModel.stopNetwork("EventModalCtrl-out with old");
+            ZMDataModel.stopNetwork("EventModalCtrl-out with old");
             $scope.animationInProgress = true;
             // give digest time for image to swap
             // 100 should be enough
@@ -1126,52 +1104,52 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     }
 
-        
-        
+
+
     function jumpToEventZms(connkey, dirn) {
-        
-        
-        if ($scope.defaultVideo !== undefined && $scope.defaultVideo !='' )
-        {
-            
+
+
+        if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
+
             $ionicLoading.show({
-            template: "Event navigation is not available with video feeds. ZoneMinder doesn't yet support them",
-            noBackdrop: true,
-            duration: 3000
+                template: "Event navigation is not available with video feeds. ZoneMinder doesn't yet support them",
+                noBackdrop: true,
+                duration: 3000
             });
             return;
-            
+
         }
-        var cmd = dirn==1?'13':'12';
+        var cmd = dirn == 1 ? '13' : '12';
         $scope.d_eventId = "...";
-        ZMDataModel.zmDebug ("Sending " + cmd + " to " + connkey);
-        
+        ZMDataModel.zmDebug("Sending " + cmd + " to " + connkey);
+
         $ionicLoading.show({
-             template: "switching events..",
-             noBackdrop: true,
-             duration: zm.httpTimeout
-            });
-        
-        console.log ("Send command connkey: "+connkey);
-        sendCommand ( cmd,connkey)
-        .then (
-            function (success) 
-            {
-                //console.log ("jump success " + JSON.stringify(success));
-                $ionicLoading.hide();
-            }, 
-            function (error) {
-                    
-                    ZMDataModel.zmDebug("Hmm jump  error " + JSON.stringify(error));
-                     ZMDataModel.stopNetwork("EventModalCtrl-jumptoEventZms error");
-                    $scope.connKey =  (Math.floor((Math.random() * 999999) + 1)).toString();
-                   //  console.log ("********* OFFSET FROM JUMPTOEVENTZMS ERROR");
-                     $timeout( function () { sendCommand('14',$scope.connKey, '&offset='+$scope.currentProgress.progress);},500);
-                    ZMDataModel.zmDebug ("so I'm regenerating Connkey to " + $scope.connKey);
-                    //$timeout.cancel(eventQueryHandle);
-                   // eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+            template: "switching events..",
+            noBackdrop: true,
+            duration: zm.httpTimeout
+        });
+
+        console.log("Send command connkey: " + connkey);
+        sendCommand(cmd, connkey)
+            .then(
+                function (success) {
+                    //console.log ("jump success " + JSON.stringify(success));
                     $ionicLoading.hide();
-            });
+                },
+                function (error) {
+
+                    ZMDataModel.zmDebug("Hmm jump  error " + JSON.stringify(error));
+                    ZMDataModel.stopNetwork("EventModalCtrl-jumptoEventZms error");
+                    $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                    //  console.log ("********* OFFSET FROM JUMPTOEVENTZMS ERROR");
+                    $timeout(function () {
+                        sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
+                    }, 500);
+                    ZMDataModel.zmDebug("so I'm regenerating Connkey to " + $scope.connKey);
+                    //$timeout.cancel(eventQueryHandle);
+                    // eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                    $ionicLoading.hide();
+                });
         var slidein;
         var slideout;
         if (dirn == 1) {
@@ -1188,25 +1166,25 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         function outWithOld() {
 
-            
-            
+
+
             $timeout(function () {
                 element.removeClass(slideout);
                 element.addClass(slidein)
                     .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
-               
+
             }, 200);
         }
 
         function inWithNew() {
             element.removeClass(slidein);
-            
-            
+
+
         }
 
     }
-    
-        
+
+
     //--------------------------------------------------------
     // utility function
     //--------------------------------------------------------
@@ -1316,17 +1294,17 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             .then(function (success) {
 
 
-                   // console.log ("DUCCESS::"+JSON.stringify(success));
+                    // console.log ("DUCCESS::"+JSON.stringify(success));
                     var event = success.data.event;
                     currentEvent = event;
 
                     event.Event.BasePath = computeBasePath(event);
                     event.Event.relativePath = computeRelativePath(event);
-                    
-                    event.Event.streamingURL = ZMDataModel.getStreamingURL (event.Event.MonitorId);
-                  //  event.Event.baseURL = ZMDataModel.getBaseURL (event.Event.MonitorId);
+
+                    event.Event.streamingURL = ZMDataModel.getStreamingURL(event.Event.MonitorId);
+                    //  event.Event.baseURL = ZMDataModel.getBaseURL (event.Event.MonitorId);
                     event.Event.baseURL = loginData.url;
-                    event.Event.imageMode = ZMDataModel.getImageMode (event.Event.MonitorId);
+                    event.Event.imageMode = ZMDataModel.getImageMode(event.Event.MonitorId);
 
                     //console.log (JSON.stringify( success));
                     $scope.eventName = event.Event.Name;
@@ -1341,11 +1319,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         event.Event.DefaultVideo = "";
 
                     $scope.defaultVideo = event.Event.DefaultVideo;
-                    
-                    console.log ("loginData is " + JSON.stringify($scope.loginData));
-                    console.log ("Event ID is " + $scope.eventId);
-                    console.log ("video is " + $scope.defaultVideo);
-            
+
+                    console.log("loginData is " + JSON.stringify($scope.loginData));
+                    console.log("Event ID is " + $scope.eventId);
+                    console.log("video is " + $scope.defaultVideo);
+
 
                     neighborEvents(event.Event.Id)
                         .then(function (success) {
@@ -1364,13 +1342,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     event.Event.video = {};
                     var videoURL;
-                    
+
                     if (event.Event.imageMode == 'path')
                         videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
                     else
-                        videoURL = event.Event.baseURL + "/index.php?view=view_video&eid="+event.Event.Id;
+                        videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
 
-                   console.log("************** VIDEO IS " + videoURL);
+                    console.log("************** VIDEO IS " + videoURL);
 
                     //console.log("************** VIDEO IS " + videoURL);
                     event.Event.video.config = {
@@ -1460,25 +1438,30 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     //$scope.FrameArray = event.Frame;
                     //  $scope.slider_options.scale=[];
-                   // $scope.slider_modal_options.scale = [];
+                    // $scope.slider_modal_options.scale = [];
 
                     // lets 
                     framearray.datasets[0].data = [];
                     for (i = 0; i < event.Frame.length; i++) {
-                        
-                        var ts=moment(event.Frame[i].TimeStamp).format(timeFormat);
-                      
+
+                        var ts = moment(event.Frame[i].TimeStamp).format(timeFormat);
+
                         //console.log ("pushing s:" + event.Frame[i].Score+" t:"+ts);
-                       
-                        framearray.datasets[0].data.push({x:ts, y:event.Frame[i].Score});
+
+                        framearray.datasets[0].data.push({
+                            x: ts,
+                            y: event.Frame[i].Score
+                        });
                         framearray.labels.push("");
-             
-        
+
+
                     }
                     $scope.totalEventTime = Math.round(parseFloat(event.Event.Length)) - 1;
                     $scope.currentEventTime = 0;
-            
-                    $timeout (function() {drawGraph();},500);
+
+                    $timeout(function () {
+                        drawGraph();
+                    }, 500);
                 },
                 function (err) {
                     ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
@@ -1493,19 +1476,19 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.$watch('ionRange.index', function () {
             //  
             $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
-            
+
             if (carouselUtils.getStop() == true)
                 return;
 
-            
-             //console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
+
+            //console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
         });
     }
 
     if (typeof $scope.mycarousel !== 'undefined') {
         $scope.$watch('mycarousel.index', function () {
-      
-            if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames -1)) {
+
+            if (currentEvent && $scope.ionRange.index == parseInt(currentEvent.Event.Frames - 1)) {
                 playbackFinished();
             }
             // end of playback from quick scrub
@@ -1513,7 +1496,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
             if ($scope.event && $scope.ionRange.index == parseInt($scope.event.Event.Frames) - 1) {
                 if (!$scope.modal || $scope.modal.isShown() == false) {
-                   // console.log("quick scrub playback over");
+                    // console.log("quick scrub playback over");
                     carouselUtils.setStop(true);
                     $scope.ionRange.index = 0;
                     $scope.mycarousel.index = 1;
@@ -1547,6 +1530,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         return number;
     }
 
-    
+
 
 }]);

@@ -109,7 +109,7 @@
     <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
         <ul>
             <li ng-if="defaultVideo==''">
-                <a href="" ng-click="toggleGapless()"> <i class="ion-ios-loop-strong"></i>-{{loginData.gapless?"on":"off"}}</a>
+                <a href="" ng-click="toggleGapless()"> <i class="ion-ios-loop-strong"></i>-{{loginData.gapless? ('kOn' | translate): ('kOff' | translate)}}</a>
             </li>
 
             <li ng-if="defaultVideo==''">

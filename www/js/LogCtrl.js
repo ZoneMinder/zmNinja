@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$tranaslate', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -74,8 +74,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
     $scope.sendEmail = function (logstring) {
         $ionicPopup.confirm({
-                title: 'Sensitive Information',
-                template: $rootScope.appName+' will modify the logs when creating the final output to remove sensitive data like urls and passwords. However it is eventually <b>your responsibility</b> to make sure there is no sensitive data in the logs. Please make sure you review and edit the logs before you send it out.'
+                title: $translate.instant('kSensitiveTitle'),
+                template: $rootScope.appName+' '+$translate.instant('kSensitiveBody')
             })
             .then(function (res) {
                 if (res) sendEmailReally(logstring);
@@ -153,7 +153,7 @@ saveAs(blob, fname);
         //console.log ("GETTING LOGS");
         
          $ionicLoading.show({
-                    template: "retrieving logs...",
+                    template: $translate.instant('kLoading'),
                     noBackdrop: true,
                     duration: zm.loadingTimeout
                 });

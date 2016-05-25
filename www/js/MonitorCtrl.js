@@ -6,8 +6,8 @@
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout','$ionicHistory', '$ionicPlatform',
-                               function ($ionicPopup, zm, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform) {
+    .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout','$ionicHistory', '$ionicPlatform', '$translate',
+                               function ($ionicPopup, zm, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate) {
 
 
     //-----------------------------------------------------------------------
@@ -26,8 +26,8 @@ angular.module('zmApp.controllers')
     if ($scope.monitors.length == 0)
     {
         $rootScope.zmPopup= $ionicPopup.alert({
-                    title: "No Monitors found",
-                    template: "Please check your credentials"
+                    title: $translate.instant('kNoMonitors'),
+                    template: $translate.instant('kPleaseCheckCredentials')
         });
         $ionicHistory.nextViewOptions({
                     disableBack: true
@@ -111,27 +111,27 @@ angular.module('zmApp.controllers')
 
         $scope.monFunctions = [
             {
-                text: "Modect",
+                text: $translate.instant('kMonModect'),
                 value: "Modect"
             },
             {
-                text: "Mocord",
+                text: $translate.instant('kMonMocord'),
                 value: "Mocord"
             },
             {
-                text: "Record",
+                text: $translate.instant('kMonRecord'),
                 value: "Record"
             },
             {
-                text: "Nodect",
+                text:$translate.instant('kMonNodect'),
                 value: "Nodect"
             },
             {
-                text: "Monitor",
+                text: $translate.instant('kMonMonitor'),
                 value: "Monitor"
             },
             {
-                text: "None",
+                text: $translate.instant('kMonNone'),
                 value: "None"
             }
         ];
@@ -146,15 +146,15 @@ angular.module('zmApp.controllers')
             template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="monfunc.myenabled"  toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
 
 
-            title: 'Change Settings for ' + monitorName,
+            title: $translate.instant('kChangeSettingsFor') + ' '+monitorName,
 
             buttons: [
                 {
-                    text: 'Cancel',
+                    text: $translate.instant('kButtonCancel'),
 
                 },
                 {
-                    text: 'Save',
+                    text:$translate.instant('kButtonSave'),
                     onTap: function (e) {
 
                         ZMDataModel.zmDebug("MonitorCtrl:changeConfig selection:" + $scope.monfunc.myenabled +
@@ -169,7 +169,7 @@ angular.module('zmApp.controllers')
                         isEnabled = ($scope.monfunc.myenabled == true) ? '1' : '0';
 
                         $ionicLoading.show({
-                            template: "Applying changes. Please wait...",
+                            template:$translate.instant('kApplyingChanges')+"...",
                             noBackdrop: true,
                             duration: zm.largeHttpTimeout,
                         });
@@ -231,7 +231,7 @@ angular.module('zmApp.controllers')
                                 ZMDataModel.zmDebug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
                                 $ionicLoading.hide();
                                 $ionicLoading.show({
-                                    template: "Error changing Monitor. Please check ZM logs...",
+                                    template: $translate.instant('kErrorChangingMonitors')+"...",
                                     noBackdrop: true,
                                     duration: 3000,
                                 });
@@ -339,7 +339,7 @@ angular.module('zmApp.controllers')
                 $scope.modal = modal;
 
                 $ionicLoading.show({
-                    template: "please wait...",
+                    template: $translate.instant('kPleaseWait')+"...",
                     noBackdrop: true,
                     duration: zm.loadingTimeout
                 });
@@ -423,7 +423,7 @@ angular.module('zmApp.controllers')
                     .error(function (data) {
                         ZMDataModel.zmDebug("MonitorCtrl: Error->monitor check state returned: " +
                             JSON.stringify(data));
-                        ZMDataModel.displayBanner('error', ['error retrieving state', 'Please try again']);
+                        ZMDataModel.displayBanner('error', [$translate.instant('kErrorRetrievingState'), $translate.instant('kPleaseTryAgain')]);
                         $scope.monitors[j].Monitor.isRunning = "error";
                         $scope.monitors[j].Monitor.color = zm.monitorErrorColor;
                         $scope.monitors[j].Monitor.char = "ion-help-circled";
