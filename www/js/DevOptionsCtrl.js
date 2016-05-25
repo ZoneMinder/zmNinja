@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory','$state', 'SecuredPopups', function ($scope, $rootScope, $ionicModal, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups) {
+angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory','$state', 'SecuredPopups', 'translate', function ($scope, $rootScope, $ionicModal, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate) {
 
 
     $scope.openMenu = function () {
@@ -103,8 +103,8 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
             saveDevOptions();
         // $rootScope.zmPopup.close();
         $rootScope.zmPopup= SecuredPopups.show('alert',{
-            title: 'Settings Saved',
-            template: 'Please explore the menu and enjoy zmNinja!'
+            title: $translate.instant('kSettingsSaved'),
+            template: "{{'kExploreEnjoy' | translate }} {{$root.appName}}"
         }).then(function (res) {
             $ionicSideMenuDelegate.toggleLeft();
         });

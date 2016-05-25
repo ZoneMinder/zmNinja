@@ -1,4 +1,4 @@
-<ion-view view-title="Event Server/{{loginData.serverName}}" cache-view="false">
+<ion-view view-title="{{'kEventServer' | translate}}/{{loginData.serverName}}" cache-view="false">
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
@@ -13,22 +13,22 @@
     <ion-content padding="true">
         
          <div class="list list-inset">
-        Please make sure your ZM settings are configured and saved before you configure the event server
+        {{'kEventServerConfig1' | translate }}
         </div>
         <ion-checkbox ng-model="loginData.isUseEventServer" ng-checked="{{loginData.isUseEventServer}}">use event server</ion-checkbox>
         
         
         <ion-item  ng-href="" ng-click="selectScreen()">
-            on tap, navigate to: {{defScreen}}
+            {{'kOnTapNavigate' | translate}}: {{defScreen}}
         </ion-item>
 
         <label class="item item-input item-floating-label" ng-if="loginData.isUseEventServer">
-            <span class="input-label">Event Server</span>
+            <span class="input-label">{{'kEventServer'}}</span>
             <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="Event notification url" ng-model="loginData.eventServer">
 
         </label>
         
-            <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush"  ng-checked="{{loginData.disablePush}}" toggle-class="toggle-calm"  class="item-text-wrap">only use websockets<br/><p>disables APNS/GCM</p></ion-toggle>
+            <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush"  ng-checked="{{loginData.disablePush}}" toggle-class="toggle-calm"  class="item-text-wrap">{{'kOnlyUseWebSocket'| translate }}<br/><p>{{'kDisablePush' | translate }}</p></ion-toggle>
         
         <!--
              <ion-toggle  ng-model="loginData.defaultPushSound" toggle-class="toggle-calm" class="item-text-wrap" ng-checked="{{loginData.defaultPushSound}}">use system sound<p>please save and restart app</p></ion-toggle>
@@ -49,7 +49,7 @@
                       ng-show="isGroupShown(monitor)">
                 <span class="item-checkbox">
                 
-                    report events
+                    {{'kReportEvents' | translate }}
                     <label class="checkbox">
                         <input type="checkbox" ng-model="monitor.Monitor.isChecked" ng-checked="monitor.Monitor.isChecked">
                     </label>
@@ -62,7 +62,7 @@
                       <label class="item-input-wrapper" >
                         <input type="tel"  placeholder="sec." ng-model="monitor.Monitor.reportingInterval">
                     </label>
-                    &nbsp;minimum interval
+                    &nbsp;{{'kMinimumIntervals' | translate}}
                   
                     
                 </div>
@@ -75,29 +75,10 @@
         
         
 
-       <!-- <ul class="list" ng-if="check.isUseEventServer">
-http://codepen.io/anon/pen/QbVveV
-            <div class="item-icon-right">
-                <li class="item item-checkbox" ng-repeat="monitor in monitors">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="monitor.Monitor.isChecked" ng-checked="monitor.Monitor.isChecked">
-                    </label>
-                    {{monitor.Monitor.Name}}
-
-                    <i class="icon ion-ios-arrow-down"></i>
-                </li>
-            </div>
-
-
-        </ul>-->
+   
 
     </ion-content>
 </ion-view>
 
 
 
-<!--
- <label class="checkbox">
-                    <input type="checkbox" ng-model="monitor.Monitor.isChecked" ng-checked="monitor.Monitor.isChecked">
-                </label>
-                {{monitor.Monitor.Name}}-->

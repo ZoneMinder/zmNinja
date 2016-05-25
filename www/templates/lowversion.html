@@ -1,5 +1,5 @@
-<ion-view view-title="zmNinja" hide-nav-bar="true" hide-back-button="true" cache-view="false">
-    <!--<ion-view view-title="zmNinja" hide-nav-bar="false" hide-back-button="true" cache-view="false">-->
+<ion-view view-title="{{$root.appName}}" hide-nav-bar="true" hide-back-button="true" cache-view="false">
+  
     <ion-content class="pin-background">
         <div style="margin-left:20px; margin-right:20px">
             <center>
@@ -12,12 +12,12 @@
 
                 <br/>
                 <span style="color:white">
-                    <h2 style="color:white" class="animated bounce">ZoneMinder upgrade needed</h2>
+                    <h2 style="color:white" class="animated bounce">{{'kZMUpgradeNeeded' | translate}}</h2>
                     <br/>
-                    <h4 style="color:white">I am incompatible with your ZoneMinder version</h4>
+                    <h4 style="color:white">{{'kVersionIncompatible' | translate }}</h4>
                     <br/>
-                    Reported Version: <b>{{currentVersion}}</b><br/>
-                    Minimum Required Version:<b>{{requiredVersion}}</b><br/>
+                    {{'kReportedVersion' | translate}}: <b>{{currentVersion}}</b><br/>
+                    {{'kMinVersion' | translate}}:<b>{{requiredVersion}}</b><br/>
                     
                     
                     </span>

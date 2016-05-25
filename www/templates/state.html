@@ -1,11 +1,11 @@
-<ion-view view-title="System Status" cache-view="false">
+<ion-view view-title="{{'kSystemStatus' | translate}}" cache-view="false">
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
     <ion-content>
-        <ion-refresher pulling-text="Pull to reload data..."
+        <ion-refresher pulling-text="{{'kPullToReload' | translate}}..."
                        spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
         <ion-list>
             <ion-item>
@@ -14,7 +14,7 @@
                         <i class="ion-home" style="font-size:150%;"></i>
                     </div>
                     <div class="col">
-                        ZoneMinder is:
+                        ZoneMinder:
                     </div>
                     <div class="col" style="text-align:right; {{color}}">
                         {{zmRun}}
@@ -29,7 +29,7 @@
                     </div>
                     <div class="col">
 
-                        ZoneMinder load:
+                        ZoneMinder {{'kLoad' | translate}}:
                     </div>
                     <div class="col" style="text-align:right;">
                         {{zmLoad}}
@@ -63,12 +63,12 @@
                     <div class="row">
                         <div class="col text-center">
                             <a class="button button-small button-outline button-dark "
-                               ng-click="selectCustomState();" href="">Change State</a>
+                               ng-click="selectCustomState();" href="">{{'kChangeState'|translate}}</a>
                             <a class="button  button-small button-outline button-dark "
-                               ng-click="controlZM('restart');" href="">Restart</a>
+                               ng-click="controlZM('restart');" href="">{{'kRestart' | translate}}</a>
                             <a class="button  button-small button-outline  button-dark"
-                               href="" ng-click="controlZM('stop');">Stop</a>
-                            <a class="button  button-small button-outline button-dark" ng-click="controlZM('start');" href="">Start</a>
+                               href="" ng-click="controlZM('stop');">{{'kStop' | translate}}</a>
+                            <a class="button  button-small button-outline button-dark" ng-click="controlZM('start');" href="">{{'kStart' | translate}}</a>
                         </div>
                     </div>
                 </div>

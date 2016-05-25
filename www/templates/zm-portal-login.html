@@ -1,6 +1,6 @@
 
-<ion-view view-title="zmNinja" hide-nav-bar="true" hide-back-button="true" cache-view="false">
-    <!--<ion-view view-title="zmNinja" hide-nav-bar="false" hide-back-button="true" cache-view="false">-->
+<ion-view view-title="{{$root.appName}}" hide-nav-bar="true" hide-back-button="true" cache-view="false">
+    
     <ion-content class="pin-background" scroll="false">
        
         <div style="margin-left:20px; margin-right:20px">
@@ -12,7 +12,7 @@
                 </div>
 
                 <div ng-if="pinPrompt">
-                    <span style="color:white">Enter PIN</span>
+                    <span style="color:white">{{'kEnterPIN' | translate}}</span>
                    
                     <div class="pinCode">
                         <input id="pin-box" type="number" pattern="[0-9]*" ng-model="pindata.pin" ng-keyup="pinChange()" />

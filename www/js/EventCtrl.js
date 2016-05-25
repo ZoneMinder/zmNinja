@@ -1050,7 +1050,7 @@ angular.module('zmApp.controllers')
                 $cordovaBadge.set(0).then(function () {
                     // You have permission, badge set.
                 }, function (err) {
-                    ZMDataModel.zmDebug("zmNinja does not have badge permissions. Please check your phone notification settings");
+                    ZMDataModel.zmDebug("app does not have badge permissions. Please check your phone notification settings");
                     // You do not have permission.
                 });
 
