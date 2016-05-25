@@ -6,7 +6,7 @@
 
 
 
-angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
+angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
 
     
     
@@ -158,7 +158,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
       labels: [],
       datasets: [
         {
-          label: 'Score',
+          label: $translate.instant('kScore'),
           fill:true,
           backgroundColor: 'rgba(129, 207, 224, 1.0)',
           borderColor: 'rgb(92, 147, 159)',
@@ -183,7 +183,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
       labels: [],
       datasets: [
         {
-          label: 'Score',
+          label: $translate.instant ('kScore'),
           backgroundColor: 'rgba(129, 207, 224, 1.0)',
           borderColor: 'rgba(129, 207, 224, 1.0)',
           hoverBackgroundColor: 'rgba(248, 148, 6,1.0)',

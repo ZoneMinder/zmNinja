@@ -5,7 +5,7 @@
 
 
 
-angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', 'SecuredPopups', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, SecuredPopups) {
+angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', 'SecuredPopups', '$translate', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, SecuredPopups, $translate) {
 
 
  
@@ -21,7 +21,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $rootScope.authSession = "undefined";
     
     $ionicLoading.show({
-        template: 'negotiating stream authentication...',
+        template: $translate.instant('kNegotiatingStreamAuth')+'...',
         animation: 'fade-in',
         showBackdrop: true,
         duration: zm.loadingTimeout,
@@ -206,7 +206,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             $scope.showPTZ = !$scope.showPTZ;
         } else {
             $ionicLoading.show({
-                template: "PTZ not configured for this monitor",
+                template: $translate.instant('kPTZnotConfigured'),
                 noBackdrop: true,
                 duration: 3000,
             });
@@ -260,7 +260,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             return;
         }
 
-        var status = ["idle", "pre-alarm","alarmed","alert","record"];
+        var status = [$translate.instant('kMonIdle'), 
+                      $translate.instant('kMonPreAlarm'),
+                      $translate.instant('kMonAlarmed'),
+                      $translate.instant('kMonAlert'),
+                      $translate.instant('kMonRecord')
+                     ];
         //console.log ("Inside Modal timer...");
         var apiurl = ZMDataModel.getLogin().apiurl;
         var alarmurl = apiurl+"/monitors/alarm/id:"+$scope.monitorId+"/command:status.json";
@@ -345,7 +350,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         if (!$scope.ptzMoveCommand) {
             $ionicLoading.show({
-                template: "Not Ready for PTZ",
+                template: $translate.instant('kPTZNotReady'),
                 noBackdrop: true,
                 duration: 2000,
             });
@@ -380,7 +385,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //console.log("PTZDATA is " + JSON.stringify(ptzData));
         $ionicLoading.hide();
         $ionicLoading.show({
-            template: "please wait...",
+            template: $translate.instant('kPleaseWait')+"...",
             noBackdrop: true,
             duration: zm.loadingTimeout,
         });
@@ -388,7 +393,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         var loginData = ZMDataModel.getLogin();
         $ionicLoading.hide();
         $ionicLoading.show({
-            template: "Sending PTZ..",
+            template: $translate.instant('kSendingPTZ')+"...",
             noBackdrop: true,
             duration: zm.loadingTimeout,
         });
@@ -571,7 +576,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     function SaveSuccess() {
         $ionicLoading.show({
-            template: "done!",
+            template: $translate.instant('kDone'),
             noBackdrop: true,
             duration: 1000
         });
@@ -580,7 +585,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     function SaveError(e) {
         $ionicLoading.show({
-            template: "error - could not save",
+            template: $translate.instant('kErrorSave'),
             noBackdrop: true,
             duration: 2000
         });
@@ -599,17 +604,17 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         {
              $rootScope.zmPopup = SecuredPopups.show('show',{
                     title: 'Confirm',
-                    template: "Are you sure you want to force an alarm for Monitor:"+$scope.monitorName+"?",
+                    template: $translate.instant('kForceAlarmConfirm')+$scope.monitorName+"?",
                     buttons: [
                         {
-                            text: 'Yes',
+                            text: $translate.instant('kButtonYes'),
                             onTap: function(e)
                             {
                                 enableAlarm(mid, mode);
                             }
                         },
                         {
-                            text: 'No',
+                            text: $translate.instant('kButtonNo'),
                             onTap: function (e)
                             {
                                 return;
@@ -629,7 +634,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             var alarmurl = apiurl+"/monitors/alarm/id:"+mid+"/command:"+c+".json";
             ZMDataModel.zmLog ("Invoking " + alarmurl);
             
-            var status = mode? "forcing alarm": "cancelling alarm";
+            var status = mode? $translate.instant('kForcingAlarm'): $translate.instant('kCancellingAlarm');
             $ionicLoading.show({
                             template: status,
                             noBackdrop: true,
@@ -639,7 +644,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             $http.get(alarmurl)
             .then (function (data) {
                 $ionicLoading.show({
-                            template: "success",
+                            template: $translate.instant('kSuccess'),
                             noBackdrop: true,
                             duration: 2000,
                         });
@@ -647,7 +652,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 function (error) {
                 
                 $ionicLoading.show({
-                            template: "error - please make sure your API supports this feature",
+                            template: $translate.instant('kAlarmAPIError'),
                             noBackdrop: true,
                             duration: 3000,
                         });
@@ -666,6 +671,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     
     $scope.stateColor = function()
     {
+        var status = [$translate.instant('kMonIdle'), 
+                      $translate.instant('kMonPreAlarm'),
+                      $translate.instant('kMonAlarmed'),
+                      $translate.instant('kMonAlert'),
+                      $translate.instant('kMonRecord')
+                     ];
         //console.log ("***MONSTATUS**"+$scope.monStatus+"**");
         var color="";
         switch ($scope.monStatus)
@@ -673,19 +684,19 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             case "":
                 color="background-color:none";
                 break;
-            case "idle":
+            case status[0]:
                 color="background-color:#4B77BE";
                 break;
-            case "pre-alarm":
+            case status[1]:
                 color="background-color:#e67e22";
                 break;
-            case "alarmed":
+            case  status[2]:
                 color="background-color:#D91E18";
                 break;
-            case "alert":
+            case status[3]:
                 color="background-color:#e67e22";
                 break;
-            case "record":
+            case status[4]:
                 color="background-color:#26A65B";
                 break;
         }
@@ -700,7 +711,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.saveImageToPhone = function (mid) {
         $ionicLoading.show({
-            template: "saving snapshot...",
+            template: $translate.instant('kSavingSnapshot')+'...',
             noBackdrop: true,
             duration: zm.httpTimeout
         });
@@ -839,7 +850,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             if (disp) {
                 $ionicLoading.hide();
                 $ionicLoading.show({
-                    template: "please wait...",
+                    template: $translate.instant('kPleaseWait')+'...',
                     noBackdrop: true,
                     duration: zm.loadingTimeout,
                 });

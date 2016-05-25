@@ -865,7 +865,7 @@ angular.module('zmApp.controllers')
                             })
                             .error(function (err) {
                                 ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
-                                ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+                                ZMDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
                             });
                         
                     }
@@ -929,7 +929,7 @@ angular.module('zmApp.controllers')
                         })
                         .error(function (err) {
                             ZMDataModel.zmLog("Error retrieving detailed frame API " + JSON.stringify(err));
-                            ZMDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+                            ZMDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
                         });
 
 
@@ -1333,7 +1333,7 @@ angular.module('zmApp.controllers')
 
             var loadingStr = "";
             if ($scope.search.text != "") {
-                var toastStr = "Searching page " + eventsPage;
+                var toastStr = $translate.instant('kToastSearchingPage') + eventsPage;
                 $ionicLoading.show({
                     maxwidth: 100,
                     scope: $scope,

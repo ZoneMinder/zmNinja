@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,alert,URI */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$localstorage', '$stateParams', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $localstorage, $stateParams) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$localstorage', '$stateParams', '$translate', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $localstorage, $stateParams, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -49,19 +49,19 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         if (as.length < 2)
         {
             $rootScope.zmPopup= SecuredPopups.show('alert',{
-                                title: 'Error',
-                                template: 'You need to have at least 2 distinct configurations created for a fallback'
+                                title: $translate.instant('kError'),
+                                template: $translate.instant('kFallback2Configs')
                             });
             return;
             
         }
-        var ab = [{text:'Clear'}];
+        var ab = [{text:$translate.instant('kClear')}];
         var ld = ZMDataModel.getLogin();
         as.forEach(function(item) { if (item != ld.serverName) ab.push({text:item});});
         var sheet = $ionicActionSheet.show({
             buttons: ab,
-            titleText: 'Select fallback',
-            cancelText: 'Cancel',
+            titleText: $translate.instant('kSelectFallback'),
+            cancelText: $translate.instant('kCancel'),
             cancel: function() {},
             buttonClicked: function (index)
             {
@@ -86,16 +86,16 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.serverActionSheet = function () {
         var hideSheet = $ionicActionSheet.show({
             buttons: serverbuttons,
-            destructiveText: 'Delete',
-            titleText: 'Manage Server Groups',
-            cancelText: 'Cancel',
+            destructiveText: $translate.instant('kDelete'),
+            titleText: $translate.instant('kManageServerGroups'),
+            cancelText: $translate.instant('kCancel'),
             cancel: function () {
                 // add cancel code..
             },
             buttonClicked: function (index) {
                  //console.log ("YOU WANT " + serverbuttons[index].text + " INDEX " + index);
                 
-                if (serverbuttons[index].text == 'Add...')
+                if (serverbuttons[index].text == $translate.instant('kServerAdd')+"...")
                 {
                     
                     $scope.loginData = angular.copy(ZMDataModel.getDefaultLoginObject());
@@ -148,7 +148,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     ZMDataModel.setLogin($scope.loginData);
 
                     availableServers = Object.keys(ZMDataModel.getServerGroups());
-                    serverbuttons = [{text:'Add...'}];
+                    serverbuttons = [{text:$translate.instant('kServerAdd')+"..."}];
                     for (var servIter = 0; servIter < availableServers.length; servIter++) {
                         serverbuttons.push({
                             text: availableServers[servIter]
@@ -157,7 +157,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     }
 
                 } else {
-                    ZMDataModel.displayBanner('error', ['Cannot delete, need at least one']);
+                    ZMDataModel.displayBanner('error', [$translate.instant('kBannerCannotDeleteNeedOne')]);
                 }
                 return true;
             }
@@ -195,7 +195,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         oldName = ld.serverName;
         
         availableServers = Object.keys(ZMDataModel.getServerGroups());
-        serverbuttons = [{text:"Add..."}];
+        serverbuttons = [{text:$translate.instant('kServerAdd')+"..."}];
         for (var servIter = 0; servIter < availableServers.length; servIter++) {
             serverbuttons.push({
             text: availableServers[servIter]
@@ -257,8 +257,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         {
             event.preventDefault();
             $rootScope.zmPopup = SecuredPopups.show('alert',{
-                title: 'Please Save',
-                template: 'You have changed from ' + oldName + ' to ' + ld.serverName + '. Please save this profile first.'
+                title: $translate.instant('kPleaseSave'),
+                template: $translate.instant('kProfileChangeNotification', {oldName: oldName, newName:ld.serverName})
+                
             });
             
         }
@@ -270,120 +271,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     
     // Make a noble attempt at deciphering 
 
-    $scope.detectCgi = function()
-    {
-        
-        if ($scope.loginData.url == "")
-        {
-            $rootScope.zmPopup = SecuredPopups.show('show',{
-                    title: 'Portal not configured',
-                    cssClass: 'popup90',
-                    template: "Please fill in your login details as well as portal URL and save it before you try to detect the cgi-path",
-                    buttons: [{text: 'Ok'}]
-                               
-                    });
-            return;
-            
-        }
-        
-        if ( $rootScope.authSession == 'undefined')
-        {
-            $rootScope.zmPopup = SecuredPopups.show('show',{
-                    title: 'Not logged in',
-                    cssClass: 'popup90',
-                    template: "It doesn't look like you are logged in. For detection to work, you must fill in your login details, portal URL and then tap on Save. Then come back to this feature.",
-                    buttons: [{text: 'Ok'}]
-                               
-                    });
-            return;
-        }
-        
-        var defaultText = "<br/><br/>Typical values:<br/><b>ubuntu:</b> http://server/zm/cgi-bin<br/><b>centos/fedora:</b> http://server/zm/cgi-bin-zm/";
-        
-         if ($scope.loginData.url.slice(-1) == '/') {
-            $scope.loginData.url = $scope.loginData.url.slice(0, -1);
-
-        }
-        
-        ZMDataModel.getPathZms()
-        .then (function (data)
-            {
-                // coming here means we were able to login 
-                $scope.loginData.url = addhttp($scope.loginData.url);
-                if ($scope.loginData.useSSL) 
-                    $scope.loginData.url = $scope.loginData.url.replace("http:", "https:");
-            
-                var c=URI.parse($scope.loginData.url);
-                var p1,p2,p3,text;
-                p1 ="";
-                p2 ="";
-               
-                if (c.userinfo)
-                    p1 = c.userinfo+"@";
-                if (c.port)
-                    p2 = ":"+c.port;
-                
-                var baseUri = c.scheme+"://"+p1+c.host+p2;
-                var dtext = baseUri + data.toLowerCase().trim();
-                dtext = dtext.substr(0, dtext.lastIndexOf("/"));
-                
-                // have we already set the right path?
-                if (dtext == $scope.loginData.streamingurl.toLowerCase())
-                {
-                     text = "It looks like you have already set your cgi-path correctly to <b>" + dtext +"</b>, which is what ZoneMinder reports too";
-                    
-                    $rootScope.zmPopup = SecuredPopups.show('show',{
-                    title: 'cgi-bin settings',
-                    cssClass: 'popup90',
-                    template: text,
-                    buttons: [{text: 'Ok'}]
-                               
-                    });
-                    
-                }
-                else
-                {
-                     text = "Zoneminder reports your cgi-bin path as <b>"+dtext+"</b>, while you have it set as "+$scope.loginData.streamingurl.toLowerCase();
-                    
-                    $rootScope.zmPopup = SecuredPopups.show('show',{
-                    title: 'cgi-bin settings',
-                    cssClass: 'popup90',
-                    template: text,
-                    buttons: [{text: 'Ok', type:'button-positive'},{text:'Use suggestion',type:'button-balanced', onTap:function(e) {$scope.loginData.streamingurl=dtext;}}, /*{text:'try harder', onTap:function(e) {tryHarder();}}*/]
-                               
-                    });
-                }
-
-                
-            
-                
-            },
-            function (error)
-            {
-                ZMDataModel.zmDebug ("Could not get PATH_ZMS:"+JSON.stringify(error));
-                var text = "(could not detect cgi-path, try coming back here after setting up your portal url and credentials correctly, and saving)<br/><br/>"+defaultText;
-                 $rootScope.zmPopup = SecuredPopups.show('alert',{
-                    title: 'cgi-bin settings',
-                    cssClass: 'popup90',
-
-                    template: text
-                });   
-                
-            });
-        
-            
-                                     
-    };
     
-    function tryHarder()
-    {
-        $rootScope.zmPopup = SecuredPopups.show('alert',{
-                    title: 'Harder',
-                    cssClass: 'popup90',
-                  template: "trying harder"
-                });   
-    }
-
+   
     //--------------------------------------------------------------------------
     // When PIN is enabled, this is called to specify a PIN
     // FIXME: Get rid of cordovaPinDialog. It's really not needed 
@@ -392,12 +281,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         ZMDataModel.zmLog("Password prompt");
         if ($scope.loginData.usePin) {
             $scope.loginData.pinCode = "";
-            $cordovaPinDialog.prompt('Enter PIN', 'PIN Protect').then(
+            $cordovaPinDialog.prompt($translate.instant('kEnterPin'), $translate.instant('kPinProtect')).then(
                 function (result1) {
 
                     // console.log (JSON.stringify(result1));
                     if (result1.input1 && result1.buttonIndex == 1) {
-                        $cordovaPinDialog.prompt('Reconfirm PIN', 'PIN Protect')
+                        $cordovaPinDialog.prompt($translate.instant('kReconfirmPin'), $translate.instant('kPinProtect'))
                             .then(function (result2) {
                                     if (result1.input1 == result2.input1) {
                                         ZMDataModel.zmLog("Pin code match");
@@ -405,7 +294,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                     } else {
                                         ZMDataModel.zmLog("Pin code mismatch");
                                         $scope.loginData.usePin = false;
-                                        ZMDataModel.displayBanner('error', ['Pin code mismatch']);
+                                        ZMDataModel.displayBanner('error', [$translate.instant('kBannerPinMismatch')]);
                                     }
                                 },
                                 function (error) {
@@ -632,7 +521,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             .finally ( function (ans) 
             {
             
-                zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;  color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;authenticating...</button>")
+                zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;  color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;"+$translate.instant('kAuthenticating')+"...</button>")
                     // Do the happy menu only if authentication works
                     // if it does not work, there is an emitter for auth
                     // fail in app.js that will be called to show an error
@@ -659,7 +548,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     $http.get(apiurl)
                         .success(function (data) {
 
-                            var loginStatus = "Please explore the menu and enjoy "+$rootScope.appName+"!";
+                            var loginStatus = $translate.instant('kExploreEnjoy')+" "+$rootScope.appName+"!";
                             EventServer.refresh();
 
 
@@ -676,7 +565,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                     $http.get(ld.streamingurl + "/zms")
                                         .success(function (data) {
                                             ZMDataModel.zmDebug("Urk! cgi-path returned  success, but it should not have come here");
-                                            loginStatus = "Login validated, but could not validate cgi-path. If live streams don't work please check your cgi-bin path or try using the discover feature";
+                                            loginStatus = $translate.instant('kLoginStatusNoCgi');
                                         
                                             ZMDataModel.zmDebug ("refreshing API version...");
                                             ZMDataModel.getAPIversion()
@@ -708,13 +597,13 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                             // if its 4xx then the cgi-bin path is not valid
 
                                             if (status < 500) {
-                                                loginStatus = "The cgi-bin path you entered may be wrong. I can't make sure, but if your live views don't work, please review your cgi path or try using the discover feature.";
+                                                loginStatus = $translate.instant('kLoginStatusNoCgiAlt');
                                             }
                                             
                                             if (showalert)
                                             {
                                                 $rootScope.zmPopup = SecuredPopups.show('alert',{
-                                                    title: 'Login validated',
+                                                    title: $translate.instant('kLoginValidatedTitle'),
                                                     template: loginStatus
                                                 }).then(function (res) {
 
@@ -742,12 +631,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
                         })
                         .error(function (error) {
-                            ZMDataModel.displayBanner('error', ['ZoneMinder API check failed', 'Please check API settings']);
+                            ZMDataModel.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
                             ZMDataModel.zmLog("API login error " + JSON.stringify(error));
                             
                             $rootScope.zmPopup= SecuredPopups.show('alert',{
-                                title: 'Login validated but API failed',
-                                template: 'Please check your API settings'
+                                title: $translate.instant('kLoginValidAPIFailedTitle'),
+                                template: $translate.instant('kBannerPleaseCheck')
                             });
                         });
                 });
@@ -766,8 +655,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         if (!$scope.loginData.serverName) {
             $rootScope.zmPopup = $ionicPopup.alert({
-                    title: 'Error',
-                    template: 'Server Name cannot be empty',
+                    title: $translate.instant('kError'),
+                    template: $translate.instant('kServerEmptyError'),
                 })
                 .then(function (res) {
                     return;

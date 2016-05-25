@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', '$ionicPlatform','$ionicPopup', '$timeout', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel, $ionicPlatform, $ionicPopup, $timeout) {
+angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', '$ionicPlatform','$ionicPopup', '$timeout', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel, $ionicPlatform, $ionicPopup, $timeout, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -59,21 +59,23 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         
    
         
+        
+        
         $rootScope.zmPopup = $ionicPopup.show({
             scope: $scope,
-            template: '<ion-radio-fix ng-model="myopt.selectedState" ng-value="\'events\'"> Event view </ion-radio-fix><ion-radio-fix ng-model="myopt.selectedState" ng-value="\'montage\'"> Montage view </ion-radio-fix>',
+            template: '<ion-radio-fix ng-model="myopt.selectedState" ng-value="\'events\'">'+ $translate.instant('kEventView')+'</ion-radio-fix><ion-radio-fix ng-model="myopt.selectedState" ng-value="\'montage\'"> Montage view </ion-radio-fix>',
 
 
             title: 'View to navigate to:',
             subTitle: 'currently set to: ' + ld.onTapScreen,
             buttons: [
                 {
-                    text: 'Cancel',
+                    text: $translate.instant('kButtonCancel'),
                     
 
                 },
                 {
-                    text: 'OK',
+                    text: $translate.instant('kButtonOk'),
                     onTap: function (e) {
                         
                         ld.onTapScreen = $scope.myopt.selectedState;
