@@ -49,7 +49,7 @@ angular.module('zmApp.controllers')
          'disablePush':false, // true if only websocket mode is desired
          'eventServerMonitors':'', // list of monitors to notify from ES
         'eventServerInterval':'', // list of intervals for all monitors
-        'refreshSec':'2', // timer value for frame change in sec
+        'refreshSec':'2', // timer value for frame change in sec 
         'enableLogs':true,
         'enableDebug':false, // if enabled with log messages with "debug"
         'usePin':false,
@@ -733,7 +733,7 @@ angular.module('zmApp.controllers')
                 {
                     // recaptcha enable. zmNinja won't work
                     zmLog ("ZM has recaptcha enabled", "error");
-                    displayBanner ('error', ['Recaptcha must be disabled in Zoneminder', 'zmNinja will not work with recaptcha'],"",8000);
+                    displayBanner ('error', ['Recaptcha must be disabled in Zoneminder', $rootScope.appName+' will not work with recaptcha'],"",8000);
                     d.resolve(true);
                     return (d.promise);
                     

@@ -659,7 +659,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     $http.get(apiurl)
                         .success(function (data) {
 
-                            var loginStatus = "Please explore the menu and enjoy zmNinja!";
+                            var loginStatus = "Please explore the menu and enjoy "+$rootScope.appName+"!";
                             EventServer.refresh();
 
 

@@ -864,7 +864,7 @@ angular.module('zmApp', [
                                             ], "", 8000);
                         var alertPopup = $ionicPopup.alert({
                             title: 'reCaptcha enabled',
-                            template: 'Looks like you have enabled reCaptcha. It needs to be turned off for zmNinja to work'
+                            template: 'Looks like you have enabled reCaptcha. It needs to be turned off for '+$rootScope.appName+' to work'
                         });
 
 
@@ -1028,6 +1028,7 @@ angular.module('zmApp', [
 
         
 
+        $rootScope.appName = "zmNinja";
         $rootScope.zmGlobalCookie = "";
         $rootScope.isEventFilterOn = false;
         $rootScope.fromDate = "";
@@ -1055,6 +1056,7 @@ angular.module('zmApp', [
 
         // only for android
         $rootScope.exitApp = function () {
+            ZMDataModel.zmLog("user exited app");
             ZMDataModel.zmLog("user exited app");
             ionic.Platform.exitApp();
         };
@@ -1183,9 +1185,9 @@ angular.module('zmApp', [
 
 
             $ionicNativeTransitions.enable(true, false);
+       
             
-            
-            
+         
             if(typeof navigator.globalization !== "undefined") {
                 navigator.globalization.getPreferredLanguage(function(language) {
                     $translate.use((language.value).split("-")[0]).then(function(data) {
@@ -1271,7 +1273,7 @@ angular.module('zmApp', [
 
                 cordova.getAppVersion(function (version) {
                     appVersion = version;
-                    ZMDataModel.zmLog("zmNinja Version: " + appVersion);
+                    ZMDataModel.zmLog("App Version: " + appVersion);
                     ZMDataModel.setAppVersion(appVersion);
                 });
 
@@ -1458,20 +1460,20 @@ angular.module('zmApp', [
     
     
     $translateProvider.registerAvailableLanguageKeys(['en', 'de','es', 'fr', 'it', 'ja', 'ko', 'zh', 'zh_CN', 'zh_TW'], {
-             'en*': 'en',
-             'de*': 'de',
-             'es*': 'es',
-             'fr*': 'fr',
-             'it*': 'it',
-             'ja*': 'ja',
-             'ko*': 'ko',
+             'en_*': 'en',
+             'de_*': 'de',
+             'es_*': 'es',
+             'fr_*': 'fr',
+             'it_*': 'it',
+             'ja_*': 'ja',
+             'ko_*': 'ko',
                '*': 'en' // must be last
          });
     
     
 
     $translateProvider.determinePreferredLanguage();
-    $translateProvider.preferredLanguage("en");
+    //$translateProvider.preferredLanguage("en");
     $translateProvider.fallbackLanguage("en");
     $translateProvider.useSanitizeValueStrategy('sanitize');
 

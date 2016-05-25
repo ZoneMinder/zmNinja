@@ -1,32 +1,32 @@
-<ion-view view-title="Filter Events">
+<ion-view view-title="{{'kFilterEvents' | translate}}">
 
 
 
     <ion-content>
         <label class="item item-input">
-            <span class="input-label">From Date:</span>
+            <span class="input-label">{{'kFromDate'|translate}}:</span>
             <input type="date" ng-model="$root.fromDate">
         </label>
         <label class="item item-input">
-                   <span class="input-label">From Time:</span>
+                   <span class="input-label">{{'kFromTime'|translate}}</span>
                     <input type="time" ng-model="$root.fromTime">
         </label>
         <label class="item item-input">
-                    <span class="input-label">To Date</span>
+                    <span class="input-label">{{'kToDate'|translate}}</span>
                     <input type="date" ng-model="$root.toDate">
         </label>
         <label class="item item-input">
-                    <span class="input-label">To Time</span>
+                    <span class="input-label">{{'kToTime'|translate}}</span>
                     <input type="time" ng-model="$root.toTime">
          </label>
 
         <br/>
         <center>
               <button class="button"
-                                ng-click="saveFilters();" > Save
+                                ng-click="saveFilters();" > {{'kSave'|translate}}
                         </button>
         <button class="button"
-                                ng-click="removeFilters();" > Reset
+                                ng-click="removeFilters();" > {{'kReset'|translate}}
                         </button>
 
 

@@ -75,7 +75,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     $scope.sendEmail = function (logstring) {
         $ionicPopup.confirm({
                 title: 'Sensitive Information',
-                template: 'zmNinja will modify the logs when creating the final output to remove sensitive data like urls and passwords. However it is eventually <b>your responsibility</b> to make sure there is no sensitive data in the logs. Please make sure you review and edit the logs before you send it out.'
+                template: $rootScope.appName+' will modify the logs when creating the final output to remove sensitive data like urls and passwords. However it is eventually <b>your responsibility</b> to make sure there is no sensitive data in the logs. Please make sure you review and edit the logs before you send it out.'
             })
             .then(function (res) {
                 if (res) sendEmailReally(logstring);
@@ -124,7 +124,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 
                 var email = {
                     to: zm.authoremail,
-                    subject: 'zmNinja Logs',
+                    subject: $rootScope.appName + ' Logs',
                     body: logstring,
                     isHtml: false
                 };
@@ -137,8 +137,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             });
         } else {
             console.log("Using default email client to send data");
-            //window.open('mailto:'+encodeURIComponent(zm.authoremail)+'?subject=zmNinja%20Logs&body='+encodeURIComponent(logstring));
-            var fname = "zmNinja-logs-" + 
+            
+            var fname = $rootScope.appName+"-logs-" + 
                     moment().format('MMM-DD-YY_HH-mm-ss') + ".txt";
             
             var dlogstring = "version:"+$scope.zmAppVersion + "\n" + logstring;

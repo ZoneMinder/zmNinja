@@ -6,15 +6,15 @@
         <ion-content  ng-cloak on-double-tap="closeModal()" delegate-handle="timeline-modal-delegate">
 <div ng-controller="TimelineModalCtrl" >   
             <br/>
-            <div class="item item-divider">Event: {{eid}}
+            <div class="item item-divider">{{'kEvent' | translate}}: {{eid}}
                   <button class="button icon-left button-small  button-positive" style="float:right; opacity:0.7" ng-click="switchType()">
                 <i class="ion-shuffle"></i>
                 </button>
                 
             </div>
           
-            <center> <h5>Showing {{graphType}} frames </h5>
-                <p>double-tap exits. touch/mouse-over and drag over items to see frames</p>
+            <center> <h5>{{'kShowing' | translate}} {{graphType}} {{'kFrames' | translate}} </h5>
+                <p>{{'kTimelineMessage' | translate}}</p>
              
                 
                {{errorDetails}}

@@ -10,7 +10,7 @@
 
     <ion-content class="padding" overflow-scroll="false">
        
-        <p><small>zmNinja v{{zmAppVersion}}</small></p>
+        <p><small>{{$root.appName}} v{{zmAppVersion}}</small></p>
         <div class="list">
 
             <ion-item class="item-text-wrap">
@@ -20,7 +20,7 @@
             <ion-item class="item-text-wrap">
                 <h2><b> What do I enter for ZM Portal URL, Base path to cgi-bin and ZM API URL?</b> </h2>
                 <ul>
-                    zmNinja now has a wizard that tries to detect your settings. This may fail if you have a custom install with non standard paths.
+                    {{$root.appName}} now has a wizard that tries to detect your settings. This may fail if you have a custom install with non standard paths.
                     <li><i class="ion-android-arrow-dropright"></i> ZM Portal URL: The URL using which you can access ZM
                         <p>(example http://myserver.ddns.net/zm)</p>
                     </li>
@@ -44,7 +44,7 @@
 
 
             <ion-item class="item-text-wrap">
-                <h2> <b>Everything works! but live streaming does not </b></h2> Check if streaming works in the web interface. If it does not work, zmNinja won't work either. Fix ZM first. If streaming in ZM works, go to zmNinja settings and fix your cgi-bin path. the automatic path that is filled in won't work. Here is a hint, go to zoneminder->options->paths and check the value of the cgi-bin path - your zmNinja path will be "base path of your server" + cgi-bin path.
+                <h2> <b>Everything works! but live streaming does not </b></h2> Check if streaming works in the web interface. If it does not work, {{$root.appName}} won't work either. Fix ZM first. If streaming in ZM works, go to {{$root.appName}} settings and fix your cgi-bin path. the automatic path that is filled in won't work. Here is a hint, go to zoneminder->options->paths and check the value of the cgi-bin path - your {{$root.appName}} path will be "base path of your server" + cgi-bin path.
             </ion-item>
 
 

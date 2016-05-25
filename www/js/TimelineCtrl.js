@@ -289,6 +289,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
           maxItems = ld.graphSize || maxItemsConf;
          ZMDataModel.zmLog("Graph items to draw is " + maxItems);
         $scope.maxItems = maxItems;
+        $scope.translationData = {
+            maxItemsVal: maxItems
+        };
+         
         $scope.graphLoaded = false;
         ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
      });
