@@ -10,12 +10,12 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     //----------------------------------------------------------------------
     // Controller main
     //----------------------------------------------------------------------
-    $scope.zmRun = "loading...";
-    $scope.zmLoad = "loading...";
-    $scope.zmDisk = "loading...";
+    $scope.zmRun = "...";
+    $scope.zmLoad = "...";
+    $scope.zmDisk = "...";
     $scope.color = "";
     $scope.showDanger = false;
-    $scope.dangerText = ["Show ZoneMinder Controls", "Hide ZoneMinder Controls"];
+    $scope.dangerText = [$translate.instant('kStateShowControls'), $translate.instant('kStateHideControls')];
     $scope.dangerButtonColor = ["button-positive", "button-assertive"];
     $scope.customState = "";
     $scope.allStateNames = [];
