@@ -129,18 +129,18 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             template: '<ion-radio-fix ng-repeat="item in allStateNames" ng-value="item" ng-model="myopt.selectedState"> {{item}} </ion-radio-fix>',
 
 
-            title: 'Select run state',
-            subTitle: 'current state:' + $scope.customState ? ("current state: " + $scope.customState) : "",
+            title: $translate.instant('kSelectRunState'),
+            subTitle: $translate.instant('kCurrentState') + $scope.customState ? ($translate.instant('kCurrentState')+": " + $scope.customState) : "",
             buttons: [
                 {
-                    text: 'Cancel',
+                    text: $translate.instant('kButtonCancel'),
                     onTap: function (e) {
                         return "CANCEL";
                     }
 
                 },
                 {
-                    text: 'OK',
+                    text:  $translate.instant('kButtonOk'),
                     onTap: function (e) {
                         return "OK";
 
