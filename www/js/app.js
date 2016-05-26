@@ -736,7 +736,7 @@ angular.module('zmApp', [
 
     $rootScope.$on("auth-success", function () {
         var contentBannerInstance = $ionicContentBanner.show({
-            text: ['ZoneMinder authentication success'],
+            text: ['ZoneMinder' + $translate.instant('kAuthSuccess')],
             interval: 2000,
             type: 'info',
             transition: 'vertical'
@@ -1080,7 +1080,7 @@ angular.module('zmApp', [
             $rootScope.$apply(function () {
                 $rootScope.online = true;
                 ZMDataModel.zmLog("Your network is online, re-authenticating");
-                zmAutoLogin.doLogin("re-authenticating");
+                zmAutoLogin.doLogin($translate.instant('kReAuthenticating'));
 
             });
         }, false);
