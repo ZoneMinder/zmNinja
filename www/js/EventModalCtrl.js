@@ -6,7 +6,7 @@
 
 
 
-angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
+angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
 
 
     // from parent scope
@@ -65,7 +65,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $rootScope.authSession = "undefined";
     $ionicLoading.show({
-        template: 'negotiating stream authentication...',
+        template: $translate.instant('kNegotiatingStreamAuth'),
         animation: 'fade-in',
         showBackdrop: true,
         duration: zm.loadingTimeout,
@@ -378,7 +378,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function SaveSuccess() {
         $ionicLoading.show({
-            template: "done!",
+            template: $translate.instant('kDone'),
             noBackdrop: true,
             duration: 1000
         });
@@ -387,7 +387,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function SaveError(e) {
         $ionicLoading.show({
-            template: "error - could not save",
+            template: $translate.instant('kErrorSave'),
             noBackdrop: true,
             duration: 2000
         });
@@ -428,7 +428,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.isPaused = true;
 
         $ionicLoading.show({
-            template: "please wait...",
+            template: $translate.instant('kPleaseWait'),
             noBackdrop: true,
             duration: zm.httpTimeout
         });
@@ -501,7 +501,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                             ZMDataModel.zmLog("snapshot API Error: Could not get frames " + JSON.stringify(err));
 
                             $ionicLoading.show({
-                                template: "error retrieving frames",
+                                template: $translate.instant('kErrorRetrievingFrames'),
                                 noBackdrop: true,
                                 duration: 4000
                             });
@@ -544,7 +544,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
 
         $rootScope.zmPopup = $ionicPopup.show({
-            template: '<center>Frame: {{slideIndex+1}} of {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  />',
+            template: '<center>Frame: {{slideIndex+1}} / {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  />',
             title: 'Select ' + (onlyAlarms ? 'Alarmed ' : '') + 'frame to save',
             subTitle: 'use left and right arrows to change',
             scope: $scope,
@@ -621,7 +621,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         function saveNow() {
             $ionicLoading.show({
-                template: "saving snapshot...",
+                template: $translate.instant('kSavingSnapshot')+"...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
             });
@@ -841,7 +841,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
 
             $ionicLoading.show({
-                template: "Please use video player controls for H264 events. ZoneMinder doesn't yet support zms controls",
+                template: $translate.instant('kUseVideoControls'),
                 noBackdrop: true,
                 duration: 3000
             });
@@ -873,7 +873,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             }
 
             $ionicLoading.show({
-                template: "please wait...",
+                template: $translate.instant('kPleaseWait')+"...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
             });
@@ -922,7 +922,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             ZMDataModel.zmDebug("Set playback speed to " + $scope.eventSpeed);
 
             $ionicLoading.show({
-                template: 'playback interval: ' + $scope.eventSpeed.toFixed(3) + "ms",
+                template: $translate.instant('kPlaybackInterval')+': ' + $scope.eventSpeed.toFixed(3) + "ms",
                 animation: 'fade-in',
                 showBackdrop: false,
                 duration: 1500,
@@ -1059,7 +1059,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         ZMDataModel.zmLog("Event jump called with:" + eid);
         if (eid == "") {
             $ionicLoading.show({
-                template: "no more events",
+                template: $translate.instant('kNoMoreEvents'),
                 noBackdrop: true,
                 duration: 2000
             });
@@ -1112,7 +1112,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
 
             $ionicLoading.show({
-                template: "Event navigation is not available with video feeds. ZoneMinder doesn't yet support them",
+                template: $translate.instant('kEventNavVidFeeds',
                 noBackdrop: true,
                 duration: 3000
             });
@@ -1124,7 +1124,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         ZMDataModel.zmDebug("Sending " + cmd + " to " + connkey);
 
         $ionicLoading.show({
-            template: "switching events..",
+            template: $translate.instant('kSwitchingEvents')+"...",
             noBackdrop: true,
             duration: zm.httpTimeout
         });

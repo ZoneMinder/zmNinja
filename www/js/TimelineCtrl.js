@@ -13,7 +13,7 @@
 // FIXME: too much redundant code between EventCtrl and Timeline 
 // Move to ModalCtrl and see if it works
 
-angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory', '$sce', '$stateParams', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce, $stateParams) {
+angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory', '$sce', '$stateParams', '$translate', function ($ionicPlatform, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce, $stateParams, $translate) {
 
     //console.log("Inside Timeline controller");
     $scope.openMenu = function () {
@@ -194,7 +194,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 $scope.modal = modal;
 
                 $ionicLoading.show({
-                    template: "please wait...",
+                    template: $translate.instant('kPleaseWait')+"...",
                     noBackdrop: true,
                     duration: 10000,
                     
@@ -505,7 +505,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         curCount = count;
 
         $ionicLoading.show({
-            template: "Loading graph...",
+            template: $translate.instant('kLoadingGraph')+"...",
             animation: 'fade-in',
             showBackdrop: true,
             maxWidth: 200,

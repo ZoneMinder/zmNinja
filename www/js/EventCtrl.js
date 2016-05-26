@@ -997,7 +997,7 @@ angular.module('zmApp.controllers')
             //$state.go($state.current, {}, {reload: true});
             $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
             $ionicLoading.show({
-                template: "refreshed view",
+                template: $translate.instant('kRefreshedView'),
                 noBackdrop: true,
                 duration: 3000
             });
@@ -1238,7 +1238,7 @@ angular.module('zmApp.controllers')
                     $scope.modal = modal;
 
                     $ionicLoading.show({
-                        template: "please wait...",
+                        template: $translate.instant('kPleaseWait')+"...",
                         noBackdrop: true,
                         duration: 10000
                     });
@@ -1295,7 +1295,7 @@ angular.module('zmApp.controllers')
             enableLoadMore = false;
             //console.log("**** CANCELLED ****");
             $ionicLoading.show({
-                template: 'Search Cancelled',
+                template: $translate.instant('kSearchCancelled'),
                 animation: 'fade-in',
                 showBackdrop: true,
                 duration: 2000,

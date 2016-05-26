@@ -4,8 +4,8 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', function (
-    $ionicPopup, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout,$ionicHistory) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', function (
+    $ionicPopup, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout,$ionicHistory, $translate) {
 
     //----------------------------------------------------------------------
     // Controller main
@@ -306,15 +306,15 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         if (inProgress) {
             ZMDataModel.zmDebug("StateCtrl/controlZM: operation in progress");
             $ionicPopup.alert({
-                title: "Operation in Progress",
-                template: "The previous operation is still in progress. Please wait..."
+                title: $translate.instant('kOperationInProgressTitle'),
+                template: $translate.instant('kOperationInProgressBody')
             });
             return;
         }
 
         var statesearch = "startstoprestart";
 
-        var promptstring = 'Are you sure you want to ' + str + ' Zoneminder?';
+        var promptstring = $translate.instant('kStateAreYouSure') + str + ' Zoneminder?';
         if (statesearch.indexOf(str) == -1) {
             promptstring = "Are you sure you want to change state to " + str;
         }

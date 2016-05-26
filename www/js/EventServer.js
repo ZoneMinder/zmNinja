@@ -11,8 +11,8 @@
 
 angular.module('zmApp.controllers')
 
-.factory('EventServer', ['ZMDataModel', '$rootScope', '$websocket', '$ionicPopup', '$timeout', '$q', 'zm', '$ionicPlatform', '$cordovaMedia', function
-    (ZMDataModel, $rootScope, $websocket, $ionicPopup, $timeout, $q, zm, $ionicPlatform, $cordovaMedia) {
+.factory('EventServer', ['ZMDataModel', '$rootScope', '$websocket', '$ionicPopup', '$timeout', '$q', 'zm', '$ionicPlatform', '$cordovaMedia', '$translate', function
+    (ZMDataModel, $rootScope, $websocket, $ionicPopup, $timeout, $q, zm, $ionicPlatform, $cordovaMedia, $translate) {
 
 
         var ws;
@@ -129,8 +129,8 @@ angular.module('zmApp.controllers')
                         str.version = "0.1";
                     if (ZMDataModel.versionCompare(str.version, zm.minEventServerVersion) == -1) {
                         $rootScope.zmPopup= $ionicPopup.alert({
-                            title: 'Event Server version not supported',
-                            template: 'You are running version ' + str.version + ". Please upgrade to " +
+                            title: $translate.instant('kEventServerVersionTitle'),
+                            template: $translate.instant('kEventServerVersionBody1') + " " + str.version + ". "+ $translate.instant('kEventServerVersionBody2')  +
                                 zm.minEventServerVersion
                         });
                     }

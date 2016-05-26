@@ -6,7 +6,7 @@
 
 // FIXME: This is a copy of montageCtrl - needs a lot of code cleanup
 
-angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window) {
+angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$translate', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $translate) {
 
 
    //--------------------------------------
@@ -353,7 +353,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             if (disp) {
                 $ionicLoading.hide();
                 $ionicLoading.show({
-                    template: "please wait...",
+                    template: $translate.instant('kPleaseWait')+"...",
                     noBackdrop: true,
                     duration: zm.loadingTimeout,
                 });
@@ -600,8 +600,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     if (tempMonitors.length == 0)
     {
         $rootScope.zmPopup= $ionicPopup.alert({
-                    title: "No Monitors found",
-                    template: "Please check your credentials"
+                    title: $translate.instant('kNoMonitors'),
+                    template:$translate.instant('kPleaseCheckCredentials')
         });
         $ionicHistory.nextViewOptions({
                     disableBack: true
@@ -740,7 +740,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     $rootScope.authSession = "undefined";
     $ionicLoading.show({
-        template: 'negotiating stream authentication...',
+        template: $translate.instant('kNegotiatingStreamAuth'),
         animation: 'fade-in',
         showBackdrop: true,
         duration: zm.loadingTimeout,
