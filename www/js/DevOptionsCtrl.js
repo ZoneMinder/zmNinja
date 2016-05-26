@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory','$state', 'SecuredPopups', 'translate', function ($scope, $rootScope, $ionicModal, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory','$state', 'SecuredPopups', '$translate', function ($scope, $rootScope, $ionicModal, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate) {
 
 
     $scope.openMenu = function () {

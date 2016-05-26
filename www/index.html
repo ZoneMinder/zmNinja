@@ -100,6 +100,7 @@
     <script src="js/NewsCtrl.js"></script>
     <script src="js/TimelineModalCtrl.js"></script>
     <script src="js/WizardCtrl.js"></script>
+    <script src="js/MenuController.js"></script>
     
     <script src="lib/ion-datetime-picker/release/ion-datetime-picker.min.js"></script>
     <script src="js/EventsModalGraphCtrl.js"></script>
@@ -235,6 +236,15 @@
                             <i class="icon ion-settings"></i>
                         </span> {{'kMenuDevSettings'|translate}}
                     </ion-item>
+                    
+                    
+                    <div ng-controller="MenuController">
+                    <ion-item ng-click="switchLang()" nav-clear menu-close href="">
+                        <span class=" item-icon-left">
+                            <i class="icon ion-earth"></i>
+                        </span> {{'kLanguage'|translate}}
+                    </ion-item>
+                    </div>
 
                     <ion-item nav-clear menu-close href="#/help">
                         <span class=" item-icon-left">

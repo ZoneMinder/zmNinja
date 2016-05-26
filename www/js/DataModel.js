@@ -2,7 +2,7 @@
 
 
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console, URI */
+/* global cordova,StatusBar,angular,console, URI, moment*/
 
 // This is my central data respository and common functions
 // that many other controllers use
@@ -11,11 +11,11 @@
 angular.module('zmApp.controllers')
     
 .service('ZMDataModel', 
-['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout','$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions',
+['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm','$rootScope','$ionicContentBanner', '$timeout','$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions', '$translate',
  function 
  ($http, $q, $ionicLoading, $ionicBackdrop,$fileLogger,
   zm, $rootScope,$ionicContentBanner, $timeout, $cordovaPinDialog, 
-   $ionicPopup, $localstorage, $state, $ionicNativeTransitions) {
+   $ionicPopup, $localstorage, $state, $ionicNativeTransitions, $translate) {
 
     var zmAppVersion="unknown";
     var isBackground = false;
@@ -25,6 +25,12 @@ angular.module('zmApp.controllers')
     var monitors = [];
     var multiservers = [];
     var oldevents = [];
+     
+    var languages = [
+        {text:'English', value:'en'},
+        {text:'Italian', value:'it'},
+        {text: 'German', value: 'de'},
+        ];
      
      var serverGroupList={};
      
@@ -79,6 +85,7 @@ angular.module('zmApp.controllers')
          'packerySizes':'',
          'timelineModalGraphType':'all',
          'resumeDelay':300,
+         'language':'en'
          
          
         
@@ -423,6 +430,12 @@ angular.module('zmApp.controllers')
                     loginData.useNphZms  = true;
                 }
                 
+                if (typeof loginData.useNphZms == 'undefined')
+                {
+                    zmDebug ("useNphZms does not exist. Setting to true");
+                    loginData.useNphZms  = true;
+                }
+                
                 // and now, force enable it
                 loginData.useNphZms = true;
                 
@@ -574,6 +587,32 @@ angular.module('zmApp.controllers')
                
             }
         },
+        
+        getLanguages: function() {
+            return languages;
+        },
+        
+        setDefaultLanguage: function(l, permanent) {
+           
+            if (permanent) 
+                window.localStorage.setItem("defaultLang", l);
+            
+            $translate.use(l).then(function(data) {
+                        zmLog("Device Language is:" + data);
+                        moment.locale(data);
+                         $translate.fallbackLanguage('en');
+                    }, function(error) {
+                        zmLog("Device Language error: " + error);
+                        $translate.use('en');
+                        moment.locale('en');
+                    });
+        },
+        
+        getDefaultLanguage: function() {
+            return window.localStorage.getItem("defaultLang");
+            
+        },
+        
 
         getLogin: function () {
             
