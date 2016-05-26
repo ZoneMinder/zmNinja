@@ -582,7 +582,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                             if (showalert)
                                             {
                                                 $rootScope.zmPopup = SecuredPopups.show('alert',{
-                                                    title: 'Login validated',
+                                                    title: $translate.instant('kLoginValidatedTitle'),
                                                     template: loginStatus
                                                 }).then(function (res) {
 

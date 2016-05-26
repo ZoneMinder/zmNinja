@@ -39,8 +39,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     $scope.deleteLogs = function () {
 
         $rootScope.zmPopup = $ionicPopup.confirm({
-            title: 'Please Confirm',
-            template: 'Are you sure you want to delete logs?',
+            title: $translate.instant('kPleaseConfirm'),
+            template: $translate.instant('kDeleteLogsConfirm'),
         });
 
         $rootScope.zmPopup.then(function (res) {

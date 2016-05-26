@@ -337,7 +337,7 @@ angular.module('zmApp.controllers')
             {
                 if (urls.length > 0 && $rootScope.userCancelledAuth != true)
                 {
-                     $ionicLoading.show({template: 'trying ' + urls[0].server});
+                     $ionicLoading.show({template: $translate.instant('kTrying') + urls[0].server});
                     zmLog ("Reachability test.." + urls[0].url);
                     return $http.get(urls[0].url).then(function () {
                         zmLog ("Success: reachability on "+ urls[0].url);
@@ -1043,7 +1043,7 @@ angular.module('zmApp.controllers')
             
             
             $ionicLoading.show({
-                template: 'loading monitors...',
+                template: $translate.instant('kLoadingMonitors'),
                 animation: 'fade-in',
                 showBackdrop: true,
                 duration: zm.loadingTimeout,
@@ -1248,7 +1248,7 @@ angular.module('zmApp.controllers')
             //console.log (">>>>>Constructed URL " + myurl);
             
             $ionicLoading.show({
-                template: 'calculating events list size...',
+                template: $translate.instant('kCalcEventSize')+'...',
                 animation: 'fade-in',
                 showBackdrop: true,
                 duration: zm.loadingTimeout,

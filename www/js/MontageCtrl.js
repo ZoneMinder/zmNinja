@@ -4,7 +4,7 @@
 /* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded */
 
 
-angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window',  '$localstorage', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage) {
+angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window',  '$localstorage', '$translate', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate) {
 
     //---------------------------------------------------------------------
     // Controller main
@@ -77,7 +77,7 @@ function initPackery()
         
         
         $ionicLoading.show({
-                    template: "arranging images...",
+                    template: $translate.instant('kArrangingImages'),
                     noBackdrop: true,
                     duration: zm.loadingTimeout
                 });
@@ -684,7 +684,7 @@ function initPackery()
                 $scope.modal = modal;
 
                 $ionicLoading.show({
-                    template: "please wait...",
+                    template: $translate.instant('kPleaseWait'),
                     noBackdrop: true,
                     duration: zm.loadingTimeout
                 });
@@ -858,8 +858,8 @@ $scope.$on('$ionicView.afterEnter', function () {
 
     if ($scope.MontageMonitors.length == 0) {
         $rootScope.zmPopup = $ionicPopup.alert({
-            title: "No Monitors found",
-            template: "Please check your credentials"
+            title: $translate.instant('kNoMonitors'),
+            template: $translate.instant('kCheckCredentials')
         });
         $ionicHistory.nextViewOptions({
             disableBack: true
@@ -874,7 +874,7 @@ $scope.$on('$ionicView.afterEnter', function () {
 
     $rootScope.authSession = "undefined";
     $ionicLoading.show({
-        template: 'negotiating stream authentication...',
+        template: $translate.instant('kNegotiatingStreamAuth'),
         animation: 'fade-in',
         showBackdrop: true,
         duration: zm.loadingTimeout,

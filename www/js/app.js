@@ -715,7 +715,7 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function ($interval, ZMDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory) {
+.factory('zmAutoLogin', function ($interval, ZMDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory, $translate) {
     var zmAutoLoginHandle;
 
     //------------------------------------------------------------------
@@ -864,7 +864,7 @@ angular.module('zmApp', [
                                             ], "", 8000);
                         var alertPopup = $ionicPopup.alert({
                             title: 'reCaptcha enabled',
-                            template: 'Looks like you have enabled reCaptcha. It needs to be turned off for '+$rootScope.appName+' to work'
+                            template: $translate.instant('kRecaptcha')
                         });
 
 
@@ -1163,8 +1163,8 @@ angular.module('zmApp', [
             if (requireLogin) {
 
                 $ionicPopup.alert({
-                    title: "Credentials Required",
-                    template: "Please provide your ZoneMinder credentials"
+                    title: $translate.instant('kCredentialsTitle'),
+                    template: $translate.instant('kCredentialsBody')
                 });
                 // for whatever reason, .go was resulting in digest loops.
                 // if you don't prevent, states will stack

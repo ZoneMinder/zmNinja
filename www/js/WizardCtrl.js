@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry, URI */
 
-angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm','$ionicLoading', 'WizardHandler', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading, WizardHandler) {
+angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm','$ionicLoading', 'WizardHandler','$translate', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading, WizardHandler, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -208,7 +208,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         function continueCgi (urls)
         {
             $ionicLoading.show({
-                template: "discovering...",
+                template: $translate.instant('kDiscovering')+"...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
                 });
@@ -225,7 +225,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 
                 
                 $ionicLoading.show({
-                template: "discovering...",
+                template: $translate.instant('kDiscovering')+"...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
                 });
@@ -421,7 +421,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         // use it even after logging in
         ZMDataModel.zmLog("zmWizard: logging out");
         $ionicLoading.show({
-                template: "cleaning up...",
+                template: $translate.instant('kCleaningUp')+"...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
                 });
@@ -434,7 +434,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 // The logic will be:
                 // Login then do an api detect and cgi-detect together
                 $ionicLoading.show({
-                template: "discovering portal...",
+                template: $translate.instant('kDiscoveringPortal')+"...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
                 });
@@ -445,7 +445,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                             
                             // API Detection
                             $ionicLoading.show({
-                            template: "discovering api...",
+                            template: $translate.instant('kDiscoveringAPI')+"...",
                             noBackdrop: true,
                             duration: zm.httpTimeout
                             });
@@ -455,7 +455,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                                 ZMDataModel.zmLog ("zmWizard: API succeeded");
                                 
                                 $ionicLoading.show({
-                                template: "discovering cgi-bin...",
+                                template: $translate.instant('kDiscoveringCGI')+"...",
                                 noBackdrop: true,
                                 duration: zm.httpTimeout
                                 });
@@ -521,10 +521,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         if ($scope.wizard.useauth) {
             if (!$scope.wizard.usezmauth && !$scope.wizard.usebasicauth) {
                 $rootScope.zmPopup = SecuredPopups.show('show', {
-                    title: 'Whoops!',
-                    template: 'You need to enable at least one authentication mechanism',
+                    title: $translate.instant('kError'),
+                    template: $translate.instant('kOneAuth'),
                     buttons: [{
-                        text: 'Ok'
+                        text: $translate.instant('kButtonOk')
                     }]
 
                 });
@@ -533,10 +533,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             if ($scope.wizard.usezmauth) {
                 if ((!$scope.wizard.zmuser) || (!$scope.wizard.zmpassword)) {
                     $rootScope.zmPopup = SecuredPopups.show('show', {
-                        title: 'Whoops!',
-                        template: 'Please enter a valid username and password for ZM auth',
+                        title: $translate.instant('kError'),
+                        template: $translate.instant('kValidNameZMAuth'),
                         buttons: [{
-                            text: 'Ok'
+                            text: $translate.instant('kButtonOk')
                         }]
 
                     });
@@ -547,10 +547,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             if ($scope.wizard.usebasicauth) {
                 if ((!$scope.wizard.basicuser) || (!$scope.wizard.basicpassword)) {
                     $rootScope.zmPopup = SecuredPopups.show('show', {
-                        title: 'Whoops!',
-                        template: 'Please enter a valid username and password for basic auth',
+                        title: $translate.instant('kError'),
+                        template: $translate.instant('kValidNameBasicAuth'),
                         buttons: [{
-                            text: 'Ok'
+                            text: $translate.instant('kButtonOk')
                         }]
 
                     });

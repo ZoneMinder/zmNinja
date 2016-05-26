@@ -58,15 +58,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     {
         ZMDataModel.zmDebug("SaveDevOptions: called");
 
-        /*if (parseInt($scope.loginData.maxMontage) > zm.safeMontageLimit) {
-            $rootScope.zmPopup= SecuredPopups.show('alert',{
-                title: 'Note',
-                template: 'You have selected to view more than 10 monitors in the Montage screen. Note that this is very resource intensive and may load the server or cause issues in the application. If you are not sure, please consider limiting this value to 10'
-            });
-            ZMDataModel.zmDebug("SaveDevOptions: " + $scope.loginData.maxMontage +
-                " monitors for montage");
-        }*/
-
+        
 
         if ((parseInt($scope.loginData.maxFPS) < 0) || (parseInt($scope.loginData.maxFPS) > zm.maxFPS)) {
             $scope.loginData.maxFPS = zm.defaultFPS.toString();
