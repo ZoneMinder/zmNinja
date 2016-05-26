@@ -200,15 +200,15 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     ZMDataModel.zmDebug("Run results: " + JSON.stringify(success));
                     switch (success.data.result) {
                         case 1:
-                            $scope.zmRun = 'running';
+                            $scope.zmRun = $translate.instant('kZMRunning');
                             $scope.color = 'color:green;';
                             break;
                         case 0:
-                            $scope.zmRun = 'stopped';
+                            $scope.zmRun = $translate.instant('kZMStopped');
                             $scope.color = 'color:red;';
                             break;
                         default:
-                            $scope.zmRun = 'undetermined';
+                            $scope.zmRun = $translate.instant('kZMUndetermined');
                             $scope.color = 'color:orange;';
 
                             break;
@@ -221,7 +221,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     //console.log("ERROR in getRun: " + JSON.stringify(error));
                     ZMDataModel.zmLog("Error getting RunStatus " + JSON.stringify(error), "error");
                     $scope.color = 'color:red;';
-                    $scope.zmRun = 'undetermined';
+                    $scope.zmRun = $translate.instant('kZMUndetermined');
                 }
             );
 
@@ -264,7 +264,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         ZMDataModel.zmDebug("inside performZMoperation with " + str);
 
 
-        $scope.zmRun = "please wait...";
+        $scope.zmRun = "...";
         $scope.color = 'color:orange;';
         $scope.customState = "";
         ZMDataModel.zmDebug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
@@ -276,11 +276,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     inProgress = 0;
                     switch (str) {
                         case "stop":
-                            $scope.zmRun = 'stopped';
+                            $scope.zmRun = $translate.instant('kZMStopped');
                             $scope.color = 'color:red;';
                             break;
                         default:
-                            $scope.zmRun = 'running';
+                            $scope.zmRun = $translate.instant('kZMRunning');
                             $scope.color = 'color:green;';
                             getCurrentState();
                             break;
@@ -294,7 +294,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     //console.log("ERROR in Change State:" + JSON.stringify(error));
                     ZMDataModel.zmDebug("StateCtrl/controlZM: returned error");
                     ZMDataModel.zmLog("Error in change run state:" + JSON.stringify(error), "error");
-                    $scope.zmRun = 'undetermined';
+                    $scope.zmRun = $translate.instant('kZMUndetermined');
                     $scope.color = 'color:orange;';
                     inProgress = 0;
 
