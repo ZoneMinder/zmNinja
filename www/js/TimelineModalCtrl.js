@@ -6,7 +6,7 @@
 
 
 
-angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup) {
+angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
 
     
     
@@ -80,10 +80,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     $scope.switchType = function()
     {
         
-        if ($scope.graphType == "all")
+        if ($scope.graphType == $translate.instant('kGraphAll'))
         {
             current_data = onlyalarm_data;
-            $scope.graphType = "alarmed";
+            $scope.graphType = $translate.instant('kGraphAlarmed');
              ZMDataModel.zmDebug ("Alarm array has " + onlyalarm_data.labels.length+ " frames");
             btype='bar';
             //console.log (JSON.stringify(onlyalarm_data));
@@ -93,7 +93,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         {
             current_data = data;
            // tcGraph.data = 
-            $scope.graphType = "all";
+            $scope.graphType = $translate.instant('kGraphAll');
             btype='line';
         }
         
@@ -175,7 +175,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                 ZMDataModel.zmLog("Image padding digits reported as " + eventImageDigits);
             });
 
-         $scope.eventdetails = "loading...";
+         $scope.eventdetails = $translate.instant('kLoading')+"...";
          processEvent();
          //$scope.eventdetails = JSON.stringify($scope.event);
      });
@@ -200,7 +200,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         },
                function (error)
                {
-                    $scope.errorDetails = "there was an error rendering the graph. Please see logs";
+                    $scope.errorDetails = $translate.instant('kGraphError');
                     ZMDataModel.zmLog ("Error in timeline frames " + JSON.stringify(error));
         });
     }
@@ -371,7 +371,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
          cv = document.getElementById("tcchart");
          ctx = cv.getContext("2d");
         
-        if (ZMDataModel.getLogin().timelineModalGraphType == 'all')
+        if (ZMDataModel.getLogin().timelineModalGraphType == $translate.instant('kGraphAll'))
         {
             btype = 'line';
             current_data = data;
