@@ -1186,17 +1186,22 @@ angular.module('zmApp', [
 
             $ionicNativeTransitions.enable(true, false);
        
-            
-         
-            if(typeof navigator.globalization !== "undefined") {
-                navigator.globalization.getPreferredLanguage(function(language) {
-                    $translate.use((language.value).split("-")[0]).then(function(data) {
-                        ZMDataModel.zmLog("Device Language is:" + data);
-                        moment.locale(data);
-                    }, function(error) {
-                        ZMDataModel.zmLog("Device Language error: " + error);
-                    });
-                }, null);
+            var lang = ZMDataModel.getDefaultLanguage();
+            if (lang == undefined)
+            {
+                ZMDataModel.zmLog ("No language set, detecting...");
+                if(typeof navigator.globalization !== "undefined") {
+                    navigator.globalization.getPreferredLanguage(function(language) {
+                       // dont make this permanent
+                        ZMDataModel.setDefaultLanguage((language.value).split("-")[0], false);
+
+                    }, null);
+                }
+            }
+            else
+            {
+                ZMDataModel.zmLog ("Language stored as:"+lang);
+                ZMDataModel.setDefaultLanguage(lang, false);
             }
             
             ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());

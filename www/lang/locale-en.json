@@ -107,6 +107,7 @@
    "kMaxItemsForTimeline"       : "Max. items for Timeline",
    "kMaxMonitorsMontage"        : "Max monitors in montage",
    "kMenuDevSettings"           : "Developer Settings",
+   "kMenuOptions"              : "Menu",
    "kMenuEventMontage"          : "EventMontage",
    "kMenuEvents"                : "Events",
    "kMenuExit"                  : "Exit",
@@ -242,5 +243,8 @@
    "kWizard"                    : "Wizard",
    "kWorkingOnGraph"            : "working on graph data",
    "kZMSettingsFor"             : "ZoneMinder settings for",
-   "kZMUpgradeNeeded"           : "ZoneMinder upgrade needed"
+   "kZMUpgradeNeeded"           : "ZoneMinder upgrade needed",
+    "kLanguage":       "Language",
+    "kSelectLanguage": "Select Language"
+    
 }
