@@ -1434,7 +1434,7 @@ angular.module('zmApp.controllers')
 
 
         $scope.prettify = function (str) {
-            return moment(str).format(ZMDataModel.getTimeFormat()+' on MMMM Do YYYY');
+            return moment(str).format(ZMDataModel.getTimeFormat()+', MMMM Do YYYY');
         };
         //--------------------------------------------------------
         // For consistency we are keeping the refresher list
