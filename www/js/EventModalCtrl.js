@@ -1112,7 +1112,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
 
             $ionicLoading.show({
-                template: $translate.instant('kEventNavVidFeeds',
+                template: $translate.instant('kEventNavVidFeeds'),
                 noBackdrop: true,
                 duration: 3000
             });
