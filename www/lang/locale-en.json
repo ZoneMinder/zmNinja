@@ -284,6 +284,9 @@
    "kWizZMAuth"                 : "I use ZM authentication",
    "kWizard"                    : "Wizard",
    "kWorkingOnGraph"            : "working on graph data",
+   "kZMRunning"                 : "running",
    "kZMSettingsFor"             : "ZoneMinder settings for",
+   "kZMStopped"                 : "stopped",
+   "kZMUndetermined"            : "undetermined",
    "kZMUpgradeNeeded"           : "ZoneMinder upgrade needed"
 }
