@@ -68,22 +68,22 @@
         
 
     </ion-modal-view>
-    <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-        <button mfb-button icon="ion-arrow-resize" label="{{imageFit?'fill screen':'fit screen'}}" ng-click="scaleImage();">
+    <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+        <button mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFitScreen' | translate):('kFillScreen' | translate)}}" ng-click="scaleImage();">
         </button>
-        <button mfb-button icon="ion-refresh" label="refresh" ng-click="reloadView();">
+        <button mfb-button icon="ion-refresh" label="{{'kRefresh' | translate}}" ng-click="reloadView();">
         </button>
-        <button mfb-button icon="ion-arrow-expand" label="pan/tilt/zoom" ng-click="togglePTZ();">
+        <button mfb-button icon="ion-arrow-expand" label="{{'kPTZ'| translate}}" ng-click="togglePTZ();">
         </button>
         
     </nav>
 
-    <nav mfb-menu position="tr" effect="zoomin" label="collapse" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
-        <button mfb-button icon="ion-android-arrow-back" label="previous monitor" ng-click="onTap(monitorId,-1);">
+    <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
+        <button mfb-button icon="ion-android-arrow-back" label="{{'kPrevMonitor' | translate}} " ng-click="onTap(monitorId,-1);">
         </button>
-        <button mfb-button icon="ion-android-arrow-forward" label="next monitor" ng-click="onTap(monitorId,1);">
+        <button mfb-button icon="ion-android-arrow-forward" label="{{'kNextMonitor' | translate}}" ng-click="onTap(monitorId,1);">
         </button>
-        <button mfb-button icon="ion-close" label="exit live view" ng-click="closeModal();">
+        <button mfb-button icon="ion-close" label="{{'kExitLiveView' | translate}}" ng-click="closeModal();">
         </button>
 
     </nav>

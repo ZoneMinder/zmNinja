@@ -190,6 +190,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var a3 = baseUri+"/zm/cgi-bin"; // ubuntu/debian
         var a2 = baseUri+"/cgi-bin-zm"; //fedora/centos/rhel
         var a1 = baseUri+"/cgi-bin"; // doofus
+        
+        
         var urls = [a1,a2,a3];
         
         

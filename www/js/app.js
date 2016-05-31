@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI, $*/
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI, ConnectSDK,$*/
 
 
 var appVersion = "0.0.0";
@@ -36,6 +36,7 @@ angular.module('zmApp', [
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     recommendedAppVersion: '1.29',
     minEventServerVersion: '0.7',
+    castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
     httpTimeout: 15000,
@@ -79,6 +80,28 @@ angular.module('zmApp', [
 
 
 })
+
+// credit: http://stackoverflow.com/questions/25391279/angularjs-ng-include-failover
+.directive("ngIncludeFailover", function() {
+      return {
+        restrict: 'CAE',
+        scope: {
+          src: '=',
+          myInclude: '='
+        },
+        transclude:true,
+        link: function(scope, iElement, iAttrs, controller) {
+          iAttrs.$observe('src', function (nv) {scope.src=nv; console.log ("CHANGED");});
+          scope.$on("$includeContentError", function(event, args){
+            scope.loadFailed=true;
+           });
+          scope.$on("$includeContentLoaded", function(event, args){
+            scope.loadFailed=false;
+          });
+        },
+        template: "<div ng-include='ngIncludeFailover||src'></div><div ng-show='loadFailed' ng-transclude/>"
+      };
+    })
 
 // credit https://gist.github.com/Zren/beaafd64f395e23f4604
 
@@ -1184,19 +1207,23 @@ angular.module('zmApp', [
         $ionicPlatform.ready(function () {
 
 
+            
+            
             $ionicNativeTransitions.enable(true, false);
        
             var lang = ZMDataModel.getDefaultLanguage();
             if (lang == undefined)
             {
-                ZMDataModel.zmLog ("No language set, detecting...");
+                ZMDataModel.zmLog ("No language set, switching to en");
+                ZMDataModel.setDefaultLanguage("en", false);
+                /*
                 if(typeof navigator.globalization !== "undefined") {
                     navigator.globalization.getPreferredLanguage(function(language) {
                        // dont make this permanent
                         ZMDataModel.setDefaultLanguage((language.value).split("-")[0], false);
 
                     }, null);
-                }
+                }*/
             }
             else
             {
@@ -1229,6 +1256,9 @@ angular.module('zmApp', [
                 $rootScope.platformOS = "android";
 
             ZMDataModel.zmLog("You are running on " + $rootScope.platformOS);
+            
+            
+           
 
             ZMDataModel.init();
             EventServer.init();
@@ -1477,7 +1507,7 @@ angular.module('zmApp', [
     
     
 
-    $translateProvider.determinePreferredLanguage();
+    //$translateProvider.determinePreferredLanguage();
     //$translateProvider.preferredLanguage("en");
     $translateProvider.fallbackLanguage("en");
     $translateProvider.useSanitizeValueStrategy('sanitize');

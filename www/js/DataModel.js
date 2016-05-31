@@ -424,11 +424,6 @@ angular.module('zmApp.controllers')
                     loginData.montageSize  = 2;
                 }
                 
-                if (typeof loginData.useNphZms == 'undefined')
-                {
-                    zmDebug ("useNphZms does not exist. Setting to true");
-                    loginData.useNphZms  = true;
-                }
                 
                 if (typeof loginData.useNphZms == 'undefined')
                 {
@@ -436,14 +431,17 @@ angular.module('zmApp.controllers')
                     loginData.useNphZms  = true;
                 }
                 
-                // and now, force enable it
-                loginData.useNphZms = true;
+              
                 
                 if (typeof loginData.useNphZmsForEvents == 'undefined')
                 {
                     zmDebug ("useNphZmsForEvents does not exist. Setting to true");
                     loginData.useNphZmsForEvents  = true;
                 }
+                
+                  // and now, force enable it
+                loginData.useNphZms = true;
+                loginData.useNphZmsForEvents = true;
                 
                 if (typeof loginData.packMontage == 'undefined')
                 {
@@ -511,7 +509,7 @@ angular.module('zmApp.controllers')
                 if (typeof timelineModalGraphType == 'undefined')
                 {
                     zmDebug ("timeline graph type not set. Setting to all");
-                    loginData.timelineModalGraphType = 'all';
+                    loginData.timelineModalGraphType = $translate.instant('kAll');
                 }
                 
                 if (typeof loginData.resumeDelay == 'undefined')
