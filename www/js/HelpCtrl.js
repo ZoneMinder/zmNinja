@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry */
 
-angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel','$ionicSideMenuDelegate', '$ionicHistory', '$state', function ($scope, $rootScope, $ionicModal, ZMDataModel,$ionicSideMenuDelegate, $ionicHistory, $state) {
+angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel','$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$q', '$templateRequest', '$sce',  '$compile', function ($scope, $rootScope, $ionicModal, ZMDataModel,$ionicSideMenuDelegate, $ionicHistory, $state, $translate, $q, $templateRequest, $sce, $compile) {
 $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -22,6 +22,44 @@ $scope.openMenu = function () {
         }
     };
 
+    
+    function insertHelp()
+    {
+         
+        
+ 
+        var l = ZMDataModel.getDefaultLanguage() || 'en';
+        var lang = "lang/help/help-"+l+".html";
+        console.log ("LANG IS " + lang);
+        var templateUrl = $sce.getTrustedResourceUrl(lang);
+        var lang_fb= "lang/help/help-"+"en"+".html";
+        var templateUrlFB = $sce.getTrustedResourceUrl(lang_fb);
+        
+        $templateRequest(lang)
+        .then (function(template) 
+               {
+                    var elem = angular.element(document.getElementById('insertHelp'));
+                     $compile(elem.html(template).contents())($scope);
+               },
+               function (error) 
+               {
+                    ZMDataModel.zmLog ("Language file "  + lang + " not found, falling back");
+                    $templateRequest(templateUrlFB)
+                    .then (function( template)
+                           {
+                                var elem = angular.element(document.getElementById('insertHelp'));
+                                $compile(elem.html(template).contents())($scope);
+                           },
+                           function (error)
+                           {
+                                ZMDataModel.zmLog("fallback help not found");
+                           });
+                }
+        );
+  
+        
+    
+    }
 
      //-------------------------------------------------------------------------
     // Lets make sure we set screen dim properly as we enter
@@ -34,6 +72,9 @@ $scope.openMenu = function () {
         //console.log("**VIEW ** Help Ctrl Entered");
         ZMDataModel.setAwake(false);
         $scope.zmAppVersion = ZMDataModel.getAppVersion();
+        insertHelp();
+        
+        
 
         
 

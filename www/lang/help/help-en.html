@@ -1,0 +1,72 @@
+<ion-item class="item-text-wrap">
+                <h2><b>Is there an official FAQ?</b> </h2>There sure is. Always check <a href="#" onclick="window.open('https://github.com/pliablepixels/zmNinja/wiki/FAQ', '_blank', 'location=yes'); return false;">here</a> for the most updated help
+            </ion-item>
+
+            <ion-item class="item-text-wrap">
+                <h2><b> What do I enter for ZM Portal URL, Base path to cgi-bin and ZM API URL?</b> </h2>
+                <ul>
+                    {{$root.appName}} now has a wizard that tries to detect your settings. This may fail if you have a custom install with non standard paths.
+                    <li><i class="ion-android-arrow-dropright"></i> ZM Portal URL: The URL using which you can access ZM
+                        <p>(example http://myserver.ddns.net/zm)</p>
+                    </li>
+                    <li><i class="ion-android-arrow-dropright"></i> CGI path: The URL using which your cgi-bin path is accessible
+                        <p>(example http://myserver.ddns.net/zm/cgi-bin).</p>
+                    </li>
+                    <li><i class="ion-android-arrow-dropright"></i> API Url: The URL using which your API path is accessible
+                        <p>(example:http://myserver.ddns.net/zm/api)</p>
+                    </li>
+                </ul>
+            </ion-item>
+
+            <ion-item class="item-text-wrap">
+                <h2><b>Since when does ZM have an API?</b> </h2> The latest versions of ZoneMinder have an API that is supposed to replace the XML skin. It is only available starting Zoneminder 1.28.107. If you don't have the API installed the client will not work.
+
+            </ion-item>
+
+            <ion-item class="item-text-wrap">
+                <h2> <b>I do not have authentication enabled but the app keeps asking me to specify authentication</b></h2> If you don't use ZM authentication, just enter an "x" in both user name and password.
+            </ion-item>
+
+
+            <ion-item class="item-text-wrap">
+                <h2> <b>Everything works! but live streaming does not </b></h2> Check if streaming works in the web interface. If it does not work, {{$root.appName}} won't work either. Fix ZM first. If streaming in ZM works, go to {{$root.appName}} settings and fix your cgi-bin path. the automatic path that is filled in won't work. Here is a hint, go to zoneminder-options-paths and check the value of the cgi-bin path - your {{$root.appName}} path will be "base path of your server" + cgi-bin path.
+            </ion-item>
+
+
+            <ion-item class="item-text-wrap">
+                <h2><b> The data is not refreshing!</b></h2> Most screens that show lists of data has a pull down action. Pull down to refresh and your data should be reloaded.
+            </ion-item>
+
+            <ion-item class="item-text-wrap">
+                <h2><b> What do all the colors in the Monitor view mean?</b></h2>
+                <i class="icon ion-checkmark-circled" style="color:#03A9F4"></i> Checking
+                <br/>
+                <i class="icon ion-checkmark-circled" style="color:#4CAF50"></i> All good
+                <br/>
+                <i class="icon ion-close-circled" style="color:#F44336"></i> Not running
+                <br/>
+                <i class="icon ion-close-circled" style="color:#FF9800"></i> Not running (pending)
+                <br/>
+                <i class="icon ion-checkmark-circled" style="color:grey"></i> Disabled
+                <br/>
+                <i class="icon ion-help-circled" style="color:#795548"></i> Unknown
+                <br/>
+
+            </ion-item>
+
+            <ion-item class="item-text-wrap">
+                <h2><b>I want to contribute!</b></h2> Awesome. <a href="#" onclick="window.open('http://github.com/pliablepixels/zmNinja', '_blank', 'location=yes'); return false;"> Grab</a> the source code!
+            </ion-item>
+
+            <ion-item class="item-text-wrap">
+                <h2><b>I'm having problems with this app</b></h2>Tap on the logs option in the menu. Click the email button on the top right to send them to the author of this app. Note that when the email is composed, zmNinja tries to remove personal information by searching and replacing server IP addresses and server passwords. However it is <b>your responsibility</b> to make sure the logs don't contain any sensitive information. Before you send the email, please review the embedded logs and edit as needed.
+            </ion-item>
+
+            <ion-item class="item-text-wrap">
+                <h2><b>I can see my server URLs and passwords in logs. You said zmNinja removes them?</b></h2>zmNinja tries to remove them <b>after</b> you tap on the email button. I suppose I could remove them from the stored logs too, but then it would be harder for you to figure out if you made a mistake in configuring the app.
+            </ion-item>
+
+            <ion-item class="item-text-wrap">
+                <h2><b>How do I contact the author?</b></h2> Send me an <a href="#" onclick="window.open('mailto:pliablepixels@gmail.com', '_blank', 'location=yes'); return false;">email</a>
+            </ion-item>
+

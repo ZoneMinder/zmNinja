@@ -19,6 +19,11 @@
         <button class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp;
         </button>
         
+        <!--
+        <button class="button button-icon button-clear ion-monitor" ng-click="cast();">&nbsp;
+        </button>
+        -->
+        
         <button class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
         </button>
         
@@ -113,15 +118,15 @@
     </ion-content>
 
     <div ng-show="minimal">
-        <nav mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+        <nav mfb-menu position="br" effect="zoomin" label="{['kCollapse' | translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
 
-            <button mfb-button icon="ion-arrow-expand" label="increase size" ng-click="sliderChanged(1)">
+            <button mfb-button icon="ion-arrow-expand" label="{{'kIncreaseSize' | translate}}" ng-click="sliderChanged(1)">
             </button>
-            <button mfb-button icon="ion-arrow-shrink" label="decrease size" ng-click="sliderChanged(-1)">
+            <button mfb-button icon="ion-arrow-shrink" label="{{'kDecreaseSize' | translate}}" ng-click="sliderChanged(-1)">
             </button>
-            <button mfb-button icon="ion-refresh" label="refresh" ng-click="resetSizes();">
+            <button mfb-button icon="ion-refresh" label="{{'kRefresh' | translate}}" ng-click="resetSizes();">
             </button>
-            <button mfb-button icon="ion-close" label="exit full screen" ng-click="switchMinimal()">
+            <button mfb-button icon="ion-close" label="{{'kExitFullScreen'| translate}}" ng-click="switchMinimal()">
             </button>
         </nav>
         
