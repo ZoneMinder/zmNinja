@@ -1,7 +1,7 @@
 // Common Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,ionic, moment, imagesLoaded */
+/* global saveAs, cordova,StatusBar,angular,console,ionic, moment, imagesLoaded, ConnectSDK */
 
 
 
@@ -192,6 +192,55 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             
     });
 
+    
+     $scope.cast = function(mid, mon)
+    {
+         
+         console.log ("PASSED WITH " + JSON.stringify(mon));
+          //ConnectSDK.discoveryManager.startDiscovery();
+         ConnectSDK.discoveryManager.startDiscovery();
+          ConnectSDK.discoveryManager.pickDevice()
+          .success(function (device) {
+              //device.disconnect();
+              function sendVideo (mid,mon) {
+                    //device.getMediaPlayer().playMedia("http://media.w3.org/2010/05/sintel/trailer.mp4", "video/mp4");
+                  
+              //  var url = "http://www.connectsdk.com/files/9613/9656/8539/test_image.jpg";
+                  
+                //var url = mon.Monitor.streamingURL+"/nph-zms?mode=jpeg&monitor="+mid+$rootScope.authSession+"&rand="+$rootScope.modalRand;
+                  
+                  var ld = ZMDataModel.getLogin();
+                  var url = mon.Monitor.streamingURL+"/nph-zms?mode=jpeg&monitor="+mid+"&user="+ld.username+"&pass="+ld.password+"&rand="+$rootScope.modalRand;
+                  
+                  console.log ("URL: " + url);
+                var iconUrl = "http://www.connectsdk.com/files/9613/9656/8539/test_image.jpg";
+                var mimeType = "image/jpeg";
+
+                device.getMediaPlayer().displayImage(url, mimeType, {
+                    title: "Monitor: "+mid,
+                    description: "Monitor feed",
+                }).success(function (launchSession, mediaControl) {
+                    console.log("Image launch successful");
+                }).error(function (err) {
+                    console.log("error: " + err.message);
+                });
+                }
+
+                if (device.isReady()) { // already connected
+                    console.log (">>> device ready sending video");
+                    sendVideo(mid,mon);
+                } else {
+                    device.on("ready", function() {sendVideo(mid,mon);});
+                    console.log (">>> device not ready connecting");
+                    device.connect();
+                }
+          })
+          .error (
+                function (error) {
+                    console.log ("ERROR");
+          });
+    };
+    
     //-------------------------------------------------------------
     // PTZ enable/disable
     //-------------------------------------------------------------
