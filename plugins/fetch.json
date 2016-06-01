@@ -115,15 +115,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-media": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/pliablepixels/cordova-plugin-media",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "com.telerik.plugins.nativepagetransitions": {
         "source": {
             "type": "git",
@@ -133,19 +124,46 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-email-composer": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-email-composer"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-globalization": {
         "source": {
             "type": "git",
             "url": "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git",
             "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-connectsdk": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-connectsdk"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-console": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-console"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "com.jcjee.plugins.emailcomposer": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jcjee/email-composer",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "org.apache.cordova.media": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/pliablepixels/cordova-plugin-media",
+            "subdir": ".",
+            "ref": "playback-only"
         },
         "is_top_level": true,
         "variables": {}

@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$tranaslate', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope','zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', function ($scope, $rootScope,zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -88,8 +88,11 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     //--------------------------------------------------------------------------
     function sendEmailReally(logstring) {
         if (window.cordova) {
+            
+             
+            
 
-            $cordovaEmailComposer.isAvailable().then(function () {
+           
 
                 // do my best to replace sensitive information
                 var loginData = ZMDataModel.getLogin();
@@ -122,21 +125,11 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                     logstring = logstring.replace(re4, "<server>");
                 }
                 
-                var email = {
-                    to: zm.authoremail,
-                    subject: $rootScope.appName + ' Logs',
-                    body: logstring,
-                    isHtml: false
-                };
-                $cordovaEmailComposer.open(email)
-                    .then(null, function () {
-                        // user cancelled email
-                    });
-            }, function () {
-                ZMDataModel.zmLog("Email plugin not found", "error");
-            });
+                window.plugins.emailComposer.showEmailComposerWithCallback(callback,$rootScope.appName+' logs',logstring,[zm.authoremail]);
+                
+               
         } else {
-            console.log("Using default email client to send data");
+           // console.log("Using default email client to send data");
             
             var fname = $rootScope.appName+"-logs-" + 
                     moment().format('MMM-DD-YY_HH-mm-ss') + ".txt";
@@ -146,6 +139,11 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 saveAs(blob, fname);
         }
 
+    }
+    
+    function callback ()
+    {
+        console.log ("EMAIL SENT");
     }
     
     function loadLogs()

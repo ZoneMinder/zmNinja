@@ -881,6 +881,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 empty: false,
 
                 onclick: function () {
+                
 
                     move(0.2);
                 }
