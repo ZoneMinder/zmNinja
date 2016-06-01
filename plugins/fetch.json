@@ -133,14 +133,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-connectsdk": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-connectsdk"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-console": {
         "source": {
             "type": "registry",
@@ -164,6 +156,14 @@
             "url": "https://github.com/pliablepixels/cordova-plugin-media",
             "subdir": ".",
             "ref": "playback-only"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-connectsdk": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-connectsdk"
         },
         "is_top_level": true,
         "variables": {}
