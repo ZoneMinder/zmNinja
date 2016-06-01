@@ -221,36 +221,61 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 if ($scope.wizard.useauth && $scope.wizard.usezmauth)
                 {
                     
-                    tail+= "&user="+$scope.wizard.zmuser+"&pass="+$scope.wizard.zmpassword;
-                    console.log ("****CDING " + tail);
+                    var ck = Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
+                    ZMDataModel.getAuthKey(success,ck)
+                    .then (function (success)
+                           {
+                                if (success=="")
+                                {
+                                    ZMDataModel.zmLog ("getAuthKey returned null, so going user=&pwd= way");
+                                    tail+= "&user="+$scope.wizard.zmuser+"&pass="+$scope.wizard.zmpassword;
+                                }
+                                else
+                                {
+                                    tail+=success;
+                                }
+                                ZMDataModel.zmLog ("auth computed is : " + tail);
+                                proceedwithCgiAfterAuth(urls,tail);
+                           },
+                           function (error)
+                           {
+                                ZMDataModel.zmLog ("Should never come here, getAuthKey doesn't return error");
+                            
+                    });
+                           
+                    
+                    //console.log ("****CDING " + tail);
                 }
                 
+                function proceedwithCgiAfterAuth(urls,tail)
+                {
                 
-                $ionicLoading.show({
-                template: $translate.instant('kDiscovering')+"...",
-                noBackdrop: true,
-                duration: zm.httpTimeout
-                });
-                
-                findFirstReachableUrl(urls,tail )
-                .then (function (success) {
-                    $ionicLoading.hide();
-                    ZMDataModel.zmLog ("Valid cgi-bin found with: " + success);
-                    $scope.wizard.streamingURL = success;
-                    $scope.wizard.streamingValidText = "cgi-bin: "+$scope.wizard.streamingURL;
-                    $scope.wizard.streamingColor = "#16a085";
-                    d.resolve(true);
-                    return d.promise;
+                    $ionicLoading.show({
+                    template: $translate.instant('kDiscovering')+"...",
+                    noBackdrop: true,
+                    duration: zm.httpTimeout
+                    });
 
-                },
-                function (error) {
-                    $ionicLoading.hide();
-                    console.log ("No cgi-bin found: " + error);
-                    $scope.wizard.streamingValidText = "cgi-bin detection failed";
-                    $scope.wizard.streamingColor = "#e74c3c";
-                    d.reject (false);
-                    return (d.promise);
-                });
+                    findFirstReachableUrl(urls,tail )
+                    .then (function (success) {
+                        $ionicLoading.hide();
+                        ZMDataModel.zmLog ("Valid cgi-bin found with: " + success);
+                        $scope.wizard.streamingURL = success;
+                        $scope.wizard.streamingValidText = "cgi-bin: "+$scope.wizard.streamingURL;
+                        $scope.wizard.streamingColor = "#16a085";
+                        d.resolve(true);
+                        return d.promise;
+
+                    },
+                    function (error) {
+                        $ionicLoading.hide();
+                        console.log ("No cgi-bin found: " + error);
+                        $scope.wizard.streamingValidText = "cgi-bin detection failed";
+                        $scope.wizard.streamingColor = "#e74c3c";
+                        d.reject (false);
+                        return (d.promise);
+                    });
+                }
             },
             function (error){
                 $ionicLoading.hide();
