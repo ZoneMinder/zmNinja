@@ -49,24 +49,33 @@
     },
     "cordova-plugin-statusbar",
     {
-      "locator": "https://github.com/pliablepixels/cordova-plugin-media",
-      "id": "cordova-plugin-media"
-    },
-    {
       "locator": "https://github.com/Telerik-Verified-Plugins/NativePageTransitions",
       "id": "com.telerik.plugins.nativepagetransitions"
     },
-    "cordova-plugin-email-composer"
+    {
+      "locator": "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git",
+      "id": "cordova-plugin-globalization"
+    },
+    "cordova-plugin-connectsdk",
+    "cordova-plugin-console",
+    {
+      "locator": "https://github.com/jcjee/email-composer",
+      "id": "com.jcjee.plugins.emailcomposer"
+    },
+    {
+      "locator": "https://github.com/pliablepixels/cordova-plugin-media",
+      "id": "org.apache.cordova.media"
+    }
   ],
   "cordovaPlatforms": [
     {},
-    "ios",
     "android",
     {
       "platform": "android",
       "version": "",
       "locator": "android"
     },
+    "ios",
     {
       "platform": "ios",
       "version": "",
