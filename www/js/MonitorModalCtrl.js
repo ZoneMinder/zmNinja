@@ -198,7 +198,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
          
          console.log ("PASSED WITH " + JSON.stringify(mon));
           //ConnectSDK.discoveryManager.startDiscovery();
+         
+         console.log ("Stopping");
+         ConnectSDK.discoveryManager.stopDiscovery();
+         
+         console.log ("Starting");
          ConnectSDK.discoveryManager.startDiscovery();
+         console.log ("picking");
           ConnectSDK.discoveryManager.pickDevice()
           .success(function (device) {
               //device.disconnect();

@@ -35,9 +35,9 @@
                                 
                             <figure style="display:inline-block">
                                 <figcaption class="smallnote">f:{{alarm.fid}} scr:{{alarm.score}} @ {{alarm.time}}</figcaption>       
-                                <img ng-if="event.Event.imageMode=='path'" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.fid, event.Event.Id, event.Event.imageMode, alarm.id)"/>
+                                <img ng-if="event.Event.imageMode=='path'" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.fid, event.Event.Id, event.Event.imageMode, alarm.id)" image-spinner-loader="lines"/>
                                                 
-                                <img ng-if="event.Event.imageMode=='fid'" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&fid={{alarm.id}}"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.fid, event.Event.Id, event.Event.imageMode, alarm.id)"/>
+                                <img ng-if="event.Event.imageMode=='fid'" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&fid={{alarm.id}}"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.fid, event.Event.Id, event.Event.imageMode, alarm.id)" image-spinner-loader="lines"/>
                                                   
 
 
