@@ -4,6 +4,7 @@
 * After you complete the translation file, do the following:
 
 (replace ``-it`` with the language you are working on)
+
 ``
 ./checklang.py -f locale-it.json -b
 ``
