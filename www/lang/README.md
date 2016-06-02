@@ -10,4 +10,4 @@
 
 
 ####Validation
-* After you create your language file, run ./checklang.py inside the lang folder. Its a python script that will ensure that your language keys are complete.
+* After you create your language file, run ``./checklang.py`` inside the lang folder. Its a python script that will ensure that your language keys are complete.
