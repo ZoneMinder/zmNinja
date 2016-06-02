@@ -197,8 +197,12 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         
         ZMDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
         .then (function(data){
-            urls.push (baseUri.trim()+data.trim());
-             ZMDataModel.zmLog ("zmWizard: getPathZMS succeeded, adding "+baseUri+data.trim()+" to things to try");
+            // remove zms or nph-zms
+            var path = data.trim();
+            path = path.replace("/nph-zms","");
+            path = path.replace("/zms","");
+            urls.push (baseUri.trim()+path);
+             ZMDataModel.zmLog ("zmWizard: getPathZMS succeeded, adding "+baseUri+path+" to things to try");
             continueCgi(urls);
         },
         function (error) {
@@ -370,7 +374,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     view: "login"
                 }
             })
-            .then (function (success) {console.log ("ZMlogout success"); d.resolve(true); return d.promise;}, function (error) {console.log ("ZMlogout success");d.resolve(true); return d.promise;});
+            .then (function (success) {$rootScope.zmCookie="";console.log ("ZMlogout success, cookie removed"); d.resolve(true); return d.promise;}, function (error) {console.log ("ZMlogout success");d.resolve(true); return d.promise;});
             
 
         return d.promise;
