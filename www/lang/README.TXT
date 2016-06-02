@@ -7,3 +7,7 @@
 ####Help language file
 * Located inside lang/help
 * Please be careful not to mess up the html tags, please only focus on text translation
+
+
+####Validation
+* After you create your language file, run ./checklang.py inside the lang folder. Its a python script that will ensure that your language keys are complete.
