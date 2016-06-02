@@ -1,13 +1,21 @@
 ####Main Language file
 * Make sure there is no comma after the last element
 * Comments are not allowed
-* Prettify and sort using http://www.uize.com/examples/json-prettifier.html
-    * Preset:Padded and Sorted/Key Padding:on, Key Quoting: always, Key Sorting: On
+* After you complete the translation file, do the following:
+
+(replace ``-it`` with the language you are working on)
+``
+./checklang.py -f locale-it.json -b
+``
+This validates your JSON file and if valid, creates pretty-locale-it.json. If you are sure it looks good,
+``
+./checklang.py -f locale-it.json -b -o
+``
+this validates your JSON file and if valid, OVERWRITES your local file with a pretty formatted version, which is what you should PR
+
 
 ####Help language file
 * Located inside lang/help
 * Please be careful not to mess up the html tags, please only focus on text translation
 
 
-####Validation
-* After you create your language file, run ``./checklang.py`` inside the lang folder. Its a python script that will ensure that your language keys are complete.
