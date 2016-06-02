@@ -7,11 +7,11 @@
 ``
 ./checklang.py -f locale-it.json -b
 ``
-This validates your JSON file and if valid, creates pretty-locale-it.json. If you are sure it looks good,
+This validates your JSON file, makes sure all keys are in sync with -en and if valid, creates pretty-locale-it.json. If you are sure it looks good,
 ``
 ./checklang.py -f locale-it.json -b -o
 ``
-this validates your JSON file and if valid, OVERWRITES your local file with a pretty formatted version, which is what you should PR
+this validates your JSON file,makes sure all keys are in sync with -en  and if valid, OVERWRITES your local file with a pretty formatted version, which is what you should PR
 
 
 ####Help language file
