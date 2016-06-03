@@ -131,7 +131,24 @@ function initPackery()
     }
         
         var elem =  angular.element(document.getElementById("mygrid"));
-        pckry = new Packery('.grid', 
+        
+         //console.log ("**** mygrid is " + JSON.stringify(elem));
+         
+        imagesLoaded(elem).on('progress', function(instance, img) {
+              
+                progressCalled = true;
+                
+               // if (layouttype) $timeout (function(){layout(pckry);},100);
+        });
+        
+        imagesLoaded(elem).on('always', function() {
+                //console.log ("******** ALL IMAGES LOADED");
+                ZMDataModel.zmDebug ("All images loaded");
+                $scope.allImagesLoaded = true;
+            
+                $ionicLoading.hide();
+                
+                pckry = new Packery('.grid', 
                              {
                                 itemSelector: '.grid-item',
                                 percentPosition: true,
@@ -140,24 +157,6 @@ function initPackery()
                                 initLayout:layouttype
                                 
                             });
-         //console.log ("**** mygrid is " + JSON.stringify(elem));
-         
-        imagesLoaded(elem).on('progress', function(instance, img) {
-              
-                progressCalled = true;
-                
-                if (layouttype) $timeout (function(){layout(pckry);},100);
-        });
-        
-        imagesLoaded(elem).on('always', function() {
-                //console.log ("******** ALL IMAGES LOADED");
-                ZMDataModel.zmDebug ("All images loaded");
-                $scope.allImagesLoaded = true;
-            
-                
-                $ionicLoading.hide();
-                
-                
                 if (!progressCalled)    
                 {
                     ZMDataModel.zmLog ("*** BUG PROGRESS WAS NOT CALLED");
@@ -165,44 +164,47 @@ function initPackery()
                     
                 }
             
-                 pckry.getItemElements().forEach(function (itemElem) {
-                      draggie = new Draggabilly(itemElem);
-                      pckry.bindDraggabillyEvents(draggie);
-                      draggies.push(draggie);
-                      draggie.disable();
-                      draggie.unbindHandles();
-                });
-                
-                pckry.on( 'dragItemPositioned', itemDragged );
+                $timeout (function() {
             
-                
-               
-                if (!isEmpty(positions))
-                {
-                    ZMDataModel.zmLog ("Arranging as per packery grid");
-                    
-                    for (var i =0; i< $scope.MontageMonitors.length; i++)
+                     pckry.getItemElements().forEach(function (itemElem) {
+                          draggie = new Draggabilly(itemElem);
+                          pckry.bindDraggabillyEvents(draggie);
+                          draggies.push(draggie);
+                          draggie.disable();
+                          draggie.unbindHandles();
+                    });
+
+                    pckry.on( 'dragItemPositioned', itemDragged );
+
+
+
+                    if (!isEmpty(positions))
                     {
-                        for (var j=0; j < positions.length; j++)
+                        ZMDataModel.zmLog ("Arranging as per packery grid");
+
+                        for (var i =0; i< $scope.MontageMonitors.length; i++)
                         {
-                            if ($scope.MontageMonitors[i].Monitor.Id == positions[j].attr)
+                            for (var j=0; j < positions.length; j++)
                             {
-                                $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
-                                $scope.MontageMonitors[i].Monitor.listDisplay = positions[j].display;
-                                ZMDataModel.zmDebug ("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " +positions[j].size + " and display:" + positions[j].display);
+                                if ($scope.MontageMonitors[i].Monitor.Id == positions[j].attr)
+                                {
+                                    $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
+                                    $scope.MontageMonitors[i].Monitor.listDisplay = positions[j].display;
+                                    ZMDataModel.zmDebug ("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " +positions[j].size + " and display:" + positions[j].display);
+                                }
+                                //console.log ("Index:"+positions[j].attr+ " with size: " + positions[j].size);
                             }
-                            //console.log ("Index:"+positions[j].attr+ " with size: " + positions[j].size);
                         }
+
+
+                        ZMDataModel.zmDebug ("All images loaded, doing image layout");
+                        pckry.initShiftLayout(positions, 'data-item-id'); 
                     }
-                    
-                    
-                    $timeout(function(){ZMDataModel.zmDebug ("All images loaded, doing image layout");pckry.initShiftLayout(positions, 'data-item-id'); },100);
-                }
-                $timeout(function(){ZMDataModel.zmLog ("Force calling resize"); pckry.onresize();},300);// don't ask
-                    
+                    $timeout(function(){ZMDataModel.zmLog ("Force calling resize"); pckry.shiftLayout();},300);// don't ask
+
                    
                    
-                
+                },300);
                
         });
     
@@ -595,6 +597,8 @@ function initPackery()
         ZMDataModel.zmDebug ("setting dragabilly to " + $scope.isDragabillyOn);
         if ($scope.isDragabillyOn)  
         {
+            $scope.showSizeButtons = true;
+            
             $scope.dragBorder="dragborder";
             ZMDataModel.zmDebug ("Enabling drag for " + draggies.length + " items");
             for (i=0; i < draggies.length; i++)
