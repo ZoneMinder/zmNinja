@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI, ConnectSDK,$*/
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK,$*/
 
 
 var appVersion = "0.0.0";
@@ -81,27 +81,26 @@ angular.module('zmApp', [
 
 })
 
-// credit: http://stackoverflow.com/questions/25391279/angularjs-ng-include-failover
-.directive("ngIncludeFailover", function() {
-      return {
-        restrict: 'CAE',
-        scope: {
-          src: '=',
-          myInclude: '='
-        },
-        transclude:true,
-        link: function(scope, iElement, iAttrs, controller) {
-          iAttrs.$observe('src', function (nv) {scope.src=nv; console.log ("CHANGED");});
-          scope.$on("$includeContentError", function(event, args){
-            scope.loadFailed=true;
-           });
-          scope.$on("$includeContentLoaded", function(event, args){
-            scope.loadFailed=false;
-          });
-        },
-        template: "<div ng-include='ngIncludeFailover||src'></div><div ng-show='loadFailed' ng-transclude/>"
-      };
-    })
+
+.directive('dannyPackery', ['$rootScope', function($rootScope) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            console.log('Running dannyPackery linking function!');
+            if($rootScope.packery === undefined || $rootScope.packery === null){
+                console.log('making packery!');
+                $rootScope.packery = new Packery(element[0].parentElement, {columnWidth: '.item'});
+                $rootScope.packery.bindResize();
+                $rootScope.packery.appended(element[0]);
+                $rootScope.packery.items.splice(1,1); // hack to fix a bug where the first element was added twice in two different positions
+            }
+            else{
+                $rootScope.packery.appended(element[0]);
+            }
+            $rootScope.packery.layout();
+        }
+    };
+}])
 
 // credit https://gist.github.com/Zren/beaafd64f395e23f4604
 
@@ -196,46 +195,6 @@ angular.module('zmApp', [
 })
 
 
-.directive('detectGestures', function ($ionicGesture) {
-    return {
-        restrict: 'A',
-
-        link: function (scope, elem, attrs) {
-            var gestureType = attrs.gestureType;
-
-            switch (gestureType) {
-                case 'pinchin':
-                    $ionicGesture.on('pinchin', scope.reportEvent, elem);
-                    break;
-            }
-
-        }
-    };
-})
-
-.directive('tooltip', function () {
-    return {
-        restrict: 'C',
-        link: function (scope, element, attrs) {
-            if (attrs.title) {
-                var $element = $(element);
-                $element.attr("title", attrs.title);
-                $element.tooltipster({
-                    animation: attrs.animation,
-                    trigger: "click",
-                    position: "right",
-                    positionTracker: true,
-                    maxWidth: 500,
-                    contentAsHTML: true
-                });
-            }
-        }
-    };
-})
-
-
-
-
 //------------------------------------------------------------------
 // I use this factory to share data between carousel and lazy load
 // carousel will not progress autoslide till imageLoading is 0 or -1
@@ -254,113 +213,6 @@ angular.module('zmApp', [
     };
 })
 
-//-------------------------------------------------------
-// Ability to share controllers with modals
-// Credit: http://codepen.io/julianpaulozzi/pen/wBgpjM
-//-------------------------------------------------------
-
-.factory('appModalService', ['$ionicModal', '$rootScope', '$q', '$injector', '$controller', function ($ionicModal, $rootScope, $q, $injector, $controller) {
-
-    return {
-        show: show
-    };
-
-    function show(templateUrl, controller, parameters, options) {
-        // Grab the injector and create a new scope
-        var deferred = $q.defer(),
-            ctrlInstance,
-            modalScope = $rootScope.$new(),
-            thisScopeId = modalScope.$id,
-            defaultOptions = {
-                animation: 'slide-in-up',
-                focusFirstInput: false,
-                backdropClickToClose: true,
-                hardwareBackButtonClose: true,
-                modalCallback: null
-            };
-
-        options = angular.extend({}, defaultOptions, options);
-
-        $ionicModal.fromTemplateUrl(templateUrl, {
-            scope: modalScope,
-            animation: options.animation,
-            focusFirstInput: options.focusFirstInput,
-            backdropClickToClose: options.backdropClickToClose,
-            hardwareBackButtonClose: options.hardwareBackButtonClose
-        }).then(function (modal) {
-            modalScope.modal = modal;
-
-            modalScope.openModal = function () {
-                modalScope.modal.show();
-            };
-            modalScope.closeModal = function (result) {
-                deferred.resolve(result);
-                modalScope.modal.hide();
-            };
-            modalScope.$on('modal.hidden', function (thisModal) {
-                if (thisModal.currentScope) {
-                    var modalScopeId = thisModal.currentScope.$id;
-                    if (thisScopeId === modalScopeId) {
-                        deferred.resolve(null);
-                        _cleanup(thisModal.currentScope);
-                    }
-                }
-            });
-
-            // Invoke the controller
-            var locals = {
-                '$scope': modalScope,
-                'parameters': parameters
-            };
-            var ctrlEval = _evalController(controller);
-            ctrlInstance = $controller(controller, locals);
-            if (ctrlEval.isControllerAs) {
-                ctrlInstance.openModal = modalScope.openModal;
-                ctrlInstance.closeModal = modalScope.closeModal;
-            }
-
-            modalScope.modal.show()
-                .then(function () {
-                    modalScope.$broadcast('modal.afterShow', modalScope.modal);
-                });
-
-            if (angular.isFunction(options.modalCallback)) {
-                options.modalCallback(modal);
-            }
-
-        }, function (err) {
-            deferred.reject(err);
-        });
-
-        return deferred.promise;
-    }
-
-    function _cleanup(scope) {
-        scope.$destroy();
-        if (scope.modal) {
-            scope.modal.remove();
-        }
-    }
-
-    function _evalController(ctrlName) {
-        var result = {
-            isControllerAs: false,
-            controllerName: '',
-            propName: ''
-        };
-        var fragments = (ctrlName || '').trim().split(/\s+/);
-        result.isControllerAs = fragments.length === 3 && (fragments[1] || '').toLowerCase() === 'as';
-        if (result.isControllerAs) {
-            result.controllerName = fragments[0];
-            result.propName = fragments[2];
-        } else {
-            result.controllerName = ctrlName;
-        }
-
-        return result;
-    }
-
-}])
 
 //credit: https://github.com/driftyco/ionic/issues/3131
 .factory('SecuredPopups', [
@@ -830,30 +682,7 @@ angular.module('zmApp', [
 
                 });
 
-        /*ZMDataModel.getReachableConfig()
-        .then (function (data)
-               {
-                    ZMDataModel.zmLog ("REACHABILITY SUCCESS " + JSON.stringify(data));
-                    proceedWithLogin()
-                    .then (function(success)
-                           { d.resolve(success); return d.promise;},
-                           function(error)
-                           {  d.reject(error); return d.promise;});
-                   
-               },
-               function (error)
-               {
-                    ZMDataModel.zmLog ("REACHABILITY ERROR " + JSON.stringify(error));
-                    ZMDataModel.zmLog ("Still trying to proceed with " + ZMDataModel.getLogin().serverName);
-                    
-                    proceedWithLogin()
-                    .then (function(success)
-                           { d.resolve(success); return d.promise;},
-                           function(error)
-                           {  d.reject(error); return d.promise;});
-                   
-                    
-               });*/
+        
         return d.promise;
 
 
@@ -1108,14 +937,7 @@ angular.module('zmApp', [
             });
         }, false);
 
-        /*window.addEventListener('wheel', function () {
-            var scrollView = angular.element(document.body).injector().get('$ionicScrollDelegate').getScrollView();
-            if (scrollView) {
-                console.log (JSON.stringify(scrollView));
-                scrollView.options.wheelDampen = 1;
-                console.log ("HERE");
-            }
-        });*/
+      
 
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
@@ -1205,135 +1027,108 @@ angular.module('zmApp', [
         //---------------------------------------------------------------------
 
         $ionicPlatform.ready(function () {
-
-
             
-            
-            $ionicNativeTransitions.enable(true, false);
-       
-            var lang = ZMDataModel.getDefaultLanguage();
-            if (lang == undefined)
-            {
-                ZMDataModel.zmLog ("No language set, switching to en");
-                ZMDataModel.setDefaultLanguage("en", false);
-                /*
-                if(typeof navigator.globalization !== "undefined") {
-                    navigator.globalization.getPreferredLanguage(function(language) {
-                       // dont make this permanent
-                        ZMDataModel.setDefaultLanguage((language.value).split("-")[0], false);
-
-                    }, null);
-                }*/
-            }
-            else
-            {
-                ZMDataModel.zmLog ("Language stored as:"+lang);
-                ZMDataModel.setDefaultLanguage(lang, false);
-            }
-            
-            ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
-            moment.locale($translate.proposedLanguage());
-           
-
-            if (window.cordova) {
-                $cordovaSplashscreen.hide();
-            }
-
-
-            $rootScope.platformOS = "desktop";
-
-
-
-
-            ZMDataModel.zmLog("Device is ready");
-            var ld = ZMDataModel.getLogin();
-
-            if ($ionicPlatform.is('ios'))
-                $rootScope.platformOS = "ios";
-
-
-            if ($ionicPlatform.is('android'))
-                $rootScope.platformOS = "android";
-
-            ZMDataModel.zmLog("You are running on " + $rootScope.platformOS);
-            
-            
-           
-
-            ZMDataModel.init();
-            EventServer.init();
-            //if ($rootScope.platformOS == "desktop")
-            zmCheckUpdates.start();
+            var pixelRatio = window.devicePixelRatio || 1;
+            $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
+            $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
             // for making sure we canuse $state.go with ng-click
             // needed for views that use popovers
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
 
-            // var loginData = ZMDataModel.getLogin();
-
-
-
-            $fileLogger.checkFile().then(function (resp) {
-                if (parseInt(resp.size) > zm.logFileMaxSize) {
-
-                    $fileLogger.deleteLogfile().then(function () {
-                        ZMDataModel.zmLog('Logfile deleted');
-
-                    });
-                } else {
-                    //console.log("Log file size is " + resp.size + " bytes");
-                }
-
-
-            });
-
-
-
-            //fileLogger is an excellent cross platform library
-            // that allows you to manage log files without worrying about
-            // paths etc.https://github.com/pbakondy/filelogger
-            $fileLogger.setStorageFilename(zm.logFile);
-            // easier tz reading
-            // $fileLogger.setTimestampFormat('medium');
-            $fileLogger.setTimestampFormat('MMM d, y ' + ZMDataModel.getTimeFormat());
-
-            ZMDataModel.zmLog("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
+            
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.disableScroll(true);
+            }
+            if (window.StatusBar) {
+                // org.apache.cordova.statusbar required
+                StatusBar.styleDefault();
+            }
+            
 
             if (window.cordova) {
-                // getAppVersion is a handy library
-                // that lets you extract the app version in config.xml
-                // given that you are always changing versions while
-                // uploading to app/play stores, this is very useful
-                // to keep in sync and use within your app
-
+                $cordovaSplashscreen.hide();
+                 
                 cordova.getAppVersion(function (version) {
                     appVersion = version;
                     ZMDataModel.zmLog("App Version: " + appVersion);
                     ZMDataModel.setAppVersion(appVersion);
                 });
-
             }
 
+            $fileLogger.checkFile().then(function (resp) {
+                if (parseInt(resp.size) > zm.logFileMaxSize) {
+
+                    $fileLogger.deleteLogfile().then(function () {
+                        ZMDataModel.zmLog("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
+
+                    });
+                } 
+            });
+
+            $fileLogger.setStorageFilename(zm.logFile);
+            $fileLogger.setTimestampFormat('MMM d, y ' + ZMDataModel.getTimeFormat());
+
+            
+            
+            $rootScope.platformOS = "desktop";
+            ZMDataModel.zmLog("Device is ready");
+            var ld = ZMDataModel.getLogin();
+            if ($ionicPlatform.is('ios'))
+                $rootScope.platformOS = "ios";
+            if ($ionicPlatform.is('android'))
+                $rootScope.platformOS = "android";
+
+            ZMDataModel.zmLog("You are running on " + $rootScope.platformOS);
+            
+            $ionicNativeTransitions.enable(true, false);
+            
+            
+            var lang = ZMDataModel.getDefaultLanguage();
+            
+            
+            if (lang == undefined)
+            {
+                ZMDataModel.zmLog ("No language set, switching to en");
+                lang = "en";
+              
+               
+            }
+            else
+            {
+                ZMDataModel.zmLog ("Language stored as:"+lang);
+               
+            }
+            
+            // This always returns success - I'm not rejecting
+             ZMDataModel.setDefaultLanguage(lang, false)
+             .then (function(success) {
+                 ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
+                 moment.locale($translate.proposedLanguage());
+                 continueRestOfInit();
+                 
+             });
+            
+            
+           
+           
+            function continueRestOfInit()
+            {
+                ZMDataModel.zmLog("Language file loaded, continuing with rest");
+                ZMDataModel.init();
+                EventServer.init();
+                zmCheckUpdates.start();
+                ZMDataModel.zmLog("Setting up POST LOGIN timer");
+                zmAutoLogin.start();
+            }
+
+          
 
 
-            /*if(window.navigator && window.navigator.splashscreen) {
-                window.navigator.splashscreen.hide();
-                console.log ("Unlocking portrait mode after splash");
-                window.plugins.orientationLock.unlock();
-            }*/
 
-            var pixelRatio = window.devicePixelRatio || 1;
-            $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
-            $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
-
-            //console.log("********Computed Dev Width & Height as" + $rootScope.devWidth + "*" +
-            // $rootScope.devHeight);
-
-            // What I noticed is when I moved the app to the device
-            // the montage screens were not redrawn after resuming from background mode
-            // Everything was fine if I switched back to the montage screen
-            // so as a global hack I'm just reloading the current state if you switch
-            // from foreground to background and back
+         //---------------------------------------------------------------------------
+        // resume handler
+        //----------------------------------------------------------------------------
             document.addEventListener("resume", function () {
                 ZMDataModel.zmLog("App is resuming from background");
                 var forceDelay = ZMDataModel.getLogin().resumeDelay;
@@ -1373,13 +1168,12 @@ angular.module('zmApp', [
                     }
                 }, forceDelay);
 
-
-                //$ionicSideMenuDelegate.toggleLeft(false);
-                //ZMDataModel.validatePin()
-
             }, false);
 
 
+        //---------------------------------------------------------------------------
+        // background handler
+        //----------------------------------------------------------------------------
             document.addEventListener("pause", function () {
                 ZMDataModel.setBackground(true);
                 ZMDataModel.setJustResumed(true); // used for window stop
@@ -1407,36 +1201,12 @@ angular.module('zmApp', [
                 if ($rootScope.zmPopup)
                     $rootScope.zmPopup.close();
 
-
-
-
-                //$ionicPopup.close();
-
-
-                /* if ($rootScope.platformOS == 'android')
-                 {
-                     ZMDataModel.zmLog("Android detected - calling stop");
-                     window.stop();
-                     //ionic.Platform.exitApp();
-                 }*/
             }, false);
 
 
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                //cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-                // solves screen bouncing on form input
-                // since I am using JS Scroll
-                cordova.plugins.Keyboard.disableScroll(true);
-            }
-            if (window.StatusBar) {
-                // org.apache.cordova.statusbar required
-                StatusBar.styleDefault();
-            }
+         
 
-            // lets POST so we get a session ID right hre
-
-            ZMDataModel.zmLog("Setting up POST LOGIN timer");
-            zmAutoLogin.start();
+           
 
 
         }); //platformReady

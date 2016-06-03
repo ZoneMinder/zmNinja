@@ -509,7 +509,8 @@ angular.module('zmApp.controllers')
                 if (typeof timelineModalGraphType == 'undefined')
                 {
                     zmDebug ("timeline graph type not set. Setting to all");
-                    loginData.timelineModalGraphType = $translate.instant('kAll');
+                    loginData.timelineModalGraphType = $translate.instant('kGraphAll');
+                    console.log (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+loginData.timelineModalGraphType);
                 }
                 
                 if (typeof loginData.resumeDelay == 'undefined')
@@ -592,18 +593,24 @@ angular.module('zmApp.controllers')
         
         setDefaultLanguage: function(l, permanent) {
            
+            var d = $q.defer();
             if (permanent) 
                 window.localStorage.setItem("defaultLang", l);
             
             $translate.use(l).then(function(data) {
                         zmLog("Device Language is:" + data);
                         moment.locale(data);
-                         $translate.fallbackLanguage('en');
+                        $translate.fallbackLanguage('en');
+                         d.resolve(data);
+                         return d.promise;
                     }, function(error) {
                         zmLog("Device Language error: " + error);
                         $translate.use('en');
                         moment.locale('en');
+                        d.resolve('en');
+                        return d.promise;
                     });
+            return d.promise;
         },
         
         getDefaultLanguage: function() {

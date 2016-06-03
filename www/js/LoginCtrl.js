@@ -61,7 +61,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         var sheet = $ionicActionSheet.show({
             buttons: ab,
             titleText: $translate.instant('kSelectFallback'),
-            cancelText: $translate.instant('kCancel'),
+            cancelText: $translate.instant('kButtonCancel'),
             cancel: function() {},
             buttonClicked: function (index)
             {
@@ -88,7 +88,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             buttons: serverbuttons,
             destructiveText: $translate.instant('kDelete'),
             titleText: $translate.instant('kManageServerGroups'),
-            cancelText: $translate.instant('kCancel'),
+            cancelText: $translate.instant('kButtonCancel'),
             cancel: function () {
                 // add cancel code..
             },
