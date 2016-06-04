@@ -2752,7 +2752,8 @@ Packery.prototype.getShiftPositions = function( attrName ) {
       attr: item.element.getAttribute( attrName ),
       size: item.element.getAttribute ("data-item-size"),
       display: item.element.getAttribute ("data-item-listdisplay"),
-      x: item.rect.x / _this.packer.width
+      x: item.rect.x / _this.packer.width,
+      y: item.rect.y / _this.packer.height
     }
   });
 };
@@ -2782,6 +2783,7 @@ Packery.prototype.initShiftLayout = function( positions, attr ) {
     var itemElem = this.element.querySelector( selector );
     var item = this.getItem( itemElem );
     item.rect.x = itemPosition.x * this.packer.width;
+    item.rect.y = itemPosition.y * this.packer.height;
     return item;
   }, this );
   this.shiftLayout();
