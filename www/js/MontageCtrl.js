@@ -198,7 +198,7 @@ function initPackery()
 
 
                         ZMDataModel.zmDebug ("All images loaded, doing image layout");
-                        pckry.initShiftLayout(positions, 'data-item-id'); 
+                        $timeout (function() {pckry.initShiftLayout(positions, 'data-item-id');},0); 
                     }
                     $timeout(function(){ZMDataModel.zmLog ("Force calling resize"); pckry.shiftLayout();},300);// don't ask
 
@@ -1023,6 +1023,8 @@ $scope.$on('$ionicView.afterEnter', function () {
         $scope.sliderChanging = true;
         
           var somethingReset = false;
+        
+          // this only changes items that are selected
           for (var i=0; i< $scope.MontageMonitors.length; i++)
           {
 
@@ -1050,6 +1052,8 @@ $scope.$on('$ionicView.afterEnter', function () {
               }
         
           }
+        
+          // this changes all items if none were selected
           if (!somethingReset && $scope.isDragabillyOn) // nothing was selected
             {
                 for (i=0; i< $scope.MontageMonitors.length; i++)
@@ -1063,23 +1067,36 @@ $scope.$on('$ionicView.afterEnter', function () {
             }
         
         
-         $timeout(function () {
-             
+              //pckry.reloadItems();
+                
                pckry.once( 'layoutComplete', function() {
-                    var positions = pckry.getShiftPositions('data-item-id');
-                    console.log ("POSITIONS MAP " + JSON.stringify(positions));
-                    var ld = ZMDataModel.getLogin();
-                    ld.packeryPositions = JSON.stringify(positions);
-                    ZMDataModel.setLogin(ld);
-                   $ionicLoading.hide();
-                   $scope.sliderChanging = false;
+                   $timeout(function () {
+                        var positions = pckry.getShiftPositions('data-item-id');
+                        console.log ("POSITIONS MAP " + JSON.stringify(positions));
+                        var ld = ZMDataModel.getLogin();
+                        ld.packeryPositions = JSON.stringify(positions);
+                        ZMDataModel.setLogin(ld);
+                       $ionicLoading.hide();
+                       $scope.sliderChanging = false;
+                    },100);
                 });
+        
+                
+        
                 if (!somethingReset) 
-                    pckry.layout();
+                {
+                    console.log (">>>SOMETHING NOT RESET");
+                    $timeout(function() {pckry.layout();},300);
+                }
                 else
-                    layout(pckry);
-        },100);
+                {
+                    
+                    console.log (">>>SOMETHING  RESET");
+                    $timeout(function() {layout(pckry);},300);
+                }
+       
       
+        
         
     };
     
