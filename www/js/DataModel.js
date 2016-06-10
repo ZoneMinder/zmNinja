@@ -28,7 +28,7 @@ angular.module('zmApp.controllers')
      
     var languages = [
         {text:'English', value:'en'},
-        {text:'Italian', value:'it'},
+        {text:'Italian', value:'it'}
         ];
      
      var serverGroupList={};
@@ -592,6 +592,7 @@ angular.module('zmApp.controllers')
         
         setDefaultLanguage: function(l, permanent) {
            
+            if (!l) l='en';
             var d = $q.defer();
             if (permanent) 
                 window.localStorage.setItem("defaultLang", l);

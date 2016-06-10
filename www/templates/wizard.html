@@ -18,7 +18,7 @@
 
             <h4>{{'kWizPortalUrl' | translate}}</h4>
             <label class="item item-input">
-                <input autocapitalize="none" autocomplete="off" type="text" placeholder="typically http://server/zm" ng-model="wizard.portalurl">
+                <input autocapitalize="none" autocomplete="off" type="text" placeholder="e.g. http://server/zm" ng-model="wizard.portalurl">
             </label>
 
             <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="toggleTip()">{{wizard.tiptext}}</a>
@@ -49,11 +49,11 @@
             <div ng-if="wizard.usezmauth">
                 <label class="item item-input item-floating-label" >
                     <span class="input-label">{{'kUserName' | translate}}</span>
-                    <input autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.zmuser" placeholder="zm auth username" >
+                    <input autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.zmuser" placeholder="{{'kPlaceHolderZMAuthUser'|translate}}" >
                 </label>
                 <label class="item item-text-wrap item-input item-floating-label" >
                     <span class="input-label">{{'kPassword' | translate}}</span>
-                    <input type="password" ng-model="wizard.zmpassword" placeholder="zm auth password" >
+                    <input type="password" ng-model="wizard.zmpassword" placeholder="{{'kPlaceHolderZMAuthPass'|translate}}" >
                     <!--<p >{{'kWizPasswdNote' | translate}}</p>-->
                 </label>
             </div>
@@ -61,11 +61,11 @@
             <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" ng-checked="wizard.usebasicauth" toggle-class="toggle-calm">{{'kWizBasicAuth' | translate}}</ion-toggle>
             <label class="item item-input item-floating-label" ng-show="wizard.usebasicauth">
                 <span class="input-label">{{'kUserName' | translate}}</span>
-                <input autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.basicuser" placeholder="basic auth username" >
+                <input autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.basicuser" placeholder="{{'kPlaceHolderBasicAuthUser'|translate}}" >
             </label>
             <label class="item item-input item-text-wrap item-floating-label" ng-show="wizard.usebasicauth">
                 <span class="input-label">{{'kPassword' | translate}}</span>
-                <input type="password" ng-model="wizard.basicpassword" placeholder="basic auth password" >
+                <input type="password" ng-model="wizard.basicpassword" placeholder="{{'kPlaceHolderBasicAuthPass'|translate}}" >
                 <p>{{'kWizPasswdNote' | translate}}</p>
             </label>
 
