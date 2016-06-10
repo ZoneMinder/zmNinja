@@ -29,7 +29,6 @@ angular.module('zmApp.controllers')
     var languages = [
         {text:'English', value:'en'},
         {text:'Italian', value:'it'},
-        {text: 'German', value: 'de'},
         ];
      
      var serverGroupList={};
