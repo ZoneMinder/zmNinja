@@ -1280,7 +1280,7 @@ angular.module('zmApp', [
     //$translateProvider.determinePreferredLanguage();
     //$translateProvider.preferredLanguage("en");
     $translateProvider.fallbackLanguage("en");
-    $translateProvider.useSanitizeValueStrategy('sanitize');
+    $translateProvider.useSanitizeValueStrategy('escape');
 
     $stateProvider
         .state('app', {

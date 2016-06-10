@@ -36,7 +36,7 @@ def beautify(fi,ki):
     pretty.append(line)
   pFh=open  (prefix+fi,"w")
   pFh.write("{\n")
-  pFh.write(',\n'.join(pretty))
+  pFh.write(',\n'.join(pretty).encode('utf-8'))
   pFh.write("\n}\n")
   pFh.close()
 
