@@ -45,13 +45,13 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 if (data.indexOf(zm.loginScreenString) == -1) {
                     
                     $scope.wizard.loginURL = $scope.wizard.fqportal;
-                    $scope.wizard.portalValidText = "Portal: "+$scope.wizard.loginURL;
+                    $scope.wizard.portalValidText = $translate.instant('kPortal')+": "+$scope.wizard.loginURL;
                     $scope.wizard.portalColor = "#16a085";
                     d.resolve(true);
                     return d.promise;
                 } else {
                     console.log("************ERROR");
-                    $scope.wizard.portalValidText = "Portal: detection failed";
+                    $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
                     $scope.wizard.portalColor = "#e74c3c";
                     d.reject(false);
                     return d.promise;
@@ -59,7 +59,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             })
             .error (function (error) {
             console.log("************ERROR");
-                    $scope.wizard.portalValidText = "Portal: detection failed";
+                    $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
                     $scope.wizard.portalColor = "#e74c3c";
                     d.reject(false);
                     return d.promise;
@@ -274,7 +274,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     function (error) {
                         $ionicLoading.hide();
                         console.log ("No cgi-bin found: " + error);
-                        $scope.wizard.streamingValidText = "cgi-bin detection failed";
+                        $scope.wizard.streamingValidText = $translate.instant('kPortalCgiBinFailed');
                         $scope.wizard.streamingColor = "#e74c3c";
                         d.reject (false);
                         return (d.promise);
@@ -283,7 +283,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             },
             function (error){
                 $ionicLoading.hide();
-                $scope.wizard.streamingValidText = "cgi-bin detection failed. No configured/enabled monitor found.";
+                $scope.wizard.streamingValidText = $translate.instant('kPortalCgiBinFailed')+" -"+$translate.instant('kPortalNoMonitorFound');
                     $scope.wizard.streamingColor = "#e74c3c";
                     d.reject (false);
                     return (d.promise);
@@ -336,7 +336,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         },
         function (error) {
             console.log ("No APIs found: " + error);
-            $scope.wizard.apiValidText = "API detection failed";
+            $scope.wizard.apiValidText = $translate.instant('kPortalAPIFailed');
             $scope.wizard.apiColor = "#e74c3c";
             d.reject (false);
             return (d.promise);
@@ -518,7 +518,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                         function (error) {
                             $ionicLoading.hide();
                             ZMDataModel.zmLog("zmWizard: login failed");
-                            $scope.wizard.portalValidText = "Portal login was unsuccessful. Please go back and review your settings";
+                            $scope.wizard.portalValidText = $translate.instant('kPortalLoginUnsuccessful');
                             $scope.wizard.portalColor = "#e74c3c";
                             return d.resolve(true);
 
@@ -606,10 +606,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
         if (!$scope.wizard.portalurl) {
             $rootScope.zmPopup = SecuredPopups.show('show', {
-                title: 'Whoops!',
-                template: 'Portal url cannot be empty',
+                title: $translate.instant('kError'),
+                template: $translate.instant ('kPortalEmpty'),
                 buttons: [{
-                    text: 'Ok'
+                    text: $translate.instant ('kButtonOk')
                 }]
 
             });
@@ -624,11 +624,11 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             
             
             $rootScope.zmPopup = $ionicPopup.show({
-                title: 'No protocol specified',
+                title: $translate.instant('kPortalNoProto'),
                 scope: $scope,
-                template: 'Please select: <ion-radio-fix ng-repeat="item in portalproto" ng-value="item.value" ng-model="myproto.proto">{{item.text}}</ion-radio-fix>',
+                template: $translate.instant('kPortalPleaseSelect')+': <ion-radio-fix ng-repeat="item in portalproto" ng-value="item.value" ng-model="myproto.proto">{{item.text}}</ion-radio-fix>',
                 buttons: [{
-                    text: 'Ok',
+                    text: $translate.instant ('kButtonOk'),
                     onTap: function(e)
                     {
                         ZMDataModel.zmDebug ("Protocol selected:" + $scope.myproto.proto);
@@ -649,10 +649,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
         if (!c.scheme) {
             $rootScope.zmPopup = SecuredPopups.show('show', {
-                title: 'Whoops!',
-                template: 'URL seems invalid (no protocol detected)',
+                title: $translate.instant('kError'),
+                template: $translate.instant('kPortalInvalidUrl'),
                 buttons: [{
-                    text: 'Ok'
+                    text: $translate.instant ('kButtonOk')
                 }]
 
             });
@@ -695,9 +695,9 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     $scope.toggleTip = function () {
         $scope.wizard.tipshow = !$scope.wizard.tipshow;
         if ($scope.wizard.tipshow)
-            $scope.wizard.tiptext = "hide tip";
+            $scope.wizard.tiptext = $translate.instant('kHideTip');
         else
-            $scope.wizard.tiptext = "show tip";
+            $scope.wizard.tiptext = $translate.instant('kShowTip');
     };
 
     $scope.gotoLoginState = function()
@@ -718,7 +718,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var monId = -1;
         $scope.wizard = {
             tipshow: false,
-            tiptext: "show tip",
+            tiptext: $translate.instant('kShowTip'),
             useauth: false,
             usebasicauth: false,
             usezmauth: false,
