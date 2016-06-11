@@ -1,5 +1,7 @@
 ##SSL Configuration notes
 
+###Deprecated: Newer versions of zmNinja automatically handle unsigned certs. Please ignore the rest of this document
+
 If your Zoneminder instance has SSL configured and you need zmNinja to connect to ZM over SSL you need to:
 
 1) Make sure you generate the certificates correctly
