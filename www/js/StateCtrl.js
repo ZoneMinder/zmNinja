@@ -307,7 +307,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             ZMDataModel.zmDebug("StateCtrl/controlZM: operation in progress");
             $ionicPopup.alert({
                 title: $translate.instant('kOperationInProgressTitle'),
-                template: $translate.instant('kOperationInProgressBody')
+                template: $translate.instant('kOperationInProgressBody')+'...'
             });
             return;
         }
