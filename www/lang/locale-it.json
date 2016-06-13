@@ -70,7 +70,7 @@
     "kMinAlarmCount"             :"Conteggio minimo allarmi",
     "kCancellingAlarm"           :"Elimino allarme",
     "kBodyPortalNotConfigured"   :"Inserisci i dati corretti(URL e password),e salva i dati, prima di provare a rilevare automaticamente la CGI-PATH",
-    "kTimelineOnlyDisplaying1"   :"Visualizzo solo gli ultimi{{maxItemsVal}} eventi",
+    "kTimelineOnlyDisplaying1"   :"Visualizzo solo gli ultimi {{maxItemsVal}} eventi",
     "kPlaceHolderZMAuthUser"     :"zm auth user name",
     "kFastRewind"                :"Indietro veloce",
     "kPleaseConfirm"             :"Conferma",
