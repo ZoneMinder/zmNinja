@@ -27,7 +27,7 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
 	echo "Building Release mode for Xwalk android..."
 	echo "--------------------------------------------"
 	echo "Adding crosswalk..."
-	ionic browser add crosswalk
+  ionic plugin add cordova-plugin-crosswalk-webview
 	cp "$NINJAKEYSTORE" platforms/android
 	ionic build android --release
 
@@ -56,9 +56,9 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
 	echo "--------------------------------------------"
 	rm -fr platforms/android/build/outputs/*
 	echo "Adding default browser..."
-	ionic browser revert android
+  ionic plugin remove cordova-plugin-crosswalk-webview
 	cp "$NINJAKEYSTORE" platforms/android
-	ionic build android --release -- --minSdkVersion 21
+	ionic build android --release -- --minSdkVersion=21
 
 	cp platforms/android/build/outputs/apk/android-release-unsigned.apk release_files/
 	echo "Copied files to release_files"
