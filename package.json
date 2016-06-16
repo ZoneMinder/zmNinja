@@ -56,7 +56,6 @@
       "locator": "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git",
       "id": "cordova-plugin-globalization"
     },
-    "cordova-plugin-connectsdk",
     "cordova-plugin-console",
     {
       "locator": "https://github.com/jcjee/email-composer",
@@ -65,7 +64,12 @@
     {
       "locator": "https://github.com/pliablepixels/cordova-plugin-media",
       "id": "org.apache.cordova.media"
-    }
+    },
+    {
+      "locator": "https://github.com/danjarvis/cordova-plugin-crosswalk-certificate",
+      "id": "cordova-plugin-crosswalk-certificate"
+    },
+    "cordova-plugin-crosswalk-webview"
   ],
   "cordovaPlatforms": [
     {},
@@ -75,6 +79,11 @@
       "platform": "ios",
       "version": "",
       "locator": "ios"
+    },
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
     }
   ]
 }
