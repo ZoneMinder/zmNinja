@@ -31,8 +31,8 @@ def beautify(fi,ki):
   print "Beautifying %s, writing to %s" % (fi,prefix+fi)
   w = len (max(ki, key=len))
   pretty=[]
-  for k,v in ki.iteritems():
-    line = "    \"%s\"%s:\"%s\"" %(k,' '*(w-len(k)+1),v)
+  for k in sorted(ki):
+    line = "    \"%s\"%s:\"%s\"" %(k,' '*(w-len(k)+1),ki[k])
     pretty.append(line)
   pFh=open  (prefix+fi,"w")
   pFh.write("{\n")
@@ -57,7 +57,7 @@ def compare (fname):
   if len(diffOrig)==0 and len (diffNew)==0:
     status = "GOOD"
     globGood+=1
-    if globBeautify and globFile == fname:
+    if globBeautify and globFile == fname or globFile == "":
       beaut="YES"
   else:
     status = "ERROR"
