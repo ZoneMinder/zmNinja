@@ -1048,6 +1048,9 @@ angular.module('zmApp', [
 
             if (window.cordova) {
                 $cordovaSplashscreen.hide();
+                
+                ZMDataModel.zmLog ("Enabling insecure SSL");
+                cordova.plugins.certificates.trustUnsecureCerts(true);
                  
                 cordova.getAppVersion(function (version) {
                     appVersion = version;
