@@ -84,7 +84,8 @@ angular.module('zmApp.controllers')
          'packerySizes':'',
          'timelineModalGraphType':'all',
          'resumeDelay':300,
-         'language':'en'
+         'language':'en',
+         'reachability':true,
          
          
         
@@ -338,14 +339,25 @@ angular.module('zmApp.controllers')
                 {
                      $ionicLoading.show({template: $translate.instant('kTrying') + ' '  +urls[0].server});
                     zmLog ("Reachability test.." + urls[0].url);
-                    return $http.get(urls[0].url).then(function () {
-                        zmLog ("Success: reachability on "+ urls[0].url);
-                        $ionicLoading.hide();
+                    
+                    if (loginData.reachability)
+                    {
+                    
+                       //console.log ("************* AUGH");
+                        return $http.get(urls[0].url).then(function () {
+                            zmLog ("Success: reachability on "+ urls[0].url);
+                            $ionicLoading.hide();
+                            return urls[0];
+                        }, function(err) {
+                            zmLog ("Failed reachability on "+ urls[0].url+ " with error " + JSON.stringify(err));
+                            return findFirstReachableUrl(urls.slice(1));
+                        });
+                    }
+                    else
+                    {
+                        zmLog ("Reachability is disabled in config, faking this test and returning success on " + urls[0]);
                         return urls[0];
-                    }, function(err) {
-                        zmLog ("Failed reachability on "+ urls[0].url+ " with error " + JSON.stringify(err));
-                        return findFirstReachableUrl(urls.slice(1));
-                    });
+                    }
                 }
                 else
                 {
@@ -437,6 +449,14 @@ angular.module('zmApp.controllers')
                     zmDebug ("useNphZmsForEvents does not exist. Setting to true");
                     loginData.useNphZmsForEvents  = true;
                 }
+                
+                if (typeof loginData.reachability == 'undefined')
+                {
+                    zmDebug ("reachability does not exist. Setting to true");
+                    loginData.reachability  = true;
+                }
+                // force it - this may not be the problem
+                loginData.reachability  = true;
                 
                   // and now, force enable it
                 loginData.useNphZms = true;
