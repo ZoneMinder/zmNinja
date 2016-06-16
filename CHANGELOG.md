@@ -1,7 +1,39 @@
 # Change Log
 
-## [1.1.9](https://github.com/pliablepixels/zmNinja/tree/1.1.9) (2016-05-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.7...1.1.9)
+## [1.1.93](https://github.com/pliablepixels/zmNinja/tree/1.1.93) (2016-06-16)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.92...1.1.93)
+
+**Implemented enhancements:**
+
+- Implement language translations [\#261](https://github.com/pliablepixels/zmNinja/issues/261)
+- Italian Language [\#260](https://github.com/pliablepixels/zmNinja/issues/260)
+- Improve desktop mouse-wheel scrolling in the event view [\#258](https://github.com/pliablepixels/zmNinja/issues/258)
+
+**Fixed bugs:**
+
+- Allow special characters in password to work in wizard  [\#264](https://github.com/pliablepixels/zmNinja/issues/264)
+- if you open a footage modal and exit before 5 seconds, the app keeps checking for event status  [\#257](https://github.com/pliablepixels/zmNinja/issues/257)
+- Montage and Live View no longer working [\#256](https://github.com/pliablepixels/zmNinja/issues/256)
+- 1.1.9 for Android broke pinch and zoom [\#255](https://github.com/pliablepixels/zmNinja/issues/255)
+
+**Closed issues:**
+
+- Fix android permissions [\#268](https://github.com/pliablepixels/zmNinja/issues/268)
+- Validate language coverage [\#267](https://github.com/pliablepixels/zmNinja/issues/267)
+- Update project to work with ionic@2 tools [\#259](https://github.com/pliablepixels/zmNinja/issues/259)
+- switch to non parsed zms for montage - see if it helps packery [\#254](https://github.com/pliablepixels/zmNinja/issues/254)
+
+**Merged pull requests:**
+
+- IT Translations correction \#270 [\#272](https://github.com/pliablepixels/zmNinja/pull/272) ([mcbittech](https://github.com/mcbittech))
+- More Translations \#267 [\#269](https://github.com/pliablepixels/zmNinja/pull/269) ([mcbittech](https://github.com/mcbittech))
+- Italian Translations first commit [\#266](https://github.com/pliablepixels/zmNinja/pull/266) ([mcbittech](https://github.com/mcbittech))
+
+## [v1.1.92](https://github.com/pliablepixels/zmNinja/tree/v1.1.92) (2016-05-21)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.9...v1.1.92)
+
+## [v1.1.9](https://github.com/pliablepixels/zmNinja/tree/v1.1.9) (2016-05-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.7...v1.1.9)
 
 **Implemented enhancements:**
 
