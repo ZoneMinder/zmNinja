@@ -28,7 +28,15 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
 	echo "--------------------------------------------"
 	echo "Adding crosswalk..."
   ionic plugin add cordova-plugin-crosswalk-webview
+
+
+  echo "Adding crosswalk cert plugin..."
+  cordova plugin remove cordova-plugin-certificates
+  cordova plugin add https://github.com/danjarvis/cordova-plugin-crosswalk-certificate
+  ionic platform remove android
+  ionic platform add android
 	cp "$NINJAKEYSTORE" platforms/android
+
 	ionic build android --release
 
 	cp platforms/android/build/outputs/apk/android-x86-release-unsigned.apk release_files/
@@ -57,7 +65,13 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
 	rm -fr platforms/android/build/outputs/*
 	echo "Adding default browser..."
   ionic plugin remove cordova-plugin-crosswalk-webview
+
+  cordova plugin remove cordova-plugin-crosswalk-certificate
+  cordova plugin add https://github.com/hypery2k/cordova-certificate-plugin
+  ionic platform remove android
+  ionic platform add android
 	cp "$NINJAKEYSTORE" platforms/android
+
 	ionic build android --release -- --minSdkVersion=21
 
 	cp platforms/android/build/outputs/apk/android-release-unsigned.apk release_files/
