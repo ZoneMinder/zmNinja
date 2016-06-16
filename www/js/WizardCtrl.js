@@ -121,6 +121,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     
     //--------------------------------------------------------------------------
     // Utility function - iterates through a list of URLs 
+    // Don't put loginData.reachability here --> we are using this to iterate
+    // through multiple options - not the same as fallback
     //--------------------------------------------------------------------------
    
     function findFirstReachableUrl(urls, tail)
