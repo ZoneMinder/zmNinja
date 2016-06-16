@@ -11,6 +11,7 @@
 
 **Fixed bugs:**
 
+- Some Android phones seem to have SSL issues with self-signed certs [\#273](https://github.com/pliablepixels/zmNinja/issues/273)
 - Allow special characters in password to work in wizard  [\#264](https://github.com/pliablepixels/zmNinja/issues/264)
 - if you open a footage modal and exit before 5 seconds, the app keeps checking for event status  [\#257](https://github.com/pliablepixels/zmNinja/issues/257)
 - Montage and Live View no longer working [\#256](https://github.com/pliablepixels/zmNinja/issues/256)
@@ -219,12 +220,7 @@
 - Allow event server to work without SSL - requires zmeventserver upgrade  [\#159](https://github.com/pliablepixels/zmNinja/issues/159)
 - Introduce a montage timeline function  [\#154](https://github.com/pliablepixels/zmNinja/issues/154)
 - Addition Next frame/prev frame buttons when viewing event - for fine grained snapshot control. [\#150](https://github.com/pliablepixels/zmNinja/issues/150)
-- Add ability to save a snapshot of an event playback to disk [\#148](https://github.com/pliablepixels/zmNinja/issues/148)
 - Notification icon and sound - add ability to play default sounds [\#135](https://github.com/pliablepixels/zmNinja/issues/135)
-
-**Fixed bugs:**
-
-- 1.0.4 Broke basic auth  [\#147](https://github.com/pliablepixels/zmNinja/issues/147)
 
 **Closed issues:**
 
@@ -234,37 +230,34 @@
 - xcode fails on linking [\#153](https://github.com/pliablepixels/zmNinja/issues/153)
 - installing ios-deploy ends with an error [\#152](https://github.com/pliablepixels/zmNinja/issues/152)
 - Progress bar is ignored in Event View when playback is paused. [\#149](https://github.com/pliablepixels/zmNinja/issues/149)
-- Viewing events on slow connection basically doesn't work [\#145](https://github.com/pliablepixels/zmNinja/issues/145)
 
 ## [v1.0.5](https://github.com/pliablepixels/zmNinja/tree/v1.0.5) (2016-01-23)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.3...v1.0.5)
 
 **Implemented enhancements:**
 
-- Allow montage to flow as columns \(packed\) or rows \(not packed\)  [\#144](https://github.com/pliablepixels/zmNinja/issues/144)
-- Reduce android apk size  [\#142](https://github.com/pliablepixels/zmNinja/issues/142)
-- Implement a mechanism to detect when network is on/off [\#127](https://github.com/pliablepixels/zmNinja/issues/127)
+- Add ability to save a snapshot of an event playback to disk [\#148](https://github.com/pliablepixels/zmNinja/issues/148)
 
 **Fixed bugs:**
 
+- 1.0.4 Broke basic auth  [\#147](https://github.com/pliablepixels/zmNinja/issues/147)
 - Basic auth only - no zm auth - app goes to login on restart and says auth fails - app works [\#140](https://github.com/pliablepixels/zmNinja/issues/140)
-- Excessive background data usage [\#131](https://github.com/pliablepixels/zmNinja/issues/131)
 
 **Closed issues:**
 
 - montage display wrap got messed up in newer versions of Chrome [\#146](https://github.com/pliablepixels/zmNinja/issues/146)
-- CSS montage - implement a better reflow algorithm [\#124](https://github.com/pliablepixels/zmNinja/issues/124)
-- Auto upload successful build to testfairy [\#75](https://github.com/pliablepixels/zmNinja/issues/75)
-- Integrate with Travis [\#72](https://github.com/pliablepixels/zmNinja/issues/72)
-- When moving montage monitors around, remember to move the size  [\#16](https://github.com/pliablepixels/zmNinja/issues/16)
+- Viewing events on slow connection basically doesn't work [\#145](https://github.com/pliablepixels/zmNinja/issues/145)
 
 ## [v1.0.3](https://github.com/pliablepixels/zmNinja/tree/v1.0.3) (2016-01-19)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.2...v1.0.3)
 
 **Implemented enhancements:**
 
+- Allow montage to flow as columns \(packed\) or rows \(not packed\)  [\#144](https://github.com/pliablepixels/zmNinja/issues/144)
+- Reduce android apk size  [\#142](https://github.com/pliablepixels/zmNinja/issues/142)
 - Improve timeline performance [\#129](https://github.com/pliablepixels/zmNinja/issues/129)
 - For Android only: Allow an exit option in menu [\#128](https://github.com/pliablepixels/zmNinja/issues/128)
+- Implement a mechanism to detect when network is on/off [\#127](https://github.com/pliablepixels/zmNinja/issues/127)
 - Add support for Pan/Tilt/Zoom Presets [\#116](https://github.com/pliablepixels/zmNinja/issues/116)
 
 **Fixed bugs:**
@@ -272,6 +265,7 @@
 - Monitor order is different one can observe in ZM montage [\#143](https://github.com/pliablepixels/zmNinja/issues/143)
 - You can swipe to dead monitor [\#138](https://github.com/pliablepixels/zmNinja/issues/138)
 - switching networks should trigger authentication [\#134](https://github.com/pliablepixels/zmNinja/issues/134)
+- Excessive background data usage [\#131](https://github.com/pliablepixels/zmNinja/issues/131)
 
 **Closed issues:**
 
@@ -282,6 +276,10 @@
 - HTTP basic auth credentials not stored [\#132](https://github.com/pliablepixels/zmNinja/issues/132)
 - Android build fails [\#130](https://github.com/pliablepixels/zmNinja/issues/130)
 - \[DESKTOP\]\[QUESTION\] gconf [\#125](https://github.com/pliablepixels/zmNinja/issues/125)
+- CSS montage - implement a better reflow algorithm [\#124](https://github.com/pliablepixels/zmNinja/issues/124)
+- Auto upload successful build to testfairy [\#75](https://github.com/pliablepixels/zmNinja/issues/75)
+- Integrate with Travis [\#72](https://github.com/pliablepixels/zmNinja/issues/72)
+- When moving montage monitors around, remember to move the size  [\#16](https://github.com/pliablepixels/zmNinja/issues/16)
 
 ## [v1.0.2](https://github.com/pliablepixels/zmNinja/tree/v1.0.2) (2015-12-28)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.0.1...v1.0.2)
@@ -332,7 +330,10 @@
 - Timeline on v0.87.2 shows only motion events [\#105](https://github.com/pliablepixels/zmNinja/issues/105)
 
 ## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
+
+## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
 
 **Fixed bugs:**
 
@@ -348,16 +349,19 @@
 - \[DESKTOP\] Lift 200 last entries limit for timeline [\#88](https://github.com/pliablepixels/zmNinja/issues/88)
 
 ## [v0.87.1](https://github.com/pliablepixels/zmNinja/tree/v0.87.1) (2015-11-18)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.1)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.86...v0.87.1)
 
 **Implemented enhancements:**
 
 - Event page is overcrowded for mocord users - add option to show only alarmed frames [\#89](https://github.com/pliablepixels/zmNinja/issues/89)
+- Ability to specify multiple ZM servers and switch between them [\#83](https://github.com/pliablepixels/zmNinja/issues/83)
+- add per monitor 'alarmed' status indicator to montage view [\#82](https://github.com/pliablepixels/zmNinja/issues/82)
 
 **Fixed bugs:**
 
 - zmNinja adds cgi-bin on its own to cgi path. This is a problem for Centos  [\#92](https://github.com/pliablepixels/zmNinja/issues/92)
 - Can't toggle gapless playback when viewing timeline events  [\#85](https://github.com/pliablepixels/zmNinja/issues/85)
+- desktop app no video from timeline [\#70](https://github.com/pliablepixels/zmNinja/issues/70)
 
 **Closed issues:**
 
@@ -367,21 +371,6 @@
 - Implement daily version check for Desktop versions [\#94](https://github.com/pliablepixels/zmNinja/issues/94)
 - eliminate duplicate code between timeline and event control for footage mode [\#87](https://github.com/pliablepixels/zmNinja/issues/87)
 - Non-persisted monitors showing in timeline, events views [\#84](https://github.com/pliablepixels/zmNinja/issues/84)
-
-## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-15)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.86...v0.87)
-
-**Implemented enhancements:**
-
-- Ability to specify multiple ZM servers and switch between them [\#83](https://github.com/pliablepixels/zmNinja/issues/83)
-- add per monitor 'alarmed' status indicator to montage view [\#82](https://github.com/pliablepixels/zmNinja/issues/82)
-
-**Fixed bugs:**
-
-- desktop app no video from timeline [\#70](https://github.com/pliablepixels/zmNinja/issues/70)
-
-**Closed issues:**
-
 - Clean up persistent data storage mechanism [\#81](https://github.com/pliablepixels/zmNinja/issues/81)
 - Remove external deps from codebase [\#80](https://github.com/pliablepixels/zmNinja/issues/80)
 - Update .gitignore to support osx [\#78](https://github.com/pliablepixels/zmNinja/issues/78)
