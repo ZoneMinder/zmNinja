@@ -160,19 +160,11 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-crosswalk-certificate": {
+    "cordova-plugin-certificates": {
         "source": {
             "type": "git",
-            "url": "https://github.com/danjarvis/cordova-plugin-crosswalk-certificate",
+            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
             "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-crosswalk-webview": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-crosswalk-webview"
         },
         "is_top_level": true,
         "variables": {}
