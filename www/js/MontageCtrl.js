@@ -890,9 +890,9 @@ $scope.$on('$ionicView.afterEnter', function () {
 
     ZMDataModel.zmLog("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
 
-    // set them all at 30% for packery
+    // set them all at 50% for packery
     for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-        $scope.MontageMonitors[i].Monitor.gridScale = "30";
+        $scope.MontageMonitors[i].Monitor.gridScale = "50";
         $scope.MontageMonitors[i].Monitor.selectStyle = "";
         $scope.MontageMonitors[i].Monitor.alarmState='color:rgba(0,0,0,0);';
 
@@ -1030,7 +1030,7 @@ $scope.$on('$ionicView.afterEnter', function () {
 
               var curVal = parseInt($scope.MontageMonitors[i].Monitor.gridScale);
               curVal = curVal + (10 * dirn);
-              if (curVal  < 20) curVal=20;
+              if (curVal  < 10) curVal=10;
               if (curVal >100) curVal = 100;
               //console.log ("For Index: " + i + " From: " + $scope.MontageMonitors[i].Monitor.gridScale + " To: " + curVal);
               
@@ -1060,7 +1060,7 @@ $scope.$on('$ionicView.afterEnter', function () {
                 {
                     var cv = parseInt($scope.MontageMonitors[i].Monitor.gridScale);
                     cv = cv + (10 * dirn);
-                    if (cv  < 20) cv=20;
+                    if (cv  < 10) cv=10;
                     if (cv >100) cv = 100;
                     $scope.MontageMonitors[i].Monitor.gridScale= cv;
                 }

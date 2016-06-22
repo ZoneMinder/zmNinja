@@ -838,6 +838,7 @@ body { font-family: sans-serif; }
 
 .grid-sizer {width:10%; }
 .grid-item { width: 20%; }
+.grid-item-10 {width: 10%; }
 .grid-item-20 { width: 20%; }
 .grid-item-30 { width: 30%; }
 .grid-item-40 { width: 40%; }
