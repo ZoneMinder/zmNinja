@@ -1,7 +1,7 @@
 <div ng-controller="EventModalCtrl">
     <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
     <ion-modal-view cache-view="false">
-        <ion-content style="background-color:#444444" ng-cloak>
+        <ion-content style="background-color:#444444" overflow-scroll="true"  ng-cloak>
 
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; " delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" overflow-scroll="false">
                 <div id="full-screen-event" style="height: 100vh;">
@@ -29,8 +29,18 @@
                     <!-- no default video -->
 
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
-                        <div on-double-tap="closeModal();">
-                            <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()">
+                        <div ng-if="videoIsReady"  class="videogular-full-container" >
+                            
+                            <!--<video controls="controls" preload="metadata" autoplay="autoplay" webkit-playsinline="webkit-playsinline" class="videoPlayer"><source src="" dynamic-url dynamic-url-src="{{video_url}}" type="video/mp4"/></video>-->
+                           
+                            <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="true" vg-responsive="true">
+                                
+                                <vg-media vg-src="videoObject.config.sources" vg-native-controls="false">
+                                </vg-media>
+                                
+                                <vg-overlay-play></vg-overlay-play>
+                                <!-- <vg-buffering></vg-buffering>-->
+                                
                                 <vg-controls>
                                     <vg-play-pause-button></vg-play-pause-button>
                                     <vg-scrub-bar>
@@ -42,11 +52,13 @@
                                         <vg-mute-button></vg-mute-button>
                                     </vg-volume>
                                 </vg-controls>
-                                <vg-media vg-src="videoObject.config.sources" vg-native-controls="false">
-                                </vg-media>
+                                
+                                
+                                
                             </videogular>
+                              
                         </div>
-                        <div id="event_canvas_video">
+                       <div id="event_canvas_video">
                             <canvas id="eventchart" width="100%" height="20px"></canvas>
                         </div>
 
@@ -57,7 +69,7 @@
 
                 </div>
                 <!-- 100vh -->
-            </ion-scroll>
+         </ion-scroll>
 
             <div ng-if="( (defaultVideo=='') || (loginData.enableh264==false)) && (loginData.useNphZmsForEvents==true)">
                 <div id="event_canvas">
@@ -104,9 +116,9 @@
 
 
 
-    <div class="events-range-modal-text">{{'kShowingEvent' | translate}}: {{d_eventId}}</div>
+   <div class="events-range-modal-text">{{'kShowingEvent' | translate}}: {{d_eventId}}</div>
 
-    <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
+   <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
         <ul>
             <li ng-if="defaultVideo==''">
                 <a href="" ng-click="toggleGapless()"> <i class="ion-ios-loop-strong"></i>-{{loginData.gapless? ('kOn' | translate): ('kOff' | translate)}}</a>

@@ -324,5 +324,6 @@
     "kZMSettingsFor"             :"ZoneMinder settings for",
     "kZMStopped"                 :"stopped",
     "kZMUndetermined"            :"undetermined",
-    "kZMUpgradeNeeded"           :"ZoneMinder upgrade needed"
+    "kZMUpgradeNeeded"           :"ZoneMinder upgrade needed",
+    "kForceImagePath": "Force events to use file path"
 }

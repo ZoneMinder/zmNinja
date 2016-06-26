@@ -621,7 +621,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         function saveNow() {
             $ionicLoading.show({
-                template: $translate.instant('kSavingSnapshot')+"...",
+                template: $translate.instant('kSavingSnapshot') + "...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
             });
@@ -703,6 +703,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
             return;
 
+        $scope.videoIsReady = false;
         var ld = ZMDataModel.getLogin();
         $scope.loginData = ZMDataModel.getLogin();
 
@@ -873,7 +874,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             }
 
             $ionicLoading.show({
-                template: $translate.instant('kPleaseWait')+"...",
+                template: $translate.instant('kPleaseWait') + "...",
                 noBackdrop: true,
                 duration: zm.httpTimeout
             });
@@ -922,7 +923,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             ZMDataModel.zmDebug("Set playback speed to " + $scope.eventSpeed);
 
             $ionicLoading.show({
-                template: $translate.instant('kPlaybackInterval')+': ' + $scope.eventSpeed.toFixed(3) + "ms",
+                template: $translate.instant('kPlaybackInterval') + ': ' + $scope.eventSpeed.toFixed(3) + "ms",
                 animation: 'fade-in',
                 showBackdrop: false,
                 duration: 1500,
@@ -1124,7 +1125,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         ZMDataModel.zmDebug("Sending " + cmd + " to " + connkey);
 
         $ionicLoading.show({
-            template: $translate.instant('kSwitchingEvents')+"...",
+            template: $translate.instant('kSwitchingEvents') + "...",
             noBackdrop: true,
             duration: zm.httpTimeout
         });
@@ -1348,26 +1349,40 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     else
                         videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
 
-                    console.log("************** VIDEO IS " + videoURL);
+                    // hack
+                    //  videoURL = "http://static.videogular.com/assets/videos/videogular.mp4";
+
+                    $scope.video_url = videoURL;
+
+                    //  console.log("************** VIDEO IS " + videoURL);
+
+                    ZMDataModel.zmDebug("Video url passed to player is: " + videoURL);
+
+                    // console.log (">>>>>>>>>>>>>"+loginData.url+"-VS-"+event.Event.baseURL);
 
                     //console.log("************** VIDEO IS " + videoURL);
-                    event.Event.video.config = {
-                        autoPlay: true,
-                        sources: [
-                            {
-                                src: $sce.trustAsResourceUrl(videoURL),
-                                type: "video/mp4"
+
+
+                    $scope.videoObject = {
+                        config: {
+                            autoPlay: true,
+                            sources: [
+                                {
+                                    src: $sce.trustAsResourceUrl(videoURL),
+                                    type: "video/mp4"
+                                }
+
+                            ],
+
+                            theme: "lib/videogular-themes-default/videogular.css",
                         }
-
-                    ],
-
-                        theme: "lib/videogular-themes-default/videogular.css",
-
                     };
 
-                    $scope.videoObject = event.Event.video;
+                    // $scope.videoObject = angular.copy(event.Event.video);
 
                     $scope.playbackURL = $scope.loginData.url;
+
+                    $scope.videoIsReady = true;
 
                     /* we don't need this for electron
                     if ($rootScope.platformOS == "desktop") {
@@ -1415,6 +1430,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         scale: []
 
                     };
+
 
 
                     $scope.mycarousel.index = 0;
