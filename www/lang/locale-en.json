@@ -73,6 +73,7 @@
     "kEventMontage"              :"Event Montage",
     "kEventMontageImageScale"    :"Event Montage image scale",
     "kEventNavVidFeeds"          :"Event navigation is not available with video feeds. ZoneMinder doesn't yet support them",
+    "kEventRecording"            :"Event Recording",
     "kEventServer"               :"Event Server",
     "kEventServerConfig1"        :"Please make sure your ZM settings are configured and saved before you configure the event server",
     "kEventServerVersionBody1"   :"You are running version",
@@ -102,6 +103,7 @@
     "kFitScreen"                 :"fit screen",
     "kFootage"                   :"Footage",
     "kForceAlarmConfirm"         :"Are you sure you want to force an alarm for Monitor:",
+    "kForceImagePath"            :"Force events to use file path",
     "kForcingAlarm"              :"forcing alarm",
     "kFrame"                     :"frame",
     "kFrameUpdate"               :"Frame update",
@@ -116,6 +118,7 @@
     "kHideMonsWithoutEvents"     :"Hide monitors without events",
     "kHideTip"                   :"hide tip",
     "kId"                        :"Id",
+    "kImages"                    :"Images",
     "kImpMsg1"                   :"Important Message",
     "kImpMsg2"                   :"I'd appreciate if you upgraded ZoneMinder",
     "kImpMsg3"                   :"You are running",
@@ -298,6 +301,7 @@
     "kValidNameZMAuth"           :"Please enter a valid username and password for ZM auth",
     "kVersion"                   :"Version",
     "kVersionIncompatible"       :"I am incompatible with your ZoneMinder version",
+    "kVideo"                     :"Video",
     "kWarningLargeTimeline"      :"A large value can affect timeline performance. If you find timeline performance slow, try reducing the value to 200 and work your way up from there.",
     "kWeek"                      :"Week",
     "kWelcomeWizard"             :"Welcome to zmWizard",
@@ -324,6 +328,5 @@
     "kZMSettingsFor"             :"ZoneMinder settings for",
     "kZMStopped"                 :"stopped",
     "kZMUndetermined"            :"undetermined",
-    "kZMUpgradeNeeded"           :"ZoneMinder upgrade needed",
-    "kForceImagePath": "Force events to use file path"
+    "kZMUpgradeNeeded"           :"ZoneMinder upgrade needed"
 }
