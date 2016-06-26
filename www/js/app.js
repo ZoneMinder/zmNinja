@@ -81,6 +81,15 @@ angular.module('zmApp', [
 
 })
 
+.directive('dynamicUrl', function () {
+    return {
+        restrict: 'A',
+        link: function postLink(scope, element, attr) {
+            element.attr('src', attr.dynamicUrlSrc);
+        }
+    };
+})
+
 
 .directive('dannyPackery', ['$rootScope', function($rootScope) {
     return {
