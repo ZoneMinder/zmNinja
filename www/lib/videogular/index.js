@@ -1,4 +1,4 @@
-require('angular');
+require('angular');		
 require('angular-sanitize');
 require('./videogular');
 
