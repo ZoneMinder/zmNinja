@@ -37,7 +37,7 @@
                         <br/> {{'kAlarmFrameCount' |translate}}: {{monitor.Monitor.AlarmFrameCount}}
                         <br/> {{'kStatus' | translate}}: {{monitor.Monitor.isRunningText}}
                         <br/> {{'kId' | translate}}: {{monitor.Monitor.Id}}
-                        <br/> {{'kEventRecording' | translate}}: {{(monitor.Monitor.VideoWriter==1?'kVideo':'kImages') | translate}}
+                        <br/> {{'kEventRecording' | translate}}: {{(monitor.Monitor.VideoWriter>0?'kVideo':'kImages') | translate}}
                         <br/>
                         <br/>
                     </p>
