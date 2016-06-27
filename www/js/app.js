@@ -81,6 +81,7 @@ angular.module('zmApp', [
 
 })
 
+// https://forum.ionicframework.com/t/ng-src-not-updated-in-video-tag/7540/6
 .directive('dynamicUrl', function () {
     return {
         restrict: 'A',

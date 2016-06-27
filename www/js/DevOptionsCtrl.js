@@ -86,6 +86,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
         ZMDataModel.zmDebug("SaveDevOptions: Saving to disk");
         ZMDataModel.setLogin($scope.loginData);
+        ZMDataModel.getMonitors(1);
 
         
     }

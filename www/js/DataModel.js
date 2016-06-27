@@ -91,7 +91,7 @@ angular.module('zmApp.controllers')
             'resumeDelay': 300,
             'language': 'en',
             'reachability': true,
-            'forceImageModePath': true,
+            'forceImageModePath': false,
 
 
 
@@ -427,8 +427,8 @@ angular.module('zmApp.controllers')
                     }
 
                     if (typeof loginData.forceImageModePath == 'undefined') {
-                        zmDebug("forceImageModePath does not exist. Setting to true");
-                        loginData.forceImageModePath = true;
+                        zmDebug("forceImageModePath does not exist. Setting to false");
+                        loginData.forceImageModePath = false;
                     }
 
                     if (typeof loginData.reachability == 'undefined') {
