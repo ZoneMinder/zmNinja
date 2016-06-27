@@ -31,15 +31,20 @@
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
                         <div ng-if="videoIsReady"  class="videogular-full-container" >
                             
-                            <!--<video controls="controls" preload="metadata" autoplay="autoplay" webkit-playsinline="webkit-playsinline" class="videoPlayer"><source src="" dynamic-url dynamic-url-src="{{video_url}}" type="video/mp4"/></video>-->
+                        <!--<video width="320" height="240" controls>
+                                <source src="" dynamic-url dynamic-url-src="{{video_url}}">
+                                
+                        </video>-->
+                            
+                            
                            
-                            <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="true" vg-responsive="true">
+                           <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="true" vg-responsive="true">
                                 
                                 <vg-media vg-src="videoObject.config.sources" vg-native-controls="false">
                                 </vg-media>
                                 
                                 <vg-overlay-play></vg-overlay-play>
-                                <!-- <vg-buffering></vg-buffering>-->
+                               
                                 
                                 <vg-controls>
                                     <vg-play-pause-button></vg-play-pause-button>
@@ -52,8 +57,7 @@
                                         <vg-mute-button></vg-mute-button>
                                     </vg-volume>
                                 </vg-controls>
-                                
-                                
+                            
                                 
                             </videogular>
                               
