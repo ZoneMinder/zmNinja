@@ -459,7 +459,14 @@ angular.module('zmApp', [
                 // these can take time, so lets bump up timeout
                 config.timeout = zm.largeHttpTimeout;
 
-            } else {
+            } 
+            else if ((config.url.indexOf("view=view_video")> -1) || 
+                      config.url.indexOf(".mp4")>-1)
+            {
+                console.log (">>> skipping timers for MP4");
+            }
+            else 
+            {
                 config.timeout = zm.httpTimeout;
             }
             return config;
