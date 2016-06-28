@@ -81,6 +81,28 @@ angular.module('zmApp', [
 
 })
 
+
+// filter for montage iteration
+.filter('onlyEnabled', function() {
+
+  // Create the return function and set the required parameter name to **input**
+  return function(input) {
+
+    var out = [];
+
+    angular.forEach(input, function(item) {
+
+      if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled!='0')) {
+        out.push(item);
+      }
+      
+    });
+
+    return out;
+  };
+
+})
+
 // https://forum.ionicframework.com/t/ng-src-not-updated-in-video-tag/7540/6
 .directive('dynamicUrl', function () {
     return {
@@ -429,6 +451,7 @@ angular.module('zmApp', [
         'request': function (config) {
 
 
+           // console.log (">>>>"+config.url);
             // handle basic auth properly
             if (config.url.indexOf("@") > -1) {
                 //console.log ("HTTP basic auth INTERCEPTOR URL IS "  + config.url);
