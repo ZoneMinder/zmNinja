@@ -53,8 +53,11 @@
             
             
             
-            <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
-                  ng-if="monitor.Monitor.Function!='None' &&  monitor.Monitor.Enabled !='0' ">
+           <!-- <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
+                  ng-if="monitor.Monitor.Function!='None' &&  monitor.Monitor.Enabled !='0' ">-->
+            
+            <span ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit" >
+            
                 
                 
                 
