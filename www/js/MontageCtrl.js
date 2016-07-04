@@ -638,7 +638,13 @@ function initPackery()
     //---------------------------------------------------------------------
     // main monitor modal open - if drag is not on, this is called on touch
     //---------------------------------------------------------------------
-    $scope.openModal = function (mid, controllable, controlid, connKey, monitor) {
+    
+    $scope.openModal = function (mid, controllable, controlid, connKey, monitor)
+    {
+        openModal  (mid, controllable, controlid, connKey, monitor);
+    };
+    
+   function openModal(mid, controllable, controlid, connKey, monitor) {
         ZMDataModel.zmDebug("MontageCtrl: Open Monitor Modal with monitor Id=" + mid + " and Controllable:" + controllable + " with control ID:" + controlid);
         // $scope.isModalActive = true;
         // Note: no need to setAwake(true) as its already awake
@@ -703,7 +709,7 @@ function initPackery()
 
             });
 
-    };
+    }
 
     //---------------------------------------------------------------------
     //
@@ -811,6 +817,10 @@ $scope.$on ('$ionicView.beforeEnter', function() {
     $scope.minimal = $stateParams.minimal;
     //console.log ("**************** MINIMAL ENTER " + $scope.minimal);
     $scope.zmMarginTop = $scope.minimal ? 0 : 15;
+    
+    
+    
+    
 });
     
 
@@ -921,6 +931,9 @@ $scope.$on('$ionicView.afterEnter', function () {
         $timeout ( function () {initPackery(); },500);
         document.addEventListener("pause", onPause, false);
         document.addEventListener("resume", onResume, false);
+    
+       
+        
 
 });
     
@@ -945,6 +958,7 @@ $scope.$on('$ionicView.afterEnter', function () {
         }
         
     });
+    
     
    
 
