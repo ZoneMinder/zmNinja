@@ -932,6 +932,7 @@ angular.module('zmApp', [
         $rootScope.loggedIntoZm = 0;
         $rootScope.apnsToken = '';
         $rootScope.tappedNotification = 0;
+        $rootScope.tappedMid = 0;
         //var eventsToDisplay=[];
         $rootScope.alarmCount = "0";
         $rootScope.platformOS = "desktop";

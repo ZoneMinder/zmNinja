@@ -66,7 +66,7 @@ angular.module('zmApp.controllers')
             'pinCode': '',
             'canSwipeMonitors': true,
             'persistMontageOrder': false,
-            'onTapScreen': 'events',
+            'onTapScreen': $translate.instant('kTapEvents'),
             'enableh264': true,
             'gapless': false,
             'montageOrder': '',

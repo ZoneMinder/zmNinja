@@ -165,6 +165,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                     if ($rootScope.tappedNotification)
                     {
+                        
                        
                         var ld = ZMDataModel.getLogin();
                          ZMDataModel.zmLog ("Came via push tap. onTapScreen="+ld.onTapScreen);
@@ -172,17 +173,23 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         $rootScope.tappedNotification = 0;
                         $ionicHistory.nextViewOptions({disableBack: true});	
 
-                        if (ld.onTapScreen == 'montage' )
+                        if (ld.onTapScreen == $translate.instant('kTapMontage') )
                         {
                             ZMDataModel.zmDebug("Going to montage");
                             $state.go("montage", {}, { reload: true });
 
                             return;
                         }
-                        else
+                        else if (ld.onTapScreen == $translate.instant ('kTapEvents'))
                         {
                             ZMDataModel.zmDebug("Going to events");
                             $state.go("events", {"id": 0}, { reload: true });
+                            return;
+                        }
+                        else // we go to live
+                        {
+                            ZMDataModel.zmDebug("Going to live view but Montage for now");
+                            $state.go("montage", {}, { reload: true });
                             return;
                         }
                     }

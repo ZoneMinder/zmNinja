@@ -14,11 +14,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.loginData = ZMDataModel.getLogin();
 
     $scope.check = {
-        isUseAuth: "",
-        isUseEventServer: ""
+        isUseAuth: false,
+        isUseEventServer: false
     };
 
-    $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
+    $scope.check.isUseAuth = ($scope.loginData.isUseAuth ) ? true : false;
     $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
 
     //----------------------------------------------------------------
@@ -108,7 +108,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 console.log ("NEW LOGIN OBJECT IS " + JSON.stringify($scope.loginData));
                 
                 
-                $scope.check.isUseAuth = ($scope.loginData.isUseAuth == '1') ? true : false;
+                $scope.check.isUseAuth = ($scope.loginData.isUseAuth) ? true : false;
                 $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
 
                 ZMDataModel.zmDebug("Retrieved state for this profile:" + JSON.stringify($scope.loginData));
@@ -217,11 +217,17 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             {
                 $scope.loginData.username = $rootScope.wizard.zmuser;
                 $scope.loginData.password = $rootScope.wizard.zmpassword;
-                if ((/^https:\/\//i.test($scope.loginData.url)))
-                {
-                    $scope.loginData.useSSL = true;
-                }
             }
+            else
+            {
+                $scope.loginData.isUseAuth = false;
+            }
+            
+            if ((/^https:\/\//i.test($scope.loginData.url)))
+            {
+                $scope.loginData.useSSL = true;
+            }
+            
             
         }
         
@@ -385,7 +391,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
 
 
-        $scope.loginData.isUseAuth = ($scope.check.isUseAuth) ? "1" : "0";
+        $scope.loginData.isUseAuth = ($scope.check.isUseAuth) ? true:false;
         $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? true : false;
 
         if ($scope.loginData.url.slice(-1) == '/') {
