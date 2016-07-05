@@ -3,12 +3,20 @@
   "version": "1.0.0",
   "description": "zmNinja: An Ionic project",
   "dependencies": {
+    "@angular/common": "^2.0.0-rc.3",
+    "@angular/compiler": "^2.0.0-rc.3",
+    "@angular/core": "^2.0.0-rc.3",
+    "@angular/http": "^2.0.0-rc.3",
+    "@angular/platform-browser": "^2.0.0-rc.3",
+    "@angular/platform-browser-dynamic": "^2.0.0-rc.3",
+    "@angular/router": "^2.0.0-rc.2",
     "async": "^1.4.2",
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^2.0.0",
+    "ionic-angular": "^2.0.0-beta.10",
     "ionic-app-lib": "^0.7.0"
   },
   "devDependencies": {
