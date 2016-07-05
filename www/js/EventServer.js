@@ -414,14 +414,39 @@ angular.module('zmApp.controllers')
 
                 if (data.additionalData.foreground == false) {
                     // This means push notification tap in background
-
-                    ZMDataModel.zmDebug("**** NOTIFICATION TAPPED SETTING TAPPED TO 1 ****");
+                    
+                    ZMDataModel.zmDebug ("*** PUSH NOTFN.>>>>"+JSON.stringify(data));
+                    
+                    // set tappedMid to monitor 
+                    //*** PUSH DATA>>>>{"sound":"blop","message":"Alarms: Basement (2854) ","additionalData":{"mid":"2","coldstart":false,"collapse_key":"do_not_collapse","foreground":false}}
+                    
+                    ZMDataModel.zmDebug("Notification Tapped");
                     $rootScope.alarmCount = "0";
                     $rootScope.isAlarm = 0;
                     $rootScope.tappedNotification = 1;
+                    var mid = data.additionalData.mid;
+                    
+                    // if Multiple mids, take the first one
+                    var mi = mid.indexOf(',');
+                    if (mi > 0)
+                    {
+                        mid = mid.slice(0,mi);
+                    }
+                    mid = parseInt(mid);
+                    
+                    $rootScope.tappedMid = mid;
+                    ZMDataModel.zmLog ("Push notification: Tapped Monitor taken as:"+$rootScope.tappedMid);
+                    
+                    
                     
                     if ($rootScope.platformOS == 'ios')
                     {
+                        if ($rootScope.tappedMid != 0)
+                        {
+                            ZMDataModel.zmDebug("iOS Push: tapped Notification not supported, YET");
+                            $rootScope.tappedMid = 0;
+                        }
+                        
                         ZMDataModel.zmDebug ("iOS only: clearing background push");
                          push.finish(function() {
                             ZMDataModel.zmDebug("processing of push data is finished");

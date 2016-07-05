@@ -188,8 +188,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         }
                         else // we go to live
                         {
-                            ZMDataModel.zmDebug("Going to live view but Montage for now");
-                            $state.go("montage", {}, { reload: true });
+                            ZMDataModel.zmDebug("Going to live view ");
+                            $state.go("monitors", {}, { reload: true });
                             return;
                         }
                     }
