@@ -441,11 +441,7 @@ angular.module('zmApp.controllers')
                     
                     if ($rootScope.platformOS == 'ios')
                     {
-                        if ($rootScope.tappedMid != 0)
-                        {
-                            ZMDataModel.zmDebug("iOS Push: tapped Notification not supported, YET");
-                            $rootScope.tappedMid = 0;
-                        }
+                       
                         
                         ZMDataModel.zmDebug ("iOS only: clearing background push");
                          push.finish(function() {
