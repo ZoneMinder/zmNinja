@@ -58,12 +58,17 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
         };
         
    
+        var options = '<ion-radio-fix ng-model="myopt.selectedState" ng-value="\''+$translate.instant('kTapEvents')+'\'">'+ $translate.instant('kTapEvents')+'</ion-radio-fix>';
+        
+        options+= '<ion-radio-fix ng-model="myopt.selectedState" ng-value="\''+$translate.instant('kTapMontage')+'\'">'+ $translate.instant('kTapMontage')+'</ion-radio-fix>';
+        
+        options+= '<ion-radio-fix ng-model="myopt.selectedState" ng-value="\''+$translate.instant('kTapLiveMonitor')+'\'">'+ $translate.instant('kTapLiveMonitor')+'</ion-radio-fix>';
         
         
         
         $rootScope.zmPopup = $ionicPopup.show({
             scope: $scope,
-            template: '<ion-radio-fix ng-model="myopt.selectedState" ng-value="\'events\'">'+ $translate.instant('kEventView')+'</ion-radio-fix><ion-radio-fix ng-model="myopt.selectedState" ng-value="\'montage\'"> Montage view </ion-radio-fix>',
+            template: options,
 
 
             title: 'View to navigate to:',
