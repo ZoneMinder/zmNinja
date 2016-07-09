@@ -66,7 +66,7 @@ angular.module('zmApp.controllers')
             'pinCode': '',
             'canSwipeMonitors': true,
             'persistMontageOrder': false,
-            'onTapScreen': $translate.instant('kTapEvents'),
+            'onTapScreen': "",
             'enableh264': true,
             'gapless': false,
             'montageOrder': '',
@@ -365,7 +365,7 @@ angular.module('zmApp.controllers')
 
                 serverGroupList = $localstorage.getObject("serverGroupList");
 
-                var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"enableAlarmCount\":true,\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
+                var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"Events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"enableAlarmCount\":true,\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
                 var demoS = JSON.parse(demoServer);
                 console.log("JSON parsed demo" + JSON.stringify(demoS));
 
@@ -401,6 +401,20 @@ angular.module('zmApp.controllers')
                         zmDebug("enableAlarmCount does not exist, setting to true");
                         loginData.enableAlarmCount = true;
                     }
+                    
+                    if (typeof loginData.onTapScreen == 'undefined')
+                    {
+                        loginData.onTapScreen = $translate.instant('kTapMontage');
+                    }
+                    
+                    if (loginData.onTapScreen != $translate.instant('kTapMontage') &&
+                        loginData.onTapScreen != $translate.instant('kTapEvents') &&
+                        loginData.onTapScreen != $translate.instant('kTapLiveMonitor'))
+                    {
+                        zmLog ("Invalid onTap setting found, resetting");
+                        loginData.onTapScreen = $translate.instant('kMontage');
+                    }
+                    
 
                     if (typeof loginData.minAlarmCount === 'undefined') {
                         zmDebug("minAlarmCount does not exist, setting to true");
