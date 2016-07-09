@@ -87,6 +87,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', 
                         ZMDataModel.zmLog("Setting new onTap State:"+ld.onTapScreen);
                         ZMDataModel.setLogin(ld);
                         $scope.defScreen = $scope.myopt.selectedState;
+                        $scope.loginData = ld;
                         
 
                     }
