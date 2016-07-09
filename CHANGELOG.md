@@ -1,7 +1,25 @@
 # Change Log
 
-## [1.1.93](https://github.com/pliablepixels/zmNinja/tree/1.1.93) (2016-06-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.92...1.1.93)
+## [v1.1.94](https://github.com/pliablepixels/zmNinja/tree/v1.1.94) (2016-07-09)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.93...v1.1.94)
+
+**Implemented enhancements:**
+
+- Allow to  navigate to live stream on notification tap [\#278](https://github.com/pliablepixels/zmNinja/issues/278)
+- Allow upto 10 monitors to be arranged per row  in montage [\#276](https://github.com/pliablepixels/zmNinja/issues/276)
+
+**Fixed bugs:**
+
+- Playback of events fails using view=video mode [\#275](https://github.com/pliablepixels/zmNinja/issues/275)
+- zmNinja does not launch on iOS 10 [\#271](https://github.com/pliablepixels/zmNinja/issues/271)
+
+**Closed issues:**
+
+- zmNinja-I can only see one camera in the app in montage view, but I can see my 2 cameras in browser [\#280](https://github.com/pliablepixels/zmNinja/issues/280)
+- Swipe to next event for the same monitor id not working [\#274](https://github.com/pliablepixels/zmNinja/issues/274)
+
+## [v1.1.93](https://github.com/pliablepixels/zmNinja/tree/v1.1.93) (2016-06-16)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.92...v1.1.93)
 
 **Implemented enhancements:**
 
@@ -11,7 +29,6 @@
 
 **Fixed bugs:**
 
-- Some Android phones seem to have SSL issues with self-signed certs [\#273](https://github.com/pliablepixels/zmNinja/issues/273)
 - Allow special characters in password to work in wizard  [\#264](https://github.com/pliablepixels/zmNinja/issues/264)
 - if you open a footage modal and exit before 5 seconds, the app keeps checking for event status  [\#257](https://github.com/pliablepixels/zmNinja/issues/257)
 - Montage and Live View no longer working [\#256](https://github.com/pliablepixels/zmNinja/issues/256)
