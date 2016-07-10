@@ -32,7 +32,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     
     $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
-            if ($scope.modal && $scope.modal.isShown())
+            if ($scope.modal !=undefined && $scope.modal.isShown())
             {
                 // switch off awake, as liveview is finished
                 ZMDataModel.zmDebug("Modal is open, closing it");

@@ -950,7 +950,7 @@ angular.module('zmApp', [
         // only for android
         $rootScope.exitApp = function () {
             ZMDataModel.zmLog("user exited app");
-            ZMDataModel.zmLog("user exited app");
+           
             ionic.Platform.exitApp();
         };
 
@@ -982,15 +982,17 @@ angular.module('zmApp', [
 
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
+    console.log (">>>>>>>>>>>>>>>>>>BACK BUTTON REGISTERED");
         $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
+            console.log ("******** back called with isOpenLeft: " + $ionicSideMenuDelegate.isOpenLeft());
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
                 $ionicSideMenuDelegate.toggleLeft();
-                //console.log("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
+                console.log("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
             } else {
                 navigator.app.exitApp();
             }
-        }, 1000);
+        }, 501);
 
 
         // this works reliably on both Android and iOS. The "onorientation" seems to reverse w/h in Android. Go figure.
