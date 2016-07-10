@@ -734,7 +734,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if (ld.useNphZmsForEvents) {
                 $timeout(function () {
 
-                    if ($scope.modal.isShown()) {
+                    if ($scope.modal != undefined && $scope.modal.isShown()) {
                         ZMDataModel.zmLog(">>>Starting checkAllEvents interval...");
 
                         //eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
