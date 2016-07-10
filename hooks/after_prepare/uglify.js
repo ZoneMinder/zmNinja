@@ -29,7 +29,8 @@ if (!isRelease) {
 }
 
 // Run uglifier
-run();
+// PP disabled on Jul 10 2016 - something is going wrong
+//run();
 
 /**
  * Run compression for all specified platforms.
