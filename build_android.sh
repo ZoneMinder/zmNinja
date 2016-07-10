@@ -9,6 +9,7 @@ fi
 
 
 rm -fr platforms/android/build/outputs/*
+mkdir release_files
 rm -f release_files/*
 
 BUILD_MODE="all"
