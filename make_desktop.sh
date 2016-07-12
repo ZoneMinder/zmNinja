@@ -25,7 +25,9 @@ if [ -d "$i" ]; then
 	exe cp electron_js/* $i/app
 	exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt ../$DIRNAME
 	exe cd $i
-	cat app/js/DataModel.js | sed "s/var zmAppVersion=\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/js/DataModel.js.tmp
+	cat app/js/DataModel.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/js/DataModel.js.tmp
+  cat app/js/DataModel.js.tmp >~/foo
+  exit
 	exe rm -fr app/js/DataModel.js
 	exe mv app/js/DataModel.js.tmp app/js/DataModel.js
 	
