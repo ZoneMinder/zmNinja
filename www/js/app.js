@@ -982,10 +982,10 @@ angular.module('zmApp', [
 
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
-    console.log (">>>>>>>>>>>>>>>>>>BACK BUTTON REGISTERED");
+        //console.log (">>>>>>>>>>>>>>>>>>BACK BUTTON REGISTERED");
         $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
-            console.log ("******** back called with isOpenLeft: " + $ionicSideMenuDelegate.isOpenLeft());
+            //console.log ("******** back called with isOpenLeft: " + $ionicSideMenuDelegate.isOpenLeft());
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
                 $ionicSideMenuDelegate.toggleLeft();
                 console.log("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
