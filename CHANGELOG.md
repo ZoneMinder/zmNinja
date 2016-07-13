@@ -1,5 +1,24 @@
 # Change Log
 
+## [v1.1.96](https://github.com/pliablepixels/zmNinja/tree/v1.1.96) (2016-07-13)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.94...v1.1.96)
+
+**Implemented enhancements:**
+
+- Make sure zmNinja plays ball with new user roles in APIs [\#93](https://github.com/pliablepixels/zmNinja/issues/93)
+
+**Fixed bugs:**
+
+- Slash screen PIN entry text error on zmN 1.1.94b [\#284](https://github.com/pliablepixels/zmNinja/issues/284)
+- build for android broke - uglify is messing up release builds [\#282](https://github.com/pliablepixels/zmNinja/issues/282)
+- ZMNinja back button issue [\#281](https://github.com/pliablepixels/zmNinja/issues/281)
+- Modify montage filtering to make sure maxLimit does not include disabled monitors [\#277](https://github.com/pliablepixels/zmNinja/issues/277)
+- Some Android phones seem to have SSL issues with self-signed certs [\#273](https://github.com/pliablepixels/zmNinja/issues/273)
+
+**Closed issues:**
+
+- Multi-server not video from cameras [\#283](https://github.com/pliablepixels/zmNinja/issues/283)
+
 ## [v1.1.94](https://github.com/pliablepixels/zmNinja/tree/v1.1.94) (2016-07-09)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.93...v1.1.94)
 
