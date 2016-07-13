@@ -332,10 +332,21 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         if (/^https:\/\//i.test($scope.loginData.url)) {
             $scope.loginData.useSSL = true;
         }
+        else
+        {$scope.loginData.useSSL = false;}
    
-        $scope.loginData.streamingurl = $scope.loginData.url;
-
-        $scope.loginData.apiurl = $scope.loginData.url + "/api";
+        if ($scope.loginData.url.slice(-1)=='/')
+        {
+            $scope.loginData.apiurl = $scope.loginData.url + "api";
+            $scope.loginData.streamingurl = $scope.loginData.url + "cgi-bin";
+        }
+        else
+        {
+            $scope.loginData.apiurl = $scope.loginData.url + "/api";
+            $scope.loginData.streamingurl = $scope.loginData.url + "/cgi-bin";
+        }
+            
+            
     };
     //-------------------------------------------------------------------------------
     // Adds http to url if not present
