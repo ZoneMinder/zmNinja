@@ -2,17 +2,6 @@ License for apps on Play store/App store
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The apps in Apple App store and Google Play store can be used for any purpose (personal, commercial etc). After all, you've paid for it.
 
-Source Code License
-~~~~~~~~~~~~~~~~~~~~~~
-
-The source code of zmNinja is dual licensed.
-
-The code is free for personal, non commercial use
-http://creativecommons.org/licenses/by-nc-sa/4.0/
-In summary: Share Alike, Adapt,Attribute, NonCommercial
-
-zmNinja source code is also open for commerical licensing and white-labeling.
-Please contact pliablepixels@gmail.com
 
 For Desktop Clients Binaries: 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,9 +9,20 @@ The Desktop clients binaries free to download and use ONLY for users
 who are using the desktop client with the free and open source ZoneMinder
 software. If you are selling a service based on zoneminder and are either distributing the Desktop Client to your users or asking your users to use the desktop client by download it themselves, you are violating the non-commercial use. You will need to procure a license before you do so.
 
-Be nice, please.
 
-If you have any questions on licensing feel free to contact me.
+Source Code License
+~~~~~~~~~~~~~~~~~~~~~~
+
+The source code of zmNinja is dual licensed.
+
+a) The code is free for personal, non commercial use
+http://creativecommons.org/licenses/by-nc-sa/4.0/
+In summary: Share Alike, Adapt,Attribute, NonCommercial
+
+b) zmNinja source code is also open for commerical licensing and white-labeling.
+Please contact pliablepixels@gmail.com
+
+
 
 
 Third Party credits
@@ -48,7 +48,7 @@ CCSA-NC-SA, you can compile the code for your personal use (non commercial purpo
 and continue to use packery. This is compliant to Packery's license too, where they
 prohibit other developers to build for profit using the license I purchased.
 
-However, in the future, if I allow for commercial use of my source code, you will
+If however you purchase the source code from me, you will
 still have to purchase an additional license for packery from David via http://packery.metafizzy.co/#commercial-license
 It's very cheap ($25 for unlimited products by one developer).
 
