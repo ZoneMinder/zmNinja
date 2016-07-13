@@ -201,6 +201,10 @@ angular.module('zmApp.controllers')
             // used by various controllers to log messages to file
             //-------------------------------------------------------------
 
+            isEmpty: function (obj)
+            {
+                return isEmpty(obj);
+            },
 
             zmLog: function (val, type) {
                 var logtype = 'info';
