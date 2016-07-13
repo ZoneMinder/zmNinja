@@ -20,6 +20,24 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $scope.check.isUseAuth = ($scope.loginData.isUseAuth ) ? true : false;
     $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
+    
+    
+    document.addEventListener("pause", onPause, false);
+    document.addEventListener("resume", onResume, false);
+    
+    function onResume()
+    {
+        ZMDataModel.zmLog ("Login screen resumed");
+        
+    }
+    
+    function onPause()
+    {
+        ZMDataModel.zmLog ("Login screen going to background, saving data");
+        $localstorage.setObject ("settings-temp-data",$scope.loginData);
+        
+    }
+    
 
     //----------------------------------------------------------------
     // Alarm notification handling
@@ -229,6 +247,21 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             }
             
             
+        }
+        
+        else
+        {
+            var savedData = $localstorage.getObject ("settings-temp-data");
+            if (! ZMDataModel.isEmpty(savedData))
+            {
+                $scope.loginData = savedData;
+                ZMDataModel.zmLog ("retrieved pre-stored loginData on past pause: "  + JSON.stringify($scope.loginData));
+                $localstorage.setObject("settings-temp-data", {});
+            }
+            else 
+            {
+                ZMDataModel.zmLog ("Not recovering login data as its empty");
+            }
         }
         
         
