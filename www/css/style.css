@@ -93,6 +93,9 @@ ion-popover-view.fit ion-content {
 }
 
 
+
+
+
 /* I am using flexboxes to dynamicall adapt content
 in montage view.
 Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
@@ -850,6 +853,7 @@ body { font-family: sans-serif; }
     border:4px solid #e74c3c;
 }
 
+
 .grid-sizer {width:10%; }
 .grid-item { width: 20%; }
 .grid-item-10 {width: 10%; }
@@ -862,7 +866,11 @@ body { font-family: sans-serif; }
 .grid-item-80 { width: 80%; }
 .grid-item-90 {width:  90%; }
 .grid-item-100 {width:100%; }
-.
+
+
+
+
+
 /* clear fix */
 .grid:after {
   content: '';
@@ -873,7 +881,8 @@ body { font-family: sans-serif; }
 
 .grid-item img {
   display: block;
-  max-width: 100%;
+  width: 100%;
+    height:auto;
   
 }
 /* ---- .grid-item ---- */

@@ -200,11 +200,11 @@ function initPackery()
                         ZMDataModel.zmDebug ("All images loaded, doing image layout");
                         $timeout (function() {pckry.initShiftLayout(positions, 'data-item-id');},0); 
                     }
-                    $timeout(function(){ZMDataModel.zmLog ("Force calling resize"); pckry.shiftLayout();},300);// don't ask
+                    $timeout(function(){ZMDataModel.zmLog ("Force calling resize"); pckry.shiftLayout();},zm.packeryTimer);// don't ask
 
                    
                    
-                },300);
+                },zm.packeryTimer);
                
         });
     
@@ -701,10 +701,10 @@ function initPackery()
                 });
                
               
+                // we don't really need this as we have stopped the timer
+               // $scope.isModalActive = true;
 
-                $scope.isModalActive = true;
-
-
+                //$timeout (function() {pckry.shiftLayout();},zm.packeryTimer);
                 $scope.modal.show();
 
             });
@@ -743,6 +743,8 @@ function initPackery()
             loadAlarmStatus();
             //  console.log ("Refreshing Image...");
         }.bind(this), 5000);
+        
+       // $timeout (function() {pckry.shiftLayout();},zm.packeryTimer);
         
         
     };
@@ -928,7 +930,7 @@ $scope.$on('$ionicView.afterEnter', function () {
 
  console.log("**VIEW ** Montage Ctrl AFTER ENTER");
         window.addEventListener("resize", orientationChanged, false);
-        $timeout ( function () {initPackery(); },500);
+       $timeout ( function () {initPackery(); },zm.packeryTimer);
         document.addEventListener("pause", onPause, false);
         document.addEventListener("resume", onResume, false);
     
@@ -1005,7 +1007,7 @@ $scope.$on('$ionicView.afterEnter', function () {
                    // $scope.slider.monsize = 2;
                 });
                 //layout(pckry);
-                $timeout (function(){pckry.layout();}); // force here - no shiftlayout
+                $timeout (function(){pckry.layout();},zm.packeryTimer); // force here - no shiftlayout
                
                
             },100);
@@ -1092,7 +1094,7 @@ $scope.$on('$ionicView.afterEnter', function () {
                         ZMDataModel.setLogin(ld);
                        $ionicLoading.hide();
                        $scope.sliderChanging = false;
-                    },100);
+                    },zm.packeryTimer);
                 });
         
                 
@@ -1100,13 +1102,13 @@ $scope.$on('$ionicView.afterEnter', function () {
                 if (!somethingReset) 
                 {
                     console.log (">>>SOMETHING NOT RESET");
-                    $timeout(function() {pckry.layout();},300);
+                    $timeout(function() {pckry.layout();},zm.packeryTimer);
                 }
                 else
                 {
                     
                     console.log (">>>SOMETHING  RESET");
-                    $timeout(function() {layout(pckry);},300);
+                    $timeout(function() {layout(pckry);},zm.packeryTimer);
                 }
        
       
