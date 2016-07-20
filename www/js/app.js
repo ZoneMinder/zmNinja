@@ -76,6 +76,7 @@ angular.module('zmApp', [
     nphSwitchTimer: 3000,
     eventHistoryTimer: 10000,
     eventPlaybackQuery: 3000,
+    packeryTimer:500
 
 
 
