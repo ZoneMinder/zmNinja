@@ -2,6 +2,8 @@
 /* jshint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
+//http://learn.ionicframework.com/formulas/localstorage/
+
 angular.module('ionic.utils', [])
 
 .factory('$localstorage', ['$window', function($window) {
