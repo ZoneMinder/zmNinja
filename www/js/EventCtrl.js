@@ -755,6 +755,7 @@ angular.module('zmApp.controllers')
                                 } 
 
                             }
+                            oldEvent = event;
 
                             //console.log (JSON.stringify(data));
                         })
