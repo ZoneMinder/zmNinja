@@ -33,6 +33,10 @@ angular.module('zmApp.controllers')
             {
                 text: 'Italian',
                 value: 'it'
+            },
+            {
+                text: 'Portugese',
+                value: 'pt'
             }
         ];
 
