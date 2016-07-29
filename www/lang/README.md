@@ -24,3 +24,7 @@ This validates your JSON file,makes sure all keys are in sync with -en  and if v
 * Please be careful not to mess up the html tags, please only focus on text translation
 
 
+####How to recognize a new language:
+(This is only for zmNinja developers. Not relevant for language translators)
+* Modify languages array in DataModel.js
+* register language glob code in app.js - make sure its added to array list and mapping
