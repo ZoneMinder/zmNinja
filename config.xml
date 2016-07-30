@@ -79,4 +79,5 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
+    <plugin name="cordova-sqlite-storage" spec="~1.4.6-pre6a" />
 </widget>
