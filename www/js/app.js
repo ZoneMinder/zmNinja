@@ -1,9 +1,10 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK,$*/
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, localforage,$*/
 
 
 var appVersion = "0.0.0";
+
 
 
 // core app start stuff
@@ -76,7 +77,9 @@ angular.module('zmApp', [
     nphSwitchTimer: 3000,
     eventHistoryTimer: 10000,
     eventPlaybackQuery: 3000,
-    packeryTimer:500
+    packeryTimer: 500,
+    dbName: 'zmninja.db',
+    dbTableName: 'userProfile'
 
 
 
@@ -84,23 +87,23 @@ angular.module('zmApp', [
 
 
 // filter for montage iteration
-.filter('onlyEnabled', function() {
+.filter('onlyEnabled', function () {
 
-  // Create the return function and set the required parameter name to **input**
-  return function(input) {
+    // Create the return function and set the required parameter name to **input**
+    return function (input) {
 
-    var out = [];
+        var out = [];
 
-    angular.forEach(input, function(item) {
+        angular.forEach(input, function (item) {
 
-      if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled!='0')) {
-        out.push(item);
-      }
-      
-    });
+            if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0')) {
+                out.push(item);
+            }
 
-    return out;
-  };
+        });
+
+        return out;
+    };
 
 })
 
@@ -115,19 +118,20 @@ angular.module('zmApp', [
 })
 
 
-.directive('dannyPackery', ['$rootScope', function($rootScope) {
+.directive('dannyPackery', ['$rootScope', function ($rootScope) {
     return {
         restrict: 'A',
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
             console.log('Running dannyPackery linking function!');
-            if($rootScope.packery === undefined || $rootScope.packery === null){
+            if ($rootScope.packery === undefined || $rootScope.packery === null) {
                 console.log('making packery!');
-                $rootScope.packery = new Packery(element[0].parentElement, {columnWidth: '.item'});
+                $rootScope.packery = new Packery(element[0].parentElement, {
+                    columnWidth: '.item'
+                });
                 $rootScope.packery.bindResize();
                 $rootScope.packery.appended(element[0]);
-                $rootScope.packery.items.splice(1,1); // hack to fix a bug where the first element was added twice in two different positions
-            }
-            else{
+                $rootScope.packery.items.splice(1, 1); // hack to fix a bug where the first element was added twice in two different positions
+            } else {
                 $rootScope.packery.appended(element[0]);
             }
             $rootScope.packery.layout();
@@ -137,23 +141,23 @@ angular.module('zmApp', [
 
 // credit https://gist.github.com/Zren/beaafd64f395e23f4604
 
-.directive('mouseWheelScroll', function($timeout) {
+.directive('mouseWheelScroll', function ($timeout) {
     return {
-      restrict: 'A',
-      link: function($scope, $element, $attrs) {
-        var onMouseWheel, scrollCtrl;
-        scrollCtrl = $element.controller('$ionicScroll');
-        //console.log(scrollCtrl);
-        if (!scrollCtrl) {
-          return console.error('mouseWheelScroll must be attached to a $ionicScroll controller.');
+        restrict: 'A',
+        link: function ($scope, $element, $attrs) {
+            var onMouseWheel, scrollCtrl;
+            scrollCtrl = $element.controller('$ionicScroll');
+            //console.log(scrollCtrl);
+            if (!scrollCtrl) {
+                return console.error('mouseWheelScroll must be attached to a $ionicScroll controller.');
+            }
+            onMouseWheel = function (e) {
+                return scrollCtrl.scrollBy(0, -e.wheelDeltaY, false);
+            };
+            return scrollCtrl.element.addEventListener('wheel', onMouseWheel);
         }
-        onMouseWheel = function(e) {
-          return scrollCtrl.scrollBy(0, -e.wheelDeltaY, false);
-        };
-        return scrollCtrl.element.addEventListener('wheel', onMouseWheel);
-      }
     };
-  })
+})
 
 // this can be used to route img-src through interceptors. Works well, but when
 // nph-zms streams images it doesn't work as success is never received 
@@ -452,7 +456,7 @@ angular.module('zmApp', [
         'request': function (config) {
 
 
-           // console.log (">>>>"+config.url);
+            // console.log (">>>>"+config.url);
             // handle basic auth properly
             if (config.url.indexOf("@") > -1) {
                 //console.log ("HTTP basic auth INTERCEPTOR URL IS "  + config.url);
@@ -483,14 +487,10 @@ angular.module('zmApp', [
                 // these can take time, so lets bump up timeout
                 config.timeout = zm.largeHttpTimeout;
 
-            } 
-            else if ((config.url.indexOf("view=view_video")> -1) || 
-                      config.url.indexOf(".mp4")>-1)
-            {
-                console.log (">>> skipping timers for MP4");
-            }
-            else 
-            {
+            } else if ((config.url.indexOf("view=view_video") > -1) ||
+                config.url.indexOf(".mp4") > -1) {
+                console.log(">>> skipping timers for MP4");
+            } else {
                 config.timeout = zm.httpTimeout;
             }
             return config;
@@ -537,7 +537,7 @@ angular.module('zmApp', [
 
 
         function checkUpdate() {
-            var lastdateString = $localstorage.get("lastUpdateCheck");
+            var lastdateString = ZMDataModel.getLastUpdateCheck();
             var lastdate;
             if (!lastdateString) {
 
@@ -558,8 +558,8 @@ angular.module('zmApp', [
             $http.get(zm.latestRelease)
                 .then(function (success) {
 
-
-                    $localstorage.set("lastUpdateCheck", moment().toISOString());
+                    ZMDataModel.setLastUpdateCheck(moment().toISOString());
+                   // $localstorage.set("lastUpdateCheck", moment().toISOString());
                     //console.log ("FULL STRING " + success.data.tag_name);
                     var res = success.data.tag_name.match("v(.*)");
                     zmUpdateVersion = res[1];
@@ -584,7 +584,7 @@ angular.module('zmApp', [
                         return;
                     }
 
-                    var lastDate = $localstorage.get("latestBlogPostChecked");
+                    var lastDate = ZMDataModel.getLatestBlogPostChecked();
                     if (!lastDate) {
 
                         $rootScope.newBlogPost = "(new post)";
@@ -649,6 +649,11 @@ angular.module('zmApp', [
     // doLogin() emits this when our auth credentials work
     //------------------------------------------------------------------
 
+    $rootScope.$on("init-complete", function () {
+        ZMDataModel.zmLog (">>>>>>>>>>>>>>> All init over, going to portal login");
+        $state.go("zm-portal-login");
+    });
+    
 
     $rootScope.$on("auth-success", function () {
         var contentBannerInstance = $ionicContentBanner.show({
@@ -723,7 +728,7 @@ angular.module('zmApp', [
 
                 });
 
-        
+
         return d.promise;
 
 
@@ -818,7 +823,7 @@ angular.module('zmApp', [
                         //eventServer.start();
                         $rootScope.loggedIntoZm = 1;
 
-                        ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
+                        ZMDataModel.zmLog("zmAutolog.runin successfully logged into Zoneminder");
 
                         d.resolve("Login Success");
 
@@ -916,10 +921,10 @@ angular.module('zmApp', [
 //====================================================================
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions, $translate) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions, $translate, $localstorage) {
 
 
-        
+
 
         $rootScope.appName = "zmNinja";
         $rootScope.zmGlobalCookie = "";
@@ -951,7 +956,7 @@ angular.module('zmApp', [
         // only for android
         $rootScope.exitApp = function () {
             ZMDataModel.zmLog("user exited app");
-           
+
             ionic.Platform.exitApp();
         };
 
@@ -979,7 +984,7 @@ angular.module('zmApp', [
             });
         }, false);
 
-      
+
 
         // This code takes care of trapping the Android back button
         // and takes it to the menu.
@@ -1024,6 +1029,7 @@ angular.module('zmApp', [
             $rootScope.userCancelledAuth = true;
             window.stop();
 
+            console.log ("inside cancelAuth , calling wizard");
             $state.go("login", {
                 "wizard": false
             });
@@ -1037,14 +1043,16 @@ angular.module('zmApp', [
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var requireLogin = toState.data.requireLogin;
 
-            if (ZMDataModel.isLoggedIn()) {
+            if (ZMDataModel.isLoggedIn() || toState.name =="login" ) {
                 //console.log("State transition is authorized");
 
                 return;
             } else {
-                ZMDataModel.zmLog("Not logged in, requested to go to " + JSON.stringify(toState));
+                ZMDataModel.zmLog("In Auth State trans: Not logged in, requested to go to " + JSON.stringify(toState));
                 // event.preventDefault();
-                // $state.transitionTo('login');
+                // 
+                
+                $state.transitionTo('login');
 
 
             }
@@ -1071,111 +1079,208 @@ angular.module('zmApp', [
         //---------------------------------------------------------------------
 
         $ionicPlatform.ready(function () {
-            
-            var pixelRatio = window.devicePixelRatio || 1;
-            $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
-            $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
-            // for making sure we canuse $state.go with ng-click
-            // needed for views that use popovers
-            $rootScope.$state = $state;
-            $rootScope.$stateParams = $stateParams;
 
-            
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.disableScroll(true);
-            }
-            if (window.StatusBar) {
-                // org.apache.cordova.statusbar required
-                StatusBar.styleDefault();
-            }
-            
-
-            if (window.cordova) {
-                $cordovaSplashscreen.hide();
-                
-                ZMDataModel.zmLog ("Enabling insecure SSL");
-                cordova.plugins.certificates.trustUnsecureCerts(true);
-                 
-                cordova.getAppVersion(function (version) {
-                    appVersion = version;
-                    ZMDataModel.zmLog("App Version: " + appVersion);
-                    ZMDataModel.setAppVersion(appVersion);
-                });
-            }
-
-            $fileLogger.checkFile().then(function (resp) {
-                if (parseInt(resp.size) > zm.logFileMaxSize) {
-
-                    $fileLogger.deleteLogfile().then(function () {
-                        ZMDataModel.zmLog("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
-
-                    });
-                } 
-            });
-
-            $fileLogger.setStorageFilename(zm.logFile);
-            $fileLogger.setTimestampFormat('MMM d, y ' + ZMDataModel.getTimeFormat());
-
-            
+            $rootScope.db = null;
             
             $rootScope.platformOS = "desktop";
             ZMDataModel.zmLog("Device is ready");
-            var ld = ZMDataModel.getLogin();
+           // var ld = ZMDataModel.getLogin();
             if ($ionicPlatform.is('ios'))
                 $rootScope.platformOS = "ios";
             if ($ionicPlatform.is('android'))
                 $rootScope.platformOS = "android";
 
             ZMDataModel.zmLog("You are running on " + $rootScope.platformOS);
-            
-            $ionicNativeTransitions.enable(true, false);
-            
-            
-            var lang = ZMDataModel.getDefaultLanguage();
-            
-            
-            if (lang == undefined)
-            {
-                ZMDataModel.zmLog ("No language set, switching to en");
-                lang = "en";
+
+
+
+            localforage.defineDriver(window.cordovaSQLiteDriver).then(function () {
+                return localforage.setDriver([
+            // Try setting cordovaSQLiteDriver if available,
+              window.cordovaSQLiteDriver._driver,
+              // otherwise use one of the default localforage drivers as a fallback.
+              // This should allow you to transparently do your tests in a browser
+              localforage.LOCALSTORAGE,
+              localforage.INDEXEDDB,
+              localforage.WEBSQL
               
-               
-            }
-            else
-            {
-                ZMDataModel.zmLog ("Language stored as:"+lang);
-               
-            }
-            
-            // This always returns success - I'm not rejecting
-             ZMDataModel.setDefaultLanguage(lang, false)
-             .then (function(success) {
-                 ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
-                 moment.locale($translate.proposedLanguage());
-                 continueRestOfInit();
-                 
-             });
-            
-            
+            ]);
+             }).then(function () {
+                // this should alert "cordovaSQLiteDriver" when in an emulator or a device
+                ZMDataModel.zmLog("localforage driver for storage:" + localforage.driver());
+                
+                // Now lets import old data if it exists:
+                var defaultServerName = $localstorage.get("defaultServerName");
+                
+                localforage.getItem("defaultServerName")
+                .then (function (val)
+                {
+                    if (!val && defaultServerName)
+                    {
+                        ZMDataModel.zmLog (">>>>Importing data from localstorage....");
+                        
+                        
+                        
+                        var dsn = defaultServerName;
+                        var dl = $localstorage.get('defaultLang');
+                        var ifu = ($localstorage.get('isFirstUse')=='0' ? false:true);
+                        var luc = $localstorage.get('lastUpdateCheck');
+                        var lbpc = $localstorage.get('latestBlogPostChecked');
+                        var sgl = $localstorage.getObject('serverGroupList');
+                        
+                        ZMDataModel.zmLog (">>>Localstorage data found as below:");
+                        ZMDataModel.zmLog ("server name:"+dsn);
+                        ZMDataModel.zmLog ("default lang :"+dl);
+                        ZMDataModel.zmLog ("is first use:"+ifu);
+                        ZMDataModel.zmLog ("last update check:"+luc);
+                        ZMDataModel.zmLog ("latest blog post check:"+lbpc);
+                        ZMDataModel.zmLog ("server group list:"+sgl);
+
+                        localforage.setItem('defaultLang', dl)
+                        .then (function() {
+                            
+                            ZMDataModel.zmLog (">>>>migrated defaultLang...");
+                            ZMDataModel.setFirstUse(ifu);
+                            return localforage.setItem('isFirstUse', ifu);
+                        })
+                        .then (function() {
+                            ZMDataModel.zmLog (">>>>migrated isFirstUse...");
+                            return localforage.setItem('lastUpdateCheck', ifu);
+                        })
+                        .then (function() {
+                            ZMDataModel.zmLog (">>>>migrated lastUpdateCheck...");
+                            return localforage.setItem('latestBlogPostChecked', lbpc);
+                        })
+                        .then (function() {
+                            ZMDataModel.zmLog (">>>>migrated latestBlogPostChecked...");
+                            return localforage.setItem('serverGroupList', sgl);
+                        })
+                        .then (function() {
+                            ZMDataModel.zmLog (">>>>migrated serverGroupList...");
+                            return localforage.setItem('defaultServerName',dsn);
+                        })
+                        .then (function() {
+                            ZMDataModel.zmLog (">>>>migrated defaultServerName...");
+                            ZMDataModel.zmLog (">>>>Migrated all values, continuing...");
+                            //ZMDataModel.migrationComplete();
+                            continueInitialInit();
+                        });
+                      
+                    }
+                    else
+                    {
+                        ZMDataModel.zmLog (">>>>No data to import....");
+                        //ZMDataModel.migrationComplete();
+                        continueInitialInit();
+                    }
+                
+                    
+                    
+                });
+                
+            });
            
-           
-            function continueRestOfInit()
+            
+            
+            function continueInitialInit()
             {
+                var pixelRatio = window.devicePixelRatio || 1;
+                $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
+                $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
+                // for making sure we canuse $state.go with ng-click
+                // needed for views that use popovers
+                $rootScope.$state = $state;
+                $rootScope.$stateParams = $stateParams;
+
+
+                if (window.cordova && window.cordova.plugins.Keyboard) {
+                    cordova.plugins.Keyboard.disableScroll(true);
+                }
+                if (window.StatusBar) {
+                    // org.apache.cordova.statusbar required
+                    StatusBar.styleDefault();
+                }
+
+
+                if (window.cordova) {
+                    $cordovaSplashscreen.hide();
+
+                    ZMDataModel.zmLog("Enabling insecure SSL");
+                    cordova.plugins.certificates.trustUnsecureCerts(true);
+
+                    cordova.getAppVersion(function (version) {
+                        appVersion = version;
+                        ZMDataModel.zmLog("App Version: " + appVersion);
+                        ZMDataModel.setAppVersion(appVersion);
+                    });
+                }
+
+                $fileLogger.checkFile().then(function (resp) {
+                    if (parseInt(resp.size) > zm.logFileMaxSize) {
+
+                        $fileLogger.deleteLogfile().then(function () {
+                            ZMDataModel.zmLog("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
+
+                        });
+                    }
+                });
+
+                $fileLogger.setStorageFilename(zm.logFile);
+                $fileLogger.setTimestampFormat('MMM d, y ' + ZMDataModel.getTimeFormat());
+
+
+
+
+                $ionicNativeTransitions.enable(true, false);
+
+
+                var lang = ZMDataModel.getDefaultLanguage();
+
+
+                if (lang == undefined) {
+                    ZMDataModel.zmLog("No language set, switching to en");
+                    lang = "en";
+
+
+                } else {
+                    ZMDataModel.zmLog("Language stored as:" + lang);
+
+                }
+                 //continueRestOfInit();
+                // This always returns success - I'm not rejecting
+                ZMDataModel.setDefaultLanguage(lang, false)
+                    .then(function (success) {
+                        ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
+                        moment.locale($translate.proposedLanguage());
+                        continueRestOfInit();
+
+                    });
+            }
+
+
+
+
+
+
+            function continueRestOfInit() {
                 ZMDataModel.zmLog("Language file loaded, continuing with rest");
                 ZMDataModel.init();
                 EventServer.init();
                 zmCheckUpdates.start();
                 ZMDataModel.zmLog("Setting up POST LOGIN timer");
                 zmAutoLogin.start();
+                
+                
+                
             }
 
-          
 
 
 
-         //---------------------------------------------------------------------------
-        // resume handler
-        //----------------------------------------------------------------------------
+
+            //---------------------------------------------------------------------------
+            // resume handler
+            //----------------------------------------------------------------------------
             document.addEventListener("resume", function () {
                 ZMDataModel.zmLog("App is resuming from background");
                 var forceDelay = ZMDataModel.getLogin().resumeDelay;
@@ -1218,9 +1323,9 @@ angular.module('zmApp', [
             }, false);
 
 
-        //---------------------------------------------------------------------------
-        // background handler
-        //----------------------------------------------------------------------------
+            //---------------------------------------------------------------------------
+            // background handler
+            //----------------------------------------------------------------------------
             document.addEventListener("pause", function () {
                 ZMDataModel.setBackground(true);
                 ZMDataModel.setJustResumed(true); // used for window stop
@@ -1251,9 +1356,9 @@ angular.module('zmApp', [
             }, false);
 
 
-         
 
-           
+
+
 
 
         }); //platformReady
@@ -1302,28 +1407,28 @@ angular.module('zmApp', [
     $ionicNativeTransitionsProvider.setDefaultOptions({
         duration: 250,
     });
-    
+
     $translateProvider.useStaticFilesLoader({
-    prefix: 'lang/locale-',
-    suffix: '.json'
-   });
-    
+        prefix: 'lang/locale-',
+        suffix: '.json'
+    });
+
     //$translateProvider.useLocalStorage();
-    
-    
-    $translateProvider.registerAvailableLanguageKeys(['en', 'de','es', 'fr', 'it', 'ja', 'ko', 'zh', 'zh_CN', 'zh_TW', 'pt'], {
-             'en_*': 'en',
-             'de_*': 'de',
-             'es_*': 'es',
-             'fr_*': 'fr',
-             'it_*': 'it',
-             'ja_*': 'ja',
-             'ko_*': 'ko',
-             'pt_*': 'pt',
-               '*': 'en' // must be last
-         });
-    
-    
+
+
+    $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'zh', 'zh_CN', 'zh_TW', 'pt'], {
+        'en_*': 'en',
+        'de_*': 'de',
+        'es_*': 'es',
+        'fr_*': 'fr',
+        'it_*': 'it',
+        'ja_*': 'ja',
+        'ko_*': 'ko',
+        'pt_*': 'pt',
+        '*': 'en' // must be last
+    });
+
+
 
     //$translateProvider.determinePreferredLanguage();
     //$translateProvider.preferredLanguage("en");
@@ -1605,8 +1710,8 @@ angular.module('zmApp', [
 
     $urlRouterProvider.otherwise(function ($injector, $location) {
         var $state = $injector.get("$state");
-
-        $state.go("zm-portal-login");
+        // we will do this after data is loaded
+       // $state.go("zm-portal-login");
 
     });
 

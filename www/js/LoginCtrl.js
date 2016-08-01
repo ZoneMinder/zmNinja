@@ -1,8 +1,8 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,URI */
+/* global cordova,StatusBar,angular,console,alert,URI, localforage */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$localstorage', '$stateParams', '$translate', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $localstorage, $stateParams, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups',  '$stateParams', '$translate', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $stateParams, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -34,7 +34,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     function onPause()
     {
         ZMDataModel.zmLog ("Login screen going to background, saving data");
-        $localstorage.setObject ("settings-temp-data",$scope.loginData);
+        localforage.setItem ("settings-temp-data",$scope.loginData);
         
     }
     
@@ -251,17 +251,22 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         
         else
         {
-            var savedData = $localstorage.getObject ("settings-temp-data");
-            if (! ZMDataModel.isEmpty(savedData))
-            {
-                $scope.loginData = savedData;
-                ZMDataModel.zmLog ("retrieved pre-stored loginData on past pause: "  + JSON.stringify($scope.loginData));
-                $localstorage.setObject("settings-temp-data", {});
-            }
-            else 
-            {
-                ZMDataModel.zmLog ("Not recovering login data as its empty");
-            }
+            var savedData;
+            localforage.getItem("settings-temp-data").then (function(value) {
+                savedData = value;
+                //= zmStorageService.getObject ("settings-temp-data");
+                if (! ZMDataModel.isEmpty(savedData))
+                {
+                    $scope.loginData = savedData;
+                    ZMDataModel.zmLog ("retrieved pre-stored loginData on past pause: "  + JSON.stringify($scope.loginData));
+                    localforage.removeItem("settings-temp-data");
+                    //zmStorageService.setObject("settings-temp-data", {});
+                }
+                else 
+                {
+                    ZMDataModel.zmLog ("Not recovering login data as its empty");
+                }
+            });
         }
         
         

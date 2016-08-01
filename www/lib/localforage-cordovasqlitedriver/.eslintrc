@@ -1,0 +1,25 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+        "modules": true
+    }
+  },
+  "extends": "eslint:recommended",
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "rules":{
+    "no-console": 0
+  },
+  "globals": {
+    "localforage": true,
+    "Promise": true,
+    "console": true,
+    "self": true,
+    "System": true
+  }
+}

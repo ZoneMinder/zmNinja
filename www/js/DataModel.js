@@ -2,7 +2,7 @@
 
 
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console, URI, moment*/
+/* global cordova,StatusBar,angular,console, URI, moment, localforage*/
 
 // This is my central data respository and common functions
 // that many other controllers use
@@ -10,7 +10,7 @@
 
 angular.module('zmApp.controllers')
 
-.service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions', '$translate',
+.service('ZMDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions', '$translate', '$cordovaSQLite',
  function
     ($http, $q, $ionicLoading, $ionicBackdrop, $fileLogger,
         zm, $rootScope, $ionicContentBanner, $timeout, $cordovaPinDialog,
@@ -24,6 +24,8 @@ angular.module('zmApp.controllers')
         var monitors = [];
         var multiservers = [];
         var oldevents = [];
+        var migrationComplete = false;
+
 
         var languages = [
             {
@@ -41,7 +43,10 @@ angular.module('zmApp.controllers')
         ];
 
         var serverGroupList = {};
-
+        var defaultLang = 'en';
+        var isFirstUse = true;
+        var lastUpdateCheck = null;
+        var latestBlogPostChecked = null;
         var loginData = {
             'serverName': '',
             'username': '',
@@ -65,7 +70,7 @@ angular.module('zmApp.controllers')
             'eventServerInterval': '', // list of intervals for all monitors
             'refreshSec': '2', // timer value for frame change in sec 
             'enableLogs': true,
-            'enableDebug': false, // if enabled with log messages with "debug"
+            'enableDebug': true, // if enabled with log messages with "debug"
             'usePin': false,
             'pinCode': '',
             'canSwipeMonitors': true,
@@ -140,11 +145,29 @@ angular.module('zmApp.controllers')
         }
 
 
+
+
         function setLogin(newLogin) {
             loginData = angular.copy(newLogin);
             serverGroupList[loginData.serverName] = angular.copy(loginData);
-            $localstorage.setObject("serverGroupList", serverGroupList);
-            $localstorage.set("defaultServerName", loginData.serverName);
+            //$localstorage.setObject("serverGroupList", serverGroupList);
+            localforage.setItem("serverGroupList", serverGroupList, function (err) {
+                if (err) zmLog("localforage store error " + JSON.stringify(err));
+            });
+            //$localstorage.set("defaultServerName", loginData.serverName);
+            localforage.setItem("defaultServerName", loginData.serverName, function (err) {
+                if (err) zmLog("localforage store error " + JSON.stringify(err));
+            });
+
+
+
+            //setDB("serverGroupList", serverGroupList);
+            //setDB ("defaultServerName", loginData.serverName);
+
+
+
+
+
             // console.log ("SAVING " + loginData.serverName);
             // console.log ("DATA IS " + JSON.stringify(loginData));
 
@@ -205,8 +228,13 @@ angular.module('zmApp.controllers')
             // used by various controllers to log messages to file
             //-------------------------------------------------------------
 
-            isEmpty: function (obj)
-            {
+            migrationComplete: function () {
+                migrationComplete = true;
+            },
+
+
+
+            isEmpty: function (obj) {
                 return isEmpty(obj);
             },
 
@@ -222,6 +250,25 @@ angular.module('zmApp.controllers')
 
                 zmDebug(val);
             },
+
+            setLastUpdateCheck: function (val) {
+                lastUpdateCheck = val;
+                localforage.setItem("lastUpdateCheck", lastUpdateCheck);
+            },
+
+            getLastUpdateCheck: function () {
+                return lastUpdateCheck;
+            },
+
+            setLatestBlogPostChecked: function (val) {
+                latestBlogPostChecked = val;
+                localforage.seItem("latestBlogPostChecked", latestBlogPostChecked);
+            },
+
+            getLatestBlogPostChecked: function () {
+                return latestBlogPostChecked;
+            },
+
 
             // This function is called when the app is ready to run
             // sets up various variables
@@ -369,185 +416,206 @@ angular.module('zmApp.controllers')
             init: function () {
                 // console.log("****** DATAMODEL INIT SERVICE CALLED ********");
 
+
+
+
+
+
+
                 zmLog("ZMData init: checking for stored variables & setting up log file");
 
-                serverGroupList = $localstorage.getObject("serverGroupList");
+                $ionicLoading.show({
+                    template: "retrieving profile data..."
+                });
+                localforage.getItem("serverGroupList").then(function (val) {
+                    $ionicLoading.hide();
+                    serverGroupList = val;
+                    console.log(">>>> serverGroupList " + JSON.stringify(serverGroupList));
+                    var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"Events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"enableAlarmCount\":true,\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
+                    var demoS = JSON.parse(demoServer);
+                    console.log("JSON parsed demo" + JSON.stringify(demoS));
 
-                var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"Events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"enableAlarmCount\":true,\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
-                var demoS = JSON.parse(demoServer);
-                console.log("JSON parsed demo" + JSON.stringify(demoS));
-
-                var isFoundDemo = false;
-                var as = Object.keys(serverGroupList);
-                for (var x = 0; x < as.length; x++) {
-                    if (as[x] == 'zmNinjaDemo')
-                        isFoundDemo = true;
-                    //console.log ("************ FOUND SERVER NAME " + as[x]);
-                    // if serverGroupList[x]
-                }
-
-                // Don't add the demo if there is another server
-                // because this means the user deleted it 
-
-                if (!isFoundDemo && as.length == 0) {
-                    zmDebug("Pushing demo server config to server groups");
-                    //serverGroupList.push(demoS);
-                    serverGroupList[demoS.serverName] = angular.copy(demoS);
-                }
-
-                var sname =
-                    $localstorage.get("defaultServerName");
-                //console.log ("!!!!!!!!!!!!!!!!!!default server name is  "  + sname);
-
-                var loadedData = serverGroupList[sname];
-                if (!isEmpty(loadedData)) {
-                    loginData = loadedData;
-
-                    // old version hacks for new variables
-
-                    if (typeof loginData.enableAlarmCount === 'undefined') {
-                        zmDebug("enableAlarmCount does not exist, setting to true");
-                        loginData.enableAlarmCount = true;
-                    }
-                    
-                    if (typeof loginData.onTapScreen == 'undefined')
-                    {
-                        loginData.onTapScreen = $translate.instant('kTapMontage');
-                    }
-                    
-                    if (loginData.onTapScreen != $translate.instant('kTapMontage') &&
-                        loginData.onTapScreen != $translate.instant('kTapEvents') &&
-                        loginData.onTapScreen != $translate.instant('kTapLiveMonitor'))
-                    {
-                        zmLog ("Invalid onTap setting found, resetting");
-                        loginData.onTapScreen = $translate.instant('kMontage');
-                    }
-                    
-
-                    if (typeof loginData.minAlarmCount === 'undefined') {
-                        zmDebug("minAlarmCount does not exist, setting to true");
-                        loginData.minAlarmCount = 1;
+                    var isFoundDemo = false;
+                    var as = Object.keys(serverGroupList);
+                    for (var x = 0; x < as.length; x++) {
+                        if (as[x] == 'zmNinjaDemo')
+                            isFoundDemo = true;
+                        //console.log ("************ FOUND SERVER NAME " + as[x]);
+                        // if serverGroupList[x]
                     }
 
+                    // Don't add the demo if there is another server
+                    // because this means the user deleted it 
 
-                    if (typeof loginData.montageSize == 'undefined') {
-                        zmDebug("montageSize does not exist, setting to 2 (2 per col)");
-                        loginData.montageSize = 2;
+                    if (!isFoundDemo && as.length == 0) {
+                        zmDebug("Pushing demo server config to server groups");
+                        //serverGroupList.push(demoS);
+                        serverGroupList[demoS.serverName] = angular.copy(demoS);
                     }
 
+                    var sname;
+                    $ionicLoading.show({
+                        template: "retrieving profile data..."
+                    });
+                    localforage.getItem("defaultServerName")
+                        .then(function (val) {
+                            $ionicLoading.hide();
+                            //console.log ("!!!!!!!!!!!!!!!!!!default server name is  "  + sname);
+                            sname = val;
+                            console.log("!!!!!!!!!!!!!!!!!!!Got VAL " + sname);
+                            var loadedData = serverGroupList[sname];
+                            console.log(">>>>>>>>>>> loadedData is: " + JSON.stringify(loadedData));
+                            if (!isEmpty(loadedData)) {
+                                loginData = loadedData;
 
-                    if (typeof loginData.useNphZms == 'undefined') {
-                        zmDebug("useNphZms does not exist. Setting to true");
-                        loginData.useNphZms = true;
-                    }
+                                // old version hacks for new variables
 
+                                if (typeof loginData.enableAlarmCount === 'undefined') {
+                                    zmDebug("enableAlarmCount does not exist, setting to true");
+                                    loginData.enableAlarmCount = true;
+                                }
 
+                                if (typeof loginData.onTapScreen == 'undefined') {
+                                    loginData.onTapScreen = $translate.instant('kTapMontage');
+                                }
 
-                    if (typeof loginData.useNphZmsForEvents == 'undefined') {
-                        zmDebug("useNphZmsForEvents does not exist. Setting to true");
-                        loginData.useNphZmsForEvents = true;
-                    }
-
-                    if (typeof loginData.forceImageModePath == 'undefined') {
-                        zmDebug("forceImageModePath does not exist. Setting to false");
-                        loginData.forceImageModePath = false;
-                    }
-
-                    if (typeof loginData.reachability == 'undefined') {
-                        zmDebug("reachability does not exist. Setting to true");
-                        loginData.reachability = true;
-                    }
-                    // force it - this may not be the problem
-                    loginData.reachability = true;
-
-                    // and now, force enable it
-                    loginData.useNphZms = true;
-                    loginData.useNphZmsForEvents = true;
-
-                    if (typeof loginData.packMontage == 'undefined') {
-                        zmDebug("packMontage does not exist. Setting to false");
-                        loginData.packMontage = false;
-                    }
-
-                    if (typeof loginData.forceNetworkStop == 'undefined') {
-                        zmDebug("forceNetwork does not exist. Setting to false");
-                        loginData.forceNetworkStop = false;
-                    }
-
-                    if (typeof loginData.enableLogs == 'undefined') {
-                        zmDebug("enableLogs does not exist. Setting to true");
-                        loginData.enableLogs = true;
-                    }
+                                if (loginData.onTapScreen != $translate.instant('kTapMontage') &&
+                                    loginData.onTapScreen != $translate.instant('kTapEvents') &&
+                                    loginData.onTapScreen != $translate.instant('kTapLiveMonitor')) {
+                                    zmLog("Invalid onTap setting found, resetting");
+                                    loginData.onTapScreen = $translate.instant('kMontage');
+                                }
 
 
-
-                    if (typeof loginData.defaultPushSound == 'undefined') {
-                        zmDebug("defaultPushSound does not exist. Setting to false");
-                        loginData.defaultPushSound = false;
-                    }
-
+                                if (typeof loginData.minAlarmCount === 'undefined') {
+                                    zmDebug("minAlarmCount does not exist, setting to true");
+                                    loginData.minAlarmCount = 1;
+                                }
 
 
-                    if (typeof loginData.exitOnSleep == 'undefined') {
-                        zmDebug("exitOnSleep does not exist. Setting to false");
-                        loginData.exitOnSleep = false;
-                    }
-
-                    if (typeof loginData.enableBlog == 'undefined') {
-                        zmDebug("enableBlog does not exist. Setting to true");
-                        loginData.enableBlog = true;
-
-                    }
-
-                    if (typeof loginData.packeryPositions == 'undefined') {
-                        zmDebug("packeryPositions does not exist. Setting to empty");
-                        loginData.packeryPositions = "";
-
-                    }
+                                if (typeof loginData.montageSize == 'undefined') {
+                                    zmDebug("montageSize does not exist, setting to 2 (2 per col)");
+                                    loginData.montageSize = 2;
+                                }
 
 
-                    if (typeof loginData.packerySizes == 'undefined') {
-                        zmDebug("packerySizes does not exist. Setting to empty");
-                        loginData.packerySizes = "";
-
-                    }
-
-                    if (typeof loginData.use24hr == 'undefined') {
-                        zmDebug("use24hr does not exist. Setting to false");
-                        loginData.use24hr = false;
-
-                    }
-
-                    if (typeof timelineModalGraphType == 'undefined') {
-                        zmDebug("timeline graph type not set. Setting to all");
-                        loginData.timelineModalGraphType = $translate.instant('kGraphAll');
-                        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + loginData.timelineModalGraphType);
-                    }
-
-                    if (typeof loginData.resumeDelay == 'undefined') {
-                        zmDebug("resumeDelay does not exist. Setting to 0");
-                        loginData.resumeDelay = "0";
-
-                    }
+                                if (typeof loginData.useNphZms == 'undefined') {
+                                    zmDebug("useNphZms does not exist. Setting to true");
+                                    loginData.useNphZms = true;
+                                }
 
 
 
-                    if (typeof loginData.montageHistoryQuality == 'undefined') {
-                        zmDebug("montageHistoryQuality does not exist. Setting to 50");
-                        loginData.montageHistoryQuality = "50";
+                                if (typeof loginData.useNphZmsForEvents == 'undefined') {
+                                    zmDebug("useNphZmsForEvents does not exist. Setting to true");
+                                    loginData.useNphZmsForEvents = true;
+                                }
 
-                    }
+                                if (typeof loginData.forceImageModePath == 'undefined') {
+                                    zmDebug("forceImageModePath does not exist. Setting to false");
+                                    loginData.forceImageModePath = false;
+                                }
 
-                    zmLog("DataModel init recovered this loginData as " + JSON.stringify(loginData));
-                } else {
-                    zmLog("defaultServer configuration NOT found. Keeping login at defaults");
-                }
+                                if (typeof loginData.reachability == 'undefined') {
+                                    zmDebug("reachability does not exist. Setting to true");
+                                    loginData.reachability = true;
+                                }
+                                // force it - this may not be the problem
+                                loginData.reachability = true;
+
+                                // and now, force enable it
+                                loginData.useNphZms = true;
+                                loginData.useNphZmsForEvents = true;
+
+                                if (typeof loginData.packMontage == 'undefined') {
+                                    zmDebug("packMontage does not exist. Setting to false");
+                                    loginData.packMontage = false;
+                                }
+
+                                if (typeof loginData.forceNetworkStop == 'undefined') {
+                                    zmDebug("forceNetwork does not exist. Setting to false");
+                                    loginData.forceNetworkStop = false;
+                                }
+
+                                if (typeof loginData.enableLogs == 'undefined') {
+                                    zmDebug("enableLogs does not exist. Setting to true");
+                                    loginData.enableLogs = true;
+                                }
 
 
-                monitorsLoaded = 0;
-                //console.log("Getting out of ZMDataModel init");
-                $rootScope.showBlog = loginData.enableBlog;
-                zmDebug("loginData structure values: " + JSON.stringify(loginData));
+
+                                if (typeof loginData.defaultPushSound == 'undefined') {
+                                    zmDebug("defaultPushSound does not exist. Setting to false");
+                                    loginData.defaultPushSound = false;
+                                }
+
+
+
+                                if (typeof loginData.exitOnSleep == 'undefined') {
+                                    zmDebug("exitOnSleep does not exist. Setting to false");
+                                    loginData.exitOnSleep = false;
+                                }
+
+                                if (typeof loginData.enableBlog == 'undefined') {
+                                    zmDebug("enableBlog does not exist. Setting to true");
+                                    loginData.enableBlog = true;
+
+                                }
+
+                                if (typeof loginData.packeryPositions == 'undefined') {
+                                    zmDebug("packeryPositions does not exist. Setting to empty");
+                                    loginData.packeryPositions = "";
+
+                                }
+
+
+                                if (typeof loginData.packerySizes == 'undefined') {
+                                    zmDebug("packerySizes does not exist. Setting to empty");
+                                    loginData.packerySizes = "";
+
+                                }
+
+                                if (typeof loginData.use24hr == 'undefined') {
+                                    zmDebug("use24hr does not exist. Setting to false");
+                                    loginData.use24hr = false;
+
+                                }
+
+                                if (typeof timelineModalGraphType == 'undefined') {
+                                    zmDebug("timeline graph type not set. Setting to all");
+                                    loginData.timelineModalGraphType = $translate.instant('kGraphAll');
+                                    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + loginData.timelineModalGraphType);
+                                }
+
+                                if (typeof loginData.resumeDelay == 'undefined') {
+                                    zmDebug("resumeDelay does not exist. Setting to 0");
+                                    loginData.resumeDelay = "0";
+
+                                }
+
+
+
+                                if (typeof loginData.montageHistoryQuality == 'undefined') {
+                                    zmDebug("montageHistoryQuality does not exist. Setting to 50");
+                                    loginData.montageHistoryQuality = "50";
+
+                                }
+
+                                zmLog("DataModel init recovered this loginData as " + JSON.stringify(loginData));
+                            } else {
+                                zmLog("defaultServer configuration NOT found. Keeping login at defaults");
+                            }
+                            // FIXME: HACK: This is the latest entry point into dataModel init, so start portal login after this
+                            // not the neatest way
+                            $rootScope.$emit('init-complete');
+                        });
+
+                    monitorsLoaded = 0;
+                    //console.log("Getting out of ZMDataModel init");
+                    $rootScope.showBlog = loginData.enableBlog;
+                    zmDebug("loginData structure values: " + JSON.stringify(loginData));
+                    //$rootScope.$emit('init-complete');
+                });
 
             },
 
@@ -592,10 +660,16 @@ angular.module('zmApp.controllers')
             setDefaultLanguage: function (l, permanent) {
 
                 if (!l) l = 'en';
+                defaultLang = l;
                 var d = $q.defer();
-                if (permanent)
-                    window.localStorage.setItem("defaultLang", l);
+                if (permanent) {
+                    //window.localStorage.setItem("defaultLang", l);
 
+                    console.log("setting default lang");
+                    localforage.setItem("defaultlang", l);
+                }
+
+                console.log("invoking translate use with " + l);
                 $translate.use(l).then(function (data) {
                     zmLog("Device Language is:" + data);
                     moment.locale(data);
@@ -613,7 +687,8 @@ angular.module('zmApp.controllers')
             },
 
             getDefaultLanguage: function () {
-                return window.localStorage.getItem("defaultLang");
+                return defaultLang;
+                //return window.localStorage.getItem("defaultLang");
 
             },
 
@@ -653,7 +728,9 @@ angular.module('zmApp.controllers')
             },
 
             isFirstUse: function () {
-                return ((window.localStorage.getItem("isFirstUse") == undefined) ? true : false);
+                console.log("isFirstUse is " + isFirstUse);
+                return isFirstUse;
+                // return ((window.localStorage.getItem("isFirstUse") == undefined) ? true : false);
 
             },
 
@@ -665,7 +742,10 @@ angular.module('zmApp.controllers')
             // Allow the option to reset first use if I need it in future
             //-----------------------------------------------------------------
             setFirstUse: function (val) {
-                window.localStorage.setItem("isFirstUse", val ? "1" : "0");
+                //window.localStorage.setItem("isFirstUse", val ? "1" : "0");
+                //localforage.setItem("isFirstUse", val, 
+                //   function(err) {if (err) zmLog ("localforage error, //storing isFirstUse: " + JSON.stringify(err));});
+                isFirstUse = val;
 
             },
 
