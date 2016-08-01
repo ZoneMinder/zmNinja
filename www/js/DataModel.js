@@ -427,6 +427,10 @@ angular.module('zmApp.controllers')
                 $ionicLoading.show({
                     template: "retrieving profile data..."
                 });
+                
+                
+                
+                
                 localforage.getItem("serverGroupList").then(function (val) {
                     $ionicLoading.hide();
                     serverGroupList = val;
@@ -746,6 +750,8 @@ angular.module('zmApp.controllers')
                 //localforage.setItem("isFirstUse", val, 
                 //   function(err) {if (err) zmLog ("localforage error, //storing isFirstUse: " + JSON.stringify(err));});
                 isFirstUse = val;
+                localforage.setItem ("isFirstUse",val);
+                console.log (">>>>>>setting isFirstUse to " + val);
 
             },
 
