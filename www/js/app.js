@@ -1043,7 +1043,7 @@ angular.module('zmApp', [
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var requireLogin = toState.data.requireLogin;
 
-            if (ZMDataModel.isLoggedIn() || toState.name =="login" ) {
+            if (ZMDataModel.isLoggedIn() || toState.data.requireLogin ==false ) {
                 //console.log("State transition is authorized");
 
                 return;
@@ -1115,7 +1115,20 @@ angular.module('zmApp', [
                 localforage.getItem("defaultServerName")
                 .then (function (val)
                 {
-                    if (!val && defaultServerName)
+                    console.log (">>>> localforage reported defaultServerName as " + val);
+                    // if neither, we are in first use, mates!
+                    if (!val && !defaultServerName)
+                    {
+                        continueInitialInit();
+                      /*  ZMDataModel.zmDebug ("Neither localstorage or forage  - First use, showing warm and fuzzy...");
+                    $ionicHistory.nextViewOptions({
+                        disableAnimate: true,
+                        disableBack: true
+                    });
+                    $state.go('first-use');*/
+                    }
+                    
+                    else if (!val && defaultServerName)
                     {
                         ZMDataModel.zmLog (">>>>Importing data from localstorage....");
                         
@@ -1252,8 +1265,26 @@ angular.module('zmApp', [
                     .then(function (success) {
                         ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
                         moment.locale($translate.proposedLanguage());
-                        continueRestOfInit();
-
+                    
+                        // Remember this is before data Init
+                        // so I need to do a direct forage fetch
+                        localforage.getItem("isFirstUse")
+                        .then (function(val)
+                        {
+                            console.log ("isFirstUse is " + val);
+                            if (val == null || val == true)
+                            {
+                                ZMDataModel.zmLog ("First time detected");
+                                $state.go("first-use");
+                            }
+                            else
+                            {
+                             continueRestOfInit();     
+                            }
+                            
+                        });
+                    
+                                
                     });
             }
 
