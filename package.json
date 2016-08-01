@@ -69,13 +69,18 @@
       "locator": "https://github.com/jcjee/email-composer",
       "id": "com.jcjee.plugins.emailcomposer"
     },
+    "cordova-plugin-compat",
     {
       "locator": "https://github.com/pliablepixels/cordova-plugin-media",
-      "id": "org.apache.cordova.media"
+      "id": "cordova-plugin-media"
     },
     {
       "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
       "id": "cordova-plugin-certificates"
+    },
+    {
+      "locator": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
+      "id": "cordova-sqlite-storage"
     }
   ],
   "cordovaPlatforms": [
