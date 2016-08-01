@@ -5,6 +5,8 @@
     "ionic": "driftyco/ionic-bower#1.2.4"
   },
   "dependencies": {
+    "localforage": "~1.4.2",
+    "localforage-cordovasqlitedriver": "localForage-cordovaSQLiteDriver#~1.4.1",
     "ng-mfb": "~0.4.0"
   }
 }

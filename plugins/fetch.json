@@ -188,8 +188,9 @@
     },
     "cordova-sqlite-storage": {
         "source": {
-            "type": "registry",
-            "id": "cordova-sqlite-storage"
+            "type": "git",
+            "url": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}

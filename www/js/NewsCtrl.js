@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,moment*/
 
-angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel','$ionicSideMenuDelegate', '$ionicHistory', '$state', '$http', 'zm', '$localstorage', function ($scope, $rootScope, $ionicModal, ZMDataModel,$ionicSideMenuDelegate, $ionicHistory, $state, $http, zm, $localstorage) {
+angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel','$ionicSideMenuDelegate', '$ionicHistory', '$state', '$http', 'zm', function ($scope, $rootScope, $ionicModal, ZMDataModel,$ionicSideMenuDelegate, $ionicHistory, $state, $http, zm) {
 $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -39,7 +39,8 @@ $scope.openMenu = function () {
     
     $scope.isUnread = function(itemdate)
     {
-        var lastDate = $localstorage.get("latestBlogPostChecked");
+        var lastDate = ZMDataModel.getLatestBlogPostChecked();
+        //get("latestBlogPostChecked");
         if (!lastDate) return true;
         var mLastDate = moment(lastDate);
         var mItemDate = moment(itemdate);
@@ -52,13 +53,15 @@ $scope.openMenu = function () {
     
     $scope.loadPost = function (item, itemdate)
     {
-        var lastDate = $localstorage.get("latestBlogPostChecked");
+        var lastDate =
+           ZMDataModel.getLatestBlogPostChecked(); //zmStorageService.get("latestBlogPostChecked");
         
         
         if (!lastDate)
         {
             ZMDataModel.zmDebug ("First time checking blog posts, I see");
-            $localstorage.set("latestBlogPostChecked", itemdate);
+            ZMDataModel.setLatestBlogPostChecked(itemdate);
+            //zmStorageService.set("latestBlogPostChecked", itemdate);
         }
         
         else
@@ -71,7 +74,8 @@ $scope.openMenu = function () {
             if (mItemDate.diff(mLastDate) >0)
             {
                 ZMDataModel.zmDebug ("Updating lastDate to this post");
-                $localstorage.set("latestBlogPostChecked", itemdate);
+                
+               ZMDataModel.setLatestBlogPostChecked(itemdate); //zmStorageService.set("latestBlogPostChecked", itemdate);
                 
                 if (itemdate == $scope.newsItems[0].date)
                 {
