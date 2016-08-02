@@ -620,7 +620,7 @@ angular.module('zmApp.controllers')
                     //console.log("Getting out of ZMDataModel init");
                     $rootScope.showBlog = loginData.enableBlog;
                     zmDebug("loginData structure values: " + JSON.stringify(loginData));
-                    //$rootScope.$emit('init-complete');
+                   
                 });
 
             },
