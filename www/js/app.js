@@ -78,8 +78,8 @@ angular.module('zmApp', [
     eventHistoryTimer: 10000,
     eventPlaybackQuery: 3000,
     packeryTimer: 500,
-    dbName: 'zmninja.db',
-    dbTableName: 'userProfile'
+    dbName: 'zmninja'
+    
 
 
 
@@ -1099,7 +1099,11 @@ angular.module('zmApp', [
             ZMDataModel.zmLog("You are running on " + $rootScope.platformOS);
 
 
-
+            localforage.config({
+                name: zm.dbName
+            
+            });
+            
             localforage.defineDriver(window.cordovaSQLiteDriver).then(function () {
                 return localforage.setDriver([
             // Try setting cordovaSQLiteDriver if available,
