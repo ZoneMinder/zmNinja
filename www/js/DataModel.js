@@ -97,7 +97,7 @@ angular.module('zmApp.controllers')
             'packeryPositions': '',
             'packerySizes': '',
             'timelineModalGraphType': 'all',
-            'resumeDelay': 300,
+            'resumeDelay': 0,
             'language': 'en',
             'reachability': true,
             'forceImageModePath': false,
@@ -593,9 +593,11 @@ angular.module('zmApp.controllers')
 
                                 if (typeof loginData.resumeDelay == 'undefined') {
                                     zmDebug("resumeDelay does not exist. Setting to 0");
-                                    loginData.resumeDelay = "0";
+                                    loginData.resumeDelay = 0;
 
                                 }
+                                // override resumeDelay - it was developed on a wrong assumption
+                                loginData.resumeDelay = 0;
 
 
 

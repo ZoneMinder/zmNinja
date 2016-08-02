@@ -646,7 +646,10 @@ angular.module('zmApp', [
     });
 
     //------------------------------------------------------------------
-    // doLogin() emits this when our auth credentials work
+    // broadcasted after :
+    // a) device is ready
+    // b) language loaded
+    // c) localforage data loaded
     //------------------------------------------------------------------
 
     $rootScope.$on("init-complete", function () {
@@ -654,6 +657,9 @@ angular.module('zmApp', [
         $state.go("zm-portal-login");
     });
     
+    //------------------------------------------------------------------
+    // doLogin() emits this when our auth credentials work
+    //------------------------------------------------------------------
 
     $rootScope.$on("auth-success", function () {
         var contentBannerInstance = $ionicContentBanner.show({
@@ -1726,24 +1732,7 @@ angular.module('zmApp', [
 
     });
 
-
-    // if none of the above states are matched, use this as the fallback
-    var defaultState = "/zm-portal-login";
-    //var defaultState = "/login";
-    // as it turns out I can't really inject a factory in config the normal way
-
-
-    //$urlRouterProvider.otherwise(defaultState);
-
-    // https://github.com/angular-ui/ui-router/issues/600
-    // If I start using the urlRouterProvider above and the
-    // first state is monitors it goes into a digest loop.
-
-    $urlRouterProvider.otherwise(function ($injector, $location) {
-        var $state = $injector.get("$state");
-        // we will do this after data is loaded
-       // $state.go("zm-portal-login");
-
-    });
-
+// We are NOT going to default route. Routing to a view will start on 
+    // a broadcast of "init-complete" 
+    
 }); //config
