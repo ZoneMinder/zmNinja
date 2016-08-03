@@ -672,7 +672,10 @@ angular.module('zmApp.controllers')
                     //window.localStorage.setItem("defaultLang", l);
 
                     console.log("setting default lang");
-                    localforage.setItem("defaultlang", l);
+                    localforage.setItem("defaultLang", l)
+                    .then (function (val) {
+                        zmLog ("Set language in localforage to: " + val);
+                    });
                 }
 
                 console.log("invoking translate use with " + l);
