@@ -1255,47 +1255,54 @@ angular.module('zmApp', [
 
 
                 $ionicNativeTransitions.enable(true, false);
+                
+                // At this stage, DataModel.init is not called yet
+                // but I do need to know the language
+                
+                ZMDataModel.zmLog ("Retrieving language before init is called...");
+                localforage.getItem("defaultLang")
+                .then (function(val) {
+
+                    var lang = val;
+                    console.log (">>>>>>>>>>>>>> LANG IS " + val);
 
 
-                var lang = ZMDataModel.getDefaultLanguage();
+                    if (lang == undefined || lang == null) {
+                        ZMDataModel.zmLog("No language set, switching to en");
+                        lang = "en";
 
 
-                if (lang == undefined) {
-                    ZMDataModel.zmLog("No language set, switching to en");
-                    lang = "en";
+                    } else {
+                        ZMDataModel.zmLog("Language stored as:" + lang);
 
+                    }
 
-                } else {
-                    ZMDataModel.zmLog("Language stored as:" + lang);
+                    ZMDataModel.setDefaultLanguage(lang, false)
+                        .then(function (success) {
+                            ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
+                            moment.locale($translate.proposedLanguage());
 
-                }
-                 //continueRestOfInit();
-                // This always returns success - I'm not rejecting
-                ZMDataModel.setDefaultLanguage(lang, false)
-                    .then(function (success) {
-                        ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
-                        moment.locale($translate.proposedLanguage());
-                    
-                        // Remember this is before data Init
-                        // so I need to do a direct forage fetch
-                        localforage.getItem("isFirstUse")
-                        .then (function(val)
-                        {
-                            console.log ("isFirstUse is " + val);
-                            if (val == null || val == true)
+                            // Remember this is before data Init
+                            // so I need to do a direct forage fetch
+                            localforage.getItem("isFirstUse")
+                            .then (function(val)
                             {
-                                ZMDataModel.zmLog ("First time detected");
-                                $state.go("first-use");
-                            }
-                            else
-                            {
-                             continueRestOfInit();     
-                            }
-                            
+                                console.log ("isFirstUse is " + val);
+                                if (val == null || val == true)
+                                {
+                                    ZMDataModel.zmLog ("First time detected");
+                                    $state.go("first-use");
+                                }
+                                else
+                                {
+                                 continueRestOfInit();     
+                                }
+
+                            });
+
+
                         });
-                    
-                                
-                    });
+                });
             }
 
 
