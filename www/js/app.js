@@ -1264,7 +1264,7 @@ angular.module('zmApp', [
                 .then (function(val) {
 
                     var lang = val;
-                    console.log (">>>>>>>>>>>>>> LANG IS " + val);
+                    //console.log (">>>>>>>>>>>>>> LANG IS " + val);
 
 
                     if (lang == undefined || lang == null) {
