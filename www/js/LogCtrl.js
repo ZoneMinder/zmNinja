@@ -96,12 +96,14 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
                 // do my best to replace sensitive information
                 var loginData = ZMDataModel.getLogin();
-                // if its null you will see deleted everywhere
-                if (loginData.password !="")
+            
+            
+                // We don't need this anymore as zmLog and zmDebug now strip passwords
+                /*if (loginData.password !="")
                 {
                     var re1 = new RegExp(loginData.password, "g");
                     logstring = logstring.replace(re1, "<deleted>");
-                }
+                }*/
                 // keep the protocol, helps to debug
                 var urlNoProtocol = loginData.url.replace(/.*?:\/\//, "");
                 if (urlNoProtocol != "")
