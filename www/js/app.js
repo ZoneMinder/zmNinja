@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, localforage,$*/
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, localforage,$*/
 
 
 var appVersion = "0.0.0";
@@ -78,10 +78,9 @@ angular.module('zmApp', [
     eventHistoryTimer: 10000,
     eventPlaybackQuery: 3000,
     packeryTimer: 500,
-    dbName: 'zmninja'
+    dbName: 'zmninja',
+    cipherKey: 'sdf#@#%FSXSA_AR'
     
-
-
 
 })
 
@@ -1085,6 +1084,11 @@ angular.module('zmApp', [
         //---------------------------------------------------------------------
 
         $ionicPlatform.ready(function () {
+            
+            
+            
+            
+            
 
             $rootScope.db = null;
             
@@ -1176,7 +1180,9 @@ angular.module('zmApp', [
                         })
                         .then (function() {
                             ZMDataModel.zmLog (">>>>migrated latestBlogPostChecked...");
-                            return localforage.setItem('serverGroupList', sgl);
+                            // lets encrypt serverGroupList
+                            var ct = CryptoJS.AES.encrypt(JSON.stringify(sgl), zm.cipherKey);
+                            return localforage.setItem('serverGroupList', ct);
                         })
                         .then (function() {
                             ZMDataModel.zmLog (">>>>migrated serverGroupList...");

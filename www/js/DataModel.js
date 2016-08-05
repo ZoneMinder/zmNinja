@@ -2,7 +2,7 @@
 
 
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console, URI, moment, localforage*/
+/* global cordova,StatusBar,angular,console, URI, moment, localforage, CryptoJS */
 
 // This is my central data respository and common functions
 // that many other controllers use
@@ -141,7 +141,20 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         function zmLog(val, logtype) {
             if (loginData.enableLogs)
+            {
+                if (val!== undefined)
+                {
+                   var regex = /"password":".*?"/;
+                    
+                    //console.log ("VAL IS " + val);
+                    val = val.replace(regex, "<password removed>");
+                    
+                }
+                // make sure password is removed
+                //"username":"zmninja","password":"xyz",
+                //val = val.replace(/\"password:\",
                 $fileLogger.log(logtype, val);
+            }
         }
 
 
@@ -150,8 +163,12 @@ angular.module('zmApp.controllers')
         function setLogin(newLogin) {
             loginData = angular.copy(newLogin);
             serverGroupList[loginData.serverName] = angular.copy(loginData);
+        
+            var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
+        
+            console.log ("****serverLogin was encrypted to " + ct);
             //$localstorage.setObject("serverGroupList", serverGroupList);
-            localforage.setItem("serverGroupList", serverGroupList, function (err) {
+            localforage.setItem("serverGroupList", ct, function (err) {
                 if (err) zmLog("localforage store error " + JSON.stringify(err));
             });
             //$localstorage.set("defaultServerName", loginData.serverName);
@@ -161,22 +178,22 @@ angular.module('zmApp.controllers')
 
 
 
-            //setDB("serverGroupList", serverGroupList);
-            //setDB ("defaultServerName", loginData.serverName);
-
-
-
-
-
-            // console.log ("SAVING " + loginData.serverName);
-            // console.log ("DATA IS " + JSON.stringify(loginData));
 
         }
 
         // separate out a debug so we don't do this if comparison for normal logs
         function zmDebug(val) {
             if (loginData.enableDebug && loginData.enableLogs)
+            {
+                 if (val!== undefined)
+                {
+                    var regex = /"password":".*?"/;
+                    
+                    //console.log ("VAL IS " + val);
+                    val = val.replace(regex, "<password removed>");
+                }
                 $fileLogger.debug(val);
+            }
         }
 
         //credit: https://gist.github.com/alexey-bass/1115557
@@ -248,6 +265,7 @@ angular.module('zmApp.controllers')
 
             zmDebug: function (val) {
 
+               
                 zmDebug(val);
             },
 
@@ -432,12 +450,33 @@ angular.module('zmApp.controllers')
                 
                 
                 localforage.getItem("serverGroupList").then(function (val) {
+                    // decrypt it now
+                    
+                    var decodedVal;
+                    
+                    if (typeof val == 'string')
+                    {
+                        zmLog ("user profile encrypted, decoding...");
+                        var bytes  = CryptoJS.AES.decrypt(val.toString(), zm.cipherKey);
+                        decodedVal = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                        
+                    }
+                    else
+                    {
+                        zmLog ("user profile not encrypted");
+                        decodedVal = val;
+                    }
+                    
+                    zmDebug ("user profile retrieved:"+JSON.stringify(decodedVal));
+                    
                     $ionicLoading.hide();
-                    serverGroupList = val;
-                    console.log(">>>> serverGroupList " + JSON.stringify(serverGroupList));
+                    serverGroupList = decodedVal;
+                    
+                    
+                   // console.log(">>>> DECRYPTED serverGroupList " + JSON.stringify(serverGroupList));
                     var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"Events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"enableAlarmCount\":true,\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
                     var demoS = JSON.parse(demoServer);
-                    console.log("JSON parsed demo" + JSON.stringify(demoS));
+                    //console.log("JSON parsed demo" + JSON.stringify(demoS));
 
                     var isFoundDemo = false;
                     var as = Object.keys(serverGroupList);
@@ -466,9 +505,9 @@ angular.module('zmApp.controllers')
                             $ionicLoading.hide();
                             //console.log ("!!!!!!!!!!!!!!!!!!default server name is  "  + sname);
                             sname = val;
-                            console.log("!!!!!!!!!!!!!!!!!!!Got VAL " + sname);
+                           // console.log("!!!!!!!!!!!!!!!!!!!Got VAL " + sname);
                             var loadedData = serverGroupList[sname];
-                            console.log(">>>>>>>>>>> loadedData is: " + JSON.stringify(loadedData));
+                           // console.log(">>>>>>>>>>> loadedData is: " + JSON.stringify(loadedData));
                             if (!isEmpty(loadedData)) {
                                 loginData = loadedData;
 
@@ -588,7 +627,7 @@ angular.module('zmApp.controllers')
                                 if (typeof timelineModalGraphType == 'undefined') {
                                     zmDebug("timeline graph type not set. Setting to all");
                                     loginData.timelineModalGraphType = $translate.instant('kGraphAll');
-                                    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + loginData.timelineModalGraphType);
+                                    //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + loginData.timelineModalGraphType);
                                 }
 
                                 if (typeof loginData.resumeDelay == 'undefined') {
