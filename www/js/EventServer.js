@@ -366,7 +366,7 @@ angular.module('zmApp.controllers')
                         {
                             "android": {
                                 "senderID": zm.gcmSenderId,
-                                "icon": "ic_stat_notification",
+                                //"icon": "ic_stat_notification",
                                 "sound":"true"
                                 //"sound": android_media_file
                             }
