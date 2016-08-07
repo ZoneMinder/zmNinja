@@ -7,6 +7,33 @@
 // and whether the new API has a better mechanism
 
 angular.module('zmApp.controllers')
+
+    // alarm frames filter
+.filter('selectFrames', function ($filter, $translate) {
+
+    // Create the return function and set the required parameter name to **input**
+    return function (input, typeOfFrames) {
+
+        
+        var out = [];
+
+        angular.forEach(input, function (item) {
+
+
+            if (typeOfFrames==$translate.instant ('kShowTimeDiffFrames')) {
+                if (item.type == $translate.instant ('kShowTimeDiffFrames'))
+                    out.push(item);
+            }
+            else
+                out.push(item);
+
+        });
+
+        return out;
+    };
+
+})
+
     .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', function ($scope, $rootScope, zm, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate) {
 
         // events in last 5 minutes
@@ -28,7 +55,9 @@ angular.module('zmApp.controllers')
         var stackState;
         var ionRangeWatcher;
         var mycarouselWatcher;
+        $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
         
+                
         //---------------------------------------------------
         // initial code
         //---------------------------------------------------
@@ -333,6 +362,21 @@ angular.module('zmApp.controllers')
         $rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
     };
     
+        
+    $scope.toggleTypeOfAlarms = function()
+    {
+      //  "kShowAllFrames"             : "all",
+   // "kShowTimeDiffFrames"        :  "different timestamps"
+
+        if ($scope.typeOfFrames == $translate.instant('kShowAllFrames'))
+        {
+            $scope.typeOfFrames = $translate.instant ('kShowTimeDiffFrames');
+        }
+        else
+        {
+            $scope.typeOfFrames = $translate.instant ('kShowAllFrames');
+        }
+    };
     
 
         // not explictly handling error --> I have a default "No events found" message
@@ -742,16 +786,29 @@ angular.module('zmApp.controllers')
                             //$scope.slider_options.scale = [];
 
                             var i;
+                            var timestamp = null;
                             for (i = 0; i < data.event.Frame.length; i++) {
                                 if (data.event.Frame[i].Type == "Alarm") {
 
                                     //console.log ("**ONLY ALARM AT " + i + "of " + data.event.Frame.length);
+                                    var atype;
+                                    if (timestamp != data.event.Frame[i].TimeStamp)
+                                    {
+                                        
+                                        atype = $translate.instant('kShowTimeDiffFrames');
+                                    }
+                                    else
+                                    {
+                                        atype = $translate.instant('kShowAllFrames');
+                                    }
                                     $scope.alarm_images.push({
+                                        type:atype,
                                         id: data.event.Frame[i].Id,
                                         frameid: data.event.Frame[i].FrameId,
                                         score: data.event.Frame[i].Score,
                                         fname: padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg"
                                     });
+                                    timestamp = data.event.Frame[i].TimeStamp;
                                 } 
 
                             }
