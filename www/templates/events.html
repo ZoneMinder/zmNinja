@@ -145,11 +145,19 @@
                             <br/><br/>
                           
                             <div style="height:190px;">
-                                <p>scroll <i class="icon ion-arrow-left-c"></i>
-                                <i class="icon ion-arrow-right-c"></i></p>
+                                <p>
+                                    <!--scroll <i class="icon ion-arrow-left-c"></i> 
+                                <i class="icon ion-arrow-right-c"></i>-->
+                                
+                                    <button ng-click="toggleTypeOfAlarms()" class="button button-small button-assertive">
+                                    {{'kType' | translate}}:{{typeOfFrames}}
+                                    </button>
+                                </p>
+                                
+                                
                                 <ion-scroll direction="x" overflow-scroll="false">
                                   
-                                        <span ng-repeat="alarm in alarm_images">
+                                        <span ng-repeat="alarm in alarm_images | selectFrames: typeOfFrames">
                                                  
                                             <figure  class = "animated slideInLeft" style="display:inline-block">
                                                 <!--{{event.Event.baseURL}} p:{{event.Event.imageMode}}-->
