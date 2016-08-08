@@ -806,7 +806,8 @@ angular.module('zmApp.controllers')
                                         id: data.event.Frame[i].Id,
                                         frameid: data.event.Frame[i].FrameId,
                                         score: data.event.Frame[i].Score,
-                                        fname: padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg"
+                                        fname: padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg",
+                                        time:data.event.Frame[i].TimeStamp
                                     });
                                     timestamp = data.event.Frame[i].TimeStamp;
                                 } 
@@ -1488,6 +1489,10 @@ angular.module('zmApp.controllers')
 
         $scope.prettifyTime = function (str) {
             return moment(str).format(ZMDataModel.getTimeFormat());
+        };
+        
+        $scope.prettifyTimeSec = function (str) {
+            return moment(str).format(ZMDataModel.getTimeFormatSec());
         };
 
 
