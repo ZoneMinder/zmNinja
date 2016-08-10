@@ -144,10 +144,12 @@ angular.module('zmApp.controllers')
             {
                 if (val!== undefined)
                 {
-                   var regex = /"password":".*?"/g;
+                   var regex1 = /"password":".*?"/g;
+                   var regex2 = /&pass=.*?&/g;
                     
                     //console.log ("VAL IS " + val);
-                    val = val.replace(regex, "<password removed>");
+                    val = val.replace(regex1, "<password removed>");
+                    val = val.replace(regex2, "<password removed>");
                     
                 }
                 // make sure password is removed
