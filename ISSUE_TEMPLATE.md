@@ -1,6 +1,6 @@
-Tip: switch to preview mode to see how the issue will look like after you hit submit.
+Before you create an issue, please make sure you have read the FAQ at https://github.com/pliablepixels/zmNinja/wiki/FAQ. Common questions on API, no image etc are covered there.
 
-Before you submit an issue, please make sure you fill up the template. 
+
 
 **Platform & OS Version**
 (example only, please edit this line) Android 6.0 Marshmallow
