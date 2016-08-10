@@ -342,25 +342,140 @@ angular.module('zmApp.controllers')
     // Tapping on a frame shows this image
     //------------------------------------------------------
     
-    $scope.showImage = function (p,r,f, fid,e, imode, id)
+    $scope.showImage = function (p,r,f, fid,e, imode, id, parray, ndx)
     {
         var img;
-        console.log ("Image Mode " + imode);
-        if (imode=='path') 
         
-            img = "<img width='100%' ng-src='"+p+"/index.php?view=image&path="+r+f+"'>";
+                
+         $scope.kFrame = $translate.instant ('kFrame');
+         $scope.kEvent = $translate.instant ('kEvent');
+         $scope.ndx = ndx;
+         $scope.parray = parray;
+         $scope.imode = imode;
+        
+       // console.log ("Image Mode " + imode);
+       // console.log ("parray :  " + JSON.stringify(parray));
+       // console.log ("index: " + ndx);
+        if ($scope.imode=='path') 
+        
+            $scope.imgsrc = p+"/index.php?view=image&path="+r+$scope.parray[$scope.ndx].fname;
         else
         {
-            img = "<img width='100%' ng-src='"+p+"/index.php?view=image&fid="+id+"'>";
-           // console.log ("IS MULTISERVER SO IMAGE IS " + img);
+            $scope.imgsrc = p+"/index.php?view=image&fid="+$scope.parray[$scope.ndx].id;
+           
         }
-        
-        var kFrame = $translate.instant ('kFrame');
-        var kEvent = $translate.instant ('kEvent');
+
         
         
-        $rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
+        
+        //$rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
+        
+              $rootScope.zmPopup = $ionicPopup.show({
+            template: '<center>{{parray[ndx].frameid}}/{{prettifyTimeSec(parray[ndx].time)}}</center><br/><img src="{{imgsrc}}" width="100%"  />',
+            title: 'details',
+            subTitle: 'use left and right arrows to change',
+            scope: $scope,
+            cssClass: 'popup80',
+            buttons: [
+                {
+                    // left 1
+                    text: '',
+                    type: 'button-small button-energized ion-chevron-left',
+                    onTap: function (e) {
+                        // look for next frame that matches the type of frame
+                        // we are showing (all or diff timestamps);
+                        
+                       // console.log ("TYPE OF FRAMES: " + $scope.typeOfFrames);
+                        var nndx = null;
+                        var alltype = $translate.instant('kShowAllFrames');
+                        for (var i=$scope.ndx-1; i>=0; i--)
+                        {
+                            if ($scope.parray[i].type == $scope.typeOfFrames|| $scope.typeOfFrames == alltype)
+                            {
+                                nndx = i;
+                                break;
+                            }
+                        }
+                        if (nndx == null) nndx = $scope.ndx;
+                        $scope.ndx = nndx;
+                       
+                        if ($scope.imode=='path') 
+                        {
+        
+                            $scope.imgsrc = p+"/index.php?view=image&path="+r+$scope.parray[$scope.ndx].fname;
+                        }
+                        else
+                        {
+                            $scope.imgsrc = p+"/index.php?view=image&fid="+$scope.parray[$scope.ndx].id;
+                        }
+
+                        
+                        
+                        e.preventDefault();
+                     
+                       
+                    }
+                },
+                {
+                    // right 1
+                    text: '',
+                    type: 'button-small button-energized ion-chevron-right',
+                    onTap: function (e) {
+                        
+                         // look for next frame that matches the type of frame
+                        // we are showing (all or diff timestamps);
+                        
+                       // console.log ("TYPE OF FRAMES: " + $scope.typeOfFrames);
+                        var nndx = null;
+                        var alltype = $translate.instant('kShowAllFrames');
+                        for (var i=$scope.ndx+1; i<$scope.parray.length; i++)
+                        {
+                            //console.log ("Comparing: " +$scope.parray[i].type +" to " + $scope.typeOfFrames);
+                            if ($scope.parray[i].type == $scope.typeOfFrames || $scope.typeOfFrames == alltype)
+                            {
+                                nndx = i;
+                                break;
+                            }
+                        }
+                        if (nndx == null) nndx = $scope.ndx;
+                        $scope.ndx = nndx;
+                        
+                        if ($scope.imode=='path') 
+                        {
+        
+                            $scope.imgsrc = p+"/index.php?view=image&path="+r+$scope.parray[$scope.ndx].fname;
+                        }
+                        else
+                        {
+                            $scope.imgsrc = p+"/index.php?view=image&fid="+$scope.parray[$scope.ndx].id;
+                        }
+
+                        e.preventDefault();
+                        
+                        
+                    }
+                },
+                
+
+                
+                {
+                    text: '',
+                    type: 'button-positive button-small ion-checkmark-round',
+                    onTap: function (e) {
+                       
+
+                    }
+                }]
+        });
+        
+        
+        
+        
     };
+        
+        
+        
+        
     
         
     $scope.toggleTypeOfAlarms = function()
