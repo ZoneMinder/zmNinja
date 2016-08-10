@@ -139,13 +139,31 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         // uses fileLogger  to write logs to file for later investigation
         //--------------------------------------------------------------------------
+        
+        // separate out a debug so we don't do this if comparison for normal logs
+        function zmDebug(val) {
+            if (loginData.enableDebug && loginData.enableLogs)
+            {
+                 if (val!== undefined)
+                {
+                   var regex1 = /"password":".*?"/g;
+                   var regex2 = /&pass=.*?(?=["&]|$)/g;
+                    
+                    //console.log ("VAL IS " + val);
+                    val = val.replace(regex1, "<password removed>");
+                    val = val.replace(regex2, "<password removed>");
+                }
+                $fileLogger.debug(val);
+            }
+        }
+        
         function zmLog(val, logtype) {
             if (loginData.enableLogs)
             {
                 if (val!== undefined)
                 {
                    var regex1 = /"password":".*?"/g;
-                   var regex2 = /&pass=.*?&/g;
+                   var regex2 = /&pass=.*?(?=["&]|$)/g;
                     
                     //console.log ("VAL IS " + val);
                     val = val.replace(regex1, "<password removed>");
@@ -183,20 +201,7 @@ angular.module('zmApp.controllers')
 
         }
 
-        // separate out a debug so we don't do this if comparison for normal logs
-        function zmDebug(val) {
-            if (loginData.enableDebug && loginData.enableLogs)
-            {
-                 if (val!== undefined)
-                {
-                    var regex = /"password":".*?"/g;
-                    
-                    //console.log ("VAL IS " + val);
-                    val = val.replace(regex, "<password removed>");
-                }
-                $fileLogger.debug(val);
-            }
-        }
+        
 
         //credit: https://gist.github.com/alexey-bass/1115557
         function versionCompare(left, right) {

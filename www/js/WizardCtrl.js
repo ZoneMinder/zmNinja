@@ -40,8 +40,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 }
             })
             .success(function (data, status, headers) {
-                console.log("LOOKING FOR " + zm.loginScreenString);
-                console.log("DATA RECEIVED " + JSON.stringify(data));
+                //console.log("LOOKING FOR " + zm.loginScreenString);
+                //console.log("DATA RECEIVED " + JSON.stringify(data));
                 if (data.indexOf(zm.loginScreenString) == -1) {
 
                     $scope.wizard.loginURL = $scope.wizard.fqportal;
@@ -79,7 +79,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var d = $q.defer();
         $http.get($scope.wizard.apiURL + "/monitors.json")
             .then(function (success) {
-                    console.log("getfirst monitor success: " + JSON.stringify(success));
+                   // console.log("getfirst monitor success: " + JSON.stringify(success));
                     if (success.data.monitors.length > 0) {
                         var foundMid = -1;
                         for (var i = 0; i < success.data.monitors.length; i++) {
@@ -416,7 +416,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var b = "";
         if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
             b = $scope.wizard.basicuser + ":" + $scope.wizard.basicpassword + "@";
-            console.log("B=" + b);
+            //console.log("B=" + b);
         }
         var u = c.scheme + "://" + b + c.host;
         if (c.port) u += ":" + c.port;
