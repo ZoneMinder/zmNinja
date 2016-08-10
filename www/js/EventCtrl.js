@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,moment */
+/* global saveAs, cordova,StatusBar,angular,console,moment */
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
@@ -342,6 +342,86 @@ angular.module('zmApp.controllers')
     // Tapping on a frame shows this image
     //------------------------------------------------------
     
+    function SaveSuccess() {
+        $ionicLoading.show({
+            template: $translate.instant('kDone'),
+            noBackdrop: true,
+            duration: 1000
+        });
+        ZMDataModel.zmDebug("ModalCtrl:Photo saved successfuly");
+    }
+
+    function SaveError(e) {
+        $ionicLoading.show({
+            template: $translate.instant('kErrorSave'),
+            noBackdrop: true,
+            duration: 2000
+        });
+        ZMDataModel.zmLog("Error saving image: " + e.message);
+        //console.log("***ERROR");
+    }
+
+        
+    function saveNow(imgsrc,r,f)
+    {
+        
+         $ionicLoading.show({
+                template: $translate.instant('kSavingSnapshot') + "...",
+                noBackdrop: true,
+                duration: zm.httpTimeout
+            });
+            var url = imgsrc;
+            ZMDataModel.zmLog("saveNow: File path to grab is " + url);
+
+            var img = new Image();
+            img.onload = function () {
+                // console.log("********* ONLOAD");
+                var canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                var context = canvas.getContext('2d');
+                context.drawImage(img, 0, 0);
+
+                var imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+                var imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+
+                if ($rootScope.platformOS != "desktop") {
+                    try {
+
+                        cordova.exec(
+                            SaveSuccess,
+                            SaveError,
+                            'Canvas2ImagePlugin',
+                            'saveImageDataToLibrary', [imageData]
+                        );
+                        // carouselUtils.setStop(curState);
+                    } catch (e) {
+
+                        SaveError(e.message);
+                        // carouselUtils.setStop(curState);
+                    }
+                } else {
+
+
+                    var fname = r + f + ".png";
+                    fname = fname.replace(/\//, "-");
+                    fname = fname.replace(/\.jpg/, '');
+
+                    canvas.toBlob(function (blob) {
+                        saveAs(blob, fname);
+                        SaveSuccess();
+                    });
+                }
+            };
+            try {
+                img.src = url;
+                // console.log ("SAVING IMAGE SOURCE");
+            } catch (e) {
+                SaveError(e.message);
+            }
+       
+    }
+        
     $scope.showImage = function (p,r,f, fid,e, imode, id, parray, ndx)
     {
         var img;
@@ -371,12 +451,23 @@ angular.module('zmApp.controllers')
         //$rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
         
               $rootScope.zmPopup = $ionicPopup.show({
-            template: '<center>{{parray[ndx].frameid}}/{{prettifyTimeSec(parray[ndx].time)}}</center><br/><img src="{{imgsrc}}" width="100%"  />',
-            title: 'details',
+            template: '<center>'+$translate.instant('kFrame')+':{{parray[ndx].frameid}}@{{prettifyTimeSec(parray[ndx].time)}}</center><br/><img src="{{imgsrc}}" width="100%"  />',
+            title:  $translate.instant('kImages') + " ("+$translate.instant($scope.typeOfFrames) +")",
             subTitle: 'use left and right arrows to change',
             scope: $scope,
             cssClass: 'popup80',
             buttons: [
+                
+                {
+                    text: '',
+                    type: 'button-assertive button-small ion-camera',
+                    onTap: function (e) {
+                        e.preventDefault();
+                        saveNow($scope.imgsrc,r,parray[$scope.ndx].fname);
+
+                    }
+                },
+                                
                 {
                     // left 1
                     text: '',
