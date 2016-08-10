@@ -75,12 +75,12 @@
       "id": "cordova-plugin-media"
     },
     {
-      "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
-      "id": "cordova-plugin-certificates"
-    },
-    {
       "locator": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
       "id": "cordova-sqlite-storage"
+    },
+    {
+      "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
+      "id": "cordova-plugin-certificates"
     }
   ],
   "cordovaPlatforms": [
