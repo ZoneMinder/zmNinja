@@ -177,19 +177,19 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-certificates": {
+    "cordova-sqlite-storage": {
         "source": {
             "type": "git",
-            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
+            "url": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
             "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-sqlite-storage": {
+    "cordova-plugin-certificates": {
         "source": {
             "type": "git",
-            "url": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
+            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
             "subdir": "."
         },
         "is_top_level": true,
