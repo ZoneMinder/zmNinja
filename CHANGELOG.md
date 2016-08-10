@@ -1,5 +1,39 @@
 # Change Log
 
+## [v1.2.0](https://github.com/pliablepixels/zmNinja/tree/v1.2.0) (2016-08-10)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.96...v1.2.0)
+
+**Implemented enhancements:**
+
+- Allow frame navigation when you tap on alarms  view within the modal  [\#301](https://github.com/pliablepixels/zmNinja/issues/301)
+- When viewing alarmed frames in events view, allow option to only show frames that differ in time [\#296](https://github.com/pliablepixels/zmNinja/issues/296)
+- Encrypt user profile for more security [\#294](https://github.com/pliablepixels/zmNinja/issues/294)
+- Portuguese language support  [\#290](https://github.com/pliablepixels/zmNinja/issues/290)
+- Allow frame navigation when you tap on a thumbnail image  [\#288](https://github.com/pliablepixels/zmNinja/issues/288)
+- tapping on graphs should show a nice event list - current doesn't do anything useful [\#18](https://github.com/pliablepixels/zmNinja/issues/18)
+
+**Fixed bugs:**
+
+- Password appears in log as plain text [\#293](https://github.com/pliablepixels/zmNinja/issues/293)
+- server settings get deleted, especially on iOS [\#292](https://github.com/pliablepixels/zmNinja/issues/292)
+- Tweak montage layout to avoid overlaps and gaps  [\#286](https://github.com/pliablepixels/zmNinja/issues/286)
+- Focus! Solve that damn "go to login screen" issue that some users are facing [\#193](https://github.com/pliablepixels/zmNinja/issues/193)
+
+**Closed issues:**
+
+- license doc typos [\#297](https://github.com/pliablepixels/zmNinja/issues/297)
+- Having issues setting up Real Time Notifications with ZM ninja and ZM server [\#295](https://github.com/pliablepixels/zmNinja/issues/295)
+- zmNinja via VPN on iOS [\#265](https://github.com/pliablepixels/zmNinja/issues/265)
+- rework event graphs in event page, make event navigation easier [\#233](https://github.com/pliablepixels/zmNinja/issues/233)
+- PTZ support could be improved [\#207](https://github.com/pliablepixels/zmNinja/issues/207)
+
+**Merged pull requests:**
+
+- license doc typos \#297 [\#298](https://github.com/pliablepixels/zmNinja/pull/298) ([phillxnet](https://github.com/phillxnet))
+- Some corrections to Portuguese translation [\#291](https://github.com/pliablepixels/zmNinja/pull/291) ([ljpinho](https://github.com/ljpinho))
+- Portugues Language [\#289](https://github.com/pliablepixels/zmNinja/pull/289) ([ljpinho](https://github.com/ljpinho))
+- New translated key addiction in locale-it.json [\#287](https://github.com/pliablepixels/zmNinja/pull/287) ([mcbittech](https://github.com/mcbittech))
+
 ## [v1.1.96](https://github.com/pliablepixels/zmNinja/tree/v1.1.96) (2016-07-13)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.94...v1.1.96)
 
