@@ -454,7 +454,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             .then(function (ans) {
                 // login now
                 $ionicLoading.hide();
-                ZMDataModel.zmLog("zmWizard: logging in with " + u + " " + zmu + ":" + zmp);
+                ZMDataModel.zmLog("zmWizard: logging in with " + u + " " + zmu );
 
                 // The logic will be:
                 // Login then do an api detect and cgi-detect together
