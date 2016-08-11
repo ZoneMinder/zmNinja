@@ -28,7 +28,7 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
 	echo "Building Release mode for Xwalk android..."
 	echo "--------------------------------------------"
 	echo "Adding crosswalk..."
-  ionic plugin add cordova-plugin-crosswalk-webview
+  ionic plugin add cordova-plugin-crosswalk-webview --variable "XWALK_VERSION"="18"
 
 
   echo "Adding crosswalk cert plugin..."
