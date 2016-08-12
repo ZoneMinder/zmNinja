@@ -1108,17 +1108,36 @@ angular.module('zmApp', [
             
             });
             
-            localforage.defineDriver(window.cordovaSQLiteDriver).then(function () {
-                return localforage.setDriver([
-            // Try setting cordovaSQLiteDriver if available,
-              window.cordovaSQLiteDriver._driver,
-              // otherwise use one of the default localforage drivers as a fallback.
-              // This should allow you to transparently do your tests in a browser
-              localforage.LOCALSTORAGE,
+            var order=[];
+            
+            if ($rootScope.platformOS == 'ios')
+            {
+                order =
+             [window.cordovaSQLiteDriver._driver,
               localforage.INDEXEDDB,
-              localforage.WEBSQL
+              localforage.WEBSQL,
+             localforage.LOCALSTORAGE];
+            }
+            
+            else
+                
+            {
+            // don't do SQL for non IOS - seems to hang?
+              order = [
               
-            ]);
+              localforage.INDEXEDDB,
+              localforage.WEBSQL,
+              localforage.LOCALSTORAGE,          
+            ];
+                
+            }
+            
+            localforage.defineDriver(window.cordovaSQLiteDriver).then(function () {
+                return localforage.setDriver(
+            // Try setting cordovaSQLiteDriver if available,
+             order
+              
+            );
              }).then(function () {
                 // this should alert "cordovaSQLiteDriver" when in an emulator or a device
                 ZMDataModel.zmLog("localforage driver for storage:" + localforage.driver());
@@ -1149,7 +1168,7 @@ angular.module('zmApp', [
                         
                         
                         var dsn = defaultServerName;
-                        var dl = $localstorage.get('defaultLang');
+                        var dl = $localstorage.get('defaultLang') || 'en';
                         var ifu = ($localstorage.get('isFirstUse')=='0' ? false:true);
                         var luc = $localstorage.get('lastUpdateCheck');
                         var lbpc = $localstorage.get('latestBlogPostChecked');
@@ -1161,7 +1180,7 @@ angular.module('zmApp', [
                         ZMDataModel.zmLog ("is first use:"+ifu);
                         ZMDataModel.zmLog ("last update check:"+luc);
                         ZMDataModel.zmLog ("latest blog post check:"+lbpc);
-                        ZMDataModel.zmLog ("server group list:"+sgl);
+                        ZMDataModel.zmLog ("server group list:"+JSON.stringify(sgl));
 
                         localforage.setItem('defaultLang', dl)
                         .then (function() {
@@ -1181,7 +1200,10 @@ angular.module('zmApp', [
                         .then (function() {
                             ZMDataModel.zmLog (">>>>migrated latestBlogPostChecked...");
                             // lets encrypt serverGroupList
+                            ZMDataModel.zmLog ("server group list is " + JSON.stringify(sgl));
                             var ct = CryptoJS.AES.encrypt(JSON.stringify(sgl), zm.cipherKey);
+                            ZMDataModel.zmLog ("encrypted server group list is " + ct);
+                            ct = sgl;
                             return localforage.setItem('serverGroupList', ct);
                         })
                         .then (function() {
@@ -1192,6 +1214,11 @@ angular.module('zmApp', [
                             ZMDataModel.zmLog (">>>>migrated defaultServerName...");
                             ZMDataModel.zmLog (">>>>Migrated all values, continuing...");
                             //ZMDataModel.migrationComplete();
+                            continueInitialInit();
+                        })
+                        .catch (function(err)
+                        {
+                            ZMDataModel.zmLog ("Migration error : " + JSON.stringify(err));
                             continueInitialInit();
                         });
                       

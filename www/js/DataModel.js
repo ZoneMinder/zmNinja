@@ -154,6 +154,7 @@ angular.module('zmApp.controllers')
                     val = val.replace(regex2, "<password removed>");
                 }
                 $fileLogger.debug(val);
+                console.log (val);
             }
         }
         
@@ -174,6 +175,7 @@ angular.module('zmApp.controllers')
                 //"username":"zmninja","password":"xyz",
                 //val = val.replace(/\"password:\",
                 $fileLogger.log(logtype, val);
+                console.log (val);
             }
         }
 
@@ -473,6 +475,8 @@ angular.module('zmApp.controllers')
                         zmLog ("user profile not encrypted");
                         decodedVal = val;
                     }
+                    
+                    //decodedVal = val;
                     
                     zmDebug ("user profile retrieved:"+JSON.stringify(decodedVal));
                     
