@@ -173,6 +173,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                         });
                         //console.log("ADDING : " + availableServers[servIter]);
                     }
+                    console.log (">>>>>>>delete: server buttons " + JSON.stringify(serverbuttons));
 
                 } else {
                     ZMDataModel.displayBanner('error', [$translate.instant('kBannerCannotDeleteNeedOne')]);
@@ -219,7 +220,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             text: availableServers[servIter]
         });
         
+            
+        console.log (">>>>>>>ionicview enter: server buttons " + JSON.stringify(serverbuttons));
         }
+        
+        
         
         ZMDataModel.zmDebug ("Does login need to hear the wizard? "  + $stateParams.wizard);
         
@@ -719,12 +724,13 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         } else {
             saveItems(true);
             availableServers = Object.keys(ZMDataModel.getServerGroups());
-            serverbuttons = [];
+            serverbuttons = [{text:$translate.instant('kServerAdd')+"..."}];
             for (var servIter = 0; servIter < availableServers.length; servIter++) {
                 serverbuttons.push({
                     text: availableServers[servIter]
                 });
             }
+            console.log (">>>>>>>ionicview save: server buttons " + JSON.stringify(serverbuttons));
 
         }
 
