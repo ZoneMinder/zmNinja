@@ -1,4 +1,4 @@
-export default function($ionicNativeTransitionsProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+export default function ($ionicNativeTransitionsProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     'ngInject';
     $ionicNativeTransitionsProvider.setDefaultOptions({
         duration: 500,
@@ -34,6 +34,30 @@ export default function($ionicNativeTransitionsProvider, $stateProvider, $urlRou
                 }
             }
         })
+        .state('tabs.about', {
+            url: "/about",
+            nativeTransitions: {
+                type: "fade"
+            },
+            views: {
+                'about-tab': {
+                    templateUrl: "templates/about.html"
+                }
+            }
+        })
+        .state('tabs.contact', {
+            url: "/contact",
+            nativeTransitions: {
+                type: "slide",
+                direction: "left",
+                fixedPixelsTop: 93
+            },
+            views: {
+                'contact-tab': {
+                    templateUrl: "templates/contact.html"
+                }
+            }
+        })
         .state('one', {
             url: "/one",
             nativeTransitions: {
@@ -45,8 +69,8 @@ export default function($ionicNativeTransitionsProvider, $stateProvider, $urlRou
                 "direction": "right"
             },
             nativeTransitionsBackAndroid: {
-                "type": "flip",
-                "direction": "left"
+                "type": "slide",
+                "direction": "down"
             },
             nativeTransitionsIOS: {
                 "type": "flip",
@@ -63,6 +87,7 @@ export default function($ionicNativeTransitionsProvider, $stateProvider, $urlRou
             nativeTransitions: {
                 type: "fade"
             },
+            nativeTransitionsBack: null,
             nativeTransitionsIOS: {
                 "type": "flip",
                 "direction": "down" // 'left|right|up|down', default 'right' (Android currently only supports left and right)
@@ -80,7 +105,7 @@ export default function($ionicNativeTransitionsProvider, $stateProvider, $urlRou
             },
             nativeTransitionsBackAndroid: {
                 "type": "slide",
-                "direction": "down" // 'left|right|up|down', default 'right' (Android currently only supports left and right)
+                "direction": "up" // 'left|right|up|down', default 'right' (Android currently only supports left and right)
             },
             templateUrl: "templates/three.html"
         })
@@ -90,27 +115,32 @@ export default function($ionicNativeTransitionsProvider, $stateProvider, $urlRou
                 test: null
             },
             templateUrl: "templates/four.html",
-            controller: function($stateParams){
+            controller: function ($stateParams) {
                 'ngInject';
                 console.log('$stateParams', $stateParams);
             }
         })
-        .state('tabs.about', {
-            url: "/about",
-            nativeTransitions: null,
-            views: {
-                'about-tab': {
-                    templateUrl: "templates/about.html"
-                }
-            }
-        })
-        .state('tabs.contact', {
-            url: "/contact",
-            nativeTransitions: null,
-            views: {
-                'contact-tab': {
-                    templateUrl: "templates/contact.html"
-                }
+        .state('five', {
+            url: "/five",
+            templateUrl: "templates/five.html",
+            controller: function ($stateParams) {
+                'ngInject';
+                console.log('$stateParams', $stateParams);
+            },
+            resolve: function ($timeout, $q, $ionicPopup) {
+                'ngInject';
+                var deferred = $q.defer();
+                $timeout(function () {
+                    $ionicPopup.show({
+                        template: '',
+                        title: 'A popup',
+                        buttons: [
+                            { text: 'Cancel' }
+                        ]
+                    });
+                    deferred.reject();
+                }, 1000)
+                return deferred.promise;
             }
         });
 

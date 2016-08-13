@@ -61,6 +61,7 @@
                     <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.enable()">Enable plugin</a>
 
                     <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.disable()">Disable plugin</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.enableBothTransitions()">Enable both transitions</a>
                     <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.disableWithoutDisablingIonicTransitions()">Disable plugin and ionic transitions</a>
                     <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.stateGo()">StateGo</a>
                     <button class="button button-full button-large icon icon-right ion-chevron-right" native-ui-sref="four({test: 'buyakacha2!', testParamUrl: 'haha'})" native-ui-sref-opts="{inherit:false}" native-options="{type: 'slide', direction:'down'}">
@@ -70,6 +71,9 @@
                         StateGo via directive without native-options
                     </button>
                     <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.locationUrl()">LocationUrl</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.sameStateGo()">sameStateGo</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.sameStateGo(true)">sameStateGo with reload</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.stateError()">State on error</a>
                 </ion-content>
             </ion-view>
         </script>
@@ -116,6 +120,13 @@
 
         <script id="templates/four.html" type="text/ng-template">
             <ion-view view-title="Four">
+                <ion-content class="">
+                </ion-content>
+            </ion-view>
+        </script>
+        
+        <script id="templates/five.html" type="text/ng-template">
+            <ion-view view-title="Five">
                 <ion-content class="">
                 </ion-content>
             </ion-view>

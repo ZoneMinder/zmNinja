@@ -2,6 +2,10 @@ Native transitions for Ionic. Turn it on and enjoy native transitions.
 
 ![gif](http://examples.julienrenaux.fr/native-transitions/native-transitions.gif)
 
+## Chat
+
+[![Join the chat at https://gitter.im/shprink/ionic-native-transitions](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shprink/ionic-native-transitions)
+
 # Installation
 ## npm
 [https://www.npmjs.com/package/ionic-native-transitions](https://www.npmjs.com/package/ionic-native-transitions)
@@ -12,7 +16,7 @@ npm install ionic-native-transitions --save
 
 Then require the library
 
-```
+```js
 # ES5
 require('ionic-native-transitions');
 
@@ -26,15 +30,21 @@ import 'ionic-native-transitions';
 bower install shprink/ionic-native-transitions
 ```
 
+Then insert the dist file
+
+```
+<script src="./PathToBowerLib/dist/ionic-native-transitions.min.js"></script>
+```
+
 ## Cordova/Ionic
-The recommended version for the Transition plugin is 0.5.5 or higher.
+The recommended version for the Transition plugin is 0.6.5 or higher.
 
 ```
 # Using Cordova
-cordova plugin add https://github.com/Telerik-Verified-Plugins/NativePageTransitions#0.5.5
+cordova plugin add https://github.com/Telerik-Verified-Plugins/NativePageTransitions#0.6.5
 
 # Using Ionic CLI
-ionic plugin add https://github.com/Telerik-Verified-Plugins/NativePageTransitions#0.5.5
+ionic plugin add https://github.com/Telerik-Verified-Plugins/NativePageTransitions#0.6.5
 ```
 
 ### iOS
@@ -57,7 +67,7 @@ if you are using Crosswalk > 1.3 please add the following to your `config.xml`
 
 # Configuration
 
-```
+```js
 angular.module('yourApp', [
     'ionic-native-transitions'
 ]);
@@ -66,7 +76,7 @@ angular.module('yourApp', [
 ## Set default options (optional)
 **_Beware_**: Only use `setDefaultOptions` if you know what you are doing.
 
-```
+```js
 .config(function($ionicNativeTransitionsProvider){
     $ionicNativeTransitionsProvider.setDefaultOptions({
         duration: 400, // in milliseconds (ms), default 400,
@@ -75,7 +85,7 @@ angular.module('yourApp', [
         androiddelay: -1, // same as above but for Android, default -1
         winphonedelay: -1, // same as above but for Windows Phone, default -1,
         fixedPixelsTop: 0, // the number of pixels of your fixed header, default 0 (iOS and Android)
-        fixedPixelsBottom: 0 // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
+        fixedPixelsBottom: 0, // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
         triggerTransitionEvent: '$ionicView.afterEnter', // internal ionic-native-transitions option
         backInOppositeDirection: false // Takes over default back transition and state back transition to use the opposite direction transition to go back
     });
@@ -85,7 +95,7 @@ angular.module('yourApp', [
 ## Set default transition (optional)
 [See the list of possible transitions](#transitions)
 
-```
+```js
 .config(function($ionicNativeTransitionsProvider){
     $ionicNativeTransitionsProvider.setDefaultTransition({
         type: 'slide',
@@ -97,7 +107,7 @@ angular.module('yourApp', [
 ## Set default back transition (optional)
 [See the list of possible transitions](#transitions)
 
-```
+```js
 .config(function($ionicNativeTransitionsProvider){
     $ionicNativeTransitionsProvider.setDefaultBackTransition({
         type: 'slide',
@@ -109,7 +119,7 @@ angular.module('yourApp', [
 ## Enable/Disable (optional)
 You can programatically disable the plugin for any reason:
 
-```
+```js
 # Within the config phase
 # * @param {boolean} enabled
 $ionicNativeTransitionsProvider.enable(false);
@@ -136,7 +146,7 @@ $ionicNativeTransitions.enable(true, false);
 # Usage
 By default any state transition will use the default transition (Defined in the configuration phase) but you can specify a different transition per state if you want using the UI router state definition:
 
-```
+```js
 .state('home', {
     url: '/home',
     nativeTransitions: {
@@ -149,7 +159,7 @@ By default any state transition will use the default transition (Defined in the 
 
 You can also define a different transition (backward and forward) per device like this:
 
-```
+```js
 .state('home', {
     url: '/home',
     nativeTransitionsAndroid: {
@@ -182,7 +192,7 @@ You can also define a different transition (backward and forward) per device lik
 
 Overwrite just one device (here only android will be different)
 
-```
+```js
 .state('home', {
     url: '/home',
     nativeTransitions: {
@@ -199,7 +209,7 @@ Overwrite just one device (here only android will be different)
 
 Disable native transition for one state (for instance on tabs)
 
-```
+```js
 .state('home', {
     url: '/home',
     nativeTransitions: null,
@@ -211,15 +221,15 @@ Disable native transition for one state (for instance on tabs)
 
 ### State
 
-```
+```js
 # * @description
 # * Call state go and apply a native transition
 # * @param {string|null} state                default:null
 # * @param {object}      stateParams          default:{}
-# * @param {object|null} transitionOptions    default:null
 # * @param {object}      stateOptions         default:{}
+# * @param {object|null} transitionOptions    default:null
 
-$ionicNativeTransitions.stateGo('yourState', {}, {
+$ionicNativeTransitions.stateGo('yourState', {}, {}, {
     "type": "slide",
     "direction": "up", // 'left|right|up|down', default 'left' (which is like 'next')
     "duration": 1500, // in milliseconds (ms), default 400
@@ -228,7 +238,7 @@ $ionicNativeTransitions.stateGo('yourState', {}, {
 
 ### Location.url
 
-```
+```js
 # * @description
 # * Call location url and apply a native transition
 # * @param {string|null} url                 default:null
@@ -243,7 +253,7 @@ $ionicNativeTransitions.locationUrl('/yourUrl', {
 
 ## Using directives
 
-```
+```html
 <button native-ui-sref="tabs.home({param1: 'param1', param2: 'param2'})" native-ui-sref-opts="{reload: true}" native-options="{type: 'slide', direction:'down'}"></button>
 ```
 
@@ -261,7 +271,7 @@ For now swipe back will trigger the state native transition (or the default). It
 
 You can disable swipe back like this:
 
-```
+```js
 $ionicConfigProvider.views.swipeBackEnabled(false);
 ```
 
@@ -270,7 +280,11 @@ $ionicConfigProvider.views.swipeBackEnabled(false);
 ## Events
 You can listen to success or error events
 
-```
+```js
+$rootScope.$on('ionicNativeTransitions.beforeTransition', function(){
+    // Transition is about to happen
+});
+
 $rootScope.$on('ionicNativeTransitions.success', function(){
     // Transition success
 });
@@ -283,7 +297,7 @@ $rootScope.$on('ionicNativeTransitions.error', function(){
 # Possible transitions
 ## Slide (default animation)
 
-```
+```js
 {
     "type"          : "slide",
     "direction"     : "left", // 'left|right|up|down', default 'left' (which is like 'next')
@@ -293,7 +307,7 @@ $rootScope.$on('ionicNativeTransitions.error', function(){
 
 ## Flip
 
-```
+```js
 {
     "type"          : "flip",
     "direction"     : "up", // 'left|right|up|down', default 'right' (Android currently only supports left and right)
@@ -303,7 +317,7 @@ $rootScope.$on('ionicNativeTransitions.error', function(){
 
 ## Fade (iOS and Android only)
 
-```
+```js
 {
     "type"          : "fade",
     "duration"      :  500, // in milliseconds (ms), default 400
@@ -312,7 +326,7 @@ $rootScope.$on('ionicNativeTransitions.error', function(){
 
 ## Drawer (iOS and Android only)
 
-```
+```js
 {
     "type"          : "drawer",
     "origin"        : "left", // 'left|right', open the drawer from this side of the view, default 'left'
@@ -322,11 +336,39 @@ $rootScope.$on('ionicNativeTransitions.error', function(){
 
 ## Curl (iOS only, direction up and down only)
 
-```
+```js
 {
     "type"          : "curl",
     "direction"     : "up", // 'up|down', default 'up'
 }
+```
+
+# FAQ
+
+## What's the best way to animate tabs?
+
+Use fade transition
+
+```js
+.state('tabs.contact', {
+    url: "/contact",
+    nativeTransitions: {
+        type: "fade"
+    }
+})
+```
+
+if you to use slide, use it with the `fixedPixelsTop` option. 
+
+```js
+.state('tabs.contact', {
+    url: "/contact",
+    nativeTransitions: {
+        type: "slide",
+        direction: "left",
+        fixedPixelsTop: 93
+    }
+})
 ```
 
 # Contribute
@@ -340,7 +382,7 @@ npm install
 npm run watch
 
 # in the other terminal run following to build the test page and the doc
-npm run devserver
+npm start
 ```
 
 Open `http://localhost:8080`

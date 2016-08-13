@@ -10,7 +10,7 @@
  * @description
  * ionic-native-transitions provider
  */
-export default function() {
+export default function () {
     'ngInject';
 
     let enabled = true,
@@ -146,15 +146,16 @@ export default function() {
             init,
             getDefaultOptions,
             enable: enableFromService,
-                isEnabled,
-                transition,
-                registerToRouteEvents,
-                unregisterToRouteEvents,
-                registerToStateChangeStartEvent,
-                unregisterToStateChangeStartEvent,
-                locationUrl,
-                stateGo,
-                goBack
+            isEnabled,
+            transition,
+            registerToRouteEvents,
+            unregisterToRouteEvents,
+            registerToStateChangeStartEvent,
+            unregisterToStateChangeStartEvent,
+            disablePendingTransition,
+            locationUrl,
+            stateGo,
+            goBack
         };
 
 
@@ -175,8 +176,10 @@ export default function() {
                 return;
             }
             unregisterToStateChangeStartEvent();
-            $location.url(url);
+            var locationPromise = $location.url(url);
             transition(transitionOptions);
+
+            return locationPromise;
         }
 
         /**
@@ -189,17 +192,23 @@ export default function() {
          * Call state go and apply a native transition
          * @param {string|null} state              default:null
          * @param {object}      stateParams        default:{}
-         * @param {object|null} transitionOptions  default:null
          * @param {object}      stateOptions       default:{}
+         * @param {object|null} transitionOptions  default:null
          */
-        function stateGo(state = null, stateParams = {}, transitionOptions = null, stateOptions = {}) {
+        function stateGo(state = null, stateParams = {}, stateOptions = {}, transitionOptions = null) {
             if (!state) {
                 $log.debug('[native transition] cannot change state without a state...');
                 return;
             }
+
+            if ($state.is(state, stateParams) && !stateOptions.reload) {
+                $log.debug('[native transition] same state transition are not possible');
+                return;
+            }
+
             unregisterToStateChangeStartEvent();
-            $state.go(state, stateParams, stateOptions);
             transition(transitionOptions);
+            return $timeout(() => $state.go(state, stateParams, stateOptions));
         }
 
         /**
@@ -258,19 +267,26 @@ export default function() {
             }
             let options = {}
             if (angular.isObject(arguments[0])) {
-                options = arguments[0];
+                options = angular.extend({}, defaultBackTransition, arguments[0])
             } else if (angular.isString(arguments[0])) {
                 switch (arguments[0]) {
                     case 'back':
-                        if (getDefaultOptions().backInOppositeDirection && arguments[1] && getStateTransition(arguments[1])) {
+                        // First we check for state back transition
+                        if (arguments[2] && getBackStateTransition(arguments[2])) {
+                            options = getBackStateTransition(arguments[2]);
+                            console.log('back first', options)
+                        } // Then we check if the backInOppositeDirection option is enabled
+                        else if (getDefaultOptions().backInOppositeDirection && arguments[1] && getStateTransition(arguments[1])) {
                             options = getStateTransition(arguments[1]);
                             if (options.direction) {
                                 options.direction = oppositeDirections[options.direction];
                             }
-                        } else if (arguments[2] && getBackStateTransition(arguments[2])) {
-                            options = getBackStateTransition(arguments[2]);
-                        } else {
+                            console.log('back second', options)
+
+                        } // otherwise we just use the default transition
+                        else {
                             options = defaultBackTransition;
+                            console.log('back default', options)
                         }
                         break;
                 }
@@ -278,64 +294,52 @@ export default function() {
                 options = defaultTransition;
             }
             options = angular.copy(options);
+            $log.debug('[native transition]', options);
             let type = options.type;
             delete options.type;
-            $log.debug('[native transition]', options);
-            switch (type) {
-                case 'flip':
-                    window.plugins.nativepagetransitions.flip(options, transitionSuccess, transitionError);
-                    break;
-                case 'fade':
-                    window.plugins.nativepagetransitions.fade(options, transitionSuccess, transitionError);
-                    break;
-                case 'curl':
-                    window.plugins.nativepagetransitions.curl(options, transitionSuccess, transitionError);
-                    break;
-                case 'drawer':
-                    window.plugins.nativepagetransitions.drawer(options, transitionSuccess, transitionError);
-                    break;
-                case 'slide':
-                default:
-                    window.plugins.nativepagetransitions.slide(options, transitionSuccess, transitionError);
-                    break;
-            }
+            $rootScope.$broadcast('ionicNativeTransitions.beforeTransition');
+            window.plugins.nativepagetransitions[type](
+                options,
+                transitionSuccess.bind(this, getTransitionDuration(options)),
+                transitionError.bind(this, getTransitionDuration(options))
+            )
+        }
 
-            function getTransitionDuration() {
-                let duration;
-                if (options.duration) {
-                    duration = parseInt(options.duration);
+        function transitionSuccess(duration) {
+            setTimeout(() => $rootScope.$broadcast('ionicNativeTransitions.success'), duration);
+        }
+
+        function transitionError(duration) {
+            setTimeout(() => $rootScope.$broadcast('ionicNativeTransitions.error'), duration);
+        }
+
+        function getTransitionDuration(options) {
+            let duration;
+            if (options.duration) {
+                duration = parseInt(options.duration);
+            } else {
+                duration = parseInt(getDefaultOptions().duration);
+            }
+            if (ionic.Platform.isAndroid()) {
+                if (options.androiddelay) {
+                    duration += parseInt(options.androiddelay);
                 } else {
-                    duration = parseInt(getDefaultOptions().duration);
+                    duration += parseInt(getDefaultOptions().androiddelay);
                 }
-                if (ionic.Platform.isAndroid()) {
-                    if (options.androiddelay) {
-                        duration += parseInt(options.androiddelay);
-                    } else {
-                        duration += parseInt(getDefaultOptions().androiddelay);
-                    }
-                } else if (ionic.Platform.isIOS()) {
-                    if (options.iosdelay) {
-                        duration += parseInt(options.iosdelay);
-                    } else {
-                        duration += parseInt(getDefaultOptions().iosdelay);
-                    }
-                } else if (ionic.Platform.isWindowsPhone()) {
-                    if (options.winphonedelay) {
-                        duration += parseInt(options.winphonedelay);
-                    } else {
-                        duration += parseInt(getDefaultOptions().winphonedelay);
-                    }
+            } else if (ionic.Platform.isIOS()) {
+                if (options.iosdelay) {
+                    duration += parseInt(options.iosdelay);
+                } else {
+                    duration += parseInt(getDefaultOptions().iosdelay);
                 }
-                return duration;
+            } else if (ionic.Platform.isWindowsPhone()) {
+                if (options.winphonedelay) {
+                    duration += parseInt(options.winphonedelay);
+                } else {
+                    duration += parseInt(getDefaultOptions().winphonedelay);
+                }
             }
-
-            function transitionSuccess() {
-                setTimeout(() => $rootScope.$broadcast('ionicNativeTransitions.success'), getTransitionDuration());
-            }
-
-            function transitionError() {
-                setTimeout(() => $rootScope.$broadcast('ionicNativeTransitions.error'), getTransitionDuration());
-            }
+            return duration;
         }
 
         function executePendingTransition() {
@@ -344,11 +348,21 @@ export default function() {
             registerToStateChangeStartEvent();
         }
 
+        function disablePendingTransition() {
+            // If native transition support cancelling transition (> 0.6.4), cancel pending transition
+            if (window.plugins && window.plugins.nativepagetransitions && angular.isFunction(window.plugins.nativepagetransitions.cancelPendingTransition)) {
+                window.plugins.nativepagetransitions.cancelPendingTransition();
+                registerToStateChangeStartEvent();
+            } else {
+                executePendingTransition();
+            }
+        }
+
         function registerToRouteEvents() {
             unregisterToRouteEvents();
             registerToStateChangeStartEvent();
             // $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', executePendingTransition);
-            $stateChangeError = $rootScope.$on('$stateChangeError', executePendingTransition);
+            $stateChangeError = $rootScope.$on('$stateChangeError', disablePendingTransition);
             $stateAfterEnter = $rootScope.$on(getDefaultOptions().triggerTransitionEvent, executePendingTransition);
         }
 
@@ -364,6 +378,7 @@ export default function() {
                 }
                 // Disable native transition for this state
                 if (toState.nativeTransitions === null) {
+                    $log.debug('[native transition] transition disabled for this state', toState);
                     return;
                 }
                 options = getStateTransition(toState);
@@ -449,7 +464,7 @@ export default function() {
         function init() {
             legacyGoBack = $rootScope.$ionicGoBack;
             if (!isEnabled()) {
-                $log.debug('nativepagetransitions is disabled or nativepagetransitions plugin is not present');
+                $log.debug('[native transition] The plugin is either disabled or nativepagetransitions plugin by telerik is not present. If you are getting this message in a browser, this is normal behavior, native transitions only work on device.');
                 return;
             } else {
                 enableFromService();
@@ -494,13 +509,17 @@ export default function() {
 
                 stateName = currentHistory.stack[newCursor].stateName;
             }
-
-            unregisterToStateChangeStartEvent();
             let currentStateTransition = angular.extend({}, $state.current);
             let toStateTransition = angular.extend({}, $state.get(stateName));
+
+            unregisterToStateChangeStartEvent();
+            if (toStateTransition.nativeTransitionsBack === null) {
+                $log.debug('[native transition] transition disabled for this state', toStateTransition);
+                return $timeout(() => $ionicHistory.goBack(backCount)).then(() => registerToStateChangeStartEvent());
+            }
             $log.debug('nativepagetransitions goBack', backCount, stateName, currentStateTransition, toStateTransition);
-            $ionicHistory.goBack(backCount);
             transition('back', currentStateTransition, toStateTransition);
+            return $timeout(() => $ionicHistory.goBack(backCount));
         }
     }
 };

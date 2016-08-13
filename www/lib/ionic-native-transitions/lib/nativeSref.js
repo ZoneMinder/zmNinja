@@ -26,7 +26,7 @@ export default function($log, $ionicNativeTransitions, $state) {
                 return;
             }
 
-            $ionicNativeTransitions.stateGo(ref.state, params, nativeOptions, stateOptions);
+            $ionicNativeTransitions.stateGo(ref.state, params, stateOptions, nativeOptions);
         });
     }
 }

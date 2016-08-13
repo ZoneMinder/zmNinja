@@ -2,7 +2,7 @@
  * ionic-native-transitions
  *  ---
  * Native transitions for Ionic applications
- * @version: v1.0.0-rc9
+ * @version: v1.0.2
  * @author: shprink <contact@julienrenaux.fr>
  * @link: https://github.com/shprink/ionic-native-transitions
  * @license: MIT
@@ -273,6 +273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            unregisterToRouteEvents: unregisterToRouteEvents,
 	            registerToStateChangeStartEvent: registerToStateChangeStartEvent,
 	            unregisterToStateChangeStartEvent: unregisterToStateChangeStartEvent,
+	            disablePendingTransition: disablePendingTransition,
 	            locationUrl: locationUrl,
 	            stateGo: stateGo,
 	            goBack: goBack
@@ -298,8 +299,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return;
 	            }
 	            unregisterToStateChangeStartEvent();
-	            $location.url(url);
+	            var locationPromise = $location.url(url);
 	            transition(transitionOptions);
+	
+	            return locationPromise;
 	        }
 	
 	        /**
@@ -312,22 +315,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Call state go and apply a native transition
 	         * @param {string|null} state              default:null
 	         * @param {object}      stateParams        default:{}
-	         * @param {object|null} transitionOptions  default:null
 	         * @param {object}      stateOptions       default:{}
+	         * @param {object|null} transitionOptions  default:null
 	         */
 	        function stateGo() {
 	            var state = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 	            var stateParams = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	            var transitionOptions = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-	            var stateOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+	            var stateOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+	            var transitionOptions = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 	
 	            if (!state) {
 	                $log.debug('[native transition] cannot change state without a state...');
 	                return;
 	            }
+	
+	            if ($state.is(state, stateParams) && !stateOptions.reload) {
+	                $log.debug('[native transition] same state transition are not possible');
+	                return;
+	            }
+	
 	            unregisterToStateChangeStartEvent();
-	            $state.go(state, stateParams, stateOptions);
 	            transition(transitionOptions);
+	            return $timeout(function () {
+	                return $state.go(state, stateParams, stateOptions);
+	            });
 	        }
 	
 	        /**
@@ -392,88 +403,78 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var options = {};
 	            if (angular.isObject(arguments[0])) {
-	                options = arguments[0];
+	                options = angular.extend({}, defaultBackTransition, arguments[0]);
 	            } else if (angular.isString(arguments[0])) {
 	                switch (arguments[0]) {
 	                    case 'back':
-	                        if (getDefaultOptions().backInOppositeDirection && arguments[1] && getStateTransition(arguments[1])) {
-	                            options = getStateTransition(arguments[1]);
-	                            if (options.direction) {
-	                                options.direction = oppositeDirections[options.direction];
-	                            }
-	                        } else if (arguments[2] && getBackStateTransition(arguments[2])) {
+	                        // First we check for state back transition
+	                        if (arguments[2] && getBackStateTransition(arguments[2])) {
 	                            options = getBackStateTransition(arguments[2]);
-	                        } else {
-	                            options = defaultBackTransition;
-	                        }
+	                            console.log('back first', options);
+	                        } // Then we check if the backInOppositeDirection option is enabled
+	                        else if (getDefaultOptions().backInOppositeDirection && arguments[1] && getStateTransition(arguments[1])) {
+	                                options = getStateTransition(arguments[1]);
+	                                if (options.direction) {
+	                                    options.direction = oppositeDirections[options.direction];
+	                                }
+	                                console.log('back second', options);
+	                            } // otherwise we just use the default transition
+	                            else {
+	                                    options = defaultBackTransition;
+	                                    console.log('back default', options);
+	                                }
 	                        break;
 	                }
 	            } else {
 	                options = defaultTransition;
 	            }
 	            options = angular.copy(options);
+	            $log.debug('[native transition]', options);
 	            var type = options.type;
 	            delete options.type;
-	            $log.debug('[native transition]', options);
-	            switch (type) {
-	                case 'flip':
-	                    window.plugins.nativepagetransitions.flip(options, transitionSuccess, transitionError);
-	                    break;
-	                case 'fade':
-	                    window.plugins.nativepagetransitions.fade(options, transitionSuccess, transitionError);
-	                    break;
-	                case 'curl':
-	                    window.plugins.nativepagetransitions.curl(options, transitionSuccess, transitionError);
-	                    break;
-	                case 'drawer':
-	                    window.plugins.nativepagetransitions.drawer(options, transitionSuccess, transitionError);
-	                    break;
-	                case 'slide':
-	                default:
-	                    window.plugins.nativepagetransitions.slide(options, transitionSuccess, transitionError);
-	                    break;
-	            }
+	            $rootScope.$broadcast('ionicNativeTransitions.beforeTransition');
+	            window.plugins.nativepagetransitions[type](options, transitionSuccess.bind(this, getTransitionDuration(options)), transitionError.bind(this, getTransitionDuration(options)));
+	        }
 	
-	            function getTransitionDuration() {
-	                var duration = undefined;
-	                if (options.duration) {
-	                    duration = parseInt(options.duration);
+	        function transitionSuccess(duration) {
+	            setTimeout(function () {
+	                return $rootScope.$broadcast('ionicNativeTransitions.success');
+	            }, duration);
+	        }
+	
+	        function transitionError(duration) {
+	            setTimeout(function () {
+	                return $rootScope.$broadcast('ionicNativeTransitions.error');
+	            }, duration);
+	        }
+	
+	        function getTransitionDuration(options) {
+	            var duration = undefined;
+	            if (options.duration) {
+	                duration = parseInt(options.duration);
+	            } else {
+	                duration = parseInt(getDefaultOptions().duration);
+	            }
+	            if (ionic.Platform.isAndroid()) {
+	                if (options.androiddelay) {
+	                    duration += parseInt(options.androiddelay);
 	                } else {
-	                    duration = parseInt(getDefaultOptions().duration);
+	                    duration += parseInt(getDefaultOptions().androiddelay);
 	                }
-	                if (ionic.Platform.isAndroid()) {
-	                    if (options.androiddelay) {
-	                        duration += parseInt(options.androiddelay);
-	                    } else {
-	                        duration += parseInt(getDefaultOptions().androiddelay);
-	                    }
-	                } else if (ionic.Platform.isIOS()) {
-	                    if (options.iosdelay) {
-	                        duration += parseInt(options.iosdelay);
-	                    } else {
-	                        duration += parseInt(getDefaultOptions().iosdelay);
-	                    }
-	                } else if (ionic.Platform.isWindowsPhone()) {
-	                    if (options.winphonedelay) {
-	                        duration += parseInt(options.winphonedelay);
-	                    } else {
-	                        duration += parseInt(getDefaultOptions().winphonedelay);
-	                    }
+	            } else if (ionic.Platform.isIOS()) {
+	                if (options.iosdelay) {
+	                    duration += parseInt(options.iosdelay);
+	                } else {
+	                    duration += parseInt(getDefaultOptions().iosdelay);
 	                }
-	                return duration;
+	            } else if (ionic.Platform.isWindowsPhone()) {
+	                if (options.winphonedelay) {
+	                    duration += parseInt(options.winphonedelay);
+	                } else {
+	                    duration += parseInt(getDefaultOptions().winphonedelay);
+	                }
 	            }
-	
-	            function transitionSuccess() {
-	                setTimeout(function () {
-	                    return $rootScope.$broadcast('ionicNativeTransitions.success');
-	                }, getTransitionDuration());
-	            }
-	
-	            function transitionError() {
-	                setTimeout(function () {
-	                    return $rootScope.$broadcast('ionicNativeTransitions.error');
-	                }, getTransitionDuration());
-	            }
+	            return duration;
 	        }
 	
 	        function executePendingTransition() {
@@ -482,11 +483,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	            registerToStateChangeStartEvent();
 	        }
 	
+	        function disablePendingTransition() {
+	            // If native transition support cancelling transition (> 0.6.4), cancel pending transition
+	            if (window.plugins && window.plugins.nativepagetransitions && angular.isFunction(window.plugins.nativepagetransitions.cancelPendingTransition)) {
+	                window.plugins.nativepagetransitions.cancelPendingTransition();
+	                registerToStateChangeStartEvent();
+	            } else {
+	                executePendingTransition();
+	            }
+	        }
+	
 	        function registerToRouteEvents() {
 	            unregisterToRouteEvents();
 	            registerToStateChangeStartEvent();
 	            // $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', executePendingTransition);
-	            $stateChangeError = $rootScope.$on('$stateChangeError', executePendingTransition);
+	            $stateChangeError = $rootScope.$on('$stateChangeError', disablePendingTransition);
 	            $stateAfterEnter = $rootScope.$on(getDefaultOptions().triggerTransitionEvent, executePendingTransition);
 	        }
 	
@@ -502,6 +513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	                // Disable native transition for this state
 	                if (toState.nativeTransitions === null) {
+	                    $log.debug('[native transition] transition disabled for this state', toState);
 	                    return;
 	                }
 	                options = getStateTransition(toState);
@@ -587,7 +599,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        function init() {
 	            legacyGoBack = $rootScope.$ionicGoBack;
 	            if (!isEnabled()) {
-	                $log.debug('nativepagetransitions is disabled or nativepagetransitions plugin is not present');
+	                $log.debug('[native transition] The plugin is either disabled or nativepagetransitions plugin by telerik is not present. If you are getting this message in a browser, this is normal behavior, native transitions only work on device.');
 	                return;
 	            } else {
 	                enableFromService();
@@ -632,13 +644,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                stateName = currentHistory.stack[newCursor].stateName;
 	            }
-	
-	            unregisterToStateChangeStartEvent();
 	            var currentStateTransition = angular.extend({}, $state.current);
 	            var toStateTransition = angular.extend({}, $state.get(stateName));
+	
+	            unregisterToStateChangeStartEvent();
+	            if (toStateTransition.nativeTransitionsBack === null) {
+	                $log.debug('[native transition] transition disabled for this state', toStateTransition);
+	                return $timeout(function () {
+	                    return $ionicHistory.goBack(backCount);
+	                }).then(function () {
+	                    return registerToStateChangeStartEvent();
+	                });
+	            }
 	            $log.debug('nativepagetransitions goBack', backCount, stateName, currentStateTransition, toStateTransition);
-	            $ionicHistory.goBack(backCount);
 	            transition('back', currentStateTransition, toStateTransition);
+	            return $timeout(function () {
+	                return $ionicHistory.goBack(backCount);
+	            });
 	        }
 	    }
 	};
@@ -688,7 +710,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return;
 	            }
 	
-	            $ionicNativeTransitions.stateGo(ref.state, params, nativeOptions, stateOptions);
+	            $ionicNativeTransitions.stateGo(ref.state, params, stateOptions, nativeOptions);
 	        });
 	    }
 	}];
