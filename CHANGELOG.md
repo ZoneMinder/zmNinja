@@ -1,7 +1,17 @@
 # Change Log
 
+## [v1.2.13](https://github.com/pliablepixels/zmNinja/tree/v1.2.13) (2016-08-18)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.0...v1.2.13)
+
+**Closed issues:**
+
+- modal close via back action on Android - make  sure all timers re-start/resources released [\#305](https://github.com/pliablepixels/zmNinja/issues/305)
+
 ## [v1.2.0](https://github.com/pliablepixels/zmNinja/tree/v1.2.0) (2016-08-10)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.96...v1.2.0)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/vv1.2.0...v1.2.0)
+
+## [vv1.2.0](https://github.com/pliablepixels/zmNinja/tree/vv1.2.0) (2016-08-10)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.96...vv1.2.0)
 
 **Implemented enhancements:**
 
