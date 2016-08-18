@@ -427,11 +427,39 @@ angular.module('zmApp.controllers')
         var img;
         
                 
+        //console.log ("HERE");
          $scope.kFrame = $translate.instant ('kFrame');
          $scope.kEvent = $translate.instant ('kEvent');
          $scope.ndx = ndx;
          $scope.parray = parray;
          $scope.imode = imode;
+        
+        // note ndx may be incorrect if we are looking 
+        // at unique frames;
+        
+       // ZMDataModel.zmDebug("Hello");
+        if ($scope.typeOfFrames == $translate.instant('kShowTimeDiffFrames'))
+        {
+         
+            var ic;
+            
+            for ( ic = 0; ic < $scope.parray.length; ic++)
+            {
+                if ($scope.parray[ic].frameid == fid)
+                    break;
+            }
+            
+            
+            ZMDataModel.zmDebug ("Readjusting selected frame ID from:"+$scope.ndx+"  to actual frame ID of:" + ic);
+            $scope.ndx = ic;
+        }
+        else
+        {
+            ZMDataModel.zmDebug ("No index adjustment necessary as we are using all frames");
+        }
+        
+        
+        
         
        // console.log ("Image Mode " + imode);
        // console.log ("parray :  " + JSON.stringify(parray));
