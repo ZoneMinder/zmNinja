@@ -161,7 +161,7 @@
                                                  
                                             <figure  class = "animated slideInLeft" style="display:inline-block">
                                                 <!--{{event.Event.baseURL}} p:{{event.Event.imageMode}}-->
-                                                <figcaption class="smallnote">{{ 'kFrame' | translate}}:{{alarm.frameid}},{{ 'kScore' | translate }}:{{alarm.score}}, {{'kTime'|translate}}: {{prettifyTimeSec(alarm.time)}}</figcaption>       
+                                                <figcaption class="smallnote">{{ 'kFrame' | translate}}:{{alarm.frameid}},{{ 'kScore' | translate }}:{{alarm.score}}, {{'kTime'|translate}}: {{prettifyTimeSec(alarm.time)}}:</figcaption>       
                                                   <img ng-if="event.Event.imageMode=='path'" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.frameid, event.Event.Id, event.Event.imageMode, alarm.id, alarm_images, $index)"  />
                                                 
                                                 <img ng-if="event.Event.imageMode=='fid'" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&fid={{alarm.id}}"    style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.frameid, event.Event.Id, event.Event.imageMode, alarm.id, alarm_images, $index)"  />
