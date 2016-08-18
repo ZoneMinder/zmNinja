@@ -887,6 +887,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         
         ZMDataModel.zmDebug ("Modal removed - killing connkey");
         controlStream(17,"",$scope.connKey,-1);
+       
         
 
         // Execute action
