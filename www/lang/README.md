@@ -1,3 +1,9 @@
+####Adding a new language
+* To contribute a new language, add a new ``locale-xx.json`` (where `xx` is your language code).
+* Ideally, you should also provide a language translation for the zmNinja help file inside ``lang/help``
+
+The best way is to simply look at an existing language translation and follow the same model for yours. If any language translation keywords are missed, it will fallback to English.
+
 ####Main Language file
 * Make sure there is no comma after the last element
 * Comments are not allowed
