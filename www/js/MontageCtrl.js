@@ -37,8 +37,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
                 // switch off awake, as liveview is finished
                 ZMDataModel.zmDebug("Modal is open, closing it");
                 ZMDataModel.setAwake(false);
-                $scope.modal.remove();
                 $scope.isModalActive = false;
+                cleanupOnClose();
             }
             else
             {
@@ -715,13 +715,8 @@ function initPackery()
     //
     //---------------------------------------------------------------------
 
-    $scope.closeModal = function () {
-        ZMDataModel.zmDebug("MontageCtrl: Close & Destroy Monitor Modal");
-        // $scope.isModalActive = false;
-        // Note: no need to setAwake(false) as needs to be awake
-        // in montage view
-        
-       
+    function cleanupOnClose()
+    {
         $scope.modal.remove();
           $timeout (function() {ZMDataModel.zmLog("MontageCtrl:Stopping network pull...");if (ZMDataModel.isForceNetworkStop())  ZMDataModel.stopNetwork();},50);
 
@@ -730,7 +725,7 @@ function initPackery()
 
         ZMDataModel.zmLog("Restarting montage timer, closing Modal...");
         var ld = ZMDataModel.getLogin();
-         console.log ("closeModal: Cancelling timer");
+        // console.log ("closeModal: Cancelling timer");
         $interval.cancel(intervalHandleMontage);
         $interval.cancel(intervalHandleAlarmStatus);
         
@@ -746,6 +741,17 @@ function initPackery()
         
        // $timeout (function() {pckry.shiftLayout();},zm.packeryTimer);
         
+        
+    }
+    
+    $scope.closeModal = function () {
+        ZMDataModel.zmDebug("MontageCtrl: Close & Destroy Monitor Modal");
+        cleanupOnClose();
+        // $scope.isModalActive = false;
+        // Note: no need to setAwake(false) as needs to be awake
+        // in montage view
+        
+       
         
     };
 
