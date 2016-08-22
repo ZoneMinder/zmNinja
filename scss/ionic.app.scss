@@ -26,19 +26,27 @@ $stable:                        #2980b9 !default;
 $positive:                      #2980b9 !default;
 $assertive:                     #cd5c5c !default;
 $balanced:                      #3498DB !default;
-$royal:				#95A5A6 !default;
+$royal:				            #95A5A6 !default;
+$bar-dark-bg:                   #256e9f !default;
+$bar-dark-active-bg:                   #256e9f !default;
+
 
 
 $button-stable-active-bg:       #2980b9 !default;
 $button-stable-active-border:   #2980b9 !default;
-
+/*
 $dark:                        #256e9f !default;
+$button-dark-border:		#256e9f !default;
+$button-dark-active-border:		#256e9f !default;
+*/
+
 $button-stable-text:	      #FFFFFF !default;
 
 $button-border-radius:            8px !default;
+
+
 $button-stable-border:            #2980b9 !default;
-$button-dark-border:		#256e9f !default;
-$button-dark-active-border:		#256e9f !default;
+
 
 $button-royal-active-bg: 	#95A5A6 !default;
 $button-royal-active-order: 	#95A5A6 !default;
