@@ -1031,10 +1031,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // 
     function configurePTZ(mid)
     {
-        $scope.ptzWakeCommand  = "";
-        $scope.ptzSleepCommand = "";
-        $scope.ptzResetCommand = "";
-
         $scope.ptzMoveCommand = "";
         $scope.ptzStopCommand = "";
         
@@ -1063,21 +1059,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                 $http.get(myurl)
                     .success(function (data) {
-
-                    if (data.control.Control.CanWake == '1')
-                    {
-                        $scope.ptzWakeCommand = 'wake'; 
-                    }
-
-                    if (data.control.Control.CanSleep == '1')
-                    {
-                        $scope.ptzSleepCommand = 'sleep'; 
-                    }
-
-                    if (data.control.Control.CanReset == '1')
-                    {
-                        $scope.ptzResetCommand = 'reset'; 
-                    }
 
                     $scope.ptzMoveCommand = "move"; // start with as move;
                     $scope.ptzStopCommand = "";
