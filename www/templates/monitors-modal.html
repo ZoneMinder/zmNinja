@@ -37,11 +37,7 @@
 
         <div ng-show="isControllable=='1' && showPTZ">
 
-            <div class="ptzcenteredtopbutton">
-                <a class="button button-small icon button-royal" href="" ng-click="controlPTZ(monitorId, ptzWakeCommand);">{{'kWake' | translate}}</a>
-                <a class="button button-small icon button-royal" href="" ng-click="controlPTZ(monitorId, ptzSleepCommand);">{{'kSleep' | translate}}</a>
-                <a class="button button-small icon button-royal" href="" ng-click="controlPTZ(monitorId, ptzResetCommand);">{{'Reset' | translate}}</a>
-            </div>
+           
 
             <div class="ptzcentered">
                 <circular options="ptzRadialMenuOptions">
