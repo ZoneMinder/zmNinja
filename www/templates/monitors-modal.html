@@ -46,7 +46,7 @@
 
             <div ng-if="presetOn" class="ptzpresetbuttons animated fadeInDown" id="presetlist">
                 <div ng-repeat="preset in ptzPresets track by $index">
-                    <button class="button {{preset.icon}} button-small button-royal" style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, preset.cmd);">{{preset.name}}</button>
+                    <button class="button {{preset.icon}} button-small {{preset.style}}" style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, preset.cmd);">{{preset.name}}</button>
                 </div>
             </div>
 
