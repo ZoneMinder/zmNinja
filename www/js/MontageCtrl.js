@@ -664,6 +664,11 @@ function initPackery()
 
         $scope.LoginData = ZMDataModel.getLogin();
         $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+
+        $scope.ptzWakeCommand  = "";
+        $scope.ptzSleepCommand = "";
+        $scope.ptzResetCommand = "";
+
         $scope.ptzMoveCommand = "";
         $scope.ptzStopCommand = "";
         
