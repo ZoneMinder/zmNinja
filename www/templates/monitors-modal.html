@@ -36,6 +36,9 @@
 
 
         <div ng-show="isControllable=='1' && showPTZ">
+
+           
+
             <div class="ptzcentered">
                 <circular options="ptzRadialMenuOptions">
                 </circular>
@@ -44,13 +47,11 @@
             <div ng-if="presetOn" class="ptzpresetbuttons animated fadeInDown" id="presetlist">
                 <div ng-repeat="preset in ptzPresets track by $index">
                     <button class="button {{preset.icon}} button-small button-royal" style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, preset.cmd);">{{preset.name}}</button>
-
-
                 </div>
             </div>
 
 
-            <div class="ptzcenteredbutton">
+            <div class="ptzcenteredbotbutton">
                 <div ng-if="canZoom">
                     <a class="button button-small icon ion-search button-positive" href="" ng-click="controlPTZ(monitorId, zoomInCommand);">+</a>
                     <a class="button button-small icon ion-search button-positive" href="" ng-click="controlPTZ(monitorId, zoomOutCommand);">-</a>

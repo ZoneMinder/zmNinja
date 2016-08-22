@@ -1031,6 +1031,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // 
     function configurePTZ(mid)
     {
+        $scope.ptzWakeCommand  = "";
+        $scope.ptzSleepCommand = "";
+        $scope.ptzResetCommand = "";
+
         $scope.ptzMoveCommand = "";
         $scope.ptzStopCommand = "";
         
@@ -1048,17 +1052,46 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         .success (function (data)
          {
             $scope.isControllable = data.monitor.Monitor.Controllable;
+            
+            // *** Only for testing - comment out //
+            //$scope.isControllable = '1';
             // for testing only
             // $scope.isControllable = 1;
             $scope.controlid = data.monitor.Monitor.ControlId;
-            if ($scope.isControllable=='1')
+            if ($scope.isControllable=='1' )
             {
+                
+                
                 var apiurl = ZMDataModel.getLogin().apiurl;
                 var myurl = apiurl + "/controls/" + $scope.controlid + ".json";
                 ZMDataModel.zmDebug("configurePTZ : getting controllable data " + myurl);
 
                 $http.get(myurl)
                     .success(function (data) {
+                    
+                    // *** Only for testing - comment out  - start//
+                    /*data.Control.Control.CanSleep = '1';
+                    data.Control.Control.CanWake = '1';
+                    data.Control.Control.CanReset = '1';
+                    data.Control.Control.CanZoom = '1';
+                    data.control.Control.HasPresets = '1';
+                    data.control.Control.HasHomePreset = '1';*/
+                    // *** Only for testing - comment out - end //
+
+                    if (data.control.Control.CanWake == '1')
+                    {
+                        $scope.ptzWakeCommand = 'wake'; 
+                    }
+
+                    if (data.control.Control.CanSleep == '1')
+                    {
+                        $scope.ptzSleepCommand = 'sleep'; 
+                    }
+
+                    if (data.control.Control.CanReset == '1')
+                    {
+                        $scope.ptzResetCommand = 'reset'; 
+                    }
 
                     $scope.ptzMoveCommand = "move"; // start with as move;
                     $scope.ptzStopCommand = "";
@@ -1127,8 +1160,29 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                         if (data.control.Control.HasHomePreset == '1')
                         {
                             $scope.ptzPresets.unshift({name:'', icon:"ion-ios-home", cmd:'presetHome'});
+                           
+                        }
+                        
+                        // lets add these to the end
+                        // strictly speaking, they aren't really presets, but meh for now
+                        
+                        if (data.control.Control.CanWake == '1')
+                        {
                             
-                            $scope.ptzPresetCount++;
+                            $scope.ptzPresets.push({name:'', icon:"ion-eye", cmd:'wake'});
+                            
+                        }
+                        
+                        if (data.control.Control.CanSleep == '1')
+                        {
+                            $scope.ptzPresets.push({name:'', icon:"ion-eye-disabled", cmd:'sleep'});
+                           
+                        }
+                        
+                        if (data.control.Control.CanReset == '1')
+                        {
+                            $scope.ptzPresets.push({name:'', icon:"ion-ios-loop-strong", cmd:'reset'});
+                           
                         }
                         
                     }
