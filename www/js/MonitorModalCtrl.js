@@ -1031,6 +1031,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // 
     function configurePTZ(mid)
     {
+        $scope.presetAndControl = $translate.instant('kMore');
         $scope.ptzWakeCommand  = "";
         $scope.ptzSleepCommand = "";
         $scope.ptzResetCommand = "";
@@ -1077,6 +1078,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     data.control.Control.HasPresets = '1';
                     data.control.Control.HasHomePreset = '1';*/
                     // *** Only for testing - comment out - end //
+                    
+                    
 
                     if (data.control.Control.CanWake == '1')
                     {
@@ -1142,14 +1145,17 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 
                 // presets
                     ZMDataModel.zmDebug ("ConfigurePTZ Preset value is " +data.control.Control.HasPresets);
-                
+                    $scope.ptzPresets = [];
+                    
                     if (data.control.Control.HasPresets == '1')
                     {
+                        $scope.presetAndControl = $translate.instant('kPresets');
+                        
                         $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
                          
                         ZMDataModel.zmDebug ("ConfigurePTZ Number of presets is " + $scope.ptzPresetCount);
                         
-                        $scope.ptzPresets = [];
+                        
                         for (var p=0; p<$scope.ptzPresetCount; p++)
                         {
                             $scope.ptzPresets.push ({name:(p+1).toString(), icon:'', cmd:"presetGoto"+(p+1).toString(), style:'button-royal'});
@@ -1163,28 +1169,40 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                            
                         }
                         
-                        // lets add these to the end
-                        // strictly speaking, they aren't really presets, but meh for now
                         
-                        if (data.control.Control.CanWake == '1')
-                        {
-                            
-                            $scope.ptzPresets.push({name:'', icon:"ion-eye", cmd:'wake', style:'button-royal button-dark'});
-                            
-                        }
                         
-                        if (data.control.Control.CanSleep == '1')
-                        {
-                            $scope.ptzPresets.push({name:'', icon:"ion-eye-disabled", cmd:'sleep', style:'button-royal button-dark'});
-                           
-                        }
-                        
-                        if (data.control.Control.CanReset == '1')
-                        {
-                            $scope.ptzPresets.push({name:'', icon:"ion-ios-loop-strong", cmd:'reset', style:'button-royal button-dark'});
-                           
-                        }
-                        
+                    }
+                    else
+                    {
+                        $scope.presetAndControl = $translate.instant('kMore');
+                    }
+                    // lets add these to the end
+                    // strictly speaking, they aren't really presets, but meh for now
+                    
+                    // no need to darken these buttons if presets are not there
+                    var buttonAccent = "button-dark";
+                    if ($scope.ptzPresets.length == 0)
+                    {
+                        buttonAccent = "";
+                    }
+                    
+                    if (data.control.Control.CanWake == '1')
+                    {
+
+                        $scope.ptzPresets.push({name:'', icon:"ion-eye", cmd:'wake', style:'button-royal '+buttonAccent});
+
+                    }
+
+                    if (data.control.Control.CanSleep == '1')
+                    {
+                        $scope.ptzPresets.push({name:'', icon:"ion-eye-disabled", cmd:'sleep', style:'button-royal '+buttonAccent});
+
+                    }
+
+                    if (data.control.Control.CanReset == '1')
+                    {
+                        $scope.ptzPresets.push({name:'', icon:"ion-ios-loop-strong", cmd:'reset', style:'button-royal '+buttonAccent});
+
                     }
                 
                 
