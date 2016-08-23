@@ -1095,22 +1095,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     // *** Only for testing - comment out - end //
                     
                     
-
-                    if (data.control.Control.CanWake == '1')
-                    {
-                        $scope.ptzWakeCommand = 'wake'; 
-                    }
-
-                    if (data.control.Control.CanSleep == '1')
-                    {
-                        $scope.ptzSleepCommand = 'sleep'; 
-                    }
-
-                    if (data.control.Control.CanReset == '1')
-                    {
-                        $scope.ptzResetCommand = 'reset'; 
-                    }
-
+                    
                     $scope.ptzMoveCommand = "move"; // start with as move;
                     $scope.ptzStopCommand = "";
                 
