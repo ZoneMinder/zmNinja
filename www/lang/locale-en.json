@@ -37,6 +37,7 @@
     "kClear"                     :"Clear",
     "kCollapse"                  :"collapse",
     "kConfiguration"             :"Configuration",
+    "kControl"                   : "control",
     "kCredentialsBody"           :"Please provide your ZoneMinder credentials",
     "kCredentialsTitle"          :"Credentials Required",
     "kCurrentState"              :"current state",

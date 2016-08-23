@@ -259,6 +259,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         if ($scope.isControllable == '1') {
             //console.log ("iscontrollable is true");
             $scope.showPTZ = !$scope.showPTZ;
+            
+
+            
         } else {
             $ionicLoading.show({
                 template: $translate.instant('kPTZnotConfigured'),
@@ -351,6 +354,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.togglePresets = function () {
         $scope.presetOn = !$scope.presetOn;
+        
+        if ($scope.presetOn)
+        {
+            $scope.controlToggle = "hide buttons";
+        }
+        else
+        {
+            $scope.controlToggle = "show buttons";
+        }
         //console.log("Changing preset to " + $scope.presetOn);
 
         var element = angular.element(document.getElementById("presetlist"));
@@ -846,6 +858,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     };
 
     $scope.$on('$ionicView.enter', function () {
+        
+        
             
 
     });
@@ -1044,7 +1058,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.zoomStopCommand = "zoomStop";
         $scope.canZoom = false;
         
-        $scope.presetOn = false;
+        $scope.presetOn = true;
+        $scope.controlToggle = "hide buttons";
         
         ZMDataModel.zmDebug ("configurePTZ: called with mid="+mid);
         var ld = ZMDataModel.getLogin();
@@ -1149,7 +1164,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     
                     if (data.control.Control.HasPresets == '1')
                     {
-                        $scope.presetAndControl = $translate.instant('kPresets');
+                        //$scope.presetAndControl = $translate.instant('kPresets');
                         
                         $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
                          
@@ -1159,8 +1174,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                         for (var p=0; p<$scope.ptzPresetCount; p++)
                         {
                             $scope.ptzPresets.push ({name:(p+1).toString(), icon:'', cmd:"presetGoto"+(p+1).toString(), style:'button-royal'});
-                           // $scope.ptzPresets[p].name = "Arjun " + p;
-                          //  console.log ("Name to " + $scope.ptzPresets[p].name);
+                          
                         }
                         
                         if (data.control.Control.HasHomePreset == '1')
@@ -1172,10 +1186,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                         
                         
                     }
-                    else
+                    /*else
                     {
                         $scope.presetAndControl = $translate.instant('kMore');
-                    }
+                    }*/
                     // lets add these to the end
                     // strictly speaking, they aren't really presets, but meh for now
                     
@@ -1189,19 +1203,19 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     if (data.control.Control.CanWake == '1')
                     {
 
-                        $scope.ptzPresets.push({name:'', icon:"ion-eye", cmd:'wake', style:'button-royal '+buttonAccent});
+                        $scope.ptzPresets.push({name:'W', icon:"ion-eye", cmd:'wake', style:'button-royal '+buttonAccent});
 
                     }
 
                     if (data.control.Control.CanSleep == '1')
                     {
-                        $scope.ptzPresets.push({name:'', icon:"ion-eye-disabled", cmd:'sleep', style:'button-royal '+buttonAccent});
+                        $scope.ptzPresets.push({name:'S', icon:"ion-eye-disabled", cmd:'sleep', style:'button-royal '+buttonAccent});
 
                     }
 
                     if (data.control.Control.CanReset == '1')
                     {
-                        $scope.ptzPresets.push({name:'', icon:"ion-ios-loop-strong", cmd:'reset', style:'button-royal '+buttonAccent});
+                        $scope.ptzPresets.push({name:'R', icon:"ion-ios-loop-strong", cmd:'reset', style:'button-royal '+buttonAccent});
 
                     }
                 
