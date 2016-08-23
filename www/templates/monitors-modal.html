@@ -62,7 +62,7 @@
                 <a class="button button-small icon ion-stop  button-assertive" href="" ng-click="controlPTZ(monitorId, ptzStopCommand);"></a>
                 
                 
-                <a class="button button-small button-royal" href="" ng-click="togglePresets();">{{presetAndControl}}</a>
+                <a class="button button-small button-royal" href="" ng-click="togglePresets();">{{controlToggle}}</a>
             </div>
 
         </div>
@@ -76,7 +76,7 @@
         </button>
         <button mfb-button icon="ion-refresh" label="{{'kRefresh' | translate}}" ng-click="reloadView();">
         </button>
-        <button mfb-button icon="ion-arrow-expand" label="{{'kPTZ'| translate}}" ng-click="togglePTZ();">
+        <button mfb-button icon="ion-arrow-expand" label="{{'kControl'| translate}}" ng-click="togglePTZ();">
         </button>
         
     </nav>
