@@ -1286,9 +1286,16 @@ angular.module('zmApp', [
 
 
 
-
-                $ionicNativeTransitions.enable(true, false);
-                
+                if (ZMDataModel.getLogin().disableNative)
+                {
+                    ZMDataModel.zmLog ("Disabling native transitions...");
+                    $ionicNativeTransitions.enable(false);
+                }
+                else
+                {
+                    ZMDataModel.zmLog ("Enabling native transitions...");
+                    $ionicNativeTransitions.enable(true);
+                }
                 // At this stage, DataModel.init is not called yet
                 // but I do need to know the language
                 

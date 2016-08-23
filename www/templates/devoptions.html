@@ -158,6 +158,12 @@
             <label>
                 <ion-toggle ng-model="loginData.enableBlog" ng-checked="{{loginData.enableBlog}}" toggle-class="toggle-calm"> {{'kEnableNewsUpdates' | translate}}</ion-toggle>
             </label>
+            
+            
+            <label ng-if = "$root.platformOS != 'desktop'">
+                <ion-toggle ng-model="loginData.disableNative" ng-checked="{{loginData.disableNative}}" toggle-class="toggle-calm"> {{'kDisableNative' | translate}}<p>{{'kDisableNativeSub' | translate}}</p></ion-toggle>
+                
+            </label>
 
 
         </div>
