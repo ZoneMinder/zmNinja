@@ -101,6 +101,7 @@ angular.module('zmApp.controllers')
             'language': 'en',
             'reachability': true,
             'forceImageModePath': false,
+            'disableNative': false
 
 
 
@@ -657,6 +658,13 @@ angular.module('zmApp.controllers')
 
                                 }
 
+                                if (typeof loginData.disableNative == 'undefined') {
+                                    zmDebug("disableNative not found, setting to false");
+                                    loginData.disableNative = false;
+
+                                }
+
+                                
                                 zmLog("DataModel init recovered this loginData as " + JSON.stringify(loginData));
                             } else {
                                 zmLog("defaultServer configuration NOT found. Keeping login at defaults");

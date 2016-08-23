@@ -52,6 +52,8 @@
     "kDeletingEvent"             :"deleting event",
     "kDevOptions"                :"Dev. Settings",
     "kDeveloperOptionsFor"       :"Developer Options for",
+    "kDisableNative"             :"Disable Native transitions",
+    "kDisableNativeSub"          :"Enable if the menu is freezing",
     "kDisablePush"               :"disable APNS/GCM",
     "kDiscovering"               :"discovering",
     "kDiscoveringAPI"            :"discovering api",
