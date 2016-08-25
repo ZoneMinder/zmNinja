@@ -828,7 +828,10 @@ angular.module('zmApp', [
                         //eventServer.start();
                         $rootScope.loggedIntoZm = 1;
 
-                        ZMDataModel.zmLog("zmAutolog.runin successfully logged into Zoneminder");
+                        ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
+                        
+                        ZMDataModel.zmDebug (">>>>> I GOT THIS LOGIN DATA - ARE WE REALLY LOGGED IN ?");
+                        ZMDataModel.zmDebug (">>>>>"+ JSON.stringify(data));
 
                         d.resolve("Login Success");
 
@@ -1264,7 +1267,7 @@ angular.module('zmApp', [
                     ZMDataModel.zmLog("Enabling insecure SSL");
                     cordova.plugins.certificates.trustUnsecureCerts(true);
 
-                    cordova.getAppVersion(function (version) {
+                    cordova.getAppVersion.getVersionNumber().then(function (version) {
                         appVersion = version;
                         ZMDataModel.zmLog("App Version: " + appVersion);
                         ZMDataModel.setAppVersion(appVersion);
