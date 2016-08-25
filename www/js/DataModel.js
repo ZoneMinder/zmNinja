@@ -290,7 +290,7 @@ angular.module('zmApp.controllers')
 
             setLatestBlogPostChecked: function (val) {
                 latestBlogPostChecked = val;
-                localforage.seItem("latestBlogPostChecked", latestBlogPostChecked);
+                localforage.setItem("latestBlogPostChecked", latestBlogPostChecked);
             },
 
             getLatestBlogPostChecked: function () {
