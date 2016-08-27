@@ -83,11 +83,17 @@ angular.module('zmApp.controllers')
             //-----------------------------------------------------------------------
             $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
                 var checked = false;
+                
+                if (monitorName == 'All')
+                {
+                    monitorName = $translate.instant('kAll');
+                }
+                
                 //console.log("called with " + monitorId + ":" + enabled + ":" + func);
                 if (enabled == '1') checked = true;
 
                 //if monitorId is not specified, all monitors will be changed 
-                var monitorsIds = new Array();
+                var monitorsIds = [];
                 if (monitorId == '') {
                     for (var i = 0; i < $scope.monitors.length; i++) {
                         monitorsIds[i] = $scope.monitors[i].Monitor.Id;
@@ -128,8 +134,8 @@ angular.module('zmApp.controllers')
                     mymonitorsIds: monitorsIds,
                     myfunc: func,
                     myenabled: checked,
-                    myfailedIds: new Array(),
-                    mypromises: new Array()
+                    myfailedIds: [],
+                    mypromises: []
                 };
 
                 $rootScope.zmPopup = $ionicPopup.show({
