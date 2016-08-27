@@ -68,6 +68,8 @@ angular.module('zmApp.controllers')
             var d = $q.defer();
 
             var loginData = ZMDataModel.getLogin();
+            
+            console.log ("INIT GOT " + JSON.stringify(loginData));
 
             if (loginData.isUseEventServer == false || !loginData.eventServer) {
                 ZMDataModel.zmLog("No Event Server present. Not initializing");
@@ -75,7 +77,7 @@ angular.module('zmApp.controllers')
                 return d.promise;
             }
 
-            if (!$rootScope.apnsToken)
+            //if (!$rootScope.apnsToken)
                 pushInit();
 
 
@@ -233,6 +235,10 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         // Send an arbitrary object to the Event Serve
         // currently planned to use it for device token
+        // isForce =1 when you need to send the message even
+        // if config says ES is off. This may happen when 
+        // you turn off ES and then we need sendMessage to
+        // let ZMES know not to send us messages
         //--------------------------------------------------------------------------
         function sendMessage(type, obj, isForce) {
             var ld = ZMDataModel.getLogin();
@@ -321,11 +327,11 @@ angular.module('zmApp.controllers')
         }
 
         function pushInit() {
-            ZMDataModel.zmLog("Setting up push registration");
+            ZMDataModel.zmLog(">>>Setting up push registration");
             var push;
             var mediasrc;
             var media;
-
+            var ld  = ZMDataModel.getLogin();
 
             var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
 
@@ -344,10 +350,10 @@ angular.module('zmApp.controllers')
 
                     {
                         "ios": {
-                            "alert": "true",
-                            "badge": "true",
-                            "sound": "true",
-                            "clearBadge": "true"
+                            "alert": true,
+                            "badge": true,
+                            "sound": ld.soundOnPush,
+                            "clearBadge": true
                         }
                     }
 
@@ -356,7 +362,6 @@ angular.module('zmApp.controllers')
             } else {
                 mediasrc = "/android_asset/www/sounds/blop.mp3";
                 var android_media_file = "blop";
-                var ld = ZMDataModel.getLogin();
                 
                 
                 
@@ -367,7 +372,8 @@ angular.module('zmApp.controllers')
                             "android": {
                                 "senderID": zm.gcmSenderId,
                                 "icon": "ic_stat_notification",
-                                "sound":"true"
+                                sound:ld.soundOnPush,
+                                vibrate: ld.vibrateOnPush
                                 //"sound": android_media_file
                             }
                         }
@@ -395,7 +401,7 @@ angular.module('zmApp.controllers')
                     platform: plat,
                     token: $rootScope.apnsToken,
                     state: pushstate
-                });
+                },1);
 
 
             });

@@ -1,4 +1,6 @@
-<ion-view view-title="{{'kEventServer' | translate}}/{{loginData.serverName}}" cache-view="false">
+<ion-view cache-view="false">
+
+    <ion-nav-title>{{'kEventServer' | translate}}/{{getTitle();}}" </ion-nav-title>
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
@@ -15,7 +17,7 @@
          <div class="list list-inset">
         {{'kEventServerConfig1' | translate }}
         </div>
-        <ion-checkbox ng-model="loginData.isUseEventServer" ng-checked="{{loginData.isUseEventServer}}">{{'kUseEventServer' | translate}}</ion-checkbox>
+        <ion-checkbox ng-model="loginData.isUseEventServer" ng-checked="loginData.isUseEventServer">{{'kUseEventServer' | translate}}</ion-checkbox>
         
         
         <ion-item  ng-href="" ng-click="selectScreen()">
@@ -28,7 +30,14 @@
 
         </label>
         
-            <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush"  ng-checked="{{loginData.disablePush}}" toggle-class="toggle-calm"  class="item-text-wrap">{{'kOnlyUseWebSocket'| translate }}<br/><p>{{'kDisablePush' | translate }}</p></ion-toggle>
+            <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush"  ng-checked="loginData.disablePush" toggle-class="toggle-calm"  class="item-text-wrap">{{'kOnlyUseWebSocket'| translate }}<br/><p>{{'kDisablePush' | translate }}</p></ion-toggle>
+        
+        
+            <!-- vibrate app setting is not av. on iOS-->
+            <ion-toggle ng-if="loginData.isUseEventServer && $root.platformOS !='ios'" ng-model="loginData.vibrateOnPush"  ng-checked="loginData.vibrateOnPush" toggle-class="toggle-calm" >{{'kVibrateOnPush'| translate }}</ion-toggle>
+        
+        
+          <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.soundOnPush"  ng-checked="loginData.soundOnPush" toggle-class="toggle-calm" >{{'kSoundOnPush'| translate }}</ion-toggle>
         
         <!--
              <ion-toggle  ng-model="loginData.defaultPushSound" toggle-class="toggle-calm" class="item-text-wrap" ng-checked="{{loginData.defaultPushSound}}">use system sound<p>please save and restart app</p></ion-toggle>

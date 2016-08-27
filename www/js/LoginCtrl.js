@@ -526,7 +526,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     platform: $rootScope.platformOS,
                     token: $rootScope.apnsToken,
                     state: "disabled"
-                });
+                },1);
             }
         }
 
@@ -542,7 +542,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     platform: $rootScope.platformOS,
                     token: $rootScope.apnsToken,
                     state: "enabled"
-                });
+                },1);
             }
             EventServer.sendMessage("control", {
                 type: 'filter',
