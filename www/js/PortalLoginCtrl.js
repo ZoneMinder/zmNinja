@@ -142,7 +142,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 {
                     ZMDataModel.zmDebug("PortalLogin: auth success");
                     ZMDataModel.getKeyConfigParams(1);
-                    
+                    // $state.go("login" ,{"wizard": false});
                     //login was ok, so get API details
                     ZMDataModel.getAPIversion()
                     .then (function(data) {
@@ -160,8 +160,31 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                             $state.go('importantmessage', {"ver":data});
                         }
-                    });
-                    EventServer.refresh();
+                        
+                        if (data == "0.0.0")
+                        {
+                         
+                            ZMDataModel.zmLog ("API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
+                             ZMDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
+                            $state.go("login" ,{"wizard": false});
+                            
+                        }
+                        // coming here means continue
+                        EventServer.refresh();
+                        var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
+                        ZMDataModel.zmDebug ("logging state transition");
+                        ZMDataModel.zmDebug("Transitioning state to: " + 
+                                           statetoGo + " with param " +JSON.stringify($rootScope.lastStateParam) );
+                        $state.go(statetoGo, $rootScope.lastStateParam);
+                        
+                        },
+                       function (error) { // API Error
+                            ZMDataModel.zmLog ("API Error handler: going to login getAPI returned error: " + JSON.stringify(error));
+                             ZMDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
+                            $state.go("login" ,{"wizard": false});
+
+                       });
+                    
 
                     if ($rootScope.tappedNotification)
                     {
@@ -193,9 +216,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             return;
                         }
                     }
-                        ZMDataModel.zmDebug("Transitioning state to: " + 
-                                        $rootScope.lastState ? $rootScope.lastState : 'montage');
-                        $state.go($rootScope.lastState ? $rootScope.lastState : 'montage', $rootScope.lastStateParam);
+                    
                     
                 },
                     // coming here means auth error
