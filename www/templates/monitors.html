@@ -10,6 +10,10 @@
     <ion-content overflow-scroll="false">
        <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
         </ion-refresher>
+            <div style="float:right;margin-top:3px;margin-right:8px;"> 
+                <a class="button button-small icon icon-left icon ion-gear-a"
+                   href="" ng-click="changeConfig('All', '','1','Monitor');">{{'kGlobalConfiguration' | translate}}</a>
+            </div><br/>
             <div class="list card" ng-repeat="monitor in monitors">
                 <div class="item" ng-style="{'background-color': monitor.Monitor.Enabled=='1'?'white':'white'}">
                     <div ng-if="monitor.Monitor.Enabled == '1'">

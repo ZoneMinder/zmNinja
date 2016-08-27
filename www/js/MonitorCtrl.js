@@ -6,8 +6,8 @@
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate',
-                               function ($ionicPopup, zm, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate) {
+    .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate', '$q',
+                               function ($ionicPopup, zm, $scope, ZMDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q) {
 
 
             //-----------------------------------------------------------------------
@@ -83,8 +83,25 @@ angular.module('zmApp.controllers')
             //-----------------------------------------------------------------------
             $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
                 var checked = false;
+                
+                if (monitorName == 'All')
+                {
+                    monitorName = $translate.instant('kAll');
+                }
+                
                 //console.log("called with " + monitorId + ":" + enabled + ":" + func);
                 if (enabled == '1') checked = true;
+
+                //if monitorId is not specified, all monitors will be changed 
+                var monitorsIds = [];
+                if (monitorId == '') {
+                    for (var i = 0; i < $scope.monitors.length; i++) {
+                        monitorsIds[i] = $scope.monitors[i].Monitor.Id;
+                    }
+                }
+                else {
+                        monitorsIds[0] = monitorId;
+                }
 
                 $scope.monFunctions = [
                     {
@@ -114,8 +131,11 @@ angular.module('zmApp.controllers')
         ];
 
                 $scope.monfunc = {
+                    mymonitorsIds: monitorsIds,
                     myfunc: func,
-                    myenabled: checked
+                    myenabled: checked,
+                    myfailedIds: [],
+                    mypromises: []
                 };
 
                 $rootScope.zmPopup = $ionicPopup.show({
@@ -133,87 +153,93 @@ angular.module('zmApp.controllers')
                         {
                             text: $translate.instant('kButtonSave'),
                             onTap: function (e) {
+                                $scope.monfunc.mymonitorsIds.forEach( function(item, index) {
+                                    ZMDataModel.zmDebug("MonitorCtrl:changeConfig selection:" + $scope.monfunc.myenabled +
+                                        $scope.monfunc.myfunc);
+                                    var loginData = ZMDataModel.getLogin();
+                                    var apiRestart = loginData.apiurl + "/states/change/restart.json";
+                                    var apiMon = loginData.apiurl + "/monitors/" + item + ".json";
 
-                                ZMDataModel.zmDebug("MonitorCtrl:changeConfig selection:" + $scope.monfunc.myenabled +
-                                    $scope.monfunc.myfunc);
-                                var loginData = ZMDataModel.getLogin();
-                                var apiRestart = loginData.apiurl + "/states/change/restart.json";
-                                var apiMon = loginData.apiurl + "/monitors/" + monitorId + ".json";
+                                    ZMDataModel.zmDebug("MonitorCtrl: URLs for changeConfig save:" + apiMon);
 
-                                ZMDataModel.zmDebug("MonitorCtrl: URLs for changeConfig save:" + apiMon);
+                                    var isEnabled = "";
+                                    isEnabled = ($scope.monfunc.myenabled == true) ? '1' : '0';
 
-                                var isEnabled = "";
-                                isEnabled = ($scope.monfunc.myenabled == true) ? '1' : '0';
+                                    $ionicLoading.show({
+                                        template: $translate.instant('kApplyingChanges') + "...",
+                                        noBackdrop: true,
+                                        duration: zm.largeHttpTimeout,
+                                    });
 
-                                $ionicLoading.show({
-                                    template: $translate.instant('kApplyingChanges') + "...",
-                                    noBackdrop: true,
-                                    duration: zm.largeHttpTimeout,
-                                });
+                                    var httpPromise = $http({
+                                        url: apiMon,
+                                        method: 'post',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                            'Accept': '*/*',
+                                        },
+                                        transformRequest: function (obj) {
+                                            var str = [];
+                                            for (var p in obj)
+                                                str.push(encodeURIComponent(p) + "=" +
+                                                    encodeURIComponent(obj[p]));
+                                            var foo = str.join("&");
+                                            // console.log("****RETURNING " + foo);
+                                            ZMDataModel.zmDebug("MonitorCtrl: parmeters constructed: " + foo);
+                                            return foo;
+                                        },
+                                        data: {
+                                            'Monitor[Function]': $scope.monfunc.myfunc,
+                                            'Monitor[Enabled]': isEnabled,
+                                        }
 
-                                $http({
-                                    url: apiMon,
-                                    method: 'post',
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded',
-                                        'Accept': '*/*',
-                                    },
-                                    transformRequest: function (obj) {
-                                        var str = [];
-                                        for (var p in obj)
-                                            str.push(encodeURIComponent(p) + "=" +
-                                                encodeURIComponent(obj[p]));
-                                        var foo = str.join("&");
-                                        // console.log("****RETURNING " + foo);
-                                        ZMDataModel.zmDebug("MonitorCtrl: parmeters constructed: " + foo);
-                                        return foo;
-                                    },
-                                    data: {
-                                        'Monitor[Function]': $scope.monfunc.myfunc,
-                                        'Monitor[Enabled]': isEnabled,
-                                    }
-
-                                })
-
-                                // I am not restarting ZM after monitor change
-
-                                .success(function () {
-                                        $ionicLoading.hide();
+                                    })
+                                    .success(function () {
                                         ZMDataModel.zmDebug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
-                                        doRefresh();
-                                        /* ZMDataModel.zmDebug ("MonitorCtrl: Restarting ZM");
-                                         $ionicLoading.show({
-                                             template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
-                                             noBackdrop: true,
-                                             duration: zm.largeHttpTimeout,
-                                         });
-                                         $http.post(apiRestart)
-                                             .then(function (success) {
-                                                     $ionicLoading.hide();
-                                                     var refresh = ZMDataModel.getMonitors(1);
-                                                     refresh.then(function (data) {
-                                                         $scope.monitors = data;
-                                                         $scope.$broadcast('scroll.refreshComplete');
-                                                     });
-
-                                                 },
-                                                 function (error) {
-                                                     $ionicLoading.hide();
-
-                                                 }
-                                             );*/
-
                                     })
                                     .error(function (data, status, headers, config) {
                                         ZMDataModel.zmDebug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
-                                        $ionicLoading.hide();
+                                        $scope.monfunc.myfailedIds.push(item);
+                                    });
+
+                                    $scope.monfunc.mypromises.push(httpPromise);
+                                });
+
+                                $q.all($scope.monfunc.mypromises).then(function(e) {
+                                    $ionicLoading.hide();
+                                    // if there's a failed ID, an error has occurred
+                                    if ($scope.monfunc.myfailedIds.length != 0) {
                                         $ionicLoading.show({
-                                            template: $translate.instant('kErrorChangingMonitors') + "...",
+                                            template: $translate.instant('kErrorChangingMonitors') + ". Monitor IDs : " + $scope.monfunc.myfailedIds.toString(),
                                             noBackdrop: true,
                                             duration: 3000,
                                         });
-                                    });
+                                    }
+                                    else {
+                                    // I am not restarting ZM after monitor change
+                                        /* ZMDataModel.zmDebug ("MonitorCtrl: Restarting ZM");
+                                        $ionicLoading.show({
+                                            template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
+                                            noBackdrop: true,
+                                            duration: zm.largeHttpTimeout,
+                                        });
+                                        $http.post(apiRestart)
+                                            .then(function (success) {
+                                                $ionicLoading.hide();
+                                                var refresh = ZMDataModel.getMonitors(1);
+                                                refresh.then(function (data) {
+                                                    $scope.monitors = data;
+                                                    $scope.$broadcast('scroll.refreshComplete');
+                                                });
 
+                                             },
+                                             function (error) {
+                                                 $ionicLoading.hide();
+
+                                             });*/
+                                        doRefresh();
+                                    }
+                                });
                             }
 
 
