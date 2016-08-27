@@ -829,9 +829,6 @@ angular.module('zmApp', [
                         $rootScope.loggedIntoZm = 1;
 
                         ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
-                        
-                        ZMDataModel.zmDebug (">>>>> I GOT THIS LOGIN DATA - ARE WE REALLY LOGGED IN ?");
-                        ZMDataModel.zmDebug (">>>>>"+ JSON.stringify(data));
 
                         d.resolve("Login Success");
 
