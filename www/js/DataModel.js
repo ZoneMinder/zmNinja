@@ -101,7 +101,9 @@ angular.module('zmApp.controllers')
             'language': 'en',
             'reachability': true,
             'forceImageModePath': false,
-            'disableNative': false
+            'disableNative': false,
+            'vibrateOnPush': true,
+            'soundOnPush': true
 
 
 
@@ -663,6 +665,18 @@ angular.module('zmApp.controllers')
                                     loginData.disableNative = false;
 
                                 }
+                                
+                                if (typeof loginData.vibrateOnPush == 'undefined') {
+                                    zmDebug("vibrate on push not found, setting to true");
+                                    loginData.vibrateOnPush = true;
+
+                                }
+                                
+                                if (typeof loginData.soundOnPush == 'undefined') {
+                                    zmDebug("sound on push not found, setting to true");
+                                    loginData.soundOnPush = true;
+
+                                }
 
                                 
                                 zmLog("DataModel init recovered this loginData as " + JSON.stringify(loginData));
@@ -883,7 +897,7 @@ angular.module('zmApp.controllers')
                         },
                         function (error) {
                             zmDebug("getAPIversion error handler " + JSON.stringify(error));
-                            d.resolve("0.0.0");
+                            d.reject("-1.-1.-1");
                             return (d.promise);
                         });
                 return (d.promise);
