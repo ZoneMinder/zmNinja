@@ -114,6 +114,7 @@
     "kFrom"                      :"From",
     "kFromDate"                  :"From Date",
     "kFromTime"                  :"From Time",
+    "kGlobalConfiguration"       :"Global Configuration",
     "kGraphAlarmed"              :"alarmed",
     "kGraphAll"                  :"all",
     "kGraphError"                :"there was an error rendering the graph. Please see logs",
