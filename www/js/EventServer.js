@@ -459,8 +459,10 @@ angular.module('zmApp.controllers')
                     
                     // this flag honors the HW mute button. Go figure
                     // http://ilee.co.uk/phonegap-plays-sound-on-mute/
-                    media.play({ playAudioWhenScreenIsLocked : false });
-                    
+                    if (ld.soundOnPush)
+                    {
+                        media.play({ playAudioWhenScreenIsLocked : false });
+                    }
     
                     var str = data.message;
                     // console.log ("***STRING: " + str + " " +str.status);
