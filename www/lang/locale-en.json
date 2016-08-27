@@ -7,6 +7,7 @@
     "kAlarmFrameCount"           :"Alarm Frame Count",
     "kAlarmMaxFPS"               :"Alarm Max FPS",
     "kAlarms"                    :"Alarms",
+    "kAll"                       : "All",
     "kAnalyze"                   :"Analyze",
     "kApiUrl"                    :"ZM api url",
     "kApplyingChanges"           :"Applying changes. Please wait",
