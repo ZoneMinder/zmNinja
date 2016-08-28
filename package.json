@@ -37,7 +37,6 @@
         "SENDER_ID": "710936220256"
       }
     },
-    "cordova-plugin-app-version",
     "cordova-plugin-file",
     "cordova-plugin-inappbrowser",
     "cordova-plugin-ios-longpress-fix",
@@ -78,6 +77,7 @@
       "locator": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
       "id": "cordova-sqlite-storage"
     },
+    "cordova-plugin-app-version",
     {
       "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
       "id": "cordova-plugin-certificates"
