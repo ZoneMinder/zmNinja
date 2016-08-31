@@ -120,7 +120,70 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     };
     
         
-    
+    //------------------------------------------------------------------------
+    // Aaron Lager hack - can't figure out why he gets a 401 after
+    // successful login and then it works after resaving
+    //------------------------------------------------------------------------
+    function tryLoggingSecondTimeHack()
+    {
+        var d = $q.defer();
+        
+        zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;"+$translate.instant('kAuthenticating')+"...</button>")
+                .then(function (data) // success
+                {
+                    ZMDataModel.zmDebug ("2nd auth login worked");
+                    ZMDataModel.getAPIversion()
+                    .then (function (data) {
+                        ZMDataModel.getKeyConfigParams(1);
+                        ZMDataModel.zmLog("2nd auth:Got API version: " + data);
+                        $rootScope.apiVersion = data;
+                        var ld = ZMDataModel.getLogin();
+                         if (ZMDataModel.versionCompare(data,zm.minAppVersion)==-1 && data !="0.0.0")
+                        {
+
+                            $state.go('lowversion', {"ver":data});
+                        }
+
+                        if (ZMDataModel.versionCompare(data,zm.recommendedAppVersion)==-1 && data !="0.0.0")
+                        {
+
+                            $state.go('importantmessage', {"ver":data});
+                        }
+                        
+                        if (data == "0.0.0")
+                        {
+                         
+                            ZMDataModel.zmLog ("2nd Auth:API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
+                             ZMDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
+                            $state.go("login" ,{"wizard": false});
+                            
+                        }
+                        // coming here means continue
+                        EventServer.refresh();
+                        var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
+                        //ZMDataModel.zmDebug ("logging state transition");
+                        ZMDataModel.zmDebug("2nd Auth: Transitioning state to: " + 
+                                           statetoGo + " with param " +JSON.stringify($rootScope.lastStateParam) );
+                        $state.go(statetoGo, $rootScope.lastStateParam);
+                        
+                    },
+                           function (error) {
+                            ZMDataModel.zmDebug ("2nd auth API failed, going to login");
+                            d.reject("failed 2nd auth");
+                            return (d.promise);
+                        
+                    });
+        
+            
+        },
+        function (error) {
+            ZMDataModel.zmDebug ("2nd auth hack failed, going to login");
+            d.reject("failed 2nd auth");
+            return (d.promise);
+        });
+        
+        return (d.promise);
+    }
 
     function unlock(idVerified) {
         /*
@@ -180,8 +243,19 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         },
                        function (error) { // API Error
                             ZMDataModel.zmLog ("API Error handler: going to login getAPI returned error: " + JSON.stringify(error));
-                             ZMDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
-                            $state.go("login" ,{"wizard": false});
+                             //ZMDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
+                        
+                            ZMDataModel.zmDebug ("Doing the Aaron Hack after 1 sec....");
+                            $timeout ( function () {
+                            tryLoggingSecondTimeHack()
+                            .then (function success(s) {
+                                ZMDataModel.zmLog ("2nd time login hack worked!, nothing to do");
+                            },
+                            function error(e) {
+                                $state.go("login" ,{"wizard": false});
+                            });
+                        
+                            },1000);
 
                        });
                     
