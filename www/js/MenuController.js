@@ -7,10 +7,10 @@ $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
 
-
-
-   
-    
+//----------------------------------------------------------------
+// This controller sits along with the main app to  bring up 
+// the language menu from the main menu
+//----------------------------------------------------------------
     $scope.switchLang = function()
     {
         $scope.lang = ZMDataModel.getLanguages();

@@ -50,7 +50,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     d.resolve(true);
                     return d.promise;
                 } else {
-                    console.log("************ERROR");
+                    //console.log("************ERROR");
                     $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
                     $scope.wizard.portalColor = "#e74c3c";
                     d.reject(false);
@@ -58,7 +58,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 }
             })
             .error(function (error) {
-                console.log("************ERROR");
+                //console.log("************ERROR");
                 $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
                 $scope.wizard.portalColor = "#e74c3c";
                 d.reject(false);
@@ -79,7 +79,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var d = $q.defer();
         $http.get($scope.wizard.apiURL + "/monitors.json")
             .then(function (success) {
-                   // console.log("getfirst monitor success: " + JSON.stringify(success));
+                    // console.log("getfirst monitor success: " + JSON.stringify(success));
                     if (success.data.monitors.length > 0) {
                         var foundMid = -1;
                         for (var i = 0; i < success.data.monitors.length; i++) {
@@ -107,7 +107,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     }
                 },
                 function (error) {
-                    console.log("getfirst monitor error: " + JSON.stringify(error));
+                    //console.log("getfirst monitor error: " + JSON.stringify(error));
                     d.reject(false);
                     return d.promise;
                 });
@@ -260,7 +260,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                                     },
                                     function (error) {
                                         $ionicLoading.hide();
-                                        console.log("No cgi-bin found: " + error);
+                                        //console.log("No cgi-bin found: " + error);
                                         $scope.wizard.streamingValidText = $translate.instant('kPortalCgiBinFailed');
                                         $scope.wizard.streamingColor = "#e74c3c";
                                         d.reject(false);
@@ -321,7 +321,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     return d.promise;
                 },
                 function (error) {
-                    console.log("No APIs found: " + error);
+                    //console.log("No APIs found: " + error);
                     $scope.wizard.apiValidText = $translate.instant('kPortalAPIFailed');
                     $scope.wizard.apiColor = "#e74c3c";
                     d.reject(false);
@@ -362,11 +362,11 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             })
             .then(function (success) {
                 $rootScope.zmCookie = "";
-                console.log("ZMlogout success, cookie removed");
+                //console.log("ZMlogout success, cookie removed");
                 d.resolve(true);
                 return d.promise;
             }, function (error) {
-                console.log("ZMlogout success");
+                //console.log("ZMlogout success");
                 d.resolve(true);
                 return d.promise;
             });
@@ -454,7 +454,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             .then(function (ans) {
                 // login now
                 $ionicLoading.hide();
-                ZMDataModel.zmLog("zmWizard: logging in with " + u + " " + zmu );
+                ZMDataModel.zmLog("zmWizard: logging in with " + u + " " + zmu);
 
                 // The logic will be:
                 // Login then do an api detect and cgi-detect together

@@ -33,17 +33,16 @@
          }
      };
 
-     
+
      // we need this to dynamically get title 
      // name as ion-view is set in stone and
      // we don't get title till beforeEnter
      // which is odd - I'd expect beforeEnter to load
      // before View is loaded
-     $scope.getTitle = function()
-     {
+     $scope.getTitle = function () {
          return $scope.loginData.serverName;
      };
-     
+
      //----------------------------------------------------------------
      // Save anyway when you exit
      //----------------------------------------------------------------
@@ -53,40 +52,40 @@
 
 
      });
-     
-     
+
+
      $scope.$on('$ionicView.beforeEnter', function () {
-     
-     $scope.loginData = ZMDataModel.getLogin();
-     console.log ("Event server - before Enter, loginData is " + JSON.stringify($scope.loginData));
-     $scope.defScreen = $scope.loginData.onTapScreen;
 
-     if ($scope.loginData.eventServer == "") {
-         $scope.loginData.eventServer = "wss://" + extractDomain($scope.loginData.url) + ":9000";
-     }
+         $scope.loginData = ZMDataModel.getLogin();
+         //console.log ("Event server - before Enter, loginData is " + JSON.stringify($scope.loginData));
+         $scope.defScreen = $scope.loginData.onTapScreen;
 
-
-
-      res = $scope.loginData.eventServerMonitors.split(",");
-      minterval = $scope.loginData.eventServerInterval.split(",");
-
-
-     for (var i = 0; i < $scope.monitors.length; i++) {
-
-
-         if (!isEnabled($scope.monitors[i].Monitor.Id)) {
-             // if the filter list has IDs and this is not part of it, uncheck it
-             $scope.monitors[i].Monitor.isChecked = false;
-             //console.log("Marking false");
-             $scope.monitors[i].Monitor.reportingInterval = 0;
-         } else {
-             // console.log("Marking true");
-             $scope.monitors[i].Monitor.isChecked = true;
-             $scope.monitors[i].Monitor.reportingInterval = getInterval($scope.monitors[i].Monitor.Id);
+         if ($scope.loginData.eventServer == "") {
+             $scope.loginData.eventServer = "wss://" + extractDomain($scope.loginData.url) + ":9000";
          }
 
-     }
-          });
+
+
+         res = $scope.loginData.eventServerMonitors.split(",");
+         minterval = $scope.loginData.eventServerInterval.split(",");
+
+
+         for (var i = 0; i < $scope.monitors.length; i++) {
+
+
+             if (!isEnabled($scope.monitors[i].Monitor.Id)) {
+                 // if the filter list has IDs and this is not part of it, uncheck it
+                 $scope.monitors[i].Monitor.isChecked = false;
+                 //console.log("Marking false");
+                 $scope.monitors[i].Monitor.reportingInterval = 0;
+             } else {
+                 // console.log("Marking true");
+                 $scope.monitors[i].Monitor.isChecked = true;
+                 $scope.monitors[i].Monitor.reportingInterval = getInterval($scope.monitors[i].Monitor.Id);
+             }
+
+         }
+     });
 
 
      //--------------------------------------------------
@@ -194,8 +193,8 @@
          $scope.loginData.eventServerInterval = intervalstring;
 
 
-         console.log ("SAVED: " + JSON.stringify($scope.loginData));
-                 ZMDataModel.setLogin($scope.loginData);
+         //console.log ("SAVED: " + JSON.stringify($scope.loginData));
+         ZMDataModel.setLogin($scope.loginData);
 
          var pushstate = "enabled";
          if ($scope.loginData.disablePush == true || $scope.loginData.isUseEventServer == false)
@@ -224,15 +223,15 @@
                              platform: plat,
                              token: $rootScope.apnsToken,
                              state: pushstate
-                         },1);
+                         }, 1);
 
                      }
 
 
                  });
-             
-                  
-            
+
+
+
          } else {
              if ($rootScope.apnsToken != "")
              // if its defined then this is post init work
@@ -250,10 +249,10 @@
 
              }
              // Give the above some time to transmit
-            
-                 EventServer.disconnect();
-                
-             
+
+             EventServer.disconnect();
+
+
          }
 
 
@@ -322,10 +321,10 @@
      //------------------------------------------------------------------------
      $scope.monitors = [];
      $scope.monitors = message;
-     var res ,minterval;
+     var res, minterval;
 
 
-     
+
 
 
 

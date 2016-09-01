@@ -5,7 +5,7 @@
 // controller for State View
 
 angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', function (
-    $ionicPopup, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout,$ionicHistory, $translate) {
+    $ionicPopup, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate) {
 
     //----------------------------------------------------------------------
     // Controller main
@@ -19,10 +19,10 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     $scope.dangerButtonColor = ["button-positive", "button-assertive"];
     $scope.customState = "";
     $scope.allStateNames = [];
-        
+
     $rootScope.zmPopup = "";
-        
-    
+
+
 
     var loginData = ZMDataModel.getLogin();
 
@@ -43,12 +43,12 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         ZMDataModel.zmDebug("invoking LoadStatus...");
         getLoadStatus();
     }, 2000);
-    
+
     $timeout(function () {
         ZMDataModel.zmDebug("invoking CurrentState...");
         getCurrentState();
     }, 4000);
-        
+
     /*
     $timeout(function () {
             ZMDataModel.zmDebug("invoking DiskStatus...");
@@ -63,7 +63,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-       // console.log("**VIEW ** Montage Ctrl Entered");
+        // console.log("**VIEW ** Montage Ctrl Entered");
         ZMDataModel.setAwake(false);
     });
 
@@ -99,21 +99,25 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             );
 
     }
-        
-   
+
+
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
-    $scope.handleAlarms = function()
-    {
-        $rootScope.isAlarm=!$rootScope.isAlarm;
-        if (!$rootScope.isAlarm)
-        {
-            $rootScope.alarmCount="0";
-            $ionicHistory.nextViewOptions({disableBack: true});		
-            $state.go("events", {"id": 0}, { reload: true });
+    $scope.handleAlarms = function () {
+        $rootScope.isAlarm = !$rootScope.isAlarm;
+        if (!$rootScope.isAlarm) {
+            $rootScope.alarmCount = "0";
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+            $state.go("events", {
+                "id": 0
+            }, {
+                reload: true
+            });
         }
-    };    
+    };
 
     //---------------------------------------------------------
     // Allows the user to select a custom run state
@@ -130,7 +134,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
 
             title: $translate.instant('kSelectRunState'),
-            subTitle: $translate.instant('kCurrentState') + $scope.customState ? ($translate.instant('kCurrentState')+": " + $scope.customState) : "",
+            subTitle: $translate.instant('kCurrentState') + $scope.customState ? ($translate.instant('kCurrentState') + ": " + $scope.customState) : "",
             buttons: [
                 {
                     text: $translate.instant('kButtonCancel'),
@@ -140,7 +144,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
                 },
                 {
-                    text:  $translate.instant('kButtonOk'),
+                    text: $translate.instant('kButtonOk'),
                     onTap: function (e) {
                         return "OK";
 
@@ -152,7 +156,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         // It seems invoking a popup within a popup handler
         // causes issues. Doing this outside due to that reason
         $rootScope.zmPopup.then(function (res) {
-           // console.log("GOT : " + JSON.stringify(res));
+            // console.log("GOT : " + JSON.stringify(res));
             if (res == "OK") {
                 if ($scope.myopt.selectedState != "")
                     controlZM($scope.myopt.selectedState);
@@ -178,11 +182,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                         $scope.zmDisk = "unknown";
                         ZMDataModel.zmLog("Error retrieving disk space, API returned null for obj.Total.space");
                     }
-                    
+
                 },
                 function (error) {
                     $scope.zmDisk = "unknown";
-                   // console.log("ERROR:" + JSON.stringify(error));
+                    // console.log("ERROR:" + JSON.stringify(error));
                     ZMDataModel.zmLog("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
                 }
             );
@@ -307,7 +311,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             ZMDataModel.zmDebug("StateCtrl/controlZM: operation in progress");
             $ionicPopup.alert({
                 title: $translate.instant('kOperationInProgressTitle'),
-                template: $translate.instant('kOperationInProgressBody')+'...'
+                template: $translate.instant('kOperationInProgressBody') + '...'
             });
             return;
         }
@@ -364,8 +368,8 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         console.log("***Pull to Refresh");
         ZMDataModel.zmDebug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
         getRunStatus();
-        $timeout (getLoadStatus,2000);
-        $timeout (getCurrentState,4000);
+        $timeout(getLoadStatus, 2000);
+        $timeout(getCurrentState, 4000);
         //$timeout (getDiskStatus,6000);
         $scope.$broadcast('scroll.refreshComplete');
 

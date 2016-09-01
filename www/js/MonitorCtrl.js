@@ -83,12 +83,11 @@ angular.module('zmApp.controllers')
             //-----------------------------------------------------------------------
             $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
                 var checked = false;
-                
-                if (monitorName == 'All')
-                {
+
+                if (monitorName == 'All') {
                     monitorName = $translate.instant('kAll');
                 }
-                
+
                 //console.log("called with " + monitorId + ":" + enabled + ":" + func);
                 if (enabled == '1') checked = true;
 
@@ -98,9 +97,8 @@ angular.module('zmApp.controllers')
                     for (var i = 0; i < $scope.monitors.length; i++) {
                         monitorsIds[i] = $scope.monitors[i].Monitor.Id;
                     }
-                }
-                else {
-                        monitorsIds[0] = monitorId;
+                } else {
+                    monitorsIds[0] = monitorId;
                 }
 
                 $scope.monFunctions = [
@@ -153,7 +151,7 @@ angular.module('zmApp.controllers')
                         {
                             text: $translate.instant('kButtonSave'),
                             onTap: function (e) {
-                                $scope.monfunc.mymonitorsIds.forEach( function(item, index) {
+                                $scope.monfunc.mymonitorsIds.forEach(function (item, index) {
                                     ZMDataModel.zmDebug("MonitorCtrl:changeConfig selection:" + $scope.monfunc.myenabled +
                                         $scope.monfunc.myfunc);
                                     var loginData = ZMDataModel.getLogin();
@@ -172,40 +170,40 @@ angular.module('zmApp.controllers')
                                     });
 
                                     var httpPromise = $http({
-                                        url: apiMon,
-                                        method: 'post',
-                                        headers: {
-                                            'Content-Type': 'application/x-www-form-urlencoded',
-                                            'Accept': '*/*',
-                                        },
-                                        transformRequest: function (obj) {
-                                            var str = [];
-                                            for (var p in obj)
-                                                str.push(encodeURIComponent(p) + "=" +
-                                                    encodeURIComponent(obj[p]));
-                                            var foo = str.join("&");
-                                            // console.log("****RETURNING " + foo);
-                                            ZMDataModel.zmDebug("MonitorCtrl: parmeters constructed: " + foo);
-                                            return foo;
-                                        },
-                                        data: {
-                                            'Monitor[Function]': $scope.monfunc.myfunc,
-                                            'Monitor[Enabled]': isEnabled,
-                                        }
+                                            url: apiMon,
+                                            method: 'post',
+                                            headers: {
+                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                                'Accept': '*/*',
+                                            },
+                                            transformRequest: function (obj) {
+                                                var str = [];
+                                                for (var p in obj)
+                                                    str.push(encodeURIComponent(p) + "=" +
+                                                        encodeURIComponent(obj[p]));
+                                                var foo = str.join("&");
+                                                // console.log("****RETURNING " + foo);
+                                                ZMDataModel.zmDebug("MonitorCtrl: parmeters constructed: " + foo);
+                                                return foo;
+                                            },
+                                            data: {
+                                                'Monitor[Function]': $scope.monfunc.myfunc,
+                                                'Monitor[Enabled]': isEnabled,
+                                            }
 
-                                    })
-                                    .success(function () {
-                                        ZMDataModel.zmDebug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
-                                    })
-                                    .error(function (data, status, headers, config) {
-                                        ZMDataModel.zmDebug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
-                                        $scope.monfunc.myfailedIds.push(item);
-                                    });
+                                        })
+                                        .success(function () {
+                                            ZMDataModel.zmDebug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
+                                        })
+                                        .error(function (data, status, headers, config) {
+                                            ZMDataModel.zmDebug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
+                                            $scope.monfunc.myfailedIds.push(item);
+                                        });
 
                                     $scope.monfunc.mypromises.push(httpPromise);
                                 });
 
-                                $q.all($scope.monfunc.mypromises).then(function(e) {
+                                $q.all($scope.monfunc.mypromises).then(function (e) {
                                     $ionicLoading.hide();
                                     // if there's a failed ID, an error has occurred
                                     if ($scope.monfunc.myfailedIds.length != 0) {
@@ -214,9 +212,8 @@ angular.module('zmApp.controllers')
                                             noBackdrop: true,
                                             duration: 3000,
                                         });
-                                    }
-                                    else {
-                                    // I am not restarting ZM after monitor change
+                                    } else {
+                                        // I am not restarting ZM after monitor change
                                         /* ZMDataModel.zmDebug ("MonitorCtrl: Restarting ZM");
                                         $ionicLoading.show({
                                             template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",

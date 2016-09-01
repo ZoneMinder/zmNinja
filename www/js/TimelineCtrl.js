@@ -49,7 +49,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // Used to display date range for timeline
     //-----------------------------------------------------------
     $scope.prettify = function (str) {
-        return moment(str).format('MMMM Do YYYY, '+ZMDataModel.getTimeFormat());
+        return moment(str).format('MMMM Do YYYY, ' + ZMDataModel.getTimeFormat());
     };
 
     //-----------------------------------------------------------
@@ -66,11 +66,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
 
     $scope.toggleMinAlarmFrameCount = function () {
-       // console.log("Toggling");
+        // console.log("Toggling");
 
         var ld = ZMDataModel.getLogin();
         ld.enableAlarmCount = !ld.enableAlarmCount;
-        
+
         ZMDataModel.setLogin(ld);
 
 
@@ -114,44 +114,42 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-----------------------------------------
     // Move by X days 
     //-----------------------------------------
-    $scope.moveDays = function (d)
-    {
+    $scope.moveDays = function (d) {
         var range = timeline.getWindow();
         var ds = moment(range.start);
-        if (d>0) 
-            ds.add(d, 'days'); 
+        if (d > 0)
+            ds.add(d, 'days');
         else
             ds.subtract(Math.abs(d), 'days');
 
         var es = moment(ds); // clone it!
-        es.add (1, 'day');
-        
+        es.add(1, 'day');
+
         fromDate = ds.format("YYYY-MM-DD HH:mm:ss");
         toDate = es.format("YYYY-MM-DD HH:mm:ss");
 
         $scope.fromDate = fromDate;
         $scope.toDate = toDate;
         $rootScope.customTimelineRange = false;
-        ZMDataModel.zmLog ("moving by " + d + " day to " + fromDate + " upto " + toDate);
+        ZMDataModel.zmLog("moving by " + d + " day to " + fromDate + " upto " + toDate);
         drawGraph(fromDate, toDate, maxItems);
-       
+
     };
 
-    
-    function eventDetails(ev)
-    {
+
+    function eventDetails(ev) {
         $scope.event = ev;
-         $ionicModal.fromTemplateUrl('templates/timeline-modal.html', {
+        $ionicModal.fromTemplateUrl('templates/timeline-modal.html', {
                 scope: $scope, // give ModalCtrl access to this scope
                 animation: 'slide-in-up',
-                id:'analyze',
-             
+                id: 'analyze',
+
             })
             .then(function (modal) {
                 $scope.modal = modal;
-                
 
-               
+
+
 
                 $scope.modal.show();
 
@@ -165,20 +163,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // FIXME : code repeat from Events
     //--------------------------------------------------------
     function openModal(event) {
-        
-        if ($scope.modalFromTimelineIsOpen == true)
-        {
+
+        if ($scope.modalFromTimelineIsOpen == true) {
             // don't know why but some conflict from angular to timeline lib
             // results in double modals at times
-            ZMDataModel.zmLog (">>-- duplicate modal detected, preventing");
+            ZMDataModel.zmLog(">>-- duplicate modal detected, preventing");
         }
-        
+
         $scope.modalFromTimelineIsOpen = true;
         ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
 
         // pass this event to ModalCtrl
         $scope.currentEvent = event;
-      
+
         $scope.event = event;
         // in Timeline view, make sure events stick to same monitor
         $scope.followSameMonitor = "1";
@@ -188,16 +185,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         $ionicModal.fromTemplateUrl('templates/events-modal.html', {
                 scope: $scope, // give ModalCtrl access to this scope
                 animation: 'slide-in-up',
-                id:'footage'
+                id: 'footage'
             })
             .then(function (modal) {
                 $scope.modal = modal;
 
                 $ionicLoading.show({
-                    template: $translate.instant('kPleaseWait')+"...",
+                    template: $translate.instant('kPleaseWait') + "...",
                     noBackdrop: true,
                     duration: 10000,
-                    
+
                 });
 
                 $scope.modal.show();
@@ -241,7 +238,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------------------------------
     function onPause() {
         ZMDataModel.zmDebug("TimelineCtrl:onpause called");
-       // console.log("*** Moving to Background ***"); // Handle the pause event
+        // console.log("*** Moving to Background ***"); // Handle the pause event
 
         if ($scope.popover) $scope.popover.remove();
 
@@ -257,8 +254,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         // in context of angular
 
-        $timeout ( function () {
-        openModal(event);});
+        $timeout(function () {
+            openModal(event);
+        });
 
     }
 
@@ -275,27 +273,27 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         //console.log("**Destroying Timeline");
         //timeline.destroy();
     });
-    
-    
-     $scope.$on('$ionicView.enter', function () {
-        
-         
-         
-    // Make sure sliding for menu is disabled so it
-    // does not interfere with graph panning
-    $ionicSideMenuDelegate.canDragContent(false);
-         var ld = ZMDataModel.getLogin();
-         maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax: zm.graphItemMax; 
-          maxItems = ld.graphSize || maxItemsConf;
-         ZMDataModel.zmLog("Graph items to draw is " + maxItems);
+
+
+    $scope.$on('$ionicView.enter', function () {
+
+
+
+        // Make sure sliding for menu is disabled so it
+        // does not interfere with graph panning
+        $ionicSideMenuDelegate.canDragContent(false);
+        var ld = ZMDataModel.getLogin();
+        maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax : zm.graphItemMax;
+        maxItems = ld.graphSize || maxItemsConf;
+        ZMDataModel.zmLog("Graph items to draw is " + maxItems);
         $scope.maxItems = maxItems;
         $scope.translationData = {
             maxItemsVal: maxItems
         };
-         
+
         $scope.graphLoaded = false;
         ZMDataModel.zmDebug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
-     });
+    });
 
     //-------------------------------------------------
     // FIXME: shitty hackery -- Im using a rootScope
@@ -307,7 +305,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // graph range
     //-------------------------------------------------
     $scope.$on('$ionicView.afterEnter', function () {
-       // console.log("***AFTER ENTER");
+        // console.log("***AFTER ENTER");
 
         $scope.modalFromTimelineIsOpen = false;
         var tempMon = message;
@@ -322,17 +320,17 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         } else
             $scope.monitors = message;
         if ($rootScope.customTimelineRange) {
-           // console.log("***** CUSTOM RANGE");
+            // console.log("***** CUSTOM RANGE");
             if (moment($rootScope.fromString).isValid() &&
                 moment($rootScope.toString).isValid()) {
-               // console.log("FROM & TO IS CUSTOM");
+                // console.log("FROM & TO IS CUSTOM");
                 fromDate = $rootScope.fromString;
                 toDate = $rootScope.toString;
                 $scope.fromDate = fromDate;
                 $scope.toDate = toDate;
                 drawGraph(fromDate, toDate, maxItems);
             } else {
-              //  console.log("FROM & TO IS CUSTOM INVALID");
+                //  console.log("FROM & TO IS CUSTOM INVALID");
             }
         } else {
             drawGraph(fromDate, toDate, maxItems);
@@ -343,37 +341,31 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         }).then(function (popover) {
             $scope.popover = popover;
         });
-        
-        
+
+
         // --------------------------------------------------------
-    // Handling of back button in case modal is open should
-    // close the modal
-    // --------------------------------------------------------                               
-    
-    $ionicPlatform.registerBackButtonAction(function (e) {
+        // Handling of back button in case modal is open should
+        // close the modal
+        // --------------------------------------------------------                               
+
+        $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
-            if ($scope.modal !=undefined && $scope.modal.isShown())
-            {
+            if ($scope.modal != undefined && $scope.modal.isShown()) {
                 // switch off awake, as liveview is finished
                 ZMDataModel.zmDebug("Modal is open, closing it");
                 ZMDataModel.setAwake(false);
                 $scope.modal.remove();
-            }
-            else
-            {
+            } else {
                 ZMDataModel.zmDebug("Modal is closed, so toggling or exiting");
-                if (!$ionicSideMenuDelegate.isOpenLeft()) 
-                {
+                if (!$ionicSideMenuDelegate.isOpenLeft()) {
                     $ionicSideMenuDelegate.toggleLeft();
-                   
-                } 
-                else 
-                {
+
+                } else {
                     navigator.app.exitApp();
                 }
-            
+
             }
-            
+
         }, 1000);
 
 
@@ -389,7 +381,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.ionRange = {
         index: 1
     };
-   
+
     var curFromDate, curToDate, curCount;
 
 
@@ -415,12 +407,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
 
     // maxItems will be ignored during timeline draw if its desktop
-     var maxItemsConf;
-    
+    var maxItemsConf;
+
     var ld = ZMDataModel.getLogin();
     var maxItems;
 
-    
+
 
     //flat colors for graph - https://flatuicolors.com http://www.flatuicolorpicker.com
     var colors = ['#3498db', '#E57373', '#EB974E', '#95A5A6', '#e74c3c', '#03C9A9', ];
@@ -537,7 +529,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         curCount = count;
 
         $ionicLoading.show({
-            template: $translate.instant('kLoadingGraph')+"...",
+            template: $translate.instant('kLoadingGraph') + "...",
             animation: 'fade-in',
             showBackdrop: true,
             maxWidth: 200,
@@ -581,7 +573,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                     second: 's',
                 },
                 majorLabels: {
-                    second: "D MMM "+ZMDataModel.getTimeFormat(),
+                    second: "D MMM " + ZMDataModel.getTimeFormat(),
                 }
             },
 
@@ -658,34 +650,33 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                             }
                                         }
                                     }
-                                    
+
                                     myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
-                            // now construct base path
+                                    // now construct base path
 
-                            myevents[i].Event.streamingURL = ZMDataModel.getStreamingURL (myevents[i].Event.MonitorId);
-                            myevents[i].Event.baseURL = ZMDataModel.getBaseURL (myevents[i].Event.MonitorId);
-                            myevents[i].Event.imageMode = ZMDataModel.getImageMode (myevents[i].Event.MonitorId);
-                            if (ZMDataModel.getLogin().url != myevents[i].Event.baseURL)
-                            {
-                                //ZMDataModel.zmDebug ("Multi server, changing base");
-                                myevents[i].Event.baseURL = ZMDataModel.getLogin().url;
-                                   
-                            }
-                           // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
+                                    myevents[i].Event.streamingURL = ZMDataModel.getStreamingURL(myevents[i].Event.MonitorId);
+                                    myevents[i].Event.baseURL = ZMDataModel.getBaseURL(myevents[i].Event.MonitorId);
+                                    myevents[i].Event.imageMode = ZMDataModel.getImageMode(myevents[i].Event.MonitorId);
+                                    if (ZMDataModel.getLogin().url != myevents[i].Event.baseURL) {
+                                        //ZMDataModel.zmDebug ("Multi server, changing base");
+                                        myevents[i].Event.baseURL = ZMDataModel.getLogin().url;
 
-                          //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
-                            
-                 
-                            
+                                    }
+                                    // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
+
+                                    //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
+
+
+
 
                                     if (idfound) {
 
                                         if (typeof myevents[i].Event.DefaultVideo === 'undefined')
-                                           // console.log (JSON.stringify(myevents[i]));
+                                        // console.log (JSON.stringify(myevents[i]));
                                             myevents[i].Event.DefaultVideo = "";
                                         graphData.add({
                                             id: graphIndex,
-                                            content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>"+myevents[i].Event.AlarmFrames+") "+myevents[i].Event.Notes + "</span>",
+                                            content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + myevents[i].Event.Notes + "</span>",
                                             start: myevents[i].Event.StartTime,
                                             end: myevents[i].Event.EndTime,
                                             group: myevents[i].Event.MonitorId,
@@ -729,24 +720,25 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             ZMDataModel.zmDebug("graph loaded: " + $scope.graphLoaded);
                             $scope.navControls = false;
                             var dblclick = false;
-                    
-                           
-                            
+
+
+
                             timeline.on('click', function (prop) {
-                                
-                                
-                                $timeout (function() {
-                                    if (dblclick)
-                                    {
-                                        console.log ("IGNORING CLICK AS DBL CLICK");
-                                        $timeout (function(){dblclick =  false;},400);
+
+
+                                $timeout(function () {
+                                    if (dblclick) {
+                                        //console.log ("IGNORING CLICK AS DBL CLICK");
+                                        $timeout(function () {
+                                            dblclick = false;
+                                        }, 400);
                                         return;
                                     }
-                                    console.log ("CLICK");
+                                    //console.log ("CLICK");
                                     //console.log ("I GOT " + JSON.stringify(prop));
-                                   // console.log ("EVENT IS " + JSON.stringify(properties.event));
+                                    // console.log ("EVENT IS " + JSON.stringify(properties.event));
                                     //var properties =  timeline.getEventProperties(prop);
-                                   // console.log ( "I GOT " + properties);
+                                    // console.log ( "I GOT " + properties);
                                     var itm = prop.item;
                                     //console.log ("ITEM CLICKED " + itm);
                                     if (itm && !isNaN(itm)) {
@@ -757,43 +749,35 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
 
                                     } else {
-                                        ZMDataModel.zmDebug ("exact match not found, guessing item with co-ordinates X="+prop.x+" group="+prop.group);
-                                        if (prop.group)
-                                        {
+                                        ZMDataModel.zmDebug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
+                                        if (prop.group) {
                                             var visible = timeline.getVisibleItems();
-                                            ZMDataModel.zmDebug ("Visible items="+JSON.stringify(visible));
-                                            var closestItem=null;
-                                            var minDist =99999;
+                                            ZMDataModel.zmDebug("Visible items=" + JSON.stringify(visible));
+                                            var closestItem = null;
+                                            var minDist = 99999;
                                             var _item;
-                                            for (var x = 0; x < visible.length; x++)
-                                            {
+                                            for (var x = 0; x < visible.length; x++) {
                                                 _item = timeline.itemSet.items[x];
-                                                 if (_item.data.group == prop.group)
-                                                 {
-                                                     if (Math.abs(_item.left - prop.x) < minDist)
-                                                         {
-                                                            closestItem = _item;
-                                                            minDist = Math.abs(_item.left - prop.x);
-                                                            ZMDataModel.zmDebug ("Temporary closest "+_item.left);
-                                                            //console.log (_item);
-                                                         }
-                                                 }
+                                                if (_item.data.group == prop.group) {
+                                                    if (Math.abs(_item.left - prop.x) < minDist) {
+                                                        closestItem = _item;
+                                                        minDist = Math.abs(_item.left - prop.x);
+                                                        ZMDataModel.zmDebug("Temporary closest " + _item.left);
+                                                        //console.log (_item);
+                                                    }
+                                                }
 
                                             }
-                                            
-                                            if (closestItem!=null)
-                                            {
-                                                ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
+
+                                            if (closestItem != null) {
+                                                ZMDataModel.zmLog("Closest item " + closestItem.left + " group: " + closestItem.data.group);
                                                 showEvent(closestItem.data.myevent);
+                                            } else {
+                                                ZMDataModel.zmLog("Did not find a visible item match");
                                             }
-                                            else
-                                            {
-                                                ZMDataModel.zmLog ("Did not find a visible item match");
-                                            }
-                                        }
-                                        else // no group row tapped, do nothing
+                                        } else // no group row tapped, do nothing
                                         {
-                                        
+
                                             /*$ionicLoading.show({
                                                 template: "",
                                                 animation: 'fade-in',
@@ -803,64 +787,57 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                                 duration: 1500,
                                             });*/
                                         }
-                                       // console.log("Zoomed out too far to playback events");
+                                        // console.log("Zoomed out too far to playback events");
                                     }
-                                },400);
+                                }, 400);
 
                             });
-                    
-                             timeline.on ('doubleClick', function (prop) {
-                                console.log ("DOUBLE");
+
+                            timeline.on('doubleClick', function (prop) {
+                                //console.log ("DOUBLE");
                                 dblclick = true;
-                                 var itm = prop.item;
-                                    //console.log ("ITEM CLICKED " + itm);
-                                    if (itm && !isNaN(itm)) {
-                                        ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + itm);
-                                        var item = graphData.get(itm);
-                                        ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
-                                        eventDetails(item.myevent);
+                                var itm = prop.item;
+                                //console.log ("ITEM CLICKED " + itm);
+                                if (itm && !isNaN(itm)) {
+                                    ZMDataModel.zmDebug("TimelineCtrl/drawGraph:You clicked on item " + itm);
+                                    var item = graphData.get(itm);
+                                    ZMDataModel.zmDebug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
+                                    eventDetails(item.myevent);
 
 
-                                    } else {
-                                        
-                                        ZMDataModel.zmDebug ("exact match not found, guessing item with co-ordinates X="+prop.x+" group="+prop.group);
-                                        if (prop.group)
-                                        {
-                                            var visible = timeline.getVisibleItems();
-                                            ZMDataModel.zmDebug ("Visible items="+JSON.stringify(visible));
-                                            var closestItem=null;
-                                            var minDist =99999;
-                                            var _item;
-                                            for (var x = 0; x < visible.length; x++)
-                                            {
-                                                 _item = timeline.itemSet.items[x];
-                                                 if (_item.data.group == prop.group)
-                                                 {
-                                                     if (Math.abs(_item.left - prop.x) < minDist)
-                                                         {
-                                                            closestItem = _item;
-                                                            minDist = Math.abs(_item.left - prop.x);
-                                                            ZMDataModel.zmDebug ("Temporary closest "+_item.left);
-                                                            //console.log (_item);
-                                                         }
-                                                 }
+                                } else {
 
+                                    ZMDataModel.zmDebug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
+                                    if (prop.group) {
+                                        var visible = timeline.getVisibleItems();
+                                        ZMDataModel.zmDebug("Visible items=" + JSON.stringify(visible));
+                                        var closestItem = null;
+                                        var minDist = 99999;
+                                        var _item;
+                                        for (var x = 0; x < visible.length; x++) {
+                                            _item = timeline.itemSet.items[x];
+                                            if (_item.data.group == prop.group) {
+                                                if (Math.abs(_item.left - prop.x) < minDist) {
+                                                    closestItem = _item;
+                                                    minDist = Math.abs(_item.left - prop.x);
+                                                    ZMDataModel.zmDebug("Temporary closest " + _item.left);
+                                                    //console.log (_item);
+                                                }
                                             }
-                                            ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
-                                            if (closestItem!=null)
-                                            {
-                                                ZMDataModel.zmLog ("Closest item " +closestItem.left+ " group: " + closestItem.data.group);
-                                                showEvent(closestItem.data.myevent);
-                                            }
-                                            else
-                                            {
-                                                ZMDataModel.zmLog ("Did not find a visible item match");
-                                            }
+
                                         }
-                                        
-                                       // console.log("Zoomed out too far to playback events");
+                                        ZMDataModel.zmLog("Closest item " + closestItem.left + " group: " + closestItem.data.group);
+                                        if (closestItem != null) {
+                                            ZMDataModel.zmLog("Closest item " + closestItem.left + " group: " + closestItem.data.group);
+                                            showEvent(closestItem.data.myevent);
+                                        } else {
+                                            ZMDataModel.zmLog("Did not find a visible item match");
+                                        }
                                     }
-                                
+
+                                    // console.log("Zoomed out too far to playback events");
+                                }
+
                             });
                         },
                         function (error) {
@@ -884,7 +861,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             cssClass: 'fa  fa-compress fa-2x',
             size: 'small',
             onclick: function () {
-                console.log("fitting");
+                //console.log("fitting");
                 timeline.fit();
             }
         },
@@ -913,7 +890,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 empty: false,
 
                 onclick: function () {
-                
+
 
                     move(0.2);
                 }
@@ -923,7 +900,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 empty: true,
 
                 onclick: function () {
-                    console.log('About');
+                    // console.log('About');
                 }
             },
 
@@ -959,7 +936,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 content: 'H',
                 empty: true,
                 onclick: function () {
-                    console.log('About');
+                    // console.log('About');
                 }
             },
 
@@ -986,7 +963,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 content: 'K',
                 empty: true,
                 onclick: function () {
-                    console.log('About');
+                    //console.log('About');
                 }
             },
     ]

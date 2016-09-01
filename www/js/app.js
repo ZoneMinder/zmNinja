@@ -80,7 +80,7 @@ angular.module('zmApp', [
     packeryTimer: 500,
     dbName: 'zmninja',
     cipherKey: 'sdf#@#%FSXSA_AR'
-    
+
 
 })
 
@@ -117,26 +117,7 @@ angular.module('zmApp', [
 })
 
 
-.directive('dannyPackery', ['$rootScope', function ($rootScope) {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-            console.log('Running dannyPackery linking function!');
-            if ($rootScope.packery === undefined || $rootScope.packery === null) {
-                console.log('making packery!');
-                $rootScope.packery = new Packery(element[0].parentElement, {
-                    columnWidth: '.item'
-                });
-                $rootScope.packery.bindResize();
-                $rootScope.packery.appended(element[0]);
-                $rootScope.packery.items.splice(1, 1); // hack to fix a bug where the first element was added twice in two different positions
-            } else {
-                $rootScope.packery.appended(element[0]);
-            }
-            $rootScope.packery.layout();
-        }
-    };
-}])
+
 
 // credit https://gist.github.com/Zren/beaafd64f395e23f4604
 
@@ -221,7 +202,7 @@ angular.module('zmApp', [
         terminal: true,
         link: function (scope, element) {
             var repeatDirective = ($rootScope.platformOS == 'desktop') ? 'ng-repeat' : 'collection-repeat';
-            console.log("*********** REPEAT SCROLL IS " + repeatDirective);
+            //console.log("*********** REPEAT SCROLL IS " + repeatDirective);
 
             element.attr(repeatDirective, element.attr('repeatsmart'));
             element.removeAttr('repeatsmart');
@@ -488,7 +469,7 @@ angular.module('zmApp', [
 
             } else if ((config.url.indexOf("view=view_video") > -1) ||
                 config.url.indexOf(".mp4") > -1) {
-                console.log(">>> skipping timers for MP4");
+                // console.log(">>> skipping timers for MP4");
             } else {
                 config.timeout = zm.httpTimeout;
             }
@@ -558,7 +539,7 @@ angular.module('zmApp', [
                 .then(function (success) {
 
                     ZMDataModel.setLastUpdateCheck(moment().toISOString());
-                   // $localstorage.set("lastUpdateCheck", moment().toISOString());
+                    // $localstorage.set("lastUpdateCheck", moment().toISOString());
                     //console.log ("FULL STRING " + success.data.tag_name);
                     var res = success.data.tag_name.match("v(.*)");
                     zmUpdateVersion = res[1];
@@ -567,14 +548,14 @@ angular.module('zmApp', [
                         zmUpdateVersion = zmUpdateVersion + "D";
                     }
                     //if (ZMDataModel.getAppVersion() != zmUpdateVersion) {
-                    if (ZMDataModel.versionCompare(ZMDataModel.getAppVersion(),zmUpdateVersion) == -1) {
+                    if (ZMDataModel.versionCompare(ZMDataModel.getAppVersion(), zmUpdateVersion) == -1) {
                         $rootScope.newVersionAvailable = "v" + zmUpdateVersion + " available";
                     } else {
                         $rootScope.newVersionAvailable = "";
                     }
-                    ZMDataModel.zmDebug ("current version: "  + currentVersion + " & available version " +  zmUpdateVersion);
-                    console.log ("Version compare returned: " + ZMDataModel.versionCompare(currentVersion, zmUpdateVersion));
-                    console.log ("Version compare returned: " + ZMDataModel.versionCompare(zmUpdateVersion, currentVersion));
+                    ZMDataModel.zmDebug("current version: " + currentVersion + " & available version " + zmUpdateVersion);
+                    //console.log ("Version compare returned: " + ZMDataModel.versionCompare(currentVersion, //zmUpdateVersion));
+                    // console.log ("Version compare returned: " + ZMDataModel.versionCompare(zmUpdateVersion, currentVersion));
                     //console.log ("UPDATE " + zmVersion);
                 });
 
@@ -588,7 +569,7 @@ angular.module('zmApp', [
                     }
 
                     var lastDate = ZMDataModel.getLatestBlogPostChecked();
-                    console.log ("************ BLOG LAST DATE " + lastDate);
+                    //console.log ("************ BLOG LAST DATE " + lastDate);
                     if (!lastDate) {
 
                         $rootScope.newBlogPost = "(new post)";
@@ -657,10 +638,10 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     $rootScope.$on("init-complete", function () {
-        ZMDataModel.zmLog (">>>>>>>>>>>>>>> All init over, going to portal login");
+        ZMDataModel.zmLog(">>>>>>>>>>>>>>> All init over, going to portal login");
         $state.go("zm-portal-login");
     });
-    
+
     //------------------------------------------------------------------
     // doLogin() emits this when our auth credentials work
     //------------------------------------------------------------------
@@ -1004,7 +985,7 @@ angular.module('zmApp', [
             //console.log ("******** back called with isOpenLeft: " + $ionicSideMenuDelegate.isOpenLeft());
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
                 $ionicSideMenuDelegate.toggleLeft();
-                console.log("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
+                //console.log("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
             } else {
                 navigator.app.exitApp();
             }
@@ -1039,7 +1020,7 @@ angular.module('zmApp', [
             $rootScope.userCancelledAuth = true;
             window.stop();
 
-            console.log ("inside cancelAuth , calling wizard");
+            //console.log ("inside cancelAuth , calling wizard");
             $state.go("login", {
                 "wizard": false
             });
@@ -1053,7 +1034,7 @@ angular.module('zmApp', [
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var requireLogin = toState.data.requireLogin;
 
-            if (ZMDataModel.isLoggedIn() || toState.data.requireLogin ==false ) {
+            if (ZMDataModel.isLoggedIn() || toState.data.requireLogin == false) {
                 //console.log("State transition is authorized");
 
                 return;
@@ -1061,7 +1042,7 @@ angular.module('zmApp', [
                 ZMDataModel.zmLog("In Auth State trans: Not logged in, requested to go to " + JSON.stringify(toState));
                 // event.preventDefault();
                 // 
-                
+
                 $state.transitionTo('login');
 
 
@@ -1089,17 +1070,17 @@ angular.module('zmApp', [
         //---------------------------------------------------------------------
 
         $ionicPlatform.ready(function () {
-            
-            
-            
-            
-            
+
+
+
+
+
 
             $rootScope.db = null;
-            
+
             $rootScope.platformOS = "desktop";
             ZMDataModel.zmLog("Device is ready");
-           // var ld = ZMDataModel.getLogin();
+            // var ld = ZMDataModel.getLogin();
             if ($ionicPlatform.is('ios'))
                 $rootScope.platformOS = "ios";
             if ($ionicPlatform.is('android'))
@@ -1110,141 +1091,128 @@ angular.module('zmApp', [
 
             localforage.config({
                 name: zm.dbName
-            
+
             });
-            
-            var order=[];
-            
-            if ($rootScope.platformOS == 'ios')
-            {
-                order =
-             [window.cordovaSQLiteDriver._driver,
+
+            var order = [];
+
+            if ($rootScope.platformOS == 'ios') {
+                order = [window.cordovaSQLiteDriver._driver,
               localforage.INDEXEDDB,
               localforage.WEBSQL,
              localforage.LOCALSTORAGE];
-            }
-            
-            else
-                
+            } else
+
             {
-            // don't do SQL for non IOS - seems to hang?
-              order = [
-              
+                // don't do SQL for non IOS - seems to hang?
+                order = [
+
               localforage.INDEXEDDB,
               localforage.WEBSQL,
-              localforage.LOCALSTORAGE,          
+              localforage.LOCALSTORAGE,
             ];
-                
+
             }
-            
+
             localforage.defineDriver(window.cordovaSQLiteDriver).then(function () {
                 return localforage.setDriver(
-            // Try setting cordovaSQLiteDriver if available,
-             order
-              
-            );
-             }).then(function () {
+                    // Try setting cordovaSQLiteDriver if available,
+                    order
+
+                );
+            }).then(function () {
                 // this should alert "cordovaSQLiteDriver" when in an emulator or a device
                 ZMDataModel.zmLog("localforage driver for storage:" + localforage.driver());
-                
+
                 // Now lets import old data if it exists:
                 var defaultServerName = $localstorage.get("defaultServerName");
-                
+
                 localforage.getItem("defaultServerName")
-                .then (function (val)
-                {
-                    console.log (">>>> localforage reported defaultServerName as " + val);
-                    // if neither, we are in first use, mates!
-                    if (!val && !defaultServerName)
-                    {
-                        continueInitialInit();
-                      /*  ZMDataModel.zmDebug ("Neither localstorage or forage  - First use, showing warm and fuzzy...");
+                    .then(function (val) {
+                        //  console.log (">>>> localforage reported defaultServerName as " + val);
+                        // if neither, we are in first use, mates!
+                        if (!val && !defaultServerName) {
+                            continueInitialInit();
+                            /*  ZMDataModel.zmDebug ("Neither localstorage or forage  - First use, showing warm and fuzzy...");
                     $ionicHistory.nextViewOptions({
                         disableAnimate: true,
                         disableBack: true
                     });
                     $state.go('first-use');*/
-                    }
-                    
-                    else if (!val && defaultServerName)
-                    {
-                        ZMDataModel.zmLog (">>>>Importing data from localstorage....");
-                        
-                        
-                        
-                        var dsn = defaultServerName;
-                        var dl = $localstorage.get('defaultLang') || 'en';
-                        var ifu = ($localstorage.get('isFirstUse')=='0' ? false:true);
-                        var luc = $localstorage.get('lastUpdateCheck');
-                        var lbpc = $localstorage.get('latestBlogPostChecked');
-                        var sgl = $localstorage.getObject('serverGroupList');
-                        
-                        ZMDataModel.zmLog (">>>Localstorage data found as below:");
-                        ZMDataModel.zmLog ("server name:"+dsn);
-                        ZMDataModel.zmLog ("default lang :"+dl);
-                        ZMDataModel.zmLog ("is first use:"+ifu);
-                        ZMDataModel.zmLog ("last update check:"+luc);
-                        ZMDataModel.zmLog ("latest blog post check:"+lbpc);
-                        ZMDataModel.zmLog ("server group list:"+JSON.stringify(sgl));
+                        } else if (!val && defaultServerName) {
+                            ZMDataModel.zmLog(">>>>Importing data from localstorage....");
 
-                        localforage.setItem('defaultLang', dl)
-                        .then (function() {
-                            
-                            ZMDataModel.zmLog (">>>>migrated defaultLang...");
-                            ZMDataModel.setFirstUse(ifu);
-                            return localforage.setItem('isFirstUse', ifu);
-                        })
-                        .then (function() {
-                            ZMDataModel.zmLog (">>>>migrated isFirstUse...");
-                            return localforage.setItem('lastUpdateCheck', ifu);
-                        })
-                        .then (function() {
-                            ZMDataModel.zmLog (">>>>migrated lastUpdateCheck...");
-                            return localforage.setItem('latestBlogPostChecked', lbpc);
-                        })
-                        .then (function() {
-                            ZMDataModel.zmLog (">>>>migrated latestBlogPostChecked...");
-                            // lets encrypt serverGroupList
-                            ZMDataModel.zmLog ("server group list is " + JSON.stringify(sgl));
-                            var ct = CryptoJS.AES.encrypt(JSON.stringify(sgl), zm.cipherKey);
-                            ZMDataModel.zmLog ("encrypted server group list is " + ct);
-                            ct = sgl;
-                            return localforage.setItem('serverGroupList', ct);
-                        })
-                        .then (function() {
-                            ZMDataModel.zmLog (">>>>migrated serverGroupList...");
-                            return localforage.setItem('defaultServerName',dsn);
-                        })
-                        .then (function() {
-                            ZMDataModel.zmLog (">>>>migrated defaultServerName...");
-                            ZMDataModel.zmLog (">>>>Migrated all values, continuing...");
+
+
+                            var dsn = defaultServerName;
+                            var dl = $localstorage.get('defaultLang') || 'en';
+                            var ifu = ($localstorage.get('isFirstUse') == '0' ? false : true);
+                            var luc = $localstorage.get('lastUpdateCheck');
+                            var lbpc = $localstorage.get('latestBlogPostChecked');
+                            var sgl = $localstorage.getObject('serverGroupList');
+
+                            ZMDataModel.zmLog(">>>Localstorage data found as below:");
+                            ZMDataModel.zmLog("server name:" + dsn);
+                            ZMDataModel.zmLog("default lang :" + dl);
+                            ZMDataModel.zmLog("is first use:" + ifu);
+                            ZMDataModel.zmLog("last update check:" + luc);
+                            ZMDataModel.zmLog("latest blog post check:" + lbpc);
+                            ZMDataModel.zmLog("server group list:" + JSON.stringify(sgl));
+
+                            localforage.setItem('defaultLang', dl)
+                                .then(function () {
+
+                                    ZMDataModel.zmLog(">>>>migrated defaultLang...");
+                                    ZMDataModel.setFirstUse(ifu);
+                                    return localforage.setItem('isFirstUse', ifu);
+                                })
+                                .then(function () {
+                                    ZMDataModel.zmLog(">>>>migrated isFirstUse...");
+                                    return localforage.setItem('lastUpdateCheck', ifu);
+                                })
+                                .then(function () {
+                                    ZMDataModel.zmLog(">>>>migrated lastUpdateCheck...");
+                                    return localforage.setItem('latestBlogPostChecked', lbpc);
+                                })
+                                .then(function () {
+                                    ZMDataModel.zmLog(">>>>migrated latestBlogPostChecked...");
+                                    // lets encrypt serverGroupList
+                                    ZMDataModel.zmLog("server group list is " + JSON.stringify(sgl));
+                                    var ct = CryptoJS.AES.encrypt(JSON.stringify(sgl), zm.cipherKey);
+                                    ZMDataModel.zmLog("encrypted server group list is " + ct);
+                                    ct = sgl;
+                                    return localforage.setItem('serverGroupList', ct);
+                                })
+                                .then(function () {
+                                    ZMDataModel.zmLog(">>>>migrated serverGroupList...");
+                                    return localforage.setItem('defaultServerName', dsn);
+                                })
+                                .then(function () {
+                                    ZMDataModel.zmLog(">>>>migrated defaultServerName...");
+                                    ZMDataModel.zmLog(">>>>Migrated all values, continuing...");
+                                    //ZMDataModel.migrationComplete();
+                                    continueInitialInit();
+                                })
+                                .catch(function (err) {
+                                    ZMDataModel.zmLog("Migration error : " + JSON.stringify(err));
+                                    continueInitialInit();
+                                });
+
+                        } else {
+                            ZMDataModel.zmLog(">>>>No data to import....");
                             //ZMDataModel.migrationComplete();
                             continueInitialInit();
-                        })
-                        .catch (function(err)
-                        {
-                            ZMDataModel.zmLog ("Migration error : " + JSON.stringify(err));
-                            continueInitialInit();
-                        });
-                      
-                    }
-                    else
-                    {
-                        ZMDataModel.zmLog (">>>>No data to import....");
-                        //ZMDataModel.migrationComplete();
-                        continueInitialInit();
-                    }
-                
-                    
-                    
-                });
-                
+                        }
+
+
+
+                    });
+
             });
-           
-            
-            
-            function continueInitialInit()
-            {
+
+
+
+            function continueInitialInit() {
                 var pixelRatio = window.devicePixelRatio || 1;
                 $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
                 $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
@@ -1291,63 +1259,56 @@ angular.module('zmApp', [
 
 
 
-                if (ZMDataModel.getLogin().disableNative)
-                {
-                    ZMDataModel.zmLog ("Disabling native transitions...");
+                if (ZMDataModel.getLogin().disableNative) {
+                    ZMDataModel.zmLog("Disabling native transitions...");
                     $ionicNativeTransitions.enable(false);
-                }
-                else
-                {
-                    ZMDataModel.zmLog ("Enabling native transitions...");
+                } else {
+                    ZMDataModel.zmLog("Enabling native transitions...");
                     $ionicNativeTransitions.enable(true);
                 }
                 // At this stage, DataModel.init is not called yet
                 // but I do need to know the language
-                
-                ZMDataModel.zmLog ("Retrieving language before init is called...");
+
+                ZMDataModel.zmLog("Retrieving language before init is called...");
                 localforage.getItem("defaultLang")
-                .then (function(val) {
+                    .then(function (val) {
 
-                    var lang = val;
-                    //console.log (">>>>>>>>>>>>>> LANG IS " + val);
-
-
-                    if (lang == undefined || lang == null) {
-                        ZMDataModel.zmLog("No language set, switching to en");
-                        lang = "en";
+                        var lang = val;
+                        //console.log (">>>>>>>>>>>>>> LANG IS " + val);
 
 
-                    } else {
-                        ZMDataModel.zmLog("Language stored as:" + lang);
+                        if (lang == undefined || lang == null) {
+                            ZMDataModel.zmLog("No language set, switching to en");
+                            lang = "en";
 
-                    }
 
-                    ZMDataModel.setDefaultLanguage(lang, false)
-                        .then(function (success) {
-                            ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
-                            moment.locale($translate.proposedLanguage());
+                        } else {
+                            ZMDataModel.zmLog("Language stored as:" + lang);
 
-                            // Remember this is before data Init
-                            // so I need to do a direct forage fetch
-                            localforage.getItem("isFirstUse")
-                            .then (function(val)
-                            {
-                                console.log ("isFirstUse is " + val);
-                                if (val == null || val == true)
-                                {
-                                    ZMDataModel.zmLog ("First time detected");
-                                    $state.go("first-use");
-                                }
-                                else
-                                {
-                                 continueRestOfInit();     
-                                }
+                        }
+
+                        ZMDataModel.setDefaultLanguage(lang, false)
+                            .then(function (success) {
+                                ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
+                                moment.locale($translate.proposedLanguage());
+
+                                // Remember this is before data Init
+                                // so I need to do a direct forage fetch
+                                localforage.getItem("isFirstUse")
+                                    .then(function (val) {
+                                        //console.log ("isFirstUse is " + val);
+                                        if (val == null || val == true) {
+                                            ZMDataModel.zmLog("First time detected");
+                                            $state.go("first-use");
+                                        } else {
+                                            continueRestOfInit();
+                                        }
+
+                                    });
+
 
                             });
-
-
-                        });
-                });
+                    });
             }
 
 
@@ -1363,16 +1324,15 @@ angular.module('zmApp', [
                 ZMDataModel.zmLog("Setting up POST LOGIN timer");
                 zmAutoLogin.start();
                 setupPauseAndResume();
-                
-                
-                
-                
+
+
+
+
             }
 
-            
-            function setupPauseAndResume()
-            {
-                ZMDataModel.zmLog ("Setting up pause and resume handler AFTER language is loaded...");
+
+            function setupPauseAndResume() {
+                ZMDataModel.zmLog("Setting up pause and resume handler AFTER language is loaded...");
                 //---------------------------------------------------------------------------
                 // resume handler
                 //----------------------------------------------------------------------------
@@ -1459,7 +1419,7 @@ angular.module('zmApp', [
 
 
 
-            
+
 
 
 
@@ -1797,7 +1757,7 @@ angular.module('zmApp', [
 
     });
 
-// We are NOT going to default route. Routing to a view will start on 
+    // We are NOT going to default route. Routing to a view will start on 
     // a broadcast of "init-complete" 
-    
+
 }); //config

@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         var localNotificationId = 0;
 
 
-        
+
 
         //--------------------------------------------------------------------------
         // called when the websocket is opened
@@ -68,8 +68,8 @@ angular.module('zmApp.controllers')
             var d = $q.defer();
 
             var loginData = ZMDataModel.getLogin();
-            
-            console.log ("INIT GOT " + JSON.stringify(loginData));
+
+            //console.log ("INIT GOT " + JSON.stringify(loginData));
 
             if (loginData.isUseEventServer == false || !loginData.eventServer) {
                 ZMDataModel.zmLog("No Event Server present. Not initializing");
@@ -78,7 +78,7 @@ angular.module('zmApp.controllers')
             }
 
             //if (!$rootScope.apnsToken)
-                pushInit();
+            pushInit();
 
 
 
@@ -112,7 +112,7 @@ angular.module('zmApp.controllers')
 
             ws.$on('$message', function (str) {
                 ZMDataModel.zmLog("Real-time event: " + JSON.stringify(str));
-                
+
 
                 // Error messages
                 if (str.status != 'Success') {
@@ -130,9 +130,9 @@ angular.module('zmApp.controllers')
                     if (str.version == undefined)
                         str.version = "0.1";
                     if (ZMDataModel.versionCompare(str.version, zm.minEventServerVersion) == -1) {
-                        $rootScope.zmPopup= $ionicPopup.alert({
+                        $rootScope.zmPopup = $ionicPopup.alert({
                             title: $translate.instant('kEventServerVersionTitle'),
-                            template: $translate.instant('kEventServerVersionBody1') + " " + str.version + ". "+ $translate.instant('kEventServerVersionBody2')  +
+                            template: $translate.instant('kEventServerVersionBody1') + " " + str.version + ". " + $translate.instant('kEventServerVersionBody2') +
                                 zm.minEventServerVersion
                         });
                     }
@@ -144,11 +144,10 @@ angular.module('zmApp.controllers')
 
                 if (str.status == 'Success' && str.event == 'alarm') // new events
                 {
-                    
+
                     var localNotText;
                     // ZMN specific hack for Event Server
-                    if (str.supplementary != 'true')
-                    {
+                    if (str.supplementary != 'true') {
                         new Audio('sounds/blop.mp3').play();
                         localNotText = "Latest Alarms: ";
                         $rootScope.isAlarm = 1;
@@ -162,13 +161,11 @@ angular.module('zmApp.controllers')
                             $rootScope.alarmCount = (parseInt($rootScope.alarmCount) + 1).toString();
                         }
 
-                    }
-                    else
-                    {
+                    } else {
                         ZMDataModel.zmDebug("received supplementary event information over websockets");
                     }
                     var eventsToDisplay = [];
-                    var listOfMonitors=[];
+                    var listOfMonitors = [];
                     for (var iter = 0; iter < str.events.length; iter++) {
                         // lets stack the display so they don't overwrite
                         eventsToDisplay.push(str.events[iter].Name + ": latest new alarm (" + str.events[iter].EventId + ")");
@@ -181,13 +178,14 @@ angular.module('zmApp.controllers')
 
                     // if we are in background, do a local notification, else do an in app display
                     if (!ZMDataModel.isBackground()) {
-                        
+
                         //emit alarm details - this is when received over websockets
-                        $rootScope.$emit('alarm',{message:listOfMonitors});
-                        
-                        if (str.supplementary != 'true')
-                        {
-                        
+                        $rootScope.$emit('alarm', {
+                            message: listOfMonitors
+                        });
+
+                        if (str.supplementary != 'true') {
+
                             ZMDataModel.zmDebug("App is in foreground, displaying banner");
                             if (eventsToDisplay.length > 0) {
 
@@ -195,15 +193,15 @@ angular.module('zmApp.controllers')
                                     //console.log("Single Display: " + eventsToDisplay[0]);
                                     ZMDataModel.displayBanner('alarm', [eventsToDisplay[0]], 5000, 5000);
                                 } else {
-                                    ZMDataModel.displayBanner('alarm', eventsToDisplay, 
-                                                              5000, 5000 * eventsToDisplay.length);
+                                    ZMDataModel.displayBanner('alarm', eventsToDisplay,
+                                        5000, 5000 * eventsToDisplay.length);
                                 }
 
                             }
                         }
                     }
 
-                    
+
 
                 } //end of success handler
 
@@ -216,20 +214,19 @@ angular.module('zmApp.controllers')
             return (d.promise);
 
         }
-        
-        function disconnect()
-        {
+
+        function disconnect() {
             ZMDataModel.zmLog("Disconnecting and deleting Event Server socket...");
-            
-             if (typeof ws === 'undefined') 
-                 return;
-             
+
+            if (typeof ws === 'undefined')
+                return;
+
             ws.$close();
             ws.$un('open');
             ws.$un('close');
             ws.$un('message');
             ws = undefined;
-            
+
         }
 
         //--------------------------------------------------------------------------
@@ -242,7 +239,7 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         function sendMessage(type, obj, isForce) {
             var ld = ZMDataModel.getLogin();
-            if (ld.isUseEventServer == false && isForce!=1) {
+            if (ld.isUseEventServer == false && isForce != 1) {
                 ZMDataModel.zmDebug("Not sending WSS message as event server is off");
                 return;
             }
@@ -264,7 +261,7 @@ angular.module('zmApp.controllers')
                 ws.$on('$open', openHandshake, function () {
 
                     //console.log(" sending " + type + " " +
-                      //  JSON.stringify(obj));
+                    //  JSON.stringify(obj));
                     ws.$emit(type, obj);
 
                     ws.$un('$open');
@@ -331,14 +328,13 @@ angular.module('zmApp.controllers')
             var push;
             var mediasrc;
             var media;
-            var ld  = ZMDataModel.getLogin();
+            var ld = ZMDataModel.getLogin();
 
             var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
 
 
-            if ($rootScope.platformOS == 'desktop')
-            {
-                ZMDataModel.zmLog ("Desktop instance, not setting up push. Websockets only, I hope");
+            if ($rootScope.platformOS == 'desktop') {
+                ZMDataModel.zmLog("Desktop instance, not setting up push. Websockets only, I hope");
                 return;
             }
 
@@ -362,30 +358,30 @@ angular.module('zmApp.controllers')
             } else {
                 mediasrc = "/android_asset/www/sounds/blop.mp3";
                 var android_media_file = "blop";
-                
-                
-                
-                   
-                    push = PushNotification.init(
 
-                        {
-                            "android": {
-                                "senderID": zm.gcmSenderId,
-                                "icon": "ic_stat_notification",
-                                sound:ld.soundOnPush,
-                                vibrate: ld.vibrateOnPush
+
+
+
+                push = PushNotification.init(
+
+                    {
+                        "android": {
+                            "senderID": zm.gcmSenderId,
+                            "icon": "ic_stat_notification",
+                            sound: ld.soundOnPush,
+                            vibrate: ld.vibrateOnPush
                                 //"sound": android_media_file
-                            }
                         }
+                    }
 
-                    );
-                
+                );
+
 
             }
 
-           // console.log("*********** MEDIA BLOG IS " + mediasrc);
+            // console.log("*********** MEDIA BLOG IS " + mediasrc);
             media = $cordovaMedia.newMedia(mediasrc);
-           
+
             push.on('registration', function (data) {
                 ZMDataModel.zmDebug("Push Notification registration ID received: " + JSON.stringify(data));
                 $rootScope.apnsToken = data.registrationId;
@@ -393,7 +389,7 @@ angular.module('zmApp.controllers')
                 var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
                 var ld = ZMDataModel.getLogin();
                 var pushstate = "enabled";
-                if (ld.disablePush ==true)
+                if (ld.disablePush == true)
                     pushstate = "disabled";
 
                 sendMessage('push', {
@@ -401,74 +397,73 @@ angular.module('zmApp.controllers')
                     platform: plat,
                     token: $rootScope.apnsToken,
                     state: pushstate
-                },1);
+                }, 1);
 
 
             });
 
 
             push.on('notification', function (data) {
-                
-                ZMDataModel.zmDebug ("received push notification");
+
+                ZMDataModel.zmDebug("received push notification");
 
                 var ld = ZMDataModel.getLogin();
-                if (ld.isUseEventServer ==false) {
+                if (ld.isUseEventServer == false) {
                     ZMDataModel.zmDebug("received push notification, but event server disabled. Not acting on it");
                     return;
                 }
-              
+
 
                 if (data.additionalData.foreground == false) {
                     // This means push notification tap in background
-                    
-                    ZMDataModel.zmDebug ("*** PUSH NOTFN.>>>>"+JSON.stringify(data));
-                    
+
+                    ZMDataModel.zmDebug("*** PUSH NOTFN.>>>>" + JSON.stringify(data));
+
                     // set tappedMid to monitor 
                     //*** PUSH DATA>>>>{"sound":"blop","message":"Alarms: Basement (2854) ","additionalData":{"mid":"2","coldstart":false,"collapse_key":"do_not_collapse","foreground":false}}
-                    
+
                     ZMDataModel.zmDebug("Notification Tapped");
                     $rootScope.alarmCount = "0";
                     $rootScope.isAlarm = 0;
                     $rootScope.tappedNotification = 1;
                     var mid = data.additionalData.mid;
-                    
+
                     // if Multiple mids, take the first one
                     var mi = mid.indexOf(',');
-                    if (mi > 0)
-                    {
-                        mid = mid.slice(0,mi);
+                    if (mi > 0) {
+                        mid = mid.slice(0, mi);
                     }
                     mid = parseInt(mid);
-                    
+
                     $rootScope.tappedMid = mid;
-                    ZMDataModel.zmLog ("Push notification: Tapped Monitor taken as:"+$rootScope.tappedMid);
-                    
-                    
-                    
-                    if ($rootScope.platformOS == 'ios')
-                    {
-                       
-                        
-                        ZMDataModel.zmDebug ("iOS only: clearing background push");
-                         push.finish(function() {
+                    ZMDataModel.zmLog("Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
+
+
+
+                    if ($rootScope.platformOS == 'ios') {
+
+
+                        ZMDataModel.zmDebug("iOS only: clearing background push");
+                        push.finish(function () {
                             ZMDataModel.zmDebug("processing of push data is finished");
                         });
                     }
-                    
+
                 } else {
-                    
+
                     // this flag honors the HW mute button. Go figure
                     // http://ilee.co.uk/phonegap-plays-sound-on-mute/
-                    if (ld.soundOnPush)
-                    {
-                        media.play({ playAudioWhenScreenIsLocked : false });
+                    if (ld.soundOnPush) {
+                        media.play({
+                            playAudioWhenScreenIsLocked: false
+                        });
                     }
-    
+
                     var str = data.message;
                     // console.log ("***STRING: " + str + " " +str.status);
                     var eventsToDisplay = [];
 
-                  
+
 
                     ZMDataModel.displayBanner('alarm', [str], 0, 5000 * eventsToDisplay.length);
 
@@ -487,8 +482,8 @@ angular.module('zmApp.controllers')
             });
 
             push.on('error', function (e) {
-                ZMDataModel.zmDebug ("Push error: " + JSON.stringify(e));
-               // console.log("************* PUSH ERROR ******************");
+                ZMDataModel.zmDebug("Push error: " + JSON.stringify(e));
+                // console.log("************* PUSH ERROR ******************");
             });
         }
 

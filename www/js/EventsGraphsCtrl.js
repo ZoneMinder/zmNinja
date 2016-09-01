@@ -15,21 +15,25 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     };
 
     $scope.$on('$ionicView.loaded', function () {
-       // console.log("**VIEW ** Graph Ctrl Loaded");
+        // console.log("**VIEW ** Graph Ctrl Loaded");
     });
-    
-    
+
+
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
-    $scope.handleAlarms = function()
-    {
-        $rootScope.isAlarm=!$rootScope.isAlarm;
-        if (!$rootScope.isAlarm)
-        {
-            $rootScope.alarmCount="0";
-            $ionicHistory.nextViewOptions({disableBack: true});		
-            $state.go("events", {"id": 0}, { reload: true });
+    $scope.handleAlarms = function () {
+        $rootScope.isAlarm = !$rootScope.isAlarm;
+        if (!$rootScope.isAlarm) {
+            $rootScope.alarmCount = "0";
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+            $state.go("events", {
+                "id": 0
+            }, {
+                reload: true
+            });
         }
     };
 
@@ -41,16 +45,16 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
-       // console.log("**VIEW ** EventsGraphs Ctrl Entered");
+        // console.log("**VIEW ** EventsGraphs Ctrl Entered");
         ZMDataModel.setAwake(false);
     });
 
     $scope.$on('$ionicView.leave', function () {
-       // console.log("**VIEW ** Graph Ctrl Left");
+        // console.log("**VIEW ** Graph Ctrl Left");
     });
 
     $scope.$on('$ionicView.unloaded', function () {
-      //  console.log("**VIEW ** Graph Ctrl Unloaded");
+        //  console.log("**VIEW ** Graph Ctrl Unloaded");
     });
 
 
@@ -141,8 +145,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         if (hrs) {
             // Apply a time based filter if I am not watching all events
             var cur = moment();
-            endDate = cur.format("YYYY-MM-DD "+ZMDataModel.getTimeFormat());
-            startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD "+ZMDataModel.getTimeFormat());
+            endDate = cur.format("YYYY-MM-DD " + ZMDataModel.getTimeFormat());
+            startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD " + ZMDataModel.getTimeFormat());
             //console.log("Start and End " + startDate + "==" + endDate);
             ZMDataModel.zmLog("Generating graph for " + startDate + " to " + endDate);
 
