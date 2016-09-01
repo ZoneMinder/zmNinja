@@ -1,5 +1,36 @@
 # Change Log
 
+## [v1.2.17](https://github.com/pliablepixels/zmNinja/tree/v1.2.17) (2016-09-01)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.13...v1.2.17)
+
+**Implemented enhancements:**
+
+- Add ability to perform monitor config changes for all monitors \(credit @sctt\) [\#316](https://github.com/pliablepixels/zmNinja/issues/316)
+- enable/disable sound and vibration push notifications [\#314](https://github.com/pliablepixels/zmNinja/issues/314)
+- Add Wake/Sleep/Reset  to PTZ functions \(credit: @sctt\) [\#306](https://github.com/pliablepixels/zmNinja/issues/306)
+
+**Fixed bugs:**
+
+- clean up event server flow - its been a bloody mess for a while [\#312](https://github.com/pliablepixels/zmNinja/issues/312)
+- Add option to disable nativeTransitions [\#310](https://github.com/pliablepixels/zmNinja/issues/310)
+- app freezes when adding more than 2 profiles  [\#304](https://github.com/pliablepixels/zmNinja/issues/304)
+- saving a server profile removes the "Add" button while in the same view [\#303](https://github.com/pliablepixels/zmNinja/issues/303)
+- 1.2.0 seems to have routing issues and xwalk issues [\#302](https://github.com/pliablepixels/zmNinja/issues/302)
+- zmNinja fails to log in over open internet on first invocation [\#126](https://github.com/pliablepixels/zmNinja/issues/126)
+- it seems in some cases monitor intervals don't get transmitted to zmeventserver [\#112](https://github.com/pliablepixels/zmNinja/issues/112)
+
+**Closed issues:**
+
+- ZMninja API issue with zoneminder 1.30 [\#300](https://github.com/pliablepixels/zmNinja/issues/300)
+
+**Merged pull requests:**
+
+- tweaks to \#313 [\#315](https://github.com/pliablepixels/zmNinja/pull/315) ([pliablepixels](https://github.com/pliablepixels))
+- Added Global Configuration function for monitors [\#313](https://github.com/pliablepixels/zmNinja/pull/313) ([sctt](https://github.com/sctt))
+- Revert "Added Wake-Sleep-Reset control commands" [\#309](https://github.com/pliablepixels/zmNinja/pull/309) ([pliablepixels](https://github.com/pliablepixels))
+- tweaks to Sleep/Wake/Reset \#306 [\#308](https://github.com/pliablepixels/zmNinja/pull/308) ([pliablepixels](https://github.com/pliablepixels))
+- Added Wake-Sleep-Reset control commands [\#307](https://github.com/pliablepixels/zmNinja/pull/307) ([sctt](https://github.com/sctt))
+
 ## [v1.2.13](https://github.com/pliablepixels/zmNinja/tree/v1.2.13) (2016-08-18)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.0...v1.2.13)
 
