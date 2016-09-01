@@ -152,7 +152,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //console.log ("Event timer");
         $scope.checkEventOn = true;
         if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
-            console.log("playing video, not using zms, skipping event commands");
+            //console.log("playing video, not using zms, skipping event commands");
         } else {
             processEvent('99', $scope.connKey);
         }
@@ -163,7 +163,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         var d = $q.defer();
 
         if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
-            console.log("playing video, not using zms, skipping event commands");
+            // console.log("playing video, not using zms, skipping event commands");
             d.resolve(true);
             return (d.promise);
         }
@@ -171,7 +171,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
 
         var loginData = ZMDataModel.getLogin();
-        console.log("Sending CGI command to " + loginData.url);
+        //console.log("Sending CGI command to " + loginData.url);
         var rqtoken = rq ? rq : "stream";
         var myauthtoken = $rootScope.authSession.replace("&auth=", "");
         //&auth=
@@ -193,7 +193,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         foo = foo + extras;
                         //console.log("EXTRAS****SUB RETURNING " + foo);
                     }
-                    console.log("CGI subcommand=" + foo);
+                    //console.log("CGI subcommand=" + foo);
                     return foo;
 
                 },
@@ -228,12 +228,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     function processEvent(cmd, connkey) {
 
         if ($scope.blockSlider) {
-            console.log("Not doing ZMS Command as slider is depressed...");
+            //console.log("Not doing ZMS Command as slider is depressed...");
             return;
         }
 
         var loginData = ZMDataModel.getLogin();
-        console.log("sending process Event command to " + loginData.url);
+        //console.log("sending process Event command to " + loginData.url);
         var myauthtoken = $rootScope.authSession.replace("&auth=", "");
         //&auth=
         var req = $http({
@@ -250,7 +250,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     str.push(encodeURIComponent(p) + "=" +
                         encodeURIComponent(obj[p]));
                 var foo = str.join("&");
-                console.log("****processEvent subcommands RETURNING " + foo);
+                //console.log("****processEvent subcommands RETURNING " + foo);
                 return foo;
             },
 
@@ -355,7 +355,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.youChangedSlider = function () {
 
-        console.log("YOU changed " + $scope.sliderProgress.progress);
+        //console.log("YOU changed " + $scope.sliderProgress.progress);
         $scope.currentProgress.progress = $scope.sliderProgress.progress;
         $timeout(function () {
             sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
@@ -719,7 +719,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         currentEvent = $scope.currentEvent;
 
-        console.log("Current Event " + JSON.stringify(currentEvent));
+        //console.log("Current Event " + JSON.stringify(currentEvent));
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
         ZMDataModel.zmDebug("Generated Connkey:" + $scope.connKey);
 
@@ -1130,7 +1130,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             duration: zm.httpTimeout
         });
 
-        console.log("Send command connkey: " + connkey);
+        //console.log("Send command connkey: " + connkey);
         sendCommand(cmd, connkey)
             .then(
                 function (success) {
@@ -1321,9 +1321,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     $scope.defaultVideo = event.Event.DefaultVideo;
 
-                    console.log("loginData is " + JSON.stringify($scope.loginData));
-                    console.log("Event ID is " + $scope.eventId);
-                    console.log("video is " + $scope.defaultVideo);
+                    //console.log("loginData is " + JSON.stringify($scope.loginData));
+                    //console.log("Event ID is " + $scope.eventId);
+                    //console.log("video is " + $scope.defaultVideo);
 
 
                     neighborEvents(event.Event.Id)

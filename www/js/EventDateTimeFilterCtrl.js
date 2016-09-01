@@ -6,24 +6,28 @@
 
 angular.module('zmApp.controllers')
     .controller('zmApp.EventDateTimeFilterCtrl', ['$scope', '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', 'ZMDataModel', '$state', function ($scope, $ionicScrollDelegate, $ionicSideMenuDelegate, $rootScope, $ionicHistory, ZMDataModel, $state) {
-        
-    //----------------------------------------------------------------
-    // Alarm notification handling
-    //----------------------------------------------------------------
-    $scope.handleAlarms = function()
-    {
-        $rootScope.isAlarm=!$rootScope.isAlarm;
-        if (!$rootScope.isAlarm)
-        {
-            $rootScope.alarmCount="0";
-            $ionicHistory.nextViewOptions({disableBack: true});		
-            $state.go("events", {"id": 0}, { reload: true });
-        }
-    };
-        
-    //--------------------------------------------------------------------------
-    // Clears filters 
-    //--------------------------------------------------------------------------
+
+            //----------------------------------------------------------------
+            // Alarm notification handling
+            //----------------------------------------------------------------
+            $scope.handleAlarms = function () {
+                $rootScope.isAlarm = !$rootScope.isAlarm;
+                if (!$rootScope.isAlarm) {
+                    $rootScope.alarmCount = "0";
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true
+                    });
+                    $state.go("events", {
+                        "id": 0
+                    }, {
+                        reload: true
+                    });
+                }
+            };
+
+            //--------------------------------------------------------------------------
+            // Clears filters 
+            //--------------------------------------------------------------------------
 
             $scope.removeFilters = function () {
                 $rootScope.isEventFilterOn = false;
@@ -48,10 +52,10 @@ angular.module('zmApp.controllers')
                 //$ionicHistory.goBack();
             };
 
-    //--------------------------------------------------------------------------
-    // Saves filters in root variables so EventFilter can access it. I know:
-    // don't root.
-    //--------------------------------------------------------------------------
+            //--------------------------------------------------------------------------
+            // Saves filters in root variables so EventFilter can access it. I know:
+            // don't root.
+            //--------------------------------------------------------------------------
             $scope.saveFilters = function () {
                 if (!$rootScope.fromDate) {
                     //console.log("RESET fromDate");
@@ -60,13 +64,13 @@ angular.module('zmApp.controllers')
                 }
 
                 if (!$rootScope.toDate) {
-                   // console.log("RESET toDate");
+                    // console.log("RESET toDate");
                     $rootScope.toDate = new Date();
                     ZMDataModel.zmDebug("DateTimeFilter: resetting to date");
                 }
 
                 if (!$rootScope.fromTime) {
-                   // console.log("RESET fromTime");
+                    // console.log("RESET fromTime");
                     $rootScope.fromTime = new Date(99, 5, 24, 0, 0, 0, 0); //moment().format("hh:mm:ss");
                     ZMDataModel.zmDebug("DateTimeFilter: resetting from time");
                 }

@@ -142,43 +142,39 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         // uses fileLogger  to write logs to file for later investigation
         //--------------------------------------------------------------------------
-        
+
         // separate out a debug so we don't do this if comparison for normal logs
         function zmDebug(val) {
-            if (loginData.enableDebug && loginData.enableLogs)
-            {
-                 if (val!== undefined)
-                {
-                   var regex1 = /"password":".*?"/g;
-                   var regex2 = /&pass=.*?(?=["&]|$)/g;
-                    
+            if (loginData.enableDebug && loginData.enableLogs) {
+                if (val !== undefined) {
+                    var regex1 = /"password":".*?"/g;
+                    var regex2 = /&pass=.*?(?=["&]|$)/g;
+
                     //console.log ("VAL IS " + val);
                     val = val.replace(regex1, "<password removed>");
                     val = val.replace(regex2, "<password removed>");
                 }
                 $fileLogger.debug(val);
-               //console.log (val);
+                //console.log (val);
             }
         }
-        
+
         function zmLog(val, logtype) {
-            if (loginData.enableLogs)
-            {
-                if (val!== undefined)
-                {
-                   var regex1 = /"password":".*?"/g;
-                   var regex2 = /&pass=.*?(?=["&]|$)/g;
-                    
+            if (loginData.enableLogs) {
+                if (val !== undefined) {
+                    var regex1 = /"password":".*?"/g;
+                    var regex2 = /&pass=.*?(?=["&]|$)/g;
+
                     //console.log ("VAL IS " + val);
                     val = val.replace(regex1, "<password removed>");
                     val = val.replace(regex2, "<password removed>");
-                    
+
                 }
                 // make sure password is removed
                 //"username":"zmninja","password":"xyz",
                 //val = val.replace(/\"password:\",
                 $fileLogger.log(logtype, val);
-               // console.log (val);
+                // console.log (val);
             }
         }
 
@@ -188,10 +184,10 @@ angular.module('zmApp.controllers')
         function setLogin(newLogin) {
             loginData = angular.copy(newLogin);
             serverGroupList[loginData.serverName] = angular.copy(loginData);
-        
+
             var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
-        
-            console.log ("****serverLogin was encrypted to " + ct);
+
+            //console.log ("****serverLogin was encrypted to " + ct);
             //$localstorage.setObject("serverGroupList", serverGroupList);
             localforage.setItem("serverGroupList", ct, function (err) {
                 if (err) zmLog("localforage store error " + JSON.stringify(err));
@@ -206,7 +202,7 @@ angular.module('zmApp.controllers')
 
         }
 
-        
+
 
         //credit: https://gist.github.com/alexey-bass/1115557
         function versionCompare(left, right) {
@@ -277,7 +273,7 @@ angular.module('zmApp.controllers')
 
             zmDebug: function (val) {
 
-               
+
                 zmDebug(val);
             },
 
@@ -291,7 +287,7 @@ angular.module('zmApp.controllers')
             },
 
             setLatestBlogPostChecked: function (val) {
-                console.log (">>>>>>>>>>>> Setting blog date: " + val);
+                //console.log (">>>>>>>>>>>> Setting blog date: " + val);
                 latestBlogPostChecked = val;
                 localforage.setItem("latestBlogPostChecked", latestBlogPostChecked);
             },
@@ -388,7 +384,7 @@ angular.module('zmApp.controllers')
                     //$localstorage.set("defaultServerName",firstReachableUrl.server);
 
                     zmLog("Based on reachability, first serverName will be " + firstReachableUrl.server);
-                    console.log("set login Data to " + JSON.stringify(loginData));
+                    //console.log("set login Data to " + JSON.stringify(loginData));
 
                     return d.promise;
                     // OK: do something with firstReachableUrl
@@ -454,43 +450,40 @@ angular.module('zmApp.controllers')
 
 
                 zmLog("ZMData init: checking for stored variables & setting up log file");
-                
+
                 latestBlogPostChecked = localforage.getItem("latestBlogPostChecked") || null;
 
                 $ionicLoading.show({
                     template: "retrieving profile data..."
                 });
-                
-                
-                
-                
+
+
+
+
                 localforage.getItem("serverGroupList").then(function (val) {
                     // decrypt it now
-                    
+
                     var decodedVal;
-                    
-                    if (typeof val == 'string')
-                    {
-                        zmLog ("user profile encrypted, decoding...");
-                        var bytes  = CryptoJS.AES.decrypt(val.toString(), zm.cipherKey);
+
+                    if (typeof val == 'string') {
+                        zmLog("user profile encrypted, decoding...");
+                        var bytes = CryptoJS.AES.decrypt(val.toString(), zm.cipherKey);
                         decodedVal = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-                        
-                    }
-                    else
-                    {
-                        zmLog ("user profile not encrypted");
+
+                    } else {
+                        zmLog("user profile not encrypted");
                         decodedVal = val;
                     }
-                    
+
                     //decodedVal = val;
-                    
-                    zmDebug ("user profile retrieved:"+JSON.stringify(decodedVal));
-                    
+
+                    zmDebug("user profile retrieved:" + JSON.stringify(decodedVal));
+
                     $ionicLoading.hide();
                     serverGroupList = decodedVal;
-                    
-                    
-                   // console.log(">>>> DECRYPTED serverGroupList " + JSON.stringify(serverGroupList));
+
+
+                    // console.log(">>>> DECRYPTED serverGroupList " + JSON.stringify(serverGroupList));
                     var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"Events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"enableAlarmCount\":true,\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
                     var demoS = JSON.parse(demoServer);
                     //console.log("JSON parsed demo" + JSON.stringify(demoS));
@@ -522,9 +515,9 @@ angular.module('zmApp.controllers')
                             $ionicLoading.hide();
                             //console.log ("!!!!!!!!!!!!!!!!!!default server name is  "  + sname);
                             sname = val;
-                           // console.log("!!!!!!!!!!!!!!!!!!!Got VAL " + sname);
+                            // console.log("!!!!!!!!!!!!!!!!!!!Got VAL " + sname);
                             var loadedData = serverGroupList[sname];
-                           // console.log(">>>>>>>>>>> loadedData is: " + JSON.stringify(loadedData));
+                            // console.log(">>>>>>>>>>> loadedData is: " + JSON.stringify(loadedData));
                             if (!isEmpty(loadedData)) {
                                 loginData = loadedData;
 
@@ -668,20 +661,20 @@ angular.module('zmApp.controllers')
                                     loginData.disableNative = false;
 
                                 }
-                                
+
                                 if (typeof loginData.vibrateOnPush == 'undefined') {
                                     zmDebug("vibrate on push not found, setting to true");
                                     loginData.vibrateOnPush = true;
 
                                 }
-                                
+
                                 if (typeof loginData.soundOnPush == 'undefined') {
                                     zmDebug("sound on push not found, setting to true");
                                     loginData.soundOnPush = true;
 
                                 }
 
-                                
+
                                 zmLog("DataModel init recovered this loginData as " + JSON.stringify(loginData));
                             } else {
                                 zmLog("defaultServer configuration NOT found. Keeping login at defaults");
@@ -695,7 +688,7 @@ angular.module('zmApp.controllers')
                     //console.log("Getting out of ZMDataModel init");
                     $rootScope.showBlog = loginData.enableBlog;
                     //zmDebug("loginData structure values: " + JSON.stringify(loginData));
-                   
+
                 });
 
             },
@@ -746,14 +739,14 @@ angular.module('zmApp.controllers')
                 if (permanent) {
                     //window.localStorage.setItem("defaultLang", l);
 
-                    console.log("setting default lang");
+                    //console.log("setting default lang");
                     localforage.setItem("defaultLang", l)
-                    .then (function (val) {
-                        zmLog ("Set language in localforage to: " + val);
-                    });
+                        .then(function (val) {
+                            zmLog("Set language in localforage to: " + val);
+                        });
                 }
 
-                console.log("invoking translate use with " + l);
+                //console.log("invoking translate use with " + l);
                 $translate.use(l).then(function (data) {
                     zmLog("Device Language is:" + data);
                     moment.locale(data);
@@ -812,7 +805,7 @@ angular.module('zmApp.controllers')
             },
 
             isFirstUse: function () {
-                console.log("isFirstUse is " + isFirstUse);
+                // console.log("isFirstUse is " + isFirstUse);
                 return isFirstUse;
                 // return ((window.localStorage.getItem("isFirstUse") == undefined) ? true : false);
 
@@ -830,8 +823,8 @@ angular.module('zmApp.controllers')
                 //localforage.setItem("isFirstUse", val, 
                 //   function(err) {if (err) zmLog ("localforage error, //storing isFirstUse: " + JSON.stringify(err));});
                 isFirstUse = val;
-                localforage.setItem ("isFirstUse",val);
-                console.log (">>>>>>setting isFirstUse to " + val);
+                localforage.setItem("isFirstUse", val);
+                //console.log (">>>>>>setting isFirstUse to " + val);
 
             },
 

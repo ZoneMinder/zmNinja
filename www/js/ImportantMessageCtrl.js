@@ -2,10 +2,10 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.ImportantMessageCtrl', ['$scope','$ionicSideMenuDelegate', 'zm', '$stateParams',  '$timeout','$rootScope', function ($scope,$ionicSideMenuDelegate,zm, $stateParams, $timeout, $rootScope) {
-$scope.openMenu = function () {
-    $ionicSideMenuDelegate.toggleLeft();
-  };
+angular.module('zmApp.controllers').controller('zmApp.ImportantMessageCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$timeout', '$rootScope', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $timeout, $rootScope) {
+    $scope.openMenu = function () {
+        $ionicSideMenuDelegate.toggleLeft();
+    };
 
 
 
@@ -21,8 +21,8 @@ $scope.openMenu = function () {
         $scope.recommendedVersion = zm.recommendedAppVersion;
 
     });
-    
-       $scope.openMenu = function () {
+
+    $scope.openMenu = function () {
         $timeout(function () {
             $rootScope.stateofSlide = $ionicSideMenuDelegate.isOpen();
         }, 500);
