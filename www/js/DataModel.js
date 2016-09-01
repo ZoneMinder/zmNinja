@@ -291,6 +291,7 @@ angular.module('zmApp.controllers')
             },
 
             setLatestBlogPostChecked: function (val) {
+                console.log (">>>>>>>>>>>> Setting blog date: " + val);
                 latestBlogPostChecked = val;
                 localforage.setItem("latestBlogPostChecked", latestBlogPostChecked);
             },
@@ -453,6 +454,8 @@ angular.module('zmApp.controllers')
 
 
                 zmLog("ZMData init: checking for stored variables & setting up log file");
+                
+                latestBlogPostChecked = localforage.getItem("latestBlogPostChecked") || null;
 
                 $ionicLoading.show({
                     template: "retrieving profile data..."
@@ -691,7 +694,7 @@ angular.module('zmApp.controllers')
                     monitorsLoaded = 0;
                     //console.log("Getting out of ZMDataModel init");
                     $rootScope.showBlog = loginData.enableBlog;
-                    zmDebug("loginData structure values: " + JSON.stringify(loginData));
+                    //zmDebug("loginData structure values: " + JSON.stringify(loginData));
                    
                 });
 

@@ -566,11 +566,15 @@ angular.module('zmApp', [
                     if ($rootScope.platformOS == "desktop") {
                         zmUpdateVersion = zmUpdateVersion + "D";
                     }
-                    if (ZMDataModel.getAppVersion() != zmUpdateVersion) {
+                    //if (ZMDataModel.getAppVersion() != zmUpdateVersion) {
+                    if (ZMDataModel.versionCompare(ZMDataModel.getAppVersion(),zmUpdateVersion) == -1) {
                         $rootScope.newVersionAvailable = "v" + zmUpdateVersion + " available";
                     } else {
                         $rootScope.newVersionAvailable = "";
                     }
+                    ZMDataModel.zmDebug ("current version: "  + currentVersion + " & available version " +  zmUpdateVersion);
+                    console.log ("Version compare returned: " + ZMDataModel.versionCompare(currentVersion, zmUpdateVersion));
+                    console.log ("Version compare returned: " + ZMDataModel.versionCompare(zmUpdateVersion, currentVersion));
                     //console.log ("UPDATE " + zmVersion);
                 });
 
@@ -584,6 +588,7 @@ angular.module('zmApp', [
                     }
 
                     var lastDate = ZMDataModel.getLatestBlogPostChecked();
+                    console.log ("************ BLOG LAST DATE " + lastDate);
                     if (!lastDate) {
 
                         $rootScope.newBlogPost = "(new post)";
