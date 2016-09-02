@@ -6,14 +6,14 @@
         <ion-content  ng-cloak on-double-tap="closeModal()" delegate-handle="timeline-modal-delegate">
 <div ng-controller="TimelineModalCtrl" >   
             <br/>
-            <div class="item item-divider">{{'kEvent' | translate}}: {{eid}}
+            <div class="item item-divider">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{'kEvent' | translate}}:{{eid}} ({{humanizeTime}})
                   <button class="button icon-left button-small  button-positive" style="float:right; opacity:0.7" ng-click="switchType()">
                 <i class="ion-shuffle"></i>
                 </button>
                 
             </div>
           
-            <center> <h5>{{'kShowing' | translate}} {{graphType}} {{'kFrames' | translate}} </h5>
+            <center> <h5>{{'kEvent' | translate}} {{graphType}} {{'kFrames' | translate}} </h5>
                 <p>{{'kTimelineMessage' | translate}}</p>
              
                 

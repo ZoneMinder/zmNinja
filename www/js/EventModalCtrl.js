@@ -1105,7 +1105,15 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     }
 
-
+    function humanizeTime(str)
+    {
+        var et = moment(str);
+        var m = moment.duration(moment().diff(et)).humanize();
+        
+        var r  = m+' '+$translate.instant('kAgo'); 
+        return (r);
+        
+    }
 
     function jumpToEventZms(connkey, dirn) {
 
@@ -1291,6 +1299,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         var loginData = ZMDataModel.getLogin();
         var myurl = loginData.apiurl + '/events/' + eid + ".json";
         ZMDataModel.zmLog("*** Constructed API for detailed events: " + myurl);
+        $scope.humanizeTime = "...";
+        $scope.mName = "...";
         $http.get(myurl)
             .then(function (success) {
 
@@ -1314,6 +1324,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     $scope.eFramesNum = event.Event.Frames;
                     $scope.eventDur = Math.round(event.Event.Length);
                     $scope.loginData = ZMDataModel.getLogin();
+                    $scope.humanizeTime = humanizeTime(event.Event.StartTime);
+                    $scope.mName = ZMDataModel.getMonitorName(event.Event.MonitorId);
+                    //console.log (">>>>>>>>HUMANIZE " + $scope.humanizeTime);
 
                     //console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
                     if (typeof event.Event.DefaultVideo === 'undefined')
