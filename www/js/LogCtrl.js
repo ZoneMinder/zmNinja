@@ -80,7 +80,11 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 template: $rootScope.appName + ' ' + $translate.instant('kSensitiveBody')
             })
             .then(function (res) {
-                if (res) sendEmailReally(logstring);
+                if (res) 
+                {
+                    logstring =  "Logs for version:"+$scope.zmAppVersion+"\n"+logstring;
+                    sendEmailReally(logstring);
+                }
 
             });
     };
@@ -90,10 +94,6 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     //--------------------------------------------------------------------------
     function sendEmailReally(logstring) {
         if (window.cordova) {
-
-
-
-
 
 
             // do my best to replace sensitive information
@@ -135,8 +135,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             var fname = $rootScope.appName + "-logs-" +
                 moment().format('MMM-DD-YY_HH-mm-ss') + ".txt";
 
-            var dlogstring = "version:" + $scope.zmAppVersion + "\n" + logstring;
-            var blob = new Blob([dlogstring], {
+            
+            var blob = new Blob([logstring], {
                 type: "text/plain;charset=utf-8"
             });
             saveAs(blob, fname);
@@ -162,6 +162,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
 
                 $scope.zmLog.logString = l.split('\n').reverse().join('\n');
+                
                 $ionicLoading.hide();
             },
             function (error) {
