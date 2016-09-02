@@ -639,6 +639,7 @@ angular.module('zmApp', [
 
     $rootScope.$on("init-complete", function () {
         ZMDataModel.zmLog(">>>>>>>>>>>>>>> All init over, going to portal login");
+        $ionicHistory.nextViewOptions({ disableAnimate: true});
         $state.go("zm-portal-login");
     });
 
@@ -1367,11 +1368,13 @@ angular.module('zmApp', [
                             }
 
                             ZMDataModel.zmDebug("going to portal login");
+                            $ionicHistory.nextViewOptions({ disableAnimate: true});
                             $state.go("zm-portal-login");
                         } else {
                             $rootScope.lastState = "";
                             $rootScope.lastStateParam = "";
                             ZMDataModel.zmDebug("reset lastState to null");
+                            $ionicHistory.nextViewOptions({ disableAnimate: true});
                             $state.go("zm-portal-login");
                         }
                     }, forceDelay);
@@ -1700,6 +1703,7 @@ angular.module('zmApp', [
         url: "/zm-portal-login",
         templateUrl: "templates/zm-portal-login.html",
         controller: 'zmApp.PortalLoginCtrl',
+        nativeTransitions: null // disable for speed
 
     })
 
