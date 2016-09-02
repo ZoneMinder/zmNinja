@@ -1,5 +1,12 @@
 # Change Log
 
+## [v1.2.18](https://github.com/pliablepixels/zmNinja/tree/v1.2.18) (2016-09-02)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.17...v1.2.18)
+
+**Implemented enhancements:**
+
+- for all event related views \(event list, footage, analyze\) show "relative time from now" like "1 day ago" or "2 hours ago" [\#317](https://github.com/pliablepixels/zmNinja/issues/317)
+
 ## [v1.2.17](https://github.com/pliablepixels/zmNinja/tree/v1.2.17) (2016-09-01)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.0...v1.2.17)
 
