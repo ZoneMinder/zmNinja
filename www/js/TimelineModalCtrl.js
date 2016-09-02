@@ -176,6 +176,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
             });
 
         $scope.eventdetails = $translate.instant('kLoading') + "...";
+        $scope.mName = ZMDataModel.getMonitorName($scope.event.Event.MonitorId);
+        $scope.humanizeTime = humanizeTime($scope.event.Event.StartTime);
         processEvent();
         //$scope.eventdetails = JSON.stringify($scope.event);
     });
@@ -440,6 +442,15 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     }
 
 
+    function humanizeTime(str)
+    {
+        var et = moment(str);
+        var m = moment.duration(moment().diff(et)).humanize();
+        
+        var r  = m+' '+$translate.instant('kAgo'); 
+        return (r);
+        
+    }
 
     function padToN(number, digits) {
 
