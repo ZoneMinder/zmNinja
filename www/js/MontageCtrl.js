@@ -789,7 +789,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.toggleSizeButtons = function () {
 
         $scope.showSizeButtons = !$scope.showSizeButtons;
+        
         ZMDataModel.zmDebug("toggling size buttons:" + $scope.showSizeButtons);
+        if ($scope.showSizeButtons) $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
     };
 
     // minimal has to be beforeEnter or header won't hide
