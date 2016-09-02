@@ -548,7 +548,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             title: 'Select ' + (onlyAlarms ? 'Alarmed ' : '') + 'frame to save',
             subTitle: 'use left and right arrows to change',
             scope: $scope,
-            cssClass: 'popup80',
+            cssClass: 'popup95',
             buttons: [
                 {
                     // left 1

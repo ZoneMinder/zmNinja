@@ -137,7 +137,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         $rootScope.zmPopup = $ionicPopup.alert({
             title: 'frame:' + fid + '/Event:' + e,
             template: img,
-            cssClass: 'popup80'
+            cssClass: 'popup95'
         });
     };
 
