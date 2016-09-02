@@ -888,7 +888,8 @@ angular.module('zmApp.controllers')
         if ($scope.events == undefined || !$scope.events.length || $scope.events[item] == undefined) {
             return "";
         } else {
-            return prettifyDate($scope.events[item].Event.StartTime);
+            //return prettifyDate($scope.events[item].Event.StartTime);
+            return dateForEventHeader($scope.events[item].Event.StartTime);
         }
         //return Math.random();
     };
@@ -1674,7 +1675,27 @@ angular.module('zmApp.controllers')
     //--------------------------------------
     // formats events dates in a nice way
     //---------------------------------------
-
+    
+    function dateForEventHeader(str)
+    {
+        var et = moment(str);
+        var m = moment.duration(moment().diff(et)).humanize();
+        
+        var r  = et.format('MMM Do') + ' ('+m+' '+$translate.instant('kAgo')+')'; 
+        return (r);
+    }
+    
+    
+    $scope.relativeTime = function(str)
+    {
+        var et = moment(str);
+        var m = moment.duration(moment().diff(et)).humanize();
+        
+        var r  = m+' '+$translate.instant('kAgo'); 
+        return (r);
+        
+    };
+    
     $scope.prettifyDate = function (str) {
         return moment(str).format('MMM Do');
     };
