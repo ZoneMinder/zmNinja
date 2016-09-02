@@ -275,6 +275,7 @@ angular.module('zmApp.controllers')
                             }
 
 
+                            myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
                             myevents[i].Event.streamingURL = ZMDataModel.getStreamingURL(myevents[i].Event.MonitorId);
                             myevents[i].Event.baseURL = ZMDataModel.getBaseURL(myevents[i].Event.MonitorId);
                             myevents[i].Event.imageMode = ZMDataModel.getImageMode(myevents[i].Event.MonitorId);
@@ -467,7 +468,7 @@ angular.module('zmApp.controllers')
             title: $translate.instant('kImages') + " (" + $translate.instant($scope.typeOfFrames) + ")",
             subTitle: 'use left and right arrows to change',
             scope: $scope,
-            cssClass: 'popup80',
+            cssClass: 'popup95',
             buttons: [
 
                 {
@@ -889,7 +890,7 @@ angular.module('zmApp.controllers')
             return "";
         } else {
             //return prettifyDate($scope.events[item].Event.StartTime);
-            return dateForEventHeader($scope.events[item].Event.StartTime);
+            return ($scope.events[item].Event.humanizeTime);
         }
         //return Math.random();
     };
@@ -1623,7 +1624,8 @@ angular.module('zmApp.controllers')
                             }
                         }
 
-
+                        
+                        myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
                         myevents[i].Event.MonitorName = ZMDataModel.getMonitorName(myevents[i].Event.MonitorId);
                         // now construct base path
 
@@ -1676,17 +1678,8 @@ angular.module('zmApp.controllers')
     // formats events dates in a nice way
     //---------------------------------------
     
-    function dateForEventHeader(str)
-    {
-        var et = moment(str);
-        var m = moment.duration(moment().diff(et)).humanize();
-        
-        var r  = et.format('MMM Do') + ' ('+m+' '+$translate.instant('kAgo')+')'; 
-        return (r);
-    }
-    
-    
-    $scope.relativeTime = function(str)
+   
+    function humanizeTime(str)
     {
         var et = moment(str);
         var m = moment.duration(moment().diff(et)).humanize();
@@ -1694,7 +1687,7 @@ angular.module('zmApp.controllers')
         var r  = m+' '+$translate.instant('kAgo'); 
         return (r);
         
-    };
+    }
     
     $scope.prettifyDate = function (str) {
         return moment(str).format('MMM Do');
