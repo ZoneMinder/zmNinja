@@ -144,8 +144,8 @@ angular.module('zmApp', [
 // (keeps reading data). Hence not using it now
 //credit: http://stackoverflow.com/questions/34958575/intercepting-img-src-via-http-interceptor-as-well-as-not-lose-the-ability-to-kee
 .directive('httpSrc', [
-        '$http', 'imageLoadingDataShare', 'ZMDataModel',
-        function ($http, imageLoadingDataShare, ZMDataModel) {
+        '$http', 'imageLoadingDataShare', 'NVRDataModel',
+        function ($http, imageLoadingDataShare, NVRDataModel) {
         var directive = {
             link: postLink,
             restrict: 'A'
@@ -503,7 +503,7 @@ angular.module('zmApp', [
 //-----------------------------------------------------------------
 // This service automatically checks for new versions every 24 hrs
 //------------------------------------------------------------------
-.factory('zmCheckUpdates', function ($interval, $http, zm, $timeout, $localstorage, ZMDataModel, $rootScope) {
+.factory('zmCheckUpdates', function ($interval, $http, zm, $timeout, $localstorage, NVRDataModel, $rootScope) {
     var zmUpdateHandle;
     var zmUpdateVersion = "";
 
@@ -517,7 +517,7 @@ angular.module('zmApp', [
 
 
         function checkUpdate() {
-            var lastdateString = ZMDataModel.getLastUpdateCheck();
+            var lastdateString = NVRDataModel.getLastUpdateCheck();
             var lastdate;
             if (!lastdateString) {
 
@@ -528,38 +528,38 @@ angular.module('zmApp', [
             }
             var timdiff = moment().diff(lastdate, 'hours');
             if (timdiff < 24) {
-                ZMDataModel.zmLog("Checked for update " + timdiff + " hours ago. Not checking again");
+                NVRDataModel.log("Checked for update " + timdiff + " hours ago. Not checking again");
 
                 return;
             }
-            ZMDataModel.zmLog("Checking for new version updates...");
+            NVRDataModel.log("Checking for new version updates...");
 
 
             $http.get(zm.latestRelease)
                 .then(function (success) {
 
-                    ZMDataModel.setLastUpdateCheck(moment().toISOString());
+                    NVRDataModel.setLastUpdateCheck(moment().toISOString());
                     // $localstorage.set("lastUpdateCheck", moment().toISOString());
                     //console.log ("FULL STRING " + success.data.tag_name);
                     var res = success.data.tag_name.match("v(.*)");
                     zmUpdateVersion = res[1];
-                    var currentVersion = ZMDataModel.getAppVersion();
+                    var currentVersion = NVRDataModel.getAppVersion();
                     if ($rootScope.platformOS == "desktop") {
                         zmUpdateVersion = zmUpdateVersion + "D";
                     }
-                    //if (ZMDataModel.getAppVersion() != zmUpdateVersion) {
-                    if (ZMDataModel.versionCompare(ZMDataModel.getAppVersion(), zmUpdateVersion) == -1) {
+                    //if (NVRDataModel.getAppVersion() != zmUpdateVersion) {
+                    if (NVRDataModel.versionCompare(NVRDataModel.getAppVersion(), zmUpdateVersion) == -1) {
                         $rootScope.newVersionAvailable = "v" + zmUpdateVersion + " available";
                     } else {
                         $rootScope.newVersionAvailable = "";
                     }
-                    ZMDataModel.zmDebug("current version: " + currentVersion + " & available version " + zmUpdateVersion);
-                    //console.log ("Version compare returned: " + ZMDataModel.versionCompare(currentVersion, //zmUpdateVersion));
-                    // console.log ("Version compare returned: " + ZMDataModel.versionCompare(zmUpdateVersion, currentVersion));
+                    NVRDataModel.debug("current version: " + currentVersion + " & available version " + zmUpdateVersion);
+                    //console.log ("Version compare returned: " + NVRDataModel.versionCompare(currentVersion, //zmUpdateVersion));
+                    // console.log ("Version compare returned: " + NVRDataModel.versionCompare(zmUpdateVersion, currentVersion));
                     //console.log ("UPDATE " + zmVersion);
                 });
 
-            ZMDataModel.zmLog("Checking for news updates");
+            NVRDataModel.log("Checking for news updates");
             $http.get(zm.blogUrl)
                 .success(function (data) {
                     $rootScope.newBlogPost = "";
@@ -568,7 +568,7 @@ angular.module('zmApp', [
                         return;
                     }
 
-                    var lastDate = ZMDataModel.getLatestBlogPostChecked();
+                    var lastDate = NVRDataModel.getLatestBlogPostChecked();
                     //console.log ("************ BLOG LAST DATE " + lastDate);
                     if (!lastDate) {
 
@@ -580,14 +580,14 @@ angular.module('zmApp', [
                     var mItemDate = moment(data[0].date);
 
                     if (mItemDate.diff(mLastDate) > 0) {
-                        ZMDataModel.zmDebug("New post dated " + data[0].date + " found");
+                        NVRDataModel.debug("New post dated " + data[0].date + " found");
                         if (data[0].level == "critical") {
                             $rootScope.newBlogPost = "(new post)";
                         } else {
-                            ZMDataModel.zmDebug("Not showing a notification in menu as this is not critical");
+                            NVRDataModel.debug("Not showing a notification in menu as this is not critical");
                         }
                     } else {
-                        ZMDataModel.zmDebug("Latest post dated " + data[0].date + " but you read " + lastDate);
+                        NVRDataModel.debug("Latest post dated " + data[0].date + " but you read " + lastDate);
                     }
 
 
@@ -616,7 +616,7 @@ angular.module('zmApp', [
 // This service automatically logs into ZM at periodic intervals
 //------------------------------------------------------------------
 
-.factory('zmAutoLogin', function ($interval, ZMDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory, $translate) {
+.factory('zmAutoLogin', function ($interval, NVRDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory, $translate) {
     var zmAutoLoginHandle;
 
     //------------------------------------------------------------------
@@ -625,8 +625,8 @@ angular.module('zmApp', [
 
     $rootScope.$on("auth-error", function () {
 
-        ZMDataModel.zmDebug("zmAutoLogin: Inside auth-error emit");
-        ZMDataModel.displayBanner('error', ['ZoneMinder authentication failed', 'Please check settings']);
+        NVRDataModel.debug("zmAutoLogin: Inside auth-error emit");
+        NVRDataModel.displayBanner('error', ['ZoneMinder authentication failed', 'Please check settings']);
 
     });
 
@@ -638,7 +638,7 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     $rootScope.$on("init-complete", function () {
-        ZMDataModel.zmLog(">>>>>>>>>>>>>>> All init over, going to portal login");
+        NVRDataModel.log(">>>>>>>>>>>>>>> All init over, going to portal login");
         $ionicHistory.nextViewOptions({ disableAnimate: true});
         $state.go("zm-portal-login");
     });
@@ -658,12 +658,12 @@ angular.module('zmApp', [
         $timeout(function () {
             contentBannerInstance();
         }, 2000);
-        ZMDataModel.zmDebug("auth-success emit:Successful");
+        NVRDataModel.debug("auth-success emit:Successful");
     });
 
 
     $rootScope.getProfileName = function () {
-        var ld = ZMDataModel.getLogin();
+        var ld = NVRDataModel.getLogin();
         return (ld.serverName || '(none)');
     };
 
@@ -682,13 +682,13 @@ angular.module('zmApp', [
         var statename = $ionicHistory.currentStateName();
 
         if (statename == "montage-history") {
-            ZMDataModel.zmLog("Skipping login process as we are in montage history. Re-logging will mess up the stream");
+            NVRDataModel.log("Skipping login process as we are in montage history. Re-logging will mess up the stream");
             d.resolve("success");
             return d.promise;
 
         }
 
-        ZMDataModel.zmDebug("Resetting zmCookie...");
+        NVRDataModel.debug("Resetting zmCookie...");
         $rootScope.zmCookie = '';
         // first try to login, if it works, good
         // else try to do reachability
@@ -700,7 +700,7 @@ angular.module('zmApp', [
                 function (error)
                 // login to main failed, so try others
                 {
-                    ZMDataModel.getReachableConfig(true)
+                    NVRDataModel.getReachableConfig(true)
                         .then(function (data) {
                                 proceedWithLogin()
                                     .then(function (success) {
@@ -735,8 +735,8 @@ angular.module('zmApp', [
             // console.log ("***** STATENAME IS " + statename);
 
             var d = $q.defer();
-            var ld = ZMDataModel.getLogin();
-            ZMDataModel.zmLog("zmAutologin called");
+            var ld = NVRDataModel.getLogin();
+            NVRDataModel.log("zmAutologin called");
 
             if (str) {
                 $ionicLoading.show({
@@ -746,11 +746,11 @@ angular.module('zmApp', [
                 });
             }
 
-            ZMDataModel.isReCaptcha()
+            NVRDataModel.isReCaptcha()
                 .then(function (result) {
                     if (result == true) {
                         $ionicLoading.hide();
-                        ZMDataModel.displayBanner('error', ['reCaptcha must be disabled',
+                        NVRDataModel.displayBanner('error', ['reCaptcha must be disabled',
                                             ], "", 8000);
                         var alertPopup = $ionicPopup.alert({
                             title: 'reCaptcha enabled',
@@ -775,8 +775,8 @@ angular.module('zmApp', [
 
 
 
-            var loginData = ZMDataModel.getLogin();
-            //ZMDataModel.zmDebug ("*** AUTH LOGIN URL IS " + loginData.url);
+            var loginData = NVRDataModel.getLogin();
+            //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
             $http({
                     method: 'POST',
                     //withCredentials: true,
@@ -815,7 +815,7 @@ angular.module('zmApp', [
                         //eventServer.start();
                         $rootScope.loggedIntoZm = 1;
 
-                        ZMDataModel.zmLog("zmAutologin successfully logged into Zoneminder");
+                        NVRDataModel.log("zmAutologin successfully logged into Zoneminder");
 
                         d.resolve("Login Success");
 
@@ -825,7 +825,7 @@ angular.module('zmApp', [
                     {
                         $rootScope.loggedIntoZm = -1;
                         //console.log("**** ZM Login FAILED");
-                        ZMDataModel.zmLog("zmAutologin Error: Bad Credentials ", "error");
+                        NVRDataModel.log("zmAutologin Error: Bad Credentials ", "error");
                         $rootScope.$emit('auth-error', "incorrect credentials");
 
                         d.reject("Login Error");
@@ -835,21 +835,21 @@ angular.module('zmApp', [
                     // Now go ahead and re-get auth key 
                     // if login was a success
                     $rootScope.authSession = "undefined";
-                    var ld = ZMDataModel.getLogin();
-                    ZMDataModel.getAuthKey($rootScope.validMonitorId)
+                    var ld = NVRDataModel.getLogin();
+                    NVRDataModel.getAuthKey($rootScope.validMonitorId)
                         .then(function (success) {
 
                                 //console.log(success);
                                 $rootScope.authSession = success;
-                                ZMDataModel.zmLog("Stream authentication construction: " +
+                                NVRDataModel.log("Stream authentication construction: " +
                                     $rootScope.authSession);
 
                             },
                             function (error) {
                                 //console.log(error);
 
-                                ZMDataModel.zmLog("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-                                ZMDataModel.zmDebug("Error was: " + JSON.stringify(error));
+                                NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                                NVRDataModel.debug("Error was: " + JSON.stringify(error));
                             });
 
                     return (d.promise);
@@ -862,7 +862,7 @@ angular.module('zmApp', [
 
                     // FIXME: Is this sometimes results in null
 
-                    ZMDataModel.zmLog("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
+                    NVRDataModel.log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
                     // bad urls etc come here
                     $rootScope.loggedIntoZm = -1;
                     $rootScope.$emit('auth-error', error);
@@ -877,7 +877,7 @@ angular.module('zmApp', [
     }
 
     function start() {
-        var ld = ZMDataModel.getLogin();
+        var ld = NVRDataModel.getLogin();
         // lets keep this timer irrespective of auth or no auth
         $rootScope.loggedIntoZm = 0;
         $interval.cancel(zmAutoLoginHandle);
@@ -892,11 +892,11 @@ angular.module('zmApp', [
     }
 
     function stop() {
-        var ld = ZMDataModel.getLogin();
+        var ld = NVRDataModel.getLogin();
 
         $interval.cancel(zmAutoLoginHandle);
         $rootScope.loggedIntoZm = 0;
-        ZMDataModel.zmLog("Cancelling zmAutologin timer");
+        NVRDataModel.log("Cancelling zmAutologin timer");
 
     }
 
@@ -913,7 +913,7 @@ angular.module('zmApp', [
 //====================================================================
 
 
-.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, ZMDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions, $translate, $localstorage) {
+.run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, NVRDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions, $translate, $localstorage) {
 
 
 
@@ -947,7 +947,7 @@ angular.module('zmApp', [
 
         // only for android
         $rootScope.exitApp = function () {
-            ZMDataModel.zmLog("user exited app");
+            NVRDataModel.log("user exited app");
 
             ionic.Platform.exitApp();
         };
@@ -955,7 +955,7 @@ angular.module('zmApp', [
 
         // This is a global exception interceptor
         $rootScope.exceptionMessage = function (error) {
-            ZMDataModel.zmDebug("**EXCEPTION**" + error.reason + " caused by " + error.cause);
+            NVRDataModel.debug("**EXCEPTION**" + error.reason + " caused by " + error.cause);
         };
 
         // register callbacks for online/offline
@@ -964,13 +964,13 @@ angular.module('zmApp', [
         $window.addEventListener("offline", function () {
             $rootScope.$apply(function () {
                 $rootScope.online = false;
-                ZMDataModel.zmLog("Your network went offline");
+                NVRDataModel.log("Your network went offline");
             });
         }, false);
         $window.addEventListener("online", function () {
             $rootScope.$apply(function () {
                 $rootScope.online = true;
-                ZMDataModel.zmLog("Your network is online, re-authenticating");
+                NVRDataModel.log("Your network is online, re-authenticating");
                 zmAutoLogin.doLogin($translate.instant('kReAuthenticating'));
 
             });
@@ -1013,7 +1013,7 @@ angular.module('zmApp', [
         // switch to another server
         $rootScope.cancelAuth = function () {
             $ionicLoading.hide();
-            ZMDataModel.zmLog("User cancelled login");
+            NVRDataModel.log("User cancelled login");
             $ionicHistory.nextViewOptions({
                 disableAnimate: true,
                 disableBack: true
@@ -1035,12 +1035,12 @@ angular.module('zmApp', [
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var requireLogin = toState.data.requireLogin;
 
-            if (ZMDataModel.isLoggedIn() || toState.data.requireLogin == false) {
+            if (NVRDataModel.isLoggedIn() || toState.data.requireLogin == false) {
                 //console.log("State transition is authorized");
 
                 return;
             } else {
-                ZMDataModel.zmLog("In Auth State trans: Not logged in, requested to go to " + JSON.stringify(toState));
+                NVRDataModel.log("In Auth State trans: Not logged in, requested to go to " + JSON.stringify(toState));
                 // event.preventDefault();
                 // 
 
@@ -1080,14 +1080,14 @@ angular.module('zmApp', [
             $rootScope.db = null;
 
             $rootScope.platformOS = "desktop";
-            ZMDataModel.zmLog("Device is ready");
-            // var ld = ZMDataModel.getLogin();
+            NVRDataModel.log("Device is ready");
+            // var ld = NVRDataModel.getLogin();
             if ($ionicPlatform.is('ios'))
                 $rootScope.platformOS = "ios";
             if ($ionicPlatform.is('android'))
                 $rootScope.platformOS = "android";
 
-            ZMDataModel.zmLog("You are running on " + $rootScope.platformOS);
+            NVRDataModel.log("You are running on " + $rootScope.platformOS);
 
 
             localforage.config({
@@ -1123,7 +1123,7 @@ angular.module('zmApp', [
                 );
             }).then(function () {
                 // this should alert "cordovaSQLiteDriver" when in an emulator or a device
-                ZMDataModel.zmLog("localforage driver for storage:" + localforage.driver());
+                NVRDataModel.log("localforage driver for storage:" + localforage.driver());
 
                 // Now lets import old data if it exists:
                 var defaultServerName = $localstorage.get("defaultServerName");
@@ -1134,14 +1134,14 @@ angular.module('zmApp', [
                         // if neither, we are in first use, mates!
                         if (!val && !defaultServerName) {
                             continueInitialInit();
-                            /*  ZMDataModel.zmDebug ("Neither localstorage or forage  - First use, showing warm and fuzzy...");
+                            /*  NVRDataModel.debug ("Neither localstorage or forage  - First use, showing warm and fuzzy...");
                     $ionicHistory.nextViewOptions({
                         disableAnimate: true,
                         disableBack: true
                     });
                     $state.go('first-use');*/
                         } else if (!val && defaultServerName) {
-                            ZMDataModel.zmLog(">>>>Importing data from localstorage....");
+                            NVRDataModel.log(">>>>Importing data from localstorage....");
 
 
 
@@ -1152,56 +1152,56 @@ angular.module('zmApp', [
                             var lbpc = $localstorage.get('latestBlogPostChecked');
                             var sgl = $localstorage.getObject('serverGroupList');
 
-                            ZMDataModel.zmLog(">>>Localstorage data found as below:");
-                            ZMDataModel.zmLog("server name:" + dsn);
-                            ZMDataModel.zmLog("default lang :" + dl);
-                            ZMDataModel.zmLog("is first use:" + ifu);
-                            ZMDataModel.zmLog("last update check:" + luc);
-                            ZMDataModel.zmLog("latest blog post check:" + lbpc);
-                            ZMDataModel.zmLog("server group list:" + JSON.stringify(sgl));
+                            NVRDataModel.log(">>>Localstorage data found as below:");
+                            NVRDataModel.log("server name:" + dsn);
+                            NVRDataModel.log("default lang :" + dl);
+                            NVRDataModel.log("is first use:" + ifu);
+                            NVRDataModel.log("last update check:" + luc);
+                            NVRDataModel.log("latest blog post check:" + lbpc);
+                            NVRDataModel.log("server group list:" + JSON.stringify(sgl));
 
                             localforage.setItem('defaultLang', dl)
                                 .then(function () {
 
-                                    ZMDataModel.zmLog(">>>>migrated defaultLang...");
-                                    ZMDataModel.setFirstUse(ifu);
+                                    NVRDataModel.log(">>>>migrated defaultLang...");
+                                    NVRDataModel.setFirstUse(ifu);
                                     return localforage.setItem('isFirstUse', ifu);
                                 })
                                 .then(function () {
-                                    ZMDataModel.zmLog(">>>>migrated isFirstUse...");
+                                    NVRDataModel.log(">>>>migrated isFirstUse...");
                                     return localforage.setItem('lastUpdateCheck', ifu);
                                 })
                                 .then(function () {
-                                    ZMDataModel.zmLog(">>>>migrated lastUpdateCheck...");
+                                    NVRDataModel.log(">>>>migrated lastUpdateCheck...");
                                     return localforage.setItem('latestBlogPostChecked', lbpc);
                                 })
                                 .then(function () {
-                                    ZMDataModel.zmLog(">>>>migrated latestBlogPostChecked...");
+                                    NVRDataModel.log(">>>>migrated latestBlogPostChecked...");
                                     // lets encrypt serverGroupList
-                                    ZMDataModel.zmLog("server group list is " + JSON.stringify(sgl));
+                                    NVRDataModel.log("server group list is " + JSON.stringify(sgl));
                                     var ct = CryptoJS.AES.encrypt(JSON.stringify(sgl), zm.cipherKey);
-                                    ZMDataModel.zmLog("encrypted server group list is " + ct);
+                                    NVRDataModel.log("encrypted server group list is " + ct);
                                     ct = sgl;
                                     return localforage.setItem('serverGroupList', ct);
                                 })
                                 .then(function () {
-                                    ZMDataModel.zmLog(">>>>migrated serverGroupList...");
+                                    NVRDataModel.log(">>>>migrated serverGroupList...");
                                     return localforage.setItem('defaultServerName', dsn);
                                 })
                                 .then(function () {
-                                    ZMDataModel.zmLog(">>>>migrated defaultServerName...");
-                                    ZMDataModel.zmLog(">>>>Migrated all values, continuing...");
-                                    //ZMDataModel.migrationComplete();
+                                    NVRDataModel.log(">>>>migrated defaultServerName...");
+                                    NVRDataModel.log(">>>>Migrated all values, continuing...");
+                                    //NVRDataModel.migrationComplete();
                                     continueInitialInit();
                                 })
                                 .catch(function (err) {
-                                    ZMDataModel.zmLog("Migration error : " + JSON.stringify(err));
+                                    NVRDataModel.log("Migration error : " + JSON.stringify(err));
                                     continueInitialInit();
                                 });
 
                         } else {
-                            ZMDataModel.zmLog(">>>>No data to import....");
-                            //ZMDataModel.migrationComplete();
+                            NVRDataModel.log(">>>>No data to import....");
+                            //NVRDataModel.migrationComplete();
                             continueInitialInit();
                         }
 
@@ -1235,13 +1235,13 @@ angular.module('zmApp', [
                 if (window.cordova) {
                     $cordovaSplashscreen.hide();
 
-                    ZMDataModel.zmLog("Enabling insecure SSL");
+                    NVRDataModel.log("Enabling insecure SSL");
                     cordova.plugins.certificates.trustUnsecureCerts(true);
 
                     cordova.getAppVersion.getVersionNumber().then(function (version) {
                         appVersion = version;
-                        ZMDataModel.zmLog("App Version: " + appVersion);
-                        ZMDataModel.setAppVersion(appVersion);
+                        NVRDataModel.log("App Version: " + appVersion);
+                        NVRDataModel.setAppVersion(appVersion);
                     });
                 }
 
@@ -1249,28 +1249,28 @@ angular.module('zmApp', [
                     if (parseInt(resp.size) > zm.logFileMaxSize) {
 
                         $fileLogger.deleteLogfile().then(function () {
-                            ZMDataModel.zmLog("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
+                            NVRDataModel.log("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
 
                         });
                     }
                 });
 
                 $fileLogger.setStorageFilename(zm.logFile);
-                $fileLogger.setTimestampFormat('MMM d, y ' + ZMDataModel.getTimeFormat());
+                $fileLogger.setTimestampFormat('MMM d, y ' + NVRDataModel.getTimeFormat());
 
 
 
-                if (ZMDataModel.getLogin().disableNative) {
-                    ZMDataModel.zmLog("Disabling native transitions...");
+                if (NVRDataModel.getLogin().disableNative) {
+                    NVRDataModel.log("Disabling native transitions...");
                     $ionicNativeTransitions.enable(false);
                 } else {
-                    ZMDataModel.zmLog("Enabling native transitions...");
+                    NVRDataModel.log("Enabling native transitions...");
                     $ionicNativeTransitions.enable(true);
                 }
                 // At this stage, DataModel.init is not called yet
                 // but I do need to know the language
 
-                ZMDataModel.zmLog("Retrieving language before init is called...");
+                NVRDataModel.log("Retrieving language before init is called...");
                 localforage.getItem("defaultLang")
                     .then(function (val) {
 
@@ -1279,18 +1279,18 @@ angular.module('zmApp', [
 
 
                         if (lang == undefined || lang == null) {
-                            ZMDataModel.zmLog("No language set, switching to en");
+                            NVRDataModel.log("No language set, switching to en");
                             lang = "en";
 
 
                         } else {
-                            ZMDataModel.zmLog("Language stored as:" + lang);
+                            NVRDataModel.log("Language stored as:" + lang);
 
                         }
 
-                        ZMDataModel.setDefaultLanguage(lang, false)
+                        NVRDataModel.setDefaultLanguage(lang, false)
                             .then(function (success) {
-                                ZMDataModel.zmLog(">>>>Language to be used:" + $translate.proposedLanguage());
+                                NVRDataModel.log(">>>>Language to be used:" + $translate.proposedLanguage());
                                 moment.locale($translate.proposedLanguage());
 
                                 // Remember this is before data Init
@@ -1299,7 +1299,7 @@ angular.module('zmApp', [
                                     .then(function (val) {
                                         //console.log ("isFirstUse is " + val);
                                         if (val == null || val == true) {
-                                            ZMDataModel.zmLog("First time detected");
+                                            NVRDataModel.log("First time detected");
                                             $state.go("first-use");
                                         } else {
                                             continueRestOfInit();
@@ -1318,11 +1318,11 @@ angular.module('zmApp', [
 
 
             function continueRestOfInit() {
-                ZMDataModel.zmLog("Language file loaded, continuing with rest");
-                ZMDataModel.init();
+                NVRDataModel.log("Language file loaded, continuing with rest");
+                NVRDataModel.init();
                 EventServer.init();
                 zmCheckUpdates.start();
-                ZMDataModel.zmLog("Setting up POST LOGIN timer");
+                NVRDataModel.log("Setting up POST LOGIN timer");
                 zmAutoLogin.start();
                 setupPauseAndResume();
 
@@ -1333,20 +1333,20 @@ angular.module('zmApp', [
 
 
             function setupPauseAndResume() {
-                ZMDataModel.zmLog("Setting up pause and resume handler AFTER language is loaded...");
+                NVRDataModel.log("Setting up pause and resume handler AFTER language is loaded...");
                 //---------------------------------------------------------------------------
                 // resume handler
                 //----------------------------------------------------------------------------
                 document.addEventListener("resume", function () {
-                    ZMDataModel.zmLog("App is resuming from background");
-                    var forceDelay = ZMDataModel.getLogin().resumeDelay;
-                    ZMDataModel.zmLog(">>> Resume delayed for " + forceDelay + " ms, to wait for network stack...");
+                    NVRDataModel.log("App is resuming from background");
+                    var forceDelay = NVRDataModel.getLogin().resumeDelay;
+                    NVRDataModel.log(">>> Resume delayed for " + forceDelay + " ms, to wait for network stack...");
 
                     $timeout(function () {
-                        var ld = ZMDataModel.getLogin();
+                        var ld = NVRDataModel.getLogin();
 
 
-                        ZMDataModel.setBackground(false);
+                        NVRDataModel.setBackground(false);
                         // don't animate
                         $ionicHistory.nextViewOptions({
                             disableAnimate: true,
@@ -1359,21 +1359,21 @@ angular.module('zmApp', [
                             $rootScope.lastState = $ionicHistory.currentView().stateName;
                             $rootScope.lastStateParam =
                                 $ionicHistory.currentView().stateParams;
-                            ZMDataModel.zmDebug("Last State recorded:" +
+                            NVRDataModel.debug("Last State recorded:" +
                                 JSON.stringify($ionicHistory.currentView()));
 
                             if ($rootScope.lastState == "zm-portal-login") {
-                                ZMDataModel.zmDebug("Last state was portal-login, so forcing montage");
+                                NVRDataModel.debug("Last state was portal-login, so forcing montage");
                                 $rootScope.lastState = "montage";
                             }
 
-                            ZMDataModel.zmDebug("going to portal login");
+                            NVRDataModel.debug("going to portal login");
                             $ionicHistory.nextViewOptions({ disableAnimate: true});
                             $state.go("zm-portal-login");
                         } else {
                             $rootScope.lastState = "";
                             $rootScope.lastStateParam = "";
-                            ZMDataModel.zmDebug("reset lastState to null");
+                            NVRDataModel.debug("reset lastState to null");
                             $ionicHistory.nextViewOptions({ disableAnimate: true});
                             $state.go("zm-portal-login");
                         }
@@ -1386,23 +1386,23 @@ angular.module('zmApp', [
                 // background handler
                 //----------------------------------------------------------------------------
                 document.addEventListener("pause", function () {
-                    ZMDataModel.setBackground(true);
-                    ZMDataModel.setJustResumed(true); // used for window stop
+                    NVRDataModel.setBackground(true);
+                    NVRDataModel.setJustResumed(true); // used for window stop
 
-                    ZMDataModel.zmLog("ROOT APP:App is going into background");
+                    NVRDataModel.log("ROOT APP:App is going into background");
 
                     $interval.cancel($rootScope.eventQueryInterval);
                     $interval.cancel($rootScope.intervalHandle);
 
 
-                    ZMDataModel.zmLog("ROOT APP: Stopping network pull...");
+                    NVRDataModel.log("ROOT APP: Stopping network pull...");
                     window.stop(); // dont call stopNetwork - we need to stop here 
 
 
-                    var ld = ZMDataModel.getLogin();
+                    var ld = NVRDataModel.getLogin();
 
                     if (ld.exitOnSleep && $rootScope.platformOS == "android") {
-                        ZMDataModel.zmLog("user exited app");
+                        NVRDataModel.log("user exited app");
                         ionic.Platform.exitApp();
                     }
 
@@ -1550,9 +1550,9 @@ angular.module('zmApp', [
             requireLogin: true
         },
         resolve: {
-            message: function (ZMDataModel) {
+            message: function (NVRDataModel) {
                 // console.log("Inside app.montage resolve");
-                return ZMDataModel.getMonitors(0);
+                return NVRDataModel.getMonitors(0);
             }
         },
         url: "/monitors",
@@ -1567,9 +1567,9 @@ angular.module('zmApp', [
             requireLogin: true
         },
         resolve: {
-            message: function (ZMDataModel) {
+            message: function (NVRDataModel) {
                 //console.log("Inside app.events resolve");
-                return ZMDataModel.getMonitors(0);
+                return NVRDataModel.getMonitors(0);
             }
         },
         url: "/events/:id",
@@ -1650,9 +1650,9 @@ angular.module('zmApp', [
             requireLogin: true
         },
         resolve: {
-            message: function (ZMDataModel) {
+            message: function (NVRDataModel) {
                 //console.log("Inside app.events resolve");
-                return ZMDataModel.getMonitors(0);
+                return NVRDataModel.getMonitors(0);
             }
         },
         url: "/timeline",
@@ -1666,8 +1666,8 @@ angular.module('zmApp', [
             requireLogin: true
         },
         resolve: {
-            message: function (ZMDataModel) {
-                return ZMDataModel.getMonitors(0);
+            message: function (NVRDataModel) {
+                return NVRDataModel.getMonitors(0);
             }
         },
         url: "/eventserversettings",
@@ -1722,9 +1722,9 @@ angular.module('zmApp', [
             requireLogin: true
         },
         resolve: {
-            message: function (ZMDataModel) {
+            message: function (NVRDataModel) {
                 //console.log("Inside app.events resolve");
-                return ZMDataModel.getMonitors(0);
+                return NVRDataModel.getMonitors(0);
             }
 
         },
@@ -1744,9 +1744,9 @@ angular.module('zmApp', [
             requireLogin: true
         },
         resolve: {
-            message: function (ZMDataModel) {
+            message: function (NVRDataModel) {
                 //console.log("Inside app.events resolve");
-                return ZMDataModel.getMonitors(0);
+                return NVRDataModel.getMonitors(0);
             }
 
         },

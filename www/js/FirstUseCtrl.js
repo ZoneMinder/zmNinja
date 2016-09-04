@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'ZMDataModel', '$rootScope', '$ionicPopup', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, ZMDataModel, $rootScope, $ionicPopup, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVRDataModel', '$rootScope', '$ionicPopup', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVRDataModel, $rootScope, $ionicPopup, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -20,7 +20,7 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
     });
 
     $scope.switchLang = function () {
-        $scope.lang = ZMDataModel.getLanguages();
+        $scope.lang = NVRDataModel.getLanguages();
         $scope.myopt = {
             lang: ""
         };
@@ -43,8 +43,8 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
                 {
                     text: $translate.instant('kButtonOk'),
                     onTap: function (e) {
-                        ZMDataModel.zmLog("Language selected:" + $scope.myopt.lang);
-                        ZMDataModel.setDefaultLanguage($scope.myopt.lang, true);
+                        NVRDataModel.log("Language selected:" + $scope.myopt.lang);
+                        NVRDataModel.setDefaultLanguage($scope.myopt.lang, true);
 
 
                         //return "OK";

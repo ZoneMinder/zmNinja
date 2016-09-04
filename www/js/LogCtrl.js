@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', function ($scope, $rootScope, zm, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', function ($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -17,13 +17,13 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     document.addEventListener("resume", onResume, false);
 
     function onPause() {
-        ZMDataModel.zmDebug("LogCtrl: pause called, killing log timer");
+        NVRDataModel.debug("LogCtrl: pause called, killing log timer");
         // $interval.cancel(intervalLogUpdateHandle);
     }
 
 
     function onResume() {
-        ZMDataModel.zmDebug("LogCtrl: resume called, starting log timer");
+        NVRDataModel.debug("LogCtrl: resume called, starting log timer");
         /*  intervalLogUpdateHandle = $interval(function ()
         {
             loadLogs();
@@ -46,7 +46,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 $fileLogger.deleteLogfile().then(function () {
                     //console.log('Logfile deleted');
                     $fileLogger.setStorageFilename(zm.logFile);
-                    $scope.zmLog.logString = "";
+                    $scope.log.logString = "";
                 });
             }
         });
@@ -97,10 +97,10 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
 
             // do my best to replace sensitive information
-            var loginData = ZMDataModel.getLogin();
+            var loginData = NVRDataModel.getLogin();
 
 
-            // We don't need this anymore as zmLog and zmDebug now strip passwords
+            // We don't need this anymore as log and debug now strip passwords
             /*if (loginData.password !="")
             {
                 var re1 = new RegExp(loginData.password, "g");
@@ -146,7 +146,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
     function callback() {
         // console.log ("EMAIL SENT");
-        ZMDataModel.zmDebug("Email sent callback called");
+        NVRDataModel.debug("Email sent callback called");
     }
 
     function loadLogs() {
@@ -161,12 +161,12 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         $fileLogger.getLogfile().then(function (l) {
 
 
-                $scope.zmLog.logString = l.split('\n').reverse().join('\n');
+                $scope.log.logString = l.split('\n').reverse().join('\n');
                 
                 $ionicLoading.hide();
             },
             function (error) {
-                $scope.zmLog.logString = "Error getting log: " + JSON.stringify(error);
+                $scope.log.logString = "Error getting log: " + JSON.stringify(error);
                 $ionicLoading.hide();
             });
     }
@@ -180,13 +180,13 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
         //console.log("**VIEW ** Log Ctrl Entered");
-        ZMDataModel.setAwake(false);
+        NVRDataModel.setAwake(false);
 
-        $scope.zmLog = {
+        $scope.log = {
             logString: ""
         };
 
-        $scope.zmAppVersion = ZMDataModel.getAppVersion();
+        $scope.zmAppVersion = NVRDataModel.getAppVersion();
 
 
         /* intervalLogUpdateHandle = $interval(function ()

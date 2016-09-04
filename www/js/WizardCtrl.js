@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry, URI */
 
-angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm', '$ionicLoading', 'WizardHandler', '$translate', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading, WizardHandler, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm', '$ionicLoading', 'WizardHandler', '$translate', function ($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading, WizardHandler, $translate) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -91,7 +91,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                         }
 
                         if (foundMid != -1) {
-                            ZMDataModel.zmDebug("zmWizard - getFirstMonitor returned " + foundMid);
+                            NVRDataModel.debug("zmWizard - getFirstMonitor returned " + foundMid);
                             d.resolve(foundMid);
                             return d.promise;
                         } else {
@@ -126,18 +126,18 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             var t = "";
             if (tail) t = tail;
             //$ionicLoading.show({template: 'trying ' + urls[0].server});
-            ZMDataModel.zmLog("zmWizard test.." + urls[0] + t);
+            NVRDataModel.log("zmWizard test.." + urls[0] + t);
             return $http.get(urls[0] + t).then(function () {
-                ZMDataModel.zmLog("Success:  on " + urls[0] + t);
+                NVRDataModel.log("Success:  on " + urls[0] + t);
                 //$ionicLoading.hide();
                 return urls[0];
             }, function (err) {
-                ZMDataModel.zmLog("zmWizard:Failed on " + urls[0] + t + " with error " + JSON.stringify(err));
+                NVRDataModel.log("zmWizard:Failed on " + urls[0] + t + " with error " + JSON.stringify(err));
                 return findFirstReachableUrl(urls.slice(1), tail);
             });
         } else {
             // $ionicLoading.hide();
-            ZMDataModel.zmLog("zmWizard: findFirst returned no success");
+            NVRDataModel.log("zmWizard: findFirst returned no success");
             d.reject("No reachable URL");
             return d.promise;
 
@@ -176,7 +176,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
         var baseUri = c.scheme + "://" + p1 + c.host + p2;
 
-        ZMDataModel.zmLog("zmWizard CGI: baseURL is " + baseUri);
+        NVRDataModel.log("zmWizard CGI: baseURL is " + baseUri);
 
         var a4 = baseUri + "/cgi-bin/zm"; // another one I found with a CentOS 6 guy
         var a3 = baseUri + "/zm/cgi-bin"; // ubuntu/debian
@@ -187,18 +187,18 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var urls = [a1, a2, a3, a4];
 
 
-        ZMDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
+        NVRDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
             .then(function (data) {
                     // remove zms or nph-zms
                     var path = data.trim();
                     path = path.replace("/nph-zms", "");
                     path = path.replace("/zms", "");
                     urls.push(baseUri.trim() + path);
-                    ZMDataModel.zmLog("zmWizard: getPathZMS succeeded, adding " + baseUri + path + " to things to try");
+                    NVRDataModel.log("zmWizard: getPathZMS succeeded, adding " + baseUri + path + " to things to try");
                     continueCgi(urls);
                 },
                 function (error) {
-                    ZMDataModel.zmLog("zmWizard: getPathZMS failed, but continuing...");
+                    NVRDataModel.log("zmWizard: getPathZMS failed, but continuing...");
                     continueCgi(urls);
                 });
 
@@ -216,19 +216,19 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                         if ($scope.wizard.useauth && $scope.wizard.usezmauth) {
 
                             var ck = Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
-                            ZMDataModel.getAuthKey(success, ck)
+                            NVRDataModel.getAuthKey(success, ck)
                                 .then(function (success) {
                                         if (success == "") {
-                                            ZMDataModel.zmLog("getAuthKey returned null, so going user=&pwd= way");
+                                            NVRDataModel.log("getAuthKey returned null, so going user=&pwd= way");
                                             tail += "&user=" + $scope.wizard.zmuser + "&pass=" + $scope.wizard.zmpassword;
                                         } else {
                                             tail += success;
                                         }
-                                        ZMDataModel.zmLog("auth computed is : " + tail);
+                                        NVRDataModel.log("auth computed is : " + tail);
                                         proceedwithCgiAfterAuth(urls, tail);
                                     },
                                     function (error) {
-                                        ZMDataModel.zmLog("Should never come here, getAuthKey doesn't return error");
+                                        NVRDataModel.log("Should never come here, getAuthKey doesn't return error");
 
                                     });
 
@@ -250,7 +250,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                             findFirstReachableUrl(urls, tail)
                                 .then(function (success) {
                                         $ionicLoading.hide();
-                                        ZMDataModel.zmLog("Valid cgi-bin found with: " + success);
+                                        NVRDataModel.log("Valid cgi-bin found with: " + success);
                                         $scope.wizard.streamingURL = success;
                                         $scope.wizard.streamingValidText = "cgi-bin: " + $scope.wizard.streamingURL;
                                         $scope.wizard.streamingColor = "#16a085";
@@ -310,7 +310,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
         findFirstReachableUrl(apilist, '/host/getVersion.json')
             .then(function (success) {
-                    ZMDataModel.zmLog("Valid API response found with:" + success);
+                    NVRDataModel.log("Valid API response found with:" + success);
                     $scope.wizard.apiURL = success;
 
 
@@ -431,7 +431,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         $scope.wizard.fqportal = u;
 
         u = u + '/index.php';
-        ZMDataModel.zmLog("Wizard: login url is " + u);
+        NVRDataModel.log("Wizard: login url is " + u);
 
         // now lets login
 
@@ -444,7 +444,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
         // logout first for the adventurers amongst us who must
         // use it even after logging in
-        ZMDataModel.zmLog("zmWizard: logging out");
+        NVRDataModel.log("zmWizard: logging out");
         $ionicLoading.show({
             template: $translate.instant('kCleaningUp') + "...",
             noBackdrop: true,
@@ -454,7 +454,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             .then(function (ans) {
                 // login now
                 $ionicLoading.hide();
-                ZMDataModel.zmLog("zmWizard: logging in with " + u + " " + zmu);
+                NVRDataModel.log("zmWizard: logging in with " + u + " " + zmu);
 
                 // The logic will be:
                 // Login then do an api detect and cgi-detect together
@@ -466,7 +466,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 login(u, zmu, zmp)
                     .then(function (success) {
                             $ionicLoading.hide();
-                            ZMDataModel.zmLog("zmWizard: login succeeded");
+                            NVRDataModel.log("zmWizard: login succeeded");
 
                             // API Detection
                             $ionicLoading.show({
@@ -477,7 +477,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                             detectapi()
                                 .then(function (success) {
                                         $ionicLoading.hide();
-                                        ZMDataModel.zmLog("zmWizard: API succeeded");
+                                        NVRDataModel.log("zmWizard: API succeeded");
 
                                         $ionicLoading.show({
                                             template: $translate.instant('kDiscoveringCGI') + "...",
@@ -499,7 +499,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                                     },
                                     function (error) {
                                         $ionicLoading.hide();
-                                        ZMDataModel.zmLog("zmWizard: api failed");
+                                        NVRDataModel.log("zmWizard: api failed");
 
                                         // return true here because we want to progress
                                         return d.resolve(true);
@@ -511,7 +511,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                         // if login failed, don't progress in the wizard
                         function (error) {
                             $ionicLoading.hide();
-                            ZMDataModel.zmLog("zmWizard: login failed");
+                            NVRDataModel.log("zmWizard: login failed");
                             $scope.wizard.portalValidText = $translate.instant('kPortalLoginUnsuccessful');
                             $scope.wizard.portalColor = "#e74c3c";
                             return d.resolve(true);
@@ -542,7 +542,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     //--------------------------------------------------------------------------
 
     $scope.exitAuth = function () {
-        ZMDataModel.zmLog("Wizard: validating auth syntax");
+        NVRDataModel.log("Wizard: validating auth syntax");
         if ($scope.wizard.useauth) {
             if (!$scope.wizard.usezmauth && !$scope.wizard.usebasicauth) {
                 $rootScope.zmPopup = SecuredPopups.show('show', {
@@ -596,7 +596,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     //--------------------------------------------------------------------------
 
     $scope.exitPortal = function () {
-        ZMDataModel.zmLog("Wizard: validating portal url syntax");
+        NVRDataModel.log("Wizard: validating portal url syntax");
 
         if (!$scope.wizard.portalurl) {
             $rootScope.zmPopup = SecuredPopups.show('show', {
@@ -632,7 +632,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 buttons: [{
                     text: $translate.instant('kButtonOk'),
                     onTap: function (e) {
-                        ZMDataModel.zmDebug("Protocol selected:" + $scope.myproto.proto);
+                        NVRDataModel.debug("Protocol selected:" + $scope.myproto.proto);
                         $scope.wizard.portalurl = $scope.myproto.proto + stripProto($scope.wizard.portalurl);
                     }
 
@@ -644,7 +644,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
         $scope.wizard.portalurl = $scope.wizard.portalurl.toLowerCase().trim();
 
-        ZMDataModel.zmLog("Wizard: stripped url:" + $scope.wizard.portalurl);
+        NVRDataModel.log("Wizard: stripped url:" + $scope.wizard.portalurl);
 
         var c = URI.parse($scope.wizard.portalurl);
 
@@ -674,7 +674,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         if (c.host) $scope.wizard.portalurl += c.host;
         if (c.port) $scope.wizard.portalurl += ":" + c.port;
         if (c.path) $scope.wizard.portalurl += c.path;
-        ZMDataModel.zmLog("Wizard: normalized url:" + $scope.wizard.portalurl);
+        NVRDataModel.log("Wizard: normalized url:" + $scope.wizard.portalurl);
         return true;
     };
 

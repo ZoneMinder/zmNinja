@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,moment*/
 
-angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$rootScope', '$ionicModal', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$http', 'zm', function ($scope, $rootScope, $ionicModal, ZMDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $http, zm) {
+angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$http', 'zm', function ($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $http, zm) {
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
@@ -36,13 +36,13 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
         // console.log("**VIEW ** News Ctrl Entered");
-        ZMDataModel.setAwake(false);
+        NVRDataModel.setAwake(false);
 
 
     });
 
     $scope.isUnread = function (itemdate) {
-        var lastDate = ZMDataModel.getLatestBlogPostChecked();
+        var lastDate = NVRDataModel.getLatestBlogPostChecked();
         //get("latestBlogPostChecked");
         if (!lastDate) return true;
         var mLastDate = moment(lastDate);
@@ -56,23 +56,23 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
 
     $scope.loadPost = function (item, itemdate) {
         var lastDate =
-            ZMDataModel.getLatestBlogPostChecked(); //zmStorageService.get("latestBlogPostChecked");
+            NVRDataModel.getLatestBlogPostChecked(); //zmStorageService.get("latestBlogPostChecked");
 
 
         if (!lastDate) {
-            ZMDataModel.zmDebug("First time checking blog posts, I see");
-            ZMDataModel.setLatestBlogPostChecked(itemdate);
+            NVRDataModel.debug("First time checking blog posts, I see");
+            NVRDataModel.setLatestBlogPostChecked(itemdate);
             //zmStorageService.set("latestBlogPostChecked", itemdate);
         } else {
-            ZMDataModel.zmDebug("last  post checked is " + lastDate);
-            ZMDataModel.zmDebug("current post dated is " + itemdate);
+            NVRDataModel.debug("last  post checked is " + lastDate);
+            NVRDataModel.debug("current post dated is " + itemdate);
 
             var mLastDate = moment(lastDate);
             var mItemDate = moment(itemdate);
             if (mItemDate.diff(mLastDate) > 0) {
-                ZMDataModel.zmDebug("Updating lastDate to this post");
+                NVRDataModel.debug("Updating lastDate to this post");
 
-                ZMDataModel.setLatestBlogPostChecked(itemdate); //zmStorageService.set("latestBlogPostChecked", itemdate);
+                NVRDataModel.setLatestBlogPostChecked(itemdate); //zmStorageService.set("latestBlogPostChecked", itemdate);
 
                 if (itemdate == $scope.newsItems[0].date) {
                     // we are reading the latest post

@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory', '$state', 'SecuredPopups', '$translate', function ($scope, $rootScope, $ionicModal, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory', '$state', 'SecuredPopups', '$translate', function ($scope, $rootScope, $ionicModal, zm, NVRDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate) {
 
 
     $scope.openMenu = function () {
@@ -49,9 +49,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
         //console.log("**VIEW ** DevOptions Ctrl Entered");
-        $scope.loginData = ZMDataModel.getLogin();
+        $scope.loginData = NVRDataModel.getLogin();
 
-        ZMDataModel.setAwake(false);
+        NVRDataModel.setAwake(false);
     });
 
     //------------------------------------------------------------------
@@ -59,7 +59,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     //------------------------------------------------------------------
 
     function saveDevOptions() {
-        ZMDataModel.zmDebug("SaveDevOptions: called");
+        NVRDataModel.debug("SaveDevOptions: called");
 
 
 
@@ -68,7 +68,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         }
 
         if (parseInt($scope.loginData.refreshSec) <= 0) {
-            ZMDataModel.zmDebug("SaveDevOptions: refresh sec was too low at " +
+            NVRDataModel.debug("SaveDevOptions: refresh sec was too low at " +
                 $scope.loginData.refreshSec + " reset to 1");
             $scope.loginData.refreshSec = 1;
 
@@ -87,9 +87,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         }
 
 
-        ZMDataModel.zmDebug("SaveDevOptions: Saving to disk");
-        ZMDataModel.setLogin($scope.loginData);
-        ZMDataModel.getMonitors(1);
+        NVRDataModel.debug("SaveDevOptions: Saving to disk");
+        NVRDataModel.setLogin($scope.loginData);
+        NVRDataModel.getMonitors(1);
 
 
     }
