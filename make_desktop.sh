@@ -15,7 +15,10 @@ for i in "${app_ports[@]}"
 do
 if [ -d "$i" ]; then
 	DIRNAME=`expr "$i" : '\.\./\(.*\)/'`
-	ZIPNAME=$DIRNAME".zip"
+        echo "Dirname:" $DIRNAME
+        PDIRNAME=`echo "$DIRNAME" | sed "s/\/Contents//"  `
+        echo "Pdirname:" $PDIRNAME
+        ZIPNAME="${PDIRNAME}_${APPVER}.zip"
 	echo "------------------------------------------------------------------------"
 	echo "Working on packaging $i"
 	echo "------------------------------------------------------------------------"
@@ -34,8 +37,10 @@ if [ -d "$i" ]; then
 	exe asar pack app app.asar
 	exe rm -fr app
 	exe cd - 
-	#echo "creating build ZIP"
+        #OSX ditto does a better job than zip!
+        #echo "Creating ZIP $ZIPNAME..."
 	#exe zip -r ../$ZIPNAME ../$DIRNAME
+
 	echo "Done!"
 	
 else
