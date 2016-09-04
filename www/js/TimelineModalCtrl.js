@@ -6,7 +6,7 @@
 
 
 
-angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '$rootScope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, ZMDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
+angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
 
 
 
@@ -25,7 +25,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     var current_options;
     var btype;
 
-    $scope.graphType = ZMDataModel.getLogin().timelineModalGraphType;
+    $scope.graphType = NVRDataModel.getLogin().timelineModalGraphType;
     //$scope.graphType = "all";
     $scope.errorDetails = "";
 
@@ -58,7 +58,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
     $rootScope.$on("auth-success", function () {
 
-        ZMDataModel.zmDebug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
+        NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
 
 
     });
@@ -80,7 +80,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         if ($scope.graphType == $translate.instant('kGraphAll')) {
             current_data = onlyalarm_data;
             $scope.graphType = $translate.instant('kGraphAlarmed');
-            ZMDataModel.zmDebug("Alarm array has " + onlyalarm_data.labels.length + " frames");
+            NVRDataModel.debug("Alarm array has " + onlyalarm_data.labels.length + " frames");
             btype = 'bar';
             //console.log (JSON.stringify(onlyalarm_data));
 
@@ -91,11 +91,11 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
             btype = 'line';
         }
 
-        ZMDataModel.zmLog("Switching graph type to " + $scope.graphType);
+        NVRDataModel.log("Switching graph type to " + $scope.graphType);
 
-        var ld = ZMDataModel.getLogin();
+        var ld = NVRDataModel.getLogin();
         ld.timelineModalGraphType = $scope.graphType;
-        ZMDataModel.setLogin(ld);
+        NVRDataModel.setLogin(ld);
 
 
         $timeout(function () {
@@ -165,18 +165,18 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
         $scope.alarm_images = [];
         $scope.graphWidth = $rootScope.devWidth - 30;
-        ZMDataModel.zmLog("Setting init graph width to " + $scope.graphWidth);
+        NVRDataModel.log("Setting init graph width to " + $scope.graphWidth);
         $scope.dataReady = false;
 
-        ZMDataModel.getKeyConfigParams(0)
+        NVRDataModel.getKeyConfigParams(0)
             .then(function (data) {
                 //console.log ("***GETKEY: " + JSON.stringify(data));
                 eventImageDigits = parseInt(data);
-                ZMDataModel.zmLog("Image padding digits reported as " + eventImageDigits);
+                NVRDataModel.log("Image padding digits reported as " + eventImageDigits);
             });
 
         $scope.eventdetails = $translate.instant('kLoading') + "...";
-        $scope.mName = ZMDataModel.getMonitorName($scope.event.Event.MonitorId);
+        $scope.mName = NVRDataModel.getMonitorName($scope.event.Event.MonitorId);
         $scope.humanizeTime = humanizeTime($scope.event.Event.StartTime);
         processEvent();
         //$scope.eventdetails = JSON.stringify($scope.event);
@@ -190,9 +190,9 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     function processEvent() {
         var eid = $scope.event.Event.Id;
         //eid = 22302;
-        var ld = ZMDataModel.getLogin();
+        var ld = NVRDataModel.getLogin();
         var apiurl = ld.apiurl + "/events/" + eid + ".json";
-        ZMDataModel.zmLog("Getting " + apiurl);
+        NVRDataModel.log("Getting " + apiurl);
         $http.get(apiurl)
             .then(function (success) {
                     //$scope.eventdetails = JSON.stringify(success);
@@ -200,7 +200,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                 },
                 function (error) {
                     $scope.errorDetails = $translate.instant('kGraphError');
-                    ZMDataModel.zmLog("Error in timeline frames " + JSON.stringify(error));
+                    NVRDataModel.log("Error in timeline frames " + JSON.stringify(error));
                 });
     }
 
@@ -296,7 +296,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         if ($scope.graphWidth < $rootScope.devWidth)
             $scope.graphWidth = $rootScope.devWidth;
 
-        // ZMDataModel.zmLog ("Changing graph width to " + $scope.graphWidth);
+        // NVRDataModel.log ("Changing graph width to " + $scope.graphWidth);
 
         for (var i = 0; i < event.event.Frame.length; i++) {
 
@@ -343,7 +343,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         cv = document.getElementById("tcchart");
         ctx = cv.getContext("2d");
 
-        if (ZMDataModel.getLogin().timelineModalGraphType == $translate.instant('kGraphAll')) {
+        if (NVRDataModel.getLogin().timelineModalGraphType == $translate.instant('kGraphAll')) {
             btype = 'line';
             current_data = data;
         } else {
@@ -381,7 +381,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                 id: items.id,
                 fname: items.fname,
                 score: items.score,
-                time: moment(items.x).format("MMM D," + ZMDataModel.getTimeFormatSec()),
+                time: moment(items.x).format("MMM D," + NVRDataModel.getTimeFormatSec()),
                 eid: items.eid
             });
         });
@@ -396,7 +396,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
     function computeRelativePath(event) {
         var relativePath = "";
-        var loginData = ZMDataModel.getLogin();
+        var loginData = NVRDataModel.getLogin();
         var str = event.Event.StartTime;
         var yy = moment(str).format('YY');
         var mm = moment(str).format('MM');
@@ -421,7 +421,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
     function computeBasePath(event) {
         var basePath = "";
-        var loginData = ZMDataModel.getLogin();
+        var loginData = NVRDataModel.getLogin();
         var str = event.Event.StartTime;
         var yy = moment(str).format('YY');
         var mm = moment(str).format('MM');

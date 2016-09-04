@@ -6,7 +6,7 @@
 
 // FIXME: This is a copy of montageCtrl - needs a lot of code cleanup
 
-angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$scope', '$rootScope', 'ZMDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$translate', function ($scope, $rootScope, ZMDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$scope', '$rootScope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$translate', function ($scope, $rootScope, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $translate) {
 
 
     //--------------------------------------
@@ -14,7 +14,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //---------------------------------------
 
     $scope.prettifyDate = function (str) {
-        return moment(str).format('MMM Do, YYYY ' + ZMDataModel.getTimeFormat());
+        return moment(str).format('MMM Do, YYYY ' + NVRDataModel.getTimeFormat());
     };
 
     function prettifyDate(str) {
@@ -28,7 +28,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
 
     $scope.prettify = function (str) {
-        return moment(str).format(ZMDataModel.getTimeFormat() + ' on MMMM Do YYYY');
+        return moment(str).format(NVRDataModel.getTimeFormat() + ' on MMMM Do YYYY');
     };
 
 
@@ -51,7 +51,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
             var cmd = $scope.MontageMonitors[m].Monitor.isPaused ? 1 : 2;
 
-            ZMDataModel.zmDebug("Sending CMD:" + cmd + " for monitor " + $scope.MontageMonitors[m].Monitor.Name);
+            NVRDataModel.debug("Sending CMD:" + cmd + " for monitor " + $scope.MontageMonitors[m].Monitor.Name);
             controlEventStream(cmd, "", $scope.MontageMonitors[m].Monitor.connKey, -1);
         }
     };
@@ -81,17 +81,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     function footerCollapse() {
         // console.log ("**************** COLLAPSE CALLED ***************");
         if (readyToRun == false) {
-            ZMDataModel.zmDebug("fake call to footerCollapse - ignoring");
+            NVRDataModel.debug("fake call to footerCollapse - ignoring");
             return;
         }
 
         $ionicSideMenuDelegate.canDragContent(true);
 
-        ZMDataModel.stopNetwork("MontageHistory-footerCollapse");
-        var ld = ZMDataModel.getLogin();
+        NVRDataModel.stopNetwork("MontageHistory-footerCollapse");
+        var ld = NVRDataModel.getLogin();
 
         $scope.sliderVal.realRate = $scope.sliderVal.rate * 100;
-        //ZMDataModel.zmDebug ("Playback rate is:"  + $scope.sliderVal.realRate);
+        //NVRDataModel.debug ("Playback rate is:"  + $scope.sliderVal.realRate);
 
         var TimeObjectFrom = moment($scope.datetimeValueFrom.value).format("YYYY-MM-DD HH:mm");
         var TimeObjectTo = moment($scope.datetimeValueTo.value).format('YYYY-MM-DD HH:mm');
@@ -106,7 +106,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
             // generate new connKeys if timeline changes
             if ($scope.MontageMonitors[i].Monitor.eventUrl != 'img/noevent.png') {
-                ZMDataModel.zmLog("footerCollapse: Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey + " because url is " + $scope.MontageMonitors[i].Monitor.eventUrl);
+                NVRDataModel.log("footerCollapse: Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey + " because url is " + $scope.MontageMonitors[i].Monitor.eventUrl);
                 var tmpCK = angular.copy($scope.MontageMonitors[i].Monitor.connKey);
                 timedControlEventStream(2500, 17, "", tmpCK, -1);
                 $scope.MontageMonitors[i].Monitor.eventUrl = "img/noevent.png";
@@ -124,13 +124,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         // this should only bring up events that span that time
         apiurl = ld.apiurl + "/events/index/StartTime >=:" + TimeObjectFrom + "/EndTime <=:" + TimeObjectTo + ".json";
 
-        ZMDataModel.zmLog("Event timeline API is " + apiurl);
+        NVRDataModel.log("Event timeline API is " + apiurl);
 
         $http.get(apiurl)
             .success(function (data) {
 
-                var ld = ZMDataModel.getLogin();
-                ZMDataModel.zmDebug("Got " + data.events.length + "new history events...");
+                var ld = NVRDataModel.getLogin();
+                NVRDataModel.debug("Got " + data.events.length + "new history events...");
                 var eid, mid, stime;
                 for (i = 0; i < data.events.length; i++) {
                     mid = data.events[i].Event.MonitorId;
@@ -161,14 +161,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 // make sure we do our best to get that duration for all monitors
                 // in the above call, is possible some did not make the cut in the first page
 
-                ZMDataModel.zmLog("Making sure all monitors have a fair chance...");
+                NVRDataModel.log("Making sure all monitors have a fair chance...");
                 for (i = 0; i < $scope.MontageMonitors.length; i++) {
                     if ($scope.MontageMonitors[i].Monitor.eventUrl == 'img/noevent.png') {
 
 
                         var indivGrab = ld.apiurl + "/events/index/MonitorId:" + $scope.MontageMonitors[i].Monitor.Id + "/StartTime >=:" + TimeObjectFrom + "/EndTime <=:" + TimeObjectTo + ".json";
 
-                        ZMDataModel.zmDebug("Monitor " + $scope.MontageMonitors[i].Monitor.Id + ":" + $scope.MontageMonitors[i].Monitor.Name + " does not have events, trying " + indivGrab);
+                        NVRDataModel.debug("Monitor " + $scope.MontageMonitors[i].Monitor.Id + ":" + $scope.MontageMonitors[i].Monitor.Name + " does not have events, trying " + indivGrab);
 
                         getExpandedEvents(i, indivGrab);
 
@@ -180,20 +180,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
             })
             .error(function (data) {
-                ZMDataModel.zmDebug("history  ERROR:" + JSON.stringify(data));
+                NVRDataModel.debug("history  ERROR:" + JSON.stringify(data));
 
             });
 
 
         function getExpandedEvents(i, indivGrab) {
-            var ld = ZMDataModel.getLogin();
+            var ld = NVRDataModel.getLogin();
             // console.log ("EXPANDED EVENT " + i + " " + indivGrab);
             $http.get(indivGrab)
                 .success(function (data) {
                     // console.log ("EXPANDED DATA FOR MONITOR " + i + JSON.stringify(data));
                     if (data.events.length > 0) {
 
-                        if (!ZMDataModel.isBackground()) {
+                        if (!NVRDataModel.isBackground()) {
 
                             $scope.MontageMonitors[i].Monitor.eventUrl = ld.streamingurl + "/nph-zms?source=event&mode=jpeg&event=" + data.events[0].Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[i].Monitor.connKey + "&scale=" + ld.montageHistoryQuality + "&rand=" + $rootScope.rand;
 
@@ -203,11 +203,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
                             $scope.MontageMonitors[i].Monitor.eventUrlTime = data.events[0].Event.StartTime;
 
-                            ZMDataModel.zmLog("Found expanded event " + data.events[0].Event.Id + " for monitor " + $scope.MontageMonitors[i].Monitor.Id);
+                            NVRDataModel.log("Found expanded event " + data.events[0].Event.Id + " for monitor " + $scope.MontageMonitors[i].Monitor.Id);
                         } else {
                             // $scope.MontageMonitors[i].eventUrl="img/noevent.png";
                             //    $scope.MontageMonitors[i].eventUrlTime = "";
-                            //    ZMDataModel.zmLog ("Setting img src to null as data received in background");
+                            //    NVRDataModel.log ("Setting img src to null as data received in background");
                         }
                     }
 
@@ -235,7 +235,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 $scope.MontageMonitors[i].Monitor.Function != 'None' &&
                 $scope.MontageMonitors[i].Monitor.listDisplay != 'noshow' &&
                 $scope.MontageMonitors[i].Monitor.Enabled != '0') {
-                ZMDataModel.zmDebug("Checking event status for " + $scope.MontageMonitors[i].Monitor.Name + ":" + $scope.MontageMonitors[i].Monitor.eventUrl + ":" + $scope.MontageMonitors[i].Monitor.Function + ":" + $scope.MontageMonitors[i].Monitor.listDisplay);
+                NVRDataModel.debug("Checking event status for " + $scope.MontageMonitors[i].Monitor.Name + ":" + $scope.MontageMonitors[i].Monitor.eventUrl + ":" + $scope.MontageMonitors[i].Monitor.Function + ":" + $scope.MontageMonitors[i].Monitor.listDisplay);
                 controlEventStream('99', '', $scope.MontageMonitors[i].Monitor.connKey, i);
 
             }
@@ -261,7 +261,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     function timedControlEventStream(mTime, cmd, disp, connkey, ndx) {
         var mMtime = mTime || 2000;
-        ZMDataModel.zmDebug("Deferring control " + cmd + " by " + mMtime);
+        NVRDataModel.debug("Deferring control " + cmd + " by " + mMtime);
         $timeout(function () {
             subControlStream(cmd, connkey);
 
@@ -269,7 +269,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     }
 
     function subControlStream(cmd, connkey) {
-        var loginData = ZMDataModel.getLogin();
+        var loginData = NVRDataModel.getLogin();
         var myauthtoken = $rootScope.authSession.replace("&auth=", "");
         //&auth=
         var req = $http({
@@ -302,12 +302,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         });
 
         req.success(function (resp) {
-            ZMDataModel.zmDebug("subControl success:" + JSON.stringify(resp));
+            NVRDataModel.debug("subControl success:" + JSON.stringify(resp));
         });
 
 
         req.error(function (resp) {
-            ZMDataModel.zmDebug("subControl error:" + JSON.stringify(resp));
+            NVRDataModel.debug("subControl error:" + JSON.stringify(resp));
         });
     }
 
@@ -323,7 +323,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 duration: zm.loadingTimeout,
             });
         }
-        var loginData = ZMDataModel.getLogin();
+        var loginData = NVRDataModel.getLogin();
 
         /*
         var CMD_NONE = 0;
@@ -390,17 +390,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             // console.log("SUCCESS FOR: " + JSON.stringify(resp));
 
             if (resp.result == "Ok" && ndx != -1) {
-                var ld = ZMDataModel.getLogin();
+                var ld = NVRDataModel.getLogin();
                 var apiurl = ld.apiurl + "/events/" + resp.status.event + ".json";
                 //console.log ("API " + apiurl);
                 $http.get(apiurl)
                     .success(function (data) {
                         var currentEventTime = moment(data.event.Event.StartTime);
                         var maxTime = moment($scope.datetimeValueTo.value);
-                        //ZMDataModel.zmDebug ("Monitor: " + $scope.MontageMonitors[ndx].Monitor.Id + " max time="+maxTime + "("+$scope.datetimeValueTo.value+")"+ " current="+currentEventTime + "("+data.event.Event.StartTime+")");
+                        //NVRDataModel.debug ("Monitor: " + $scope.MontageMonitors[ndx].Monitor.Id + " max time="+maxTime + "("+$scope.datetimeValueTo.value+")"+ " current="+currentEventTime + "("+data.event.Event.StartTime+")");
                         if ($scope.MontageMonitors[ndx].Monitor.eventUrlTime != data.event.Event.StartTime && currentEventTime.diff(maxTime) <= 0) {
 
-                            var ld = ZMDataModel.getLogin();
+                            var ld = NVRDataModel.getLogin();
                             var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id + "-timeline"));
                             element.removeClass('animated flipInX');
                             element.addClass('animated flipOutX');
@@ -413,7 +413,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                             }, 700);
 
                         } else if (currentEventTime.diff(maxTime) > 0) {
-                            ZMDataModel.zmDebug(">>>>>>>>Monitor " + $scope.MontageMonitors[ndx].Monitor.Id + " event time of " + data.event.Event.StartTime + " exceeds " + $scope.datetimeValueTo.value + " stopping...");
+                            NVRDataModel.debug(">>>>>>>>Monitor " + $scope.MontageMonitors[ndx].Monitor.Id + " event time of " + data.event.Event.StartTime + " exceeds " + $scope.datetimeValueTo.value + " stopping...");
                             subControlStream(17, connkey);
 
 
@@ -429,7 +429,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
         req.error(function (resp) {
             //console.log("ERROR: " + JSON.stringify(resp));
-            ZMDataModel.zmLog("Error sending event command " + JSON.stringify(resp), "error");
+            NVRDataModel.log("Error sending event command " + JSON.stringify(resp), "error");
         });
     }
 
@@ -440,10 +440,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
 
-    $scope.timeFormat = "yyyy-MM-dd " + ZMDataModel.getTimeFormat();
+    $scope.timeFormat = "yyyy-MM-dd " + NVRDataModel.getTimeFormat();
     $scope.displayDateTimeSliders = true;
     $scope.showtimers = true;
-    $scope.loginData = ZMDataModel.getLogin();
+    $scope.loginData = NVRDataModel.getLogin();
 
 
 
@@ -540,8 +540,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     $scope.slider = {};
 
-    //console.log ("************ HISTORY " + ZMDataModel.getMontageSize());
-    $scope.slider.monsize = ZMDataModel.getMontageSize();
+    //console.log ("************ HISTORY " + NVRDataModel.getMontageSize());
+    $scope.slider.monsize = NVRDataModel.getMontageSize();
     $scope.revMonSize = 11 - parseInt($scope.slider.monsize);
 
     // The difference between old and original is this:
@@ -572,22 +572,22 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     }
 
     // console.log ("TEMP MONITORS IS " + JSON.stringify(tempMonitors));
-    var tempResponse = ZMDataModel.applyMontageMonitorPrefs(message, 0);
+    var tempResponse = NVRDataModel.applyMontageMonitorPrefs(message, 0);
     $scope.monitors = tempResponse[0];
     montageOrder = tempResponse[1];
     hiddenOrder = tempResponse[2];
 
-    ZMDataModel.zmLog("Inside MontageHistoryCtrl:We found " + $scope.monitors.length + " monitors");
+    NVRDataModel.log("Inside MontageHistoryCtrl:We found " + $scope.monitors.length + " monitors");
 
-    $scope.MontageMonitors = ZMDataModel.applyMontageMonitorPrefs(message, 1)[0];
+    $scope.MontageMonitors = NVRDataModel.applyMontageMonitorPrefs(message, 1)[0];
 
-    var loginData = ZMDataModel.getLogin();
+    var loginData = NVRDataModel.getLogin();
 
     $scope.packMontage = loginData.packMontage;
 
 
     // init monitors
-    ZMDataModel.zmDebug(">>Initializing connkeys and images...");
+    NVRDataModel.debug(">>Initializing connkeys and images...");
     for (i = 0; i < $scope.MontageMonitors.length; i++) {
         //$scope.MontageMonitors[i].Monitor.connKey='';
 
@@ -613,12 +613,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         e.preventDefault();
         if ($scope.modal && $scope.modal.isShown()) {
             // switch off awake, as liveview is finished
-            ZMDataModel.zmDebug("Modal is open, closing it");
-            ZMDataModel.setAwake(false);
+            NVRDataModel.debug("Modal is open, closing it");
+            NVRDataModel.setAwake(false);
             $scope.modal.remove();
             $scope.isModalActive = false;
         } else {
-            ZMDataModel.zmDebug("Modal is closed, so toggling or exiting");
+            NVRDataModel.debug("Modal is closed, so toggling or exiting");
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
                 $ionicSideMenuDelegate.toggleLeft();
 
@@ -658,7 +658,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     if (loginData.montageArraySize == '0') {
 
         for (i = 0; i < $scope.monitors.length; i++) {
-            $scope.monitorSize.push(ZMDataModel.getMontageSize());
+            $scope.monitorSize.push(NVRDataModel.getMontageSize());
             $scope.scaleDirection.push(1);
         }
     } else // recover previous settings
@@ -680,11 +680,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // $scope.monitorSize = monitorSize;
     // $scope.scaleDirection = scaleDirection;
 
-    $scope.LoginData = ZMDataModel.getLogin();
+    $scope.LoginData = NVRDataModel.getLogin();
     $scope.monLimit = $scope.LoginData.maxMontage;
 
     if ($rootScope.platformOS != 'ios') {
-        ZMDataModel.zmLog("Limiting montage to 5, thanks to Chrome's stupid connection limit");
+        NVRDataModel.log("Limiting montage to 5, thanks to Chrome's stupid connection limit");
         $scope.monLimit = 5;
     }
 
@@ -702,25 +702,25 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     });
 
 
-    var ld = ZMDataModel.getLogin();
+    var ld = NVRDataModel.getLogin();
 
     //console.log ("MONITORS " + JSON.stringify($scope.monitors));
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-    ZMDataModel.getAuthKey($rootScope.validMonitorId)
+    NVRDataModel.getAuthKey($rootScope.validMonitorId)
         .then(function (success) {
                 $ionicLoading.hide();
                 //console.log(success);
                 $rootScope.authSession = success;
-                ZMDataModel.zmLog("Stream authentication construction: " +
+                NVRDataModel.log("Stream authentication construction: " +
                     $rootScope.authSession);
 
             },
             function (error) {
 
                 $ionicLoading.hide();
-                ZMDataModel.zmDebug("MontageHistoryCtrl: Error in authkey retrieval " + error);
+                NVRDataModel.debug("MontageHistoryCtrl: Error in authkey retrieval " + error);
                 //$rootScope.authSession="";
-                ZMDataModel.zmLog("MontageHistoryCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                NVRDataModel.log("MontageHistoryCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
             });
 
 
@@ -750,14 +750,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.closeReorderModal = function () {
         //console.log("Close & Destroy Monitor Modal");
         // switch off awake, as liveview is finished
-        //ZMDataModel.setAwake(false);
+        //NVRDataModel.setAwake(false);
         $scope.modal.remove();
 
     };
 
 
     $scope.isBackground = function () {
-        return ZMDataModel.isBackground();
+        return NVRDataModel.isBackground();
     };
 
 
@@ -783,7 +783,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $rootScope.isAlarm = !$rootScope.isAlarm;
 
         $scope.minimal = !$scope.minimal;
-        ZMDataModel.zmDebug("MontageHistoryCtrl: switch minimal is " + $scope.minimal);
+        NVRDataModel.debug("MontageHistoryCtrl: switch minimal is " + $scope.minimal);
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
         $interval.cancel(intervalHandle);
         $interval.cancel($rootScope.eventQueryInterval);
@@ -810,8 +810,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     $scope.isBackground = function () {
         //console.log ("Is background called from Montage and returned " +    
-        //ZMDataModel.isBackground());
-        return ZMDataModel.isBackground();
+        //NVRDataModel.isBackground());
+        return NVRDataModel.isBackground();
     };
 
     //-------------------------------------------------------------
@@ -831,7 +831,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     };
 
     $scope.reloadReorder = function () {
-        var refresh = ZMDataModel.getMonitors(1);
+        var refresh = NVRDataModel.getMonitors(1);
 
         refresh.then(function (data) {
             $scope.monitors = data;
@@ -846,10 +846,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
             loginData.montageOrder = montageOrder.toString();
             loginData.montageHiddenOrder = hiddenOrder.toString();
-            ZMDataModel.setLogin(loginData);
+            NVRDataModel.setLogin(loginData);
             //window.localStorage.setItem("montageOrder", montageOrder.toString());
             //window.localStorage.setItem("montageHiddenOrder", hiddenOrder.toString());
-            ZMDataModel.zmLog("Montage order saved on refresh: " + montageOrder.toString() + " and hidden order: " + hiddenOrder.toString());
+            NVRDataModel.log("Montage order saved on refresh: " + montageOrder.toString() + " and hidden order: " + hiddenOrder.toString());
 
         });
     };
@@ -857,12 +857,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.saveReorder = function () {
         loginData.montageOrder = montageOrder.toString();
         loginData.montageHiddenOrder = hiddenOrder.toString();
-        ZMDataModel.setLogin(loginData);
+        NVRDataModel.setLogin(loginData);
         //window.localStorage.setItem("montageOrder", montageOrder.toString());
         // window.localStorage.setItem("montageHiddenOrder",
         //    hiddenOrder.toString());
         //console.log("Saved " + montageOrder.toString());
-        ZMDataModel.zmLog("User press OK. Saved Monitor Order as: " +
+        NVRDataModel.log("User press OK. Saved Monitor Order as: " +
             montageOrder.toString() +
             " and hidden order as " + hiddenOrder.toString());
         $scope.modal.remove();
@@ -878,7 +878,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 hiddenOrder[i] = 0;
             }
             //console.log("Order string is " + montageOrder.toString());
-            ZMDataModel.zmLog("User press Cancel. Reset Monitor Order to: " + montageOrder.toString());
+            NVRDataModel.log("User press Cancel. Reset Monitor Order to: " + montageOrder.toString());
         } else // montageOrder exists
         {
             var myorder = loginData.montageOrder;
@@ -901,7 +901,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             }
 
             $scope.MontageMonitors = oldMonitors;
-            ZMDataModel.zmLog("User press Cancel. Restored Monitor Order as: " + montageOrder.toString() + " and hidden order as: " + hiddenOrder.toString());
+            NVRDataModel.log("User press Cancel. Restored Monitor Order as: " + montageOrder.toString() + " and hidden order as: " + hiddenOrder.toString());
 
         }
         $scope.modal.remove();
@@ -920,11 +920,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             $scope.monitors[i].Monitor.listDisplay="show";
         }*/
 
-        ld = ZMDataModel.getLogin();
+        ld = NVRDataModel.getLogin();
         if (ld.enableDebug) {
             // Lets show the re-order list
             for (i = 0; i < $scope.MontageMonitors.length; i++) {
-                ZMDataModel.zmDebug("Montage reorder list: " + $scope.MontageMonitors[i].Monitor.Name +
+                NVRDataModel.debug("Montage reorder list: " + $scope.MontageMonitors[i].Monitor.Name +
                     ":listdisplay->" + $scope.MontageMonitors[i].Monitor.listDisplay);
 
             }
@@ -976,7 +976,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         //window.localStorage.setItem("montageOrder", montageOrder.toString());
         //console.log("DELETE: Order Array now is " + montageOrder.toString());
         //console.log("DELETE: Hidden Array now is " + hiddenOrder.toString());
-        ZMDataModel.zmLog("Marked monitor " + findindex + " as " + $scope.MontageMonitors[index].Monitor.listDisplay + " in montage");
+        NVRDataModel.log("Marked monitor " + findindex + " as " + $scope.MontageMonitors[index].Monitor.listDisplay + " in montage");
 
     };
 
@@ -987,7 +987,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     function reorderItem(item, from, to, reorderHidden) {
 
-        ZMDataModel.zmDebug("MontageHistoryCtrl: Reorder from " + from + " to " + to);
+        NVRDataModel.debug("MontageHistoryCtrl: Reorder from " + from + " to " + to);
         $scope.MontageMonitors.splice(from, 1);
         $scope.MontageMonitors.splice(to, 0, item);
 
@@ -1003,7 +1003,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 }
             }
         }
-        ZMDataModel.zmLog("New Montage Order is: " + montageOrder.toString());
+        NVRDataModel.log("New Montage Order is: " + montageOrder.toString());
 
     }
 
@@ -1018,7 +1018,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //---------------------------------------------------------------------
     $scope.switchMinimal = function () {
         $scope.minimal = !$scope.minimal;
-        ZMDataModel.zmDebug("MontageHistoryCtrl: switch minimal is " + $scope.minimal);
+        NVRDataModel.debug("MontageHistoryCtrl: switch minimal is " + $scope.minimal);
         //console.log("Hide Statusbar");
         ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
         $interval.cancel(intervalHandle); //we will renew on reload
@@ -1063,7 +1063,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.toggleMontageDisplayOrder = function () {
         $scope.packMontage = !$scope.packMontage;
         loginData.packMontage = $scope.packMontage;
-        ZMDataModel.setLogin(loginData);
+        NVRDataModel.setLogin(loginData);
         //console.log ("Switching orientation");
     };
 
@@ -1076,7 +1076,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //---------------------------------------------------------------------
 
     function onPause() {
-        ZMDataModel.zmDebug("MontageHistoryCtrl: onpause called");
+        NVRDataModel.debug("MontageHistoryCtrl: onpause called");
         $interval.cancel($rootScope.eventQueryInterval);
         $interval.cancel(intervalHandle);
 
@@ -1091,11 +1091,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         // FIXME: Do we need to resume timers? when you resume, you go to portal and then here
         /*
           if (!$scope.isModalActive) {
-              var ld = ZMDataModel.getLogin();
+              var ld = NVRDataModel.getLogin();
               
               
-              ZMDataModel.zmDebug("MontageHistoryCtrl: onresume called");
-              ZMDataModel.zmLog("Restarting eventQuery timer on resume");
+              NVRDataModel.debug("MontageHistoryCtrl: onresume called");
+              NVRDataModel.log("Restarting eventQuery timer on resume");
               
               console.log ("************** TIMER STARTED INSIDE RESUME ***************");
               
@@ -1124,7 +1124,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     };
 
     $scope.$on('$destroy', function () {
-        ZMDataModel.zmDebug("Cancelling eventQueryInterval");
+        NVRDataModel.debug("Cancelling eventQueryInterval");
         $interval.cancel($rootScope.eventQueryInterval);
 
 
@@ -1138,10 +1138,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     });
 
     $scope.$on('$ionicView.enter', function () {
-        ZMDataModel.zmDebug("**VIEW ** MontageHistory Ctrl Entered, Starting loadNotifications");
-        var ld = ZMDataModel.getLogin();
-        //console.log("Setting Awake to " + ZMDataModel.getKeepAwake());
-        ZMDataModel.setAwake(ZMDataModel.getKeepAwake());
+        NVRDataModel.debug("**VIEW ** MontageHistory Ctrl Entered, Starting loadNotifications");
+        var ld = NVRDataModel.getLogin();
+        //console.log("Setting Awake to " + NVRDataModel.getKeepAwake());
+        NVRDataModel.setAwake(NVRDataModel.getKeepAwake());
 
         $interval.cancel($rootScope.eventQueryInterval);
         //console.log ("****************** TIMER STARTED INSIDE ENTER");
@@ -1164,7 +1164,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     $scope.$on('$ionicView.beforeEnter', function () {
 
-        //  ZMDataModel.zmLog ("Before Enter History: initing connkeys");
+        //  NVRDataModel.log ("Before Enter History: initing connkeys");
 
 
 
@@ -1177,13 +1177,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         if ($scope.modal) $scope.modal.remove();
 
 
-        ZMDataModel.zmLog("BeforeLeave: Nullifying the streams...");
+        NVRDataModel.log("BeforeLeave: Nullifying the streams...");
 
         for (i = 0; i < $scope.MontageMonitors.length; i++) {
             var element = document.getElementById("img-" + i);
             /*if (element)
             {
-                ZMDataModel.zmDebug("BeforeLeave: Nullifying  " + element.src);
+                NVRDataModel.debug("BeforeLeave: Nullifying  " + element.src);
                 element.src="";
                 //element.removeAttribute('src');
                 
@@ -1195,10 +1195,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
 
 
-        ZMDataModel.zmLog("Cancelling event query timer");
+        NVRDataModel.log("Cancelling event query timer");
         $interval.cancel($rootScope.eventQueryInterval);
 
-        ZMDataModel.zmLog("MontageHistory:Stopping network pull...");
+        NVRDataModel.log("MontageHistory:Stopping network pull...");
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
 
@@ -1208,14 +1208,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 $scope.MontageMonitors[i].Monitor.Function != 'None' &&
                 $scope.MontageMonitors[i].Monitor.lisDisplay != 'noshow' &&
                 $scope.MontageMonitors[i].Monitor.Enabled != '0') {
-                ZMDataModel.zmLog("Before leave: Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey);
+                NVRDataModel.log("Before leave: Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey);
                 var tmpCK = angular.copy($scope.MontageMonitors[i].Monitor.connKey);
                 timedControlEventStream(2500, 17, "", tmpCK, -1);
             }
         }
 
-        ZMDataModel.zmLog("Forcing a window.stop() here");
-        ZMDataModel.stopNetwork("MontageHistory-beforeLeave");
+        NVRDataModel.log("Forcing a window.stop() here");
+        NVRDataModel.stopNetwork("MontageHistory-beforeLeave");
 
 
 
@@ -1236,15 +1236,15 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
         sizeInProgress = true;
         //console.log('Size has changed');
-        ZMDataModel.setMontageSize(val);
-        //console.log("ZMData Montage is " + ZMDataModel.getMontageSize() +
+        NVRDataModel.setMontageSize(val);
+        //console.log("ZMData Montage is " + NVRDataModel.getMontageSize() +
         //   " and slider montage is " + $scope.slider.monsize);
         // Now go ahead and reset sizes of entire monitor array
         var monsizestring = "";
         var i;
         for (i = 0; i < $scope.monitors.length; i++) {
 
-            $scope.monitorSize[i] = parseInt(ZMDataModel.getMontageSize());
+            $scope.monitorSize[i] = parseInt(NVRDataModel.getMontageSize());
             //console.log("Resetting Monitor " + i + " size to " + $scope.monitorSize[i]);
             $scope.scaleDirection[i] = 1;
             monsizestring = monsizestring + $scope.monitorSize[i] + ':';
@@ -1252,7 +1252,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         monsizestring = monsizestring.slice(0, -1); // kill last :
         //console.log("Setting monsize string:" + monsizestring);
         loginData.montageArraySize = monsizestring;
-        ZMDataModel.setLogin(loginData);
+        NVRDataModel.setLogin(loginData);
         //window.localStorage.setItem("montageArraySize", monsizestring);
         sizeInProgress = false;
     }
@@ -1270,7 +1270,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     $scope.reloadView = function () {
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-        ZMDataModel.zmLog("User action: image reload " + $rootScope.rand);
+        NVRDataModel.log("User action: image reload " + $rootScope.rand);
     };
 
     $scope.doRefresh = function () {
@@ -1278,12 +1278,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
 
         //console.log("***Pull to Refresh, recomputing Rand");
-        ZMDataModel.zmLog("Reloading view for montage view, recomputing rand");
+        NVRDataModel.log("Reloading view for montage view, recomputing rand");
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $scope.monitors = [];
         imageLoadingDataShare.set(0);
 
-        var refresh = ZMDataModel.getMonitors(1);
+        var refresh = NVRDataModel.getMonitors(1);
 
         refresh.then(function (data) {
             $scope.monitors = data;

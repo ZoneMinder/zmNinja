@@ -14,16 +14,16 @@
         
         <div ng-if="$root.platformOS!='desktop'">
             <a style="" class="button button-icon icon ion-email"
-           ng-href="" ng-click="sendEmail(zmLog.logString)" > </a>
+           ng-href="" ng-click="sendEmail(log.logString)" > </a>
         </div>
         <div ng-if="$root.platformOS=='desktop'">
             <a style="" class="button button-icon icon ion-android-download"
-           ng-href="" ng-click="sendEmail(zmLog.logString)" > </a>
+           ng-href="" ng-click="sendEmail(log.logString)" > </a>
         </div>
     </ion-nav-buttons>
 
     <ion-content class="padding">
         <b>{{$root.appName}} {{'kVersion'|translate}}: {{zmAppVersion}}</b><br/>
         <!-- don't indent here -- its a pre-->
-        <pre>{{zmLog.logString}}</pre>
+        <pre>{{log.logString}}</pre>
     </ion-content>

@@ -2,7 +2,7 @@
  /* jslint browser: true*/
  /* global cordova,StatusBar,angular,console */
 
- angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'ZMDataModel', '$ionicPlatform', '$ionicPopup', '$timeout', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, ZMDataModel, $ionicPlatform, $ionicPopup, $timeout, $translate) {
+ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'NVRDataModel', '$ionicPlatform', '$ionicPopup', '$timeout', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, NVRDataModel, $ionicPlatform, $ionicPopup, $timeout, $translate) {
      $scope.openMenu = function () {
          $ionicSideMenuDelegate.toggleLeft();
      };
@@ -56,7 +56,7 @@
 
      $scope.$on('$ionicView.beforeEnter', function () {
 
-         $scope.loginData = ZMDataModel.getLogin();
+         $scope.loginData = NVRDataModel.getLogin();
          //console.log ("Event server - before Enter, loginData is " + JSON.stringify($scope.loginData));
          $scope.defScreen = $scope.loginData.onTapScreen;
 
@@ -96,7 +96,7 @@
 
      $scope.selectScreen = function () {
 
-         var ld = ZMDataModel.getLogin();
+         var ld = NVRDataModel.getLogin();
 
          $scope.myopt = {
              selectedState: ld.onTapScreen
@@ -128,8 +128,8 @@
                      onTap: function (e) {
 
                          ld.onTapScreen = $scope.myopt.selectedState;
-                         ZMDataModel.zmLog("Setting new onTap State:" + ld.onTapScreen);
-                         ZMDataModel.setLogin(ld);
+                         NVRDataModel.log("Setting new onTap State:" + ld.onTapScreen);
+                         NVRDataModel.setLogin(ld);
                          $scope.defScreen = $scope.myopt.selectedState;
                          $scope.loginData = ld;
 
@@ -166,7 +166,7 @@
      //----------------------------------------------------------------
 
      function saveItems() {
-         ZMDataModel.zmDebug("Saving Event Server data");
+         NVRDataModel.debug("Saving Event Server data");
          var monstring = "";
          var intervalstring = "";
          var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
@@ -194,7 +194,7 @@
 
 
          //console.log ("SAVED: " + JSON.stringify($scope.loginData));
-         ZMDataModel.setLogin($scope.loginData);
+         NVRDataModel.setLogin($scope.loginData);
 
          var pushstate = "enabled";
          if ($scope.loginData.disablePush == true || $scope.loginData.isUseEventServer == false)
@@ -204,7 +204,7 @@
              EventServer.init()
                  .then(function (data) {
                      // console.log("Sending control filter");
-                     ZMDataModel.zmDebug("Sending Control message 'filter' with monlist=" + monstring + " and interval=" + intervalstring);
+                     NVRDataModel.debug("Sending Control message 'filter' with monlist=" + monstring + " and interval=" + intervalstring);
                      EventServer.sendMessage("control", {
                          type: 'filter',
                          monlist: monstring,
@@ -217,7 +217,7 @@
 
                      {
                          // we need to disable the token
-                         ZMDataModel.zmDebug("Sending token state " + pushstate);
+                         NVRDataModel.debug("Sending token state " + pushstate);
                          EventServer.sendMessage('push', {
                              type: 'token',
                              platform: plat,
@@ -239,7 +239,7 @@
 
              {
                  // we need to disable the token
-                 ZMDataModel.zmDebug("Sending token state " + pushstate);
+                 NVRDataModel.debug("Sending token state " + pushstate);
                  EventServer.sendMessage('push', {
                      type: 'token',
                      platform: plat,
@@ -257,7 +257,7 @@
 
 
 
-         ZMDataModel.displayBanner('info', ['settings saved']);
+         NVRDataModel.displayBanner('info', ['settings saved']);
      }
 
      //----------------------------------------------------------------

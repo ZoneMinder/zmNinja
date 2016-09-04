@@ -4,8 +4,8 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'ZMDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', function (
-    $ionicPopup, $scope, zm, ZMDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', function (
+    $ionicPopup, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate) {
 
     //----------------------------------------------------------------------
     // Controller main
@@ -24,7 +24,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
 
 
-    var loginData = ZMDataModel.getLogin();
+    var loginData = NVRDataModel.getLogin();
 
     var apiRun = loginData.apiurl + "/host/daemonCheck.json";
     var apiLoad = loginData.apiurl + "/host/getLoad.json";
@@ -40,18 +40,18 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // This may also help if your Apache is not configured to let multiple connections through
 
     $timeout(function () {
-        ZMDataModel.zmDebug("invoking LoadStatus...");
+        NVRDataModel.debug("invoking LoadStatus...");
         getLoadStatus();
     }, 2000);
 
     $timeout(function () {
-        ZMDataModel.zmDebug("invoking CurrentState...");
+        NVRDataModel.debug("invoking CurrentState...");
         getCurrentState();
     }, 4000);
 
     /*
     $timeout(function () {
-            ZMDataModel.zmDebug("invoking DiskStatus...");
+            NVRDataModel.debug("invoking DiskStatus...");
             getDiskStatus();
         }, 6000);
     */
@@ -64,7 +64,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function () {
         // console.log("**VIEW ** Montage Ctrl Entered");
-        ZMDataModel.setAwake(false);
+        NVRDataModel.setAwake(false);
     });
 
     //---------------------------------------------------------
@@ -72,11 +72,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // if applicable
     //---------------------------------------------------------
     function getCurrentState() {
-        ZMDataModel.zmDebug("StateCtrl: getting state using " + apiCurrentState);
+        NVRDataModel.debug("StateCtrl: getting state using " + apiCurrentState);
         $http.get(apiCurrentState)
             .then(
                 function (success) {
-                    ZMDataModel.zmDebug("State results: " + JSON.stringify(success));
+                    NVRDataModel.debug("State results: " + JSON.stringify(success));
                     var customStateArray = success.data.states;
                     var i = 0;
                     var found = false;
@@ -92,7 +92,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
                 },
                 function (error) {
-                    ZMDataModel.zmDebug("StateCtrl: Error retrieving state list " + JSON.stringify(error));
+                    NVRDataModel.debug("StateCtrl: Error retrieving state list " + JSON.stringify(error));
                     $scope.customState = "";
 
                 }
@@ -127,7 +127,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             selectedState: ""
         };
         //console.log(JSON.stringify($scope.allStateNames));
-        ZMDataModel.zmLog("List of custom states: " + JSON.stringify($scope.allStateNames));
+        NVRDataModel.log("List of custom states: " + JSON.stringify($scope.allStateNames));
         $rootScope.zmPopup = $ionicPopup.show({
             scope: $scope,
             template: '<ion-radio-fix ng-repeat="item in allStateNames" ng-value="item" ng-model="myopt.selectedState"> {{item}} </ion-radio-fix>',
@@ -169,25 +169,25 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // returns disk space in gigs taken up by events
     //----------------------------------------------------------------------
     function getDiskStatus() {
-        ZMDataModel.zmDebug("StateCtrl/getDiskStatus: " + apiDisk);
+        NVRDataModel.debug("StateCtrl/getDiskStatus: " + apiDisk);
         $http.get(apiDisk)
             .then(
                 function (success) {
-                    ZMDataModel.zmDebug("StateCtrl/getDiskStatus: success");
-                    ZMDataModel.zmDebug("Disk results: " + JSON.stringify(success));
+                    NVRDataModel.debug("StateCtrl/getDiskStatus: success");
+                    NVRDataModel.debug("Disk results: " + JSON.stringify(success));
                     var obj = success.data.usage;
                     if (obj.Total.space != undefined) {
                         $scope.zmDisk = parseFloat(obj.Total.space).toFixed(1).toString() + "G";
                     } else {
                         $scope.zmDisk = "unknown";
-                        ZMDataModel.zmLog("Error retrieving disk space, API returned null for obj.Total.space");
+                        NVRDataModel.log("Error retrieving disk space, API returned null for obj.Total.space");
                     }
 
                 },
                 function (error) {
                     $scope.zmDisk = "unknown";
                     // console.log("ERROR:" + JSON.stringify(error));
-                    ZMDataModel.zmLog("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
+                    NVRDataModel.log("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
                 }
             );
     }
@@ -196,12 +196,12 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // returns ZM running status
     //----------------------------------------------------------------------
     function getRunStatus() {
-        ZMDataModel.zmDebug("StateCtrl/getRunStatus: " + apiRun);
+        NVRDataModel.debug("StateCtrl/getRunStatus: " + apiRun);
         $http.get(apiRun)
             .then(
                 function (success) {
-                    ZMDataModel.zmDebug("StateCtrl/getRunStatus: success");
-                    ZMDataModel.zmDebug("Run results: " + JSON.stringify(success));
+                    NVRDataModel.debug("StateCtrl/getRunStatus: success");
+                    NVRDataModel.debug("Run results: " + JSON.stringify(success));
                     switch (success.data.result) {
                         case 1:
                             $scope.zmRun = $translate.instant('kZMRunning');
@@ -223,7 +223,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 },
                 function (error) {
                     //console.log("ERROR in getRun: " + JSON.stringify(error));
-                    ZMDataModel.zmLog("Error getting RunStatus " + JSON.stringify(error), "error");
+                    NVRDataModel.log("Error getting RunStatus " + JSON.stringify(error), "error");
                     $scope.color = 'color:red;';
                     $scope.zmRun = $translate.instant('kZMUndetermined');
                 }
@@ -236,14 +236,14 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     // gets ZM load - max[0], avg[1], min[2]
     //----------------------------------------------------------------------
     function getLoadStatus() {
-        ZMDataModel.zmDebug("StateCtrl/getLoadStatus: " + apiLoad);
+        NVRDataModel.debug("StateCtrl/getLoadStatus: " + apiLoad);
         $http.get(apiLoad)
             .then(
                 function (success) {
-                    ZMDataModel.zmDebug("Load results: " + JSON.stringify(success));
+                    NVRDataModel.debug("Load results: " + JSON.stringify(success));
                     //console.log(JSON.stringify(success));
                     // load returns 3 params - one in the middle is avg.
-                    ZMDataModel.zmDebug("StateCtrl/getLoadStatus: success");
+                    NVRDataModel.debug("StateCtrl/getLoadStatus: success");
                     $scope.zmLoad = success.data.load[1];
 
 
@@ -251,7 +251,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 },
                 function (error) {
                     //console.log("ERROR in getLoad: " + JSON.stringify(error));
-                    ZMDataModel.zmLog("Error retrieving loadStatus " + JSON.stringify(error), "error");
+                    NVRDataModel.log("Error retrieving loadStatus " + JSON.stringify(error), "error");
                     $scope.zmLoad = 'undetermined';
                 }
             );
@@ -265,18 +265,18 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     function performZMoperation(str) {
 
 
-        ZMDataModel.zmDebug("inside performZMoperation with " + str);
+        NVRDataModel.debug("inside performZMoperation with " + str);
 
 
         $scope.zmRun = "...";
         $scope.color = 'color:orange;';
         $scope.customState = "";
-        ZMDataModel.zmDebug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
+        NVRDataModel.debug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
         inProgress = 1;
         $http.post(apiExec + str + ".json")
             .then(
                 function (success) {
-                    ZMDataModel.zmDebug("StateCtrl/controlZM: returned success");
+                    NVRDataModel.debug("StateCtrl/controlZM: returned success");
                     inProgress = 0;
                     switch (str) {
                         case "stop":
@@ -296,8 +296,8 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     //if (error.status) // it seems to return error with status 0 if ok
                     // {
                     //console.log("ERROR in Change State:" + JSON.stringify(error));
-                    ZMDataModel.zmDebug("StateCtrl/controlZM: returned error");
-                    ZMDataModel.zmLog("Error in change run state:" + JSON.stringify(error), "error");
+                    NVRDataModel.debug("StateCtrl/controlZM: returned error");
+                    NVRDataModel.log("Error in change run state:" + JSON.stringify(error), "error");
                     $scope.zmRun = $translate.instant('kZMUndetermined');
                     $scope.color = 'color:orange;';
                     inProgress = 0;
@@ -308,7 +308,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     function controlZM(str) {
         if (inProgress) {
-            ZMDataModel.zmDebug("StateCtrl/controlZM: operation in progress");
+            NVRDataModel.debug("StateCtrl/controlZM: operation in progress");
             $ionicPopup.alert({
                 title: $translate.instant('kOperationInProgressTitle'),
                 template: $translate.instant('kOperationInProgressBody') + '...'
@@ -366,7 +366,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     $scope.doRefresh = function () {
         console.log("***Pull to Refresh");
-        ZMDataModel.zmDebug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
+        NVRDataModel.debug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
         getRunStatus();
         $timeout(getLoadStatus, 2000);
         $timeout(getCurrentState, 4000);
