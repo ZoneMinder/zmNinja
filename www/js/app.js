@@ -79,7 +79,8 @@ angular.module('zmApp', [
     eventPlaybackQuery: 3000,
     packeryTimer: 500,
     dbName: 'zmninja',
-    cipherKey: 'sdf#@#%FSXSA_AR'
+    cipherKey: 'sdf#@#%FSXSA_AR',
+    minCycleTime: 5,
 
 
 })

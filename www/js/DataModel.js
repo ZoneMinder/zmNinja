@@ -103,7 +103,9 @@ angular.module('zmApp.controllers')
             'forceImageModePath': false,
             'disableNative': false,
             'vibrateOnPush': true,
-            'soundOnPush': true
+            'soundOnPush': true,
+            'cycleMonitors': false,
+            'cycleMonitorsInterval':10, // 10sec
 
 
 
@@ -671,6 +673,18 @@ angular.module('zmApp.controllers')
                                 if (typeof loginData.soundOnPush == 'undefined') {
                                     debug("sound on push not found, setting to true");
                                     loginData.soundOnPush = true;
+
+                                }
+                                
+                                if (typeof loginData.cycleMonitors == 'undefined') {
+                                    
+                                    loginData.cycleMonitors = false;
+
+                                }
+                                
+                                if (typeof loginData.cycleMonitorsInterval == 'undefined') {
+                                    
+                                    loginData.cycleMonitorsInterval = 10;
 
                                 }
 

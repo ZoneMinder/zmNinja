@@ -124,9 +124,17 @@
             </div>
 
             <label>
-
                 <ion-toggle ng-model="loginData.enableLogs" ng-checked="{{loginData.enableLogs}}" toggle-class="toggle-calm">{{'kEnableLogs' | translate}}</ion-toggle>
             </label>
+            
+            
+            
+            <div class="item item-input-inset" >
+                {{'kCycleMonitorsInterval'|translate}}(s)&nbsp;
+                <label class="item-input-wrapper">
+                    <input type="tel" placeholder="" ng-model="loginData.cycleMonitorsInterval">
+                </label>
+            </div>
 
             <label>
 
