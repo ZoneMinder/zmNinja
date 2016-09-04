@@ -250,7 +250,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 });
     };
     
-    
+    //----------------------------------
+    // toggles monitor cycling
+    //----------------------------------
     $scope.toggleCycle = function()
     {
         //console.log ("HERE");
