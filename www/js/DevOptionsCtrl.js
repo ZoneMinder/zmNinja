@@ -62,7 +62,10 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         NVRDataModel.debug("SaveDevOptions: called");
 
 
-
+        if (parseInt($scope.loginData.cycleMonitorsInterval) < zm.minCycleTime)
+        {
+            $scope.loginData.cycleMonitorsInterval = zm.minCycleTime.toString();
+        }
         if ((parseInt($scope.loginData.maxFPS) < 0) || (parseInt($scope.loginData.maxFPS) > zm.maxFPS)) {
             $scope.loginData.maxFPS = zm.defaultFPS.toString();
         }

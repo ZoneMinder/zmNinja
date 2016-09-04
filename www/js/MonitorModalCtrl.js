@@ -15,6 +15,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.imageFit = true;
     $scope.isModalActive = true;
     var intervalModalHandle;
+    var cycleHandle;
     var nphTimer;
     var ld = NVRDataModel.getLogin();
 
@@ -54,6 +55,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
 
     $interval.cancel(intervalModalHandle);
+    $interval.cancel(cycleHandle);
 
     intervalModalHandle = $interval(function () {
         loadModalNotifications();
@@ -247,6 +249,34 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     // console.log ("ERROR");
                 });
     };
+    
+    
+    $scope.toggleCycle = function()
+    {
+        //console.log ("HERE");
+        $scope.isCycle = !$scope.isCycle;
+        var ld = NVRDataModel.getLogin();
+        ld.cycleMonitors = $scope.isCycle;
+        NVRDataModel.setLogin(ld);
+        $scope.cycleText = $scope.isCycle ? $translate.instant ('kOn'):$translate.instant ('kOff');
+        
+        if ($scope.isCycle)
+        {
+            NVRDataModel.log ("re-starting cycle timer");
+            $interval.cancel(cycleHandle);
+
+                cycleHandle = $interval(function () {
+                    moveToMonitor($scope.monitorId,1);
+                    //  console.log ("Refreshing Image...");
+                }.bind(this), ld.cycleMonitorsInterval * 1000);
+        }
+        else
+        {
+             NVRDataModel.log ("cancelling cycle timer");
+             $interval.cancel(cycleHandle);
+        }
+        
+    };
 
     //-------------------------------------------------------------
     // PTZ enable/disable
@@ -282,6 +312,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     function onPause() {
         NVRDataModel.debug("ModalCtrl: onpause called");
         $interval.cancel(intervalModalHandle);
+        $interval.cancel(cycleHandle);
         // $interval.cancel(modalIntervalHandle);
 
         // FIXME: Do I need to  setAwake(false) here?
@@ -294,12 +325,26 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             NVRDataModel.log("ModalCtrl: Restarting Modal timer on resume");
 
             $interval.cancel(intervalModalHandle);
+            $interval.cancel(cycleHandle);
 
             var ld = NVRDataModel.getLogin();
 
             intervalModalHandle = $interval(function () {
                 loadModalNotifications();
             }.bind(this), 5000);
+            
+            if (ld.cycleMonitors)
+            {
+                NVRDataModel.debug ("Cycling enabled at "+ld.cycleMonitorsInterval);
+
+                $interval.cancel(cycleHandle);
+
+                cycleHandle = $interval(function () {
+                    moveToMonitor($scope.monitorId,1);
+                    //  console.log ("Refreshing Image...");
+                }.bind(this), ld.cycleMonitorsInterval * 1000);
+
+        }
 
             $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
 
@@ -858,6 +903,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         // console.log("**MODAL: Stopping modal timer");
         $scope.isModalActive = false;
         $interval.cancel(intervalModalHandle);
+        $interval.cancel(cycleHandle);
     });
 
 
@@ -880,6 +926,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.isModalActive = false;
 
         $interval.cancel(intervalModalHandle);
+        $interval.cance(cycleHandle);
 
     });
 
@@ -887,6 +934,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.isModalActive = false;
         //console.log("**MODAL REMOVED: Stopping modal timer");
         $interval.cancel(intervalModalHandle);
+        $interval.cancel(cycleHandle);
 
         NVRDataModel.debug("Modal removed - killing connkey");
         controlStream(17, "", $scope.connKey, -1);
@@ -1228,8 +1276,24 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //console.log ("************* GENERATED CONNKEY " + $scope.connKey);
         $scope.currentFrame = 1;
         $scope.monStatus = "";
+        $scope.isCycle = ld.cycleMonitors;
+        $scope.cycleText = $scope.isCycle ? $translate.instant ('kOn'):$translate.instant ('kOff'); 
 
         configurePTZ($scope.monitorId);
+        
+        if (ld.cycleMonitors)
+        {
+            NVRDataModel.debug ("Cycling enabled at "+ld.cycleMonitorsInterval);
+            
+            $interval.cancel(cycleHandle);
+
+            cycleHandle = $interval(function () {
+                moveToMonitor($scope.monitorId,1);
+                //  console.log ("Refreshing Image...");
+            }.bind(this), ld.cycleMonitorsInterval * 1000);
+            
+        }
+        
 
     });
 

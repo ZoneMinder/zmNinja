@@ -44,6 +44,8 @@
     "kCredentialsTitle"          :"Credentials Required",
     "kCurrentState"              :"current state",
     "kCustomRange"               :"Custom Range",
+    "kCycleMonitorsInterval"             :"monitor cycle interval",
+    "kCycleMonitors"             :"cycle monitors",
     "kDay"                       :"Day",
     "kDecreaseSize"              :"decrease size",
     "kDelete"                    :"Delete",
