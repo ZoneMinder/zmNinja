@@ -1,5 +1,16 @@
 # Change Log
 
+## [v1.2.19](https://github.com/pliablepixels/zmNinja/tree/v1.2.19) (2016-09-04)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.18...v1.2.19)
+
+**Implemented enhancements:**
+
+- Cycle monitors [\#319](https://github.com/pliablepixels/zmNinja/issues/319)
+
+**Fixed bugs:**
+
+- Switching servers without saving first causes the app to freeze \(android/ios\) [\#320](https://github.com/pliablepixels/zmNinja/issues/320)
+
 ## [v1.2.18](https://github.com/pliablepixels/zmNinja/tree/v1.2.18) (2016-09-02)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.17...v1.2.18)
 
@@ -8,7 +19,7 @@
 - for all event related views \(event list, footage, analyze\) show "relative time from now" like "1 day ago" or "2 hours ago" [\#317](https://github.com/pliablepixels/zmNinja/issues/317)
 
 ## [v1.2.17](https://github.com/pliablepixels/zmNinja/tree/v1.2.17) (2016-09-01)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.0...v1.2.17)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.13...v1.2.17)
 
 **Implemented enhancements:**
 
@@ -28,7 +39,6 @@
 
 **Closed issues:**
 
-- modal close via back action on Android - make  sure all timers re-start/resources released [\#305](https://github.com/pliablepixels/zmNinja/issues/305)
 - ZMninja API issue with zoneminder 1.30 [\#300](https://github.com/pliablepixels/zmNinja/issues/300)
 
 **Merged pull requests:**
@@ -38,6 +48,13 @@
 - Revert "Added Wake-Sleep-Reset control commands" [\#309](https://github.com/pliablepixels/zmNinja/pull/309) ([pliablepixels](https://github.com/pliablepixels))
 - tweaks to Sleep/Wake/Reset \#306 [\#308](https://github.com/pliablepixels/zmNinja/pull/308) ([pliablepixels](https://github.com/pliablepixels))
 - Added Wake-Sleep-Reset control commands [\#307](https://github.com/pliablepixels/zmNinja/pull/307) ([sctt](https://github.com/sctt))
+
+## [v1.2.13](https://github.com/pliablepixels/zmNinja/tree/v1.2.13) (2016-08-18)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.0...v1.2.13)
+
+**Closed issues:**
+
+- modal close via back action on Android - make  sure all timers re-start/resources released [\#305](https://github.com/pliablepixels/zmNinja/issues/305)
 
 ## [v1.2.0](https://github.com/pliablepixels/zmNinja/tree/v1.2.0) (2016-08-10)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/vv1.2.0...v1.2.0)
