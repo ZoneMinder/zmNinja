@@ -4,7 +4,10 @@
 
 angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$stateParams', '$translate', function ($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $stateParams, $translate) {
     $scope.openMenu = function () {
+        
+        saveItems(false);
         $ionicSideMenuDelegate.toggleLeft();
+        
     };
 
 
@@ -289,6 +292,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //----------------------------------------------------------------
 
     // credit: http://stackoverflow.com/questions/33385610/ionic-prevent-navigation-on-leave
+    /* Disabled - seems to crash with native transitions
+    
     $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
         NVRDataModel.setAwake(false);
         var ld = NVRDataModel.getLogin();
@@ -305,7 +310,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             });
 
         }
-    });
+    });*/
 
     $rootScope.$on('$stateChangeSuccess', function () {
         $scope.ignoreDirty = false;
