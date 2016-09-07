@@ -422,6 +422,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         //console.log ("*********** SAVE ITEMS CALLED ");
         //console.log('Saving login');
         NVRDataModel.setFirstUse(false);
+        
+        // used for menu display
+        $rootScope.runMode = $scope.loginData.enableLowBandwidth  ? "low":"normal";
 
         // lets so some basic sanitization of the data
         // I am already adding "/" so lets remove spurious ones

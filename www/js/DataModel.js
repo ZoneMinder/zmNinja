@@ -59,7 +59,8 @@ angular.module('zmApp.controllers')
             'streamingurl': "",
             'maxFPS': "3", // image streaming FPS
             'montageQuality': "50", // montage streaming quality in %
-            'singleImageQuality': "100", // single streaming quality in %
+            'singleImageQuality': "100", // event single streaming quality in %
+            'monSingleImageQuality': "100", // live view quality
             'montageHistoryQuality': "50",
             'useSSL': false, // "1" if HTTPS
             'keepAwake': true, // don't dim/dim during live view
@@ -69,6 +70,7 @@ angular.module('zmApp.controllers')
             'eventServerMonitors': '', // list of monitors to notify from ES
             'eventServerInterval': '', // list of intervals for all monitors
             'refreshSec': '2', // timer value for frame change in sec 
+            'refreshSecLowBW': 8,
             'enableLogs': true,
             'enableDebug': true, // if enabled with log messages with "debug"
             'usePin': false,
@@ -106,6 +108,7 @@ angular.module('zmApp.controllers')
             'soundOnPush': true,
             'cycleMonitors': false,
             'cycleMonitorsInterval':10, // 10sec
+            'enableLowBandwidth':false,
 
 
 
@@ -688,6 +691,27 @@ angular.module('zmApp.controllers')
 
                                 }
 
+                                if (typeof loginData.enableLowBandwidth == 'undefined') {
+
+                                    loginData.enableLowBandwidth = false;
+
+                                }
+                                $rootScope.runMode =  loginData.enableLowBandwith? "low": "normal";
+                                
+                                if (typeof loginData.refreshSecLowBW == 'undefined') {
+                                    
+                                    loginData.refreshSecLowBW = 8;
+
+                                }
+                                
+                                
+                                
+                                
+                                if (typeof loginData.monSingleImageQuality == 'undefined') {
+                                    
+                                    loginData.monSingleImageQuality = 100;
+
+                                }
 
                                 log("DataModel init recovered this loginData as " + JSON.stringify(loginData));
                             } else {

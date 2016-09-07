@@ -16,7 +16,7 @@
                         <div ng-if="!animationInProgress && !isBackground() && connKey">
                             <!--<span style="color:white">{{currentStreamMode}}</span>-->
                             
-                            <img id="singlemonitor" style="width:100vw; height:100vh;"  image-spinner-loader="lines" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" />
+                            <img id="singlemonitor" style="width:100vw; height:100vh;"  image-spinner-loader="lines" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}&scale={{quality}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" />
                             
                             
                             
@@ -124,8 +124,8 @@
             
         </li>
         
-        <!--
-        <li>
+        
+        <!--<li>
             
             <a href="" ng-click="cast(monitorId, monitor)"> <i class="icon  ion-android-funnel"></i></a>
         </li>-->
