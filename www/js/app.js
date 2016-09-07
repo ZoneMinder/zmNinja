@@ -46,6 +46,7 @@ angular.module('zmApp', [
     authoremail: 'pliablepixels+zmNinja@gmail.com',
     logFileMaxSize: 20000, // after this limit log gets reset
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
+    loginIntervalLowBW: 600000, //10m login
     //loginInterval: 30000,
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
@@ -77,6 +78,7 @@ angular.module('zmApp', [
     nphSwitchTimer: 3000,
     eventHistoryTimer: 10000,
     eventPlaybackQuery: 3000,
+    eventPlaybackQueryLowBW: 6000,
     packeryTimer: 500,
     dbName: 'zmninja',
     cipherKey: 'sdf#@#%FSXSA_AR',
@@ -1079,6 +1081,7 @@ angular.module('zmApp', [
 
 
             $rootScope.db = null;
+            $rootScope.runMode = "normal";
 
             $rootScope.platformOS = "desktop";
             NVRDataModel.log("Device is ready");

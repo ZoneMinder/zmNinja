@@ -707,7 +707,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         var ld = NVRDataModel.getLogin();
         $scope.loginData = NVRDataModel.getLogin();
 
-        $scope.singleImageQuality = ld.singleImageQuality;
+        $scope.singleImageQuality = ld.enableLowBandwidth? 70: ld.singleImageQuality;
         $scope.blockSlider = false;
         $scope.checkEventOn = false;
         //$scope.singleImageQuality = 100;
@@ -743,7 +743,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         eventQueryHandle = $interval(function () {
                             checkEvent();
                             //  console.log ("Refreshing Image...");
-                        }.bind(this), zm.eventPlaybackQuery);
+                        }.bind(this), ld.enableLowBandwidth? zm.eventPlaybackQueryLowBW: zm.eventPlaybackQuery);
                     } else {
                         NVRDataModel.log(">>>Modal was exited, not starting checkAllEvents");
                     }

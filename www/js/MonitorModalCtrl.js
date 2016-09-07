@@ -1,7 +1,7 @@
 // Common Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,ionic, moment, imagesLoaded, ConnectSDK */
+/* global saveAs, cordova,StatusBar,angular,console,ionic, moment, imagesLoaded, chrome */
 
 
 
@@ -196,88 +196,34 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
 
     $scope.cast = function (mid, mon) {
+       
 
-        //console.log ("PASSED WITH " + JSON.stringify(mon));
-        //ConnectSDK.discoveryManager.startDiscovery();
-
-        //console.log ("Stopping");
-        ConnectSDK.discoveryManager.stopDiscovery();
-
-        //console.log ("Starting");
-        ConnectSDK.discoveryManager.startDiscovery();
-        //console.log ("picking");
-        ConnectSDK.discoveryManager.pickDevice()
-            .success(function (device) {
-                //device.disconnect();
-                function sendVideo(mid, mon) {
-                    //device.getMediaPlayer().playMedia("http://media.w3.org/2010/05/sintel/trailer.mp4", "video/mp4");
-
-                    //  var url = "http://www.connectsdk.com/files/9613/9656/8539/test_image.jpg";
-
-                    //var url = mon.Monitor.streamingURL+"/nph-zms?mode=jpeg&monitor="+mid+$rootScope.authSession+"&rand="+$rootScope.modalRand;
-
-                    var ld = NVRDataModel.getLogin();
-                    var url = mon.Monitor.streamingURL + "/nph-zms?mode=jpeg&monitor=" + mid + "&user=" + ld.username + "&pass=" + ld.password + "&rand=" + $rootScope.modalRand;
-
-                    //console.log ("URL: " + url);
-                    var iconUrl = "http://www.connectsdk.com/files/9613/9656/8539/test_image.jpg";
-                    var mimeType = "image/jpeg";
-
-                    device.getMediaPlayer().displayImage(url, mimeType, {
-                        title: "Monitor: " + mid,
-                        description: "Monitor feed",
-                    }).success(function (launchSession, mediaControl) {
-                        //console.log("Image launch successful");
-                    }).error(function (err) {
-                        //console.log("error: " + err.message);
-                    });
-                }
-
-                if (device.isReady()) { // already connected
-                    // console.log (">>> device ready sending video");
-                    sendVideo(mid, mon);
-                } else {
-                    device.on("ready", function () {
-                        sendVideo(mid, mon);
-                    });
-                    //console.log (">>> device not ready connecting");
-                    device.connect();
-                }
-            })
-            .error(
-                function (error) {
-                    // console.log ("ERROR");
-                });
     };
-    
+
     //----------------------------------
     // toggles monitor cycling
     //----------------------------------
-    $scope.toggleCycle = function()
-    {
+    $scope.toggleCycle = function () {
         //console.log ("HERE");
         $scope.isCycle = !$scope.isCycle;
         var ld = NVRDataModel.getLogin();
         ld.cycleMonitors = $scope.isCycle;
         NVRDataModel.setLogin(ld);
-        $scope.cycleText = $scope.isCycle ? $translate.instant ('kOn'):$translate.instant ('kOff');
-        
-        if ($scope.isCycle)
-        {
-            NVRDataModel.log ("re-starting cycle timer");
+        $scope.cycleText = $scope.isCycle ? $translate.instant('kOn') : $translate.instant('kOff');
+
+        if ($scope.isCycle) {
+            NVRDataModel.log("re-starting cycle timer");
             $interval.cancel(cycleHandle);
 
-                cycleHandle = $interval(function () {
-                    moveToMonitor($scope.monitorId,1);
-                    //  console.log ("Refreshing Image...");
-                }.bind(this), ld.cycleMonitorsInterval * 1000);
+            cycleHandle = $interval(function () {
+                moveToMonitor($scope.monitorId, 1);
+                //  console.log ("Refreshing Image...");
+            }.bind(this), ld.cycleMonitorsInterval * 1000);
+        } else {
+            NVRDataModel.log("cancelling cycle timer");
+            $interval.cancel(cycleHandle);
         }
-        else
-        {
-             NVRDataModel.log ("cancelling cycle timer");
-             $interval.cancel(cycleHandle);
-        }
-        
+
     };
 
     //-------------------------------------------------------------
@@ -334,19 +280,18 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             intervalModalHandle = $interval(function () {
                 loadModalNotifications();
             }.bind(this), 5000);
-            
-            if (ld.cycleMonitors)
-            {
-                NVRDataModel.debug ("Cycling enabled at "+ld.cycleMonitorsInterval);
+
+            if (ld.cycleMonitors) {
+                NVRDataModel.debug("Cycling enabled at " + ld.cycleMonitorsInterval);
 
                 $interval.cancel(cycleHandle);
 
                 cycleHandle = $interval(function () {
-                    moveToMonitor($scope.monitorId,1);
+                    moveToMonitor($scope.monitorId, 1);
                     //  console.log ("Refreshing Image...");
                 }.bind(this), ld.cycleMonitorsInterval * 1000);
 
-        }
+            }
 
             $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
 
@@ -364,6 +309,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
             return;
         }
+        
+        if (NVRDataModel.getLogin().enableLowBandwidth)
+            return;
 
         var status = [$translate.instant('kMonIdle'),
                       $translate.instant('kMonPreAlarm'),
@@ -1279,23 +1227,24 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.currentFrame = 1;
         $scope.monStatus = "";
         $scope.isCycle = ld.cycleMonitors;
-        $scope.cycleText = $scope.isCycle ? $translate.instant ('kOn'):$translate.instant ('kOff'); 
+        $scope.cycleText = $scope.isCycle ? $translate.instant('kOn') : $translate.instant('kOff');
+        
+        $scope.quality = ld.enableLowBandwidth? 70:ld.monSingleImageQuality;
 
         configurePTZ($scope.monitorId);
-        
-        if (ld.cycleMonitors)
-        {
-            NVRDataModel.debug ("Cycling enabled at "+ld.cycleMonitorsInterval);
-            
+
+        if (ld.cycleMonitors) {
+            NVRDataModel.debug("Cycling enabled at " + ld.cycleMonitorsInterval);
+
             $interval.cancel(cycleHandle);
 
             cycleHandle = $interval(function () {
-                moveToMonitor($scope.monitorId,1);
+                moveToMonitor($scope.monitorId, 1);
                 //  console.log ("Refreshing Image...");
             }.bind(this), ld.cycleMonitorsInterval * 1000);
-            
+
         }
-        
+
 
     });
 

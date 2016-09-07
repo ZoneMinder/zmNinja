@@ -22,7 +22,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var sizeInProgress;
     var modalIntervalHandle;
     var ld;
-
+    var refreshSec;
 
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
@@ -259,6 +259,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         if (NVRDataModel.versionCompare($rootScope.apiVersion, "1.30") == -1) {
 
+            return;
+        }
+        
+        if (NVRDataModel.getLogin().enableLowBandwidth)
+        {
             return;
         }
 
@@ -631,7 +636,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.monitorName = NVRDataModel.getMonitorName(mid);
         $scope.controlid = controlid;
 
-        $scope.LoginData = NVRDataModel.getLogin();
+        //$scope.LoginData = NVRDataModel.getLogin();
         $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
 
@@ -705,7 +710,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         intervalHandleMontage = $interval(function () {
             loadNotifications();
             //  console.log ("Refreshing Image...");
-        }.bind(this), ld.refreshSec * 1000);
+        }.bind(this), refreshSec * 1000);
 
         intervalHandleAlarmStatus = $interval(function () {
             loadAlarmStatus();
@@ -813,6 +818,18 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.allImagesLoaded = false;
         $scope.gridScale = "grid-item-50";
         $scope.LoginData = NVRDataModel.getLogin();
+        
+        if ($scope.LoginData.enableLowBandwidth)
+        {
+            NVRDataModel.debug ("Enabling low bandwidth parameters");
+            $scope.LoginData.montageQuality = 50;
+            $scope.LoginData.singleImageQuality = 70;
+            $scope.LoginData.montageHistoryQuality = 50;
+            
+            
+        }
+        
+        
         $scope.monLimit = $scope.LoginData.maxMontage;
         $scope.showSizeButtons = false;
 
@@ -834,6 +851,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         //$scope.areImagesLoading = true;
         var ld = NVRDataModel.getLogin();
+        
+        refreshSec = ld.enableLowBandwidth ? ld.refreshSecLowBW: ld.refreshSec;
+        
+        NVRDataModel.debug ("Enable Low bandwidth: " + ld.enableLowBandwidth+ " montage refresh set to: " + refreshSec);
+        
         //console.log("Setting Awake to " + NVRDataModel.getKeepAwake());
         NVRDataModel.setAwake(NVRDataModel.getKeepAwake());
 
@@ -843,7 +865,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         intervalHandleMontage = $interval(function () {
             loadNotifications();
             //  console.log ("Refreshing Image...");
-        }.bind(this), ld.refreshSec * 1000);
+        }.bind(this), refreshSec * 1000);
 
         intervalHandleAlarmStatus = $interval(function () {
             loadAlarmStatus();
