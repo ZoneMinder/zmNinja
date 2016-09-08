@@ -648,7 +648,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             noBackdrop: true,
             duration: 2000
         });
-        NVRDataModel.log("Error saving image: " + e.message);
+        NVRDataModel.log("Error saving image: " + e);
         //console.log("***ERROR");
     }
 
@@ -761,7 +761,37 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
-    $scope.saveImageToPhone = function (mid) {
+    $scope.saveImageToPhoneWithPerms = function (mid)
+    {
+        if ($rootScope.platformOS != 'android')
+        {
+            saveImageToPhone(mid);
+        }
+        
+        
+        NVRDataModel.debug("ModalCtrl: Permission checking for write");
+        var permissions = cordova.plugins.permissions;
+        permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, checkPermissionCallback, null);
+        
+        function checkPermissionCallback(status) {
+            if (!status.hasPermission)
+            {
+                SaveError("No permission to write to external storage");
+            }
+            permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, succ,err);
+        }
+        
+        function succ(s)
+        {
+            saveImageToPhone(mid);
+        }
+        function err(e)
+        {
+            SaveError ("Error in requestPermission");
+        }
+    };
+    
+    function saveImageToPhone(mid) {
         $ionicLoading.show({
             template: $translate.instant('kSavingSnapshot') + '...',
             noBackdrop: true,
@@ -820,7 +850,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             SaveError(e.message);
 
         }
-    };
+    }
 
 
 

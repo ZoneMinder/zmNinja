@@ -406,7 +406,40 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
-    $scope.saveEventImageToPhone = function (onlyAlarms) {
+    
+    $scope.saveEventImageToPhoneWithPerms = function (onlyAlarms)
+    {
+        
+        if ($rootScope.platformOS != 'android')
+        {
+            processSaveEventImageToPhone(onlyAlarms);
+        }
+        
+        // if we are on android do the 6.x+ hasPermissions flow
+        NVRDataModel.debug("EventModalCtrl: Permission checking for write");
+        var permissions = cordova.plugins.permissions;
+        permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, checkPermissionCallback, null);
+        
+        function checkPermissionCallback(status) {
+            if (!status.hasPermission)
+            {
+                SaveError("No permission to write to external storage");
+            }
+            permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, succ,err);
+        }
+        
+        function succ(s)
+        {
+            processSaveEventImageToPhone(onlyAlarms);
+        }
+        function err(e)
+        {
+            SaveError ("Error in requestPermission");
+        }
+    };
+    
+    
+    function processSaveEventImageToPhone (onlyAlarms) {
 
         if ($scope.loginData.useNphZmsForEvents) {
             NVRDataModel.log("Use ZMS stream to save to phone");
@@ -418,7 +451,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         }
 
 
-    };
+    }
 
     function saveEventImageToPhoneZms(onlyAlarms) {
         // The strategy here is to build the array now so we can grab frames
