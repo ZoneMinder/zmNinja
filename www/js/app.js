@@ -1108,7 +1108,7 @@ angular.module('zmApp', [
 
 
             $rootScope.db = null;
-            $rootScope.runMode = "highbw";
+            $rootScope.runMode = NVRDataModel.getBandwidth();
 
             $rootScope.platformOS = "desktop";
             NVRDataModel.log("Device is ready");
