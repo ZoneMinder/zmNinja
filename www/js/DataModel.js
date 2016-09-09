@@ -1110,7 +1110,12 @@ angular.module('zmApp.controllers')
                 {
                     return "lowbw";
                 }
+                if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth == true && $rootScope.platformOS == 'desktop')
+                {
+                    return "highbw";
+                }
                 // else return real state
+            
                 var networkState = navigator.connection.type; 
                 var strState;
                 switch (networkState)
