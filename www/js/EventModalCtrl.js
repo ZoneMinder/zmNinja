@@ -101,6 +101,30 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 //$rootScope.authSession="";
                 NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
             });
+    
+    
+    
+    //--------------------------------------------------------------------------------------
+    // Handles bandwidth change, if required
+    //
+    //--------------------------------------------------------------------------------------
+
+    $rootScope.$on("bandwidth-change", function (e,data) {
+    // not called for offline, I'm only interested in BW switches
+        NVRDataModel.debug("Got network change:" + data);
+        var ds;
+        if (data == 'lowbw') {
+            ds = "low bandwidth mode";
+        } else {
+            ds = "high bandwidth mode";
+        }
+        NVRDataModel.displayBanner('net', [ds]);
+
+        var ld = NVRDataModel.getLogin();
+        
+         $scope.singleImageQuality = (NVRDataModel.getBandwidth()=="lowbw" )? zm.eventSingleImageQualityLowBW: ld.singleImageQuality;
+    });
+
 
 
 
@@ -740,7 +764,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         var ld = NVRDataModel.getLogin();
         $scope.loginData = NVRDataModel.getLogin();
 
-        $scope.singleImageQuality = ld.enableLowBandwidth? 70: ld.singleImageQuality;
+        $scope.singleImageQuality = (NVRDataModel.getBandwidth()=="lowbw" )? zm.eventSingleImageQualityLowBW: ld.singleImageQuality;
         $scope.blockSlider = false;
         $scope.checkEventOn = false;
         //$scope.singleImageQuality = 100;
@@ -776,7 +800,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         eventQueryHandle = $interval(function () {
                             checkEvent();
                             //  console.log ("Refreshing Image...");
-                        }.bind(this), ld.enableLowBandwidth? zm.eventPlaybackQueryLowBW: zm.eventPlaybackQuery);
+                        }.bind(this), (NVRDataModel.getBandwidth()=="lowbw")? zm.eventPlaybackQueryLowBW: zm.eventPlaybackQuery);
                     } else {
                         NVRDataModel.log(">>>Modal was exited, not starting checkAllEvents");
                     }

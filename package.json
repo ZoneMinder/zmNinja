@@ -82,7 +82,8 @@
       "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
       "id": "cordova-plugin-certificates"
     },
-    "cordova-plugin-android-permissions"
+    "cordova-plugin-android-permissions",
+    "cordova-plugin-network-information"
   ],
   "cordovaPlatforms": [
     {},

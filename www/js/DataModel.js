@@ -2,7 +2,7 @@
 
 
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console, URI, moment, localforage, CryptoJS */
+/* global cordova,StatusBar,angular,console, URI, moment, localforage, CryptoJS, Connection */
 
 // This is my central data respository and common functions
 // that many other controllers use
@@ -109,6 +109,7 @@ angular.module('zmApp.controllers')
             'cycleMonitors': false,
             'cycleMonitorsInterval':10, // 10sec
             'enableLowBandwidth':false,
+            'autoSwitchBandwidth':false,
 
 
 
@@ -691,12 +692,28 @@ angular.module('zmApp.controllers')
 
                                 }
 
+                                
                                 if (typeof loginData.enableLowBandwidth == 'undefined') {
 
+                                  
                                     loginData.enableLowBandwidth = false;
 
                                 }
-                                $rootScope.runMode =  loginData.enableLowBandwith? "low": "normal";
+                                // wtf is wrong with this ternary?
+                                //$rootScope.runMode = (loginData.enableLowBandwith==true)? "low": "normal";
+                            
+                                
+                               
+                                
+                                if (typeof loginData.autoSwitchBandwidth == 'undefined') {
+
+                                  
+                                    loginData.autoSwitchBandwidth = false;
+
+                                }
+                                
+                                
+                                    
                                 
                                 if (typeof loginData.refreshSecLowBW == 'undefined') {
                                     
@@ -1078,6 +1095,33 @@ angular.module('zmApp.controllers')
                 return (d.promise);
 
 
+            },
+            //--------------------------------------------------------------------------
+            // returns high or low BW mode
+            //--------------------------------------------------------------------------
+            getBandwidth: function () {
+                // if mode is not on always return high
+                if (loginData.enableLowBandwidth == false)
+                {
+                    return "highbw";
+                }
+                // if mode is force on, return low
+                if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth != true)
+                {
+                    return "lowbw";
+                }
+                // else return real state
+                var networkState = navigator.connection.type; 
+                var strState;
+                switch (networkState)
+                {
+
+                    case Connection.WIFI: strState="highbw"; break;
+                    case Connection.ETHERNET: strState="highbw"; break;
+                    default: strState = "lowbw"; break;
+
+                }
+                return strState;
             },
 
             //--------------------------------------------------------------------------

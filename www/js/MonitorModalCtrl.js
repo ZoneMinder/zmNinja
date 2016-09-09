@@ -1259,7 +1259,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.isCycle = ld.cycleMonitors;
         $scope.cycleText = $scope.isCycle ? $translate.instant('kOn') : $translate.instant('kOff');
         
-        $scope.quality = ld.enableLowBandwidth? 70:ld.monSingleImageQuality;
+        $scope.quality = ld.enableLowBandwidth? zm.monSingleImageQualityLowBW:ld.monSingleImageQuality;
 
         configurePTZ($scope.monitorId);
 

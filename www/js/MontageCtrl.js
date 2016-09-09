@@ -24,6 +24,43 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     var ld;
     var refreshSec;
 
+
+    //--------------------------------------------------------------------------------------
+    // Handles bandwidth change, if required
+    //
+    //--------------------------------------------------------------------------------------
+
+    $rootScope.$on("bandwidth-change", function (e,data) {
+    // not called for offline, I'm only interested in BW switches
+        NVRDataModel.debug("Got network change:" + data);
+        var ds;
+        if (data == 'lowbw') {
+            ds = "low bandwidth mode";
+        } else {
+            ds = "high bandwidth mode";
+        }
+        NVRDataModel.displayBanner('net', [ds]);
+
+        var ld = NVRDataModel.getLogin();
+        
+        refreshSec = (NVRDataModel.getBandwidth()=='lowbw') ? ld.refreshSecLowBW : ld.refreshSec;
+        $interval.cancel(intervalHandleMontage);
+        intervalHandleMontage = $interval(function () {
+            loadNotifications();
+        }.bind(this), refreshSec * 1000);
+        
+        
+        if (NVRDataModel.getBandwidth() == 'lowbw')
+        {
+            NVRDataModel.debug("Enabling low bandwidth parameters");
+            $scope.LoginData.montageQuality = zm.montageQualityLowBW;
+            $scope.LoginData.singleImageQuality = zm.eventSingleImageQualityLowBW;
+            $scope.LoginData.montageHistoryQuality = zm.montageQualityLowBW;
+
+        }
+    });
+
+
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
     // close the modal
@@ -261,9 +298,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
             return;
         }
-        
-        if (NVRDataModel.getLogin().enableLowBandwidth)
-        {
+
+        if (NVRDataModel.getBandwidth() == 'lowbw') {
             return;
         }
 
@@ -794,7 +830,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
     $scope.toggleSizeButtons = function () {
 
         $scope.showSizeButtons = !$scope.showSizeButtons;
-        
+
         NVRDataModel.debug("toggling size buttons:" + $scope.showSizeButtons);
         if ($scope.showSizeButtons) $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
     };
@@ -818,18 +854,18 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
         $scope.allImagesLoaded = false;
         $scope.gridScale = "grid-item-50";
         $scope.LoginData = NVRDataModel.getLogin();
+        //FIXME
         
-        if ($scope.LoginData.enableLowBandwidth)
-        {
-            NVRDataModel.debug ("Enabling low bandwidth parameters");
-            $scope.LoginData.montageQuality = 50;
-            $scope.LoginData.singleImageQuality = 70;
-            $scope.LoginData.montageHistoryQuality = 50;
-            
-            
+        if (NVRDataModel.getBandwidth() == 'lowbw') {
+            NVRDataModel.debug("Enabling low bandwidth parameters");
+            $scope.LoginData.montageQuality = zm.montageQualityLowBW;
+            $scope.LoginData.singleImageQuality = zm.eventSingleImageQualityLowBW;
+            $scope.LoginData.montageHistoryQuality = zm.montageQualityLowBW;
+
+
         }
-        
-        
+
+
         $scope.monLimit = $scope.LoginData.maxMontage;
         $scope.showSizeButtons = false;
 
@@ -851,11 +887,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageCtrl', ['$scope', '
 
         //$scope.areImagesLoading = true;
         var ld = NVRDataModel.getLogin();
-        
-        refreshSec = ld.enableLowBandwidth ? ld.refreshSecLowBW: ld.refreshSec;
-        
-        NVRDataModel.debug ("Enable Low bandwidth: " + ld.enableLowBandwidth+ " montage refresh set to: " + refreshSec);
-        
+
+        refreshSec = (NVRDataModel.getBandwidth()=='lowbw') ? ld.refreshSecLowBW : ld.refreshSec;
+
+        NVRDataModel.debug("bandwidth: " + NVRDataModel.getBandwidth() + " montage refresh set to: " + refreshSec);
+
         //console.log("Setting Awake to " + NVRDataModel.getKeepAwake());
         NVRDataModel.setAwake(NVRDataModel.getKeepAwake());
 

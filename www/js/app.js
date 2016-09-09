@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, localforage,$*/
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, ContactFindOptions, localforage,$, Connection*/
 
 
 var appVersion = "0.0.0";
@@ -46,7 +46,7 @@ angular.module('zmApp', [
     authoremail: 'pliablepixels+zmNinja@gmail.com',
     logFileMaxSize: 20000, // after this limit log gets reset
     loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
-    loginIntervalLowBW: 600000, //10m login
+    
     //loginInterval: 30000,
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
@@ -78,11 +78,17 @@ angular.module('zmApp', [
     nphSwitchTimer: 3000,
     eventHistoryTimer: 10000,
     eventPlaybackQuery: 3000,
-    eventPlaybackQueryLowBW: 6000,
+    
     packeryTimer: 500,
     dbName: 'zmninja',
     cipherKey: 'sdf#@#%FSXSA_AR',
     minCycleTime: 5,
+    
+    eventPlaybackQueryLowBW: 6000,
+    loginIntervalLowBW: 600000, //10m login
+    eventSingleImageQualityLowBW:70,
+    monSingleImageQualityLowBW:70,
+    montageQualityLowBW:50,
 
 
 })
@@ -968,11 +974,35 @@ angular.module('zmApp', [
             $rootScope.$apply(function () {
                 $rootScope.online = false;
                 NVRDataModel.log("Your network went offline");
+                
+                //$rootScope.$emit('network-change', "offline");
+                
             });
         }, false);
+    
         $window.addEventListener("online", function () {
             $rootScope.$apply(function () {
                 $rootScope.online = true;
+                
+                $timeout ( function () {
+                    var networkState = navigator.connection.type;
+                    NVRDataModel.debug ("Detected network type as: "+ networkState);
+                    var strState = NVRDataModel.getBandwidth();
+                    NVRDataModel.debug ("getBandwidth() normalized it as: " + strState);
+                    $rootScope.runMode = strState;
+                    if ((NVRDataModel.getLogin().autoSwitchBandwidth == true) &&
+                        (NVRDataModel.getLogin().enableLowBandwidth == true))
+                    {
+                        NVRDataModel.debug ("Setting app state to: "+ strState);
+                        $rootScope.$emit('bandwidth-change', strState);
+                    }
+                    else
+                    {
+                        NVRDataModel.debug ("Not changing bandwidth state, as auto change is not on");
+                    }
+                    
+                },1000); // need a time gap, seems network type registers late
+                
                 NVRDataModel.log("Your network is online, re-authenticating");
                 zmAutoLogin.doLogin($translate.instant('kReAuthenticating'));
 
@@ -1077,11 +1107,8 @@ angular.module('zmApp', [
 
 
 
-
-
-
             $rootScope.db = null;
-            $rootScope.runMode = "normal";
+            $rootScope.runMode = "highbw";
 
             $rootScope.platformOS = "desktop";
             NVRDataModel.log("Device is ready");
@@ -1422,12 +1449,6 @@ angular.module('zmApp', [
 
 
             }
-
-
-
-
-
-
 
 
         }); //platformReady
