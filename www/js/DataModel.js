@@ -145,6 +145,37 @@ angular.module('zmApp.controllers')
             return true;
         }
 
+        function getBandwidth()
+        {
+            // if mode is not on always return high
+                if (loginData.enableLowBandwidth == false)
+                {
+                    return "highbw";
+                }
+                // if mode is force on, return low
+                if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth != true)
+                {
+                    return "lowbw";
+                }
+                if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth == true && $rootScope.platformOS == 'desktop')
+                {
+                    return "highbw";
+                }
+                // else return real state
+            
+                var networkState = navigator.connection.type; 
+                var strState;
+                switch (networkState)
+                {
+
+                    case Connection.WIFI: strState="highbw"; break;
+                    case Connection.ETHERNET: strState="highbw"; break;
+                    default: strState = "lowbw"; break;
+
+                }
+                return strState;
+        }
+        
         //--------------------------------------------------------------------------
         // uses fileLogger  to write logs to file for later investigation
         //--------------------------------------------------------------------------
@@ -712,6 +743,9 @@ angular.module('zmApp.controllers')
 
                                 }
                                 
+                                $rootScope.runMode = getBandwidth();
+                                log("Setting DataModel init bandwidth to: " +$rootScope.runMode);
+                                
                                 
                                     
                                 
@@ -1100,33 +1134,7 @@ angular.module('zmApp.controllers')
             // returns high or low BW mode
             //--------------------------------------------------------------------------
             getBandwidth: function () {
-                // if mode is not on always return high
-                if (loginData.enableLowBandwidth == false)
-                {
-                    return "highbw";
-                }
-                // if mode is force on, return low
-                if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth != true)
-                {
-                    return "lowbw";
-                }
-                if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth == true && $rootScope.platformOS == 'desktop')
-                {
-                    return "highbw";
-                }
-                // else return real state
-            
-                var networkState = navigator.connection.type; 
-                var strState;
-                switch (networkState)
-                {
-
-                    case Connection.WIFI: strState="highbw"; break;
-                    case Connection.ETHERNET: strState="highbw"; break;
-                    default: strState = "lowbw"; break;
-
-                }
-                return strState;
+                return getBandwidth();
             },
 
             //--------------------------------------------------------------------------
