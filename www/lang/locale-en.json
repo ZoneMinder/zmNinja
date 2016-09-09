@@ -16,6 +16,7 @@
     "kAt"                        :"at",
     "kAuthSuccess"               :"authentication success",
     "kAuthenticating"            :"authenticating",
+    "kAutoSwitchBW"              :"auto switch bandwidth",
     "kAwake1"                    :"Keep display on",
     "kAwake2"                    :"(when viewing footage)",
     "kBannerAPICheckFailed"      :"API check failed",

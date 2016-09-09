@@ -424,7 +424,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         NVRDataModel.setFirstUse(false);
         
         // used for menu display
-        $rootScope.runMode = $scope.loginData.enableLowBandwidth  ? "low":"normal";
+        
 
         // lets so some basic sanitization of the data
         // I am already adding "/" so lets remove spurious ones
@@ -529,6 +529,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
 
         NVRDataModel.setLogin($scope.loginData);
+        $rootScope.runMode = NVRDataModel.getBandwidth();
+        
         oldName = $scope.loginData.serverName;
 
         if ($scope.check.isUseEventServer) {
