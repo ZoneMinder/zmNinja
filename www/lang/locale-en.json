@@ -149,6 +149,7 @@
     "kLoginValidatedTitle"       :"Login Validated",
     "kLogs"                      :"Logs",
     "kLowBandwidth"              :"low bandwidth mode",
+    "kLowBWDisplay"              : "low bandwidth",
     "kManageServerGroups"        :"Manage Server Groups",
     "kMaxFPS"                    :"Max FPS",
     "kMaxItemsForTimeline"       :"Max. items for Timeline",

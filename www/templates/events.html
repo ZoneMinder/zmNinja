@@ -34,7 +34,7 @@
         </ion-header-bar>
     </div>
 
- 
+
 
     <ion-content ng-cloak on-tap="tapped();" delegate-handle="mainScroll"  has-subheader="true" overflow-scroll="false" mouse-wheel-scroll>
 
@@ -278,7 +278,15 @@
             </ion-infinite-scroll>
         </div>
     </ion-content>
+    
+    
+    
     <div class="events-float-filter" ng-if="isEventFilterOn" on-tap="filterTapped();">{{'kFilterOn'|translate}}</div>
+    
+     <div class="bwmode" ng-if="$root.runMode=='lowbw'">
+            {{ 'kLowBWDisplay' | translate }}
+     </div>
+    
 
     <ion-pull-up-footer class="zmPullup" on-expand="footerExpand()" on-collapse="footerCollapse()" initial-state="minimized" default-behavior="expand">
 
