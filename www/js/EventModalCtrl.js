@@ -172,6 +172,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     //------------------------------------------------------
 
     function checkEvent() {
+        
+        if ($scope.modalFromTimelineIsOpen == false)
+        {
+            NVRDataModel.log ("Modal was closed in timeline, cancelling timer");
+            $interval.cancel(eventQueryHandle);
+            return;
+        }
+        
         //console.log ("Event timer");
         //console.log ("Event timer");
         $scope.checkEventOn = true;
@@ -878,6 +886,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
 
     $scope.$on('modal.removed', function (e, m) {
+        console.log ("************* REMOVE CALLED");
         $interval.cancel(eventQueryHandle);
         if (m.id != 'footage')
             return;
