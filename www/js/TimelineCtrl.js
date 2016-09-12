@@ -127,7 +127,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         fromDate = ds.format("YYYY-MM-DD HH:mm:ss");
         toDate = es.format("YYYY-MM-DD HH:mm:ss");
-
+        
+   
         $scope.fromDate = fromDate;
         $scope.toDate = toDate;
         $rootScope.customTimelineRange = false;
@@ -527,6 +528,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         curFromDate = fromDate;
         curToDate = toDate;
         curCount = count;
+        
+        
+        var fromDateNoLang = moment(fromDate).locale('en').format("YYYY-MM-DD HH:mm:ss");
+        var toDateNoLang = moment(toDate).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
         $ionicLoading.show({
             template: $translate.instant('kLoadingGraph') + "...",
@@ -537,7 +542,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             duration: zm.loadingTimeout, //specifically for Android - http seems to get stuck at times
         });
 
-        NVRDataModel.log("TimelineCtrl/drawgraph: from->" + fromDate + " to->" + toDate + " count:" + count);
+        NVRDataModel.log("TimelineCtrl/drawgraph: from->" + fromDateNoLang + " to->" + toDateNoLang + " count:" + count);
         $scope.graphLoaded = false;
         NVRDataModel.debug("TimelineCtrl/drawgraph: graphLoaded:" + $scope.graphLoaded);
 
@@ -552,18 +557,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         //console.log ("AFTER VIS");
 
 
+         
         var options = {
-
+            
             editable: false,
             throttleRedraw: 100,
             moveable: true,
             zoomable: true,
             selectable: true,
-            start: fromDate,
-            end: toDate,
+            start: moment(fromDate).locale('en').format("YYYY-MM-DD HH:mm:ss"),
+            end: moment(toDate).locale('en').format("YYYY-MM-DD HH:mm:ss"),
             orientation: 'top',
-            min: fromDate,
-            max: toDate,
+            min: moment(fromDate).locale('en').format("YYYY-MM-DD HH:mm:ss"),
+            max: moment(toDate).locale('en').format("YYYY-MM-DD HH:mm:ss"),
             zoomMin: 1 * 60 * 1000, // 1 min
             stack: false,
             format: {
@@ -581,7 +587,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         var graphIndex = 1; // will be used for graph ID
 
-        NVRDataModel.getEventsPages(0, fromDate, toDate)
+        
+        console.log ("**NOLANG" + fromDateNoLang  + " " + toDateNoLang);
+        
+        NVRDataModel.getEventsPages(0, fromDateNoLang, toDateNoLang)
             .then(function (data) {
                 var pages = parseInt(data.pageCount);
                 var itemsPerPage = parseInt(data.limit);
@@ -597,7 +606,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 // I am waiting for the full data to load before I draw
                 var promises = [];
                 while ((pages > 0) && (iterCount > 0)) {
-                    var promise = NVRDataModel.getEvents(0, pages, "none", fromDate, toDate);
+                    var promise = NVRDataModel.getEvents(0, pages, "none", fromDateNoLang, toDateNoLang);
                     promises.push(promise);
                     pages--;
                     iterCount--;
