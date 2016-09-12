@@ -131,6 +131,10 @@
             </div>
 
             <label>
+                <ion-toggle ng-model="loginData.disableAlarmCheckMontage" ng-checked="loginData.disableAlarmCheckMontage" toggle-class="toggle-calm">{{'kDisableAlarmMontage' | translate}}<p>{{'kDisableAlarmMontageSub' | translate}}</p></ion-toggle>
+            </label>
+            
+            <label>
                 <ion-toggle ng-model="loginData.enableLogs" ng-checked="{{loginData.enableLogs}}" toggle-class="toggle-calm">{{'kEnableLogs' | translate}}</ion-toggle>
             </label>
             

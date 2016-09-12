@@ -293,14 +293,15 @@ angular.module('zmApp.controllers')
 
     function loadAlarmStatus() {
 
-        if (NVRDataModel.versionCompare($rootScope.apiVersion, "1.30") == -1) {
+        if ((NVRDataModel.versionCompare($rootScope.apiVersion, "1.30") == -1) ||
+            (NVRDataModel.getBandwidth() == 'lowbw') ||
+            (NVRDataModel.getLogin().disableAlarmCheckMontage == true))    
+        {
 
             return;
         }
 
-        if (NVRDataModel.getBandwidth() == 'lowbw') {
-            return;
-        }
+        
 
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
             if (($scope.MontageMonitors[i].Monitor.Function == 'None') ||
