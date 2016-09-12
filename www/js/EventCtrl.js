@@ -1372,12 +1372,12 @@ angular.module('zmApp.controllers')
         var relativePath = "";
         var loginData = NVRDataModel.getLogin();
         var str = event.Event.StartTime;
-        var yy = moment(str).format('YY');
-        var mm = moment(str).format('MM');
-        var dd = moment(str).format('DD');
-        var hh = moment(str).format('HH');
-        var min = moment(str).format('mm');
-        var sec = moment(str).format('ss');
+        var yy = moment(str).locale('en').format('YY');
+        var mm = moment(str).locale('en').format('MM');
+        var dd = moment(str).locale('en').format('DD');
+        var hh = moment(str).locale('en').format('HH');
+        var min = moment(str).locale('en').format('mm');
+        var sec = moment(str).locale('en').format('ss');
         relativePath = event.Event.MonitorId + "/" +
             yy + "/" +
             mm + "/" +
@@ -1397,12 +1397,12 @@ angular.module('zmApp.controllers')
         var basePath = "";
         var loginData = NVRDataModel.getLogin();
         var str = event.Event.StartTime;
-        var yy = moment(str).format('YY');
-        var mm = moment(str).format('MM');
-        var dd = moment(str).format('DD');
-        var hh = moment(str).format('HH');
-        var min = moment(str).format('mm');
-        var sec = moment(str).format('ss');
+        var yy = moment(str).locale('en').format('YY');
+        var mm = moment(str).locale('en').format('MM');
+        var dd = moment(str).locale('en').format('DD');
+        var hh = moment(str).locale('en').format('HH');
+        var min = moment(str).locale('en').format('mm');
+        var sec = moment(str).locale('en').format('ss');
 
         basePath = event.Event.baseURL + "/events/" +
             event.Event.MonitorId + "/" +

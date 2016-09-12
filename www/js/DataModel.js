@@ -39,6 +39,10 @@ angular.module('zmApp.controllers')
             {
                 text: 'Portugese',
                 value: 'pt'
+            },
+            {
+                text: 'Hindi',
+                value: 'hi'
             }
         ];
 
