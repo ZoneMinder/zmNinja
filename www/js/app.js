@@ -2,6 +2,12 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, ContactFindOptions, localforage,$, Connection*/
 
+// For desktop versions, this is replaced
+// with actual app version from config.xml by the 
+// ./make_desktop.sh script
+
+// For mobile versions, I use cordova app version plugin
+// to get it at run time
 
 var appVersion = "0.0.0";
 
@@ -115,18 +121,6 @@ angular.module('zmApp', [
     };
 
 })
-
-// https://forum.ionicframework.com/t/ng-src-not-updated-in-video-tag/7540/6
-.directive('dynamicUrl', function () {
-    return {
-        restrict: 'A',
-        link: function postLink(scope, element, attr) {
-            element.attr('src', attr.dynamicUrlSrc);
-        }
-    };
-})
-
-
 
 
 // credit https://gist.github.com/Zren/beaafd64f395e23f4604
@@ -1507,7 +1501,7 @@ angular.module('zmApp', [
     //$translateProvider.useLocalStorage();
 
 
-    $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'zh', 'zh_CN', 'zh_TW', 'pt'], {
+    $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'zh', 'zh_CN', 'zh_TW', 'pt', 'hi'], {
         'en_*': 'en',
         'de_*': 'de',
         'es_*': 'es',
@@ -1516,6 +1510,7 @@ angular.module('zmApp', [
         'ja_*': 'ja',
         'ko_*': 'ko',
         'pt_*': 'pt',
+        'hi_*': 'hi',
         '*': 'en' // must be last
     });
 
