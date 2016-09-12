@@ -444,11 +444,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
     function humanizeTime(str)
     {
-        var et = moment(str);
-        var m = moment.duration(moment().diff(et)).humanize();
-        
-        var r  = m+' '+$translate.instant('kAgo'); 
-        return (r);
+       return moment(str).fromNow();
         
     }
 

@@ -284,9 +284,6 @@ angular.module('zmApp.controllers')
                 $scope.monitors = [];
                 $scope.monitors = message;
 
-
-
-
                 if ($scope.monitors.length == 0) {
                     $rootScope.zmPopup = $ionicPopup.alert({
                         title: $translate.instant('kNoMonitors'),
