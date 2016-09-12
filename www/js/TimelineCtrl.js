@@ -588,7 +588,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         var graphIndex = 1; // will be used for graph ID
 
         
-        console.log ("**NOLANG" + fromDateNoLang  + " " + toDateNoLang);
+        //console.log ("**NOLANG" + fromDateNoLang  + " " + toDateNoLang);
         
         NVRDataModel.getEventsPages(0, fromDateNoLang, toDateNoLang)
             .then(function (data) {

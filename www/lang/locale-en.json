@@ -3,7 +3,6 @@
     "k1HourSummary"              :"1 hour summary",
     "k1MonthSummary"             :"1 month summary",
     "k1WeekSummary"              :"1 week summary",
-    "kAgo"                       :"ago",
     "kAlarmAPIError"             :"error - please make sure your API supports this feature",
     "kAlarmFrameCount"           :"Alarm Frame Count",
     "kAlarmMaxFPS"               :"Alarm Max FPS",
