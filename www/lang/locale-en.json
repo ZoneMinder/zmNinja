@@ -57,6 +57,8 @@
     "kDeletingEvent"             :"deleting event",
     "kDevOptions"                :"Dev. Settings",
     "kDeveloperOptionsFor"       :"Developer Options for",
+    "kDisableAlarmMontage"       : "Disable alarm API in montage",
+    "kDisableAlarmMontageSub"    : "may help if server gets overloaded",
     "kDisableNative"             :"Disable Native transitions",
     "kDisableNativeSub"          :"Enable if the menu is freezing",
     "kDisablePush"               :"disable APNS/GCM",

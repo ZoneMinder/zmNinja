@@ -40,10 +40,14 @@ angular.module('zmApp.controllers')
                 text: 'Portugese',
                 value: 'pt'
             },
+            /*{
+                text: 'Arabic',
+                value: 'ar'
+            },
             {
                 text: 'Hindi',
                 value: 'hi'
-            }
+            }*/
         ];
 
         var serverGroupList = {};
@@ -114,6 +118,7 @@ angular.module('zmApp.controllers')
             'cycleMonitorsInterval':10, // 10sec
             'enableLowBandwidth':false,
             'autoSwitchBandwidth':false,
+            'disableAlarmCheckMontage': false,
 
 
 
@@ -756,6 +761,12 @@ angular.module('zmApp.controllers')
                                 if (typeof loginData.refreshSecLowBW == 'undefined') {
                                     
                                     loginData.refreshSecLowBW = 8;
+
+                                }
+                                
+                                if (typeof loginData.disableAlarmCheckMontage == 'undefined') {
+                                    
+                                    loginData.disableAlarmCheckMontage = false;
 
                                 }
                                 
