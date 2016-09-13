@@ -54,6 +54,8 @@ angular.module('zmApp.controllers')
     var stackState;
     var ionRangeWatcher;
     var mycarouselWatcher;
+    var nolangFrom;
+    var nolangTo;
     $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
 
 
@@ -245,7 +247,9 @@ angular.module('zmApp.controllers')
         // start from the latest. If this fails, nothing displays
 
         NVRDataModel.debug("EventCtrl: grabbing # of event pages");
-        NVRDataModel.getEventsPages($scope.id, $rootScope.fromString, $rootScope.toString)
+        nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+        nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+        NVRDataModel.getEventsPages($scope.id, nolangFrom, nolangTo)
             .then(function (data) {
                 eventsPage = data.pageCount;
                 NVRDataModel.debug("EventCtrl: found " + eventsPage + " pages of events");
@@ -254,7 +258,9 @@ angular.module('zmApp.controllers')
                 $scope.viewTitle.title = data.count;
                 NVRDataModel.debug("EventCtrl: grabbing events for: id=" + $scope.id + " Date/Time:" + $rootScope.fromString +
                     "-" + $rootScope.toString);
-                NVRDataModel.getEvents($scope.id, eventsPage, "", $rootScope.fromString, $rootScope.toString)
+                nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+                nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+                NVRDataModel.getEvents($scope.id, eventsPage, "", nolangFrom, nolangTo)
                     .then(function (data) {
 
                         var myevents = data;
@@ -1600,7 +1606,9 @@ angular.module('zmApp.controllers')
             loadingStr = "none";
         }
 
-        NVRDataModel.getEvents($scope.id, eventsPage, loadingStr, $rootScope.fromString, $rootScope.toString)
+        nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+        nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+        NVRDataModel.getEvents($scope.id, eventsPage, loadingStr, nolangFrom, nolangTo)
             .then(function (data) {
                     var loginData = NVRDataModel.getLogin();
                     // console.log("Got new page of events with Page=" + eventsPage);
