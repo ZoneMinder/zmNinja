@@ -12,14 +12,26 @@ The best way is to simply look at an existing language translation and follow th
 
 (replace ``-it`` with the language you are working on)
 
+Python 2.x:
 ``
 ./checklang.py -f locale-it.json -b
 ``
 
+Python 3.x:
+``
+./checklang.py3 -f locale-it.json -b
+``
+
 This validates your JSON file, makes sure all keys are in sync with -en and if valid, creates pretty-locale-it.json. If you are sure it looks good,
 
+Python 2.x:
 ``
 ./checklang.py -f locale-it.json -b -o
+``
+
+Python 3.x:
+``
+./checklang.py3 -f locale-it.json -b -o
 ``
 
 This validates your JSON file,makes sure all keys are in sync with -en  and if valid, OVERWRITES your local file with a pretty formatted version, which is what you should PR
