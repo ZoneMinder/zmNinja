@@ -36,9 +36,9 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("Got network change:" + data);
         var ds;
         if (data == 'lowbw') {
-            ds = "low bandwidth mode";
+            ds = $translate.instant('kLowBWDisplay');
         } else {
-            ds = "high bandwidth mode";
+            ds = $translate.instant('kHighBWDisplay');
         }
         NVRDataModel.displayBanner('net', [ds]);
         var ld = NVRDataModel.getLogin();

@@ -252,7 +252,7 @@ angular.module('zmApp.controllers')
         if ($rootScope.fromString)
             nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
         if ($rootScope.toString)
-        nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+            nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
         NVRDataModel.getEventsPages($scope.id, nolangFrom, nolangTo)
             .then(function (data) {
                 eventsPage = data.pageCount;
@@ -267,8 +267,8 @@ angular.module('zmApp.controllers')
                 if ($rootScope.fromString)
                     nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
                 if ($rootScope.toString)
-                nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
-                
+                    nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+
                 NVRDataModel.getEvents($scope.id, eventsPage, "", nolangFrom, nolangTo)
                     .then(function (data) {
 
@@ -1621,7 +1621,7 @@ angular.module('zmApp.controllers')
             nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
         if ($rootScope.toString)
             nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
-        
+
         NVRDataModel.getEvents($scope.id, eventsPage, loadingStr, nolangFrom, nolangTo)
             .then(function (data) {
                     var loginData = NVRDataModel.getLogin();
@@ -1646,7 +1646,7 @@ angular.module('zmApp.controllers')
                             }
                         }
 
-                        
+
                         myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
                         myevents[i].Event.MonitorName = NVRDataModel.getMonitorName(myevents[i].Event.MonitorId);
                         // now construct base path
@@ -1699,14 +1699,13 @@ angular.module('zmApp.controllers')
     //--------------------------------------
     // formats events dates in a nice way
     //---------------------------------------
-    
-   
-    function humanizeTime(str)
-    {
+
+
+    function humanizeTime(str) {
         return moment(str).fromNow();
-        
+
     }
-    
+
     $scope.prettifyDate = function (str) {
         return moment(str).format('MMM Do');
     };
