@@ -41,7 +41,7 @@ angular.module('zmApp.controllers')
                 value: 'pt'
             },
             {
-                text: '???????',
+                text: 'العربية',
                 value: 'ar'
             }
           /*{
