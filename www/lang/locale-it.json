@@ -65,6 +65,8 @@
     "kDiscoveringAPI"            :"Cerco API",
     "kDiscoveringCGI"            :"Sto cercando cgi",
     "kDiscoveringPortal"         :"Sto cercando il server",
+    "kDisableNative"             :"Disabilita transizioni",
+    "kDisableNativeSub"          :"Abilita con menù bloccato",
     "kDone"                      :"fatto",
     "kEnable24hr"                :"Abilita orario con formato 24hr",
     "kEnableDebug"               :"Abilita logs per debug",
