@@ -615,11 +615,11 @@ angular.module('zmApp.controllers')
         //$rootScope.toDate = toDate.toDate();
         $rootScope.isEventFilterOn = true;
         $rootScope.fromString = mFromDate
-            .format("YYYY-MM-DD") + " " + mFromDate.format("HH:mm:ss");
+            .locale('en').format("YYYY-MM-DD") + " " + mFromDate.locale('en').format("HH:mm:ss");
 
         $rootScope.toString = mToDate
-            .format("YYYY-MM-DD") + " " + mToDate
-            .format("HH:mm:ss");
+            .locale('en').format("YYYY-MM-DD") + " " + mToDate
+            .locale('en').format("HH:mm:ss");
 
 
         // console.log("**************From String: " + $rootScope.fromString);

@@ -41,13 +41,13 @@ angular.module('zmApp.controllers')
                 value: 'pt'
             },
             {
-                text: 'Arabic',
+                text: '???????',
                 value: 'ar'
-            },
-            {
+            }
+          /*{
                 text: 'Hindi',
                 value: 'hi'
-            }
+            }*/
         ];
 
         var serverGroupList = {};
