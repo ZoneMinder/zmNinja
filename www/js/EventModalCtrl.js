@@ -114,9 +114,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         NVRDataModel.debug("Got network change:" + data);
         var ds;
         if (data == 'lowbw') {
-            ds = "low bandwidth mode";
+            ds = $translate.instant('kLowBWDisplay');
         } else {
-            ds = "high bandwidth mode";
+            ds = $translate.instant('kHighBWDisplay');
         }
         NVRDataModel.displayBanner('net', [ds]);
 
