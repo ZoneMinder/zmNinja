@@ -85,9 +85,9 @@ angular.module('zmApp.controllers')
 
 
                 $rootScope.isEventFilterOn = true;
-                $rootScope.fromString = moment($rootScope.fromDate).format("YYYY-MM-DD") + " " + moment($rootScope.fromTime).format("HH:mm:ss");
+                $rootScope.fromString = moment($rootScope.fromDate).locale('en').format("YYYY-MM-DD") + " " + moment($rootScope.fromTime).locale('en').format("HH:mm:ss");
 
-                $rootScope.toString = moment($rootScope.toDate).format("YYYY-MM-DD") + " " + moment($rootScope.toTime).format("HH:mm:ss");
+                $rootScope.toString = moment($rootScope.toDate).locale('en').format("YYYY-MM-DD") + " " + moment($rootScope.toTime).locale('en').format("HH:mm:ss");
 
                 //console.log("CONCAT DATES " + temp);
                 //

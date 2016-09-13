@@ -152,6 +152,7 @@
     "kLogs"                      :"Logs",
     "kLowBWDisplay"              :"low bandwidth",
     "kLowBandwidth"              :"low bandwidth mode",
+    "kHighBandwidth"              :"high bandwidth mode",
     "kManageServerGroups"        :"Manage Server Groups",
     "kMaxFPS"                    :"Max FPS",
     "kMaxItemsForTimeline"       :"Max. items for Timeline",
