@@ -283,6 +283,10 @@ angular.module('zmApp.controllers')
                 // console.log("**VIEW ** Monitor Ctrl Entered");
                 $scope.monitors = [];
                 $scope.monitors = message;
+                
+                //console.log (">>>>>>>>>>>> MONITOR CTRL " + JSON.stringify($scope.monitors));
+                
+              
 
                 if ($scope.monitors.length == 0) {
                     $rootScope.zmPopup = $ionicPopup.alert({
@@ -380,6 +384,8 @@ angular.module('zmApp.controllers')
 
                 $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                 $scope.isControllable = controllable;
+                
+                $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
 
                 // This is a modal to show the monitor footage
