@@ -529,6 +529,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         }
 
         NVRDataModel.setLogin($scope.loginData);
+        
         $rootScope.runMode = NVRDataModel.getBandwidth();
         
         oldName = $scope.loginData.serverName;
