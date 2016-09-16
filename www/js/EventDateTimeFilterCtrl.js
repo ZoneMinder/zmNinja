@@ -25,6 +25,10 @@ angular.module('zmApp.controllers')
                 }
             };
 
+            $scope.$on('$ionicView.beforeEnter', function () {
+                $scope.today = moment().format("YYYY-MM-DD");
+            });
+        
             //--------------------------------------------------------------------------
             // Clears filters 
             //--------------------------------------------------------------------------
@@ -89,6 +93,10 @@ angular.module('zmApp.controllers')
 
                 $rootScope.toString = moment($rootScope.toDate).format("YYYY-MM-DD") + " " + moment($rootScope.toTime).format("HH:mm:ss");
 
+                
+               
+                
+                
                 //console.log("CONCAT DATES " + temp);
                 //
                 // var startDate = moment(temp).format("YYYY-MM-DD hh:mm:ss");
