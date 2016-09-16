@@ -69,6 +69,7 @@ angular.module('zmApp.controllers')
         $scope.events = [];
         getInitialEvents();
         setupWatchers();
+        footerExpand();
     });
 
     $scope.$on('$ionicView.beforeEnter', function () {
@@ -745,7 +746,13 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
 
     $scope.footerExpand = function () {
-        //https://server/zm/api/events/consoleEvents/5%20minute.json
+            footerExpand();
+
+    };
+
+    function footerExpand()
+    {
+                //https://server/zm/api/events/consoleEvents/5%20minute.json
         var ld = NVRDataModel.getLogin();
 
         var af = "/AlarmFrames >=: " + ld.enableAlarmCount;
@@ -890,9 +897,7 @@ angular.module('zmApp.controllers')
                 }
             });
 
-
-    };
-
+    }
 
     $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
