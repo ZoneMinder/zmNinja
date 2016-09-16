@@ -22,8 +22,6 @@ angular.module('zmApp.controllers')
 
             var loginData;
 
-
-
             // --------------------------------------------------------
             // Handling of back button in case modal is open should
             // close the modal
@@ -48,8 +46,6 @@ angular.module('zmApp.controllers')
                 }
 
             }, 1000);
-
-
 
 
             $scope.openMenu = function () {
@@ -147,7 +143,7 @@ angular.module('zmApp.controllers')
                         {
                             text: $translate.instant('kButtonCancel'),
 
-                },
+                        },
                         {
                             text: $translate.instant('kButtonSave'),
                             onTap: function (e) {
