@@ -5,7 +5,7 @@
     <ion-content>
         <label class="item item-input">
             <span class="input-label">{{'kFromDate'|translate}}:</span>
-            <input type="date" ng-model="$root.fromDate">
+            <input type="date" ng-model="$root.fromDate" max={{today}}>
         </label>
         <label class="item item-input">
                    <span class="input-label">{{'kFromTime'|translate}}</span>
@@ -13,7 +13,7 @@
         </label>
         <label class="item item-input">
                     <span class="input-label">{{'kToDate'|translate}}</span>
-                    <input type="date" ng-model="$root.toDate">
+                    <input type="date" ng-model="$root.toDate" max={{today}}>
         </label>
         <label class="item item-input">
                     <span class="input-label">{{'kToTime'|translate}}</span>
