@@ -88,6 +88,14 @@ angular.module('zmApp.controllers')
                 }
 
 
+                if ($rootScope.fromDate > $rootScope.toDate)
+                {
+                    NVRDataModel.log ("From date > To Date, swapping");
+                    var t = $rootScope.fromDate;
+                    $rootScope.fromDate = $rootScope.toDate;
+                    $rootScope.toDate = t;
+                }
+                
                 $rootScope.isEventFilterOn = true;
                 $rootScope.fromString = moment($rootScope.fromDate).format("YYYY-MM-DD") + " " + moment($rootScope.fromTime).format("HH:mm:ss");
 
