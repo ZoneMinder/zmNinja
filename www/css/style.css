@@ -701,6 +701,10 @@ input[type=range]::-webkit-slider-thumb {
     -webkit-animation-delay: 1s;
 }
 
+#really-your-fault {
+    -webkit-animation-delay: 4s;
+}
+
 /* packery stuff */
 * {
     box-sizing: border-box;

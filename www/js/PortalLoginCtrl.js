@@ -234,8 +234,10 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     NVRDataModel.debug("logging state transition");
                                     NVRDataModel.debug("Transitioning state to: " +
                                         statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
+                            
+                                    
                                     $state.go(statetoGo, $rootScope.lastStateParam);
-
+                                   
                                 },
                                 function (error) { // API Error
                                     NVRDataModel.log("API Error handler: going to login getAPI returned error: " + JSON.stringify(error));
