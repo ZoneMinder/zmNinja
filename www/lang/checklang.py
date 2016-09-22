@@ -47,8 +47,9 @@ def compare (fname):
   with open (i) as json_data:
       try:
         newKeys = json.load(json_data)
-      except ValueError:
+      except ValueError as e:
         print 'could not parse %s, skipping!' %fname
+        print 'Error was %s' % str(e)
         globBad+=1
         return
       json_data.close()
