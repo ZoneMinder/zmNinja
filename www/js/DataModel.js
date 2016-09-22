@@ -987,7 +987,7 @@ angular.module('zmApp.controllers')
                 var apiurl = loginData.apiurl + '/host/getVersion.json';
                 $http.get(apiurl)
                     .then(function (success) {
-                            if (success.data.version) {
+                            if ( success.data.version) {
                                 d.resolve(success.data.version);
                             } else {
                                 d.resolve("0.0.0");

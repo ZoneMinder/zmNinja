@@ -1,10 +1,11 @@
 {
   "name": "zmNinja",
   "app_id": "8f73ad5f",
+  "defaultBrowser": "google chrome",
   "proxies": [
     {
       "path": "/zm",
-      "proxyUrl": "",
+      "proxyUrl": "http://server/zm",
       "rejectUnauthorized": false
     }
   ],
