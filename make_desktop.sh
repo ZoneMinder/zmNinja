@@ -24,7 +24,7 @@ if [ -d "$i" ]; then
 	echo "------------------------------------------------------------------------"
 	exe rm -fr $i/app
 	exe mkdir $i/app
-	exe cp -R www/ $i/app
+	exe cp -R www/* $i/app/
 	exe cp electron_js/* $i/app
 	exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt ../$DIRNAME
 	exe cd $i
