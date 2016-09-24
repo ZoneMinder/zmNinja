@@ -1,5 +1,35 @@
 # Change Log
 
+## [1.2.24](https://github.com/pliablepixels/zmNinja/tree/1.2.24) (2016-09-24)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.19...1.2.24)
+
+**Implemented enhancements:**
+
+- Arabic language implementation \(credit @aljabr\) [\#336](https://github.com/pliablepixels/zmNinja/issues/336)
+- enable low bandwidth mode for zmN [\#321](https://github.com/pliablepixels/zmNinja/issues/321)
+
+**Fixed bugs:**
+
+- Yellow Event Summary Window \(Ionic pullup footer\) displays no data when dragged up. [\#333](https://github.com/pliablepixels/zmNinja/issues/333)
+- No live view \(via monitor, not montage\) after switching between servers. [\#329](https://github.com/pliablepixels/zmNinja/issues/329)
+- languages with non-english numbers break events/timeline feeds [\#325](https://github.com/pliablepixels/zmNinja/issues/325)
+- "Error - unable to save snapshot" on Android V6 [\#322](https://github.com/pliablepixels/zmNinja/issues/322)
+
+**Closed issues:**
+
+- Syntax error: newline unexpected [\#335](https://github.com/pliablepixels/zmNinja/issues/335)
+- v [\#332](https://github.com/pliablepixels/zmNinja/issues/332)
+- Validate From/To date in Event Filter [\#330](https://github.com/pliablepixels/zmNinja/issues/330)
+- IOS status bar [\#324](https://github.com/pliablepixels/zmNinja/issues/324)
+- ZMNinja for Kodi [\#311](https://github.com/pliablepixels/zmNinja/issues/311)
+- zmNinja for Windows Mobile [\#299](https://github.com/pliablepixels/zmNinja/issues/299)
+
+**Merged pull requests:**
+
+- add more translate [\#331](https://github.com/pliablepixels/zmNinja/pull/331) ([aljabr](https://github.com/aljabr))
+- all new key on -en file translated [\#328](https://github.com/pliablepixels/zmNinja/pull/328) ([mcbittech](https://github.com/mcbittech))
+- New keys translated. [\#323](https://github.com/pliablepixels/zmNinja/pull/323) ([ljpinho](https://github.com/ljpinho))
+
 ## [v1.2.19](https://github.com/pliablepixels/zmNinja/tree/v1.2.19) (2016-09-04)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.18...v1.2.19)
 
