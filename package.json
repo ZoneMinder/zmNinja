@@ -54,7 +54,6 @@
       "locator": "https://github.com/devgeeks/Canvas2ImagePlugin.git",
       "id": "org.devgeeks.Canvas2ImagePlugin"
     },
-    "cordova-plugin-statusbar",
     {
       "locator": "https://github.com/Telerik-Verified-Plugins/NativePageTransitions",
       "id": "com.telerik.plugins.nativepagetransitions"
@@ -78,12 +77,14 @@
       "id": "cordova-sqlite-storage"
     },
     "cordova-plugin-app-version",
+    "cordova-plugin-android-permissions",
+    "cordova-plugin-network-information",
+    "cordova-plugin-statusbar",
     {
       "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
       "id": "cordova-plugin-certificates"
     },
-    "cordova-plugin-android-permissions",
-    "cordova-plugin-network-information"
+    "cordova-plugin-settings-hook"
   ],
   "cordovaPlatforms": [
     {},

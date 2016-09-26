@@ -210,5 +210,13 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-settings-hook": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-settings-hook"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
