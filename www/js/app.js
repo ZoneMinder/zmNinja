@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, ContactFindOptions, localforage,$, Connection*/
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, ContactFindOptions, localforage,$, Connection, MobileAccessibility */
 
 // For desktop versions, this is replaced
 // with actual app version from config.xml by the 
@@ -1097,11 +1097,19 @@ angular.module('zmApp', [
         //---------------------------------------------------------------------
         // called when device is ready
         //---------------------------------------------------------------------
+    
+        function getTextZoomCallback(tz)
+        {
+            $rootScope.textScaleFactor = parseFloat(tz+"%") / 100.0;
+            NVRDataModel.debug ("text zoom factor is " + $rootScope.textScaleFactor);
+        }
 
         $ionicPlatform.ready(function () {
 
 
-
+            $rootScope.textScaleFactor = 1.0;
+            MobileAccessibility.getTextZoom(getTextZoomCallback);
+            
             $rootScope.db = null;
             $rootScope.runMode = NVRDataModel.getBandwidth();
 
