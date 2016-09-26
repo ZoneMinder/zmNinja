@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,moment */
+/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility */
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
@@ -56,7 +56,10 @@ angular.module('zmApp.controllers')
     var mycarouselWatcher;
     var nolangFrom;
     var nolangTo;
+    
     $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
+    var eventsListScrubHeight = eventsListScrubHeight;
+    var eventsListDetailsHeight = eventsListDetailsHeight;
 
 
     //---------------------------------------------------
@@ -72,12 +75,22 @@ angular.module('zmApp.controllers')
         footerExpand();
     });
 
+    
+    
     $scope.$on('$ionicView.beforeEnter', function () {
 
+        
         //console.log ("********* BEFORE ENTER");
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
+        
+        MobileAccessibility.getTextZoom(getTextZoomCallback);
+        
+        eventsListDetailsHeight = parseInt(zm.eventsListDetailsHeight * $rootScope.textScaleFactor);
+        eventsListScrubHeight = parseInt(zm.eventsListScrubHeight * $rootScope.textScaleFactor);
+        
+        NVRDataModel.debug (">>>height of list/scrub set to " + eventsListDetailsHeight + " and " + eventsListScrubHeight);
 
         pageLoaded = false;
         enableLoadMore = true;
@@ -137,7 +150,12 @@ angular.module('zmApp.controllers')
 
 
 
-
+    function getTextZoomCallback(tz)
+    {
+            $rootScope.textScaleFactor = parseFloat(tz+"%") / 100.0;
+            NVRDataModel.debug ("text zoom factor is " + $rootScope.textScaleFactor);
+    }
+    
 
 
 
@@ -302,7 +320,7 @@ angular.module('zmApp.controllers')
 
                             myevents[i].Event.MonitorName = NVRDataModel.getMonitorName(myevents[i].Event.MonitorId);
                             myevents[i].Event.ShowScrub = false;
-                            myevents[i].Event.height = zm.eventsListDetailsHeight;
+                            myevents[i].Event.height = eventsListDetailsHeight;
                             // now construct base path
                             myevents[i].Event.BasePath = computeBasePath(myevents[i]);
                             myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
@@ -905,7 +923,7 @@ angular.module('zmApp.controllers')
 
     $scope.scrollPosition = function () {
         var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
-        var item = Math.round(scrl / zm.eventsListDetailsHeight);
+        var item = Math.round(scrl / eventsListDetailsHeight );
         if ($scope.events == undefined || !$scope.events.length || $scope.events[item] == undefined) {
             return "";
         } else {
@@ -985,7 +1003,7 @@ angular.module('zmApp.controllers')
 
             NVRDataModel.debug("EventCtrl:Old event scrub will hide now");
             oldEvent.Event.ShowScrub = false;
-            oldEvent.Event.height = zm.eventsListDetailsHeight;
+            oldEvent.Event.height = eventsListDetailsHeight ;
             oldEvent = "";
         }
 
@@ -999,7 +1017,7 @@ angular.module('zmApp.controllers')
 
             if (groupType == 'alarms') {
                 $scope.alarm_images = [];
-                event.Event.height = zm.eventsListDetailsHeight + zm.eventsListScrubHeight;
+                event.Event.height = (eventsListDetailsHeight + eventsListScrubHeight);
                 $ionicScrollDelegate.resize();
                 var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
                 NVRDataModel.log("API for event details" + myurl);
@@ -1091,7 +1109,7 @@ angular.module('zmApp.controllers')
 
                 };
 
-                event.Event.height = zm.eventsListDetailsHeight + zm.eventsListScrubHeight;
+                event.Event.height = (eventsListDetailsHeight + eventsListScrubHeight);
                 $ionicScrollDelegate.resize();
                 $scope.mycarousel.index = 0;
                 $scope.ionRange.index = 1;
@@ -1223,9 +1241,9 @@ angular.module('zmApp.controllers')
                 var distdiff = parseInt($rootScope.devHeight) - toplocation - objheight;
                 // console.log("*****Space at  bottom is " + distdiff);
 
-                if (distdiff < zm.eventsListScrubHeight) // size of the scroller with bars
+                if (distdiff < eventsListScrubHeight) // size of the scroller with bars
                 {
-                    scrollbynumber = zm.eventsListScrubHeight - distdiff;
+                    scrollbynumber = eventsListScrubHeight - distdiff;
                     $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, scrollbynumber, true);
 
                     // we need to scroll up to make space
@@ -1236,7 +1254,7 @@ angular.module('zmApp.controllers')
         else {
             // $ionicScrollDelegate.freezeScroll(false);
             $ionicSideMenuDelegate.canDragContent(true);
-            event.Event.height = zm.eventsListDetailsHeight;
+            event.Event.height = eventsListDetailsHeight;
             $ionicScrollDelegate.resize();
 
             if (scrollbynumber) {
@@ -1666,7 +1684,7 @@ angular.module('zmApp.controllers')
                         myevents[i].Event.ShowScrub = false;
                         myevents[i].Event.BasePath = computeBasePath(myevents[i]);
                         myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
-                        myevents[i].Event.height = zm.eventsListDetailsHeight;
+                        myevents[i].Event.height = eventsListDetailsHeight;
                         if (idfound) $scope.events.push(myevents[i]);
                     }
 
