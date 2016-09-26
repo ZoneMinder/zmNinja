@@ -84,7 +84,10 @@ angular.module('zmApp.controllers')
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
-        
+        // This is the only view that hardcodes row size due to
+        // collection repeat, so lets re-get the text size if it has changed
+        // note that there may be a delay as its a callback - so might involve
+        // a UI jiggle 
         MobileAccessibility.getTextZoom(getTextZoomCallback);
         
         eventsListDetailsHeight = parseInt(zm.eventsListDetailsHeight * $rootScope.textScaleFactor);
