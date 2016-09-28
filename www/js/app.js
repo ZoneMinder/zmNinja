@@ -28,7 +28,8 @@ angular.module('zmApp', [
                             'com.2fdevs.videogular.plugins.overlayplay',
                             'ionic-native-transitions',
                             'mgo-angular-wizard',
-                            'pascalprecht.translate'
+                            'pascalprecht.translate',
+                            'ionic.ion.headerShrink'
                            
 
 
