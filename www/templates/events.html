@@ -17,7 +17,7 @@
         <a style="" class="button button-icon icon ion-search" ng-href="" ng-click="searchClicked();"> </a>
     </ion-nav-buttons>
 
-    <!--<div ng-if="showSearch">
+    <div ng-if="showSearch">
         <ion-header-bar class="bar bar-subheader item-input-inset">
 
             <label class="item-input-wrapper">
@@ -25,11 +25,11 @@
                 <input type="search" placeholder="{{'kSearch'|translate}}" ng-model="search.text" autocorrect="off" autocomplete="off">
             </label>
         </ion-header-bar>
-    </div>-->
+    </div>
 
 
    
-    <ion-content header-shrink ng-cloak on-tap="tapped();" delegate-handle="mainScroll"   overflow-scroll="false" mouse-wheel-scroll>
+    <ion-content style="top:0 !important;" header-shrink ng-cloak on-tap="tapped();" delegate-handle="mainScroll"   overflow-scroll="false" mouse-wheel-scroll>
 
 
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
