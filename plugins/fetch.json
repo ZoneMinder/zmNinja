@@ -202,15 +202,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-certificates": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-settings-hook": {
         "source": {
             "type": "registry",
@@ -235,6 +226,15 @@
             "subdir": "."
         },
         "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-certificates": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
+            "subdir": "."
+        },
+        "is_top_level": true,
         "variables": {}
     }
 }

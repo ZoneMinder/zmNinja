@@ -88,7 +88,9 @@ angular.module('zmApp.controllers')
         // collection repeat, so lets re-get the text size if it has changed
         // note that there may be a delay as its a callback - so might involve
         // a UI jiggle 
-        MobileAccessibility.getTextZoom(getTextZoomCallback);
+        
+        if ($rootScope.platformOS != "desktop")
+            MobileAccessibility.getTextZoom(getTextZoomCallback);
         
         eventsListDetailsHeight = parseInt(zm.eventsListDetailsHeight * $rootScope.textScaleFactor);
         eventsListScrubHeight = parseInt(zm.eventsListScrubHeight * $rootScope.textScaleFactor);
