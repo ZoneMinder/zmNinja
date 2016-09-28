@@ -29,6 +29,7 @@ angular.module('zmApp', [
                             'ionic-native-transitions',
                             'mgo-angular-wizard',
                             'pascalprecht.translate'
+                           
 
 
 
@@ -1108,7 +1109,7 @@ angular.module('zmApp', [
 
 
             $rootScope.textScaleFactor = 1.0;
-            MobileAccessibility.getTextZoom(getTextZoomCallback);
+            
             
             $rootScope.db = null;
             $rootScope.runMode = NVRDataModel.getBandwidth();
@@ -1123,6 +1124,8 @@ angular.module('zmApp', [
 
             NVRDataModel.log("You are running on " + $rootScope.platformOS);
 
+            if ($rootScope.platformOS != "desktop")
+                MobileAccessibility.getTextZoom(getTextZoomCallback);
 
             localforage.config({
                 name: zm.dbName
