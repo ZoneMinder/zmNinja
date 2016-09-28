@@ -29,9 +29,9 @@
 
 
    
-    <ion-content style="top:0 !important;" header-shrink ng-cloak on-tap="tapped();" delegate-handle="mainScroll"   overflow-scroll="false" mouse-wheel-scroll>
-
-
+    <ion-content clas="has-header" style="top:0 !important;" header-shrink ng-cloak on-tap="tapped();" delegate-handle="mainScroll"   overflow-scroll="false" mouse-wheel-scroll>
+        <!-- needed for header-shrink so first item doesn't go below header-->
+        <div style="height: 50px;"></div>
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
       
         <div ng-if="!eventsBeingLoaded">
