@@ -1,0 +1,16 @@
+//Scroll Sista
+
+//places subheader underneath top tabs.  Don't forget to import ionic scss before this file!
+.tabs-top .bar-subheader {
+  top: $bar-height + $tabs-height;
+}
+.platform-ios.platform-cordova {
+  // iOS has a status bar which sits on top of the header.
+  // Bump down everything to make room for it. However, if
+  // if its in Cordova, and set to fullscreen, then disregard the bump.
+  &:not(.fullscreen) {
+    .tabs-top .bar-subheader {
+      top: $bar-height + $tabs-height + $ios-statusbar-height;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "ionic-scroll-sista",
+  "version": "1.0.7",
+  "description": "An Ionic plugin that will push your headers and tabs away while scrolling to free up more space",
+  "author": "Devin Jett <djett41@gmail.com> (https://github.com/djett41)",
+  "main": [
+    "dist/ionic.scroll.sista.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/djett41/ionic-scroll-sista.git"
+  },
+  "ignore": [
+    "demo",
+    "js",
+    "test",
+    ".gitignore",
+    "gulpfile.js",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "ionic": "^1.0.0-rc.0",
+    "angular-mocks": "1.4.3"
+  },
+  "keywords": [
+    "mobile",
+    "html5",
+    "ionic",
+    "cordova",
+    "phonegap",
+    "scroll",
+    "header",
+    "shrink",
+    "tabs",
+    "angularjs",
+    "angular"
+  ],
+  "license": "MIT",
+  "private": false
+}

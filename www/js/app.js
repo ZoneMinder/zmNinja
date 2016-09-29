@@ -29,7 +29,8 @@ angular.module('zmApp', [
                             'ionic-native-transitions',
                             'mgo-angular-wizard',
                             'pascalprecht.translate',
-                            'ionic.ion.headerShrink'
+                            'ionic.ion.headerShrink',
+                            'jett.ionic.scroll.sista'
                            
 
 
@@ -1266,7 +1267,10 @@ angular.module('zmApp', [
                 }
                 if (window.StatusBar) {
                     // org.apache.cordova.statusbar required
+                    NVRDataModel.log("Updating statusbar");
                     StatusBar.styleDefault();
+                    //StatusBar.overlaysWebView(true);
+                    //StatusBar.backgroundColorByHexString("#2980b9");
                 }
 
 
