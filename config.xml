@@ -15,6 +15,7 @@
     <preference name="CrosswalkAnimatable" value="true" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#2980b9" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="AutoHideSplashScreen" value="false" />
@@ -24,7 +25,7 @@
     <preference name="SplashScreenDelay" value="300" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="FadeSplashScreen" value="false" />
-    <preference name="BackgroundColor" value="0xff555555" />
+    <preference name="BackgroundColor" value="#444444" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
