@@ -62,6 +62,9 @@ angular.module('zmApp.controllers')
         // Called once at app start. Does a lazy definition of websockets open
         //--------------------------------------------------------------------------
         function init() {
+            
+           
+            
             $rootScope.isAlarm = 0;
             $rootScope.alarmCount = "0";
 
@@ -102,6 +105,12 @@ angular.module('zmApp.controllers')
 
             // Transmit auth information to server              
             ws.$on('$open', openHandshake);
+
+            console.log ("********** SETTING UP ERROR WS " );
+            ws.$on('$error', function (e){
+                console.log ("******** WS ERROR CALLED");
+                 NVRDataModel.displayBanner('error',['Event Server connection error']);
+             });
 
             ws.$on('$close', function () {
                 NVRDataModel.log("Websocket closed");
