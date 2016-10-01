@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('jett.ionic.scroll.sista', ['ionic'])
-    .directive('scrollSista', ['$document', '$timeout', '$rootScope', '$ionicScrollDelegate', function($document, $timeout, $rootScope, $ionicScrollDelegate) {
+    .directive('scrollSista', ['$document', '$timeout', '$rootScope', '$ionicScrollDelegate', '$ionicPlatform',function($document, $timeout, $rootScope, $ionicScrollDelegate, $ionicPlatform) {
       var TRANSITION_DELAY = 400;
       var defaultDelay = TRANSITION_DELAY * 2;
       var defaultDuration = TRANSITION_DELAY + 'ms';
@@ -30,6 +30,7 @@
           var body = $document[0].body;
           var scrollDelegate = $attr.delegateHandle ? $ionicScrollDelegate.$getByHandle($attr.delegateHandle) : $ionicScrollDelegate;
           var scrollView = scrollDelegate.getScrollView();
+          var isIos = false;
 
           //coordinates
           var y, prevY, prevScrollTop;
@@ -85,7 +86,15 @@
               return;
             }
 
+            // credit - adapted 20px PR from https://github.com/driftyco/ionic-ion-header-shrink/pull/10
+
             headerHeight = activeHeader.offsetHeight;
+            $ionicPlatform.ready(function() {
+             if($ionicPlatform.is('ios')) {
+                 isIos = true;
+                 headerHeight -= 20; // account 20px for the ios status bar
+             }
+            });
             contentTop = headerHeight;
 
             //since some people can have nested tabs, get the last tabs
@@ -278,6 +287,11 @@
             var scrollTop = e.detail?e.detail.scrollTop:e.target.scrollTop;
 
             y = scrollTop >= 0 ? Math.min(defaultEnd, Math.max(0, y + scrollTop - prevScrollTop)) : 0;
+            if (isIos && y >headerHeight)
+            {
+                    y = headerHeight;
+            }
+            
 
             //if we are at the bottom, animate the header/tabs back in
             if (scrollView.getScrollMax().top - scrollTop <= contentTop) {
