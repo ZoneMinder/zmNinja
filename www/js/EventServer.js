@@ -10,16 +10,14 @@
 //--------------------------------------------------------------------------
 
 angular.module('zmApp.controllers')
-
 .factory('EventServer', ['NVRDataModel', '$rootScope', '$websocket', '$ionicPopup', '$timeout', '$q', 'zm', '$ionicPlatform', '$cordovaMedia', '$translate', function
     (NVRDataModel, $rootScope, $websocket, $ionicPopup, $timeout, $q, zm, $ionicPlatform, $cordovaMedia, $translate) {
 
-
+        var lastEventServerCheck = Date.now();
         var ws;
 
         var localNotificationId = 0;
-
-
+        var firstError = true;
 
 
         //--------------------------------------------------------------------------
@@ -106,10 +104,20 @@ angular.module('zmApp.controllers')
             // Transmit auth information to server              
             ws.$on('$open', openHandshake);
 
-            console.log ("********** SETTING UP ERROR WS " );
+            NVRDataModel.debug ("Setting up websocket error handler" );
             ws.$on('$error', function (e){
-                console.log ("******** WS ERROR CALLED");
-                 NVRDataModel.displayBanner('error',['Event Server connection error']);
+                
+                if ((Date.now() - lastEventServerCheck > 30000.0) || firstError)
+                {
+                    NVRDataModel.debug ("Websocket Errorhandler called");
+                    $timeout( function(){
+                        NVRDataModel.displayBanner('error',['Event Server connection error']);
+                    },3000); // leave 3 seconds for transitions
+                    firstError = false;
+                    lastEventServerCheck = Date.now();
+                }
+                //console.log ("VALUE TIME " + lastEventServerCheck);
+                //console.log ("NOW TIME " + Date.now());
              });
 
             ws.$on('$close', function () {
