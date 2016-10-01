@@ -91,6 +91,9 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     ~/Library/Android/sdk/build-tools/22.0.1/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
     rm -f android-release-unsigned.apk 
     cd ..
+    ./checkperms.sh release_files/zmNinja.apk
+    echo "*** Phone State Check:"
+    ./checkperms.sh release_files/zmNinja.apk | grep PHONE_STATE
 fi
 
 
