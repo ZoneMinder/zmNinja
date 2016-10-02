@@ -2758,6 +2758,20 @@ Packery.prototype.getShiftPositions = function( attrName ) {
   });
 };
 
+// get JSON-friendly data for items positions
+Packery.prototype.EHgetShiftPositions = function( attrName ) {
+  attrName = attrName || 'id';
+  var _this = this;
+  return this.items.map( function( item ) {
+    return {
+      attr: item.element.getAttribute( attrName ),
+      size: item.element.getAttribute ("eh-data-item-size"),
+      display: item.element.getAttribute ("eh-data-item-listdisplay"),
+      x: item.rect.x / _this.packer.width,
+      y: item.rect.y / _this.packer.height
+    }
+  });
+};
 Packery.prototype.initShiftLayout = function( positions, attr ) {
   if ( !positions ) {
     // if no initial positions, run packery layout

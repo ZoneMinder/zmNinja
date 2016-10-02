@@ -1766,7 +1766,7 @@ angular.module('zmApp', [
 
         },
         url: "/montage-history",
-        templateUrl: "templates/montage-history.html",
+        templateUrl: "templates/montage-history2.html",
         controller: 'zmApp.MontageHistoryCtrl',
         params: {
             minimal: false,
