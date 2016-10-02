@@ -209,19 +209,19 @@
         "is_top_level": false,
         "variables": {}
     },
-    "cordova-plugin-certificates": {
+    "cordova-plugin-media": {
         "source": {
             "type": "git",
-            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
+            "url": "https://github.com/pliablepixels/cordova-plugin-media",
             "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-media": {
+    "cordova-plugin-certificates": {
         "source": {
             "type": "git",
-            "url": "https://github.com/pliablepixels/cordova-plugin-media",
+            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
             "subdir": "."
         },
         "is_top_level": true,

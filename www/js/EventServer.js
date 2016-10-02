@@ -95,7 +95,7 @@ angular.module('zmApp.controllers')
             ws = $websocket.$new({
                 url: loginData.eventServer,
                 reconnect: true,
-                reconnectInterval: 5000,
+                reconnectInterval: 60000,
                 lazy: true
             });
 
@@ -107,7 +107,9 @@ angular.module('zmApp.controllers')
             NVRDataModel.debug ("Setting up websocket error handler" );
             ws.$on('$error', function (e){
                 
-                if ((Date.now() - lastEventServerCheck > 30000.0) || firstError)
+                // we don't need this check as I changed reconnect interval to 60s
+                //if ((Date.now() - lastEventServerCheck > 30000.0) || firstError)
+                if (1)
                 {
                     NVRDataModel.debug ("Websocket Errorhandler called");
                     $timeout( function(){
