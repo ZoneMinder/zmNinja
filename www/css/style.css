@@ -99,12 +99,12 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     opacity: 80%;
 }
 .header-event-id {
-    background: #9b59b6;
-    color: #cccccc;
-    border-color: #9b59b6;
-    border-style: solid;
-    border-width: 1px;
-    opacity: 80%;
+    background:rgba(52, 152, 219,0.2);
+    color: #FFF;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 1;
 }
 .header-paused {
     background: #ba3e3e;
@@ -913,3 +913,4 @@ body {
 .white-button-text {
     color: #fff !important;
 }
+

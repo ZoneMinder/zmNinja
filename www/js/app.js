@@ -28,7 +28,8 @@ angular.module('zmApp', [
                             'com.2fdevs.videogular.plugins.overlayplay',
                             'ionic-native-transitions',
                             'mgo-angular-wizard',
-                            'pascalprecht.translate'
+                            'pascalprecht.translate',
+                            'jett.ionic.scroll.sista'
                            
 
 
@@ -1265,7 +1266,10 @@ angular.module('zmApp', [
                 }
                 if (window.StatusBar) {
                     // org.apache.cordova.statusbar required
+                    NVRDataModel.log("Updating statusbar");
                     StatusBar.styleDefault();
+                    //StatusBar.overlaysWebView(false);
+                    StatusBar.backgroundColorByHexString("#2980b9");
                 }
 
 
@@ -1762,7 +1766,7 @@ angular.module('zmApp', [
 
         },
         url: "/montage-history",
-        templateUrl: "templates/montage-history.html",
+        templateUrl: "templates/montage-history2.html",
         controller: 'zmApp.MontageHistoryCtrl',
         params: {
             minimal: false,

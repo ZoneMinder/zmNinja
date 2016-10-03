@@ -10,16 +10,14 @@
 //--------------------------------------------------------------------------
 
 angular.module('zmApp.controllers')
-
 .factory('EventServer', ['NVRDataModel', '$rootScope', '$websocket', '$ionicPopup', '$timeout', '$q', 'zm', '$ionicPlatform', '$cordovaMedia', '$translate', function
     (NVRDataModel, $rootScope, $websocket, $ionicPopup, $timeout, $q, zm, $ionicPlatform, $cordovaMedia, $translate) {
 
-
+        var lastEventServerCheck = Date.now();
         var ws;
 
         var localNotificationId = 0;
-
-
+        var firstError = true;
 
 
         //--------------------------------------------------------------------------
@@ -62,6 +60,9 @@ angular.module('zmApp.controllers')
         // Called once at app start. Does a lazy definition of websockets open
         //--------------------------------------------------------------------------
         function init() {
+            
+           
+            
             $rootScope.isAlarm = 0;
             $rootScope.alarmCount = "0";
 
@@ -94,7 +95,7 @@ angular.module('zmApp.controllers')
             ws = $websocket.$new({
                 url: loginData.eventServer,
                 reconnect: true,
-                reconnectInterval: 5000,
+                reconnectInterval: 60000,
                 lazy: true
             });
 
@@ -102,6 +103,24 @@ angular.module('zmApp.controllers')
 
             // Transmit auth information to server              
             ws.$on('$open', openHandshake);
+
+            NVRDataModel.debug ("Setting up websocket error handler" );
+            ws.$on('$error', function (e){
+                
+                // we don't need this check as I changed reconnect interval to 60s
+                //if ((Date.now() - lastEventServerCheck > 30000.0) || firstError)
+                if (1)
+                {
+                    NVRDataModel.debug ("Websocket Errorhandler called");
+                    $timeout( function(){
+                        NVRDataModel.displayBanner('error',['Event Server connection error']);
+                    },3000); // leave 3 seconds for transitions
+                    firstError = false;
+                    lastEventServerCheck = Date.now();
+                }
+                //console.log ("VALUE TIME " + lastEventServerCheck);
+                //console.log ("NOW TIME " + Date.now());
+             });
 
             ws.$on('$close', function () {
                 NVRDataModel.log("Websocket closed");

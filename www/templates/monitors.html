@@ -1,4 +1,5 @@
 <ion-view view-title="{{'kMonitors' | translate}}" cache-view="false">
+    
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()">
         </button>
@@ -6,8 +7,9 @@
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
 
     </ion-nav-buttons>
+    
 
-    <ion-content overflow-scroll="false">
+    <ion-content scroll-sista  delegate-handle="none" overflow-scroll="false"  mouse-wheel-scroll >
        <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
         </ion-refresher>
             <div style="float:right;margin-top:3px;margin-right:8px;"> 

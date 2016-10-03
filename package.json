@@ -67,11 +67,11 @@
       "locator": "https://github.com/jcjee/email-composer",
       "id": "com.jcjee.plugins.emailcomposer"
     },
-    "cordova-plugin-compat",
     {
       "locator": "https://github.com/pliablepixels/cordova-plugin-media",
-      "id": "cordova-plugin-media"
+      "id": "org.apache.cordova.media"
     },
+    "cordova-plugin-compat",
     {
       "locator": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
       "id": "cordova-sqlite-storage"
@@ -80,11 +80,19 @@
     "cordova-plugin-android-permissions",
     "cordova-plugin-network-information",
     "cordova-plugin-statusbar",
+    "cordova-plugin-settings-hook",
+    {
+      "locator": "https://github.com/phonegap/phonegap-mobile-accessibility.git",
+      "id": "phonegap-plugin-mobile-accessibility"
+    },
+    {
+      "locator": "https://github.com/apache/cordova-plugin-device.git",
+      "id": "cordova-plugin-device"
+    },
     {
       "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
       "id": "cordova-plugin-certificates"
-    },
-    "cordova-plugin-settings-hook"
+    }
   ],
   "cordovaPlatforms": [
     {},
