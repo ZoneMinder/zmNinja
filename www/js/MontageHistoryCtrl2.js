@@ -223,12 +223,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 console.log("REDOING PACKERY & DRAG");
                 if (pckry !== undefined)
                     $timeout(function () {
-                        pckry.reloadItems();
+                       
                         
                         draggies.forEach(function (drag) {
                             drag.destroy();
                         });
+                       
                         draggies = [];
+                        pckry.reloadItems();
                         pckry.getItemElements().forEach(function (itemElem) {
                             draggie = new Draggabilly(itemElem);
                             pckry.bindDraggabillyEvents(draggie);
@@ -237,9 +239,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         });
                         
                         $timeout(function () {
-                            pckry.onresize();
+                            console.log (">>>>> layouting");
+                            //pckry.onresize();
                             pckry.layout();
-                        }, zm.packeryTimer);
+                        }, 100);
 
                     }, 500);
 
