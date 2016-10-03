@@ -221,7 +221,11 @@
             translateHeaders(Math.min(headerEnd, headerY), duration);
 
             //readjust top of ion-content
-            contentStyle.top = Math.max(0, contentTop - y) + 'px';
+            var st = Math.max(0, contentTop - y);
+             if (isIos)
+                     st+=20;
+
+            contentStyle.top = st + 'px';
           }
 
           /**
@@ -292,7 +296,6 @@
                     y = headerHeight;
             }
             
-
             //if we are at the bottom, animate the header/tabs back in
             if (scrollView.getScrollMax().top - scrollTop <= contentTop) {
             //  console.log ("MAX TOP="+scrollView.getScrollMax().top+" SCROLL TOP:"+scrollTop+" CONTOP="+contentTop);
