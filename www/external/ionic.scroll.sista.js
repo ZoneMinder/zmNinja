@@ -295,8 +295,9 @@
 
             //if we are at the bottom, animate the header/tabs back in
             if (scrollView.getScrollMax().top - scrollTop <= contentTop) {
-              y = 0;
-              duration = defaultDuration;
+            //  console.log ("MAX TOP="+scrollView.getScrollMax().top+" SCROLL TOP:"+scrollTop+" CONTOP="+contentTop);
+            //  y = 0;
+            //  duration = defaultDuration;
             }
 
             prevScrollTop = scrollTop;
