@@ -134,29 +134,10 @@
         "is_top_level": true,
         "variables": {}
     },
-    "org.apache.cordova.media": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/pliablepixels/cordova-plugin-media",
-            "subdir": ".",
-            "ref": "playback-only"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-compat": {
         "source": {
             "type": "registry",
             "id": "cordova-plugin-compat"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "cordova-plugin-media": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/pliablepixels/cordova-plugin-media",
-            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
@@ -226,6 +207,15 @@
             "subdir": "."
         },
         "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-media": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/pliablepixels/cordova-plugin-media",
+            "subdir": "."
+        },
+        "is_top_level": true,
         "variables": {}
     },
     "cordova-plugin-certificates": {

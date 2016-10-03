@@ -1,4 +1,4 @@
-<ion-view view-title="Help">
+<ion-view cache-view="false" view-title="Help">
 
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
@@ -8,7 +8,7 @@
     </ion-nav-buttons>
 
 
-    <ion-content class="padding" overflow-scroll="false" ng-cloak>
+    <ion-content  class="padding" scroll-sista delegate-handle="none"  overflow-scroll="false"  mouse-wheel-scroll>
        
         <p><small>{{$root.appName}} v{{zmAppVersion}}</small></p>
         <div class="list">

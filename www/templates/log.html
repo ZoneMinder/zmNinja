@@ -22,7 +22,7 @@
         </div>
     </ion-nav-buttons>
 
-    <ion-content class="padding">
+    <ion-content scroll-sista delegate-handle="none"  overflow-scroll="false"  mouse-wheel-scroll>
         <b>{{$root.appName}} {{'kVersion'|translate}}: {{zmAppVersion}}</b><br/>
         <!-- don't indent here -- its a pre-->
         <pre>{{log.logString}}</pre>
