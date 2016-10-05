@@ -1283,7 +1283,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         imagesLoaded(elem).once('always', function () {
             console.log("******** ALL IMAGES LOADED");
             NVRDataModel.debug("All images loaded");
-            $scope.allImagesLoaded = true;
+            
 
             $ionicLoading.hide();
 
@@ -1340,6 +1340,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 $timeout(function () {
                     NVRDataModel.log("Force calling resize");
                     pckry.layout();
+                    $scope.allImagesLoaded = true;
                 }, zm.packeryTimer); // don't ask
 
 
