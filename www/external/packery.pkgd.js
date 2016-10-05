@@ -2748,6 +2748,7 @@ Packery.prototype.getShiftPositions = function( attrName ) {
   attrName = attrName || 'id';
   var _this = this;
   return this.items.map( function( item ) {
+    //console.log ("x for "+item.element.getAttribute(attrName)+" is " + item.rect.x);
     return {
       attr: item.element.getAttribute( attrName ),
       size: item.element.getAttribute ("data-item-size"),
@@ -2796,8 +2797,10 @@ Packery.prototype.initShiftLayout = function( positions, attr ) {
     var selector = '[' + attr + '="' + itemPosition.attr  + '"]'
     var itemElem = this.element.querySelector( selector );
     var item = this.getItem( itemElem );
-    item.rect.x = itemPosition.x * this.packer.width;
+    //item.rect.x = itemPosition.x * this.packer.width;
+    item.rect.x = Math.ceil(itemPosition.x * this.packer.width);
     item.rect.y = itemPosition.y * this.packer.height;
+    //console.log ("X computed as " + item.rect.x);
     return item;
   }, this );
   this.shiftLayout();

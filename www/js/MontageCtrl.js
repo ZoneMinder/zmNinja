@@ -129,6 +129,7 @@ angular.module('zmApp.controllers')
             //console.log ("POSITION STR IS " + positionsStr);
             positions = JSON.parse(positionsStr);
             NVRDataModel.log("found a packery layout");
+            
             layouttype = false;
         }
 
@@ -167,7 +168,7 @@ angular.module('zmApp.controllers')
         imagesLoaded(elem).on('always', function () {
             //console.log ("******** ALL IMAGES LOADED");
             NVRDataModel.debug("All images loaded");
-            $scope.allImagesLoaded = true;
+            
 
             $ionicLoading.hide();
 
@@ -181,12 +182,13 @@ angular.module('zmApp.controllers')
             });
             if (!progressCalled) {
                 NVRDataModel.log("*** BUG PROGRESS WAS NOT CALLED");
-                pckry.reloadItems();
-
             }
-
+             NVRDataModel.debug("All images loaded, doing image layout");
             $timeout(function () {
-
+            pckry.initShiftLayout(positions, 'data-item-id');
+             //pckry.reloadItems();
+            
+                
                 pckry.getItemElements().forEach(function (itemElem) {
                     draggie = new Draggabilly(itemElem);
                     pckry.bindDraggabillyEvents(draggie);
@@ -214,15 +216,12 @@ angular.module('zmApp.controllers')
                     }
 
 
-                    NVRDataModel.debug("All images loaded, doing image layout");
-                    $timeout(function () {
-                        pckry.initShiftLayout(positions, 'data-item-id');
-                    }, 0);
+                  
                 }
-                $timeout(function () {
-                    NVRDataModel.log("Force calling resize");
-                    pckry.shiftLayout();
-                }, zm.packeryTimer); // don't ask
+               
+                    $scope.allImagesLoaded = true;
+                $timeout (function () {
+                    pckry.layout();},300);
 
 
 
@@ -242,6 +241,7 @@ angular.module('zmApp.controllers')
             //console.log ("POSITIONS MAP " + JSON.stringify(positions));
             var ld = NVRDataModel.getLogin();
             ld.packeryPositions = JSON.stringify(positions);
+            //console.log ("Saving " + ld.packeryPositions);
             NVRDataModel.setLogin(ld);
         }
 
@@ -407,6 +407,7 @@ angular.module('zmApp.controllers')
                     NVRDataModel.debug("POSITIONS MAP " + JSON.stringify(positions));
                     var ld = NVRDataModel.getLogin();
                     ld.packeryPositions = JSON.stringify(positions);
+                    //console.log ("Saving " + ld.packeryPositions);
                     NVRDataModel.setLogin(ld);
                 });
             });
@@ -637,6 +638,7 @@ angular.module('zmApp.controllers')
                     //console.log ("POSITIONS MAP " + JSON.stringify(positions));
                     var ld = NVRDataModel.getLogin();
                     ld.packeryPositions = JSON.stringify(positions);
+                     //console.log ("Saving " + ld.packeryPositions);
                     NVRDataModel.setLogin(ld);
                 }, 300);
             }, 100);
@@ -823,7 +825,7 @@ angular.module('zmApp.controllers')
     function orientationChanged() {
         NVRDataModel.debug("Detected orientation change, redoing packery resize");
         $timeout(function () {
-            pckry.onresize();
+            if (pckry) pckry.onresize();
         });
     }
 
@@ -851,7 +853,7 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("Setting image mode to snapshot, will change to image when packery is all done");
         $scope.allImagesLoaded = false;
         $scope.isDragabillyOn = false;
-        $scope.allImagesLoaded = false;
+       
         $scope.gridScale = "grid-item-50";
         $scope.LoginData = NVRDataModel.getLogin();
         //FIXME
@@ -1036,7 +1038,9 @@ angular.module('zmApp.controllers')
                 var positions = pckry.getShiftPositions('data-item-id');
                 //console.log ("POSITIONS MAP " + JSON.stringify(positions));
                 var ld = NVRDataModel.getLogin();
+                 
                 ld.packeryPositions = JSON.stringify(positions);
+                //console.log ("Saving " + ld.packeryPositions);
                 NVRDataModel.setLogin(ld);
                 // $scope.slider.monsize = 2;
             });
@@ -1070,6 +1074,8 @@ angular.module('zmApp.controllers')
             // return;
         }
 
+     
+        
         $scope.sliderChanging = true;
 
         var somethingReset = false;
@@ -1111,14 +1117,16 @@ angular.module('zmApp.controllers')
         }
 
 
-        //pckry.reloadItems();
+        pckry.shiftLayout();
 
         pckry.once('layoutComplete', function () {
             $timeout(function () {
                 var positions = pckry.getShiftPositions('data-item-id');
                 //console.log ("POSITIONS MAP " + JSON.stringify(positions));
                 var ld = NVRDataModel.getLogin();
+                
                 ld.packeryPositions = JSON.stringify(positions);
+                 //console.log ("Saving " + ld.packeryPositions);
                 NVRDataModel.setLogin(ld);
                 $ionicLoading.hide();
                 $scope.sliderChanging = false;
