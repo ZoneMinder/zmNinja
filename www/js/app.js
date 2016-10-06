@@ -18,7 +18,6 @@ angular.module('zmApp', [
                             'ionic',
                             'ion-datetime-picker',
                             'ngIOS9UIWebViewPatch',
-                            'tc.chartjs',
                             'zmApp.controllers',
                             'fileLogger',
                             'angular-carousel',
@@ -114,6 +113,27 @@ angular.module('zmApp', [
         angular.forEach(input, function (item) {
 
             if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0')) {
+                out.push(item);
+            }
+
+        });
+
+        return out;
+    };
+
+})
+
+// filter for EH iteration
+.filter('onlyEnabledAndEventHas', function () {
+
+    // Create the return function and set the required parameter name to **input**
+    return function (input) {
+
+        var out = [];
+
+        angular.forEach(input, function (item) {
+
+            if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0') && (item.Monitor.eventUrl != 'img/noevent.png')) {
                 out.push(item);
             }
 
@@ -1766,7 +1786,7 @@ angular.module('zmApp', [
 
         },
         url: "/montage-history",
-        templateUrl: "templates/montage-history2.html",
+        templateUrl: "templates/montage-history.html",
         controller: 'zmApp.MontageHistoryCtrl',
         params: {
             minimal: false,

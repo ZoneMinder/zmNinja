@@ -778,7 +778,7 @@ angular.module('zmApp.controllers')
                 //https://server/zm/api/events/consoleEvents/5%20minute.json
         var ld = NVRDataModel.getLogin();
 
-        var af = "/AlarmFrames >=: " + ld.enableAlarmCount;
+        var af =  "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
         var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour" + af + ".json";
         NVRDataModel.debug("consoleEvents API:" + apiurl);
