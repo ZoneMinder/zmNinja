@@ -1,7 +1,7 @@
 {
   "name": "zmninja",
   "version": "1.0.0",
-  "description": "zmNinja: An Ionic project",
+  "description": "zmNinja: An Awesome ZoneMinder app",
   "dependencies": {
     "@angular/common": "^2.0.0-rc.3",
     "@angular/compiler": "^2.0.0-rc.3",
