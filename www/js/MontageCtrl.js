@@ -184,6 +184,7 @@ angular.module('zmApp.controllers')
                 NVRDataModel.log("*** BUG PROGRESS WAS NOT CALLED");
             }
              NVRDataModel.debug("All images loaded, doing image layout");
+            $scope.areImagesLoading = false; // outside timeout so images show before next line
             $timeout(function () {
             pckry.initShiftLayout(positions, 'data-item-id');
              //pckry.reloadItems();
@@ -219,7 +220,8 @@ angular.module('zmApp.controllers')
                   
                 }
                
-                    $scope.allImagesLoaded = true;
+                
+                
                 $timeout (function () {
                     pckry.layout();},300);
 
@@ -887,7 +889,7 @@ angular.module('zmApp.controllers')
         $ionicSideMenuDelegate.canDragContent($scope.minimal ? true : true);
 
 
-        //$scope.areImagesLoading = true;
+        $scope.areImagesLoading = true;
         var ld = NVRDataModel.getLogin();
 
         refreshSec = (NVRDataModel.getBandwidth()=='lowbw') ? ld.refreshSecLowBW : ld.refreshSec;
