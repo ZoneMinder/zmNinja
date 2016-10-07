@@ -1141,10 +1141,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                          pckry.initShiftLayout(positions, 'eh-data-item-id');
                      }, 0);*/
                 }
+                $scope.allImagesLoaded = true;
                 $timeout(function () {
                     NVRDataModel.log("Force calling resize");
                     pckry.layout();
-                    $scope.allImagesLoaded = true;
+                    
                 }, zm.packeryTimer); // don't ask
 
 
