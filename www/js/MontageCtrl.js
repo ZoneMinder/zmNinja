@@ -1,7 +1,7 @@
 // Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded, ConnectSDK */
+/* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded, ConnectSDK, moment */
 
 
 angular.module('zmApp.controllers')
@@ -101,6 +101,7 @@ angular.module('zmApp.controllers')
     };*/
 
 
+    
 
     // called by afterEnter to load Packery
     function initPackery() {
@@ -368,12 +369,15 @@ angular.module('zmApp.controllers')
 
     function loadNotifications() {
 
-        if (!$scope.allImagesLoaded) {
+        if ($scope.areImagesLoading) {
             NVRDataModel.debug("skipping image refresh, packery is still loading");
             return;
         }
 
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+        
+        // if you see the time move, montage should move
+        $scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
 
         //console.log ("Inside Montage timer...");
 
@@ -853,8 +857,11 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.afterEnter', function () {
         NVRDataModel.debug("Setting image mode to snapshot, will change to image when packery is all done");
-        $scope.allImagesLoaded = false;
+        $scope.areImagesLoading = true;
         $scope.isDragabillyOn = false;
+        
+        $scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
+   
        
         $scope.gridScale = "grid-item-50";
         $scope.LoginData = NVRDataModel.getLogin();
