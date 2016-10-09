@@ -49,8 +49,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         return moment(str).format(NVRDataModel.getTimeFormat() + ' on MMMM Do YYYY');
     };
 
+    $scope.dateChanged = function()
+    {
+        console.log ("DATE CHANGED");
+        $scope.datetimeValueFrom.hrs = Math.round(moment.duration(moment().diff(moment($scope.datetimeValueFrom.value))).asHours());
+    };
 
 
+    $scope.hrsChanged = function()
+    {
+         $scope.datetimeValueFrom.value = moment().subtract($scope.datetimeValueFrom.hrs,'hours').toDate();
+        timefrom.toDate();
+         
+    };
+    
 
     function orientationChanged() {
         NVRDataModel.debug("Detected orientation change, redoing packery resize");
@@ -321,12 +333,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     }
 
 
-    $scope.dateChanged = function () {
-        // window.stop();
-        // console.log (">>>>>>>>>>>>>>>>>>>>>>>>>>>>> BAD BAD");
-        footerCollapse();
-    };
-
+   
 
     //--------------------------------------------------------------
     //  Used to control zms for a connkey. If ndx is not -1,
@@ -1198,6 +1205,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $scope.monitors = [];
         imageLoadingDataShare.set(0);
+        
 
         var refresh = NVRDataModel.getMonitors(1);
 
@@ -1216,6 +1224,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     var intervalHandle;
     $scope.isModalActive = false;
     var modalIntervalHandle;
+    $scope.hrsAgo = 4;
 
     window.addEventListener("resize", orientationChanged, false);
 
@@ -1258,13 +1267,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //tdatetimeValueFrom.setDate(tdatetimeValueFrom.getDate()-1);
 
     $scope.datetimeValueFrom = {
-        value: ""
+        value: "",
+        hrs:""
     };
     $scope.datetimeValueTo = {
         value: ""
     };
 
     $scope.datetimeValueFrom.value = timefrom.toDate();
+    $scope.datetimeValueFrom.hrs = Math.round(moment.duration(moment().diff(moment($scope.datetimeValueFrom.value))).asHours());
+    
     $scope.datetimeValueTo.value = timeto.toDate();
 
     $rootScope.eventQueryInterval = "";

@@ -14,10 +14,10 @@
 
         <button class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
         </button>
-        
+
         <button class="button button-icon button-clear ion-plus-round" ng-click="sliderChanged(1);">&nbsp;
         </button>
-        
+
         <button class="button button-icon button-clear ion-minus-round" ng-click="sliderChanged(-1);">&nbsp;
         </button>
 
@@ -29,7 +29,7 @@
 
     <ion-content scroll-sista has-bouncing="false" style="background-color:#444444" delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
 
-        
+
 
         <!--<div class="timeline_text" ion-datetime-picker title="From" am-pm={{!loginData.use24hr}} ng-model="datetimeValueFrom.value" ng-change="dateChanged()">
             <b>{{'kFrom' | translate}} : </b>{{datetimeValueFrom.value | date: timeFormat}}
@@ -41,7 +41,8 @@
         </div>-->
 
         <div class="timeline_text">
-            {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}} ({{humanizeTime(datetimeValueFrom.value)}}) <!-- - {{'kTo' | translate}}:{{prettifyDateTimeFirst(datetimeValueTo.value)}} -->
+            {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}} ({{humanizeTime(datetimeValueFrom.value)}})
+            <!-- - {{'kTo' | translate}}:{{prettifyDateTimeFirst(datetimeValueTo.value)}} -->
             <div ng-if="$root.platformOS != 'ios'">({{'kChromeMax' | translate}})</div>
         </div>
 
@@ -92,49 +93,46 @@
 
                                 <figcaption class="normal-figcaption" >
 
-                                        &nbsp;<i class="ion-ios-videocam"></i> <span style="background-color:red;color:#fff" ng-if="monitor.Monitor.isPaused">&nbsp;<i class="ion-pause"></i>&nbsp;</span>
-                                       {{monitor.Monitor.Name}}&nbsp;
-                                    
-                                       <div  ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px" 
-                             class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">
-                            <i class="ion-clock"></i>
-                               {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}} ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp;
-                            </div>
+                                        &nbsp;<i class="ion-ios-videocam"></i> <span style="background-color:red;color:#fff" ng-if="monitor.Monitor.isPaused">&nbsp;<i class="ion-pause"></i>&nbsp;</span> {{monitor.Monitor.Name}}&nbsp;
 
-                                </figcaption>
+            <div ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px" class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">
+                <i class="ion-clock"></i> {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}} ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp;
+            </div>
 
-                                
+            </figcaption>
 
-                                </figure>
-                            </div>
-                            
-                            
-                            
 
-                            
-                            <!--
+
+            </figure>
+        </div>
+
+
+
+
+
+        <!--
                              <div  ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style=" position:absolute; bottom:15px; right:0%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;" 
                              class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">
                             &nbsp;<i class="ion-clock"></i>
                                {{prettifyDate(monitor.Monitor.eventUrlTime)}}&nbsp;
                             </div>
                             -->
-                          
-                            
-                            <!--<div ng-if="!monitor.isPaused"
+
+
+        <!--<div ng-if="!monitor.isPaused"
                                 style="position:absolute; bottom:35px; right:0%;white-space:nowrap;overflow:hidden;" class="header-event-id">paused
                             </div>-->
-			  
-			  
-                        </div>
-                    </div> <!-- valid auth session &!background -->
 
-                    <div ng-if="!$root.authSession=='undefined' || isBackground()">
-                        <img  image-spinner-src="img/pausevideo.png" 
-                              />
-                    
-                    </div>
-            </span>
+
+        </div>
+        </div>
+        <!-- valid auth session &!background -->
+
+        <div ng-if="!$root.authSession=='undefined' || isBackground()">
+            <img image-spinner-src="img/pausevideo.png" />
+
+        </div>
+        </span>
         </div>
 
         <ion-item ng-show="!MontageMonitors.length">
@@ -195,14 +193,22 @@
 
 
 
-                
+
 
                 <div class="item item-divider">{{'kTimeline' | translate}}</div>
 
+                <div class="item item-input-inset">
+                    {{'kEventHistShowFrom'|translate}}:&nbsp;
+                    <label class="item-input-wrapper">
+                        <input ng-change="hrsChanged()" type="tel" placeholder="hours" ng-model="datetimeValueFrom.hrs">
+                    </label>
+                    &nbsp;{{'kEventHistHrs' | translate}}
+                </div>
+                
                 <ion-item>
-                    <div ion-datetime-picker title="From" am-pm={{!loginData.use24hr}} ng-model="datetimeValueFrom.value">
+                    <div ion-datetime-picker title="From" am-pm={{!loginData.use24hr}} ng-model="datetimeValueFrom.value" ng-change="dateChanged()">
                         <b>{{'kFrom' | translate }}: </b>{{datetimeValueFrom.value | date: timeFormat}}
-                    </div>  ({{humanizeTime(datetimeValueFrom.value)}})
+                    </div> ({{humanizeTime(datetimeValueFrom.value)}})
                 </ion-item>
 
                 <div class="row">
