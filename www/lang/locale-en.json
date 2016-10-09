@@ -355,5 +355,8 @@
     "kZMSettingsFor"             :"ZoneMinder settings for",
     "kZMStopped"                 :"stopped",
     "kZMUndetermined"            :"undetermined",
-    "kZMUpgradeNeeded"           :"ZoneMinder upgrade needed"
+    "kZMUpgradeNeeded"           :"ZoneMinder upgrade needed",
+    "kEventHistShowFrom"         :"Show from",
+    "kEventHistHrs"              :"hours ago"
+    
 }
