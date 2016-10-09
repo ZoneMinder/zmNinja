@@ -920,14 +920,14 @@ body {
     color: #fff !important;
 }
 
-@media (min-width:700px) {
+@media (min-width:600px) {
     .montage-time {
         display:block !important;
         line-height:250%;
     }  
 }
 
-@media (max-width:699px) {
+@media (max-width:599px) {
     .montage-time {
         display:none !important;
     }  
