@@ -19,7 +19,8 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
                 disableBack: true
             });
             $state.go("events", {
-                "id": 0
+                "id": 0,
+                "playEvent":false
             }, {
                 reload: true
             });

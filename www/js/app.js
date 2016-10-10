@@ -1,4 +1,4 @@
-/* jshint -W041 */
+/* jshint -W041, -W093 */
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, ContactFindOptions, localforage,$, Connection, MobileAccessibility */
 
@@ -83,7 +83,7 @@ angular.module('zmApp', [
     latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
     blogUrl: "http://pliablepixels.github.io/feed.json",
     nphSwitchTimer: 3000,
-    eventHistoryTimer: 10000,
+    eventHistoryTimer: 5000,
     eventPlaybackQuery: 3000,
     
     packeryTimer: 500,
@@ -256,6 +256,52 @@ angular.module('zmApp', [
     };
 })
 
+
+/*.factory('qHttp', function($q, $http) {
+    //credit: http://stackoverflow.com/a/29719693
+      var queue = $q.when();
+
+      return function queuedHttp(httpConf) {
+        var f = function(data) {
+          return $http(httpConf);
+        };
+        return queue = queue.then(f, f);
+      };
+})*/
+
+
+//credit: http://stackoverflow.com/a/14468276
+.factory('qHttp', function($q,$http) {
+
+  var queue=[];
+  var execNext = function() {
+    var task = queue[0];
+    //console.log ("qHTTP>>> Executing:"+JSON.stringify(task.c)+">>> pending:"+queue.length);
+      
+    $http(task.c).then(function(data) {
+      queue.shift();
+      task.d.resolve(data);
+      if (queue.length>0) execNext();
+    }, function(err) {
+      queue.shift();
+      task.d.reject(err);
+      if (queue.length>0) execNext();
+    })
+    ;
+  }; 
+  return function(config) {
+    var d = $q.defer();
+    //config.headers.push({'X-qHttp':'enabled'});
+    queue.push({c:config,d:d});
+    if (queue.length===1) 
+    {
+        execNext();
+    }
+    //else
+        //console.log ("qHTTP>>> Queuing:"+JSON.stringify(config));
+    return d.promise;
+  };
+})
 
 //credit: https://github.com/driftyco/ionic/issues/3131
 .factory('SecuredPopups', [
@@ -461,7 +507,11 @@ angular.module('zmApp', [
 
         'request': function (config) {
 
-
+            // NOTE ON TIMEOUTS: As of Oct 10 2016, it seems
+            // the Http queue often gets messed up when there is a timeout
+            // and the # of requests are plentiful. I'm going to disable it and see
+            
+            
             // console.log (">>>>"+config.url);
             // handle basic auth properly
             if (config.url.indexOf("@") > -1) {
@@ -476,6 +526,7 @@ angular.module('zmApp', [
 
             }
 
+            //console.log (">>>>>>>>>>>>> INTERCEPT OBJECT " + JSON.stringify(config));
 
             if ($rootScope.zmCookie) {
                 config.headers.Cookie = "ZMSESSID=" + $rootScope.zmCookie;
@@ -486,18 +537,21 @@ angular.module('zmApp', [
             if ((config.url.indexOf("/api/states/change/") > -1) ||
                 (config.url.indexOf("getDiskPercent.json") > -1) ||
                 (config.url.indexOf("daemonCheck.json") > -1) ||
-                (config.url.indexOf("getLoad.json") > -1))
+                (config.url.indexOf("getLoad.json") > -1) )
 
 
             {
+               
                 // these can take time, so lets bump up timeout
                 config.timeout = zm.largeHttpTimeout;
 
             } else if ((config.url.indexOf("view=view_video") > -1) ||
                 config.url.indexOf(".mp4") > -1) {
                 // console.log(">>> skipping timers for MP4");
-            } else {
-                config.timeout = zm.httpTimeout;
+            // put a timeout for zms urls
+            } else  if (config.url.indexOf("zms?") > -1) {
+               // config.timeout = zm.httpTimeout;
+               
             }
             return config;
         },
@@ -1629,7 +1683,7 @@ angular.module('zmApp', [
                 return NVRDataModel.getMonitors(0);
             }
         },
-        url: "/events/:id",
+        url: "/events/:id/:playEvent",
         templateUrl: "templates/events.html",
         controller: 'zmApp.EventCtrl',
 

@@ -18,7 +18,8 @@ angular.module('zmApp.controllers')
                         disableBack: true
                     });
                     $state.go("events", {
-                        "id": 0
+                        "id": 0,
+                        "playEvent":false
                     }, {
                         reload: true
                     });
@@ -50,7 +51,8 @@ angular.module('zmApp.controllers')
                     disableBack: true
                 });
                 $state.go("events", {
-                    "id": 0
+                    "id": 0,
+                    "playEvent":false
                 });
 
                 //$ionicHistory.goBack();
