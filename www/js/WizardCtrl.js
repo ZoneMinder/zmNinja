@@ -178,13 +178,14 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
         NVRDataModel.log("zmWizard CGI: baseURL is " + baseUri);
 
+        var a5 = baseUri + "/zmcgi"; // mageia
         var a4 = baseUri + "/cgi-bin/zm"; // another one I found with a CentOS 6 guy
         var a3 = baseUri + "/zm/cgi-bin"; // ubuntu/debian
         var a2 = baseUri + "/cgi-bin-zm"; //fedora/centos/rhel
         var a1 = baseUri + "/cgi-bin"; // doofus
 
 
-        var urls = [a1, a2, a3, a4];
+        var urls = [a1, a2, a3, a4,a5];
 
 
         NVRDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
