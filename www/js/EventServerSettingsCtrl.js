@@ -26,7 +26,8 @@
 
 
              $state.go("events", {
-                 "id": 0
+                 "id": 0,
+                 "playEvent":false
              }, {
                  reload: true
              });

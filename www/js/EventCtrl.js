@@ -84,6 +84,13 @@ angular.module('zmApp.controllers')
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
+        $scope.showEvent = $stateParams.playEvent || false;
+        
+        console.log (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        
+       
+         NVRDataModel.log  ("EventCtrl called with: EID=" + $scope.id + " playEvent =  "+$scope.showEvent);
+        
         // This is the only view that hardcodes row size due to
         // collection repeat, so lets re-get the text size if it has changed
         // note that there may be a delay as its a callback - so might involve
@@ -154,6 +161,34 @@ angular.module('zmApp.controllers')
 
 
 
+    function getEventObject(eid)
+    {
+        
+        var apiurl = NVRDataModel.getLogin().apiurl + '/events/'+eid+'.json';
+        
+        $http.get (apiurl)
+        .success (function (data) {
+        })
+        .error (function (err) {
+        });
+        /*
+        myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
+        myevents[i].Event.MonitorName = NVRDataModel.getMonitorName(myevents[i].Event.MonitorId);
+        // now construct base path
+
+        myevents[i].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[i].Event.MonitorId);
+        myevents[i].Event.baseURL = NVRDataModel.getBaseURL(myevents[i].Event.MonitorId);
+        myevents[i].Event.imageMode = NVRDataModel.getImageMode(myevents[i].Event.MonitorId);
+        // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
+
+        //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
+
+        myevents[i].Event.ShowScrub = false;
+        myevents[i].Event.BasePath = computeBasePath(myevents[i]);
+        myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
+        */
+    }
+    
 
     function getTextZoomCallback(tz)
     {
@@ -667,7 +702,8 @@ angular.module('zmApp.controllers')
         // reloading - may solve https://github.com/pliablepixels/zmNinja/issues/36
         // if you are in the same mid event page $state.go won't work
         $state.go("events", {
-            "id": monitorId
+            "id": monitorId,
+            "playEvent":false
         }, {
             reload: true
         });
@@ -684,7 +720,8 @@ angular.module('zmApp.controllers')
                 disableBack: true
             });
             $state.go("events", {
-                "id": 0
+                "id": 0,
+                "playEvent":false
             }, {
                 reload: true
             });
@@ -754,7 +791,8 @@ angular.module('zmApp.controllers')
                     disableBack: true
                 });
                 $state.go("events", {
-                    "id": 0
+                    "id": 0,
+                    "playEvent":false
                 });
             } else {
                 NVRDataModel.log("Filter reset cancelled in popup");

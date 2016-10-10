@@ -63,7 +63,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 disableBack: true
             });
             $state.go("events", {
-                "id": 0
+                "id": 0,
+                "playEvent":false
             }, {
                 reload: true
             });
