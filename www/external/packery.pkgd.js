@@ -285,7 +285,8 @@ function setup() {
   body.appendChild( div );
   var style = getStyle( div );
 
-  getSize.isBoxSizeOuter = isBoxSizeOuter = getStyleSize( style.width ) == 200;
+  //PP https://github.com/metafizzy/packery/pull/382/commits/ea595864bfc161e992bcb28cbce132df9eac57b9
+  getSize.isBoxSizeOuter = isBoxSizeOuter = Math.round(getStyleSize( style.width )) == 200;
   body.removeChild( div );
 
 }
@@ -2797,8 +2798,8 @@ Packery.prototype.initShiftLayout = function( positions, attr ) {
     var selector = '[' + attr + '="' + itemPosition.attr  + '"]'
     var itemElem = this.element.querySelector( selector );
     var item = this.getItem( itemElem );
-    //item.rect.x = itemPosition.x * this.packer.width;
-    item.rect.x = Math.ceil(itemPosition.x * this.packer.width);
+    item.rect.x = itemPosition.x * this.packer.width;
+    //item.rect.x = Math.ceil(itemPosition.x * this.packer.width);
     item.rect.y = itemPosition.y * this.packer.height;
     //console.log ("X computed as " + item.rect.x);
     return item;
