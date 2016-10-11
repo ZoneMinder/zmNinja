@@ -43,8 +43,8 @@ angular.module('ionic-pullup', [])
                   tabs = document.querySelector('.tabs');
                   hasBottomTabs = document.querySelector('.tabs-bottom');
                   header = document.querySelector('.bar-header');
-                  tabsHeight = tabs ? tabs.offsetHeight : 0;
-                  headerHeight = header ? header.offsetHeight : 0;
+                  tabsHeight = tabs ? tabs.offsetHeight : 80;
+                  headerHeight = header ? header.offsetHeight : 80;
               }
 
               function computeHeights() {
