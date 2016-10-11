@@ -360,6 +360,7 @@
     "kEventHistHrs"              :"hours ago",
     "kEventHistSlower"           : "slower",
     "kEventHistFaster"           : "faster",
-    "kEventHistPlay"            : "play"
+    "kEventHistPlay"            : "play",
+    "kEventHistPause"           : "pause"
     
 }
