@@ -162,12 +162,14 @@ angular.module('zmApp.controllers')
         imagesLoaded(elem).on('progress', function (instance, img) {
 
             progressCalled = true;
+            
 
             // if (layouttype) $timeout (function(){layout(pckry);},100);
         });
 
         imagesLoaded(elem).on('always', function () {
             //console.log ("******** ALL IMAGES LOADED");
+           // $scope.$digest();
             NVRDataModel.debug("All images loaded");
             $scope.areImagesLoading = false;
 
@@ -219,6 +221,7 @@ angular.module('zmApp.controllers')
                     NVRDataModel.debug("All images loaded, doing image layout");
                     $timeout(function () {
                         pckry.initShiftLayout(positions, 'data-item-id');
+                        //$scope.$digest();
                     }, 0);
                 }
                 $timeout(function () {
@@ -226,7 +229,7 @@ angular.module('zmApp.controllers')
                     pckry.shiftLayout();
                 }, zm.packeryTimer); // don't ask
 
-
+                pckry.onresize();
 
             }, zm.packeryTimer);
 
