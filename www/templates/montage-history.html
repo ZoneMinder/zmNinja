@@ -21,7 +21,7 @@
 			<!-- <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng- -->
 			<span ng-repeat="monitor in MontageMonitors | onlyEnabledAndEventHas |limitTo: currentLimit">
 				<div ng-if="$root.authSession!='undefined'">
-					<div ng-if = "monitor.Monitor.eventUrl == 'img/noevent.png' && !sliderVal.hideNoEvents">
+					<div ng-if = "monitor.Monitor.eventUrl == 'img/noevent.png' ">
 						<!-- make sure we don't use id here
                             -- or we lose the handle for cleanup forever!-->
 						<div  class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}" >
@@ -41,7 +41,7 @@
 						<div  ng-if = "monitor.Monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey !=''">
 							<div  class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}" >
 								<figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-show=" monitor.Monitor.listDisplay!='noshow'">
-									<img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{monitor.Monitor.eventUrl}}{{$root.authSession}}"  image-spinner-loader="lines" on-tap="!isDragabillyOn?togglePause(monitor.Monitor.Id):toggleSelectItem($index)"  on-swipe-left="toggleControls()" />
+									<img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{monitor.Monitor.eventUrl}}{{$root.authSession}}"  image-spinner-loader="lines" on-tap="!isDragabillyOn?noop():toggleSelectItem($index)"  on-swipe-left="toggleControls()" />
 									<figcaption class="normal-figcaption" >
 
                                         &nbsp;
@@ -50,12 +50,12 @@
 											<i class="ion-pause"></i>&nbsp;
 										</span> {{monitor.Monitor.Name}}&nbsp;
             
-										<div ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px" class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">
+										<div ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px" class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">[{{monitor.Monitor.eid}}]
 											<i class="ion-clock"></i> {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}} ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp; 
 										</div>
 									</figcaption>
 								</figure>
-								<div ng-if="showControls">
+								<div ng-show="showControls">
                                      
                             
                        
@@ -63,12 +63,13 @@
 										<input on-release="seek(monitor.Monitor.Id,monitor.Monitor.sliderProgress.progress )" type="range" min="0" max="{{monitor.Monitor.eventDuration}}" ng-model="monitor.Monitor.sliderProgress.progress">
 										</div>
                                     <div id="history_canvas_video">
-                                        eventchart-{{monitor.Monitor.Id}}
-                                        <canvas id="eventchart-{{monitor.Monitor.Id}}" width="95%" height="20px"></canvas>
-                                    </div>
+                                        
+                                        <canvas style="padding-left:23px;
+                        padding-right:23px;" id="eventchart-{{monitor.Monitor.Id}}" width="auto" height="20"></canvas>
+                                    
 
 									</div>
-									<div id="flyoutmenu" ng-if="showControls" style="position:absolute;top:50%;left:50%;z-index:99999;transform: translate(-50%, -50%);">
+									<div id="flyoutmenu" ng-if="showControls" style="position:absolute;bottom:5%;left:50%;z-index:99999;transform: translate(-50%, -50%);">
 										<ul>
 											<li>
 												<a href="" ng-click="moveSlower(monitor.Monitor.Id)"> {{'kEventHistSlower' | translate}} </a>
@@ -81,6 +82,8 @@
 											</li>
 										</ul>
 									</div>
+                                </div>
+                                
 								</div>
 							</div>
 						</div>
