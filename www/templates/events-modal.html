@@ -78,7 +78,7 @@
             <div ng-if="( (defaultVideo=='') || (loginData.enableh264==false)) && (loginData.useNphZmsForEvents==true)">
                 <div id="event_canvas">
                     <canvas style="padding-left:23px;
-                        padding-right:23px;" id="eventchart" width="auto" height="20px"></canvas>
+                        padding-right:23px;" id="eventchart" width="auto" height="20"></canvas>
                 </div>
                 <div ng-if="checkEventOn" id="event_slider" data-tap-disabled="false">
                     <div class="range">
@@ -113,6 +113,9 @@
         <a mfb-button icon="ion-skip-backward" label="{{'kFastRewind'|translate}}" ng-click="adjustSpeed('fr');"></a>
         <a mfb-button icon="ion-skip-forward" label="{{'kFastForward'|translate}}" ng-click="adjustSpeed('ff');"></a>
         <a mfb-button icon="ion-play" label="{{'kNormalPlay'|translate}}" ng-click="adjustSpeed('np');"></a>
+        
+        
+        
 
         <a mfb-button icon="ion-pause" label="{{'kPause'|translate}}" ng-click="adjustSpeed('p');"> </a>
 

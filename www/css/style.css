@@ -866,6 +866,10 @@ body {
     background: rgba(108, 122, 137, 0.7);
     z-index: -1;
 }
+
+#flyoutmenu li:active {
+    background:#3498db;
+}
 #flyoutmenu a {
     text-decoration: none;
     color: white;
@@ -890,6 +894,19 @@ body {
     opacity: 1;
     z-index: 99;
 }
+
+#history_canvas_video {
+    position: absolute;
+    width: 95%;
+    top:10%;
+    height: 20px;
+    
+    opacity: 1;
+    z-index: 998;
+}
+
+
+
 #event_slider {
     position: absolute;
     width: 80%;

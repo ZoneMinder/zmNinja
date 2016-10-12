@@ -357,6 +357,10 @@
     "kZMUndetermined"            :"undetermined",
     "kZMUpgradeNeeded"           :"ZoneMinder upgrade needed",
     "kEventHistShowFrom"         :"Show from",
-    "kEventHistHrs"              :"hours ago"
+    "kEventHistHrs"              :"hours ago",
+    "kEventHistSlower"           : "slower",
+    "kEventHistFaster"           : "faster",
+    "kEventHistPlay"            : "play",
+    "kEventHistPause"           : "pause"
     
 }

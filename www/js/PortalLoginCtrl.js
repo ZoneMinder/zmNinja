@@ -281,7 +281,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             } else if (ld.onTapScreen == $translate.instant('kTapEvents')) {
                                 NVRDataModel.debug("Going to events");
                                 $state.go("events", {
-                                    "id": 0
+                                    "id": 0,
+                                    "playEvent":false
                                 }, {
                                     reload: true
                                 });

@@ -162,14 +162,16 @@ angular.module('zmApp.controllers')
         imagesLoaded(elem).on('progress', function (instance, img) {
 
             progressCalled = true;
+            
 
             // if (layouttype) $timeout (function(){layout(pckry);},100);
         });
 
         imagesLoaded(elem).on('always', function () {
             //console.log ("******** ALL IMAGES LOADED");
+           // $scope.$digest();
             NVRDataModel.debug("All images loaded");
-            
+            $scope.areImagesLoading = false;
 
             $ionicLoading.hide();
 
@@ -182,15 +184,13 @@ angular.module('zmApp.controllers')
 
             });
             if (!progressCalled) {
-                NVRDataModel.log("*** BUG PROGRESS WAS NOT CALLED");
+                NVRDataModel.log("***  PROGRESS WAS NOT CALLED");
+                pckry.reloadItems();
             }
-             NVRDataModel.debug("All images loaded, doing image layout");
-            $scope.areImagesLoading = false; // outside timeout so images show before next line
-            $timeout(function () {
-            pckry.initShiftLayout(positions, 'data-item-id');
-             //pckry.reloadItems();
+             
             
-                
+            $timeout(function () {
+
                 pckry.getItemElements().forEach(function (itemElem) {
                     draggie = new Draggabilly(itemElem);
                     pckry.bindDraggabillyEvents(draggie);
@@ -218,19 +218,24 @@ angular.module('zmApp.controllers')
                     }
 
 
-                  
+                    NVRDataModel.debug("All images loaded, doing image layout");
+                    $timeout(function () {
+                        pckry.initShiftLayout(positions, 'data-item-id');
+                        //$scope.$digest();
+                    }, 0);
                 }
-               
-                
-                
-                $timeout (function () {
-                    pckry.layout();},300);
+                $timeout(function () {
+                    NVRDataModel.log("Force calling resize");
+                    pckry.shiftLayout();
+                }, zm.packeryTimer); // don't ask
 
-
+                pckry.onresize();
 
             }, zm.packeryTimer);
 
         });
+
+
 
         function itemDragged(item) {
             NVRDataModel.debug("drag complete");
@@ -512,7 +517,8 @@ angular.module('zmApp.controllers')
                 disableBack: true
             });
             $state.go("events", {
-                "id": 0
+                "id": 0,
+                "playEvent":false
             }, {
                 reload: true
             });
@@ -535,7 +541,8 @@ angular.module('zmApp.controllers')
                 disableBack: true
             });
             $state.go("events", {
-                "id": 0
+                "id": 0,
+                "playEvent":false
             }, {
                 reload: true
             });

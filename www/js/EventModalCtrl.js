@@ -389,14 +389,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         //console.log("YOU changed " + $scope.sliderProgress.progress);
         $scope.currentProgress.progress = $scope.sliderProgress.progress;
-        $timeout(function () {
-            sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
-        }, 500);
-        // give this command some time to complete
-        $timeout(function () {
-            $scope.blockSlider = false;
-        }, 1500);
-
+        sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress)
+        .then (function (s) { $scope.blockSlider = false; }, function (e) {$scope.blockSlider = false;});
+    
+       
     };
 
 

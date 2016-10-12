@@ -69,6 +69,7 @@
     <script src="external/draggabilly.pkgd.js"></script>
     <script src="external/ionic.scroll.sista.js"></script>
     <script src="external/angular-circular-navigation.js"></script>
+    <script src="external/Chart2.min.js"></script>
     
     
 
@@ -140,7 +141,7 @@
 
             </ion-header-bar>
             <ion-content has-header="true" mouse-wheel-scroll>
-                <ion-scroll scrollbar-y="false" style="height:100%" >
+               <!-- <ion-scroll scrollbar-y="false" style="height:100%" >-->
                     <ion-list>
 
                         <ion-item href="#/montage" menu-close>
@@ -164,7 +165,7 @@
                         </span>{{'kMenuTimeline'|translate}}
                         </ion-item>
 
-                        <ion-item href="#/events/0" menu-close>
+                        <ion-item href="#/events/0/false" menu-close>
                             <span class=" item-icon-left">
                             <i class="icon ion-ios-calendar-outline"></i>
                         </span>{{'kMenuEvents'|translate}}
@@ -260,7 +261,7 @@
 
 
                     </ion-list>
-                </ion-scroll>
+                <!--</ion-scroll>-->
             </ion-content>
         </ion-side-menu>
     </ion-side-menus>

@@ -45,10 +45,18 @@ angular.module('ionic-pullup', [])
                   header = document.querySelector('.bar-header');
                   tabsHeight = tabs ? tabs.offsetHeight : 0;
                   headerHeight = header ? header.offsetHeight : 0;
+
+                  /*if ($rootScope.platformOS == 'ios')
+                  {
+                          tabsHeight +=40;
+                          headerHeight +=40;
+                  }*/
               }
 
               function computeHeights() {
                   footer.height = footer.maxHeight > 0 ? footer.maxHeight : $window.innerHeight - headerHeight - handleHeight - tabsHeight;
+                  if ($rootScope.platformOS == 'ios') footer.height -=60;
+                  if ($rootScope.platformOS == 'android') footer.height -=40;
                   $element.css({'height': footer.height + 'px'});
 
                   if (footer.initialState == FooterState.MINIMIZED) {
@@ -69,6 +77,8 @@ angular.module('ionic-pullup', [])
               function recomputeAllHeights() {
                   computeDefaultHeights();
                   footer.height = footer.maxHeight > 0 ? footer.maxHeight : $window.innerHeight - headerHeight - handleHeight - tabsHeight;
+                  if ($rootScope.platformOS == 'ios') footer.height -=60;
+                  if ($rootScope.platformOS == 'android') footer.height -=40;
                 }
 
               function expand() {
