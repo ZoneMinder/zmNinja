@@ -53,7 +53,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //--------------------------------------
     // pause/unpause nph-zms
     //---------------------------------------
-    $scope.monitorPause = function (mid) {
+    $scope.togglePause = function (mid) {
         //console.log ("TOGGLE PAUSE " + mid);
         var m = -1;
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
@@ -63,7 +63,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             }
         }
         if (m != -1) {
-            $scope.MontageMonitors[m].Monitor.isPaused = true; 
+            
+            $scope.MontageMonitors[m].Monitor.isPaused = !$scope.MontageMonitors[m].Monitor.isPaused; 
             var cmd = 1;
             NVRDataModel.debug("Sending CMD:" + cmd + " for monitor " + $scope.MontageMonitors[m].Monitor.Name);
             controlEventStream(cmd, "", $scope.MontageMonitors[m].Monitor.connKey, -1);
@@ -155,6 +156,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             NVRDataModel.debug("fake call to footerCollapse - ignoring");
             return;
         }
+        
+        $interval.cancel($rootScope.eventQueryInterval);
+        $ionicLoading.show({
+                    template: $translate.instant('kPleaseWait'),
+                    noBackdrop: true,
+                    duration: zm.httpTimeout
+                });
+        
         $scope.dragBorder = "";
         $scope.isDragabillyOn = false;
         $ionicSideMenuDelegate.canDragContent(false);
@@ -174,8 +183,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 // this means this mid was showing a message, now we need to change it
                 // so kill prev. stream first
                 NVRDataModel.log("footerCollapse: Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey + " for Monitor:" + $scope.MontageMonitors[i].Monitor.Name);
-                var tmpCK = angular.copy($scope.MontageMonitors[i].Monitor.connKey);
-                timedControlEventStream(2500, 17, "", tmpCK, -1);
+                //var tmpCK = angular.copy($scope.MontageMonitors[i].Monitor.connKey);
+                //timedControlEventStream(2500, 17, "", tmpCK, -1);
+                controlEventStream(17, "", $scope.MontageMonitors[i].Monitor.connKey, -1);
                 $scope.MontageMonitors[i].Monitor.eventUrl = "img/noevent.png";
                 $scope.MontageMonitors[i].Monitor.eid = "-1";
                 $scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
@@ -189,7 +199,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         // make sure there are no more than 5 active streams (noevent is ok)
         $scope.currentLimit = $scope.monLimit;
         //qHttp.get(apiurl)
-        qHttp({
+        $http({
             method: 'get',
             url: apiurl
         }).then(function (succ) {
@@ -231,36 +241,50 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             // make sure we do our best to get that duration for all monitors
             // in the above call, is possible some did not make the cut in the first page
             NVRDataModel.log("Making sure all monitors have a fair chance...");
+            var promises = [];
             for (i = 0; i < $scope.MontageMonitors.length; i++) {
                 console.log("Fair chance check for " + $scope.MontageMonitors[i].Monitor.Name);
                 if ($scope.MontageMonitors[i].Monitor.eventUrl == 'img/noevent.png') {
                     var indivGrab = ld.apiurl + "/events/index/MonitorId:" + $scope.MontageMonitors[i].Monitor.Id + "/StartTime >=:" + TimeObjectFrom + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json";
                     NVRDataModel.debug("Monitor " + $scope.MontageMonitors[i].Monitor.Id + ":" + $scope.MontageMonitors[i].Monitor.Name + " does not have events, trying " + indivGrab);
-                    getExpandedEvents(i, indivGrab);
+                    var p = getExpandedEvents(i, indivGrab);
+                    promises.push(p);
+                    
                 }
+                
             }
+            $q.all(promises).then( doPackery );
             
             // At this stage, we have both a general events grab, and specific event grabs for MIDS that were empty
             
-            console.log("REDOING PACKERY & DRAG");
-            if (pckry !== undefined) {
-                // remove current draggies
-                draggies.forEach(function (drag) {
-                    drag.destroy();
-                });
-                draggies = [];
-                // destroy existing packery object
-                pckry.destroy();
-                initPackery();
+            function doPackery()
+            {
+               // $ionicLoading.hide();
+                console.log("REDOING PACKERY & DRAG");
+                if (pckry !== undefined) {
+                    // remove current draggies
+                    draggies.forEach(function (drag) {
+                        drag.destroy();
+                    });
+                    draggies = [];
+                    // destroy existing packery object
+                    pckry.destroy();
+                    initPackery();
+                    
+                    $rootScope.eventQueryInterval = $interval(function () {
+            checkAllEvents();
+        }.bind(this), zm.eventHistoryTimer);
+                }
             }
         }, function (err) {
             NVRDataModel.debug("history  ERROR:" + JSON.stringify(err));
         });
 
         function getExpandedEvents(i, indivGrab) {
+            var d  = $q.defer();
             var ld = NVRDataModel.getLogin();
             console.log ("Expanded API: " + indivGrab);
-            qHttp({
+            $http({
                 method: 'get',
                 url: indivGrab
             }).then(function (succ) {
@@ -286,7 +310,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         //    NVRDataModel.log ("Setting img src to null as data received in background");
                     }
                 }
-            });
+                d.resolve(true);
+                return d.promise;
+            },
+                    function (err) { d.resolve(true);return d.promise; }
+                   
+                   );
+            return d.promise;
         }
     }
     //---------------------------------------------------------
@@ -478,7 +508,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         }
                         $timeout(function () {
                             drawGraph(framearray, $scope.MontageMonitors[ndx].Monitor.Id);
-                        }, 500);
+                        }, 100);
                         var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id + "-timeline"));
                         element.removeClass('animated flipInX');
                         element.addClass('animated flipOutX');
