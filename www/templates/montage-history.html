@@ -41,7 +41,7 @@
 						<div  ng-if = "monitor.Monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey !=''">
 							<div  class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}" >
 								<figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-show=" monitor.Monitor.listDisplay!='noshow'">
-									<img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{monitor.Monitor.eventUrl}}{{$root.authSession}}"  image-spinner-loader="lines" on-tap="!isDragabillyOn?noop():toggleSelectItem($index)"  on-swipe-left="toggleControls()" on-swipe-right="toggleControls()" />
+									<img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{monitor.Monitor.eventUrl}}{{$root.authSession}}"  image-spinner-loader="lines" on-tap="!isDragabillyOn?togglePause(monitor.Monitor.Id):toggleSelectItem($index)"  on-swipe-left="toggleControls()" on-swipe-right="toggleControls()" />
 									<figcaption class="normal-figcaption" >
 
                                         &nbsp;
@@ -70,20 +70,7 @@
 
                 </div>
 
-                <div id="flyoutmenu" ng-if="showControls" style="position:absolute;top:30%;left:50%;z-index:99999;transform: translate(-50%, -50%);">
-                    <ul>
-                        <!--<li>
-												<a href="" ng-click="moveSlower(monitor.Monitor.Id)"> {{'kEventHistSlower' | translate}} </a>
-											</li>-->
-
-                        <li>
-                            <a href="" ng-click="monitor.Monitor.isPaused ? movePlay(monitor.Monitor.Id) : monitorPause(monitor.Monitor.Id)">{{ monitor.Monitor.isPaused ? ('kEventHistPlay' | translate) : ('kEventHistPause' | translate)}}</a>
-                        </li>
-                        <!--<li>
-												<a href="" ng-click = "moveFaster(monitor.Monitor.Id)">{{'kEventHistFaster' | translate}}</a>
-											</li>-->
-                    </ul>
-                </div>
+                
             </div>
 
         </div>
@@ -94,6 +81,9 @@
             <img image-spinner-src="img/pausevideo.png" />
         </div>
         </span>
+            
+            
+            
         </div>
         <ion-item ng-show="!MontageMonitors.length"> {{'kNoMonitors' | translate }} </ion-item>
     </ion-content>
