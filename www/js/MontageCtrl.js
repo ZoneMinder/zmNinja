@@ -379,6 +379,7 @@ angular.module('zmApp.controllers')
             return;
         }
 
+        if (pckry && !$scope.isDragabillyOn) pckry.shiftLayout();
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         
         // if you see the time move, montage should move
