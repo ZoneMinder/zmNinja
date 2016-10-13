@@ -933,6 +933,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 $timeout(function () {
                     NVRDataModel.log("Force calling resize");
                     pckry.layout();
+                    $scope.packeryDone = true;
                 }, zm.packeryTimer); // don't ask
 
 
@@ -952,6 +953,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         // I don't think I am using this anymore FIXME: check and delete if needed
         // $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $scope.showControls = true;
+        $scope.packeryDone = false;
         readyToRun = false;
         $timeout(function () {
             
