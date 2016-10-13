@@ -66,6 +66,11 @@ angular.module('zmApp.controllers')
     // initial code
     //---------------------------------------------------
 
+    
+    $rootScope.$on("language-changed", function () {
+        NVRDataModel.log(">>>>>>>>>>>>>>> language changed");
+        doRefresh();
+    });
 
     $scope.$on('$ionicView.afterEnter', function () {
         //console.log ("********* AFTER ENTER");

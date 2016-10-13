@@ -36,6 +36,8 @@ $scope.openMenu = function () {
                     onTap: function (e) {
                         NVRDataModel.log("Language selected:"+$scope.myopt.lang);
                         NVRDataModel.setDefaultLanguage($scope.myopt.lang, true);
+                        $rootScope.$emit('language-changed');
+                        
                         
                         //return "OK";
 
