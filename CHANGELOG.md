@@ -1,7 +1,34 @@
 # Change Log
 
-## [1.2.24](https://github.com/pliablepixels/zmNinja/tree/1.2.24) (2016-09-24)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.19...1.2.24)
+## [v1.2.26](https://github.com/pliablepixels/zmNinja/tree/v1.2.26) (2016-10-13)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.24...v1.2.26)
+
+**Implemented enhancements:**
+
+- simplify event montage UX [\#348](https://github.com/pliablepixels/zmNinja/issues/348)
+- Show actual \(server\) time in visible in full screen \(desktop\) [\#346](https://github.com/pliablepixels/zmNinja/issues/346)
+- Implement "shrinking headers" as you scroll to get more real estate [\#342](https://github.com/pliablepixels/zmNinja/issues/342)
+- Add Montage Awesomeness to Event Montage [\#201](https://github.com/pliablepixels/zmNinja/issues/201)
+
+**Fixed bugs:**
+
+- Make events list work with system font size [\#339](https://github.com/pliablepixels/zmNinja/issues/339)
+- IOS 10 - crash on image save to photo albums [\#338](https://github.com/pliablepixels/zmNinja/issues/338)
+
+**Closed issues:**
+
+- Montage Not working [\#343](https://github.com/pliablepixels/zmNinja/issues/343)
+- Show an error message if event server connection fail [\#341](https://github.com/pliablepixels/zmNinja/issues/341)
+- adding download button for video events [\#235](https://github.com/pliablepixels/zmNinja/issues/235)
+
+**Merged pull requests:**
+
+- Montage jazz [\#349](https://github.com/pliablepixels/zmNinja/pull/349) ([pliablepixels](https://github.com/pliablepixels))
+- fixes issue \#337 [\#344](https://github.com/pliablepixels/zmNinja/pull/344) ([PartialVolume](https://github.com/PartialVolume))
+- initial experiments [\#340](https://github.com/pliablepixels/zmNinja/pull/340) ([pliablepixels](https://github.com/pliablepixels))
+
+## [v1.2.24](https://github.com/pliablepixels/zmNinja/tree/v1.2.24) (2016-09-24)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.19...v1.2.24)
 
 **Implemented enhancements:**
 
@@ -468,7 +495,7 @@
 - Cannot get video [\#115](https://github.com/pliablepixels/zmNinja/issues/115)
 
 ## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.3)
 
 **Implemented enhancements:**
 
@@ -488,11 +515,11 @@
 
 - Timeline on v0.87.2 shows only motion events [\#105](https://github.com/pliablepixels/zmNinja/issues/105)
 
-## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
-
 ## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87)
+
+## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
 
 **Fixed bugs:**
 
