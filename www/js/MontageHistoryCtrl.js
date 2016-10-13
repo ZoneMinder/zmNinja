@@ -103,6 +103,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             $scope.MontageMonitors[i].Monitor.seek = true;
         }
         
+        
         sendCmd(mid, '14', "&offset=" + p)
         .then (function(success)
         {
