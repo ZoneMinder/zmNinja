@@ -89,7 +89,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
     }
     $scope.seek = function (mid, p) {
-        console.log("SLIDER CALLED WITH MID=" + mid + " progress=" + p);
+        NVRDataModel.debug("Slider called with mid=" + mid + " progress=" + p);
         
         var m = -1;
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
@@ -107,13 +107,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         sendCmd(mid, '14', "&offset=" + p)
         .then (function(success)
         {
-            console.log ("Removing seek status from "  + $scope.MontageMonitors[i].Monitor.Name);
+            //console.log ("Removing seek status from "  + $scope.MontageMonitors[i].Monitor.Name);
             $scope.MontageMonitors[i].Monitor.seek = false;
             
         },
         function (err)
         {
-            console.log ("Removing seek status from "  + $scope.MontageMonitors[i].Monitor.Name);
+            //console.log ("Removing seek status from "  + $scope.MontageMonitors[i].Monitor.Name);
              $scope.MontageMonitors[i].Monitor.seek = false;
         });
         
@@ -244,7 +244,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             NVRDataModel.log("Making sure all monitors have a fair chance...");
             var promises = [];
             for (i = 0; i < $scope.MontageMonitors.length; i++) {
-                console.log("Fair chance check for " + $scope.MontageMonitors[i].Monitor.Name);
+                //console.log("Fair chance check for " + $scope.MontageMonitors[i].Monitor.Name);
                 if ($scope.MontageMonitors[i].Monitor.eventUrl == 'img/noevent.png') {
                     var indivGrab = ld.apiurl + "/events/index/MonitorId:" + $scope.MontageMonitors[i].Monitor.Id + "/StartTime >=:" + TimeObjectFrom + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json";
                     NVRDataModel.debug("Monitor " + $scope.MontageMonitors[i].Monitor.Id + ":" + $scope.MontageMonitors[i].Monitor.Name + " does not have events, trying " + indivGrab);
@@ -261,7 +261,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             function doPackery()
             {
                // $ionicLoading.hide();
-                console.log("REDOING PACKERY & DRAG");
+                //console.log("REDOING PACKERY & DRAG");
+                NVRDataModel.debug ("Re-creating packery and draggy");
                 if (pckry !== undefined) {
                     // remove current draggies
                     draggies.forEach(function (drag) {
@@ -284,7 +285,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         function getExpandedEvents(i, indivGrab) {
             var d  = $q.defer();
             var ld = NVRDataModel.getLogin();
-            console.log ("Expanded API: " + indivGrab);
+           // console.log ("Expanded API: " + indivGrab);
             $http({
                 method: 'get',
                 url: indivGrab
@@ -303,7 +304,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                             progress: 0
                         };
                         $scope.MontageMonitors[i].Monitor.eventDuration = data.events[0].Event.Length;
-                        console.log(">>> Setting Event for " + $scope.MontageMonitors[i].Monitor.Name + " to " + data.events[0].Event.Id);
+                        //console.log(">>> Setting Event for " + $scope.MontageMonitors[i].Monitor.Name + " to " + data.events[0].Event.Id);
                         NVRDataModel.log("Found expanded event " + data.events[0].Event.Id + " for monitor " + $scope.MontageMonitors[i].Monitor.Id);
                     } else {
                         // $scope.MontageMonitors[i].eventUrl="img/noevent.png";
@@ -327,7 +328,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // API call to get time stamp. Sucks
     //---------------------------------------------------------
     function checkAllEvents() {
-        console.log("Timer:Events are checked....");
+        //console.log("Timer:Events are checked....");
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
             // don't check for monitors that are not shown
             // because nph connkey won't exist and the response
@@ -456,7 +457,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         req.then(function (succ) {
             var resp = succ.data;
             
-            console.log ("zms response: " + JSON.stringify(resp));
+            //console.log ("zms response: " + JSON.stringify(resp));
             
             // move progress bar if event id is the same
             if (resp.result == "Ok" && ndx != -1 && (resp.status.event == $scope.MontageMonitors[ndx].Monitor.eid)) 
@@ -487,6 +488,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                     var maxTime = moment();
                     //NVRDataModel.debug ("Monitor: " + $scope.MontageMonitors[ndx].Monitor.Id + " max time="+maxTime + "("+$scope.datetimeValueTo.value+")"+ " current="+currentEventTime + "("+data.event.Event.StartTime+")");
                     
+                    NVRDataModel.debug ("creating graph for "+$scope.MontageMonitors[ndx].Monitor.Name);
                         var framearray = {
                             labels: [],
                             datasets: [{
@@ -497,7 +499,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         };
                         framearray.labels = [];
                         var ld = NVRDataModel.getLogin();
-                        console.log(">>>>> GRAPH");
+                        //console.log(">>>>> GRAPH");
                         for (i = 0; i < data.event.Frame.length; i++) {
                             var ts = moment(data.event.Frame[i].TimeStamp).format(timeFormat);
                             //console.log ("pushing s:" + event.Frame[i].Score+" t:"+ts);
@@ -524,11 +526,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                                 progress: 0
                             };
                             $scope.MontageMonitors[ndx].Monitor.eventDuration = data.event.Event.Length;
-                            console.log(">>> Setting Event for " + $scope.MontageMonitors[ndx].Monitor.Name + " to " + data.event.Event.Id);
+                            //console.log(">>> Setting Event for " + $scope.MontageMonitors[ndx].Monitor.Name + " to " + data.event.Event.Id);
                         }, 700);
                    
                     
                 }, function (err) {
+                    NVRDataModel.debug ("skipping graph as detailed API failed for "+$scope.MontageMonitors[ndx].Monitor.Name);
                     $scope.MontageMonitors[ndx].Monitor.eventUrlTime = "-";
                 });
             }
@@ -756,7 +759,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     });
     $scope.$on('$ionicView.unloaded', function () {});
     $scope.sliderChanged = function (dirn) {
-        console.log("SLIDER CHANGED");
+        //console.log("SLIDER CHANGED");
         if ($scope.sliderChanging) {
             // console.log ("too fast my friend");
             //$scope.slider.monsize = oldSliderVal;
@@ -982,7 +985,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     };
 
     function drawGraph(f, mid) {
-        console.log("Graphing on " + "eventchart-" + mid);
+        //console.log("Graphing on " + "eventchart-" + mid);
         var cv = document.getElementById("eventchart-" + mid);
         var ctx = cv.getContext("2d");
         frameoptions = {
@@ -1055,7 +1058,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // default = start of day
     var timeto = moment();
     var timefrom = moment().startOf('day');
-    $scope.sliderVal.rate = 2;
+    $scope.sliderVal.rate = 1;
     $scope.sliderVal.realRate = $scope.sliderVal.rate * 100;
     $scope.datetimeValueFrom = {
         value: "",
