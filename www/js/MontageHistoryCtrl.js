@@ -329,6 +329,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //---------------------------------------------------------
     function checkAllEvents() {
         //console.log("Timer:Events are checked....");
+        
+        if (pckry && !$scope.isDragabillyOn) pckry.shiftLayout();
+        
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
             // don't check for monitors that are not shown
             // because nph connkey won't exist and the response
