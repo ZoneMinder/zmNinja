@@ -27,23 +27,28 @@ if [ "$1" = "2" ]; then
         echo "only building native view (5+)"
 fi
 
+echo "Cleaning past builds..."
+cordova clean
+
 ############ Crosswalk build ####################################
 if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
 
     echo "Building Release mode for Xwalk android..."
     echo "--------------------------------------------"
     echo "Adding crosswalk..."
-    #ionic plugin add cordova-plugin-crosswalk-webview --variable "XWALK_VERSION"="18+"
-    ionic plugin add cordova-plugin-crosswalk-webview 
+    #ionic plugin add cordova-plugin-crosswalk-webview@9.8.0 --variable "XWALK_VERSION"="18+"
+    ionic plugin remove cordova-plugin-crosswalk-webview
+    ionic plugin add "https://github.com/crosswalk-project/cordova-plugin-crosswalk-webview#1.8.0"  --variable XWALK_MODE="lite" --variable "XWALK_VERSION"="17.46.459.1"
+    #ionic plugin add cordova-plugin-crosswalk-webview 
 
     # crosswalk handles SSL certificate handling in a different way
     # need to switch plugins
     echo "Adding crosswalk cert plugin..."
     cordova plugin remove cordova-plugin-certificates
     cordova plugin add https://github.com/danjarvis/cordova-plugin-crosswalk-certificate
-    ionic platform remove android
-    ionic platform add android
-    cp "$NINJAKEYSTORE" platforms/android
+    #ionic platform remove android
+    #ionic platform add android
+    cp "$NINJAKEYSTORE" platforms/android/
     ionic build android --release
     
     # copy builds to my release directory
@@ -75,12 +80,13 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     # use the right plugin for SSL certificate mgmt
     cordova plugin remove cordova-plugin-crosswalk-certificate
     cordova plugin add https://github.com/hypery2k/cordova-certificate-plugin
-    ionic platform remove android
-    ionic platform add android
-    cp "$NINJAKEYSTORE" platforms/android
+    #ionic platform remove android
+    #ionic platform add android
+    cp "$NINJAKEYSTORE" platforms/android/
 
     # Make sure native builds are only deployed in devices < Android 5
     ionic build android --release -- --minSdkVersion=21
+    #ionic build android --release -- --minSdkVersion=19
 
     # copy build to release folder and sign
     cp platforms/android/build/outputs/apk/android-release-unsigned.apk release_files/

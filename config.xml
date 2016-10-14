@@ -31,7 +31,7 @@
     </feature>
     <platform name="ios">
         <config-file parent="NSPhotoLibraryUsageDescription" platform="ios" target="*-Info.plist">
-                    <string>Store photos of events and live feeds</string>
+            <string>Store photos of events and live feeds</string>
         </config-file>
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
