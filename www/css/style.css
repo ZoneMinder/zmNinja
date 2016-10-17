@@ -719,6 +719,10 @@ body {
     font-family: sans-serif;
 }
 
+* {
+  font-family: -apple-system, "Helvetica Neue", sans-serif;
+}
+
 /* ---- grid ---- */
 .dragborder {
     border: 2px dotted #3498db;
