@@ -845,6 +845,7 @@ angular.module('zmApp.controllers')
         $timeout(function () {
             if (pckry) pckry.onresize();
         });
+        $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
     }
 
     $scope.toggleSizeButtons = function () {
