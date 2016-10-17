@@ -161,6 +161,8 @@ angular.module('zmApp.controllers')
 
         imagesLoaded(elem).on('progress', function (instance, img) {
 
+            var result = img.isLoaded ? 'loaded' : 'broken';
+            NVRDataModel.debug( '~~loaded image is ' + result + ' for ' + img.img.src );
             progressCalled = true;
             
 
@@ -171,7 +173,9 @@ angular.module('zmApp.controllers')
             //console.log ("******** ALL IMAGES LOADED");
            // $scope.$digest();
             NVRDataModel.debug("All images loaded");
+        
             $scope.areImagesLoading = false;
+      
 
             $ionicLoading.hide();
 
@@ -975,6 +979,9 @@ angular.module('zmApp.controllers')
                     $rootScope.authSession = success;
                     NVRDataModel.log("Stream authentication construction: " +
                         $rootScope.authSession);
+                        $timeout(function () {
+                            initPackery();
+                        }, zm.packeryTimer);
 
                 },
                 function (error) {
@@ -983,13 +990,14 @@ angular.module('zmApp.controllers')
                     NVRDataModel.debug("MontageCtrl: Error in authkey retrieval " + error);
                     //$rootScope.authSession="";
                     NVRDataModel.log("MontageCtrl: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                    $timeout(function () {
+                            initPackery();
+                        }, zm.packeryTimer);
                 });
 
         //console.log("**VIEW ** Montage Ctrl AFTER ENTER");
         window.addEventListener("resize", orientationChanged, false);
-        $timeout(function () {
-            initPackery();
-        }, zm.packeryTimer);
+      
         document.addEventListener("pause", onPause, false);
         document.addEventListener("resume", onResume, false);
 

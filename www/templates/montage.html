@@ -66,18 +66,19 @@
                 
                 
                 
-                <div  class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} " >
+                <div  class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} "   >
                 
                    
                     
-                    <figure  class="{{dragBorder}}" ng-show=" monitor.Monitor.listDisplay!='noshow'">
+                    <figure   class="{{dragBorder}}" ng-show=" monitor.Monitor.listDisplay!='noshow'">
                         <!--<div ng-if="!isModalActive" >-->
-                            <div ng-if="$root.authSession!='undefined' && !isBackground() && !areImagesLoading">
+                            <!--<div ng-if="$root.authSession!='undefined' && !isBackground() && !areImagesLoading">-->
+                            <div ng-if="$root.authSession!='undefined' && !isBackground() ">
                                 <div ng-if = "!minimal">
                                     
                                  
                                     
-                                    <img    class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem($index);" image-spinner-loader="lines"  />
+                                    <img    class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem($index);" image-spinner-loader="lines"  />
 
                                     </div> 
 
@@ -86,10 +87,12 @@
                                     </div>
                             </div>
 
-                            <div ng-if="!$root.authSession=='undefined' || isBackground() || areImagesLoading">
+                            <!--<div ng-if="!$root.authSession=='undefined' || isBackground() || areImagesLoading">
                                
                                 <img  id="img-{{$index}}" image-spinner-src="img/pausevideo.png"  />
-                            </div>
+                                
+                               <canvas style="background:black;width:{{monitor.Monitor.Width}}; "></canvas>
+                            </div>-->
 
 
 
