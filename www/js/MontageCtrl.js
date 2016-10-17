@@ -158,11 +158,22 @@ angular.module('zmApp.controllers')
         var elem = angular.element(document.getElementById("mygrid"));
 
         //console.log ("**** mygrid is " + JSON.stringify(elem));
+        
+        
+            pckry = new Packery('.grid', {
+                itemSelector: '.grid-item',
+                percentPosition: true,
+                columnWidth: '.grid-sizer',
+                gutter: 0,
+                initLayout: layouttype
+
+            });
 
         imagesLoaded(elem).on('progress', function (instance, img) {
 
             var result = img.isLoaded ? 'loaded' : 'broken';
             NVRDataModel.debug( '~~loaded image is ' + result + ' for ' + img.img.src );
+            pckry.layout();
             progressCalled = true;
             
 
@@ -179,14 +190,6 @@ angular.module('zmApp.controllers')
 
             $ionicLoading.hide();
 
-            pckry = new Packery('.grid', {
-                itemSelector: '.grid-item',
-                percentPosition: true,
-                columnWidth: '.grid-sizer',
-                gutter: 0,
-                initLayout: layouttype
-
-            });
             if (!progressCalled) {
                 NVRDataModel.log("***  PROGRESS WAS NOT CALLED");
                 pckry.reloadItems();
@@ -844,7 +847,7 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("Detected orientation change, redoing packery resize");
         $timeout(function () {
             if (pckry) pckry.onresize();
-        });
+        }, zm.packeryTimer);
         $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
     }
 

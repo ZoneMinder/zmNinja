@@ -50,7 +50,9 @@ angular.module('angular-carousel')
 		//console.log ("Calling autoslide because isStopped is false");
             	scope.autoSlide();
 	    }
-	    else {console.log ("Not sliding as stop=true");}
+	    else {
+                    //console.log ("Not sliding as stop=true");
+            }
         };
 	//PP - don't auto play if user taps
 	var toggleAutoPlay = function() {
@@ -65,21 +67,21 @@ angular.module('angular-carousel')
 			//scope.rnForceStop = true; //PP
 			carouselUtils.setStop (true);
 			carouselUtils.setIndex (scope.carouselIndex);
-			console.log ("***RN: Stopping Play rnForceStop is "+carouselUtils.getStop());
+			//console.log ("***RN: Stopping Play rnForceStop is "+carouselUtils.getStop());
 			stopAutoPlay();
 		}
 		else
 		{
 			//scope.rnForceStop = false; //PP
 			carouselUtils.setStop (false);
-			console.log ("***RN: Starting Play rnForceStop is "+carouselUtils.getStop());
+			//console.log ("***RN: Starting Play rnForceStop is "+carouselUtils.getStop());
 			//scope.carouselIndex = carouselUtils.getIndex();
 			restartTimer();
 		}
 	};
 
 // start with autoplay and require tap to stop
-	console.log ("*** Setting rnForceStop to false and watching");
+	//console.log ("*** Setting rnForceStop to false and watching");
 	//scope.rnForceStop = false; // PP
 	carouselUtils.setStop (false);
         scope.$watch('carouselIndex', restartTimer);
@@ -88,19 +90,19 @@ angular.module('angular-carousel')
 	// PP - added touchend to make it react to touch devices
            if (attrs.hasOwnProperty('rnPlatform') && attrs.rnPlatform == 'desktop')
 	   {
-		console.log ("ranPlatform is " + attrs.rnPlatform);
-		 console.log ("Desktop, de-registering any old click");
+		//console.log ("ranPlatform is " + attrs.rnPlatform);
+		 //console.log ("Desktop, de-registering any old click");
             	element.off('click', toggleAutoPlay); // PP - remove mouse click for desktop
            	 element.on('click', toggleAutoPlay); // PP for  desktop
-		 console.log ("Desktop, registering click");
+		 //console.log ("Desktop, registering click");
 	   }
 	  else
 	  {
-		console.log ("ranPlatform is " + attrs.rnPlatform);
-	    console.log ("Device, de-registering any old touch");
+		//console.log ("ranPlatform is " + attrs.rnPlatform);
+	    //console.log ("Device, de-registering any old touch");
             element.off('touchend', toggleAutoPlay); // PP - remove touchend too
             element.on('touchend', toggleAutoPlay);
-	    console.log ("Device, registering touch");
+	    //console.log ("Device, registering touch");
 	  }
             //element.on('mouseenter', stopAutoPlay);
             //element.on('mouseleave', restartTimer);
@@ -265,7 +267,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 		setDuration: function (val)
 		{
 			duration = val;
-			console.log (">>>>>>>>>>>>>>>> DURATION SET TO (secs) " + duration);
+			//console.log (">>>>>>>>>>>>>>>> DURATION SET TO (secs) " + duration);
 		},
 
 		getDuration: function ()
@@ -285,7 +287,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 		setIndex: function(val)
 		{
 			stoppedIndex = val;
-			console.log ("setting saved index to " + stoppedIndex);
+			//console.log ("setting saved index to " + stoppedIndex);
 		},
 		getIndex: function()
 		{
@@ -301,7 +303,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 		},
 		hello: function()
 		{
-			console.log ("Hello from carouselUtils");
+			//console.log ("Hello from carouselUtils");
 		}
 
 	}
@@ -453,7 +455,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         scope.nextSlide = function(slideOptions) {
 		           if (carouselUtils.isStopped()==true)
 			   {
-				console.log ("Just updated index, but we are stopped");
+				//console.log ("Just updated index, but we are stopped");
 				return;
 			   }
 			    var index = scope.carouselIndex + 1;
