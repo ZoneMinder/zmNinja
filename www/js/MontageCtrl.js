@@ -200,6 +200,7 @@ angular.module('zmApp.controllers')
 
                 pckry.getItemElements().forEach(function (itemElem) {
                     draggie = new Draggabilly(itemElem);
+                    draggie = new Draggabilly(itemElem);
                     pckry.bindDraggabillyEvents(draggie);
                     draggies.push(draggie);
                     draggie.disable();
@@ -226,10 +227,8 @@ angular.module('zmApp.controllers')
 
 
                     NVRDataModel.debug("All images loaded, doing image layout");
-                    $timeout(function () {
-                        pckry.initShiftLayout(positions, 'data-item-id');
-                        //$scope.$digest();
-                    }, 0);
+                    
+                  
                 }
                 $timeout(function () {
                     NVRDataModel.log("Force calling resize");
@@ -386,7 +385,7 @@ angular.module('zmApp.controllers')
             return;
         }
 
-        if (pckry && !$scope.isDragabillyOn) pckry.shiftLayout();
+        //if (pckry && !$scope.isDragabillyOn) pckry.shiftLayout();
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         
         // if you see the time move, montage should move
@@ -844,11 +843,17 @@ angular.module('zmApp.controllers')
 
 
     function orientationChanged() {
-        NVRDataModel.debug("Detected orientation change, redoing packery resize");
+       /* NVRDataModel.debug("Detected orientation change, redoing packery resize");
         $timeout(function () {
             if (pckry) pckry.onresize();
-        }, zm.packeryTimer);
+        }, zm.packeryTimer);*/
         $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
+        var positions = pckry.getShiftPositions('data-item-id');
+            //console.log ("POSITIONS MAP " + JSON.stringify(positions));
+            var ld = NVRDataModel.getLogin();
+            ld.packeryPositions = JSON.stringify(positions);
+            //console.log ("Saving " + ld.packeryPositions);
+            NVRDataModel.setLogin(ld);
     }
 
     $scope.toggleSizeButtons = function () {

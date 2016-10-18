@@ -1773,29 +1773,44 @@ angular.module('zmApp.controllers')
 
 
     function humanizeTime(str) {
-        return moment(str).fromNow();
-
+        //console.log ("Time:"+str+" TO LOCAL " + moment(str).local().toString());
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
     }
 
     $scope.prettifyDate = function (str) {
-        return moment(str).format('MMM Do');
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('MMM Do');
+        else
+            return moment(str).format('MMM Do');      
     };
 
     function prettifyDate(str) {
-        return moment(str).format('MMM Do');
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('MMM Do');
+        else
+            return moment(str).format('MMM Do');
     }
 
     $scope.prettifyTime = function (str) {
-        return moment(str).format(NVRDataModel.getTimeFormat());
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormat());
+        else    
+            return moment(str).format(NVRDataModel.getTimeFormat());
     };
 
     $scope.prettifyTimeSec = function (str) {
-        return moment(str).format(NVRDataModel.getTimeFormatSec());
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormatSec());
+        else
+            return moment(str).format(NVRDataModel.getTimeFormatSec());
     };
 
 
     $scope.prettify = function (str) {
-        return moment(str).format(NVRDataModel.getTimeFormat() + ', MMMM Do YYYY');
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormat() + ', MMMM Do YYYY');
+        else    
+            return moment(str).format(NVRDataModel.getTimeFormat() + ', MMMM Do YYYY');
     };
     //--------------------------------------------------------
     // For consistency we are keeping the refresher list

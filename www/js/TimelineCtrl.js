@@ -50,7 +50,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // Used to display date range for timeline
     //-----------------------------------------------------------
     $scope.prettify = function (str) {
-        return moment(str).format('MMMM Do YYYY, ' + NVRDataModel.getTimeFormat());
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('MMMM Do YYYY, ' + NVRDataModel.getTimeFormat());
+        else
+            return moment(str).format('MMMM Do YYYY, ' + NVRDataModel.getTimeFormat());
     };
 
     //-----------------------------------------------------------
@@ -684,6 +687,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         if (typeof myevents[i].Event.DefaultVideo === 'undefined')
                                         // console.log (JSON.stringify(myevents[i]));
                                             myevents[i].Event.DefaultVideo = "";
+                                        
+                                        if (NVRDataModel.getLogin().useLocalTimeZone)
+                                        {
+                                            //console.log ("CHANGING TZ");
+                                            myevents[i].Event.StartTime = moment.tz(myevents[i].Event.StartTime,NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+                                            //2016-08-15 17:40:00
+                                            myevents[i].Event.EndTime = moment.tz(myevents[i].Event.EndTime,NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+                                        }
+                                        
                                         graphData.add({
                                             id: graphIndex,
                                             content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + myevents[i].Event.Notes + "</span>",

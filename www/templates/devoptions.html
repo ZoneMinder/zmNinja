@@ -19,6 +19,7 @@
 
             <div class="item item-input-inset">
                 {{'kFrameUpdate'|translate}} ({{'kSec'|translate}}.)&nbsp;
+        
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="min is 1s" ng-model="loginData.refreshSec">
                 </label>
@@ -27,6 +28,10 @@
 
             <label>
                 <ion-toggle ng-model="loginData.use24hr" ng-checked="{{loginData.use24hr}}" toggle-class="toggle-calm">{{'kEnable24hr' | translate}}</ion-toggle>
+            </label>
+            
+            <label>
+                <ion-toggle ng-model="loginData.useLocalTimeZone" ng-checked="{{loginData.useLocalTimeZone}}" toggle-class="toggle-calm">{{'kLocalTimeZone' | translate}}</ion-toggle>
             </label>
 
             <div ng-if="$root.platformOS=='android'">

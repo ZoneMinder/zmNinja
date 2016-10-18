@@ -45,10 +45,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     };
 
     function orientationChanged() {
-        NVRDataModel.debug("Detected orientation change, redoing packery resize");
-        $timeout(function () {
+      //  NVRDataModel.debug("Detected orientation change, redoing packery resize");
+       /* $timeout(function () {
             pckry.onresize();
-        });
+        });*/
     }
     //--------------------------------------
     // pause/unpause nph-zms
@@ -335,7 +335,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     function checkAllEvents() {
         //console.log("Timer:Events are checked....");
 
-        if (pckry && !$scope.isDragabillyOn) pckry.shiftLayout();
+       //if (pckry && !$scope.isDragabillyOn) pckry.shiftLayout();
 
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
             // don't check for monitors that are not shown
@@ -874,8 +874,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         var ld = NVRDataModel.getLogin();
 
         var elem = angular.element(document.getElementById("mygrid"));
+         pckry = new Packery('.grid', {
+                itemSelector: '.grid-item',
+                percentPosition: true,
+                columnWidth: '.grid-sizer',
+                gutter: 0,
+                initLayout: true
+
+            });
         //console.log ("**** mygrid is " + JSON.stringify(elem));
         imagesLoaded(elem).on('progress', function (instance, img) {
+            var result = img.isLoaded ? 'loaded' : 'broken';
+            NVRDataModel.debug( '~~loaded image is ' + result + ' for ' + img.img.src );
+            pckry.layout();
             progressCalled = true;
             // if (layouttype) $timeout (function(){layout(pckry);},100);
         });
@@ -885,19 +896,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             NVRDataModel.debug("All images loaded");
             $ionicLoading.hide();
 
-            layouttype = true;
-            pckry = new Packery('.grid', {
-                itemSelector: '.grid-item',
-                percentPosition: true,
-                columnWidth: '.grid-sizer',
-                gutter: 0,
-                initLayout: layouttype
-
-            });
-            pckry.reloadItems();
+            $scope.areImagesLoading = false;
+            
+            
             if (!progressCalled) {
                 NVRDataModel.log("***  PROGRESS WAS NOT CALLED");
-
+                pckry.reloadItems();
             }
 
 

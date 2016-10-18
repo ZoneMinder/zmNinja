@@ -362,6 +362,7 @@
     "kEventHistSlower"           : "slower",
     "kEventHistFaster"           : "faster",
     "kEventHistPlay"            : "play",
-    "kEventHistPause"           : "pause"
+    "kEventHistPause"           : "pause",
+    "kLocalTimeZone"            :"convert to local timezone"
     
 }

@@ -25,6 +25,8 @@ angular.module('zmApp.controllers')
         var multiservers = [];
         var oldevents = [];
         var migrationComplete = false;
+        
+        var tz = "";
 
 
         var languages = [
@@ -120,6 +122,7 @@ angular.module('zmApp.controllers')
             'enableLowBandwidth':false,
             'autoSwitchBandwidth':false,
             'disableAlarmCheckMontage': false,
+            'useLocalTimeZone': true,
 
 
 
@@ -779,6 +782,13 @@ angular.module('zmApp.controllers')
                                 }
                                 
                                 
+                                if (typeof loginData.useLocalTimeZone == 'undefined') {
+                                    
+                                    loginData.useLocalTimeZone = true;
+
+                                }
+                                
+                                
                                 
                                 
                                 if (typeof loginData.monSingleImageQuality == 'undefined') {
@@ -791,6 +801,9 @@ angular.module('zmApp.controllers')
                             } else {
                                 log("defaultServer configuration NOT found. Keeping login at defaults");
                             }
+                        
+                        
+                        
                             // FIXME: HACK: This is the latest entry point into dataModel init, so start portal login after this
                             // not the neatest way
                             $rootScope.$emit('init-complete');
@@ -1458,6 +1471,50 @@ angular.module('zmApp.controllers')
             setMonitors: function (mon) {
                 //console.log("ZMData setMonitors called with " + mon.length + " monitors");
                 monitors = mon;
+            },
+            
+            
+            //returns TZ value immediately (sync)
+            
+            getTimeZoneNow: function()
+            {
+               // console.log ("getTimeZoneNow: " + tz ? tz : moment.tz.guess());
+                return tz ? tz : moment.tz.guess();
+            },
+            
+            // returns server timezone, failing which local timezone
+            // always resolves true
+            
+            getTimeZone: function ()
+            {
+                var d = $q.defer();
+                if (!tz)
+                {
+                    log ("First invocation of TimeZone, asking server");
+                    var apiurl = loginData.apiurl + '/host/getTimeZone.json';
+                    $http.get(apiurl)
+                        .then(function (success) {
+                                tz = success.data.tz;
+                                d.resolve(tz);
+                                debug ("Timezone API response is:"+success.data.tz);
+                                return (d.promise);
+
+                            },
+                            function (error) {
+                                tz = moment.tz.guess();
+                                debug("Timezone API error handler, guessing local:" + tz);
+                                d.resolve(tz);
+                                return (d.promise);
+                            });
+                    
+                }
+                else
+                {
+                    d.resolve(tz);
+                    return d.promise;
+                }
+                
+                return d.promise;
             },
 
             //-----------------------------------------------------------------------------

@@ -198,6 +198,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     {
                         NVRDataModel.debug("PortalLogin: auth success");
                         NVRDataModel.getKeyConfigParams(1);
+                        NVRDataModel.getTimeZone();
                         // $state.go("login" ,{"wizard": false});
                         //login was ok, so get API details
                         NVRDataModel.getAPIversion()
@@ -248,6 +249,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         tryLoggingSecondTimeHack()
                                             .then(function success(s) {
                                                     NVRDataModel.log("2nd time login hack worked!, nothing to do");
+                                                    NVRDataModel.getTimeZone();
                                                 },
                                                 function error(e) {
                                                     $state.go("login", {
