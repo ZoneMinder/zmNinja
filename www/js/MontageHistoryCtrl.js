@@ -16,23 +16,39 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // formats events dates in a nice way
     //---------------------------------------
     $scope.prettifyDateTimeFirst = function (str) {
-        return moment(str).format(NVRDataModel.getTimeFormat() + '/MMM Do');
+         if (NVRDataModel.getLogin().useLocalTimeZone)
+             return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormat() + '/MMM Do');
+        else
+            return moment(str).format(NVRDataModel.getTimeFormat() + '/MMM Do');
     };
     $scope.prettifyDate = function (str) {
         return moment(str).format('MMM Do, YYYY ' + NVRDataModel.getTimeFormat());
     };
 
     function prettifyDate(str) {
-        return moment(str).format('MMM Do');
+         if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('MMM Do');
+        else
+            return moment(str).format('MMM Do');     
     }
     $scope.prettifyTime = function (str) {
-        return moment(str).format('h:mm a');
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('h:mm a');
+        else
+            return moment(str).format('h:mm a');
     };
     $scope.prettify = function (str) {
-        return moment(str).format(NVRDataModel.getTimeFormat() + ' on MMMM Do YYYY');
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormat() + ' on MMMM Do YYYY');
+        else
+            return moment(str).format(NVRDataModel.getTimeFormat() + ' on MMMM Do YYYY');
     };
     $scope.humanizeTime = function (str) {
-        return moment(str).fromNow();
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
+        else    
+            return moment(str).fromNow();
+    
     };
     // if you change date in footer, change hrs
     $scope.dateChanged = function () {

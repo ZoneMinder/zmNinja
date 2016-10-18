@@ -1774,7 +1774,11 @@ angular.module('zmApp.controllers')
 
     function humanizeTime(str) {
         //console.log ("Time:"+str+" TO LOCAL " + moment(str).local().toString());
+        if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
+        else    
+            return moment(str).fromNow();
+            
     }
 
     $scope.prettifyDate = function (str) {

@@ -1169,7 +1169,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function humanizeTime(str)
     {
-         return moment(str).fromNow();
+         if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
+        else    
+            return moment(str).fromNow();
         
     }
 
