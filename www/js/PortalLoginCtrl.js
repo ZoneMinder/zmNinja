@@ -211,13 +211,17 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         $state.go('lowversion', {
                                             "ver": data
                                         });
+                                        return;
                                     }
 
                                     if (NVRDataModel.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
 
+                                       // console.log (">>>>>>>>>>>>> HERE AND VERSION SAYS " +NVRDataModel.versionCompare(data, zm.recommendedAppVersion)); 
+                                        //console.log ("GOING TO IMPORTANT");
                                         $state.go('importantmessage', {
                                             "ver": data
                                         });
+                                        return;
                                     }
 
                                     if (data == "0.0.0") {
@@ -227,9 +231,11 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         $state.go("login", {
                                             "wizard": false
                                         });
+                                        return;
 
                                     }
                                     // coming here means continue
+                                    // console.log (">>>>>>>>>>>>>>>>>>>>>>>>>NEVER");
                                     EventServer.refresh();
                                     var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
                                     NVRDataModel.debug("logging state transition");
