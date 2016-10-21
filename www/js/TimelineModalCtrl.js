@@ -47,6 +47,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
             }, {
                 reload: true
             });
+            return;
         }
     };
 

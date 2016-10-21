@@ -23,6 +23,7 @@ angular.module('zmApp.controllers')
                     }, {
                         reload: true
                     });
+                    return;
                 }
             };
 
@@ -54,6 +55,7 @@ angular.module('zmApp.controllers')
                     "id": 0,
                     "playEvent":false
                 });
+                return;
 
                 //$ionicHistory.goBack();
             };

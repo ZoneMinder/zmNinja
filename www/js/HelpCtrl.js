@@ -24,6 +24,7 @@ angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$ro
             }, {
                 reload: true
             });
+            return;
         }
     };
 

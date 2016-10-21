@@ -36,6 +36,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             }, {
                 reload: true
             });
+            return;
         }
     };
 
@@ -512,6 +513,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         {
             $rootScope.customTimelineRange = true;
             $state.go('events-date-time-filter');
+            return;
         }
 
     };

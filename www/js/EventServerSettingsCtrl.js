@@ -31,6 +31,7 @@
              }, {
                  reload: true
              });
+             return;
          }
      };
 

@@ -24,6 +24,7 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
             }, {
                 reload: true
             });
+            return;
         }
     };
 

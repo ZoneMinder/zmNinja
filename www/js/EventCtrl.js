@@ -730,6 +730,7 @@ angular.module('zmApp.controllers')
             }, {
                 reload: true
             });
+            return;
         }
     };
 
@@ -799,6 +800,7 @@ angular.module('zmApp.controllers')
                     "id": 0,
                     "playEvent":false
                 });
+                return;
             } else {
                 NVRDataModel.log("Filter reset cancelled in popup");
             }

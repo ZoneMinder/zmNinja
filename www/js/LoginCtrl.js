@@ -56,7 +56,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             }, {
                 reload: true
             });
+            return;
         }
+        
     };
 
     //----------------------------------------------------------------
@@ -200,7 +202,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         //console.log ( "My loginData saved " + JSON.stringify($scope.loginData));
         NVRDataModel.setLogin($scope.loginData);
         $state.go("eventserversettings");
-
+        return;
     };
 
 

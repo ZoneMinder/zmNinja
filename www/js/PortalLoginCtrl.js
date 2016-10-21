@@ -75,6 +75,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         disableBack: true
                     });
                     $state.go('first-use');
+                    return;
                 } else {
                     if (!$rootScope.userCancelledAuth) {
                         $ionicHistory.nextViewOptions({
@@ -84,6 +85,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         $state.go("login", {
                             "wizard": false
                         });
+                        return;
                     } else {
                         // do this only once - rest for next time
                         $rootScope.userCancelledAuth = false;
@@ -134,6 +136,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     $state.go('lowversion', {
                                         "ver": data
                                     });
+                                    return;
                                 }
 
                                 if (NVRDataModel.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
@@ -141,6 +144,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     $state.go('importantmessage', {
                                         "ver": data
                                     });
+                                    return;
                                 }
 
                                 if (data == "0.0.0") {
@@ -150,7 +154,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     $state.go("login", {
                                         "wizard": false
                                     });
-
+                                    return;
                                 }
                                 // coming here means continue
                                 EventServer.refresh();
@@ -159,6 +163,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 NVRDataModel.debug("2nd Auth: Transitioning state to: " +
                                     statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
                                 $state.go(statetoGo, $rootScope.lastStateParam);
+                                return;
 
                             },
                             function (error) {
@@ -244,6 +249,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             
                                     
                                     $state.go(statetoGo, $rootScope.lastStateParam);
+                                    return;
                                    
                                 },
                                 function (error) { // API Error
@@ -262,6 +268,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                                         "wizard": false
                                                     });
                                                 });
+                                                return;
 
                                     }, 1000);
 
@@ -321,12 +328,14 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             $state.go("login", {
                                 "wizard": false
                             });
+                            return;
                         } else {
                             // if user cancelled auth I guess we go to login
                             $rootScope.userCancelledAuth = false;
                             $state.go("login", {
                                 "wizard": false
                             });
+                            return;
                         }
                     });
         } else {

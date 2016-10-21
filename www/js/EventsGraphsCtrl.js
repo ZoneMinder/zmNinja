@@ -35,6 +35,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             }, {
                 reload: true
             });
+            return;
         }
     };
 

@@ -68,6 +68,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             }, {
                 reload: true
             });
+            return;
         }
     };
 

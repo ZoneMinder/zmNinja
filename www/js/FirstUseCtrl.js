@@ -65,6 +65,7 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
         $state.go("login", {
             "wizard": false
         });
+        return;
     };
 
     $scope.goToWizard = function () {
@@ -73,6 +74,7 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
             disableBack: true
         });
         $state.go("wizard");
+        return;
     };
 
 

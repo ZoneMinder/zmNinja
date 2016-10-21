@@ -710,6 +710,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         $state.go("login", {
             "wizard": true
         });
+        return;
     };
 
     //--------------------------------------------------------------------------

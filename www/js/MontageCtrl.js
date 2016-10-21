@@ -529,6 +529,7 @@ angular.module('zmApp.controllers')
             }, {
                 reload: true
             });
+            return;
         }
     };
 
@@ -553,6 +554,7 @@ angular.module('zmApp.controllers')
             }, {
                 reload: true
             });
+            return;
         }
     };
 
@@ -590,6 +592,7 @@ angular.module('zmApp.controllers')
             minimal: $scope.minimal,
             isRefresh: true
         });
+        return;
     };
 
     //---------------------------------------------------------------------

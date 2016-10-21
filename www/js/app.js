@@ -721,6 +721,7 @@ angular.module('zmApp', [
         NVRDataModel.log(">>>>>>>>>>>>>>> All init over, going to portal login");
         $ionicHistory.nextViewOptions({ disableAnimate: true});
         $state.go("zm-portal-login");
+        return;
     });
 
     //------------------------------------------------------------------
@@ -1129,7 +1130,7 @@ angular.module('zmApp', [
             $state.go("login", {
                 "wizard": false
             });
-
+            return;
         };
 
         //---------------------------------------------------------------------------
@@ -1416,6 +1417,7 @@ angular.module('zmApp', [
                                         if (val == null || val == true) {
                                             NVRDataModel.log("First time detected");
                                             $state.go("first-use");
+                                            return;
                                         } else {
                                             continueRestOfInit();
                                         }
@@ -1485,12 +1487,14 @@ angular.module('zmApp', [
                             NVRDataModel.debug("going to portal login");
                             $ionicHistory.nextViewOptions({ disableAnimate: true});
                             $state.go("zm-portal-login");
+                            return;
                         } else {
                             $rootScope.lastState = "";
                             $rootScope.lastStateParam = "";
                             NVRDataModel.debug("reset lastState to null");
                             $ionicHistory.nextViewOptions({ disableAnimate: true});
                             $state.go("zm-portal-login");
+                            return;
                         }
                     }, forceDelay);
 

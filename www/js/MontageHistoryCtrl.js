@@ -583,6 +583,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             }, {
                 reload: true
             });
+            return;
         }
     };
     $scope.handleAlarmsWhileMinimized = function () {
@@ -603,6 +604,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             }, {
                 reload: true
             });
+            return;
         }
     };
     //-------------------------------------------------------------
