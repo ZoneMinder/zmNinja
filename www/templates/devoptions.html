@@ -31,7 +31,7 @@
             </label>
             
             <label>
-                <ion-toggle ng-model="loginData.useLocalTimeZone" ng-checked="{{loginData.useLocalTimeZone}}" ng-disabled="!isTzSupported()" toggle-class="toggle-calm">{{'kLocalTimeZone' | translate}}<span ng-if="!isTzSupported()"><p>your API doesn't support this</p></span></ion-toggle>
+                <ion-toggle ng-model="loginData.useLocalTimeZone" ng-checked="{{loginData.useLocalTimeZone}}" ng-disabled="!isTzSupported()" toggle-class="toggle-calm">{{'kLocalTimeZone' | translate}}<span ng-if="!isTzSupported()"><p>{{'kTimeZoneNotSupported' | translate}}</p></span><span ng-if="isTzSupported()"><p>{{'kServerTimeZone' | translate}}:{{getTimeZoneNow()}}</p></span></ion-toggle>
             </label>
 
             <div ng-if="$root.platformOS=='android'">

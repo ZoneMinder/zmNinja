@@ -60,6 +60,11 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     {
         return NVRDataModel.isTzSupported();
     };
+    
+    $scope.getTimeZoneNow = function()
+    {
+        return NVRDataModel.getTimeZoneNow();
+    };
 
     //------------------------------------------------------------------
     // Perform the login action when the user submits the login form

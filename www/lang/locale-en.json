@@ -363,6 +363,8 @@
     "kEventHistFaster"           : "faster",
     "kEventHistPlay"            : "play",
     "kEventHistPause"           : "pause",
-    "kLocalTimeZone"            :"convert to local timezone"
+    "kLocalTimeZone"            :"convert to local timezone",
+    "kTimeZoneNotSupported"     : "your API doesn't support this",
+    "kServerTimeZone"           : "server TZ"
     
 }
