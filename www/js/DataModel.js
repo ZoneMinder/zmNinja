@@ -27,6 +27,7 @@ angular.module('zmApp.controllers')
         var migrationComplete = false;
         
         var tz = "";
+        var isTzSupported = false;
 
 
         var languages = [
@@ -1485,11 +1486,17 @@ angular.module('zmApp.controllers')
             // returns server timezone, failing which local timezone
             // always resolves true
             
+            isTzSupported: function()
+            {
+                return isTzSupported;
+            },
+            
             getTimeZone: function ()
             {
                 var d = $q.defer();
                 if (!tz)
                 {
+                    
                     log ("First invocation of TimeZone, asking server");
                     var apiurl = loginData.apiurl + '/host/getTimeZone.json';
                     $http.get(apiurl)
@@ -1497,6 +1504,7 @@ angular.module('zmApp.controllers')
                                 tz = success.data.tz;
                                 d.resolve(tz);
                                 debug ("Timezone API response is:"+success.data.tz);
+                                isTzSupported = true;
                                 return (d.promise);
 
                             },
@@ -1504,6 +1512,7 @@ angular.module('zmApp.controllers')
                                 tz = moment.tz.guess();
                                 debug("Timezone API error handler, guessing local:" + tz);
                                 d.resolve(tz);
+                                isTzSupported = false;
                                 return (d.promise);
                             });
                     

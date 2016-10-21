@@ -27,6 +27,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
             }, {
                 reload: true
             });
+            return;
         }
     };
 
@@ -54,6 +55,11 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
         NVRDataModel.setAwake(false);
     });
+    
+    $scope.isTzSupported = function()
+    {
+        return NVRDataModel.isTzSupported();
+    };
 
     //------------------------------------------------------------------
     // Perform the login action when the user submits the login form
