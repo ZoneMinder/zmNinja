@@ -190,8 +190,30 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         NVRDataModel.stopNetwork("MontageHistory-footerCollapse");
         var ld = NVRDataModel.getLogin();
         $scope.sliderVal.realRate = $scope.sliderVal.rate * 100;
+        
+        
+        
         var TimeObjectFrom = moment($scope.datetimeValueFrom.value).format("YYYY-MM-DD HH:mm");
         var TimeObjectTo = moment().format('YYYY-MM-DD HH:mm');
+        
+        // At this point of time, we need to ensure From and To are changed to server time
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+        {
+            var localtz = moment.tz.guess();
+            var servertz = NVRDataModel.getTimeZoneNow();
+            
+            NVRDataModel.log ("Local timezone conversion is on, converting from "+localtz+" to " +servertz);
+            NVRDataModel.log ("Original From: " + TimeObjectFrom + " Original To: " + TimeObjectTo);
+            
+            TimeObjectFrom = moment.tz(TimeObjectFrom, localtz).tz(servertz).format("YYYY-MM-DD HH:mm");
+            TimeObjectTo = moment.tz(TimeObjectTo, localtz).tz(servertz).format("YYYY-MM-DD HH:mm");
+            
+            NVRDataModel.log ("Converted From: " + TimeObjectFrom + " Converted To: " + TimeObjectTo);
+            
+        }
+        
+        
+        
         var apiurl;
 
         // release all active streams
