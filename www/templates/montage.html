@@ -16,8 +16,10 @@
 
 
     <ion-nav-buttons side="right">
-
-         <span class="icon montage-time">{{timeNow}}&nbsp;</span>
+        <span ng-click="toggleTimeType()" class="icon montage-time">
+        <i ng-class="(iconTimeNow=='server')?'icon-server':'ion-ios-location'"></i>
+         {{timeNow}}&nbsp;</span>
+        
         <button class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp;
         </button>
         

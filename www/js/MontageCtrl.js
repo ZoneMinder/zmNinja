@@ -389,7 +389,12 @@ angular.module('zmApp.controllers')
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         
         // if you see the time move, montage should move
-        $scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
+        
+        if ($scope.iconTimeNow == 'local')
+            $scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
+        else
+            $scope.timeNow = moment().tz(NVRDataModel.getTimeZoneNow()).format(NVRDataModel.getTimeFormatSec());
+        //$scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
 
         //console.log ("Inside Montage timer...");
 
@@ -878,15 +883,37 @@ angular.module('zmApp.controllers')
 
     });
 
+    $scope.toggleTimeType = function()
+    {
+        if (NVRDataModel.isTzSupported())
+        {
+            if ($scope.iconTimeNow == 'server')
+                    $scope.iconTimeNow = 'local';
+            else
+                    $scope.iconTimeNow = 'server';
+        }
+        else
+            NVRDataModel.debug ("timezone API not supported, can't display");
+    };
+        
 
     $scope.$on('$ionicView.afterEnter', function () {
         NVRDataModel.debug("Setting image mode to snapshot, will change to image when packery is all done");
         $scope.areImagesLoading = true;
         $scope.isDragabillyOn = false;
         
-        $scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
-   
-       
+        
+        if (NVRDataModel.isTzSupported())
+            $scope.iconTimeNow = 'server';
+        else
+            $scope.iconTimeNow = 'local';
+        
+        if ($scope.iconTimeNow == 'local')
+            $scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
+        else
+            $scope.timeNow = moment().tz(NVRDataModel.getTimeZoneNow()).format(NVRDataModel.getTimeFormatSec());
+            
+        
         $scope.gridScale = "grid-item-50";
         $scope.LoginData = NVRDataModel.getLogin();
         //FIXME

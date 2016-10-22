@@ -676,9 +676,10 @@ angular.module('zmApp.controllers')
             disableBack: true
         });
 
-        var mToDate = moment();
-
-        var mFromDate = moment().subtract(parseInt(val), unit);
+        
+        // we have to convert from and to, to server time
+        var mToDate = moment().tz(NVRDataModel.getTimeZoneNow());
+        var mFromDate = moment().subtract(parseInt(val), unit).tz(NVRDataModel.getTimeZoneNow());
 
         // console.log("Moment Dates:" + mFromDate.format() + " TO  " + mToDate.format());
 
