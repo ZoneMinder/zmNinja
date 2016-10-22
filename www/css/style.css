@@ -21,6 +21,11 @@
     font-family: "fontawesome";
     content: "\f100";
 }
+.icon-server:before {
+    font-family: "fontawesome";
+    content: "\f233";
+}
+
 .image-loader-container {
     position: relative;
     width: 100%;

@@ -12,6 +12,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         // nothing to do for now
         // eventUrl will use lower BW in next query cycle
     });
+    
+    $scope.getLocalTZ = function()
+    {
+        return moment.tz.guess();
+    };
     //--------------------------------------
     // formats events dates in a nice way
     //---------------------------------------
@@ -44,10 +49,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             return moment(str).format(NVRDataModel.getTimeFormat() + ' on MMMM Do YYYY');
     };
     $scope.humanizeTime = function (str) {
-        if (NVRDataModel.getLogin().useLocalTimeZone)
+       // if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
-        else    
-            return moment(str).fromNow();
+      //  else    
+       //     return moment(str).fromNow();
     
     };
     // if you change date in footer, change hrs
@@ -197,7 +202,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         var TimeObjectTo = moment().format('YYYY-MM-DD HH:mm');
         
         // At this point of time, we need to ensure From and To are changed to server time
-        if (NVRDataModel.getLogin().useLocalTimeZone)
+        //if (NVRDataModel.getLogin().useLocalTimeZone)
+        if (1)
         {
             var localtz = moment.tz.guess();
             var servertz = NVRDataModel.getTimeZoneNow();

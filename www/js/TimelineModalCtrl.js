@@ -446,7 +446,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
     function humanizeTime(str)
     {
-       return moment(str).fromNow();
+        return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
+     
         
     }
 
