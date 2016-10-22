@@ -202,6 +202,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 .then(function (data) // success
                     {
                         NVRDataModel.debug("PortalLogin: auth success");
+                
                         NVRDataModel.getKeyConfigParams(1);
                         NVRDataModel.getTimeZone();
                         // $state.go("login" ,{"wizard": false});

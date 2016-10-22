@@ -124,6 +124,7 @@ angular.module('zmApp.controllers')
             'autoSwitchBandwidth':false,
             'disableAlarmCheckMontage': false,
             'useLocalTimeZone': true,
+            'fastLogin': true,
 
 
 
@@ -528,7 +529,7 @@ angular.module('zmApp.controllers')
 
                     //decodedVal = val;
 
-                    debug("user profile retrieved:" + JSON.stringify(decodedVal));
+                   // debug("user profile retrieved:" + JSON.stringify(decodedVal));
 
                     $ionicLoading.hide();
                     serverGroupList = decodedVal;
@@ -786,6 +787,13 @@ angular.module('zmApp.controllers')
                                 if (typeof loginData.useLocalTimeZone == 'undefined') {
                                     
                                     loginData.useLocalTimeZone = true;
+
+                                }
+                                
+                                
+                                if (typeof loginData.fastLogin == 'undefined') {
+                                    
+                                    loginData.fastLogin = true;
 
                                 }
                                 
@@ -1474,6 +1482,58 @@ angular.module('zmApp.controllers')
                 monitors = mon;
             },
             
+            processFastLogin: function() {
+                var d = $q.defer();
+                if (1)
+                {
+                    d.reject ("not implemented");
+                    return d.promise;
+                }
+                console.log ("inside processFastLogin");
+                if (!loginData.fastLogin)
+                {
+                    console.log ("Fast login not set");
+                    d.reject ("fast login not enabled");
+                    debug ("fast login not enabled");
+                    return d.promise;
+                    
+                }
+                else //fastlogin is on
+                {
+                    localforage.getItem("lastLogin")
+                    .then (function(succ) {
+                        console.log ("fast login DB found");
+                        var dt = moment(succ);
+                        
+                        if (dt.isValid())
+                        {   
+                            debug ("Got last login as " + dt.toString());
+                            if (moment.duration(moment().diff(dt)).asHours() >=2 ) {
+                                d.reject ("duration since last login >=2hrs, need to relogin");
+                                return d.promise;
+                            }
+                            else {
+                                d.resolve ("fast login is valid, less then 2 hrs");
+                                return d.promise;
+                            }
+                        }
+                        else
+                        {
+                            console.log ("Invalid date found");
+                            d.reject ("last-login invalid");
+                            return d.promise;
+                            
+                        }
+                    },
+                           function (e) {
+                            console.log ("fastlogin DB not found");
+                            d.reject ("last-login not found, fastlogin rejected");
+                            return d.promise;
+                    });
+                           
+                }
+                return d.promise;
+            },
             
             //returns TZ value immediately (sync)
             
@@ -1493,6 +1553,7 @@ angular.module('zmApp.controllers')
             
             getTimeZone: function ()
             {
+                
                 var d = $q.defer();
                 if (!tz)
                 {
