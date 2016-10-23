@@ -441,6 +441,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if ($rootScope.platformOS != 'android')
         {
             processSaveEventImageToPhone(onlyAlarms);
+            return;
         }
         
         // if we are on android do the 6.x+ hasPermissions flow
@@ -531,7 +532,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                             // console.log ("STEP 1 : Computed index as "+  $scope.mycarousel.index);
                             var i;
                             for (i = 1; i <= event.Frame.length; i++) {
-                                var fname = padToN(i, eventImageDigits) + "-capture.jpg";
+                                var fname = padToN(event.Frame[i-1].FrameId, eventImageDigits) + "-capture.jpg";
                                 // console.log ("Building " + fname);
 
                                 // console.log ("DUMPING ONE " + JSON.stringify(event.Frame[i-1]));
@@ -539,17 +540,20 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                                 if (onlyAlarms) {
                                     if (event.Frame[i - 1] && event.Frame[i - 1].Type == 'Alarm') {
                                         $scope.slides.push({
-                                            id: i,
+                                            id: event.Frame[i-1].FrameId,
                                             img: fname,
                                         });
+                                        console.log ("ALARM PUSHED " + fname);
                                     }
                                 } else // push all frames
                                 {
                                     $scope.slides.push({
-                                        id: i,
+                                        id: event.Frame[i-1].FrameId,
                                         img: fname,
                                     });
+                                    console.log ("PUSHED " + fname);
                                 }
+                                
                             }
                             //  console.log ("STEP 2 : calling Save Event To Phone");
                             $ionicLoading.hide();
@@ -601,11 +605,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.slideIndex = $scope.mycarousel.index;
         $scope.slideLastIndex = $scope.slides.length - 1;
 
-
+        console.log ("URL TO DISPLAY " + url);
 
 
         $rootScope.zmPopup = $ionicPopup.show({
-            template: '<center>Frame: {{slideIndex+1}} / {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  />',
+            template: '<center>Frame: {{slideIndex+1}} / {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  /><br/>{{selectEventUrl}}',
             title: 'Select ' + (onlyAlarms ? 'Alarmed ' : '') + 'frame to save',
             subTitle: 'use left and right arrows to change',
             scope: $scope,
@@ -620,6 +624,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
                         //NVRDataModel.log("selected frame is " + $scope.slideIndex);
 
+                        console.log ("URL TO DISPLAY " + $scope.slides[$scope.slideIndex].img);
+                        
                         e.preventDefault();
                     }
                 },
@@ -631,6 +637,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         if ($scope.slideIndex < $scope.slideLastIndex) $scope.slideIndex++;
                         $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
                         //NVRDataModel.log("selected frame is " + $scope.slideIndex);
+                        console.log ("URL TO DISPLAY " + $scope.slides[$scope.slideIndex].img);
                         e.preventDefault();
                     }
                 },
