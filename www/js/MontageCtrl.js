@@ -199,7 +199,7 @@ angular.module('zmApp.controllers')
             $timeout(function () {
 
                 pckry.getItemElements().forEach(function (itemElem) {
-                    draggie = new Draggabilly(itemElem);
+                    
                     draggie = new Draggabilly(itemElem);
                     pckry.bindDraggabillyEvents(draggie);
                     draggies.push(draggie);
