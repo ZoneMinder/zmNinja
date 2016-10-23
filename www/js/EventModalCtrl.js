@@ -543,7 +543,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                                             id: event.Frame[i-1].FrameId,
                                             img: fname,
                                         });
-                                        console.log ("ALARM PUSHED " + fname);
+                                        //console.log ("ALARM PUSHED " + fname);
                                     }
                                 } else // push all frames
                                 {
@@ -551,7 +551,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                                         id: event.Frame[i-1].FrameId,
                                         img: fname,
                                     });
-                                    console.log ("PUSHED " + fname);
+                                    //console.log ("PUSHED " + fname);
                                 }
                                 
                             }
@@ -605,11 +605,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.slideIndex = $scope.mycarousel.index;
         $scope.slideLastIndex = $scope.slides.length - 1;
 
-        console.log ("URL TO DISPLAY " + url);
+       // console.log ("URL TO DISPLAY " + url);
 
 
         $rootScope.zmPopup = $ionicPopup.show({
-            template: '<center>Frame: {{slideIndex+1}} / {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  /><br/>{{selectEventUrl}}',
+            template: '<center>Frame: {{slideIndex+1}} / {{slideLastIndex+1}}</center><br/><img src="{{selectEventUrl}}" width="100%"  />',
             title: 'Select ' + (onlyAlarms ? 'Alarmed ' : '') + 'frame to save',
             subTitle: 'use left and right arrows to change',
             scope: $scope,
