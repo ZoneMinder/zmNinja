@@ -1228,7 +1228,7 @@ angular.module('zmApp', [
 
             NVRDataModel.log("You are running on " + $rootScope.platformOS);
 
-            if ($rootScope.platformOS != "desktop")
+            if (window.cordova)
                 MobileAccessibility.getTextZoom(getTextZoomCallback);
 
             localforage.config({

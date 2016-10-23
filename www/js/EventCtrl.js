@@ -101,7 +101,7 @@ angular.module('zmApp.controllers')
         // note that there may be a delay as its a callback - so might involve
         // a UI jiggle 
         
-        if ($rootScope.platformOS != "desktop")
+        if (window.cordova)
             MobileAccessibility.getTextZoom(getTextZoomCallback);
         
         eventsListDetailsHeight = parseInt(zm.eventsListDetailsHeight * $rootScope.textScaleFactor);
