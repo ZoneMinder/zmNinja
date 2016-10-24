@@ -95,8 +95,6 @@
     }
   ],
   "cordovaPlatforms": [
-    "android",
-    "ios",
     {
       "platform": "ios",
       "version": "",
