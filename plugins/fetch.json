@@ -2,7 +2,7 @@
     "phonegap-plugin-push": {
         "source": {
             "type": "registry",
-            "id": "phonegap-plugin-push"
+            "id": "phonegap-plugin-push@1.8.3"
         },
         "is_top_level": true,
         "variables": {
@@ -20,7 +20,7 @@
     "cordova-plugin-inappbrowser": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-inappbrowser"
+            "id": "cordova-plugin-inappbrowser@1.5.0"
         },
         "is_top_level": true,
         "variables": {}
@@ -36,7 +36,7 @@
     "cordova-plugin-splashscreen": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-splashscreen"
+            "id": "cordova-plugin-splashscreen@4.0.0"
         },
         "is_top_level": true,
         "variables": {}
@@ -60,7 +60,7 @@
     "cordova-plugin-whitelist": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-whitelist"
+            "id": "cordova-plugin-whitelist@1.3.0"
         },
         "is_top_level": true,
         "variables": {}
@@ -178,7 +178,7 @@
     "cordova-plugin-statusbar": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-statusbar"
+            "id": "cordova-plugin-statusbar@2.2.0"
         },
         "is_top_level": true,
         "variables": {}
@@ -186,7 +186,7 @@
     "cordova-plugin-settings-hook": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-settings-hook"
+            "id": "cordova-plugin-settings-hook@~0.2.3"
         },
         "is_top_level": true,
         "variables": {}
@@ -206,7 +206,7 @@
             "url": "https://github.com/apache/cordova-plugin-device.git",
             "subdir": "."
         },
-        "is_top_level": false,
+        "is_top_level": true,
         "variables": {}
     },
     "cordova-plugin-media": {
