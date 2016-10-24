@@ -766,6 +766,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         if ($rootScope.platformOS != 'android')
         {
             saveImageToPhone(mid);
+            return;
         }
         
         
