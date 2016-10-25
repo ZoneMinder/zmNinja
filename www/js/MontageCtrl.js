@@ -232,12 +232,18 @@ angular.module('zmApp.controllers')
                 }
                 $timeout(function () {
                     NVRDataModel.log("Force calling resize");
-                    pckry.shiftLayout();
-                }, zm.packeryTimer); // don't ask
+                    pckry.reloadItems();
+                    //pckry.initShiftLayout(positions,"data-item-id");
+                    // now do a jiggle 
+                    $timeout (function() {pckry.layout(); } ,300);
+                    
+                }, 20); 
+                
+                
 
-                pckry.onresize();
+                //pckry.onresize();
 
-            }, zm.packeryTimer);
+            }, 20);
 
         });
 
@@ -855,13 +861,19 @@ angular.module('zmApp.controllers')
         $timeout(function () {
             if (pckry) pckry.onresize();
         }, zm.packeryTimer);*/
-        $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
-        var positions = pckry.getShiftPositions('data-item-id');
+        
+       /* var positions = pckry.getShiftPositions('data-item-id');
+        $timeout(function () {
+                    NVRDataModel.log("init shift layout");
+                    pckry.initShiftLayout(positions,"data-item-id");
+                    $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
+                }, 20);*/
+        
             //console.log ("POSITIONS MAP " + JSON.stringify(positions));
-            var ld = NVRDataModel.getLogin();
-            ld.packeryPositions = JSON.stringify(positions);
+          //  var ld = NVRDataModel.getLogin();
+         //   ld.packeryPositions = JSON.stringify(positions);
             //console.log ("Saving " + ld.packeryPositions);
-            NVRDataModel.setLogin(ld);
+        //    NVRDataModel.setLogin(ld);
     }
 
     $scope.toggleSizeButtons = function () {
@@ -1109,12 +1121,12 @@ angular.module('zmApp.controllers')
                 // $scope.slider.monsize = 2;
             });
             //layout(pckry);
-            $timeout(function () {
+            
                 pckry.layout();
-            }, zm.packeryTimer); // force here - no shiftlayout
+          
 
 
-        }, 100);
+        }, 20);
 
     };
 
@@ -1133,16 +1145,32 @@ angular.module('zmApp.controllers')
     $scope.sliderChanged = function (dirn) {
 
         if ($scope.sliderChanging) {
-            // console.log ("too fast my friend");
+            console.log ("too fast my friend");
             //$scope.slider.monsize = oldSliderVal;
-            // return;
+             return;
         }
 
      
         
         $scope.sliderChanging = true;
+        
+        $ionicLoading.show({
+                    template: $translate.instant('kPleaseWait'),
+                    noBackdrop: true,
+                    duration: 5000
+                });
 
         var somethingReset = false;
+        
+        var oldScales = {};
+         pckry.getItemElements().forEach(function (elem) {
+                var id = elem.getAttribute("data-item-id");
+                var sz = elem.getAttribute("data-item-size");
+                oldScales[id] = sz;
+                console.log ("REMEMBERING "+id+":"+sz);
+                
+            });
+        
 
         // this only changes items that are selected
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
@@ -1179,27 +1207,44 @@ angular.module('zmApp.controllers')
                 $scope.MontageMonitors[i].Monitor.gridScale = cv;
             }
         }
+        
+        // reload sizes from DOM and trigger a layout
+      
+        $timeout (function() {
+        console.log ("Calling re-layout");
+        //pckry.reloadItems(); 
+        
+        if (dirn == 1) //expand
+        {
+            pckry.getItemElements().forEach(function (elem) {
+                var id = elem.getAttribute("data-item-id");
+                var sz = elem.getAttribute("data-item-size");
+                console.log ("NOW IT IS-> "+id+":"+sz);
+                if (oldScales[id] != sz)
+                {
+                    console.log ("Calling FIT on " + id + " size:"+oldScales[id]+"->"+sz);
+                    pckry.once('fitComplete', resizeComplete);
+                    pckry.fit(elem);
+                    
+                }
+            });
+        }
+        else //shrink
+        {
+            console.log ("Calling shift");
+            pckry.once('layoutComplete', resizeComplete);
+            pckry.shiftLayout();
+            
+            
+        }
+        
+        },20);
+        
+         
+        
 
 
-        pckry.shiftLayout();
-
-        pckry.once('layoutComplete', function () {
-            $timeout(function () {
-                var positions = pckry.getShiftPositions('data-item-id');
-                //console.log ("POSITIONS MAP " + JSON.stringify(positions));
-                var ld = NVRDataModel.getLogin();
-                
-                ld.packeryPositions = JSON.stringify(positions);
-                 //console.log ("Saving " + ld.packeryPositions);
-                NVRDataModel.setLogin(ld);
-                $ionicLoading.hide();
-                $scope.sliderChanging = false;
-            }, zm.packeryTimer);
-        });
-
-
-
-        if (!somethingReset) {
+       /* if (!somethingReset) {
             //console.log (">>>SOMETHING NOT RESET");
             $timeout(function () {
                 pckry.layout();
@@ -1210,8 +1255,23 @@ angular.module('zmApp.controllers')
             $timeout(function () {
                 layout(pckry);
             }, zm.packeryTimer);
+        }*/
+        function resizeComplete()
+        {
+            //console.log ("HERE");
+            $timeout(function () {
+                var positions = pckry.getShiftPositions('data-item-id');
+                console.log ("SAVING");
+                var ld = NVRDataModel.getLogin();
+                
+                ld.packeryPositions = JSON.stringify(positions);
+                 //console.log ("Saving " + ld.packeryPositions);
+                NVRDataModel.setLogin(ld);
+                $ionicLoading.hide();
+                $scope.sliderChanging = false;
+            }, 20);
+  
         }
-
 
 
 
