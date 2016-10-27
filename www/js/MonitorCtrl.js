@@ -428,7 +428,7 @@ angular.module('zmApp.controllers')
             //Cleanup the modal when we're done with it!
             $scope.$on('$destroy', function () {
                 //console.log("Destroy Monitor Modal");
-                $scope.modal.remove();
+                if ($scope.modal) $scope.modal.remove();
             });
 
 

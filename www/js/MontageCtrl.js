@@ -459,7 +459,7 @@ angular.module('zmApp.controllers')
                   
                   // Now also ask DataModel to update its monitor display status
                   NVRDataModel.reloadMonitorDisplayStatus();
-                });
+                },20);
         }
         
 

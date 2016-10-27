@@ -51,7 +51,7 @@ angular.module('zmApp.controllers')
     var pageLoaded;
     var enableLoadMore;
     var lData;
-    var stackState;
+    var showHiddenMonitors;
     var ionRangeWatcher;
     var mycarouselWatcher;
     var nolangFrom;
@@ -74,6 +74,18 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.afterEnter', function () {
         //console.log ("********* AFTER ENTER");
+        
+        // see if we come from monitors, if so, don't filter events
+        if ($ionicHistory.backTitle() =='Monitors')
+        {
+            showHiddenMonitors = true;
+        }
+        else
+        {
+            showHiddenMonitors = false;
+        }
+        console.log (">>>>>>>>>>>>>>>>>SHOWHIDDEN IS " + showHiddenMonitors);
+        
         $scope.events = [];
         getInitialEvents();
         setupWatchers();
@@ -280,7 +292,7 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("getInitialEvents called");
         var lData = NVRDataModel.getLogin();
 
-        var stackState = $ionicHistory.backTitle();
+       
 
         // If you came from Monitors, disregard hidden monitors in montage
        /* if (lData.persistMontageOrder && stackState != "Monitors") {
@@ -345,7 +357,7 @@ angular.module('zmApp.controllers')
                             if (loginData.persistMontageOrder) {
                                 idfound = false;
                                 for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                    if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && NVRDataModel.isNotHidden(myevents[i].Event.MonitorId)) {
+                                    if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && (NVRDataModel.isNotHidden(myevents[i].Event.MonitorId) || showHiddenMonitors)) {
 
                                         idfound = true;
                                         break;
@@ -846,7 +858,7 @@ angular.module('zmApp.controllers')
                         if (ld.persistMontageOrder) {
                             idfound = false;
                             for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == key && NVRDataModel.isNotHidden(key) ) {
+                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key) || showHiddenMonitors) ) {
                                    // console.log ("Authorizing "+$scope.monitors[ii].Monitor.Name);
                                     idfound = true;
                                     break;
@@ -879,7 +891,7 @@ angular.module('zmApp.controllers')
                         if (ld.persistMontageOrder) {
                             idfound = false;
                             for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == key && NVRDataModel.isNotHidden(key)) {
+                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key) || showHiddenMonitors)) {
                                     idfound = true;
                                     break;
                                 }
@@ -914,7 +926,7 @@ angular.module('zmApp.controllers')
                         if (ld.persistMontageOrder) {
                             idfound = false;
                             for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == key && NVRDataModel.isNotHidden(key)) {
+                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key)|| showHiddenMonitors)) {
                                     idfound = true;
                                     break;
                                 }
@@ -949,7 +961,7 @@ angular.module('zmApp.controllers')
                         if (ld.persistMontageOrder) {
                             idfound = false;
                             for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == key && NVRDataModel.isNotHidden(key)) {
+                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key)|| showHiddenMonitors)) {
                                     idfound = true;
                                     break;
                                 }
@@ -1712,7 +1724,7 @@ angular.module('zmApp.controllers')
                         if (ld.persistMontageOrder) {
                             idfound = false;
                             for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && NVRDataModel.isNotHidden(myevents[i].Event.MonitorId)) {
+                                if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && (NVRDataModel.isNotHidden(myevents[i].Event.MonitorId)|| showHiddenMonitors)) {
 
                                     //console.log ( $scope.monitors[ii].Monitor.Id + " MATCHES " + myevents[i].Event.MonitorId);
                                     idfound = true;
