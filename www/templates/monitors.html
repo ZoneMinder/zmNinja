@@ -19,12 +19,30 @@
             <div class="list card" ng-repeat="monitor in monitors">
                 <div class="item" ng-style="{'background-color': monitor.Monitor.Enabled=='1'?'white':'white'}">
                     <div ng-if="monitor.Monitor.Enabled == '1'">
-                        <span class='item item-icon-left item-icon-right'>
-                            <i class="icon ion-ios-videocam-outline"></i>
-                            <b>{{monitor.Monitor.Name}}</b>
-                            <i class="icon {{monitor.Monitor.char}}" style="color:{{monitor.Monitor.color}};"></i>
+                        <div class='item'>
+                            
+                            <span class="item-icon-left">
+                                
+                                <div class="icon">
+                                    <span  class="ion-ios-videocam-outline"></span>
+                                    &nbsp;
 
-                        </span>
+                                    <span ng-class="{'ion-eye':monitor.Monitor.listDisplay=='show','ion-eye-disabled':monitor.Monitor.listDisplay!='show'}"> </span>
+                                </div>
+                                
+                             &nbsp;
+                             <b>{{monitor.Monitor.Name}}</b>   
+                            </span>
+                            
+                            
+                            <span class="item-icon-right">
+                                <i class="icon {{monitor.Monitor.char}}" style="color:{{monitor.Monitor.color}};"></i>
+                            </span>
+                            
+                            <!-- <i ng-class="{'icon ion-eye':monitor.Monitor.listDisplay=='show','icon ion-eye-disabled':monitor.Monitor.listDisplay!='show'}"> </i>-->
+
+
+                        </div>
                     </div>
 
                     <div ng-if="monitor.Monitor.Enabled != '1'">
