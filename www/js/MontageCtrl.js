@@ -410,53 +410,63 @@ angular.module('zmApp.controllers')
         $scope.modal.remove();
     };
 
+        
+        
+        
     $scope.saveReorder = function () {
-        NVRDataModel.debug("Saving monitor hide/unhide and sizes");
+        NVRDataModel.debug("Saving monitor hide/unhide");
 
 
 
-
+        // redo packery as monitor status has changed
+        // DOM may need reloading if you've hidden/unhidden stuff
         $scope.MontageMonitors = $scope.copyMontage;
         $scope.modal.remove();
+        
         $timeout(function () {
-            pckry.reloadItems();
-        }, 400);
-        $timeout(function () {
-
+            
             draggies.forEach(function (drag) {
                 drag.destroy();
             });
-
+            
+            pckry.reloadItems();
             draggies = [];
-
-            pckry.once('layoutComplete', function () {
-                //console.log('Saving packery order now, layout rendered');
-                $timeout(function () {
+            pckry.once ('layoutComplete', savePackeryOrder);
+            pckry.layout();
+            
+            
+            
+        }, 400);
+        
+        function savePackeryOrder ()
+        {
+              $timeout(function () {
                     var positions = pckry.getShiftPositions('data-item-id');
                     NVRDataModel.debug("POSITIONS MAP " + JSON.stringify(positions));
                     var ld = NVRDataModel.getLogin();
                     ld.packeryPositions = JSON.stringify(positions);
-                    //console.log ("Saving " + ld.packeryPositions);
+                    //console.log ("Savtogging " + ld.packeryPositions);
                     NVRDataModel.setLogin(ld);
+                  
+                    pckry.getItemElements().forEach(function (itemElem) {
+                        draggie = new Draggabilly(itemElem);
+                        pckry.bindDraggabillyEvents(draggie);
+                        draggies.push(draggie);
+                        draggie.disable();
+                    });
+                    
+                    $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
+                  
+                  // Now also ask DataModel to update its monitor display status
+                  NVRDataModel.reloadMonitorDisplayStatus();
                 });
-            });
-
-            pckry.getItemElements().forEach(function (itemElem) {
-                draggie = new Draggabilly(itemElem);
-                pckry.bindDraggabillyEvents(draggie);
-                draggies.push(draggie);
-                draggie.disable();
-            });
-            pckry.layout();
-
-        }, 800);
-
-        $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
+        }
+        
 
     };
 
 
-    $scope.toggleDelete = function (i) {
+    $scope.toggleHide = function (i) {
 
         if ($scope.copyMontage[i].Monitor.listDisplay == 'show')
             $scope.copyMontage[i].Monitor.listDisplay = 'noshow';
@@ -470,6 +480,8 @@ angular.module('zmApp.controllers')
         if ($scope.isDragabillyOn) {
             dragToggle();
         }
+        // make a copy of the current list and work on that
+        // this is to avoid packery screw ups while you are hiding/unhiding
         $scope.copyMontage = angular.copy($scope.MontageMonitors);
         $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
                 scope: $scope,

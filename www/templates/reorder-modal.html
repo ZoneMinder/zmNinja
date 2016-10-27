@@ -19,7 +19,7 @@
         <ion-content >
             <div class="list">
                 <span  ng-repeat="item in copyMontage">
-                    <a class="item item-icon-left" ng-click="toggleDelete($index)" href="">
+                    <a class="item item-icon-left" ng-click="toggleHide($index)" href="">
                         <i ng-class="{'icon ion-eye':item.Monitor.listDisplay=='show','icon ion-eye-disabled':item.Monitor.listDisplay!='show'}"> </i>
                         {{item.Monitor.Name}}
                     </a>

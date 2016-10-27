@@ -320,11 +320,13 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         var ld = NVRDataModel.getLogin();
         $scope.loginData = NVRDataModel.getLogin();
 
-        if (ld.persistMontageOrder) {
+       /* if (ld.persistMontageOrder) {
             var iMon = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2);
             $scope.monitors = iMon[0];
-        } else
-            $scope.monitors = message;
+        } else*/
+        
+        
+        $scope.monitors = message;
         if ($rootScope.customTimelineRange) {
             // console.log("***** CUSTOM RANGE");
             if (moment($rootScope.fromString).isValid() &&
@@ -657,7 +659,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                         idfound = false;
                                         for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                            if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId) {
+                                            if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && NVRDataModel.isNotHidden(myevents[i].Event.MonitorId) ) {
                                                 idfound = true;
                                                 //console.log ("****************** ID MATCH " + graphIndex);
 

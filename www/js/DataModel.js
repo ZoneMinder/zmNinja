@@ -231,6 +231,32 @@ angular.module('zmApp.controllers')
         }
 
 
+        function reloadMonitorDisplayStatus()
+        {
+            debug ("Loading hidden/unhidden status...");
+                            var positionsStr = loginData.packeryPositions;
+                            //console.log ("positionStr="+positionsStr);
+                            var positions = {};
+                            if (loginData.packeryPositions != '')
+                            {
+                                positions = JSON.parse(positionsStr);
+                                for (var m = 0; m < monitors.length; m++)
+                                {
+                                    for (var p = 0; p < positions.length; p++)
+                                    {
+                                        if (monitors[m].Monitor.Id == positions[p].attr) 
+                                        {
+                                            monitors[m].Monitor.listDisplay = positions[p].display;
+                                            debug ("DataModel: Setting MID:"+monitors[m].Monitor.Id+" to " + monitors[m].Monitor.listDisplay);
+                                        }
+                                            
+                                            
+                                    }
+                                }
+
+                                
+                            }
+        }
 
 
         function setLogin(newLogin) {
@@ -500,6 +526,7 @@ angular.module('zmApp.controllers')
 
 
 
+                
 
                 log("ZMData init: checking for stored variables & setting up log file");
 
@@ -574,6 +601,10 @@ angular.module('zmApp.controllers')
                                 loginData = loadedData;
 
                                 // old version hacks for new variables
+                                
+                                // always true Oct 27 2016
+                                loginData.persistMontageOrder = true;
+                                loginData.enableh264 = true;
 
                                 if (typeof loginData.enableAlarmCount === 'undefined') {
                                     debug("enableAlarmCount does not exist, setting to true");
@@ -813,6 +844,7 @@ angular.module('zmApp.controllers')
                         
                         
                         
+                        
                             // FIXME: HACK: This is the latest entry point into dataModel init, so start portal login after this
                             // not the neatest way
                             $rootScope.$emit('init-complete');
@@ -902,7 +934,10 @@ angular.module('zmApp.controllers')
                 //return window.localStorage.getItem("defaultLang");
 
             },
-
+            
+            reloadMonitorDisplayStatus: function() {
+                return reloadMonitorDisplayStatus();
+            },
 
             getLogin: function () {
 
@@ -1182,113 +1217,7 @@ angular.module('zmApp.controllers')
                 return getBandwidth();
             },
 
-            //--------------------------------------------------------------------------
-            // This is really a hack for now & is very ugly. I need to clean this up a lot
-            // it re-arranges monitors based on montage and hidden order so that 
-            // I can reuse this from events and timeline view if persist monitor states
-            // is on
-            //--------------------------------------------------------------------------
-            applyMontageMonitorPrefs: function (mon, doOrder) {
-                var montageOrder = []; // This array will keep the ordering in montage view
-                var hiddenOrder = []; // 1 = hide, 0 = don't hide
-                var monitors = mon;
-                var orderedMonitors = [];
-
-
-                // First let's check if the user already has a saved monitor order
-                var i;
-                if (loginData.montageOrder == '') {
-                    //if (window.localStorage.getItem("montageOrder") == undefined) {
-
-                    for (i = 0; i < monitors.length; i++) {
-                        montageOrder[i] = i; // order to show is order ZM returns
-                        hiddenOrder[i] = 0; // don't hide them
-                    }
-                    //console.log("Order string is " + montageOrder.toString());
-                    //console.log("Hiddent string is " + hiddenOrder.toString());
-
-                    log("Stored montage order does not exist");
-                } else
-                // there is a saved order
-                {
-                    var myorder = loginData.montageOrder;
-                    var myhiddenorder = loginData.montageHiddenOrder;
-
-
-                    debug("MontageCtrl: Montage order is " + myorder);
-                    debug("MontageCtrl: Hidden order is " + myhiddenorder);
-                    if (myorder) montageOrder = myorder.split(",");
-                    if (myhiddenorder) hiddenOrder = myhiddenorder.split(",");
-
-                    //  handle add/delete monitors after the array has been 
-                    // saved
-
-                    if (monitors.length != montageOrder.length) {
-                        log("Monitors array length different from stored hidden/order array. It's possible monitors were added/removed. Resetting...");
-                        montageOrder = [];
-                        hiddenOrder = [];
-                        for (i = 0; i < monitors.length; i++) {
-                            montageOrder[i] = i; // order to show is order ZM returns
-                            hiddenOrder[i] = 0; // don't hide them
-                        }
-
-                        loginData.montageOrder = montageOrder.toString();
-                        loginData.montageHiddenOrder = hiddenOrder.toString();
-                        setLogin(loginData);
-                        //window.localStorage.setItem("montageOrder",
-                        //   montageOrder.toString());
-                        //  window.localStorage.setItem("montageHiddenOrder",
-                        //     hiddenOrder.toString());
-
-
-                    }
-
-                } // at this stage, the monitor arrangement is not matching
-                // the montage order. Its in true order. Let us first process the hiddenOrder part
-                // now
-
-                for (i = 0; i < montageOrder.length; i++) {
-                    montageOrder[i] = parseInt(montageOrder[i]);
-                    hiddenOrder[i] = parseInt(hiddenOrder[i]);
-                    //  $scope.monitors[i].Monitor.sortOrder = montageOrder[i];
-                    // FIXME: This will briefly show and then hide
-                    // disabled monitors
-                    if (hiddenOrder[i] == 1) {
-                        // $scope.monitors[i].Monitor.listDisplay='noshow';
-
-                        if (monitors[i] !== undefined)
-                            monitors[i].Monitor.listDisplay = 'noshow';
-                        log("Monitor " + i + " is marked as hidden in montage");
-                    } else {
-                        if (monitors[i] !== undefined)
-                            monitors[i].Monitor.listDisplay = 'show';
-                    }
-                }
-
-
-                if (doOrder) {
-                    for (i = 0; i < montageOrder.length; i++) {
-                        for (var j = 0; j < montageOrder.length; j++) {
-                            if (montageOrder[j] == i) {
-                                // if 2 is passed, hidden elements are not recorded
-                                if (doOrder == 2) {
-                                    if (monitors[j].Monitor.listDisplay != 'noshow')
-                                        orderedMonitors.push(monitors[j]);
-                                } else
-                                    orderedMonitors.push(monitors[j]);
-                            }
-                        }
-                    }
-                } else {
-                    orderedMonitors = monitors;
-                }
-
-
-
-                return ([orderedMonitors, montageOrder, hiddenOrder]);
-
-            },
-
+           
             //-----------------------------------------------------------------------------
             // This function returns a list of monitors
             // if forceReload == 1 then it will force an HTTP API request to get a list of monitors
@@ -1332,6 +1261,11 @@ angular.module('zmApp.controllers')
                             });
                             //console.log("promise resolved inside HTTP success");
                             monitorsLoaded = 1;
+                        
+                            reloadMonitorDisplayStatus();                
+                                            
+                        
+                        
                             debug("Now trying to get multi-server data, if present");
                             $http.get(apiurl + "/servers.json")
                                 .success(function (data) {
@@ -1342,7 +1276,7 @@ angular.module('zmApp.controllers')
 
                                     for (var i = 0; i < monitors.length; i++) {
 
-                                        monitors[i].Monitor.listDisplay = 'show';
+                                        //monitors[i].Monitor.listDisplay = 'show';
                                         monitors[i].Monitor.isAlarmed = false;
                                         monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
@@ -1392,6 +1326,9 @@ angular.module('zmApp.controllers')
                                             baseurl = st;
 
                                             st += (s.path ? s.path : p.path);
+                                            
+                                            //console.log ("----------STREAMING URL PARSED AS " + st);
+                                            
                                             monitors[i].Monitor.streamingURL = st;
                                             monitors[i].Monitor.baseURL = baseurl;
                                             // starting 1.30 we have fid=xxx mode to return images
@@ -1403,7 +1340,7 @@ angular.module('zmApp.controllers')
 
 
                                         } else {
-                                            monitors[i].Monitor.listDisplay = 'show';
+                                            //monitors[i].Monitor.listDisplay = 'show';
                                             monitors[i].Monitor.isAlarmed = false;
                                             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                                             monitors[i].Monitor.streamingURL = loginData.streamingurl;
@@ -1427,7 +1364,7 @@ angular.module('zmApp.controllers')
                                     multiservers = [];
 
                                     for (var i = 0; i < monitors.length; i++) {
-                                        monitors[i].Monitor.listDisplay = 'show';
+                                        //monitors[i].Monitor.listDisplay = 'show';
                                         monitors[i].Monitor.isAlarmed = false;
                                         monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                                         monitors[i].Monitor.streamingURL = loginData.streamingurl;
@@ -1533,6 +1470,23 @@ angular.module('zmApp.controllers')
                            
                 }
                 return d.promise;
+            },
+            
+            // returns if this mid is hidden or not
+            isNotHidden: function(mid)
+            {
+                var notHidden = true;
+                for (var i=0; i<monitors.length; i++)
+                {
+                    if (monitors[i].Monitor.Id == mid)
+                    {
+                        notHidden = (monitors[i].Monitor.listDisplay =='show') ? true:false;
+                        break;
+                    }
+                    
+                }
+                return notHidden;
+                    
             },
             
             //returns TZ value immediately (sync)
