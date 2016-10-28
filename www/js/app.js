@@ -1497,13 +1497,14 @@ angular.module('zmApp', [
                     
                     localforage.getItem('last-desktop-state')
                     .then (function (succ) {
-                        console.log ("FOUND " + JSON.stringify(succ));
+                       // console.log ("FOUND " + JSON.stringify(succ) + ":"+succ);
                         if (succ)
                         {
                             $rootScope.lastState = succ.name;
                             $rootScope.lastStateParam = succ.params;
-                            loadServices();
+                            
                         }
+                        loadServices();
                     }, function (err) {
                         console.log ("ERR " + JSON.stringify(err));
                         loadServices();

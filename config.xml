@@ -85,4 +85,6 @@
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <plugin name="cordova-sqlite-storage" spec="~1.4.6-pre6a" />
     <plugin name="cordova-plugin-settings-hook" spec="~0.2.3" />
+    <engine name="ios" spec="~4.1.1" />
+    <engine name="android" spec="~5.1.1" />
 </widget>
