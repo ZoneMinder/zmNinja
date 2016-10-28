@@ -1071,9 +1071,32 @@ angular.module('zmApp', [
             NVRDataModel.debug("**EXCEPTION**" + error.reason + " caused by " + error.cause);
         };
 
+    
+    
+        window.addEventListener('beforeunload', function(ev) { 
+            
+            if ($rootScope.platformOS != 'desktop')
+            {
+                ev.returnValue = "true"; 
+                return;
+            }
+            
+            
+            
+            localforage.setItem('last-desktop-state', {'name':$ionicHistory.currentView().stateName, 'params' : $ionicHistory.currentView().stateParams}).then(function () {
+              return localforage.getItem('last-desktop-state');
+            }).then(function (value) {
+              ev.returnValue = "true"; 
+            }).catch(function (err) {
+              ev.returnValue = "true"; 
+            });
+            
+        });
+    
         // register callbacks for online/offline
         // lets see if it really works
         $rootScope.online = navigator.onLine;
+    
         $window.addEventListener("offline", function () {
             $rootScope.$apply(function () {
                 $rootScope.online = false;
@@ -1230,6 +1253,9 @@ angular.module('zmApp', [
 
             if (window.cordova)
                 MobileAccessibility.getTextZoom(getTextZoomCallback);
+            
+           // $rootScope.lastState = "events";
+            //$rootScope.lastStateParam = "0";
 
             localforage.config({
                 name: zm.dbName
@@ -1463,14 +1489,43 @@ angular.module('zmApp', [
 
 
             function continueRestOfInit() {
-                NVRDataModel.log("Language file loaded, continuing with rest");
-                NVRDataModel.init();
-                EventServer.init();
-                zmCheckUpdates.start();
-                NVRDataModel.log("Setting up POST LOGIN timer");
-                zmAutoLogin.start();
-                setupPauseAndResume();
+                
+                if ($rootScope.platformOS == 'desktop' )
+                {
+                    $rootScope.lastState = "";
+                    $rootScope.lastStateParam = {};
+                    
+                    localforage.getItem('last-desktop-state')
+                    .then (function (succ) {
+                        console.log ("FOUND " + JSON.stringify(succ));
+                        if (succ)
+                        {
+                            $rootScope.lastState = succ.name;
+                            $rootScope.lastStateParam = succ.params;
+                            loadServices();
+                        }
+                    }, function (err) {
+                        console.log ("ERR " + JSON.stringify(err));
+                        loadServices();
+                    });
+                }
+                else
+                    
+                {
+                
+                    loadServices();
+                }
 
+                function loadServices()
+                {
+                    NVRDataModel.log("Language file loaded, continuing with rest");
+                    NVRDataModel.init();
+                    EventServer.init();
+                    zmCheckUpdates.start();
+                    NVRDataModel.log("Setting up POST LOGIN timer");
+                    zmAutoLogin.start();
+                    setupPauseAndResume();
+                }
 
 
 
@@ -1497,37 +1552,42 @@ angular.module('zmApp', [
                             disableAnimate: true,
                             disableBack: true
                         });
+                        
+                        
+                       
+                        
+                       
+                            // remember the last state so we can 
+                            // go back there after auth
+                            if ($ionicHistory.currentView()) {
+                                $rootScope.lastState = $ionicHistory.currentView().stateName;
+                                $rootScope.lastStateParam =
+                                    $ionicHistory.currentView().stateParams;
+                                NVRDataModel.debug("Last State recorded:" +
+                                    JSON.stringify($ionicHistory.currentView()));
 
-                        // remember the last state so we can 
-                        // go back there after auth
-                        if ($ionicHistory.currentView()) {
-                            $rootScope.lastState = $ionicHistory.currentView().stateName;
-                            $rootScope.lastStateParam =
-                                $ionicHistory.currentView().stateParams;
-                            NVRDataModel.debug("Last State recorded:" +
-                                JSON.stringify($ionicHistory.currentView()));
+                                if ($rootScope.lastState == "zm-portal-login") {
+                                    NVRDataModel.debug("Last state was portal-login, so forcing montage");
+                                    $rootScope.lastState = "montage";
+                                }
 
-                            if ($rootScope.lastState == "zm-portal-login") {
-                                NVRDataModel.debug("Last state was portal-login, so forcing montage");
-                                $rootScope.lastState = "montage";
+                                NVRDataModel.debug("going to portal login");
+                                $ionicHistory.nextViewOptions({
+                                    disableAnimate: true
+                                });
+                                $state.go("zm-portal-login");
+                                return;
+                            } else {
+                                $rootScope.lastState = "";
+                                $rootScope.lastStateParam = "";
+                                NVRDataModel.debug("reset lastState to null");
+                                $ionicHistory.nextViewOptions({
+                                    disableAnimate: true
+                                });
+                                $state.go("zm-portal-login");
+                                return;
                             }
-
-                            NVRDataModel.debug("going to portal login");
-                            $ionicHistory.nextViewOptions({
-                                disableAnimate: true
-                            });
-                            $state.go("zm-portal-login");
-                            return;
-                        } else {
-                            $rootScope.lastState = "";
-                            $rootScope.lastStateParam = "";
-                            NVRDataModel.debug("reset lastState to null");
-                            $ionicHistory.nextViewOptions({
-                                disableAnimate: true
-                            });
-                            $state.go("zm-portal-login");
-                            return;
-                        }
+                    
                     }, forceDelay);
 
                 }, false);

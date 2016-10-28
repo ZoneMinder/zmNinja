@@ -158,6 +158,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 }
                                 // coming here means continue
                                 EventServer.refresh();
+                        
+                                
+                        
                                 var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
                                 //NVRDataModel.debug ("logging state transition");
                                 NVRDataModel.debug("2nd Auth: Transitioning state to: " +
@@ -243,6 +246,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     // coming here means continue
                                     // console.log (">>>>>>>>>>>>>>>>>>>>>>>>>NEVER");
                                     EventServer.refresh();
+                            
+                                    
+                                    
                                     var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
                                     NVRDataModel.debug("logging state transition");
                                     NVRDataModel.debug("Transitioning state to: " +
