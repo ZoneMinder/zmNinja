@@ -2,6 +2,154 @@
 http://visjs.org
 
 
+## 2016-04-18, version 4.16.1
+
+### Timeline
+
+- Fixed #1786: Timeline having zero height on Internet Explorer, regression
+  introduced after fixing #1697.
+
+
+## 2016-04-07, version 4.16.0
+
+### Timeline
+
+- Implemented rtl support. Thanks @yotamberk.
+- Fixed #1697: Timeline not drawn when used within the Angular.js directive.
+- Fixed #1774: Wrong initial scale when Timeline contains a single item.
+
+### General
+
+- Created bundles for individual visualizations: `vis-graph3d.min.js`,
+  `vis-network.min.js`, and `vis-timeline-graph2d.min.js`.
+
+
+## 2016-03-08, version 4.15.1
+
+## General
+
+- Updated all dependencies.
+
+### Graph2d
+
+- Fixed #1455: allow vertical panning of the web page on touch devices.
+- Fixed #1692: Error when y-axis values are equal.
+
+### Timeline
+
+- Fixed #1455: allow vertical panning of the web page on touch devices.
+- Fixed #1695: Item line and dot not correctly reckoning with the line width
+  when using left or right align.
+- Fixed #1697: Timeline not drawn when used within the Angular.js directive.
+
+
+## 2016-02-23, version 4.15.0
+
+### Timeline
+
+- Implemented `currentTimeTick` event (see #1683).
+- Fixed #1630: method `getItemRange` missing in docs.
+
+### Graph2d
+
+- Fixed #1630: method `getDataRange` was wrongly called `getItemRange` in docs.
+- Fixed #1655: use parseFloat instead of Number.parseFloat, as the latter is
+  not supported in IE. Thanks @ttjoseph.
+
+### Graph3d
+
+- Changed the built-in tooltip to show the provided `xLabel`, `yLabel`, and
+  `zLabel` instead of `'x'`, `'y'`, and `'z'`. Thanks @jacklightbody.
+
+### Network
+
+- Implemented interpolation option for interpolation of images, default true.
+- Implemented parentCentralization option for hierarchical layout.
+- Fixed #1635: edges are now referring to the correct points.
+- Fixed #1644, #1631: overlapping nodes in hierarchical layout should no longer occur.
+- Fixed #1575: fixed selection events
+- Fixed #1677: updating groups through manipulation now works as it should.
+- Fixed #1672: Implemented stepped scaling for nice interpolation of images.
+
+
+## 2016-02-04, version 4.14.0
+
+### Timeline
+
+- Fixed a regression: Timeline/Graph2d constructor throwing an exception when
+  no options are provided via the constructor.
+
+### Graph2d
+
+- Fixed a regression: Timeline/Graph2d constructor throwing an exception when
+  no options are provided via the constructor.
+
+### Graph3d
+
+- Fixed #1615: implemented new option `dotSizeRatio`.
+
+
+## 2016-02-01, version 4.13.0
+
+### Network
+
+- Added options to customize the hierarchical layout without the use of physics.
+- Altered edges for arrows and added the arrowStrikethrough option.
+- Improved the hierarchical layout algorithm by adding a condensing method to remove whitespace.
+- Fixed #1556: Network throwing an error when clicking the "Edit" button
+  on the manipulation toolbar.
+- Fixed #1334 (again): Network now ignores scroll when interaction:zoomView is false.
+- Fixed #1588: destroy now unsubscribed from the dataset.
+- Fixed #1584: Navigation buttons broken.
+- Fixed #1596: correct clean up of manipulation dom elements.
+- Fixed #1594: bug in hierarchical layout.
+- Fixed #1597: Allow zero borders and addressed scaling artifacts.
+- Fixed #1608: Fixed wrong variable reference
+
+### Timeline
+
+- Moved initial autoscale/fit method to an handler of the "changed" event.
+- Fixed #1580: Invisible timeline/graph should not be drawn, as most inputs are invalid
+- Fixed #1521: Prevent items from staying stuck to the left side of the viewport.
+- Fixed #1592: Emit a "changed" event after each redraw.
+- Fixed #1541: Timeline and Graph2d did not load synchronously anymore.
+
+### Graph2d
+
+- Major redesign of data axis/scales, with large focus on creating a sane slave axis setup
+- Cleanup of linegraph's event handling.
+- Fixed #1585: Allow bar groups to exclude from stacking
+- Fixed #1580: Invisible timeline/graph should not be drawn, as most inputs are invalid
+- Fixed #1177: Fix custom range of slaved right axis.
+- Fixed #1592: Emit a "changed" event after each redraw.
+- Fixed #1017: Fixed minWidth behavior for bars.
+- Fixes #1557: Fix default axis formatting function.
+- Fixed #1541: Timeline and Graph2d did not load synchronously anymore.
+- Fixed a performance regression
+
+
+## 2016-01-08, version 4.12.0
+
+### Timeline
+
+- Fixed #1527: error when creating/updating a Timeline without data.
+- Fixed #1127: `doubleClick` event not being fired.
+- Fixed #1554: wrong cursor on readonly range items.
+
+### Network
+
+- Fixed #1531, #1335:  border distances for arrow positioning
+- Fixed findNode method. It now does not return internal objects anymore.
+- Fixed #1529, clustering and declustering now respects the original settings of the edges for physics and hidden.
+- Fixed #1406, control nodes are now drawn immediately without a second redraw.
+- Fixed #1404, made the array returned by findNode match the docs.
+- Added #1138, enable the user to define the color of the shadows for nodes and edges.
+- Fixed #1528, #1278, avoided ID's being cast to string for methods that return ID's as well as storePositions casting to string.
+- Fixed upscaling when the window size increases.
+- Accepted pull request #1544, thanks @felixhayashi!
+- Fixed documented bug in #1544.
+
+
 ## 2015-12-18, version 4.11.0
 
 ### Network

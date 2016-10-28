@@ -31,6 +31,11 @@
   },
   "cordovaPlugins": [
     {
+      "locator": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
+      "id": "cordova-sqlite-storage"
+    },
+    "cordova-plugin-settings-hook",
+    {
       "id": "phonegap-plugin-push",
       "locator": "phonegap-plugin-push",
       "variables": {
@@ -38,6 +43,7 @@
       }
     },
     "cordova-plugin-file",
+    "cordova-plugin-compat",
     "cordova-plugin-inappbrowser",
     "cordova-plugin-ios-longpress-fix",
     "cordova-plugin-splashscreen",
@@ -67,16 +73,10 @@
       "locator": "https://github.com/jcjee/email-composer",
       "id": "com.jcjee.plugins.emailcomposer"
     },
-    "cordova-plugin-compat",
-    {
-      "locator": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
-      "id": "cordova-sqlite-storage"
-    },
     "cordova-plugin-app-version",
     "cordova-plugin-android-permissions",
     "cordova-plugin-network-information",
     "cordova-plugin-statusbar",
-    "cordova-plugin-settings-hook",
     {
       "locator": "https://github.com/phonegap/phonegap-mobile-accessibility.git",
       "id": "phonegap-plugin-mobile-accessibility"

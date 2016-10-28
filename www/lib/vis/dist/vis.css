@@ -32,6 +32,11 @@ div.vis-configuration-wrapper {
     width:700px;
 }
 
+div.vis-configuration-wrapper::after {
+  clear: both;
+  content: "";
+  display: block;
+}
 
 div.vis-configuration.vis-config-option-container{
     display:block;
@@ -133,7 +138,7 @@ input.vis-configuration.vis-config-rangeinput{
     position:relative;
     top:-5px;
     width:60px;
-    height:13px;
+    /*height:13px;*/
     padding:1px;
     margin:0;
     pointer-events:none;
@@ -560,6 +565,17 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
   cursor: pointer;
 }
 
+.vis-item .vis-delete-rtl {
+  background: url('img/timeline/delete.png') no-repeat center;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: -4px;
+  left: -24px;
+  cursor: pointer;
+}
+
+
 .vis-item.vis-range .vis-drag-left {
   position: absolute;
   width: 24px;
@@ -582,6 +598,11 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
   right: -4px;
 
   cursor: e-resize;
+}
+
+.vis-range.vis-item.vis-readonly .vis-drag-left,
+.vis-range.vis-item.vis-readonly .vis-drag-right {
+  cursor: auto;
 }
 
 .vis-time-axis {
@@ -625,6 +646,11 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
 .vis-time-axis .vis-grid.vis-vertical {
   position: absolute;
   border-left: 1px solid;
+}
+
+.vis-time-axis .vis-grid.vis-vertical-rtl {
+  position: absolute;
+  border-right: 1px solid;
 }
 
 .vis-time-axis .vis-grid.vis-minor {
@@ -1046,7 +1072,7 @@ div.vis-network-tooltip {
 
   font-family: verdana;
   font-size:14px;
-  font-color:#000000;
+  color:#000000;
   background-color: #f5f4ed;
 
   -moz-border-radius: 3px;
@@ -1121,14 +1147,17 @@ div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
 
 div.vis-color-picker {
   position:absolute;
+  top: 0px;
+  left: 30px;
   margin-top:-140px;
   margin-left:30px;
-  width:293px;
-  height:425px;
+  width:310px;
+  height:444px;
+  z-index: 1;
   padding: 10px;
   border-radius:15px;
   background-color:#ffffff;
-  display:none;
+  display: none;
   box-shadow: rgba(0,0,0,0.5) 0px 0px 10px 0px;
 }
 
@@ -1138,8 +1167,8 @@ div.vis-color-picker div.vis-arrow {
   left:5px;
 }
 
-div.vis-color-picker div.vis-arrow:after,
-div.vis-color-picker div.vis-arrow:before {
+div.vis-color-picker div.vis-arrow::after,
+div.vis-color-picker div.vis-arrow::before {
   right: 100%;
   top: 50%;
   border: solid transparent;

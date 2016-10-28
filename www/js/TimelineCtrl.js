@@ -761,6 +761,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             var dblclick = false;
 
 
+                            timeline.on ('currentTimeTick', function () {
+                                console.log ("TICK! TICK!");
+                            
+                            });
 
                             timeline.on('click', function (prop) {
 
