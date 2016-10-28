@@ -459,6 +459,7 @@ angular.module('zmApp.controllers')
                   
                   // Now also ask DataModel to update its monitor display status
                   NVRDataModel.reloadMonitorDisplayStatus();
+                  pckry.layout();
                 },20);
         }
         
@@ -912,9 +913,15 @@ angular.module('zmApp.controllers')
         if (NVRDataModel.isTzSupported())
         {
             if ($scope.iconTimeNow == 'server')
+            {
                     $scope.iconTimeNow = 'local';
+                    $scope.timeNow = $translate.instant('kPleaseWait');
+            }
             else
+            {
                     $scope.iconTimeNow = 'server';
+                    $scope.timeNow = $translate.instant('kPleaseWait');
+            }
         }
         else
             NVRDataModel.debug ("timezone API not supported, can't display");
