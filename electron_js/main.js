@@ -1,4 +1,5 @@
 const electron = require('electron');
+//require('electron-debug')({showDevTools: true});
 // Module to control application life.
 const {app} = electron;
 // Module to create native browser window.
@@ -31,7 +32,7 @@ function createWindow() {
   win.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  //win.webContents.openDevTools();
+  win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
