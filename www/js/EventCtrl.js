@@ -66,6 +66,11 @@ angular.module('zmApp.controllers')
     // initial code
     //---------------------------------------------------
 
+    //we come here is TZ is updated after the view loads
+    $rootScope.$on('tz-updated', function() {
+        $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
+        NVRDataModel.debug ("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
+    });
     
     $rootScope.$on("language-changed", function () {
         NVRDataModel.log(">>>>>>>>>>>>>>> language changed");
@@ -84,7 +89,17 @@ angular.module('zmApp.controllers')
         {
             showHiddenMonitors = false;
         }
-        console.log (">>>>>>>>>>>>>>>>>SHOWHIDDEN IS " + showHiddenMonitors);
+       // console.log (">>>>>>>>>>>>>>>>>SHOWHIDDEN IS " + showHiddenMonitors);
+        
+        // lets get the abbreviated version of TZ to display
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+        {
+            $scope.tzAbbr = moment().tz(moment.tz.guess()).zoneAbbr();
+        }
+        else
+        {
+            $scope.tzAbbr = moment().tz(NVRDataModel.getTimeZoneNow()).zoneAbbr();
+        }
         
         $scope.events = [];
         getInitialEvents();

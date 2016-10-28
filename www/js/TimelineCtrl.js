@@ -266,7 +266,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     }
 
-
+     $rootScope.$on('tz-updated', function() {
+        $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
+        NVRDataModel.debug ("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
+    });
 
 
 
@@ -315,6 +318,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         $scope.modalFromTimelineIsOpen = false;
         var tempMon = message;
+        
+         // lets get the abbreviated version of TZ to display
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+        {
+            $scope.tzAbbr = moment().tz(moment.tz.guess()).zoneAbbr();
+        }
+        else
+        {
+            $scope.tzAbbr = moment().tz(NVRDataModel.getTimeZoneNow()).zoneAbbr();
+        }
 
         //console.log ("TIMELINE MONITORS: " + JSON.stringify(message));
         var ld = NVRDataModel.getLogin();
