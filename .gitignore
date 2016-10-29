@@ -9,3 +9,5 @@ plugins/*
 engine/
 /ionic.project
 .DS_Store
+zmNinja.sublime-project
+zmNinja.sublime-workspace
