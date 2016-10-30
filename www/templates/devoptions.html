@@ -1,45 +1,33 @@
 <ion-view view-title="{{'kDevOptions' | translate}}">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-
     </ion-nav-buttons>
-
     <ion-nav-buttons side="right">
         <button class="button button-clear" ng-click="saveDevOptions()">Save</button>
     </ion-nav-buttons>
-
-
-    <ion-content scroll-sista delegate-handle="none"  overflow-scroll="false"  mouse-wheel-scroll >
+    <ion-content scroll-sista delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
         <div class="list list-inset">
             <span style="color:rgb(100,100,100)">
                 <i class="ion-android-settings" style="font-size:150%"></i> {{'kDeveloperOptionsFor'|translate}} {{loginData.serverName}}
             </span>
-
             <div class="item item-input-inset">
                 {{'kFrameUpdate'|translate}} ({{'kSec'|translate}}.)&nbsp;
-        
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="min is 1s" ng-model="loginData.refreshSec">
                 </label>
             </div>
-
-
             <label>
                 <ion-toggle ng-model="loginData.use24hr" ng-checked="{{loginData.use24hr}}" toggle-class="toggle-calm">{{'kEnable24hr' | translate}}</ion-toggle>
             </label>
-            
             <label>
                 <ion-toggle ng-model="loginData.useLocalTimeZone" ng-checked="{{loginData.useLocalTimeZone}}" ng-disabled="!isTzSupported()" toggle-class="toggle-calm">{{'kLocalTimeZone' | translate}}<span ng-if="!isTzSupported()"><p>{{'kTimeZoneNotSupported' | translate}}</p></span><span ng-if="isTzSupported()"><p>{{'kServerTimeZone' | translate}}:{{getTimeZoneNow()}}</p></span></ion-toggle>
             </label>
-
             <div ng-if="$root.platformOS=='android'">
                 <label>
                     <ion-toggle ng-model="loginData.exitOnSleep" ng-checked="{{loginData.exitOnSleep}}" toggle-class="toggle-calm">{{'kExitAppBackground' | translate}}</ion-toggle>
                 </label>
             </div>
-
             <!--
             <label>
                 <ion-toggle ng-model="loginData.useNphZms"
@@ -53,14 +41,12 @@
                             toggle-class="toggle-calm">use ZMS for events footage</ion-toggle>
             </label>
             -->
-
             <div class="item item-input-inset">
                 {{'kMaxMonitorsMontage' | translate }}&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="be careful" ng-model="loginData.maxMontage">
                 </label>
             </div>
-
             <!--
             <div class="item item-input-inset">
                 maxfps for streaming&nbsp;
@@ -69,28 +55,24 @@
                 </label>
             </div>
             -->
-
             <div class="item item-input-inset">
                 {{'kMontageImageScale' | translate}}(%)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="max is 70" ng-model="loginData.montageQuality">
                 </label>
             </div>
-
             <div class="item item-input-inset">
                 {{'kEventSingleImageScale' | translate}}(%)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.singleImageQuality">
                 </label>
             </div>
-            
             <div class="item item-input-inset">
                 {{'kMonitorSingleImageScale' | translate}}(%)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.monSingleImageQuality">
                 </label>
             </div>
-
             <!--<div class="item item-input-inset">
                 {{'kResumeDelay' | translate}}(ms)&nbsp;
                 <label class="item-input-wrapper">
@@ -99,91 +81,69 @@
                 </label>
 
             </div>-->
-
             <div class="item item-input-inset">
                 {{'kEventMontageImageScale'|translate}}(%)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.montageHistoryQuality">
                 </label>
             </div>
-
             <div class="item item-input-inset">
                 {{'kMaxItemsForTimeline' | translate}}&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.graphSize">
                     <br/>
-
                 </label>
                 <br/>
             </div>
-
             <div class="item item-input-inset">
                 {{'kMinAlarmCount' | translate}}&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.minAlarmCount">
                     <br/>
-
                 </label>
                 <br/>
             </div>
-
             <div class="item" style="background-color:#C8F7C5" ng-if="loginData.graphSize > 5000">
                 <label class="animated fadeInDown item-text-wrap">
-
                     {{'kWarningLargeTimeline' | translate}}
-
                 </label>
             </div>
-
             <label>
-                <ion-toggle ng-model="loginData.disableAlarmCheckMontage" ng-checked="loginData.disableAlarmCheckMontage" toggle-class="toggle-calm">{{'kDisableAlarmMontage' | translate}}<p>{{'kDisableAlarmMontageSub' | translate}}</p></ion-toggle>
+                <ion-toggle ng-model="loginData.disableAlarmCheckMontage" ng-checked="loginData.disableAlarmCheckMontage" toggle-class="toggle-calm">{{'kDisableAlarmMontage' | translate}}
+                    <p>{{'kDisableAlarmMontageSub' | translate}}</p>
+                </ion-toggle>
             </label>
-            
             <label>
                 <ion-toggle ng-model="loginData.enableLogs" ng-checked="{{loginData.enableLogs}}" toggle-class="toggle-calm">{{'kEnableLogs' | translate}}</ion-toggle>
             </label>
-            
-            
-            
-            <div class="item item-input-inset" >
+            <div class="item item-input-inset">
                 {{'kCycleMonitorsInterval'|translate}}({{'kSec'|translate}}.)&nbsp;
                 <label class="item-input-wrapper">
                     <input type="tel" placeholder="" ng-model="loginData.cycleMonitorsInterval">
                 </label>
             </div>
-
             <label>
-
                 <ion-toggle ng-if="loginData.enableLogs" ng-model="loginData.enableDebug" ng-checked="{{loginData.enableDebug}}" toggle-class="toggle-calm">{{'kEnableDebug' | translate}}</ion-toggle>
             </label>
-
             <label>
                 <ion-toggle ng-model="loginData.canSwipeMonitors" ng-checked="{{loginData.canSwipeMonitors}}" toggle-class="toggle-calm">{{'kSwipeToChangeMon' | translate}}</ion-toggle>
             </label>
-
             <label>
                 <ion-toggle ng-model="loginData.forceImageModePath" ng-checked="{{loginData.forceImageModePath}}" toggle-class="toggle-calm"> {{'kForceImagePath' | translate}}</ion-toggle>
             </label>
-
-          
-
             <!--
             <label>
                 <ion-toggle ng-model="loginData.reachability" ng-checked="{{loginData.reachability}}" toggle-class="toggle-calm"> {{'kReachability' | translate}}</ion-toggle>
             </label>
             -->
-
             <label>
                 <ion-toggle ng-model="loginData.enableBlog" ng-checked="{{loginData.enableBlog}}" toggle-class="toggle-calm"> {{'kEnableNewsUpdates' | translate}}</ion-toggle>
             </label>
-            
-            
-            <label ng-if = "$root.platformOS != 'desktop'">
-                <ion-toggle ng-model="loginData.disableNative" ng-checked="{{loginData.disableNative}}" toggle-class="toggle-calm"> {{'kDisableNative' | translate}}<p>{{'kDisableNativeSub' | translate}}</p></ion-toggle>
-                
+            <label ng-if="$root.platformOS != 'desktop'">
+                <ion-toggle ng-model="loginData.disableNative" ng-checked="{{loginData.disableNative}}" toggle-class="toggle-calm"> {{'kDisableNative' | translate}}
+                    <p>{{'kDisableNativeSub' | translate}}</p>
+                </ion-toggle>
             </label>
-
-
         </div>
     </ion-content>
 </ion-view>

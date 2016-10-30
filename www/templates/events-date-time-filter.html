@@ -1,38 +1,27 @@
 <ion-view view-title="{{'kFilterEvents' | translate}}">
-
-
-
-    <ion-content scroll-sista delegate-handle="none"  overflow-scroll="false"  mouse-wheel-scroll >
+    <ion-content scroll-sista delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
         <label class="item item-input">
             <span class="input-label">{{'kFromDate'|translate}}:</span>
             <input type="date" ng-model="$root.fromDate" max={{today}}>
         </label>
         <label class="item item-input">
-                   <span class="input-label">{{'kFromTime'|translate}}</span>
-                    <input type="time" ng-model="$root.fromTime">
+            <span class="input-label">{{'kFromTime'|translate}}</span>
+            <input type="time" ng-model="$root.fromTime">
         </label>
         <label class="item item-input">
-                    <span class="input-label">{{'kToDate'|translate}}</span>
-                    <input type="date" ng-model="$root.toDate" max={{today}}>
+            <span class="input-label">{{'kToDate'|translate}}</span>
+            <input type="date" ng-model="$root.toDate" max={{today}}>
         </label>
         <label class="item item-input">
-                    <span class="input-label">{{'kToTime'|translate}}</span>
-                    <input type="time" ng-model="$root.toTime">
-         </label>
-
+            <span class="input-label">{{'kToTime'|translate}}</span>
+            <input type="time" ng-model="$root.toTime">
+        </label>
         <br/>
         <center>
-              <button class="button"
-                                ng-click="saveFilters();" > {{'kSave'|translate}}
-                        </button>
-        <button class="button"
-                                ng-click="removeFilters();" > {{'kReset'|translate}}
-                        </button>
-
-
-
-</center>
-
+            <button class="button" ng-click="saveFilters();"> {{'kSave'|translate}}
+            </button>
+            <button class="button" ng-click="removeFilters();"> {{'kReset'|translate}}
+            </button>
+        </center>
     </ion-content>
-
 </ion-view>

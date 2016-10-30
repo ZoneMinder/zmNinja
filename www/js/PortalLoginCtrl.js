@@ -3,11 +3,11 @@
 /*This is for the loop closure I am using in line 143 */
 /* jslint browser: true*/
 /* global vis,cordova,StatusBar,angular,console,moment */
-angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', '$cordovaTouchID', 'EventServer', '$translate', function ($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, $cordovaTouchID, EventServer, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', '$cordovaTouchID', 'EventServer', '$translate', function($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, $cordovaTouchID, EventServer, $translate) {
 
 
     $scope.$on('$ionicView.enter',
-        function () {
+        function() {
 
             NVRDataModel.debug("Inside Portal login Enter handler");
             loginData = NVRDataModel.getLogin();
@@ -34,19 +34,19 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 // You can login either via touch ID or typing in your code     
                 if ($ionicPlatform.is('ios') && loginData.usePin) {
                     $cordovaTouchID.checkSupport()
-                        .then(function () {
+                        .then(function() {
                             // success, TouchID supported
                             $cordovaTouchID.authenticate("")
-                                .then(function () {
+                                .then(function() {
                                         NVRDataModel.log("Touch Success");
                                         // Don't assign pin as it may be alphanum
                                         unlock(true);
 
                                     },
-                                    function () {
+                                    function() {
                                         NVRDataModel.log("Touch Failed");
                                     });
-                        }, function (error) {
+                        }, function(error) {
                             NVRDataModel.log("TouchID not supported");
                         });
                 } else // touch was not used
@@ -99,7 +99,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     // remove status is pin is empty
     //-------------------------------------------------------------------------------
 
-    $scope.pinChange = function () {
+    $scope.pinChange = function() {
         if ($scope.pindata.pin == null) {
             $scope.pindata.status = "";
         }
@@ -108,7 +108,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     //-------------------------------------------------------------------------------
     // unlock app if PIN is correct
     //-------------------------------------------------------------------------------
-    $scope.unlock = function () {
+    $scope.unlock = function() {
         // call with false meaning check for pin
         unlock(false);
     };
@@ -122,11 +122,11 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
         var d = $q.defer();
 
         zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating') + "...</button>")
-            .then(function (data) // success
+            .then(function(data) // success
                 {
                     NVRDataModel.debug("2nd auth login worked");
                     NVRDataModel.getAPIversion()
-                        .then(function (data) {
+                        .then(function(data) {
                                 NVRDataModel.getKeyConfigParams(1);
                                 NVRDataModel.log("2nd auth:Got API version: " + data);
                                 $rootScope.apiVersion = data;
@@ -158,9 +158,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 }
                                 // coming here means continue
                                 EventServer.refresh();
-                        
-                                
-                        
+
+
+
                                 var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
                                 //NVRDataModel.debug ("logging state transition");
                                 NVRDataModel.debug("2nd Auth: Transitioning state to: " +
@@ -169,7 +169,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 return;
 
                             },
-                            function (error) {
+                            function(error) {
                                 NVRDataModel.debug("2nd auth API failed, going to login");
                                 d.reject("failed 2nd auth");
                                 return (d.promise);
@@ -178,7 +178,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
 
                 },
-                function (error) {
+                function(error) {
                     NVRDataModel.debug("2nd auth hack failed, going to login");
                     d.reject("failed 2nd auth");
                     return (d.promise);
@@ -202,16 +202,16 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
             // PIN is fine, or not set so lets login
             zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating') + "...</button>")
-                .then(function (data) // success
+                .then(function(data) // success
                     {
                         NVRDataModel.debug("PortalLogin: auth success");
-                
+
                         NVRDataModel.getKeyConfigParams(1);
                         NVRDataModel.getTimeZone();
                         // $state.go("login" ,{"wizard": false});
                         //login was ok, so get API details
                         NVRDataModel.getAPIversion()
-                            .then(function (data) {
+                            .then(function(data) {
                                     NVRDataModel.log("Got API version: " + data);
                                     $rootScope.apiVersion = data;
                                     var ld = NVRDataModel.getLogin();
@@ -225,7 +225,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                                     if (NVRDataModel.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
 
-                                       // console.log (">>>>>>>>>>>>> HERE AND VERSION SAYS " +NVRDataModel.versionCompare(data, zm.recommendedAppVersion)); 
+                                        // console.log (">>>>>>>>>>>>> HERE AND VERSION SAYS " +NVRDataModel.versionCompare(data, zm.recommendedAppVersion)); 
                                         //console.log ("GOING TO IMPORTANT");
                                         $state.go('importantmessage', {
                                             "ver": data
@@ -246,25 +246,25 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     // coming here means continue
                                     // console.log (">>>>>>>>>>>>>>>>>>>>>>>>>NEVER");
                                     EventServer.refresh();
-                            
-                                    
-                                    
+
+
+
                                     var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
                                     NVRDataModel.debug("logging state transition");
                                     NVRDataModel.debug("Transitioning state to: " +
                                         statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
-                            
-                                    
+
+
                                     $state.go(statetoGo, $rootScope.lastStateParam);
                                     return;
-                                   
+
                                 },
-                                function (error) { // API Error
+                                function(error) { // API Error
                                     NVRDataModel.log("API Error handler: going to login getAPI returned error: " + JSON.stringify(error));
                                     //NVRDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
 
                                     NVRDataModel.debug("Doing the Aaron Hack after 1 sec....");
-                                    $timeout(function () {
+                                    $timeout(function() {
                                         tryLoggingSecondTimeHack()
                                             .then(function success(s) {
                                                     NVRDataModel.log("2nd time login hack worked!, nothing to do");
@@ -275,7 +275,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                                         "wizard": false
                                                     });
                                                 });
-                                                return;
+                                        return;
 
                                     }, 1000);
 
@@ -304,7 +304,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 NVRDataModel.debug("Going to events");
                                 $state.go("events", {
                                     "id": 0,
-                                    "playEvent":false
+                                    "playEvent": false
                                 }, {
                                     reload: true
                                 });
@@ -323,7 +323,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     },
                     // coming here means auth error
                     // so go back to login
-                    function (error) {
+                    function(error) {
                         NVRDataModel.debug("PortalLogin: error authenticating " +
                             JSON.stringify(error));
                         if (!$rootScope.userCancelledAuth) {
@@ -353,7 +353,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
             element.addClass("animated shake")
                 .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
-                    function () {
+                    function() {
                         element.removeClass("animated shake");
                     });
         }
@@ -369,4 +369,4 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
 
 
-    }]);
+}]);
