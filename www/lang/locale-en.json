@@ -365,6 +365,7 @@
     "kEventHistPause"           : "pause",
     "kLocalTimeZone"            :"use local timezone",
     "kTimeZoneNotSupported"     : "your API doesn't support this",
-    "kServerTimeZone"           : "server TZ"
+    "kServerTimeZone"           : "server TZ",
+    "kFollowTime"               : "follow current time"
     
 }

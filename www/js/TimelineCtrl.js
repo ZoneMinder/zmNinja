@@ -280,7 +280,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
     $scope.$on('$ionicView.leave', function () {
         //console.log("**Destroying Timeline");
-        //timeline.destroy();
+        timeline.destroy();
     });
 
 
@@ -316,10 +316,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.$on('$ionicView.afterEnter', function () {
         // console.log("***AFTER ENTER");
 
+        $scope.follow = {'time':false};
         $scope.modalFromTimelineIsOpen = false;
         var tempMon = message;
         
-         // lets get the abbreviated version of TZ to display
+         // lets timeline.onget the abbreviated version of TZ to display
         if (NVRDataModel.getLogin().useLocalTimeZone)
         {
             $scope.tzAbbr = moment().tz(moment.tz.guess()).zoneAbbr();
@@ -489,6 +490,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     };
 
+    $scope.toggleFollowTime = function()
+    {
+        $scope.follow.time = !$scope.follow.time;
+    };
     //-------------------------------------------------
     // Called with day/week/month
     // so we can redraw the graph
@@ -581,6 +586,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
          
         var options = {
             
+            showCurrentTime:true,
             editable: false,
             throttleRedraw: 100,
             moveable: true,
@@ -761,8 +767,40 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             var dblclick = false;
 
 
+                            // this is called for each tick the bar moves
+                            // speed moves depending on zoom factor
                             timeline.on ('currentTimeTick', function () {
-                                console.log ("TICK! TICK!");
+                                
+                                if ($scope.follow.time)
+                                {
+                                    var w = timeline.getWindow();
+                                   /* var c = moment(timeline.getCurrentTime());
+                                    
+                                    if (c >= moment(w.start) && c <= moment(w.end))
+                                    {
+                                        console.log ("I CAN SEE CURRENT");
+                                    }
+                                       */
+                                    
+                                    /*var pos =  (moment(w.start).valueOf() + moment(w.end).valueOf()) * 0.3;
+                                    var diff = pos - moment(timeline.getCurrentTime()).valueOf();
+                                    var ns = moment(w.start).valueOf() - diff;
+                                    var ne = moment(w.end).valueOf() - diff;
+                                     timeline.setWindow(moment(ns), moment(ne));*/
+                                    timeline.moveTo(timeline.getCurrentTime());
+                                }
+                               /* graphIndex++;
+                               console.log ("TICK!");
+                                graphData.add({
+                                            id: graphIndex,
+                                            content: "test",
+                                            group:1,
+                                            start: moment().format("YYYY-MM-DD HH:mm:ss"),
+                                            end: moment().add(1,'minute').format("YYYY-MM-DD HH:mm:ss"),
+                                            //type: "range",
+                                            
+
+                                        });*/
                             
                             });
 
