@@ -366,6 +366,7 @@
     "kLocalTimeZone"            :"use local timezone",
     "kTimeZoneNotSupported"     : "your API doesn't support this",
     "kServerTimeZone"           : "server TZ",
-    "kFollowTime"               : "follow current time"
+    "kFollowTime"               : "follow current time",
+    "kFollowError"              : "You must be in Day mode tofollow time"
     
 }

@@ -13,17 +13,17 @@
 // FIXME: too much redundant code between EventCtrl and Timeline 
 // Move to ModalCtrl and see if it works
 
-angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory', '$sce', '$stateParams', '$translate', function ($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce, $stateParams, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory', '$sce', '$stateParams', '$translate', '$ionicPopup', '$interval', function($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce, $stateParams, $translate, $ionicPopup, $interval) {
 
     //console.log("Inside Timeline controller");
-    $scope.openMenu = function () {
+    $scope.openMenu = function() {
         $ionicSideMenuDelegate.toggleLeft();
     };
 
-    //----------------------------------------------------------------
+    //---------------------------------------f-------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
-    $scope.handleAlarms = function () {
+    $scope.handleAlarms = function() {
         $rootScope.isAlarm = !$rootScope.isAlarm;
         if (!$rootScope.isAlarm) {
             $rootScope.alarmCount = "0";
@@ -32,7 +32,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             });
             $state.go("events", {
                 "id": 0,
-                "playEvent":false
+                "playEvent": false
             }, {
                 reload: true
             });
@@ -42,15 +42,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     $scope.leftButtons = [{
         type: 'button-icon icon ion-navicon',
-        tap: function (e) {
+        tap: function(e) {
             $scope.toggleMenu();
         }
-        }];
+    }];
 
     //-----------------------------------------------------------
     // Used to display date range for timeline
     //-----------------------------------------------------------
-    $scope.prettify = function (str) {
+    $scope.prettify = function(str) {
         if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('MMMM Do YYYY, ' + NVRDataModel.getTimeFormat());
         else
@@ -60,7 +60,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-----------------------------------------------------------
     // used for playback when you tap on a timeline event
     //-----------------------------------------------------------
-    $scope.calcMsTimer = function (frames, len) {
+    $scope.calcMsTimer = function(frames, len) {
         var myframes, mylen;
         myframes = parseFloat(frames);
         mylen = parseFloat(len);
@@ -70,7 +70,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     };
 
 
-    $scope.toggleMinAlarmFrameCount = function () {
+    $scope.toggleMinAlarmFrameCount = function() {
         // console.log("Toggling");
 
         var ld = NVRDataModel.getLogin();
@@ -106,12 +106,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         });
     }
 
-    $scope.move = function (percentage) {
+    $scope.move = function(percentage) {
         move(percentage);
 
     };
 
-    $scope.zoom = function (percentage) {
+    $scope.zoom = function(percentage) {
         zoom(percentage);
 
     };
@@ -119,7 +119,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-----------------------------------------
     // Move by X days 
     //-----------------------------------------
-    $scope.moveDays = function (d) {
+    $scope.moveDays = function(d) {
         var range = timeline.getWindow();
         var ds = moment(range.start);
         if (d > 0)
@@ -132,8 +132,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         fromDate = ds.format("YYYY-MM-DD HH:mm:ss");
         toDate = es.format("YYYY-MM-DD HH:mm:ss");
-        
-   
+
+
         $scope.fromDate = fromDate;
         $scope.toDate = toDate;
         $rootScope.customTimelineRange = false;
@@ -151,7 +151,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 id: 'analyze',
 
             })
-            .then(function (modal) {
+            .then(function(modal) {
                 $scope.modal = modal;
 
 
@@ -193,7 +193,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 animation: 'slide-in-up',
                 id: 'footage'
             })
-            .then(function (modal) {
+            .then(function(modal) {
                 $scope.modal = modal;
 
                 $ionicLoading.show({
@@ -217,7 +217,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //We need to destroy because we are instantiating
     // it on open
     //--------------------------------------------------------
-    $scope.closeModal = function () {
+    $scope.closeModal = function() {
         $scope.modalFromTimelineIsOpen = false;
         // $interval.cancel(eventsInterval);
         //$interval.cancel(segmentHandle);
@@ -260,15 +260,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         // in context of angular
 
-        $timeout(function () {
+        $timeout(function() {
             openModal(event);
         });
 
     }
 
-     $rootScope.$on('tz-updated', function() {
+    $rootScope.$on('tz-updated', function() {
         $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
-        NVRDataModel.debug ("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
+        NVRDataModel.debug("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
     });
 
 
@@ -278,13 +278,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // This may be redundant as the root view gets
     // destroyed but no harm
     //-------------------------------------------------
-    $scope.$on('$ionicView.leave', function () {
-        //console.log("**Destroying Timeline");
-        timeline.destroy();
+    $scope.$on('$ionicView.leave', function() {
+
+        if (timeline) {
+            $interval.cancel(updateInterval);
+            timeline.destroy();
+            console.log("**Destroying Timeline");
+
+        }
     });
 
 
-    $scope.$on('$ionicView.enter', function () {
+    $scope.$on('$ionicView.enter', function() {
 
 
 
@@ -304,6 +309,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         NVRDataModel.debug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
     });
 
+    $scope.$on('$ionicView.beforeEnter', function() {
+
+        timeline = '';
+    });
+
     //-------------------------------------------------
     // FIXME: shitty hackery -- Im using a rootScope
     // to know if you just went to custom range
@@ -313,20 +323,23 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // we come here - so make sure we update the
     // graph range
     //-------------------------------------------------
-    $scope.$on('$ionicView.afterEnter', function () {
+
+    $scope.$on('$ionicView.afterEnter', function() {
         // console.log("***AFTER ENTER");
 
-        $scope.follow = {'time':false};
+        $scope.follow = { 'time': false };
+
+        $interval.cancel(updateInterval);
+
+        //latestDateDrawn = moment().locale('en').format("YYYY-MM-DD HH:mm:ss");
         $scope.modalFromTimelineIsOpen = false;
         var tempMon = message;
-        
-         // lets timeline.onget the abbreviated version of TZ to display
-        if (NVRDataModel.getLogin().useLocalTimeZone)
-        {
+
+
+        // lets timeline.onget the abbreviated version of TZ to display
+        if (NVRDataModel.getLogin().useLocalTimeZone) {
             $scope.tzAbbr = moment().tz(moment.tz.guess()).zoneAbbr();
-        }
-        else
-        {
+        } else {
             $scope.tzAbbr = moment().tz(NVRDataModel.getTimeZoneNow()).zoneAbbr();
         }
 
@@ -334,14 +347,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         var ld = NVRDataModel.getLogin();
         $scope.loginData = NVRDataModel.getLogin();
 
-       /* if (ld.persistMontageOrder) {
-            var iMon = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2);
-            $scope.monitors = iMon[0];
-        } else*/
-        
-        
+        /* if (ld.persistMontageOrder) {
+             var iMon = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2);
+             $scope.monitors = iMon[0];
+         } else*/
+
+
         $scope.monitors = message;
         if ($rootScope.customTimelineRange) {
+            $scope.currentMode = 'custom';
             // console.log("***** CUSTOM RANGE");
             if (moment($rootScope.fromString).isValid() &&
                 moment($rootScope.toString).isValid()) {
@@ -355,12 +369,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 //  console.log("FROM & TO IS CUSTOM INVALID");
             }
         } else {
+            $scope.currentMode = 'day';
+            fromDate = moment().startOf('day').format("YYYY-MM-DD HH:mm:ss");
+            toDate = moment().endOf('day').format("YYYY-MM-DD HH:mm:ss");
             drawGraph(fromDate, toDate, maxItems);
         }
 
         $ionicPopover.fromTemplateUrl('templates/timeline-popover.html', {
             scope: $scope,
-        }).then(function (popover) {
+        }).then(function(popover) {
             $scope.popover = popover;
         });
 
@@ -370,7 +387,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         // close the modal
         // --------------------------------------------------------                               
 
-        $ionicPlatform.registerBackButtonAction(function (e) {
+        $ionicPlatform.registerBackButtonAction(function(e) {
             e.preventDefault();
             if ($scope.modal != undefined && $scope.modal.isShown()) {
                 // switch off awake, as liveview is finished
@@ -396,6 +413,13 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
     // Controller main
     //-------------------------------------------------
+
+
+    var graphIndex;
+    var updateInterval;
+    var lastTimeForEvent;
+    var groups, graphData;
+    var isProcessNewEventsWaiting = false;
 
     $scope.mycarousel = {
         index: 0
@@ -441,7 +465,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     var container;
     container = angular.element(document.getElementById('visualization'));
-    var timeline = "";
+    var timeline;
 
 
 
@@ -462,16 +486,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // Rest graph to sane state after you went
     // wild zooming and panning :-)
     //-------------------------------------------------
-    $scope.fit = function () {
+    $scope.fit = function() {
         timeline.fit();
     };
 
-    $scope.toggleNav = function () {
+    $scope.toggleNav = function() {
         if (navControls == true) {
             navControls = !navControls;
             // $scope.navControls = navControls;
             // give out animation time
-            $timeout(function () {
+            $timeout(function() {
                 $scope.navControls = navControls;
             }, 2000);
         } else {
@@ -490,8 +514,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     };
 
-    $scope.toggleFollowTime = function()
-    {
+    $scope.toggleFollowTime = function() {
+        if ($scope.currentMode != 'day') {
+            $rootScope.zmPopup = $ionicPopup.alert({
+                title: $translate.instant('kError'),
+                template: $translate.instant('kFollowError')
+            });
+            return;
+        }
         $scope.follow.time = !$scope.follow.time;
     };
     //-------------------------------------------------
@@ -499,10 +529,13 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // so we can redraw the graph
     //-------------------------------------------------
 
-    $scope.buttonClicked = function (index) {
+
+    $scope.buttonClicked = function(index) {
         //console.log (index);
         if (index == 0) //month
         {
+            $scope.follow.time = false;
+            $scope.currentMode = "month";
             NVRDataModel.log("Month view");
             $rootScope.customTimelineRange = false;
 
@@ -513,6 +546,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             drawGraph(fromDate, toDate, maxItems);
         } else if (index == 1) //week
         {
+            $scope.follow.time = false;
+            $scope.currentMode = "week";
             $rootScope.customTimelineRange = false;
             NVRDataModel.log("Week  view");
             toDate = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -522,15 +557,20 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             drawGraph(fromDate, toDate, maxItems);
         } else if (index == 2) //day
         {
+
+            $scope.currentMode = "day";
             $rootScope.customTimelineRange = false;
             NVRDataModel.log("Day view");
-            toDate = moment().format("YYYY-MM-DD HH:mm:ss");
-            fromDate = moment().subtract(1, 'day').startOf('day').format("YYYY-MM-DD HH:mm:ss");
+            //toDate = moment().format("YYYY-MM-DD HH:mm:ss");
+            fromDate = moment().startOf('day').format("YYYY-MM-DD HH:mm:ss");
+            toDate = moment().endOf('day').format("YYYY-MM-DD HH:mm:ss");
             $scope.fromDate = fromDate;
             $scope.toDate = toDate;
             drawGraph(fromDate, toDate, maxItems);
         } else // custom
         {
+            $scope.follow.time = false;
+            $scope.currentMode = "custom";
             $rootScope.customTimelineRange = true;
             $state.go('events-date-time-filter');
             return;
@@ -539,25 +579,195 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     };
 
 
+    /**
+     * [processNewEvents description]
+     * @return {[type]}
+     */
+    function processNewEvents() {
+
+
+        if (!$scope.follow.time || isProcessNewEventsWaiting) return;
+        var ld = NVRDataModel.getLogin();
+        console.log("NEED TO PROCESS NEW EVENTS");
+        // check for last 2 minutes to account for late DB updates and what not. 5 mins was likely enough
+        var from = moment(lastTimeForEvent).subtract(2, 'minutes').locale('en').format("YYYY-MM-DD HH:mm:ss");
+        var to = moment().locale('en').format("YYYY-MM-DD HH:mm:ss");
+        lastTimeForEvent = moment();
+
+        var apiurl = ld.apiurl + '/events/index/StartTime >=:' + from /*+ "/EndTime <=:" + to*/ ;
+        //apiurl = apiurl + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+        // we can't do alarm frames and end time as otherwise currently recording won't show up
+        // FIXME: Check the same in Events page
+    
+        apiurl = apiurl + ".json";
+
+        NVRDataModel.debug("Getting incremental events using: " + apiurl);
+
+        isProcessNewEventsWaiting = true;
+        $http.get(apiurl)
+            .then(function(data) {
+                    //console.log ("GOT "+JSON.stringify(data));
+                    var myevents = data.data.events;
+                    for (var j = 0; j < myevents.length; j++) {
+                        console.log("GOT Event Id:" + myevents[j].Event.Id);
+                        var itm = graphData.get(myevents[j].Event.Id);
+                        if (itm) {
+                            console.log(myevents[j].Event.Id + " already exists, updating params");
+                           // data.update({id: 2, group: 1});
+                            // update end time - is it needed to be updated?
+                            graphData.update({
+                                id: myevents[j].Event.Id,
+                                    content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + (myevents[j].Event.AlarmFrames || 'new') + ") " + myevents[j].Event.Notes + "</span>",
+                                    start: myevents[j].Event.StartTime,
+                                    end: myevents[j].Event.EndTime,
+                                    group: myevents[j].Event.MonitorId,
+                                    //type: "range",
+                                    style: "background-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length] +
+                                        ";border-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length],
+                                    myframes: myevents[j].Event.Frames,
+                                    mydur: myevents[j].Event.Length,
+                                    myeid: myevents[j].Event.Id,
+                                    myename: myevents[j].Event.Name,
+                                    myvideo: myevents[j].Event.DefaultVideo,
+                                    myevent: myevents[j]
+
+                            });
+
+
+
+                        } else {
+                            var idfound = false;
+                            for (var ii = 0; ii < $scope.monitors.length; ii++) {
+                                if ($scope.monitors[ii].Monitor.Id == myevents[j].Event.MonitorId && NVRDataModel.isNotHidden(myevents[j].Event.MonitorId)) {
+                                    idfound = true;
+                                    break;
+                                }
+                            }
+
+                            if (idfound) {
+                                NVRDataModel.debug(myevents[j].Event.Id + " New event updating graph");
+
+                                myevents[j].Event.MonitorName = NVRDataModel.getMonitorName(myevents[j].Event.MonitorId);
+
+
+                                myevents[j].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[j].Event.MonitorId);
+                                myevents[j].Event.baseURL = NVRDataModel.getBaseURL(myevents[j].Event.MonitorId);
+                                myevents[j].Event.imageMode = NVRDataModel.getImageMode(myevents[j].Event.MonitorId);
+                                if (NVRDataModel.getLogin().url != myevents[j].Event.baseURL) {
+
+                                    myevents[j].Event.baseURL = NVRDataModel.getLogin().url;
+                                }
+
+                                if (typeof myevents[j].Event.DefaultVideo === 'undefined')
+                                // console.log (JSON.stringify(myevents[j]));
+                                    myevents[j].Event.DefaultVideo = "";
+
+                                if (NVRDataModel.getLogin().useLocalTimeZone) {
+                                    //console.log ("CHANGING TZ");
+                                    myevents[j].Event.StartTime = moment.tz(myevents[j].Event.StartTime, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+                                    //2016-08-15 17:40:00
+                                    myevents[j].Event.EndTime = moment.tz(myevents[j].Event.EndTime, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+                                }
+
+                                // now lets make sure we don't infinitely increase
+                                
+                                if (graphIndex >= curCount)
+                                //if (1)
+                                {
+                                    var mv = graphData.min('id');
+                                    //console.log("MIN="+JSON.stringify(mv));
+                                    if (mv)
+                                    {
+                                        graphData.remove(mv.id);
+                                        graphIndex--;
+                                        NVRDataModel.debug ("Removed Event "+mv.id+" to make space");
+                                    }
+
+                                }
+
+                                // since this is a new add its possible dates are not defined
+                                if (!moment(myevents[j].Event.StartTime).isValid())
+                                {
+                                    console.log ("WTF  - START TIME IS "+myevents[j].Event.StartTime );
+
+                                }
+
+
+                                 if (!moment(myevents[j].Event.EndTime).isValid())
+                                {
+                                    console.log ("End time is invalid, likely recording, so fixing"+myevents[j].Event.EndTime );
+                                    myevents[j].Event.EndTime = moment.tz(moment(), NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+
+                                }
+
+                             
+
+                                graphData.add({
+                               
+                                    id: myevents[j].Event.Id,
+                                    content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + (myevents[j].Event.AlarmFrames || ' unknown ') + ") " + myevents[j].Event.Notes + "</span>",
+                                    start: myevents[j].Event.StartTime,
+                                    end: myevents[j].Event.EndTime,
+                                    group: myevents[j].Event.MonitorId,
+                                    //type: "range",
+                                    style: "background-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length] +
+                                        ";border-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length],
+                                    myframes: myevents[j].Event.Frames,
+                                    mydur: myevents[j].Event.Length,
+                                    myeid: myevents[j].Event.Id,
+                                    myename: myevents[j].Event.Name,
+                                    myvideo: myevents[j].Event.DefaultVideo,
+                                    myevent: myevents[j]
+
+                                });
+                                graphIndex++;
+                                timeline.focus( myevents[j].Event.Id);
+
+                            } //idfound
+
+
+                        }
+
+                    }
+                    isProcessNewEventsWaiting = false;
+
+                },
+                function(err) {
+                    NVRDataModel.debug("Error getting incremental timeline data");
+                    isProcessNewEventsWaiting = false;
+
+                });
+
+
+
+
+        // check all events that started 10+10 seconds ago
+
+
+    }
+
+
     //-------------------------------------------------
     // This function draws the graph
-    // So far struggling with mobile perf
-    // Observations so far:
-    // a) Just about acceptable performance with 100 items
-    // b) Sometimes on panning CPU gets locked at 99%
-    //    for over 3-4 seconds
     //-------------------------------------------------
 
     function drawGraph(fromDate, toDate, count) {
 
 
+        // we only need this for day mode
+        $interval.cancel(updateInterval);
+
         curFromDate = fromDate;
         curToDate = toDate;
         curCount = count;
-        
-        
+
+
+        var isFirstItem = true;
+
         var fromDateNoLang = moment(fromDate).locale('en').format("YYYY-MM-DD HH:mm:ss");
         var toDateNoLang = moment(toDate).locale('en').format("YYYY-MM-DD HH:mm:ss");
+
+        //latestDateDrawn =toDateNoLang;
 
         $ionicLoading.show({
             template: $translate.instant('kLoadingGraph') + "...",
@@ -578,15 +788,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         }
 
 
-        var groups = new vis.DataSet();
-        var graphData = new vis.DataSet();
+        groups = new vis.DataSet();
+        graphData = new vis.DataSet();
         //console.log ("AFTER VIS");
 
 
-         
+
         var options = {
-            
-            showCurrentTime:true,
+
+            showCurrentTime: true,
             editable: false,
             throttleRedraw: 100,
             moveable: true,
@@ -612,13 +822,13 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         };
 
-        var graphIndex = 1; // will be used for graph ID
+        graphIndex = 1; // will be used for graph ID
 
-        
+
         //console.log ("**NOLANG" + fromDateNoLang  + " " + toDateNoLang);
-        
+
         NVRDataModel.getEventsPages(0, fromDateNoLang, toDateNoLang)
-            .then(function (data) {
+            .then(function(data) {
                 var pages = parseInt(data.pageCount);
                 var itemsPerPage = parseInt(data.limit);
                 var iterCount;
@@ -641,7 +851,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 }
 
                 $q.all(promises)
-                    .then(function (data) {
+                    .then(function(data) {
                             NVRDataModel.debug("TimelineCtrl/drawgraph: all pages of graph data received");
                             graphIndex = 0;
                             NVRDataModel.log("Creating " + $scope.monitors.length + " groups for the graph");
@@ -678,7 +888,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                         idfound = false;
                                         for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                            if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && NVRDataModel.isNotHidden(myevents[i].Event.MonitorId) ) {
+                                            if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && NVRDataModel.isNotHidden(myevents[i].Event.MonitorId)) {
                                                 idfound = true;
                                                 //console.log ("****************** ID MATCH " + graphIndex);
 
@@ -710,17 +920,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         if (typeof myevents[i].Event.DefaultVideo === 'undefined')
                                         // console.log (JSON.stringify(myevents[i]));
                                             myevents[i].Event.DefaultVideo = "";
-                                        
-                                        if (NVRDataModel.getLogin().useLocalTimeZone)
-                                        {
+
+                                        if (NVRDataModel.getLogin().useLocalTimeZone) {
                                             //console.log ("CHANGING TZ");
-                                            myevents[i].Event.StartTime = moment.tz(myevents[i].Event.StartTime,NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+                                            myevents[i].Event.StartTime = moment.tz(myevents[i].Event.StartTime, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
                                             //2016-08-15 17:40:00
-                                            myevents[i].Event.EndTime = moment.tz(myevents[i].Event.EndTime,NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+                                            myevents[i].Event.EndTime = moment.tz(myevents[i].Event.EndTime, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
                                         }
-                                        
+
+
+
                                         graphData.add({
-                                            id: graphIndex,
+                                            //id: graphIndex,
+                                            id: myevents[i].Event.Id,
                                             content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + myevents[i].Event.Notes + "</span>",
                                             start: myevents[i].Event.StartTime,
                                             end: myevents[i].Event.EndTime,
@@ -752,6 +964,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                 }
                             }
 
+                            console.log(">>>>> CREATING NEW TIMELINE");
                             timeline = new vis.Timeline(container[0], null, options);
                             // console.log ("GRAPH DATA");
                             timeline.setItems(graphData);
@@ -759,6 +972,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             timeline.setGroups(groups);
 
                             timeline.fit();
+
+                            lastTimeForEvent = moment();
+                            updateInterval = $interval(function() {
+                                processNewEvents();
+                            }.bind(this), 10 * 1000);
 
                             $ionicLoading.hide();
                             $scope.graphLoaded = true;
@@ -769,19 +987,20 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                             // this is called for each tick the bar moves
                             // speed moves depending on zoom factor
-                            timeline.on ('currentTimeTick', function () {
-                                
-                                if ($scope.follow.time)
-                                {
-                                    var w = timeline.getWindow();
-                                   /* var c = moment(timeline.getCurrentTime());
-                                    
-                                    if (c >= moment(w.start) && c <= moment(w.end))
-                                    {
-                                        console.log ("I CAN SEE CURRENT");
-                                    }
-                                       */
-                                    
+                            timeline.on('currentTimeTick', function() {
+
+                                if ($scope.follow.time) {
+                                    console.log("TICK");
+                                    // processNewEvents();
+                                    //var w = timeline.getWindow();
+                                    /* var c = moment(timeline.getCurrentTime());
+                                     
+                                     if (c >= moment(w.start) && c <= moment(w.end))
+                                     {
+                                         console.log ("I CAN SEE CURRENT");
+                                     }
+                                        */
+
                                     /*var pos =  (moment(w.start).valueOf() + moment(w.end).valueOf()) * 0.3;
                                     var diff = pos - moment(timeline.getCurrentTime()).valueOf();
                                     var ns = moment(w.start).valueOf() - diff;
@@ -789,28 +1008,17 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                      timeline.setWindow(moment(ns), moment(ne));*/
                                     timeline.moveTo(timeline.getCurrentTime());
                                 }
-                               /* graphIndex++;
-                               console.log ("TICK!");
-                                graphData.add({
-                                            id: graphIndex,
-                                            content: "test",
-                                            group:1,
-                                            start: moment().format("YYYY-MM-DD HH:mm:ss"),
-                                            end: moment().add(1,'minute').format("YYYY-MM-DD HH:mm:ss"),
-                                            //type: "range",
-                                            
 
-                                        });*/
-                            
+
                             });
 
-                            timeline.on('click', function (prop) {
+                            timeline.on('click', function(prop) {
 
 
-                                $timeout(function () {
+                                $timeout(function() {
                                     if (dblclick) {
                                         //console.log ("IGNORING CLICK AS DBL CLICK");
-                                        $timeout(function () {
+                                        $timeout(function() {
                                             dblclick = false;
                                         }, 400);
                                         return;
@@ -874,7 +1082,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                             });
 
-                            timeline.on('doubleClick', function (prop) {
+                            timeline.on('doubleClick', function(prop) {
                                 //console.log ("DOUBLE");
                                 dblclick = true;
                                 var itm = prop.item;
@@ -921,7 +1129,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                             });
                         },
-                        function (error) {
+                        function(error) {
                             NVRDataModel.displayBanner('error', 'Timeline error', 'Please try again');
 
                         }
@@ -941,17 +1149,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         button: {
             cssClass: 'fa  fa-compress fa-2x',
             size: 'small',
-            onclick: function () {
+            onclick: function() {
                 //console.log("fitting");
                 timeline.fit();
             }
         },
-        items: [
-            {
+        items: [{
                 content: '',
                 cssClass: 'fa fa-minus-circle',
                 empty: false,
-                onclick: function () {
+                onclick: function() {
                     zoom(0.2);
                 }
             },
@@ -960,7 +1167,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
-                onclick: function () {
+                onclick: function() {
 
                 }
             },
@@ -970,17 +1177,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
 
-                onclick: function () {
+                onclick: function() {
 
 
                     move(0.2);
                 }
-            },
-            {
+            }, {
                 content: 'D',
                 empty: true,
 
-                onclick: function () {
+                onclick: function() {
                     // console.log('About');
                 }
             },
@@ -989,7 +1195,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
-                onclick: function () {
+                onclick: function() {
 
                 }
             },
@@ -998,7 +1204,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 content: '',
                 cssClass: 'fa fa-plus-circle',
                 empty: false,
-                onclick: function () {
+                onclick: function() {
 
                     zoom(-0.2);
                 }
@@ -1008,7 +1214,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
-                onclick: function () {
+                onclick: function() {
 
                 }
             },
@@ -1016,7 +1222,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             {
                 content: 'H',
                 empty: true,
-                onclick: function () {
+                onclick: function() {
                     // console.log('About');
                 }
             },
@@ -1025,7 +1231,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
-                onclick: function () {
+                onclick: function() {
                     move(-0.2);
                 }
             },
@@ -1035,7 +1241,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: true,
-                onclick: function () {
+                onclick: function() {
 
                 }
             },
@@ -1043,11 +1249,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             {
                 content: 'K',
                 empty: true,
-                onclick: function () {
+                onclick: function() {
                     //console.log('About');
                 }
             },
-    ]
+        ]
     };
 
 
