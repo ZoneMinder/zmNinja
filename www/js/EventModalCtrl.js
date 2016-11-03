@@ -163,6 +163,23 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     };
 
 
+    $scope.onPlayerReady = function(handle)
+    {
+
+        NVRDataModel.debug ("Player is ready");
+        handle.stop();
+       // window.stop();
+    };
+
+    $scope.onCanPlay = function ()
+    {
+        NVRDataModel.debug ("This video can be played");
+    };
+
+    $scope.onVideoError = function (event)
+    {
+        NVRDataModel.debug ("player reported a video error:"+JSON.stringify(event));
+    };
 
 
     //-------------------------------------------------------
@@ -1425,14 +1442,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     event.Event.video = {};
                     var videoURL;
 
-                    if (event.Event.imageMode == 'path')
+                    if ((event.Event.imageMode == 'path') || NVRDataModel.getLogin().forceImageModePath )
                         videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
                     else
                         videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
 
                     // hack
-                    //  videoURL = "http://static.videogular.com/assets/videos/videogular.mp4";
-
+                     //videoURL = "http://static.videogular.com/assets/videos/videogular.mp4";
+                     //videoURL = "http://arjunrc.ddns.net:8888/foo2.mp4";
                     $scope.video_url = videoURL;
 
                     //  console.log("************** VIDEO IS " + videoURL);
@@ -1446,7 +1463,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     $scope.videoObject = {
                         config: {
-                            autoPlay: true,
+                            autoPlay: false,
+                            startTime: -1,
                             sources: [
                                 {
                                     src: $sce.trustAsResourceUrl(videoURL),
