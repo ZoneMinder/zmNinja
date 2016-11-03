@@ -37,8 +37,8 @@ if [ -d "$i" ]; then
 	exe asar pack app app.asar
 	exe rm -fr app
 	exe cd - 
-        #OSX ditto does a better job than zip!
-        #echo "Creating ZIP $ZIPNAME..."
+    #OSX ditto does a better job than zip!
+    #echo "Creating ZIP $ZIPNAME..."
 	#exe zip -r ../$ZIPNAME ../$DIRNAME
 
 	echo "Done!"
