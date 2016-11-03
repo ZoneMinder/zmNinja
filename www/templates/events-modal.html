@@ -21,10 +21,10 @@
                                 <source src="" dynamic-url dynamic-url-src="{{video_url}}">
                                 
                         </video>-->
-                            <videogular vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="true" vg-responsive="true">
-                                <vg-media vg-src="videoObject.config.sources" vg-native-controls="false">
-                                </vg-media>
-                                <vg-overlay-play></vg-overlay-play>
+                            <videogular vg-error="onVideoError($event)" vg-can-play = "onCanPlay()" vg-player-ready="onPlayerReady($API)" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="false" vg-responsive="true" >
+                                <<vg-media vg-src="videoObject.config.sources" vg-native-controls="false">
+                                </vg-media>-
+                                
                                 <vg-controls>
                                     <vg-play-pause-button></vg-play-pause-button>
                                     <vg-scrub-bar>
@@ -36,6 +36,7 @@
                                         <vg-mute-button></vg-mute-button>
                                     </vg-volume>
                                 </vg-controls>
+                                <!--<vg-buffering></vg-buffering>-->
                             </videogular>
                         </div>
                         <div id="event_canvas_video">
