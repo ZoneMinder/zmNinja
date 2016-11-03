@@ -1276,7 +1276,8 @@ angular.module('zmApp.controllers')
 
                                     for (var i = 0; i < monitors.length; i++) {
 
-                                        //monitors[i].Monitor.listDisplay = 'show';
+                                        // make them all show for now
+                                        monitors[i].Monitor.listDisplay = 'show';
                                         monitors[i].Monitor.isAlarmed = false;
                                         monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
@@ -1357,6 +1358,8 @@ angular.module('zmApp.controllers')
                                             debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
                                         }
                                     }
+                                    // now get packery hide if applicable
+                                    reloadMonitorDisplayStatus();
                                     d.resolve(monitors);
                                 })
                                 .error(function (err) {
