@@ -20,7 +20,7 @@
     "commit": "22a686dd9ca7bbbc7e09239d71a14da50afaffc5"
   },
   "_source": "https://github.com/2fdevs/bower-videogular-themes-default.git",
-  "_target": "1.4.4",
+  "_target": "~1.4.4",
   "_originalSource": "videogular-themes-default",
   "_direct": true
 }
