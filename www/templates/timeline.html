@@ -33,9 +33,14 @@
             </div>
         </div>
         <br/>
-        <button ng-click="toggleFollowTime()" class="button button-small button-assertive">
-            {{'kFollowTime' | translate}}:{{ follow.time}}
-        </button>
+        <div style="padding-left:15px; font-size:10px; color:grey">
+            <button ng-click="toggleFollowTime()" ng-class="follow.time? 'button button-small button-balanced':'button button-small button-assertive'">
+                {{'kUpdateTimeline' | translate}}:{{ follow.time}}
+            </button>
+            <div ng-if="follow.time">
+                <p>{{newEvents}}</p>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
 <div ng-show="graphLoaded && navControls">

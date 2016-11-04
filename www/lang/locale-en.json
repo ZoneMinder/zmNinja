@@ -194,7 +194,7 @@
     "kMore"                      :"more",
     "kNeedToKnow"                :"I need to know your ZoneMinder login and path details to get started",
     "kNegotiatingStreamAuth"     :"negotiating stream authentication",
-    "kNews"                      :"News",
+     "kNews"                      :"News",
     "kNext"                      :"Next",
     "kNextEvent"                 :"next event",
     "kNextMonitor"               :"next monitor",
@@ -366,7 +366,8 @@
     "kLocalTimeZone"            :"use local timezone",
     "kTimeZoneNotSupported"     : "your API doesn't support this",
     "kServerTimeZone"           : "server TZ",
-    "kFollowTime"               : "follow current time",
-    "kFollowError"              : "You must be in Day mode tofollow time"
+    "kUpdateTimeline"           : "enable dynamic updates",
+    "kLatestEvents"             : "latest events"
+    
     
 }
