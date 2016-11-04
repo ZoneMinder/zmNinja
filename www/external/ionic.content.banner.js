@@ -153,8 +153,9 @@ angular.module('jett.ionic.content.banner', ['ionic']);
             if (scope.removed) {
               return;
             }
-
-            getActiveView(body).querySelector('.scroll-content').appendChild(element[0]);
+            // PP: get rid of querySelector
+            if (getActiveView(body) !== undefined)
+              getActiveView(body).querySelector('.scroll-content').appendChild(element[0]);
 
             ionic.requestAnimationFrame(function () {
               $timeout(function () {
