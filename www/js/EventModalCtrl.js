@@ -166,8 +166,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.onPlayerReady = function(handle)
     {
 
+        // we need this timeout to avoid load interrupting
+        // play -- I suppose its an angular digest foo thing
         NVRDataModel.debug ("Player is ready");
-        handle.stop();
+        $timeout (function() {handle.play();},400);
+        
        // window.stop();
     };
 
@@ -1460,11 +1463,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     //console.log("************** VIDEO IS " + videoURL);
 
-
+                   
                     $scope.videoObject = {
                         config: {
-                            autoPlay: false,
-                            startTime: -1,
+                            autoPlay: true,
+                            
+                            playsInline:true,
                             sources: [
                                 {
                                     src: $sce.trustAsResourceUrl(videoURL),
