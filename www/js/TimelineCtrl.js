@@ -244,7 +244,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------------------------------
     function onPause() {
         NVRDataModel.debug("TimelineCtrl:onpause called");
-         $interval.cancel(updateInterval);
+        $interval.cancel(updateInterval);
         // console.log("*** Moving to Background ***"); // Handle the pause event
 
         if ($scope.popover) $scope.popover.remove();
@@ -520,7 +520,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     function shortenTime(str) {
         if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormat());
-        else    
+        else
             return moment(str).format(NVRDataModel.getTimeFormat());
     }
 
@@ -590,80 +590,109 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
 
     /**
-     * [processNewEvents description]
+     * [processNewEvents is called every X seconds when dynamic update is on. X = 10 for now]
      * @return {[type]}
      */
     function processNewEvents() {
 
-
+        //safeguard in the event http calls are still going on
         if (!$scope.follow.time || isProcessNewEventsWaiting) return;
+
         var ld = NVRDataModel.getLogin();
-        console.log("NEED TO PROCESS NEW EVENTS");
+
         // check for last 2 minutes to account for late DB updates and what not. 5 mins was likely enough
         var from = moment(lastTimeForEvent).subtract(2, 'minutes').locale('en').format("YYYY-MM-DD HH:mm:ss");
         var to = moment().locale('en').format("YYYY-MM-DD HH:mm:ss");
         lastTimeForEvent = moment();
 
-        var apiurl = ld.apiurl + '/events/index/StartTime >=:' + from /*+ "/EndTime <=:" + to*/ ;
-        //apiurl = apiurl + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
-        // we can't do alarm frames and end time as otherwise currently recording won't show up
-        // FIXME: Check the same in Events page
-    
-        apiurl = apiurl + ".json";
+        // FIXME: totally ignoring event pages - hoping it wont be more than 100 or 150 whatever
+        // the events per page limit is. Why? laziness.
+        // 
+        var completedEvents = ld.apiurl + '/events/index/StartTime >=:' + from;
+        // we can add alarmCount as this is really for completed events
+        completedEvents = completedEvents + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
-        NVRDataModel.debug("Getting incremental events using: " + apiurl);
+        completedEvents = completedEvents + ".json";
+
+        // now get currently ongoing events
+        // as it turns out various events get stored withn null and never recover
+        // so, lets limiy to 15 m
+        // 
+        
+        var st = moment().subtract (10,'minutes').locale('en').format("YYYY-MM-DD HH:mm:ss");
+        var ongoingEvents = ld.apiurl + '/events/index/StartTime >=:'+st+'/EndTime =:.json';
+        //NVRDataModel.debug("Getting incremental events using: " + completedEvents);
 
 
         isProcessNewEventsWaiting = true;
-        $http.get(apiurl)
-            .then(function(data) 
-            {
-        
-                   $scope.newEvents = '';
-                   var localNewEvents = '';
+
+        var $httpApi = $http.get(completedEvents);
+        var $httpOngoing = $http.get(ongoingEvents);
+
+        $q.all([$httpApi, $httpOngoing])
+            .then(function(dataarray) {
+
+                    var myevents = dataarray[0].data.events;
+
+                    if (dataarray.length > 1) {
+                        myevents = myevents.concat(dataarray[1].data.events);
+                      
+                    }
+
+                    $scope.newEvents = '';
+                    var localNewEvents = '';
                     //console.log ("GOT "+JSON.stringify(data));
-                    var myevents = data.data.events;
-                    for (var j = 0; j < myevents.length; j++) 
-                    {
-                        console.log("GOT Event Id:" + myevents[j].Event.Id);
+
+                    for (var j = 0; j < myevents.length; j++) {
+
+                        // get rid of the moment js deprecation notice
+                        myevents[j].Event.StartTime = moment.tz(myevents[j].Event.StartTime, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+
+                        myevents[j].Event.EndTime = moment.tz(myevents[j].Event.EndTime, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+              
                         var itm = graphData.get(myevents[j].Event.Id);
-                        if (itm) 
-                        {
+                        if (itm) {
                             console.log(myevents[j].Event.Id + " already exists, updating params");
 
-                            var content = "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + (myevents[j].Event.AlarmFrames || 'new') + ") " + myevents[j].Event.Notes + "</span>";
+                            var content = "<span class='my-vis-font'>" + myevents[j].Event.Notes + " " + $translate.instant('kRecordingProgress') + "</span>";
 
                             var style;
+                            var recordingInProgress = false;
 
                             if (moment(myevents[j].Event.EndTime).isValid()) // recording over
                             {
-                                    // remove flash
-                                    content = "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + (myevents[j].Event.AlarmFrames || 'new') + ") " + myevents[j].Event.Notes + "</span>";
+      
+                                content = "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[j].Event.AlarmFrames + ") " + myevents[j].Event.Notes + "</span>";
 
-                                    style="background-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length] +
-                                        ";border-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length];
-                            }
-
-                            else // still recording
+                                style = "background-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length] +
+                                    ";border-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length];
+                            } else // still recording
                             {
-
-                                    NVRDataModel.debug ("Event:" + myevents[j].Event.Id +"-End time is invalid, likely recording, so fixing");
-
-                                    myevents[j].Event.EndTime = moment.tz(moment(), NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
-                                    style="background-color:orange" ;
+                                myevents[j].Event.EndTime = moment.tz(moment(), NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+                                style = "background-color:orange";
+                                recordingInProgress = true;
 
                             }
 
-                            if (moment(options.max).isBefore(moment()))
-                                {
-                                    console.log ("Adjusting Range to fit in new event");
-                                    options.max = moment().add ('1','hours').locale('en').format("YYYY-MM-DD HH:mm:ss");
-                                    timeline.setOptions(options);
-                                } 
-                           // data.update({id: 2, group: 1});
+                            if (moment(options.max).isBefore(moment())) {
+                               // console.log("Adjusting Range to fit in new event");
+                                options.max = moment().add('1', 'hours').locale('en').format("YYYY-MM-DD HH:mm:ss");
+                                timeline.setOptions(options);
+                            }
+                            // data.update({id: 2, group: 1});
                             // update end time - is it needed to be updated?
-                            graphData.update({
-                                id: myevents[j].Event.Id,
+                            // 
+
+                            // right at this point we need to decide if we keep or remove this event
+                            // 
+
+                            if (ld.enableAlarmCount && ld.minAlarmCount > myevents[j].Event.AlarmFrames && !recordingInProgress) {
+                                // remove
+                                NVRDataModel.debug("Removing Event:" + myevents[j].Event.Id + "as it doesn't have" + myevents[j].Event.AlarmFrames + " alarm frames");
+                                graphData.remove(myevents[j].Event.Id);
+                            } else {
+                                graphData.update({
+                                    id: myevents[j].Event.Id,
                                     content: content,
                                     start: myevents[j].Event.StartTime,
                                     end: myevents[j].Event.EndTime,
@@ -677,13 +706,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     myvideo: myevents[j].Event.DefaultVideo,
                                     myevent: myevents[j]
 
-                            });
+                                });
 
-                            timeline.focus( myevents[j].Event.Id);
-                            localNewEvents= localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId)+'@'+shortenTime(myevents[j].Event.StartTime)+' ('+myevents[j].Event.Id+'),';
+                                timeline.focus(myevents[j].Event.Id);
+                                localNewEvents = localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId) + '@' + shortenTime(myevents[j].Event.StartTime) + ' (' + myevents[j].Event.Id + '),';
+
+
+                            }
+
 
 
                         } else { // event is new
+
+                            var isBeingRecorded = false;
                             var idfound = false;
                             for (var ii = 0; ii < $scope.monitors.length; ii++) {
                                 if ($scope.monitors[ii].Monitor.Id == myevents[j].Event.MonitorId && NVRDataModel.isNotHidden(myevents[j].Event.MonitorId)) {
@@ -693,9 +728,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             }
 
                             if (idfound) {
-                                NVRDataModel.debug(myevents[j].Event.Id + " New event updating graph");
 
-                            localNewEvents= localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId)+'@'+shortenTime(myevents[j].Event.StartTime)+' ('+myevents[j].Event.Id+'),';
+
 
                                 myevents[j].Event.MonitorName = NVRDataModel.getMonitorName(myevents[j].Event.MonitorId);
 
@@ -720,69 +754,80 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                 }
 
                                 // now lets make sure we don't infinitely increase
-                                
+
                                 if (graphIndex >= curCount)
                                 //if (1)
                                 {
                                     var mv = graphData.min('id');
                                     //console.log("MIN="+JSON.stringify(mv));
-                                    if (mv)
-                                    {
+                                    if (mv) {
                                         graphData.remove(mv.id);
                                         graphIndex--;
-                                        NVRDataModel.debug ("Removed Event "+mv.id+" to make space");
+                                        NVRDataModel.debug("Removed Event " + mv.id + " to make space");
                                     }
 
                                 }
 
                                 // since this is a new add its possible dates are not defined
-                                if (!moment(myevents[j].Event.StartTime).isValid())
-                                {
-                                    NVRDataModel.debug ("Event:" + myevents[j].Event.Id +"-Invalid Start time - this should really not happen ");
+                                if (!moment(myevents[j].Event.StartTime).isValid()) {
+                                    NVRDataModel.debug("Event:" + myevents[j].Event.Id + "-Invalid Start time - this should really not happen ");
 
                                 }
 
 
-                                 if (!moment(myevents[j].Event.EndTime).isValid())
-                                {
-                                    NVRDataModel.debug ("Event:" + myevents[j].Event.Id +"-End time is invalid, likely recording, so fixing" );
+                                if (!moment(myevents[j].Event.EndTime).isValid()) {
+                                    //  NVRDataModel.debug ("Event:" + myevents[j].Event.Id +"-End time is invalid, likely recording, so fixing" );
                                     myevents[j].Event.EndTime = moment.tz(moment(), NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+                                    isBeingRecorded = true;
 
                                 }
 
-                             
+
                                 // if range doesn't allow for current time, we need to fix that
-                                if (moment(options.max).isBefore(moment()))
-                                {
-                                    console.log ("Adjusting Range to fit in new event");
-                                    options.max = moment().add ('1','hours').locale('en').format("YYYY-MM-DD HH:mm:ss");
+                                if (moment(options.max).isBefore(moment())) {
+                                   // console.log("Adjusting Range to fit in new event");
+                                    options.max = moment().add('1', 'hours').locale('en').format("YYYY-MM-DD HH:mm:ss");
                                     timeline.setOptions(options);
-                                } 
+                                }
 
-                                graphData.add({
-                               
-                                    id: myevents[j].Event.Id,
-                                    content: "<span class='my-vis-font'>" + "New Event:( <i class='ion-android-notifications'></i>" + (myevents[j].Event.AlarmFrames || ' unknown ') + ") " + myevents[j].Event.Notes + "</span>",
-                                    start: myevents[j].Event.StartTime,
-                                    end: myevents[j].Event.EndTime,
-                                    group: myevents[j].Event.MonitorId,
-                                    style:"background-color:orange" ,
-                                    //type: "range",
-                                   
-                                    myframes: myevents[j].Event.Frames,
-                                    mydur: myevents[j].Event.Length,
-                                    myeid: myevents[j].Event.Id,
-                                    myename: myevents[j].Event.Name,
-                                    myvideo: myevents[j].Event.DefaultVideo,
-                                    myevent: myevents[j]
+                                var eventText = "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + (myevents[j].Event.AlarmFrames || ' unknown ') + ") " + myevents[j].Event.Notes + "</span>";
 
-                                });
-                                graphIndex++;
+                                if (isBeingRecorded) {
+                                    eventText = "<span class='my-vis-font'>" + myevents[j].Event.Notes + " " + $translate.instant('kRecordingProgress') + "</span>";
+                                }
 
-                                
+                                // since we concated, its possible events may be repeated
+                                if (!graphData.get(myevents[j].Event.Id)) {
+                                    NVRDataModel.debug(">>> "+myevents[j].Event.Id + " at " + myevents[j].Event.StartTime + " New event updating graph");
+
+                                    localNewEvents = localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId) + '@' + shortenTime(myevents[j].Event.StartTime) + ' (' + myevents[j].Event.Id + '),';
+
+                                    
+                                    console.log ("SHIZ");
+                                    graphData.add({
+
+                                        id: myevents[j].Event.Id,
+                                        content: eventText,
+                                        start: myevents[j].Event.StartTime,
+                                        end: myevents[j].Event.EndTime,
+                                        group: myevents[j].Event.MonitorId,
+                                        style: "background-color:orange",
+                                        //type: "range",
+
+                                        myframes: myevents[j].Event.Frames,
+                                        mydur: myevents[j].Event.Length,
+                                        myeid: myevents[j].Event.Id,
+                                        myename: myevents[j].Event.Name,
+                                        myvideo: myevents[j].Event.DefaultVideo,
+                                        myevent: myevents[j]
+
+                                    });
+                                    graphIndex++;
+                                }
+
                                 //options.max = moment(fromDate).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-                                timeline.focus( myevents[j].Event.Id);
+                                timeline.focus(myevents[j].Event.Id);
 
                             } //idfound
 
@@ -792,9 +837,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                     } // for j
 
                     // At this stage, see if we need to display new events
-                    if (localNewEvents.length > 0)
-                    {
-                        localNewEvents = $translate.instant('kLatestEvents')+':'+localNewEvents;
+                    if (localNewEvents.length > 0) {
+                        localNewEvents = $translate.instant('kLatestEvents') + ':' + localNewEvents;
                         localNewEvents = localNewEvents.slice(0, -1);
                         $scope.newEvents = localNewEvents;
                     }
@@ -823,7 +867,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     function drawGraph(fromDate, toDate, count) {
 
 
-        $scope.newEvents="";
+        $scope.newEvents = "";
         // we only need this for day mode
         $interval.cancel(updateInterval);
 
@@ -864,7 +908,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
 
 
-         options = {
+        options = {
 
             showCurrentTime: true,
             editable: false,
@@ -1060,14 +1104,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             // this is called for each tick the bar moves
                             // speed moves depending on zoom factor
                             // 
-                           /* timeline.on('currentTimeTick', function() {
+                            /* timeline.on('currentTimeTick', function() {
 
-                                if ($scope.follow.time) {
-                                 
-                                }
+                                 if ($scope.follow.time) {
+                                  
+                                 }
 
 
-                            });*/
+                             });*/
 
                             timeline.on('click', function(prop) {
 
