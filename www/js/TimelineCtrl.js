@@ -517,6 +517,13 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     };
 
+    function shortenTime(str) {
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+            return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormat());
+        else    
+            return moment(str).format(NVRDataModel.getTimeFormat());
+    }
+
     $scope.toggleFollowTime = function() {
         /*if ($scope.currentMode != 'day') {
             $rootScope.zmPopup = $ionicPopup.alert({
@@ -673,7 +680,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             });
 
                             timeline.focus( myevents[j].Event.Id);
-                            localNewEvents= localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId)+' ('+myevents[j].Event.Id+'),';
+                            localNewEvents= localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId)+'@'+shortenTime(myevents[j].Event.StartTime)+' ('+myevents[j].Event.Id+'),';
 
 
                         } else { // event is new
@@ -688,7 +695,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             if (idfound) {
                                 NVRDataModel.debug(myevents[j].Event.Id + " New event updating graph");
 
-                                localNewEvents= localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId)+' ('+myevents[j].Event.Id+'),';
+                            localNewEvents= localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId)+'@'+shortenTime(myevents[j].Event.StartTime)+' ('+myevents[j].Event.Id+'),';
 
                                 myevents[j].Event.MonitorName = NVRDataModel.getMonitorName(myevents[j].Event.MonitorId);
 
