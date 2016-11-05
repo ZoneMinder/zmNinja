@@ -899,7 +899,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         NVRDataModel.getEventsPages(0, fromDateNoLang, toDateNoLang)
             .then(function(data) {
-                var pages = parseInt(data.pageCount);
+                var pages = data.pageCount || 1;
                 var itemsPerPage = parseInt(data.limit);
                 var iterCount;
 

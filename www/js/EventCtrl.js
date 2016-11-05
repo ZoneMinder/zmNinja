@@ -346,7 +346,7 @@ angular.module('zmApp.controllers')
             nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
         NVRDataModel.getEventsPages($scope.id, nolangFrom, nolangTo)
             .then(function (data) {
-                eventsPage = data.pageCount;
+                eventsPage = data.pageCount || 1;
                 NVRDataModel.debug("EventCtrl: found " + eventsPage + " pages of events");
 
                 pageLoaded = true;
