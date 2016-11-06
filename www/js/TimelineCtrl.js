@@ -329,7 +329,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.$on('$ionicView.afterEnter', function() {
         // console.log("***AFTER ENTER");
 
-        $scope.follow = { 'time': false };
+        $scope.follow = { 'time': NVRDataModel.getLogin().followTimeLine };
 
         $interval.cancel(updateInterval);
 
@@ -533,6 +533,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             return;
         }*/
         $scope.follow.time = !$scope.follow.time;
+        var loginData = NVRDataModel.getLogin();
+        loginData.followTimeLine = $scope.follow.time;
+        NVRDataModel.setLogin(loginData);
     };
     //-------------------------------------------------
     // Called with day/week/month
@@ -544,7 +547,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         //console.log (index);
         if (index == 0) //month
         {
-            $scope.follow.time = false;
+            $scope.follow.time = NVRDataModel.getLogin().followTimeLine;
             $scope.currentMode = "month";
             NVRDataModel.log("Month view");
             $rootScope.customTimelineRange = false;
@@ -556,7 +559,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             drawGraph(fromDate, toDate, maxItems);
         } else if (index == 1) //week
         {
-            $scope.follow.time = false;
+            $scope.follow.time = NVRDataModel.getLogin().followTimeLine;
             $scope.currentMode = "week";
             $rootScope.customTimelineRange = false;
             NVRDataModel.log("Week  view");
@@ -579,7 +582,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             drawGraph(fromDate, toDate, maxItems);
         } else // custom
         {
-            $scope.follow.time = false;
+            $scope.follow.time = NVRDataModel.getLogin().followTimeLine;
             $scope.currentMode = "custom";
             $rootScope.customTimelineRange = true;
             $state.go('events-date-time-filter');

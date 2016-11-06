@@ -11,8 +11,7 @@
 angular.module('zmApp.controllers')
 
 .service('NVRDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions', '$translate', '$cordovaSQLite',
- function
-    ($http, $q, $ionicLoading, $ionicBackdrop, $fileLogger,
+    function($http, $q, $ionicLoading, $ionicBackdrop, $fileLogger,
         zm, $rootScope, $ionicContentBanner, $timeout, $cordovaPinDialog,
         $ionicPopup, $localstorage, $state, $ionicNativeTransitions, $translate) {
 
@@ -25,32 +24,28 @@ angular.module('zmApp.controllers')
         var multiservers = [];
         var oldevents = [];
         var migrationComplete = false;
-        
+
         var tz = "";
         var isTzSupported = false;
 
 
-        var languages = [
-            {
+        var languages = [{
                 text: 'English',
                 value: 'en'
-            },
-            {
+            }, {
                 text: 'Italian',
                 value: 'it'
-            },
-            {
+            }, {
                 text: 'Portugese',
                 value: 'pt'
-            },
-            {
+            }, {
                 text: 'العربية',
                 value: 'ar'
             },
-           /* {
-                text: 'Hindi',
-                value: 'hi'
-            }*/
+            /* {
+                 text: 'Hindi',
+                 value: 'hi'
+             }*/
         ];
 
         var serverGroupList = {};
@@ -119,12 +114,13 @@ angular.module('zmApp.controllers')
             'vibrateOnPush': true,
             'soundOnPush': true,
             'cycleMonitors': false,
-            'cycleMonitorsInterval':10, // 10sec
-            'enableLowBandwidth':false,
-            'autoSwitchBandwidth':false,
+            'cycleMonitorsInterval': 10, // 10sec
+            'enableLowBandwidth': false,
+            'autoSwitchBandwidth': false,
             'disableAlarmCheckMontage': false,
             'useLocalTimeZone': true,
             'fastLogin': true,
+            'followTimeLine': false
 
 
 
@@ -160,37 +156,38 @@ angular.module('zmApp.controllers')
             return true;
         }
 
-        function getBandwidth()
-        {
+        function getBandwidth() {
             // if mode is not on always return high
-                if (loginData.enableLowBandwidth == false)
-                {
-                    return "highbw";
-                }
-                // if mode is force on, return low
-                if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth != true)
-                {
-                    return "lowbw";
-                }
-                if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth == true && $rootScope.platformOS == 'desktop')
-                {
-                    return "highbw";
-                }
-                // else return real state
-            
-                var networkState = navigator.connection.type; 
-                var strState;
-                switch (networkState)
-                {
+            if (loginData.enableLowBandwidth == false) {
+                return "highbw";
+            }
+            // if mode is force on, return low
+            if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth != true) {
+                return "lowbw";
+            }
+            if (loginData.enableLowBandwidth == true && loginData.autoSwitchBandwidth == true && $rootScope.platformOS == 'desktop') {
+                return "highbw";
+            }
+            // else return real state
 
-                    case Connection.WIFI: strState="highbw"; break;
-                    case Connection.ETHERNET: strState="highbw"; break;
-                    default: strState = "lowbw"; break;
+            var networkState = navigator.connection.type;
+            var strState;
+            switch (networkState) {
 
-                }
-                return strState;
+                case Connection.WIFI:
+                    strState = "highbw";
+                    break;
+                case Connection.ETHERNET:
+                    strState = "highbw";
+                    break;
+                default:
+                    strState = "lowbw";
+                    break;
+
+            }
+            return strState;
         }
-        
+
         //--------------------------------------------------------------------------
         // uses fileLogger  to write logs to file for later investigation
         //--------------------------------------------------------------------------
@@ -231,31 +228,26 @@ angular.module('zmApp.controllers')
         }
 
 
-        function reloadMonitorDisplayStatus()
-        {
-            debug ("Loading hidden/unhidden status...");
-                            var positionsStr = loginData.packeryPositions;
-                            //console.log ("positionStr="+positionsStr);
-                            var positions = {};
-                            if (loginData.packeryPositions != '')
-                            {
-                                positions = JSON.parse(positionsStr);
-                                for (var m = 0; m < monitors.length; m++)
-                                {
-                                    for (var p = 0; p < positions.length; p++)
-                                    {
-                                        if (monitors[m].Monitor.Id == positions[p].attr) 
-                                        {
-                                            monitors[m].Monitor.listDisplay = positions[p].display;
-                                            debug ("DataModel: Setting MID:"+monitors[m].Monitor.Id+" to " + monitors[m].Monitor.listDisplay);
-                                        }
-                                            
-                                            
-                                    }
-                                }
+        function reloadMonitorDisplayStatus() {
+            debug("Loading hidden/unhidden status...");
+            var positionsStr = loginData.packeryPositions;
+            //console.log ("positionStr="+positionsStr);
+            var positions = {};
+            if (loginData.packeryPositions != '') {
+                positions = JSON.parse(positionsStr);
+                for (var m = 0; m < monitors.length; m++) {
+                    for (var p = 0; p < positions.length; p++) {
+                        if (monitors[m].Monitor.Id == positions[p].attr) {
+                            monitors[m].Monitor.listDisplay = positions[p].display;
+                            debug("DataModel: Setting MID:" + monitors[m].Monitor.Id + " to " + monitors[m].Monitor.listDisplay);
+                        }
 
-                                
-                            }
+
+                    }
+                }
+
+
+            }
         }
 
 
@@ -267,11 +259,11 @@ angular.module('zmApp.controllers')
 
             //console.log ("****serverLogin was encrypted to " + ct);
             //$localstorage.setObject("serverGroupList", serverGroupList);
-            localforage.setItem("serverGroupList", ct, function (err) {
+            localforage.setItem("serverGroupList", ct, function(err) {
                 if (err) log("localforage store error " + JSON.stringify(err));
             });
             //$localstorage.set("defaultServerName", loginData.serverName);
-            localforage.setItem("defaultServerName", loginData.serverName, function (err) {
+            localforage.setItem("defaultServerName", loginData.serverName, function(err) {
                 if (err) log("localforage store error " + JSON.stringify(err));
             });
 
@@ -319,7 +311,7 @@ angular.module('zmApp.controllers')
                     //cancelOnStateChange: false
                 });
 
-            $timeout(function () {
+            $timeout(function() {
                 contentBannerInstance();
             }, mytimer || 6000);
         }
@@ -331,17 +323,17 @@ angular.module('zmApp.controllers')
             // used by various controllers to log messages to file
             //-------------------------------------------------------------
 
-            migrationComplete: function () {
+            migrationComplete: function() {
                 migrationComplete = true;
             },
 
 
 
-            isEmpty: function (obj) {
+            isEmpty: function(obj) {
                 return isEmpty(obj);
             },
 
-            log: function (val, type) {
+            log: function(val, type) {
                 var logtype = 'info';
                 if (type != undefined)
                     logtype = type;
@@ -349,28 +341,28 @@ angular.module('zmApp.controllers')
 
             },
 
-            debug: function (val) {
+            debug: function(val) {
 
 
                 debug(val);
             },
 
-            setLastUpdateCheck: function (val) {
+            setLastUpdateCheck: function(val) {
                 lastUpdateCheck = val;
                 localforage.setItem("lastUpdateCheck", lastUpdateCheck);
             },
 
-            getLastUpdateCheck: function () {
+            getLastUpdateCheck: function() {
                 return lastUpdateCheck;
             },
 
-            setLatestBlogPostChecked: function (val) {
+            setLatestBlogPostChecked: function(val) {
                 //console.log (">>>>>>>>>>>> Setting blog date: " + val);
                 latestBlogPostChecked = val;
                 localforage.setItem("latestBlogPostChecked", latestBlogPostChecked);
             },
 
-            getLatestBlogPostChecked: function () {
+            getLatestBlogPostChecked: function() {
                 return latestBlogPostChecked;
             },
 
@@ -385,7 +377,7 @@ angular.module('zmApp.controllers')
             // from APIs, I don't have an option
 
 
-            zmStateGo: function (state, p1, p2) {
+            zmStateGo: function(state, p1, p2) {
                 if ($rootScope.platformOS == 'desktop')
                     $state.go(state, p1, p2);
                 else
@@ -393,12 +385,12 @@ angular.module('zmApp.controllers')
             },
 
             // used when an empty server profile is created
-            getDefaultLoginObject: function () {
+            getDefaultLoginObject: function() {
                 return angular.copy(defaultLoginData);
             },
 
 
-            getReachableConfig: function (skipFirst) {
+            getReachableConfig: function(skipFirst) {
                 var d = $q.defer();
                 if (loginData.serverName == "") {
                     log("Reachable: No server name configured, likely first use?");
@@ -452,7 +444,7 @@ angular.module('zmApp.controllers')
 
 
                 //contactedServers.push(loginData.serverName);
-                findFirstReachableUrl(chainURLs).then(function (firstReachableUrl) {
+                findFirstReachableUrl(chainURLs).then(function(firstReachableUrl) {
                     d.resolve(firstReachableUrl);
                     // also make sure loginData points to this now
 
@@ -466,7 +458,7 @@ angular.module('zmApp.controllers')
 
                     return d.promise;
                     // OK: do something with firstReachableUrl
-                }, function () {
+                }, function() {
                     d.reject("No servers reachable");
                     loginData = savedLoginData;
                     return d.promise;
@@ -492,11 +484,11 @@ angular.module('zmApp.controllers')
                         if (loginData.reachability) {
 
                             //console.log ("************* AUGH");
-                            return $http.get(urls[0].url).then(function () {
+                            return $http.get(urls[0].url).then(function() {
                                 log("Success: reachability on " + urls[0].url);
                                 $ionicLoading.hide();
                                 return urls[0];
-                            }, function (err) {
+                            }, function(err) {
                                 log("Failed reachability on " + urls[0].url + " with error " + JSON.stringify(err));
                                 return findFirstReachableUrl(urls.slice(1));
                             });
@@ -518,7 +510,7 @@ angular.module('zmApp.controllers')
 
             },
 
-            init: function () {
+            init: function() {
                 // console.log("****** DATAMODEL INIT SERVICE CALLED ********");
 
 
@@ -526,7 +518,7 @@ angular.module('zmApp.controllers')
 
 
 
-                
+
 
                 log("ZMData init: checking for stored variables & setting up log file");
 
@@ -539,7 +531,7 @@ angular.module('zmApp.controllers')
 
 
 
-                localforage.getItem("serverGroupList").then(function (val) {
+                localforage.getItem("serverGroupList").then(function(val) {
                     // decrypt it now
 
                     var decodedVal;
@@ -556,7 +548,7 @@ angular.module('zmApp.controllers')
 
                     //decodedVal = val;
 
-                   // debug("user profile retrieved:" + JSON.stringify(decodedVal));
+                    // debug("user profile retrieved:" + JSON.stringify(decodedVal));
 
                     $ionicLoading.hide();
                     serverGroupList = decodedVal;
@@ -590,7 +582,7 @@ angular.module('zmApp.controllers')
                         template: "retrieving profile data..."
                     });
                     localforage.getItem("defaultServerName")
-                        .then(function (val) {
+                        .then(function(val) {
                             $ionicLoading.hide();
                             //console.log ("!!!!!!!!!!!!!!!!!!default server name is  "  + sname);
                             sname = val;
@@ -601,7 +593,7 @@ angular.module('zmApp.controllers')
                                 loginData = loadedData;
 
                                 // old version hacks for new variables
-                                
+
                                 // always true Oct 27 2016
                                 loginData.persistMontageOrder = true;
                                 loginData.enableh264 = true;
@@ -703,8 +695,8 @@ angular.module('zmApp.controllers')
                                     loginData.packeryPositions = "";
 
                                 }
-                                
-                                
+
+
                                 if (typeof loginData.EHpackeryPositions == 'undefined') {
                                     debug("EHpackeryPositions does not exist. Setting to empty");
                                     loginData.EHpackeryPositions = "";
@@ -763,76 +755,83 @@ angular.module('zmApp.controllers')
                                     loginData.soundOnPush = true;
 
                                 }
-                                
+
                                 if (typeof loginData.cycleMonitors == 'undefined') {
-                                    
+
                                     loginData.cycleMonitors = false;
 
                                 }
-                                
+
                                 if (typeof loginData.cycleMonitorsInterval == 'undefined') {
-                                    
+
                                     loginData.cycleMonitorsInterval = 10;
 
                                 }
 
-                                
+
                                 if (typeof loginData.enableLowBandwidth == 'undefined') {
 
-                                  
+
                                     loginData.enableLowBandwidth = false;
 
                                 }
                                 // wtf is wrong with this ternary?
                                 //$rootScope.runMode = (loginData.enableLowBandwith==true)? "low": "normal";
-                            
-                                
-                               
-                                
+
+
+
+
                                 if (typeof loginData.autoSwitchBandwidth == 'undefined') {
 
-                                  
+
                                     loginData.autoSwitchBandwidth = false;
 
                                 }
-                                
+
                                 $rootScope.runMode = getBandwidth();
-                                log("Setting DataModel init bandwidth to: " +$rootScope.runMode);
-                                
-                                
-                                    
-                                
+                                log("Setting DataModel init bandwidth to: " + $rootScope.runMode);
+
+
+
+
                                 if (typeof loginData.refreshSecLowBW == 'undefined') {
-                                    
+
                                     loginData.refreshSecLowBW = 8;
 
                                 }
-                                
+
                                 if (typeof loginData.disableAlarmCheckMontage == 'undefined') {
-                                    
+
                                     loginData.disableAlarmCheckMontage = false;
 
                                 }
-                                
-                                
+
+
                                 if (typeof loginData.useLocalTimeZone == 'undefined') {
-                                    
+
                                     loginData.useLocalTimeZone = true;
 
                                 }
-                                
-                                
+
+
                                 if (typeof loginData.fastLogin == 'undefined') {
-                                    
+
                                     loginData.fastLogin = true;
 
                                 }
-                                
-                                
-                                
-                                
+
+
+                                if (typeof loginData.followTimeLine == 'undefined') {
+
+                                    loginData.followTimeLine = false;
+
+                                }
+
+
+
+
                                 if (typeof loginData.monSingleImageQuality == 'undefined') {
-                                    
+
                                     loginData.monSingleImageQuality = 100;
 
                                 }
@@ -841,10 +840,10 @@ angular.module('zmApp.controllers')
                             } else {
                                 log("defaultServer configuration NOT found. Keeping login at defaults");
                             }
-                        
-                        
-                        
-                        
+
+
+
+
                             // FIXME: HACK: This is the latest entry point into dataModel init, so start portal login after this
                             // not the neatest way
                             $rootScope.$emit('init-complete');
@@ -859,15 +858,15 @@ angular.module('zmApp.controllers')
 
             },
 
-            isForceNetworkStop: function () {
+            isForceNetworkStop: function() {
                 return loginData.forceNetworkStop;
             },
 
-            setJustResumed: function (val) {
+            setJustResumed: function(val) {
                 justResumed = true;
             },
 
-            stopNetwork: function (str) {
+            stopNetwork: function(str) {
                 var s = "";
                 if (str) s = str + ":";
                 if (justResumed) {
@@ -880,7 +879,7 @@ angular.module('zmApp.controllers')
                 }
             },
 
-            isLoggedIn: function () {
+            isLoggedIn: function() {
 
                 if ((loginData.username != "" && loginData.password != "" && loginData.url != "" &&
                         loginData.apiurl != "") || (loginData.isUseAuth != '1')) {
@@ -893,11 +892,11 @@ angular.module('zmApp.controllers')
                 }
             },
 
-            getLanguages: function () {
+            getLanguages: function() {
                 return languages;
             },
 
-            setDefaultLanguage: function (l, permanent) {
+            setDefaultLanguage: function(l, permanent) {
 
                 if (!l) l = 'en';
                 defaultLang = l;
@@ -907,19 +906,19 @@ angular.module('zmApp.controllers')
 
                     //console.log("setting default lang");
                     localforage.setItem("defaultLang", l)
-                        .then(function (val) {
+                        .then(function(val) {
                             log("Set language in localforage to: " + val);
                         });
                 }
 
                 //console.log("invoking translate use with " + l);
-                $translate.use(l).then(function (data) {
+                $translate.use(l).then(function(data) {
                     log("Device Language is:" + data);
                     moment.locale(data);
                     $translate.fallbackLanguage('en');
                     d.resolve(data);
                     return d.promise;
-                }, function (error) {
+                }, function(error) {
                     log("Device Language error: " + error);
                     $translate.use('en');
                     moment.locale('en');
@@ -929,65 +928,65 @@ angular.module('zmApp.controllers')
                 return d.promise;
             },
 
-            getDefaultLanguage: function () {
+            getDefaultLanguage: function() {
                 return defaultLang;
                 //return window.localStorage.getItem("defaultLang");
 
             },
-            
+
             reloadMonitorDisplayStatus: function() {
                 return reloadMonitorDisplayStatus();
             },
 
-            getLogin: function () {
+            getLogin: function() {
 
 
                 return angular.copy(loginData);
             },
 
-            getServerGroups: function () {
+            getServerGroups: function() {
                 return angular.copy(serverGroupList);
             },
 
-            setServerGroups: function (sg) {
+            setServerGroups: function(sg) {
                 serverGroupList = angular.copy(sg);
             },
 
-            getKeepAwake: function () {
+            getKeepAwake: function() {
                 return (loginData.keepAwake == '1') ? true : false;
             },
 
-            setAppVersion: function (ver) {
+            setAppVersion: function(ver) {
                 zmAppVersion = ver;
             },
 
-            getAppVersion: function () {
+            getAppVersion: function() {
                 return (zmAppVersion);
             },
 
-            setBackground: function (val) {
+            setBackground: function(val) {
                 isBackground = val;
             },
 
-            isBackground: function () {
+            isBackground: function() {
                 return isBackground;
             },
 
-            isFirstUse: function () {
+            isFirstUse: function() {
                 // console.log("isFirstUse is " + isFirstUse);
                 return isFirstUse;
                 // return ((window.localStorage.getItem("isFirstUse") == undefined) ? true : false);
 
             },
 
-            versionCompare: function (l, r) {
+            versionCompare: function(l, r) {
                 return versionCompare(l, r);
             },
 
             //-----------------------------------------------------------------
             // Allow the option to reset first use if I need it in future
             //-----------------------------------------------------------------
-            setFirstUse: function (val) {
+            setFirstUse: function(val) {
                 //window.localStorage.setItem("isFirstUse", val ? "1" : "0");
                 //localforage.setItem("isFirstUse", val, 
                 //   function(err) {if (err) log ("localforage error, //storing isFirstUse: " + JSON.stringify(err));});
@@ -997,18 +996,18 @@ angular.module('zmApp.controllers')
 
             },
 
-            getTimeFormat: function () {
+            getTimeFormat: function() {
                 return (loginData.use24hr ? "HH:mm" : "hh:mm a");
             },
 
-            getTimeFormatSec: function () {
+            getTimeFormatSec: function() {
                 return (loginData.use24hr ? "HH:mm:ss" : "hh:mm:ss a");
             },
 
             //------------------------------------------------------------------
             // switches screen to 'always on' or 'auto'
             //------------------------------------------------------------------
-            setAwake: function (val) {
+            setAwake: function(val) {
 
 
                 //console.log ("**** setAwake called with:" + val);
@@ -1036,7 +1035,7 @@ angular.module('zmApp.controllers')
             // writes all params to local storage. FIXME: Move all of this into a JSON 
             // object
             //--------------------------------------------------------------------------
-            setLogin: function (newLogin) {
+            setLogin: function(newLogin) {
 
                 setLogin(newLogin);
                 $rootScope.showBlog = newLogin.enableBlog;
@@ -1046,13 +1045,13 @@ angular.module('zmApp.controllers')
             //-------------------------------------------------------
             // returns API version or none 
             //-------------------------------------------------------
-            getAPIversion: function () {
+            getAPIversion: function() {
                 debug("getAPIversion called");
                 var d = $q.defer();
                 var apiurl = loginData.apiurl + '/host/getVersion.json';
                 $http.get(apiurl)
-                    .then(function (success) {
-                            if ( success.data.version) {
+                    .then(function(success) {
+                            if (success.data.version) {
                                 d.resolve(success.data.version);
                             } else {
                                 d.resolve("0.0.0");
@@ -1060,7 +1059,7 @@ angular.module('zmApp.controllers')
                             return (d.promise);
 
                         },
-                        function (error) {
+                        function(error) {
                             debug("getAPIversion error handler " + JSON.stringify(error));
                             d.reject("-1.-1.-1");
                             return (d.promise);
@@ -1070,17 +1069,17 @@ angular.module('zmApp.controllers')
 
             },
 
-            displayBanner: function (mytype, mytext, myinterval, mytimer) {
+            displayBanner: function(mytype, mytext, myinterval, mytimer) {
                 displayBanner(mytype, mytext, myinterval, mytimer);
             },
 
-            isReCaptcha: function () {
+            isReCaptcha: function() {
                 var d = $q.defer();
 
                 var myurl = loginData.url;
                 log("Checking if reCaptcha is enabled in ZM...");
                 $http.get(myurl)
-                    .then(function (success) {
+                    .then(function(success) {
                         if (success.data.search("g-recaptcha") != -1) {
                             // recaptcha enable. zmNinja won't work
                             log("ZM has recaptcha enabled", "error");
@@ -1105,7 +1104,7 @@ angular.module('zmApp.controllers')
 
             // need a mid as restricted users won't be able to get
             // auth with just &watch
-            getAuthKey: function (mid, ck) {
+            getAuthKey: function(mid, ck) {
                 var d = $q.defer();
 
                 if (!mid) {
@@ -1119,7 +1118,7 @@ angular.module('zmApp.controllers')
                 var myurl = loginData.url + "/index.php?view=watch&mid=" + mid + "&connkey=" + ck;
                 debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
                 $http.get(myurl)
-                    .then(function (success) {
+                    .then(function(success) {
                             // console.log ("**** RESULT IS " + JSON.stringify(success));
                             // Look for auth=
                             var auth = success.data.match("auth=(.*?)&");
@@ -1140,7 +1139,7 @@ angular.module('zmApp.controllers')
                             }
 
                         },
-                        function (error) {
+                        function(error) {
                             log("DataModel: Error resolving auth key " + JSON.stringify(error));
                             d.resolve("");
                             return (d.promise);
@@ -1153,7 +1152,7 @@ angular.module('zmApp.controllers')
             // This function returns the numdigits for padding capture images
             //-----------------------------------------------------------------------------
 
-            getKeyConfigParams: function (forceReload) {
+            getKeyConfigParams: function(forceReload) {
 
                 var d = $q.defer();
 
@@ -1162,14 +1161,14 @@ angular.module('zmApp.controllers')
                     var myurl = apiurl + '/configs/viewByName/ZM_EVENT_IMAGE_DIGITS.json';
                     debug("Config URL for digits is:" + myurl);
                     $http.get(myurl)
-                        .success(function (data) {
+                        .success(function(data) {
                             log("ZM_EVENT_IMAGE_DIGITS is " + data.config.Value);
                             configParams.ZM_EVENT_IMAGE_DIGITS = data.config.Value;
                             d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
                             return (d.promise);
 
                         })
-                        .error(function (err) {
+                        .error(function(err) {
                             log("Error retrieving ZM_EVENT_IMAGE_DIGITS" + JSON.stringify(err), "error");
                             log("Taking a guess, setting ZM_EVENT_IMAGE_DIGITS to 5");
                             // FIXME: take a plunge and keep it at 5?
@@ -1190,18 +1189,18 @@ angular.module('zmApp.controllers')
             // Useful to know what ZMS is using as its cgi-bin. If people misconfigure
             // the setting in the app, they can check their logs
             //--------------------------------------------------------------------------
-            getPathZms: function () {
+            getPathZms: function() {
                 var d = $q.defer();
                 var apiurl = loginData.apiurl;
                 var myurl = apiurl + '/configs/viewByName/ZM_PATH_ZMS.json';
                 debug("Config URL for ZMS PATH is:" + myurl);
                 $http.get(myurl)
-                    .success(function (data) {
+                    .success(function(data) {
                         configParams.ZM_PATH_ZMS = data.config.Value;
                         d.resolve(configParams.ZM_PATH_ZMS);
                         return (d.promise);
                     })
-                    .error(function (error) {
+                    .error(function(error) {
                         log("Error retrieving ZM_PATH_ZMS: " + JSON.stringify(error));
                         d.reject("");
                         return (d.promise);
@@ -1213,11 +1212,11 @@ angular.module('zmApp.controllers')
             //--------------------------------------------------------------------------
             // returns high or low BW mode
             //--------------------------------------------------------------------------
-            getBandwidth: function () {
+            getBandwidth: function() {
                 return getBandwidth();
             },
 
-           
+
             //-----------------------------------------------------------------------------
             // This function returns a list of monitors
             // if forceReload == 1 then it will force an HTTP API request to get a list of monitors
@@ -1227,7 +1226,7 @@ angular.module('zmApp.controllers')
             // I've wrapped this function in my own promise even though http returns a promise.
             //-----------------------------------------------------------------------------
 
-            getMonitors: function (forceReload) {
+            getMonitors: function(forceReload) {
                 //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
 
 
@@ -1253,22 +1252,22 @@ angular.module('zmApp.controllers')
                     var myurl = apiurl + "/monitors.json";
                     //console.log ("API:"+myurl);
                     $http.get(myurl /*,{timeout:15000}*/ )
-                        .success(function (data) {
+                        .success(function(data) {
                             //console.log("HTTP success got " + JSON.stringify(data.monitors));
                             monitors = data.monitors;
-                            monitors.sort(function (a, b) {
+                            monitors.sort(function(a, b) {
                                 return parseInt(a.Monitor.Sequence) - parseInt(b.Monitor.Sequence);
                             });
                             //console.log("promise resolved inside HTTP success");
                             monitorsLoaded = 1;
-                        
-                            reloadMonitorDisplayStatus();                
-                                            
-                        
-                        
+
+                            reloadMonitorDisplayStatus();
+
+
+
                             debug("Now trying to get multi-server data, if present");
                             $http.get(apiurl + "/servers.json")
-                                .success(function (data) {
+                                .success(function(data) {
                                     // We found a server list API, so lets make sure
                                     // we get the hostname as it will be needed for playback
                                     log("multi server list loaded" + JSON.stringify(data));
@@ -1327,9 +1326,9 @@ angular.module('zmApp.controllers')
                                             baseurl = st;
 
                                             st += (s.path ? s.path : p.path);
-                                            
+
                                             //console.log ("----------STREAMING URL PARSED AS " + st);
-                                            
+
                                             monitors[i].Monitor.streamingURL = st;
                                             monitors[i].Monitor.baseURL = baseurl;
                                             // starting 1.30 we have fid=xxx mode to return images
@@ -1362,7 +1361,7 @@ angular.module('zmApp.controllers')
                                     reloadMonitorDisplayStatus();
                                     d.resolve(monitors);
                                 })
-                                .error(function (err) {
+                                .error(function(err) {
                                     log("multi server list loading error");
                                     multiservers = [];
 
@@ -1389,7 +1388,7 @@ angular.module('zmApp.controllers')
 
 
                         })
-                        .error(function (err) {
+                        .error(function(err) {
                             //console.log("HTTP Error " + err);
                             log("Monitor load failed " + JSON.stringify(err), "error");
                             // To keep it simple for now, I'm translating an error
@@ -1417,131 +1416,115 @@ angular.module('zmApp.controllers')
             //-----------------------------------------------------------------------------
             //
             //-----------------------------------------------------------------------------
-            setMonitors: function (mon) {
+            setMonitors: function(mon) {
                 //console.log("ZMData setMonitors called with " + mon.length + " monitors");
                 monitors = mon;
             },
-            
+
             processFastLogin: function() {
                 var d = $q.defer();
-                if (1)
-                {
-                    d.reject ("not implemented");
+                if (1) {
+                    d.reject("not implemented");
                     return d.promise;
                 }
-                console.log ("inside processFastLogin");
-                if (!loginData.fastLogin)
-                {
-                    console.log ("Fast login not set");
-                    d.reject ("fast login not enabled");
-                    debug ("fast login not enabled");
+                console.log("inside processFastLogin");
+                if (!loginData.fastLogin) {
+                    console.log("Fast login not set");
+                    d.reject("fast login not enabled");
+                    debug("fast login not enabled");
                     return d.promise;
-                    
-                }
-                else //fastlogin is on
+
+                } else //fastlogin is on
                 {
                     localforage.getItem("lastLogin")
-                    .then (function(succ) {
-                        console.log ("fast login DB found");
-                        var dt = moment(succ);
-                        
-                        if (dt.isValid())
-                        {   
-                            debug ("Got last login as " + dt.toString());
-                            if (moment.duration(moment().diff(dt)).asHours() >=2 ) {
-                                d.reject ("duration since last login >=2hrs, need to relogin");
+                        .then(function(succ) {
+                                console.log("fast login DB found");
+                                var dt = moment(succ);
+
+                                if (dt.isValid()) {
+                                    debug("Got last login as " + dt.toString());
+                                    if (moment.duration(moment().diff(dt)).asHours() >= 2) {
+                                        d.reject("duration since last login >=2hrs, need to relogin");
+                                        return d.promise;
+                                    } else {
+                                        d.resolve("fast login is valid, less then 2 hrs");
+                                        return d.promise;
+                                    }
+                                } else {
+                                    console.log("Invalid date found");
+                                    d.reject("last-login invalid");
+                                    return d.promise;
+
+                                }
+                            },
+                            function(e) {
+                                console.log("fastlogin DB not found");
+                                d.reject("last-login not found, fastlogin rejected");
                                 return d.promise;
-                            }
-                            else {
-                                d.resolve ("fast login is valid, less then 2 hrs");
-                                return d.promise;
-                            }
-                        }
-                        else
-                        {
-                            console.log ("Invalid date found");
-                            d.reject ("last-login invalid");
-                            return d.promise;
-                            
-                        }
-                    },
-                           function (e) {
-                            console.log ("fastlogin DB not found");
-                            d.reject ("last-login not found, fastlogin rejected");
-                            return d.promise;
-                    });
-                           
+                            });
+
                 }
                 return d.promise;
             },
-            
+
             // returns if this mid is hidden or not
-            isNotHidden: function(mid)
-            {
+            isNotHidden: function(mid) {
                 var notHidden = true;
-                for (var i=0; i<monitors.length; i++)
-                {
-                    if (monitors[i].Monitor.Id == mid)
-                    {
-                        notHidden = (monitors[i].Monitor.listDisplay =='show') ? true:false;
+                for (var i = 0; i < monitors.length; i++) {
+                    if (monitors[i].Monitor.Id == mid) {
+                        notHidden = (monitors[i].Monitor.listDisplay == 'show') ? true : false;
                         break;
                     }
-                    
+
                 }
                 return notHidden;
-                    
+
             },
-            
+
             //returns TZ value immediately (sync)
-            
-            getTimeZoneNow: function()
-            {
-               // console.log ("getTimeZoneNow: " + tz ? tz : moment.tz.guess());
+
+            getTimeZoneNow: function() {
+                // console.log ("getTimeZoneNow: " + tz ? tz : moment.tz.guess());
                 return tz ? tz : moment.tz.guess();
             },
-            
+
             // returns server timezone, failing which local timezone
             // always resolves true
-            
-            isTzSupported: function()
-            {
+
+            isTzSupported: function() {
                 return isTzSupported;
             },
-            
-            getTimeZone: function ()
-            {
-                
+
+            getTimeZone: function() {
+
                 var d = $q.defer();
-                if (!tz)
-                {
-                    
-                    log ("First invocation of TimeZone, asking server");
+                if (!tz) {
+
+                    log("First invocation of TimeZone, asking server");
                     var apiurl = loginData.apiurl + '/host/getTimeZone.json';
                     $http.get(apiurl)
-                        .then(function (success) {
+                        .then(function(success) {
                                 tz = success.data.tz;
                                 d.resolve(tz);
-                                debug ("Timezone API response is:"+success.data.tz);
+                                debug("Timezone API response is:" + success.data.tz);
                                 isTzSupported = true;
                                 $rootScope.$emit('tz-updated');
                                 return (d.promise);
 
                             },
-                            function (error) {
+                            function(error) {
                                 tz = moment.tz.guess();
                                 debug("Timezone API error handler, guessing local:" + tz);
                                 d.resolve(tz);
                                 isTzSupported = false;
                                 return (d.promise);
                             });
-                    
-                }
-                else
-                {
+
+                } else {
                     d.resolve(tz);
                     return d.promise;
                 }
-                
+
                 return d.promise;
             },
 
@@ -1553,7 +1536,7 @@ angular.module('zmApp.controllers')
             // All this effort because the ZM APIs return events in sorted order, oldest first. Yeesh.
             //-----------------------------------------------------------------------------
 
-            getEventsPages: function (monitorId, startTime, endTime) {
+            getEventsPages: function(monitorId, startTime, endTime) {
                 //console.log("********** INSIDE EVENTS PAGES ");
                 var apiurl = loginData.apiurl;
 
@@ -1584,14 +1567,14 @@ angular.module('zmApp.controllers')
                 //var myurl = (monitorId == 0) ? apiurl + "/events.json?page=1" : apiurl + "/events/index/MonitorId:" + monitorId + ".json?page=1";
                 var d = $q.defer();
                 $http.get(myurl)
-                    .success(function (data) {
+                    .success(function(data) {
                         $ionicLoading.hide();
                         //console.log ("**** EVENTS PAGES I GOT "+JSON.stringify(data));
                         //console.log("**** PAGE COUNT IS " + data.pagination.pageCount);
                         d.resolve(data.pagination);
                         return d.promise;
                     })
-                    .error(function (error) {
+                    .error(function(error) {
                         $ionicLoading.hide();
                         // console.log("*** ERROR GETTING TOTAL PAGES ***");
                         log("Error retrieving page count of events " + JSON.stringify(error), "error");
@@ -1611,7 +1594,7 @@ angular.module('zmApp.controllers')
             // monitorId == 0 means all monitors (ZM starts from 1)
             //-----------------------------------------------------------------------------
 
-            getEvents: function (monitorId, pageId, loadingStr, startTime, endTime) {
+            getEvents: function(monitorId, pageId, loadingStr, startTime, endTime) {
 
                 //console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
@@ -1663,7 +1646,7 @@ angular.module('zmApp.controllers')
 
 
                 $http.get(myurl /*,{timeout:15000}*/ )
-                    .success(function (data) {
+                    .success(function(data) {
                         if (loadingStr != 'none') $ionicLoading.hide();
                         //myevents = data.events;
                         myevents = data.events.reverse();
@@ -1676,7 +1659,7 @@ angular.module('zmApp.controllers')
                         return d.promise;
 
                     })
-                    .error(function (err) {
+                    .error(function(err) {
                         if (loadingStr != 'none') $ionicLoading.hide();
                         displayBanner('error', ['error retrieving event list', 'please try again']);
                         //console.log("HTTP Events error " + err);
@@ -1700,14 +1683,14 @@ angular.module('zmApp.controllers')
             //-----------------------------------------------------------------------------
             //
             //-----------------------------------------------------------------------------
-            getMontageSize: function () {
+            getMontageSize: function() {
                 return loginData.montageSize;
             },
 
             //-----------------------------------------------------------------------------
             //
             //-----------------------------------------------------------------------------
-            setMontageSize: function (montage) {
+            setMontageSize: function(montage) {
                 loginData.montageSize = montage;
             },
 
@@ -1716,7 +1699,7 @@ angular.module('zmApp.controllers')
             //-----------------------------------------------------------------------------
             //
             //-----------------------------------------------------------------------------
-            getMonitorsLoaded: function () {
+            getMonitorsLoaded: function() {
                 // console.log("**** Inside promise function ");
                 var deferred = $q.defer();
                 if (monitorsLoaded != 0) {
@@ -1729,7 +1712,7 @@ angular.module('zmApp.controllers')
             //-----------------------------------------------------------------------------
             //
             //-----------------------------------------------------------------------------
-            setMonitorsLoaded: function (loaded) {
+            setMonitorsLoaded: function(loaded) {
                 // console.log("ZMData.setMonitorsLoaded=" + loaded);
                 monitorsLoaded = loaded;
             },
@@ -1738,7 +1721,7 @@ angular.module('zmApp.controllers')
             // returns the next monitor ID in the list
             // used for swipe next
             //-----------------------------------------------------------------------------
-            getNextMonitor: function (monitorId, direction) {
+            getNextMonitor: function(monitorId, direction) {
                 var id = parseInt(monitorId);
                 var foundIndex = -1;
                 for (var i = 0; i < monitors.length; i++) {
@@ -1766,7 +1749,7 @@ angular.module('zmApp.controllers')
             // Given a monitor Id it returns the monitor name
             // FIXME: Can I do a better job with associative arrays?
             //-----------------------------------------------------------------------------
-            getMonitorName: function (id) {
+            getMonitorName: function(id) {
                 var idnum = parseInt(id);
                 for (var i = 0; i < monitors.length; i++) {
                     if (parseInt(monitors[i].Monitor.Id) == idnum) {
@@ -1778,7 +1761,7 @@ angular.module('zmApp.controllers')
                 return "(Unknown)";
             },
 
-            getMonitorObject: function (id) {
+            getMonitorObject: function(id) {
                 var idnum = parseInt(id);
                 for (var i = 0; i < monitors.length; i++) {
                     if (parseInt(monitors[i].Monitor.Id) == idnum) {
@@ -1790,7 +1773,7 @@ angular.module('zmApp.controllers')
                 return "(Unknown)";
             },
 
-            getImageMode: function (id) {
+            getImageMode: function(id) {
                 var idnum = parseInt(id);
                 for (var i = 0; i < monitors.length; i++) {
                     if (parseInt(monitors[i].Monitor.Id) == idnum) {
@@ -1802,7 +1785,7 @@ angular.module('zmApp.controllers')
                 return "(Unknown)";
             },
 
-            getStreamingURL: function (id) {
+            getStreamingURL: function(id) {
                 var idnum = parseInt(id);
                 for (var i = 0; i < monitors.length; i++) {
                     if (parseInt(monitors[i].Monitor.Id) == idnum) {
@@ -1814,7 +1797,7 @@ angular.module('zmApp.controllers')
                 return "(Unknown)";
             },
 
-            getBaseURL: function (id) {
+            getBaseURL: function(id) {
                 var idnum = parseInt(id);
                 for (var i = 0; i < monitors.length; i++) {
                     if (parseInt(monitors[i].Monitor.Id) == idnum) {
@@ -1828,4 +1811,5 @@ angular.module('zmApp.controllers')
 
 
         };
-}]);
+    }
+]);
