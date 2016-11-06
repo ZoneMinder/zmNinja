@@ -48,14 +48,25 @@ angular.module('zmApp.controllers')
                 // you are looking at a specific monitor ID
                 // going back will only retain that monitor ID
                 // so lets reload with all monitors
-                $ionicHistory.nextViewOptions({
-                    disableBack: true
-                });
-                $state.go("events", {
-                    "id": 0,
-                    "playEvent":false
-                });
-                return;
+                // 
+                //console.log (">>> BACKVIEW="+$ionicHistory.backTitle());
+
+                if ($ionicHistory.backTitle() == 'Timeline')
+                {
+                    $ionicHistory.goBack();
+                }
+                else // in events, backview is undefined?
+                {
+                   $ionicHistory.nextViewOptions({
+                       disableBack: true
+                   });
+                   $state.go("events", {
+                       "id": 0,
+                       "playEvent":false
+                   });
+                   return;     
+                }
+               
 
                 //$ionicHistory.goBack();
             };

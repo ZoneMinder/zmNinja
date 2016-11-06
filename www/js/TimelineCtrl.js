@@ -290,25 +290,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     });
 
 
-    $scope.$on('$ionicView.enter', function() {
+    /*$scope.$on('$ionicView.enter', function() {
 
 
 
-        // Make sure sliding for menu is disabled so it
-        // does not interfere with graph panning
-        $ionicSideMenuDelegate.canDragContent(false);
-        var ld = NVRDataModel.getLogin();
-        maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax : zm.graphItemMax;
-        maxItems = ld.graphSize || maxItemsConf;
-        NVRDataModel.log("Graph items to draw is " + maxItems);
-        $scope.maxItems = maxItems;
-        $scope.translationData = {
-            maxItemsVal: maxItems
-        };
-
-        $scope.graphLoaded = false;
-        NVRDataModel.debug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
-    });
+      
+    });*/
 
     $scope.$on('$ionicView.beforeEnter', function() {
 
@@ -327,11 +314,26 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
 
     $scope.$on('$ionicView.afterEnter', function() {
-        // console.log("***AFTER ENTER");
+        console.log("***AFTER ENTER");
 
         $scope.follow = { 'time': NVRDataModel.getLogin().followTimeLine };
 
         $interval.cancel(updateInterval);
+
+          // Make sure sliding for menu is disabled so it
+        // does not interfere with graph panning
+        $ionicSideMenuDelegate.canDragContent(false);
+        var ld = NVRDataModel.getLogin();
+        maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax : zm.graphItemMax;
+        maxItems = ld.graphSize || maxItemsConf;
+        NVRDataModel.log("Graph items to draw is " + maxItems);
+        $scope.maxItems = maxItems;
+        $scope.translationData = {
+            maxItemsVal: maxItems
+        };
+
+        $scope.graphLoaded = false;
+        NVRDataModel.debug("TimelineCtrl/drawGraph: graphLoaded is " + $scope.graphLoaded);
 
         //latestDateDrawn = moment().locale('en').format("YYYY-MM-DD HH:mm:ss");
         $scope.modalFromTimelineIsOpen = false;
@@ -346,7 +348,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         }
 
         //console.log ("TIMELINE MONITORS: " + JSON.stringify(message));
-        var ld = NVRDataModel.getLogin();
+        //var ld = NVRDataModel.getLogin();
         $scope.loginData = NVRDataModel.getLogin();
 
         /* if (ld.persistMontageOrder) {
@@ -358,7 +360,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         $scope.monitors = message;
         if ($rootScope.customTimelineRange) {
             $scope.currentMode = 'custom';
-            // console.log("***** CUSTOM RANGE");
+             console.log("***** CUSTOM RANGE");
             if (moment($rootScope.fromString).isValid() &&
                 moment($rootScope.toString).isValid()) {
                 // console.log("FROM & TO IS CUSTOM");
@@ -368,7 +370,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 $scope.toDate = toDate;
                 drawGraph(fromDate, toDate, maxItems);
             } else {
-                //  console.log("FROM & TO IS CUSTOM INVALID");
+                console.log ("From:"+$rootScope.fromString + " To:"+$rootScope.toString);
+                console.log("FROM & TO IS CUSTOM INVALID");
+                fromDate = moment().startOf('day').format("YYYY-MM-DD HH:mm:ss");
+                toDate = moment().endOf('day').format("YYYY-MM-DD HH:mm:ss");
+                drawGraph(fromDate, toDate, maxItems);
             }
         } else {
             $scope.currentMode = 'day';
@@ -869,6 +875,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     function drawGraph(fromDate, toDate, count) {
 
+        console.log ("INSIDE DRAW");
 
         $scope.newEvents = "";
         // we only need this for day mode
