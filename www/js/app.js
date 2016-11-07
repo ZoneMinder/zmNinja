@@ -1725,6 +1725,7 @@ angular.module('zmApp', [
             requireLogin: false
         },
         url: "/login/:wizard",
+        cache: false,        
         templateUrl: "templates/login.html",
         controller: 'zmApp.LoginCtrl',
 
@@ -1736,6 +1737,7 @@ angular.module('zmApp', [
             requireLogin: false
         },
         url: "/help",
+        cache: false,
         templateUrl: "templates/help.html",
         controller: 'zmApp.HelpCtrl',
 
@@ -1746,6 +1748,7 @@ angular.module('zmApp', [
             requireLogin: false
         },
         url: "/news",
+        cache: false,
         templateUrl: "templates/news.html",
         controller: 'zmApp.NewsCtrl',
 
@@ -1764,6 +1767,7 @@ angular.module('zmApp', [
             }
         },
         url: "/monitors",
+        cache: false,
         templateUrl: "templates/monitors.html",
         controller: 'zmApp.MonitorCtrl',
 
@@ -1780,6 +1784,7 @@ angular.module('zmApp', [
                 return NVRDataModel.getMonitors(0);
             }
         },
+        cache: false,
         url: "/events/:id/:playEvent",
         templateUrl: "templates/events.html",
         controller: 'zmApp.EventCtrl',
@@ -1793,6 +1798,7 @@ angular.module('zmApp', [
         },
 
         url: "/lowversion/:ver",
+        cache: false,
         templateUrl: "templates/lowversion.html",
         controller: 'zmApp.LowVersionCtrl',
 
@@ -1804,6 +1810,7 @@ angular.module('zmApp', [
             requireLogin: false
         },
 
+        cache: false,
         url: "/importantmessage/:ver",
         templateUrl: "templates/important_message.html",
         controller: 'zmApp.ImportantMessageCtrl',
@@ -1817,6 +1824,7 @@ angular.module('zmApp', [
         data: {
             requireLogin: true
         },
+        cache: false,
         url: "/events-graphs",
         templateUrl: "templates/events-graphs.html",
         controller: 'zmApp.EventsGraphsCtrl',
@@ -1828,6 +1836,7 @@ angular.module('zmApp', [
         data: {
             requireLogin: true
         },
+        cache: false,
         url: "/events-date-time-filter",
         templateUrl: "templates/events-date-time-filter.html",
         controller: 'zmApp.EventDateTimeFilterCtrl',
@@ -1838,6 +1847,7 @@ angular.module('zmApp', [
         data: {
             requireLogin: true
         },
+        cache: false,
         url: "/state",
         templateUrl: "templates/state.html",
         controller: 'zmApp.StateCtrl',
@@ -1849,6 +1859,7 @@ angular.module('zmApp', [
             requireLogin: true
         },
         url: "/devoptions",
+        cache: false,
         templateUrl: "templates/devoptions.html",
         controller: 'zmApp.DevOptionsCtrl',
     })
@@ -1864,6 +1875,7 @@ angular.module('zmApp', [
             }
         },
         url: "/timeline",
+        cache:false,
         templateUrl: "templates/timeline.html",
         controller: 'zmApp.TimelineCtrl',
 
@@ -1879,6 +1891,7 @@ angular.module('zmApp', [
             }
         },
         url: "/eventserversettings",
+        cache: false,
         templateUrl: "templates/eventserversettings.html",
         controller: 'zmApp.EventServerSettingsCtrl',
 
@@ -1889,6 +1902,7 @@ angular.module('zmApp', [
             requireLogin: false
         },
         url: "/log",
+        cache: false,
         templateUrl: "templates/log.html",
         controller: 'zmApp.LogCtrl',
 
@@ -1899,6 +1913,7 @@ angular.module('zmApp', [
             requireLogin: false
         },
         url: "/wizard",
+        cache: false,
         templateUrl: "templates/wizard.html",
         controller: 'zmApp.WizardCtrl',
 
@@ -1909,6 +1924,7 @@ angular.module('zmApp', [
             requireLogin: false
         },
         url: "/zm-portal-login",
+        cache: false,
         templateUrl: "templates/zm-portal-login.html",
         controller: 'zmApp.PortalLoginCtrl',
         nativeTransitions: null // disable for speed
@@ -1920,6 +1936,7 @@ angular.module('zmApp', [
             requireLogin: false
         },
         url: "/first-use",
+        cache: false,
         templateUrl: "templates/first-use.html",
         controller: 'zmApp.FirstUseCtrl',
 
@@ -1936,6 +1953,7 @@ angular.module('zmApp', [
             }
 
         },
+        cache: false,
         url: "/montage-history",
         templateUrl: "templates/montage-history.html",
         controller: 'zmApp.MontageHistoryCtrl',
@@ -1959,6 +1977,7 @@ angular.module('zmApp', [
 
         },
         url: "/montage",
+        cache: false,
         templateUrl: "templates/montage.html",
         controller: 'zmApp.MontageCtrl',
         params: {
