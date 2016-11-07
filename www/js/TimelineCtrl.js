@@ -96,25 +96,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         });
     }
 
-    function zoom(percentage) {
-        var range = timeline.getWindow();
-        var interval = range.end - range.start;
-
-        timeline.setWindow({
-            start: range.start.valueOf() - interval * percentage,
-            end: range.end.valueOf() + interval * percentage
-        });
-    }
+    
 
     $scope.move = function(percentage) {
         move(percentage);
 
     };
 
-    $scope.zoom = function(percentage) {
-        zoom(percentage);
-
-    };
+   
 
     //-----------------------------------------
     // Move by X days 
@@ -299,8 +288,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     $scope.$on('$ionicView.beforeEnter', function() {
 
+        //$ionicHistory.clearCache();
+        //$ionicHistory.clearHistory();
         timeline = '';
         $scope.newEvents = '';
+
     });
 
     //-------------------------------------------------
@@ -314,6 +306,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
 
     $scope.$on('$ionicView.afterEnter', function() {
+
+         $scope.monitors = message;
         console.log("***AFTER ENTER");
 
         $scope.follow = { 'time': NVRDataModel.getLogin().followTimeLine };
@@ -337,7 +331,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         //latestDateDrawn = moment().locale('en').format("YYYY-MM-DD HH:mm:ss");
         $scope.modalFromTimelineIsOpen = false;
-        var tempMon = message;
+        //var tempMon = message;
 
 
         // lets timeline.onget the abbreviated version of TZ to display
@@ -357,7 +351,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
          } else*/
 
 
-        $scope.monitors = message;
+       
+
+        console.log ("MONITORS:"+JSON.stringify($scope.monitors));
+
         if ($rootScope.customTimelineRange) {
             $scope.currentMode = 'custom';
              console.log("***** CUSTOM RANGE");
@@ -812,7 +809,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     localNewEvents = localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId) + '@' + shortenTime(myevents[j].Event.StartTime) + ' (' + myevents[j].Event.Id + '),';
 
                                     
-                                    console.log ("SHIZ");
+                                   
                                     graphData.add({
 
                                         id: myevents[j].Event.Id,
@@ -922,7 +919,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
             showCurrentTime: true,
             editable: false,
-            throttleRedraw: 100,
+            //throttleRedraw: 100,
             moveable: true,
             zoomable: true,
             selectable: true,
@@ -1270,7 +1267,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 cssClass: 'fa fa-minus-circle',
                 empty: false,
                 onclick: function() {
-                    zoom(0.2);
+                    //zoom(0.2);
+                    timeline.zoomOut(0.2);
                 }
             },
 
@@ -1317,7 +1315,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 empty: false,
                 onclick: function() {
 
-                    zoom(-0.2);
+                    //zoom(-0.2);
+                    timeline.zoomIn(0.2);
                 }
             },
 

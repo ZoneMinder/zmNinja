@@ -1407,6 +1407,7 @@ angular.module('zmApp.controllers')
                     //console.log("Returning pre-loaded list of " + monitors.length + " monitors");
                     log("Returning pre-loaded list of " + monitors.length + " monitors");
                     d.resolve(monitors);
+                    //console.log ("Returning"+JSON.stringify(monitors));
                     $ionicLoading.hide();
                     return d.promise;
                 }
