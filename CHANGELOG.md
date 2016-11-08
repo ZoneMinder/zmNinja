@@ -1,5 +1,28 @@
 # Change Log
 
+## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
+
+**Implemented enhancements:**
+
+- \[DESKTOP\] \(H264\) Automatic playback? [\#359](https://github.com/pliablepixels/zmNinja/issues/359)
+- Remember last state of application \(desktops\) [\#357](https://github.com/pliablepixels/zmNinja/issues/357)
+- Allow option for timeline view to get dynamically updated as new events occur [\#356](https://github.com/pliablepixels/zmNinja/issues/356)
+- Differentiate between server timezone and local timezone  \(needs ZM API Update \#1655\) [\#353](https://github.com/pliablepixels/zmNinja/issues/353)
+
+**Fixed bugs:**
+
+- Cancel timeline custom range settings leads to indefinitely 'working on graph data'  [\#360](https://github.com/pliablepixels/zmNinja/issues/360)
+- alarm frame navigation while watching event footage shows incorrect frames [\#354](https://github.com/pliablepixels/zmNinja/issues/354)
+- iOS Websockets stopped working with latest updates [\#352](https://github.com/pliablepixels/zmNinja/issues/352)
+- Android \< 5.0 has SSL cert issues [\#351](https://github.com/pliablepixels/zmNinja/issues/351)
+- Try and solve the montage overlapping when the image doesn't fully load [\#350](https://github.com/pliablepixels/zmNinja/issues/350)
+
+**Closed issues:**
+
+- \[DESKTOP\] view=view\_video mode is not working. [\#364](https://github.com/pliablepixels/zmNinja/issues/364)
+- Can't load as a web page on Android since d76cf1c commit [\#355](https://github.com/pliablepixels/zmNinja/issues/355)
+
 ## [v1.2.26](https://github.com/pliablepixels/zmNinja/tree/v1.2.26) (2016-10-13)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.24...v1.2.26)
 
