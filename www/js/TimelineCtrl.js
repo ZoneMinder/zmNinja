@@ -1092,7 +1092,37 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             //   console.log ("GROUPS");
                             timeline.setGroups(groups);
 
-                            timeline.fit();
+                            if (NVRDataModel.getLogin().timelineScale == -1)
+
+                            {
+                               // console.log ("SCALE NOT FOUND");
+                                    
+                                timeline.fit();    
+                            }
+                            else
+                            {
+                                timeline.fit();   
+                                
+                                /*var d = NVRDataModel.getLogin().timelineScale;
+                                console.log ("SCALE FOUND "+d+" SECONDS");
+                                var w = timeline.getWindow();
+                                console.log ("Original s="+w.start+" e="+w.end);
+
+
+                                var s = moment.tz(w.end, NVRDataModel.getTimeZoneNow()).subtract(d,'seconds').tz(moment.tz.guess());
+
+                                //var s = moment(w.start).format("YYYY-MM-DD HH:mm:ss");
+                                //
+                                //var e = moment(w.start).add(d,'seconds').format("YYYY-MM-DD HH:mm:ss");
+
+                                var e = moment.tz(w.end, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess());
+
+                                console.log ("Start="+s+" End="+e);
+                                $timeout (function() {timeline.setWindow(s,e);},1000);*/
+                                
+
+                            }
+                            
 
                             lastTimeForEvent = moment();
                             updateInterval = $interval(function() {
@@ -1119,6 +1149,27 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
 
                              });*/
+
+                             timeline.on('rangechanged', function(s)
+                             {
+                                ///console.log ("Range Changed:"+JSON.stringify(s));
+                                if (s.byUser)
+                                {
+
+                                    var w = timeline.getWindow();
+                                    //console.log ("start:"+w.start+" end:"+w.end);
+                                    var a = moment(w.start);
+                                    var b = moment(w.end);
+                                    var d = b.diff(a,'seconds');
+                                    var ld = NVRDataModel.getLogin();
+                                    ld.timelineScale = d;
+                                    NVRDataModel.setLogin(ld);
+                                    //console.log ("Stored user scale of "+d+" seconds");
+                                }
+
+                            
+
+                             });
 
                             timeline.on('click', function(prop) {
 

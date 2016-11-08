@@ -120,7 +120,8 @@ angular.module('zmApp.controllers')
             'disableAlarmCheckMontage': false,
             'useLocalTimeZone': true,
             'fastLogin': true,
-            'followTimeLine': false
+            'followTimeLine': false,
+            'timelineScale': -1,
 
 
 
@@ -824,6 +825,13 @@ angular.module('zmApp.controllers')
                                 if (typeof loginData.followTimeLine == 'undefined') {
 
                                     loginData.followTimeLine = false;
+
+                                }
+
+
+                                if (typeof loginData.timelineScale == 'undefined') {
+
+                                    loginData.timelineScale = -1;
 
                                 }
 
