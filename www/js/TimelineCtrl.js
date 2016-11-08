@@ -700,8 +700,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                 graphData.update({
                                     id: myevents[j].Event.Id,
                                     content: content,
-                                    start: myevents[j].Event.StartTime,
-                                    end: myevents[j].Event.EndTime,
+                                    start:moment.tz(myevents[j].Event.StartTime,NVRDataModel.getTimeZoneNow()),
+                                   // start: myevents[j].Event.StartTime,
+                                   // end: myevents[j].Event.EndTime,
+                                   end:moment.tz(myevents[j].Event.EndTime,NVRDataModel.getTimeZoneNow()),
                                     group: myevents[j].Event.MonitorId,
                                     //type: "range",
                                     style: style,
@@ -814,8 +816,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                         id: myevents[j].Event.Id,
                                         content: eventText,
-                                        start: myevents[j].Event.StartTime,
-                                        end: myevents[j].Event.EndTime,
+                                        start:moment.tz(myevents[j].Event.StartTime,NVRDataModel.getTimeZoneNow()),
+                                        //start: myevents[j].Event.StartTime,
+                                       // end: myevents[j].Event.EndTime,
+                                        end:moment.tz(myevents[j].Event.EndTime,NVRDataModel.getTimeZoneNow()),
                                         group: myevents[j].Event.MonitorId,
                                         style: "background-color:orange",
                                         //type: "range",
@@ -923,11 +927,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             moveable: true,
             zoomable: true,
             selectable: true,
-            start: moment(fromDate).locale('en').format("YYYY-MM-DD HH:mm:ss"),
-            end: moment(toDate).locale('en').format("YYYY-MM-DD HH:mm:ss"),
+            start: moment.tz(fromDate,NVRDataModel.getTimeZoneNow()),
+            end: moment.tz(toDate,NVRDataModel.getTimeZoneNow()),
             orientation: 'top',
-            min: moment(fromDate).locale('en').format("YYYY-MM-DD HH:mm:ss"),
-            max: moment(toDate).locale('en').format("YYYY-MM-DD HH:mm:ss"),
+            min: moment.tz(fromDate,NVRDataModel.getTimeZoneNow()),
+            max: moment.tz(toDate,NVRDataModel.getTimeZoneNow()),
             zoomMin: 1 * 60 * 1000, // 1 min
             stack: false,
             format: {
@@ -1050,13 +1054,17 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         }
 
 
+                                        console.log ("ADDING "+myevents[i].Event.StartTime+"->"+myevents[i].Event.EndTime);
 
                                         graphData.add({
                                             //id: graphIndex,
                                             id: myevents[i].Event.Id,
                                             content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + myevents[i].Event.Notes + "</span>",
-                                            start: myevents[i].Event.StartTime,
-                                            end: myevents[i].Event.EndTime,
+
+                                            start:moment.tz(myevents[i].Event.StartTime,NVRDataModel.getTimeZoneNow()),
+                                            //start: myevents[i].Event.StartTime,
+                                            //end: myevents[i].Event.EndTime,
+                                            end:moment.tz(myevents[i].Event.EndTime,NVRDataModel.getTimeZoneNow()),
                                             group: myevents[i].Event.MonitorId,
                                             //type: "range",
                                             style: "background-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length] +
@@ -1085,7 +1093,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                 }
                             }
 
-                            console.log(">>>>> CREATING NEW TIMELINE");
+                            console.log(">>>>> CREATING NEW TIMELINE with "+JSON.stringify(options));
                             timeline = new vis.Timeline(container[0], null, options);
                             // console.log ("GRAPH DATA");
                             timeline.setItems(graphData);
