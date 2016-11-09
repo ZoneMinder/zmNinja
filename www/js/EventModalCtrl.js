@@ -791,6 +791,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
             return;
 
+        $scope.videoDynamicTime = "";
         $scope.videoIsReady = false;
         var ld = NVRDataModel.getLogin();
         $scope.loginData = NVRDataModel.getLogin();

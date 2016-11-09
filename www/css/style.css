@@ -686,19 +686,41 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 /* This is for quick scrub for H264 */
+
+
 .videogular-container {
     height: 260px;
     margin: auto;
     overflow: hidden;
     float: left;
+
 }
-.videogular-full-container {
-    height: 80%;
-    z-index: 100;
-    float: center;
+
+
+.videogular-container-modal-width {
+    height: auto;
+    width:100%;
     margin: auto;
     overflow: hidden;
 }
+
+.videogular-container-modal-height {
+    height: 40%;
+    margin: auto;
+    overflow: hidden;
+}
+
+
+videogular div.event-time {
+    position: absolute;
+    display: block;
+    z-index: 9999;
+    bottom: 10%;
+    background: rgba(255,0,0,0.5);
+}
+
+
+
 #full-screen-event {
     -webkit-animation-duration: 200ms;
 }
