@@ -3,13 +3,16 @@
     "recursiveFolderSearch": true,
     "foldersToProcess": [
         "js",
-        "css"
+        "css",
+        "img",
+        "build"
     ],
     "uglifyJsOptions": {
         "compress": {
             "drop_console": true
         },
-        "fromString": true
+        "fromString": true,
+        "mangle": false
     },
     "cleanCssOptions": {
         "noAdvanced": true,
