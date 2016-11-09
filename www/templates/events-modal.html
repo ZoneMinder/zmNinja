@@ -4,6 +4,8 @@
         <ion-content style="background-color:#444444" ng-cloak>
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; " delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" overflow-scroll="false">
                 <div id="full-screen-event" style="height: 100vh;">
+                <!--<div>-->
+               
                     <!-- route via ZMS -->
                     <div ng-if="( (defaultVideo=='') || (loginData.enableh264==false)) && (loginData.useNphZmsForEvents==true)">
                         <!--<div style="color:white">connkey:{{connKey}}</div>-->
@@ -17,17 +19,21 @@
                     <!-- no default video -->
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
                         <!--<div ng-if="videoIsReady" class="videogular-full-container">-->
-                        <div ng-if="videoIsReady" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" >
+                        <!--<div ng-if="videoIsReady" ng-class="{'videogular-container-modal-width':imageFit==true, 'videogular-container-modal-height':imageFit==false}"  >-->
+
+                        <div ng-if="videoIsReady" ng-class="imageFit?'videogular-container-modal-width':'videogular-container-modal-height'">
                             <!--<video width="320" height="240" controls>
                                 <source src="" dynamic-url dynamic-url-src="{{video_url}}">
                                 
                         </video>-->
-                            <videogular vg-error="onVideoError($event)" vg-can-play = "onCanPlay()" vg-player-ready="onPlayerReady($API)" vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="true" >
-                                <<vg-media vg-src="videoObject.config.sources" vg-native-controls="false">
-                                </vg-media>-
+
+                            <videogular vg-error="onVideoError($event)" vg-can-play = "onCanPlay()" vg-player-ready="onPlayerReady($API)" vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)" >
+                                <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
+                                </vg-media>
                                 
                                 <vg-controls>
                                     <vg-play-pause-button></vg-play-pause-button>
+                                    <vg-time-display>{{ videoTime(event.Event.StartTime, currentTime ); }}</vg-time-display>
                                     <vg-scrub-bar>
                                         <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
                                     </vg-scrub-bar>
@@ -75,7 +81,7 @@
         <a mfb-button icon="ion-play" label="{{'kNormalPlay'|translate}}" ng-click="adjustSpeed('np');"></a>
         <a mfb-button icon="ion-pause" label="{{'kPause'|translate}}" ng-click="adjustSpeed('p');"> </a>
     </nav>
-    <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{humanizeTime}} ({{d_eventId}}) </div>
+    <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] </div>
     <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
         <ul>
             <li ng-if="defaultVideo==''">

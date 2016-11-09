@@ -6,7 +6,7 @@
 
 
 
-angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
+angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', '$filter', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate, $filter) {
 
 
     // from parent scope
@@ -775,7 +775,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.scaleImage = function () {
 
         $scope.imageFit = !$scope.imageFit;
-        // console.log("Switching image style to " + $scope.imageFit);
+         console.log("Switching image style to " + $scope.imageFit);
     };
 
     $scope.$on('$ionicView.enter', function () {
@@ -907,6 +907,25 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         });
     }
 
+    $scope.videoTime = function(s,c)
+    {
+        var a,o;
+        if (NVRDataModel.getLogin().useLocalTimeZone)
+        {
+            a = moment.tz(s, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess());
+
+        }
+        else
+        {
+            a = moment(s);
+        }
+         a.add(c);
+
+        o = a.format("MMM Do "+NVRDataModel.getTimeFormatSec());
+        $scope.videoDynamicTime = o;
+        //return a.format("MMM Do "+o);
+
+    };
 
     $scope.$on('modal.removed', function (e, m) {
         console.log ("************* REMOVE CALLED");
@@ -1467,6 +1486,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     $scope.videoObject = {
                         config: {
                             autoPlay: true,
+                            responsive:true,
+                            nativeControls:false,
                             
                             playsInline:true,
                             sources: [
