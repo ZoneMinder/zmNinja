@@ -5,22 +5,27 @@
     font-weight: normal;
     font-style: normal;
 }
+
 .icon-super-speed:before {
     font-family: "fontawesome";
     content: "\f135";
 }
+
 .icon-normal-speed:before {
     font-family: "fontawesome";
     content: "\f1b9";
 }
+
 .icon-faster:before {
     font-family: "fontawesome";
     content: "\f101";
 }
+
 .icon-slower:before {
     font-family: "fontawesome";
     content: "\f100";
 }
+
 .icon-server:before {
     font-family: "fontawesome";
     content: "\f233";
@@ -31,18 +36,22 @@
     width: 100%;
     height: 100%;
 }
+
 image-loader {
     position: absolute;
     top: 50%;
     left: 50%;
     z-index: 999;
 }
+
 .vis-time-axis .grid.vis-odd {
     background: #f5f5f5;
 }
+
 .my-vis-font {
     font-size: 10px;
 }
+
 .my-vis-buttons {
     position: absolute;
     top: 0;
@@ -50,19 +59,24 @@ image-loader {
     margin: 10px;
     z-index: 9999;
 }
+
 ion-popover-view.fit {
     height: auto;
 }
+
 ion-popover-view.fit ion-content {
     position: relative;
 }
+
 .platform-android ion-popover-view.fit {
     margin-top: 10px;
 }
+
 .platform-ios ion-popover-view.fit {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
 
 /* Using this for full screen modals for event and monitor mode */
 
@@ -73,6 +87,7 @@ ion-popover-view.fit ion-content {
     right: 0;
     width: 100%
 }
+
 
 /* I am using flexboxes to dynamicall adapt content
 in montage view.
@@ -91,10 +106,12 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     text-align: left;
     flex-wrap: wrap;
 }
+
 .wrapper > * {
     /*padding: 5px;*/
     /*flex: 1 100%; -- I commented this out - the wrapper was taking up full width in Chrome*/
 }
+
 .header {
     background: #333333;
     color: #cccccc;
@@ -103,14 +120,16 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     border-width: 1px;
     opacity: 80%;
 }
+
 .header-event-id {
-    background:rgba(52, 152, 219,0.2);
+    background: rgba(52, 152, 219, 0.2);
     color: #FFF;
     bottom: 0;
     left: 0;
     right: 0;
     opacity: 1;
 }
+
 .header-paused {
     background: #ba3e3e;
     color: #cccccc;
@@ -120,6 +139,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     opacity: 80%;
     transform: translate(-50%, -50%);
 }
+
 .alarmed-header {
     background: #ba3e3e;
     color: #ffffff;
@@ -128,6 +148,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     border-width: 1px;
     opacity: 80%;
 }
+
 .minimized-alarmed-header {
     background: #ba3e3e;
     color: #ffffff;
@@ -140,12 +161,15 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     left: 0px;
     width: 100%;
 }
+
 #slowpulse {
     -webkit-animation-duration: 1500ms;
 }
+
 .alarmed-body {
     border-left: thick solid #ba3e3e;
 }
+
 .alarmed-footer {
     background: #ba3e3e;
     border-color: #ba3e3e;
@@ -153,6 +177,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     border-width: 1px;
     /*padding:2px;*/
 }
+
 .main {
     text-align: center;
     /*background: #5a5a5a;*/
@@ -161,25 +186,31 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     padding: 0px;
     /*padding:2px;*/
 }
+
 .aside-1 {
     background: gold;
 }
+
 .aside-2 {
     background: hotpink;
 }
+
 figure {
     position: relative;
 }
+
 figure img {
     display: block;
     width: 100%;
     height: auto;
 }
+
 figcaption {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 .normal-figcaption {
     background: rgba(0, 0, 0, 0.2);
     color: #FFF;
@@ -189,6 +220,7 @@ figcaption {
     right: 0;
     opacity: 1;
 }
+
 .alarmed-figcaption {
     background: #ba3e3e;
     color: #ffffff;
@@ -199,12 +231,14 @@ figcaption {
     opacity: 0.7;
 }
 
+
 /* modified from:
 http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
 
 .notification-badge {
     position: relative;
 }
+
 .notification-badge[data-badge]:after {
     content: attr(data-badge);
     position: absolute;
@@ -220,6 +254,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     border-radius: 40%;
     font-weight: bold;
 }
+
 
 /*
 .notification-badge{
@@ -240,6 +275,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     right: 95%;
     transform: translate(-50%, -50%);
 }
+
 .ptzcentered {
     position: fixed;
     /* or absolute */
@@ -247,6 +283,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .timeline_text {
     text-align: center;
     color: white;
@@ -257,6 +294,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     color: white;
     font-size: 80%;
 }
+
 
 /* // not using for now, may come in handy later
 .ptzcenteredtopbutton
@@ -273,12 +311,14 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .ptzpresetbuttons {
     position: absolute;
     top: 5%;
     left: 10%;
     width: 80%;
 }
+
 .timelinebuttons {
     position: fixed;
     /* or absolute */
@@ -287,6 +327,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     transform: translate(-50%, -50%);
     z-index: 99999;
 }
+
 .eventprogress {
     position: absolute;
     -webkit-transform: rotate(-90deg) translateY(-1000%);
@@ -299,6 +340,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     z-index: 10;
     width: 100px;
 }
+
 .camera-icon {
     position: absolute;
     bottom: 20px;
@@ -306,6 +348,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     z-index: 10;
     opacity: 0.7;
 }
+
 .desktop-zoom-icon {
     position: absolute;
     bottom: 20px;
@@ -313,6 +356,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     z-index: 10;
     opacity: 0.7;
 }
+
 .modal-alarm-badge {
     position: absolute;
     bottom: 20px;
@@ -320,6 +364,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     z-index: 10;
     opacity: 0.7;
 }
+
 .event-modal-alarm-badge {
     position: absolute;
     left: 10px;
@@ -327,6 +372,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     z-index: 10;
     opacity: 1;
 }
+
 .events-modal-gapless-icon {
     position: absolute;
     bottom: 120px;
@@ -334,15 +380,19 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     z-index: 10;
     opacity: 0.5;
 }
+
 .popup80 .popup {
     width: 80% !important;
 }
+
 .popup90 .popup {
     width: 90% !important;
 }
+
 .popup95 .popup {
     width: 95% !important;
 }
+
 .events-modal-camera-icon {
     position: absolute;
     bottom: 120px;
@@ -350,6 +400,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     z-index: 10;
     opacity: 0.5;
 }
+
 .events-modal-onlyalarms-icon {
     position: absolute;
     bottom: 120px;
@@ -357,6 +408,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     z-index: 10;
     opacity: 0.5;
 }
+
 .events-range {
     position: absolute;
     bottom: 20px;
@@ -365,6 +417,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     opacity: 0.7;
     width: 70%;
 }
+
 .events-range-modal {
     position: absolute;
     bottom: 30px;
@@ -373,6 +426,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     opacity: 1;
     width: 70%;
 }
+
 .events-range-modal-text {
     position: absolute;
     top: 20px;
@@ -388,6 +442,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     padding-left: 3px;
     padding-right: 3px;
 }
+
 .monitor-modal-text {
     position: absolute;
     bottom: 30px;
@@ -401,6 +456,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     padding-left: 3px;
     padding-right: 3px;
 }
+
 .events-alarm-line {
     position: relative;
     bottom: 1px;
@@ -408,7 +464,26 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     width: 100%;
     border-top: 1px solid black;
 }
+
 .bwmode {
+    writing-mode: vertical-lr;
+    -webkit-writing-mode: vertical-lr;
+    position: absolute;
+    top: 30%;
+    transform: translateY(-50%: );
+    right: 0;
+    background-color: #f1c40f;
+    color: #000;
+    font-size: 11px;
+    border-radius: 5px 0px 0px 5px;
+    z-index: 99999;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    opacity: 0.7;
+}
+
+
+/*.bwmode {
     position: absolute;
     top: 30%;
     right: -28px;
@@ -425,27 +500,27 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
-}
-
+}*/
 
 .events-float-filter {
+    writing-mode: vertical-lr;
+    -webkit-writing-mode: vertical-lr;
     position: absolute;
     top: 50%;
-    right: -12px;
-    color: #fff;
+    transform: translateY(-50%: );
+    right: 0;
     background-color: #b47226;
-    border-radius: 0px 0px 5px 5px;
+    color: #fff;
     font-size: 11px;
-    padding-left: 3px;
-    padding-right: 3px;
-    opacity: 0.7;
+    border-radius: 5px 0px 0px 5px;
     z-index: 99999;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
+    padding-top: 3px;
+    padding-bottom: 3px;
+    opacity: 0.7;
 }
+
+
+/*
 .events-filter-on {
     position: absolute;
     left: 50%;
@@ -458,80 +533,104 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     padding-right: 6px;
     color: #fff;
     font-size: 11px;
-}
+}*/
+
 
 /* Styling of progress bar
 http://www.useragentman.com/blog/2012/01/03/cross-browser-html5-progress-bars-in-depth/
 */
+
 progress,
+
 /* All HTML5 progress enabled browsers */
-progress[role]/* polyfill */
+
+progress[role]
+/* polyfill */
+
 {
     /* Turns off styling - not usually needed, but good to know. */
-    
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
     /* gets rid of default border in Firefox and Opera. */
-    
     border: none;
     /* Needs to be in here for Safari polyfill so background images work as expected. */
-    
     background-size: auto;
     height: 10px;
 }
 
+
 /* Polyfill */
+
 progress[role]:after {
     background-image: none;
     /* removes default background from polyfill */
 }
 
+
 /* Ensure fallback text doesn't appear in polyfill */
+
 progress[role] strong {
     display: none;
 }
 
+
 /* ----------------- progress background start ------------------*/
+
 progress,
+
 /* Firefox  */
+
 progress[role][aria-valuenow] {
     /* Polyfill */
-    
     background: #aaaaaa !important;
     /* !important is needed by the polyfill */
 }
 
+
 /* Chrome */
+
 progress::-webkit-progress-bar {
     background: #aaaaaa;
 }
 
+
 /* ----------------- progress background start ------------------*/
+
 
 /* ----------------- progress bar color start ------------------*/
 
+
 /* IE10 */
+
 progress {
     color: #f1a165;
 }
 
+
 /* Firefox */
+
 progress::-moz-progress-bar {
     background: #f1a165;
 }
 
+
 /* Chrome */
+
 progress::-webkit-progress-value {
     background: #f1a165;
 }
 
+
 /* Polyfill */
+
 progress[aria-valuenow]:before {
     background: #f1a165;
 }
 
+
 /* ----------------- progress bar color end ------------------*/
+
 .rotate-button {
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
@@ -539,55 +638,68 @@ progress[aria-valuenow]:before {
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
 }
+
 .zm-image-fit {
     max-width: 100%;
     max-height: 100%;
 }
+
 .zm-image-crop {
     width: 100%;
 }
+
 
 /*
 
 .object-fit_cover { object-fit: cover; width:100%; height:auto;}
 .object-fit_contain { object-fit: contain; max-width:100%; height:auto; }
 */
+
 .object-fit_cover {
     object-fit: cover;
     width: 100%;
     height: auto;
 }
+
 .object-fit_contain {
     object-fit: contain;
     max-width: 100%;
     max-height: 100%;
 }
+
 .list .item.item-accordion {
     line-height: 200px;
     padding-top: 0;
     padding-bottom: 0;
     transition: 3s all linear;
 }
+
 .list .item.item-accordion.ng-hide {
     line-height: 0px;
 }
+
 .list .item.item-accordion.ng-hide-add,
 .list .item.item-accordion.ng-hide-remove {
     display: block !important;
 }
+
 ul[rn-carousel] > li {
     position: relative;
     margin-left: -100%;
 }
+
 ul[rn-carousel] > li:first-child {
     margin-left: 0;
 }
+
 ul[rn-carousel] img {
     max-width: 100%;
 }
+
 .content-banner .content-banner-close {
     margin-top: -5px;
 }
+
 .mySliderClass.jslider.sliderCSS div.jslider-pointer {
     left: 50%;
     width: 30px;
@@ -598,12 +710,14 @@ ul[rn-carousel] img {
     margin-left: -3px;
     margin-top: -8px;
 }
+
 .mySliderClass div.jslider-scale ins {
     color: red;
     /*background-color:red;
     border-radius:5%;
     line-height:5px;*/
 }
+
 .mySliderClass div.jslider-value {
     position: absolute;
     top: -29px;
@@ -618,14 +732,18 @@ ul[rn-carousel] img {
     -o-border-radius: 2px;
     border-radius: 2px
 }
+
 input[type=range]::-webkit-slider-thumb {
     background: #2980b9;
 }
 
+
 /* this is for input = password and dialog = text */
+
 .pinCode input[type=number] {
     -webkit-text-security: disc;
 }
+
 .pinCode input[type=number] {
     height: 50px;
     width: 200px;
@@ -634,72 +752,82 @@ input[type=range]::-webkit-slider-thumb {
     border: 1px solid #ddd;
     -webkit-appearance: none;
 }
+
 .pin-background.scroll-content {
     /*background: url('../img/background.png') no-repeat center center fixed;*/
-    
     background-size: cover;
     background-color: #555555;
     /*background-color:#16a085;*/
 }
+
 #responsive-image {
     width: 65%;
     margin: 0 auto;
 }
+
 #responsive-image img {
     width: 100%
 }
 
+
 /* to avoid padding on delete in event list */
+
 .item-content {
     padding-right: 16px !important;
 }
+
 .eventDeleteSpeed {
     -webkit-animation-duration: 300ms;
 }
+
 .content-banner.alarm {
     background-color: forestgreen;
     color: white;
 }
+
 .content-banner.net {
     background-color: #9b59b6;
     color: white;
 }
 
+
 /* This accordion list is used for event server monitor filter
  * http://docs.angularjs.org/api/ng/directive/ngShow#usage_animations
  */
+
 .list .item.item-accordion {
     line-height: 45px;
     padding-top: 0;
     padding-bottom: 0;
     transition: 0.09s all linear;
 }
+
 .list .item.item-accordion.ng-hide {
     line-height: 0px;
 }
+
 .list .item.item-accordion.ng-hide-add,
 .list .item.item-accordion.ng-hide-remove {
     display: block !important;
 }
+
 .custom-list i {
     float: right;
 }
 
-/* This is for quick scrub for H264 */
 
+/* This is for quick scrub for H264 */
 
 .videogular-container {
     height: 260px;
     margin: auto;
     overflow: hidden;
     float: left;
-
 }
-
 
 .videogular-container-modal-width {
     height: auto;
-    width:100%;
+    width: 100%;
     margin: auto;
     overflow: hidden;
 }
@@ -710,26 +838,26 @@ input[type=range]::-webkit-slider-thumb {
     overflow: hidden;
 }
 
-
 videogular div.event-time {
     position: absolute;
     display: block;
     z-index: 9999;
     bottom: 10%;
-    background: rgba(255,0,0,0.5);
+    background: rgba(255, 0, 0, 0.5);
 }
-
-
 
 #full-screen-event {
     -webkit-animation-duration: 200ms;
 }
+
 #monitorimage {
     -webkit-animation-duration: 200ms;
 }
+
 #firstuse {
     -webkit-animation-delay: 1s;
 }
+
 #transition-delay {
     -webkit-animation-delay: 1s;
 }
@@ -738,93 +866,120 @@ videogular div.event-time {
     -webkit-animation-delay: 4s;
 }
 
+
 /* packery stuff */
+
 * {
     box-sizing: border-box;
 }
+
 body {
     font-family: sans-serif;
 }
 
 * {
-  font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
 }
 
+
 /* ---- grid ---- */
+
 .dragborder {
     border: 2px dotted #3498db;
 }
+
 .dragborder-selected {
     border: 4px solid #e74c3c;
 }
+
 .grid-sizer {
     width: 10%;
 }
+
 .grid-item {
     width: 20%;
 }
+
 .grid-item-10 {
     width: 10%;
 }
+
 .grid-item-20 {
     width: 20%;
 }
+
 .grid-item-30 {
     width: 30%;
 }
+
 .grid-item-40 {
     width: 40%;
 }
+
 .grid-item-50 {
     width: 50%;
 }
+
 .grid-item-60 {
     width: 60%;
 }
+
 .grid-item-70 {
     width: 70%;
 }
+
 .grid-item-80 {
     width: 80%;
 }
+
 .grid-item-90 {
     width: 90%;
 }
+
 .grid-item-100 {
     width: 100%;
 }
 
+
 /* clear fix */
+
 .grid:after {
     content: '';
     display: block;
     clear: both;
 }
+
 .grid-item img {
     display: block;
     width: 100%;
     height: auto;
 }
 
+
 /* ---- .grid-item ---- */
+
 .grid-item.is-dragging,
 .grid-item.is-positioning-post-drag {
     background: #34495e;
     z-index: 2;
 }
+
 .packery-drop-placeholder {
     outline: 3px dashed hsla(0, 0%, 0%, 0.5);
     outline-offset: -6px;
     -webkit-transition: -webkit-transform 0.2s;
     transition: transform 0.2s;
 }
+
 .wide-as-needed {
     overflow: scroll;
     white-space: nowrap;
 }
+
 .visred {
     fill: #FF0000;
 }
+
 .wizardtip {
     margin-left: 5px;
     margin-right: 5px;
@@ -838,16 +993,20 @@ body {
     border-color: #8b8888;
     border-style: solid;
 }
+
 .wiz-list {
     list-style-type: disc;
     list-style-position: inside;
 }
+
 .zmPullup {
     background-color: #E3BE1C;
 }
+
 #flyoutmenu {
     z-index: 99;
 }
+
 #flyoutmenu ul {
     list-style: none;
     margin: 0;
@@ -858,11 +1017,13 @@ body {
     font-family: sans-serif;
     text-transform: uppercase;
 }
+
 #flyoutmenu ul li a i {
     font-size: 2.5em;
     font-family: sans-serif;
     text-transform: uppercase;
 }
+
 #flyoutmenu li {
     display: inline-block;
     margin-bottom: .2em;
@@ -870,43 +1031,49 @@ body {
     margin-right: 4px;
     line-height: 100%;
 }
+
 #flyoutmenu li:first-child {
     /*background: rgba(192, 57, 43, 0.7);*/
-    
     background: rgba(108, 122, 137, 0.7);
     -webkit-border-radius: 5px 0 0 5px;
 }
+
 #flyoutmenu li:only-child {
     /*background: rgba(192, 57, 43, 0.7);*/
-    
     background: rgba(108, 122, 137, 0.7);
     -webkit-border-radius: 5px 5px 5px 5px;
 }
+
 #flyoutmenu li:last-child {
     -webkit-border-radius: 0 5px 5px 0;
 }
 
+
 /* make sure this is after last-child */
+
 #flyoutmenu li:only-child {
     /*background: rgba(192, 57, 43, 0.7);*/
-    
     background: rgba(108, 122, 137, 0.7);
     -webkit-border-radius: 5px 5px 5px 5px;
 }
+
 #flyoutmenu li:nth-child(n+2) {
     background: rgba(108, 122, 137, 0.7);
     z-index: -1;
 }
 
 #flyoutmenu li:active {
-    background:#3498db;
+    background: #3498db;
 }
+
 #flyoutmenu a {
     text-decoration: none;
     color: white;
 }
 
+
 /* Overlay graph in event footage */
+
 #event_canvas {
     position: absolute;
     width: 80%;
@@ -916,6 +1083,7 @@ body {
     opacity: 1;
     z-index: 99;
 }
+
 #event_canvas_video {
     position: absolute;
     width: 100%;
@@ -929,14 +1097,11 @@ body {
 #history_canvas_video {
     position: absolute;
     width: 95%;
-    top:10%;
+    top: 10%;
     height: 20px;
-    
     opacity: 1;
     z-index: 998;
 }
-
-
 
 #event_slider {
     position: absolute;
@@ -947,6 +1112,7 @@ body {
     opacity: 1;
     z-index: 9999;
 }
+
 #event_rate_text {
     position: absolute;
     width: 80%;
@@ -956,6 +1122,7 @@ body {
     color: #fff;
     z-index: 9998;
 }
+
 .smallnote {
     font-size: 9px;
     text-align: center;
@@ -964,19 +1131,20 @@ body {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
+
 .white-button-text {
     color: #fff !important;
 }
 
 @media (min-width:600px) {
     .montage-time {
-        display:block !important;
-        line-height:250%;
-    }  
+        display: block !important;
+        line-height: 250%;
+    }
 }
 
 @media (max-width:599px) {
     .montage-time {
-        display:none !important;
-    }  
+        display: none !important;
+    }
 }
