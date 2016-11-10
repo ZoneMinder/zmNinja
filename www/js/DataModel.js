@@ -36,6 +36,9 @@ angular.module('zmApp.controllers')
                 text: 'Italian',
                 value: 'it'
             }, {
+                text: 'Русский',
+                value: 'ru'
+            }, {
                 text: 'Portugese',
                 value: 'pt'
             }, {

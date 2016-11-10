@@ -1687,12 +1687,13 @@ angular.module('zmApp', [
     //$translateProvider.useLocalStorage();
 
 
-    $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'zh', 'zh_CN', 'zh_TW', 'pt', 'ar', 'hi'], {
+    $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ru', 'ja', 'ko', 'zh', 'zh_CN', 'zh_TW', 'pt', 'ar', 'hi'], {
         'en_*': 'en',
         'de_*': 'de',
         'es_*': 'es',
         'fr_*': 'fr',
         'it_*': 'it',
+        'ru_*': 'ru',        
         'ja_*': 'ja',
         'ko_*': 'ko',
         'pt_*': 'pt',
