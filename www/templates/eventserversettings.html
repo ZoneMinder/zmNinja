@@ -37,7 +37,7 @@
             <ion-toggle ng-if="loginData.isUseEventServer && $root.platformOS !='ios'" ng-model="loginData.vibrateOnPush"  ng-checked="loginData.vibrateOnPush" toggle-class="toggle-calm" >{{'kVibrateOnPush'| translate }}</ion-toggle>
         
         
-          <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.soundOnPush"  ng-checked="loginData.soundOnPush" toggle-class="toggle-calm" >{{'kSoundOnPush'| translate }}</ion-toggle>
+          <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.soundOnPush"  ng-checked="loginData.soundOnPush" toggle-class="toggle-calm" class="item-text-wrap" >{{'kSoundOnPush'| translate }}</ion-toggle>
         
         <!--
              <ion-toggle  ng-model="loginData.defaultPushSound" toggle-class="toggle-calm" class="item-text-wrap" ng-checked="{{loginData.defaultPushSound}}">use system sound<p>please save and restart app</p></ion-toggle>

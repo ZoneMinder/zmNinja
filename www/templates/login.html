@@ -15,7 +15,7 @@
 
     <ion-content scroll-sista delegate-handle="none"  overflow-scroll="false"  mouse-wheel-scroll >
 
-        <div class="item item-input-inset">
+        <div class="item item-text-wrap  item-input-inset">
             {{'kServerName' | translate }}:&nbsp;
             <label class="item-input-wrapper">
                 <input autocorrect="off" type="text" placeholder="{{'kExampleServer' | translate}}" ng-model="loginData.serverName">
@@ -23,11 +23,11 @@
         </div>
 
         <label>
-            <ion-toggle ng-model="loginData.enableLowBandwidth" toggle-class="toggle-calm">{{'kLowBandwidth'|translate}}
+            <ion-toggle ng-model="loginData.enableLowBandwidth" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kLowBandwidth'|translate}}</span>
             </ion-toggle>
         </label>
         <label ng-if="loginData.enableLowBandwidth">
-            <ion-toggle ng-model="loginData.autoSwitchBandwidth" toggle-class="toggle-calm">{{'kAutoSwitchBW'|translate}}
+            <ion-toggle ng-model="loginData.autoSwitchBandwidth" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kAutoSwitchBW'|translate}}</span>
             </ion-toggle>
         </label>
 
@@ -38,7 +38,7 @@
                {{'kZMSettingsFor' | translate}} {{loginData.serverName || ('kUnknown' | translate)}}
             </span>
 
-            <div class="item">
+            <div class="item item-text-wrap">
                 <ion-checkbox ng-model="check.isUseAuth">{{'kUseZmAuth' | translate }}</ion-checkbox>
 
                 <div ng-if="check.isUseAuth">
@@ -97,19 +97,19 @@
             <div ng-if="$root.platformOS != 'desktop'">
                 <label>
 
-                    <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();" ng-checked="{{loginData.usePin}}" toggle-class="toggle-calm">{{'kPassword' | translate}} {{'kProtect'|translate}}</ion-toggle>
+                    <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();" ng-checked="{{loginData.usePin}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kPassword' | translate}} {{'kProtect'|translate}}</span></ion-toggle>
                 </label>
             </div>
 
             <label>
-                <ion-toggle ng-model="loginData.useSSL" ng-checked="{{loginData.useSSL}}" toggle-class="toggle-calm">{{'kUseSSL' | translate}}</ion-toggle>
+                <ion-toggle ng-model="loginData.useSSL" ng-checked="{{loginData.useSSL}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kUseSSL' | translate}}</span></ion-toggle>
             </label>
 
             <div ng-if="$root.platformOS != 'desktop'">
                 <label>
 
-                    <ion-toggle ng-model="loginData.keepAwake" ng-checked="{{loginData.keepAwake}}" toggle-class="toggle-calm">{{'kAwake1'|translate}}
-                        <p>{{'kAwake2'| translate}}</p>
+                    <ion-toggle ng-model="loginData.keepAwake" ng-checked="{{loginData.keepAwake}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kAwake1'|translate}}
+                        <p>{{'kAwake2'| translate}}</p></span>
                     </ion-toggle>
                 </label>
             </div>
