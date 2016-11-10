@@ -6,7 +6,7 @@
 
 
 
-angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', '$filter', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate, $filter) {
+angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', '$filter', 'SecuredPopups', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate, $filter, SecuredPopups) {
 
 
     // from parent scope
@@ -181,7 +181,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.onVideoError = function (event)
     {
+        if (!$scope.isModalActive) return;
         NVRDataModel.debug ("player reported a video error:"+JSON.stringify(event));
+        $rootScope.zmPopup = SecuredPopups.show('alert', {
+                                title: $translate.instant('kError'),
+                                template: $rootScope.platformOS == 'desktop' ?$translate.instant('kVideoError'):$translate.instant('kVideoErrorMobile')
+                            });
+
     };
 
 
@@ -1487,7 +1493,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     $scope.videoObject = {
                         config: {
                             autoPlay: true,
-                            responsive:true,
+                            responsive:false,
                             nativeControls:false,
                             
                             playsInline:true,

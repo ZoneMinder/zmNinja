@@ -2,7 +2,7 @@
     <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
     <ion-modal-view cache-view="false">
         <ion-content style="background-color:#444444" ng-cloak>
-            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; " delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" overflow-scroll="false">
+            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy"  delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" overflow-scroll="false">
                 <div id="full-screen-event" style="height: 100vh;">
                 <!--<div>-->
                
@@ -18,15 +18,8 @@
                     </div>
                     <!-- no default video -->
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
-                        <!--<div ng-if="videoIsReady" class="videogular-full-container">-->
-                        <!--<div ng-if="videoIsReady" ng-class="{'videogular-container-modal-width':imageFit==true, 'videogular-container-modal-height':imageFit==false}"  >-->
-
-                        <div ng-if="videoIsReady" ng-class="imageFit?'videogular-container-modal-width':'videogular-container-modal-height'">
-                            <!--<video width="320" height="240" controls>
-                                <source src="" dynamic-url dynamic-url-src="{{video_url}}">
-                                
-                        </video>-->
-
+                        <div ng-if="videoIsReady" >
+                            <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">
                             <videogular vg-error="onVideoError($event)" vg-can-play = "onCanPlay()" vg-player-ready="onPlayerReady($API)" vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)" >
                                 <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
                                 </vg-media>
@@ -45,6 +38,7 @@
                                 </vg-controls>
                                 <!--<vg-buffering></vg-buffering>-->
                             </videogular>
+                            </div>
                         </div>
                         <!--<div id="event_canvas_video">
                             <canvas id="eventchart" width="100%" height="20px"></canvas>

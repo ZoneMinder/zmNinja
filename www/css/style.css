@@ -825,7 +825,10 @@ input[type=range]::-webkit-slider-thumb {
     float: left;
 }
 
-.videogular-container-modal-width {
+/* don't need these, responsive is on
+and parent div is hard pixels
+
+ .videogular-container-modal-width {
     height: auto;
     width: 100%;
     margin: auto;
@@ -833,10 +836,11 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .videogular-container-modal-height {
-    height: 40%;
+    height: 100%;
+    width:auto;
     margin: auto;
-    overflow: hidden;
-}
+ 
+}*/
 
 videogular div.event-time {
     position: absolute;
@@ -873,13 +877,7 @@ videogular div.event-time {
     box-sizing: border-box;
 }
 
-body {
-    font-family: sans-serif;
-}
 
-* {
-    font-family: -apple-system, "Helvetica Neue", sans-serif;
-}
 
 
 /* ---- grid ---- */
@@ -1147,4 +1145,13 @@ body {
     .montage-time {
         display: none !important;
     }
+}
+
+body {
+    font-family: sans-serif;
+    height:100%;
+}
+
+* {
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
 }
