@@ -1519,7 +1519,10 @@ angular.module('zmApp.controllers')
                                 tz = success.data.tz;
                                 d.resolve(tz);
                                 debug("Timezone API response is:" + success.data.tz);
-                                isTzSupported = true;
+                                if (success.data.tz !== undefined)
+                                    isTzSupported = true;
+                                else
+                                    isTzSupported = false;
                                 $rootScope.$emit('tz-updated');
                                 return (d.promise);
 

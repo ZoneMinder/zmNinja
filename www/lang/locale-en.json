@@ -339,6 +339,8 @@
     "kVersionIncompatible"       :"I am incompatible with your ZoneMinder version",
     "kVibrateOnPush"             :"Vibrate on push",
     "kVideo"                     :"Video",
+    "kVideoError"                : "Video not playable.",
+    "kVideoErrorMobile"          : "Video not playable. Try enabling 'force image path for events' in Dev Settings. The format may also be incompatible with a mobile system view",
     "kWake"                      :"Wake",
     "kWarningLargeTimeline"      :"A large value can affect timeline performance. If you find timeline performance slow, try reducing the value to 200 and work your way up from there.",
     "kWeek"                      :"Week",
