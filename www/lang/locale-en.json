@@ -61,6 +61,7 @@
     "kDisableNative"             :"Disable Native transitions",
     "kDisableNativeSub"          :"Enable if the menu is freezing",
     "kDisablePush"               :"disable APNS/GCM",
+    "kDisableSamsung"            :"If you are on a samsung device and are facing input issues, please temporarily disable auto-correction",
     "kDiscovering"               :"discovering",
     "kDiscoveringAPI"            :"discovering api",
     "kDiscoveringCGI"            :"discovering cgi",
