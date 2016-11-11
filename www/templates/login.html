@@ -34,13 +34,13 @@
         </label>
 
 
-        
+
         <div class="list list-inset">
             <span style="color:rgb(100,100,100)">
                 <i class="ion-android-home" style="font-size:150%"></i>
                {{'kZMSettingsFor' | translate}} {{loginData.serverName || ('kUnknown' | translate)}}
             </span>
-            <p ng-if="$root.platformOS!='android'" style="font-size:0.8em; color:gray">{{'kDisableSamsung' | translate}}</p>
+            <p ng-if="$root.platformOS=='android'" style="font-size:0.8em; color:gray">{{'kDisableSamsung' | translate}}</p>
             <div class="item item-text-wrap">
                 <ion-checkbox ng-model="check.isUseAuth">{{'kUseZmAuth' | translate }}</ion-checkbox>
 
