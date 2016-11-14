@@ -1493,6 +1493,9 @@ angular.module('zmApp.controllers')
 
             },
 
+            getLocalTimeZoneNow: function() {
+                return moment.tz.guess();
+            },
             //returns TZ value immediately (sync)
 
             getTimeZoneNow: function() {
@@ -1507,10 +1510,10 @@ angular.module('zmApp.controllers')
                 return isTzSupported;
             },
 
-            getTimeZone: function() {
+            getTimeZone: function(isForce) {
 
                 var d = $q.defer();
-                if (!tz) {
+                if (!tz || isForce) {
 
                     log("First invocation of TimeZone, asking server");
                     var apiurl = loginData.apiurl + '/host/getTimeZone.json';

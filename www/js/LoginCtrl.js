@@ -606,10 +606,13 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                     // possible image digits changed between servers
                     NVRDataModel.getKeyConfigParams(0);
 
+
                     NVRDataModel.log("Validating APIs at " + apiurl);
                     $http.get(apiurl)
                         .success(function (data) {
 
+                            
+                            NVRDataModel.getTimeZone(true);
                             var loginStatus = $translate.instant('kExploreEnjoy') + " " + $rootScope.appName + "!";
                             EventServer.refresh();
 
