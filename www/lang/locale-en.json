@@ -210,6 +210,7 @@
     "kNoMonitors"                :"No monitors to display",
     "kNoMoreEvents"              :"no more events",
     "kNormalPlay"                :"normal play",
+    "kNow"                       :"now",
     "kOff"                       :"off",
     "kOn"                        :"on",
     "kOnTapNavigate"             :"on tap, navigate to",

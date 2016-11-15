@@ -96,7 +96,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         });
     }
 
-    
+    // helps to navigate to current time quickly
+    // after a night of heavy navigation
+    $scope.gotoNow = function()
+    {
+        timeline.moveTo(timeline.getCurrentTime());
+    }; 
 
     $scope.move = function(percentage) {
         move(percentage);
