@@ -308,7 +308,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $scope.$on('$ionicView.afterEnter', function() {
 
          $scope.monitors = message;
-        console.log("***AFTER ENTER");
+        //console.log("***AFTER ENTER");
 
         $scope.follow = { 'time': NVRDataModel.getLogin().followTimeLine };
 
@@ -353,11 +353,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
        
 
-        console.log ("MONITORS:"+JSON.stringify($scope.monitors));
+        //console.log ("MONITORS:"+JSON.stringify($scope.monitors));
 
         if ($rootScope.customTimelineRange) {
             $scope.currentMode = 'custom';
-             console.log("***** CUSTOM RANGE");
+             //console.log("***** CUSTOM RANGE");
             if (moment($rootScope.fromString).isValid() &&
                 moment($rootScope.toString).isValid()) {
                 // console.log("FROM & TO IS CUSTOM");
@@ -368,7 +368,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 drawGraph(fromDate, toDate, maxItems);
             } else {
                 console.log ("From:"+$rootScope.fromString + " To:"+$rootScope.toString);
-                console.log("FROM & TO IS CUSTOM INVALID");
+                //console.log("FROM & TO IS CUSTOM INVALID");
 
                 if (NVRDataModel.getLogin().useLocalTimeZone)
                 {
@@ -662,8 +662,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         //NVRDataModel.debug("Getting incremental events using: " + completedEvents);
 
 
-        console.log ("COMPLETED CHECK:"+completedEvents);
-        console.log ("ONGOING CHECK:+"+ongoingEvents);
+        NVRDataModel.debug ("Completed events API:"+completedEvents);
+        NVRDataModel.debug ("Ongoing events API:+"+ongoingEvents);
 
         isProcessNewEventsWaiting = true;
 
@@ -688,24 +688,24 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                         // these are all in server timezone but no TZ
                         
-                        myevents[j].Event.StartTime = moment(myevents[j].Event.StartTime).format('YYYY-MM-DD HH:mm:ss');
+                        myevents[j].Event.StartTime = moment.tz(myevents[j].Event.StartTime, NVRDataModel.getTimeZoneNow()).format('YYYY-MM-DD HH:mm:ss');
 
-                        myevents[j].Event.EndTime = moment(myevents[j].Event.EndTime).format('YYYY-MM-DD HH:mm:ss');
+                        myevents[j].Event.EndTime = moment.tz(myevents[j].Event.EndTime, NVRDataModel.getTimeZoneNow()).format('YYYY-MM-DD HH:mm:ss');
               
                         var itm = graphData.get(myevents[j].Event.Id);
                         if (itm) {
-                            console.log(myevents[j].Event.Id + " already exists, updating params");
+                           // console.log(myevents[j].Event.Id + " already exists, updating params");
 
-                            var content = "<span class='my-vis-font'>" + myevents[j].Event.Notes + " " + $translate.instant('kRecordingProgress') + "</span>";
+                            var content = "<span class='my-vis-font'>" + "("+myevents[j].Event.Id+")"+myevents[j].Event.Notes + " " + $translate.instant('kRecordingProgress') + "</span>";
 
                             var style;
                             var recordingInProgress = false;
 
                             if (moment(myevents[j].Event.EndTime).isValid()) // recording over
                             {
-                                console.log ("EVENT "+myevents[j].Event.Id+" emded at "+myevents[j].Event.EndTime);
+                                //console.log ("EVENT "+myevents[j].Event.Id+" emded at "+myevents[j].Event.EndTime);
 
-                                content = "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[j].Event.AlarmFrames + ") " + myevents[j].Event.Notes + "</span>";
+                                content = "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[j].Event.AlarmFrames + ") " + " ("+myevents[j].Event.Id+") "+ myevents[j].Event.Notes + "</span>";
 
                                 style = "background-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length] +
                                     ";border-color:" + colors[parseInt(myevents[j].Event.MonitorId) % colors.length];
@@ -713,11 +713,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             {
 
                                 var  tze;
-                                tze = moment().tz(NVRDataModel.getLogin().useLocalTimeZone?NVRDataModel.getLocalTimeZoneNow():NVRDataModel.getTimeZoneNow());
+                                tze = moment().tz(NVRDataModel.getTimeZoneNow());
                                 
                                 myevents[j].Event.EndTime = tze.format('YYYY-MM-DD HH:mm:ss');
 
-                                console.log ("END TIME = "+ myevents[j].Event.EndTime);
+                                //console.log ("END TIME = "+ myevents[j].Event.EndTime);
 
                                 style = "background-color:orange";
                                 recordingInProgress = true;
@@ -725,32 +725,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             }
 
                             
-                            // not sure what TZ graph is in, so convert to local for comparison
-                            // 
-                            var om = moment(options.max).tz(NVRDataModel.getLocalTimeZoneNow());
-
-                            if (om.isBefore(moment())) {
-                               console.log("Adjusting Range to fit in new event");
-
-                               om = moment();
-                               options.max =om.tz(NVRDataModel.getLogin().useLocalTimeZone?NVRDataModel.getLocalTimeZoneNow():NVRDataModel.getTimeZoneNow());
-
-                
-
-                               // options.max = moment().tz(NVRDataModel.getTimeZoneNow()).add('1', 'hours').format("YYYY-MM-DD HH:mm:ss");
-                                timeline.setOptions(options);
-                            }
-                            // data.update({id: 2, group: 1});
-                            // update end time - is it needed to be updated?
-                            // 
-
+                            
                             // right at this point we need to decide if we keep or remove this event
                             // 
 
                             if (ld.enableAlarmCount && ld.minAlarmCount > myevents[j].Event.AlarmFrames && !recordingInProgress) {
                                 // remove
-                                NVRDataModel.debug("Removing Event:" + myevents[j].Event.Id + "as it doesn't have" + myevents[j].Event.AlarmFrames + " alarm frames");
+                                NVRDataModel.debug("Removing Event:" + myevents[j].Event.Id + "as it doesn't have " + myevents[j].Event.AlarmFrames + " alarm frames");
+                               // var old = timeline.getWindow();
                                 graphData.remove(myevents[j].Event.Id);
+                             //   timeline.setWindow (old.start, old.end);
                             } else {
 
                                 var tzs1, tze1;
@@ -765,6 +749,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     tze1 = moment.tz(myevents[j].Event.EndTime,NVRDataModel.getTimeZoneNow());
                                 }
 
+                                //tzs1 = tzs1.format("YYYY-MM-DD HH:mm:ss");
+                                //tze1 = tze1.format("YYYY-MM-DD HH:mm:ss");
+
+                                NVRDataModel.debug("Updating Event:" + myevents[j].Event.Id + "StartTime:"+tzs1.format()+" EndTime:" + tze1.format());
                                 graphData.update({
                                     id: myevents[j].Event.Id,
                                     content: content,
@@ -772,7 +760,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                    // start: myevents[j].Event.StartTime,
                                    // end: myevents[j].Event.EndTime,
                                     end:tze1,
-                                    group: myevents[j].Event.MonitorId,
+                                    //group: myevents[j].Event.MonitorId,
                                     //type: "range",
                                     style: style,
                                     myframes: myevents[j].Event.Frames,
@@ -784,7 +772,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                 });
 
-                                timeline.focus(myevents[j].Event.Id);
+                                //timeline.focus(myevents[j].Event.Id);
+                                //
+                                timeline.moveTo(timeline.getCurrentTime());
+                                //console.log ("Focus EID="+myevents[j].Event.Id);
                                 localNewEvents = localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId) + '@' + shortenTime(myevents[j].Event.StartTime) + ' (' + myevents[j].Event.Id + '),';
 
 
@@ -841,35 +832,41 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                 // since this is a new add its possible dates are not defined
                                 if (!moment(myevents[j].Event.StartTime).isValid()) {
-                                    NVRDataModel.debug("Event:" + myevents[j].Event.Id + "-Invalid Start time - this should really not happen ");
+                                    NVRDataModel.log("Event:" + myevents[j].Event.Id + "-Invalid Start time - this should really not happen ");
 
                                 }
 
 
                                 if (!moment(myevents[j].Event.EndTime).isValid()) {
-                                    //  NVRDataModel.debug ("Event:" + myevents[j].Event.Id +"-End time is invalid, likely recording, so fixing" );
-                                    myevents[j].Event.EndTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                                   var t1  = moment().tz(NVRDataModel.getTimeZoneNow());
+
+
+
+                                    myevents[j].Event.EndTime = t1.format('YYYY-MM-DD HH:mm:ss');
+
+                                    NVRDataModel.debug ("Event:" + myevents[j].Event.Id +"-End time is invalid, setting to current time");
+                                    
                                     isBeingRecorded = true;
 
                                 }
 
 
                                 // if range doesn't allow for current time, we need to fix that
-                                if (moment(options.max).isBefore(moment())) {
+                                /*if (moment(options.max).isBefore(moment())) {
                                    // console.log("Adjusting Range to fit in new event");
                                     options.max = moment().add('1', 'hours').locale('en').format("YYYY-MM-DD HH:mm:ss");
                                     timeline.setOptions(options);
-                                }
+                                }*/
 
                                 var eventText = "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + (myevents[j].Event.AlarmFrames || ' unknown ') + ") " + myevents[j].Event.Notes + "</span>";
 
                                 if (isBeingRecorded) {
-                                    eventText = "<span class='my-vis-font'>" + myevents[j].Event.Notes + " " + $translate.instant('kRecordingProgress') + "</span>";
+                                    eventText = "<span class='my-vis-font'>"  + "("+myevents[j].Event.Id+") "+ myevents[j].Event.Notes + " " + $translate.instant('kRecordingProgress') + "</span>";
                                 }
 
                                 // since we concated, its possible events may be repeated
                                 if (!graphData.get(myevents[j].Event.Id)) {
-                                    NVRDataModel.debug(">>> "+myevents[j].Event.Id + " at " + myevents[j].Event.StartTime + " New event updating graph");
+                                    
 
                                     localNewEvents = localNewEvents + NVRDataModel.getMonitorName(myevents[j].Event.MonitorId) + '@' + shortenTime(myevents[j].Event.StartTime) + ' (' + myevents[j].Event.Id + '),';
 
@@ -884,7 +881,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                         tzs2 = moment.tz(myevents[j].Event.StartTime,NVRDataModel.getTimeZoneNow());
                                         tze2 = moment.tz(myevents[j].Event.EndTime,NVRDataModel.getTimeZoneNow());
                                     }
+
+                                    //tzs2 = tzs2.format("YYYY-MM-DD HH:mm:ss");
+                                    //tze2 = tze2.format("YYYY-MM-DD HH:mm:ss");
                                     
+                                    NVRDataModel.debug(">>> "+myevents[j].Event.Id +  " New event updating graph " + " from:" + tzs2.format()+" to:"+tze2.format() );
                                    
                                     graphData.add({
 
@@ -907,11 +908,13 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                                     });
                                     graphIndex++;
+                                    //timeline.focus(myevents[j].Event.Id);
+                                     timeline.moveTo(timeline.getCurrentTime());
                                 }
 
                                 //options.max = moment(fromDate).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-                                timeline.focus(myevents[j].Event.Id);
+                                
 
                             } //idfound
 
@@ -1007,6 +1010,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             tze = moment.tz(toDate,NVRDataModel.getTimeZoneNow());
         }
 
+        //tzs = tzs.format("YYYY-MM-DD HH:mm:ss");
+        //tze = tze.format("YYYY-MM-DD HH:mm:ss");
+
         options = {
 
             showCurrentTime: true,
@@ -1015,6 +1021,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                 //var t;
                 if (NVRDataModel.getLogin().useLocalTimeZone)
+                //if (0)
                     return moment.tz(date,NVRDataModel.getTimeZoneNow()).tz(NVRDataModel.getLocalTimeZoneNow());
                 else
                     // typecast to server time zone - its in server time anyway
@@ -1028,8 +1035,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             end: tze,
             orientation: 'top',
             min: tzs,
-            max: tze,
-            zoomMin: 1 * 60 * 1000, // 1 min
+            //max: tze,
+            zoomMin: 5 * 60 * 1000, // 1 min
             stack: false,
             format: {
                 minorLabels: {
@@ -1157,11 +1164,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                             tze = moment.tz(myevents[i].Event.EndTime,NVRDataModel.getTimeZoneNow());
                                         }
 
-                                        console.log ("ADDED "+tzs+" " +tze);
+                                        //console.log ("ADDED "+tzs+" " +tze);
                                         graphData.add({
                                             //id: graphIndex,
                                             id: myevents[i].Event.Id,
-                                            content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + myevents[i].Event.Notes + "</span>",
+                                            content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") "+ "("+myevents[j].Event.Id+") " + myevents[i].Event.Notes + "</span>",
 
                                             start:tzs,
                                             //start: myevents[i].Event.StartTime,
