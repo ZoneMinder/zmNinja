@@ -1,7 +1,38 @@
 # Change Log
 
+## [1.2.29](https://github.com/pliablepixels/zmNinja/tree/1.2.29) (2016-11-16)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...1.2.29)
+
+**Implemented enhancements:**
+
+- New language: Polish \(credit @maymaymay\) [\#372](https://github.com/pliablepixels/zmNinja/issues/372)
+- Add button 'Now' to timeline screen [\#371](https://github.com/pliablepixels/zmNinja/issues/371)
+- Add Russian language \(credit @BoskSpb\) [\#366](https://github.com/pliablepixels/zmNinja/issues/366)
+- \[H264\] Time overlay during playback [\#362](https://github.com/pliablepixels/zmNinja/issues/362)
+- Option to fit to screen on H264 event playback [\#358](https://github.com/pliablepixels/zmNinja/issues/358)
+
+**Fixed bugs:**
+
+- On certain samsung phones, autocorrect makes it hard to enter text in input configuration [\#367](https://github.com/pliablepixels/zmNinja/issues/367)
+- When navigating events using prev/next or gapless, it shows all events including ones with 0 alarms [\#113](https://github.com/pliablepixels/zmNinja/issues/113)
+
+**Closed issues:**
+
+- Timeline dynamic updates issue [\#369](https://github.com/pliablepixels/zmNinja/issues/369)
+
+**Merged pull requests:**
+
+- Polish language name modyfication [\#375](https://github.com/pliablepixels/zmNinja/pull/375) ([maymaymay](https://github.com/maymaymay))
+- added the enhancement label [\#374](https://github.com/pliablepixels/zmNinja/pull/374) ([maymaymay](https://github.com/maymaymay))
+- Create help-pl.html [\#370](https://github.com/pliablepixels/zmNinja/pull/370) ([maymaymay](https://github.com/maymaymay))
+- Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
+- Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
+
 ## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
+
+## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
 
 **Implemented enhancements:**
 
@@ -20,7 +51,7 @@
 
 **Closed issues:**
 
-- \[DESKTOP\] view=view\_video mode is not working. [\#364](https://github.com/pliablepixels/zmNinja/issues/364)
+- view=view\_video mode is not working \(requires ZM patch\) [\#364](https://github.com/pliablepixels/zmNinja/issues/364)
 - Can't load as a web page on Android since d76cf1c commit [\#355](https://github.com/pliablepixels/zmNinja/issues/355)
 
 ## [v1.2.26](https://github.com/pliablepixels/zmNinja/tree/v1.2.26) (2016-10-13)
