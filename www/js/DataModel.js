@@ -37,7 +37,7 @@ angular.module('zmApp.controllers')
                 value: 'it'
             }, 
             {
-                text: 'Polksi',
+                text: 'Polski',
                 value: 'pl'
             },
 
