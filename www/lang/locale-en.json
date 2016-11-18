@@ -67,6 +67,7 @@
     "kDiscoveringCGI"            :"discovering cgi",
     "kDiscoveringPortal"         :"discovering portal",
     "kDone"                      :"done",
+    "kDownload"                  :"download",
     "kEnable24hr"                :"enable 24hr time format",
     "kEnableDebug"               :"Enable debug logs",
     "kEnableLogs"                :"Enable logs",

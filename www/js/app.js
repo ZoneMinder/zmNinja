@@ -1767,6 +1767,7 @@ angular.module('zmApp', [
     // This is an exception interceptor so it can show up in app logs 
     // if they occur. I suspect digest and other errors will be useful
     // for me to see
+    //$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|cdvphotolibrary):/);
 
     $provide.decorator("$exceptionHandler", ['$delegate', '$injector', function($delegate, $injector)
     {

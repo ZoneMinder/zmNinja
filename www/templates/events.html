@@ -63,7 +63,10 @@
                         <div class="col col-80">
                             <div class="item-text-wrap">
                                 <i class="ion-ios-videocam-outline"></i>
-                                <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}})
+                                <b>{{event.Event.MonitorName}}</b> ({{event.Event.Name}}) &nbsp; &nbsp;
+                                <button ng-if="gifshotSupported" class="button button-small button-outline icon ion-android-download" ng-click="downloadAsGif(event)"> 
+                            </button>
+
                             </div>
                             <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                             <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
@@ -79,17 +82,21 @@
                         </div>
                     </div>
                     <span style="float:right">
-                                <div ng-if="event.Event.EndTime || 1">
-                                    
-                                    <button class="button button-small button-outline icon icon-left ion-stats-bars"
-                                            ng-click="closeIfOpen(event);analyzeEvent(event)" >  <span translate="kAnalyze"></span>
-                    </button>
-                    <button class="button button-outline button-small icon icon-left ion-ios-eye" ng-click="toggleGroupScrub(event,$index,event.Event.Frames)"> <span translate="kScrub"></span>
-                    </button>
-                    <button ng-if="event.Event.AlarmFrames > 0" class="button button-outline button-small icon icon-left ion-ios-bell" ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)"> <span translate="kAlarms"></span>
-                    </button>
-                    <button class="button button-outline button-small icon icon-left ion-ios-eye" ng-click="closeIfOpen(event);openModal(event)"> <span translate="kFootage"></span>
-                    </button>
+                        <div ng-if="event.Event.EndTime || 1">
+                             <button class="button button-small button-outline icon icon-left ion-stats-bars"
+                                            ng-click="closeIfOpen(event);analyzeEvent(event)" > 
+                                             <span translate="kAnalyze"></span>
+                            </button>
+                            <button class="button button-outline button-small icon icon-left ion-ios-eye" ng-click="toggleGroupScrub(event,$index,event.Event.Frames)"> <span translate="kScrub"></span>
+                            </button>
+                            <button ng-if="event.Event.AlarmFrames > 0" class="button button-outline button-small icon icon-left ion-ios-bell" ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)"> <span translate="kAlarms"></span>
+                            </button>
+                            <button class="button button-outline button-small icon icon-left ion-ios-eye" ng-click="closeIfOpen(event);openModal(event)"> <span translate="kFootage"></span>
+                            </button>
+
+                            
+
+
         </div>
         </span>
         <!-- this is the event scrub/alarm frames area -->
@@ -168,17 +175,20 @@
         </div>
         <!-- isGroupShown -->
         <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
-        </ion-delete-button>
-        </ion-item>
-        </ion-list>
-        </div>
-        <ion-item ng-show="!events.length">
-            <span translate="kNoEvents"></span>
-        </ion-item>
-        <div ng-if="!eventsBeingLoaded">
-            <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="2%">
-            </ion-infinite-scroll>
-        </div>
+            </ion-delete-button>
+            </ion-item>
+            </ion-list>
+            </div>
+            <!-- !eventsBeingLoaded-->
+
+
+            <ion-item ng-show="!events.length">
+                <span translate="kNoEvents"></span>
+            </ion-item>
+            <div ng-if="!eventsBeingLoaded">
+                <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="2%">
+                </ion-infinite-scroll>
+            </div>
     </ion-content>
     <div class="events-float-filter" ng-if="isEventFilterOn" on-tap="filterTapped();"><span translate="kFilterOn"></span></div>
     <div class="bwmode" ng-if="$root.runMode=='lowbw'">
@@ -239,6 +249,7 @@
                     </a>
                     </span>
                 </div>
+
             </div>
             <br/>
             <br/>

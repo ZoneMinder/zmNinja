@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility */
+/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot */
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
@@ -117,6 +117,8 @@ angular.module('zmApp.controllers')
     {
 
         //console.log ("********* BEFORE ENTER");
+        //
+        $scope.gifshotSupported =gifshot.isSupported();
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
@@ -792,9 +794,178 @@ angular.module('zmApp.controllers')
         }
     };
 
+    // credit:http://stackoverflow.com/a/20151856/1361529
+    function base64toBlob(base64Data, contentType)
+    {
+        contentType = contentType || '';
+        var sliceSize = 1024;
+        var byteCharacters = atob(base64Data);
+        var bytesLength = byteCharacters.length;
+        var slicesCount = Math.ceil(bytesLength / sliceSize);
+        var byteArrays = new Array(slicesCount);
+
+        for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex)
+        {
+            var begin = sliceIndex * sliceSize;
+            var end = Math.min(begin + sliceSize, bytesLength);
+
+            var bytes = new Array(end - begin);
+            for (var offset = begin, i = 0; offset < end; ++i, ++offset)
+            {
+                bytes[i] = byteCharacters[offset].charCodeAt(0);
+            }
+            byteArrays[sliceIndex] = new Uint8Array(bytes);
+        }
+        return new Blob(byteArrays,
+        {
+            type: contentType
+        });
+    }
+
+    //----------------------------------------------------------
+    // create an array of images
+    // too keep memory manageable, we are only  going to pick up alarmed frames
+    // and that too, max 2fps
+    // --------------------------------------------------------------
+    function prepareImages(e)
+    {
+        var d = $q.defer();
+        var imglist = [];
+        var myurl = loginData.apiurl + '/events/' + e.Event.Id + ".json";
+        $http.get(myurl)
+            .then(function(succ)
+                {
+                    var data = succ.data;
+                    var fps = 0;
+                    var lastTime = "";
+
+                    for (var i = 0; i < data.event.Frame.length; i++)
+                    {
+                        if (data.event.Frame[i].Type == "Alarm")
+                        {
+                            var fname;
+                            if (e.Event.imageMode == 'path')
+                            {
+                                var rfp = padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg";
+                                fname = e.Event.baseURL + "/index.php?view=image&path=" + e.Event.relativePath + rfp;
+                            }
+                            else
+                            {
+                                fname = e.Event.baseURL + "/index.php?view=image&fid=" + data.event.Frame[i].Id;
+                            }
+
+                            if (data.event.Frame[i].TimeStamp != lastTime || fps < 2)
+                            {
+                                imglist.push(fname);
+                                fps = data.event.Frame[i].TimeStamp != lastTime ? 0 : fps++;
+                                lastTime = data.event.Frame[i].TimeStamp;
+                            }
+
+                        }
+
+                    }
+                    d.resolve(imglist);
+                    return d.promise;
+                },
+                function(err)
+                {
+                    d.reject(err);
+                    return d.promise;
+                });
+        return d.promise;
+    }
+
+    // force image to be 800px. TBD: rotated foo
+    function adjustAspect(e)
+    {
+        var w = 800;
+        var h = parseInt(e.Event.Height / e.Event.Width * 800.0);
+        return {
+            w: w,
+            h: h
+        };
+
+    }
+
+    $scope.downloadAsGif = function(e)
+    {
+        $ionicLoading.show(
+        {
+            template: $translate.instant('kPleaseWait') + "...",
+            noBackdrop: true,
+            //duration: 10000
+        });
+
+        prepareImages(e)
+            .then(function(imgs)
+                {
+
+                    console.log(JSON.stringify(imgs));
+
+                    var ad = adjustAspect(e);
+                    console.log("SAVING W=" + ad.w + " H=" + ad.h);
+
+                    gifshot.createGIF(
+                    {
+                        //'images': ['http://i.imgur.com/2OO33vX.jpg', 'http://i.imgur.com/qOwVaSN.png', 'http://i.imgur.com/Vo5mFZJ.gif']
+                        'gifWidth': ad.w,
+                        'gifHeight': ad.h,
+                        'images': imgs,
+                        'text': 'zmNinja',
+                    }, function(obj)
+                    {
+                        if (!obj.error)
+                        {
+                            //console.log(obj.image);
+
+                            var blob;
+                            
+                            
+
+                            
+
+                            if ($rootScope.platformOS == 'desktop')
+                            {
+                                
+                                obj.image = obj.image.replace(/data:image\/gif;base64,/, '');
+                                blob = base64toBlob(obj.image, "image/gif");
+                                var f = NVRDataModel.getMonitorName(e.Event.MonitorId);
+                                f = f+"-"+e.Event.Id+".gif";
+                                saveAs(blob, f);
+                                $ionicLoading.hide();
+                            }
+
+                            else
+                            {
+                                NVRDataModel.debug("Saving blob to gallery...");
+                                var album = "zmNinja";
+                                cordova.plugins.photoLibrary.saveImage(obj.image, album, 
+                                    function () {$ionicLoading.hide(); NVRDataModel.debug ("Event saved");}, 
+                                    function (err) {$ionicLoading.hide(); NVRDataModel.debug("Saving ERROR="+err);});
+                         
+                            }
+
+                        }
+                        else
+                        {
+                            $ionicLoading.hide();
+                            console.log("Error creating GIF");
+                        }
+                    });
+                },
+                function(err)
+                {
+                    $ionicLoading.hide();
+                    console.log("Error getting frames");
+                }
+
+            );
+    };
+
     //--------------------------------------------------------------------------
     // Takes care of deleting individual events
     //--------------------------------------------------------------------------
+
     $scope.deleteEvent = function(id, itemid)
     {
         //$scope.eventList.showDelete = false;
