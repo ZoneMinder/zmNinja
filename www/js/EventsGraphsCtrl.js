@@ -8,31 +8,38 @@
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
 
-angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$ionicHistory', '$state', function ($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $ionicHistory, $state) {
+angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$ionicHistory', '$state', function($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $ionicHistory, $state)
+{
     //console.log("Inside Graphs controller");
-    $scope.openMenu = function () {
+    $scope.openMenu = function()
+    {
         $ionicSideMenuDelegate.toggleLeft();
     };
 
-    $scope.$on('$ionicView.loaded', function () {
+    $scope.$on('$ionicView.loaded', function()
+    {
         // console.log("**VIEW ** Graph Ctrl Loaded");
     });
-
 
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
-    $scope.handleAlarms = function () {
+    $scope.handleAlarms = function()
+    {
         $rootScope.isAlarm = !$rootScope.isAlarm;
-        if (!$rootScope.isAlarm) {
+        if (!$rootScope.isAlarm)
+        {
             $rootScope.alarmCount = "0";
-            $ionicHistory.nextViewOptions({
+            $ionicHistory.nextViewOptions(
+            {
                 disableBack: true
             });
-            $state.go("events", {
+            $state.go("events",
+            {
                 "id": 0,
-                "playEvent":false
-            }, {
+                "playEvent": false
+            },
+            {
                 reload: true
             });
             return;
@@ -46,19 +53,21 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     // reset power state on exit as if it is called after we enter another
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
-    $scope.$on('$ionicView.enter', function () {
+    $scope.$on('$ionicView.enter', function()
+    {
         // console.log("**VIEW ** EventsGraphs Ctrl Entered");
         NVRDataModel.setAwake(false);
     });
 
-    $scope.$on('$ionicView.leave', function () {
+    $scope.$on('$ionicView.leave', function()
+    {
         // console.log("**VIEW ** Graph Ctrl Left");
     });
 
-    $scope.$on('$ionicView.unloaded', function () {
+    $scope.$on('$ionicView.unloaded', function()
+    {
         //  console.log("**VIEW ** Graph Ctrl Unloaded");
     });
-
 
     //-------------------------------------------------
     // Controller main
@@ -67,56 +76,57 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     // $scope.chart = "";
     $scope.navTitle = 'Tab Page';
     // $scope.chart="";
-    $scope.leftButtons = [{
+    $scope.leftButtons = [
+    {
         type: 'button-icon icon ion-navicon',
-        tap: function (e) {
+        tap: function(e)
+        {
             $scope.toggleMenu();
         }
-        }];
-
+    }];
 
     var container = angular.element(document.getElementById('visualization'));
     //console.log(JSON.stringify(container));
     var data = [
-        {
-            id: 1,
-            content: 'item 1',
-            start: '2013-04-20'
-        },
-        {
-            id: 2,
-            content: 'item 2',
-            start: '2013-04-14'
-        },
-        {
-            id: 3,
-            content: 'item 3',
-            start: '2013-04-18'
-        },
-        {
-            id: 4,
-            content: 'item 4',
-            start: '2013-04-16',
-            end: '2013-04-19'
-        },
-        {
-            id: 5,
-            content: 'item 5',
-            start: '2013-04-25'
-        },
-        {
-            id: 6,
-            content: 'item 6',
-            start: '2013-04-27'
-        }
-  ];
+    {
+        id: 1,
+        content: 'item 1',
+        start: '2013-04-20'
+    },
+    {
+        id: 2,
+        content: 'item 2',
+        start: '2013-04-14'
+    },
+    {
+        id: 3,
+        content: 'item 3',
+        start: '2013-04-18'
+    },
+    {
+        id: 4,
+        content: 'item 4',
+        start: '2013-04-16',
+        end: '2013-04-19'
+    },
+    {
+        id: 5,
+        content: 'item 5',
+        start: '2013-04-25'
+    },
+    {
+        id: 6,
+        content: 'item 6',
+        start: '2013-04-27'
+    }];
     var options = {};
     //var timeline = new vis.Timeline(container[0], data, options);
 
     // -------------------------------------------------
     // Called when user taps on a bar
     //---------------------------------------------------
-    $scope.handleChartClick = function (event) {
+    $scope.handleChartClick = function(event)
+    {
 
         //console.log(JSON.stringify($scope.chartwithbars.getBarsAtEvent(event)));
         //console.log(angular.element[0].getContext('2d'));
@@ -127,7 +137,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     //-------------------------------------------------
     // Generates a bar graph with data provided
     //-------------------------------------------------
-    $scope.generateTCChart = function (id, chartTitle, hrs) {
+    $scope.generateTCChart = function(id, chartTitle, hrs)
+    {
         var monitors = [];
         var dateRange = "";
         var startDate = "";
@@ -140,11 +151,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
         };
 
-
         $scope.chart.barHeight = $rootScope.devHeight;
 
-
-        if (hrs) {
+        if (hrs)
+        {
             // Apply a time based filter if I am not watching all events
             var cur = moment();
             endDate = cur.format("YYYY-MM-DD " + NVRDataModel.getTimeFormat());
@@ -159,27 +169,30 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
         $scope.chart.data = {
             labels: [],
             datasets: [
-                {
-                    label: '',
-                    fillColor: zm.graphFillColor,
-                    strokeColor: zm.graphStrokeColor,
-                    highlightFill: zm.graphHighlightFill,
-                    data: []
-        },
-          ]
+            {
+                label: '',
+                fillColor: zm.graphFillColor,
+                strokeColor: zm.graphStrokeColor,
+                highlightFill: zm.graphHighlightFill,
+                data: []
+            }, ]
         };
 
-        NVRDataModel.getMonitors(0).then(function (data) {
+        NVRDataModel.getMonitors(0).then(function(data)
+        {
             monitors = data;
             var adjustedHeight = monitors.length * 30;
-            if (adjustedHeight > $rootScope.devHeight) {
+            if (adjustedHeight > $rootScope.devHeight)
+            {
 
                 $scope.chart.barHeight = adjustedHeight;
                 //console.log("********* BAR HEIGHT TO " + $scope.chart.barHeight);
             }
 
-            for (var i = 0; i < monitors.length; i++) {
-                (function (j) { // loop closure - http is async, so success returns after i goes out of scope
+            for (var i = 0; i < monitors.length; i++)
+            {
+                (function(j)
+                { // loop closure - http is async, so success returns after i goes out of scope
                     // so we need to bind j to i when http returns so its not out of scope. Gak.
                     // I much prefer the old days of passing context data from request to response
 
@@ -189,7 +202,8 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                     // $scope.chartObject.data[j+1]=([monitors[j].Monitor.Name,'100','color:#76A7FA','0']);
 
                     var dateString = "";
-                    if (hrs) {
+                    if (hrs)
+                    {
                         dateString = "/StartTime >=:" + startDate + "/EndTime <=:" + endDate;
                     }
                     var url = loginData.apiurl +
@@ -198,12 +212,14 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                     // console.log("Monitor event URL:" + url);
                     NVRDataModel.log("EventGraph: composed url is " + url);
                     $http.get(url /*,{timeout:15000}*/ )
-                        .success(function (data) {
+                        .success(function(data)
+                        {
                             NVRDataModel.debug("Event count for monitor" +
                                 monitors[j].Monitor.Id + " is " + data.pagination.count);
                             $scope.chart.data.datasets[0].data[j] = data.pagination.count;
                         })
-                        .error(function (data) {
+                        .error(function(data)
+                        {
                             // ideally I should be treating it as an error
                             // but what I am really doing now is treating it like no events
                             // works but TBD: make this into a proper error handler

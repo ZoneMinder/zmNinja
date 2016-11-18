@@ -1,17 +1,11 @@
 <ion-view view-title="{{'kNews' | translate}}">
-
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-        
     </ion-nav-buttons>
-
-
-    <ion-content scroll-sista delegate-handle="none"  overflow-scroll="false"  mouse-wheel-scroll >
+    <ion-content scroll-sista delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
         <div class="list">
-            
-            <span ng-repeat = "post in newsItems">
+            <span ng-repeat="post in newsItems">
                 <a class="item item-text-wrap item-icon-left" ng-click="loadPost(post.url, post.date)" href="">
                     <i ng-class="isUnread(post.date) ? 'icon ion-email-unread': 'icon ion-ios-email-outline'"></i>
                     {{post.title}}
@@ -20,14 +14,9 @@
                 </a>
                 
             </span>
-            
             <div ng-if="!newsItems.length">
                 <ion-item>{{'kLoading' | translate}}...</ion-item>
             </div>
-            
-
         </div>
-
     </ion-content>
-
 </ion-view>

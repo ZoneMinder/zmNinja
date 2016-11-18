@@ -7,8 +7,8 @@
 
 angular.module('zmApp.controllers')
     .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate', '$q',
-                               function ($ionicPopup, zm, $scope, NVRDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q) {
-
+        function($ionicPopup, zm, $scope, NVRDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q)
+        {
 
             //-----------------------------------------------------------------------
             // Controller Main
@@ -18,8 +18,6 @@ angular.module('zmApp.controllers')
 
             // console.log("***EVENTS: Waiting for Monitors to load before I proceed");
 
-
-
             var loginData;
 
             // --------------------------------------------------------
@@ -27,19 +25,26 @@ angular.module('zmApp.controllers')
             // close the modal
             // --------------------------------------------------------                               
 
-            $ionicPlatform.registerBackButtonAction(function (e) {
+            $ionicPlatform.registerBackButtonAction(function(e)
+            {
                 e.preventDefault();
-                if ($scope.modal != undefined && $scope.modal.isShown()) {
+                if ($scope.modal != undefined && $scope.modal.isShown())
+                {
                     // switch off awake, as liveview is finished
                     NVRDataModel.debug("Modal is open, closing it");
                     NVRDataModel.setAwake(false);
                     $scope.modal.remove();
-                } else {
+                }
+                else
+                {
                     NVRDataModel.debug("Modal is closed, so toggling or exiting");
-                    if (!$ionicSideMenuDelegate.isOpenLeft()) {
+                    if (!$ionicSideMenuDelegate.isOpenLeft())
+                    {
                         $ionicSideMenuDelegate.toggleLeft();
 
-                    } else {
+                    }
+                    else
+                    {
                         navigator.app.exitApp();
                     }
 
@@ -47,28 +52,31 @@ angular.module('zmApp.controllers')
 
             }, 1000);
 
-
-            $scope.openMenu = function () {
+            $scope.openMenu = function()
+            {
                 $ionicSideMenuDelegate.toggleLeft();
             };
-
 
             //----------------------------------------------------------------
             // Alarm notification handling
             //----------------------------------------------------------------
-            $scope.handleAlarms = function () {
+            $scope.handleAlarms = function()
+            {
                 $rootScope.isAlarm = !$rootScope.isAlarm;
-                if (!$rootScope.isAlarm) {
+                if (!$rootScope.isAlarm)
+                {
                     $rootScope.alarmCount = "0";
-                    $ionicHistory.nextViewOptions({
+                    $ionicHistory.nextViewOptions(
+                    {
                         disableBack: true
                     });
 
-
-                    $state.go("events", {
+                    $state.go("events",
+                    {
                         "id": 0,
-                        "playEvent":false
-                    }, {
+                        "playEvent": false
+                    },
+                    {
                         reload: true
                     });
                     return;
@@ -79,10 +87,12 @@ angular.module('zmApp.controllers')
             // For now, I've only limited it to enable/disable and change monitor mode
             // and changing monitor function
             //-----------------------------------------------------------------------
-            $scope.changeConfig = function (monitorName, monitorId, enabled, func) {
+            $scope.changeConfig = function(monitorName, monitorId, enabled, func)
+            {
                 var checked = false;
 
-                if (monitorName == 'All') {
+                if (monitorName == 'All')
+                {
                     monitorName = $translate.instant('kAll');
                 }
 
@@ -91,40 +101,43 @@ angular.module('zmApp.controllers')
 
                 //if monitorId is not specified, all monitors will be changed 
                 var monitorsIds = [];
-                if (monitorId == '') {
-                    for (var i = 0; i < $scope.monitors.length; i++) {
+                if (monitorId == '')
+                {
+                    for (var i = 0; i < $scope.monitors.length; i++)
+                    {
                         monitorsIds[i] = $scope.monitors[i].Monitor.Id;
                     }
-                } else {
+                }
+                else
+                {
                     monitorsIds[0] = monitorId;
                 }
 
                 $scope.monFunctions = [
-                    {
-                        text: $translate.instant('kMonModect'),
-                        value: "Modect"
-            },
-                    {
-                        text: $translate.instant('kMonMocord'),
-                        value: "Mocord"
-            },
-                    {
-                        text: $translate.instant('kMonRecord'),
-                        value: "Record"
-            },
-                    {
-                        text: $translate.instant('kMonNodect'),
-                        value: "Nodect"
-            },
-                    {
-                        text: $translate.instant('kMonMonitor'),
-                        value: "Monitor"
-            },
-                    {
-                        text: $translate.instant('kMonNone'),
-                        value: "None"
-            }
-        ];
+                {
+                    text: $translate.instant('kMonModect'),
+                    value: "Modect"
+                },
+                {
+                    text: $translate.instant('kMonMocord'),
+                    value: "Mocord"
+                },
+                {
+                    text: $translate.instant('kMonRecord'),
+                    value: "Record"
+                },
+                {
+                    text: $translate.instant('kMonNodect'),
+                    value: "Nodect"
+                },
+                {
+                    text: $translate.instant('kMonMonitor'),
+                    value: "Monitor"
+                },
+                {
+                    text: $translate.instant('kMonNone'),
+                    value: "None"
+                }];
 
                 $scope.monfunc = {
                     mymonitorsIds: monitorsIds,
@@ -134,133 +147,139 @@ angular.module('zmApp.controllers')
                     mypromises: []
                 };
 
-                $rootScope.zmPopup = $ionicPopup.show({
+                $rootScope.zmPopup = $ionicPopup.show(
+                {
                     scope: $scope,
                     template: '<ion-toggle ng-model="monfunc.myenabled" ng-checked="monfunc.myenabled"  toggle-class="toggle-calm">Enabled</ion-toggle><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
-
 
                     title: $translate.instant('kChangeSettingsFor') + ' ' + monitorName,
 
                     buttons: [
+                    {
+                        text: $translate.instant('kButtonCancel'),
+
+                    },
+                    {
+                        text: $translate.instant('kButtonSave'),
+                        onTap: function(e)
                         {
-                            text: $translate.instant('kButtonCancel'),
+                            $scope.monfunc.mymonitorsIds.forEach(function(item, index)
+                            {
+                                NVRDataModel.debug("MonitorCtrl:changeConfig selection:" + $scope.monfunc.myenabled +
+                                    $scope.monfunc.myfunc);
+                                var loginData = NVRDataModel.getLogin();
+                                var apiRestart = loginData.apiurl + "/states/change/restart.json";
+                                var apiMon = loginData.apiurl + "/monitors/" + item + ".json";
 
-                        },
-                        {
-                            text: $translate.instant('kButtonSave'),
-                            onTap: function (e) {
-                                $scope.monfunc.mymonitorsIds.forEach(function (item, index) {
-                                    NVRDataModel.debug("MonitorCtrl:changeConfig selection:" + $scope.monfunc.myenabled +
-                                        $scope.monfunc.myfunc);
-                                    var loginData = NVRDataModel.getLogin();
-                                    var apiRestart = loginData.apiurl + "/states/change/restart.json";
-                                    var apiMon = loginData.apiurl + "/monitors/" + item + ".json";
+                                NVRDataModel.debug("MonitorCtrl: URLs for changeConfig save:" + apiMon);
 
-                                    NVRDataModel.debug("MonitorCtrl: URLs for changeConfig save:" + apiMon);
+                                var isEnabled = "";
+                                isEnabled = ($scope.monfunc.myenabled == true) ? '1' : '0';
 
-                                    var isEnabled = "";
-                                    isEnabled = ($scope.monfunc.myenabled == true) ? '1' : '0';
+                                $ionicLoading.show(
+                                {
+                                    template: $translate.instant('kApplyingChanges') + "...",
+                                    noBackdrop: true,
+                                    duration: zm.largeHttpTimeout,
+                                });
 
+                                var httpPromise = $http(
+                                    {
+                                        url: apiMon,
+                                        method: 'post',
+                                        headers:
+                                        {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                            'Accept': '*/*',
+                                        },
+                                        transformRequest: function(obj)
+                                        {
+                                            var str = [];
+                                            for (var p in obj)
+                                                str.push(encodeURIComponent(p) + "=" +
+                                                    encodeURIComponent(obj[p]));
+                                            var foo = str.join("&");
+                                            // console.log("****RETURNING " + foo);
+                                            NVRDataModel.debug("MonitorCtrl: parmeters constructed: " + foo);
+                                            return foo;
+                                        },
+                                        data:
+                                        {
+                                            'Monitor[Function]': $scope.monfunc.myfunc,
+                                            'Monitor[Enabled]': isEnabled,
+                                        }
+
+                                    })
+                                    .success(function()
+                                    {
+                                        NVRDataModel.debug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
+                                    })
+                                    .error(function(data, status, headers, config)
+                                    {
+                                        NVRDataModel.debug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
+                                        $scope.monfunc.myfailedIds.push(item);
+                                    });
+
+                                $scope.monfunc.mypromises.push(httpPromise);
+                            });
+
+                            $q.all($scope.monfunc.mypromises).then(function(e)
+                            {
+                                $ionicLoading.hide();
+                                // if there's a failed ID, an error has occurred
+                                if ($scope.monfunc.myfailedIds.length != 0)
+                                {
+                                    $ionicLoading.show(
+                                    {
+                                        template: $translate.instant('kErrorChangingMonitors') + ". Monitor IDs : " + $scope.monfunc.myfailedIds.toString(),
+                                        noBackdrop: true,
+                                        duration: 3000,
+                                    });
+                                }
+                                else
+                                {
+                                    // I am not restarting ZM after monitor change
+                                    /* NVRDataModel.debug ("MonitorCtrl: Restarting ZM");
                                     $ionicLoading.show({
-                                        template: $translate.instant('kApplyingChanges') + "...",
+                                        template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
                                         noBackdrop: true,
                                         duration: zm.largeHttpTimeout,
                                     });
+                                    $http.post(apiRestart)
+                                        .then(function (success) {
+                                            $ionicLoading.hide();
+                                            var refresh = NVRDataModel.getMonitors(1);
+                                            refresh.then(function (data) {
+                                                $scope.monitors = data;
+                                                $scope.$broadcast('scroll.refreshComplete');
+                                            });
 
-                                    var httpPromise = $http({
-                                            url: apiMon,
-                                            method: 'post',
-                                            headers: {
-                                                'Content-Type': 'application/x-www-form-urlencoded',
-                                                'Accept': '*/*',
-                                            },
-                                            transformRequest: function (obj) {
-                                                var str = [];
-                                                for (var p in obj)
-                                                    str.push(encodeURIComponent(p) + "=" +
-                                                        encodeURIComponent(obj[p]));
-                                                var foo = str.join("&");
-                                                // console.log("****RETURNING " + foo);
-                                                NVRDataModel.debug("MonitorCtrl: parmeters constructed: " + foo);
-                                                return foo;
-                                            },
-                                            data: {
-                                                'Monitor[Function]': $scope.monfunc.myfunc,
-                                                'Monitor[Enabled]': isEnabled,
-                                            }
+                                         },
+                                         function (error) {
+                                             $ionicLoading.hide();
 
-                                        })
-                                        .success(function () {
-                                            NVRDataModel.debug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
-                                        })
-                                        .error(function (data, status, headers, config) {
-                                            NVRDataModel.debug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
-                                            $scope.monfunc.myfailedIds.push(item);
-                                        });
+                                         });*/
+                                    doRefresh();
+                                }
+                            });
+                        }
 
-                                    $scope.monfunc.mypromises.push(httpPromise);
-                                });
-
-                                $q.all($scope.monfunc.mypromises).then(function (e) {
-                                    $ionicLoading.hide();
-                                    // if there's a failed ID, an error has occurred
-                                    if ($scope.monfunc.myfailedIds.length != 0) {
-                                        $ionicLoading.show({
-                                            template: $translate.instant('kErrorChangingMonitors') + ". Monitor IDs : " + $scope.monfunc.myfailedIds.toString(),
-                                            noBackdrop: true,
-                                            duration: 3000,
-                                        });
-                                    } else {
-                                        // I am not restarting ZM after monitor change
-                                        /* NVRDataModel.debug ("MonitorCtrl: Restarting ZM");
-                                        $ionicLoading.show({
-                                            template: "Successfully changed Monitor. Please wait, restarting ZoneMinder...",
-                                            noBackdrop: true,
-                                            duration: zm.largeHttpTimeout,
-                                        });
-                                        $http.post(apiRestart)
-                                            .then(function (success) {
-                                                $ionicLoading.hide();
-                                                var refresh = NVRDataModel.getMonitors(1);
-                                                refresh.then(function (data) {
-                                                    $scope.monitors = data;
-                                                    $scope.$broadcast('scroll.refreshComplete');
-                                                });
-
-                                             },
-                                             function (error) {
-                                                 $ionicLoading.hide();
-
-                                             });*/
-                                        doRefresh();
-                                    }
-                                });
-                            }
-
-
-
-                },
-                ]
+                    }, ]
                 });
 
             };
 
-
-
             // same logic as EventCtrl.js
-            $scope.finishedLoadingImage = function () {
+            $scope.finishedLoadingImage = function()
+            {
                 // console.log("***Monitor image FINISHED Loading***");
                 $ionicLoading.hide();
             };
 
-
-            $scope.$on('$ionicView.loaded', function () {
+            $scope.$on('$ionicView.loaded', function()
+            {
                 //  console.log("**VIEW ** Monitor Ctrl Loaded");
             });
-
-
-
-
 
             //-------------------------------------------------------------------------
             // Lets make sure we set screen dim properly as we enter
@@ -269,32 +288,35 @@ angular.module('zmApp.controllers')
             // reset power state on exit as if it is called after we enter another
             // state, that effectively overwrites current view power management needs
             //------------------------------------------------------------------------
-            $scope.$on('$ionicView.enter', function () {
+            $scope.$on('$ionicView.enter', function()
+            {
                 // console.log("**VIEW ** Monitor Ctrl Entered");
                 NVRDataModel.setAwake(false);
                 $ionicSideMenuDelegate.canDragContent(true);
                 $scope.areImagesLoading = true;
             });
 
-
-            $scope.$on('$ionicView.afterEnter', function () {
+            $scope.$on('$ionicView.afterEnter', function()
+            {
                 // console.log("**VIEW ** Monitor Ctrl Entered");
                 $scope.monitors = [];
                 $scope.monitors = message;
-                
-                //console.log (">>>>>>>>>>>> MONITOR CTRL " + JSON.stringify($scope.monitors));
-                
-              
 
-                if ($scope.monitors.length == 0) {
-                    $rootScope.zmPopup = $ionicPopup.alert({
+                //console.log (">>>>>>>>>>>> MONITOR CTRL " + JSON.stringify($scope.monitors));
+
+                if ($scope.monitors.length == 0)
+                {
+                    $rootScope.zmPopup = $ionicPopup.alert(
+                    {
                         title: $translate.instant('kNoMonitors'),
                         template: $translate.instant('kPleaseCheckCredentials')
                     });
-                    $ionicHistory.nextViewOptions({
+                    $ionicHistory.nextViewOptions(
+                    {
                         disableBack: true
                     });
-                    $state.go("login", {
+                    $state.go("login",
+                    {
                         "wizard": false
                     });
                     return;
@@ -307,14 +329,17 @@ angular.module('zmApp.controllers')
                 // Now lets see if we need to load live screen
 
                 // $rootScope.tappedMid = 1;
-                if ($rootScope.tappedMid != 0) {
+                if ($rootScope.tappedMid != 0)
+                {
                     NVRDataModel.log("Notification tapped, we need to go to monitor " + $rootScope.tappedMid);
 
                     var tm = $rootScope.tappedMid;
                     $rootScope.tappedMid = 0;
                     var monitem;
-                    for (var m = 0; m < $scope.monitors.length; m++) {
-                        if ($scope.monitors[m].Monitor.Id == tm) {
+                    for (var m = 0; m < $scope.monitors.length; m++)
+                    {
+                        if ($scope.monitors[m].Monitor.Id == tm)
+                        {
                             monitem = $scope.monitors[m];
                             break;
                         }
@@ -324,30 +349,30 @@ angular.module('zmApp.controllers')
                     openModal(monitem.Monitor.Id, monitem.Monitor.Controllable, monitem.Monitor.ControlId, monitem.Monitor.connKey, monitem);
                 }
 
-
             });
 
-
-            $scope.$on('$ionicView.leave', function () {
+            $scope.$on('$ionicView.leave', function()
+            {
                 // console.log("**VIEW ** Monitor Ctrl Left, force removing modal");
                 if ($scope.modal) $scope.modal.remove();
             });
 
-            $scope.$on('$ionicView.unloaded', function () {
+            $scope.$on('$ionicView.unloaded', function()
+            {
                 // console.log("**VIEW ** Monitor Ctrl Unloaded");
             });
 
-
-            $scope.openModal = function (mid, controllable, controlid, connKey, monitor) {
+            $scope.openModal = function(mid, controllable, controlid, connKey, monitor)
+            {
 
                 openModal(mid, controllable, controlid, connKey, monitor);
 
             };
 
-            function openModal(mid, controllable, controlid, connKey, monitor) {
+            function openModal(mid, controllable, controlid, connKey, monitor)
+            {
                 NVRDataModel.debug("MonitorCtrl:Open Monitor Modal with monitor Id=" + mid +
                     " and Controllable:" + controllable + " with control ID:" + controlid);
-
 
                 $scope.monitor = monitor;
                 //console.log (">>>>>>>>>>>> MONITOR CRL " + $scope.monitor.
@@ -359,8 +384,6 @@ angular.module('zmApp.controllers')
                 NVRDataModel.log("Monitor Orientation is: " + $scope.orientation);
                 $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
-
-
                 $scope.showPTZ = false;
                 $scope.monitorId = mid;
                 $scope.monitorName = NVRDataModel.getMonitorName(mid);
@@ -368,7 +391,6 @@ angular.module('zmApp.controllers')
 
                 $scope.LoginData = NVRDataModel.getLogin();
                 $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-
 
                 $scope.ptzMoveCommand = "";
                 $scope.ptzStopCommand = "";
@@ -382,24 +404,24 @@ angular.module('zmApp.controllers')
 
                 $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                 $scope.isControllable = controllable;
-                
-                $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
+                $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
                 // This is a modal to show the monitor footage
                 // We need to switch to always awake if set so the feed doesn't get interrupted
                 NVRDataModel.setAwake(NVRDataModel.getKeepAwake());
 
-
-
-                $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
+                $ionicModal.fromTemplateUrl('templates/monitors-modal.html',
+                    {
                         scope: $scope,
                         animation: 'slide-in-up'
                     })
-                    .then(function (modal) {
+                    .then(function(modal)
+                    {
                         $scope.modal = modal;
 
-                        $ionicLoading.show({
+                        $ionicLoading.show(
+                        {
                             template: $translate.instant('kPleaseWait') + "...",
                             noBackdrop: true,
                             duration: zm.loadingTimeout
@@ -410,7 +432,8 @@ angular.module('zmApp.controllers')
 
             }
 
-            $scope.closeModal = function () {
+            $scope.closeModal = function()
+            {
                 // console.log("Close & Destroy Monitor Modal");
 
                 // stop networking -nph-zms keeps sucking data
@@ -418,73 +441,78 @@ angular.module('zmApp.controllers')
                 // switch off awake, as liveview is finished
                 NVRDataModel.setAwake(false);
                 $scope.modal.remove();
-                $timeout(function () {
+                $timeout(function()
+                {
                     NVRDataModel.log("MonitorCtrl:Stopping network pull...");
                     if (NVRDataModel.isForceNetworkStop()) NVRDataModel.stopNetwork("MonitorCtrl-closeModal");
                 }, 300);
 
-
             };
             //Cleanup the modal when we're done with it!
-            $scope.$on('$destroy', function () {
+            $scope.$on('$destroy', function()
+            {
                 //console.log("Destroy Monitor Modal");
                 if ($scope.modal) $scope.modal.remove();
             });
-
-
-
 
             //-----------------------------------------------------------------------
             // Controller Main
             //-----------------------------------------------------------------------
 
-
-            function monitorStateCheck() {
+            function monitorStateCheck()
+            {
                 var apiMonCheck;
 
                 // The status is provided by zmdc.pl
                 // "not running", "pending", "running since", "Unable to connect"
                 var i;
-                for (i = 0; i < $scope.monitors.length; i++) {
-                    (function (j) {
+                for (i = 0; i < $scope.monitors.length; i++)
+                {
+                    (function(j)
+                    {
                         $scope.monitors[j].Monitor.isRunningText = "...";
                         $scope.monitors[j].Monitor.isRunning = "...";
                         $scope.monitors[j].Monitor.color = zm.monitorCheckingColor;
                         $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
                         apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
 
-
                         //apiMonCheck = apiMonCheck.replace(loginData.url, $scope.monitors[j].Monitor.baseURL);
 
-
                         // in multiserver replace apiurl with baseurl
-
 
                         NVRDataModel.debug("MonitorCtrl:monitorStateCheck: " + apiMonCheck);
                         //console.log("**** ZMC CHECK " + apiMonCheck);
                         $http.get(apiMonCheck)
-                            .success(function (data) {
+                            .success(function(data)
+                            {
                                 NVRDataModel.debug("MonitorCtrl: monitor check state returned: " + JSON.stringify(data));
-                                if (data.statustext.indexOf("not running") > -1) {
+                                if (data.statustext.indexOf("not running") > -1)
+                                {
                                     $scope.monitors[j].Monitor.isRunning = "false";
                                     $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
                                     $scope.monitors[j].Monitor.char = "ion-close-circled";
-                                } else if (data.statustext.indexOf("pending") > -1) {
+                                }
+                                else if (data.statustext.indexOf("pending") > -1)
+                                {
                                     $scope.monitors[j].Monitor.isRunning = "pending";
                                     $scope.monitors[j].Monitor.color = zm.monitorPendingColor;
-                                } else if (data.statustext.indexOf("running since") > -1) {
+                                }
+                                else if (data.statustext.indexOf("running since") > -1)
+                                {
                                     $scope.monitors[j].Monitor.isRunning = "true";
                                     $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
-                                } else if (data.statustext.indexOf("Unable to connect") > -1) {
+                                }
+                                else if (data.statustext.indexOf("Unable to connect") > -1)
+                                {
                                     $scope.monitors[j].Monitor.isRunning = "false";
                                     $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
                                     $scope.monitors[j].Monitor.char = "ion-close-circled";
                                 }
 
-
                                 $scope.monitors[j].Monitor.isRunningText = data.statustext;
                             })
-                            .error(function (data) {
+                            .error(function(data)
+                            {
                                 NVRDataModel.debug("MonitorCtrl: Error->monitor check state returned: " +
                                     JSON.stringify(data));
                                 NVRDataModel.displayBanner('error', [$translate.instant('kErrorRetrievingState'), $translate.instant('kPleaseTryAgain')]);
@@ -493,30 +521,30 @@ angular.module('zmApp.controllers')
                                 $scope.monitors[j].Monitor.char = "ion-help-circled";
                             });
 
-
                     })(i);
                 }
             }
 
-
-            function doRefresh() {
+            function doRefresh()
+            {
                 $scope.monitors = [];
 
                 var refresh = NVRDataModel.getMonitors(1);
 
-                refresh.then(function (data) {
+                refresh.then(function(data)
+                {
                     $scope.monitors = data;
                     monitorStateCheck();
                     $scope.$broadcast('scroll.refreshComplete');
                 });
             }
 
-            $scope.doRefresh = function () {
+            $scope.doRefresh = function()
+            {
                 //console.log("***Pull to Refresh");
                 doRefresh();
 
-
             };
 
-
-}]);
+        }
+    ]);

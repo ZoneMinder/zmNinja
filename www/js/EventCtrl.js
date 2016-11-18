@@ -9,21 +9,24 @@
 angular.module('zmApp.controllers')
 
 // alarm frames filter
-.filter('selectFrames', function ($filter, $translate) {
+.filter('selectFrames', function($filter, $translate)
+{
 
     // Create the return function and set the required parameter name to **input**
-    return function (input, typeOfFrames) {
-
+    return function(input, typeOfFrames)
+    {
 
         var out = [];
 
-        angular.forEach(input, function (item) {
+        angular.forEach(input, function(item)
+        {
 
-
-            if (typeOfFrames == $translate.instant('kShowTimeDiffFrames')) {
+            if (typeOfFrames == $translate.instant('kShowTimeDiffFrames'))
+            {
                 if (item.type == $translate.instant('kShowTimeDiffFrames'))
                     out.push(item);
-            } else
+            }
+            else
                 out.push(item);
 
         });
@@ -33,7 +36,8 @@ angular.module('zmApp.controllers')
 
 })
 
-.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', function ($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate) {
+.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate)
+{
 
     // events in last 5 minutes
     // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -56,32 +60,34 @@ angular.module('zmApp.controllers')
     var mycarouselWatcher;
     var nolangFrom;
     var nolangTo;
-    
+
     $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
     var eventsListScrubHeight = eventsListScrubHeight;
     var eventsListDetailsHeight = eventsListDetailsHeight;
-
 
     //---------------------------------------------------
     // initial code
     //---------------------------------------------------
 
     //we come here is TZ is updated after the view loads
-    $rootScope.$on('tz-updated', function() {
+    $rootScope.$on('tz-updated', function()
+    {
         $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
-        NVRDataModel.debug ("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
+        NVRDataModel.debug("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
     });
-    
-    $rootScope.$on("language-changed", function () {
+
+    $rootScope.$on("language-changed", function()
+    {
         NVRDataModel.log(">>>>>>>>>>>>>>> language changed");
         doRefresh();
     });
 
-    $scope.$on('$ionicView.afterEnter', function () {
+    $scope.$on('$ionicView.afterEnter', function()
+    {
         //console.log ("********* AFTER ENTER");
-        
+
         // see if we come from monitors, if so, don't filter events
-        if ($ionicHistory.backTitle() =='Monitors')
+        if ($ionicHistory.backTitle() == 'Monitors')
         {
             showHiddenMonitors = true;
         }
@@ -89,8 +95,8 @@ angular.module('zmApp.controllers')
         {
             showHiddenMonitors = false;
         }
-       // console.log (">>>>>>>>>>>>>>>>>SHOWHIDDEN IS " + showHiddenMonitors);
-        
+        // console.log (">>>>>>>>>>>>>>>>>SHOWHIDDEN IS " + showHiddenMonitors);
+
         // lets get the abbreviated version of TZ to display
         if (NVRDataModel.getLogin().useLocalTimeZone)
         {
@@ -100,41 +106,38 @@ angular.module('zmApp.controllers')
         {
             $scope.tzAbbr = moment().tz(NVRDataModel.getTimeZoneNow()).zoneAbbr();
         }
-        
+
         $scope.events = [];
         getInitialEvents();
         setupWatchers();
         footerExpand();
     });
 
-    
-    
-    $scope.$on('$ionicView.beforeEnter', function () {
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
 
-        
         //console.log ("********* BEFORE ENTER");
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
         $scope.showEvent = $stateParams.playEvent || false;
-        
-        console.log (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        
-       
-         NVRDataModel.log  ("EventCtrl called with: EID=" + $scope.id + " playEvent =  "+$scope.showEvent);
-        
+
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+        NVRDataModel.log("EventCtrl called with: EID=" + $scope.id + " playEvent =  " + $scope.showEvent);
+
         // This is the only view that hardcodes row size due to
         // collection repeat, so lets re-get the text size if it has changed
         // note that there may be a delay as its a callback - so might involve
         // a UI jiggle 
-        
+
         if (window.cordova)
             MobileAccessibility.getTextZoom(getTextZoomCallback);
-        
+
         eventsListDetailsHeight = parseInt(zm.eventsListDetailsHeight * $rootScope.textScaleFactor);
         eventsListScrubHeight = parseInt(zm.eventsListScrubHeight * $rootScope.textScaleFactor);
-        
-        NVRDataModel.debug (">>>height of list/scrub set to " + eventsListDetailsHeight + " and " + eventsListScrubHeight);
+
+        NVRDataModel.debug(">>>height of list/scrub set to " + eventsListDetailsHeight + " and " + eventsListScrubHeight);
 
         pageLoaded = false;
         enableLoadMore = true;
@@ -153,7 +156,6 @@ angular.module('zmApp.controllers')
         $scope.weeks = [];
         $scope.months = [];
 
-
         $scope.eventList = {
             showDelete: false
         };
@@ -167,12 +169,12 @@ angular.module('zmApp.controllers')
         $scope.FrameArray = []; // will hold frame info from detailed Events API
         loginData = NVRDataModel.getLogin();
         NVRDataModel.getKeyConfigParams(0)
-            .then(function (data) {
+            .then(function(data)
+            {
                 //console.log ("***GETKEY: " + JSON.stringify(data));
                 eventImageDigits = parseInt(data);
                 NVRDataModel.log("Image padding digits reported as " + eventImageDigits);
             });
-
 
         $scope.showSearch = false;
         eventsPage = 1;
@@ -191,18 +193,14 @@ angular.module('zmApp.controllers')
 
     });
 
-
-
     function getEventObject(eid)
     {
-        
-        var apiurl = NVRDataModel.getLogin().apiurl + '/events/'+eid+'.json';
-        
-        $http.get (apiurl)
-        .success (function (data) {
-        })
-        .error (function (err) {
-        });
+
+        var apiurl = NVRDataModel.getLogin().apiurl + '/events/' + eid + '.json';
+
+        $http.get(apiurl)
+            .success(function(data) {})
+            .error(function(err) {});
         /*
         myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
         myevents[i].Event.MonitorName = NVRDataModel.getMonitorName(myevents[i].Event.MonitorId);
@@ -220,35 +218,38 @@ angular.module('zmApp.controllers')
         myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
         */
     }
-    
 
     function getTextZoomCallback(tz)
     {
-            $rootScope.textScaleFactor = parseFloat(tz+"%") / 100.0;
-            NVRDataModel.debug ("text zoom factor is " + $rootScope.textScaleFactor);
+        $rootScope.textScaleFactor = parseFloat(tz + "%") / 100.0;
+        NVRDataModel.debug("text zoom factor is " + $rootScope.textScaleFactor);
     }
-    
-
-
 
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
     // close the modal
     // --------------------------------------------------------                               
 
-    $ionicPlatform.registerBackButtonAction(function (e) {
+    $ionicPlatform.registerBackButtonAction(function(e)
+    {
         e.preventDefault();
-        if ($scope.modal != undefined && $scope.modal.isShown()) {
+        if ($scope.modal != undefined && $scope.modal.isShown())
+        {
             // switch off awake, as liveview is finished
             NVRDataModel.debug("Modal is open, closing it");
             NVRDataModel.setAwake(false);
             $scope.modal.remove();
-        } else {
+        }
+        else
+        {
             NVRDataModel.debug("Modal is closed, so toggling or exiting");
-            if (!$ionicSideMenuDelegate.isOpenLeft()) {
+            if (!$ionicSideMenuDelegate.isOpenLeft())
+            {
                 $ionicSideMenuDelegate.toggleLeft();
 
-            } else {
+            }
+            else
+            {
                 navigator.app.exitApp();
             }
 
@@ -256,30 +257,30 @@ angular.module('zmApp.controllers')
 
     }, 1000);
 
-
     //--------------------------------------
     // monitor the slider for carousels
     //--------------------------------------
-    function setupWatchers() {
+    function setupWatchers()
+    {
         NVRDataModel.debug("Setting up carousel watchers");
 
-        ionRangeWatcher = $scope.$watch('ionRange.index', function () {
+        ionRangeWatcher = $scope.$watch('ionRange.index', function()
+        {
             // console.log ("Watching index");
             $scope.mycarousel.index = parseInt($scope.ionRange.index) - 1;
             if (carouselUtils.getStop() == true)
                 return;
 
-
             //console.log ("***ION RANGE CHANGED TO " + $scope.mycarousel.index);
         });
 
+        mycarouselWatcher = $scope.$watch('mycarousel.index', function()
+        {
 
-
-        mycarouselWatcher = $scope.$watch('mycarousel.index', function () {
-
-
-            if ($scope.event && $scope.ionRange.index == parseInt($scope.event.Event.Frames) - 1) {
-                if (!$scope.modal || $scope.modal.isShown() == false) {
+            if ($scope.event && $scope.ionRange.index == parseInt($scope.event.Event.Frames) - 1)
+            {
+                if (!$scope.modal || $scope.modal.isShown() == false)
+                {
                     // console.log("quick scrub playback over");
                     carouselUtils.setStop(true);
                     $scope.ionRange.index = 0;
@@ -292,9 +293,7 @@ angular.module('zmApp.controllers')
             $scope.ionRange.index = ($scope.mycarousel.index + 1).toString();
             // console.log ("***IONRANGE RANGE CHANGED TO " + $scope.ionRange.index);
 
-
         });
-
 
     }
 
@@ -303,30 +302,32 @@ angular.module('zmApp.controllers')
     // close the modal
     // --------------------------------------------------------      
 
-    function getInitialEvents() {
+    function getInitialEvents()
+    {
         NVRDataModel.debug("getInitialEvents called");
         var lData = NVRDataModel.getLogin();
 
-       
-
         // If you came from Monitors, disregard hidden monitors in montage
-       /* if (lData.persistMontageOrder && stackState != "Monitors") {
-            var tempMon = message;
-            $scope.monitors = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2)[0];
-        } else*/
-            $scope.monitors = message;
+        /* if (lData.persistMontageOrder && stackState != "Monitors") {
+             var tempMon = message;
+             $scope.monitors = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2)[0];
+         } else*/
+        $scope.monitors = message;
 
-
-        if ($scope.monitors.length == 0) {
+        if ($scope.monitors.length == 0)
+        {
             var pTitle = $translate.instant('kNoMonitors');
-            $ionicPopup.alert({
+            $ionicPopup.alert(
+            {
                 title: pTitle,
                 template: "{{'kCheckCredentials' | translate }}"
             });
-            $ionicHistory.nextViewOptions({
+            $ionicHistory.nextViewOptions(
+            {
                 disableBack: true
             });
-            $state.go("login", {
+            $state.go("login",
+            {
                 "wizard": false
             });
             return;
@@ -345,7 +346,8 @@ angular.module('zmApp.controllers')
         if ($rootScope.toString)
             nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
         NVRDataModel.getEventsPages($scope.id, nolangFrom, nolangTo)
-            .then(function (data) {
+            .then(function(data)
+            {
                 eventsPage = data.pageCount || 1;
                 NVRDataModel.debug("EventCtrl: found " + eventsPage + " pages of events");
 
@@ -361,25 +363,29 @@ angular.module('zmApp.controllers')
                     nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
                 NVRDataModel.getEvents($scope.id, eventsPage, "", nolangFrom, nolangTo)
-                    .then(function (data) {
+                    .then(function(data)
+                    {
 
                         var myevents = data;
                         NVRDataModel.debug("EventCtrl: success, got " + myevents.length + " events");
                         var loginData = NVRDataModel.getLogin();
-                        for (var i = 0; i < myevents.length; i++) {
+                        for (var i = 0; i < myevents.length; i++)
+                        {
 
                             var idfound = true;
-                            if (loginData.persistMontageOrder) {
+                            if (loginData.persistMontageOrder)
+                            {
                                 idfound = false;
-                                for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                    if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && (NVRDataModel.isNotHidden(myevents[i].Event.MonitorId) || showHiddenMonitors)) {
+                                for (var ii = 0; ii < $scope.monitors.length; ii++)
+                                {
+                                    if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && (NVRDataModel.isNotHidden(myevents[i].Event.MonitorId) || showHiddenMonitors))
+                                    {
 
                                         idfound = true;
                                         break;
                                     }
                                 }
                             }
-
 
                             myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
                             myevents[i].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[i].Event.MonitorId);
@@ -397,25 +403,27 @@ angular.module('zmApp.controllers')
                             myevents[i].Event.BasePath = computeBasePath(myevents[i]);
                             myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
 
-
                             // in multiserver BasePath is login url for frames 
                             // http://login.url/index.php?view=frame&eid=19696772&fid=21
 
                             //  console.log ("COMPARING "+NVRDataModel.getLogin().url+ " TO " +myevents[i].Event.baseURL);
-                            if (NVRDataModel.getLogin().url != myevents[i].Event.baseURL) {
+                            if (NVRDataModel.getLogin().url != myevents[i].Event.baseURL)
+                            {
                                 //NVRDataModel.debug ("Multi server, changing base");
                                 myevents[i].Event.baseURL = NVRDataModel.getLogin().url;
 
                             }
 
-                            if (idfound) {
+                            if (idfound)
+                            {
                                 $scope.events.push(myevents[i]);
-                            } else {
+                            }
+                            else
+                            {
                                 //console.log ("Skipping Event MID = " + myevents[i].Event.MonitorId);
                             }
 
                         } //for
-
 
                         //$scope.events = myevents;
                         // we only need to stop the template from loading when the list is empty
@@ -425,7 +433,8 @@ angular.module('zmApp.controllers')
                         // to avoid only few events being displayed
                         // if last page has less events
                         //console.log("**Loading Next Page ***");
-                        if (myevents.length < 50) {
+                        if (myevents.length < 50)
+                        {
                             NVRDataModel.debug("EventCtrl:loading one more page just in case we don't have enough to display");
                             loadMore();
                         }
@@ -434,14 +443,14 @@ angular.module('zmApp.controllers')
             });
     }
 
-
-
     //-------------------------------------------------------
     // Tapping on a frame shows this image
     //------------------------------------------------------
 
-    function SaveSuccess() {
-        $ionicLoading.show({
+    function SaveSuccess()
+    {
+        $ionicLoading.show(
+        {
             template: $translate.instant('kDone'),
             noBackdrop: true,
             duration: 1000
@@ -449,8 +458,10 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("ModalCtrl:Photo saved successfuly");
     }
 
-    function SaveError(e) {
-        $ionicLoading.show({
+    function SaveError(e)
+    {
+        $ionicLoading.show(
+        {
             template: $translate.instant('kErrorSave'),
             noBackdrop: true,
             duration: 2000
@@ -459,10 +470,11 @@ angular.module('zmApp.controllers')
         //console.log("***ERROR");
     }
 
+    function saveNow(imgsrc, r, f)
+    {
 
-    function saveNow(imgsrc, r, f) {
-
-        $ionicLoading.show({
+        $ionicLoading.show(
+        {
             template: $translate.instant('kSavingSnapshot') + "...",
             noBackdrop: true,
             duration: zm.httpTimeout
@@ -471,7 +483,8 @@ angular.module('zmApp.controllers')
         NVRDataModel.log("saveNow: File path to grab is " + url);
 
         var img = new Image();
-        img.onload = function () {
+        img.onload = function()
+        {
             // console.log("********* ONLOAD");
             var canvas = document.createElement('canvas');
             canvas.width = img.width;
@@ -482,8 +495,10 @@ angular.module('zmApp.controllers')
             var imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
             var imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
 
-            if ($rootScope.platformOS != "desktop") {
-                try {
+            if ($rootScope.platformOS != "desktop")
+            {
+                try
+                {
 
                     cordova.exec(
                         SaveSuccess,
@@ -492,36 +507,43 @@ angular.module('zmApp.controllers')
                         'saveImageDataToLibrary', [imageData]
                     );
                     // carouselUtils.setStop(curState);
-                } catch (e) {
+                }
+                catch (e)
+                {
 
                     SaveError(e.message);
                     // carouselUtils.setStop(curState);
                 }
-            } else {
-
+            }
+            else
+            {
 
                 var fname = r + f + ".png";
                 fname = fname.replace(/\//, "-");
                 fname = fname.replace(/\.jpg/, '');
 
-                canvas.toBlob(function (blob) {
+                canvas.toBlob(function(blob)
+                {
                     saveAs(blob, fname);
                     SaveSuccess();
                 });
             }
         };
-        try {
+        try
+        {
             img.src = url;
             // console.log ("SAVING IMAGE SOURCE");
-        } catch (e) {
+        }
+        catch (e)
+        {
             SaveError(e.message);
         }
 
     }
 
-    $scope.showImage = function (p, r, f, fid, e, imode, id, parray, ndx) {
+    $scope.showImage = function(p, r, f, fid, e, imode, id, parray, ndx)
+    {
         var img;
-
 
         //console.log ("HERE");
         $scope.kFrame = $translate.instant('kFrame');
@@ -534,24 +556,24 @@ angular.module('zmApp.controllers')
         // at unique frames;
 
         // NVRDataModel.debug("Hello");
-        if ($scope.typeOfFrames == $translate.instant('kShowTimeDiffFrames')) {
+        if ($scope.typeOfFrames == $translate.instant('kShowTimeDiffFrames'))
+        {
 
             var ic;
 
-            for (ic = 0; ic < $scope.parray.length; ic++) {
+            for (ic = 0; ic < $scope.parray.length; ic++)
+            {
                 if ($scope.parray[ic].frameid == fid)
                     break;
             }
 
-
             NVRDataModel.debug("Readjusting selected frame ID from:" + $scope.ndx + "  to actual frame ID of:" + ic);
             $scope.ndx = ic;
-        } else {
+        }
+        else
+        {
             NVRDataModel.debug("No index adjustment necessary as we are using all frames");
         }
-
-
-
 
         // console.log ("Image Mode " + imode);
         // console.log ("parray :  " + JSON.stringify(parray));
@@ -559,17 +581,16 @@ angular.module('zmApp.controllers')
         if ($scope.imode == 'path')
 
             $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-        else {
+        else
+        {
             $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
 
         }
 
-
-
-
         //$rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
 
-        $rootScope.zmPopup = $ionicPopup.show({
+        $rootScope.zmPopup = $ionicPopup.show(
+        {
             template: '<center>' + $translate.instant('kFrame') + ':{{parray[ndx].frameid}}@{{prettifyTimeSec(parray[ndx].time)}}</center><br/><img src="{{imgsrc}}" width="100%"  />',
             title: $translate.instant('kImages') + " (" + $translate.instant($scope.typeOfFrames) + ")",
             subTitle: 'use left and right arrows to change',
@@ -580,7 +601,8 @@ angular.module('zmApp.controllers')
                 {
                     text: '',
                     type: 'button-assertive button-small ion-camera',
-                    onTap: function (e) {
+                    onTap: function(e)
+                    {
                         e.preventDefault();
                         saveNow($scope.imgsrc, r, parray[$scope.ndx].fname);
 
@@ -591,15 +613,18 @@ angular.module('zmApp.controllers')
                     // left 1
                     text: '',
                     type: 'button-small button-energized ion-chevron-left',
-                    onTap: function (e) {
+                    onTap: function(e)
+                    {
                         // look for next frame that matches the type of frame
                         // we are showing (all or diff timestamps);
 
                         // console.log ("TYPE OF FRAMES: " + $scope.typeOfFrames);
                         var nndx = null;
                         var alltype = $translate.instant('kShowAllFrames');
-                        for (var i = $scope.ndx - 1; i >= 0; i--) {
-                            if ($scope.parray[i].type == $scope.typeOfFrames || $scope.typeOfFrames == alltype) {
+                        for (var i = $scope.ndx - 1; i >= 0; i--)
+                        {
+                            if ($scope.parray[i].type == $scope.typeOfFrames || $scope.typeOfFrames == alltype)
+                            {
                                 nndx = i;
                                 break;
                             }
@@ -607,17 +632,17 @@ angular.module('zmApp.controllers')
                         if (nndx == null) nndx = $scope.ndx;
                         $scope.ndx = nndx;
 
-                        if ($scope.imode == 'path') {
+                        if ($scope.imode == 'path')
+                        {
 
                             $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-                        } else {
+                        }
+                        else
+                        {
                             $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
                         }
 
-
-
                         e.preventDefault();
-
 
                     }
                 },
@@ -625,7 +650,8 @@ angular.module('zmApp.controllers')
                     // right 1
                     text: '',
                     type: 'button-small button-energized ion-chevron-right',
-                    onTap: function (e) {
+                    onTap: function(e)
+                    {
 
                         // look for next frame that matches the type of frame
                         // we are showing (all or diff timestamps);
@@ -633,9 +659,11 @@ angular.module('zmApp.controllers')
                         // console.log ("TYPE OF FRAMES: " + $scope.typeOfFrames);
                         var nndx = null;
                         var alltype = $translate.instant('kShowAllFrames');
-                        for (var i = $scope.ndx + 1; i < $scope.parray.length; i++) {
+                        for (var i = $scope.ndx + 1; i < $scope.parray.length; i++)
+                        {
                             //console.log ("Comparing: " +$scope.parray[i].type +" to " + $scope.typeOfFrames);
-                            if ($scope.parray[i].type == $scope.typeOfFrames || $scope.typeOfFrames == alltype) {
+                            if ($scope.parray[i].type == $scope.typeOfFrames || $scope.typeOfFrames == alltype)
+                            {
                                 nndx = i;
                                 break;
                             }
@@ -643,52 +671,47 @@ angular.module('zmApp.controllers')
                         if (nndx == null) nndx = $scope.ndx;
                         $scope.ndx = nndx;
 
-                        if ($scope.imode == 'path') {
+                        if ($scope.imode == 'path')
+                        {
 
                             $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-                        } else {
+                        }
+                        else
+                        {
                             $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
                         }
 
                         e.preventDefault();
 
-
                     }
                 },
-
-
 
                 {
                     text: '',
                     type: 'button-positive button-small ion-checkmark-round',
-                    onTap: function (e) {
-
+                    onTap: function(e) {
 
                     }
-                }]
+                }
+            ]
         });
-
-
-
 
     };
 
-
-
-
-
-
-    $scope.toggleTypeOfAlarms = function () {
+    $scope.toggleTypeOfAlarms = function()
+    {
         //  "kShowAllFrames"             : "all",
         // "kShowTimeDiffFrames"        :  "different timestamps"
 
-        if ($scope.typeOfFrames == $translate.instant('kShowAllFrames')) {
+        if ($scope.typeOfFrames == $translate.instant('kShowAllFrames'))
+        {
             $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
-        } else {
+        }
+        else
+        {
             $scope.typeOfFrames = $translate.instant('kShowAllFrames');
         }
     };
-
 
     // not explictly handling error --> I have a default "No events found" message
     // displayed in the template if events list is null
@@ -696,14 +719,15 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
     // This is what the pullup bar calls depending on what range is specified
     //--------------------------------------------------------------------------
-    $scope.showEvents = function (val, unit, monitorId) {
+    $scope.showEvents = function(val, unit, monitorId)
+    {
         NVRDataModel.debug("ShowEvents called with val:" + val + " unit:" + unit + " for Monitor:" + monitorId);
 
-        $ionicHistory.nextViewOptions({
+        $ionicHistory.nextViewOptions(
+        {
             disableBack: true
         });
 
-        
         // we have to convert from and to, to server time
         var mToDate = moment().tz(NVRDataModel.getTimeZoneNow());
         var mFromDate = moment().subtract(parseInt(val), unit).tz(NVRDataModel.getTimeZoneNow());
@@ -728,16 +752,17 @@ angular.module('zmApp.controllers')
             .format("YYYY-MM-DD") + " " + mToDate
             .format("HH:mm:ss");
 
-
         // console.log("**************From String: " + $rootScope.fromString);
         //  console.log("**************To String: " + $rootScope.toString);
 
         // reloading - may solve https://github.com/pliablepixels/zmNinja/issues/36
         // if you are in the same mid event page $state.go won't work
-        $state.go("events", {
+        $state.go("events",
+        {
             "id": monitorId,
-            "playEvent":false
-        }, {
+            "playEvent": false
+        },
+        {
             reload: true
         });
     };
@@ -745,17 +770,22 @@ angular.module('zmApp.controllers')
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
-    $scope.handleAlarms = function () {
+    $scope.handleAlarms = function()
+    {
         $rootScope.isAlarm = !$rootScope.isAlarm;
-        if (!$rootScope.isAlarm) {
+        if (!$rootScope.isAlarm)
+        {
             $rootScope.alarmCount = "0";
-            $ionicHistory.nextViewOptions({
+            $ionicHistory.nextViewOptions(
+            {
                 disableBack: true
             });
-            $state.go("events", {
+            $state.go("events",
+            {
                 "id": 0,
-                "playEvent":false
-            }, {
+                "playEvent": false
+            },
+            {
                 reload: true
             });
             return;
@@ -765,7 +795,8 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
     // Takes care of deleting individual events
     //--------------------------------------------------------------------------
-    $scope.deleteEvent = function (id, itemid) {
+    $scope.deleteEvent = function(id, itemid)
+    {
         //$scope.eventList.showDelete = false;
         //curl -XDELETE http://server/zm/api/events/1.json
         var loginData = NVRDataModel.getLogin();
@@ -773,14 +804,16 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("DeleteEvent: ID=" + id + " item=" + itemid);
         NVRDataModel.log("Delete event " + apiDelete);
 
-        $ionicLoading.show({
+        $ionicLoading.show(
+        {
             template: "{{'kDeletingEvent' | translate}}...",
             noBackdrop: true,
             duration: zm.httpTimeout
         });
 
         $http.delete(apiDelete)
-            .success(function (data) {
+            .success(function(data)
+            {
                 $ionicLoading.hide();
                 NVRDataModel.debug("delete success: " + JSON.stringify(data));
                 NVRDataModel.displayBanner('info', [$translate.instant('kDeleteEventSuccess')], 2000, 2000);
@@ -789,12 +822,12 @@ angular.module('zmApp.controllers')
                 //doRefresh();
 
             })
-            .error(function (data) {
+            .error(function(data)
+            {
                 $ionicLoading.hide();
                 NVRDataModel.debug("delete error: " + JSON.stringify(data));
                 NVRDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);
             });
-
 
     };
 
@@ -802,17 +835,21 @@ angular.module('zmApp.controllers')
     // Tapping on the filter sign lets you reset it
     //-------------------------------------------------
 
-    $scope.filterTapped = function () {
+    $scope.filterTapped = function()
+    {
         //console.log("FILTER TAPPED");
         var myFrom = moment($rootScope.fromString).format("MMM/DD/YYYY " + NVRDataModel.getTimeFormat()).toString();
         var toString = moment($rootScope.toString).format("MMM/DD/YYYY " + NVRDataModel.getTimeFormat()).toString();
 
-        $rootScope.zmPopup = $ionicPopup.confirm({
+        $rootScope.zmPopup = $ionicPopup.confirm(
+        {
             title: $translate.instant('kFilterSettings'),
             template: $translate.instant('kFilterEventsBetween1') + ':<br/> <b>' + myFrom + "</b> " + $translate.instant('kTo') + " <b>" + toString + '</b><br/>' + $translate.instant('kFilterEventsBetween2')
         });
-        $rootScope.zmPopup.then(function (res) {
-            if (res) {
+        $rootScope.zmPopup.then(function(res)
+        {
+            if (res)
+            {
                 NVRDataModel.log("Filter reset requested in popup");
                 $rootScope.isEventFilterOn = false;
                 $rootScope.fromDate = "";
@@ -821,15 +858,19 @@ angular.module('zmApp.controllers')
                 $rootScope.toTime = "";
                 $rootScope.fromString = "";
                 $rootScope.toString = "";
-                $ionicHistory.nextViewOptions({
+                $ionicHistory.nextViewOptions(
+                {
                     disableBack: true
                 });
-                $state.go("events", {
+                $state.go("events",
+                {
                     "id": 0,
-                    "playEvent":false
+                    "playEvent": false
                 });
                 return;
-            } else {
+            }
+            else
+            {
                 NVRDataModel.log("Filter reset cancelled in popup");
             }
         });
@@ -841,40 +882,44 @@ angular.module('zmApp.controllers')
     // data for events ranges summaries using the consolveEvents facility of ZM
     //--------------------------------------------------------------------------
 
-    $scope.footerExpand = function () {
-            footerExpand();
+    $scope.footerExpand = function()
+    {
+        footerExpand();
 
     };
 
     function footerExpand()
     {
-                //https://server/zm/api/events/consoleEvents/5%20minute.json
+        //https://server/zm/api/events/consoleEvents/5%20minute.json
         var ld = NVRDataModel.getLogin();
 
-        var af =  "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+        var af = "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
         var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour" + af + ".json";
         NVRDataModel.debug("consoleEvents API:" + apiurl);
 
-
         $http.get(apiurl)
-            .success(function (data) {
+            .success(function(data)
+            {
                 NVRDataModel.debug(JSON.stringify(data));
                 $scope.hours = [];
                 var p = data.results;
-                for (var key in data.results) {
+                for (var key in data.results)
+                {
 
-
-
-                    if (p.hasOwnProperty(key)) {
+                    if (p.hasOwnProperty(key))
+                    {
 
                         var idfound = true;
                         //console.log ("PERSIST IS " + ld.persistMontageOrder);
-                        if (ld.persistMontageOrder) {
+                        if (ld.persistMontageOrder)
+                        {
                             idfound = false;
-                            for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key) || showHiddenMonitors) ) {
-                                   // console.log ("Authorizing "+$scope.monitors[ii].Monitor.Name);
+                            for (var ii = 0; ii < $scope.monitors.length; ii++)
+                            {
+                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key) || showHiddenMonitors))
+                                {
+                                    // console.log ("Authorizing "+$scope.monitors[ii].Monitor.Name);
                                     idfound = true;
                                     break;
                                 }
@@ -882,7 +927,8 @@ angular.module('zmApp.controllers')
                         }
                         //console.log(NVRDataModel.getMonitorName(key) + " -> " + p[key]);
                         if (idfound)
-                            $scope.hours.push({
+                            $scope.hours.push(
+                            {
                                 monitor: NVRDataModel.getMonitorName(key),
                                 events: p[key],
                                 mid: key
@@ -892,21 +938,26 @@ angular.module('zmApp.controllers')
                 }
             });
 
-
         apiurl = ld.apiurl + "/events/consoleEvents/1%20day" + af + ".json";
         NVRDataModel.debug("consoleEvents API:" + apiurl);
         $http.get(apiurl)
-            .success(function (data) {
+            .success(function(data)
+            {
                 NVRDataModel.debug(JSON.stringify(data));
                 $scope.days = [];
                 var p = data.results;
-                for (var key in data.results) {
-                    if (p.hasOwnProperty(key)) {
+                for (var key in data.results)
+                {
+                    if (p.hasOwnProperty(key))
+                    {
                         var idfound = true;
-                        if (ld.persistMontageOrder) {
+                        if (ld.persistMontageOrder)
+                        {
                             idfound = false;
-                            for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key) || showHiddenMonitors)) {
+                            for (var ii = 0; ii < $scope.monitors.length; ii++)
+                            {
+                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key) || showHiddenMonitors))
+                                {
                                     idfound = true;
                                     break;
                                 }
@@ -915,7 +966,8 @@ angular.module('zmApp.controllers')
                         //console.log(NVRDataModel.getMonitorName(key) + " -> " + p[key]);
                         if (idfound)
                         //console.log(NVRDataModel.getMonitorName(key) + " -> " + p[key]);
-                            $scope.days.push({
+                            $scope.days.push(
+                        {
                             monitor: NVRDataModel.getMonitorName(key),
                             events: p[key],
                             mid: key
@@ -924,24 +976,28 @@ angular.module('zmApp.controllers')
                     }
                 }
             });
-
-
 
         apiurl = ld.apiurl + "/events/consoleEvents/1%20week" + af + ".json";
         NVRDataModel.debug("consoleEvents API:" + apiurl);
         $http.get(apiurl)
-            .success(function (data) {
+            .success(function(data)
+            {
                 NVRDataModel.debug(JSON.stringify(data));
                 $scope.weeks = [];
                 var p = data.results;
-                for (var key in data.results) {
-                    if (p.hasOwnProperty(key)) {
+                for (var key in data.results)
+                {
+                    if (p.hasOwnProperty(key))
+                    {
 
                         var idfound = true;
-                        if (ld.persistMontageOrder) {
+                        if (ld.persistMontageOrder)
+                        {
                             idfound = false;
-                            for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key)|| showHiddenMonitors)) {
+                            for (var ii = 0; ii < $scope.monitors.length; ii++)
+                            {
+                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key) || showHiddenMonitors))
+                                {
                                     idfound = true;
                                     break;
                                 }
@@ -950,7 +1006,8 @@ angular.module('zmApp.controllers')
                         //console.log(NVRDataModel.getMonitorName(key) + " -> " + p[key]);
                         if (idfound)
                         //console.log(NVRDataModel.getMonitorName(key) + " -> " + p[key]);
-                            $scope.weeks.push({
+                            $scope.weeks.push(
+                        {
                             monitor: NVRDataModel.getMonitorName(key),
                             events: p[key],
                             mid: key
@@ -960,23 +1017,28 @@ angular.module('zmApp.controllers')
                 }
             });
 
-
         apiurl = ld.apiurl + "/events/consoleEvents/1%20month" + af + ".json";
         NVRDataModel.debug("consoleEvents API:" + apiurl);
         $http.get(apiurl)
-            .success(function (data) {
+            .success(function(data)
+            {
                 NVRDataModel.debug(JSON.stringify(data));
                 $scope.months = [];
                 var p = data.results;
-                for (var key in data.results) {
-                    if (p.hasOwnProperty(key)) {
+                for (var key in data.results)
+                {
+                    if (p.hasOwnProperty(key))
+                    {
 
                         var idfound = true;
                         var ld = NVRDataModel.getLogin();
-                        if (ld.persistMontageOrder) {
+                        if (ld.persistMontageOrder)
+                        {
                             idfound = false;
-                            for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key)|| showHiddenMonitors)) {
+                            for (var ii = 0; ii < $scope.monitors.length; ii++)
+                            {
+                                if ($scope.monitors[ii].Monitor.Id == key && (NVRDataModel.isNotHidden(key) || showHiddenMonitors))
+                                {
                                     idfound = true;
                                     break;
                                 }
@@ -985,7 +1047,8 @@ angular.module('zmApp.controllers')
                         //console.log(NVRDataModel.getMonitorName(key) + " -> " + p[key]);
                         if (idfound)
                         //console.log(NVRDataModel.getMonitorName(key) + " -> " + p[key]);
-                            $scope.months.push({
+                            $scope.months.push(
+                        {
                             monitor: NVRDataModel.getMonitorName(key),
                             events: p[key],
                             mid: key
@@ -997,16 +1060,21 @@ angular.module('zmApp.controllers')
 
     }
 
-    $scope.openMenu = function () {
+    $scope.openMenu = function()
+    {
         $ionicSideMenuDelegate.toggleLeft();
     };
 
-    $scope.scrollPosition = function () {
+    $scope.scrollPosition = function()
+    {
         var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
-        var item = Math.round(scrl / eventsListDetailsHeight );
-        if ($scope.events == undefined || !$scope.events.length || $scope.events[item] == undefined) {
+        var item = Math.round(scrl / eventsListDetailsHeight);
+        if ($scope.events == undefined || !$scope.events.length || $scope.events[item] == undefined)
+        {
             return "";
-        } else {
+        }
+        else
+        {
             //return prettifyDate($scope.events[item].Event.StartTime);
             return ($scope.events[item].Event.humanizeTime);
         }
@@ -1016,7 +1084,8 @@ angular.module('zmApp.controllers')
     //-------------------------------------------------------------------------
     // called when user switches to background
     //-------------------------------------------------------------------------
-    function onPause() {
+    function onPause()
+    {
         NVRDataModel.debug("EventCtrl:onpause called");
         if ($scope.popover) $scope.popover.remove();
 
@@ -1024,66 +1093,70 @@ angular.module('zmApp.controllers')
     //-------------------------------------------------------------------------
     // Pads the filename with leading 0s, depending on  ZM_IMAGE_DIGITS
     //-------------------------------------------------------------------------
-    function padToN(number, digits) {
+    function padToN(number, digits)
+    {
 
         var i;
         var stringMax = "";
         var stringLeading = "";
-        for (i = 1; i <= digits; i++) {
+        for (i = 1; i <= digits; i++)
+        {
             stringMax = stringMax + "9";
             if (i != digits) stringLeading = stringLeading + "0";
         }
         var numMax = parseInt(stringMax);
 
-        if (number <= numMax) {
+        if (number <= numMax)
+        {
             number = (stringLeading + number).slice(-digits);
         }
         //console.log ("PADTON: returning " + number);
         return number;
     }
 
-
     //-------------------------------------------------------------------------
     // FIXME: Are we using this?
     //-------------------------------------------------------------------------
-    $scope.disableSlide = function () {
+    $scope.disableSlide = function()
+    {
         NVRDataModel.debug("EventCtrl:DisableSlide called");
         $ionicSlideBoxDelegate.$getByHandle("eventSlideBox").enableSlide(false);
     };
-
-
-
 
     //-------------------------------------------------------------------------
     // This function is called when a user enables or disables
     // scrub view for an event.
     //-------------------------------------------------------------------------
 
-    $scope.toggleGroupScrub = function (event, ndx, frames) {
+    $scope.toggleGroupScrub = function(event, ndx, frames)
+    {
         $scope.groupType = "scrub";
         toggleGroup(event, ndx, frames, $scope.groupType);
     };
 
-    $scope.toggleGroupAlarms = function (event, ndx, frames) {
+    $scope.toggleGroupAlarms = function(event, ndx, frames)
+    {
         $scope.groupType = "alarms";
         toggleGroup(event, ndx, frames, $scope.groupType);
     };
 
-    function toggleGroup(event, ndx, frames, groupType) {
-
+    function toggleGroup(event, ndx, frames, groupType)
+    {
 
         // If we are here and there is a record of a previous scroll
         // then we need to scroll back to hide that view
-        if (scrollbynumber) {
+        if (scrollbynumber)
+        {
             $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, -1 * scrollbynumber, true);
             scrollbynumber = 0;
         }
 
-        if (oldEvent && event != oldEvent) {
+        if (oldEvent && event != oldEvent)
+        {
 
             NVRDataModel.debug("EventCtrl:Old event scrub will hide now");
             oldEvent.Event.ShowScrub = false;
-            oldEvent.Event.height = eventsListDetailsHeight ;
+            oldEvent.Event.height = eventsListDetailsHeight;
             oldEvent = "";
         }
 
@@ -1095,14 +1168,16 @@ angular.module('zmApp.controllers')
         if (event.Event.ShowScrub == true) // turn on display now
         {
 
-            if (groupType == 'alarms') {
+            if (groupType == 'alarms')
+            {
                 $scope.alarm_images = [];
                 event.Event.height = (eventsListDetailsHeight + eventsListScrubHeight);
                 $ionicScrollDelegate.resize();
                 var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
                 NVRDataModel.log("API for event details" + myurl);
                 $http.get(myurl)
-                    .success(function (data) {
+                    .success(function(data)
+                    {
                         $scope.FrameArray = data.event.Frame;
                         //  $scope.slider_options.scale=[];
 
@@ -1110,18 +1185,24 @@ angular.module('zmApp.controllers')
 
                         var i;
                         var timestamp = null;
-                        for (i = 0; i < data.event.Frame.length; i++) {
-                            if (data.event.Frame[i].Type == "Alarm") {
+                        for (i = 0; i < data.event.Frame.length; i++)
+                        {
+                            if (data.event.Frame[i].Type == "Alarm")
+                            {
 
                                 //console.log ("**ONLY ALARM AT " + i + "of " + data.event.Frame.length);
                                 var atype;
-                                if (timestamp != data.event.Frame[i].TimeStamp) {
+                                if (timestamp != data.event.Frame[i].TimeStamp)
+                                {
 
                                     atype = $translate.instant('kShowTimeDiffFrames');
-                                } else {
+                                }
+                                else
+                                {
                                     atype = $translate.instant('kShowAllFrames');
                                 }
-                                $scope.alarm_images.push({
+                                $scope.alarm_images.push(
+                                {
                                     type: atype,
                                     id: data.event.Frame[i].Id,
                                     frameid: data.event.Frame[i].FrameId,
@@ -1137,7 +1218,8 @@ angular.module('zmApp.controllers')
 
                         //console.log (JSON.stringify(data));
                     })
-                    .error(function (err) {
+                    .error(function(err)
+                    {
                         NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
                         NVRDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
                     });
@@ -1157,31 +1239,38 @@ angular.module('zmApp.controllers')
                     realtime: true,
                     step: 1,
                     className: "mySliderClass",
-                    callback: function (value, released) {
+                    callback: function(value, released)
+                    {
                         //console.log("CALLBACK"+value+released);
                         $ionicScrollDelegate.freezeScroll(!released);
                         //NVRDataModel.debug("EventCtrl: freezeScroll called with " + !released);
 
-
                     },
                     //modelLabels:function(val) {return "";},
-                    css: {
-                        background: {
+                    css:
+                    {
+                        background:
+                        {
                             "background-color": "silver"
                         },
-                        before: {
+                        before:
+                        {
                             "background-color": "purple"
                         },
-                        default: {
+                        default:
+                        {
                             "background-color": "white"
                         }, // default value: 1px
-                        after: {
+                        after:
+                        {
                             "background-color": "green"
                         }, // zone after default value
-                        pointer: {
+                        pointer:
+                        {
                             "background-color": "red"
                         }, // circle pointer
-                        range: {
+                        range:
+                        {
                             "background-color": "red"
                         } // use it if double value
                     },
@@ -1197,57 +1286,57 @@ angular.module('zmApp.controllers')
                 $scope.slides = [];
                 var i;
 
-                if (event.Event.imageMode == 'path') {
+                if (event.Event.imageMode == 'path')
+                {
                     NVRDataModel.debug("EventCtrl: found " + frames + " frames to scrub");
 
-
-
-                    for (i = 1; i <= frames; i++) {
+                    for (i = 1; i <= frames; i++)
+                    {
                         var fname = padToN(i, eventImageDigits) + "-capture.jpg";
 
-
-
-                        $scope.slides.push({
+                        $scope.slides.push(
+                        {
                             id: i,
                             img: fname
                         });
 
                     }
-                } else // we need fids
+                }
+                else // we need fids
                 {
                     var myurl_frames = loginData.apiurl + '/events/' + event.Event.Id + ".json";
                     NVRDataModel.log("API for event details" + myurl_frames);
                     $http.get(myurl_frames)
-                        .success(function (data) {
+                        .success(function(data)
+                        {
                             $scope.FrameArray = data.event.Frame;
                             //  $scope.slider_options.scale=[];
 
                             //$scope.slider_options.scale = [];
 
                             var i;
-                            for (i = 0; i < data.event.Frame.length; i++) {
-
+                            for (i = 0; i < data.event.Frame.length; i++)
+                            {
 
                                 //console.log ("**ONLY ALARM AT " + i + "of " + data.event.Frame.length);
-                                $scope.slides.push({
+                                $scope.slides.push(
+                                {
                                     id: data.event.Frame[i].Id,
                                     frameid: data.event.Frame[i].FrameId,
 
                                 });
 
-
                             }
 
                             //console.log (JSON.stringify(data));
                         })
-                        .error(function (err) {
+                        .error(function(err)
+                        {
                             NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
                             NVRDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
                         });
 
                 }
-
-
 
                 // now get event details to show alarm frames
                 loginData = NVRDataModel.getLogin();
@@ -1270,7 +1359,7 @@ angular.module('zmApp.controllers')
                         {
                             src: $sce.trustAsResourceUrl(videoURL),
                             type: "video/mp4"
-                            }
+                        }
 
                     ],
 
@@ -1278,25 +1367,30 @@ angular.module('zmApp.controllers')
 
                 };
 
-
                 var myurl2 = loginData.apiurl + '/events/' + event.Event.Id + ".json";
                 NVRDataModel.log("API for event details" + myurl2);
                 $http.get(myurl2)
-                    .success(function (data) {
+                    .success(function(data)
+                    {
                         $scope.FrameArray = data.event.Frame;
                         //  $scope.slider_options.scale=[];
                         $scope.slider_options.scale = [];
 
                         var i;
-                        for (i = 0; i < data.event.Frame.length; i++) {
-                            if (data.event.Frame[i].Type == "Alarm") {
+                        for (i = 0; i < data.event.Frame.length; i++)
+                        {
+                            if (data.event.Frame[i].Type == "Alarm")
+                            {
 
                                 //console.log ("**ALARM AT " + i + "of " + data.event.Frame.length);
-                                $scope.slider_options.scale.push({
+                                $scope.slider_options.scale.push(
+                                {
                                     val: data.event.Frame[i].FrameId,
                                     label: ' '
                                 });
-                            } else {
+                            }
+                            else
+                            {
                                 //$scope.slider_options.scale.push(' ');
                             }
 
@@ -1304,11 +1398,11 @@ angular.module('zmApp.controllers')
 
                         //console.log (JSON.stringify(data));
                     })
-                    .error(function (err) {
+                    .error(function(err)
+                    {
                         NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
                         NVRDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
                     });
-
 
                 oldEvent = event;
                 $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
@@ -1331,13 +1425,15 @@ angular.module('zmApp.controllers')
 
             } // end of groupType == scrub 
         } // end of ShowScrub == true
-        else {
+        else
+        {
             // $ionicScrollDelegate.freezeScroll(false);
             $ionicSideMenuDelegate.canDragContent(true);
             event.Event.height = eventsListDetailsHeight;
             $ionicScrollDelegate.resize();
 
-            if (scrollbynumber) {
+            if (scrollbynumber)
+            {
                 $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, -1 * scrollbynumber, true);
                 scrollbynumber = 0;
             }
@@ -1346,15 +1442,18 @@ angular.module('zmApp.controllers')
 
     }
 
-    $scope.closeIfOpen = function (event) {
-        if (event != undefined) {
+    $scope.closeIfOpen = function(event)
+    {
+        if (event != undefined)
+        {
             if (event.Event.ShowScrub)
                 toggleGroup(event);
 
         }
     };
 
-    $scope.isGroupShown = function (event) {
+    $scope.isGroupShown = function(event)
+    {
         //  console.log ("IS SHOW INDEX is " + ndx);
         //console.log ("SHOW GROUP IS " + showGroup);
 
@@ -1365,7 +1464,8 @@ angular.module('zmApp.controllers')
     //---------------------------------------------------
     // reload view
     //---------------------------------------------------
-    $scope.reloadView = function () {
+    $scope.reloadView = function()
+    {
         // All we really need to do here is change the random token
         // in the image src and it will refresh. No need to reload the view
         // and if you did reload the view, it would go back to events list
@@ -1373,7 +1473,8 @@ angular.module('zmApp.controllers')
         //console.log("*** Refreshing Modal view ***");
         //$state.go($state.current, {}, {reload: true});
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-        $ionicLoading.show({
+        $ionicLoading.show(
+        {
             template: $translate.instant('kRefreshedView'),
             noBackdrop: true,
             duration: 3000
@@ -1384,17 +1485,20 @@ angular.module('zmApp.controllers')
     //---------------------------------------------------
     // when you tap a list entry - to break search loop
     //---------------------------------------------------
-    $scope.tapped = function () {
+    $scope.tapped = function()
+    {
         // console.log("*** TAPPED ****");
         // if he tapped, the we are not infinite loading on ion-infinite
-        if (enableLoadMore == false) {
+        if (enableLoadMore == false)
+        {
             moreEvents = true;
             enableLoadMore = true;
             // console.log("REMOVING ARTIFICAL LOAD MORE BLOCK");
         }
     };
 
-    $scope.$on('$ionicView.loaded', function () {
+    $scope.$on('$ionicView.loaded', function()
+    {
         //  console.log("**VIEW ** Events Ctrl Loaded");
     });
 
@@ -1405,28 +1509,33 @@ angular.module('zmApp.controllers')
     // reset power state on exit as if it is called after we enter another
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
-    $scope.$on('$ionicView.enter', function () {
+    $scope.$on('$ionicView.enter', function()
+    {
         //  console.log("**VIEW ** Events Ctrl Entered");
         NVRDataModel.setAwake(false);
 
-        EventServer.sendMessage('push', {
+        EventServer.sendMessage('push',
+        {
             type: 'badge',
             badge: 0,
         });
 
-        $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
+        $ionicPopover.fromTemplateUrl('templates/events-popover.html',
+        {
             scope: $scope,
-        }).then(function (popover) {
+        }).then(function(popover)
+        {
             $scope.popover = popover;
         });
 
-
-
         //reset badge count
-        if (window.cordova && window.cordova.plugins.notification) {
-            $cordovaBadge.set(0).then(function () {
+        if (window.cordova && window.cordova.plugins.notification)
+        {
+            $cordovaBadge.set(0).then(function()
+            {
                 // You have permission, badge set.
-            }, function (err) {
+            }, function(err)
+            {
                 NVRDataModel.debug("app does not have badge permissions. Please check your phone notification settings");
                 // You do not have permission.
             });
@@ -1436,14 +1545,17 @@ angular.module('zmApp.controllers')
 
     });
 
-    $scope.$on('$ionicView.leave', function () {
+    $scope.$on('$ionicView.leave', function()
+    {
         //console.log("**VIEW ** Events Ctrl Left");
     });
 
-    $scope.$on('$ionicView.unloaded', function () {
+    $scope.$on('$ionicView.unloaded', function()
+    {
         //console.log("**VIEW ** Events Ctrl Unloaded");
         //console.log("*** MODAL ** Destroying modal too");
-        if ($scope.modal !== undefined) {
+        if ($scope.modal !== undefined)
+        {
             $scope.modal.remove();
         }
 
@@ -1452,7 +1564,8 @@ angular.module('zmApp.controllers')
     //---------------------------------------------------
     // used to hide loading image toast
     //---------------------------------------------------
-    $scope.finishedLoadingImage = function (ndx) {
+    $scope.finishedLoadingImage = function(ndx)
+    {
         //  console.log("*** Events image FINISHED loading index: "+ndx+"***");
         $ionicLoading.hide();
     };
@@ -1460,33 +1573,36 @@ angular.module('zmApp.controllers')
     //---------------------------------------------------
     //
     //---------------------------------------------------
-    $scope.clearSearch = function () {
+    $scope.clearSearch = function()
+    {
         $scope.search.text = "";
     };
 
     //---------------------------------------------------
     // Called when user toggles search
     //---------------------------------------------------
-    $scope.searchClicked = function () {
+    $scope.searchClicked = function()
+    {
         $scope.showSearch = !$scope.showSearch;
         // this helps greatly in repeat scroll gets
         if ($scope.showSearch == false)
             $scope.search.text = "";
 
         //console.log("**** Setting search view to " + $scope.showSearch + " ****");
-        if (enableLoadMore == false && $scope.showSearch == false) {
+        if (enableLoadMore == false && $scope.showSearch == false)
+        {
             moreEvents = true;
             enableLoadMore = true;
             //console.log("REMOVING ARTIFICAL LOAD MORE BLOCK");
         }
     };
 
-
     //--------------------------------------------------------
     // utility function
     //--------------------------------------------------------
 
-    function computeRelativePath(event) {
+    function computeRelativePath(event)
+    {
         var relativePath = "";
         var loginData = NVRDataModel.getLogin();
         var str = event.Event.StartTime;
@@ -1511,7 +1627,8 @@ angular.module('zmApp.controllers')
     // utility function
     //--------------------------------------------------------
 
-    function computeBasePath(event) {
+    function computeBasePath(event)
+    {
         var basePath = "";
         var loginData = NVRDataModel.getLogin();
         var str = event.Event.StartTime;
@@ -1533,43 +1650,44 @@ angular.module('zmApp.controllers')
         return basePath;
     }
 
-    $scope.modalGraph = function () {
-        $ionicModal.fromTemplateUrl('templates/events-modalgraph.html', {
+    $scope.modalGraph = function()
+    {
+        $ionicModal.fromTemplateUrl('templates/events-modalgraph.html',
+            {
                 scope: $scope, // give ModalCtrl access to this scope
                 animation: 'slide-in-up',
                 id: 'modalgraph',
 
             })
-            .then(function (modal) {
+            .then(function(modal)
+            {
                 $scope.modal = modal;
-
-
-
 
                 $scope.modal.show();
 
             });
     };
 
-    $scope.analyzeEvent = function (ev) {
+    $scope.analyzeEvent = function(ev)
+    {
         $scope.event = ev;
-        $ionicModal.fromTemplateUrl('templates/timeline-modal.html', {
+        $ionicModal.fromTemplateUrl('templates/timeline-modal.html',
+            {
                 scope: $scope, // give ModalCtrl access to this scope
                 animation: 'slide-in-up',
                 id: 'analyze',
             })
-            .then(function (modal) {
+            .then(function(modal)
+            {
                 $scope.modal = modal;
-
-
-
 
                 $scope.modal.show();
 
             });
     };
 
-    $scope.$on('modal.removed', function (e, m) {
+    $scope.$on('modal.removed', function(e, m)
+    {
 
         if (m.id != 'footage')
             return;
@@ -1588,7 +1706,8 @@ angular.module('zmApp.controllers')
     //earlier won't work
     //--------------------------------------------------------
 
-    $scope.openModal = function (event) {
+    $scope.openModal = function(event)
+    {
 
         NVRDataModel.debug("unbinding eventCtrl watchers as modal has its own");
         ionRangeWatcher();
@@ -1602,17 +1721,18 @@ angular.module('zmApp.controllers')
         $scope.currentEvent = event;
         $scope.followSameMonitor = ($stateParams.id == "0") ? "0" : "1";
 
-
-
-        $ionicModal.fromTemplateUrl('templates/events-modal.html', {
+        $ionicModal.fromTemplateUrl('templates/events-modal.html',
+            {
                 scope: $scope,
                 animation: 'slide-in-up',
                 id: 'footage',
             })
-            .then(function (modal) {
+            .then(function(modal)
+            {
                 $scope.modal = modal;
 
-                $ionicLoading.show({
+                $ionicLoading.show(
+                {
                     template: $translate.instant('kPleaseWait') + "...",
                     noBackdrop: true,
                     duration: 10000
@@ -1622,8 +1742,6 @@ angular.module('zmApp.controllers')
 
                 var ld = NVRDataModel.getLogin();
 
-
-
             });
 
     };
@@ -1632,10 +1750,12 @@ angular.module('zmApp.controllers')
     //We need to destroy because we are instantiating
     // it on open
     //--------------------------------------------------------
-    $scope.closeModal = function () {
+    $scope.closeModal = function()
+    {
         NVRDataModel.debug(">>>EventCtrl:Close & Destroy Modal");
         NVRDataModel.setAwake(false);
-        if ($scope.modal !== undefined) {
+        if ($scope.modal !== undefined)
+        {
             $scope.modal.remove();
         }
 
@@ -1645,9 +1765,11 @@ angular.module('zmApp.controllers')
     //Cleanup the modal when we're done with it
     // I Don't think it ever comes here
     //--------------------------------------------------------
-    $scope.$on('$destroy', function () {
+    $scope.$on('$destroy', function()
+    {
         //console.log("Destroy Modal");
-        if ($scope.modal !== undefined) {
+        if ($scope.modal !== undefined)
+        {
             $scope.modal.remove();
         }
         if ($scope.popover !== undefined)
@@ -1658,18 +1780,21 @@ angular.module('zmApp.controllers')
     // used by infinite scrolling to see if we can get more
     //--------------------------------------------------------
 
-    $scope.moreDataCanBeLoaded = function () {
+    $scope.moreDataCanBeLoaded = function()
+    {
         return moreEvents;
     };
 
     //--------------------------------------------------------
     // stop searching for more data
     //--------------------------------------------------------
-    $scope.cancelSearch = function () {
+    $scope.cancelSearch = function()
+    {
         $ionicLoading.hide(); //Or whatever action you want to preform
         enableLoadMore = false;
         //console.log("**** CANCELLED ****");
-        $ionicLoading.show({
+        $ionicLoading.show(
+        {
             template: $translate.instant('kSearchCancelled'),
             animation: 'fade-in',
             showBackdrop: true,
@@ -1678,27 +1803,28 @@ angular.module('zmApp.controllers')
             showDelay: 0
         });
 
-
     };
 
     //--------------------------------------------------------
     // loads next page of events
     //--------------------------------------------------------
 
-
-    function loadMore() {
+    function loadMore()
+    {
         // the events API does not return an error for anything
         // except greater page limits than reported
 
         // console.log("***** LOADING MORE INFINITE SCROLL ****");
         eventsPage--;
-        if ((eventsPage <= 0) && (pageLoaded)) {
+        if ((eventsPage <= 0) && (pageLoaded))
+        {
             moreEvents = false;
             //console.log("*** At Page " + eventsPage + ", not proceeding");
             return;
         }
 
-        if (!enableLoadMore) {
+        if (!enableLoadMore)
+        {
             moreEvents = false; // Don't ion-scroll till enableLoadMore is true;
             $scope.$broadcast('scroll.infiniteScrollComplete');
 
@@ -1707,9 +1833,11 @@ angular.module('zmApp.controllers')
         }
 
         var loadingStr = "";
-        if ($scope.search.text != "") {
+        if ($scope.search.text != "")
+        {
             var toastStr = $translate.instant('kToastSearchingPage') + eventsPage;
-            $ionicLoading.show({
+            $ionicLoading.show(
+            {
                 maxwidth: 100,
                 scope: $scope,
                 template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >' + toastStr + '</button>'
@@ -1726,20 +1854,25 @@ angular.module('zmApp.controllers')
             nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
         NVRDataModel.getEvents($scope.id, eventsPage, loadingStr, nolangFrom, nolangTo)
-            .then(function (data) {
+            .then(function(data)
+                {
                     var loginData = NVRDataModel.getLogin();
                     // console.log("Got new page of events with Page=" + eventsPage);
                     var myevents = data;
 
-                    for (var i = 0; i < myevents.length; i++) {
+                    for (var i = 0; i < myevents.length; i++)
+                    {
 
                         var idfound = true;
                         var ld = NVRDataModel.getLogin();
 
-                        if (ld.persistMontageOrder) {
+                        if (ld.persistMontageOrder)
+                        {
                             idfound = false;
-                            for (var ii = 0; ii < $scope.monitors.length; ii++) {
-                                if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && (NVRDataModel.isNotHidden(myevents[i].Event.MonitorId)|| showHiddenMonitors)) {
+                            for (var ii = 0; ii < $scope.monitors.length; ii++)
+                            {
+                                if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && (NVRDataModel.isNotHidden(myevents[i].Event.MonitorId) || showHiddenMonitors))
+                                {
 
                                     //console.log ( $scope.monitors[ii].Monitor.Id + " MATCHES " + myevents[i].Event.MonitorId);
                                     idfound = true;
@@ -1748,7 +1881,6 @@ angular.module('zmApp.controllers')
                                 }
                             }
                         }
-
 
                         myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
                         myevents[i].Event.MonitorName = NVRDataModel.getMonitorName(myevents[i].Event.MonitorId);
@@ -1773,7 +1905,8 @@ angular.module('zmApp.controllers')
                     $scope.$broadcast('scroll.infiniteScrollComplete');
                 },
 
-                function (error) {
+                function(error)
+                {
                     // console.log("*** No More Events to Load, Stop Infinite Scroll ****");
                     moreEvents = false;
                     $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -1781,13 +1914,14 @@ angular.module('zmApp.controllers')
                 });
     }
 
-    $scope.loadMore = function () {
+    $scope.loadMore = function()
+    {
         loadMore();
 
     };
 
-    $scope.toggleMinAlarmFrameCount = function () {
-
+    $scope.toggleMinAlarmFrameCount = function()
+    {
 
         var ld = NVRDataModel.getLogin();
 
@@ -1798,54 +1932,57 @@ angular.module('zmApp.controllers')
         doRefresh();
     };
 
-
     //--------------------------------------
     // formats events dates in a nice way
     //---------------------------------------
 
-
-    function humanizeTime(str) {
+    function humanizeTime(str)
+    {
         //console.log ("Time:"+str+" TO LOCAL " + moment(str).local().toString());
         //if (NVRDataModel.getLogin().useLocalTimeZone)
-            return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
-       // else    
-          //  return moment(str).fromNow();
-            
+        return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
+        // else    
+        //  return moment(str).fromNow();
+
     }
 
-    $scope.prettifyDate = function (str) {
+    $scope.prettifyDate = function(str)
+    {
         if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('MMM Do');
         else
-            return moment(str).format('MMM Do');      
+            return moment(str).format('MMM Do');
     };
 
-    function prettifyDate(str) {
+    function prettifyDate(str)
+    {
         if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('MMM Do');
         else
             return moment(str).format('MMM Do');
     }
 
-    $scope.prettifyTime = function (str) {
+    $scope.prettifyTime = function(str)
+    {
         if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormat());
-        else    
+        else
             return moment(str).format(NVRDataModel.getTimeFormat());
     };
 
-    $scope.prettifyTimeSec = function (str) {
+    $scope.prettifyTimeSec = function(str)
+    {
         if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormatSec());
         else
             return moment(str).format(NVRDataModel.getTimeFormatSec());
     };
 
-
-    $scope.prettify = function (str) {
+    $scope.prettify = function(str)
+    {
         if (NVRDataModel.getLogin().useLocalTimeZone)
             return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format(NVRDataModel.getTimeFormat() + ', MMMM Do YYYY');
-        else    
+        else
             return moment(str).format(NVRDataModel.getTimeFormat() + ', MMMM Do YYYY');
     };
     //--------------------------------------------------------
@@ -1856,31 +1993,33 @@ angular.module('zmApp.controllers')
     // a large list
     //--------------------------------------------------------
 
-    $scope.dummyDoRefresh = function () {
+    $scope.dummyDoRefresh = function()
+    {
         $scope.$broadcast('scroll.refreshComplete');
     };
 
-
-    $scope.doRefresh = function () {
+    $scope.doRefresh = function()
+    {
         doRefresh();
     }; //dorefresh
 
-    function doRefresh() {
+    function doRefresh()
+    {
         // console.log("***Pull to Refresh");
 
         NVRDataModel.debug("Reloading monitors");
         var refresh = NVRDataModel.getMonitors(1);
-        refresh.then(function (data) {
+        refresh.then(function(data)
+        {
             $scope.monitors = data;
-            
-           /* var ld = NVRDataModel.getLogin();
-            if (ld.persistMontageOrder) {
-                var tempMon = data;
-                $scope.monitors = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2)[0];
-            } else {
-                $scope.monitors = data;
-            }*/
 
+            /* var ld = NVRDataModel.getLogin();
+             if (ld.persistMontageOrder) {
+                 var tempMon = data;
+                 $scope.monitors = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2)[0];
+             } else {
+                 $scope.monitors = data;
+             }*/
 
             getInitialEvents();
             moreEvents = true;

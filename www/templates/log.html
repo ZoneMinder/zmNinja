@@ -1,29 +1,20 @@
 <ion-view view-title="{{'kLogs' | translate}}">
-
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-        
-
-        
     </ion-nav-buttons>
-
     <ion-nav-buttons side="right">
         <a class="button button-icon icon ion-trash-a" ng-href="" ng-click="deleteLogs()"></a>
-        
         <div ng-if="$root.platformOS!='desktop'">
-            <a style="" class="button button-icon icon ion-email"
-           ng-href="" ng-click="sendEmail(log.logString)" > </a>
+            <a style="" class="button button-icon icon ion-email" ng-href="" ng-click="sendEmail(log.logString)"> </a>
         </div>
         <div ng-if="$root.platformOS=='desktop'">
-            <a style="" class="button button-icon icon ion-android-download"
-           ng-href="" ng-click="sendEmail(log.logString)" > </a>
+            <a style="" class="button button-icon icon ion-android-download" ng-href="" ng-click="sendEmail(log.logString)"> </a>
         </div>
     </ion-nav-buttons>
-
-    <ion-content scroll-sista delegate-handle="none"  overflow-scroll="false"  mouse-wheel-scroll>
-        <b>{{$root.appName}} {{'kVersion'|translate}}: {{zmAppVersion}}</b><br/>
+    <ion-content scroll-sista delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
+        <b>{{$root.appName}} {{'kVersion'|translate}}: {{zmAppVersion}}</b>
+        <br/>
         <!-- don't indent here -- its a pre-->
         <pre>{{log.logString}}</pre>
     </ion-content>

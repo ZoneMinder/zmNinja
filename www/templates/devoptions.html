@@ -21,7 +21,8 @@
                 <ion-toggle ng-model="loginData.use24hr" ng-checked="{{loginData.use24hr}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnable24hr' | translate}}</span></ion-toggle>
             </label>
             <label>
-                <ion-toggle ng-model="loginData.useLocalTimeZone" ng-checked="{{loginData.useLocalTimeZone}}" ng-disabled="!isTzSupported()" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kLocalTimeZone' | translate}}<span ng-if="!isTzSupported()"><p>{{'kTimeZoneNotSupported' | translate}}</p></span><span ng-if="isTzSupported()"><p>{{'kServerTimeZone' | translate}}:{{getTimeZoneNow()}}</p></span></span></ion-toggle>
+                <ion-toggle ng-model="loginData.useLocalTimeZone" ng-checked="{{loginData.useLocalTimeZone}}" ng-disabled="!isTzSupported()" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kLocalTimeZone' | translate}}<span ng-if="!isTzSupported()"><p>{{'kTimeZoneNotSupported' | translate}}</p></span><span ng-if="isTzSupported()"><p>{{'kServerTimeZone' | translate}}:{{getTimeZoneNow()}}</p></span></span>
+                </ion-toggle>
             </label>
             <div ng-if="$root.platformOS=='android'">
                 <label>
@@ -41,9 +42,6 @@
                             toggle-class="toggle-calm">use ZMS for events footage</ion-toggle>
             </label>
             -->
-
-            
-
             <div class="item item-text-wrap item-input-inset">
                 {{'kMaxMonitorsMontage' | translate }}&nbsp;
                 <label class="item-input-wrapper">
