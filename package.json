@@ -93,7 +93,9 @@
     {
       "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
       "id": "cordova-plugin-certificates"
-    }
+    },
+    "cordova-plugin-photo-library",
+    "cordova-plugin-add-swift-support"
   ],
   "cordovaPlatforms": [
     {
