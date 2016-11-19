@@ -968,6 +968,7 @@ angular.module('zmApp.controllers')
                         'gifHeight': ad.h,
                         'images': imgs,
                         'interval':1,
+                        'sampleInterval':20,
                         //'frameDur':5, // 1/2 a sec
                         'text': 'zmNinja',
                         'crossOrigin': 'use-credentials',

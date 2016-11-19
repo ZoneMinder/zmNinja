@@ -93,7 +93,7 @@ angular.module('zmApp', [
     monSingleImageQualityLowBW: 70,
     montageQualityLowBW: 50,
     eventMontageQualityLowBW: 50,
-    maxGifCount:50, 
+    maxGifCount:70, 
 
 })
 
