@@ -163,7 +163,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         NVRDataModel.debug("Player is ready");
         $timeout(function()
         {
+            handle.setPlayback(2);
             handle.play();
+
         }, 400);
 
         // window.stop();

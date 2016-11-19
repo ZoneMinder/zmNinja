@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot */
+/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot, AnimatedGIF */
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
@@ -961,6 +961,7 @@ angular.module('zmApp.controllers')
                     var ad = adjustAspect(e);
                     console.log("SAVING W=" + ad.w + " H=" + ad.h);
 
+                    //AnimatedGIF.setRepeat(null);
                     gifshot.createGIF(
                     {
                         //'images': ['http://i.imgur.com/2OO33vX.jpg', 'http://i.imgur.com/qOwVaSN.png', 'http://i.imgur.com/Vo5mFZJ.gif'],
@@ -968,6 +969,7 @@ angular.module('zmApp.controllers')
                         'gifHeight': ad.h,
                         'images': imgs,
                         'interval':1,
+                        //'loop':null,
                         'sampleInterval':20,
                         //'frameDur':5, // 1/2 a sec
                         'text': 'zmNinja',
