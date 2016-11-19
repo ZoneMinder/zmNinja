@@ -118,7 +118,7 @@ angular.module('zmApp.controllers')
 
         //console.log ("********* BEFORE ENTER");
         //
-        $scope.gifshotSupported =gifshot.isSupported();
+        $scope.gifshotSupported = gifshot.isExistingImagesGIFSupported();
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
@@ -844,7 +844,9 @@ angular.module('zmApp.controllers')
                         if (data.event.Frame[i].Type == "Alarm")
                         {
                             var fname;
-                            if (e.Event.imageMode == 'path')
+                            console.log ("PATH="+e.Event.imageMode);
+                            //if (e.Event.imageMode == 'path')
+                            if (1)
                             {
                                 var rfp = padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg";
                                 fname = e.Event.baseURL + "/index.php?view=image&path=" + e.Event.relativePath + rfp;
@@ -878,8 +880,10 @@ angular.module('zmApp.controllers')
     // force image to be 800px. TBD: rotated foo
     function adjustAspect(e)
     {
+
+
         var w = 800;
-        var h = parseInt(e.Event.Height / e.Event.Width * 800.0);
+        var h = Math.round(e.Event.Height / e.Event.Width * 800.0);
         return {
             w: w,
             h: h
@@ -887,7 +891,44 @@ angular.module('zmApp.controllers')
 
     }
 
-    $scope.downloadAsGif = function(e)
+    $scope.permissionsDownload = function(e)
+    {
+        if ($rootScope.platformOS == 'desktop')
+        {
+            downloadAsGif(e);
+        }
+        else
+        {
+
+            console.log ("in perms");
+            cordova.plugins.photoLibrary.getLibrary(
+              function (library) { downloadAsGif(e);},
+              function (err) {
+                if (err.startsWith('Permission')) {
+                  // call requestAuthorization, and retry
+                  cordova.plugins.photoLibrary.requestAuthorization(
+                    function () {
+                      // User gave us permission to his library, retry reading it!
+                      downloadAsGif(e);
+                    },
+                    function (err) {
+                        NVRDataModel.log ("ERROR with saving permissions "+err);
+                      // User denied the access
+                    }, // if options not provided, defaults to {read: true}. 
+                    {
+                      read: true,
+                      write: true
+                    }
+                  );
+                }
+                // Handle error - it's not permission-related
+              }
+            );
+
+        }
+    };
+
+    function downloadAsGif(e)
     {
         $ionicLoading.show(
         {
@@ -907,11 +948,16 @@ angular.module('zmApp.controllers')
 
                     gifshot.createGIF(
                     {
-                        //'images': ['http://i.imgur.com/2OO33vX.jpg', 'http://i.imgur.com/qOwVaSN.png', 'http://i.imgur.com/Vo5mFZJ.gif']
+                        //'images': ['http://i.imgur.com/2OO33vX.jpg', 'http://i.imgur.com/qOwVaSN.png', 'http://i.imgur.com/Vo5mFZJ.gif'],
                         'gifWidth': ad.w,
                         'gifHeight': ad.h,
                         'images': imgs,
                         'text': 'zmNinja',
+                        'crossOrigin': 'use-credentials',
+                        'progressCallback': function (cp)
+                        {
+                            var p = Math.round(cp * 100);
+                            $ionicLoading.show({template: $translate.instant('kPleaseWait') + "...("+p+"%)",noBackdrop: true});}
                     }, function(obj)
                     {
                         if (!obj.error)
@@ -919,18 +965,14 @@ angular.module('zmApp.controllers')
                             //console.log(obj.image);
 
                             var blob;
-                            
-                            
-
-                            
 
                             if ($rootScope.platformOS == 'desktop')
                             {
-                                
+
                                 obj.image = obj.image.replace(/data:image\/gif;base64,/, '');
                                 blob = base64toBlob(obj.image, "image/gif");
                                 var f = NVRDataModel.getMonitorName(e.Event.MonitorId);
-                                f = f+"-"+e.Event.Id+".gif";
+                                f = f + "-" + e.Event.Id + ".gif";
                                 saveAs(blob, f);
                                 $ionicLoading.hide();
                             }
@@ -939,10 +981,18 @@ angular.module('zmApp.controllers')
                             {
                                 NVRDataModel.debug("Saving blob to gallery...");
                                 var album = "zmNinja";
-                                cordova.plugins.photoLibrary.saveImage(obj.image, album, 
-                                    function () {$ionicLoading.hide(); NVRDataModel.debug ("Event saved");}, 
-                                    function (err) {$ionicLoading.hide(); NVRDataModel.debug("Saving ERROR="+err);});
-                         
+                                cordova.plugins.photoLibrary.saveImage(obj.image, album,
+                                    function()
+                                    {
+                                        $ionicLoading.hide();
+                                        NVRDataModel.debug("Event saved");
+                                    },
+                                    function(err)
+                                    {
+                                        $ionicLoading.hide();
+                                        NVRDataModel.debug("Saving ERROR=" + err);
+                                    });
+
                             }
 
                         }
@@ -960,7 +1010,7 @@ angular.module('zmApp.controllers')
                 }
 
             );
-    };
+    }
 
     //--------------------------------------------------------------------------
     // Takes care of deleting individual events
