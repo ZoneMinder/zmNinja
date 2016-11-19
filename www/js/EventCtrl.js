@@ -825,7 +825,7 @@ angular.module('zmApp.controllers')
     //----------------------------------------------------------
     // create an array of images
     // too keep memory manageable, we are only  going to pick up alarmed frames
-    // and that too, max 2fps
+    // and that too, max 1ps
     // --------------------------------------------------------------
     function prepareImages(e)
     {
@@ -842,30 +842,45 @@ angular.module('zmApp.controllers')
                     for (var i = 0; i < data.event.Frame.length; i++)
                     {
                         if (data.event.Frame[i].Type == "Alarm")
+                        //if (1)
                         {
                             var fname;
-                            console.log ("PATH="+e.Event.imageMode);
-                            //if (e.Event.imageMode == 'path')
-                            if (1)
+                            //console.log ("PATH="+e.Event.imageMode);
+                            if (e.Event.imageMode == 'path')
+                            //if (1)
                             {
                                 var rfp = padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg";
-                                fname = e.Event.baseURL + "/index.php?view=image&path=" + e.Event.relativePath + rfp;
+                                fname = e.Event.baseURL + "/index.php?view=image&width=800&path=" + e.Event.relativePath + rfp;
                             }
                             else
                             {
-                                fname = e.Event.baseURL + "/index.php?view=image&fid=" + data.event.Frame[i].Id;
+                                fname = e.Event.baseURL + "/index.php?view=image&width=800&fid=" + data.event.Frame[i].Id;
                             }
 
-                            if (data.event.Frame[i].TimeStamp != lastTime || fps < 2)
+                            if (data.event.Frame[i].TimeStamp != lastTime  /*|| fps < 2*/)
                             {
                                 imglist.push(fname);
-                                fps = data.event.Frame[i].TimeStamp != lastTime ? 0 : fps++;
+                                //fps = data.event.Frame[i].TimeStamp != lastTime ? 0 : fps+1;
                                 lastTime = data.event.Frame[i].TimeStamp;
                             }
 
                         }
 
                     }
+
+                    // next up make sure we are not processing more than 100 images
+                    
+                    while (imglist.length > zm.maxGifCount)
+                    {
+                        NVRDataModel.debug ("Too many images: " +imglist.length+", deleting  alternate frames to keep it <="+zm.maxGifCount);
+
+                        for(var l = 0; l < imglist.length; l++) {
+                            imglist.splice(l+1,2);
+                            if (imglist.length <=zm.maxGifCount) break;
+                        }
+
+                    }
+
                     d.resolve(imglist);
                     return d.promise;
                 },
@@ -880,7 +895,6 @@ angular.module('zmApp.controllers')
     // force image to be 800px. TBD: rotated foo
     function adjustAspect(e)
     {
-
 
         var w = 800;
         var h = Math.round(e.Event.Height / e.Event.Width * 800.0);
@@ -941,6 +955,7 @@ angular.module('zmApp.controllers')
             .then(function(imgs)
                 {
 
+                    console.log ("TOTAL IMAGES TO GIF="+imgs.length);
                     console.log(JSON.stringify(imgs));
 
                     var ad = adjustAspect(e);
@@ -952,6 +967,8 @@ angular.module('zmApp.controllers')
                         'gifWidth': ad.w,
                         'gifHeight': ad.h,
                         'images': imgs,
+                        'interval':1,
+                        //'frameDur':5, // 1/2 a sec
                         'text': 'zmNinja',
                         'crossOrigin': 'use-credentials',
                         'progressCallback': function (cp)
