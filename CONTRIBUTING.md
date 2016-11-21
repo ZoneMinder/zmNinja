@@ -4,3 +4,53 @@ The source code will always be available under CC BY-NC-SA 4.0. If you'd like to
 
 Thanks.
 
+
+##### Steps for code contribution
+
+It's best if you follow a proper process to contribute code - makes it easy for me to track/review. You will need `git` 
+
+###### One time 
+* checkout zmNinja and make sure you link it to my repository(you only need to do this once) 
+
+* This sets up a local copy of my repo
+```
+git checkout https://github.com/pliablepixels/zmNinja.git
+```
+* This will link your repo to mine (needed for future pushes)
+```
+git add upstream https://github.com/pliablepixels/zmNinja.git
+```
+
+
+###### every time you want to contribute
+* cd `<wherever you cloned my repo>/zmNinja`
+
+* Make sure you have the latest version of my repo
+
+```
+git checkout master
+git pull upstream master
+
+```
+
+* Let's suppose you want to add some "new-feature"
+
+* Create an ISSUE on [zmNinja github issues](https://github.com/pliablepixels/zmNinja/issues)
+
+* Note down the issue number (lets say its 1234)
+
+* create a branch in your local git copy
+```
+git checkout -b 1234-new-feature (replace 1234 and new-feature)
+```
+
+You will now be in a new branch for you to develop the feature
+
+* You can keep testing your changes. Make sure you commit often via `git add <files>` and `git commit -m "comments on changes" .`(you are committing to your local copy, not my repo)
+
+* Once done, go to your github webpage and you will see a "create pull request" button in green. Review what you are doing a pull request for and click that button - I'll get an email you want me to review your changes
+
+
+
+
+
