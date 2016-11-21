@@ -10,13 +10,14 @@ Thanks.
 It's best if you follow a proper process to contribute code - makes it easy for me to track/review. You will need `git` 
 
 ### One time 
-* checkout zmNinja and make sure you link it to my repository(you only need to do this once) 
+* [Fork](https://guides.github.com/activities/forking/) zmNinja using the "Fork" button on the top right of the [zmNinja project](https://github.com/pliablepixels/zmNinja). This creates your own copy (or fork) of zmNinja on github:
 
-* This sets up a local copy of my repo
+* Now launch a command line and make a local copy of your fork
 ```
-git checkout https://github.com/pliablepixels/zmNinja.git
+git clone https://github.com/<your github username>/zmNinja.git
 ```
-* This will link your repo to mine (needed for future pushes)
+
+* Now connect your copy to my repository (needed for future pushes)
 ```
 git add upstream https://github.com/pliablepixels/zmNinja.git
 ```
@@ -30,7 +31,6 @@ git add upstream https://github.com/pliablepixels/zmNinja.git
 ```
 git checkout master
 git pull upstream master
-
 ```
 
 * Let's suppose you want to add some "new-feature"
@@ -46,7 +46,11 @@ git checkout -b 1234-new-feature (replace 1234 and new-feature)
 
 You will now be in a new branch for you to develop the feature
 
-* You can keep testing your changes. Make sure you commit often via `git add <files>` and `git commit -m "comments on changes" .`(you are committing to your local copy, not my repo)
+* You can keep testing your changes. Make sure you commit often via `git add <files>` and `git commit -m "comments describing change" .`(you are committing to your local copy only here). 
+
+* So far, you are committing changes to your local copy. To push it to your fork of zmNinja on github, do `git push origin 1234-new-feature` (replace 1234 and new-feature)
+
+* Keep repeating above steps as many times as you want till the code is ready.	
 
 * Once done, go to your github webpage and you will see a "create pull request" button in green. Review what you are doing a pull request for and click that button - I'll get an email you want me to review your changes
 
