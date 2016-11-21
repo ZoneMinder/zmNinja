@@ -1,15 +1,15 @@
-####Contributing to zmNinja
+##Contributing to zmNinja
 
 The source code will always be available under CC BY-NC-SA 4.0. If you'd like to contribute please know that if your changes are accepted and merged they will make it to the App/Play Store when I publish the app. This does not entitle you to any remuneration - If you still would like to contribute and make this solution better, please go right ahead. If you feel this prohibits you from contributing, please create a bug report or enhancement request via the github issue tracker and I'll incorporate it when I have time/agree its a good idea.
 
 Thanks.
 
 
-##### Steps for code contribution
+## Steps for code contribution
 
 It's best if you follow a proper process to contribute code - makes it easy for me to track/review. You will need `git` 
 
-###### One time 
+### One time 
 * checkout zmNinja and make sure you link it to my repository(you only need to do this once) 
 
 * This sets up a local copy of my repo
@@ -22,7 +22,7 @@ git add upstream https://github.com/pliablepixels/zmNinja.git
 ```
 
 
-###### every time you want to contribute
+### Every time you want to contribute
 * cd `<wherever you cloned my repo>/zmNinja`
 
 * Make sure you have the latest version of my repo
