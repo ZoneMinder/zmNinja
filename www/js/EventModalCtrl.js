@@ -163,7 +163,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         // we need this timeout to avoid load interrupting
         // play -- I suppose its an angular digest foo thing
-        
+        console.log ("*********** ON PLAY READY");
         handle = api;
 
         $ionicLoading.show(
@@ -174,16 +174,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         NVRDataModel.debug("Player is ready");
         $timeout(function()
         {
-            handle.setPlayback(2);
-            handle.play();
+                handle.pause();
+                handle.setPlayback(2);
+                handle.play();
 
-        }, 400);
+        }, 300);
 
         // window.stop();
     };
 
     $scope.onCanPlay = function()
     {
+        console.log ("*********** CAN PLAY");
         $ionicLoading.hide();
         NVRDataModel.debug("This video can be played");
         $scope.videoObject.config.cuepoints.points = [];

@@ -95,9 +95,7 @@ angular.module('zmApp.controllers')
         {
             showHiddenMonitors = false;
         }
-        // console.log (">>>>>>>>>>>>>>>>>SHOWHIDDEN IS " + showHiddenMonitors);
-
-        // lets get the abbreviated version of TZ to display
+       
         if (NVRDataModel.getLogin().useLocalTimeZone)
         {
             $scope.tzAbbr = moment().tz(moment.tz.guess()).zoneAbbr();
@@ -203,22 +201,7 @@ angular.module('zmApp.controllers')
         $http.get(apiurl)
             .success(function(data) {})
             .error(function(err) {});
-        /*
-        myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
-        myevents[i].Event.MonitorName = NVRDataModel.getMonitorName(myevents[i].Event.MonitorId);
-        // now construct base path
-
-        myevents[i].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[i].Event.MonitorId);
-        myevents[i].Event.baseURL = NVRDataModel.getBaseURL(myevents[i].Event.MonitorId);
-        myevents[i].Event.imageMode = NVRDataModel.getImageMode(myevents[i].Event.MonitorId);
-        // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
-
-        //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
-
-        myevents[i].Event.ShowScrub = false;
-        myevents[i].Event.BasePath = computeBasePath(myevents[i]);
-        myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
-        */
+       
     }
 
     function getTextZoomCallback(tz)
@@ -948,7 +931,7 @@ angular.module('zmApp.controllers')
         {
             template: $translate.instant('kPleaseWait') + "...",
             noBackdrop: true,
-            //duration: 10000
+            duration: 20000
         });
 
         prepareImages(e)
@@ -961,10 +944,10 @@ angular.module('zmApp.controllers')
                     var ad = adjustAspect(e);
                     console.log("SAVING W=" + ad.w + " H=" + ad.h);
 
-                    //AnimatedGIF.setRepeat(null);
+                   
                     gifshot.createGIF(
                     {
-                        //'images': ['http://i.imgur.com/2OO33vX.jpg', 'http://i.imgur.com/qOwVaSN.png', 'http://i.imgur.com/Vo5mFZJ.gif'],
+                       
                         'gifWidth': ad.w,
                         'gifHeight': ad.h,
                         'images': imgs,
@@ -977,7 +960,7 @@ angular.module('zmApp.controllers')
                         'progressCallback': function (cp)
                         {
                             var p = Math.round(cp * 100);
-                            $ionicLoading.show({template: $translate.instant('kPleaseWait') + "...("+p+"%)",noBackdrop: true});}
+                            $ionicLoading.show({template: $translate.instant('kPleaseWait') + "...("+p+"%)",noBackdrop: true });}
                     }, function(obj)
                     {
                         if (!obj.error)
