@@ -10,7 +10,7 @@ Thanks.
 It's best if you follow a proper process to contribute code - makes it easy for me to track/review. You will need `git` 
 
 If you are familiar with doing Pull Requests, you can ignore detailed instructions below - just do the following:
-* create a github issue in zmNinja describing your feature
+* create a [github issue](https://github.com/pliablepixels/zmNinja/issues) in zmNinja describing your feature
 * create a fork and create a local branch using the issue# created (Example 459-new-feature)
 * Make your changes on that branch and push/PR
 
