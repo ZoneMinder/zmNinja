@@ -1,3 +1,6 @@
+
+If you are familiar with using git, I'd prefer if you follow the Pull Request process [here](https://github.com/pliablepixels/zmNinja/blob/master/CONTRIBUTING.md#steps-for-code-contribution).
+
 ####Adding a new language
 * Languages translations are available [here](https://github.com/pliablepixels/zmNinja/tree/master/www/lang)
 * To contribute a new language, add a new ``locale-xx.json`` (where `xx` is your language code).
