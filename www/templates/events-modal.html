@@ -28,6 +28,9 @@
                                         <vg-time-display>{{ videoTime(event.Event.StartTime, currentTime ); }}</vg-time-display>
                                         <vg-scrub-bar>
                                             <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                            <vg-cuepoints vg-cuepoints-config="videoObject.config.cuepoints"
+                                                            vg-cuepoints-theme="videoObject.config.cuepoints.theme.url">
+                                                        </vg-cuepoints>
                                         </vg-scrub-bar>
                                         <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
                                         <vg-fullscreen-button></vg-fullscreen-button>

@@ -13,6 +13,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.loginData = NVRDataModel.getLogin();
     $scope.currentRate = '-';
     var timeFormat = 'MM/DD/YYYY HH:mm:ss';
+    var event;
+    var gEvent;
 
     var framearray = {
 
@@ -165,6 +167,25 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         {
             handle.setPlayback(2);
             handle.play();
+
+            // now set up cue points
+            NVRDataModel.debug("Setting cue points..");
+            //console.log ("jEvent=" + JSON.stringify(currentEvent));
+            //var event = $scope.currentEvent.event;
+           // console.log (JSON.stringify(event));
+            var st  = moment(currentEvent.Event.StartTime);
+            for (var l=0; l<currentEvent.Frame.length; l++ )
+            {
+                if (currentEvent.Frame[l].Type=='Alarm')
+                {
+                    var ft = moment(currentEvent.Frame[l].TimeStamp);
+                    var s = st.diff(ft,'seconds');
+                    //console.log("START="+currentEvent.Event.StartTime);
+                    //console.log("END="+currentEvent.Frame[l].TimeStamp);
+                    NVRDataModel.debug ("alarm cue at:"+s+"s");
+                    $scope.videoObject.config.cuepoints.points.push({time:s});
+                }
+            }
 
         }, 400);
 
@@ -547,7 +568,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     .then(function(success)
                         {
 
-                            var event = success.data.event;
+                             event = success.data.event;
 
                             event.Event.BasePath = computeBasePath(event);
                             event.Event.relativePath = computeRelativePath(event);
@@ -856,7 +877,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         $scope.currentFrame = 1;
         $scope.isPaused = false;
+
+        gEvent = $scope.currentEvent;
         //console.log ("CURRENT EVENT " + JSON.stringify($scope.currentEvent));
+        //
         $scope.currentEventDuration = Math.floor($scope.currentEvent.Event.Length);
         //console.log ($scope.event.Event.Frames);
         if (currentEvent && currentEvent.Event)
@@ -1584,6 +1608,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                             ],
 
                             theme: "lib/videogular-themes-default/videogular.css",
+                            cuepoints: {
+                                    theme: {
+                                        url:"lib/videogular-cuepoints/cuepoints.css"
+                                    },
+                                    points: [],
+                            }
                         }
                     };
 

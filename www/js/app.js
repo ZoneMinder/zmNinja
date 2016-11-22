@@ -26,7 +26,8 @@ angular.module('zmApp', [
     'ionic-native-transitions',
     'mgo-angular-wizard',
     'pascalprecht.translate',
-    'jett.ionic.scroll.sista'
+    'jett.ionic.scroll.sista',
+    'uk.ac.soton.ecs.videogular.plugins.cuepoints'
 
 ])
 
