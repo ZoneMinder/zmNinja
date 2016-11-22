@@ -162,6 +162,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         // we need this timeout to avoid load interrupting
         // play -- I suppose its an angular digest foo thing
+        
+
+
+        $ionicLoading.show(
+        {
+            template: "<ion-spinner icon='ripple' class='spinner-energized'></ion-spinner><br/>" + $translate.instant('kVideoLoading')+"...",
+            
+        });
         NVRDataModel.debug("Player is ready");
         $timeout(function()
         {
@@ -179,7 +187,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 if (currentEvent.Frame[l].Type=='Alarm')
                 {
                     var ft = moment(currentEvent.Frame[l].TimeStamp);
-                    var s = st.diff(ft,'seconds');
+                    var s = Math.abs(st.diff(ft,'seconds'));
                     //console.log("START="+currentEvent.Event.StartTime);
                     //console.log("END="+currentEvent.Frame[l].TimeStamp);
                     NVRDataModel.debug ("alarm cue at:"+s+"s");
@@ -194,11 +202,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.onCanPlay = function()
     {
+        $ionicLoading.hide();
         NVRDataModel.debug("This video can be played");
     };
 
     $scope.onVideoError = function(event)
     {
+        $ionicLoading.hide();
         if (!$scope.isModalActive) return;
         NVRDataModel.debug("player reported a video error:" + JSON.stringify(event));
         $rootScope.zmPopup = SecuredPopups.show('alert',
