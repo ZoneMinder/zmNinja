@@ -7,7 +7,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.openMenu = function()
     {
 
-        saveItems(false);
+    if ($scope.loginData.serverName)
+            saveItems(false);
         $ionicSideMenuDelegate.toggleLeft();
 
     };
