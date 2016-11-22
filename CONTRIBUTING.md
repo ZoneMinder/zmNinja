@@ -16,7 +16,8 @@ If you are familiar with doing Pull Requests, you can ignore detailed instructio
 
 If you are not familiar with the Pull Request process, these steps explain further:
 
-### One time 
+### Detailed instructions (for folks who are not familiar with Pull Requests)
+#### One time 
 * [Fork](https://guides.github.com/activities/forking/) zmNinja using the "Fork" button on the top right of the [zmNinja project](https://github.com/pliablepixels/zmNinja). This creates your own copy (or fork) of zmNinja on github:
 
 * Now launch a command line and make a local copy of your fork
@@ -30,7 +31,7 @@ git add upstream https://github.com/pliablepixels/zmNinja.git
 ```
 
 
-### Every time you want to contribute
+#### Every time you want to contribute
 * cd `<wherever you cloned my repo>/zmNinja`
 
 * Make sure you have the latest version of my repo
