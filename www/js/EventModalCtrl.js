@@ -15,6 +15,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var timeFormat = 'MM/DD/YYYY HH:mm:ss';
     var event;
     var gEvent;
+    var handle;
 
     var framearray = {
 
@@ -157,13 +158,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     };
 
-    $scope.onPlayerReady = function(handle)
+    $scope.onPlayerReady = function(api)
     {
 
         // we need this timeout to avoid load interrupting
         // play -- I suppose its an angular digest foo thing
         
-
+        handle = api;
 
         $ionicLoading.show(
         {
@@ -176,25 +177,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             handle.setPlayback(2);
             handle.play();
 
-            // now set up cue points
-            NVRDataModel.debug("Setting cue points..");
-            //console.log ("jEvent=" + JSON.stringify(currentEvent));
-            //var event = $scope.currentEvent.event;
-           // console.log (JSON.stringify(event));
-            var st  = moment(currentEvent.Event.StartTime);
-            for (var l=0; l<currentEvent.Frame.length; l++ )
-            {
-                if (currentEvent.Frame[l].Type=='Alarm')
-                {
-                    var ft = moment(currentEvent.Frame[l].TimeStamp);
-                    var s = Math.abs(st.diff(ft,'seconds'));
-                    //console.log("START="+currentEvent.Event.StartTime);
-                    //console.log("END="+currentEvent.Frame[l].TimeStamp);
-                    NVRDataModel.debug ("alarm cue at:"+s+"s");
-                    $scope.videoObject.config.cuepoints.points.push({time:s});
-                }
-            }
-
         }, 400);
 
         // window.stop();
@@ -204,6 +186,33 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
         $ionicLoading.hide();
         NVRDataModel.debug("This video can be played");
+        $scope.videoObject.config.cuepoints.points = [];
+          // now set up cue points
+            NVRDataModel.debug("Setting cue points..");
+            NVRDataModel.debug ("API-Total length:"+currentEvent.Event.Length);
+
+            var vt1 = $filter('date')(handle.totalTime, "ss");
+           
+            NVRDataModel.debug ("reported player length:"+vt1);
+            var factor = vt1/currentEvent.Event.Length;
+            NVRDataModel.debug ("hack - conversion factor:"+factor);
+             //NVRDataModel.debug ("Video-Total length left:"+handle.timeLeft);
+            //console.log ("jEvent=" + JSON.stringify(currentEvent));
+            //var event = $scope.currentEvent.event;
+           // console.log (JSON.stringify(event));
+            var st  = moment(currentEvent.Event.StartTime);
+            for (var l=0; l<currentEvent.Frame.length; l++ )
+            {
+                if (currentEvent.Frame[l].Type=='Alarm')
+                {
+                    var ft = moment(currentEvent.Frame[l].TimeStamp);
+                    var s = factor*Math.abs(st.diff(ft,'seconds'));
+                    //console.log("START="+currentEvent.Event.StartTime);
+                    //console.log("END="+currentEvent.Frame[l].TimeStamp);
+                    NVRDataModel.debug ("alarm cue at:"+s+"s");
+                    $scope.videoObject.config.cuepoints.points.push({time:s});
+                }
+            }
     };
 
     $scope.onVideoError = function(event)
