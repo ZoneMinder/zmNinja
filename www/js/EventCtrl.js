@@ -399,6 +399,13 @@ angular.module('zmApp.controllers')
 
                             }
 
+                            if (myevents[i].Event.imageMode == 'path')
+                            //if (1)
+                                myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/events/" + myevents[i].Event.relativePath + myevents[i].Event.DefaultVideo;
+                            else
+                                myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
+
+
                             if (idfound)
                             {
                                 $scope.events.push(myevents[i]);
@@ -525,6 +532,16 @@ angular.module('zmApp.controllers')
         }
 
     }
+
+    $scope.mp4warning = function()
+    {
+          $ionicPopup.alert(
+            {
+                title: $translate.instant('kNote'),
+                template: "{{'kVideoMp4Warning' | translate }}"
+            });
+    };
+    
 
     $scope.showImage = function(p, r, f, fid, e, imode, id, parray, ndx)
     {
@@ -2121,6 +2138,15 @@ angular.module('zmApp.controllers')
                         myevents[i].Event.BasePath = computeBasePath(myevents[i]);
                         myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
                         myevents[i].Event.height = eventsListDetailsHeight;
+
+
+                        if (myevents[i].Event.imageMode == 'path')
+                        //if (1)
+                            myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/events/" + myevents[i].Event.relativePath + myevents[i].Event.DefaultVideo;
+                        else
+                            myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
+
+
                         if (idfound) $scope.events.push(myevents[i]);
                     }
 

@@ -6,6 +6,29 @@
     font-style: normal;
 }
 
+
+.icon.gif-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 100%;
+  /*background-image: url('../img/gif.svg');*/
+  background-image: url('../img/gif-anim.png');
+  background-size:contain;
+}
+
+
+.icon.mp4-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 100%;
+  /*background-image: url('../img/gif.svg');*/
+  background-image: url('../img/mp4.svg');
+  background-size:contain;
+}
+
+
+
+
 .icon-super-speed:before {
     font-family: "fontawesome";
     content: "\f135";
