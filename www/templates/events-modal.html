@@ -19,7 +19,7 @@
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
                         <div ng-if="videoIsReady">
                             <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">
-                                <videogular vg-error="onVideoError($event)" vg-can-play="onCanPlay()"  vg-player-ready="onPlayerReady($API)" vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)">
+                                <videogular vg-error="onVideoError($event)" vg-can-play="onCanPlay()"  vg-native-fullscreen="videoObject.config.nativeFullScreen" vg-player-ready="onPlayerReady($API)" vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)">
                                     <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
                                     </vg-media>
                                     <vg-controls>

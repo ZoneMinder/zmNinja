@@ -1618,6 +1618,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                             autoPlay: true,
                             responsive: false,
                             nativeControls: false,
+                            nativeFullScreen:false,
 
                             playsInline: true,
                             sources: [

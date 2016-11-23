@@ -12,6 +12,7 @@
     <access launch-external="yes" origin="mailto:*" />
     <allow-navigation href="*" />
     <allow-intent href="*" />
+    <preference name="AllowInlineMediaPlayback" value="true" />
     <preference name="CrosswalkAnimatable" value="true" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
