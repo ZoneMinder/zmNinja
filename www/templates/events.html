@@ -71,6 +71,10 @@
 
                             <a ng-if="event.Event.DefaultVideo!='' && $root.platformOS=='desktop' " class="button button-clear button-small icon mp4-icon" href="{{event.Event.videoPath}}" download="{{event.Event.Id}}-video.mp4" ng-click="mp4warning()"></a>
 
+                             <!--<button ng-if="event.Event.DefaultVideo!='' && $root.platformOS!='desktop'" class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath)"> 
+                            </button>-->
+
+
                             </div>
                             <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                             <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;

@@ -1,6 +1,6 @@
 /* jshint -W041 */
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot, AnimatedGIF */
+/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot, AnimatedGIF , LibraryHelper*/
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
@@ -36,7 +36,7 @@ angular.module('zmApp.controllers')
 
 })
 
-.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate)
+.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer)
 {
 
     // events in last 5 minutes
@@ -532,6 +532,26 @@ angular.module('zmApp.controllers')
         }
 
     }
+
+
+    $scope.downloadFileToDevice = function(path) {
+       // var url = "http://your_ip_address/images/my.jpg";
+        LibraryHelper.saveVideoToLibrary(onSuccess, onError, path, "zmNinja");   
+        //cordova.plugins.PhotoLibrary.videofromUrl(path, onSuccess, onError);
+
+        function onSuccess(results) 
+        {
+            console.log("Duration: " + results.duration); 
+            console.log("Thumbnail path on disk: " + results.thumbnail);
+        }
+
+        function onError(error) 
+        {
+            console.log("Error: " + error); 
+            
+        }
+
+     };
 
     $scope.mp4warning = function()
     {
@@ -1588,7 +1608,8 @@ angular.module('zmApp.controllers')
                 event.Event.video = {};
                 var videoURL;
 
-                if (event.Event.imageMode == 'path')
+                //if (event.Event.imageMode == 'path')
+                if (1)
                     videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
                 else
                     videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
