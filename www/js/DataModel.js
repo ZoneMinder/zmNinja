@@ -54,6 +54,10 @@ angular.module('zmApp.controllers')
                 text: 'العربية',
                 value: 'ar'
             },
+            {
+                text: 'Español',
+                value: 'es'
+            },
             /* {
                  text: 'Hindi',
                  value: 'hi'

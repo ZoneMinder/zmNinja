@@ -1815,7 +1815,7 @@ angular.module('zmApp', [
     {
         'en_*': 'en',
         'de_*': 'de',
-        'es_*': 'es',
+        'es_*': 'es', //already exists
         'fr_*': 'fr',
         'it_*': 'it',
         'ru_*': 'ru',
