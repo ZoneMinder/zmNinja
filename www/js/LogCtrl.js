@@ -92,8 +92,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             .then(function(res)
             {
                 if (res)
-                {
-                    logstring = "Logs for version:" + $scope.zmAppVersion + "\n" + logstring;
+                { 
+                    logstring = "Logs for version:" + $scope.zmAppVersion + " ("+$rootScope.platformOS+")\n" + logstring;
                     sendEmailReally(logstring);
                 }
 
