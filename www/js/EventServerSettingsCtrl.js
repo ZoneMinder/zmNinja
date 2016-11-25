@@ -75,6 +75,7 @@
          res = $scope.loginData.eventServerMonitors.split(",");
          minterval = $scope.loginData.eventServerInterval.split(",");
 
+         var monchecked = false;
          for (var i = 0; i < $scope.monitors.length; i++)
          {
 
@@ -90,7 +91,21 @@
                  // console.log("Marking true");
                  $scope.monitors[i].Monitor.isChecked = true;
                  $scope.monitors[i].Monitor.reportingInterval = getInterval($scope.monitors[i].Monitor.Id);
+                 monchecked = true;
              }
+
+         }
+
+         // now if none are checked, assume it means all checked. This is related to the
+         // fact that ES will start sending all monitors, even ones you don't have access to
+         if (!monchecked)
+         {
+            NVRDataModel.debug ("Enabling all monitors for event server");
+            for (var j = 0; j < $scope.monitors.length; j++)
+            {
+                $scope.monitors[i].Monitor.isChecked = true;
+                 $scope.monitors[i].Monitor.reportingInterval = 0;
+            }
 
          }
      });
