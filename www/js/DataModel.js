@@ -34,23 +34,6 @@ angular.module('zmApp.controllers')
                 value: 'en'
             },
             {
-                text: 'Italian',
-                value: 'it'
-            },
-            {
-                text: 'Polski',
-                value: 'pl'
-            },
-
-            {
-                text: 'Русский',
-                value: 'ru'
-            },
-            {
-                text: 'Portugese',
-                value: 'pt'
-            },
-            {
                 text: 'العربية',
                 value: 'ar'
             },
@@ -58,6 +41,25 @@ angular.module('zmApp.controllers')
                 text: 'Español',
                 value: 'es'
             },
+            {
+                text: 'Italian',
+                value: 'it'
+            },
+            {
+                text: 'Polski',
+                value: 'pl'
+            },
+            {
+                text: 'Portugese',
+                value: 'pt'
+            },
+            {
+                text: 'Русский',
+                value: 'ru'
+            },
+            
+            
+            
             /* {
                  text: 'Hindi',
                  value: 'hi'
