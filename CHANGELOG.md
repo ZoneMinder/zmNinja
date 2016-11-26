@@ -1,12 +1,40 @@
 # Change Log
 
-## [1.2.29](https://github.com/pliablepixels/zmNinja/tree/1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...1.2.29)
+## [v1.2.30](https://github.com/pliablepixels/zmNinja/tree/v1.2.30) (2016-11-26)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.29...v1.2.30)
+
+**Implemented enhancements:**
+
+- Add ability to download mp4 files: if using feature-264 [\#383](https://github.com/pliablepixels/zmNinja/issues/383)
+- \[H264\] Playback speed in event player [\#382](https://github.com/pliablepixels/zmNinja/issues/382)
+- \[h264\] add cue points in video player for alarmed frames [\#381](https://github.com/pliablepixels/zmNinja/issues/381)
+- Add ability to save animated gif version of event \(alarm frames only\) [\#379](https://github.com/pliablepixels/zmNinja/issues/379)
+
+**Fixed bugs:**
+
+- restricted users for event notification not working [\#391](https://github.com/pliablepixels/zmNinja/issues/391)
+
+**Closed issues:**
+
+- \[BUG\] Window title does not change to 'Events' when in events view [\#389](https://github.com/pliablepixels/zmNinja/issues/389)
+- adding spanish language [\#384](https://github.com/pliablepixels/zmNinja/issues/384)
+- Monitor configuration change hangs on FreeBSD-11 [\#373](https://github.com/pliablepixels/zmNinja/issues/373)
+
+**Merged pull requests:**
+
+- Translation updates. [\#386](https://github.com/pliablepixels/zmNinja/pull/386) ([maymaymay](https://github.com/maymaymay))
+- 384 spanish trans [\#385](https://github.com/pliablepixels/zmNinja/pull/385) ([fxrnando](https://github.com/fxrnando))
+- more minor fixes [\#378](https://github.com/pliablepixels/zmNinja/pull/378) ([maymaymay](https://github.com/maymaymay))
+- minor fixes [\#377](https://github.com/pliablepixels/zmNinja/pull/377) ([maymaymay](https://github.com/maymaymay))
+- minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
 - New language: Polish \(credit @maymaymay\) [\#372](https://github.com/pliablepixels/zmNinja/issues/372)
-- Add button 'Now' to timeline screen [\#371](https://github.com/pliablepixels/zmNinja/issues/371)
+- \[NFR\] Add button 'Now' to timeline screen [\#371](https://github.com/pliablepixels/zmNinja/issues/371)
 - Add Russian language \(credit @BoskSpb\) [\#366](https://github.com/pliablepixels/zmNinja/issues/366)
 - \[H264\] Time overlay during playback [\#362](https://github.com/pliablepixels/zmNinja/issues/362)
 - Option to fit to screen on H264 event playback [\#358](https://github.com/pliablepixels/zmNinja/issues/358)
@@ -685,6 +713,7 @@
 **Closed issues:**
 
 - custom range dates shown even if pullup overwrites them [\#37](https://github.com/pliablepixels/zmNinja/issues/37)
+- Latest Events panel doesn't initialize correctly on first use. [\#36](https://github.com/pliablepixels/zmNinja/issues/36)
 - Android client: System Status view returns HTTP error [\#32](https://github.com/pliablepixels/zmNinja/issues/32)
 - app causes ZM crash/bad behavior after it's been asleep for a while [\#30](https://github.com/pliablepixels/zmNinja/issues/30)
 
