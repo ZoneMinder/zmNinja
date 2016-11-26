@@ -36,7 +36,7 @@ angular.module('zmApp.controllers')
 
 })
 
-.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer)
+.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile)
 {
 
     // events in last 5 minutes
@@ -95,7 +95,7 @@ angular.module('zmApp.controllers')
         {
             showHiddenMonitors = false;
         }
-       
+
         if (NVRDataModel.getLogin().useLocalTimeZone)
         {
             $scope.tzAbbr = moment().tz(moment.tz.guess()).zoneAbbr();
@@ -201,7 +201,7 @@ angular.module('zmApp.controllers')
         $http.get(apiurl)
             .success(function(data) {})
             .error(function(err) {});
-       
+
     }
 
     function getTextZoomCallback(tz)
@@ -405,7 +405,6 @@ angular.module('zmApp.controllers')
                             else
                                 myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
 
-
                             if (idfound)
                             {
                                 $scope.events.push(myevents[i]);
@@ -533,35 +532,84 @@ angular.module('zmApp.controllers')
 
     }
 
+    $scope.downloadFileToDevice = function(path, eid)
+    {
+       
+        NVRDataModel.setAwake(true);
+        var tp = cordova.file.documentsDirectory +  "temp-video.mp4";
+        var th = true;
+        var opt = {};
+        //path = "http://techslides.com/demos/sample-videos/small.mp4";
 
-    $scope.downloadFileToDevice = function(path) {
-       // var url = "http://your_ip_address/images/my.jpg";
-        LibraryHelper.saveVideoToLibrary(onSuccess, onError, path, "zmNinja");   
-        //cordova.plugins.PhotoLibrary.videofromUrl(path, onSuccess, onError);
+        NVRDataModel.debug ("Saving temporary video to: "+tp);
+        $cordovaFileTransfer.download(path, tp, opt, th)
+            .then(function(result)
+            {
+                NVRDataModel.debug ("Moving to gallery...");
+                var ntp = tp.indexOf('file://') === 0 ? tp.slice(7) : tp;
 
-        function onSuccess(results) 
+                $ionicLoading.hide();
+                moveToGallery(ntp);
+                NVRDataModel.setAwake(false);
+                // Success!
+            }, function(err)
+            {
+                NVRDataModel.setAwake(false);
+                NVRDataModel.log ("Error="+JSON.stringify(err));
+                $ionicLoading.hide();
+                $ionicLoading.show(
+                {
+
+                    template: $translate.instant('kError'),
+                    noBackdrop: true,
+                    duration:3000
+                });
+                // Error
+            }, function(progress)
+            {
+                var p = Math.round((progress.loaded / progress.total) * 100);
+                $ionicLoading.show(
+                {
+
+                    template: $translate.instant('kPleaseWait') + "...(" + p + "%)",
+                    noBackdrop: true
+                });
+                
+               
+            });
+
+        function moveToGallery(path)
         {
-            console.log("Duration: " + results.duration); 
-            console.log("Thumbnail path on disk: " + results.thumbnail);
-        }
 
-        function onError(error) 
-        {
-            console.log("Error: " + error); 
+            NVRDataModel.debug ("moveToGallery called with "+path);
+            LibraryHelper.saveVideoToLibrary(onSuccess, onError, path, "zmNinja");
             
+
+            function onSuccess(results)
+            {
+                NVRDataModel.debug ("Removing temp file");
+                $cordovaFile.removeFile(cordova.file.documentsDirectory, "temp-video.mp4");
+               
+
+            }
+
+            function onError(error)
+            {
+                console.log("Error: " + error);
+
+            }
         }
 
-     };
+    };
 
     $scope.mp4warning = function()
     {
-          $ionicPopup.alert(
-            {
-                title: $translate.instant('kNote'),
-                template: "{{'kVideoMp4Warning' | translate }}"
-            });
+        $ionicPopup.alert(
+        {
+            title: $translate.instant('kNote'),
+            template: "{{'kVideoMp4Warning' | translate }}"
+        });
     };
-    
 
     $scope.showImage = function(p, r, f, fid, e, imode, id, parray, ndx)
     {
@@ -877,7 +925,7 @@ angular.module('zmApp.controllers')
                                 fname = e.Event.baseURL + "/index.php?view=image&width=800&fid=" + data.event.Frame[i].Id;
                             }
 
-                            if (data.event.Frame[i].TimeStamp != lastTime  /*|| fps < 2*/)
+                            if (data.event.Frame[i].TimeStamp != lastTime /*|| fps < 2*/ )
                             {
                                 imglist.push(fname);
                                 //fps = data.event.Frame[i].TimeStamp != lastTime ? 0 : fps+1;
@@ -889,14 +937,15 @@ angular.module('zmApp.controllers')
                     }
 
                     // next up make sure we are not processing more than 100 images
-                    
+
                     while (imglist.length > zm.maxGifCount)
                     {
-                        NVRDataModel.debug ("Too many images: " +imglist.length+", deleting  alternate frames to keep it <="+zm.maxGifCount);
+                        NVRDataModel.debug("Too many images: " + imglist.length + ", deleting  alternate frames to keep it <=" + zm.maxGifCount);
 
-                        for(var l = 0; l < imglist.length; l++) {
-                            imglist.splice(l+1,2);
-                            if (imglist.length <=zm.maxGifCount) break;
+                        for (var l = 0; l < imglist.length; l++)
+                        {
+                            imglist.splice(l + 1, 2);
+                            if (imglist.length <= zm.maxGifCount) break;
                         }
 
                     }
@@ -934,29 +983,36 @@ angular.module('zmApp.controllers')
         else
         {
 
-            console.log ("in perms");
+            console.log("in perms");
             cordova.plugins.photoLibrary.getLibrary(
-              function (library) { downloadAsGif(e);},
-              function (err) {
-                if (err.startsWith('Permission')) {
-                  // call requestAuthorization, and retry
-                  cordova.plugins.photoLibrary.requestAuthorization(
-                    function () {
-                      // User gave us permission to his library, retry reading it!
-                      downloadAsGif(e);
-                    },
-                    function (err) {
-                        NVRDataModel.log ("ERROR with saving permissions "+err);
-                      // User denied the access
-                    }, // if options not provided, defaults to {read: true}. 
+                function(library)
+                {
+                    downloadAsGif(e);
+                },
+                function(err)
+                {
+                    if (err.startsWith('Permission'))
                     {
-                      read: true,
-                      write: true
+                        // call requestAuthorization, and retry
+                        cordova.plugins.photoLibrary.requestAuthorization(
+                            function()
+                            {
+                                // User gave us permission to his library, retry reading it!
+                                downloadAsGif(e);
+                            },
+                            function(err)
+                            {
+                                NVRDataModel.log("ERROR with saving permissions " + err);
+                                // User denied the access
+                            }, // if options not provided, defaults to {read: true}. 
+                            {
+                                read: true,
+                                write: true
+                            }
+                        );
                     }
-                  );
+                    // Handle error - it's not permission-related
                 }
-                // Handle error - it's not permission-related
-              }
             );
 
         }
@@ -975,31 +1031,36 @@ angular.module('zmApp.controllers')
             .then(function(imgs)
                 {
 
-                    console.log ("TOTAL IMAGES TO GIF="+imgs.length);
-                    console.log(JSON.stringify(imgs));
+                    console.log("TOTAL IMAGES TO GIF=" + imgs.length);
+                    //console.log(JSON.stringify(imgs));
 
                     var ad = adjustAspect(e);
-                    console.log("SAVING W=" + ad.w + " H=" + ad.h);
-
-                   
+                    //console.log("SAVING W=" + ad.w + " H=" + ad.h);
+                    NVRDataModel.setAwake(true);
                     gifshot.createGIF(
                     {
-                       
+
                         'gifWidth': ad.w,
                         'gifHeight': ad.h,
                         'images': imgs,
-                        'interval':1,
+                        'interval': 1,
                         //'loop':null,
-                        'sampleInterval':20,
+                        'sampleInterval': 20,
                         //'frameDur':5, // 1/2 a sec
                         'text': 'zmNinja',
                         'crossOrigin': 'use-credentials',
-                        'progressCallback': function (cp)
+                        'progressCallback': function(cp)
                         {
                             var p = Math.round(cp * 100);
-                            $ionicLoading.show({template: $translate.instant('kPleaseWait') + "...("+p+"%)",noBackdrop: true });}
+                            $ionicLoading.show(
+                            {
+                                template: $translate.instant('kPleaseWait') + "...(" + p + "%)",
+                                noBackdrop: true
+                            });
+                        }
                     }, function(obj)
                     {
+                        NVRDataModel.setAwake(false);
                         if (!obj.error)
                         {
                             //console.log(obj.image);
@@ -1039,14 +1100,14 @@ angular.module('zmApp.controllers')
                         else
                         {
                             $ionicLoading.hide();
-                            console.log("Error creating GIF");
+                            NVRDataModel.log("Error creating GIF");
                         }
                     });
                 },
                 function(err)
                 {
                     $ionicLoading.hide();
-                    console.log("Error getting frames");
+                    NVRDataModel.log("Error getting frames");
                 }
 
             );
@@ -2160,13 +2221,11 @@ angular.module('zmApp.controllers')
                         myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
                         myevents[i].Event.height = eventsListDetailsHeight;
 
-
                         if (myevents[i].Event.imageMode == 'path')
                         //if (1)
                             myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/events/" + myevents[i].Event.relativePath + myevents[i].Event.DefaultVideo;
                         else
                             myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
-
 
                         if (idfound) $scope.events.push(myevents[i]);
                     }

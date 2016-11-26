@@ -95,7 +95,9 @@
       "id": "cordova-plugin-certificates"
     },
     "cordova-plugin-photo-library",
-    "cordova-plugin-add-swift-support"
+    "cordova-plugin-add-swift-support",
+    "cordova-plugin-file-transfer",
+    "cordova-library-helper"
   ],
   "cordovaPlatforms": [
     {
