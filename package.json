@@ -90,14 +90,17 @@
       "locator": "https://github.com/pliablepixels/cordova-plugin-media",
       "id": "cordova-plugin-media"
     },
-    {
-      "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
-      "id": "cordova-plugin-certificates"
-    },
     "cordova-plugin-photo-library",
     "cordova-plugin-add-swift-support",
     "cordova-plugin-file-transfer",
-    "cordova-library-helper"
+    {
+      "locator": "https://github.com/FlyingDonkeyDev/cordova-library-helper",
+      "id": "cordova-library-helper"
+    },
+    {
+      "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
+      "id": "cordova-plugin-certificates"
+    }
   ],
   "cordovaPlatforms": [
     {

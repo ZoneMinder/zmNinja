@@ -62,8 +62,8 @@
                         <!-- col col left-->
                         <div class="col col-80">
                             <div class="item-text-wrap">
-                                <i class="ion-ios-videocam-outline"></i>
-                                <b>{{event.Event.MonitorName}}</b> ({{event.Event.Id}}) &nbsp; &nbsp;
+                                
+                                <b>{{event.Event.MonitorName}}</b> ({{event.Event.Id}}) &nbsp;
                                 <button ng-if="gifshotSupported" class="button button-small button-clear icon gif-icon" ng-click="permissionsDownload(event)"> 
                             </button>
 
@@ -71,7 +71,7 @@
 
                             <a ng-if="(event.Event.DefaultVideo!='' && event.Event.DefaultVideo!==undefined) && $root.platformOS=='desktop' " class="button button-clear button-small icon mp4-icon" href="{{event.Event.videoPath}}" download="{{event.Event.Id}}-video.mp4" ng-click="mp4warning()"></a>
 
-                             <button ng-if="event.Event.DefaultVideo!='' && $root.platformOS!='desktop'" class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)"> 
+                             <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop'" class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)"> 
                             </button>
 
 

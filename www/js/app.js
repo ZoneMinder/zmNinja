@@ -72,8 +72,8 @@ angular.module('zmApp', [
     monitorRunningColor: '#4CAF50',
     monitorErrorColor: '#795548',
     montageScaleFrequency: 300,
-    eventsListDetailsHeight: 200.0,
-    eventsListScrubHeight: 300,
+    eventsListDetailsHeight: 230.0,
+    eventsListScrubHeight: 330,
     loginScreenString: "var currentView = 'login'", // Isn't there a better way?
     desktopUrl: "/zm",
     desktopApiUrl: "/api/zm",

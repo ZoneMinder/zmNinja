@@ -129,6 +129,7 @@
     "kFrom"                      :"From",
     "kFromDate"                  :"From Date",
     "kFromTime"                  :"From Time",
+    "kGifWarning"                :"The GIF animation will only be of alarmed frames and limited to 70 frames, due to memory constraints",
     "kGlobalConfiguration"       :"Global Configuration",
     "kGraphAlarmed"              :"alarmed",
     "kGraphAll"                  :"all",

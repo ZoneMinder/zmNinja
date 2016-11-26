@@ -536,59 +536,72 @@ angular.module('zmApp.controllers')
     {
        
         NVRDataModel.setAwake(true);
-        var tp = cordova.file.documentsDirectory +  "temp-video.mp4";
+        var tp;
+        if ($rootScope.platformOS == 'ios')
+            tp = cordova.file.documentsDirectory +  "temp-video.mp4";
+        else
+            tp = cordova.file.dataDirectory + "temp-video.mp4";
+
         var th = true;
         var opt = {};
-        //path = "http://techslides.com/demos/sample-videos/small.mp4";
+       //path = "http://techslides.com/demos/sample-videos/small.mp4";
 
         NVRDataModel.debug ("Saving temporary video to: "+tp);
         $cordovaFileTransfer.download(path, tp, opt, th)
             .then(function(result)
             {
                 NVRDataModel.debug ("Moving to gallery...");
-                var ntp = tp.indexOf('file://') === 0 ? tp.slice(7) : tp;
+                var ntp; 
+                ntp = tp.indexOf('file://') === 0 ? tp.slice(7) : tp;
 
-                $ionicLoading.hide();
-                moveToGallery(ntp);
+                $timeout (function(){$ionicLoading.hide();});
+                moveToGallery(ntp,eid+"-video");
                 NVRDataModel.setAwake(false);
                 // Success!
             }, function(err)
             {
                 NVRDataModel.setAwake(false);
                 NVRDataModel.log ("Error="+JSON.stringify(err));
-                $ionicLoading.hide();
-                $ionicLoading.show(
-                {
+               
+                $timeout (function() {
+                    $ionicLoading.show(
+                    {
 
-                    template: $translate.instant('kError'),
-                    noBackdrop: true,
-                    duration:3000
-                });
+                        template: $translate.instant('kError'),
+                        noBackdrop: true,
+                        duration:3000
+                    });
+                 });
                 // Error
             }, function(progress)
             {
                 var p = Math.round((progress.loaded / progress.total) * 100);
-                $ionicLoading.show(
-                {
+              
+                    $ionicLoading.show(
+                    {
 
-                    template: $translate.instant('kPleaseWait') + "...(" + p + "%)",
-                    noBackdrop: true
-                });
-                
+                        template: $translate.instant('kPleaseWait') + "...(" + p + "%)",
+                        noBackdrop: true
+                    });
+               
                
             });
 
-        function moveToGallery(path)
+        function moveToGallery(path,fname)
         {
 
             NVRDataModel.debug ("moveToGallery called with "+path);
-            LibraryHelper.saveVideoToLibrary(onSuccess, onError, path, "zmNinja");
+            LibraryHelper.saveVideoToLibrary(onSuccess, onError, path, fname);
             
 
             function onSuccess(results)
             {
                 NVRDataModel.debug ("Removing temp file");
-                $cordovaFile.removeFile(cordova.file.documentsDirectory, "temp-video.mp4");
+
+                if ($rootScope.platformOS == 'ios')
+                    $cordovaFile.removeFile(cordova.file.documentsDirectory, "temp-video.mp4");
+                else
+                   $cordovaFile.removeFile(cordova.file.dataDirectory, "temp-video.mp4");
                
 
             }
@@ -978,7 +991,7 @@ angular.module('zmApp.controllers')
     {
         if ($rootScope.platformOS == 'desktop')
         {
-            downloadAsGif(e);
+            gifAlert(e);
         }
         else
         {
@@ -987,7 +1000,7 @@ angular.module('zmApp.controllers')
             cordova.plugins.photoLibrary.getLibrary(
                 function(library)
                 {
-                    downloadAsGif(e);
+                    gifAlert(e);
                 },
                 function(err)
                 {
@@ -998,7 +1011,7 @@ angular.module('zmApp.controllers')
                             function()
                             {
                                 // User gave us permission to his library, retry reading it!
-                                downloadAsGif(e);
+                                gifAlert(e);
                             },
                             function(err)
                             {
@@ -1017,6 +1030,16 @@ angular.module('zmApp.controllers')
 
         }
     };
+
+    function gifAlert(e)
+    {
+        $ionicPopup.alert(
+        {
+            title: $translate.instant('kNote'),
+            template: "{{'kGifWarning' | translate }}"
+        }).then(function(){downloadAsGif(e);});
+         
+    }
 
     function downloadAsGif(e)
     {

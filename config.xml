@@ -12,6 +12,8 @@
     <access launch-external="yes" origin="mailto:*" />
     <allow-navigation href="*" />
     <allow-intent href="*" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <preference name="iosPersistentFileLocation" value="Library" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <preference name="CrosswalkAnimatable" value="true" />
     <preference name="webviewbounce" value="false" />
