@@ -193,22 +193,16 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             NVRDataModel.debug("Setting cue points..");
             NVRDataModel.debug ("API-Total length:"+currentEvent.Event.Length);
 
-            var vt1 = $filter('date')(handle.totalTime, "ss");
-           
-            NVRDataModel.debug ("reported player length:"+vt1);
-            var factor = vt1/currentEvent.Event.Length;
-            NVRDataModel.debug ("hack - conversion factor:"+factor);
-             //NVRDataModel.debug ("Video-Total length left:"+handle.timeLeft);
-            //console.log ("jEvent=" + JSON.stringify(currentEvent));
-            //var event = $scope.currentEvent.event;
-           // console.log (JSON.stringify(event));
-            var st  = moment(currentEvent.Event.StartTime);
+    
             for (var l=0; l<currentEvent.Frame.length; l++ )
             {
                 if (currentEvent.Frame[l].Type=='Alarm')
                 {
-                    var ft = moment(currentEvent.Frame[l].TimeStamp);
-                    var s = factor*Math.abs(st.diff(ft,'seconds'));
+                   // var ft = moment(currentEvent.Frame[l].TimeStamp);
+                    //var s = factor*Math.abs(st.diff(ft,'seconds'));
+                    
+                    var s = currentEvent.Frame[l].Delta;
+
                     //console.log("START="+currentEvent.Event.StartTime);
                     //console.log("END="+currentEvent.Frame[l].TimeStamp);
                     NVRDataModel.debug ("alarm cue at:"+s+"s");
