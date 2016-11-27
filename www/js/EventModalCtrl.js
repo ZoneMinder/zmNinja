@@ -192,7 +192,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           // now set up cue points
             NVRDataModel.debug("Setting cue points..");
             NVRDataModel.debug ("API-Total length:"+currentEvent.Event.Length);
-
+            NVRDataModel.debug ("Player-Total length:"+handle.totalTime/1000);
     
             for (var l=0; l<currentEvent.Frame.length; l++ )
             {
