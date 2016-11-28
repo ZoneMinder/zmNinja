@@ -394,7 +394,7 @@ angular.module('zmApp.controllers')
 
             setLatestBlogPostChecked: function(val)
             {
-                //console.log (">>>>>>>>>>>> Setting blog date: " + val);
+                console.log (">>>>>>>>>>>> Setting blog date: " + val);
                 latestBlogPostChecked = val;
                 localforage.setItem("latestBlogPostChecked", latestBlogPostChecked);
             },
@@ -572,7 +572,10 @@ angular.module('zmApp.controllers')
 
                 log("ZMData init: checking for stored variables & setting up log file");
 
-                latestBlogPostChecked = localforage.getItem("latestBlogPostChecked") || null;
+                localforage.getItem("latestBlogPostChecked")
+                .then (function (val) {latestBlogPostChecked = val;},
+                       function (err) {latestBlogPostChecked = null;});
+
 
                 $ionicLoading.show(
                 {
