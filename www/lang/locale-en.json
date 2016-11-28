@@ -204,7 +204,7 @@
     "kMore"                      :"more",
     "kNeedToKnow"                :"I need to know your ZoneMinder login and path details to get started",
     "kNegotiatingStreamAuth"     :"negotiating stream authentication",
-    "kNews"                      :"News",
+    "kNews"                      :"News (latest 10)",
     "kNext"                      :"Next",
     "kNextEvent"                 :"next event",
     "kNextMonitor"               :"next monitor",

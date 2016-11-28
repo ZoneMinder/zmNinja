@@ -185,6 +185,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.onCanPlay = function()
     {
+        
         console.log ("*********** CAN PLAY");
         $ionicLoading.hide();
         NVRDataModel.debug("This video can be played");

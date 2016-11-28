@@ -51,6 +51,7 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
     $scope.isUnread = function(itemdate)
     {
         var lastDate = NVRDataModel.getLatestBlogPostChecked();
+        //console.log ("BLOG DATE="+itemdate+"  LAST DATE="+lastDate);
         //get("latestBlogPostChecked");
         if (!lastDate) return true;
         var mLastDate = moment(lastDate);
@@ -99,18 +100,29 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
 
     $scope.newsItems = [];
 
-    $http.get(zm.blogUrl)
-        .success(function(data)
+    
+    $http.get(zm.blogUrl, 
+        {transformResponse: function(d,h) 
+            { 
+                var trunc = "])}while(1);</x>";
+                d = d.substr(trunc.length);
+                return d;
+            }
+        })
+        .success(function(datastr)
         {
-            //console.log ("Here2");
-            // console.log (JSON.stringify(data));
-            for (var i = 0; i < data.length; i++)
+            
+            
+            // console.log ("DATA:"+data);
+            // 
+            var data = JSON.parse(datastr);
+            for (var i = 0; i < data.payload.posts.length; i++)
             {
                 $scope.newsItems.push(
                 {
-                    title: data[i].title,
-                    url: data[i].url,
-                    date: data[i].date
+                    title: data.payload.posts[i].title,
+                    url: "https://medium.com/zmninja/"+data.payload.posts[i].uniqueSlug,
+                    date: moment(data.payload.posts[i].createdAt).format("YYYY-MM-DD HH:mm:ss")
                 });
             }
 

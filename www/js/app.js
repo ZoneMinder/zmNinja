@@ -78,7 +78,7 @@ angular.module('zmApp', [
     desktopUrl: "/zm",
     desktopApiUrl: "/api/zm",
     latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
-    blogUrl: "http://pliablepixels.github.io/feed.json",
+    blogUrl: "https://medium.com/zmninja/latest?format=json",
     nphSwitchTimer: 3000,
     eventHistoryTimer: 5000,
     eventPlaybackQuery: 3000,
@@ -696,11 +696,21 @@ angular.module('zmApp', [
                 });
 
             NVRDataModel.log("Checking for news updates");
-            $http.get(zm.blogUrl)
-                .success(function(data)
+            $http.get(zm.blogUrl,
+                {transformResponse: function(d,h) 
+                    { 
+                        var trunc = "])}while(1);</x>";
+                        d = d.substr(trunc.length);
+                        return d;
+                    }
+                })
+                
+                .success(function(datastr)
                 {
+                    
+                    var data = JSON.parse(datastr);
                     $rootScope.newBlogPost = "";
-                    if (data.length <= 0)
+                    if (data.payload.posts.length <= 0)
                     {
                         $rootScope.newBlogPost = "";
                         return;
@@ -716,23 +726,19 @@ angular.module('zmApp', [
 
                     }
                     var mLastDate = moment(lastDate);
-                    var mItemDate = moment(data[0].date);
+                    var mItemDate = moment(data.payload.posts[0].createdAt);
 
                     if (mItemDate.diff(mLastDate) > 0)
                     {
-                        NVRDataModel.debug("New post dated " + data[0].date + " found");
-                        if (data[0].level == "critical")
-                        {
-                            $rootScope.newBlogPost = "(new post)";
-                        }
-                        else
-                        {
-                            NVRDataModel.debug("Not showing a notification in menu as this is not critical");
-                        }
+                        NVRDataModel.debug("New post dated " + mItemDate.format("YYYY-MM-DD HH:mm:ss") + " found");
+                        
+                        $rootScope.newBlogPost = "(new post)";
+                        
+                        
                     }
                     else
                     {
-                        NVRDataModel.debug("Latest post dated " + data[0].date + " but you read " + lastDate);
+                        NVRDataModel.debug("Latest post dated " + mItemDate.format("YYYY-MM-DD HH:mm:ss") + " but you read " + lastDate);
                     }
 
                 });
