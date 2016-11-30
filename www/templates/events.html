@@ -197,6 +197,7 @@
                 <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="2%">
                 </ion-infinite-scroll>
             </div>
+            <canvas id="canvas" class="hiddengifcanvas"></canvas>
     </ion-content>
     <div class="events-float-filter" ng-if="isEventFilterOn" on-tap="filterTapped();"><span translate="kFilterOn"></span></div>
     <div class="bwmode" ng-if="$root.runMode=='lowbw'">

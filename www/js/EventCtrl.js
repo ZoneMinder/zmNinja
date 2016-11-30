@@ -1,6 +1,7 @@
 /* jshint -W041 */
+/*jshint bitwise: false*/
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot, AnimatedGIF , LibraryHelper*/
+/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot, ReadableStream , LibraryHelper, GifWriter, NeuQuant*/
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
@@ -116,7 +117,7 @@ angular.module('zmApp.controllers')
 
         //console.log ("********* BEFORE ENTER");
         //
-        $scope.gifshotSupported = gifshot.isExistingImagesGIFSupported();
+        $scope.gifshotSupported = true;
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
         $scope.id = parseInt($stateParams.id, 10);
@@ -534,75 +535,76 @@ angular.module('zmApp.controllers')
 
     $scope.downloadFileToDevice = function(path, eid)
     {
-       
+
         NVRDataModel.setAwake(true);
         var tp;
         if ($rootScope.platformOS == 'ios')
-            tp = cordova.file.documentsDirectory +  "temp-video.mp4";
+            tp = cordova.file.documentsDirectory + "temp-video.mp4";
         else
             tp = cordova.file.dataDirectory + "temp-video.mp4";
 
         var th = true;
         var opt = {};
-       //path = "http://techslides.com/demos/sample-videos/small.mp4";
+        //path = "http://techslides.com/demos/sample-videos/small.mp4";
 
-        NVRDataModel.debug ("Saving temporary video to: "+tp);
+        NVRDataModel.debug("Saving temporary video to: " + tp);
         $cordovaFileTransfer.download(path, tp, opt, th)
             .then(function(result)
             {
-                NVRDataModel.debug ("Moving to gallery...");
-                var ntp; 
+                NVRDataModel.debug("Moving to gallery...");
+                var ntp;
                 ntp = tp.indexOf('file://') === 0 ? tp.slice(7) : tp;
 
-                $timeout (function(){$ionicLoading.hide();});
-                moveToGallery(ntp,eid+"-video");
+                $timeout(function()
+                {
+                    $ionicLoading.hide();
+                });
+                moveToGallery(ntp, eid + "-video");
                 NVRDataModel.setAwake(false);
                 // Success!
             }, function(err)
             {
                 NVRDataModel.setAwake(false);
-                NVRDataModel.log ("Error="+JSON.stringify(err));
-               
-                $timeout (function() {
+                NVRDataModel.log("Error=" + JSON.stringify(err));
+
+                $timeout(function()
+                {
                     $ionicLoading.show(
                     {
 
                         template: $translate.instant('kError'),
                         noBackdrop: true,
-                        duration:3000
+                        duration: 3000
                     });
-                 });
+                });
                 // Error
             }, function(progress)
             {
                 var p = Math.round((progress.loaded / progress.total) * 100);
-              
-                    $ionicLoading.show(
-                    {
 
-                        template: $translate.instant('kPleaseWait') + "...(" + p + "%)",
-                        noBackdrop: true
-                    });
-               
-               
+                $ionicLoading.show(
+                {
+
+                    template: $translate.instant('kPleaseWait') + "...(" + p + "%)",
+                    noBackdrop: true
+                });
+
             });
 
-        function moveToGallery(path,fname)
+        function moveToGallery(path, fname)
         {
 
-            NVRDataModel.debug ("moveToGallery called with "+path);
+            NVRDataModel.debug("moveToGallery called with " + path);
             LibraryHelper.saveVideoToLibrary(onSuccess, onError, path, fname);
-            
 
             function onSuccess(results)
             {
-                NVRDataModel.debug ("Removing temp file");
+                NVRDataModel.debug("Removing temp file");
 
                 if ($rootScope.platformOS == 'ios')
                     $cordovaFile.removeFile(cordova.file.documentsDirectory, "temp-video.mp4");
                 else
-                   $cordovaFile.removeFile(cordova.file.dataDirectory, "temp-video.mp4");
-               
+                    $cordovaFile.removeFile(cordova.file.dataDirectory, "temp-video.mp4");
 
             }
 
@@ -931,14 +933,15 @@ angular.module('zmApp.controllers')
                             //if (1)
                             {
                                 var rfp = padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg";
-                                fname = e.Event.baseURL + "/index.php?view=image&width=800&path=" + e.Event.relativePath + rfp;
+                                fname = e.Event.baseURL + "/index.php?view=image&width=" + zm.maxGifWidth + "&path=" + e.Event.relativePath + rfp;
                             }
                             else
                             {
-                                fname = e.Event.baseURL + "/index.php?view=image&width=800&fid=" + data.event.Frame[i].Id;
+                                fname = e.Event.baseURL + "/index.php?view=image&width=" + zm.maxGifWidth + "&fid=" + data.event.Frame[i].Id;
                             }
 
                             if (data.event.Frame[i].TimeStamp != lastTime /*|| fps < 2*/ )
+
                             {
                                 imglist.push(fname);
                                 //fps = data.event.Frame[i].TimeStamp != lastTime ? 0 : fps+1;
@@ -951,17 +954,18 @@ angular.module('zmApp.controllers')
 
                     // next up make sure we are not processing more than 100 images
 
-                    while (imglist.length > zm.maxGifCount)
+                    while (imglist.length > zm.maxGifCount2)
                     {
-                        NVRDataModel.debug("Too many images: " + imglist.length + ", deleting  alternate frames to keep it <=" + zm.maxGifCount);
+                        NVRDataModel.debug("Too many images: " + imglist.length + ", deleting  alternate frames to keep it <=" + zm.maxGifCount2);
 
                         for (var l = 0; l < imglist.length; l++)
                         {
                             imglist.splice(l + 1, 2);
-                            if (imglist.length <= zm.maxGifCount) break;
+                            if (imglist.length <= zm.maxGifCount2) break;
                         }
 
                     }
+                    NVRDataModel.debug("final image list length is:" + imglist.length);
 
                     d.resolve(imglist);
                     return d.promise;
@@ -974,12 +978,12 @@ angular.module('zmApp.controllers')
         return d.promise;
     }
 
-    // force image to be 800px. TBD: rotated foo
+    // force image to be of zm.maxGifWidth. TBD: rotated foo
     function adjustAspect(e)
     {
 
-        var w = 800;
-        var h = Math.round(e.Event.Height / e.Event.Width * 800.0);
+        var w = zm.maxGifWidth;
+        var h = Math.round(e.Event.Height / e.Event.Width * zm.maxGifWidth);
         return {
             w: w,
             h: h
@@ -987,6 +991,7 @@ angular.module('zmApp.controllers')
 
     }
 
+    // for devices - handle permission before you download
     $scope.permissionsDownload = function(e)
     {
         if ($rootScope.platformOS == 'desktop')
@@ -1031,16 +1036,251 @@ angular.module('zmApp.controllers')
         }
     };
 
+    // make sure the user knows the GIF is not full fps/all frames
     function gifAlert(e)
     {
         $ionicPopup.alert(
         {
             title: $translate.instant('kNote'),
             template: "{{'kGifWarning' | translate }}"
-        }).then(function(){downloadAsGif(e);});
-         
+        }).then(function()
+        {
+            downloadAsGif2(e);
+        });
+
     }
 
+    // convert to base64 - devices need this to save to gallery
+    function blobToBase64(blob)
+    {
+        NVRDataModel.debug("converting blob to base64...");
+        var d = $q.defer();
+        var reader = new window.FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function()
+        {
+            var base64data = reader.result;
+            //console.log(base64data );
+            d.resolve(base64data);
+            return d.promise;
+
+        };
+        return d.promise;
+    }
+
+    // part of neuquant conversion 
+    function componentizedPaletteToArray(paletteRGB)
+    {
+        var paletteArray = [],
+            i, r, g, b;
+        for (i = 0; i < paletteRGB.length; i += 3)
+        {
+            r = paletteRGB[i];
+            g = paletteRGB[i + 1];
+            b = paletteRGB[i + 2];
+            paletteArray.push(r << 16 | g << 8 | b);
+        }
+        return paletteArray;
+    }
+
+    // part of neuquant conversion 
+    function dataToRGB(data, width, height)
+    {
+        var i = 0,
+            length = width * height * 4,
+            rgb = [];
+        while (i < length)
+        {
+            rgb.push(data[i++]);
+            rgb.push(data[i++]);
+            rgb.push(data[i++]);
+            i++;
+        }
+        return rgb;
+    }
+
+    // credit Jimmy Warting
+    // https://github.com/jimmywarting/StreamSaver.js/issues/38
+    // he stream-ized and cleaned up the gif creation process
+    // using GifWriter.js
+    function createGif(files, w, h)
+    {
+
+        var cv = document.getElementById("canvas");
+        var ctx = cv.getContext("2d");
+        var pixels = new Uint8Array(w * h);
+        var totalImages = files.length;
+        var processedImages = 0;
+
+        cv.width = w;
+        cv.height = h;
+
+        var rs = new ReadableStream(
+        {
+            // Each time pull gets called you should get the pixel data and
+            // enqueue it as if it would be good old gif.addFrame()
+            pull: function pull(controller)
+            {
+                var frame = files.shift();
+                if (!frame) controller.close();
+
+                return $http(
+                    {
+                        url: frame,
+                        responseType: "blob"
+                    })
+                    .then(function(res)
+                    {
+
+                        return res.data.image();
+                    })
+                    .then(function(img)
+                    {
+                        processedImages++;
+
+                        var p = Math.round(processedImages / totalImages * 100);
+                        $ionicLoading.show(
+                        {
+                            template: $translate.instant('kPleaseWait') + "...(" + p + "%)",
+                            noBackdrop: true
+                        });
+
+                        console.log("URL=" + frame);
+                        URL.revokeObjectURL(img.src);
+                        ctx.drawImage(img, 0, 0);
+
+                        var data = ctx.getImageData(0, 0, w, h).data;
+                        var rgbComponents = dataToRGB(data, w, h);
+                        var nq = new NeuQuant(rgbComponents, rgbComponents.length, 15);
+                        var paletteRGB = nq.process();
+                        var paletteArray = new Uint32Array(componentizedPaletteToArray(paletteRGB));
+                        var numberPixels = w * h;
+                        var k = 0,
+                            i, r, g, b;
+
+                        for (i = 0; i < numberPixels; i++)
+                        {
+                            r = rgbComponents[k++];
+                            g = rgbComponents[k++];
+                            b = rgbComponents[k++];
+                            pixels[i] = nq.map(r, g, b);
+                        }
+
+                        controller.enqueue([0, 0, w, h, pixels,
+                        {
+                            palette: paletteArray,
+                            delay: 100, // 1 second
+                        }]);
+                    });
+            }
+        });
+
+        return new GifWriter(rs, w, h,
+        {
+            loop: null
+        });
+    }
+
+    function downloadAsGif2(e)
+    {
+        $ionicLoading.show(
+        {
+            template: $translate.instant('kPleaseWait') + "...",
+            noBackdrop: true,
+            duration: 20000
+        });
+        NVRDataModel.setAwake(true);
+
+        prepareImages(e)
+            .then(function(files)
+                {
+                    return $http(
+                        {
+                            url: files[0],
+                            responseType: "blob"
+                        })
+                        .then(function(res)
+                        {
+                            return res.data.image();
+                        })
+                        .then(function(img)
+                        {
+                            URL.revokeObjectURL(img.src); // Revoke object URL to free memory
+                            var stream = createGif(files, img.width, img.height);
+                            var chunks = [];
+                            var reader = stream.getReader();
+
+                            function pull()
+                            {
+                                return reader.read().then(function(result)
+                                {
+                                    chunks.push(result.value);
+                                    return result.done ? chunks : pull();
+                                });
+                            }
+
+                            pull().then(function(chunks)
+                            {
+                                var blob = new Blob(chunks,
+                                {
+                                    type: "image/gif"
+                                });
+                                blob.image().then(function(img)
+                                {
+
+                                    //alert ("WE ARE DONE!");
+                                    if ($rootScope.platformOS == 'desktop')
+                                    {
+                                        saveAs(blob, e.Event.Id + "-video.gif");
+                                        $ionicLoading.hide();
+                                    }
+                                    else
+                                    {
+                                        blobToBase64(blob)
+                                            .then(function(base64Blob)
+                                            {
+
+                                                NVRDataModel.debug("Saving blob to gallery...");
+                                                var album = "zmNinja";
+
+                                                cordova.plugins.photoLibrary.saveImage(base64Blob, album,
+                                                    function()
+                                                    {
+                                                        $ionicLoading.hide();
+                                                        NVRDataModel.debug("Event saved");
+                                                        NVRDataModel.setAwake(false);
+                                                    },
+                                                    function(err)
+                                                    {
+                                                        $ionicLoading.hide();
+                                                        NVRDataModel.debug("Saving ERROR=" + err);
+                                                        NVRDataModel.setAwake(false);
+                                                    });
+                                            });
+
+                                    }
+
+                                    //console.log (img);
+                                    //document.body.appendChild(img);
+                                    //document.getElementById("canvas").hidden = true;
+
+                                });
+                            });
+                        });
+
+                },
+                function(err)
+                {
+                    $ionicLoading.hide();
+                    NVRDataModel.setAwake(false);
+                    NVRDataModel.log("Error getting frames");
+                }
+
+            );
+
+    }
+
+    // NOT USED - WILL REMOVE AFTER TESTING OTHER METHOD MORE
     function downloadAsGif(e)
     {
         $ionicLoading.show(

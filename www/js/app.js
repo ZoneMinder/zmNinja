@@ -94,7 +94,10 @@ angular.module('zmApp', [
     monSingleImageQualityLowBW: 70,
     montageQualityLowBW: 50,
     eventMontageQualityLowBW: 50,
-    maxGifCount:70, 
+    maxGifCount:60, 
+    maxGifCount2:500,
+    maxGifWidth:800.0,
+    quantSample:15,
 
 })
 
@@ -543,6 +546,8 @@ angular.module('zmApp', [
 
         'request': function(config)
         {
+            if (!config) return config;
+            if (!config.url) return config;
 
             // NOTE ON TIMEOUTS: As of Oct 10 2016, it seems
             // the Http queue often gets messed up when there is a timeout

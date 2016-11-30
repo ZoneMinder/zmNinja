@@ -1157,6 +1157,14 @@ videogular div.event-time {
     color: #fff !important;
 }
 
+.hiddengifcanvas {
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute;
+    left: -99999px;
+    top: -99999px;
+}
+
 @media (min-width:600px) {
     .montage-time {
         display: block !important;
