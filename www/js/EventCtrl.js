@@ -533,6 +533,31 @@ angular.module('zmApp.controllers')
 
     }
 
+
+    function moveImageToGallery(fname)
+        {
+
+            NVRDataModel.debug("moveImageToGallery called with " + fname);
+            LibraryHelper.saveImageToLibrary(onSuccess, onError, fname, "zmNinja");
+
+            function onSuccess(results)
+            {
+                NVRDataModel.debug("Removing temp file");
+
+                if ($rootScope.platformOS == 'ios')
+                    $cordovaFile.removeFile(cordova.file.documentsDirectory, "temp-file.gif");
+                else
+                    $cordovaFile.removeFile(cordova.file.dataDirectory, "temp-file.gif");
+
+            }
+
+            function onError(error)
+            {
+                console.log("Error: " + error);
+
+            }
+        }
+
     $scope.downloadFileToDevice = function(path, eid)
     {
 
@@ -1122,7 +1147,7 @@ angular.module('zmApp.controllers')
             pull: function pull(controller)
             {
                 var frame = files.shift();
-                if (!frame) controller.close();
+                if (!frame) {controller.close(); return;}
 
                 return $http(
                     {
@@ -1183,6 +1208,7 @@ angular.module('zmApp.controllers')
 
     function downloadAsGif2(e)
     {
+        $rootScope.isDownloading = true;
         $ionicLoading.show(
         {
             template: $translate.instant('kPleaseWait') + "...",
@@ -1224,47 +1250,54 @@ angular.module('zmApp.controllers')
                                 var blob = new Blob(chunks,
                                 {
                                     type: "image/gif"
+
                                 });
-                                blob.image().then(function(img)
+
+                                //alert ("WE ARE DONE!");
+                                if ($rootScope.platformOS == 'desktop')
                                 {
-
-                                    //alert ("WE ARE DONE!");
-                                    if ($rootScope.platformOS == 'desktop')
-                                    {
-                                        saveAs(blob, e.Event.Id + "-video.gif");
-                                        $ionicLoading.hide();
-                                    }
+                                    saveAs(blob, e.Event.Id + "-video.gif");
+                                    $ionicLoading.hide();
+                                }
+                                else
+                                {
+                                    // write blob to file
+                                    var tp;
+                                    if ($rootScope.platformOS == 'ios')
+                                        tp = cordova.file.documentsDirectory;
                                     else
+                                        tp = cordova.file.dataDirectory;
+                                    var th = true, opt = {};
+
+                                    $ionicLoading.show(
                                     {
-                                        blobToBase64(blob)
-                                            .then(function(base64Blob)
-                                            {
 
-                                                NVRDataModel.debug("Saving blob to gallery...");
-                                                var album = "zmNinja";
+                                        template:"writing to file...",
+                                        noBackdrop: true,
+                                    });
+                                    $cordovaFile.writeFile(tp, "temp-file.gif", blob,true)
+                                    .then (function (succ) {
+                                        NVRDataModel.debug ("write to file successful");
+                                        $ionicLoading.hide();
 
-                                                cordova.plugins.photoLibrary.saveImage(base64Blob, album,
-                                                    function()
-                                                    {
-                                                        $ionicLoading.hide();
-                                                        NVRDataModel.debug("Event saved");
-                                                        NVRDataModel.setAwake(false);
-                                                    },
-                                                    function(err)
-                                                    {
-                                                        $ionicLoading.hide();
-                                                        NVRDataModel.debug("Saving ERROR=" + err);
-                                                        NVRDataModel.setAwake(false);
-                                                    });
-                                            });
+                                        var ntp;
+                                        ntp = tp.indexOf('file://') === 0 ? tp.slice(7) : tp;
 
-                                    }
+                                         ntp = ntp+"temp-file.gif";
+                                        console.log ("ntp="+ntp);
 
-                                    //console.log (img);
-                                    //document.body.appendChild(img);
-                                    //document.getElementById("canvas").hidden = true;
+                                        moveImageToGallery(ntp);
+                                        $rootScope.isDownloading = false;
 
-                                });
+                                    }, function (err) {
+                                        $rootScope.isDownloading = false;
+                                        $ionicLoading.hide();
+                                        NVRDataModel.debug ("error writing to file "+err);
+
+
+                                    });
+                                }
+
                             });
                         });
 
@@ -1274,6 +1307,7 @@ angular.module('zmApp.controllers')
                     $ionicLoading.hide();
                     NVRDataModel.setAwake(false);
                     NVRDataModel.log("Error getting frames");
+                    $rootScope.isDownloading = false;
                 }
 
             );
