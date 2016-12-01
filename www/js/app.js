@@ -856,7 +856,10 @@ angular.module('zmApp', [
     function doLogin(str)
     {
 
+
         var d = $q.defer();
+
+
 
         NVRDataModel.processFastLogin()
             // coming here means login not needed, old login is valid
@@ -879,6 +882,13 @@ angular.module('zmApp', [
                         d.resolve("success");
                         return d.promise;
 
+                    }
+
+                    if ($rootScope.isDownloading)
+                    {
+                        NVRDataModel.log("Skipping login process as we are downloading...");
+                        d.resolve("success");
+                        return d.promise;
                     }
 
                     NVRDataModel.debug("Resetting zmCookie...");
@@ -1674,6 +1684,7 @@ angular.module('zmApp', [
                 document.addEventListener("resume", function()
                 {
                     NVRDataModel.log("App is resuming from background");
+                    $rootScope.isDownloading = false;
                     var forceDelay = NVRDataModel.getLogin().resumeDelay;
                     NVRDataModel.log(">>> Resume delayed for " + forceDelay + " ms, to wait for network stack...");
 
