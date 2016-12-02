@@ -1,6 +1,6 @@
 /* jshint -W041, -W093 */
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, ContactFindOptions, localforage,$, Connection, MobileAccessibility */
+/* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, ContactFindOptions, localforage,$, Connection, MobileAccessibility, hello */
 
 // For desktop versions, this is replaced
 // with actual app version from config.xml by the 
@@ -95,7 +95,7 @@ angular.module('zmApp', [
     montageQualityLowBW: 50,
     eventMontageQualityLowBW: 50,
     maxGifCount:60, 
-    maxGifCount2:500,
+    maxGifCount2:100,
     maxGifWidth:800.0,
     quantSample:15,
 
@@ -1356,7 +1356,7 @@ angular.module('zmApp', [
 
         $ionicPlatform.ready(function()
         {
-
+           
             $rootScope.textScaleFactor = 1.0;
 
             $rootScope.db = null;

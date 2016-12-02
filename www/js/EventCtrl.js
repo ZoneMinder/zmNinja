@@ -1,7 +1,7 @@
 /* jshint -W041 */
 /*jshint bitwise: false*/
 /* jslint browser: true*/
-/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot, ReadableStream , LibraryHelper, GifWriter, NeuQuant*/
+/* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot, ReadableStream , LibraryHelper, GifWriter, NeuQuant, LocalFileSystem, FileError*/
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it
@@ -534,20 +534,135 @@ angular.module('zmApp.controllers')
     }
 
 
+
+
+    function writeFile2( path, file, blob, isAppend)
+    {
+        var csize = 4 * 1024 * 1024; // 4MB
+        var d = $q.defer();
+        NVRDataModel.debug ("Inside writeFile2 with blob size="+blob.size);
+
+        // nothing more to write, so all good?
+        if (!blob.size)
+        {
+            NVRDataModel.debug ("writeFile2 all done");
+            d.resolve(true);
+            return $q.resolve(true); 
+        }
+
+        
+        if (!isAppend)
+           {
+               // return the delegated promise, even if it fails
+               return $cordovaFile.writeFile(path, file, blob.slice(0,csize), true)
+                   .then (function (succ) {
+                       return writeFile2(path,file,blob.slice(csize),true);
+                   });
+           }
+           else
+           {
+               // return the delegated promise, even if it fails
+               return $cordovaFile.writeExistingFile(path, file, blob.slice(0,csize))
+                   .then (function (succ) {
+                       return writeFile2(path,file,blob.slice(csize),true);
+                   });   
+           }
+        
+        
+    }
+
+    function writeFile(path, __filename, __data){
+        var d = $q.defer();
+        console.log ("inside write file");
+        window.requestFileSystem(LocalFileSystem.TEMPORARY, __data.size+5000, onFileSystemSuccess, fail);
+
+        function fail(e)
+        {
+            var msg = '';
+
+              switch (e.code) {
+                case FileError.QUOTA_EXCEEDED_ERR:
+                  msg = 'QUOTA_EXCEEDED_ERR';
+                  break;
+                case FileError.NOT_FOUND_ERR:
+                  msg = 'NOT_FOUND_ERR';
+                  break;
+                case FileError.SECURITY_ERR:
+                  msg = 'SECURITY_ERR';
+                  break;
+                case FileError.INVALID_MODIFICATION_ERR:
+                  msg = 'INVALID_MODIFICATION_ERR';
+                  break;
+                case FileError.INVALID_STATE_ERR:
+                  msg = 'INVALID_STATE_ERR';
+                  break;
+                default:
+                  msg = 'Unknown Error';
+                  break;
+              }
+
+              console.log('Error: ' + msg);
+        }
+        function onFileSystemSuccess()
+        {
+            console.log ("Got temporary FS");
+            window.resolveLocalFileSystemURL(path, function(dir){
+                dir.getFile(__filename, {create:true}, function(file){            
+                    file.createWriter(function(fileWriter){
+                        //var blob = new Blob([__data], {type:'text/plain'});
+                        console.log ("about to write "+__data.size+" bytes");
+                        //var blob = new Blob([__data], {type:'text/plain'});
+                        fileWriter.write(__data);
+                        fileWriter.onwrite = function(e) {
+                            NVRDataModel.debug ("write complete");
+                            d.resolve();
+                            return d.promise;
+                        };
+
+                        fileWriter.onerror = function(e) {
+                            NVRDataModel.debug ("write error in filewriter:"+JSON.stringify(e));
+                            d.reject();
+                            return d.promise;
+                        };
+
+                    });                     
+                });
+
+            },
+            function (err) {
+                d.reject(err);
+                return d.promise;
+            });   
+    }
+        return d.promise;
+    }
+
+
     function moveImageToGallery(fname)
         {
+            // this is https://github.com/terikon/cordova-plugin-photo-library
 
             NVRDataModel.debug("moveImageToGallery called with " + fname);
-            LibraryHelper.saveImageToLibrary(onSuccess, onError, fname, "zmNinja");
+            cordova.plugins.photoLibrary.saveImage(fname, "zmNinja",onSuccess, onError);
+            //LibraryHelper.saveImageToLibrary(onSuccess, onError, fname, "zmNinja");
 
             function onSuccess(results)
             {
+
                 NVRDataModel.debug("Removing temp file");
 
-                if ($rootScope.platformOS == 'ios')
-                    $cordovaFile.removeFile(cordova.file.documentsDirectory, "temp-file.gif");
+                if ($rootScope.platformOS == 'ios') {
+                   $cordovaFile.removeFile(cordova.file.documentsDirectory, "temp-file.gif");
+                }
                 else
                     $cordovaFile.removeFile(cordova.file.dataDirectory, "temp-file.gif");
+                $ionicLoading.show(
+                {
+                    template: $translate.instant('kDone'),
+                    noBackdrop: true,
+                    duration: 2000
+                });
+
 
             }
 
@@ -1206,6 +1321,8 @@ angular.module('zmApp.controllers')
         });
     }
 
+    
+
     function downloadAsGif2(e)
     {
         $rootScope.isDownloading = true;
@@ -1233,6 +1350,8 @@ angular.module('zmApp.controllers')
                         {
                             URL.revokeObjectURL(img.src); // Revoke object URL to free memory
                             var stream = createGif(files, img.width, img.height);
+                            //var fileStream = streamSaver.createWriteStream('image.gif');
+
                             var chunks = [];
                             var reader = stream.getReader();
 
@@ -1275,13 +1394,18 @@ angular.module('zmApp.controllers')
                                         template:"writing to file...",
                                         noBackdrop: true,
                                     });
-                                    $cordovaFile.writeFile(tp, "temp-file.gif", blob,true)
+
+                                    //var bloburl = URL.createObjectURL(blob);
+                                    //NVRDataModel.debug ("blob-url is:"+bloburl);
+
+                                    writeFile2(tp,"temp-file.gif",blob,false)
                                     .then (function (succ) {
                                         NVRDataModel.debug ("write to file successful");
+                                        console.log( "write file successful");
                                         $ionicLoading.hide();
 
-                                        var ntp;
-                                        ntp = tp.indexOf('file://') === 0 ? tp.slice(7) : tp;
+                                        var ntp = tp;
+                                        //ntp = tp.indexOf('file://') === 0 ? tp.slice(7) : tp;
 
                                          ntp = ntp+"temp-file.gif";
                                         console.log ("ntp="+ntp);
@@ -1292,7 +1416,7 @@ angular.module('zmApp.controllers')
                                     }, function (err) {
                                         $rootScope.isDownloading = false;
                                         $ionicLoading.hide();
-                                        NVRDataModel.debug ("error writing to file "+err);
+                                        NVRDataModel.debug ("error writing to file "+JSON.stringify(err));
 
 
                                     });
