@@ -130,6 +130,7 @@
     "kFromDate"                  :"From Date",
     "kFromTime"                  :"From Time",
     "kGifWarning"                :"The GIF animation will only be of alarmed frames and 1fps",
+    "kGifNoCrosswalk"            : "Sorry, you need to be on Android 5.0 (Lollipop) or above for this feature to work.",
     "kGlobalConfiguration"       :"Global Configuration",
     "kGraphAlarmed"              :"alarmed",
     "kGraphAll"                  :"all",

@@ -1179,14 +1179,30 @@ angular.module('zmApp.controllers')
     // make sure the user knows the GIF is not full fps/all frames
     function gifAlert(e)
     {
-        $ionicPopup.alert(
+        if(navigator.userAgent.toLowerCase().indexOf('crosswalk') == -1) {
+            $ionicPopup.confirm(
+            {
+                title: $translate.instant('kNote'),
+                template: "{{'kGifWarning' | translate }}"
+            }).then(function(res)
+            {
+                if (res)
+                {
+                    downloadAsGif2(e);    
+                }
+                else
+                    NVRDataModel.debug ("User cancelled GIF");
+                
+            });
+        }
+        else
         {
-            title: $translate.instant('kNote'),
-            template: "{{'kGifWarning' | translate }}"
-        }).then(function()
-        {
-            downloadAsGif2(e);
-        });
+            $ionicPopup.alert({
+                title:$translate.instant ('kNote'),
+                template:"{{'kGifNoCrosswalk' | translate}}"
+            });
+        }
+
 
     }
 
