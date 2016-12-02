@@ -1,5 +1,17 @@
 # Change Log
 
+## [v1.2.31](https://github.com/pliablepixels/zmNinja/tree/v1.2.31) (2016-12-02)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.30...v1.2.31)
+
+**Fixed bugs:**
+
+- \[H.264\] Cue position: player reports incorrect length [\#395](https://github.com/pliablepixels/zmNinja/issues/395)
+- hardcoded phrases in code \(not using translation files\) [\#394](https://github.com/pliablepixels/zmNinja/issues/394)
+
+**Closed issues:**
+
+- rewrite GIFcreation to be able to handle much larger images [\#398](https://github.com/pliablepixels/zmNinja/issues/398)
+
 ## [v1.2.30](https://github.com/pliablepixels/zmNinja/tree/v1.2.30) (2016-11-26)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.29...v1.2.30)
 
@@ -29,7 +41,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -56,11 +68,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
-
 ## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
+
+## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
 
 **Implemented enhancements:**
 
