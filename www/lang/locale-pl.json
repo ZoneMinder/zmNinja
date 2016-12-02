@@ -129,6 +129,7 @@
     "kFrom"                      :"Od",
     "kFromDate"                  :"Od Daty",
     "kFromTime"                  :"Od Godziny",
+    "kGifWarning"                :"Animacja GIF będzie zawierała tylko zaalarmowane klatki i 1fps.",
     "kGlobalConfiguration"       :"Konfiguracja Główna",
     "kGraphAlarmed"              :"zaalarmowane",
     "kGraphAll"                  :"wszystko",
