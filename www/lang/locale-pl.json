@@ -130,6 +130,7 @@
     "kFromDate"                  :"Od Daty",
     "kFromTime"                  :"Od Godziny",
     "kGifWarning"                :"Animacja GIF będzie zawierała tylko zaalarmowane klatki i 1fps.",
+    "kGifNoCrosswalk"            : "Przepraszam, żeby ta funkcja mogła działać, musisz posiadać co najmniej Android 5, lub wyższy.",
     "kGlobalConfiguration"       :"Konfiguracja Główna",
     "kGraphAlarmed"              :"zaalarmowane",
     "kGraphAll"                  :"wszystko",
