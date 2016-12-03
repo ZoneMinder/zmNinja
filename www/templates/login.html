@@ -5,7 +5,7 @@
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <button class="button button-clear" ng-click="saveItems()">Save</button>
+        <button class="button button-clear" ng-click="saveItems()">{{'kSave' | translate}}</button>
     </ion-nav-buttons>
     <ion-content scroll-sista delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
         <div class="item item-text-wrap  item-input-inset">

@@ -1775,7 +1775,7 @@ angular.module('zmApp.controllers')
 
                 if (!loadingStr)
                 {
-                    loadingStr = "loading events...";
+                    loadingStr = $translate.instant('kLoadingEvents')+"...";
                 }
                 //if (loadingStr) loa
 
