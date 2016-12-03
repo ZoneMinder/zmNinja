@@ -58,7 +58,7 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
         var mItemDate = moment(itemdate);
         //var unread = mItemDate.diff(mLastDate) >0) ? true:false;
         //console.log (unread);
-        return (mItemDate.diff(mLastDate) > 0) ? true : false;
+        return (mItemDate.diff(mLastDate, 'seconds') > 0) ? true : false;
 
     };
 
@@ -80,7 +80,7 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
 
             var mLastDate = moment(lastDate);
             var mItemDate = moment(itemdate);
-            if (mItemDate.diff(mLastDate) > 0)
+            if (mItemDate.diff(mLastDate, 'seconds') > 0)
             {
                 NVRDataModel.debug("Updating lastDate to this post");
 

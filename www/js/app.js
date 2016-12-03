@@ -633,7 +633,7 @@ angular.module('zmApp', [
 //-----------------------------------------------------------------
 // This service automatically checks for new versions every 24 hrs
 //------------------------------------------------------------------
-.factory('zmCheckUpdates', function($interval, $http, zm, $timeout, $localstorage, NVRDataModel, $rootScope)
+.factory('zmCheckUpdates', function($interval, $http, zm, $timeout, $localstorage, NVRDataModel, $rootScope, $translate)
 {
     var zmUpdateHandle;
     var zmUpdateVersion = "";
@@ -726,18 +726,27 @@ angular.module('zmApp', [
                     if (!lastDate)
                     {
 
-                        $rootScope.newBlogPost = "(new post)";
+                        $rootScope.newBlogPost = "("+$translate.instant('kNewPost')+")";
+                        NVRDataModel.setLatestBlogPostChecked(moment().format("YYYY-MM-DD HH:mm:ss"));
                         return;
 
                     }
                     var mLastDate = moment(lastDate);
                     var mItemDate = moment(data.payload.posts[0].createdAt);
 
-                    if (mItemDate.diff(mLastDate) > 0)
+                    if (mItemDate.diff(mLastDate, 'seconds') > 0)
                     {
-                        NVRDataModel.debug("New post dated " + mItemDate.format("YYYY-MM-DD HH:mm:ss") + " found");
+                        /*console.log ("DIFF IS "+mItemDate.diff(mLastDate, 'seconds'));
+                        console.log ("DIFF mLastDate="+mLastDate);
+                        console.log ("DIFF mItemDate="+mItemDate);
+                        console.log ("FORMAT DIFF mLastDate="+mLastDate.format("YYYY-MM-DD HH:mm:ss") );
+                        console.log ("FORMAT DIFF mItemDate="+mItemDate.format("YYYY-MM-DD HH:mm:ss") );*/
+
+                        NVRDataModel.debug("New post dated " + mItemDate.format("YYYY-MM-DD HH:mm:ss") + " found, last date checked was "+mLastDate.format("YYYY-MM-DD HH:mm:ss"));
                         
-                        $rootScope.newBlogPost = "(new post)";
+                        $rootScope.newBlogPost = "("+$translate.instant('kNewPost')+")";
+                         NVRDataModel.setLatestBlogPostChecked(mItemDate.format("YYYY-MM-DD HH:mm:ss"));
+
                         
                         
                     }
