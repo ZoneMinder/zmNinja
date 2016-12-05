@@ -174,7 +174,8 @@ angular.module('zmApp.controllers')
                 percentPosition: true,
                 columnWidth: '.grid-sizer',
                 gutter: 0,
-                initLayout: layouttype
+                initLayout: layouttype,
+                shiftPercentResize:true
 
             });
 
@@ -183,7 +184,11 @@ angular.module('zmApp.controllers')
 
                 var result = img.isLoaded ? 'loaded' : 'broken';
                 NVRDataModel.debug('~~loaded image is ' + result + ' for ' + img.img.src);
-                pckry.layout();
+
+                // lay out every image if a pre-arranged position has not been found
+                
+                $timeout (function(){if (layouttype) pckry.layout();},100);
+                
                 progressCalled = true;
 
                 // if (layouttype) $timeout (function(){layout(pckry);},100);
@@ -202,7 +207,7 @@ angular.module('zmApp.controllers')
                 if (!progressCalled)
                 {
                     NVRDataModel.log("***  PROGRESS WAS NOT CALLED");
-                    pckry.reloadItems();
+                   // pckry.reloadItems();
                 }
 
                 $timeout(function()
@@ -243,13 +248,13 @@ angular.module('zmApp.controllers')
                     }
                     $timeout(function()
                     {
-                        NVRDataModel.log("Force calling resize");
-                        pckry.reloadItems();
-                        //pckry.initShiftLayout(positions,"data-item-id");
+                        //NVRDataModel.log("Force calling resize");
+                        ///pckry.reloadItems();
+                        pckry.initShiftLayout(positions,"data-item-id");
                         // now do a jiggle 
                         $timeout(function()
                         {
-                            pckry.layout();
+                            pckry.shiftLayout();
                         }, 300);
 
                     }, 20);
@@ -914,9 +919,12 @@ angular.module('zmApp.controllers')
 
         function orientationChanged()
         {
-            /* NVRDataModel.debug("Detected orientation change, redoing packery resize");
+             /*NVRDataModel.debug("Detected orientation change, redoing packery resize");
+
              $timeout(function () {
-                 if (pckry) pckry.onresize();
+                var positions = pckry.getShiftPositions('data-item-id');
+                pckry.initShiftLayout(positions,'data-item-id');
+                pckry.shiftLayout();
              }, zm.packeryTimer);*/
 
             /* var positions = pckry.getShiftPositions('data-item-id');
