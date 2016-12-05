@@ -15,6 +15,7 @@ globFile=""
 def usage():
   print((
         'Usage: '+sys.argv[0]+'\n'
+          ' called without arguments runs a check without any modifications\n'
           ' -h|--help: this help\n'
           ' -f|file <fname>: only processes that file\n'
           ' -b|--beautify: beautifies the json file\n'
@@ -62,7 +63,7 @@ def compare(fname):
   if len(diffOrig)==0 and len (diffNew)==0:
     status = "GOOD"
     globGood+=1
-    if globBeautify and globFile == fname or globFile == "":
+    if globBeautify and (globFile == fname or globFile == ""):
       beaut="YES"
   else:
     status = "ERROR"
