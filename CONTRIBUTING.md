@@ -27,7 +27,7 @@ git clone https://github.com/<your github username>/zmNinja.git
 
 * Now connect your copy to my repository (needed for future pushes)
 ```
-git add upstream https://github.com/pliablepixels/zmNinja.git
+git remote add upstream https://github.com/pliablepixels/zmNinja.git
 ```
 
 
