@@ -94,6 +94,7 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
             }
 
         }
+        
         window.open(item, '_blank', 'location=yes');
         return false;
     };

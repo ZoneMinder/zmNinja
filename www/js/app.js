@@ -1823,6 +1823,8 @@ angular.module('zmApp', [
     //$httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
     $ionicConfigProvider.navBar.alignTitle('center');
+    //$ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
+    //$ionicConfigProvider.backButton.text('').icon('ion-chevron-left').previousTitleText(false);
     // use overflow-scroll=false in ion-content
     // removing it here doesn't allow you to enable it per view
     // so it messes up scrolldelegate zoom and possibly others
