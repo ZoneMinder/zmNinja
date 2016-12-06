@@ -3,7 +3,7 @@
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
         </button>
-        <button class="button button-icon button-clear ion-android-more-vertical" ng-click="toggleSizeButtons();">&nbsp;
+        <button class="button button-icon button-clear ion-android-more-vertical" ng-click="toggleSubMenuFunction();">&nbsp;
         </button>
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
@@ -23,7 +23,7 @@
         </button>
     </ion-nav-buttons>
     <ion-content scroll-sista ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate" overflow-scroll="false">
-        <div ng-if="!minimal && showSizeButtons" >
+        <div ng-if="!minimal && toggleSubMenu" >
             <!-- this is header -->
             <br/>
             <div id="flyoutmenu" style="float:left">

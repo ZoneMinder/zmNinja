@@ -107,7 +107,7 @@ angular.module('zmApp.controllers')
             'montageOrder': '',
             'montageHiddenOrder': '',
             'montageArraySize': '0',
-
+            'showMontageSubMenu': false,
             'graphSize': 2000,
             'enableAlarmCount': true,
             'minAlarmCount': 1,
@@ -908,6 +908,14 @@ angular.module('zmApp.controllers')
                                 {
 
                                     loginData.timelineScale = -1;
+
+                                }
+
+
+                                if (typeof loginData.showMontageSubMenu == 'undefined')
+                                {
+
+                                    loginData.showMontageSubMenu = false;
 
                                 }
 

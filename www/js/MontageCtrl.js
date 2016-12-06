@@ -706,7 +706,7 @@ angular.module('zmApp.controllers')
             NVRDataModel.debug("setting dragabilly to " + $scope.isDragabillyOn);
             if ($scope.isDragabillyOn)
             {
-                $scope.showSizeButtons = true;
+                $scope.toggleSubMenu = true;
 
                 $scope.dragBorder = "dragborder";
                 NVRDataModel.debug("Enabling drag for " + draggies.length + " items");
@@ -1106,13 +1106,16 @@ angular.module('zmApp.controllers')
 
         };
 
-        $scope.toggleSizeButtons = function()
+        $scope.toggleSubMenuFunction = function()
         {
 
-            $scope.showSizeButtons = !$scope.showSizeButtons;
+            $scope.toggleSubMenu = !$scope.toggleSubMenu;
 
-            NVRDataModel.debug("toggling size buttons:" + $scope.showSizeButtons);
-            if ($scope.showSizeButtons) $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
+            NVRDataModel.debug("toggling size buttons:" + $scope.toggleSubMenu);
+            if ($scope.toggleSubMenu) $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
+            var ld = NVRDataModel.getLogin();
+            ld.showMontageSubMenu = $scope.toggleSubMenu;
+            NVRDataModel.setLogin(ld);
         };
 
         // minimal has to be beforeEnter or header won't hide
@@ -1173,7 +1176,7 @@ angular.module('zmApp.controllers')
             }
 
             $scope.monLimit = $scope.LoginData.maxMontage;
-            $scope.showSizeButtons = false;
+            $scope.toggleSubMenu = NVRDataModel.getLogin().showMontageSubMenu;
 
             $scope.monitors = message;
             $scope.MontageMonitors = angular.copy(message);
