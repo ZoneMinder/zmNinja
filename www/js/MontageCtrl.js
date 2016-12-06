@@ -979,6 +979,7 @@ angular.module('zmApp.controllers')
                     '</ion-list>                               ',
 
                 title: $translate.instant('kSelect'),
+                subTitle:$translate.instant('kSelectDelete'),
                 scope: $scope,
 
             }).then(function(res)
@@ -1027,7 +1028,8 @@ angular.module('zmApp.controllers')
                 $rootScope.zmPopup = $ionicPopup.alert(
                 {
                     title: $translate.instant('kError'),
-                    template: $translate.instant('kMontageNoSavedProfiles')
+                    template: $translate.instant('kMontageNoSavedProfiles'),
+
                 });
                 return;
             }
@@ -1045,6 +1047,7 @@ angular.module('zmApp.controllers')
                     '</ion-list>                               ',
 
                 title: $translate.instant('kSelect'),
+                subTitle:$translate.instant('kSelectSwitch'),
                 scope: $scope,
 
             }).then(function(res)

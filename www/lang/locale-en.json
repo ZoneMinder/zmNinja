@@ -288,6 +288,8 @@
     "kSearchCancelled"           :"search cancelled",
     "kSec"                       :"sec",
     "kSelect"                    :"Please Select",
+    "kSelectDelete"              :"Selected profile will be deleted",
+    "kSelectSwitch"              :"Selected profile will be loaded",
     "kSelectFallback"            :"Select fallback",
     "kSelectLanguage"            :"Select Language",
     "kSelectRunState"            :"Select run state",
