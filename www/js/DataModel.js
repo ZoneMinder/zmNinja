@@ -121,6 +121,7 @@ angular.module('zmApp.controllers')
             'enableBlog': true,
             'use24hr': false,
             'packeryPositions': '',
+            'packeryPositionsArray': {},
             'EHpackeryPositions': '',
             'packerySizes': '',
             'timelineModalGraphType': 'all',
@@ -754,6 +755,14 @@ angular.module('zmApp.controllers')
                                     loginData.enableBlog = true;
 
                                 }
+
+                                if (typeof loginData.packeryPositionsArray == 'undefined')
+                                {
+                                    debug("packeryPositionsArray does not exist. Setting to empty");
+                                    loginData.packeryPositionsArray = {};
+
+                                }
+
 
                                 if (typeof loginData.packeryPositions == 'undefined')
                                 {

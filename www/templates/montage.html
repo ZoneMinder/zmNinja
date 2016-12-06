@@ -3,7 +3,7 @@
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
         </button>
-        <button class="button button-icon button-clear ion-arrow-resize" ng-click="toggleSizeButtons();">&nbsp;
+        <button class="button button-icon button-clear ion-android-more-vertical" ng-click="toggleSizeButtons();">&nbsp;
         </button>
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
@@ -23,14 +23,49 @@
         </button>
     </ion-nav-buttons>
     <ion-content scroll-sista ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate" overflow-scroll="false">
-        <span ng-if="!minimal && showSizeButtons">
+        <div ng-if="!minimal && showSizeButtons" >
             <!-- this is header -->
+            <br/>
+            <div id="flyoutmenu" style="float:left">
+                <ul>
+                    <li>
+                        <a href="" ng-click="sliderChanged(1)"> <i class="ion-plus-circled"></i></a>
+                    </li>
+                    <li>
+                        <a href="" ng-click="sliderChanged(-1)"> <i class="ion-minus-circled"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="flyoutmenu" style="float:right">
+                <ul>
+                    <li>
+                        <a href="" ng-click="switchMontageProfile()"> <i class="ion-navicon-round"></i></a>
+                    </li>
+
+                    <li>
+                        <a href="" ng-click="saveMontageProfile()"> <i class="ion-heart"></i></a>
+                    </li>
+
+                    <li>
+                        <a href="" ng-click="deleteMontageProfile()"> <i class="ion-trash-a"></i></a>
+                    </li>
+                    
+
+                </ul>
+            </div>
+            <div style="clear: both;"></div>
+
+           <!-- <span ng-click="sliderChanged(1)" style="float:right;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:25px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;</i></span>
+
             
-            <span ng-click="sliderChanged(1)" style="float:right;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:25px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;</i></span>
         <span ng-click="sliderChanged(-1)" style="float:left;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:22px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 5px 0px;">&nbsp;<i class="ion-minus-circled">&nbsp;</i></span>
+
+        <span ng-click="" style="left:50%;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:11px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;hello</i></span>
+    -->
+        
         <br/>
-        <br/>
-        </span>
+        </div>
         <!-- now lets draw the montage windows -->
         <div class="grid" id="mygrid">
             <div class="grid-sizer grid-item-10"></div>

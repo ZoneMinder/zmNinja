@@ -26,6 +26,10 @@
   background-size:contain;
 }
 
+.icon-save:before {
+     font-family: "fontawesome";
+    content: "\f0c7";
+}
 
 
 

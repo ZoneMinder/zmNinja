@@ -3088,10 +3088,10 @@ proto._bindFitEvents = function( item ) {
 // -------------------------- resize -------------------------- //
 
 // debounced, layout on resize
-proto.resize = function() {
+proto.resize = function(force) {
   // don't trigger if size did not change
   // or if resize was unbound. See #285, outlayer#9
-  if ( !this.isResizeBound || !this.needsResizeLayout() ) {
+  if ( !force && (!this.isResizeBound || !this.needsResizeLayout()) ) {
     return;
   }
 

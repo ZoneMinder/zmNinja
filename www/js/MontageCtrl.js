@@ -4,7 +4,7 @@
 /* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded, ConnectSDK, moment */
 
 angular.module('zmApp.controllers')
-    .controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', function($scope, $rootScope, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate)
+    .controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups', function($scope, $rootScope, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups)
     {
 
         //---------------------------------------------------------------------
@@ -175,7 +175,7 @@ angular.module('zmApp.controllers')
                 columnWidth: '.grid-sizer',
                 gutter: 0,
                 initLayout: layouttype,
-                shiftPercentResize:true
+                shiftPercentResize: true
 
             });
 
@@ -186,9 +186,12 @@ angular.module('zmApp.controllers')
                 NVRDataModel.debug('~~loaded image is ' + result + ' for ' + img.img.src);
 
                 // lay out every image if a pre-arranged position has not been found
-                
-                $timeout (function(){if (layouttype) pckry.layout();},100);
-                
+
+                $timeout(function()
+                {
+                    if (layouttype) pckry.layout();
+                }, 100);
+
                 progressCalled = true;
 
                 // if (layouttype) $timeout (function(){layout(pckry);},100);
@@ -207,7 +210,7 @@ angular.module('zmApp.controllers')
                 if (!progressCalled)
                 {
                     NVRDataModel.log("***  PROGRESS WAS NOT CALLED");
-                   // pckry.reloadItems();
+                    // pckry.reloadItems();
                 }
 
                 $timeout(function()
@@ -250,14 +253,15 @@ angular.module('zmApp.controllers')
                     {
                         //NVRDataModel.log("Force calling resize");
                         ///pckry.reloadItems();
-                        pckry.initShiftLayout(positions,"data-item-id");
+                        pckry.initShiftLayout(positions, "data-item-id");
                         // now do a jiggle 
                         $timeout(function()
                         {
-                            pckry.shiftLayout();
+                            NVRDataModel.debug("doing the jiggle and dance...");
+                            pckry.resize(true);
                         }, 300);
 
-                    }, 20);
+                    }, 100);
 
                     //pckry.onresize();
 
@@ -919,27 +923,188 @@ angular.module('zmApp.controllers')
 
         function orientationChanged()
         {
-             /*NVRDataModel.debug("Detected orientation change, redoing packery resize");
-
-             $timeout(function () {
-                var positions = pckry.getShiftPositions('data-item-id');
-                pckry.initShiftLayout(positions,'data-item-id');
-                pckry.shiftLayout();
-             }, zm.packeryTimer);*/
-
-            /* var positions = pckry.getShiftPositions('data-item-id');
-             $timeout(function () {
-                         NVRDataModel.log("init shift layout");
-                         pckry.initShiftLayout(positions,"data-item-id");
-                         $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
-                     }, 20);*/
-
-            //console.log ("POSITIONS MAP " + JSON.stringify(positions));
-            //  var ld = NVRDataModel.getLogin();
-            //   ld.packeryPositions = JSON.stringify(positions);
-            //console.log ("Saving " + ld.packeryPositions);
-            //    NVRDataModel.setLogin(ld);
+            
         }
+
+
+        // remove a saved montage profile
+        $scope.deleteMontageProfile = function()
+        {
+            var posArray;
+
+            try
+            {
+                posArray = NVRDataModel.getLogin().packeryPositionsArray;
+                //console.log ("PA="+JSON.stringify(posArray));
+
+            }
+            catch (e)
+            {
+                NVRDataModel.debug("error parsing packery array positions");
+                posArray = {};
+            }
+
+            //console.log ("posArray="+JSON.stringify(posArray));
+
+            $scope.listdata = [];
+            for (var key in posArray)
+            {
+                if (posArray.hasOwnProperty(key))
+                {
+                    $scope.listdata.push(key);
+                }
+            }
+
+            if (!$scope.listdata.length)
+            {
+
+                $rootScope.zmPopup = $ionicPopup.alert(
+                {
+                    title: $translate.instant('kError'),
+                    template: $translate.instant('kMontageNoSavedProfiles')
+                });
+                return;
+            }
+
+            $scope.data = {
+                'selectedVal': ''
+            };
+
+            $rootScope.zmPopup = SecuredPopups.show('confirm',
+            {
+                template: '<ion-list>                                ' +
+                    '  <ion-radio-fix ng-repeat="item in listdata" ng-value="item" ng-model="data.selectedVal"> ' +
+                    '    {{item}}                              ' +
+                    '  </ion-item>                             ' +
+                    '</ion-list>                               ',
+
+                title: $translate.instant('kSelect'),
+                scope: $scope,
+
+            }).then(function(res)
+            {
+                NVRDataModel.debug("Deleting profile: " + $scope.data.selectedVal);
+                delete posArray[$scope.data.selectedVal];
+                var ld = NVRDataModel.getLogin();
+                ld.packeryPositionsArray = posArray;
+                NVRDataModel.setLogin(ld);
+
+            });
+
+        };
+
+        // switch to another montage profile
+        $scope.switchMontageProfile = function()
+        {
+            var posArray;
+
+            try
+            {
+                posArray = NVRDataModel.getLogin().packeryPositionsArray;
+                //console.log ("PA="+JSON.stringify(posArray));
+
+            }
+            catch (e)
+            {
+                NVRDataModel.debug("error parsing packery array positions");
+                posArray = {};
+            }
+
+            //console.log ("posArray="+JSON.stringify(posArray));
+
+            $scope.listdata = [];
+            for (var key in posArray)
+            {
+                if (posArray.hasOwnProperty(key))
+                {
+                    $scope.listdata.push(key);
+                }
+            }
+
+            if (!$scope.listdata.length)
+            {
+
+                $rootScope.zmPopup = $ionicPopup.alert(
+                {
+                    title: $translate.instant('kError'),
+                    template: $translate.instant('kMontageNoSavedProfiles')
+                });
+                return;
+            }
+
+            $scope.data = {
+                'selectedVal': ''
+            };
+
+            $rootScope.zmPopup = SecuredPopups.show('confirm',
+            {
+                template: '<ion-list>                                ' +
+                    '  <ion-radio-fix ng-repeat="item in listdata" ng-value="item" ng-model="data.selectedVal"> ' +
+                    '    {{item}}                              ' +
+                    '  </ion-item>                             ' +
+                    '</ion-list>                               ',
+
+                title: $translate.instant('kSelect'),
+                scope: $scope,
+
+            }).then(function(res)
+            {
+                if (res)
+                {
+                    //console.log ("SELECTED " + $scope.data.selectedVal);
+                    var ld = NVRDataModel.getLogin();
+                    //console.log ("OLD POS="+ld.packeryPositions);
+                    ld.packeryPositions = ld.packeryPositionsArray[$scope.data.selectedVal];
+                    //console.log ("NEW POS="+ld.packeryPositions);
+                    NVRDataModel.setLogin(ld);
+                    NVRDataModel.reloadMonitorDisplayStatus();
+                    draggies.forEach(function(drag)
+                    {
+                        drag.destroy();
+                    });
+                    draggies = [];
+                    pckry.destroy();
+                    initPackery();
+                    //pckry.reloadItems();
+                }
+
+            });
+
+        };
+
+        // save current configuration into a profile
+        $scope.saveMontageProfile = function()
+        {
+            $scope.data = {
+                montageName: ""
+            };
+            $rootScope.zmPopup = SecuredPopups.show('confirm',
+            {
+                title: $translate.instant('kMontageSave'),
+                template: "<input autocapitalize='none' autocomplete='off' autocorrect='off' type='text' ng-model='data.montageName'>",
+                subTitle: $translate.instant('kMontageSaveSubtitle'),
+                scope: $scope,
+
+            }).then(function(res)
+            {
+                console.log(res);
+                if (res) // ok
+                {
+
+                    var ld = NVRDataModel.getLogin();
+
+                    if ($scope.data.montageName != '')
+                    {
+                        var pos = JSON.stringify(pckry.getShiftPositions('data-item-id'));
+                        ld.packeryPositionsArray[$scope.data.montageName] = pos;
+                        NVRDataModel.debug("Saving " + $scope.data.montageName + " with:" + pos);
+                        NVRDataModel.setLogin(ld);
+                    }
+
+                }
+            });
+
+        };
 
         $scope.toggleSizeButtons = function()
         {
@@ -1196,10 +1361,15 @@ angular.module('zmApp.controllers')
                     ld.packeryPositions = JSON.stringify(positions);
                     //console.log ("Saving " + ld.packeryPositions);
                     NVRDataModel.setLogin(ld);
+
+                    $timeout(function()
+                    {
+                        NVRDataModel.debug("doing the jiggle and dance...");
+                        pckry.resize(true);
+                    }, 300);
+
                     // $scope.slider.monsize = 2;
                 });
-                //layout(pckry);
-
                 pckry.layout();
 
             }, 20);
