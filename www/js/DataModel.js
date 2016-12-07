@@ -1380,6 +1380,17 @@ angular.module('zmApp.controllers')
 
             // I've wrapped this function in my own promise even though http returns a promise.
             //-----------------------------------------------------------------------------
+            //
+            
+            // returns a non promise version 
+            // so if monitors is null, it will return null
+            // As of now, this is only used by EventServer.js to 
+            // send the right list of monitors after registration
+            // token
+            getMonitorsNow: function()
+            {
+                return monitors;
+            },
 
             getMonitors: function(forceReload)
             {

@@ -46,13 +46,22 @@ angular.module('zmApp.controllers')
                     pushstate = "disabled";
 
                 NVRDataModel.debug("openHandShake: state of push is " + pushstate);
-                ws.$emit('push',
+                // let's do this only if disabled. If enabled, I suppose registration
+                // will be called?
+                //if (ld.disablePush)
+                if (1)
                 {
-                    type: 'token',
-                    platform: plat,
-                    token: $rootScope.apnsToken,
-                    state: pushstate
-                });
+                    //console.log ("HANDSHAKE MESSAGE WITH "+$rootScope.monstring);
+                    ws.$emit('push',
+                    {
+                        type: 'token',
+                        platform: plat,
+                        token: $rootScope.apnsToken,
+                        monlist:$rootScope.monstring,
+                        intlist:$rootScope.intstring,
+                        state: pushstate
+                    });
+                }
             }
 
         }
@@ -293,6 +302,7 @@ angular.module('zmApp.controllers')
 
                     //console.log(" sending " + type + " " +
                     //  JSON.stringify(obj));
+                   //console.log("sending " + type + " " + JSON.stringify(obj));
                     ws.$emit(type, obj);
 
                     ws.$un('$open');
@@ -304,7 +314,7 @@ angular.module('zmApp.controllers')
             else
             {
                 ws.$emit(type, obj);
-                //console.log("sending " + type + " " + JSON.stringify(obj));
+               // console.log("sending " + type + " " + JSON.stringify(obj));
             }
 
         }
@@ -426,13 +436,47 @@ angular.module('zmApp.controllers')
                 if (ld.disablePush == true)
                     pushstate = "disabled";
 
-                sendMessage('push',
+                // now at this stage, if this is a first registration
+                // zmeventserver will have no record of this token
+                // so we need to make sure we send it a legit list of 
+                // monitors otherwise users will get notifications for monitors
+                // their login is not supposed to see. Refer #391
+
+                var monstring='';
+                var intstring='';
+                NVRDataModel.getMonitors()
+                .then (function(succ) {
+                    var mon = succ;
+                    for (var i = 0; i < mon.length; i++) {
+                        monstring = monstring + mon[i].Monitor.Id + ",";
+                        intstring = intstring + '0,';
+                    }
+                    if (monstring.charAt(monstring.length - 1) == ',')
+                        monstring = monstring.substr(0, monstring.length - 1);
+
+                    if (intstring.charAt(intstring.length - 1) == ',')
+                        intstring = intstring.substr(0, intstring.length - 1);
+
+                    //console.log ("WUTPUT SENDING REG WITH "+monstring);
+
+                    $rootScope.monstring = monstring;
+                    $rootScope.intstring = intstring;
+
+                    sendMessage('push',
+                    {
+                        type: 'token',
+                        platform: plat,
+                        token: $rootScope.apnsToken,
+                        monlist: monstring,
+                        intlist: intstring,
+                        state: pushstate
+                    }, 1);
+
+                }, 
+                function (err)
                 {
-                    type: 'token',
-                    platform: plat,
-                    token: $rootScope.apnsToken,
-                    state: pushstate
-                }, 1);
+                    NVRDataModel.log ("Could not get monitors, can't send push reg");
+                });     
 
             });
 
