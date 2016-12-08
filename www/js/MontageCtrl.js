@@ -253,7 +253,8 @@ angular.module('zmApp.controllers')
                     {
                         //NVRDataModel.log("Force calling resize");
                         ///pckry.reloadItems();
-                        pckry.initShiftLayout(positions, "data-item-id");
+                        ///positions is defined only if layouttype was false
+                        if (!layouttype) pckry.initShiftLayout(positions, "data-item-id");
                         // now do a jiggle 
                         $timeout(function()
                         {
