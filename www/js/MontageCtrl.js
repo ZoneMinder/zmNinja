@@ -672,9 +672,26 @@ angular.module('zmApp.controllers')
             $scope.showPTZ = !$scope.showPTZ;
         };
 
-        $scope.toggleSelectItem = function(ndx)
-        {
 
+        function getIndex (mid)
+        {
+            var ndx = 0;
+            for (var i=0; i< $scope.MontageMonitors.length; i++)
+            {
+                if ($scope.MontageMonitors[i].Monitor.Id == mid)
+                {
+                    ndx = i;
+                    break;
+                }
+            }
+            return ndx;
+
+        }
+
+        $scope.toggleSelectItem = function(mid)
+        {
+            var ndx = getIndex(mid);
+            //console.log ("TOGGLE DETECTED AT INDEX:"+ndx+" NAME="+$scope.MontageMonitors[ndx].Monitor.Name);
             if ($scope.MontageMonitors[ndx].Monitor.selectStyle !== "undefined" && $scope.MontageMonitors[ndx].Monitor.selectStyle == "dragborder-selected")
             {
                 $scope.MontageMonitors[ndx].Monitor.selectStyle = "";
