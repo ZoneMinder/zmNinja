@@ -279,6 +279,17 @@ angular.module('zmApp.controllers')
                 }
 
             }
+            else // if there are no packery positions, make sure all are displayed! 
+            {
+                debug ("no packery profile, making sure monitors are show");
+                for (var m1 = 0; m1 < monitors.length; m1++)
+                {
+                     monitors[m1].Monitor.listDisplay = 'show';
+
+                }
+
+
+            }
         }
 
         function setLogin(newLogin)
