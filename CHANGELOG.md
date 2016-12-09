@@ -1,5 +1,32 @@
 # Change Log
 
+## [v1.2.32](https://github.com/pliablepixels/zmNinja/tree/v1.2.32) (2016-12-09)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.31...v1.2.32)
+
+**Implemented enhancements:**
+
+- Montage Camera Groups [\#397](https://github.com/pliablepixels/zmNinja/issues/397)
+- Multiple selectable/saveable 'Montage' views within a server profile  [\#390](https://github.com/pliablepixels/zmNinja/issues/390)
+
+**Fixed bugs:**
+
+- In some cases, events screen shows no events - even though there are events [\#408](https://github.com/pliablepixels/zmNinja/issues/408)
+
+**Closed issues:**
+
+- Translation issue [\#400](https://github.com/pliablepixels/zmNinja/issues/400)
+
+**Merged pull requests:**
+
+- translation updates [\#407](https://github.com/pliablepixels/zmNinja/pull/407) ([maymaymay](https://github.com/maymaymay))
+- Updated Portuguese Translation [\#406](https://github.com/pliablepixels/zmNinja/pull/406) ([ljpinho](https://github.com/ljpinho))
+- spanish language update translations and modifying an instruction lin… [\#404](https://github.com/pliablepixels/zmNinja/pull/404) ([fxrnando](https://github.com/fxrnando))
+- Updated 3 missing keys [\#402](https://github.com/pliablepixels/zmNinja/pull/402) ([maymaymay](https://github.com/maymaymay))
+- Translation update [\#399](https://github.com/pliablepixels/zmNinja/pull/399) ([maymaymay](https://github.com/maymaymay))
+- Translation updates [\#396](https://github.com/pliablepixels/zmNinja/pull/396) ([maymaymay](https://github.com/maymaymay))
+-  Translation adjustments. [\#393](https://github.com/pliablepixels/zmNinja/pull/393) ([maymaymay](https://github.com/maymaymay))
+- Translation updates to \#383 [\#392](https://github.com/pliablepixels/zmNinja/pull/392) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.2.31](https://github.com/pliablepixels/zmNinja/tree/v1.2.31) (2016-12-02)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.30...v1.2.31)
 
@@ -22,10 +49,6 @@
 - \[h264\] add cue points in video player for alarmed frames [\#381](https://github.com/pliablepixels/zmNinja/issues/381)
 - Add ability to save animated gif version of event \(alarm frames only\) [\#379](https://github.com/pliablepixels/zmNinja/issues/379)
 
-**Fixed bugs:**
-
-- restricted users for event notification not working [\#391](https://github.com/pliablepixels/zmNinja/issues/391)
-
 **Closed issues:**
 
 - \[BUG\] Window title does not change to 'Events' when in events view [\#389](https://github.com/pliablepixels/zmNinja/issues/389)
@@ -41,7 +64,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -68,11 +91,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
-
 ## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
+
+## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
 
 **Implemented enhancements:**
 
