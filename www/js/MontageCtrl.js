@@ -795,7 +795,7 @@ angular.module('zmApp.controllers')
             var i;
             $scope.isDragabillyOn = !$scope.isDragabillyOn;
 
-             for (var i = 0; i < $scope.MontageMonitors.length; i++)
+             for ( i = 0; i < $scope.MontageMonitors.length; i++)
              {
                 $scope.MontageMonitors[i].Monitor.isStamp = false;
              }
