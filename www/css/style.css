@@ -1076,8 +1076,11 @@ videogular div.event-time {
 
 /* make sure this is after last-child */
 
+
+
+
 #flyoutmenu li:only-child {
-    /*background: rgba(192, 57, 43, 0.7);*/
+    
     background: rgba(108, 122, 137, 0.7);
     -webkit-border-radius: 5px 5px 5px 5px;
 }

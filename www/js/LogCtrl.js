@@ -37,6 +37,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         {
             title: $translate.instant('kPleaseConfirm'),
             template: $translate.instant('kDeleteLogsConfirm'),
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
         });
 
         $rootScope.zmPopup.then(function(res)
@@ -87,7 +89,9 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         $ionicPopup.confirm(
             {
                 title: $translate.instant('kSensitiveTitle'),
-                template: $rootScope.appName + ' ' + $translate.instant('kSensitiveBody')
+                template: $rootScope.appName + ' ' + $translate.instant('kSensitiveBody'),
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
             })
             .then(function(res)
             {

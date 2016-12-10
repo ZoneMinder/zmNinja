@@ -339,7 +339,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             $ionicPopup.alert(
             {
                 title: $translate.instant('kOperationInProgressTitle'),
-                template: $translate.instant('kOperationInProgressBody') + '...'
+                template: $translate.instant('kOperationInProgressBody') + '...',
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
             });
             return;
         }
@@ -354,15 +356,15 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
         $rootScope.zmPopup = $ionicPopup.show(
         {
-            title: 'Please Confirm',
+            title: $translate.instant('kPleaseConfirm'),
             template: promptstring,
             buttons: [
             {
-                text: 'Cancel',
+                text: $translate.instant('kButtonCancel'),
                 type: 'button-positive'
             },
             {
-                text: 'Yes',
+                text: $translate.instant('kButtonOk'),
                 type: 'button-assertive',
                 onTap: function(e)
                 {

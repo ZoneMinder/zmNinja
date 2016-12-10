@@ -139,7 +139,9 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         {
             title: 'frame:' + fid + '/Event:' + e,
             template: img,
-            cssClass: 'popup95'
+            cssClass: 'popup95',
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
         });
     };
 

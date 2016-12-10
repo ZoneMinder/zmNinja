@@ -1377,7 +1377,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             $rootScope.zmPopup = $ionicPopup.alert(
             {
                 title: $translate.instant('kNoMonitors'),
-                template: $translate.instant('kPleaseCheckCredentials')
+                template: $translate.instant('kPleaseCheckCredentials'),
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
             });
             $ionicHistory.nextViewOptions(
             {

@@ -220,7 +220,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $rootScope.zmPopup = SecuredPopups.show('alert',
         {
             title: $translate.instant('kError'),
-            template: $rootScope.platformOS == 'desktop' ? $translate.instant('kVideoError') : $translate.instant('kVideoErrorMobile')
+            template: $rootScope.platformOS == 'desktop' ? $translate.instant('kVideoError') : $translate.instant('kVideoErrorMobile'),
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
         });
 
     };

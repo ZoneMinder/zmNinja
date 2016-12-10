@@ -167,7 +167,9 @@ angular.module('zmApp.controllers')
                         {
                             title: $translate.instant('kEventServerVersionTitle'),
                             template: $translate.instant('kEventServerVersionBody1') + " " + str.version + ". " + $translate.instant('kEventServerVersionBody2') +
-                                zm.minEventServerVersion
+                                zm.minEventServerVersion,
+                                okText: $translate.instant('kButtonOk'),
+                                cancelText: $translate.instant('kButtonCancel'),
                         });
                     }
 

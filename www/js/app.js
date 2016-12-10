@@ -975,7 +975,9 @@ angular.module('zmApp', [
                                     var alertPopup = $ionicPopup.alert(
                                     {
                                         title: 'reCaptcha enabled',
-                                        template: $translate.instant('kRecaptcha')
+                                        template: $translate.instant('kRecaptcha'),
+                                        okText: $translate.instant('kButtonOk'),
+                                        cancelText: $translate.instant('kButtonCancel'),
                                     });
 
                                     // close it after 5 seconds

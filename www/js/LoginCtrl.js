@@ -80,7 +80,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             $rootScope.zmPopup = SecuredPopups.show('alert',
             {
                 title: $translate.instant('kError'),
-                template: $translate.instant('kFallback2Configs')
+                template: $translate.instant('kFallback2Configs'),
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
             });
             return;
 
@@ -711,7 +713,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                                 $rootScope.zmPopup = SecuredPopups.show('alert',
                                                 {
                                                     title: $translate.instant('kLoginValidatedTitle'),
-                                                    template: loginStatus
+                                                    template: loginStatus,
+                                                    okText: $translate.instant('kButtonOk'),
+                                                    cancelText: $translate.instant('kButtonCancel'),
                                                 }).then(function(res)
                                                 {
 
@@ -736,7 +740,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                                                 $rootScope.zmPopup = SecuredPopups.show('alert',
                                                 {
                                                     title: $translate.instant('kLoginValidatedTitle'),
-                                                    template: loginStatus
+                                                    template: loginStatus,
+                                                    okText: $translate.instant('kButtonOk'),
+                                                    cancelText: $translate.instant('kButtonCancel'),
                                                 }).then(function(res)
                                                 {
 
@@ -771,7 +777,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                             $rootScope.zmPopup = SecuredPopups.show('alert',
                             {
                                 title: $translate.instant('kLoginValidAPIFailedTitle'),
-                                template: $translate.instant('kBannerPleaseCheck')
+                                template: $translate.instant('kBannerPleaseCheck'),
+                                okText: $translate.instant('kButtonOk'),
+                                cancelText: $translate.instant('kButtonCancel'),
                             });
                         });
                 });

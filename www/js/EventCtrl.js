@@ -306,7 +306,9 @@ angular.module('zmApp.controllers')
             $ionicPopup.alert(
             {
                 title: pTitle,
-                template: "{{'kCheckCredentials' | translate }}"
+                template: "{{'kCheckCredentials' | translate }}",
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
             });
             $ionicHistory.nextViewOptions(
             {
@@ -762,7 +764,9 @@ angular.module('zmApp.controllers')
         $ionicPopup.alert(
         {
             title: $translate.instant('kNote'),
-            template: "{{'kVideoMp4Warning' | translate }}"
+            template: "{{'kVideoMp4Warning' | translate }}",
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
         });
     };
 
@@ -1183,7 +1187,9 @@ angular.module('zmApp.controllers')
             $ionicPopup.confirm(
             {
                 title: $translate.instant('kNote'),
-                template: "{{'kGifWarning' | translate }}"
+                template: "{{'kGifWarning' | translate }}",
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
             }).then(function(res)
             {
                 if (res)
@@ -1603,7 +1609,9 @@ angular.module('zmApp.controllers')
         $rootScope.zmPopup = $ionicPopup.confirm(
         {
             title: $translate.instant('kFilterSettings'),
-            template: $translate.instant('kFilterEventsBetween1') + ':<br/> <b>' + myFrom + "</b> " + $translate.instant('kTo') + " <b>" + toString + '</b><br/>' + $translate.instant('kFilterEventsBetween2')
+            template: $translate.instant('kFilterEventsBetween1') + ':<br/> <b>' + myFrom + "</b> " + $translate.instant('kTo') + " <b>" + toString + '</b><br/>' + $translate.instant('kFilterEventsBetween2'),
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
         });
         $rootScope.zmPopup.then(function(res)
         {

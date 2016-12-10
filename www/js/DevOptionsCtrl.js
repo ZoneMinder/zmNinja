@@ -123,7 +123,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         $rootScope.zmPopup = SecuredPopups.show('alert',
         {
             title: $translate.instant('kSettingsSaved'),
-            template: "{{'kExploreEnjoy' | translate }} {{$root.appName}}"
+            template: "{{'kExploreEnjoy' | translate }} {{$root.appName}}",
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
         }).then(function(res)
         {
             $ionicSideMenuDelegate.toggleLeft();

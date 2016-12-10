@@ -1061,7 +1061,9 @@ angular.module('zmApp.controllers')
                 $rootScope.zmPopup = $ionicPopup.alert(
                 {
                     title: $translate.instant('kError'),
-                    template: $translate.instant('kMontageNoSavedProfiles')
+                    template: $translate.instant('kMontageNoSavedProfiles'),
+                    okText: $translate.instant('kButtonOk'),
+                    cancelText: $translate.instant('kButtonCancel'),
                 });
                 return;
             }
@@ -1081,6 +1083,8 @@ angular.module('zmApp.controllers')
                 title: $translate.instant('kSelect'),
                 subTitle:$translate.instant('kSelectDelete'),
                 scope: $scope,
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
 
             }).then(function(res)
             {
@@ -1149,6 +1153,9 @@ angular.module('zmApp.controllers')
                 title: $translate.instant('kSelect'),
                 subTitle:$translate.instant('kSelectSwitch'),
                 scope: $scope,
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
+                    
 
             }).then(function(res)
             {
@@ -1187,6 +1194,8 @@ angular.module('zmApp.controllers')
                 template: "<input autocapitalize='none' autocomplete='off' autocorrect='off' type='text' ng-model='data.montageName'>",
                 subTitle: $translate.instant('kMontageSaveSubtitle'),
                 scope: $scope,
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
 
             }).then(function(res)
             {
@@ -1327,7 +1336,9 @@ angular.module('zmApp.controllers')
                 $rootScope.zmPopup = $ionicPopup.alert(
                 {
                     title: $translate.instant('kNoMonitors'),
-                    template: $translate.instant('kCheckCredentials')
+                    template: $translate.instant('kCheckCredentials'),
+                    okText: $translate.instant('kButtonOk'),
+                    cancelText: $translate.instant('kButtonCancel'),
                 });
                 $ionicHistory.nextViewOptions(
                 {
