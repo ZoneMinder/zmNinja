@@ -688,6 +688,83 @@ angular.module('zmApp.controllers')
 
         }
 
+        $scope.toggleStamp = function ()
+        {
+            if (!$scope.isDragabillyOn) return;
+            var found = false;
+            
+
+            for (var i=0; i< $scope.MontageMonitors.length; i++)
+            {
+                if ($scope.MontageMonitors[i].Monitor.selectStyle == 'dragborder-selected')
+                {
+                    
+                    findPackeryElement(i);
+                }
+            }
+
+            function findPackeryElement(i)
+            {
+                pckry.getItemElements().forEach(function(elem)
+                {
+
+                    var id = elem.getAttribute("data-item-id");
+                    if (id == $scope.MontageMonitors[i].Monitor.Id)
+                    {
+                        if ($scope.MontageMonitors[i].Monitor.isStamp)
+                             pckry.unstamp(elem);
+                        else          
+                          pckry.stamp(elem);
+
+                       $scope.MontageMonitors[i].Monitor.isStamp = !$scope.MontageMonitors[i].Monitor.isStamp;
+                       NVRDataModel.debug ("Stamp for "+$scope.MontageMonitors[i].Monitor.Name + " is:"+$scope.MontageMonitors[i].Monitor.isStamp );
+                        //break;
+
+                    }
+                });
+            }
+
+
+        };
+
+        $scope.hideMonitor = function (mid)
+        {
+             if (!$scope.isDragabillyOn) return;
+             var found = false;
+            for (var i=0; i< $scope.MontageMonitors.length; i++)
+            {
+                if ($scope.MontageMonitors[i].Monitor.selectStyle == 'dragborder-selected')
+                {
+                    $scope.MontageMonitors[i].Monitor.listDisplay = 'noshow';  
+                    $scope.MontageMonitors[i].Monitor.selectStyle = "";
+                    found = true;
+                } 
+
+            }
+            if (found)
+            {
+                pckry.once ('layoutComplete', saveUpdatedLayout);
+                $timeout (function() {pckry.shiftLayout();},300);
+            }
+           
+            function saveUpdatedLayout() 
+            {
+                $timeout(function()
+                {
+                    var positions = pckry.getShiftPositions('data-item-id');
+                    console.log("SAVING");
+                    var ld = NVRDataModel.getLogin();
+
+                    ld.packeryPositions = JSON.stringify(positions);
+                    //console.log ("Saving " + ld.packeryPositions);
+                    NVRDataModel.setLogin(ld);
+                    $ionicLoading.hide();
+                    //$scope.sliderChanging = false;
+                }, 20);
+            }
+            
+        };
+
         $scope.toggleSelectItem = function(mid)
         {
             var ndx = getIndex(mid);
@@ -717,6 +794,11 @@ angular.module('zmApp.controllers')
         {
             var i;
             $scope.isDragabillyOn = !$scope.isDragabillyOn;
+
+             for (var i = 0; i < $scope.MontageMonitors.length; i++)
+             {
+                $scope.MontageMonitors[i].Monitor.isStamp = false;
+             }
 
             $ionicSideMenuDelegate.canDragContent($scope.isDragabillyOn ? false : true);
 
@@ -1279,6 +1361,7 @@ angular.module('zmApp.controllers')
                 $scope.MontageMonitors[i].Monitor.gridScale = "50";
                 $scope.MontageMonitors[i].Monitor.selectStyle = "";
                 $scope.MontageMonitors[i].Monitor.alarmState = 'color:rgba(0,0,0,0);';
+                $scope.MontageMonitors[i].Monitor.isStamp = false;
 
             }
 

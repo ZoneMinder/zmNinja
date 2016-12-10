@@ -34,6 +34,14 @@
                     <li>
                         <a href="" ng-click="sliderChanged(-1)"> <i class="ion-minus-circled"></i></a>
                     </li>
+                    <span ng-if="isDragabillyOn">
+                        <li>
+                            <a href="" ng-click="hideMonitor(monitor.Monitor.Id)"> <i class="ion-close-circled"></i></a>
+                        </li>
+                        <li>
+                            <a href="" ng-click="toggleStamp()"> <i class="ion-pin"></i></a>
+                        </li>
+                    </span>
                 </ul>
             </div>
 
@@ -89,6 +97,8 @@
                                  
                                     
                                     <img    class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);" image-spinner-loader="lines"  />
+                                       
+                                   
 
                                     </div> 
 
@@ -107,9 +117,9 @@
 
 
 
-                            <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >
+                            <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >&nbsp;
 
-                                    &nbsp;<i class="ion-ios-videocam"></i>
+                                    <span ng-if="monitor.Monitor.isStamp && isDragabillyOn"><i  class="animated infinite flash ion-pin"></i>&nbsp;</span><i class="ion-ios-videocam"></i>&nbsp;
                                    {{monitor.Monitor.Name}}&nbsp;<i ng-if="$root.runMode!='lowbw'" style="{{monitor.Monitor.alarmState}}" class="ion-record"></i>&nbsp;
 
                             </figcaption>
