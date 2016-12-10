@@ -34,14 +34,14 @@
                     <li>
                         <a href="" ng-click="sliderChanged(-1)"> <i class="ion-minus-circled"></i></a>
                     </li>
-                    <span ng-if="isDragabillyOn">
-                        <li>
+                    
+                        <li ng-if="isDragabillyOn">
                             <a href="" ng-click="hideMonitor(monitor.Monitor.Id)"> <i class="ion-close-circled"></i></a>
                         </li>
-                        <li>
+                        <li ng-if="isDragabillyOn"> 
                             <a href="" ng-click="toggleStamp()"> <i class="ion-pin"></i></a>
                         </li>
-                    </span>
+                  
                 </ul>
             </div>
 
