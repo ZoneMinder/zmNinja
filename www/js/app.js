@@ -1355,6 +1355,19 @@ angular.module('zmApp', [
 
         });
 
+        // credit http://stackoverflow.com/a/2091331/1361529
+        function getQueryVariable(query, variable) {
+            var vars = query.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                if (decodeURIComponent(pair[0]) == variable) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+            return "";
+            //console.log('Query variable %s not found', variable);
+        }
+
         //---------------------------------------------------------------------
         // called when device is ready
         //---------------------------------------------------------------------
@@ -1368,6 +1381,27 @@ angular.module('zmApp', [
         $ionicPlatform.ready(function()
         {
            
+           // handles URL launches
+           // if you just launch zmninja:// then it will honor the settings in "tap screen" -> events or montage
+           // if you launch with zmninja://<mid> it will take you to live view for that mid
+           window.handleOpenURL = function(url) {
+               $rootScope.tappedNotification = 1;
+               $rootScope.tappedMid = 0;
+               var c= URI.parse(url);
+               //NVRDataModel.log ("***********launched with "+ JSON.stringify(c));
+               if (c.query)
+               {
+                    var qm = getQueryVariable(c.query, "mid");
+                    if (qm) $rootScope.tappedMid = parseInt(qm);
+                    NVRDataModel.log ("external URL called with MID="+$rootScope.tappedMid);
+                    //console.log (">>>>>>>>> EID="+getQueryVariable(c.query, "eid"));
+
+               }
+
+               
+                    
+           };
+
             $rootScope.textScaleFactor = 1.0;
 
             $rootScope.db = null;
@@ -1783,6 +1817,9 @@ angular.module('zmApp', [
                 }, false);
 
             }
+
+            // URL interceptor
+
 
         }); //platformReady
 

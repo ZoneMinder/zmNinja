@@ -93,4 +93,10 @@
     <plugin name="cordova-plugin-photo-library" spec="~1.2.0">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="images to gallery" />
     </plugin>
+    <plugin name="cordova-plugin-customurlscheme" spec="~4.2.0">
+        <variable name="URL_SCHEME" value="zmninja" />
+        <variable name="ANDROID_SCHEME" value=" " />
+        <variable name="ANDROID_HOST" value=" " />
+        <variable name="ANDROID_PATHPREFIX" value="/" />
+    </plugin>
 </widget>
