@@ -273,18 +273,25 @@ angular.module('zmApp.controllers')
             function itemDragged(item)
             {
                 NVRDataModel.debug("drag complete");
+                $timeout (function(){pckry.shiftLayout();},20);
+
+                pckry.once ('layoutComplete', function() {
+
+                    var positions = pckry.getShiftPositions('data-item-id');
+                    //console.log ("POSITIONS MAP " + JSON.stringify(positions));
+                    var ld = NVRDataModel.getLogin();
+                    ld.packeryPositions = JSON.stringify(positions);
+                    //console.log ("Saving " + ld.packeryPositions);
+                    NVRDataModel.setLogin(ld);
+                    NVRDataModel.debug("saved new positions");
+                });
 
                 //pckry.getItemElements().forEach(function (itemElem) {
 
                 //console.log (itemElem.attributes['data-item-id'].value+" size  "+itemElem.attributes['data-item-size'].value );
                 //  });
 
-                var positions = pckry.getShiftPositions('data-item-id');
-                //console.log ("POSITIONS MAP " + JSON.stringify(positions));
-                var ld = NVRDataModel.getLogin();
-                ld.packeryPositions = JSON.stringify(positions);
-                //console.log ("Saving " + ld.packeryPositions);
-                NVRDataModel.setLogin(ld);
+                
             }
 
         }

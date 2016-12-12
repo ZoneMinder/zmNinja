@@ -214,6 +214,58 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
         return (d.promise);
     }
 
+    function evaluateTappedNotification()
+    {
+        if ($rootScope.tappedNotification)
+        {
+
+            var ld = NVRDataModel.getLogin();
+            NVRDataModel.log("Came via push tap. onTapScreen=" + ld.onTapScreen);
+            //console.log ("***** NOTIFICATION TAPPED  ");
+            $rootScope.tappedNotification = 0;
+            $ionicHistory.nextViewOptions(
+            {
+                disableBack: true
+            });
+
+            if (ld.onTapScreen == $translate.instant('kTapMontage'))
+            {
+                NVRDataModel.debug("Going to montage");
+                $state.go("montage",
+                {},
+                {
+                    reload: true
+                });
+
+                return;
+            }
+            else if (ld.onTapScreen == $translate.instant('kTapEvents'))
+            {
+                NVRDataModel.debug("Going to events");
+                $state.go("events",
+                {
+                    "id": 0,
+                    "playEvent": false
+                },
+                {
+                    reload: true
+                });
+                return;
+            }
+            else // we go to live
+            {
+                NVRDataModel.debug("Going to live view ");
+                $state.go("monitors",
+                {},
+                {
+                    reload: true
+                });
+                return;
+            }
+        }
+
+    }
+
     function unlock(idVerified)
     {
         /*
@@ -282,14 +334,21 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     // coming here means continue
                                     // console.log (">>>>>>>>>>>>>>>>>>>>>>>>>NEVER");
                                     EventServer.refresh();
+                                    if ($rootScope.tappedNotification != 1)
+                                    {
+                                        console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
+                                        var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
+                                        NVRDataModel.debug("logging state transition");
+                                        NVRDataModel.debug("Transitioning state to: " +
+                                            statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
 
-                                    var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
-                                    NVRDataModel.debug("logging state transition");
-                                    NVRDataModel.debug("Transitioning state to: " +
-                                        statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
+                                        $state.go(statetoGo, $rootScope.lastStateParam);
+                                        return;
 
-                                    $state.go(statetoGo, $rootScope.lastStateParam);
-                                    return;
+                                    }
+                                    else
+                                        evaluateTappedNotification();
+                                    
 
                                 },
                                 function(error)
@@ -319,53 +378,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                                 });
 
-                        if ($rootScope.tappedNotification)
-                        {
-
-                            var ld = NVRDataModel.getLogin();
-                            NVRDataModel.log("Came via push tap. onTapScreen=" + ld.onTapScreen);
-                            //console.log ("***** NOTIFICATION TAPPED  ");
-                            $rootScope.tappedNotification = 0;
-                            $ionicHistory.nextViewOptions(
-                            {
-                                disableBack: true
-                            });
-
-                            if (ld.onTapScreen == $translate.instant('kTapMontage'))
-                            {
-                                NVRDataModel.debug("Going to montage");
-                                $state.go("montage",
-                                {},
-                                {
-                                    reload: true
-                                });
-
-                                return;
-                            }
-                            else if (ld.onTapScreen == $translate.instant('kTapEvents'))
-                            {
-                                NVRDataModel.debug("Going to events");
-                                $state.go("events",
-                                {
-                                    "id": 0,
-                                    "playEvent": false
-                                },
-                                {
-                                    reload: true
-                                });
-                                return;
-                            }
-                            else // we go to live
-                            {
-                                NVRDataModel.debug("Going to live view ");
-                                $state.go("monitors",
-                                {},
-                                {
-                                    reload: true
-                                });
-                                return;
-                            }
-                        }
+                       
 
                     },
                     // coming here means auth error
