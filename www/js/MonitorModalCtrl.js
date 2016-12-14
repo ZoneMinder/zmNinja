@@ -3,13 +3,8 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment, imagesLoaded, chrome */
 
-
-
-angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', 'SecuredPopups', '$translate', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, SecuredPopups, $translate) {
-
-
-
-
+angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', 'SecuredPopups', '$translate', function($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, SecuredPopups, $translate)
+{
 
     $scope.animationInProgress = false;
     $scope.imageFit = true;
@@ -21,7 +16,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $rootScope.authSession = "undefined";
 
-    $ionicLoading.show({
+    $ionicLoading.show(
+    {
         template: $translate.instant('kNegotiatingStreamAuth') + '...',
         animation: 'fade-in',
         showBackdrop: true,
@@ -30,7 +26,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         showDelay: 0
     });
 
-
     $scope.currentStreamMode = 'single';
     NVRDataModel.log("Using stream mode " + $scope.currentStreamMode);
 
@@ -38,13 +33,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
     NVRDataModel.getAuthKey($rootScope.validMonitorId, $scope.monitors[0].Monitor.connKey)
-        .then(function (success) {
+        .then(function(success)
+            {
                 $ionicLoading.hide();
                 $rootScope.authSession = success;
                 NVRDataModel.log("Modal: Stream authentication construction: " + $rootScope.authSession);
 
             },
-            function (error) {
+            function(error)
+            {
 
                 $ionicLoading.hide();
                 NVRDataModel.debug("ModalCtrl: Error details of stream auth:" + error);
@@ -52,19 +49,18 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
             });
 
-
-
     $interval.cancel(intervalModalHandle);
     $interval.cancel(cycleHandle);
 
-    intervalModalHandle = $interval(function () {
+    intervalModalHandle = $interval(function()
+    {
         loadModalNotifications();
         //  console.log ("Refreshing Image...");
     }.bind(this), 5000);
 
-
     $timeout.cancel(nphTimer);
-    nphTimer = $timeout(function () {
+    nphTimer = $timeout(function()
+    {
         $scope.currentStreamMode = 'jpeg';
         NVRDataModel.log("Switching playback via nphzms");
     }, zm.nphSwitchTimer);
@@ -77,7 +73,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         background: '#2F4F4F',
         isOpen: true,
         toggleOnClick: false,
-        button: {
+        button:
+        {
             cssClass: "fa  fa-arrows-alt",
         },
         items: [
@@ -85,7 +82,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
-                onclick: function () {
+                onclick: function()
+                {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Down');
                 }
             },
@@ -94,7 +92,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
-                onclick: function () {
+                onclick: function()
+                {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'DownLeft');
                 }
             },
@@ -104,7 +103,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
 
-                onclick: function () {
+                onclick: function()
+                {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Left');
                 }
             },
@@ -112,7 +112,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 content: 'D',
                 empty: true,
 
-                onclick: function () {
+                onclick: function()
+                {
                     // console.log('About');
                 }
             },
@@ -121,7 +122,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
-                onclick: function () {
+                onclick: function()
+                {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'UpLeft');
                 }
             },
@@ -130,7 +132,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
-                onclick: function () {
+                onclick: function()
+                {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Up');
                 }
             },
@@ -139,7 +142,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
-                onclick: function () {
+                onclick: function()
+                {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'UpRight');
                 }
             },
@@ -147,7 +151,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             {
                 content: 'H',
                 empty: true,
-                onclick: function () {
+                onclick: function()
+                {
                     //console.log('About');
                 }
             },
@@ -156,17 +161,18 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
-                onclick: function () {
+                onclick: function()
+                {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Right');
                 }
             },
-
 
             {
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
-                onclick: function () {
+                onclick: function()
+                {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'DownRight');
                 }
             },
@@ -174,36 +180,36 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             {
                 content: 'K',
                 empty: true,
-                onclick: function () {
+                onclick: function()
+                {
                     //console.log('About');
                 }
             },
-    ]
+        ]
     };
 
     //-------------------------------------------------------------
     // On re-auth, we need a new zms
     //-------------------------------------------------------------
 
-    $rootScope.$on("auth-success", function () {
+    $rootScope.$on("auth-success", function()
+    {
 
         NVRDataModel.debug("MonitorModalCtrl: Re-login detected, resetting everything & re-generating connkey");
         NVRDataModel.stopNetwork("MonitorModal-auth success");
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
-
     });
 
-
-    $scope.cast = function (mid, mon) {
-       
+    $scope.cast = function(mid, mon) {
 
     };
 
     //----------------------------------
     // toggles monitor cycling
     //----------------------------------
-    $scope.toggleCycle = function () {
+    $scope.toggleCycle = function()
+    {
         //console.log ("HERE");
         $scope.isCycle = !$scope.isCycle;
         var ld = NVRDataModel.getLogin();
@@ -211,15 +217,19 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         NVRDataModel.setLogin(ld);
         $scope.cycleText = $scope.isCycle ? $translate.instant('kOn') : $translate.instant('kOff');
 
-        if ($scope.isCycle) {
+        if ($scope.isCycle)
+        {
             NVRDataModel.log("re-starting cycle timer");
             $interval.cancel(cycleHandle);
 
-            cycleHandle = $interval(function () {
+            cycleHandle = $interval(function()
+            {
                 moveToMonitor($scope.monitorId, 1);
                 //  console.log ("Refreshing Image...");
             }.bind(this), ld.cycleMonitorsInterval * 1000);
-        } else {
+        }
+        else
+        {
             NVRDataModel.log("cancelling cycle timer");
             $interval.cancel(cycleHandle);
         }
@@ -230,19 +240,21 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // PTZ enable/disable
     //-------------------------------------------------------------
 
-
-    $scope.togglePTZ = function () {
+    $scope.togglePTZ = function()
+    {
 
         //console.log("PTZ");
 
-        if ($scope.isControllable == '1') {
+        if ($scope.isControllable == '1')
+        {
             //console.log ("iscontrollable is true");
             $scope.showPTZ = !$scope.showPTZ;
 
-
-
-        } else {
-            $ionicLoading.show({
+        }
+        else
+        {
+            $ionicLoading.show(
+            {
                 template: $translate.instant('kPTZnotConfigured'),
                 noBackdrop: true,
                 duration: 3000,
@@ -251,13 +263,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     };
 
-
-
     //-------------------------------------------------------------
     // Pause and resume handlers
     //-------------------------------------------------------------
 
-    function onPause() {
+    function onPause()
+    {
         NVRDataModel.debug("ModalCtrl: onpause called");
         $interval.cancel(intervalModalHandle);
         $interval.cancel(cycleHandle);
@@ -266,10 +277,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         // FIXME: Do I need to  setAwake(false) here?
     }
 
-
-    function onResume() {
+    function onResume()
+    {
         NVRDataModel.debug("ModalCtrl: Modal resume called");
-        if ($scope.isModalActive) {
+        if ($scope.isModalActive)
+        {
             NVRDataModel.log("ModalCtrl: Restarting Modal timer on resume");
 
             $interval.cancel(intervalModalHandle);
@@ -277,16 +289,19 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
             var ld = NVRDataModel.getLogin();
 
-            intervalModalHandle = $interval(function () {
+            intervalModalHandle = $interval(function()
+            {
                 loadModalNotifications();
             }.bind(this), 5000);
 
-            if (ld.cycleMonitors) {
+            if (ld.cycleMonitors)
+            {
                 NVRDataModel.debug("Cycling enabled at " + ld.cycleMonitorsInterval);
 
                 $interval.cancel(cycleHandle);
 
-                cycleHandle = $interval(function () {
+                cycleHandle = $interval(function()
+                {
                     moveToMonitor($scope.monitorId, 1);
                     //  console.log ("Refreshing Image...");
                 }.bind(this), ld.cycleMonitorsInterval * 1000);
@@ -299,79 +314,81 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     }
 
-
     //-------------------------------------------------------------
     // Queries the 1.30 API for recording state of current monitor
     //-------------------------------------------------------------
-    function loadModalNotifications() {
+    function loadModalNotifications()
+    {
 
-        if (NVRDataModel.versionCompare($rootScope.apiVersion, "1.30") == -1) {
+        if (NVRDataModel.versionCompare($rootScope.apiVersion, "1.30") == -1)
+        {
 
             return;
         }
-        
+
         if (NVRDataModel.getLogin().enableLowBandwidth)
             return;
 
         var status = [$translate.instant('kMonIdle'),
-                      $translate.instant('kMonPreAlarm'),
-                      $translate.instant('kMonAlarmed'),
-                      $translate.instant('kMonAlert'),
-                      $translate.instant('kMonRecord')
-                     ];
+            $translate.instant('kMonPreAlarm'),
+            $translate.instant('kMonAlarmed'),
+            $translate.instant('kMonAlert'),
+            $translate.instant('kMonRecord')
+        ];
         //console.log ("Inside Modal timer...");
         var apiurl = NVRDataModel.getLogin().apiurl;
         var alarmurl = apiurl + "/monitors/alarm/id:" + $scope.monitorId + "/command:status.json";
         NVRDataModel.log("Invoking " + alarmurl);
 
-
         $http.get(alarmurl)
-            .then(function (data) {
+            .then(function(data)
+                {
                     //  NVRDataModel.debug ("Success in monitor alarmed status " + JSON.stringify(data));
 
                     $scope.monStatus = status[parseInt(data.data.status)];
 
                 },
-                function (error) {
-
+                function(error)
+                {
 
                     $scope.monStatus = "";
                     NVRDataModel.debug("Error in monitor alarmed status ");
                 });
 
-
     }
-
 
     //-------------------------------------------------------------
     // Enable/Disable preset list
     //-------------------------------------------------------------
 
-    $scope.togglePresets = function () {
+    $scope.togglePresets = function()
+    {
         $scope.presetOn = !$scope.presetOn;
 
-        if ($scope.presetOn) {
+        if ($scope.presetOn)
+        {
             $scope.controlToggle = "hide buttons";
-        } else {
+        }
+        else
+        {
             $scope.controlToggle = "show buttons";
         }
         //console.log("Changing preset to " + $scope.presetOn);
 
         var element = angular.element(document.getElementById("presetlist"));
         // bring it in
-        if ($scope.presetOn) {
+        if ($scope.presetOn)
+        {
             element.removeClass("animated fadeOutUp");
 
-
-        } else {
+        }
+        else
+        {
             element.removeClass("animated fadeInDown");
             element.addClass("animated fadeOutUp");
         }
 
-
-
     };
-
 
     //-------------------------------------------------------------
     // this is checked to make sure we are not pulling images
@@ -379,36 +396,35 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // for example
     //-------------------------------------------------------------
 
-    $scope.isBackground = function () {
+    $scope.isBackground = function()
+    {
         // console.log ("Is background called from ModalCtrl and returned " +    
         // NVRDataModel.isBackground());
         return NVRDataModel.isBackground();
     };
-
-
-
-
-
 
     //-------------------------------------------------------------
     // Send PTZ command to ZM
     // Note: PTZ fails on desktop, don't bother about it
     //-------------------------------------------------------------
 
-
-    $scope.controlPTZ = function (monitorId, cmd) {
+    $scope.controlPTZ = function(monitorId, cmd)
+    {
         controlPTZ(monitorId, cmd);
     };
 
-    function controlPTZ(monitorId, cmd) {
+    function controlPTZ(monitorId, cmd)
+    {
 
         //presetGotoX
         //presetHome
         //curl -X POST "http://server.com/zm/index.php?view=request" -d
         //"request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
 
-        if (!$scope.ptzMoveCommand) {
-            $ionicLoading.show({
+        if (!$scope.ptzMoveCommand)
+        {
+            $ionicLoading.show(
+            {
                 template: $translate.instant('kPTZNotReady'),
                 noBackdrop: true,
                 duration: 2000,
@@ -417,7 +433,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         }
 
         var ptzData = "";
-        if (cmd.lastIndexOf("preset", 0) === 0) {
+        if (cmd.lastIndexOf("preset", 0) === 0)
+        {
             NVRDataModel.debug("PTZ command is a preset, so skipping xge/lge");
             ptzData = {
                 view: "request",
@@ -428,7 +445,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 //  yge: "30", //wtf
             };
 
-        } else {
+        }
+        else
+        {
 
             ptzData = {
                 view: "request",
@@ -443,7 +462,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //console.log("Command value " + cmd + " with MID=" + monitorId);
         //console.log("PTZDATA is " + JSON.stringify(ptzData));
         $ionicLoading.hide();
-        $ionicLoading.show({
+        $ionicLoading.show(
+        {
             template: $translate.instant('kPleaseWait') + "...",
             noBackdrop: true,
             duration: zm.loadingTimeout,
@@ -451,22 +471,25 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         var loginData = NVRDataModel.getLogin();
         $ionicLoading.hide();
-        $ionicLoading.show({
+        $ionicLoading.show(
+        {
             template: $translate.instant('kSendingPTZ') + "...",
             noBackdrop: true,
             duration: zm.loadingTimeout,
         });
 
-
-        var req = $http({
+        var req = $http(
+        {
             method: 'POST',
             /*timeout: 15000,*/
             url: loginData.url + '/index.php',
-            headers: {
+            headers:
+            {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': 'application/json',
             },
-            transformRequest: function (obj) {
+            transformRequest: function(obj)
+            {
                 var str = [];
                 for (var p in obj)
                     str.push(encodeURIComponent(p) + "=" +
@@ -480,49 +503,50 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         });
 
-        req.success(function (resp) {
+        req.success(function(resp)
+        {
             $ionicLoading.hide();
 
         });
 
-        req.error(function (resp) {
+        req.error(function(resp)
+        {
             $ionicLoading.hide();
             //console.log("ERROR: " + JSON.stringify(resp));
             NVRDataModel.log("Error sending PTZ:" + JSON.stringify(resp), "error");
         });
     }
 
-
-
-
-    $scope.getZoomLevel = function () {
+    $scope.getZoomLevel = function()
+    {
         //console.log("ON RELEASE");
         var zl = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition();
         //console.log(JSON.stringify(zl));
     };
 
-    $scope.onTap = function (m, d) {
+    $scope.onTap = function(m, d)
+    {
 
         moveToMonitor(m, d);
     };
 
-
-    $scope.onSwipe = function (m, d) {
+    $scope.onSwipe = function(m, d)
+    {
         var ld = NVRDataModel.getLogin();
         if (!ld.canSwipeMonitors) return;
 
-        if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1) {
+        if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1)
+        {
             //console.log("Image is zoomed in - not honoring swipe");
             return;
         }
         $scope.monStatus = "";
         moveToMonitor(m, d);
 
-
-
     };
 
-    function moveToMonitor(m, d) {
+    function moveToMonitor(m, d)
+    {
         var curstate = $ionicHistory.currentStateName();
         var found = 0;
         var mid;
@@ -537,19 +561,22 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             m = mid;
             //console.log("Next Monitor is " + m);
 
-
             found = 0;
-            for (var i = 0; i < $scope.monitors.length; i++) {
+            for (var i = 0; i < $scope.monitors.length; i++)
+            {
                 if ($scope.monitors[i].Monitor.Id == mid &&
                     // if you came from monitors, then ignore noshow
                     ($scope.monitors[i].Monitor.listDisplay != 'noshow' || curstate == "monitors") &&
                     $scope.monitors[i].Monitor.Function != 'None' &&
-                    $scope.monitors[i].Monitor.Enabled != '0') {
+                    $scope.monitors[i].Monitor.Enabled != '0')
+                {
                     found = 1;
                     //console.log(mid + "is part of the monitor list");
                     NVRDataModel.debug("ModalCtrl: swipe detected, moving to " + mid);
                     break;
-                } else {
+                }
+                else
+                {
                     NVRDataModel.debug("skipping " + $scope.monitors[i].Monitor.Id +
                         " listDisplay=" + $scope.monitors[i].Monitor.listDisplay +
                         " Function=" + $scope.monitors[i].Monitor.Function +
@@ -557,18 +584,19 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 }
             }
 
-
         }
         while (found != 1);
-
 
         var slidein;
         var slideout;
         var dirn = d;
-        if (dirn == 1) {
+        if (dirn == 1)
+        {
             slideout = "animated slideOutLeft";
             slidein = "animated slideInRight";
-        } else {
+        }
+        else
+        {
             slideout = "animated slideOutRight";
             slidein = "animated slideInLeft";
         }
@@ -577,16 +605,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         element.addClass(slideout)
             .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
 
-
-
-        function outWithOld() {
+        function outWithOld()
+        {
 
             NVRDataModel.log("ModalCtrl:Stopping network pull...");
             NVRDataModel.stopNetwork("MonitorModal-outwithOld");
             $scope.rand = Math.floor((Math.random() * 100000) + 1);
             $scope.animationInProgress = true;
 
-            $timeout(function () {
+            $timeout(function()
+            {
                 element.removeClass(slideout);
                 element.addClass(slidein)
                     .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
@@ -597,7 +625,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             }, 200);
         }
 
-        function inWithNew() {
+        function inWithNew()
+        {
 
             element.removeClass(slidein);
             $scope.animationInProgress = false;
@@ -605,14 +634,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             NVRDataModel.log("New image loaded in");
             var ld = NVRDataModel.getLogin();
             carouselUtils.setStop(false);
-            if (ld.useNphZms == true) {
+            if (ld.useNphZms == true)
+            {
                 $scope.currentStreamMode = 'single';
                 NVRDataModel.log("Setting timer to play nph-zms mode");
                 // first 5 seconds, load a snapshot, then switch to real FPS display
                 // this is to avoid initial image load delay
                 // FIXME: 5 seconds fair?
                 $timeout.cancel(nphTimer);
-                nphTimer = $timeout(function () {
+                nphTimer = $timeout(function()
+                {
                     $scope.currentStreamMode = 'jpeg';
                     NVRDataModel.log("Switching playback via nphzms");
                 }, zm.nphSwitchTimer);
@@ -620,21 +651,19 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         }
 
-
         $ionicLoading.hide();
 
-
     }
-
-
 
     //-----------------------------------------------------------------------
     // Sucess/Error handlers for saving a snapshot of the
     // monitor image to phone storage
     //-----------------------------------------------------------------------
 
-    function SaveSuccess() {
-        $ionicLoading.show({
+    function SaveSuccess()
+    {
+        $ionicLoading.show(
+        {
             template: $translate.instant('kDone'),
             noBackdrop: true,
             duration: 1000
@@ -642,8 +671,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         NVRDataModel.debug("ModalCtrl:Photo saved successfuly");
     }
 
-    function SaveError(e) {
-        $ionicLoading.show({
+    function SaveError(e)
+    {
+        $ionicLoading.show(
+        {
             template: $translate.instant('kErrorSave'),
             noBackdrop: true,
             duration: 2000
@@ -652,60 +683,69 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //console.log("***ERROR");
     }
 
-
     //-------------------------------------------------------------
     // Turns on or off an alarm forcibly (mode true = on, false = off)
     //-------------------------------------------------------------
-    $scope.enableAlarm = function (mid, mode) {
+    $scope.enableAlarm = function(mid, mode)
+    {
 
         if (mode) // trigger alarm
         {
-            $rootScope.zmPopup = SecuredPopups.show('show', {
+            $rootScope.zmPopup = SecuredPopups.show('show',
+            {
                 title: 'Confirm',
                 template: $translate.instant('kForceAlarmConfirm') + $scope.monitorName + "?",
                 buttons: [
+                {
+                    text: $translate.instant('kButtonYes'),
+                    onTap: function(e)
                     {
-                        text: $translate.instant('kButtonYes'),
-                        onTap: function (e) {
-                            enableAlarm(mid, mode);
-                        }
-                        },
+                        enableAlarm(mid, mode);
+                    }
+                },
+                {
+                    text: $translate.instant('kButtonNo'),
+                    onTap: function(e)
                     {
-                        text: $translate.instant('kButtonNo'),
-                        onTap: function (e) {
-                            return;
-                        }
-                        }
-                    ]
+                        return;
+                    }
+                }]
 
             });
-        } else
+        }
+        else
             enableAlarm(mid, mode);
 
-        function enableAlarm(mid, mode) {
+        function enableAlarm(mid, mode)
+        {
             var apiurl = NVRDataModel.getLogin().apiurl;
             var c = mode ? "on" : "off";
             var alarmurl = apiurl + "/monitors/alarm/id:" + mid + "/command:" + c + ".json";
             NVRDataModel.log("Invoking " + alarmurl);
 
             var status = mode ? $translate.instant('kForcingAlarm') : $translate.instant('kCancellingAlarm');
-            $ionicLoading.show({
+            $ionicLoading.show(
+            {
                 template: status,
                 noBackdrop: true,
                 duration: zm.largeHttpTimeout,
             });
 
             $http.get(alarmurl)
-                .then(function (data) {
-                        $ionicLoading.show({
+                .then(function(data)
+                    {
+                        $ionicLoading.show(
+                        {
                             template: $translate.instant('kSuccess'),
                             noBackdrop: true,
                             duration: 2000,
                         });
                     },
-                    function (error) {
+                    function(error)
+                    {
 
-                        $ionicLoading.show({
+                        $ionicLoading.show(
+                        {
                             template: $translate.instant('kAlarmAPIError'),
                             noBackdrop: true,
                             duration: 3000,
@@ -714,25 +754,24 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     });
         }
 
-
-
     };
-
 
     //-----------------------------------------------------------------------
     // color for monitor state
     //-----------------------------------------------------------------------
 
-    $scope.stateColor = function () {
+    $scope.stateColor = function()
+    {
         var status = [$translate.instant('kMonIdle'),
-                      $translate.instant('kMonPreAlarm'),
-                      $translate.instant('kMonAlarmed'),
-                      $translate.instant('kMonAlert'),
-                      $translate.instant('kMonRecord')
-                     ];
+            $translate.instant('kMonPreAlarm'),
+            $translate.instant('kMonAlarmed'),
+            $translate.instant('kMonAlert'),
+            $translate.instant('kMonRecord')
+        ];
         //console.log ("***MONSTATUS**"+$scope.monStatus+"**");
         var color = "";
-        switch ($scope.monStatus) {
+        switch ($scope.monStatus)
+        {
             case "":
                 color = "background-color:none";
                 break;
@@ -756,44 +795,46 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         return "padding-left:4px;padding-right:4px;" + color;
     };
 
-
     //-----------------------------------------------------------------------
     // Saves a snapshot of the monitor image to phone storage
     //-----------------------------------------------------------------------
 
-    $scope.saveImageToPhoneWithPerms = function (mid)
+    $scope.saveImageToPhoneWithPerms = function(mid)
     {
         if ($rootScope.platformOS != 'android')
         {
             saveImageToPhone(mid);
             return;
         }
-        
-        
+
         NVRDataModel.debug("ModalCtrl: Permission checking for write");
         var permissions = cordova.plugins.permissions;
         permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, checkPermissionCallback, null);
-        
-        function checkPermissionCallback(status) {
+
+        function checkPermissionCallback(status)
+        {
             if (!status.hasPermission)
             {
                 SaveError("No permission to write to external storage");
             }
-            permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, succ,err);
+            permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, succ, err);
         }
-        
+
         function succ(s)
         {
             saveImageToPhone(mid);
         }
+
         function err(e)
         {
-            SaveError ("Error in requestPermission");
+            SaveError("Error in requestPermission");
         }
     };
-    
-    function saveImageToPhone(mid) {
-        $ionicLoading.show({
+
+    function saveImageToPhone(mid)
+    {
+        $ionicLoading.show(
+        {
             template: $translate.instant('kSavingSnapshot') + '...',
             noBackdrop: true,
             duration: zm.httpTimeout
@@ -808,7 +849,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         NVRDataModel.log("SavetoPhone:Trying to save image from " + url);
 
         var img = new Image();
-        img.onload = function () {
+        img.onload = function()
+        {
             // console.log("********* ONLOAD");
             canvas = document.createElement('canvas');
             canvas.width = img.width;
@@ -819,8 +861,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
             imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
 
-            if ($rootScope.platformOS != "desktop") {
-                try {
+            if ($rootScope.platformOS != "desktop")
+            {
+                try
+                {
 
                     cordova.exec(
                         SaveSuccess,
@@ -828,82 +872,87 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                         'Canvas2ImagePlugin',
                         'saveImageDataToLibrary', [imageData]
                     );
-                } catch (e) {
+                }
+                catch (e)
+                {
 
                     SaveError(e.message);
                 }
-            } else {
-
+            }
+            else
+            {
 
                 var fname = $scope.monitorName + "-" +
                     moment().format('MMM-DD-YY_HH-mm-ss') + ".png";
-                canvas.toBlob(function (blob) {
+                canvas.toBlob(function(blob)
+                {
                     saveAs(blob, fname);
                     SaveSuccess();
 
                 });
             }
         };
-        try {
+        try
+        {
             img.src = url;
             // console.log ("SAVING IMAGE SOURCE");
-        } catch (e) {
+        }
+        catch (e)
+        {
             SaveError(e.message);
 
         }
     }
 
-
-
-
     //-------------------------------------------------------------
     //reloaads mon - do we need it?
     //-------------------------------------------------------------
 
-
-    $scope.reloadView = function () {
+    $scope.reloadView = function()
+    {
         NVRDataModel.log("Reloading view for modal view, recomputing rand");
         $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
         $scope.isModalActive = true;
     };
 
-    $scope.scaleImage = function () {
+    $scope.scaleImage = function()
+    {
 
         $scope.imageFit = !$scope.imageFit;
         // console.log("Switching image style to " + $scope.imageFit);
     };
 
-    $scope.$on('$ionicView.enter', function () {
-
+    $scope.$on('$ionicView.enter', function()
+    {
 
         //https://server/zm/api/zones/forMonitor/X.json
 
     });
 
-    $scope.$on('$ionicView.leave', function () {
+    $scope.$on('$ionicView.leave', function()
+    {
         // console.log("**MODAL: Stopping modal timer");
         $scope.isModalActive = false;
         $interval.cancel(intervalModalHandle);
         $interval.cancel(cycleHandle);
     });
 
-
-    $scope.$on('$ionicView.beforeLeave', function () {
+    $scope.$on('$ionicView.beforeLeave', function()
+    {
 
         NVRDataModel.log("Nullifying the streams...");
 
-
         var element = document.getElementById("singlemonitor");
-        if (element) {
+        if (element)
+        {
             NVRDataModel.debug("Nullifying  " + element.src);
             element.src = "";
         }
 
-
-
     });
 
-    $scope.$on('$ionicView.unloaded', function () {
+    $scope.$on('$ionicView.unloaded', function()
+    {
         $scope.isModalActive = false;
 
         $interval.cancel(intervalModalHandle);
@@ -911,7 +960,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     });
 
-    $scope.$on('modal.removed', function () {
+    $scope.$on('modal.removed', function()
+    {
         $scope.isModalActive = false;
         //console.log("**MODAL REMOVED: Stopping modal timer");
         $interval.cancel(intervalModalHandle);
@@ -919,8 +969,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         NVRDataModel.debug("Modal removed - killing connkey");
         controlStream(17, "", $scope.connKey, -1);
-
-
 
         // Execute action
     });
@@ -931,13 +979,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // anyway 
     //-------------------------------------------------------------
 
-
-    function controlStream(cmd, disp, connkey, ndx) {
+    function controlStream(cmd, disp, connkey, ndx)
+    {
         // console.log("Command value " + cmd);
 
-        if (disp) {
+        if (disp)
+        {
             $ionicLoading.hide();
-            $ionicLoading.show({
+            $ionicLoading.show(
+            {
                 template: $translate.instant('kPleaseWait') + '...',
                 noBackdrop: true,
                 duration: zm.loadingTimeout,
@@ -967,15 +1017,18 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         var myauthtoken = $rootScope.authSession.replace("&auth=", "");
         //&auth=
-        var req = $http({
+        var req = $http(
+        {
             method: 'POST',
             /*timeout: 15000,*/
             url: loginData.url + '/index.php',
-            headers: {
+            headers:
+            {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 //'Accept': '*/*',
             },
-            transformRequest: function (obj) {
+            transformRequest: function(obj)
+            {
                 var str = [];
                 for (var p in obj)
                     str.push(encodeURIComponent(p) + "=" +
@@ -985,7 +1038,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 return foo;
             },
 
-            data: {
+            data:
+            {
                 view: "request",
                 request: "stream",
                 connkey: connkey,
@@ -994,20 +1048,25 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
             }
         });
-        req.success(function (resp) {
+        req.success(function(resp)
+        {
 
-            if (resp.result == "Ok" && ndx != -1) {
+            if (resp.result == "Ok" && ndx != -1)
+            {
                 var ld = NVRDataModel.getLogin();
                 var apiurl = ld.apiurl + "/events/" + resp.status.event + ".json";
                 //console.log ("API " + apiurl);
                 $http.get(apiurl)
-                    .success(function (data) {
-                        if ($scope.MontageMonitors[ndx].eventUrlTime != data.event.Event.StartTime) {
+                    .success(function(data)
+                    {
+                        if ($scope.MontageMonitors[ndx].eventUrlTime != data.event.Event.StartTime)
+                        {
 
                             var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id + "-timeline"));
                             element.removeClass('animated slideInRight');
                             element.addClass('animated slideOutRight');
-                            $timeout(function () {
+                            $timeout(function()
+                            {
                                 element.removeClass('animated slideOutRight');
                                 element.addClass('animated slideInRight');
                                 $scope.MontageMonitors[ndx].eventUrlTime = data.event.Event.StartTime;
@@ -1016,7 +1075,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                         }
 
                     })
-                    .error(function (data) {
+                    .error(function(data)
+                    {
                         $scope.MontageMonitors[ndx].eventUrlTime = "-";
                     });
 
@@ -1024,30 +1084,30 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         });
 
-        req.error(function (resp) {
+        req.error(function(resp)
+        {
             //console.log("ERROR: " + JSON.stringify(resp));
             NVRDataModel.log("Error sending event command " + JSON.stringify(resp), "error");
         });
     }
 
-
     //-------------------------------------------------------------
     // Zoom in and out via +- for desktops
     //-------------------------------------------------------------
-    $scope.zoomImage = function (val) {
+    $scope.zoomImage = function(val)
+    {
         var zl = parseInt($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom);
-        if (zl == 1 && val == -1) {
+        if (zl == 1 && val == -1)
+        {
             NVRDataModel.debug("Already zoomed out max");
             return;
         }
-
 
         zl += val;
         NVRDataModel.debug("Zoom level is " + zl);
         $ionicScrollDelegate.$getByHandle("imgscroll").zoomTo(zl, true);
 
     };
-
 
     //-------------------------------------------------------------
     // Retrieves PTZ state for each monitor
@@ -1056,7 +1116,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // $scope.isControllable 
     // $scope.controlid
     // 
-    function configurePTZ(mid) {
+    function configurePTZ(mid)
+    {
         $scope.presetAndControl = $translate.instant('kMore');
         $scope.ptzWakeCommand = "";
         $scope.ptzSleepCommand = "";
@@ -1077,7 +1138,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         var ld = NVRDataModel.getLogin();
         var url = ld.apiurl + "/monitors/" + mid + ".json";
         $http.get(url)
-            .success(function (data) {
+            .success(function(data)
+            {
                 $scope.isControllable = data.monitor.Monitor.Controllable;
 
                 // *** Only for testing - comment out //
@@ -1085,15 +1147,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 // for testing only
                 // $scope.isControllable = 1;
                 $scope.controlid = data.monitor.Monitor.ControlId;
-                if ($scope.isControllable == '1') {
-
+                if ($scope.isControllable == '1')
+                {
 
                     var apiurl = NVRDataModel.getLogin().apiurl;
                     var myurl = apiurl + "/controls/" + $scope.controlid + ".json";
                     NVRDataModel.debug("configurePTZ : getting controllable data " + myurl);
 
                     $http.get(myurl)
-                        .success(function (data) {
+                        .success(function(data)
+                        {
 
                             // *** Only for testing - comment out  - start//
                             /*data.Control.Control.CanSleep = '1';
@@ -1104,30 +1167,34 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                             data.control.Control.HasHomePreset = '1';*/
                             // *** Only for testing - comment out - end //
 
-
-
                             $scope.ptzMoveCommand = "move"; // start with as move;
                             $scope.ptzStopCommand = "";
 
-                            if (data.control.Control.CanZoom == '1') {
+                            if (data.control.Control.CanZoom == '1')
+                            {
                                 $scope.canZoom = true;
-                                if (data.control.Control.CanZoomCon == '1') {
+                                if (data.control.Control.CanZoomCon == '1')
+                                {
                                     $scope.zoomInCommand = "zoomConTele";
                                     $scope.zoomOutCommand = "zoomConWide";
 
-                                } else if (data.control.Control.CanZoomRel == '1') {
+                                }
+                                else if (data.control.Control.CanZoomRel == '1')
+                                {
                                     $scope.zoomInCommand = "zoomRelTele";
                                     $scope.zoomOutCommand = "zoomRelWide";
-                                } else if (data.control.Control.CanZoomAbs == '1') {
+                                }
+                                else if (data.control.Control.CanZoomAbs == '1')
+                                {
                                     $scope.zoomInCommand = "zoomRelAbs";
                                     $scope.zoomOutCommand = "zoomRelAbs";
                                 }
                             }
 
-
                             NVRDataModel.debug("configurePTZ: control data returned " + JSON.stringify(data));
 
-                            if (data.control.Control.CanMoveRel == '1') {
+                            if (data.control.Control.CanMoveRel == '1')
+                            {
 
                                 $scope.ptzMoveCommand = "moveRel";
                                 $scope.ptzStopCommand = "moveStop";
@@ -1136,28 +1203,29 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                             // Prefer con over rel if both enabled
                             // I've tested con
 
-                            if (data.control.Control.CanMoveCon == '1') {
+                            if (data.control.Control.CanMoveCon == '1')
+                            {
 
                                 $scope.ptzMoveCommand = "moveCon";
                                 $scope.ptzStopCommand = "moveStop";
                             }
 
-
-
                             // presets
                             NVRDataModel.debug("ConfigurePTZ Preset value is " + data.control.Control.HasPresets);
                             $scope.ptzPresets = [];
 
-                            if (data.control.Control.HasPresets == '1') {
+                            if (data.control.Control.HasPresets == '1')
+                            {
                                 //$scope.presetAndControl = $translate.instant('kPresets');
 
                                 $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
 
                                 NVRDataModel.debug("ConfigurePTZ Number of presets is " + $scope.ptzPresetCount);
 
-
-                                for (var p = 0; p < $scope.ptzPresetCount; p++) {
-                                    $scope.ptzPresets.push({
+                                for (var p = 0; p < $scope.ptzPresetCount; p++)
+                                {
+                                    $scope.ptzPresets.push(
+                                    {
                                         name: (p + 1).toString(),
                                         icon: '',
                                         cmd: "presetGoto" + (p + 1).toString(),
@@ -1166,8 +1234,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                                 }
 
-                                if (data.control.Control.HasHomePreset == '1') {
-                                    $scope.ptzPresets.unshift({
+                                if (data.control.Control.HasHomePreset == '1')
+                                {
+                                    $scope.ptzPresets.unshift(
+                                    {
                                         name: '',
                                         icon: "ion-ios-home",
                                         cmd: 'presetHome',
@@ -1175,8 +1245,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                                     });
 
                                 }
-
-
 
                             }
                             /*else
@@ -1188,13 +1256,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                             // no need to darken these buttons if presets are not there
                             var buttonAccent = "button-dark";
-                            if ($scope.ptzPresets.length == 0) {
+                            if ($scope.ptzPresets.length == 0)
+                            {
                                 buttonAccent = "";
                             }
 
-                            if (data.control.Control.CanWake == '1') {
+                            if (data.control.Control.CanWake == '1')
+                            {
 
-                                $scope.ptzPresets.push({
+                                $scope.ptzPresets.push(
+                                {
                                     name: 'W',
                                     icon: "ion-eye",
                                     cmd: 'wake',
@@ -1203,8 +1274,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                             }
 
-                            if (data.control.Control.CanSleep == '1') {
-                                $scope.ptzPresets.push({
+                            if (data.control.Control.CanSleep == '1')
+                            {
+                                $scope.ptzPresets.push(
+                                {
                                     name: 'S',
                                     icon: "ion-eye-disabled",
                                     cmd: 'sleep',
@@ -1213,8 +1286,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                             }
 
-                            if (data.control.Control.CanReset == '1') {
-                                $scope.ptzPresets.push({
+                            if (data.control.Control.CanReset == '1')
+                            {
+                                $scope.ptzPresets.push(
+                                {
                                     name: 'R',
                                     icon: "ion-ios-loop-strong",
                                     cmd: 'reset',
@@ -1223,29 +1298,30 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                             }
 
-
                             NVRDataModel.log("ConfigurePTZ Modal: ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
                         })
-                        .error(function (data) {
+                        .error(function(data)
+                        {
                             //  console.log("** Error retrieving move PTZ command");
                             NVRDataModel.log("ConfigurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
                         });
 
-                } else {
+                }
+                else
+                {
                     NVRDataModel.log("configurePTZ " + mid + " is not PTZ controllable");
                 }
             })
-            .error(function (data) {
+            .error(function(data)
+            {
                 //  console.log("** Error retrieving move PTZ command");
                 NVRDataModel.log("configurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
             });
 
-
-
     }
 
-
-    $scope.$on('modal.shown', function () {
+    $scope.$on('modal.shown', function()
+    {
 
         $scope.monStatus = "";
         document.addEventListener("pause", onPause, false);
@@ -1259,23 +1335,24 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.monStatus = "";
         $scope.isCycle = ld.cycleMonitors;
         $scope.cycleText = $scope.isCycle ? $translate.instant('kOn') : $translate.instant('kOff');
-        
-        $scope.quality = (NVRDataModel.getBandwidth()=="lowbw")? zm.monSingleImageQualityLowBW:ld.monSingleImageQuality;
+
+        $scope.quality = (NVRDataModel.getBandwidth() == "lowbw") ? zm.monSingleImageQualityLowBW : ld.monSingleImageQuality;
 
         configurePTZ($scope.monitorId);
 
-        if (ld.cycleMonitors) {
+        if (ld.cycleMonitors)
+        {
             NVRDataModel.debug("Cycling enabled at " + ld.cycleMonitorsInterval);
 
             $interval.cancel(cycleHandle);
 
-            cycleHandle = $interval(function () {
+            cycleHandle = $interval(function()
+            {
                 moveToMonitor($scope.monitorId, 1);
                 //  console.log ("Refreshing Image...");
             }.bind(this), ld.cycleMonitorsInterval * 1000);
 
         }
-
 
     });
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+from __future__ import absolute_import, division, print_function, unicode_literals
+import sys
 import json
 import os
 import getopt
-import sys
 
 globGood=0
 globBad=0
@@ -12,13 +13,14 @@ globFile=""
 
 # prints usage
 def usage():
-  print (
+  print((
         'Usage: '+sys.argv[0]+'\n'
+          ' called without arguments runs a check without any modifications\n'
           ' -h|--help: this help\n'
           ' -f|file <fname>: only processes that file\n'
           ' -b|--beautify: beautifies the json file\n'
           ' -o|--overwrite: when used with -b/--beautify overwrites the file without adding a pretty- prefix. Use with caution\n'
-  )
+  ))
 
 
 #beautifies a given file
@@ -28,28 +30,31 @@ def beautify(fi,ki):
     prefix=''
   else:
     prefix='pretty-'
-  print "Beautifying %s, writing to %s" % (fi,prefix+fi)
+  print("Beautifying %s, writing to %s" % (fi,prefix+fi))
   w = len (max(ki, key=len))
   pretty=[]
   for k in sorted(ki):
     line = "    \"%s\"%s:\"%s\"" %(k,' '*(w-len(k)+1),ki[k])
     pretty.append(line)
-  pFh=open  (prefix+fi,"w")
-  pFh.write("{\n")
-  pFh.write(',\n'.join(pretty).encode('utf-8'))
-  pFh.write("\n}\n")
+  pFh=open(prefix+fi,"w")
+  pFh.write('{\n')
+  if sys.version_info >=(3, 0):
+    pFh.write(",\n".join(pretty))
+  else:
+    pFh.write(",\n".join(pretty).encode('UTF-8'))
+  pFh.write('\n}\n')
   pFh.close()
 
 #Compares keys in language file
-def compare (fname):
+
+def compare(fname):
   beaut="no"
   global globGood, globBad,globOverwrite, globFile, globBeautify
   with open (i) as json_data:
       try:
         newKeys = json.load(json_data)
-      except ValueError as e:
-        print 'could not parse %s, skipping!' %fname
-        print 'Error was %s' % str(e)
+      except ValueError:
+        print('could not parse %s, skipping!' %fname)
         globBad+=1
         return
       json_data.close()
@@ -58,23 +63,23 @@ def compare (fname):
   if len(diffOrig)==0 and len (diffNew)==0:
     status = "GOOD"
     globGood+=1
-    if globBeautify and globFile == fname or globFile == "":
+    if globBeautify and (globFile == fname or globFile == ""):
       beaut="YES"
   else:
     status = "ERROR"
     globBad+=1
-  print "\n-------Checking:%s:%s, beautify:%s---------" % (fname,status,beaut)
-  print "master keys:%d, %s keys:%d" % (len(origKeys), i, len(newKeys))
+  print("\n-------Checking:%s:%s, beautify:%s---------" % (fname,status,beaut))
+  print("master keys:%d, %s keys:%d" % (len(origKeys), i, len(newKeys)))
   if beaut=="YES":
       beautify(fname,newKeys)
   if len(diffOrig) > 0:
-    print "Keys not present in :%s" %fname
+    print("Keys not present in :%s" %fname)
     for x in diffOrig:
-      print '-->',x
+      print("-->",x)
   if len(diffNew) > 0:
-    print "Extra keys present in :%s" %fname
+    print("Extra keys present in :%s" %fname)
     for x in diffNew:
-      print '-->',x
+      print("-->",x)
   
 
 
@@ -101,7 +106,7 @@ with open ('locale-en.json') as json_data:
   origKeys=json.load(json_data)
   json_data.close()
 
-print "total keys in master language: ", len(origKeys)
+print("total keys in master language: ", len(origKeys))
 
 #iterate through all languages, using -en as the master
 for i in os.listdir(os.getcwd()):
@@ -112,11 +117,11 @@ for i in os.listdir(os.getcwd()):
     if globFile == "" or globFile == i:
       compare(i)
     else:
-      print "skipping ",i, " as its not ",globFile
+      print("skipping ",i, " as its not ",globFile)
 
-print "================================================="
-print "Good files:%d, Bad files:%d, Total files:%d" % (globGood, globBad, globGood+globBad)
-print "=================================================\n"
+print("=================================================")
+print("Good files:%d, Bad files:%d, Total files:%d" % (globGood, globBad, globGood+globBad))
+print("=================================================\n")
       
 
   

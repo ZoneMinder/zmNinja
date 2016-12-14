@@ -1,6 +1,10 @@
+
+If you are familiar with using git, I'd prefer if you follow the Pull Request process [here](https://github.com/pliablepixels/zmNinja/blob/master/CONTRIBUTING.md#steps-for-code-contribution).
+
 ####Adding a new language
+* Languages translations are available [here](https://github.com/pliablepixels/zmNinja/tree/master/www/lang)
 * To contribute a new language, add a new ``locale-xx.json`` (where `xx` is your language code).
-* Ideally, you should also provide a language translation for the zmNinja help file inside ``lang/help``
+* Ideally, you should also provide a language translation for the zmNinja help file inside [lang/help](https://github.com/pliablepixels/zmNinja/tree/master/www/lang/help)
 
 The best way is to simply look at an existing language translation and follow the same model for yours. If any language translation keywords are missed, it will fallback to English.
 
@@ -12,27 +16,18 @@ The best way is to simply look at an existing language translation and follow th
 
 (replace ``-it`` with the language you are working on)
 
-Python 2.x:
+
 ``
 ./checklang.py -f locale-it.json -b
 ``
 
-Python 3.x:
-``
-./checklang.py3 -f locale-it.json -b
-``
 
 This validates your JSON file, makes sure all keys are in sync with -en and if valid, creates pretty-locale-it.json. If you are sure it looks good,
 
-Python 2.x:
 ``
 ./checklang.py -f locale-it.json -b -o
 ``
 
-Python 3.x:
-``
-./checklang.py3 -f locale-it.json -b -o
-``
 
 This validates your JSON file,makes sure all keys are in sync with -en  and if valid, OVERWRITES your local file with a pretty formatted version, which is what you should PR
 

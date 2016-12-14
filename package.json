@@ -22,6 +22,7 @@
   "devDependencies": {
     "bower": "^1.3.3",
     "clean-css": "^3.4.0",
+    "cordova-uglify": "^0.2.6",
     "gulp-angular-templatecache": "^1.6.0",
     "gulp-util": "^2.2.14",
     "jshint": "^2.8.0",
@@ -89,9 +90,23 @@
       "locator": "https://github.com/pliablepixels/cordova-plugin-media",
       "id": "cordova-plugin-media"
     },
+    "cordova-plugin-add-swift-support",
+    "cordova-plugin-file-transfer",
+    {
+      "locator": "https://github.com/FlyingDonkeyDev/cordova-library-helper",
+      "id": "cordova-library-helper"
+    },
+    "cordova-plugin-photo-library",
     {
       "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
       "id": "cordova-plugin-certificates"
+    },
+    {
+      "id": "cordova-plugin-customurlscheme",
+      "locator": "cordova-plugin-customurlscheme",
+      "variables": {
+        "URL_SCHEME": "zmninja"
+      }
     }
   ],
   "cordovaPlatforms": [

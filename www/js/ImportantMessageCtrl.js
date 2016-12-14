@@ -2,18 +2,18 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.ImportantMessageCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$timeout', '$rootScope', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $timeout, $rootScope) {
-    $scope.openMenu = function () {
+angular.module('zmApp.controllers').controller('zmApp.ImportantMessageCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$timeout', '$rootScope', function($scope, $ionicSideMenuDelegate, zm, $stateParams, $timeout, $rootScope)
+{
+    $scope.openMenu = function()
+    {
         $ionicSideMenuDelegate.toggleLeft();
     };
-
-
-
 
     //-------------------------------------------------------------------------
     // Controller Main
     //------------------------------------------------------------------------
-    $scope.$on('$ionicView.enter', function () {
+    $scope.$on('$ionicView.enter', function()
+    {
         console.log("**VIEW ** LowVersion Ctrl Entered");
         $ionicSideMenuDelegate.canDragContent(true);
         $scope.requiredVersion = zm.minAppVersion;
@@ -22,8 +22,10 @@ angular.module('zmApp.controllers').controller('zmApp.ImportantMessageCtrl', ['$
 
     });
 
-    $scope.openMenu = function () {
-        $timeout(function () {
+    $scope.openMenu = function()
+    {
+        $timeout(function()
+        {
             $rootScope.stateofSlide = $ionicSideMenuDelegate.isOpen();
         }, 500);
 

@@ -1,23 +1,21 @@
-/* jshint ignore:start */
-/**
 
- * Angular Carousel - Mobile friendly touch carousel for AngularJS
- * @version v0.3.12 - 2015-06-11
- * @link http://revolunet.github.com/angular-carousel
- * @author Julien Bouquillon <julien@revolunet.com>
- * @license MIT License, http://www.opensource.org/licenses/MIT
- */
-/*global angular */
+//Angular Carousel - Mobile friendly touch carousel for AngularJS
+//@version v0.3.12 - 2015-06-11
+//@link http://revolunet.github.com/angular-carousel
+//@author Julien Bouquillon <julien@revolunet.com>
+//@license MIT License, http://www.opensource.org/licenses/MIT
 
-/*
-Angular touch carousel with CSS GPU accel and slide buffering
-http://github.com/revolunet/angular-carousel
 
-*/
+
+//Angular touch carousel with CSS GPU accel and slide buffering
+//http://github.com/revolunet/angular-carousel
+
 
 // Modified by PP for mobile friendly touch, start without auto slide but enabled it if tapped
 // and logic to wait for an image to load before it slides to the next one
 
+/* jshint ignore:start */
+/*global angular */
 angular.module('angular-carousel', [
     'ngTouch',
     'angular-carousel.shifty'

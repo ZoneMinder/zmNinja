@@ -37,6 +37,9 @@
             <button ng-click="toggleFollowTime()" ng-class="follow.time? 'button button-small button-balanced':'button button-small button-assertive'">
                 {{'kUpdateTimeline' | translate}}:&nbsp;{{follow.time}}
             </button>
+            <button ng-click="gotoNow()" class="button button-small button-balanced">
+                {{'kNow' | translate}}
+            </button>
             <div ng-if="follow.time">
                 <p>{{newEvents}}</p>
             </div>

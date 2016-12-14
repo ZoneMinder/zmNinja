@@ -3,13 +3,8 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment, vis , Chart, DJS*/
 
-
-
-
-angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
-
-
-
+angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate)
+{
 
     var Graph2d;
     var tcGraph;
@@ -26,52 +21,50 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     var btype;
     var data, options;
 
-
-
-
-
-
-    $scope.$on('modal.shown', function (e, m) {
+    $scope.$on('modal.shown', function(e, m)
+    {
 
         if (m.id != 'modalgraph')
             return;
-
 
         //console.log ("INSIDE MODAL GRAPH>>>>>>>>>>>>>>>>>");
         data = {
             labels: ["January", "February", "March", "April", "May", "June", "July"],
             datasets: [
-                {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.5)",
-                    strokeColor: "rgba(220,220,220,0.8)",
-                    highlightFill: "rgba(220,220,220,0.75)",
-                    highlightStroke: "rgba(220,220,220,1)",
-                    data: [65, 59, 80, 81, 56, 55, 40]
-        },
-                {
-                    label: "My Second dataset",
-                    fillColor: "rgba(151,187,205,0.5)",
-                    strokeColor: "rgba(151,187,205,0.8)",
-                    highlightFill: "rgba(151,187,205,0.75)",
-                    highlightStroke: "rgba(151,187,205,1)",
-                    data: [28, 48, 40, 19, 86, 27, 90]
-        }
-    ]
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.5)",
+                strokeColor: "rgba(220,220,220,0.8)",
+                highlightFill: "rgba(220,220,220,0.75)",
+                highlightStroke: "rgba(220,220,220,1)",
+                data: [65, 59, 80, 81, 56, 55, 40]
+            },
+            {
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.5)",
+                strokeColor: "rgba(151,187,205,0.8)",
+                highlightFill: "rgba(151,187,205,0.75)",
+                highlightStroke: "rgba(151,187,205,1)",
+                data: [28, 48, 40, 19, 86, 27, 90]
+            }]
         };
 
         options = {
 
-            scales: {
-                yAxes: [{
-                    ticks: {
+            scales:
+            {
+                yAxes: [
+                {
+                    ticks:
+                    {
                         // beginAtZero:true,
                         min: -1,
                     },
-            }],
-                xAxes: [{
+                }],
+                xAxes: [
+                {
                     display: false
-            }]
+                }]
             },
 
             responsive: true,
@@ -80,10 +73,11 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
             scaleGridLineColor: "rgba(0,0,0,.05)",
             scaleGridLineWidth: 1,
 
-
-            hover: {
+            hover:
+            {
                 mode: 'single',
-                onHover: function (obj) {
+                onHover: function(obj)
+                {
                     if (obj.length > 0)
                         tapOrHover(obj[0]._index);
                 }
@@ -95,8 +89,10 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
         cv = document.getElementById("eventchart");
         ctx = cv.getContext("2d");
-        $timeout(function () {
-            var tcGraph2 = new Chart(ctx, {
+        $timeout(function()
+        {
+            var tcGraph2 = new Chart(ctx,
+            {
                 type: 'bar',
                 data: data,
                 options: options
@@ -108,24 +104,20 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------
 
-
-    $rootScope.$on("auth-success", function () {
+    $rootScope.$on("auth-success", function()
+    {
 
         NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
 
-
     });
-
-
-
-
 
     //-------------------------------------------------------
     // I was kidding, this is where it really is drawn
     // scout's promise
     //------------------------------------------------------
 
-    function drawGraphTC(event) {
+    function drawGraphTC(event)
+    {
 
         $scope.eid = event.event.Event.Id;
 
@@ -155,7 +147,6 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
       ]
     };*/
 
-
         data = {
             labels: [],
             datasets: [
@@ -176,9 +167,9 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
                     data: [],
                     frames: []
-        },
+                },
 
-      ]
+            ]
         };
 
         onlyalarm_data = {
@@ -192,24 +183,28 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
                     hoverBorderColor: 'rgba(248, 148, 6,1.0)',
                     data: [],
                     frames: []
-        },
+                },
 
-      ]
+            ]
         };
 
         // Chart.js Options
         options = {
 
-            scales: {
-                yAxes: [{
-                    ticks: {
+            scales:
+            {
+                yAxes: [
+                {
+                    ticks:
+                    {
                         // beginAtZero:true,
                         min: -1,
                     },
-            }],
-                xAxes: [{
+                }],
+                xAxes: [
+                {
                     display: false
-            }]
+                }]
             },
 
             responsive: true,
@@ -218,10 +213,11 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
             scaleGridLineColor: "rgba(0,0,0,.05)",
             scaleGridLineWidth: 1,
 
-
-            hover: {
+            hover:
+            {
                 mode: 'single',
-                onHover: function (obj) {
+                onHover: function(obj)
+                {
                     if (obj.length > 0)
                         tapOrHover(obj[0]._index);
                 }
@@ -237,13 +233,14 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
         // NVRDataModel.log ("Changing graph width to " + $scope.graphWidth);
 
-        for (var i = 0; i < event.event.Frame.length; i++) {
-
+        for (var i = 0; i < event.event.Frame.length; i++)
+        {
 
             data.labels.push(event.event.Frame[i].TimeStamp);
             //data.labels.push(' ');
             data.datasets[0].data.push(event.event.Frame[i].Score);
-            data.datasets[0].frames.push({
+            data.datasets[0].frames.push(
+            {
                 x: event.event.Frame[i].TimeStamp,
                 y: event.event.Frame[i].Score,
                 eid: event.event.Event.Id,
@@ -255,12 +252,14 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
             });
 
-            if (event.event.Frame[i].Type == "Alarm") {
+            if (event.event.Frame[i].Type == "Alarm")
+            {
 
                 onlyalarm_data.labels.push(event.event.Frame[i].TimeStamp);
                 //data.labels.push(' ');
                 onlyalarm_data.datasets[0].data.push(event.event.Frame[i].Score);
-                onlyalarm_data.datasets[0].frames.push({
+                onlyalarm_data.datasets[0].frames.push(
+                {
                     x: event.event.Frame[i].TimeStamp,
                     y: event.event.Frame[i].Score,
                     eid: event.event.Event.Id,
@@ -280,39 +279,48 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
         cv = document.getElementById("tcchart");
         ctx = cv.getContext("2d");
 
-        if (NVRDataModel.getLogin().timelineModalGraphType == 'all') {
+        if (NVRDataModel.getLogin().timelineModalGraphType == 'all')
+        {
             btype = 'line';
             current_data = data;
-        } else {
+        }
+        else
+        {
             btype = 'bar';
             current_data = onlyalarm_data;
         }
-        $timeout(function () {
-            tcGraph = new Chart(ctx, {
+        $timeout(function()
+        {
+            tcGraph = new Chart(ctx,
+            {
                 type: btype,
                 data: current_data,
                 options: options
             });
         });
 
-        cv.onclick = function (e) {
+        cv.onclick = function(e)
+        {
             var b = tcGraph.getElementAtEvent(e);
-            if (b.length > 0) {
+            if (b.length > 0)
+            {
                 tapOrHover(b[0]._index);
             }
         };
     }
 
-    function tapOrHover(ndx) {
+    function tapOrHover(ndx)
+    {
 
-        $timeout(function () {
-
+        $timeout(function()
+        {
 
             //console.log ("You tapped " + ndx);
             $scope.alarm_images = [];
             $scope.playbackURL = NVRDataModel.getLogin().url;
             var items = current_data.datasets[0].frames[ndx];
-            $scope.alarm_images.push({
+            $scope.alarm_images.push(
+            {
                 relativePath: items.relativePath,
                 fid: items.fid,
                 fname: items.fname,
@@ -324,13 +332,12 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
     }
 
-
-
     //--------------------------------------------------------
     // utility function
     //--------------------------------------------------------
 
-    function computeRelativePath(event) {
+    function computeRelativePath(event)
+    {
         var relativePath = "";
         var loginData = NVRDataModel.getLogin();
         var str = event.Event.StartTime;
@@ -355,7 +362,8 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     // utility function
     //--------------------------------------------------------
 
-    function computeBasePath(event) {
+    function computeBasePath(event)
+    {
         var basePath = "";
         var loginData = NVRDataModel.getLogin();
         var str = event.Event.StartTime;
@@ -377,26 +385,25 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
         return basePath;
     }
 
-
-
-    function padToN(number, digits) {
+    function padToN(number, digits)
+    {
 
         var i;
         var stringMax = "";
         var stringLeading = "";
-        for (i = 1; i <= digits; i++) {
+        for (i = 1; i <= digits; i++)
+        {
             stringMax = stringMax + "9";
             if (i != digits) stringLeading = stringLeading + "0";
         }
         var numMax = parseInt(stringMax);
 
-        if (number <= numMax) {
+        if (number <= numMax)
+        {
             number = (stringLeading + number).slice(-digits);
         }
         //console.log ("PADTON: returning " + number);
         return number;
     }
-
-
 
 }]);

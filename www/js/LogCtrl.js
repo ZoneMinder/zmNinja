@@ -2,8 +2,10 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', function ($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate) {
-    $scope.openMenu = function () {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', function($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate)
+{
+    $scope.openMenu = function()
+    {
         $ionicSideMenuDelegate.toggleLeft();
     };
 
@@ -16,34 +18,35 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
 
-    function onPause() {
+    function onPause()
+    {
         NVRDataModel.debug("LogCtrl: pause called, killing log timer");
         // $interval.cancel(intervalLogUpdateHandle);
     }
 
-
-    function onResume() {
+    function onResume()
+    {
         NVRDataModel.debug("LogCtrl: resume called, starting log timer");
-        /*  intervalLogUpdateHandle = $interval(function ()
-        {
-            loadLogs();
-        
-        }.bind(this), 3000);*/
-
         loadLogs();
     }
 
+    $scope.deleteLogs = function()
+    {
 
-    $scope.deleteLogs = function () {
-
-        $rootScope.zmPopup = $ionicPopup.confirm({
+        $rootScope.zmPopup = $ionicPopup.confirm(
+        {
             title: $translate.instant('kPleaseConfirm'),
             template: $translate.instant('kDeleteLogsConfirm'),
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
         });
 
-        $rootScope.zmPopup.then(function (res) {
-            if (res) {
-                $fileLogger.deleteLogfile().then(function () {
+        $rootScope.zmPopup.then(function(res)
+        {
+            if (res)
+            {
+                $fileLogger.deleteLogfile().then(function()
+                {
                     //console.log('Logfile deleted');
                     $fileLogger.setStorageFilename(zm.logFile);
                     $scope.log.logString = "";
@@ -55,17 +58,22 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     //----------------------------------------------------------------
     // Alarm notification handling
     //----------------------------------------------------------------
-    $scope.handleAlarms = function () {
+    $scope.handleAlarms = function()
+    {
         $rootScope.isAlarm = !$rootScope.isAlarm;
-        if (!$rootScope.isAlarm) {
+        if (!$rootScope.isAlarm)
+        {
             $rootScope.alarmCount = "0";
-            $ionicHistory.nextViewOptions({
+            $ionicHistory.nextViewOptions(
+            {
                 disableBack: true
             });
-            $state.go("events", {
+            $state.go("events",
+            {
                 "id": 0,
-                "playEvent":false
-            }, {
+                "playEvent": false
+            },
+            {
                 reload: true
             });
             return;
@@ -76,15 +84,20 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     // Make sure user knows information masking is best effort
     //--------------------------------------------------------------------------
 
-    $scope.sendEmail = function (logstring) {
-        $ionicPopup.confirm({
+    $scope.sendEmail = function(logstring)
+    {
+        $ionicPopup.confirm(
+            {
                 title: $translate.instant('kSensitiveTitle'),
-                template: $rootScope.appName + ' ' + $translate.instant('kSensitiveBody')
+                template: $rootScope.appName + ' ' + $translate.instant('kSensitiveBody'),
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
             })
-            .then(function (res) {
-                if (res) 
-                {
-                    logstring =  "Logs for version:"+$scope.zmAppVersion+"\n"+logstring;
+            .then(function(res)
+            {
+                if (res)
+                { 
+                    logstring = "Logs for version:" + $scope.zmAppVersion + " ("+$rootScope.platformOS+")\n" + logstring;
                     sendEmailReally(logstring);
                 }
 
@@ -94,13 +107,13 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     //--------------------------------------------------------------------------
     // Convenience function to send logs via email
     //--------------------------------------------------------------------------
-    function sendEmailReally(logstring) {
-        if (window.cordova) {
-
+    function sendEmailReally(logstring)
+    {
+        if (window.cordova)
+        {
 
             // do my best to replace sensitive information
             var loginData = NVRDataModel.getLogin();
-
 
             // We don't need this anymore as log and debug now strip passwords
             /*if (loginData.password !="")
@@ -110,35 +123,39 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             }*/
             // keep the protocol, helps to debug
             var urlNoProtocol = loginData.url.replace(/.*?:\/\//, "");
-            if (urlNoProtocol != "") {
+            if (urlNoProtocol != "")
+            {
                 var re2 = new RegExp(urlNoProtocol, "g");
                 // just replacing baseurl - that will take care of
                 // masking api but may not be cgi
                 logstring = logstring.replace(re2, "<server>");
             }
             urlNoProtocol = loginData.streamingurl.replace(/.*?:\/\//, "");
-            if (urlNoProtocol != "") {
+            if (urlNoProtocol != "")
+            {
                 var re3 = new RegExp(urlNoProtocol, "g");
                 logstring = logstring.replace(re3, "<server>");
             }
 
             urlNoProtocol = loginData.eventServer.replace(/.*?:\/\//, "");
-            if (urlNoProtocol != "") {
+            if (urlNoProtocol != "")
+            {
                 var re4 = new RegExp(urlNoProtocol, "g");
                 logstring = logstring.replace(re4, "<server>");
             }
 
             window.plugins.emailComposer.showEmailComposerWithCallback(callback, $rootScope.appName + ' logs', logstring, [zm.authoremail]);
 
-
-        } else {
+        }
+        else
+        {
             // console.log("Using default email client to send data");
 
             var fname = $rootScope.appName + "-logs-" +
                 moment().format('MMM-DD-YY_HH-mm-ss') + ".txt";
 
-            
-            var blob = new Blob([logstring], {
+            var blob = new Blob([logstring],
+            {
                 type: "text/plain;charset=utf-8"
             });
             saveAs(blob, fname);
@@ -146,28 +163,32 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
     }
 
-    function callback() {
+    function callback()
+    {
         // console.log ("EMAIL SENT");
         NVRDataModel.debug("Email sent callback called");
     }
 
-    function loadLogs() {
+    function loadLogs()
+    {
         //console.log ("GETTING LOGS");
 
-        $ionicLoading.show({
+        $ionicLoading.show(
+        {
             template: $translate.instant('kLoading'),
             noBackdrop: true,
             duration: zm.loadingTimeout
         });
 
-        $fileLogger.getLogfile().then(function (l) {
-
+        $fileLogger.getLogfile().then(function(l)
+            {
 
                 $scope.log.logString = l.split('\n').reverse().join('\n');
-                
+
                 $ionicLoading.hide();
             },
-            function (error) {
+            function(error)
+            {
                 $scope.log.logString = "Error getting log: " + JSON.stringify(error);
                 $ionicLoading.hide();
             });
@@ -180,7 +201,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     // reset power state on exit as if it is called after we enter another
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
-    $scope.$on('$ionicView.enter', function () {
+    $scope.$on('$ionicView.enter', function()
+    {
         //console.log("**VIEW ** Log Ctrl Entered");
         NVRDataModel.setAwake(false);
 
@@ -190,7 +212,6 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
         $scope.zmAppVersion = NVRDataModel.getAppVersion();
 
-
         /* intervalLogUpdateHandle = $interval(function ()
         {
             loadLogs();
@@ -199,11 +220,10 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
         loadLogs();
 
-
-
     });
 
-    $scope.$on('$ionicView.leave', function () {
+    $scope.$on('$ionicView.leave', function()
+    {
         //console.log ("Deleting Log interval...");
         // $interval.cancel(intervalLogUpdateHandle);
     });

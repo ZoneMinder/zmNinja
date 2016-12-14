@@ -1,39 +1,20 @@
-
-    <ion-modal-view cache-view="false" style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;" >
-        
+<ion-modal-view cache-view="false" style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;">
     <ion-header-bar class="bar-stable">
-    
-        
-      <h1 class="title"></h1>
-      <div class="buttons">
-        
-          
-          <button class="button button-icon icon ion-checkmark" ng-click="saveReorder()"></button>
-          
-                  <button class="button button-icon icon ion-close" ng-click="cancelReorder()"></button>
-          
-      </div>
+        <h1 class="title"></h1>
+        <div class="buttons">
+            <button class="button button-icon icon ion-checkmark" ng-click="saveReorder()"></button>
+            <button class="button button-icon icon ion-close" ng-click="cancelReorder()"></button>
+        </div>
     </ion-header-bar>
-        
-        
-        <ion-content >
-            <div class="list">
-                <span  ng-repeat="item in copyMontage">
+    <ion-content>
+        <div class="list">
+            <span ng-repeat="item in copyMontage">
                     <a class="item item-icon-left" ng-click="toggleHide($index)" href="">
                         <i ng-class="{'icon ion-eye':item.Monitor.listDisplay=='show','icon ion-eye-disabled':item.Monitor.listDisplay!='show'}"> </i>
                         {{item.Monitor.Name}}
                     </a>
                         
                 </span>
-            </div>
-            
- 
-        </ion-content>
-  
-    </ion-modal-view>
-
-
- 
-
-
-
+        </div>
+    </ion-content>
+</ion-modal-view>

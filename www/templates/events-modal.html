@@ -2,8 +2,9 @@
     <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
     <ion-modal-view cache-view="false">
         <ion-content style="background-color:#444444" ng-cloak>
-            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%; " delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" overflow-scroll="false">
+            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" overflow-scroll="false">
                 <div id="full-screen-event" style="height: 100vh;">
+                    <!--<div>-->
                     <!-- route via ZMS -->
                     <div ng-if="( (defaultVideo=='') || (loginData.enableh264==false)) && (loginData.useNphZmsForEvents==true)">
                         <!--<div style="color:white">connkey:{{connKey}}</div>-->
@@ -16,33 +17,34 @@
                     </div>
                     <!-- no default video -->
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
-                        <!--<div ng-if="videoIsReady" class="videogular-full-container">-->
-                        <div ng-if="videoIsReady" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" >
-                            <!--<video width="320" height="240" controls>
-                                <source src="" dynamic-url dynamic-url-src="{{video_url}}">
-                                
-                        </video>-->
-                            <videogular vg-error="onVideoError($event)" vg-can-play = "onCanPlay()" vg-player-ready="onPlayerReady($API)" vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="true" >
-                                <<vg-media vg-src="videoObject.config.sources" vg-native-controls="false">
-                                </vg-media>-
-                                
-                                <vg-controls>
-                                    <vg-play-pause-button></vg-play-pause-button>
-                                    <vg-scrub-bar>
-                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                    </vg-scrub-bar>
-                                    <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
-                                    <vg-fullscreen-button></vg-fullscreen-button>
-                                    <vg-volume>
-                                        <vg-mute-button></vg-mute-button>
-                                    </vg-volume>
-                                </vg-controls>
-                                <!--<vg-buffering></vg-buffering>-->
-                            </videogular>
+                        <div ng-if="videoIsReady">
+                            <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">
+                                <videogular vg-error="onVideoError($event)" vg-can-play="onCanPlay()"  vg-native-fullscreen="videoObject.config.nativeFullScreen" vg-player-ready="onPlayerReady($API)" vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)">
+                                    <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
+                                    </vg-media>
+                                    <vg-controls>
+                                        <vg-playback-button></vg-playback-button>
+                                        <vg-play-pause-button></vg-play-pause-button>
+                                        <vg-time-display>{{ videoTime(event.Event.StartTime, currentTime ); }}</vg-time-display>
+                                        <vg-scrub-bar>
+                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                            <vg-cuepoints vg-cuepoints-config="videoObject.config.cuepoints"
+                                                            vg-cuepoints-theme="videoObject.config.cuepoints.theme.url">
+                                                        </vg-cuepoints>
+                                        </vg-scrub-bar>
+                                        <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                                        <vg-fullscreen-button></vg-fullscreen-button>
+                                        <vg-volume>
+                                            <vg-mute-button></vg-mute-button>
+                                        </vg-volume>
+                                    </vg-controls>
+                            
+                                </videogular>
+                            </div>
                         </div>
-                        <div id="event_canvas_video">
+                        <!--<div id="event_canvas_video">
                             <canvas id="eventchart" width="100%" height="20px"></canvas>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <!-- 100vh -->
@@ -61,21 +63,22 @@
                     @{{currentRate}}x {{'kAt' | translate}}:{{currentProgress.progress}}s
                 </div>
             </div>
+            
         </ion-content>
     </ion-modal-view>
     <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
         <a mfb-button icon="ion-arrow-right-c" label="{{'kNextEvent'|translate}}" ng-click="jumpToEvent(nextId,1);"></a>
         <a mfb-button icon="ion-arrow-left-c" label="{{'kPrevEvent'|translate}}" ng-click="jumpToEvent(prevId,-1);"></a>
-        <a mfb-button icon="ion-arrow-resize" label="{{imageFit?'fill screen':'fit screen'}}" ng-click="scaleImage();"></a>
+        <a mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFillScreen' | translate):('kFitScreen' | translate)}}" ng-click="scaleImage();"></a>
         <a mfb-button icon="ion-close" label="{{'kExitEventView' | translate}}" ng-click="closeModal()"> </a>
     </nav>
-    <nav ng-if="loginData.useNphZmsForEvents" mfb-menu position="br" effect="zoomin" label="collapse" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+    <nav ng-if="loginData.useNphZmsForEvents && defaultVideo==''" mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
         <a mfb-button icon="ion-skip-backward" label="{{'kFastRewind'|translate}}" ng-click="adjustSpeed('fr');"></a>
         <a mfb-button icon="ion-skip-forward" label="{{'kFastForward'|translate}}" ng-click="adjustSpeed('ff');"></a>
         <a mfb-button icon="ion-play" label="{{'kNormalPlay'|translate}}" ng-click="adjustSpeed('np');"></a>
         <a mfb-button icon="ion-pause" label="{{'kPause'|translate}}" ng-click="adjustSpeed('p');"> </a>
     </nav>
-    <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{humanizeTime}} ({{d_eventId}}) </div>
+    <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] </div>
     <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
         <ul>
             <li ng-if="defaultVideo==''">

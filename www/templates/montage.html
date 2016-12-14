@@ -1,69 +1,85 @@
 <ion-view view-title="{{'kMontage' | translate}}" cache-view="false" hide-nav-bar="{{minimal}}">
-    
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-         <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
+        <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
         </button>
-        
-        
-        <button class="button button-icon button-clear ion-arrow-resize" ng-click="toggleSizeButtons();">&nbsp;
+        <button class="button button-icon button-clear ion-android-more-vertical" ng-click="toggleSubMenuFunction();">&nbsp;
         </button>
-        
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-        
     </ion-nav-buttons>
-
-
-
     <ion-nav-buttons side="right">
         <span ng-click="toggleTimeType()" class="icon montage-time">
         <i ng-class="(iconTimeNow=='server')?'icon-server':'ion-ios-location'"></i>
          {{timeNow}}&nbsp;</span>
-        
         <button class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp;
         </button>
-        
         <!--
         <button class="button button-icon button-clear ion-monitor" ng-click="cast();">&nbsp;
         </button>
         -->
-        
         <button class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
         </button>
-        
         <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
         </button>
-        
-       
-
     </ion-nav-buttons>
-
-    <ion-content scroll-sista ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate" overflow-scroll="false" >
-    
-        
-        
-        <span  ng-if="!minimal && showSizeButtons">
+    <ion-content scroll-sista ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate" overflow-scroll="false">
+        <div ng-if="!minimal && toggleSubMenu" >
             <!-- this is header -->
+            <br/>
+            <div id="flyoutmenu" style="float:left">
+                <ul>
+                    <li>
+                        <a href="" ng-click="sliderChanged(1)"> <i class="ion-plus-circled"></i></a>
+                    </li>
+                    <li>
+                        <a href="" ng-click="sliderChanged(-1)"> <i class="ion-minus-circled"></i></a>
+                    </li>
+                    
+                        <li ng-if="isDragabillyOn">
+                            <a href="" ng-click="hideMonitor(monitor.Monitor.Id)"> <i class="ion-close-circled"></i></a>
+                        </li>
+                        <li ng-if="isDragabillyOn"> 
+                            <a href="" ng-click="toggleStamp()"> <i class="ion-pin"></i></a>
+                        </li>
+                  
+                </ul>
+            </div>
+
+            <div id="flyoutmenu" style="float:right">
+                <ul>
+                    <li>
+                        <a href="" ng-click="switchMontageProfile()"> <i class="ion-navicon-round"></i></a>
+                    </li>
+
+                    <li>
+                        <a href="" ng-click="saveMontageProfile()"> <i class="ion-heart"></i></a>
+                    </li>
+
+                    <li>
+                        <a href="" ng-click="deleteMontageProfile()"> <i class="ion-trash-a"></i></a>
+                    </li>
+                    
+
+                </ul>
+            </div>
+            <div style="clear: both;"></div>
+
+           <!-- <span ng-click="sliderChanged(1)" style="float:right;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:25px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;</i></span>
+
             
-            <span ng-click="sliderChanged(1)" style="float:right;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:25px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;</i></span>
-            
-            <span ng-click="sliderChanged(-1)" style="float:left;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:22px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 5px 0px;">&nbsp;<i class="ion-minus-circled">&nbsp;</i></span>
-            <br/><br/>
-        </span>
+        <span ng-click="sliderChanged(-1)" style="float:left;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:22px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 5px 0px;">&nbsp;<i class="ion-minus-circled">&nbsp;</i></span>
+
+        <span ng-click="" style="left:50%;margin-top:0px;padding-top:8px;background-color:#5c6767;color:#fff;font-size:11px;opacity:1;width:40px;height:36px;border-radius: 0px 0px 0px 5px;">&nbsp;<i class="ion-plus-circled">&nbsp;hello</i></span>
+    -->
         
-        
-       
-        
+        <br/>
+        </div>
         <!-- now lets draw the montage windows -->
         <div class="grid" id="mygrid">
             <div class="grid-sizer grid-item-10"></div>
-            
-            
-            
-           <!-- <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
+            <!-- <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
                   ng-if="monitor.Monitor.Function!='None' &&  monitor.Monitor.Enabled !='0' ">-->
-            
-            <span ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit" >
+            <span ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit">
             
                 
                 
@@ -80,12 +96,14 @@
                                     
                                  
                                     
-                                    <img    class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem($index);" image-spinner-loader="lines"  />
+                                    <img    class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);" image-spinner-loader="lines"  />
+                                       
+                                   
 
                                     </div> 
 
                                     <div ng-if = "minimal">
-                                        <img  id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem($index);" image-spinner-loader="lines"    />
+                                        <img  id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);" image-spinner-loader="lines"    />
                                     </div>
                             </div>
 
@@ -99,9 +117,9 @@
 
 
 
-                            <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >
+                            <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >&nbsp;
 
-                                    &nbsp;<i class="ion-ios-videocam"></i>
+                                    <span ng-if="monitor.Monitor.isStamp && isDragabillyOn"><i  class="animated infinite flash ion-pin"></i>&nbsp;</span><i class="ion-ios-videocam"></i>&nbsp;
                                    {{monitor.Monitor.Name}}&nbsp;<i ng-if="$root.runMode!='lowbw'" style="{{monitor.Monitor.alarmState}}" class="ion-record"></i>&nbsp;
 
                             </figcaption>
@@ -117,30 +135,18 @@
                     </figure>
                 
                 </div>
-            </span>       <!-- ngrepeat -->
+            </span>
+            <!-- ngrepeat -->
         </div>
-
- 
-
-
-
-
         <ion-item style="background-color:#444444; color:#fff;border:none;" ng-show="!MontageMonitors.length">
             {{'kNoMonitors' | translate}}
         </ion-item>
-
-
-
     </ion-content>
-    
     <div class="bwmode" ng-if="$root.runMode=='lowbw'">
-            {{ 'kLowBWDisplay' | translate }}
-     </div>
-    
-
+        {{ 'kLowBWDisplay' | translate }}
+    </div>
     <div ng-show="minimal">
         <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-
             <button mfb-button icon="ion-arrow-expand" label="{{'kIncreaseSize' | translate}}" ng-click="sliderChanged(1)">
             </button>
             <button mfb-button icon="ion-arrow-shrink" label="{{'kDecreaseSize' | translate}}" ng-click="sliderChanged(-1)">
@@ -150,14 +156,10 @@
             <button mfb-button icon="ion-close" label="{{'kExitFullScreen'| translate}}" ng-click="switchMinimal()">
             </button>
         </nav>
-        
-        
         <span class="modal-alarm-badge">
             <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive" 
                     ng-click="handleAlarmsWhileMinimized();" ng-if="$root.isAlarm"></a>
         </span>
-
     </div>
     <br/>
-
 </ion-view>
