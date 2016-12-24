@@ -1,7 +1,30 @@
 # Change Log
 
-## [v1.2.32](https://github.com/pliablepixels/zmNinja/tree/v1.2.32) (2016-12-09)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.31...v1.2.32)
+## [v1.2.34](https://github.com/pliablepixels/zmNinja/tree/v1.2.34) (2016-12-24)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.33...v1.2.34)
+
+**Implemented enhancements:**
+
+- Add ability to launch app via URL for external integration [\#411](https://github.com/pliablepixels/zmNinja/issues/411)
+- Allow for pinning and hiding monitors during rearranging in montage [\#409](https://github.com/pliablepixels/zmNinja/issues/409)
+
+**Fixed bugs:**
+
+- First time users - app gets locked if APIs are not configured \[Mostly Android\] [\#415](https://github.com/pliablepixels/zmNinja/issues/415)
+
+**Closed issues:**
+
+- Missing translations Russian [\#412](https://github.com/pliablepixels/zmNinja/issues/412)
+- Missing translations for popup buttons [\#410](https://github.com/pliablepixels/zmNinja/issues/410)
+- Mobile unable to connect to the event server [\#403](https://github.com/pliablepixels/zmNinja/issues/403)
+- Download events as avi,mov, even mp4 videos [\#334](https://github.com/pliablepixels/zmNinja/issues/334)
+
+**Merged pull requests:**
+
+- New items [\#413](https://github.com/pliablepixels/zmNinja/pull/413) ([BoskSpb](https://github.com/BoskSpb))
+
+## [v1.2.33](https://github.com/pliablepixels/zmNinja/tree/v1.2.33) (2016-12-09)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.31...v1.2.33)
 
 **Implemented enhancements:**
 
