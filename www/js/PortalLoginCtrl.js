@@ -173,7 +173,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     return;
                                 }
 
-                                if (data == "0.0.0")
+                                /*if (data == "0.0.0")
                                 {
 
                                     NVRDataModel.log("2nd Auth:API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
@@ -183,7 +183,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         "wizard": false
                                     });
                                     return;
-                                }
+                                }*/
                                 // coming here means continue
                                 EventServer.refresh();
 
@@ -287,8 +287,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     {
                         NVRDataModel.debug("PortalLogin: auth success");
 
-                        NVRDataModel.getKeyConfigParams(1);
-                        NVRDataModel.getTimeZone();
+                        
                         // $state.go("login" ,{"wizard": false});
                         //login was ok, so get API details
                         NVRDataModel.getAPIversion()
@@ -319,7 +318,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         return;
                                     }
 
-                                    if (data == "0.0.0")
+                                    /*if (data == "0.0.0")
                                     {
 
                                         NVRDataModel.log("API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
@@ -330,9 +329,12 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         });
                                         return;
 
-                                    }
+                                    }*/
                                     // coming here means continue
                                     // console.log (">>>>>>>>>>>>>>>>>>>>>>>>>NEVER");
+                                    
+                                    NVRDataModel.getKeyConfigParams(1);
+                                    NVRDataModel.getTimeZone();
                                     EventServer.refresh();
                                     if ($rootScope.tappedNotification != 1)
                                     {
@@ -367,11 +369,23 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                                 },
                                                 function error(e)
                                                 {
-                                                    $state.go("login",
+
+                                                    if ($rootScope.apiValid == true)
                                                     {
-                                                        "wizard": false
-                                                    });
+                                                        $state.go("login",
+                                                        {
+                                                            "wizard": false
+                                                        });
+                                                        return;
+                                                    }
+                                                    else
+                                                    {
+                                                        $state.go("invalidapi");
+                                                        return;
+                                                    }
+                                                        
                                                 });
+                                                    
                                         return;
 
                                     }, 1000);

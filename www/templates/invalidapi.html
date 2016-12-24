@@ -1,0 +1,30 @@
+<ion-view view-title="{{$root.appName}}" hide-nav-bar="false" hide-back-button="false" cache-view="false">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+    <ion-content class="pin-background">
+        <div style="margin-left:20px; margin-right:20px">
+            <center>
+                <br/>
+                <br/>
+                <div id="responsive-image">
+                    <img src="img/authlogo.png">
+                </div>
+                <br/>
+                <span style="color:white">
+                    <h2 style="color:white" class="animated bounce">{{'kInvalidAPIHeader' | translate}}</h2>
+                    <br/>
+                    <h4 style="color:white">{{'kInvalidAPIBody' | translate}}</h4>
+                    
+                   <br/><br/>
+                    
+                    <button  class="button button-stable animated bounceInUp" ng-click="readFAQ()">
+                    {{'kInvalidAPIRead' | translate}}</button>
+            
+                    
+                </span>
+            </center>
+            <br/>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1193,11 +1193,13 @@ angular.module('zmApp.controllers')
                         {
                             if (success.data.version)
                             {
+                                $rootScope.apiValid = true;
                                 d.resolve(success.data.version);
                             }
                             else
                             {
-                                d.resolve("0.0.0");
+                                $rootScope.apiValid = false;
+                                d.reject("-1.-1.-1");
                             }
                             return (d.promise);
 
@@ -1206,6 +1208,7 @@ angular.module('zmApp.controllers')
                         {
                             debug("getAPIversion error handler " + JSON.stringify(error));
                             d.reject("-1.-1.-1");
+                            $rootScope.apiValid = false;
                             return (d.promise);
                         });
                 return (d.promise);

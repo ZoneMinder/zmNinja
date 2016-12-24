@@ -1321,6 +1321,14 @@ angular.module('zmApp', [
         {
             var requireLogin = toState.data.requireLogin;
 
+            if ($rootScope.apiValid == false && toState.name != 'invalidapi' && toState.data.requireLogin == true) 
+            {
+                event.preventDefault();
+                $state.transitionTo('invalidapi');
+                return;
+
+            }
+
             if (NVRDataModel.isLoggedIn() || toState.data.requireLogin == false)
             {
                 //console.log("State transition is authorized");
@@ -1349,6 +1357,7 @@ angular.module('zmApp', [
                 // if you don't prevent, states will stack
                 event.preventDefault();
                 $state.transitionTo('login');
+                return;
             }
 
             return;
@@ -1403,6 +1412,7 @@ angular.module('zmApp', [
            };
 
             $rootScope.textScaleFactor = 1.0;
+            $rootScope.apiValid = false;
 
             $rootScope.db = null;
             $rootScope.runMode = NVRDataModel.getBandwidth();
@@ -2022,6 +2032,20 @@ angular.module('zmApp', [
         url: "/importantmessage/:ver",
         templateUrl: "templates/important_message.html",
         controller: 'zmApp.ImportantMessageCtrl',
+
+    })
+
+    .state('invalidapi',
+    {
+        data:
+        {
+            requireLogin: false
+        },
+
+        cache: false,
+        url: "/invalidapi",
+        templateUrl: "templates/invalidapi.html",
+        controller: 'zmApp.InvalidApiCtrl',
 
     })
 
