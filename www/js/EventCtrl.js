@@ -37,7 +37,7 @@ angular.module('zmApp.controllers')
 
 })
 
-.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile)
+.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', '$ionicListDelegate',function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile, $ionicListDelegate)
 {
 
     // events in last 5 minutes
@@ -1559,6 +1559,9 @@ angular.module('zmApp.controllers')
     $scope.archiveUnarchiveEvent = function (ndx,eid)
     {
         //https://server/zm/api/events/11902.json -XPUT -d"Event[Archived]=1"
+        //
+        $ionicListDelegate.closeOptionButtons();
+
         NVRDataModel.debug ("Archiving request for EID="+eid);
         var loginData = NVRDataModel.getLogin();
         var apiArchive = loginData.apiurl + "/events/" + eid + ".json";

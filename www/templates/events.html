@@ -188,9 +188,9 @@
             </ion-delete-button>
 
             
-            <ion-option-button ng-if="event.Event.Archived == 1" class="button-balanced" ng-click= "archiveUnarchiveEvent($index,event.Event.Id)">Unflag</ion-option-button>
+            <ion-option-button ng-if="event.Event.Archived == 1" class="button-balanced" ng-click= "archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag' | translate}}</ion-option-button>
 
-             <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)" >Flag</ion-option-button>
+             <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)" >{{'kFlag' | translate}}</ion-option-button>
 
              <!-- hack to make sure swipe left displays well
              if there is no content and our list height is set
