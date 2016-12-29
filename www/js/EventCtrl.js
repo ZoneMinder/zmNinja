@@ -1556,6 +1556,91 @@ angular.module('zmApp.controllers')
             );
     }
 
+    $scope.archiveUnarchiveEvent = function (ndx,eid)
+    {
+        //https://server/zm/api/events/11902.json -XPUT -d"Event[Archived]=1"
+        NVRDataModel.debug ("Archiving request for EID="+eid);
+        var loginData = NVRDataModel.getLogin();
+        var apiArchive = loginData.apiurl + "/events/" + eid + ".json";
+        var setArchiveBit = ($scope.events[ndx].Event.Archived == '0') ? "1":"0";
+
+        NVRDataModel.debug ("Calling archive with:"+apiArchive+ " and Archive="+setArchiveBit);
+        //put(url, data, [config]);
+
+       // $http.put(apiArchive,"Event[Archived]="+setArchiveBit)
+       // 
+       $ionicLoading.show(
+        {
+            template: "{{'kPleaseWait' | translate}}...",
+            noBackdrop: true,
+            duration: zm.httpTimeout
+        });
+
+        $http({
+
+                method: 'POST',
+                headers:
+                {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': '*/*',
+                },
+                transformRequest: function(obj)
+                {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                    var foo = str.join("&");
+                    // console.log("****RETURNING " + foo);
+                    NVRDataModel.debug("MonitorCtrl: parmeters constructed: " + foo);
+                    return foo;
+                },
+                url: apiArchive,
+                data: {
+                    "Event[Archived]":setArchiveBit
+
+                }
+            })
+        .then (function (success) {
+
+             NVRDataModel.log ("archiving response: "+ JSON.stringify(success));
+             if (success.data.message == 'Error')
+             {
+                $ionicLoading.show(
+                 {
+                     template: "{{'kError' | translate}}...",
+                     noBackdrop: true,
+                     duration: 1500
+                 });
+
+             }
+             else
+             {
+
+
+                $ionicLoading.show(
+                 {
+                     template: "{{'kSuccess' | translate}}...",
+                     noBackdrop: true,
+                     duration: 1000
+                 });
+                if ($scope.events[ndx].Event.Archived == '0')
+                    $scope.events[ndx].Event.Archived = '1';
+                else
+                    $scope.events[ndx].Event.Archived = '0';    
+             }
+
+            
+
+        },
+        function (error) {
+            NVRDataModel.log ("Error archiving: "+ JSON.stringify(error));
+        } );
+            
+        
+
+    };
+
     //--------------------------------------------------------------------------
     // Takes care of deleting individual events
     //--------------------------------------------------------------------------
@@ -1575,6 +1660,8 @@ angular.module('zmApp.controllers')
             noBackdrop: true,
             duration: zm.httpTimeout
         });
+
+
 
         $http.delete(apiDelete)
             .success(function(data)

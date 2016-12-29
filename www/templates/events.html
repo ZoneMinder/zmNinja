@@ -63,7 +63,7 @@
                         <div class="col col-80">
                             <div class="item-text-wrap">
                                 
-                                <b>{{event.Event.MonitorName}}</b> ({{event.Event.Id}}) &nbsp;
+                                <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b> ({{event.Event.Id}}) &nbsp;
                                 <button ng-if="gifshotSupported" class="button button-small button-clear icon gif-icon" ng-click="permissionsDownload(event)"> 
                             </button>
 
@@ -79,6 +79,8 @@
                             <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                             <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
                             <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
+
+                            
                         </div>
                     </div>
                     <!--row-->
@@ -184,6 +186,18 @@
         <!-- isGroupShown -->
         <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
             </ion-delete-button>
+
+            
+            <ion-option-button ng-if="event.Event.Archived == 1" class="button-balanced" ng-click= "archiveUnarchiveEvent($index,event.Event.Id)">Unflag</ion-option-button>
+
+             <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)" >Flag</ion-option-button>
+
+             <!-- hack to make sure swipe left displays well
+             if there is no content and our list height is set
+             to a larger height, the swipe display acts weird -->
+             
+             <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
             </ion-item>
             </ion-list>
             </div>
@@ -198,6 +212,9 @@
                 </ion-infinite-scroll>
             </div>
             <canvas id="canvas" class="hiddengifcanvas"></canvas>
+
+
+
     </ion-content>
     <div class="events-float-filter" ng-if="isEventFilterOn" on-tap="filterTapped();"><span translate="kFilterOn"></span></div>
     <div class="bwmode" ng-if="$root.runMode=='lowbw'">
