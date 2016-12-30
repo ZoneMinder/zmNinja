@@ -27,7 +27,8 @@ angular.module('zmApp', [
     'mgo-angular-wizard',
     'pascalprecht.translate',
     'jett.ionic.scroll.sista',
-    'uk.ac.soton.ecs.videogular.plugins.cuepoints'
+    'uk.ac.soton.ecs.videogular.plugins.cuepoints',
+    'dcbImgFallback'
 
 ])
 

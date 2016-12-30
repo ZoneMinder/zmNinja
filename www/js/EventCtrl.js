@@ -63,6 +63,8 @@ angular.module('zmApp.controllers')
     var nolangTo;
 
     $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
+    $scope.outlineMotion = false;
+    $scope.outlineMotionParam = "";
     var eventsListScrubHeight = eventsListScrubHeight;
     var eventsListDetailsHeight = eventsListDetailsHeight;
 
@@ -808,11 +810,18 @@ angular.module('zmApp.controllers')
         // console.log ("parray :  " + JSON.stringify(parray));
         // console.log ("index: " + ndx);
         if ($scope.imode == 'path')
+        {
+            if ($scope.outlineMotion)
+                $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].aname;
+            else
+                $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
+            $scope.fallbackImgSrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
+        }
 
-            $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
         else
         {
-            $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
+            $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id+$scope.outlineMotionParam;
+            $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
 
         }
 
@@ -820,7 +829,7 @@ angular.module('zmApp.controllers')
 
         $rootScope.zmPopup = $ionicPopup.show(
         {
-            template: '<center>' + $translate.instant('kFrame') + ':{{parray[ndx].frameid}}@{{prettifyTimeSec(parray[ndx].time)}}</center><br/><img src="{{imgsrc}}" width="100%"  />',
+            template: '<center>' + $translate.instant('kFrame') + ':{{parray[ndx].frameid}}@{{prettifyTimeSec(parray[ndx].time)}}</center><br/><img ng-src="{{imgsrc}}" fallback-src="{{fallbackImgSrc}}" width="100%"  />',
             title: $translate.instant('kImages') + " (" + $translate.instant($scope.typeOfFrames) + ")",
             subTitle: 'use left and right arrows to change',
             scope: $scope,
@@ -861,15 +870,22 @@ angular.module('zmApp.controllers')
                         if (nndx == null) nndx = $scope.ndx;
                         $scope.ndx = nndx;
 
-                        if ($scope.imode == 'path')
-                        {
+                       if ($scope.imode == 'path')
+                              {
+                                  if ($scope.outlineMotion)
+                                      $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].aname;
+                                  else
+                                      $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
+                                  $scope.fallbackImgSrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
+                              }
 
-                            $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-                        }
-                        else
-                        {
-                            $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
-                        }
+                              else
+                              {
+                                  $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id+$scope.outlineMotionParam;
+                                  $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
+
+                              }
+
 
                         e.preventDefault();
 
@@ -901,14 +917,21 @@ angular.module('zmApp.controllers')
                         $scope.ndx = nndx;
 
                         if ($scope.imode == 'path')
-                        {
+                               {
+                                   if ($scope.outlineMotion)
+                                       $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].aname;
+                                   else
+                                       $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
+                                   $scope.fallbackImgSrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
+                               }
 
-                            $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-                        }
-                        else
-                        {
-                            $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
-                        }
+                               else
+                               {
+                                   $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id+$scope.outlineMotionParam;
+                                   $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
+
+                               }
+
 
                         e.preventDefault();
 
@@ -925,6 +948,15 @@ angular.module('zmApp.controllers')
             ]
         });
 
+    };
+
+    $scope.toggleMotionOutline = function()
+    {
+        $scope.outlineMotion = !$scope.outlineMotion;
+        if ($scope.outlineMotion)
+            $scope.outlineMotionParam =  "&show=analyse";
+        else
+            $scope.outlineMotionParam = "";
     };
 
     $scope.toggleTypeOfAlarms = function()
@@ -1670,10 +1702,37 @@ angular.module('zmApp.controllers')
             .success(function(data)
             {
                 $ionicLoading.hide();
-                NVRDataModel.debug("delete success: " + JSON.stringify(data));
-                NVRDataModel.displayBanner('info', [$translate.instant('kDeleteEventSuccess')], 2000, 2000);
+                NVRDataModel.debug("delete output: " + JSON.stringify(data));
 
-                $scope.events.splice(itemid, 1);
+                if (data.data.message == 'Error')
+                {
+                   $ionicLoading.show(
+                    {
+                        template: "{{'kError' | translate}}...",
+                        noBackdrop: true,
+                        duration: 1500
+                    });
+
+                }
+                else
+                {
+
+
+                   $ionicLoading.show(
+                    {
+                        template: "{{'kSuccess' | translate}}...",
+                        noBackdrop: true,
+                        duration: 1000
+                    });
+                   $scope.events.splice(itemid, 1);
+                   
+                }
+
+               // NVRDataModel.displayBanner('info', [$translate.instant('kDeleteEventSuccess')], 2000, 2000);
+
+                
+
+
                 //doRefresh();
 
             })
@@ -1999,6 +2058,8 @@ angular.module('zmApp.controllers')
 
     function toggleGroup(event, ndx, frames, groupType)
     {
+        $ionicListDelegate.canSwipeItems(true);
+        NVRDataModel.debug ("enabling options swipe");
 
         // If we are here and there is a record of a previous scroll
         // then we need to scroll back to hide that view
@@ -2027,6 +2088,8 @@ angular.module('zmApp.controllers')
 
             if (groupType == 'alarms')
             {
+                $ionicListDelegate.canSwipeItems(false);
+                NVRDataModel.debug ("Disabling flag swipe as alarms are swipable");
                 $scope.alarm_images = [];
                 event.Event.height = (eventsListDetailsHeight + eventsListScrubHeight);
                 $ionicScrollDelegate.resize();
@@ -2065,6 +2128,7 @@ angular.module('zmApp.controllers')
                                     frameid: data.event.Frame[i].FrameId,
                                     score: data.event.Frame[i].Score,
                                     fname: padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg",
+                                    aname:padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-analyse.jpg",
                                     time: data.event.Frame[i].TimeStamp
                                 });
                                 timestamp = data.event.Frame[i].TimeStamp;
