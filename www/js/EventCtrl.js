@@ -88,6 +88,9 @@ angular.module('zmApp.controllers')
     $scope.$on('$ionicView.afterEnter', function()
     {
         //console.log ("********* AFTER ENTER");
+        //
+        $ionicListDelegate.canSwipeItems(true);
+        NVRDataModel.debug ("enabling options swipe");
 
         // see if we come from monitors, if so, don't filter events
         if ($ionicHistory.backTitle() == 'Monitors')
@@ -950,14 +953,7 @@ angular.module('zmApp.controllers')
 
     };
 
-    $scope.alarmSwipe = function(e)
-    {
-
-        //alert ("HERE");
-        console.log ("HERE");
-        e.stopPropagation();
-        e.preventDefault();
-    };
+    
 
     $scope.toggleMotionOutline = function()
     {
@@ -2048,6 +2044,21 @@ angular.module('zmApp.controllers')
         $ionicSlideBoxDelegate.$getByHandle("eventSlideBox").enableSlide(false);
     };
 
+    $scope.checkSwipe = function (ndx)
+    {
+        if ($scope.events[ndx].Event.ShowScrub)
+        {
+            $ionicListDelegate.canSwipeItems(false);
+            NVRDataModel.debug ("disabling options swipe");
+        }
+        else
+        {
+          $ionicListDelegate.canSwipeItems(true);
+          NVRDataModel.debug ("enabling options swipe");   
+        }
+            
+    }
+
     //-------------------------------------------------------------------------
     // This function is called when a user enables or disables
     // scrub view for an event.
@@ -2067,8 +2078,7 @@ angular.module('zmApp.controllers')
 
     function toggleGroup(event, ndx, frames, groupType)
     {
-        $ionicListDelegate.canSwipeItems(true);
-        NVRDataModel.debug ("enabling options swipe");
+        
 
         // If we are here and there is a record of a previous scroll
         // then we need to scroll back to hide that view
@@ -2088,6 +2098,24 @@ angular.module('zmApp.controllers')
         }
 
         event.Event.ShowScrub = !event.Event.ShowScrub;
+
+        if (event.Event.ShowScrub == false)
+        {
+            $ionicListDelegate.canSwipeItems(true);
+            NVRDataModel.debug ("enabling options swipe due to toggle");
+        }
+
+        else
+        {
+            $ionicListDelegate.canSwipeItems(false);
+            $ionicListDelegate.closeOptionButtons();
+            NVRDataModel.debug ("disabling options swipe due to toggle");
+
+        }
+
+
+
+
         //console.log ("SCRUBBING IS "+event.Event.ShowScrub);
         // $ionicScrollDelegate.resize();
 
@@ -2095,6 +2123,7 @@ angular.module('zmApp.controllers')
 
         if (event.Event.ShowScrub == true) // turn on display now
         {
+        
 
             if (groupType == 'alarms')
             {
@@ -2360,6 +2389,10 @@ angular.module('zmApp.controllers')
         else
         {
             // $ionicScrollDelegate.freezeScroll(false);
+            // 
+           // $ionicListDelegate.canSwipeItems(true);
+            // NVRDataModel.debug ("enabling options swipe");
+
             $ionicSideMenuDelegate.canDragContent(true);
             event.Event.height = eventsListDetailsHeight;
             $ionicScrollDelegate.resize();

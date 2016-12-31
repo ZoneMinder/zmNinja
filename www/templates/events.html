@@ -25,7 +25,7 @@
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
         <div ng-if="!eventsBeingLoaded">
             <ion-list show-delete="eventList.showDelete">
-                <ion-item collection-repeat="event in events| filter:search.text" item-height="event.Event.height" id="item-{{$index}}">
+                <ion-item collection-repeat="event in events| filter:search.text" item-height="event.Event.height" id="item-{{$index}}" on-swipe-left="checkSwipe($index);">
                     <span style="float:left;margin-top:-18px;background-color:#96281B;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;</span>&nbsp;&nbsp;
                     <span style="float:left;margin-top:-18px;background-color:#fff;color:#888;font-size:11px;opacity:1;">&nbsp;&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{event.Event.humanizeTime}} <span ng-if="!event.Event.EndTime">(<span translate="kRecordingProgress"></span>)</span>
                     </span>
@@ -128,7 +128,7 @@
                     </p>
                     
                    
-                    <ion-scroll direction="x" overflow-scroll="false"  on-swipe-left="alarmSwipe($event)">
+                    <ion-scroll direction="x" overflow-scroll="false" >
                         <span ng-repeat="alarm in alarm_images | selectFrames: typeOfFrames">
                                                  
                                             <figure  class = "animated slideInLeft" style="display:inline-block">
@@ -196,10 +196,11 @@
         <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
             </ion-delete-button>
 
-            <ion-option-button  ng-if="event.Event.Archived == 1 && !event.Event.ShowScrub" class="button-balanced" ng-click= "archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag' | translate}}</ion-option-button>
+    
+        <ion-option-button  ng-if="event.Event.Archived == 1" class="button-balanced" ng-click= "archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag' | translate}}</ion-option-button>
 
-             <ion-option-button ng-if="event.Event.Archived == 0 && !event.Event.ShowScrub" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)" >{{'kFlag' | translate}}</ion-option-button>
-          
+        <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)" >{{'kFlag' | translate}}</ion-option-button>
+      
             
              <!-- hack to make sure swipe left displays well
              if there is no content and our list height is set
