@@ -2057,7 +2057,7 @@ angular.module('zmApp.controllers')
           NVRDataModel.debug ("enabling options swipe");   
         }
             
-    }
+    };
 
     //-------------------------------------------------------------------------
     // This function is called when a user enables or disables

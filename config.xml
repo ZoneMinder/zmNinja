@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninjapro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.2.34" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninjapro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.2.35" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>zmNinja</name>
     <description>
 	High performance ZoneMinder client
@@ -100,8 +100,4 @@
     </plugin>
     <engine name="ios" spec="~4.1.1" />
     <engine name="android" spec="~5.1.1" />
-    <preference name="xwalkVersion" value="17.46.459.1" />
-    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
-    <preference name="xwalkMode" value="lite" />
-    <preference name="xwalkMultipleApk" value="true" />
 </widget>
