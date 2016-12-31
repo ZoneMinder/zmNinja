@@ -1,5 +1,18 @@
 # Change Log
 
+## [v1.2.35](https://github.com/pliablepixels/zmNinja/tree/v1.2.35) (2016-12-31)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.34...v1.2.35)
+
+**Implemented enhancements:**
+
+- Add ability to show motion outlines in alarm frames \(if enabled in ZM\) [\#417](https://github.com/pliablepixels/zmNinja/issues/417)
+- Archive selected events [\#388](https://github.com/pliablepixels/zmNinja/issues/388)
+
+**Merged pull requests:**
+
+- Eci peci z tłumaczeniem ;\) Happy New Year!!! [\#418](https://github.com/pliablepixels/zmNinja/pull/418) ([maymaymay](https://github.com/maymaymay))
+- Translation update [\#416](https://github.com/pliablepixels/zmNinja/pull/416) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.2.34](https://github.com/pliablepixels/zmNinja/tree/v1.2.34) (2016-12-24)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.33...v1.2.34)
 
@@ -24,7 +37,10 @@
 - New items [\#413](https://github.com/pliablepixels/zmNinja/pull/413) ([BoskSpb](https://github.com/BoskSpb))
 
 ## [v1.2.33](https://github.com/pliablepixels/zmNinja/tree/v1.2.33) (2016-12-09)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.31...v1.2.33)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.32...v1.2.33)
+
+## [v1.2.32](https://github.com/pliablepixels/zmNinja/tree/v1.2.32) (2016-12-09)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.31...v1.2.32)
 
 **Implemented enhancements:**
 
@@ -87,7 +103,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -114,11 +130,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
-
 ## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
+
+## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
 
 **Implemented enhancements:**
 
@@ -635,7 +651,7 @@
 - Cannot get video [\#115](https://github.com/pliablepixels/zmNinja/issues/115)
 
 ## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.3)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
 
 **Implemented enhancements:**
 
@@ -655,11 +671,11 @@
 
 - Timeline on v0.87.2 shows only motion events [\#105](https://github.com/pliablepixels/zmNinja/issues/105)
 
-## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87)
-
 ## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
+
+## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
 
 **Fixed bugs:**
 
