@@ -950,6 +950,15 @@ angular.module('zmApp.controllers')
 
     };
 
+    $scope.alarmSwipe = function(e)
+    {
+
+        //alert ("HERE");
+        console.log ("HERE");
+        e.stopPropagation();
+        e.preventDefault();
+    };
+
     $scope.toggleMotionOutline = function()
     {
         $scope.outlineMotion = !$scope.outlineMotion;
@@ -2079,6 +2088,7 @@ angular.module('zmApp.controllers')
         }
 
         event.Event.ShowScrub = !event.Event.ShowScrub;
+        //console.log ("SCRUBBING IS "+event.Event.ShowScrub);
         // $ionicScrollDelegate.resize();
 
         //console.log ("GROUP TYPE IS " + groupType);
@@ -2088,8 +2098,8 @@ angular.module('zmApp.controllers')
 
             if (groupType == 'alarms')
             {
-                $ionicListDelegate.canSwipeItems(false);
-                NVRDataModel.debug ("Disabling flag swipe as alarms are swipable");
+               // $ionicListDelegate.canSwipeItems(false);
+                //NVRDataModel.debug ("Disabling flag swipe as alarms are swipable");
                 $scope.alarm_images = [];
                 event.Event.height = (eventsListDetailsHeight + eventsListScrubHeight);
                 $ionicScrollDelegate.resize();

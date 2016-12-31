@@ -126,7 +126,9 @@
                             <span translate="kOutlineMotion"></span>:{{outlineMotion}}
                         </button>
                     </p>
-                    <ion-scroll direction="x" overflow-scroll="false">
+                    
+                   
+                    <ion-scroll direction="x" overflow-scroll="false"  on-swipe-left="alarmSwipe($event)">
                         <span ng-repeat="alarm in alarm_images | selectFrames: typeOfFrames">
                                                  
                                             <figure  class = "animated slideInLeft" style="display:inline-block">
@@ -138,6 +140,8 @@
                         </figure>
                         </span>
                     </ion-scroll>
+
+                 
                 </div>
             </div>
             <div ng-if="groupType=='scrub'">
@@ -192,11 +196,16 @@
         <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
             </ion-delete-button>
 
+           
+           VAL:{{event.Event.ShowScrub}}
+
+         
+           
+            <ion-option-button  ng-if="event.Event.Archived == 1 && !event.Event.ShowScrub" class="button-balanced" ng-click= "archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag' | translate}}</ion-option-button>
+
+             <ion-option-button ng-if="event.Event.Archived == 0 && !event.Event.ShowScrub" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)" >{{'kFlag' | translate}}</ion-option-button>
+          
             
-            <ion-option-button ng-if="event.Event.Archived == 1" class="button-balanced" ng-click= "archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag' | translate}}</ion-option-button>
-
-             <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)" >{{'kFlag' | translate}}</ion-option-button>
-
              <!-- hack to make sure swipe left displays well
              if there is no content and our list height is set
              to a larger height, the swipe display acts weird -->
