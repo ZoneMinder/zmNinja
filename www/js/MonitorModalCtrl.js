@@ -13,6 +13,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var cycleHandle;
     var nphTimer;
     var ld = NVRDataModel.getLogin();
+    $scope.svgReady = false;
+    $scope.zoneArray = [];
+    var originalZones = [];
+
+
+     window.addEventListener("resize", function(){imageLoaded();}, false);
+
 
     $rootScope.authSession = "undefined";
 
@@ -390,6 +397,65 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     };
 
+    $scope.toggleZone = function()
+    {
+        $scope.showZones = !$scope.showZones;
+    };
+
+    $scope.imageLoaded = function()
+    {
+        imageLoaded();
+    };
+
+    // credit: http://stackoverflow.com/questions/41411891/most-elegant-way-to-parse-scale-and-re-string-a-string-of-number-co-ordinates?noredirect=1#41411927
+    // This function scales coords of zones based on current image size
+    function scaleCoords(string, sx, sy) {
+        var f = [sx, sy];
+        return string.split(' ').map(function (a) {
+            return a.split(',').map(function (b, i) {
+                return Math.round(b * f[i]);
+            }).join(',');
+        }).join(' ');
+    }
+
+    
+
+    // called when the live monitor image loads
+    // this is a good time to calculate scaled zone points
+    function imageLoaded()
+    {
+        
+        var img =document.getElementById("singlemonitor");
+
+        $scope.cw = img.naturalWidth;
+        $scope.ch = img.naturalHeight;
+        
+
+        console.log (img.clientWidth+ "x"+img.clientHeight );
+        //https://server/zm/api/zones/forMonitor/7.json
+        //
+        $scope.zoneArray = [];
+
+        var ow = $scope.monitor.Monitor.Width;
+        var oh = $scope.monitor.Monitor.Height;
+
+       // console.log ("MONITOR IS: "+JSON.stringify($scope.monitor));
+
+       // console.log ("ORIGINAL WH="+ow+"x"+oh);
+
+        for (var i=0; i < originalZones.length; i++)
+        {
+            var sx = $scope.cw/ow;
+            var sy = $scope.ch/oh;
+            $scope.zoneArray.push({
+                coords:scaleCoords(originalZones[i].coords,sx,sy),
+                type:originalZones[i].type});
+      
+        }
+
+
+    }
+
     //-------------------------------------------------------------
     // this is checked to make sure we are not pulling images
     // when app is in background. This is a problem with Android,
@@ -621,6 +687,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 $scope.monitorId = mid;
                 $scope.monitorName = NVRDataModel.getMonitorName(mid);
                 $scope.monitor = NVRDataModel.getMonitorObject(mid);
+                getZones();
                 configurePTZ($scope.monitorId);
             }, 200);
         }
@@ -919,6 +986,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     {
 
         $scope.imageFit = !$scope.imageFit;
+        if ($scope.imageFit) 
+            $scope.aspectFit="";
+        else
+            $scope.aspectFit = "xMidYMid slice";
+
         // console.log("Switching image style to " + $scope.imageFit);
     };
 
@@ -1320,12 +1392,39 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     }
 
+    function getZones()
+    {
+        //https://server/zm/api/zones/forMonitor/7.json
+        var api = NVRDataModel.getLogin().apiurl+"/zones/forMonitor/"+$scope.monitorId+".json";
+        NVRDataModel.debug ("Getting zones using:"+api);
+        originalZones = [];
+        $http.get (api)
+        .then (function (succ) {
+            console.log (JSON.stringify(succ));
+            for (var i=0; i < succ.data.zones.length; i++)
+            {
+                originalZones.push ({
+                    coords:succ.data.zones[i].Zone.Coords, 
+                    type:succ.data.zones[i].Zone.Type});
+            }
+
+        },
+        function (err) {
+            NVRDataModel.debug ("Error getting zones :"+JSON.stringify(err));
+
+        });
+
+    }
+
     $scope.$on('modal.shown', function()
     {
 
         $scope.monStatus = "";
         document.addEventListener("pause", onPause, false);
         document.addEventListener("resume", onResume, false);
+        $scope.showZones = false;
+
+        getZones();
 
         var ld = NVRDataModel.getLogin();
         //currentEvent = $scope.currentEvent;

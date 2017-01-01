@@ -1201,6 +1201,43 @@ videogular div.event-time {
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
+
+}
+
+.imagecontainer{position:relative; margin:0 auto;}
+.zonelayer
+{
+    position:absolute;
+    top:0;
+    left:0;
+    background:none;
+    
+}
+
+.zonelayer polygon {
+    fill-opacity: 0.25;
+    stroke-width: 2px;
+}
+
+/* Lets use similar colors to ZM zones, but use slate variations */
+.zonelayer .Active {
+    stroke: #e74c3c;
+    fill: #e74c3c;
+}
+
+.zonelayer  .Inclusive {
+    stroke: #f39c12;
+    fill: #f39c12;
+}
+
+.zonelayer  .Exclusive {
+    stroke: #8e44ad;
+    fill: #8e44ad;
+}
+
+.zonelayer  .Preclusive {
+    stroke: #1F3A93;
+    fill: #1F3A93;
 }
 
 @media (min-width:600px) {

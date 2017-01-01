@@ -1,6 +1,8 @@
 <div ng-controller="MonitorModalCtrl" ng-cloak>
     <ion-modal-view cache-view="false" style="background-color:#444444">
-        <ion-content on-double-tap="closeModal();">
+        <ion-content ng-cloak on-double-tap="closeModal();">
+
+            <div id="imagecontainer">
             <ion-scroll delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%;" overflow-scroll="false">
                 <!-- android needs this 100vh - otherwise max- does not work -->
                 <!--  -->
@@ -8,7 +10,17 @@
                     <div ng-if="$root.authSession!='undefined'">
                         <div ng-if="!animationInProgress && !isBackground() && connKey">
                             <!--<span style="color:white">{{currentStreamMode}}</span>-->
-                            <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}&scale={{quality}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" />
+                            <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}&scale={{quality}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" imageonload="imageLoaded()" />
+
+                            <!-- zone overlays if enabled -->
+                            <div ng-show="showZones">
+                                <svg  width="100vw" height="100vh" class="zonelayer" ng-attr-view_box="0 0 {{cw}} {{ch}}" ng-attr-preserve_aspect_ratio="{{aspectFit}}">
+                                    
+                                     <polygon  ng-repeat="item in zoneArray track by $index" ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-points="{{item.coords}}" /> </polygon>                                    
+                                    
+                                </svg>
+                           </div>
+
                         </div>
                         <div ng-if="animationInProgress || isBackground()">
                             <img style="width:100vw; height:100vh" ng-src="img/pausevideo.png" class="object-fit_contain" />
@@ -19,6 +31,7 @@
                     </div>
                 </div>
             </ion-scroll>
+            </div>
         </ion-content>
         <div ng-show="isControllable=='1' && showPTZ">
             <div class="ptzcentered">
@@ -75,6 +88,12 @@
             <li>
                 <a href="" ng-click="enableAlarm(monitorId,false)"> <i class="icon  ion-flash-off"></i></a>
             </li>
+
+             <li>
+                <a href="" ng-click="toggleZone()"> <i class="icon ion-qr-scanner"></i></a>
+            </li>
+            
+
             <li>
                 <a href="" ng-click="toggleCycle()"> <i class="icon  ion-android-bicycle"></i>-{{cycleText}}</a>
             </li>
