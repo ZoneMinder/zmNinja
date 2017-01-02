@@ -1220,10 +1220,17 @@ videogular div.event-time {
 }
 
 /* Lets use similar colors to ZM zones, but use slate variations */
+
+.zonelayer .zonepoint {
+    stroke:#2ecc71;
+    fill:#2ecc71;
+}
+
 .zonelayer .Active {
     stroke: #e74c3c;
     fill: #e74c3c;
 }
+
 
 .zonelayer  .Inclusive {
     stroke: #f39c12;

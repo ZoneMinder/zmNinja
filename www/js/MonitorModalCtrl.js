@@ -16,6 +16,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.svgReady = false;
     $scope.zoneArray = [];
     var originalZones = [];
+    $scope.isZoneEdit = false;
 
 
      window.addEventListener("resize", function(){imageLoaded();}, false);
@@ -397,14 +398,80 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     };
 
+
+    $scope.saveZones = function()
+    {
+
+        $rootScope.zmPopup = SecuredPopups.show('confirm',
+            {
+                title: 'Sure',
+                template: 'Shall we save?',
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
+            });
+
+    };
+
+    $scope.toggleZoneEdit = function()
+    {
+        $scope.isZoneEdit = !$scope.isZoneEdit;
+
+    };
+
     $scope.toggleZone = function()
     {
         $scope.showZones = !$scope.showZones;
+        if (!$scope.showZones)
+            $scope.isZoneEdit = false;
     };
 
     $scope.imageLoaded = function()
     {
         imageLoaded();
+    };
+
+    $scope.circleTouch = function (evt)
+    {
+        console.log ("TOUCH");
+    };
+
+    $scope.circleOnDrag = function (evt, ndx)
+    {
+
+        //console.log ("DRAG");
+        
+        //evt.preventDefault(); 
+        //evt.stopPropagation();
+        var ax = evt.gesture.center.pageX;
+        var ay = evt.gesture.center.pageY;
+
+        // we get screen X/Y - need to translate
+        // to SVG points
+        var svg=document.getElementById('zsvg');
+        var pt = svg.createSVGPoint();
+        pt.x = ax;
+        pt.y = ay;
+        var svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+
+        $scope.circlePoints[ndx].x = Math.round(svgP.x);
+        $scope.circlePoints[ndx].y = Math.round(svgP.y);
+
+        // get related polygon set
+        var zi = $scope.circlePoints[ndx].zoneIndex;
+        var newPoints="";
+        for ( var i=0; i < $scope.circlePoints.length; i++)
+        {
+            if ($scope.circlePoints[i].zoneIndex == zi)
+            {
+                newPoints = newPoints  + " " +$scope.circlePoints[i].x+","+$scope.circlePoints[i].y;
+            }
+        }
+       // console.log ("OLD ZONE FOR:"+zi+" is "+$scope.zoneArray[zi].coords );
+        //console.log ("NEW ZONE FOR:"+zi+" is "+newPoints);
+        $scope.zoneArray[zi].coords = newPoints;
+
+        //console.log ("INDEX="+ndx+" DRAG="+svgP.x+":"+svgP.y);
+
     };
 
     // credit: http://stackoverflow.com/questions/41411891/most-elegant-way-to-parse-scale-and-re-string-a-string-of-number-co-ordinates?noredirect=1#41411927
@@ -435,6 +502,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //https://server/zm/api/zones/forMonitor/7.json
         //
         $scope.zoneArray = [];
+        $scope.circlePoints = [];
 
         var ow = $scope.monitor.Monitor.Width;
         var oh = $scope.monitor.Monitor.Height;
@@ -452,6 +520,22 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 type:originalZones[i].type});
       
         }
+
+        // now create a points array for circle handles
+        for (i=0; i < $scope.zoneArray.length; i++)
+        {
+            /*jshint loopfunc: true */
+            console.log ("ZONE ARRAY="+$scope.zoneArray[i].coords);
+             $scope.zoneArray[i].coords.split(' ')
+             .forEach( function(itm) 
+                { 
+                    var o=itm.split(','); 
+                    $scope.circlePoints.push({x:o[0],y:o[1], zoneIndex:i});
+                    console.log ("CIRCLE X="+o[0]+"Y="+o[1]);
+                });            
+
+        }
+
 
 
     }
@@ -598,6 +682,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.onSwipe = function(m, d)
     {
+        if ($scope.isZoneEdit)
+        {
+            NVRDataModel.log ("swipe disabled as you are in edit mode");
+            return;
+        }
         var ld = NVRDataModel.getLogin();
         if (!ld.canSwipeMonitors) return;
 
@@ -613,6 +702,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     function moveToMonitor(m, d)
     {
+
+        if ($scope.isZoneEdit)
+        {
+            NVRDataModel.log ("Not cycling, as you are editing zones");
+        }
         var curstate = $ionicHistory.currentStateName();
         var found = 0;
         var mid;
@@ -688,6 +782,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 $scope.monitorName = NVRDataModel.getMonitorName(mid);
                 $scope.monitor = NVRDataModel.getMonitorObject(mid);
                 $scope.zoneArray=[];
+                $scope.circlePoints=[];
                 getZones();
                 configurePTZ($scope.monitorId);
             }, 200);

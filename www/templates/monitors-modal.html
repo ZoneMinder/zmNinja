@@ -14,9 +14,13 @@
 
                             <!-- zone overlays if enabled -->
                             <div ng-show="showZones">
-                                <svg  width="100vw" height="100vh" class="zonelayer" ng-attr-view_box="0 0 {{cw}} {{ch}}" ng-attr-preserve_aspect_ratio="{{aspectFit}}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();">
+                                <svg  id="zsvg" width="100vw" height="100vh" class="zonelayer" ng-attr-view_box="0 0 {{cw}} {{ch}}" ng-attr-preserve_aspect_ratio="{{aspectFit}}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();">
                                     
-                                     <polygon  ng-repeat="item in zoneArray track by $index" ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-points="{{item.coords}}" /> </polygon>                                    
+                                     <polygon  ng-repeat="item in zoneArray track by $index" ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-points="{{item.coords}}" /> </polygon>     
+                                        
+                                        
+                                            <circle ng-show="isZoneEdit" ng-repeat="item in circlePoints track by $index" on-drag="circleOnDrag($event, $index)" class="zonepoint"   ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-cx="{{item.x}}" ng-attr-cy="{{item.y}}" r="7"/>
+                                                   
                                     
                                 </svg>
                            </div>
@@ -92,11 +96,22 @@
              <li>
                 <a href="" ng-click="toggleZone()"> <i class="icon ion-qr-scanner"></i></a>
             </li>
+
+            <!-- zone editing is TBD -->
+            <li ng-if="showZones && $root.platformOS=='desktop' && 0">
+                <a href="" ng-click="toggleZoneEdit()"> <i class="icon ion-edit"></i></a>
+            </li>
             
+            <li ng-if="showZones && isZoneEdit ">
+                <a href="" ng-click="saveZones()"> <i class="icon ion-android-done-all"></i></a>
+            </li>
 
             <li>
                 <a href="" ng-click="toggleCycle()"> <i class="icon  ion-android-bicycle"></i>-{{cycleText}}</a>
             </li>
+
+            
+
             <!--<li>
             
             <a href="" ng-click="cast(monitorId, monitor)"> <i class="icon  ion-android-funnel"></i></a>
