@@ -687,6 +687,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 $scope.monitorId = mid;
                 $scope.monitorName = NVRDataModel.getMonitorName(mid);
                 $scope.monitor = NVRDataModel.getMonitorObject(mid);
+                $scope.zoneArray=[];
                 getZones();
                 configurePTZ($scope.monitorId);
             }, 200);
