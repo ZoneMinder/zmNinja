@@ -1709,7 +1709,7 @@ angular.module('zmApp.controllers')
                 $ionicLoading.hide();
                 NVRDataModel.debug("delete output: " + JSON.stringify(data));
 
-                if (data.data.message == 'Error')
+                if (data.message == 'Error')
                 {
                    $ionicLoading.show(
                     {
