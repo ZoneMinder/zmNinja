@@ -49,6 +49,7 @@
     "kDay"                       :"Day",
     "kDecreaseSize"              :"decrease size",
     "kDelete"                    :"Delete",
+    "kDeleteProfile"            : "Are you sure you want to delete",
     "kDeleteEventError1"         :"could  not delete event",
     "kDeleteEventError2"         :"please check logs",
     "kDeleteEventSuccess"        :"deleted event",
