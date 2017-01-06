@@ -1,30 +1,17 @@
 <div ng-controller="MonitorModalCtrl" ng-cloak>
     <ion-modal-view cache-view="false" style="background-color:#444444">
-        <ion-content ng-cloak on-double-tap="closeModal();">
+        <ion-content ng-cloak on-double-tap="closeModal();" scroll="false">
 
-            <div id="imagecontainer">
-            <ion-scroll delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%;" overflow-scroll="false">
+            <div id="imagecontainer"  >
+            <ion-scroll ng-if="!isZoneEdit" on-scroll="checkZoom()" delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%;" overflow-scroll="false">
                 <!-- android needs this 100vh - otherwise max- does not work -->
                 <!--  -->
                 <div id="monitorimage" style="height: 100vh;" class="main">
                     <div ng-if="$root.authSession!='undefined'">
                         <div ng-if="!animationInProgress && !isBackground() && connKey">
                             <!--<span style="color:white">{{currentStreamMode}}</span>-->
+
                             <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}&scale={{quality}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" imageonload="imageLoaded()" />
-
-                            <!-- zone overlays if enabled -->
-                            <div ng-show="showZones">
-                                <svg  id="zsvg" width="100vw" height="100vh" class="zonelayer" ng-attr-view_box="0 0 {{cw}} {{ch}}" ng-attr-preserve_aspect_ratio="{{aspectFit}}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();">
-                                    
-                                     <polygon  ng-repeat="item in zoneArray track by $index" ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-points="{{item.coords}}" /> </polygon>     
-                                        
-                                        
-                                            <circle ng-show="isZoneEdit" ng-repeat="item in circlePoints track by $index" on-drag="circleOnDrag($event, $index)" class="zonepoint"   ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-cx="{{item.x}}" ng-attr-cy="{{item.y}}" r="7"/>
-                                                   
-                                    
-                                </svg>
-                           </div>
-
                         </div>
                         <div ng-if="animationInProgress || isBackground()">
                             <img style="width:100vw; height:100vh" ng-src="img/pausevideo.png" class="object-fit_contain" />
@@ -35,6 +22,43 @@
                     </div>
                 </div>
             </ion-scroll>
+
+            <!-- egads, ion-scroll is a bind-on-start directive, so I have to repeat this thanks to zooming = false. Must be a better way -->
+            <ion-scroll ng-if="isZoneEdit"  delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="false" direction="xy" style="width: 100%;" overflow-scroll="false">
+                <!-- android needs this 100vh - otherwise max- does not work -->
+                <!--  -->
+                <div id="monitorimage" style="height: 100vh;" class="main">
+                    <div ng-if="$root.authSession!='undefined'">
+                        <div ng-if="!animationInProgress && !isBackground() && connKey">
+                            <!--<span style="color:white">{{currentStreamMode}}</span>-->
+
+                            <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}&scale={{quality}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" imageonload="imageLoaded()" />
+                        </div>
+                        <div ng-if="animationInProgress || isBackground()">
+                            <img style="width:100vw; height:100vh" ng-src="img/pausevideo.png" class="object-fit_contain" />
+                        </div>
+                    </div>
+                    <div ng-if="$root.authSession=='undefined'">
+                        <img id="singlemonitor" ng-src="img/pausevideo.png" style="width:100vw; height:100vh; display:block;" class="object-fit_contain" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
+                    </div>
+                </div>
+            </ion-scroll>
+
+             <!-- zone overlays if enabled -->
+                 <div ng-show="showZones">
+                     <svg  id="zsvg" width="100vw" height="100vh" class="zonelayer" ng-attr-view_box="0 0 {{cw}} {{ch}}" ng-attr-preserve_aspect_ratio="{{aspectFit}}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();">
+                         
+                          <polygon  ng-repeat="item in zoneArray track by $index" ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-points="{{item.coords}}" /> </polygon>     
+                             
+                             
+                                 <circle id="circle-{{$index}}" ng-show="isZoneEdit" ng-repeat="item in circlePoints track by $index"  class="zonepoint"   ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-cx="{{item.x}}" ng-attr-cy="{{item.y}}" ng-attr-r="{{csize}}"/>
+                                        
+                         
+                     </svg>
+                </div>
+
+
+
             </div>
         </ion-content>
         <div ng-show="isControllable=='1' && showPTZ">
@@ -98,12 +122,16 @@
             </li>
 
             <!-- zone editing is TBD -->
-            <li ng-if="showZones && $root.platformOS=='desktop' && 0">
+            <li ng-if="showZones  && 0">
                 <a href="" ng-click="toggleZoneEdit()"> <i class="icon ion-edit"></i></a>
             </li>
             
-            <li ng-if="showZones && isZoneEdit ">
+            <li ng-if="showZones && isZoneEdit">
                 <a href="" ng-click="saveZones()"> <i class="icon ion-android-done-all"></i></a>
+            </li>
+
+            <li ng-if="showZones && isZoneEdit">
+                <a href="" ng-click="changeCircleSize()"> <i class="icon ion-navigate"></i></a>
             </li>
 
             <li>

@@ -17,6 +17,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.zoneArray = [];
     var originalZones = [];
     $scope.isZoneEdit = false;
+    var _moveStart = false;
+    var targetID = "";
+    $scope.imageZoomable = true;
+
+
+    $scope.csize = ($rootScope.platformOS == 'desktop') ? 10:20;
 
 
      window.addEventListener("resize", function(){imageLoaded();}, false);
@@ -401,20 +407,74 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.saveZones = function()
     {
+        var str="";
+        for (var i=0; i < originalZones.length; i++)
+        {
+            str = str + "o:"+originalZones[i].coords+"<br/>n:"+$scope.zoneArray[i].coords+"--------------------------------------------------<br/>";
+
+        }
 
         $rootScope.zmPopup = SecuredPopups.show('confirm',
             {
                 title: 'Sure',
-                template: 'Shall we save?',
+                template: str,
                 okText: $translate.instant('kButtonOk'),
                 cancelText: $translate.instant('kButtonCancel'),
             });
 
     };
 
+    $scope.changeCircleSize = function()
+    {
+        $scope.csize = Math.max (($scope.csize + 5) % 31, 10);
+
+    };
+
     $scope.toggleZoneEdit = function()
     {
         $scope.isZoneEdit = !$scope.isZoneEdit;
+        
+        
+         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+
+        
+        if ($scope.isZoneEdit)
+        {
+             $ionicScrollDelegate.$getByHandle("imgscroll").zoomTo(1, true);
+             $scope.imageZoomable = false;
+             //document.getElementById("imgscroll").zooming="false";
+
+            for (var i=0; i < $scope.circlePoints.length; i++)
+            {
+                var t = document.getElementById("circle-"+i);
+                if (t)
+                {
+                    t.removeEventListener("touchstart",moveStart);
+                    t.removeEventListener("mousedown",moveStart);
+                    //t.removeEventListener("mousemove",moveContinue);
+                    //t.removeEventListener("mouseup",moveStop);
+
+
+                    t.addEventListener("touchstart",moveStart); 
+                    t.addEventListener("mousedown",moveStart); 
+                    //t.addEventListener("mousemove",moveContinue);
+                    //t.addEventListener("mouseup",moveStop);
+
+
+                    console.log ("Found circle-"+i);   
+                }
+                else
+                {
+                    console.log ("did not find circle-"+i);
+                }
+                
+            }
+        }
+        else // get out of edit
+        {
+
+            $scope.imageZoomable = true;
+        }
 
     };
 
@@ -430,23 +490,26 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         imageLoaded();
     };
 
+    $scope.checkZoom = function()
+    {
+        //var z = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom;
+        //imageLoaded();
+
+    };
+
     $scope.circleTouch = function (evt)
     {
         console.log ("TOUCH");
     };
 
-    $scope.circleOnDrag = function (evt, ndx)
+    //$scope.circleOnDrag = function (evt, ndx)
+    function recomputePolygons (ax, ay, ndx,z)
     {
 
-        //console.log ("DRAG");
-        
-        //evt.preventDefault(); 
-        //evt.stopPropagation();
-        var ax = evt.gesture.center.pageX;
-        var ay = evt.gesture.center.pageY;
-
+       
         // we get screen X/Y - need to translate
         // to SVG points
+        console.log ("recompute with",ax,"&",ay);
         var svg=document.getElementById('zsvg');
         var pt = svg.createSVGPoint();
         pt.x = ax;
@@ -465,6 +528,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             {
                 newPoints = newPoints  + " " +$scope.circlePoints[i].x+","+$scope.circlePoints[i].y;
             }
+            console.log ("recomputed polygon:", newPoints);
         }
        // console.log ("OLD ZONE FOR:"+zi+" is "+$scope.zoneArray[zi].coords );
         //console.log ("NEW ZONE FOR:"+zi+" is "+newPoints);
@@ -472,7 +536,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         //console.log ("INDEX="+ndx+" DRAG="+svgP.x+":"+svgP.y);
 
-    };
+    }
 
     // credit: http://stackoverflow.com/questions/41411891/most-elegant-way-to-parse-scale-and-re-string-a-string-of-number-co-ordinates?noredirect=1#41411927
     // This function scales coords of zones based on current image size
@@ -485,6 +549,85 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         }).join(' ');
     }
 
+    function moveContinue(event)
+    {
+        if (!_moveStart) {return;}
+        
+            console.log ("CONTINUE: target id="+targetID);
+            
+
+            /*if(event.preventDefault) event.preventDefault();
+            if (event.gesture) event.gesture.preventDefault() ;
+            if (event.gesture) event.gesture.stopPropagation();*/
+
+            var x,y;
+
+            var z = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom;
+            console.log ("zoom is:"+z);
+           
+            //console.log(event, this, "t");
+            if (event.touches)
+            {
+                //console.log ("TOUCH");
+                x = event.targetTouches[0].pageX;
+                y = event.targetTouches[0].pageY;
+                
+            }
+            else
+            {
+                //console.log ("MOUSE");
+                x = event.clientX  ;
+                y = event.clientY  ;
+
+
+            }
+            
+          
+            console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
+            $timeout (function() {recomputePolygons (x,y,targetID,1);});
+
+
+    }
+
+    function moveStop (event)
+    {
+        _moveStart = false;
+        console.log ("STOP");
+    }
+
+    function moveStart(event)
+    {
+        
+            _moveStart=true;
+            targetID = event.target.id.substring(7);
+            console.log ("START: target id="+targetID);
+
+            if(event.preventDefault) event.preventDefault();
+            if (event.gesture) event.gesture.preventDefault() ;
+            if (event.gesture) event.gesture.stopPropagation();
+
+            var z = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom;
+            console.log ("zoom is:"+z);
+
+            var x,y;
+            // perhaps event.targetTouches[0]?
+            if (event.touches)
+            {
+                //console.log(event.changedTouches[0], this, "t");
+                x  = event.touches[0].pageX;
+                y  = event.touches[0].pageY;
+
+            }
+            else
+            {
+                //console.log(event, this, "t");
+                x = event.clientX ;
+                y = event.clientY  ;
+
+            }
+            console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
+
+    }
     
 
     // called when the live monitor image loads
@@ -494,11 +637,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         
         var img =document.getElementById("singlemonitor");
 
+        //$scope.cw = img.naturalWidth;
+        //$scope.ch = img.naturalHeight;
+        
         $scope.cw = img.naturalWidth;
         $scope.ch = img.naturalHeight;
-        
 
-        console.log (img.clientWidth+ "x"+img.clientHeight );
+        //console.log ("REPORTED DIM:" + $scope.cw+ "x"+$scope.ch );
+        //console.log ("ORIGINAL DIM:" + img.naturalWidth+ "x"+img.naturalHeight);
         //https://server/zm/api/zones/forMonitor/7.json
         //
         $scope.zoneArray = [];
@@ -515,9 +661,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         {
             var sx = $scope.cw/ow;
             var sy = $scope.ch/oh;
-            $scope.zoneArray.push({
-                coords:scaleCoords(originalZones[i].coords,sx,sy),
+            //$scope.zoneArray.push({
+               // coords:scaleCoords(originalZones[i].coords,sx,sy),
+             //   type:originalZones[i].type});
+             $scope.zoneArray.push({
+                coords:originalZones[i].coords,
                 type:originalZones[i].type});
+      
       
         }
 
@@ -531,10 +681,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 { 
                     var o=itm.split(','); 
                     $scope.circlePoints.push({x:o[0],y:o[1], zoneIndex:i});
-                    console.log ("CIRCLE X="+o[0]+"Y="+o[1]);
+                     
+                   // console.log ("CIRCLE X="+o[0]+"Y="+o[1]);
                 });            
 
         }
+
+
+
 
 
 
@@ -1083,7 +1237,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         $scope.imageFit = !$scope.imageFit;
         if ($scope.imageFit) 
-            $scope.aspectFit="";
+            $scope.aspectFit="xMidYMid meet";
         else
             $scope.aspectFit = "xMidYMid slice";
 
@@ -1264,6 +1418,19 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     //-------------------------------------------------------------
     $scope.zoomImage = function(val)
     {
+
+        if ($scope.isZoneEdit)
+        {
+            $ionicLoading.show(
+            {
+                //template: $translate.instant('kError'),
+                template: 'zoom disabled in zone edit mode',
+                noBackdrop: true,
+                duration: 2000
+            });
+
+            return;
+        }
         var zl = parseInt($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom);
         if (zl == 1 && val == -1)
         {
@@ -1501,6 +1668,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             {
                 originalZones.push ({
                     coords:succ.data.zones[i].Zone.Coords, 
+                    area: succ.data.zones[i].Zone.Area,
                     type:succ.data.zones[i].Zone.Type});
             }
 
@@ -1518,6 +1686,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.monStatus = "";
         document.addEventListener("pause", onPause, false);
         document.addEventListener("resume", onResume, false);
+
+        document.addEventListener("mouseup", moveStop, false);
+        document.addEventListener("touchend", moveStop, false);
+
+        document.addEventListener("mousemove", moveContinue, false);
+        document.addEventListener("touchmove", moveContinue, false);
+
+        
+
+
         $scope.showZones = false;
 
         getZones();

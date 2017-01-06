@@ -1224,6 +1224,7 @@ videogular div.event-time {
 .zonelayer .zonepoint {
     stroke:#2ecc71;
     fill:#2ecc71;
+fill-opacity: 0.8;
 }
 
 .zonelayer .Active {

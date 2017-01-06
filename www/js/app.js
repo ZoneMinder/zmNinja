@@ -869,7 +869,7 @@ angular.module('zmApp', [
 
         var d = $q.defer();
 
-
+        console.log (">>>>>>>>>>> DO LOGIN");
 
         NVRDataModel.processFastLogin()
             // coming here means login not needed, old login is valid
@@ -883,6 +883,7 @@ angular.module('zmApp', [
                 // coming here means login is needed
                 function(error)
                 {
+                    console.log (">>>>>>>>>>>> FAST FAILED - THIS IS OK");
 
                     var statename = $ionicHistory.currentStateName();
 
@@ -905,6 +906,8 @@ angular.module('zmApp', [
                     $rootScope.zmCookie = '';
                     // first try to login, if it works, good
                     // else try to do reachability
+                    
+                    console.log (">>>>>>>>>>>> CALLING DO LOGIN");
                     proceedWithLogin()
                         .then(function(success)
                             {
@@ -917,6 +920,7 @@ angular.module('zmApp', [
                             function(error)
                             // login to main failed, so try others
                             {
+                                console.log (">>>>>>>>>>>> Failed  first login, trying reachability");
                                 NVRDataModel.getReachableConfig(true)
                                     .then(function(data)
                                         {
@@ -966,6 +970,8 @@ angular.module('zmApp', [
                             });
                         }
 
+                        console.log (">>>>>>>>>>>>>> ISRECAPTCHA");
+
                         NVRDataModel.isReCaptcha()
                             .then(function(result)
                             {
@@ -995,10 +1001,14 @@ angular.module('zmApp', [
                             });
 
                         var loginData = NVRDataModel.getLogin();
+                        console.log (">>>>>>>>>>>>>> PARALLEL POST WITH RECAPTCHA TO "+loginData.url);
+
+                        
                         //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
                         $http(
                             {
                                 method: 'POST',
+                                timeout:5000,
                                 //withCredentials: true,
                                 url: loginData.url + '/index.php',
                                 headers:
@@ -1026,6 +1036,7 @@ angular.module('zmApp', [
                             })
                             .success(function(data, status, headers)
                             {
+                                console.log (">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
                                 $ionicLoading.hide();
 
                                 // Coming here does not mean success
@@ -1084,6 +1095,8 @@ angular.module('zmApp', [
                             })
                             .error(function(error, status)
                             {
+
+                                console.log (">>>>>>>>>>>>>> PARALLEL POST ERROR");
                                 $ionicLoading.hide();
 
                                 //console.log("**** ZM Login FAILED");
