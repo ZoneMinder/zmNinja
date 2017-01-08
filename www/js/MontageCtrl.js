@@ -25,6 +25,8 @@ angular.module('zmApp.controllers')
         var ld;
         var refreshSec;
 
+
+
         //--------------------------------------------------------------------------------------
         // Handles bandwidth change, if required
         //
@@ -379,6 +381,12 @@ angular.module('zmApp.controllers')
 
             }
 
+            if ($scope.reOrderActive)
+            {
+                NVRDataModel.debug ("not cycling, re-order in progress");
+                return;
+            }
+
             if ($scope.isDragabillyOn)
             {
                 NVRDataModel.debug ("not cycling, edit in progress");
@@ -602,14 +610,28 @@ angular.module('zmApp.controllers')
             $ionicModal.fromTemplateUrl('templates/reorder-modal.html',
                 {
                     scope: $scope,
-                    animation: 'slide-in-up'
+                    animation: 'slide-in-up',
+                    id:'reorder',
                 })
                 .then(function(modal)
                 {
                     $scope.modal = modal;
+                    $scope.reOrderActive = true;
                     $scope.modal.show();
                 });
         };
+
+
+        $scope.$on('modal.removed', function(e, m)
+        {
+
+            if (m.id != 'reorder')
+                return;
+            $scope.reOrderActive = false;
+
+            //console.log ("************** FOOTAGE CLOSED");
+
+        });
 
         /*
             $scope.closeReorderModal = function () {
@@ -992,7 +1014,8 @@ angular.module('zmApp.controllers')
             $ionicModal.fromTemplateUrl('templates/monitors-modal.html',
                 {
                     scope: $scope,
-                    animation: 'slide-in-up'
+                    animation: 'slide-in-up',
+                    id: 'monitorsmodal'
 
                 })
                 .then(function(modal)
@@ -1395,6 +1418,7 @@ angular.module('zmApp.controllers')
             NVRDataModel.debug("Setting image mode to snapshot, will change to image when packery is all done");
             $scope.areImagesLoading = true;
             $scope.isDragabillyOn = false;
+            $scope.reOrderActive = false;
 
             if (NVRDataModel.isTzSupported())
                 $scope.iconTimeNow = 'server';
