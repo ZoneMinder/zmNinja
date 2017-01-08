@@ -13,6 +13,7 @@ angular.module('zmApp.controllers')
 
         var intervalHandleMontage; // image re-load handler
         var intervalHandleAlarmStatus; // status of each alarm state
+        var intervalHandleMontageCycle;
 
         var gridcontainer;
         var pckry, draggie;
@@ -45,11 +46,20 @@ angular.module('zmApp.controllers')
             NVRDataModel.displayBanner('net', [ds]);
             var ld = NVRDataModel.getLogin();
             refreshSec = (NVRDataModel.getBandwidth() == 'lowbw') ? ld.refreshSecLowBW : ld.refreshSec;
+
             $interval.cancel(intervalHandleMontage);
+            $interval.cancel(intervalHandleMontageCycle);
+
+
             intervalHandleMontage = $interval(function()
             {
                 loadNotifications();
             }.bind(this), refreshSec * 1000);
+
+            intervalHandleMontageCycle = $interval(function()
+            {
+                cycleMontageProfiles();
+            }.bind(this), NVRDataModel.getLogin().cycleMontageInterval* 1000);
 
             if (NVRDataModel.getBandwidth() == 'lowbw')
             {
@@ -126,7 +136,7 @@ angular.module('zmApp.controllers')
             var positionsStr = ld.packeryPositions;
             var positions = {};
 
-            if (positionsStr == '')
+            if (positionsStr == '' || positionsStr == undefined)
             {
                 NVRDataModel.log("Did NOT find a packery layout");
                 layouttype = true;
@@ -338,6 +348,60 @@ angular.module('zmApp.controllers')
             return attr;
         };
 
+
+        function findNext (key,obj)
+        {
+           var size = Object.keys(obj).length;
+           var i;
+           for (i=0; i<size; i++)
+           {
+              if (Object.keys(obj)[i] == key)
+              break;
+           }
+           i = (i + 1) % size;
+           return Object.keys(obj)[i];
+           
+        }
+
+        //----------------------------------------------
+        // cycle profiles
+        //-----------------------------------------------
+
+        function cycleMontageProfiles()
+        {
+
+            var ld = NVRDataModel.getLogin();
+
+            if (!ld.cycleMontageProfiles)
+            {
+               // NVRDataModel.debug ("cycling disabled");
+                return;
+
+            }
+
+            if ($scope.isDragabillyOn)
+            {
+                NVRDataModel.debug ("not cycling, edit in progress");
+                return;
+
+            }
+           
+            var nextProfile = findNext(ld.currentMontageProfile, ld.packeryPositionsArray);
+
+            if (nextProfile == ld.currentMontageProfile)
+            {
+                NVRDataModel.debug ("Not cycling profiles, looks like you only have one");
+            }
+            else
+            {
+                NVRDataModel.debug ("Cycling profile from: "+ld.currentMontageProfile+" to:"+nextProfile);
+                switchMontageProfile(nextProfile);
+
+            }
+  
+          
+        }
+
         //-----------------------------------------------------------------------
         // cycle through all displayed monitors and check alarm status
         //-----------------------------------------------------------------------
@@ -499,6 +563,22 @@ angular.module('zmApp.controllers')
 
         };
 
+        $scope.getCycleStatus = function()
+        {
+            var c = NVRDataModel.getLogin().cycleMontageProfiles;
+            var str = (c) ? $translate.instant('kOn'):$translate.instant('kOff');
+            return str;
+        };
+
+        $scope.toggleCycle = function()
+        {
+            var ld = NVRDataModel.getLogin();
+            ld.cycleMontageProfiles = !ld.cycleMontageProfiles;
+            NVRDataModel.setLogin(ld);
+            NVRDataModel.debug ("cycle="+ld.cycleMontageProfiles);
+
+        };
+
         $scope.toggleHide = function(i)
         {
 
@@ -611,6 +691,7 @@ angular.module('zmApp.controllers')
             ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
             //console.log ("alarms:Cancelling timer");
             $interval.cancel(intervalHandleMontage);
+            $interval.cancel(intervalHandleMontageCycle);
             $interval.cancel(intervalHandleAlarmStatus);
 
             if (!$rootScope.isAlarm)
@@ -656,6 +737,7 @@ angular.module('zmApp.controllers')
             ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
             //console.log ("minimal switch:Cancelling timer");
             $interval.cancel(intervalHandleMontage); //we will renew on reload
+            $interval.cancel(intervalHandleMontageCycle);
             $interval.cancel(intervalHandleAlarmStatus);
             // We are reloading this view, so we don't want entry animations
             $ionicHistory.nextViewOptions(
@@ -876,6 +958,7 @@ angular.module('zmApp.controllers')
             // NVRDataModel.log("Starting Modal timer");
             //console.log ("openModal:Cancelling timer");
             $interval.cancel(intervalHandleMontage);
+            $interval.cancel(intervalHandleMontageCycle);
             $interval.cancel(intervalHandleAlarmStatus);
 
             $scope.monitor = monitor;
@@ -954,6 +1037,7 @@ angular.module('zmApp.controllers')
             // console.log ("closeModal: Cancelling timer");
             $interval.cancel(intervalHandleMontage);
             $interval.cancel(intervalHandleAlarmStatus);
+            $interval.cancel(intervalHandleMontageCycle);
 
             intervalHandleMontage = $interval(function()
             {
@@ -966,6 +1050,13 @@ angular.module('zmApp.controllers')
                 loadAlarmStatus();
                 //  console.log ("Refreshing Image...");
             }.bind(this), 5000);
+
+            intervalHandleMontageCycle = $interval(function()
+            {
+                cycleMontageProfiles();
+                //  console.log ("Refreshing Image...");
+            }.bind(this), 5000);
+
 
             // $timeout (function() {pckry.shiftLayout();},zm.packeryTimer);
 
@@ -992,6 +1083,7 @@ angular.module('zmApp.controllers')
         {
             NVRDataModel.debug("MontageCtrl: onpause called");
             $interval.cancel(intervalHandleMontage);
+            $interval.cancel(intervalHandleMontageCycle);
             $interval.cancel(intervalHandleAlarmStatus);
             // $interval.cancel(modalIntervalHandle);
 
@@ -1099,12 +1191,52 @@ angular.module('zmApp.controllers')
                 delete posArray[$scope.data.selectedVal];
                 var ld = NVRDataModel.getLogin();
                 ld.packeryPositionsArray = posArray;
+
+                if (ld.currentMontageProfile == $scope.data.selectedVal)
+                {
+                    ld.currentMontageProfile = "";
+
+                }
+
+                if ($scope.currentMontageProfile == $scope.data.selectedVal)
+                        $scope.currentProfileName = $translate.instant('kMontage');
+
                 NVRDataModel.setLogin(ld);
 
             });
 
         };
 
+
+        function switchMontageProfile (mName)
+        {
+            $interval.cancel(intervalHandleMontageCycle);
+            intervalHandleMontageCycle = $interval(function()
+            {
+                cycleMontageProfiles();
+                //  console.log ("Refreshing Image...");
+            }.bind(this), NVRDataModel.getLogin().cycleMontageInterval* 1000);
+
+            
+            //console.log ("SELECTED " + $scope.data.selectedVal);
+            var ld = NVRDataModel.getLogin();
+            //console.log ("OLD POS="+ld.packeryPositions);
+            ld.packeryPositions = ld.packeryPositionsArray[mName];
+            ld.currentMontageProfile = mName;
+            $scope.currentProfileName =mName; 
+            //console.log ("NEW POS="+ld.packeryPositions);
+            NVRDataModel.setLogin(ld);
+            //console.log ("SAVING "+ld.packeryPositions.name+ " but "+$scope.data.selectedVal);
+            NVRDataModel.reloadMonitorDisplayStatus();
+            draggies.forEach(function(drag)
+            {
+                drag.destroy();
+            });
+            draggies = [];
+            pckry.destroy();
+            initPackery();
+
+        }
         // switch to another montage profile
         $scope.switchMontageProfile = function()
         {
@@ -1168,20 +1300,11 @@ angular.module('zmApp.controllers')
             {
                 if (res)
                 {
-                    //console.log ("SELECTED " + $scope.data.selectedVal);
-                    var ld = NVRDataModel.getLogin();
-                    //console.log ("OLD POS="+ld.packeryPositions);
-                    ld.packeryPositions = ld.packeryPositionsArray[$scope.data.selectedVal];
-                    //console.log ("NEW POS="+ld.packeryPositions);
-                    NVRDataModel.setLogin(ld);
-                    NVRDataModel.reloadMonitorDisplayStatus();
-                    draggies.forEach(function(drag)
-                    {
-                        drag.destroy();
-                    });
-                    draggies = [];
-                    pckry.destroy();
-                    initPackery();
+                    // destroy cycle timer and redo it
+                    // 
+                    switchMontageProfile($scope.data.selectedVal);
+
+                    
                     //pckry.reloadItems();
                 }
 
@@ -1217,7 +1340,9 @@ angular.module('zmApp.controllers')
                         var pos = JSON.stringify(pckry.getShiftPositions('data-item-id'));
                         ld.packeryPositionsArray[$scope.data.montageName] = pos;
                         NVRDataModel.debug("Saving " + $scope.data.montageName + " with:" + pos);
+                        ld.currentMontageProfile =$scope.data.montageName ;
                         NVRDataModel.setLogin(ld);
+                        $scope.currentProfileName = $scope.data.montageName;
                     }
 
                 }
@@ -1306,6 +1431,7 @@ angular.module('zmApp.controllers')
             sizeInProgress = false;
             $scope.imageStyle = true;
             intervalHandleMontage = "";
+            intervalHandleMontageCycle = "";
             $scope.isModalActive = false;
             $scope.isReorder = false;
 
@@ -1322,6 +1448,7 @@ angular.module('zmApp.controllers')
             NVRDataModel.setAwake(NVRDataModel.getKeepAwake());
 
             $interval.cancel(intervalHandleMontage);
+            $interval.cancel(intervalHandleMontageCycle);
             $interval.cancel(intervalHandleAlarmStatus);
 
             intervalHandleMontage = $interval(function()
@@ -1329,6 +1456,12 @@ angular.module('zmApp.controllers')
                 loadNotifications();
                 //  console.log ("Refreshing Image...");
             }.bind(this), refreshSec * 1000);
+
+            intervalHandleMontageCycle = $interval(function()
+            {
+                cycleMontageProfiles();
+                //  console.log ("Refreshing Image...");
+            }.bind(this), NVRDataModel.getLogin().cycleMontageInterval* 1000);
 
             intervalHandleAlarmStatus = $interval(function()
             {
@@ -1425,6 +1558,7 @@ angular.module('zmApp.controllers')
 
             //console.log ("beforeLeave:Cancelling timer");
             $interval.cancel(intervalHandleMontage);
+            $interval.cancel(intervalHandleMontageCycle);
             $interval.cancel(intervalHandleAlarmStatus);
             pckry.destroy();
             window.removeEventListener("resize", orientationChanged, false);
@@ -1658,6 +1792,8 @@ angular.module('zmApp.controllers')
             // I don't think I am using this anymore FIXME: check and delete if needed
             // $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         });
+
+        $scope.currentProfileName = NVRDataModel.getLogin().currentMontageProfile || $translate.instant ('kMontage');
 
         $scope.reloadView = function()
         {

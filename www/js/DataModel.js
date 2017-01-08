@@ -121,6 +121,7 @@ angular.module('zmApp.controllers')
             'enableBlog': true,
             'use24hr': false,
             'packeryPositions': '',
+            'currentMontageProfile': '',
             'packeryPositionsArray': {},
             'EHpackeryPositions': '',
             'packerySizes': '',
@@ -133,6 +134,8 @@ angular.module('zmApp.controllers')
             'vibrateOnPush': true,
             'soundOnPush': true,
             'cycleMonitors': false,
+            'cycleMontage': false,
+            'cycleMontageInterval': 10, // 10sec
             'cycleMonitorsInterval': 10, // 10sec
             'enableLowBandwidth': false,
             'autoSwitchBandwidth': false,
@@ -262,8 +265,11 @@ angular.module('zmApp.controllers')
             var positionsStr = loginData.packeryPositions;
             //console.log ("positionStr="+positionsStr);
             var positions = {};
-            if (loginData.packeryPositions != '')
+            if (loginData.packeryPositions != '' && loginData.packeryPositions != undefined)
             {
+                console.log ("positions="+loginData.packeryPositions);
+
+
                 positions = JSON.parse(positionsStr);
                 for (var m = 0; m < monitors.length; m++)
                 {
@@ -861,6 +867,20 @@ angular.module('zmApp.controllers')
 
                                 }
 
+                                if (typeof loginData.cycleMontage == 'undefined')
+                                {
+
+                                    loginData.cycleMontage = false;
+
+                                }
+
+                                if (typeof loginData.cycleMontageInterval == 'undefined')
+                                {
+
+                                    loginData.cycleMontageInterval = 10;
+
+                                }
+
                                 if (typeof loginData.enableLowBandwidth == 'undefined')
                                 {
 
@@ -905,6 +925,13 @@ angular.module('zmApp.controllers')
                                 {
 
                                     loginData.fastLogin = true;
+
+                                }
+
+                                if (typeof loginData.currentMontageProfile == 'undefined')
+                                {
+
+                                    loginData.currentMontageProfile = '';
 
                                 }
 
