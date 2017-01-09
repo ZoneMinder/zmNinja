@@ -140,7 +140,7 @@ angular.module('zmApp', [
         angular.forEach(input, function(item)
         {
 
-            if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0') && (item.Monitor.eventUrl != 'img/noevent.png'))
+            if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0') && (item.Monitor.eventUrl != 'img/noevent.png') && (item.Monitor.listDisplay != 'noshow'))
             {
                 out.push(item);
             }
@@ -151,6 +151,57 @@ angular.module('zmApp', [
     };
 
 })
+
+
+//http://stackoverflow.com/a/23931217/1361529
+.directive('hidepassword', function () {
+  
+  var modelSet = function (str)
+  {
+        
+        return str;
+  };
+
+  var viewSet = function (str)
+  {
+        //https://github.com/garycourt/uri-js
+        if (!str) return str;
+        var c = URI.parse(str);
+        if (c.userinfo) c.userinfo="***:***";
+        var vc = URI.serialize({scheme : c.scheme, 
+                                userinfo: c.userinfo,
+                                host: c.host,
+                                port: c.port,
+                                path: c.path,
+                                query: c.query,
+                                fragment: c.fragment
+                                });
+        console.log ("CONVERTED IS "+vc);
+
+
+        return vc;
+  };
+
+  return {
+
+    restrict: 'A',
+      require: 'ngModel',
+      link: function (scope, element, attr, ngModel) {
+        ngModel.$parsers.push(modelSet);
+        ngModel.$formatters.push(viewSet);
+
+        element.bind('blur', function() {
+          element.val(viewSet(ngModel.$modelValue));
+        });
+        element.bind('focus', function () {
+          element.val(ngModel.$modelValue);
+        });
+         
+      }
+  };
+})
+  
+
 
 // credit https://gist.github.com/Zren/beaafd64f395e23f4604
 

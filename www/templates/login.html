@@ -33,7 +33,7 @@
                 <div ng-if="check.isUseAuth">
                     <label class="item item-input item-floating-label">
                         <span class="input-label">{{'kUserName'|translate}}</span>
-                        <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="username" ng-model="loginData.username">
+                        <input  autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="username" ng-model="loginData.username">
                     </label>
                     <label class="item item-input item-floating-label">
                         <span class="input-label">{{'kPassword' | translate}}</span>
@@ -43,18 +43,18 @@
             </div>
             <label class="item item-input item-floating-label">
                 <span class="input-label">{{'kPortalUrl' | translate}}</span>
-                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="ZM portal url " ng-model="loginData.url" ng-keyup="portalKeypress($event)">
+                <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="ZM portal url " ng-model="loginData.url" ng-keyup="portalKeypress($event)">
             </label>
             <!--<button class="button button-small button-clear icon-left ion-wand" ng-click="detectCgi()">tap here to discover cgi-bin
                 </button>-->
             <label class="item item-input item-floating-label">
                 <!--<span style="float:right;margin-top:-7px;background-color:#6d0909;color:#fff;font-size:14px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;" on-tap="detectCgi();">&nbsp;&nbsp;&nbsp;<i class="ion-wand"></i>discover</span>-->
                 <span class="input-label">{{'kPathToCgi' | translate}}</span>
-                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="eg. server.com/zm/cgi-bin" ng-model="loginData.streamingurl">
+                <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="eg. server.com/zm/cgi-bin" ng-model="loginData.streamingurl">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">{{'kApiUrl' | translate}}</span>
-                <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="ZM api url" ng-model="loginData.apiurl">
+                <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="ZM api url" ng-model="loginData.apiurl">
             </label>
             <a class="item item-icon-right" href="" ng-click="selectFallback()">
                 <i class="icon ion-ios-arrow-right">
