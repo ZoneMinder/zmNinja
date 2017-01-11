@@ -609,7 +609,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                             // console.log ("DUMPING " + JSON.stringify(event));
                             $scope.mycarousel.index = myFrame;
                             // console.log ("STEP 1 : Computed index as "+  $scope.mycarousel.index);
-                            var i;
+                            var i, p = 0;
                             for (i = 1; i <= event.Frame.length; i++)
                             {
                                 var fname = padToN(event.Frame[i - 1].FrameId, eventImageDigits) + "-capture.jpg";
@@ -621,6 +621,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                                 {
                                     if (event.Frame[i - 1] && event.Frame[i - 1].Type == 'Alarm')
                                     {
+                                        p++;
                                         $scope.slides.push(
                                         {
                                             id: event.Frame[i - 1].FrameId,
@@ -631,15 +632,41 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                                 }
                                 else // push all frames
                                 {
+                                    //now handle bulk frames pushing before pushing this one
+                                    if (event.Frame[i-1].Type == 'Bulk')
+                                    {
+                                        var f1 = parseInt(event.Frame[i-2].FrameId);
+                                        var f2 = parseInt(event.Frame[i-1].FrameId);
+
+                                        //console.log ("Filling in bulk from:"+f1+" to "+(f2-1));
+                                        for (var bulk=f1+1; bulk < f2; bulk++)
+                                        {
+                                            //console.log ("Storing bulk:"+bulk);
+                                            var bfname = padToN(bulk, eventImageDigits) + "-capture.jpg";
+                                            p++;
+                                            $scope.slides.push({
+                                                id: bulk,
+                                                img: bfname
+
+                                            });
+                                            
+
+                                        }
+                                    }
+                                    //console.log ("storing: "+event.Frame[i - 1].FrameId);
+                                    p++;
                                     $scope.slides.push(
                                     {
                                         id: event.Frame[i - 1].FrameId,
                                         img: fname,
                                     });
-                                    //console.log ("PUSHED " + fname);
+                             
+
+                                    
                                 }
 
                             }
+                            //console.log ("I PUSHED:" + p+" BUT SLIDE LENGHT BEFORE DISPLAY:"+$scope.slides.length);
                             //  console.log ("STEP 2 : calling Save Event To Phone");
                             $ionicLoading.hide();
                             saveEventImageToPhone(onlyAlarms);
@@ -669,8 +696,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     }
 
+    // don't think this is used anymore
     function saveEventImageToPhone(onlyAlarms)
     {
+       // console.log ("________________UNUSED?_______________________");
         var curState = carouselUtils.getStop();
         carouselUtils.setStop(true);
 
@@ -688,6 +717,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.selectEventUrl = url;
         $scope.slideIndex = $scope.mycarousel.index;
         $scope.slideLastIndex = $scope.slides.length - 1;
+        console.log ("FRAMES LENGTH IS " +$scope.slideLastIndex );
 
         // console.log ("URL TO DISPLAY " + url);
 
