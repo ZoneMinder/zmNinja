@@ -773,6 +773,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
                                                 });
                                             }
+                                            else // make sure CGI error is always shown
+                                            {
+                                                NVRDataModel.displayBanner('error', [loginStatus]);
+                                            }
                                             NVRDataModel.debug("refreshing API version...");
                                             NVRDataModel.getAPIversion()
                                                 .then(function(data)
