@@ -21,7 +21,7 @@
 				<div ng-if="$root.authSession!='undefined'">
 					<div ng-if = "monitor.Monitor.eventUrl == 'img/noevent.png' ">
 						<!-- make sure we don't use id here
-                            -- or we lose the handle for cleanup forever!-->
+                             or we lose the handle for cleanup forever!-->
 						<div  class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}" >
 							<figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-show=" monitor.Monitor.listDisplay!='noshow'">
 								<img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{monitor.Monitor.eventUrl}}"  image-spinner-loader="lines" on-tap="!isDragabillyOn?noop():toggleSelectItem($index)" >
