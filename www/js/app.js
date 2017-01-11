@@ -153,7 +153,7 @@ angular.module('zmApp', [
 })
 
 
-//http://stackoverflow.com/a/23931217/1361529
+//credit: http://stackoverflow.com/a/23931217/1361529
 .directive('hidepassword', function () {
   
   var modelSet = function (str)
@@ -167,19 +167,31 @@ angular.module('zmApp', [
         //https://github.com/garycourt/uri-js
         if (!str) return str;
         var c = URI.parse(str);
-        if (c.userinfo) c.userinfo="***:***";
-        var vc = URI.serialize({scheme : c.scheme, 
+        //if (c.userinfo) c.userinfo="***:***";
+        if (c.userinfo) c.userinfo="\u2022\u2022\u2022:\u2022\u2022\u2022";
+
+        var ostr = "";
+        if (c.scheme) ostr = ostr+c.scheme+"://";
+        if (c.userinfo) ostr = ostr+c.userinfo+"@";
+        if (c.host) ostr = ostr+c.host;
+        if (c.port) ostr = ostr+":"+c.port;
+        if (c.path) ostr = ostr+c.path;
+        if (c.query) ostr = ostr+c.query;
+        if (c.fragment) ostr = ostr+c.fragment;
+        
+
+        /*var vc = URI.serialize({scheme : c.scheme, 
                                 userinfo: c.userinfo,
                                 host: c.host,
                                 port: c.port,
                                 path: c.path,
                                 query: c.query,
                                 fragment: c.fragment
-                                });
-        console.log ("CONVERTED IS "+vc);
+                                },{unicodeSupport:true});*/
+       // console.log ("CONVERTED IS "+vc);
 
 
-        return vc;
+        return ostr;
   };
 
   return {
