@@ -353,7 +353,11 @@ angular.module('zmApp.controllers')
 
         function findNext (key,obj)
         {
-           var size = Object.keys(obj).length;
+
+           var keys = Object.keys(obj);
+           return  keys[(keys.indexOf(key) + 1) % keys.length];
+
+          /* var size = Object.keys(obj).length;
            var i;
            for (i=0; i<size; i++)
            {
@@ -361,7 +365,7 @@ angular.module('zmApp.controllers')
               break;
            }
            i = (i + 1) % size;
-           return Object.keys(obj)[i];
+           return Object.keys(obj)[i];*/
            
         }
 
