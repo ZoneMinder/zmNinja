@@ -49,6 +49,7 @@
     "kDay"                       :"Dzień",
     "kDecreaseSize"              :"zmniejsz rozmiar",
     "kDelete"                    :"Usuń",
+    "kDeleteProfile"            : "Jesteś pewien, że chcesz usunąć?",
     "kDeleteEventError1"         :"Nie można usunąc Zdarzenia",
     "kDeleteEventError2"         :"proszę sprawdzić logi",
     "kDeleteEventSuccess"        :"usunięte Zdarzenia",
