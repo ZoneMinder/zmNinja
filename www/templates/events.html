@@ -76,6 +76,7 @@
 
 
                             </div>
+
                             <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                             <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
                             <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
@@ -85,9 +86,12 @@
                     </div>
                     <!--row-->
                     <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-                        <div class="item-text-wrap"><i class="ion-calendar"></i>&nbsp; {{prettify(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;
+                        <div class="item-text-wrap">
+                        <i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}<br/>
+                        <i class="ion-calendar"></i>&nbsp; {{prettify(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;
                             <br/>
                             <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
+
                             <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
                         </div>
                     </div>
