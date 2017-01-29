@@ -141,6 +141,7 @@
     "kH264VideoSupport"          :"H264 Video ondersteuning",
     "kHelp"                      :"Help",
     "kHideMonsWithoutEvents"     :"Verberg monitors zonder gebeurtenissen",
+    "kHideArchived"              :"Verberg gearchiveerde gebeurtenissen",
     "kHideTip"                   :"Verberg tip",
     "kHighBWDisplay"             :"hoge bandbreedte",
     "kId"                        :"Id",
