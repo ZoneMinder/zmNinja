@@ -109,6 +109,13 @@
                     {{'kWarningLargeTimeline' | translate}}
                 </label>
             </div>
+
+            <label>
+                <ion-toggle ng-model="loginData.hideArchived" ng-checked="loginData.hideArchived" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kHideArchived' | translate}}
+                   </span>
+                </ion-toggle>
+            </label>
+
             <label>
                 <ion-toggle ng-model="loginData.disableAlarmCheckMontage" ng-checked="loginData.disableAlarmCheckMontage" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableAlarmMontage' | translate}}
                     <p>{{'kDisableAlarmMontageSub' | translate}}</p></span>

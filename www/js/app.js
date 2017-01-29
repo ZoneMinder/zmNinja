@@ -102,6 +102,22 @@ angular.module('zmApp', [
 
 })
 
+.filter ('eventListFilter', function(NVRDataModel)
+{
+    return function (input) {
+        var ld = NVRDataModel.getLogin();
+        var out = [];
+        angular.forEach (input, function (item)
+        {
+            if (item.Event.Archived == '0' ||  !ld.hideArchived) {
+                out.push(item);
+            }
+        });
+        return out;
+    };
+
+})
+
 // filter for montage iteration
 .filter('onlyEnabled', function()
 {
