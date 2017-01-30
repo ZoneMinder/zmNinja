@@ -148,6 +148,7 @@ angular.module('zmApp.controllers')
             'fastLogin': true,
             'followTimeLine': false,
             'timelineScale': -1,
+            'hideArchived': false
 
         };
 
@@ -961,10 +962,19 @@ angular.module('zmApp.controllers')
 
                                 }
 
+
+
                                 if (typeof loginData.monSingleImageQuality == 'undefined')
                                 {
 
                                     loginData.monSingleImageQuality = 100;
+
+                                }
+
+                                if (typeof loginData.hideArchived == 'undefined')
+                                {
+
+                                    loginData.hideArchived = false;
 
                                 }
 
