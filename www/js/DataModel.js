@@ -46,6 +46,10 @@ angular.module('zmApp.controllers')
                 value: 'it'
             },
             {
+                text: 'Nederlands',
+                value: 'nl'
+            },
+            {
                 text: 'Polski',
                 value: 'pl'
             },
@@ -144,7 +148,6 @@ angular.module('zmApp.controllers')
             'fastLogin': true,
             'followTimeLine': false,
             'timelineScale': -1,
-            'hideArchived': false,
 
         };
 
@@ -962,13 +965,6 @@ angular.module('zmApp.controllers')
                                 {
 
                                     loginData.monSingleImageQuality = 100;
-
-                                }
-
-                                if (typeof loginData.hideArchived == 'undefined')
-                                {
-
-                                    loginData.hideArchived = false;
 
                                 }
 
