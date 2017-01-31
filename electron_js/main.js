@@ -27,6 +27,8 @@ if (shouldQuit) {
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({width: 1024, height: 900, webPreferences:{nodeIntegration:false}});
+  if (process.argv.slice(2)=='fs')
+        win.setFullScreen(true);
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
