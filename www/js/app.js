@@ -102,6 +102,8 @@ angular.module('zmApp', [
 
 })
 
+
+// for events view
 .filter ('eventListFilter', function(NVRDataModel)
 {
     return function (input) {
@@ -1986,7 +1988,7 @@ angular.module('zmApp', [
 
     //$translateProvider.useLocalStorage();
 
-    $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ru', 'ja', 'ko', 'pl', 'zh', 'zh_CN', 'zh_TW', 'pt', 'ar', 'hi'],
+    $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ru', 'ja', 'ko', 'nl', 'pl', 'zh', 'zh_CN', 'zh_TW', 'pt', 'ar', 'hi'],
     {
         'en_*': 'en',
         'de_*': 'de',
@@ -1996,6 +1998,7 @@ angular.module('zmApp', [
         'ru_*': 'ru',
         'ja_*': 'ja',
         'ko_*': 'ko',
+        'nl_*': 'nl',
         'pt_*': 'pt',
         'pl_*': 'pl',
         'ar_*': 'ar',
