@@ -602,7 +602,7 @@ angular.module('zmApp.controllers')
 
                 $ionicLoading.show(
                 {
-                    template: "retrieving profile data..."
+                    template: $translate.instant('kRetrievingProfileData'),
                 });
 
                 localforage.getItem("serverGroupList").then(function(val)
@@ -659,7 +659,7 @@ angular.module('zmApp.controllers')
                     var sname;
                     $ionicLoading.show(
                     {
-                        template: "retrieving profile data..."
+                        template: $translate.instant('kRetrievingProfileData'),
                     });
                     localforage.getItem("defaultServerName")
                         .then(function(val)

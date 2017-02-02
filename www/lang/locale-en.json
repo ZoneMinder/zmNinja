@@ -11,6 +11,7 @@
     "kAnalyze"                   :"Analyze",
     "kApiUrl"                    :"ZM api url",
     "kApplyingChanges"           :"Applying changes. Please wait",
+    "kRetrievingProfileData"     :"retrieving profile data",
     "kArrangingImages"           :"arranging images",
     "kAt"                        :"at",
     "kAuthSuccess"               :"authentication success",
