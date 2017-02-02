@@ -17,7 +17,7 @@
         </ion-item>
         <label class="item item-input item-floating-label" ng-if="loginData.isUseEventServer">
             <span class="input-label">{{'kEventServer' | translate}}</span>
-            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="Event notification url" ng-model="loginData.eventServer">
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kEventNotificationUrl' | translate}}" ng-model="loginData.eventServer">
         </label>
         <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush" ng-checked="loginData.disablePush" toggle-class="toggle-calm" class="item-text-wrap">{{'kOnlyUseWebSocket'| translate }}
             <br/>
@@ -46,7 +46,7 @@
                 <ion-item class="item-accordion" ng-show="isGroupShown(monitor)">
                     <div class="item-input-inset">
                         <label class="item-input-wrapper">
-                            <input type="tel" placeholder="sec." ng-model="monitor.Monitor.reportingInterval">
+                            <input type="tel" placeholder="{{'kSec' | translate}}" ng-model="monitor.Monitor.reportingInterval">
                         </label>
                         &nbsp;{{'kMinimumIntervals' | translate}}
                     </div>
