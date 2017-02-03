@@ -35,7 +35,7 @@
         <br/>
         <div style="padding-left:15px; font-size:10px; color:grey">
             <button ng-click="toggleFollowTime()" ng-class="follow.time? 'button button-small button-balanced':'button button-small button-assertive'">
-                {{'kUpdateTimeline' | translate}}:&nbsp;{{follow.time}}
+                {{'kUpdateTimeline' | translate}}:&nbsp;{{follow.time? ('kTrue' | translate) : ('kFalse' | translate)}}
             </button>
             <button ng-click="gotoNow()" class="button button-small button-balanced">
                 {{'kNow' | translate}}
