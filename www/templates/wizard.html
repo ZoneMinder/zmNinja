@@ -11,7 +11,7 @@
                 <p>{{'kWizConfigPain' | translate}}</p>
                 <h4>{{'kWizPortalUrl' | translate}}</h4>
                 <label class="item item-input">
-                    <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" placeholder="e.g. http://server/zm" ng-model="wizard.portalurl">
+                    <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" placeholder="{{'kPortalUrlExample | translate}}" ng-model="wizard.portalurl">
                 </label>
                 <p ng-if="$root.platformOS=='android'" style="font-size:0.8em; color:gray">{{'kDisableSamsung' | translate}}</p>
                 <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="toggleTip()">{{wizard.tiptext}}</a>
