@@ -81,13 +81,16 @@
     <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] </div>
     <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
         <ul>
-            <li ng-if="defaultVideo==''">
+            <li>
+                <a href="" ng-click="toggleListMenu()"> <i ng-class="(isToggleListMenu) ? 'icon  ion-chevron-left': 'icon ion-chevron-right'"></i></a>
+            </li>
+            <li ng-if="defaultVideo=='' && isToggleListMenu">
                 <a href="" ng-click="toggleGapless()"> <i class="ion-ios-loop-strong"></i>-{{loginData.gapless? ('kOn' | translate): ('kOff' | translate)}}</a>
             </li>
-            <li ng-if="defaultVideo==''">
+            <li ng-if="defaultVideo=='' && isToggleListMenu">
                 <a href="" ng-click="saveEventImageToPhoneWithPerms(false)"> <i class="ion-ios-camera"></i></a>
             </li>
-            <li ng-if="defaultVideo==''">
+            <li ng-if="defaultVideo=='' && isToggleListMenu">
                 <a href="" ng-click="saveEventImageToPhoneWithPerms(true)"> <i class="ion-android-notifications"></i></a>
             </li>
             <li ng-if="$root.isAlarm">

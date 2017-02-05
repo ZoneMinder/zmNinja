@@ -101,40 +101,45 @@
     </nav>
     <div id="flyoutmenu" style="position:absolute;bottom:80px;left:10px">
         <ul>
+
             <li>
+                <a href="" ng-click="toggleListMenu()"> <i ng-class="(isToggleListMenu) ? 'icon  ion-chevron-left': 'icon ion-chevron-right'"></i></a>
+            </li>
+
+            <li ng-if="isToggleListMenu">
                 <a href="" ng-click="saveImageToPhoneWithPerms(monitorId)"> <i class="icon  ion-ios-camera"></i></a>
             </li>
-            <li ng-if="$root.platformOS == 'desktop'">
+            <li ng-if="$root.platformOS == 'desktop' && isToggleListMenu">
                 <a href="" ng-click="zoomImage(1)"><i class="ion-plus-round"></i></a>
             </li>
-            <li ng-if="$root.platformOS == 'desktop'">
+            <li ng-if="$root.platformOS == 'desktop' && isToggleListMenu">
                 <a href="" ng-click="zoomImage(-1)"><i class="ion-minus-round"></i></a>
             </li>
-            <li>
+            <li ng-if="isToggleListMenu">
                 <a href="" ng-click="enableAlarm(monitorId,true)"> <i class="icon  ion-flash"></i></a>
             </li>
-            <li>
+            <li ng-if="isToggleListMenu">
                 <a href="" ng-click="enableAlarm(monitorId,false)"> <i class="icon  ion-flash-off"></i></a>
             </li>
 
-             <li>
+             <li ng-if="isToggleListMenu">
                 <a href="" ng-click="toggleZone()"> <i class="icon ion-qr-scanner"></i></a>
             </li>
 
             <!-- zone editing is TBD -->
-            <li ng-if="showZones  && 0">
+            <li ng-if="showZones  && 0 && isToggleListMenu">
                 <a href="" ng-click="toggleZoneEdit()"> <i class="icon ion-edit"></i></a>
             </li>
             
-            <li ng-if="showZones && isZoneEdit">
+            <li ng-if="showZones && isZoneEdit && isToggleListMenu">
                 <a href="" ng-click="saveZones()"> <i class="icon ion-android-done-all"></i></a>
             </li>
 
-            <li ng-if="showZones && isZoneEdit">
+            <li ng-if="showZones && isZoneEdit && isToggleListMenu">
                 <a href="" ng-click="changeCircleSize()"> <i class="icon ion-navigate"></i></a>
             </li>
 
-            <li>
+            <li ng-if="isToggleListMenu">
                 <a href="" ng-click="toggleCycle()"> <i class="icon  ion-android-bicycle"></i>-{{cycleText}}</a>
             </li>
 

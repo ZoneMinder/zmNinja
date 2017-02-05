@@ -904,6 +904,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
             return;
 
+        $scope.isToggleListMenu = true;
         $scope.videoDynamicTime = "";
         $scope.videoIsReady = false;
         var ld = NVRDataModel.getLogin();
@@ -1173,6 +1174,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             });
         }
 
+    };
+
+    $scope.toggleListMenu = function()
+    {
+
+        $scope.isToggleListMenu = !$scope.isToggleListMenu;
     };
 
     $scope.toggleGapless = function()

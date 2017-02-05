@@ -1413,6 +1413,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         });
     }
 
+    $scope.toggleListMenu = function()
+    {
+
+        $scope.isToggleListMenu = !$scope.isToggleListMenu;
+    };
+
     //-------------------------------------------------------------
     // Zoom in and out via +- for desktops
     //-------------------------------------------------------------
@@ -1684,6 +1690,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     {
 
         $scope.monStatus = "";
+        $scope.isToggleListMenu = true;
         document.addEventListener("pause", onPause, false);
         document.addEventListener("resume", onResume, false);
 
