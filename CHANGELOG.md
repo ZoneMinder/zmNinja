@@ -1,5 +1,46 @@
 # Change Log
 
+## [v1.2.36](https://github.com/pliablepixels/zmNinja/tree/v1.2.36) (2017-02-06)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.35...v1.2.36)
+
+**Implemented enhancements:**
+
+- Add ability to hide grey buttons in single monitor view [\#443](https://github.com/pliablepixels/zmNinja/issues/443)
+- Desktop app opening maximized, in full screen montage view [\#436](https://github.com/pliablepixels/zmNinja/issues/436)
+- Adding Dutch Language Files [\#433](https://github.com/pliablepixels/zmNinja/issues/433)
+- Allow for archived events to be displayed or hidden \(based on toggle switch\) [\#432](https://github.com/pliablepixels/zmNinja/issues/432)
+- Enhancement: Add event names to Event list view [\#431](https://github.com/pliablepixels/zmNinja/issues/431)
+- server settings - confirm deletion [\#423](https://github.com/pliablepixels/zmNinja/issues/423)
+- Add ability to view zones as overlays on live monitor feed [\#420](https://github.com/pliablepixels/zmNinja/issues/420)
+- Add ability to cycle between montage profiles [\#419](https://github.com/pliablepixels/zmNinja/issues/419)
+- Adding Dutch language [\#387](https://github.com/pliablepixels/zmNinja/issues/387)
+- Hide credentials of simple auth in display [\#363](https://github.com/pliablepixels/zmNinja/issues/363)
+
+**Fixed bugs:**
+
+- switching from full screen to regular causes header alignment issues\(iOS only\) [\#429](https://github.com/pliablepixels/zmNinja/issues/429)
+- when bulk frames are present, frame view while viewing footage goes wrong [\#428](https://github.com/pliablepixels/zmNinja/issues/428)
+- display cgi-bin error if a wrong cgi path is set in login even if you don't tap save [\#427](https://github.com/pliablepixels/zmNinja/issues/427)
+- Fallback Server Hangup [\#424](https://github.com/pliablepixels/zmNinja/issues/424)
+- Cannot delete events [\#422](https://github.com/pliablepixels/zmNinja/issues/422)
+- restricted users for event notification not working [\#391](https://github.com/pliablepixels/zmNinja/issues/391)
+
+**Closed issues:**
+
+- Hard coded text found [\#440](https://github.com/pliablepixels/zmNinja/issues/440)
+- Hard coded text alert found [\#437](https://github.com/pliablepixels/zmNinja/issues/437)
+- Typo in Validating-if-APIs-work-on-ZM page \(events instead of events.json\): [\#421](https://github.com/pliablepixels/zmNinja/issues/421)
+- event server settings - Strange Behaviour [\#414](https://github.com/pliablepixels/zmNinja/issues/414)
+
+**Merged pull requests:**
+
+- 440 hard coded text found  [\#442](https://github.com/pliablepixels/zmNinja/pull/442) ([steelyard-nl](https://github.com/steelyard-nl))
+- sorted keys \#437 [\#439](https://github.com/pliablepixels/zmNinja/pull/439) ([maymaymay](https://github.com/maymaymay))
+- 437 hard coded text alert found [\#438](https://github.com/pliablepixels/zmNinja/pull/438) ([steelyard-nl](https://github.com/steelyard-nl))
+- 433 adding dutch language files [\#435](https://github.com/pliablepixels/zmNinja/pull/435) ([steelyard-nl](https://github.com/steelyard-nl))
+-  you can now toggle a dev option to hide/unhide archived \(flagged\) ev… [\#434](https://github.com/pliablepixels/zmNinja/pull/434) ([maymaymay](https://github.com/maymaymay))
+- Translation update to \#423 [\#425](https://github.com/pliablepixels/zmNinja/pull/425) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.2.35](https://github.com/pliablepixels/zmNinja/tree/v1.2.35) (2016-12-31)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.34...v1.2.35)
 
@@ -103,7 +144,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -130,11 +171,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
-
 ## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
+
+## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
 
 **Implemented enhancements:**
 
