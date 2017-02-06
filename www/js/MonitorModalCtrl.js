@@ -1416,7 +1416,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.toggleListMenu = function()
     {
 
+        
         $scope.isToggleListMenu = !$scope.isToggleListMenu;
+        //console.log ("isToggleListMenu:"+$scope.isToggleListMenu);
     };
 
     //-------------------------------------------------------------
@@ -1691,14 +1693,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         $scope.monStatus = "";
         $scope.isToggleListMenu = true;
+        //console.log (">>>>>>>>>>>>>>>>>>>STOOOP");
         document.addEventListener("pause", onPause, false);
         document.addEventListener("resume", onResume, false);
 
-        document.addEventListener("mouseup", moveStop, false);
+        /*document.addEventListener("mouseup", moveStop, false);
         document.addEventListener("touchend", moveStop, false);
 
-        document.addEventListener("mousemove", moveContinue, false);
-        document.addEventListener("touchmove", moveContinue, false);
+        document.addEventL`istener("mousemove", moveContinue, false);
+        document.addEventListener("touchmove", moveContinue, false);*/
 
         
 
