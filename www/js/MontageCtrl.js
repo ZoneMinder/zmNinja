@@ -1668,6 +1668,32 @@ angular.module('zmApp.controllers')
             pckry.shiftLayout();
         }
 
+
+        $scope.squeezeMonitors = function()
+        {
+                 pckry.once('layoutComplete', resizeComplete);
+                $timeout (function() {pckry.layout();});
+
+                function resizeComplete()
+                {
+                    //console.log ("HERE");
+                    $timeout(function()
+                    {
+                        var positions = pckry.getShiftPositions('data-item-id');
+                        console.log("SAVING");
+                        var ld = NVRDataModel.getLogin();
+
+                        ld.packeryPositions = JSON.stringify(positions);
+                        //console.log ("Saving " + ld.packeryPositions);
+                        NVRDataModel.setLogin(ld);
+                        $ionicLoading.hide();
+                        $scope.sliderChanging = false;
+                    }, 20);
+
+                }
+                
+
+        };
         //---------------------------------------------------------
         // slider is tied to the view slider for montage
         //Remember not to use a variable. I'm using an object
