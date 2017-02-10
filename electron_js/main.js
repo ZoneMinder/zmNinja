@@ -27,7 +27,9 @@ if (shouldQuit) {
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({width: 1024, height: 900, webPreferences:{nodeIntegration:false}});
-  if (process.argv.slice(2)=='fs')
+
+  // fs will be arg 1 if its not run in electron debug mode
+  if (process.argv.slice(1)=='fs' || process.argv.slice(2)=='fs')
         win.setFullScreen(true);
 
   // and load the index.html of the app.
