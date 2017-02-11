@@ -153,10 +153,20 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             {
                 NVRDataModel.log("Success:  on " + urls[0] + t);
                 //$ionicLoading.hide();
-                return urls[0];
+                d.resolve(urls[0]);
+                return d.promise;
+                //return urls[0];
             }, function(err)
             {
-                NVRDataModel.log("zmWizard:Failed on " + urls[0] + t + " with error " + JSON.stringify(err));
+                NVRDataModel.log("zmWizard:Failed on " + urls[0] + t + " with error " + JSON.stringify(err) );
+                // this is actually a success - I might get empty status
+                // or something
+                if (err.status < 300)
+                {
+                    NVRDataModel.log ("I am taking this as a cgi-bin success - "+urls[0]);
+                    d.resolve(urls[0]);
+                    return d.promise;
+                }
                 return findFirstReachableUrl(urls.slice(1), tail);
             });
         }
@@ -302,7 +312,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                                     function(error)
                                     {
                                         $ionicLoading.hide();
-                                        //console.log("No cgi-bin found: " + error);
+                                        console.log("No cgi-bin found: " + JSON.stringify(error));
                                         $scope.wizard.streamingValidText = $translate.instant('kPortalCgiBinFailed');
                                         $scope.wizard.streamingColor = "#e74c3c";
                                         d.reject(false);
