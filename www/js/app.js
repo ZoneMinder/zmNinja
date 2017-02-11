@@ -623,6 +623,7 @@ angular.module('zmApp', [
 .factory('timeoutHttpIntercept', ['$rootScope', '$q', 'zm', '$injector', function($rootScope, $q, zm, $injector)
 {
     $rootScope.zmCookie = "";
+    //console.log ("HHHHHHHHHHHHHH**************************");
 
     return {
 
@@ -1514,6 +1515,8 @@ angular.module('zmApp', [
 
             $rootScope.platformOS = "desktop";
             NVRDataModel.log("Device is ready");
+
+
             // var ld = NVRDataModel.getLogin();
             if ($ionicPlatform.is('ios'))
                 $rootScope.platformOS = "ios";
@@ -1821,6 +1824,8 @@ angular.module('zmApp', [
                     NVRDataModel.log("Setting up POST LOGIN timer");
                     zmAutoLogin.start();
                     setupPauseAndResume();
+
+
                 }
 
             }

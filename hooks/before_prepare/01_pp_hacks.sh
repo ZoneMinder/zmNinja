@@ -27,13 +27,13 @@ else
 	echo "Directory platforms/android does not exist, skipping..."
 fi
 
-echo "Copying plist hack for iOS for non SSL connections"
-echo "--------------------------------------------------"
-if [ -d "platforms/ios/zmNinja" ]; then
-	exe cp www/external/zmNinja-Info.plist.IOS9nonSSLPatch platforms/ios/zmNinja/zmNinja-Info.plist
-else
-	echo "Directory platforms/ios/zmNinja does not exist, skipping..."
-fi
+#echo "Copying plist hack for iOS for non SSL connections"
+#echo "--------------------------------------------------"
+#if [ -d "platforms/ios/zmNinja" ]; then
+#	exe cp www/external/zmNinja-Info.plist.IOS9nonSSLPatch platforms/ios/zmNinja/zmNinja-Info.plist
+#else
+#	echo "Directory platforms/ios/zmNinja does not exist, skipping..."
+#fi
 
 echo "Copying Android notification icons to resource dir"
 echo "--------------------------------------------------"
@@ -43,18 +43,18 @@ else
 	echo "Directory platforms/android/res/ does not exist, skipping..."
 fi
 
-#echo "Fixing insecure SSL permission problem"
-#echo "--------------------------------------------------"
-#if [ -d "platforms/android/CordovaLib/src/org/apache/cordova/engine" ]; then
-#	exe cp www/external/SystemWebViewClient.java platforms/android/CordovaLib/src/org/apache/cordova/engine
-#else
-#	echo "Directory platforms/android/CordovaLib/src/org/apache/cordova/engine does not exist, skipping..."
-#fi
-#if [ -d "platforms/ios/zmNinja/Classes" ]; then
-#	exe cp www/external/AppDelegate.m platforms/ios/zmNinja/Classes/
-#else
-#	echo "Directory platforms/ios/zmNinja/Classes does not exist, skipping..."
-#fi
+echo "Fixing insecure SSL permission problem"
+echo "--------------------------------------------------"
+if [ -d "platforms/android/CordovaLib/src/org/apache/cordova/engine" ]; then
+	exe cp www/external/SystemWebViewClient.java platforms/android/CordovaLib/src/org/apache/cordova/engine
+else
+	echo "Directory platforms/android/CordovaLib/src/org/apache/cordova/engine does not exist, skipping..."
+fi
+if [ -d "platforms/ios/zmNinja/Classes" ]; then
+	exe cp www/external/AppDelegate.m platforms/ios/zmNinja/Classes/
+else
+	echo "Directory platforms/ios/zmNinja/Classes does not exist, skipping..."
+fi
 
 
 

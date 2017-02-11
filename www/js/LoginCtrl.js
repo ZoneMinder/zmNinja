@@ -638,9 +638,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         // lets logout
         NVRDataModel.debug("Logging out of current session...");
         $rootScope.authSession = "undefined";
+
+        
         $http(
             {
                 method: 'POST',
+                timeout:10000,
                 //withCredentials: true,
                 url: $scope.loginData.url + '/index.php',
                 headers:
