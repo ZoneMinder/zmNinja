@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', function($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate)
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', '$http',function($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate, $http)
 {
     $scope.openMenu = function()
     {
@@ -29,6 +29,17 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         NVRDataModel.debug("LogCtrl: resume called, starting log timer");
         loadLogs();
     }
+
+    $scope.flipLogs = function()
+    {
+        if ($scope.logEntity == 'ZoneMinder')
+            $scope.logEntity = $rootScope.appName;
+        else
+            $scope.logEntity = 'ZoneMinder';
+        console.log ("Flipped");
+        loadLogs();
+
+    };
 
     $scope.deleteLogs = function()
     {
@@ -169,6 +180,42 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         NVRDataModel.debug("Email sent callback called");
     }
 
+    function loadZMlogs()
+    {
+        var ld = NVRDataModel.getLogin();
+        var lapi = ld.apiurl + "/logs.json?sort=TimeKey&direction=desc&page="+$scope.zmPage;
+        $http.get (lapi)
+        .then (function (success) {
+            $ionicLoading.hide();
+            $scope.zmMaxPage = success.data.pagination.pageCount;
+            console.log ("PAGES="+$scope.zmMaxPage);
+            var tLogs = "";
+            console.log (JSON.stringify(success));
+            for (var i=0; i< success.data.logs.length; i++)
+            {
+                tLogs = tLogs + moment.unix(success.data.logs[i].Log.TimeKey).format ("MM/DD/YY hh:mm:ss") +" "+
+                success.data.logs[i].Log.Code+" " +
+                success.data.logs[i].Log.Message+"\n";
+            }
+            $scope.log.logString = tLogs;
+        },
+        function (error) {
+            NVRDataModel.log ("Error getting ZM logs:"+JSON.stringify(error));
+             $scope.log.logString = "Error getting log: " + JSON.stringify(error);
+
+
+        } );
+
+    }
+
+    $scope.changePage = function(p)
+    {
+        $scope.zmPage = $scope.zmPage + p;
+        if ($scope.zmPage < 1) $scope.zmPage = 1;
+        if ($scope.zmPage > $scope.zmMaxPage) $scope.zmPage = $scope.zmMaxPage;
+        loadLogs();
+    };
+
     function loadLogs()
     {
         //console.log ("GETTING LOGS");
@@ -178,9 +225,12 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             template: $translate.instant('kLoading'),
             noBackdrop: true,
             duration: zm.loadingTimeout
+
         });
 
-        $fileLogger.getLogfile().then(function(l)
+        if ($scope.logEntity == $rootScope.appName)
+        {
+            $fileLogger.getLogfile().then(function(l)
             {
 
                 $scope.log.logString = l.split('\n').reverse().join('\n');
@@ -191,7 +241,11 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             {
                 $scope.log.logString = "Error getting log: " + JSON.stringify(error);
                 $ionicLoading.hide();
-            });
+            });    
+        }
+        else
+            loadZMlogs();
+        
     }
 
     //-------------------------------------------------------------------------
@@ -205,6 +259,9 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     {
         //console.log("**VIEW ** Log Ctrl Entered");
         NVRDataModel.setAwake(false);
+        $scope.logEntity = $rootScope.appName;
+        $scope.zmPage = 1;
+        $scope.zmMaxPage = 1;
 
         $scope.log = {
             logString: ""

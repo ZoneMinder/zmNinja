@@ -1,10 +1,11 @@
-<ion-view view-title="{{'kLogs' | translate}}">
+<ion-view view-title="{{logEntity}} {{'kLogs' | translate}}">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-trash-a" ng-href="" ng-click="deleteLogs()"></a>
+         <a class="button button-icon icon ion-arrow-swap" ng-href="" ng-click="flipLogs()"></a>
+        <a ng-if="logEntity == $root.appName" class="button button-icon icon ion-trash-a" ng-href="" ng-click="deleteLogs()"></a>
         <div ng-if="$root.platformOS!='desktop'">
             <a style="" class="button button-icon icon ion-email" ng-href="" ng-click="sendEmail(log.logString)"> </a>
         </div>
@@ -13,8 +14,25 @@
         </div>
     </ion-nav-buttons>
     <ion-content scroll-sista delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
+
+        <div ng-if="logEntity=='ZoneMinder'">
+
+            <button class="button button-small button-stable icon ion-chevron-left" ng-click="changePage(1)"> 
+            </button>
+            <button class="button button-small button-stable icon ion-chevron-right" ng-click="changePage(-1)"> 
+            </button>
+        </div>
+
+        <div ng-if="logEntity==$root.appName">
         <b>{{$root.appName}} {{'kVersion'|translate}}: {{zmAppVersion}} ({{$root.platformOS}})</b>
+        </div>
+
+        <div ng-if="logEntity!=$root.appName">
+        <b>ZoneMinder</b>
+        </div>
+
+
         <br/>
-        <!-- don't indent here -- its a pre-->
+        <!-- don't indent here its a pre-->
         <pre>{{log.logString}}</pre>
     </ion-content>
