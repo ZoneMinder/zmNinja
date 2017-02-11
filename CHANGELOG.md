@@ -1,5 +1,27 @@
 # Change Log
 
+## [v1.2.37](https://github.com/pliablepixels/zmNinja/tree/v1.2.37) (2017-02-11)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.36...v1.2.37)
+
+**Implemented enhancements:**
+
+- Add ability to view server logs [\#452](https://github.com/pliablepixels/zmNinja/issues/452)
+- Add ability to reflow montage without resetting size [\#448](https://github.com/pliablepixels/zmNinja/issues/448)
+
+**Fixed bugs:**
+
+- wizard often does not detect cgi-bin [\#451](https://github.com/pliablepixels/zmNinja/issues/451)
+- fs command line option not working [\#450](https://github.com/pliablepixels/zmNinja/issues/450)
+
+**Closed issues:**
+
+- Montage Image Scale not Saving on Win x64 [\#447](https://github.com/pliablepixels/zmNinja/issues/447)
+- Side menu scroll feature locks after switching servers OR displaying liveview in landscape [\#337](https://github.com/pliablepixels/zmNinja/issues/337)
+
+**Merged pull requests:**
+
+- Translations [\#446](https://github.com/pliablepixels/zmNinja/pull/446) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.2.36](https://github.com/pliablepixels/zmNinja/tree/v1.2.36) (2017-02-06)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.35...v1.2.36)
 
