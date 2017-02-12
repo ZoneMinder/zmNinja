@@ -175,12 +175,20 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $timeout(function()
         {
                 handle.pause();
-                handle.setPlayback(2);
+                handle.setPlayback(NVRDataModel.getLogin().videoPlaybackSpeed);
                 handle.play();
 
         }, 300);
 
         // window.stop();
+    };
+
+    $scope.onPlaybackUpdate = function(rate)
+    {
+        console.log ("UPDATED RATE TO "+rate);
+        var ld = NVRDataModel.getLogin();
+        ld.videoPlaybackSpeed = rate;
+        NVRDataModel.setLogin(ld);
     };
 
     $scope.onCanPlay = function()

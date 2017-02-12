@@ -148,7 +148,8 @@ angular.module('zmApp.controllers')
             'fastLogin': true,
             'followTimeLine': false,
             'timelineScale': -1,
-            'hideArchived': false
+            'hideArchived': false,
+            'videoPlaybackSpeed': 2,
 
         };
 
@@ -559,7 +560,7 @@ angular.module('zmApp.controllers')
                         {
 
                             //console.log ("************* AUGH");
-                            return $http({method:'GET', timeout:5000, url:urls[0].url}).then(function()
+                            return $http({method:'GET', timeout:15000, url:urls[0].url}).then(function()
                             {
                                 log("Success: reachability on " + urls[0].url);
                                 $ionicLoading.hide();
@@ -975,6 +976,13 @@ angular.module('zmApp.controllers')
                                 {
 
                                     loginData.hideArchived = false;
+
+                                }
+
+                                if (typeof loginData.videoPlaybackSpeed == 'undefined')
+                                {
+
+                                    loginData.videoPlaybackSpeed = 2;
 
                                 }
 
