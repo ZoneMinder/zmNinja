@@ -65,14 +65,14 @@
                             <div class="item-text-wrap">
                                 
                                 <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b> ({{event.Event.Id}}) &nbsp;
-                                <button ng-if="gifshotSupported" class="button button-small button-clear icon gif-icon" ng-click="permissionsDownload(event)"> 
+                                <button ng-if="gifshotSupported && loginData.enableGIFMP4 " class="button button-small button-clear icon gif-icon" ng-click="permissionsDownload(event)"> 
                             </button>
 
                           
 
-                            <a ng-if="(event.Event.DefaultVideo!='' && event.Event.DefaultVideo!==undefined) && $root.platformOS=='desktop' " class="button button-clear button-small icon mp4-icon" href="{{event.Event.videoPath}}" download="{{event.Event.Id}}-video.mp4" ng-click="mp4warning()"></a>
+                            <a ng-if="(event.Event.DefaultVideo!='' && event.Event.DefaultVideo!==undefined) && $root.platformOS=='desktop' && loginData.enableGIFMP4 " class="button button-clear button-small icon mp4-icon" href="{{event.Event.videoPath}}" download="{{event.Event.Id}}-video.mp4" ng-click="mp4warning()"></a>
 
-                             <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop'" class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)"> 
+                             <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && loginData.enableGIFMP4 " class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)"> 
                             </button>
 
 

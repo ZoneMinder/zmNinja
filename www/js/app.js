@@ -1090,7 +1090,7 @@ angular.module('zmApp', [
                         $http(
                             {
                                 method: 'POST',
-                                timeout:5000,
+                                timeout:15000,
                                 //withCredentials: true,
                                 url: loginData.url + '/index.php',
                                 headers:

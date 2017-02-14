@@ -150,6 +150,7 @@ angular.module('zmApp.controllers')
             'timelineScale': -1,
             'hideArchived': false,
             'videoPlaybackSpeed': 2,
+            'enableGIFMP4': false,
 
         };
 
@@ -983,6 +984,13 @@ angular.module('zmApp.controllers')
                                 {
 
                                     loginData.videoPlaybackSpeed = 2;
+
+                                }
+
+                                if (typeof loginData.enableGIFMP4 == 'undefined')
+                                {
+
+                                    loginData.enableGIFMP4 = true;
 
                                 }
 
