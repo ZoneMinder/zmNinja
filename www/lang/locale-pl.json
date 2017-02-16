@@ -73,6 +73,7 @@
     "kDownload"                  :"pobierz",
     "kEnable24hr"                :"Włącz format czasu 24 godz.",
     "kEnableDebug"               :"Włącz dzienniki debugowania",
+    "kEnableGIFMP4"              :"Włącz pobieranie GIF/MP4",
     "kEnableLogs"                :"Włącz dziennik",
     "kEnableNewsUpdates"         :"Włącz informację o aktualizacji",
     "kEnterPin"                  :"Wprowadź PIN",
