@@ -18,10 +18,26 @@
                     <!-- no default video -->
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && loginData.enableh264 == true">
                         <div ng-if="videoIsReady">
+
+                            
+
+
                             <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">
-                                <videogular vg-error="onVideoError($event)" vg-can-play="onCanPlay()"  vg-native-fullscreen="videoObject.config.nativeFullScreen" vg-player-ready="onPlayerReady($API)" 
+                            
+                            <!--
+
+                            <br/><br/><br/><br/><br/><br/>
+
+                                Falback testing:{{ video_url | trusted}}
+                                <video   controls>
+                                    <source ng-src="{{video_url | trusted}}" type="video/mp4" />
+                              Your browser does not support the video tag.
+                                </video>
+
+                                -->
+                                <videogular  vg-can-play="onCanPlay()"  vg-native-fullscreen="videoObject.config.nativeFullScreen" vg-player-ready="onPlayerReady($API)" 
                                 vg-update-playback="onPlaybackUpdate($playBack)"
-                                vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)">
+                                vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)" vg-error="onVideoError($event)">
                                     <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
                                     </vg-media>
                                     <vg-controls>

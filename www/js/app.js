@@ -102,6 +102,13 @@ angular.module('zmApp', [
 
 })
 
+//http://stackoverflow.com/a/24519069/1361529
+.filter('trusted', ['$sce', function ($sce) {
+    return function(url) {
+        return $sce.trustAsResourceUrl(url);
+    };
+}])
+
 
 // for events view
 .filter ('eventListFilter', function(NVRDataModel)

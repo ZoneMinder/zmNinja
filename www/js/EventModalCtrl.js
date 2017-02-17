@@ -177,6 +177,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 handle.pause();
                 handle.setPlayback(NVRDataModel.getLogin().videoPlaybackSpeed);
                 handle.play();
+                NVRDataModel.debug ("*** Invoking play");
 
         }, 300);
 
