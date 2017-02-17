@@ -116,6 +116,11 @@
                 </ion-toggle>
             </label>
 
+            <label ng-if="$root.platformOS!='desktop'">
+                <ion-toggle ng-model="loginData.enableStrictSSL" ng-checked="loginData.enableStrictSSL" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableStrictSSL' | translate}}
+                   </span>
+                </ion-toggle>
+            </label>
 
             <label>
                 <ion-toggle ng-model="loginData.enableGIFMP4" ng-checked="loginData.enableGIFMP4" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableGIFMP4' | translate}}

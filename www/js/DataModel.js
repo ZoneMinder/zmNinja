@@ -151,6 +151,7 @@ angular.module('zmApp.controllers')
             'hideArchived': false,
             'videoPlaybackSpeed': 2,
             'enableGIFMP4': false,
+            'enableStrictSSL': false,
 
         };
 
@@ -160,6 +161,27 @@ angular.module('zmApp.controllers')
             'ZM_EVENT_IMAGE_DIGITS': '-1',
             'ZM_PATH_ZMS': ''
         };
+
+
+        function setSSLCerts()
+            {
+                if (!window.cordova) return;
+                if (!loginData.enableStrictSSL)
+                    {
+
+                      //alert("Enabling insecure SSL");
+                      log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+                       cordova.plugins.certificates.trustUnsecureCerts(true);
+
+                    }
+                    else
+                    {
+
+                        log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+                        cordova.plugins.certificates.trustUnsecureCerts(false);
+                    }
+            }
+
 
         // credit: http://stackoverflow.com/questions/4994201/is-object-empty
         function isEmpty(obj)
@@ -994,12 +1016,24 @@ angular.module('zmApp.controllers')
 
                                 }
 
+                                if (typeof loginData.enableStrictSSL == 'undefined')
+                                {
+                                    
+                                    loginData.enableStrictSSL = false;
+
+                                }
+
                                 log("DataModel init recovered this loginData as " + JSON.stringify(loginData));
                             }
                             else
                             {
                                 log("defaultServer configuration NOT found. Keeping login at defaults");
                             }
+
+                            // now set up SSL - need to do it after data return
+                            // from local forage
+                            setSSLCerts();
+                            
 
                             // FIXME: HACK: This is the latest entry point into dataModel init, so start portal login after this
                             // not the neatest way

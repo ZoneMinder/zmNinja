@@ -16,6 +16,16 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
     {
         //console.log("**VIEW ** FirstUse Ctrl Entered");
         $ionicSideMenuDelegate.canDragContent(true);
+        // right up here lets set certs to true, we will disable it later
+            // this is for first starts
+            
+            // 
+        if (window.cordova)
+        {
+            cordova.plugins.certificates.trustUnsecureCerts(true);
+            NVRDataModel.log (">>>>>Accepting all certificates, since its first use");
+        }
+
 
     });
 

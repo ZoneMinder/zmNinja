@@ -43,18 +43,18 @@ else
 	echo "Directory platforms/android/res/ does not exist, skipping..."
 fi
 
-echo "Fixing insecure SSL permission problem"
-echo "--------------------------------------------------"
-if [ -d "platforms/android/CordovaLib/src/org/apache/cordova/engine" ]; then
-	exe cp www/external/SystemWebViewClient.java platforms/android/CordovaLib/src/org/apache/cordova/engine
-else
-	echo "Directory platforms/android/CordovaLib/src/org/apache/cordova/engine does not exist, skipping..."
-fi
-if [ -d "platforms/ios/zmNinja/Classes" ]; then
-	exe cp www/external/AppDelegate.m platforms/ios/zmNinja/Classes/
-else
-	echo "Directory platforms/ios/zmNinja/Classes does not exist, skipping..."
-fi
+#echo "Fixing insecure SSL permission problem"
+#echo "--------------------------------------------------"
+#if [ -d "platforms/android/CordovaLib/src/org/apache/cordova/engine" ]; then
+#	exe cp www/external/SystemWebViewClient.java platforms/android/CordovaLib/src/org/apache/cordova/engine
+#else
+#	echo "Directory platforms/android/CordovaLib/src/org/apache/cordova/engine does not exist, skipping..."
+#fi
+#if [ -d "platforms/ios/zmNinja/Classes" ]; then
+#	exe cp www/external/AppDelegate.m platforms/ios/zmNinja/Classes/
+#else
+#	echo "Directory platforms/ios/zmNinja/Classes does not exist, skipping..."
+#fi
 
 
 

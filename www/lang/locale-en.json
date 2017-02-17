@@ -77,6 +77,7 @@
     "kEnableLogs"                :"Enable logs",
     "kEnableNewsUpdates"         :"enable news updates",
     "kEnterPin"                  :"Enter PIN",
+    "kEnableStrictSSL"           : "Enable strict SSL check",
     "kError"                     :"Error",
     "kErrorChangingMonitors"     :"Error changing monitors. Please check logs",
     "kErrorFrameBanner"          :"could not retrieve frame details",

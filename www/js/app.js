@@ -1485,6 +1485,8 @@ angular.module('zmApp', [
 
         $ionicPlatform.ready(function()
         {
+
+            
            
            // handles URL launches
            // if you just launch zmninja:// then it will honor the settings in "tap screen" -> events or montage
@@ -1694,8 +1696,7 @@ angular.module('zmApp', [
                 {
                     $cordovaSplashscreen.hide();
 
-                    NVRDataModel.log("Enabling insecure SSL");
-                    cordova.plugins.certificates.trustUnsecureCerts(true);
+                    
 
                     cordova.getAppVersion.getVersionNumber().then(function(version)
                     {
@@ -1819,6 +1820,10 @@ angular.module('zmApp', [
                 {
                     NVRDataModel.log("Language file loaded, continuing with rest");
                     NVRDataModel.init();
+                    
+                    // now do SSL check
+                    //setSSLCerts();
+
                     EventServer.init();
                     zmCheckUpdates.start();
                     NVRDataModel.log("Setting up POST LOGIN timer");
@@ -1826,10 +1831,12 @@ angular.module('zmApp', [
                     setupPauseAndResume();
 
 
+
                 }
 
             }
 
+            
             function setupPauseAndResume()
             {
                 NVRDataModel.log("Setting up pause and resume handler AFTER language is loaded...");
@@ -2193,7 +2200,7 @@ angular.module('zmApp', [
     {
         data:
         {
-            requireLogin: true
+            requireLogin: false
         },
         url: "/devoptions",
         cache: false,
