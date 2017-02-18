@@ -1049,6 +1049,17 @@ angular.module('zmApp', [
                         var ld = NVRDataModel.getLogin();
                         NVRDataModel.log("zmAutologin called");
 
+
+                        // This is a good time to check if auth is used :-p
+                        if (!ld.isUseAuth)
+                        {
+                            NVRDataModel.log ("Auth is disabled!");
+                            d.resolve("Login Success");
+
+                            $rootScope.$emit('auth-success', 'no auth');
+
+                        }
+
                         if (str)
                         {
                             $ionicLoading.show(
