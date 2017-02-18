@@ -77,6 +77,7 @@
     "kEnableLogs"                :"Włącz dziennik",
     "kEnableNewsUpdates"         :"Włącz informację o aktualizacji",
     "kEnterPin"                  :"Wprowadź PIN",
+    "kEnableStrictSSL"           :"Włącz rygorystyczne sprawdzanie SSL",
     "kError"                     :"Błąd",
     "kErrorChangingMonitors"     :"Błąd zmiany monitorów. Proszę sprawdzić logi",
     "kErrorFrameBanner"          :"nie mogłem odczytać właściwości klatki",
