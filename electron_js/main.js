@@ -1,4 +1,5 @@
 const electron = require('electron');
+const windowStateKeeper = require('electron-window-state');
 //require('electron-debug')({showDevTools: true});
 // Module to control application life.
 const {app} = electron;
@@ -26,8 +27,19 @@ if (shouldQuit) {
 
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({width: 1024, height: 900, webPreferences:{nodeIntegration:false}});
+  let mainWindowState = windowStateKeeper({
+      defaultWidth: 1000,
+      defaultHeight: 800
+   });
+  //win = new BrowserWindow({width: 1024, height: 900, webPreferences:{nodeIntegration:false}});
+  win = new BrowserWindow({
+        x: mainWindowState.x,
+        y: mainWindowState.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height,
+        webPreferences:{nodeIntegration:false}});
 
+  mainWindowState.manage(win);
   // fs will be arg 1 if its not run in electron debug mode
   if (process.argv.slice(1)=='fs' || process.argv.slice(2)=='fs')
         win.setFullScreen(true);
