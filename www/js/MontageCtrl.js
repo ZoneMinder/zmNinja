@@ -1398,6 +1398,9 @@ angular.module('zmApp.controllers')
 
         });
 
+        //avoid bogus scale error
+        $scope.LoginData = NVRDataModel.getLogin();
+
         $scope.toggleTimeType = function()
         {
             if (NVRDataModel.isTzSupported())
