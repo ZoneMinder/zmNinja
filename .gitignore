@@ -11,3 +11,7 @@ engine/
 .DS_Store
 zmNinja.sublime-project
 zmNinja.sublime-workspace
+.vscode/
+typings/
+jsconfig.json
+

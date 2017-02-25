@@ -2022,7 +2022,7 @@ angular.module('zmApp', [
     {
         'en_*': 'en',
         'de_*': 'de',
-        'es_*': 'es', //already exists
+        'es_*': 'es', 
         'fr_*': 'fr',
         'it_*': 'it',
         'ru_*': 'ru',
