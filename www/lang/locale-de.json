@@ -204,7 +204,7 @@
     "kMode"                      :"Modus",
     "kMonAlarmed"                :"ausgelöster Alarm",
     "kMonAlert"                  :"aufgeweckt",
-    "kMonIdle"                   :"Leerlauf",
+    "kMonIdle"                   :"frei",
     "kMonMocord"                 :"Mocord",
     "kMonModect"                 :"Modect",
     "kMonMonitor"                :"Monitor",
