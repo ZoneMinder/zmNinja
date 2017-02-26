@@ -41,6 +41,12 @@ angular.module('zmApp.controllers')
                 text: 'Español',
                 value: 'es'
             },
+
+            {
+                text: 'French',
+                value: 'fr'
+            },
+
             {
                 text: 'German',
                 value: 'de'
