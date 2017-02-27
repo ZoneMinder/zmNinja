@@ -2,9 +2,14 @@ const electron = require('electron');
 const windowStateKeeper = require('electron-window-state');
 //require('electron-debug')({showDevTools: true});
 // Module to control application life.
-const {app} = electron;
+const {app, globalShortcut} = electron;
 // Module to create native browser window.
 const {BrowserWindow} = electron;
+var isFs = false;
+
+
+
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -26,10 +31,25 @@ if (shouldQuit) {
 
 
 function createWindow() {
+
+const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
+    console.log('CommandOrControl+F is pressed');
+    isFs = !isFs;
+    win.setFullScreen(isFs);
+  })
+
+  const dbgx = globalShortcut.register('CommandOrControl+Alt+D', () => {
+    console.log('CommandOrControl+Alt+D is pressed');
+    win.webContents.openDevTools();
+  })
+
+
   // Create the browser window.
   let mainWindowState = windowStateKeeper({
       defaultWidth: 1000,
-      defaultHeight: 800
+      defaultHeight: 800,
+      webPreferences:{nodeIntegration:false}
+
    });
   //win = new BrowserWindow({width: 1024, height: 900, webPreferences:{nodeIntegration:false}});
   win = new BrowserWindow({
@@ -42,7 +62,12 @@ function createWindow() {
   mainWindowState.manage(win);
   // fs will be arg 1 if its not run in electron debug mode
   if (process.argv.slice(1)=='fs' || process.argv.slice(2)=='fs')
+  {
         win.setFullScreen(true);
+        isFs = true;
+  }
+
+    
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
@@ -64,6 +89,8 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
 
+
+
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
@@ -79,4 +106,12 @@ app.on('activate', () => {
   if (win === null) {
     createWindow();
   }
+});
+
+app.on('will-quit', () => {
+  // Unregister a shortcut.
+  //globalShortcut.unregister('CommandOrControl+X')
+
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll()
 });
