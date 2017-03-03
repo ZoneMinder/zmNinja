@@ -129,6 +129,12 @@
             </label>
 
             <label>
+                <ion-toggle ng-model="loginData.enableSlowLoading" ng-checked="loginData.enableSlowLoading" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableSlowLoading' | translate}}
+                   </span>
+                </ion-toggle>
+            </label>
+
+            <label>
                 <ion-toggle ng-model="loginData.disableAlarmCheckMontage" ng-checked="loginData.disableAlarmCheckMontage" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableAlarmMontage' | translate}}
                     <p>{{'kDisableAlarmMontageSub' | translate}}</p></span>
                 </ion-toggle>

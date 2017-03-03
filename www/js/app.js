@@ -55,6 +55,7 @@ angular.module('zmApp', [
     //loginInterval: 30000,
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
+    slowLoadingTimeout:60000,
     safeMontageLimit: 100,
     safeImageQuality: 10,
     maxFPS: 30,
@@ -1103,12 +1104,13 @@ angular.module('zmApp', [
                         var loginData = NVRDataModel.getLogin();
                         console.log (">>>>>>>>>>>>>> PARALLEL POST WITH RECAPTCHA TO "+loginData.url);
 
-                        
+                        var hDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout: zm.httpTimeout;
                         //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
                         $http(
                             {
+                                
                                 method: 'POST',
-                                timeout:15000,
+                                timeout:hDelay,
                                 //withCredentials: true,
                                 url: loginData.url + '/index.php',
                                 headers:

@@ -162,6 +162,7 @@ angular.module('zmApp.controllers')
             'videoPlaybackSpeed': 2,
             'enableGIFMP4': false,
             'enableStrictSSL': false,
+            'enableSlowLoading': false,
 
         };
 
@@ -593,7 +594,8 @@ angular.module('zmApp.controllers')
                         {
 
                             //console.log ("************* AUGH");
-                            return $http({method:'GET', timeout:15000, url:urls[0].url}).then(function()
+                            var hDelay = loginData.enableSlowLoading? zm.largeHttpTimeout:zm.httpTimeout;
+                            return $http({method:'GET', timeout:hDelay, url:urls[0].url}).then(function()
                             {
                                 log("Success: reachability on " + urls[0].url);
                                 $ionicLoading.hide();
@@ -1025,6 +1027,14 @@ angular.module('zmApp.controllers')
                                     loginData.enableGIFMP4 = true;
 
                                 }
+
+                                if (typeof loginData.enableSlowLoading == 'undefined')
+                                {
+
+                                    loginData.enableSlowLoading = false;
+                                    
+                                }
+                                log ("SlowDelay is: "+loginData.enableSlowLoading);
 
                                 if (typeof loginData.enableStrictSSL == 'undefined')
                                 {
