@@ -1,5 +1,49 @@
 # Change Log
 
+## [v1.2.39](https://github.com/pliablepixels/zmNinja/tree/v1.2.39) (2017-03-04)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.38...v1.2.39)
+
+**Implemented enhancements:**
+
+- French Translation [\#469](https://github.com/pliablepixels/zmNinja/issues/469)
+- New language: German [\#466](https://github.com/pliablepixels/zmNinja/issues/466)
+
+**Fixed bugs:**
+
+- \(timeout\) "Zoneminder Authentication Failed" even though Zoneminder's logs says authentication was successful [\#487](https://github.com/pliablepixels/zmNinja/issues/487)
+- Can't get out of fullscreen mode \(confirmed on win64\) [\#473](https://github.com/pliablepixels/zmNinja/issues/473)
+- Login denied for user "" when not using ZM authentication [\#459](https://github.com/pliablepixels/zmNinja/issues/459)
+
+**Closed issues:**
+
+- Update source build to use new versions of Cordova/Ionic [\#491](https://github.com/pliablepixels/zmNinja/issues/491)
+- Launch zmNinja via iOS app URL scheme [\#467](https://github.com/pliablepixels/zmNinja/issues/467)
+- zmNinja complied from sources for Android and push notification [\#464](https://github.com/pliablepixels/zmNinja/issues/464)
+- \[Desktop/Windows\]Window placement and size is not preserved across multiple sessions. [\#462](https://github.com/pliablepixels/zmNinja/issues/462)
+- Cycle Montage [\#460](https://github.com/pliablepixels/zmNinja/issues/460)
+- view streaming video inside ionic with iOS 10.2.1? [\#458](https://github.com/pliablepixels/zmNinja/issues/458)
+- missing event only shown with Filters [\#445](https://github.com/pliablepixels/zmNinja/issues/445)
+- FAB action buttons are confusing [\#204](https://github.com/pliablepixels/zmNinja/issues/204)
+
+**Merged pull requests:**
+
+- \#487 - devoption added to increase HTTP timeouts [\#490](https://github.com/pliablepixels/zmNinja/pull/490) ([florie1706](https://github.com/florie1706))
+- \#487 - devoption added to increase HTTP timeouts [\#489](https://github.com/pliablepixels/zmNinja/pull/489) ([cryptage21](https://github.com/cryptage21))
+-  \#487 - devoption added to increase HTTP timeouts [\#488](https://github.com/pliablepixels/zmNinja/pull/488) ([maymaymay](https://github.com/maymaymay))
+- Fixes for some bad German translations [\#486](https://github.com/pliablepixels/zmNinja/pull/486) ([florie1706](https://github.com/florie1706))
+- zmNinja removed from translation [\#485](https://github.com/pliablepixels/zmNinja/pull/485) ([florie1706](https://github.com/florie1706))
+- clarified menu option [\#481](https://github.com/pliablepixels/zmNinja/pull/481) ([florie1706](https://github.com/florie1706))
+- clarified menu option [\#480](https://github.com/pliablepixels/zmNinja/pull/480) ([maymaymay](https://github.com/maymaymay))
+- French Language - Update 1 [\#479](https://github.com/pliablepixels/zmNinja/pull/479) ([cryptage21](https://github.com/cryptage21))
+- Update locale-de.json [\#478](https://github.com/pliablepixels/zmNinja/pull/478) ([florie1706](https://github.com/florie1706))
+- more fixes [\#474](https://github.com/pliablepixels/zmNinja/pull/474) ([florie1706](https://github.com/florie1706))
+- Fixed some translations for a better understanding [\#472](https://github.com/pliablepixels/zmNinja/pull/472) ([florie1706](https://github.com/florie1706))
+- wrong wording [\#471](https://github.com/pliablepixels/zmNinja/pull/471) ([florie1706](https://github.com/florie1706))
+- fixed some typos [\#470](https://github.com/pliablepixels/zmNinja/pull/470) ([florie1706](https://github.com/florie1706))
+- Create locale-de.json [\#465](https://github.com/pliablepixels/zmNinja/pull/465) ([florie1706](https://github.com/florie1706))
+- spanish update [\#463](https://github.com/pliablepixels/zmNinja/pull/463) ([fxrnando](https://github.com/fxrnando))
+- android and iOS ports now allow for strict SSL checks... [\#461](https://github.com/pliablepixels/zmNinja/pull/461) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.2.38](https://github.com/pliablepixels/zmNinja/tree/v1.2.38) (2017-02-17)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.37...v1.2.38)
 
