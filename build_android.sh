@@ -30,7 +30,6 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
 
     echo "Building Release mode for Xwalk android..."
     echo "--------------------------------------------"
-    #ionic plugin add cordova-plugin-crosswalk-webview@9.8.0 --variable "XWALK_VERSION"="18+"
     echo "Removing android and re-adding..."
     cordova platform remove android
     cordova platform add android
@@ -38,16 +37,13 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
     echo "Adding crosswalk..."
     cordova plugin add cordova-plugin-crosswalk-webview@2.2.0  --variable XWALK_MODE="lite" --variable "XWALK_VERSION"="17.46.459.1"
     #ionic plugin add cordova-plugin-crosswalk-webview 
-
     # crosswalk handles SSL certificate handling in a different way
     # need to switch plugins
     echo "Adding crosswalk cert plugin..."
     cordova plugin remove cordova-plugin-certificates
     cordova plugin add https://github.com/danjarvis/cordova-plugin-crosswalk-certificate
-    #ionic platform remove android
-    #ionic platform add android
     cp "$NINJAKEYSTORE" platforms/android/
-    cordova build android --release
+    cordova build android --release 
     
     # copy builds to my release directory
     cp platforms/android/build/outputs/apk/android-x86-release-unsigned.apk release_files/
@@ -70,6 +66,9 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
 
     echo "Building Release mode for android 5+..."
     echo "--------------------------------------------"
+    APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns.*/\1/'`
+    a=( ${APPVER//./ } )
+    vcode="$(((a[0]*10000+a[1]*100+a[2])))9"
     
     echo "Removing android and re-adding..."
     cordova platform remove android
@@ -87,8 +86,7 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     cp "$NINJAKEYSTORE" platforms/android/
 
     # Make sure native builds are only deployed in devices < Android 5
-    cordova build android --release -- --minSdkVersion=21
-    #ionic build android --release -- --minSdkVersion=19
+    cordova build android --release -- --minSdkVersion=21 --versionCode=${vcode}
 
     # copy build to release folder and sign
     cp platforms/android/build/outputs/apk/android-release-unsigned.apk release_files/
