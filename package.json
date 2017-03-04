@@ -37,13 +37,6 @@
       "id": "cordova-sqlite-storage"
     },
     "cordova-plugin-settings-hook",
-    {
-      "id": "phonegap-plugin-push",
-      "locator": "phonegap-plugin-push",
-      "variables": {
-        "SENDER_ID": "710936220256"
-      }
-    },
     "cordova-plugin-file",
     "cordova-plugin-compat",
     "cordova-plugin-inappbrowser",
@@ -99,15 +92,22 @@
     },
     "cordova-plugin-photo-library",
     {
-      "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
-      "id": "cordova-plugin-certificates"
-    },
-    {
       "id": "cordova-plugin-customurlscheme",
       "locator": "cordova-plugin-customurlscheme",
       "variables": {
         "URL_SCHEME": "zmninja"
       }
+    },
+    {
+      "id": "phonegap-plugin-push",
+      "locator": "phonegap-plugin-push",
+      "variables": {
+        "SENDER_ID": "710936220256"
+      }
+    },
+    {
+      "locator": "https://github.com/hypery2k/cordova-certificate-plugin",
+      "id": "cordova-plugin-certificates"
     }
   ],
   "cordovaPlatforms": [

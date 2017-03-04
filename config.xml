@@ -9,7 +9,7 @@
     </author>
     <content src="index.html" />
     <access launch-external="yes" origin="mailto:*" />
-    <access origin='*' allows-arbitrary-loads-in-media='true' allows-arbitrary-loads-in-web-content='true' allows-local-networking='true' minimum-tls-version='TLSv1.0' requires-forward-secrecy='false' requires-certificate-transparency='false'/>
+    <access allows-arbitrary-loads-in-media="true" allows-arbitrary-loads-in-web-content="true" allows-local-networking="true" minimum-tls-version="TLSv1.0" origin="*" requires-certificate-transparency="false" requires-forward-secrecy="false" />
     <allow-navigation href="*" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="iosPersistentFileLocation" value="Library" />
@@ -96,6 +96,6 @@
         <variable name="ANDROID_HOST" value=" " />
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
-    <engine name="android" spec="~5.1.1" />
-    <engine name="ios" spec="~4.3.1" />
+    <engine name="android" />
+    <engine name="ios" />
 </widget>

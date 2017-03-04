@@ -8,8 +8,6 @@ if [ ! -f "$NINJAKEYSTORE" ]; then
         exit
 fi
 
-# clean up past builds
-rm -fr platforms/android/build/outputs/*
 mkdir release_files
 rm -f release_files/*
 
@@ -27,18 +25,18 @@ if [ "$1" = "2" ]; then
         echo "only building native view (5+)"
 fi
 
-echo "Cleaning past builds..."
-cordova clean
-
 ############ Crosswalk build ####################################
 if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
 
     echo "Building Release mode for Xwalk android..."
     echo "--------------------------------------------"
-    echo "Adding crosswalk..."
     #ionic plugin add cordova-plugin-crosswalk-webview@9.8.0 --variable "XWALK_VERSION"="18+"
-    ionic plugin remove cordova-plugin-crosswalk-webview
-    ionic plugin add "https://github.com/crosswalk-project/cordova-plugin-crosswalk-webview#1.8.0"  --variable XWALK_MODE="lite" --variable "XWALK_VERSION"="17.46.459.1"
+    echo "Removing android and re-adding..."
+    cordova platform remove android
+    cordova platform add android
+    cordova plugin remove cordova-plugin-crosswalk-webview
+    echo "Adding crosswalk..."
+    cordova plugin add cordova-plugin-crosswalk-webview@2.2.0  --variable XWALK_MODE="lite" --variable "XWALK_VERSION"="17.46.459.1"
     #ionic plugin add cordova-plugin-crosswalk-webview 
 
     # crosswalk handles SSL certificate handling in a different way
@@ -49,7 +47,7 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
     #ionic platform remove android
     #ionic platform add android
     cp "$NINJAKEYSTORE" platforms/android/
-    ionic build android --release
+    cordova build android --release
     
     # copy builds to my release directory
     cp platforms/android/build/outputs/apk/android-x86-release-unsigned.apk release_files/
@@ -66,16 +64,20 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
     cd ..
 fi
 
+
 ############ Native web view build ###############################
 if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
 
     echo "Building Release mode for android 5+..."
     echo "--------------------------------------------"
     
-    #clean up past build stuff
-    rm -fr platforms/android/build/outputs/*
+    echo "Removing android and re-adding..."
+    cordova platform remove android
+    cordova platform add android
+
+   #clean up past build stuff
     echo "Adding default browser..."
-    ionic plugin remove cordova-plugin-crosswalk-webview
+    cordova plugin remove cordova-plugin-crosswalk-webview
 
     # use the right plugin for SSL certificate mgmt
     cordova plugin remove cordova-plugin-crosswalk-certificate
@@ -85,7 +87,7 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     cp "$NINJAKEYSTORE" platforms/android/
 
     # Make sure native builds are only deployed in devices < Android 5
-    ionic build android --release -- --minSdkVersion=21
+    cordova build android --release -- --minSdkVersion=21
     #ionic build android --release -- --minSdkVersion=19
 
     # copy build to release folder and sign
@@ -97,9 +99,11 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     ~/Library/Android/sdk/build-tools/22.0.1/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
     rm -f android-release-unsigned.apk 
     cd ..
+fi
+
+# Do a phone perm check
+
     ./checkperms.sh release_files/zmNinja.apk
     echo "*** Phone State Check:"
     ./checkperms.sh release_files/zmNinja.apk | grep PHONE_STATE
-fi
-
 
