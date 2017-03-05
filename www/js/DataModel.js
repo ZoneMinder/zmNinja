@@ -43,16 +43,16 @@ angular.module('zmApp.controllers')
             },
 
             {
-                text: 'French',
+                text: 'Français',
                 value: 'fr'
             },
 
             {
-                text: 'German',
+                text: 'Deutsch',
                 value: 'de'
             },
             {
-                text: 'Italian',
+                text: 'Italiano',
                 value: 'it'
             },
             {
