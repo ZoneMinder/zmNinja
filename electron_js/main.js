@@ -1,8 +1,7 @@
 const electron = require('electron');
 const windowStateKeeper = require('electron-window-state');
-//require('electron-debug')({showDevTools: true});
-// Module to control application life.
 const {app, globalShortcut} = electron;
+
 // Module to create native browser window.
 const {BrowserWindow} = electron;
 var isFs = false;
@@ -51,7 +50,6 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
       webPreferences:{nodeIntegration:false}
 
    });
-  //win = new BrowserWindow({width: 1024, height: 900, webPreferences:{nodeIntegration:false}});
   win = new BrowserWindow({
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -109,9 +107,6 @@ app.on('activate', () => {
 });
 
 app.on('will-quit', () => {
-  // Unregister a shortcut.
-  //globalShortcut.unregister('CommandOrControl+X')
-
   // Unregister all shortcuts.
   globalShortcut.unregisterAll()
 });
