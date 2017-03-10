@@ -925,6 +925,7 @@ angular.module('zmApp', [
                                 d.resolve("Login Success");
 
                                 $rootScope.$emit('auth-success', 'no auth');
+                                return (d.promise);
 
                             }
 
