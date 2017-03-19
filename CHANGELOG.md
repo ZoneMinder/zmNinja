@@ -1,5 +1,24 @@
 # Change Log
 
+## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
+
+**Fixed bugs:**
+
+- Problem with notifications. [\#468](https://github.com/pliablepixels/zmNinja/issues/468)
+- Login denied for user "" when not using ZM authentication [\#459](https://github.com/pliablepixels/zmNinja/issues/459)
+
+**Closed issues:**
+
+- Timezone incorrect [\#492](https://github.com/pliablepixels/zmNinja/issues/492)
+
+**Merged pull requests:**
+
+- Update locale-de.json [\#497](https://github.com/pliablepixels/zmNinja/pull/497) ([florie1706](https://github.com/florie1706))
+- Update locale-fr 1.2.39 [\#495](https://github.com/pliablepixels/zmNinja/pull/495) ([cryptage21](https://github.com/cryptage21))
+- Buttons in this view were the wrong way around [\#494](https://github.com/pliablepixels/zmNinja/pull/494) ([florie1706](https://github.com/florie1706))
+- Change languages to their mother tongue [\#493](https://github.com/pliablepixels/zmNinja/pull/493) ([florie1706](https://github.com/florie1706))
+
 ## [v1.2.39](https://github.com/pliablepixels/zmNinja/tree/v1.2.39) (2017-03-04)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.38...v1.2.39)
 
@@ -12,7 +31,6 @@
 
 - \(timeout\) "Zoneminder Authentication Failed" even though Zoneminder's logs says authentication was successful [\#487](https://github.com/pliablepixels/zmNinja/issues/487)
 - Can't get out of fullscreen mode \(confirmed on win64\) [\#473](https://github.com/pliablepixels/zmNinja/issues/473)
-- Login denied for user "" when not using ZM authentication [\#459](https://github.com/pliablepixels/zmNinja/issues/459)
 
 **Closed issues:**
 
@@ -223,7 +241,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -250,11 +268,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
-
 ## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
+
+## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
 
 **Implemented enhancements:**
 
