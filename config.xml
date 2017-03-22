@@ -9,7 +9,11 @@
     </author>
     <content src="index.html" />
     <access launch-external="yes" origin="mailto:*" />
+
+    <!-- This borks video playback on iOS
     <access allows-arbitrary-loads-in-media="true" allows-arbitrary-loads-in-web-content="true" allows-local-networking="true" minimum-tls-version="TLSv1.0" origin="*" requires-certificate-transparency="false" requires-forward-secrecy="false" />
+    -->
+
     <allow-navigation href="*" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="iosPersistentFileLocation" value="Library" />
