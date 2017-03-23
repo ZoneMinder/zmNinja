@@ -67,61 +67,11 @@ Please follow [these](https://github.com/pliablepixels/zmNinja/wiki/Running-zmNi
 
 Screenshots:
 ------------
-
-Menu:
-
-![](http://www.pbase.com/arjunrc/image/160697727/medium.jpg "Menu")
-
-Events List:
-
-![](http://www.pbase.com/arjunrc/image/160697725/medium.jpg "Events List")
-
-Event Quick Scrub:
-
-![](http://www.pbase.com/arjunrc/image/160851403/medium.jpg "Events Scrub")
-
-Timeline View:
-
-![](http://www.pbase.com/arjunrc/image/160940106/medium.jpg "Timeline zoomout")
-
-![](http://www.pbase.com/arjunrc/image/160940104/medium.jpg "Timeline zoomin")
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0757.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0758.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0759.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0760.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0761.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0762.PNG?raw=true)
 
 
-Full Screen Events Footage View (with floating buttons)
-![](http://www.pbase.com/arjunrc/image/160697734/medium.jpg "Events View")
-
-Sliding Montage View 1:
-
-![](http://www.pbase.com/arjunrc/image/160697821/medium.jpg "Sliding Montage View")
-
-Sliding Montage View 2 (Different sizes):
-
-![] (http://www.pbase.com/arjunrc/image/160697822/medium.jpg "Sliding Montage View again")
-
-
-Montage Re-order and show/hide:
-
-![] (http://www.pbase.com/arjunrc/image/160697740/medium.jpg "Montage re-order and hide")
-
-
-Monitor View:
-
-![](http://www.pbase.com/arjunrc/image/160697737/medium.jpg "Monitor View")
-
-Graphs:
-
-![] (http://www.pbase.com/arjunrc/image/160697738/medium.jpg "Graphs")
-
-Control ZM custom states/start/stop/restart:
-
-![] (http://www.pbase.com/arjunrc/image/160697735/medium.jpg "Control ZM")
-
-
-Change Monitor Modes:
-
-![] (http://www.pbase.com/arjunrc/image/160697731/medium.jpg "Monitor Modes")
-
-
-Pan/Tilt/Zoom Mode:
-
-![] (http://www.pbase.com/arjunrc/image/160171688/medium.jpg "PTZ")
