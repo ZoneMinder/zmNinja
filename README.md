@@ -27,37 +27,23 @@ See links above to get them on play store (Android) and app store (iOS)
 It also runs on the desktop (see below)
 
 
-
 Desktop Platforms
 -----------------
-This will forever be Beta. I'm using the awesome [Electron packager] (http://electron.atom.io) to auto-package my ionic apps to executables.
 
 Please download binaries for Win 7, Linux or Mac from [here](https://github.com/pliablepixels/zmNinja/releases). 
-
 Please make sure you download the correct ZIP file (32/64 bit)
 
 
 Key Features (just watch the video already)
 --------------------------------------------
-* H264 video branch support - if you are using the zoneminder video branch and have recorded videos they will automatically be used (you can disable it in developer settings). If an event has a recorded video, you will see a small video icon at the top of that event entry in events view
-
-* Receive real time push notifications for alarms as they happen. You need to install my [Event Server](https://github.com/pliablepixels/zmeventserver) for this. You can even control monitors you want to be notified of and reporting intervals (if you defined your zones loosely you don't want pings every second, do you?)
-
-* Runs on Android/iOS and now desktops too - in a browser 
-
-
-* View live monitors and events 
-
-* High speed event scrubbing and control
-
-* Pullup handy views of activities based on time 
-
-* Incredible zoom/pan timeline of alarms
-
-* Control Zoneminder - restart, change states
-
-* Swipe/pan between monitors
-
+* Push Notifications for alarms (Needs the [eventserver](https://github.com/pliablepixels/zmeventserver) to be set up)
+* Multiple languages (English, French, German, Spanish, Portugese, Dutch, and more)
+* H264 video branch support 
+* live views of monitors
+* Montage view (with multiple montage profile settings/sizes)
+* Events history and list
+* Timeline view
+* Camera pan/tilt/zoom (needs to have ZM support it first)
 
 Thanks
 ------
@@ -72,31 +58,11 @@ Important Notes
 
 Objective
 ----------
-I wanted to learn how to create a full fledged cross platform app for a long time.
-I used this as an excuse to learn Angular JS, phoneGap and ionic and see if one could
-use these modern tools to build high performance phonegap apps. I was very pleasantly
-surprised -- for a large part, most people who complain about performance  probably
-haven't spent time researching how to optimize. 
-
-I'll keep refining it over time as I learn more of AngularJS and stuff.
+I wanted to learn how to write a mobile app. It was (and is) fun. 
 
 Running from source
 ----------------------
-
 Please follow [these](https://github.com/pliablepixels/zmNinja/wiki/Running-zmNinja-from-Source) instructions.
-
-If you want to run zmNinja in an emulator, you will need to install the appropriate emulator tools.
-
-* For iOS, you will need the latest version of XCode (available in the App Store) as well as the npm package `ios-sim`: `npm install -g ios-sim`
-* For Android, you will need the latest [Android Studio](https://developer.android.com/sdk/index.html)
-
-Now, you can launch the emulator:
-
-```bash
-$ ionic emulate ios
-# - OR -
-$ ionic emulate android
-```
 
 
 Screenshots:
@@ -112,16 +78,13 @@ Events List:
 
 Event Quick Scrub:
 
-![]
-(http://www.pbase.com/arjunrc/image/160851403/medium.jpg "Events Scrub")
+![](http://www.pbase.com/arjunrc/image/160851403/medium.jpg "Events Scrub")
 
 Timeline View:
 
-![]
-(http://www.pbase.com/arjunrc/image/160940106/medium.jpg "Timeline zoomout")
+![](http://www.pbase.com/arjunrc/image/160940106/medium.jpg "Timeline zoomout")
 
-![]
-(http://www.pbase.com/arjunrc/image/160940104/medium.jpg "Timeline zoomin")
+![](http://www.pbase.com/arjunrc/image/160940104/medium.jpg "Timeline zoomin")
 
 
 Full Screen Events Footage View (with floating buttons)
