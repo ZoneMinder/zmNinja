@@ -15,7 +15,7 @@ by many for home and commercial security monitoring.
 
 Video Demo
 -------------
-Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
+Check out a video demo of zmNinja [here](https://youtu.be/prtA_mv68Ok)
 
 Mobile Platforms
 ---------------------------
@@ -44,13 +44,18 @@ Key Features (just watch the video already)
 Thanks
 ------
 To the zonemider community in general, and the awesome Stack Overflow community.
-But specifically, [Andrew Bauer](https://github.com/knnniggett) (knnniggett) - he is a ZoneMinder maintainer and
-helped me significantly in getting into ZoneMinder and also continues to help
-me with my client goals. 
+But specifically, [Andrew Bauer](https://github.com/knnniggett) (knnniggett) who egged me on to take up this project.
 
 Important Notes
 ---------------
-* zmNinja needs APIs enabled in ZoneMinder. See https://github.com/pliablepixels/zmNinja/wiki/Configuring-ZoneMinder-with-API
+* zmNinja needs APIs enabled in ZoneMinder. If you are running ZM 1.29 or above, APIs should automatically be available. See [this](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) for instructions on how to make sure your APIs are working. If they are not working, zmNinja **will not** work.
+
+Before you ask for help
+-----------------------
+* Make sure you have read the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ)
+* Make sure you have [validated](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) that your APIs are working (if not, its a ZM issue, please post in ZM forums)
+* Please don't ask me for help with source compilation if you are not familiar with coding mobile apps - you should try and solve your own problems
+
 
 Objective
 ----------
