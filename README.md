@@ -78,16 +78,13 @@ Events List:
 
 Event Quick Scrub:
 
-![]
-(http://www.pbase.com/arjunrc/image/160851403/medium.jpg "Events Scrub")
+![](http://www.pbase.com/arjunrc/image/160851403/medium.jpg "Events Scrub")
 
 Timeline View:
 
-![]
-(http://www.pbase.com/arjunrc/image/160940106/medium.jpg "Timeline zoomout")
+![](http://www.pbase.com/arjunrc/image/160940106/medium.jpg "Timeline zoomout")
 
-![]
-(http://www.pbase.com/arjunrc/image/160940104/medium.jpg "Timeline zoomin")
+![](http://www.pbase.com/arjunrc/image/160940104/medium.jpg "Timeline zoomin")
 
 
 Full Screen Events Footage View (with floating buttons)
