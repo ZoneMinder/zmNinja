@@ -1,10 +1,10 @@
-![](http://www.pbase.com/arjunrc/image/160855207.jpg "icon") 
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/zmn.png?raw=true "icon") 
 
 [zmNinja website](http://pliablepixels.github.io)
 
 zmNinja is a multi platform (iOS, Android, Windows Desktop, Mac Desktop, Linux Desktop) client for ZoneMinder users.
-ZoneMinder is an incredible open source camera monitoring system and is used
-by many for home and commercial security monitoring. http://www.zoneminder.com
+[ZoneMinder](http://www.zoneminder.com) is an incredible open source camera monitoring system and is used
+by many for home and commercial security monitoring. 
 
 
 <a href="https://itunes.apple.com/us/app/zmninja-pro/id1067914954?mt=8"><img src="http://www.pbase.com/arjunrc/image/162132546/original.jpg" width="200px" alt="Get in on App Store"></a>
@@ -20,16 +20,12 @@ Check out a video demo of zmNinja here: https://youtu.be/prtA_mv68Ok
 Mobile Platforms
 ---------------------------
 zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
-
 See links above to get them on play store (Android) and app store (iOS)
-
 
 It also runs on the desktop (see below)
 
-
 Desktop Platforms
 -----------------
-
 Please download binaries for Win 7, Linux or Mac from [here](https://github.com/pliablepixels/zmNinja/releases). 
 Please make sure you download the correct ZIP file (32/64 bit)
 
