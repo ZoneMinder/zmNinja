@@ -68,6 +68,10 @@ Please follow [these](https://github.com/pliablepixels/zmNinja/wiki/Running-zmNi
 Screenshots:
 ------------
 ![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0757.PNG?raw=true)
-
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0758.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0759.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0760.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0761.PNG?raw=true)
+![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0762.PNG?raw=true)
 
 
