@@ -918,47 +918,86 @@ videogular div.event-time {
 }
 
 .grid-sizer {
-    width: 10%;
+    width: 5%;
 }
 
 .grid-item {
     width: 20%;
 }
 
+.grid-item-5 {
+    width: 5%;
+}
 .grid-item-10 {
     width: 10%;
 }
 
+.grid-item-15 {
+    width: 15%;
+}
+
+
 .grid-item-20 {
     width: 20%;
+}
+
+.grid-item-25 {
+    width: 25%;
 }
 
 .grid-item-30 {
     width: 30%;
 }
 
+.grid-item-35 {
+    width: 35%;
+}
+
 .grid-item-40 {
     width: 40%;
+}
+
+.grid-item-45 {
+    width: 45%;
 }
 
 .grid-item-50 {
     width: 50%;
 }
 
+.grid-item-55 {
+    width: 55%;
+}
+
 .grid-item-60 {
     width: 60%;
+}
+
+.grid-item-65 {
+    width: 65%;
 }
 
 .grid-item-70 {
     width: 70%;
 }
 
+.grid-item-75 {
+    width: 75%;
+}
 .grid-item-80 {
     width: 80%;
 }
 
+.grid-item-85 {
+    width: 85%;
+}
+
 .grid-item-90 {
     width: 90%;
+}
+
+.grid-item-95 {
+    width: 95%;
 }
 
 .grid-item-100 {

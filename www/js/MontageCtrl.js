@@ -1740,7 +1740,7 @@ angular.module('zmApp.controllers')
             {
 
                 var curVal = parseInt($scope.MontageMonitors[i].Monitor.gridScale);
-                curVal = curVal + (10 * dirn);
+                curVal = curVal + (5 * dirn);
                 if (curVal < 10) curVal = 10;
                 if (curVal > 100) curVal = 100;
                 //console.log ("For Index: " + i + " From: " + $scope.MontageMonitors[i].Monitor.gridScale + " To: " + curVal);
@@ -1770,7 +1770,7 @@ angular.module('zmApp.controllers')
                 for (i = 0; i < $scope.MontageMonitors.length; i++)
                 {
                     var cv = parseInt($scope.MontageMonitors[i].Monitor.gridScale);
-                    cv = cv + (10 * dirn);
+                    cv = cv + (5 * dirn);
                     if (cv < 10) cv = 10;
                     if (cv > 100) cv = 100;
                     $scope.MontageMonitors[i].Monitor.gridScale = cv;

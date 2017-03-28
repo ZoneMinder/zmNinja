@@ -85,7 +85,7 @@
         </div>
         <!-- now lets draw the montage windows -->
         <div class="grid" id="mygrid">
-            <div class="grid-sizer grid-item-10"></div>
+            <div class="grid-sizer grid-item-5"></div>
             <!-- <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" 
                   ng-if="monitor.Monitor.Function!='None' &&  monitor.Monitor.Enabled !='0' ">-->
             <span ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit">
