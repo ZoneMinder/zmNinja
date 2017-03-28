@@ -99,6 +99,7 @@ angular.module('zmApp', [
         maxGifCount2: 100,
         maxGifWidth: 800.0,
         quantSample: 15,
+        hashSecret: 'unused at the moment'
 
     })
 
@@ -836,9 +837,11 @@ angular.module('zmApp', [
 
 
             var d = $q.defer();
+            var ld = NVRDataModel.getLogin();
 
             console.log(">>>>>>>>>>> DO LOGIN");
 
+            
             NVRDataModel.processFastLogin()
                 // coming here means login not needed, old login is valid
                 .then(function (success) {
@@ -936,6 +939,11 @@ angular.module('zmApp', [
                                     duration: zm.httpTimeout
                                 });
                             }
+                            
+                  
+
+
+                            
 
                             console.log(">>>>>>>>>>>>>> ISRECAPTCHA");
 
@@ -966,6 +974,42 @@ angular.module('zmApp', [
                             var loginData = NVRDataModel.getLogin();
                             console.log(">>>>>>>>>>>>>> PARALLEL POST WITH RECAPTCHA TO " + loginData.url);
 
+                           /*  console.log ("-----------------------SECRET IS "+zm.hashSecret);
+                            $http.get (ld.apiurl+'/host/remoteIp.json')
+                            .then (function (data) {
+                                 $ionicLoading.hide();
+                                var ip = (data.data.auth_hash_ip) ? data.data.remote_ip: "";
+                                var composite =  zm.hashSecret + ld.username + ld.password + ip + data.data.time_frag;
+                                var hash = CryptoJS.MD5(composite);
+                                console.log ("MD5 HASH IS "+hash);
+                                $rootScope.authSession = hash;
+                                d.resolve ("Login Success");
+                                $rootScope.loggedIntoZm = 1;
+                                $rootScope.$emit('auth-success', data);
+
+
+                                //ZM_AUTH_HASH_SECRET.$user['Username'].$user['Password'].$remoteAddr.$time[2].$time[3].$time[4].$time[5]
+                                //$rootScope.authSession
+                                // data.data.remote_ip
+                                // data.data.is_auth
+
+                                console.log (JSON.stringify(data));
+                            },
+                                function (error) {
+                                $ionicLoading.hide();
+                                console.log (JSON.stringify(error));
+                                $rootScope.authSession = "";
+                                d.reject ("Login Error");
+                                $rootScope.loggedIntoZm = 1;
+                                $rootScope.$emit('auth-error', "incorrect credentials");
+                                }
+                            
+                            );
+
+                            return (d.promise);
+
+                            console.log ("*****************NEVER HERE***********");
+                            */
                             var hDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
                             //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
                             $http({
