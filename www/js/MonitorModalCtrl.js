@@ -714,6 +714,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.controlPTZ = function(monitorId, cmd)
     {
+        console.log ("PTZ command is"+cmd);
         controlPTZ(monitorId, cmd);
     };
 
@@ -725,7 +726,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //curl -X POST "http://server.com/zm/index.php?view=request" -d
         //"request=control&user=admin&passwd=xx&id=4&control=moveConLeft"
 
-        if (!$scope.ptzMoveCommand)
+        if ($scope.ptzMoveCommand=="undefined")
         {
             $ionicLoading.show(
             {
@@ -1466,7 +1467,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.ptzSleepCommand = "";
         $scope.ptzResetCommand = "";
 
-        $scope.ptzMoveCommand = "";
+        $scope.ptzMoveCommand = "undefined";
         $scope.ptzStopCommand = "";
 
         $scope.zoomInCommand = "";
@@ -1513,6 +1514,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                             $scope.ptzMoveCommand = "move"; // start with as move;
                             $scope.ptzStopCommand = "";
 
+                            console.log ("GOT CONTROL "+JSON.stringify(data.control.Control));
+
                             if (data.control.Control.CanZoom == '1')
                             {
                                 $scope.canZoom = true;
@@ -1536,12 +1539,33 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                             NVRDataModel.debug("configurePTZ: control data returned " + JSON.stringify(data));
 
+
+                            if (data.control.Control.CanMoveMap == '1')
+                            {
+
+                                //seems moveMap uses Up/Down/Left/Right, 
+                                // so no prefix
+                                $scope.ptzMoveCommand = "";
+                                $scope.ptzStopCommand = "moveStop";
+                                console.log ("MoveAbs set");
+                            }
+
+                            if (data.control.Control.CanMoveAbs == '1')
+                            {
+
+                                $scope.ptzMoveCommand = "moveAbs";
+                                $scope.ptzStopCommand = "moveStop";
+                                console.log ("MoveAbs set");
+                            }
+
                             if (data.control.Control.CanMoveRel == '1')
                             {
 
                                 $scope.ptzMoveCommand = "moveRel";
                                 $scope.ptzStopCommand = "moveStop";
                             }
+
+                            
 
                             // Prefer con over rel if both enabled
                             // I've tested con
@@ -1552,6 +1576,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                                 $scope.ptzMoveCommand = "moveCon";
                                 $scope.ptzStopCommand = "moveStop";
                             }
+                            //CanMoveMap
 
                             // presets
                             NVRDataModel.debug("ConfigurePTZ Preset value is " + data.control.Control.HasPresets);
