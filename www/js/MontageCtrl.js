@@ -156,7 +156,7 @@ angular.module('zmApp.controllers')
             var cnt = 0;
             $scope.MontageMonitors.forEach(function(elem)
             {
-                if ((elem.Monitor.Enabled != '0') && (elem.Monitor.Function != 'None'))
+                if ((elem.Monitor.Enabled != '0') && (elem.Monitor.Function != 'None')  )
                     cnt++;
             });
 
@@ -244,12 +244,14 @@ angular.module('zmApp.controllers')
                     {
                         NVRDataModel.log("Arranging as per packery grid");
 
+
                         for (var i = 0; i < $scope.MontageMonitors.length; i++)
                         {
                             for (var j = 0; j < positions.length; j++)
                             {
                                 if ($scope.MontageMonitors[i].Monitor.Id == positions[j].attr)
                                 {
+                                    if (isNaN(positions[j].size)) positions[j].size=20;
                                     $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
                                     $scope.MontageMonitors[i].Monitor.listDisplay = positions[j].display;
                                     NVRDataModel.debug("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " + positions[j].size + " and display:" + positions[j].display);
@@ -266,6 +268,7 @@ angular.module('zmApp.controllers')
                         //NVRDataModel.log("Force calling resize");
                         ///pckry.reloadItems();
                         ///positions is defined only if layouttype was false
+                        console.log (">>> Positions is "+ JSON.stringify(positions));
                         if (!layouttype) pckry.initShiftLayout(positions, "data-item-id");
                         // now do a jiggle 
                         $timeout(function()
@@ -293,7 +296,10 @@ angular.module('zmApp.controllers')
                     //console.log ("POSITIONS MAP " + JSON.stringify(positions));
                     var ld = NVRDataModel.getLogin();
                     ld.packeryPositions = JSON.stringify(positions);
-                    //console.log ("Saving " + ld.packeryPositions);
+                    console.log ("Saving " + ld.packeryPositions);
+                   // console.log ("FULL OBJECT "+ JSON.stringify(ld));
+                    ld.currentMontageProfile = "";
+                    $scope.currentProfileName = $translate.instant ('kMontage');
                     NVRDataModel.setLogin(ld);
                     NVRDataModel.debug("saved new positions");
                 });
@@ -544,9 +550,11 @@ angular.module('zmApp.controllers')
                 pckry.once('layoutComplete', savePackeryOrder);
                 pckry.layout();
 
-            }, 400);
+            }, 400);  
 
-            function savePackeryOrder()
+        };
+
+        function savePackeryOrder()
             {
                 $timeout(function()
                 {
@@ -555,6 +563,8 @@ angular.module('zmApp.controllers')
                     var ld = NVRDataModel.getLogin();
                     ld.packeryPositions = JSON.stringify(positions);
                     //console.log ("Savtogging " + ld.packeryPositions);
+                    ld.currentMontageProfile = "";
+                    $scope.currentProfileName = $translate.instant ('kMontage');
                     NVRDataModel.setLogin(ld);
 
                     pckry.getItemElements().forEach(function(itemElem)
@@ -569,11 +579,11 @@ angular.module('zmApp.controllers')
 
                     // Now also ask DataModel to update its monitor display status
                     NVRDataModel.reloadMonitorDisplayStatus();
+                    //$scope.MontageMonitors = angular.copy(NVRDataModel.getMonitorsNow());
+                    //$scope.MontageMonitors = NVRDataModel.getMonitorsNow();
                     pckry.layout();
                 }, 20);
             }
-
-        };
 
         $scope.getCycleStatus = function()
         {
@@ -872,6 +882,8 @@ angular.module('zmApp.controllers')
 
                     ld.packeryPositions = JSON.stringify(positions);
                     //console.log ("Saving " + ld.packeryPositions);
+                    ld.currentMontageProfile = "";
+                    $scope.currentProfileName = $translate.instant ('kMontage');
                     NVRDataModel.setLogin(ld);
                     $ionicLoading.hide();
                     //$scope.sliderChanging = false;
@@ -957,6 +969,8 @@ angular.module('zmApp.controllers')
                         var ld = NVRDataModel.getLogin();
                         ld.packeryPositions = JSON.stringify(positions);
                         //console.log ("Saving " + ld.packeryPositions);
+                        ld.currentMontageProfile = "";
+                        $scope.currentProfileName =$translate.instant ('kMontage');
                         NVRDataModel.setLogin(ld);
                     }, 300);
                 }, 100);
@@ -1222,6 +1236,7 @@ angular.module('zmApp.controllers')
                 if (ld.currentMontageProfile == $scope.data.selectedVal)
                 {
                     ld.currentMontageProfile = "";
+                    $scope.currentProfileName = $translate.instant ('kMontage');
 
                 }
 
@@ -1254,14 +1269,21 @@ angular.module('zmApp.controllers')
             //console.log ("NEW POS="+ld.packeryPositions);
             NVRDataModel.setLogin(ld);
             //console.log ("SAVING "+ld.packeryPositions.name+ " but "+$scope.data.selectedVal);
-            NVRDataModel.reloadMonitorDisplayStatus();
+           
+            //$scope.MontageMonitors = angular.copy(NVRDataModel.getMonitorsNow());
+            
+            
             draggies.forEach(function(drag)
             {
                 drag.destroy();
             });
             draggies = [];
             pckry.destroy();
-            initPackery();
+            NVRDataModel.reloadMonitorDisplayStatus();
+            $scope.MontageMonitors = NVRDataModel.getMonitorsNow();
+            $timeout (function() {initPackery();},zm.packeryTimer);
+            
+            
 
         }
         // switch to another montage profile
@@ -1291,6 +1313,8 @@ angular.module('zmApp.controllers')
                     $scope.listdata.push(key);
                 }
             }
+            if ($scope.listdata.indexOf($translate.instant('kMontageDefaultProfile')) == -1)
+                $scope.listdata.push($translate.instant('kMontageDefaultProfile'));
 
             if (!$scope.listdata.length)
             {
@@ -1364,12 +1388,55 @@ angular.module('zmApp.controllers')
 
                     if ($scope.data.montageName != '')
                     {
-                        var pos = JSON.stringify(pckry.getShiftPositions('data-item-id'));
-                        ld.packeryPositionsArray[$scope.data.montageName] = pos;
-                        NVRDataModel.debug("Saving " + $scope.data.montageName + " with:" + pos);
-                        ld.currentMontageProfile =$scope.data.montageName ;
-                        NVRDataModel.setLogin(ld);
-                        $scope.currentProfileName = $scope.data.montageName;
+                        // lets allow them to save default 
+                        //if ($scope.data.montageName != $translate.instant('kMontageDefaultProfile'))
+                        if (1)
+                        {
+                            var getMonPos = pckry.getShiftPositions('data-item-id');
+                            var unHidden = false;
+
+                            // if you are saving to default all monitor profile
+                            // then I will undo any hidden monitors
+                            if ($scope.data.montageName == $translate.instant('kMontageDefaultProfile'))
+                            {
+                                for  ( var p=0; p < getMonPos.length; p++)
+                                {
+                                    //console.log ("CHECK");
+                                    if  (getMonPos[p].display != 'show')
+                                    {
+                                        getMonPos[p].display = 'show';
+                                        unHidden = true;
+                                    }
+                                }
+                            }
+
+                            var pos = JSON.stringify(getMonPos);
+
+                            //console.log ("SAVING POS = "+pos);
+
+                            ld.packeryPositionsArray[$scope.data.montageName] = pos;
+                            NVRDataModel.debug("Saving " + $scope.data.montageName + " with:" + pos);
+                            ld.currentMontageProfile =$scope.data.montageName ;
+                             NVRDataModel.setLogin(ld);
+                            $scope.currentProfileName = $scope.data.montageName;
+
+                            if (unHidden)
+                            {
+                                $rootScope.zmPopup = SecuredPopups.show('alert',
+                                {
+                                    title: $translate.instant('kNote'),
+                                    template: $translate.instant('kMontageSaveDefaultWarning'),
+                                    okText: $translate.instant('kButtonOk'),
+
+                                });
+                                 switchMontageProfile($translate.instant('kMontageDefaultProfile'));
+                                
+                                
+                            }
+
+                        }
+                    
+                      
                     }
 
                 }
@@ -1650,6 +1717,8 @@ angular.module('zmApp.controllers')
 
                     ld.packeryPositions = JSON.stringify(positions);
                     //console.log ("Saving " + ld.packeryPositions);
+                    ld.currentMontageProfile = "";
+                    $scope.currentProfileName = $translate.instant ('kMontage');
                     NVRDataModel.setLogin(ld);
 
                     $timeout(function()
@@ -1688,6 +1757,8 @@ angular.module('zmApp.controllers')
 
                         ld.packeryPositions = JSON.stringify(positions);
                         //console.log ("Saving " + ld.packeryPositions);
+                        ld.currentMontageProfile = "";
+                        $scope.currentProfileName =$translate.instant ('kMontage');;
                         NVRDataModel.setLogin(ld);
                         $ionicLoading.hide();
                         $scope.sliderChanging = false;
@@ -1730,6 +1801,7 @@ angular.module('zmApp.controllers')
             {
                 var id = elem.getAttribute("data-item-id");
                 var sz = elem.getAttribute("data-item-size");
+                if (isNaN(sz)) sz=20;
                 oldScales[id] = sz;
                 console.log("REMEMBERING " + id + ":" + sz);
 
@@ -1739,7 +1811,7 @@ angular.module('zmApp.controllers')
             for (var i = 0; i < $scope.MontageMonitors.length; i++)
             {
 
-                var curVal = parseInt($scope.MontageMonitors[i].Monitor.gridScale);
+                var curVal = parseInt($scope.MontageMonitors[i].Monitor.gridScale) || 20;
                 curVal = curVal + (5 * dirn);
                 if (curVal < 10) curVal = 10;
                 if (curVal > 100) curVal = 100;
@@ -1769,11 +1841,12 @@ angular.module('zmApp.controllers')
             {
                 for (i = 0; i < $scope.MontageMonitors.length; i++)
                 {
-                    var cv = parseInt($scope.MontageMonitors[i].Monitor.gridScale);
+                    var cv = parseInt($scope.MontageMonitors[i].Monitor.gridScale) || 20;
                     cv = cv + (5 * dirn);
                     if (cv < 10) cv = 10;
                     if (cv > 100) cv = 100;
                     $scope.MontageMonitors[i].Monitor.gridScale = cv;
+                    //console.log ("*******GRIDSCALE="+)
                 }
             }
 
@@ -1790,6 +1863,7 @@ angular.module('zmApp.controllers')
                     {
                         var id = elem.getAttribute("data-item-id");
                         var sz = elem.getAttribute("data-item-size");
+                        if (isNaN(sz)) sz=20;
                         console.log("NOW IT IS-> " + id + ":" + sz);
                         if (oldScales[id] != sz)
                         {
@@ -1833,6 +1907,8 @@ angular.module('zmApp.controllers')
 
                     ld.packeryPositions = JSON.stringify(positions);
                     //console.log ("Saving " + ld.packeryPositions);
+                    ld.currentMontageProfile = "";
+                    $scope.currentProfileName = $translate.instant ('kMontage');
                     NVRDataModel.setLogin(ld);
                     $ionicLoading.hide();
                     $scope.sliderChanging = false;

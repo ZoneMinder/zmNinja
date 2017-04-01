@@ -136,7 +136,9 @@ angular.module('zmApp', [
 
             angular.forEach(input, function (item) {
 
-                if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0')) {
+                if ((item.Monitor.Function != 'None') && 
+                    (item.Monitor.Enabled != '0')  
+                     ) {
                     out.push(item);
                 }
 
