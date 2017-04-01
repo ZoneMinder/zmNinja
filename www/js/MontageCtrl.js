@@ -1758,7 +1758,7 @@ angular.module('zmApp.controllers')
                         ld.packeryPositions = JSON.stringify(positions);
                         //console.log ("Saving " + ld.packeryPositions);
                         ld.currentMontageProfile = "";
-                        $scope.currentProfileName =$translate.instant ('kMontage');;
+                        $scope.currentProfileName =$translate.instant ('kMontage');
                         NVRDataModel.setLogin(ld);
                         $ionicLoading.hide();
                         $scope.sliderChanging = false;
