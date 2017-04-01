@@ -301,7 +301,8 @@ angular.module('zmApp.controllers')
 
         function reloadMonitorDisplayStatus()
         {
-            debug("Loading hidden/unhidden status...");
+            debug("Loading hidden/unhidden status for profile:"+loginData.currentMontageProfile);
+        
             var positionsStr = loginData.packeryPositions;
             //console.log ("positionStr="+positionsStr);
             var positions = {};
@@ -313,15 +314,33 @@ angular.module('zmApp.controllers')
                 positions = JSON.parse(positionsStr);
                 for (var m = 0; m < monitors.length; m++)
                 {
+                    var positionFound = false;
                     for (var p = 0; p < positions.length; p++)
                     {
                         if (monitors[m].Monitor.Id == positions[p].attr)
                         {
                             monitors[m].Monitor.listDisplay = positions[p].display;
+                            positionFound = true;
                             debug("DataModel: Setting MID:" + monitors[m].Monitor.Id + " to " + monitors[m].Monitor.listDisplay);
                         }
 
                     }
+                    if (!positionFound)
+                    {
+                        if (loginData.currentMontageProfile != $translate.instant('kMontageDefaultProfile'))
+                        {
+                            monitors[m].Monitor.listDisplay = 'noshow';
+                            console.log("*************DISABLE NEW MONITOR");
+                        }
+                        else // make sure we add it because its show all view
+                        {
+                            monitors[m].Monitor.listDisplay = 'show';
+                            console.log("*************ENABLE NEW MONITOR");
+                        }
+                    
+
+                    }
+                     
                 }
 
             }
