@@ -9,12 +9,18 @@
     <ion-content>
         <div class="list">
             <span ng-repeat="item in copyMontage">
-                    <a class="item item-icon-left" ng-click="toggleHide($index)" href="">
-                        <i ng-class="{'icon ion-eye':item.Monitor.listDisplay=='show','eye-red icon ion-eye-disabled':item.Monitor.listDisplay!='show'}"> </i>
-                        <span ng-class="{'eye-red':item.Monitor.listDisplay!='show'}">{{item.Monitor.Name}}</span>
+
+                    
+             
+                    <a class="item  item-avatar item-icon-right " ng-click="toggleHide($index)" href="">
+
+                        <img src="{{item.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{item.Monitor.Id}}&scale=50{{$root.authSession}}"  fallback-src />
+
+                        <i ng-class="{'icon ion-eye':item.Monitor.listDisplay=='show','eye-red icon ion-eye-disabled':item.Monitor.listDisplay!='show'}"> </i><h2><span ng-class="{'eye-red':item.Monitor.listDisplay!='show'}">{{item.Monitor.Name}}</span></h2><p>{{'kId' | translate}}:{{item.Monitor.Id}}, {{'kMode' | translate}}:{{item.Monitor.Function}}</p>
+                       
                     </a>
-                        
-                </span>
+            
+            </span>
         </div>
     </ion-content>
 </ion-modal-view>
