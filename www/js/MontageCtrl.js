@@ -1366,13 +1366,51 @@ angular.module('zmApp.controllers')
         // save current configuration into a profile
         $scope.saveMontageProfile = function()
         {
+
+            var posArray;
+
+            try
+            {
+                posArray = NVRDataModel.getLogin().packeryPositionsArray;
+                //console.log ("PA="+JSON.stringify(posArray));
+
+            }
+            catch (e)
+            {
+                NVRDataModel.debug("error parsing packery array positions");
+                posArray = {};
+            }
             $scope.data = {
                 montageName: ""
             };
+
+            $scope.listdata = [];
+            for (var key in posArray)
+            {
+                if (posArray.hasOwnProperty(key))
+                {
+                    $scope.listdata.push(key);
+                }
+            }
+            if ($scope.listdata.indexOf($translate.instant('kMontageDefaultProfile')) == -1)
+                $scope.listdata.push($translate.instant('kMontageDefaultProfile'));
+
+
+            var templ = "<input autocapitalize='none' autocomplete='off' autocorrect='off' type='text' ng-model='data.montageName'>";
+
+            if ($scope.listdata.length)
+            templ += '<br/><div class="item item-divider">'+$translate.instant('kMontageSavedProfiles')+'</div>'+
+                    '<ion-list>                                ' +
+                    '  <ion-radio-fix ng-repeat="item in listdata" ng-value="item" ng-model="data.montageName"> ' +
+                    '    {{item}}                              ' +
+                    '  </ion-item>                             ' +
+                    '</ion-list>                               ';
+
+
             $rootScope.zmPopup = SecuredPopups.show('confirm',
             {
                 title: $translate.instant('kMontageSave'),
-                template: "<input autocapitalize='none' autocomplete='off' autocorrect='off' type='text' ng-model='data.montageName'>",
+                template: templ,
                 subTitle: $translate.instant('kMontageSaveSubtitle'),
                 scope: $scope,
                 okText: $translate.instant('kButtonOk'),
