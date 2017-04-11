@@ -1,5 +1,32 @@
 # Change Log
 
+## [v1.2.41](https://github.com/pliablepixels/zmNinja/tree/v1.2.41) (2017-04-11)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v1.2.41)
+
+**Implemented enhancements:**
+
+- Implement concept of 'default profile' & 'workspace' in Montage [\#509](https://github.com/pliablepixels/zmNinja/issues/509)
+- Allow for montage scaling at increments of 5% \(currently 10%\) [\#505](https://github.com/pliablepixels/zmNinja/issues/505)
+- In monitor list \(Montage screen\) make the color of disabled monitors more prominent [\#503](https://github.com/pliablepixels/zmNinja/issues/503)
+
+**Fixed bugs:**
+
+- Montage profile showing new monitors automatically [\#504](https://github.com/pliablepixels/zmNinja/issues/504)
+- Video playback \(h264\) breaks on iOS with a config.xml setting [\#501](https://github.com/pliablepixels/zmNinja/issues/501)
+
+**Closed issues:**
+
+- Add support for manual disable/enable alarms [\#507](https://github.com/pliablepixels/zmNinja/issues/507)
+- When zoneminder is in contineous record mode zmNinja shows no events [\#502](https://github.com/pliablepixels/zmNinja/issues/502)
+- 2 Monitors - But only only one show up in "Event List" [\#500](https://github.com/pliablepixels/zmNinja/issues/500)
+- Google independent zmNinja via F-Droid  or downloadable packages \(apk\) [\#498](https://github.com/pliablepixels/zmNinja/issues/498)
+- iOS app frozen after being in background [\#482](https://github.com/pliablepixels/zmNinja/issues/482)
+
+**Merged pull requests:**
+
+- montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
+-  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
 
