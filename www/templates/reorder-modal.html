@@ -12,7 +12,8 @@
 
                     
              
-                    <a class="item  item-avatar item-icon-right " ng-click="toggleHide($index)" href="">
+                    
+                    <a ng-class="{ 'item  item-avatar item-icon-right' :  item.Monitor.listDisplay == 'show', 'item  item-avatar item-icon-right eye-background-red' : item.Monitor.listDisplay!='show' }"  ng-click="toggleHide($index)" href="" >
 
                         <img src="{{item.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{item.Monitor.Id}}&scale=50{{$root.authSession}}"  fallback-src />
 

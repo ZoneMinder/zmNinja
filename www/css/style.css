@@ -22,6 +22,11 @@
     color:red;
 }
 
+.eye-background-red
+{
+    background-color:rgba(231, 76, 60,0.2);
+}
+
 .icon.mp4-icon {
   background-repeat: no-repeat;
   background-position: 50%;
