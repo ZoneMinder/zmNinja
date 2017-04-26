@@ -67,9 +67,11 @@
                 </circular>
             </div>
             <div ng-if="presetOn" class="ptzpresetbuttons animated fadeInDown" id="presetlist">
-                <div ng-repeat="preset in ptzPresets track by $index">
-                    <button class="button {{preset.icon}} button-small {{preset.style}}" style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, preset.cmd);">{{preset.name}}</button>
-                </div>
+                <ion-scroll style="height:170px">
+                    <div ng-repeat="preset in ptzPresets track by $index">
+                        <button class="button {{preset.icon}} button-small {{preset.style}}" style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, preset.cmd);">{{preset.name}}</button>
+                    </div>
+                </ion-scroll>
             </div>
             <div class="ptzcenteredbotbutton">
                 <div ng-if="canZoom">

@@ -1587,6 +1587,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                                 //$scope.presetAndControl = $translate.instant('kPresets');
 
                                 $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
+                            //$scope.ptzPresetCount =80;
 
                                 NVRDataModel.debug("ConfigurePTZ Number of presets is " + $scope.ptzPresetCount);
 
