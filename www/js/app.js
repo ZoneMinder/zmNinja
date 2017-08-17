@@ -49,7 +49,8 @@ angular.module('zmApp', [
         logFile: 'zmNinjaLog.txt',
         authoremail: 'pliablepixels+zmNinja@gmail.com',
         logFileMaxSize: 20000, // after this limit log gets reset
-        loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
+        //loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
+        loginInterval: 1800000, //30m*60s*1000 - ZM auto login after 30 mins
 
         //loginInterval: 30000,
         updateCheckInterval: 86400000, // 24 hrs
@@ -90,7 +91,7 @@ angular.module('zmApp', [
         minCycleTime: 5,
 
         eventPlaybackQueryLowBW: 6000,
-        loginIntervalLowBW: 600000, //10m login
+        loginIntervalLowBW: 1800000, //30m login
         eventSingleImageQualityLowBW: 70,
         monSingleImageQualityLowBW: 70,
         montageQualityLowBW: 50,
@@ -592,6 +593,17 @@ angular.module('zmApp', [
                     //  console.log ("No cookie present in " + config.url);
                 }
 
+                if ($rootScope.apiAuth)
+                {
+                    console.log ("********** API AUTH");
+                    if (config.url.indexOf("/api/") > -1 )
+                    {
+                        config.url = config.url + "&auth="+$rootScope.authSession;
+                        console.log ("********** API AUTH muggled to:"+config.url);
+                        
+                    }
+                } 
+
                 if ((config.url.indexOf("/api/states/change/") > -1) ||
                     (config.url.indexOf("getDiskPercent.json") > -1) ||
                     (config.url.indexOf("daemonCheck.json") > -1) ||
@@ -610,6 +622,7 @@ angular.module('zmApp', [
                     // config.timeout = zm.httpTimeout;
 
                 }
+
                 return config;
             },
 
@@ -841,7 +854,17 @@ angular.module('zmApp', [
             var d = $q.defer();
             var ld = NVRDataModel.getLogin();
 
+
+            /*$rootScope.authSession = 'Test';
+            $rootScope.apiAuth = true;
+            d.resolve ("Login Success");
+            $rootScope.loggedIntoZm = 1;
+            $rootScope.$emit('auth-success', 'hash API mode');
+
             console.log(">>>>>>>>>>> DO LOGIN");
+            if (1) {return (d.promise);}*/
+
+
 
             
             NVRDataModel.processFastLogin()
@@ -1817,7 +1840,7 @@ angular.module('zmApp', [
 
         //$translateProvider.useLocalStorage();
 
-        $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ru', 'ja', 'ko', 'nl', 'pl', 'zh', 'zh_CN', 'zh_TW', 'pt', 'ar', 'hi'], {
+        $translateProvider.registerAvailableLanguageKeys(['en', 'de', 'es', 'fr', 'it', 'ru', 'ja', 'ko', 'nl', 'pl', 'zh', 'zh_CN', 'zh_TW', 'pt', 'ar', 'hi', 'hu'], {
             'en_*': 'en',
             'de_*': 'de',
             'es_*': 'es',
@@ -1831,6 +1854,7 @@ angular.module('zmApp', [
             'pl_*': 'pl',
             'ar_*': 'ar',
             'hi_*': 'hi',
+            'hu_*':'hu',
             '*': 'en' // must be last
         });
 
