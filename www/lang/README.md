@@ -1,14 +1,14 @@
 
 If you are familiar with using git, I'd prefer if you follow the Pull Request process [here](https://github.com/pliablepixels/zmNinja/blob/master/CONTRIBUTING.md#steps-for-code-contribution).
 
-####Adding a new language
+#### Adding a new language
 * Languages translations are available [here](https://github.com/pliablepixels/zmNinja/tree/master/www/lang)
 * To contribute a new language, add a new ``locale-xx.json`` (where `xx` is your language code).
 * Ideally, you should also provide a language translation for the zmNinja help file inside [lang/help](https://github.com/pliablepixels/zmNinja/tree/master/www/lang/help)
 
 The best way is to simply look at an existing language translation and follow the same model for yours. If any language translation keywords are missed, it will fallback to English.
 
-####Main Language file
+#### Main Language file
 * Make sure there is no comma after the last element
 * Comments are not allowed
 * Make sure you don't add ellipsis "..." anywhere, they are added to messages in code when needed
@@ -32,12 +32,12 @@ This validates your JSON file, makes sure all keys are in sync with -en and if v
 This validates your JSON file,makes sure all keys are in sync with -en  and if valid, OVERWRITES your local file with a pretty formatted version, which is what you should PR
 
 
-####Translating Help language file
+#### Translating Help language file
 * Located inside lang/help
 * Please be careful not to mess up the html tags, please only focus on text translation
 
 
-####How to recognize a new language:
+#### How to recognize a new language:
 (This is only for zmNinja developers. Not relevant for language translators)
 * Modify languages array in DataModel.js (look for "var languages")
 * register language glob code in app.js - make sure its added to array list and mapping (look for registerAvailableLanguageKeys)
