@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 5.1.6.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2017-08-16T23:57:44.406723066"/>
+	<style type="text/css">
+		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; line-height: 120% }
+		pre.cjk { font-family: "Nimbus Mono L", monospace }
+		a:link { so-language: zxx }
+	</style>
+</head>
+<body lang="hu-HU" dir="ltr">
+<pre class="western">&lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt; Van hivatalos GYIK?&lt;/b&gt; &lt;/h2&gt;Biztos vagyok benne. Mindig ellenőrizze &lt;a href=&quot;#&quot; onclick=&quot;window.open('https://github.com/pliablepixels/zmNinja/wiki/FAQ', '_blank', 'location=yes'); return false;&quot;&gt;here&lt;/a&gt; a legfrissebb segítségért
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt; Mit írok be a ZM oldal URL-je, a cgi-bin elérési útja és a ZM API URL-jéhez?&lt;/b&gt; &lt;/h2&gt;
+                &lt;ul&gt;
+                    {{$root.appName}} Most van egy varázsló, amely megpróbálja felismerni a beállításokat. Ez sikertelen lehet, ha egyéni telepítés van a nem szabványos elérési utakkal.
+                    &lt;li&gt;&lt;i class=&quot;ion-android-arrow-dropright&quot;&gt;&lt;/i&gt; ZM oldal URL: Az URL, amellyel hozzáférhet a ZM-hez
+                        &lt;p&gt;(Például: http://myserver.ddns.net/zm)&lt;/p&gt;
+                    &lt;/li&gt;
+                    &lt;li&gt;&lt;i class=&quot;ion-android-arrow-dropright&quot;&gt;&lt;/i&gt; CGI elérési út: Az URL, amellyel a cgi-bin elérési útja elérhető
+                        &lt;p&gt;(Például: http://myserver.ddns.net/zm/cgi-bin).&lt;/p&gt;
+                    &lt;/li&gt;
+                    &lt;li&gt;&lt;i class=&quot;ion-android-arrow-dropright&quot;&gt;&lt;/i&gt; API Url: Az az URL, amellyel az API elérési útja elérhető
+                        &lt;p&gt;(Például: http://myserver.ddns.net/zm/api)&lt;/p&gt;
+                    &lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt;Mikor van a ZM-nek API-ja?&lt;/b&gt; &lt;/h2&gt; A ZoneMinder legfrissebb verziói olyan API-t tartalmaznak, amely az XML bőrt helyettesítheti. Csak a Zoneminder 1.28.107 indításával érhető el. Ha nincs telepítve az API, az ügyfél nem fog működni.
+
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt; &lt;b&gt;Nincs engedélyezve a hitelesítés, de az alkalmazás továbbra is megkéri a hitelesítés megadását&lt;/b&gt;&lt;/h2&gt;Ha nem használja a ZM-hitelesítést, csak egy &quot;x&quot; -et írjon be mind a felhasználónévben, mind a jelszóban.
+            &lt;/ion-item&gt;
+
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt; &lt;b&gt;Minden működik! De az élő közvetítés nem &lt;/b&gt;&lt;/h2&gt; Ellenőrizze, hogy működik-e a webes felületen. Ha nem működik, {{$root.appName}} nem fog működni itt sem. Állítsa ZM először. Ha a ZM-ben történő adatfolyamozás működik, folytassa {{$root.appName}} és állítsa be a cgi-bin útvonalat. Az automatikus elérési útvonal nem működik. Íme egy tipp, menj a zoneminder-options-ösvényekhez, és ellenőrizd a cgi-bin elérési útjának értékét - a te {{$root.appName}} szervered Beállítás→Útvonalak→PATH_ZMS helyen.
+            &lt;/ion-item&gt;
+
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt; Az adatok nem frissűlnek!&lt;/b&gt;&lt;/h2&gt; A legtöbb adatbeviteli képernyőnek van egy lefelé irányuló művelete. Húzza le a frissítéhez, és az adatokat újra kell töltenie.
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt; Mit jelent a kamera nézetbene a színek?&lt;/b&gt;&lt;/h2&gt;
+                &lt;i class=&quot;icon ion-checkmark-circled&quot; style=&quot;color:#03A9F4&quot;&gt;&lt;/i&gt; Ellenőrzés
+                &lt;br/&gt;
+                &lt;i class=&quot;icon ion-checkmark-circled&quot; style=&quot;color:#4CAF50&quot;&gt;&lt;/i&gt; Minden rendben
+                &lt;br/&gt;
+                &lt;i class=&quot;icon ion-close-circled&quot; style=&quot;color:#F44336&quot;&gt;&lt;/i&gt; Not Futás
+                &lt;br/&gt;
+                &lt;i class=&quot;icon ion-close-circled&quot; style=&quot;color:#FF9800&quot;&gt;&lt;/i&gt; Not Futás (függőben)
+                &lt;br/&gt;
+                &lt;i class=&quot;icon ion-checkmark-circled&quot; style=&quot;color:grey&quot;&gt;&lt;/i&gt; Tiltva
+                &lt;br/&gt;
+                &lt;i class=&quot;icon ion-help-circled&quot; style=&quot;color:#795548&quot;&gt;&lt;/i&gt; Ismeretlen
+                &lt;br/&gt;
+
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt;Hozzájárulni akarok!&lt;/b&gt;&lt;/h2&gt; Fantasztikus. &lt;a href=&quot;#&quot; onclick=&quot;window.open('http://github.com/pliablepixels/zmNinja', '_blank', 'location=yes'); return false;&quot;&gt; Grab&lt;/a&gt; itt találhatü a forráskód!
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt;Problémám van ezzel az alkalmazással&lt;/b&gt;&lt;/h2&gt;Érintse meg a naplók menüpontját. Kattintson a jobb felső sarokban található e-mail gombra, hogy elküldje őket az alkalmazás szerzőjének. Ne feledje, hogy az e-mail összetételénél a zmNinja megpróbálja eltávolítani a személyes adatokat a szerver IP-címek és a kiszolgálói jelszavak keresésével és cseréjével. A &lt;b&gt;saját felelősséged&lt;/ b&gt; azonban biztosítani kell, hogy a naplók ne tartalmazzanak semmilyen érzékeny információt. Mielőtt elküldi az e-mailt, kérjük, olvassa át a beágyazott naplókat, és szükség szerint módosítsa.
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt;A kiszolgáló URL-jét és jelszavát a naplókban láthatom. Azt mondtad, hogy a zmNinja eltávolítja őket?&lt;/b&gt;&lt;/h2&gt;A zmNinja megpróbálja eltávolítani &lt;b&gt; miután &lt;/ b&gt; megérintette az e-mail gombot. Feltételezem, hogy eltávolíthatom őket a tárolt naplóktól is, de akkor nehezebb lenne kideríteni, hogy hibázott-e az alkalmazás konfigurálásakor.
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt;Hogyan léphetek kapcsolatba a szerzővel?&lt;/b&gt;&lt;/h2&gt; Küldj nekem egy &lt;a href=&quot;#&quot; onclick=&quot;window.open('mailto:pliablepixels@gmail.com', '_blank', 'location=yes'); return false;&quot;&gt;email&lt;/a&gt;
+            &lt;/ion-item&gt;
+
+            &lt;ion-item class=&quot;item-text-wrap&quot;&gt;
+                &lt;h2&gt;&lt;b&gt;Fordította magyar nyelvre: Veress Krisztián&lt;/b&gt;&lt;/h2&gt;Fordítási hiba esetén küldj nekem egy &lt;a href=&quot;#&quot; onclick=&quot;window.open('mailto:krive001@gmail.com', '_blank', 'location=yes'); return false;&quot;&gt;e-mailt&lt;/a&gt;
+            &lt;/ion-item&gt;
+</pre>
+</body>
+</html>

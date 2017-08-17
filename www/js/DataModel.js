@@ -38,6 +38,10 @@ angular.module('zmApp.controllers')
                 value: 'ar'
             },
             {
+                text: 'Deutsch',
+                value: 'de'
+            },
+            {
                 text: 'Español',
                 value: 'es'
             },
@@ -46,14 +50,14 @@ angular.module('zmApp.controllers')
                 text: 'Français',
                 value: 'fr'
             },
-
-            {
-                text: 'Deutsch',
-                value: 'de'
-            },
+                       
             {
                 text: 'Italiano',
                 value: 'it'
+            },
+            {
+                text:'Magyar',
+                value:'hu'
             },
             {
                 text: 'Nederlands',
