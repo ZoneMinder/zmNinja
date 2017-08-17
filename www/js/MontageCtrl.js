@@ -25,6 +25,11 @@ angular.module('zmApp.controllers')
         var ld;
         var refreshSec;
 
+        $rootScope.$on("auth-success", function () {
+             NVRDataModel.debug("REAUTH");
+            console.log ("RETAUTH");
+            NVRDataModel.stopNetwork();
+        });
 
 
         //--------------------------------------------------------------------------------------
@@ -495,12 +500,21 @@ angular.module('zmApp.controllers')
                     });
         }
 
+        function randEachTime() {
+          $scope.randToAvoidCacheMem =  new Date().getTime();
+          //$scope.randToAvoidCacheMem =  "1";
+          console.log ("Generating:"+$scope.randToAvoidCacheMem);
+        }
+
         //-----------------------------------------------------------------------
         // re-compute rand so snapshot in montage reloads
         //-----------------------------------------------------------------------
 
         function loadNotifications()
         {
+
+            randEachTime();
+            console.log ($scope.randToAvoidCacheMem);
 
             if ($scope.areImagesLoading)
             {

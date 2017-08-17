@@ -105,14 +105,14 @@
                                     
                                  
                                     
-                                    <img    class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);" image-spinner-loader="lines"  />
+                                    <img    class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{randToAvoidCacheMem}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);" image-spinner-loader="lines"  />
                                        
                                    
 
                                     </div> 
 
                                     <div ng-if = "minimal">
-                                        <img  id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{$root.rand}}"  ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);" image-spinner-loader="lines"    />
+                                        <img  id="img-{{$index}}" image-spinner-src="{{monitor.Monitor.streamingURL}}/zms?mode=single&monitor={{monitor.Monitor.Id}}&scale={{LoginData.montageQuality}}{{$root.authSession}}&rand={{randToAvoidCacheMem}}"  ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);" image-spinner-loader="lines"    />
                                     </div>
                             </div>
 
