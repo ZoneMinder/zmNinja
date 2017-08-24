@@ -148,6 +148,15 @@
                     <input type="tel" placeholder="" ng-model="loginData.cycleMonitorsInterval">
                 </label>
             </div>
+
+            <div class="item item-text-wrap item-input-inset">
+                {{'kCycleMontageInterval'|translate}}({{'kSec'|translate}}.)&nbsp;
+                <label class="item-input-wrapper">
+                    <input type="tel" placeholder="" ng-model="loginData.cycleMontageInterval">
+                </label>
+            </div>
+
+
             <label>
                 <ion-toggle ng-if="loginData.enableLogs" ng-model="loginData.enableDebug" ng-checked="{{loginData.enableDebug}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableDebug' | translate}}</span></ion-toggle>
             </label>

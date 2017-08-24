@@ -25,5 +25,9 @@
     "!www/lib/**/*",
     "scss/**/*"
   ],
-  "type": "ionic-angular"
+  "type": "ionic-angular",
+  "integrations": {
+    "gulp": {},
+    "cordova": {}
+  }
 }

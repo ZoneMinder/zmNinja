@@ -365,8 +365,22 @@ angular.module('zmApp.controllers')
         function findNext (key,obj)
         {
 
+          console.log (" key is: "+ key);
+          console.log ("array is " + JSON.stringify (obj));
            var keys = Object.keys(obj);
-           return  keys[(keys.indexOf(key) + 1) % keys.length];
+
+           var len = keys.length;
+           var curindex = keys.indexOf(key);
+           var modulus = (curindex +  1) % len;
+
+           console.log ("*********** len="+len+" curr="+curindex+" next="+modulus);
+
+           //console.log ("Keys array "+ JSON.stringify(keys));
+
+           //console.log ("Current index: "+ keys.indexOf(key) );
+           //console.log ("returning index of " + (keys.indexOf(key) + 1) % (keys.length));
+          // console.log ("keys length is "+ keys.length);
+           return  keys[modulus];
 
           /* var size = Object.keys(obj).length;
            var i;
@@ -503,7 +517,7 @@ angular.module('zmApp.controllers')
         function randEachTime() {
           $scope.randToAvoidCacheMem =  new Date().getTime();
           //$scope.randToAvoidCacheMem =  "1";
-          console.log ("Generating:"+$scope.randToAvoidCacheMem);
+          //console.log ("Generating:"+$scope.randToAvoidCacheMem);
         }
 
         //-----------------------------------------------------------------------
@@ -514,7 +528,7 @@ angular.module('zmApp.controllers')
         {
 
             randEachTime();
-            console.log ($scope.randToAvoidCacheMem);
+            //console.log ($scope.randToAvoidCacheMem);
 
             if ($scope.areImagesLoading)
             {
@@ -612,6 +626,8 @@ angular.module('zmApp.controllers')
             ld.cycleMontageProfiles = !ld.cycleMontageProfiles;
             NVRDataModel.setLogin(ld);
             NVRDataModel.debug ("cycle="+ld.cycleMontageProfiles);
+            NVRDataModel.debug ("cycle interval="+ld.cycleMontageInterval);
+
 
         };
 
@@ -1607,6 +1623,7 @@ angular.module('zmApp.controllers')
                 //  console.log ("Refreshing Image...");
             }.bind(this), refreshSec * 1000);
 
+            NVRDataModel.debug ("Setting up cycle interval of:"+ NVRDataModel.getLogin().cycleMontageInterval* 1000);
             intervalHandleMontageCycle = $interval(function()
             {
                 cycleMontageProfiles();

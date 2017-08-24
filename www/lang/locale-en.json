@@ -48,6 +48,7 @@
     "kCustomRange"               :"Custom Range",
     "kCycleMonitors"             :"cycle monitors",
     "kCycleMonitorsInterval"     :"monitor cycle interval",
+    "kCycleMontageInterval"      :"montage cycle interval",
     "kDay"                       :"Day",
     "kDecreaseSize"              :"decrease size",
     "kDelete"                    :"Delete",
