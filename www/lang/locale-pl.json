@@ -48,6 +48,7 @@
     "kCustomRange"               :"Zakres niestandardowy",
     "kCycleMonitors"             :"cykl monitorów",
     "kCycleMonitorsInterval"     :"Interwał cyklu monitora",
+    "kCycleMontageInterval"      :"Interwał cyklu Podglądu",
     "kDay"                       :"Dzień",
     "kDecreaseSize"              :"zmniejsz rozmiar",
     "kDelete"                    :"Usuń",
