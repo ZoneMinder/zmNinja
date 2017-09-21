@@ -167,13 +167,13 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                     }
                     else {
                         // kEmailNotConfigured
-                    $rootScope.zmPopup = SecuredPopups.show('alert',
-                    {
-                        title: $translate.instant('kError'),
-                        template: $translate.instant('kEmailNotConfigured'),
-                        okText: $translate.instant('kButtonOk'),
-                        cancelText: $translate.instant('kButtonCancel'),
-                    });
+                        $rootScope.zmPopup = SecuredPopups.show('alert',
+                        {
+                            title: $translate.instant('kError'),
+                            template: $translate.instant('kEmailNotConfigured'),
+                            okText: $translate.instant('kButtonOk'),
+                            cancelText: $translate.instant('kButtonCancel'),
+                        });
 
                     }
        
