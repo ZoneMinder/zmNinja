@@ -27,6 +27,7 @@
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="FadeSplashScreen" value="false" />
     <preference name="BackgroundColor" value="#444444" />
+    <preference name="android-targetSdkVersion" value="23" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
@@ -76,6 +77,7 @@
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
+    <engine name="android" spec="^6.2.3" />
     <engine name="ios" spec="^4.4.0" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="^0.6.5" />
     <plugin name="cordova-library-helper" spec="^1.0.4">
@@ -84,9 +86,16 @@
     <plugin name="cordova-plugin-add-swift-support" spec="^1.7.0" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
-    <plugin name="cordova-plugin-certificates" spec="git+https://github.com/hypery2k/cordova-certificate-plugin.git" />
     <plugin name="cordova-plugin-compat" spec="^1.1.0" />
     <plugin name="cordova-plugin-console" spec="^1.0.7" />
+    <plugin name="cordova-plugin-crosswalk-certificate" spec="git+https://github.com/danjarvis/cordova-plugin-crosswalk-certificate.git" />
+    <plugin name="cordova-plugin-crosswalk-webview" spec="^2.2.0">
+        <variable name="XWALK_MODE" value="lite" />
+        <variable name="XWALK_VERSION" value="17.46.459.1" />
+        <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
+        <variable name="XWALK_COMMANDLINE" value="--disable-pull-to-refresh-effect" />
+        <variable name="XWALK_MULTIPLEAPK" value="true" />
+    </plugin>
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
         <variable name="URL_SCHEME" value="zmninja" />
     </plugin>
