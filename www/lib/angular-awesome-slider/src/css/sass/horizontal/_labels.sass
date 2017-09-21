@@ -1,0 +1,17 @@
+div.jslider-label small,
+div.jslider-value small
+	+position(relative, -0.4em null null null)
+
+// limits
+div.jslider-label
+	+position(absolute, -18px null 0 null)
+	padding: 0px 2px
+	opacity: 0.4
+	color: $color-pointers-label
+	font-size: $font-size-pointers-label
+	line-height: $line-height-pointers-label
+	white-space: nowrap
+
+	&.jslider-label-to
+		left: auto
+		right: 0

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.ionicNativeTransitions" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>ionic-native-transitions</name>
+    <description>
+        Your description.
+    </description>
+    <author email="youEmail@" href="yourUrl">
+        YourName
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-navigation href="http://example.com/*" />
+    <preference name="orientation" value="portrait" />
+    <preference name="fullscreen" value="false" />
+    <preference name="webviewbounce" value="false" />
+    <preference name="UIWebViewBounce" value="false" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackupWebStorage" value="none" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="android-minSdkVersion" value="14" />
+    <preference name="android-targetSdkVersion" value="14" />
+    <preference name="CROSSWALK_ANDROID_VERSION" value="14+" />
+    <preference name="CrosswalkAnimatable" value="true" />
+    <preference name="android-windowSoftInputMode" value="adjustNothing" />
+    <feature name="StatusBar">
+        <param name="ios-package" onload="true" value="CDVStatusBar" />
+    </feature>
+    <resources>
+        <integer name="google_play_services_version">4323000</integer>
+    </resources>
+    <preference name="xwalkVersion" value="14+" />
+    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
+    <preference name="xwalkMode" value="embedded" />
+    <preference name="xwalkMultipleApk" value="true" />
+</widget>

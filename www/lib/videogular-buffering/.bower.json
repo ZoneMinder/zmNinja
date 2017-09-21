@@ -1,0 +1,19 @@
+{
+  "name": "videogular-buffering",
+  "version": "1.4.4",
+  "main": "./vg-buffering.js",
+  "dependencies": {
+    "videogular": "~1.4.4"
+  },
+  "homepage": "https://github.com/2fdevs/bower-videogular-buffering",
+  "_release": "1.4.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.4.4",
+    "commit": "84fa91b8b28631336e3bb9a8108d3a04e76508d3"
+  },
+  "_source": "https://github.com/2fdevs/bower-videogular-buffering.git",
+  "_target": "1.4.4",
+  "_originalSource": "videogular-buffering",
+  "_direct": true
+}

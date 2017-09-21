@@ -1,0 +1,8 @@
+{
+  "name": "videogular-buffering",
+  "version": "1.4.4",
+  "main": "./vg-buffering.js",
+  "dependencies": {
+    "videogular": "~1.4.4"
+  }
+}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>{%=o.htmlWebpackPlugin.options.pkg.title %}</title>
+        <!-- cordova script (this will be a 404 during development) -->
+        <script src="cordova.js"></script>
+    </head>
+
+    <body ng-app="test" ng-strict-di ng-controller="MainController as main">
+        <ion-side-menus enable-menu-with-back-views="true">
+            <ion-side-menu-content>
+                <ion-nav-bar class="bar-positive">
+                    <ion-nav-back-button class="button-icon ion-arrow-left-c">
+                    </ion-nav-back-button>
+                    <ion-nav-buttons side="left">
+                        <button menu-toggle="left" class="button button-clear">
+                            <i class="icon ion-navicon-round"></i>
+                        </button>
+                    </ion-nav-buttons>
+                    <ion-nav-buttons side="right">
+                        <button class="button button-clear" ng-click="main.openModal()">
+                            <i class="icon ion-open"></i> Modal
+                        </button>
+                    </ion-nav-buttons>
+                </ion-nav-bar>
+                <ion-nav-view></ion-nav-view>
+            </ion-side-menu-content>
+            <ion-side-menu side="left" ui-view="menu"></ion-side-menu>
+        </ion-side-menus>
+
+        <script id="templates/tabs.html" type="text/ng-template">
+            <ion-tabs class="tabs-icon-top tabs-positive">
+
+                <ion-tab title="Home" icon="ion-home" ui-sref="tabs.home" ui-sref-opts="{inherit:false}">
+                    <ion-nav-view name="home-tab"></ion-nav-view>
+                </ion-tab>
+
+                <ion-tab title="About" icon="ion-ios-football" ui-sref="tabs.about">
+                    <ion-nav-view name="about-tab"></ion-nav-view>
+                </ion-tab>
+
+                <ion-tab title="Contact" icon="ion-bag" ui-sref="tabs.contact">
+                    <ion-nav-view name="contact-tab"></ion-nav-view>
+                </ion-tab>
+
+                </ion-tab>
+
+            </ion-tabs>
+        </script>
+
+        <script id="templates/home.html" type="text/ng-template">
+            <ion-view view-title="Home">
+                <ion-content class="">
+                    <p>
+                        <a class="button button-full button-large icon icon-right ion-chevron-right" ui-sref="one">Start</a>
+                    </p>
+                    Is enabled: {{main.isEnable}}
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.enable()">Enable plugin</a>
+
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.disable()">Disable plugin</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.enableBothTransitions()">Enable both transitions</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.disableWithoutDisablingIonicTransitions()">Disable plugin and ionic transitions</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.stateGo()">StateGo</a>
+                    <button class="button button-full button-large icon icon-right ion-chevron-right" native-ui-sref="four({test: 'buyakacha2!', testParamUrl: 'haha'})" native-ui-sref-opts="{inherit:false}" native-options="{type: 'slide', direction:'down'}">
+                        StateGo via directive
+                    </button>
+                    <button class="button button-full button-large icon icon-right ion-chevron-right" native-ui-sref="four" native-ui-sref-opts="{inherit:false}">
+                        StateGo via directive without native-options
+                    </button>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.locationUrl()">LocationUrl</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.sameStateGo()">sameStateGo</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.sameStateGo(true)">sameStateGo with reload</a>
+                    <a class="button button-full button-large icon icon-right ion-chevron-right" ng-click="main.stateError()">State on error</a>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <script id="templates/one.html" type="text/ng-template">
+            <ion-view view-title="One">
+                <ion-nav-buttons side="left">
+                    <button class="button button-clear" native-ui-sref="tabs.home" native-ui-sref-opts="{reload: true}" native-options="{type: 'slide', direction:'down'}">
+                        <i class="icon ion-arrow-left-c"></i> Custom back
+                    </button>
+                </ion-nav-buttons>
+                <ion-content class="">
+                    <p>
+                        <a class="button button-full button-large icon icon-right ion-chevron-right" ui-sref="two">Two</a>
+                    </p>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <script id="templates/two.html" type="text/ng-template">
+            <ion-view view-title="Two">
+                <ion-content class="">
+                    <p>
+                        <a class="button button-full button-large icon icon-right ion-chevron-right" ui-sref="three">Three</a>
+                    </p>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <script id="templates/three.html" type="text/ng-template">
+            <ion-view view-title="Three">
+                <ion-content class="">
+                    <p>
+                        <a class="button button-full button-large icon icon-right ion-chevron-right" ui-sref="four">Four</a>
+                        <a class="button" ng-click="main.goBack()">Go back</a>
+                        <a class="button" ng-click="main.goBack(-1)">Go back 1 states</a>
+                        <a class="button" ng-click="main.goBack(-2)">Go back 2 states</a>
+                        <a class="button" ng-click="main.goBack(-3)">Go back 3 states</a>
+                        <a class="button" ng-click="main.goBack(-10)">Go back 10 states</a>
+                    </p>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <script id="templates/four.html" type="text/ng-template">
+            <ion-view view-title="Four">
+                <ion-content class="">
+                </ion-content>
+            </ion-view>
+        </script>
+        
+        <script id="templates/five.html" type="text/ng-template">
+            <ion-view view-title="Five">
+                <ion-content class="">
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <script id="templates/about.html" type="text/ng-template">
+            <ion-view view-title="About">
+                <ion-content class="padding">
+                    <h3>Create hybrid mobile apps with the web technologies you love.</h3>
+                    <p>Free and open source, Ionic offers a library of mobile-optimized HTML, CSS and JS components for building highly interactive apps.</p>
+                    <p>Built with Sass and optimized for AngularJS.</p>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <script id="templates/contact.html" type="text/ng-template">
+            <ion-view title="Contact">
+                <ion-content>
+                    <div class="list">
+                        <a class="item" href="https://twitter.com/julienrenaux">
+                            @julienrenaux
+                        </a>
+                        <div class="item">
+                            @IonicFramework
+                        </div>
+                        <div class="item">
+                            @DriftyTeam
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
+        <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
+        {% } %}
+    </body>
+
+</html>

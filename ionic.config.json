@@ -1,5 +1,12 @@
 {
   "name": "zmNinja",
   "app_id": "",
-  "type": "ionic1"
+  "type": "ionic1",
+  "integrations": {
+    "gulp": {},
+    "cordova": {}
+  },
+  "watchPatterns": [
+    "scss/**/*"
+  ]
 }

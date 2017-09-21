@@ -1,0 +1,34 @@
+<ion-view view-title="{{$root.appName}}" hide-nav-bar="false" hide-back-button="false" cache-view="false">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+    <ion-content class="pin-background">
+        <div style="margin-left:20px; margin-right:20px">
+            <center>
+                <br/>
+                <br/>
+                <div id="responsive-image">
+                    <img src="img/authlogo.png">
+                </div>
+                <br/>
+                <span style="color:white">
+                    <h2 style="color:white" class="animated bounce">{{'kImpMsg1' | translate}}</h2>
+                    <br/>
+                    <h4 style="color:white">{{'kImpMsg2' | translate}}</h4>
+                    <br/>
+                    {{'kImpMsg3' | translate}} v{{currentVersion}}.<br/> v{{recommendedVersion}} {{'kImpMsg4' | translate}}
+                    <br/>
+                    {{'kImpMsg5' | translate}}: <b>v{{currentVersion}}</b><br/>
+                     {{'kImpMsg6' | translate}}:<b>v{{recommendedVersion}}</b><br/><br/>
+                    
+                    <button  class="button button-stable animated bounceInUp" ng-click="openMenu()">
+                    {{'kImpMsg7' | translate}}
+                    </button>
+            
+                    
+                </span>
+            </center>
+            <br/>
+        </div>
+    </ion-content>
+</ion-view>

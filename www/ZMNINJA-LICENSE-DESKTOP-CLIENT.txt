@@ -1,0 +1,29 @@
+The source code of zmNinja is dual licensed.
+
+The code is free for personal, non commercial use
+http://creativecommons.org/licenses/by-nc-sa/4.0/
+In summary: Share Alike, Adapt,Attribute, NonCommercial
+
+zmNinja source code is also open for commerical licensing and white-labeling.
+Please contact pliablepixels@gmail.com
+
+For Desktop Clients Binaries: 
+
+The Desktop clients binaries free to download and use ONLY for users
+who are using the desktop client with the free and open source ZoneMinder
+software. If you are selling a service based on zoneminder and are either distributing the Desktop Client to your users or asking your users to use the desktop client by download it themselves, you are violating the non-commercial use. You will need to procure a license before you do so.
+
+Be nice, please.
+
+If you have any questions on licensing feel free to contact me.
+
+Ninja icon;
+https://openclipart.org/detail/172393/ninja-logo
+License: https://openclipart.org/share
+
+Blop sound for notifications:
+http://soundbible.com/2067-Blop.html
+
+
+-thanks
+

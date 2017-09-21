@@ -1,0 +1,39 @@
+{
+  "name": "localforage",
+  "main": [
+    "dist/localforage.js"
+  ],
+  "ignore": [
+    ".travis.yml",
+    "CONTRIBUTING.md",
+    "config.rb",
+    "Gemfile",
+    "Gemfile.lock",
+    "Rakefile",
+    "LICENSE",
+    "docs*",
+    "examples*",
+    "test*",
+    "site*"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "es6-promise": "~1.0.0",
+    "requirejs": "~2.1.10",
+    "mocha": "~1.18.2",
+    "expect": "~0.3.1",
+    "assert": "~0.1.0",
+    "modernizr": "~2.8.1"
+  },
+  "version": "1.4.2",
+  "homepage": "https://github.com/mozilla/localForage",
+  "_release": "1.4.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.4.2",
+    "commit": "48a690d11da378850949de8dff4b69c5c290969b"
+  },
+  "_source": "https://github.com/mozilla/localForage.git",
+  "_target": "^1.4.0",
+  "_originalSource": "localforage"
+}

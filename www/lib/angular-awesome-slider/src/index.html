@@ -1,0 +1,391 @@
+<head>
+
+<!--
+  <link rel="stylesheet" type="text/css" href="../dist/css/angular-awesome-slider.min.css">
+-->
+
+  <link rel="stylesheet" type="text/css" href="css/angular-awesome-slider.css">
+
+  <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
+
+  <script type="text/javascript" src="core/index.js"></script>
+  <script type="text/javascript" src="core/config/constants.js"></script>
+  <script type="text/javascript" src="core/model/draggable.factory.js"></script>
+  <script type="text/javascript" src="core/model/pointer.factory.js"></script>
+  <script type="text/javascript" src="core/model/slider.factory.js"></script>
+  <script type="text/javascript" src="core/utils/utils.factory.js"></script>
+  <script type="text/javascript" src="core/template/slider.tmpl.js"></script>
+
+  <!--<script type="text/javascript" src="../dist/angular-awesome-slider.js"></script>-->
+
+
+<!--
+  <script type="text/javascript" src="../dist/angular-awesome-slider.min.js"></script>
+  -->
+
+
+
+</head>
+<body>
+
+  <div ng-app="myApp" ng-controller="ctrl" style="width:700px;">
+
+  <div>
+      <div id="slider-range-container" slider-range-filter ng-if="true"></div>
+    </div>
+    <button ng-click='changeValueAndProperty()'>CHANGE VALUE</button>
+  </br>
+  </br>
+    <div>
+      <input ng-model="value3bis"  type="text" id="coucou" slider ng-disabled="disabled" options="{
+                from: 1,
+                to: 100,
+                step: 1,
+                dimension: ' km',
+                vertical: false,
+                limits: false,
+                css: {
+                    range: {'background': 'transparent'},
+                    background: {'background-color': 'yellow'},
+                    before: {'background-color': 'purple'},
+                    default: {'background-color': 'white'},
+                    after: {'background-color': 'green'},
+                    pointer: {'background-color': 'red'}
+                },
+                className: 'customClass'
+            }"/>
+    </div>
+    <div>
+      Current value is: {{value3bis}}
+    </div>
+   </br>
+    <div>
+      sdsdqsdsqd<input ng-model="value"  type="text" id="{{id2}}" slider options="options" ng-disabled="disabled" />
+    </div>
+    <div>
+      Current value is: {{value}}
+    </div>
+    <div>
+      <input ng-model="valueDate"  type="text" slider options="optionsDate" ng-disabled="disabled" />
+    </div> -->
+    <div>
+      Current value is: {{valueDate}}
+    </div>
+    <div>
+      sdsdqsdsqd<input ng-model="value"  type="text" id="coucou" slider options="optionsCss" ng-disabled="disabled" />
+    </div>
+   <div>
+      Current value is: {{value}}
+    </div>
+    <div ng-show="show">
+      <input ng-model="valueVisibility"  type="text" id="vvvv" slider options="optionsVisibility" ng-disabled="disabled" />
+    </div>
+    <div>
+      Current value is: {{valueVisibility}}
+    </div>
+
+    </br>
+    </br>
+    <div>
+    <input ng-model="data.quote.coverages.coverageA"  type="text" id="{{id}}" slider options="coverageASliderOptions" ng-disabled="disabled" />
+    </br>
+    </br>
+    <div>
+      Current value is: {{data.quote.coverages.coverageA}}
+    </div>
+    </br>
+    </br>
+    <div>
+      <input ng-model="value2"  type="text" id="mySlider3" slider options="options" ng-disabled="disabled"/>
+    </div>
+    <div>
+      Current value is: {{value2}}
+    </div>
+    <div >
+      <input ng-model="value4"  type="text" id="mySlider4" slider options="options3" ng-disabled="disabled"/>
+    </div>
+    <div>
+      Current value is: {{value4}}
+    </div>
+    <div style="display: inline-flex;position:relative;left:200px;height:300px;">
+      <input ng-model="value5"  type="text" id="mySlider5" slider options="optionsV" ng-disabled="disabledtoto" />
+      <input ng-model="value6"  type="text" id="mySlider6" slider options="options2V" ng-disabled="disabled"/>
+      <input ng-model="value6"  type="text" id="mySlider7" slider options="options2VCSS" ng-disabled="disabled"/>
+    </div>
+    <div>
+      <button ng-click='changeOptions()'>CHANGE OPTIONS</button>
+      <button ng-click='changeValue()'>CHANGE VALUE</button>
+      <button ng-click='disable()'>DISABLE</button>
+      <button ng-click="toggleVisibility()">VISIBILITY</button>
+    </div>
+
+  </div>
+
+  <script type="text/javascript">
+
+    "use strict";
+
+    function ctrl($scope, $filter, $timeout) {
+      $scope.show = false;
+          $timeout(function() {
+              $scope.show  = true;
+        }, 1000);
+      $scope.id = "bob";
+      $scope.id2 = "bob";
+      $scope.value = "10;20";
+      $scope.value2 = "12;15";
+      $scope.value3 = {value:"7;20"};
+      $scope.value3bis = "8";
+      $scope.value4 = "999;1700";
+      $scope.value5 = "10;20";
+      $scope.value6 = "10;53";
+      $scope.valueVisibility = "40;70";
+      $scope.disa = true;
+      $scope.disabledtoto = false;
+      $scope.data = {
+          quote: {
+              coverages: {
+                  coverageA: 200000
+              }
+          }
+      };
+      $scope.defaultAmount=190000;
+
+      $scope.coverageASliderOptions = {
+        from: $scope.defaultAmount,
+        to: $scope.defaultAmount+ ($scope.defaultAmount* 0.20),
+        step: 500,
+        calculate: function(value) {
+          return $filter('currency')(value, '$', 0);
+        }
+      };
+
+      $scope.disable = function() {
+        $scope.disabledtoto = !$scope.disabledtoto;
+      };
+      $scope.toggleVisibility = function () {
+        $scope.show = !$scope.show;
+      };
+
+      var calculate = function( value ) {
+        var hours = Math.floor( value / 60 );
+        var mins = ( value - hours*60 );
+        return (hours < 10 ? "0"+hours : hours) + ":" + ( mins == 0 ? "00" : mins );
+      };
+
+      $scope.options = {
+        from: 1,
+        to: 100,
+        floor: true,
+        step: 1,
+        dimension: " km",
+        vertical: false,
+        threshold: 5,
+        callback: function(value, elt) {
+            console.log(value);
+        }
+      };
+
+      $scope.valueDate = 1429864200;
+
+      var modelLabelsFn = function(value) {
+        var d = new Date(value);
+        return d.toLocaleDateString() + ' - ' + d.toLocaleTimeString();
+      }
+
+      $scope.optionsDate = {
+        from: 1429798600,
+        to: 1429877200,
+        step: 60 * 60,
+        vertical: false,
+        skin: 'plastic',
+        limits: true,
+        modelLabels: modelLabelsFn,
+        callback: function(value, released) {
+          console.log(value + " " + released);
+        }
+      };
+
+      $scope.optionsVisibility = {
+        from: 10,
+        to: 100,
+        step: 1,
+        dimension: ' min',
+        callback: function(value, elt) {
+          console.log(value);
+        }
+      };
+
+      $scope.optionsCss = {
+            from: 0,
+            to: 40,
+            step: 0.5,
+            dimension: " $",
+            vertical: false,
+            round: 1,
+            css: {
+                    background: {'background-color': 'yellow'},
+                    before: {'background-color': 'purple'},
+                    default: {'background-color': 'white'},
+                    after: {'background-color': 'green'},
+                    pointer: {'background-color': 'red'}
+                },
+        callback: function(value, elt) {
+          console.log(value);
+        }
+      };
+
+      $scope.optionsV = {
+        from: 0,
+        to: 40,
+        step: 0.5,
+        dimension: " $",
+        round: 1,
+        skin: 'jslider_blue',
+        scale: [0, '|', 10, '|', 20, '|' , 30, '|', 40],
+        vertical: true,
+        /*css: {
+          background: {"background-color": "yellow"},
+          before: {"background-color": "purple"},
+          default: {"background-color": "blue"},
+          after: {"background-color": "green"},
+          pointer: {"background-color": "red"}
+        },*/
+        callback: function(value, elt) {
+          console.log(value);
+          console.log(elt);
+        }
+        // calculate: calculate
+      };
+
+      $scope.options2 = {
+        from: 0,
+        to: 100,
+        floor: true,
+        step: 10,
+        dimension: " km",
+        css: {
+          background: {"background-color": "yellow"},
+          before: {"background-color": "purple"},
+          default: {"background-color": "white"},
+          after: {"background-color": "green"},
+          pointer: {"background-color": "red"}
+        },
+        callback: function(value, elt) {
+          console.log(value);
+        }
+      };
+
+      $scope.options2V = {
+        from: 1,
+        to: 100,
+        floor: true,
+        step: 10,
+        dimension: " km",
+        vertical: true,
+        skin: 'round',
+        callback: function(value, elt) {
+          console.log(value);
+        }
+      };
+
+      $scope.options2VCSS = {
+        from: 1,
+        to: 100,
+        floor: true,
+        step: 10,
+        dimension: " km",
+        vertical: true,
+        css: {
+          background: {"background-color": "yellow"},
+          before: {"background-color": "purple"},
+          default: {"background-color": "blue"},
+          after: {"background-color": "green"},
+          pointer: {"background-color": "red"}
+        },
+        callback: function(value, elt) {
+          console.log(value);
+        }
+      };
+
+      $scope.options3 = {
+        from: 700,
+        to: 2100,
+        step: 1,
+        smooth: false,
+        dimension: " mb",
+        callback: function(value, elt) {
+          console.log(value);
+        }
+      };
+
+      $scope.changeOptions = function() {
+
+        $scope.options = {
+          from: 0,
+          to: 80,
+          step: 1,
+          threshold: 10,
+          dimension: " $",
+          scale: [0, '|', 10, '|', 20, '|' , 30, '|', 40, '|', 50, '|', 60, '|', 70, '|', 80]
+        };
+
+        $scope.optionsCss = {
+          from: 1,
+          to: 100,
+          step: 1,
+          dimension: " km",
+          vertical: false,
+          threshold: 10,
+          css: {
+                  background: {'background-color': 'yellow'},
+                  before: {'background-color': 'purple'},
+                  default: {'background-color': 'white'},
+                  after: {'background-color': 'green'},
+                  pointer: {'background-color': 'red'}
+              },
+          callback: function(value, elt) {
+            console.log(value);
+          }
+        };
+
+      };
+
+
+      $scope.changeValue = function() {
+
+        $scope.value = "11;15";
+        $scope.value2 = "13;15";
+        $scope.value3 = 20;
+        $scope.value4 = "700;1000";
+
+      };
+
+      $scope.changeValueAndProperty = function() {
+        $scope.options = {
+            from: 1,
+            to: 60,
+            step: 1,
+            dimension: ""
+        };
+        $scope.value3 = {value:"10;50"};
+      };
+
+
+    }
+
+    var app = angular.module('myApp', ['angularAwesomeSlider']).controller('ctrl', ctrl);
+
+    app.directive('sliderRangeFilter', [function() {
+      return {
+        restrict: 'A',
+        template: '<div id="searchBySliderFilter" class="filter-slider"><input ng-model="value3.value"  type="text" id="mySlider1" slider options="options" /></div><div>Current value is: {{value3.value}}</div>',
+        link: function($scope, element, attrs) {
+        }
+
+      };
+    }]);
+
+  </script>
+
+</body>

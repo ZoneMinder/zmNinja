@@ -1,0 +1,339 @@
+//
+// Main slider css rules
+// --------------------------------------------------
+
+@import "variables.less";
+
+/*http://codeguide.co/#css-syntax*/
+
+.jslider {
+
+  /* Positioning */
+  position: relative;
+  top: 0.6em;
+
+  /* Box-model */
+  cursor: pointer; 
+  display: block; 
+  width: 100%; 
+  height: 1em;
+
+  /* Typography */  
+  font-family: @font-family-base;
+
+  // disabled
+  &.disabled { opacity: 0.5; }
+
+  table {
+    border-collapse: collapse; 
+    border: 0;
+    width: 100%;
+    td, th {
+      width: 100%;
+      vertical-align: top;
+      border: 0;
+      padding: 0;       
+      text-align: left;
+      vertical-align: top;
+    }
+  }
+
+  // RANGES
+  div.jslider-bg i, div.jslider-pointer {
+    background: url(../img/jslider.png) no-repeat 0 0;
+  }
+
+  div.jslider-bg {
+    position: relative;
+    i { 
+      position: absolute;
+      top: 0;
+      height: 5px;
+
+      &.left { 
+        left: 0;
+        width: 50%; 
+        background-position: 0 0;          
+      }
+
+      &.right {
+        left: 50%;
+        width: 50%;         
+        background-position: right 0;
+      }
+
+      &.range { 
+        position: absolute;
+        top: 0;
+        left: 20%;
+        width: 60%;
+        height: 5px;
+        z-index: 1;
+        background-repeat: repeat-x; 
+        background-position: 0 -40px; 
+      }
+
+      &.default {
+        left: 0;
+        width: 1px;
+        z-index: 1;                 
+        background-color: @color-pointers-default-value;
+      }    
+
+    }    
+  }
+  // END RANGES
+
+  // POINTERS
+  // single value hide to
+  &.jslider-single {
+    div.jslider-pointer-to, 
+    div.jslider-value-to, 
+    div.jslider-bg .v,
+    .jslider-limitless .jslider-label {
+      display: none;
+    } 
+  }
+
+  div.jslider-pointer {
+    position: absolute;
+    top: -4px;
+    left: 20%;     
+    z-index: 2; 
+    width: 15px; 
+    height: 15px; 
+    background-position: 2px -60px; 
+    margin-left: -8px;      
+    cursor: pointer; 
+    cursor: hand;
+
+    &.jslider-pointer-to { 
+      left: 80%;
+    }
+
+    &.jslider-pointer-hover { 
+      background-position: -18px -60px;
+    }
+  }
+  // END POINTERS
+
+  // LABELS
+  div.jslider-label small,
+  div.jslider-value small { 
+    position: relative; 
+    top: -0.4em; 
+  }
+
+  // limits  
+  div.jslider-label {
+    position: absolute;
+    top: -18px; 
+    left: 0px;
+    padding: 0px 2px;
+    opacity: 0.4;
+    color: @color-pointers-label; 
+    font-size: @font-size-pointers-label; 
+    line-height: @line-height-pointers-label;         
+    white-space: nowrap; 
+    
+    &.jslider-label-to { 
+      left: auto; 
+      right: 0;
+    }   
+  }
+  // END LABELS
+
+  // POINTERS VALUE
+  div.jslider-value {
+    position: absolute;
+    top: -19px;
+    left: 0;
+    padding: 1px 2px 0;
+    background: white;
+    font-size: @font-size-pointers-value;
+    line-height: @line-height-pointers-value;
+    white-space: nowrap; 
+    -moz-border-radius: 2px; 
+    -webkit-border-radius: 2px; 
+    -o-border-radius: 2px; 
+    border-radius: 2px;
+    &.jslider-value-to {
+      left: 80%;
+    } 
+  }
+  // END POINTERS VALUE  
+
+  // SCALE
+  div.jslider-scale { 
+    position: relative; 
+    top: 9px;
+    span { 
+      position: absolute; 
+      height: 5px; 
+      border-left: 1px solid #999; 
+      font-size: 0; 
+    }
+    ins {
+      position: absolute;
+      top: 5px;
+      left: 0px; 
+      font-size: 9px;
+      text-decoration: none; 
+      color: #999; }
+  }
+  // END SCALE
+
+  // VERTICAL
+  &.vertical {
+    display: block; 
+    width: 17px;
+    height: 100%;
+    position: relative;
+    top: 0.6em;
+    font-family: Arial, sans-serif;
+    table {
+      height: 100%;      
+    }
+    
+    &.sliderCSS .jslider-bg i, &.jslider-pointer {
+      background-color: silver;
+      background-image: none;
+    }
+
+    // RANGES    
+    div.jslider-bg i,.jslider-pointer {
+      background: url(../img/jslider.vertical.png) no-repeat 0 0;
+    }
+
+    div.jslider-bg { 
+      position: relative; 
+      height:100%;
+
+      i {
+        position: absolute;
+        top: 0;        
+        width: 5px;
+        font-size: 0;
+
+        &.before {
+          left: 50%;
+          background: none
+        }
+
+        &.left {
+          top: 0;
+          left: 50%;
+          height: 50%;                     
+          background-position: right 0; 
+          background-repeat: repeat-y
+        }
+
+        &.right {
+          top: 50%;
+          left: 50%;
+          height: 50%;           
+          background-position: right 0; 
+          background-repeat: repeat-y
+        }
+
+        &.range {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 60%;
+          height: 100%;
+          z-index: 1;
+          background-repeat: repeat-y; 
+          background-position: -36px 0px; 
+        }
+
+        &.default {
+          left: 50%;
+          width: 5px;
+          height:1px;
+          z-index: 1;                     
+          background-color: @color-pointers-default-value;
+        }
+
+      }     
+    }
+    // END RANGES
+
+    // POINTERS
+    div.jslider-pointer { 
+      left: 62%; 
+      background-position: -7px -1px;
+
+      &.jslider-pointer-hover { 
+        background-position: -7px -21px; 
+      }
+
+      &.jslider-pointer-to { 
+        left: 62%; 
+      }
+
+      &.jslider-pointer-to.jslider-pointer-hover { 
+        background-position: -7px -21px; 
+      }
+    }
+    // END POINTERS
+
+    // LABELS
+    div.jslider-label {
+      top: -5px;
+      margin-left: 22px; 
+
+      &.jslider-label-to {
+        top:100%;
+        left: inherit; 
+        right: inherit;
+        margin-top: -5px;
+      }
+    }
+    // END LABELS
+
+    
+    // POINTERS VALUE
+    div.jslider-value {
+      top: 0;
+      left: 0;       
+    }
+    
+    div.jslider-value-to {
+      top: 80%;
+      left: 0;        
+    }
+    // END POINTERS VALUE
+    
+    // SCALES    
+    div.jslider-scale { 
+      position: inherit; 
+      span { 
+        position: absolute; 
+        width: 5px; 
+        height: 1px; 
+        border-left: none; 
+        font-size: 0; 
+        border-top: 1px solid #999;
+      }
+      ins {
+        position: absolute; 
+        left: 0px; 
+        top: 5px; 
+        font-size: 9px; 
+        text-decoration: none;         
+        color: @color-scale; 
+      }
+    }
+                            
+  }
+  // END VERTICAL
+  
+
+  // SKINS
+  @import "skin-css.less";
+  @import "skin-round.less";
+  @import "skin-blue.less";
+  @import "skin-plastic.less";
+}
+

@@ -1,0 +1,9 @@
+{
+  "name": "videogular",
+  "version": "1.4.4",
+  "main": "./videogular.js",
+  "dependencies": {
+    "angular": "^1.3.x",
+    "angular-sanitize": "^1.3.x"
+  }
+}

@@ -1,0 +1,78 @@
+//
+// Plastic skin
+// --------------------------------------------------
+
+&.jslider_plastic {
+  .jslider-bg i,
+  .jslider-pointer { 
+    background: url(../img/jslider.plastic.png) no-repeat 0 0; 
+  }
+
+  .jslider-bg {
+    i {
+      background-position: 2px -20px;
+      &.default {
+        background-color: @color-skin-pointers-default-value;
+      }
+
+      &.range {    
+        z-index: 1;
+        background-position: 0 -40px;
+      }
+    }
+  }
+  
+  .jslider-pointer {
+    z-index: 2; 
+    width: 20px; 
+    height: 17px; 
+    top: -4px;
+    background-position: 2px -60px;
+
+    &.jslider-pointer-hover { 
+      background-position: -18px -60px;
+    }
+  }
+  
+  &.vertical {
+    div.jslider-bg i,
+    div.jslider-pointer {       
+      background: url(../img/jslider.plastic.vertical.png) no-repeat 0 0;      
+    }
+
+    div.jslider-bg {
+
+      i {
+        background-position: right 0;
+
+        &.range {
+          background-position: -35px 0;
+        }
+
+        &.before, 
+        &.after {
+          background: none;
+        }
+
+        &.default {
+          background-color: @color-skin-pointers-default-value;
+        }
+      }
+    }
+
+    div.jslider-pointer {
+      top: -6px;
+      margin-left: -6px;
+      width: 20px; 
+      height: 17px; 
+      background-position: -7px -1px;
+
+      &.jslider-pointer-hover { 
+        background-position: -7px -21px;
+      }
+
+    }
+
+  }
+}
+

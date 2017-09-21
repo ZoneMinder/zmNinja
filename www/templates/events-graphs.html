@@ -1,0 +1,65 @@
+<!----- NOT USED -------->
+<ion-view view-title="Monitor Event Summary" cache-view="false">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+    </ion-nav-buttons>
+    <!-- I'm calling the same controller function but with different parameters when
+            you switch between tabs -->
+    <!-- Oddly, unless I add a "div ng-controller" before each canvas
+    onClick handler does not work
+    -->
+    <!-- All Events view -->
+    <div id="visualization"></div>
+    <ion-tabs class="tabs-icon-top tabs-stable">
+        <ion-tab title="All" icon="ion-stats-bars" on-select="generateTCChart(0,'All Events',0)">
+            <ion-nav-view>
+                <ion-content class="has-header">
+                    <div ng-controller="zmApp.EventsGraphsCtrl">
+                        <canvas tc-chartjs-bar chart-data="chart.data" chart-options="chart.options" ng-click="handleChartClick($event)" chart="chartwithbars">
+                        </canvas>
+                    </div>
+                </ion-content>
+            </ion-nav-view>
+        </ion-tab>
+        <!-- All Events in the last hour -->
+        <ion-tab title="Last Hour" icon="ion-stats-bars" on-select="generateTCChart(1,'Events in the last hour',1)">
+            <ion-nav-view>
+                <ion-content>
+                    <div ng-controller="zmApp.EventsGraphsCtrl">
+                        <div style="overflow:scroll;">
+                            <canvas tc-chartjs-bar chart-data="chart.data" chart-options="chart.options" ng-click="handleChartClick($event)" chart="chartwithbars">
+                            </canvas>
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-nav-view>
+        </ion-tab>
+        <!-- All Events in last 24 hrs-->
+        <ion-tab title="Day" icon="ion-stats-bars" on-select="generateTCChart(2,'Events in the last day',24)">
+            <ion-nav-view>
+                <ion-content>
+                    <div ng-controller="zmApp.EventsGraphsCtrl">
+                        <div style="overflow:scroll;">
+                            <canvas tc-chartjs-bar chart-data="chart.data" chart-options="chart.options" chart="chartwithbars" ng-click="handleChartClick($event)">
+                            </canvas>
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-nav-view>
+        </ion-tab>
+        <!-- All Events in last week -->
+        <ion-tab title="Week" icon="ion-stats-bars" on-select="generateTCChart(3,'Events in the last week',168)">
+            <ion-nav-view>
+                <ion-content>
+                    <div ng-controller="zmApp.EventsGraphsCtrl">
+                        <div style="overflow:scroll;">
+                            <canvas tc-chartjs-bar chart-data="chart.data" chart-options="chart.options" chart="chartwithbars" ng-click="handleChartClick($event)">
+                            </canvas>
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-nav-view>
+        </ion-tab>
+    </ion-tabs>
+</ion-view>

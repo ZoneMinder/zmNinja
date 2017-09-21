@@ -1,0 +1,160 @@
+<div ng-controller="MonitorModalCtrl" ng-cloak>
+    <ion-modal-view cache-view="false" style="background-color:#444444">
+        <ion-content ng-cloak on-double-tap="closeModal();" scroll="false">
+
+            <div id="imagecontainer"  >
+            <ion-scroll ng-if="!isZoneEdit" on-scroll="checkZoom()" delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="true" direction="xy" style="width: 100%;" overflow-scroll="false">
+                <!-- android needs this 100vh - otherwise max- does not work -->
+                <!--  -->
+                <div id="monitorimage" style="height: 100vh;" class="main">
+                    <div ng-if="$root.authSession!='undefined'">
+                        <div ng-if="!animationInProgress && !isBackground() && connKey">
+                            <!--<span style="color:white">{{currentStreamMode}}</span>-->
+
+                            <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}&scale={{quality}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" imageonload="imageLoaded()" />
+                        </div>
+                        <div ng-if="animationInProgress || isBackground()">
+                            <img style="width:100vw; height:100vh" ng-src="img/pausevideo.png" class="object-fit_contain" />
+                        </div>
+                    </div>
+                    <div ng-if="$root.authSession=='undefined'">
+                        <img id="singlemonitor" ng-src="img/pausevideo.png" style="width:100vw; height:100vh; display:block;" class="object-fit_contain" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
+                    </div>
+                </div>
+            </ion-scroll>
+
+            <!-- egads, ion-scroll is a bind-on-start directive, so I have to repeat this thanks to zooming = false. Must be a better way -->
+            <ion-scroll ng-if="isZoneEdit"  delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="false" direction="xy" style="width: 100%;" overflow-scroll="false">
+                <!-- android needs this 100vh - otherwise max- does not work -->
+                <!--  -->
+                <div id="monitorimage" style="height: 100vh;" class="main">
+                    <div ng-if="$root.authSession!='undefined'">
+                        <div ng-if="!animationInProgress && !isBackground() && connKey">
+                            <!--<span style="color:white">{{currentStreamMode}}</span>-->
+
+                            <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines" image-spinner-src="{{monitor.Monitor.streamingURL}}/nph-zms?mode={{currentStreamMode}}&monitor={{monitorId}}&scale={{quality}}{{$root.authSession}}&rand={{$root.modalRand}}&connkey={{connKey}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" imageonload="imageLoaded()" />
+                        </div>
+                        <div ng-if="animationInProgress || isBackground()">
+                            <img style="width:100vw; height:100vh" ng-src="img/pausevideo.png" class="object-fit_contain" />
+                        </div>
+                    </div>
+                    <div ng-if="$root.authSession=='undefined'">
+                        <img id="singlemonitor" ng-src="img/pausevideo.png" style="width:100vw; height:100vh; display:block;" class="object-fit_contain" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
+                    </div>
+                </div>
+            </ion-scroll>
+
+             <!-- zone overlays if enabled -->
+                 <div ng-show="showZones">
+                     <svg  id="zsvg" width="100vw" height="100vh" class="zonelayer" ng-attr-view_box="0 0 {{cw}} {{ch}}" ng-attr-preserve_aspect_ratio="{{aspectFit}}" on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();">
+                         
+                          <polygon  ng-repeat="item in zoneArray track by $index" ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-points="{{item.coords}}" /> </polygon>     
+                             
+                             
+                                 <circle id="circle-{{$index}}" ng-show="isZoneEdit" ng-repeat="item in circlePoints track by $index"  class="zonepoint"   ng-class="{'object-fit_cover {{item.type}}':imageFit==false, 'object-fit_contain {{item.type}}':imageFit==true}" ng-attr-cx="{{item.x}}" ng-attr-cy="{{item.y}}" ng-attr-r="{{csize}}"/>
+                                        
+                         
+                     </svg>
+                </div>
+
+
+
+            </div>
+        </ion-content>
+        <div ng-show="isControllable=='1' && showPTZ">
+            <div class="ptzcentered">
+                <circular options="ptzRadialMenuOptions">
+                </circular>
+            </div>
+            <div ng-if="presetOn" class="ptzpresetbuttons animated fadeInDown" id="presetlist">
+                <ion-scroll style="height:170px">
+                    <div ng-repeat="preset in ptzPresets track by $index">
+                        <button class="button {{preset.icon}} button-small {{preset.style}}" style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, preset.cmd);">{{preset.name}}</button>
+                    </div>
+                </ion-scroll>
+            </div>
+            <div class="ptzcenteredbotbutton">
+                <div ng-if="canZoom">
+                    <a class="button button-small icon ion-search button-positive" href="" ng-click="controlPTZ(monitorId, zoomInCommand);">+</a>
+                    <a class="button button-small icon ion-search button-positive" href="" ng-click="controlPTZ(monitorId, zoomOutCommand);">-</a>
+                    <a class="button button-small icon ion-search button-positive" href="" ng-click="controlPTZ(monitorId, zoomStopCommand);">x</a>
+                </div>
+                <br/>
+                <a class="button button-small icon ion-stop  button-assertive" href="" ng-click="controlPTZ(monitorId, ptzStopCommand);"></a>
+                <a class="button button-small button-royal" href="" ng-click="togglePresets();">{{controlToggle}}</a>
+            </div>
+        </div>
+    </ion-modal-view>
+    <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+        <button mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFillScreen' | translate):('kFitScreen' | translate)}}" ng-click="scaleImage();">
+        </button>
+        <button mfb-button icon="ion-refresh" label="{{'kRefresh' | translate}}" ng-click="reloadView();">
+        </button>
+        <button mfb-button icon="ion-arrow-expand" label="{{'kControl'| translate}}" ng-click="togglePTZ();">
+        </button>
+    </nav>
+    <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
+        <button mfb-button icon="ion-android-arrow-back" label="{{'kPrevMonitor' | translate}} " ng-click="onTap(monitorId,-1);">
+        </button>
+        <button mfb-button icon="ion-android-arrow-forward" label="{{'kNextMonitor' | translate}}" ng-click="onTap(monitorId,1);">
+        </button>
+        <button mfb-button icon="ion-close" label="{{'kExitLiveView' | translate}}" ng-click="closeModal();">
+        </button>
+    </nav>
+    <div id="flyoutmenu" style="position:absolute;bottom:80px;left:10px">
+        <ul>
+
+            <li>
+                <a href="" ng-click="toggleListMenu()">&nbsp; <i ng-class="(isToggleListMenu) ? 'icon  ion-chevron-left': 'icon ion-chevron-right'"></i>&nbsp;</a>
+            </li>
+
+            <li ng-if="isToggleListMenu">
+                <a href="" ng-click="saveImageToPhoneWithPerms(monitorId)"> <i class="icon  ion-ios-camera"></i></a>
+            </li>
+            <li ng-if="$root.platformOS == 'desktop' && isToggleListMenu">
+                <a href="" ng-click="zoomImage(1)"><i class="ion-plus-round"></i></a>
+            </li>
+            <li ng-if="$root.platformOS == 'desktop' && isToggleListMenu">
+                <a href="" ng-click="zoomImage(-1)"><i class="ion-minus-round"></i></a>
+            </li>
+            <li ng-if="isToggleListMenu">
+                <a href="" ng-click="enableAlarm(monitorId,true)"> <i class="icon  ion-flash"></i></a>
+            </li>
+            <li ng-if="isToggleListMenu">
+                <a href="" ng-click="enableAlarm(monitorId,false)"> <i class="icon  ion-flash-off"></i></a>
+            </li>
+
+             <li ng-if="isToggleListMenu">
+                <a href="" ng-click="toggleZone()"> <i class="icon ion-qr-scanner"></i></a>
+            </li>
+
+            <!-- zone editing is TBD -->
+            <li ng-if="showZones  && 0 && isToggleListMenu">
+                <a href="" ng-click="toggleZoneEdit()"> <i class="icon ion-edit"></i></a>
+            </li>
+            
+            <li ng-if="showZones && isZoneEdit && isToggleListMenu">
+                <a href="" ng-click="saveZones()"> <i class="icon ion-android-done-all"></i></a>
+            </li>
+
+            <li ng-if="showZones && isZoneEdit && isToggleListMenu">
+                <a href="" ng-click="changeCircleSize()"> <i class="icon ion-navigate"></i></a>
+            </li>
+
+            <li ng-if="isToggleListMenu">
+                <a href="" ng-click="toggleCycle()"> <i class="icon  ion-android-bicycle"></i>-{{cycleText}}</a>
+            </li>
+
+            
+
+            <!--<li>
+            
+            <a href="" ng-click="cast(monitorId, monitor)"> <i class="icon  ion-android-funnel"></i></a>
+        </li>-->
+            <li ng-if="$root.isAlarm">
+                <a data-badge="{{$root.alarmCount}}" class="notification-badge animated infinite tada" href="" ng-click="handleAlarms()"><i class="ion-ios-bell"></i></a>
+            </li>
+        </ul>
+    </div>
+    <div class="monitor-modal-text">{{monitorName}} &nbsp;<span style="{{stateColor()}}">{{monStatus}}&nbsp;</span></div>
+</div>

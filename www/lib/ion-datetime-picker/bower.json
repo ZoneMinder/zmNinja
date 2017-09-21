@@ -1,0 +1,30 @@
+{
+    "name": "ion-datetime-picker",
+    "version": "0.1.2",
+    "authors": [
+        "Kate Miháliková <kate@katemihalikova.cz>"
+    ],
+    "description": "Date and/or time picker for awesome ionic framework",
+    "main": [
+        "release/ion-datetime-picker.min.js",
+        "release/ion-datetime-picker.min.css"
+    ],
+    "keywords": [
+        "ion-datetime-picker",
+        "ionic",
+        "date",
+        "time",
+        "picker",
+        "cordova",
+        "phonegap"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/katemihalikova/ionic-datetime-picker",
+    "ignore": [
+        "**/.*",
+        "node_modules"
+    ],
+    "dependencies": {
+        "ionic": "^1.0.0-beta.9"
+    }
+}

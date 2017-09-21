@@ -1,1 +1,1323 @@
-/* Empty. Add your own CSS if you like */
+@font-face {
+    font-family: 'fontawesome';
+    src: url('../lib/font-awesome/fonts/fontawesome-webfont.eot');
+    src: url('../lib/font-awesome/fonts/fontawesome-webfont.eot') format('embedded-opentype'), url('../lib/font-awesome/fonts/fontawesome-webfont.woff') format('woff'), url('../lib/font-awesome/fonts/fontawesome-webfont.ttf') format('truetype'), url('../lib/font-awesome/fonts/fontawesome-webfont.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.icon.gif-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 100%;
+  /*background-image: url('../img/gif.svg');*/
+  background-image: url('../img/gif-anim.png');
+  background-size:contain;
+}
+
+
+.eye-red
+{
+    color:red;
+}
+
+.eye-background-red
+{
+    background-color:rgba(231, 76, 60,0.2);
+}
+
+.icon.mp4-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 100%;
+  /*background-image: url('../img/gif.svg');*/
+  background-image: url('../img/mp4.svg');
+  background-size:contain;
+}
+
+.icon-save:before {
+     font-family: "fontawesome";
+    content: "\f0c7";
+}
+
+
+
+.icon-super-speed:before {
+    font-family: "fontawesome";
+    content: "\f135";
+}
+
+.icon-normal-speed:before {
+    font-family: "fontawesome";
+    content: "\f1b9";
+}
+
+.icon-faster:before {
+    font-family: "fontawesome";
+    content: "\f101";
+}
+
+.icon-slower:before {
+    font-family: "fontawesome";
+    content: "\f100";
+}
+
+.icon-server:before {
+    font-family: "fontawesome";
+    content: "\f233";
+}
+
+.image-loader-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+image-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 999;
+}
+
+.vis-time-axis .grid.vis-odd {
+    background: #f5f5f5;
+}
+
+.my-vis-font {
+    font-size: 10px;
+}
+
+.my-vis-buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    z-index: 9999;
+}
+
+ion-popover-view.fit {
+    height: auto;
+}
+
+ion-popover-view.fit ion-content {
+    position: relative;
+}
+
+.platform-android ion-popover-view.fit {
+    margin-top: 10px;
+}
+
+.platform-ios ion-popover-view.fit {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+/* Using this for full screen modals for event and monitor mode */
+
+.modal {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%
+}
+
+
+/* I am using flexboxes to dynamicall adapt content
+in montage view.
+Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+*/
+
+.wrapper {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    font-weight: normal;
+    text-align: left;
+    flex-wrap: wrap;
+}
+
+.wrapper > * {
+    /*padding: 5px;*/
+    /*flex: 1 100%; -- I commented this out - the wrapper was taking up full width in Chrome*/
+}
+
+.header {
+    background: #333333;
+    color: #cccccc;
+    border-color: #444444;
+    border-style: solid;
+    border-width: 1px;
+    opacity: 80%;
+}
+
+.header-event-id {
+    background: rgba(52, 152, 219, 0.2);
+    color: #FFF;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 1;
+}
+
+.header-paused {
+    background: #ba3e3e;
+    color: #cccccc;
+    border-color: #ba3e3e;
+    border-style: solid;
+    border-width: 1px;
+    opacity: 80%;
+    transform: translate(-50%, -50%);
+}
+
+.alarmed-header {
+    background: #ba3e3e;
+    color: #ffffff;
+    border-color: #ba3e3e;
+    border-style: solid;
+    border-width: 1px;
+    opacity: 80%;
+}
+
+.minimized-alarmed-header {
+    background: #ba3e3e;
+    color: #ffffff;
+    border-color: #ba3e3e;
+    border-style: solid;
+    border-width: 5px;
+    opacity: 80%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+}
+
+#slowpulse {
+    -webkit-animation-duration: 1500ms;
+}
+
+.alarmed-body {
+    border-left: thick solid #ba3e3e;
+}
+
+.alarmed-footer {
+    background: #ba3e3e;
+    border-color: #ba3e3e;
+    color: #ffffff;
+    border-width: 1px;
+    /*padding:2px;*/
+}
+
+.main {
+    text-align: center;
+    /*background: #5a5a5a;*/
+    background: #1f1e1e;
+    margin: 0px;
+    padding: 0px;
+    /*padding:2px;*/
+}
+
+.aside-1 {
+    background: gold;
+}
+
+.aside-2 {
+    background: hotpink;
+}
+
+figure {
+    position: relative;
+}
+
+figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+figcaption {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.normal-figcaption {
+    background: rgba(0, 0, 0, 0.2);
+    color: #FFF;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 1;
+}
+
+.alarmed-figcaption {
+    background: #ba3e3e;
+    color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0.7;
+}
+
+
+/* modified from:
+http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
+
+.notification-badge {
+    position: relative;
+}
+
+.notification-badge[data-badge]:after {
+    content: attr(data-badge);
+    position: absolute;
+    top: -3px;
+    left: 18px;
+    font-size: 9px;
+    background: crimson;
+    color: white;
+    width: 22px;
+    height: 17px;
+    text-align: center;
+    line-height: 17px;
+    border-radius: 40%;
+    font-weight: bold;
+}
+
+
+/*
+.notification-badge{
+  
+  border-radius:50%;
+  border: 1 px solid white;   
+  top: -3px;
+  left:-10px;
+  background-color: crimson;
+  color:white;
+  font-size: 8px;
+}*/
+
+.missingnetwork {
+    position: fixed;
+    /* or absolute */
+    bottom: 95%;
+    right: 95%;
+    transform: translate(-50%, -50%);
+}
+
+.ptzcentered {
+    position: fixed;
+    /* or absolute */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.timeline_text {
+    text-align: center;
+    color: white;
+}
+
+.timeline_text_small {
+    text-align: center;
+    color: white;
+    font-size: 80%;
+}
+
+
+/* // not using for now, may come in handy later
+.ptzcenteredtopbutton
+{
+    position: absolute;
+    top: 20%; 
+    left:50%;
+    transform: translate(-50%, -50%);
+}*/
+
+.ptzcenteredbotbutton {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ptzpresetbuttons {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    width: 80%;
+}
+
+.timelinebuttons {
+    position: fixed;
+    /* or absolute */
+    bottom: 130px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+}
+
+.eventprogress {
+    position: absolute;
+    -webkit-transform: rotate(-90deg) translateY(-1000%);
+    -webkit-transform-origin: 100% 0%;
+    -moz-transform: rotate(-90deg);
+    top: 50%;
+    margin-top: -50px;
+    left: 100%;
+    margin-left: -15px;
+    z-index: 10;
+    width: 100px;
+}
+
+.camera-icon {
+    position: absolute;
+    bottom: 20px;
+    left: 10px;
+    z-index: 10;
+    opacity: 0.7;
+}
+
+.desktop-zoom-icon {
+    position: absolute;
+    bottom: 20px;
+    left: 70px;
+    z-index: 10;
+    opacity: 0.7;
+}
+
+.modal-alarm-badge {
+    position: absolute;
+    bottom: 20px;
+    left: 100px;
+    z-index: 10;
+    opacity: 0.7;
+}
+
+.event-modal-alarm-badge {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 10;
+    opacity: 1;
+}
+
+.events-modal-gapless-icon {
+    position: absolute;
+    bottom: 120px;
+    left: 20px;
+    z-index: 10;
+    opacity: 0.5;
+}
+
+.popup80 .popup {
+    width: 80% !important;
+}
+
+.popup90 .popup {
+    width: 90% !important;
+}
+
+.popup95 .popup {
+    width: 95% !important;
+}
+
+.events-modal-camera-icon {
+    position: absolute;
+    bottom: 120px;
+    left: 110px;
+    z-index: 10;
+    opacity: 0.5;
+}
+
+.events-modal-onlyalarms-icon {
+    position: absolute;
+    bottom: 120px;
+    left: 140px;
+    z-index: 10;
+    opacity: 0.5;
+}
+
+.events-range {
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    z-index: 10;
+    opacity: 0.7;
+    width: 70%;
+}
+
+.events-range-modal {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    z-index: 99;
+    opacity: 1;
+    width: 70%;
+}
+
+.events-range-modal-text {
+    position: absolute;
+    top: 20px;
+    font-size: 80%;
+    line-height: 100%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index: 10;
+    opacity: 0.7;
+    color: white;
+    background-color: black;
+    border-radius: 5px 5px 5px 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.monitor-modal-text {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index: 10;
+    opacity: 0.7;
+    color: white;
+    background-color: black;
+    border-radius: 5px 5px 5px 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.events-alarm-line {
+    position: relative;
+    bottom: 1px;
+    left: 0px;
+    width: 100%;
+    border-top: 1px solid black;
+}
+
+.bwmode {
+    writing-mode: vertical-lr;
+    -webkit-writing-mode: vertical-lr;
+    position: absolute;
+    top: 30%;
+    transform: translateY(-50%: );
+    right: 0;
+    background-color: #f1c40f;
+    color: #000;
+    font-size: 11px;
+    border-radius: 5px 0px 0px 5px;
+    z-index: 99999;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    opacity: 0.7;
+}
+
+
+/*.bwmode {
+    position: absolute;
+    top: 30%;
+    right: -28px;
+    opacity: 0.7;
+    background-color: #f1c40f;
+    color: #000;
+    font-size: 11px;
+    border-radius: 0px 0px 5px 5px;
+    z-index: 99999;
+    padding-left: 3px;
+    padding-right: 3px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}*/
+
+.events-float-filter {
+    writing-mode: vertical-lr;
+    -webkit-writing-mode: vertical-lr;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%: );
+    right: 0;
+    background-color: #b47226;
+    color: #fff;
+    font-size: 11px;
+    border-radius: 5px 0px 0px 5px;
+    z-index: 99999;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    opacity: 0.7;
+}
+
+
+/*
+.events-filter-on {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    opacity: 0.7;
+    border-radius: 0px 0px 5px 5px;
+    margin-top: -18px;
+    background-color: #b47226;
+    padding-left: 6px;
+    padding-right: 6px;
+    color: #fff;
+    font-size: 11px;
+}*/
+
+
+/* Styling of progress bar
+http://www.useragentman.com/blog/2012/01/03/cross-browser-html5-progress-bars-in-depth/
+*/
+
+progress,
+
+/* All HTML5 progress enabled browsers */
+
+progress[role]
+/* polyfill */
+
+{
+    /* Turns off styling - not usually needed, but good to know. */
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    /* gets rid of default border in Firefox and Opera. */
+    border: none;
+    /* Needs to be in here for Safari polyfill so background images work as expected. */
+    background-size: auto;
+    height: 10px;
+}
+
+
+/* Polyfill */
+
+progress[role]:after {
+    background-image: none;
+    /* removes default background from polyfill */
+}
+
+
+/* Ensure fallback text doesn't appear in polyfill */
+
+progress[role] strong {
+    display: none;
+}
+
+
+/* ----------------- progress background start ------------------*/
+
+progress,
+
+/* Firefox  */
+
+progress[role][aria-valuenow] {
+    /* Polyfill */
+    background: #aaaaaa !important;
+    /* !important is needed by the polyfill */
+}
+
+
+/* Chrome */
+
+progress::-webkit-progress-bar {
+    background: #aaaaaa;
+}
+
+
+/* ----------------- progress background start ------------------*/
+
+
+/* ----------------- progress bar color start ------------------*/
+
+
+/* IE10 */
+
+progress {
+    color: #f1a165;
+}
+
+
+/* Firefox */
+
+progress::-moz-progress-bar {
+    background: #f1a165;
+}
+
+
+/* Chrome */
+
+progress::-webkit-progress-value {
+    background: #f1a165;
+}
+
+
+/* Polyfill */
+
+progress[aria-valuenow]:before {
+    background: #f1a165;
+}
+
+
+/* ----------------- progress bar color end ------------------*/
+
+.rotate-button {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.zm-image-fit {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.zm-image-crop {
+    width: 100%;
+}
+
+
+/*
+
+.object-fit_cover { object-fit: cover; width:100%; height:auto;}
+.object-fit_contain { object-fit: contain; max-width:100%; height:auto; }
+*/
+
+.object-fit_cover {
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+}
+
+.object-fit_contain {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.list .item.item-accordion {
+    line-height: 200px;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: 3s all linear;
+}
+
+.list .item.item-accordion.ng-hide {
+    line-height: 0px;
+}
+
+.list .item.item-accordion.ng-hide-add,
+.list .item.item-accordion.ng-hide-remove {
+    display: block !important;
+}
+
+ul[rn-carousel] > li {
+    position: relative;
+    margin-left: -100%;
+}
+
+ul[rn-carousel] > li:first-child {
+    margin-left: 0;
+}
+
+ul[rn-carousel] img {
+    max-width: 100%;
+}
+
+.content-banner .content-banner-close {
+    margin-top: -5px;
+}
+
+.mySliderClass.jslider.sliderCSS div.jslider-pointer {
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+    background-color: #615959;
+    border-radius: 50%;
+    margin-left: -3px;
+    margin-top: -8px;
+}
+
+.mySliderClass div.jslider-scale ins {
+    color: red;
+    /*background-color:red;
+    border-radius:5%;
+    line-height:5px;*/
+}
+
+.mySliderClass div.jslider-value {
+    position: absolute;
+    top: -29px;
+    left: 0;
+    padding: 1px 2px 0;
+    background: #fff;
+    font-size: 9px;
+    line-height: 12px;
+    white-space: nowrap;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px
+}
+
+input[type=range]::-webkit-slider-thumb {
+    background: #2980b9;
+}
+
+
+/* this is for input = password and dialog = text */
+
+.pinCode input[type=number] {
+    -webkit-text-security: disc;
+}
+
+.pinCode input[type=number] {
+    height: 50px;
+    width: 200px;
+    text-align: center;
+    font-size: 2em;
+    border: 1px solid #ddd;
+    -webkit-appearance: none;
+}
+
+.pin-background.scroll-content {
+    /*background: url('../img/background.png') no-repeat center center fixed;*/
+    background-size: cover;
+    background-color: #555555;
+    /*background-color:#16a085;*/
+}
+
+#responsive-image {
+    width: 65%;
+    margin: 0 auto;
+}
+
+#responsive-image img {
+    width: 100%
+}
+
+
+/* to avoid padding on delete in event list */
+
+.item-content {
+    padding-right: 16px !important;
+}
+
+.eventDeleteSpeed {
+    -webkit-animation-duration: 300ms;
+}
+
+.content-banner.alarm {
+    background-color: forestgreen;
+    color: white;
+}
+
+.content-banner.net {
+    background-color: #9b59b6;
+    color: white;
+}
+
+
+/* This accordion list is used for event server monitor filter
+ * http://docs.angularjs.org/api/ng/directive/ngShow#usage_animations
+ */
+
+.list .item.item-accordion {
+    line-height: 45px;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: 0.09s all linear;
+}
+
+.list .item.item-accordion.ng-hide {
+    line-height: 0px;
+}
+
+.list .item.item-accordion.ng-hide-add,
+.list .item.item-accordion.ng-hide-remove {
+    display: block !important;
+}
+
+.custom-list i {
+    float: right;
+}
+
+
+/* This is for quick scrub for H264 */
+
+.videogular-container {
+    height: 260px;
+    margin: auto;
+    overflow: hidden;
+    float: left;
+}
+
+/* don't need these, responsive is on
+and parent div is hard pixels
+
+ .videogular-container-modal-width {
+    height: auto;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.videogular-container-modal-height {
+    height: 100%;
+    width:auto;
+    margin: auto;
+ 
+}*/
+
+videogular div.event-time {
+    position: absolute;
+    display: block;
+    z-index: 9999;
+    bottom: 10%;
+    background: rgba(255, 0, 0, 0.5);
+}
+
+#full-screen-event {
+    -webkit-animation-duration: 200ms;
+}
+
+#monitorimage {
+    -webkit-animation-duration: 200ms;
+}
+
+#firstuse {
+    -webkit-animation-delay: 1s;
+}
+
+#transition-delay {
+    -webkit-animation-delay: 1s;
+}
+
+#really-your-fault {
+    -webkit-animation-delay: 4s;
+}
+
+
+/* packery stuff */
+
+* {
+    box-sizing: border-box;
+}
+
+
+
+
+/* ---- grid ---- */
+
+.dragborder {
+    border: 2px dotted #3498db;
+}
+
+.dragborder-selected {
+    border: 4px solid #e74c3c;
+}
+
+.grid-sizer {
+    width: 5%;
+}
+
+.grid-item {
+    width: 20%;
+}
+
+.grid-item-5 {
+    width: 5%;
+}
+.grid-item-10 {
+    width: 10%;
+}
+
+.grid-item-15 {
+    width: 15%;
+}
+
+
+.grid-item-20 {
+    width: 20%;
+}
+
+.grid-item-25 {
+    width: 25%;
+}
+
+.grid-item-30 {
+    width: 30%;
+}
+
+.grid-item-35 {
+    width: 35%;
+}
+
+.grid-item-40 {
+    width: 40%;
+}
+
+.grid-item-45 {
+    width: 45%;
+}
+
+.grid-item-50 {
+    width: 50%;
+}
+
+.grid-item-55 {
+    width: 55%;
+}
+
+.grid-item-60 {
+    width: 60%;
+}
+
+.grid-item-65 {
+    width: 65%;
+}
+
+.grid-item-70 {
+    width: 70%;
+}
+
+.grid-item-75 {
+    width: 75%;
+}
+.grid-item-80 {
+    width: 80%;
+}
+
+.grid-item-85 {
+    width: 85%;
+}
+
+.grid-item-90 {
+    width: 90%;
+}
+
+.grid-item-95 {
+    width: 95%;
+}
+
+.grid-item-100 {
+    width: 100%;
+}
+
+
+/* clear fix */
+
+.grid:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.grid-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+
+/* ---- .grid-item ---- */
+
+.grid-item.is-dragging,
+.grid-item.is-positioning-post-drag {
+    background: #34495e;
+    z-index: 2;
+}
+
+.packery-drop-placeholder {
+    outline: 3px dashed hsla(0, 0%, 0%, 0.5);
+    outline-offset: -6px;
+    -webkit-transition: -webkit-transform 0.2s;
+    transition: transform 0.2s;
+}
+
+.wide-as-needed {
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+.visred {
+    fill: #FF0000;
+}
+
+.wizardtip {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding: 5px 5px 5px 5px;
+    background-color: #cccccc;
+    color: #333232;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: #8b8888;
+    border-style: solid;
+}
+
+.wiz-list {
+    list-style-type: disc;
+    list-style-position: inside;
+}
+
+.zmPullup {
+    background-color: #E3BE1C;
+}
+
+#flyoutmenu {
+    z-index: 99;
+}
+
+#flyoutmenu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    color: white;
+    z-index: 99;
+    font-size: 0.7em;
+    font-family: sans-serif;
+    text-transform: uppercase;
+}
+
+#flyoutmenu ul li a i {
+    font-size: 2.5em;
+    font-family: sans-serif;
+    text-transform: uppercase;
+}
+
+#flyoutmenu li {
+    display: inline-block;
+    margin-bottom: .2em;
+    padding: 0.7em;
+    margin-right: 4px;
+    line-height: 100%;
+}
+
+#flyoutmenu li:first-child {
+    /*background: rgba(192, 57, 43, 0.7);*/
+    background: rgba(108, 122, 137, 0.7);
+    -webkit-border-radius: 5px 0 0 5px;
+}
+
+#flyoutmenu li:only-child {
+    /*background: rgba(192, 57, 43, 0.7);*/
+    background: rgba(108, 122, 137, 0.7);
+    -webkit-border-radius: 5px 5px 5px 5px;
+}
+
+#flyoutmenu li:last-child {
+    -webkit-border-radius: 0 5px 5px 0;
+}
+
+
+/* make sure this is after last-child */
+
+
+
+
+#flyoutmenu li:only-child {
+    
+    background: rgba(108, 122, 137, 0.7);
+    -webkit-border-radius: 5px 5px 5px 5px;
+}
+
+#flyoutmenu li:nth-child(n+2) {
+    background: rgba(108, 122, 137, 0.7);
+    z-index: -1;
+}
+
+#flyoutmenu li:active {
+    background: #3498db;
+}
+
+#flyoutmenu a {
+    text-decoration: none;
+    color: white;
+}
+
+
+/* Overlay graph in event footage */
+
+#event_canvas {
+    position: absolute;
+    width: 80%;
+    height: 20px;
+    bottom: 80px;
+    left: 20px;
+    opacity: 1;
+    z-index: 99;
+}
+
+#event_canvas_video {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    bottom: 140px;
+    left: 0px;
+    opacity: 1;
+    z-index: 99;
+}
+
+#history_canvas_video {
+    position: absolute;
+    width: 95%;
+    top: 10%;
+    height: 20px;
+    opacity: 1;
+    z-index: 998;
+}
+
+#event_slider {
+    position: absolute;
+    width: 80%;
+    height: 20px;
+    bottom: 60px;
+    left: 20px;
+    opacity: 1;
+    z-index: 9999;
+}
+
+#event_rate_text {
+    position: absolute;
+    width: 80%;
+    bottom: 20px;
+    left: 43px;
+    opacity: 1;
+    color: #fff;
+    z-index: 9998;
+}
+
+.smallnote {
+    font-size: 9px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: rgb(0, 0, 0);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.white-button-text {
+    color: #fff !important;
+}
+
+.hiddengifcanvas {
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute;
+    left: -99999px;
+    top: -99999px;
+}
+
+.item-options .button{
+      display: -webkit-box;
+    display: -moz-box;
+    display: -ms-inline-flexbox;
+    display: -webkit-inline-flex;
+    display: inline-flex;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+}
+
+.imagecontainer{position:relative; margin:0 auto;}
+.zonelayer
+{
+    position:absolute;
+    top:0;
+    left:0;
+    background:none;
+    
+}
+
+.zonelayer polygon {
+    fill-opacity: 0.25;
+    stroke-width: 2px;
+}
+
+/* Lets use similar colors to ZM zones, but use slate variations */
+
+.zonelayer .zonepoint {
+    stroke:#2ecc71;
+    fill:#2ecc71;
+fill-opacity: 0.8;
+}
+
+.zonelayer .Active {
+    stroke: #e74c3c;
+    fill: #e74c3c;
+}
+
+
+.zonelayer  .Inclusive {
+    stroke: #f39c12;
+    fill: #f39c12;
+}
+
+.zonelayer  .Exclusive {
+    stroke: #8e44ad;
+    fill: #8e44ad;
+}
+
+.zonelayer  .Preclusive {
+    stroke: #1F3A93;
+    fill: #1F3A93;
+}
+
+@media (min-width:600px) {
+    .montage-time {
+        display: block !important;
+        line-height: 250%;
+    }
+}
+
+@media (max-width:599px) {
+    .montage-time {
+        display: none !important;
+    }
+}
+
+body {
+    font-family: sans-serif;
+    height:100%;
+    padding-top: constant(safe-area-inset-top);
+}
+
+
+
+* {
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+}

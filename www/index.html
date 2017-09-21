@@ -1,45 +1,273 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">      
+
+    <meta http-equiv="Content-Security-Policy" content="img-src * blob: android-webview-video-poster: cdvphotolibrary:  'self' data: ws: wss://*; default-src * blob: 'self' gap: wss: ws: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src * http: https: ws: wss://*;">
+
+    <!--<meta http-equiv="Content-Security-Policy" content="img-src * blob: android-webview-video-poster: cdvphotolibrary:  'self' data:; default-src * blob: 'self' gap: wss: ws: ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';connect-src * http: https: ws: wss:;">-->
     <title></title>
-
-    <link rel="manifest" href="manifest.json">
-
-    <!-- un-comment this code to enable service worker
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(() => console.log('service worker installed'))
-          .catch(err => console.log('Error', err));
-      }
-    </script>-->
-
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/angular-circular-navigation.css">
+    <link rel="stylesheet" href="css/custommfb.css">
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/angular-carousel.css">
+    <link rel="stylesheet" href="lib/angular-awesome-slider/dist/css/angular-awesome-slider.min.css">
+    <link rel="stylesheet" href="lib/vis/dist/vis-timeline-graph2d.min.css">
+    <link rel="stylesheet" href="lib/ion-datetime-picker/release/ion-datetime-picker.min.css">
+    <link rel="stylesheet" href="lib/angular-wizard/dist/angular-wizard.min.css">
+    <link href="css/ionic.app.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
-
-    <!-- ionic/angularjs js -->
+    <!-- unmanaged externals -->
+    <link rel="stylesheet" href="external/ionic.content.banner.min.css">
+    <link rel="stylesheet" href="external/radio.css">
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
-    <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
+        <script src="cordova.js"></script>
+    <script src="lib/filelogger/dist/filelogger.min.js"></script>
+  
+    <script src="lib/localforage/dist/localforage.js"></script>
+    <script src="lib/localforage-cordovasqlitedriver/dist/localforage-cordovasqlitedriver.js"></script>
+    <script src="js/ionicUtils.js"></script>
+    <script src="lib/ionic-native-transitions/dist/ionic-native-transitions.min.js"></script>
+    <script src="lib/angular-wizard/dist/angular-wizard.min.js"></script>
+    <script src="lib/crypto-js/crypto-js.js"></script>
+    <script src="lib/angular-awesome-slider/dist/angular-awesome-slider.min.js">
+    </script>
+    <script src="lib/videogular/videogular.min.js"></script>
+    <script src="lib/videogular-controls/vg-controls.min.js"></script>
+    <script src="lib/videogular-overlay-play/vg-overlay-play.min.js"></script>
+    <script src="lib/videogular-buffering/vg-buffering.min.js"></script>
+     <script src="lib/videogular-cuepoints/cuepoints.js"></script>
+    <script src="lib/ion-datetime-picker/release/ion-datetime-picker.min.js"></script>
+    <script src="lib/angular-translate/angular-translate.min.js"></script>
+    <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+    <script src="lib/vis/dist/vis-timeline-graph2d.min.js"></script>
+    <script src="lib/moment/min/moment-with-locales.min.js"></script>
+    <script src="lib/ng-mfb/src/mfb-directive.js"></script>
+    <script src="lib/angular-touch/angular-touch.min.js"></script>
 
-    <!-- your app's js -->
+
+    <!-- unmanaged externals -->
+    <script src="external/moment-timezone-with-data.min.js"></script>
+    <script src="external/angular-ios9-uiwebview.patch.js"></script>
+    <script src="external/ionRadio.min.js"></script>
+    <script src="external/ng-websocket.min.js"></script>
+    <script src="external/uri.min.js"></script>
+    <script src="external/angular-carousel.min.js"></script>
+    <script src="external/ion-pullup.min.js"></script>
+    <script src="external/ionic.content.banner.min.js"></script>
+    <script src="external/FileSaver.min.js"></script>
+    <script src="external/canvas-toBlob.min.js"></script>
+    <script src="external/imagesloaded.pkgd.min.js"></script>
+    <script src="external/packery.pkgd.min.js"></script>
+    <script src="external/draggabilly.pkgd.min.js"></script>
+    <script src="external/ionic.scroll.sista.min.js"></script>
+    <script src="external/angular-circular-navigation.min.js"></script>
+    <script src="external/Chart2.min.js"></script>
+    <script src="external/screwdriver.js"></script>
+    <script src="external/polyfill.min.js"></script>
+    <script src="external/gifwriter.min.js"></script>
+    <script src="external/NeuQuant.min.js"></script>
+     <script src="external/angular.dcb-img-fallback.min.js"></script>  
+
+
+
+    <!-- app related JS -->
     <script src="js/app.js"></script>
-  </head>
-  <body ng-app="starter">
+    <script src="js/controllers.js"></script>
+    <script src="js/DataModel.js"></script>
+    <script src="js/LoginCtrl.js"></script>
+    <script src="js/MonitorModalCtrl.js"></script>
+    <script src="js/EventModalCtrl.js"></script>
+    <script src="js/MontageCtrl.js"></script>
+    <script src="js/EventCtrl.js"></script>
+    <script src="js/EventsGraphsCtrl.js"></script>
+    <script src="js/MonitorCtrl.js"></script>
+    <script src="js/HelpCtrl.js"></script>
+    <script src="js/StateCtrl.js"></script>
+    <script src="js/DevOptionsCtrl.js"></script>
+    <script src="js/LogCtrl.js"></script>
+    <script src="js/EventDateTimeFilterCtrl.js"></script>
+    <script src="js/TimelineCtrl.js"></script>
+    <script src="js/PortalLoginCtrl.js"></script>
+    <script src="js/LowVersionCtrl.js"></script>
+    <script src="js/ImportantMessageCtrl.js"></script>
+    <script src="js/EventServer.js"></script>
+    <script src="js/EventServerSettingsCtrl.js"></script>
+    <script src="js/FirstUseCtrl.js"></script>
+    <script src="js/MontageHistoryCtrl.js"></script>
+    <script src="js/NewsCtrl.js"></script>
+    <script src="js/TimelineModalCtrl.js"></script>
+    <script src="js/WizardCtrl.js"></script>
+    <script src="js/MenuController.js"></script>
+    <script src="js/EventsModalGraphCtrl.js"></script>
+    <script src="js/InvalidApiCtrl.js"></script>
+</head>
+<!-- <body ng-app="starter" > -->
+<!-- I want to start angular only after cordova device is ready, so I'll tag it on device ready -->
 
-    <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">Ionic Blank Starter</h1>
-      </ion-header-bar>
-      <ion-content>
-      </ion-content>
-    </ion-pane>
-  </body>
+<body bgcolor="#555555">
+    <!-- For some reason - which I haven't debugged yet, when I was using the ionic side menu template
+      I was having problems with tabs/sliders in views, I think its to do with controls being alive in
+      the menu. this approach puts controls in each page and that works well -->
+    <!-- This is the Side menu options -->
+    <!-- ng-cloak makes sure no HTML items load up before Angular is initialized -->
+    <!-- This avoids sudden flashes of odd/mis-aligned icons-->
+    <ion-side-menus delegate-handle="sideMenu" ng-cloak>
+        <ion-side-menu-content>
+            <ion-nav-bar class="bar-stable nav-title-slide-ios7">
+                <ion-nav-back-button class="button-icon">
+                    <span class="icon ion-ios7-arrow-left"></span>
+                </ion-nav-back-button>
+            </ion-nav-bar>
+            <ion-nav-view></ion-nav-view>
+        </ion-side-menu-content>
+        <ion-side-menu>
+            <ion-header-bar class="bar bar-header bar-stable">
+                <h1 class="title">{{'kMenuOptions'|translate}}</h1>
+            </ion-header-bar>
+            <ion-content has-header="true" mouse-wheel-scroll>
+                <!-- <ion-scroll scrollbar-y="false" style="height:100%" >-->
+                <ion-list>
+                    <ion-item href="#/montage" menu-close>
+                        <!--<span ng-if="$root.runMode=='lowbw'" style="float:right;margin-top:-18px;background-color:#f1c40f;color:#000;font-size:11px;opacity:0.7;width:20px;border-radius: 0px 0px 5px 5px;display:inline-block;text-align:center;">&nbsp;<i class="icon ion-arrow-graph-down-left"></i>&nbsp;</span>-->
+                        <span class=" item-icon-left">
+                            <i class="icon ion-grid"></i>
+                        </span>{{'kMenuMontage'|translate}}
+                    </ion-item>
+                   
+                    <ion-item href="#/timeline" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-android-time"></i>
+                        </span>{{'kMenuTimeline'|translate}}
+                    </ion-item>
+                    <ion-item href="#/events/0/false" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-ios-calendar-outline"></i>
+                        </span>{{'kMenuEvents'|translate}}
+                    </ion-item>
+
+                     <ion-item href="#/montage-history" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-ios-keypad-outline"></i>
+                        </span>{{'kMenuEventMontage'|translate}}
+                    </ion-item>
+
+                    
+                    <ion-item href="#/monitors" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-ios-videocam-outline"></i>
+                        </span>{{'kMenuMonitors'|translate}}
+                    </ion-item>
+                    <ion-item href="#/state" menu-close>
+                        <span class=" item-icon-left">
+                            <i class="icon ion-information-circled"></i>
+                        </span> {{'kMenuSystemStatus'|translate}}
+                    </ion-item>
+                    <ion-item nav-clear menu-close href="#/login/false">
+                        <span class=" item-icon-left">
+                                <i class="icon ion-person"></i>
+                                {{'kMenuZMSettings'|translate}}
+                                <!--<span class="item-note" style="width:90px">
+                                    {{$root.getProfileName();}}
+                                </span>-->
+                        <span style="float:right;margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;:text-overflow:ellipsis;overflow:hidden;white-space:nowrap;display:inline-block;text-align:center;">&nbsp;{{$root.getProfileName();}}&nbsp;</span>
+                        </span>
+                    </ion-item>
+                    <ion-item nav-clear menu-close href="#/devoptions">
+                        <span class=" item-icon-left">
+                            <i class="icon ion-settings"></i>
+                        </span> {{'kMenuDevSettings'|translate}}
+                    </ion-item>
+                    <div ng-controller="MenuController">
+                        <ion-item ng-click="switchLang()" nav-clear menu-close href="">
+                            <span class=" item-icon-left">
+                            <i class="icon ion-earth"></i>
+                        </span> {{'kLanguage'|translate}}
+                        </ion-item>
+                    </div>
+                    <ion-item nav-clear menu-close href="#/help">
+                        <span class=" item-icon-left">
+                            <i class="icon ion-help"></i>
+                        </span> {{'kMenuHelp'|translate}}
+                    </ion-item>
+                    <ion-item nav-clear menu-close href="#/wizard">
+                        <span class=" item-icon-left">
+                            <i class="icon ion-wand"></i>
+                        </span> {{'kMenuWizard'|translate}}
+                    </ion-item>
+                    <div ng-if="$root.showBlog">
+                        <ion-item nav-clear menu-close href="#/news">
+                            <span class=" item-icon-left">
+                                <i class="icon ion-radio-waves"></i>
+                            </span>{{'kMenuNews'|translate}}<span style="color:#268d3a;"> {{$root.newBlogPost}}</span>
+                        </ion-item>
+                    </div>
+                    <ion-item nav-clear menu-close href="#/log">
+                        <span class=" item-icon-left">
+                            <i class="icon ion-clipboard"></i>
+                        </span> {{'kMenuLogs'|translate}}
+                    </ion-item>
+                    <div ng-if="$root.newVersionAvailable &&  $root.platformOS=='desktop'">
+                        <ion-item nav-clear menu-close href="">
+                            <span class=" item-icon-left">
+                                <i class="icon ion-email-unread"></i>
+                            </span> <span style="color:#268d3a;">{{$root.newVersionAvailable}}</span>
+                        </ion-item>
+                    </div>
+                    <div ng-if="$root.platformOS=='android'">
+                        <ion-item ng-click="$root.exitApp();">
+                            <span class=" item-icon-left">
+                            <i class="icon ion-close-circled"></i>
+                        </span> {{'kMenuExit'|translate}}
+                        </ion-item>
+                    </div>
+                    <ion-item style="color:rgb(106, 106, 106); font-size:90%;">
+                        <i class="ion-ios-location"></i> {{$root.getLocalTimeZone();}}
+                        <br/>
+                        <span ng-if="$root.isTzSupported()"><i class="icon icon-server"></i> {{$root.getServerTimeZoneNow();}}   </span>
+                    </ion-item>
+                </ion-list>
+                <!--</ion-scroll>-->
+            </ion-content>
+        </ion-side-menu>
+    </ion-side-menus>
+    <!--  This is where is bootstrap angular - if I don't do this, then the window jumps around
+    after the status bar comes on - because the window kicked in before phonegap got ready -->
+    <script>
+    window.ionic.Platform.ready(function()
+    {
+        console.log("******* PLATFORM READY ****");
+
+        angular.bootstrap(document, ['zmApp']);
+    });
+    </script>
+    <!-- keyboard input jump fix 
+    https://forum.ionicframework.com/t/ionic-keyboard-scroll-issue-ios/34420/2?u=pliablepixels
+    -->
+    <script>
+    /* global angular, $*/
+   // window.addEventListener('native.keyboardshow', keyboardShowHandler);
+   //alert ('Hello');
+
+    function keyboardShowHandler(e)
+    {
+        setTimeout(function()
+        {
+            $('html, body').animate(
+            {
+                scrollTop: 0
+            }, 1000);
+        }, 0);
+    }
+    </script>
+</body>
+
 </html>
