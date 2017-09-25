@@ -1,0 +1,8 @@
+{
+            "mitchellsimoens.file-tree-exclude.excludeList": [
+             ".git(?!ignore)",
+             "dist",
+             "bower_components",
+             "node_modules"
+      ]
+}
