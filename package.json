@@ -103,10 +103,6 @@
             "id": "cordova-plugin-globalization"
         },
         "cordova-plugin-console",
-        {
-            "locator": "https://github.com/jcjee/email-composer",
-            "id": "com.jcjee.plugins.emailcomposer"
-        },
         "cordova-plugin-app-version",
         "cordova-plugin-android-permissions",
         "cordova-plugin-network-information",

@@ -106,6 +106,10 @@ app.on('activate', () => {
   }
 });
 
+app.on('uncaughtException', function (err) {
+  console.log("***WHOOPS TIME****"+err);
+})
+
 app.on('will-quit', () => {
   // Unregister all shortcuts.
   globalShortcut.unregisterAll()
