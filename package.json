@@ -21,7 +21,6 @@
                 "URL_SCHEME": "zmninja"
             },
             "cordova-plugin-device": {},
-            "cordova-plugin-email": {},
             "cordova-plugin-file": {},
             "cordova-plugin-file-transfer": {},
             "cordova-plugin-globalization": {},
@@ -51,10 +50,12 @@
             "phonegap-plugin-push": {
                 "SENDER_ID": "710936220256"
             },
-            "cordova-plugin-certificates": {}
+            "cordova-plugin-certificates": {},
+            "com.jcjee.plugins.emailcomposer": {}
         }
     },
     "dependencies": {
+        "EmailComposer": "git+https://github.com/pliablepixels/email-composer.git",
         "com.telerik.plugins.nativepagetransitions": "^0.6.5",
         "cordova-android": "^6.2.3",
         "cordova-ios": "^4.4.0",
@@ -67,7 +68,6 @@
         "cordova-plugin-console": "^1.0.7",
         "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^1.1.6",
-        "cordova-plugin-email": "^1.2.6",
         "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-file-transfer": "^1.6.3",
         "cordova-plugin-globalization": "^1.0.7",
@@ -88,6 +88,7 @@
         "ionic-plugin-keyboard": "^2.2.1",
         "org.devgeeks.Canvas2ImagePlugin": "https://github.com/flache/Canvas2ImagePlugin",
         "phonegap-plugin-mobile-accessibility": "^1.0.5",
-        "phonegap-plugin-push": "^1.9.0"
+        "phonegap-plugin-push": "^1.9.0",
+        "com.jcjee.plugins.emailcomposer": "https://github.com/pliablepixels/email-composer"
     }
 }

@@ -9,6 +9,7 @@
     </author>
     <content src="index.html" />
     <access launch-external="yes" origin="mailto:*" />
+    <allow-intent href="mailto:*" />
     <allow-navigation href="*" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="iosPersistentFileLocation" value="Library" />
@@ -96,6 +97,7 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <engine name="android" spec="^6.2.3" />
     <engine name="ios" spec="^4.4.0" />
+    <plugin name="com.jcjee.plugins.emailcomposer" spec="https://github.com/pliablepixels/email-composer" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="^0.6.5" />
     <plugin name="cordova-library-helper" spec="^1.0.4">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Save media to your Camera Roll" />
@@ -110,7 +112,6 @@
         <variable name="URL_SCHEME" value="zmninja" />
     </plugin>
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
-    <plugin name="cordova-plugin-email" spec="^1.2.6" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
     <plugin name="cordova-plugin-file-transfer" spec="^1.6.3" />
     <plugin name="cordova-plugin-globalization" spec="^1.0.7" />

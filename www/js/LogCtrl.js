@@ -155,34 +155,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 logstring = logstring.replace(re4, "<server>");
             }
 
-            cordova.plugins.email.isAvailable(
-                function (isAvailable) {
-
-                    if (isAvailable) {
-                        cordova.plugins.email.open({
-                         to: zm.authoremail,
-                         subject: $rootScope.appName + ' logs',
-                         body: logstring
-                         });
-                    }
-                    else {
-                        // kEmailNotConfigured
-                        $rootScope.zmPopup = SecuredPopups.show('alert',
-                        {
-                            title: $translate.instant('kError'),
-                            template: $translate.instant('kEmailNotConfigured'),
-                            okText: $translate.instant('kButtonOk'),
-                            cancelText: $translate.instant('kButtonCancel'),
-                        });
-
-                    }
-       
-            });
-
-
-            
-
-           // window.plugins.emailComposer.showEmailComposerWithCallback(callback, $rootScope.appName + ' logs', logstring, [zm.authoremail]);
+            window.plugins.emailComposer.showEmailComposerWithCallback(callback, $rootScope.appName + ' logs', logstring, [zm.authoremail]);
 
         }
         else
