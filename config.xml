@@ -95,9 +95,6 @@
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
-    <engine name="android" spec="^6.2.3" />
-    <engine name="ios" spec="^4.4.0" />
-    <plugin name="com.jcjee.plugins.emailcomposer" spec="https://github.com/pliablepixels/email-composer" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="^0.6.5" />
     <plugin name="cordova-library-helper" spec="^1.0.4">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Save media to your Camera Roll" />
@@ -106,8 +103,8 @@
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <plugin name="cordova-plugin-certificates" spec="git+https://github.com/hypery2k/cordova-certificate-plugin.git" />
-    <plugin name="cordova-plugin-compat" spec="^1.1.0" />
-    <plugin name="cordova-plugin-console" spec="^1.0.7" />
+    <plugin name="cordova-plugin-compat" spec="^1.2.0" />
+    <plugin name="cordova-plugin-console" spec="^1.1.0" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
         <variable name="URL_SCHEME" value="zmninja" />
     </plugin>
@@ -138,7 +135,10 @@
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value=" " />
     </plugin>
     <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
-    <plugin name="phonegap-plugin-push" spec="^1.9.0">
+    <plugin name="phonegap-plugin-push" spec="^1.10.5">
         <variable name="SENDER_ID" value="710936220256" />
     </plugin>
+    <engine name="ios" spec="~4.4.0" />
+    <engine name="android" spec="~6.2.3" />
+    <plugin name="com.jcjee.plugins.emailcomposer" spec="https://github.com/pliablepixels/email-composer" />
 </widget>

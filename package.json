@@ -50,8 +50,8 @@
             "phonegap-plugin-push": {
                 "SENDER_ID": "710936220256"
             },
-            "com.jcjee.plugins.emailcomposer": {},
-            "cordova-plugin-certificates": {}
+            "cordova-plugin-certificates": {},
+            "com.jcjee.plugins.emailcomposer": {}
         }
     },
     "dependencies": {
@@ -64,9 +64,10 @@
         "cordova-plugin-add-swift-support": "^1.7.0",
         "cordova-plugin-android-permissions": "^1.0.0",
         "cordova-plugin-app-version": "^0.1.9",
+        "cordova-plugin-canvas2image": "git+https://github.com/flache/Canvas2ImagePlugin.git",
         "cordova-plugin-certificates": "git+https://github.com/hypery2k/cordova-certificate-plugin.git",
-        "cordova-plugin-compat": "^1.1.0",
-        "cordova-plugin-console": "^1.0.7",
+        "cordova-plugin-compat": "^1.2.0",
+        "cordova-plugin-console": "^1.1.0",
         "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-file": "^4.3.3",
@@ -93,7 +94,7 @@
         "mkdirp": "^0.5.1",
         "org.devgeeks.Canvas2ImagePlugin": "https://github.com/flache/Canvas2ImagePlugin",
         "phonegap-plugin-mobile-accessibility": "^1.0.5",
-        "phonegap-plugin-push": "^1.9.0"
+        "phonegap-plugin-push": "^1.10.5"
     },
     "devDependencies": {
         "bower": "^1.8.2"
