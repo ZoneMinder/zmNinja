@@ -25,15 +25,16 @@
     "assert": "~0.1.0",
     "modernizr": "~2.8.1"
   },
-  "version": "1.4.2",
+  "version": "1.5.0",
   "homepage": "https://github.com/mozilla/localForage",
-  "_release": "1.4.2",
+  "_release": "1.5.0",
   "_resolution": {
     "type": "version",
-    "tag": "1.4.2",
-    "commit": "48a690d11da378850949de8dff4b69c5c290969b"
+    "tag": "1.5.0",
+    "commit": "e09ee3966862d50d101b6e2b442e4ad53b58663c"
   },
   "_source": "https://github.com/mozilla/localForage.git",
-  "_target": "^1.4.0",
-  "_originalSource": "localforage"
+  "_target": "~1.5.0",
+  "_originalSource": "localforage",
+  "_direct": true
 }

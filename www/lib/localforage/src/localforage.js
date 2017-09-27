@@ -116,7 +116,7 @@ class LocalForage {
         this._dbInfo = null;
 
         this._wrapLibraryMethodsWithReady();
-        this.setDriver(this._config.driver);
+        this.setDriver(this._config.driver).catch(() => {});
     }
 
     // Set any config values for localForage; can be called anytime before
@@ -140,13 +140,17 @@ class LocalForage {
                     options[i] = options[i].replace(/\W/g, '_');
                 }
 
+                if (i === 'version' && typeof options[i] !== 'number') {
+                    return new Error('Database version must be a number.');
+                }
+
                 this._config[i] = options[i];
             }
 
             // after all config options are set and
             // the driver option is used, try setting it
             if ('driver' in options && options.driver) {
-                this.setDriver(this._config.driver);
+                return this.setDriver(this._config.driver);
             }
 
             return true;
@@ -275,6 +279,14 @@ class LocalForage {
             self._config.driver = self.driver();
         }
 
+        function extendSelfWithDriver(driver) {
+            self._extend(driver);
+            setDriverToConfig();
+
+            self._ready = self._initStorage(self._config);
+            return self._ready;
+        }
+
         function initDriver(supportedDrivers) {
             return function() {
                 var currentDriverIndex = 0;
@@ -288,13 +300,7 @@ class LocalForage {
                         self._ready = null;
 
                         return self.getDriver(driverName)
-                            .then(driver => {
-                                self._extend(driver);
-                                setDriverToConfig();
-
-                                self._ready = self._initStorage(self._config);
-                                return self._ready;
-                            })
+                            .then(extendSelfWithDriver)
                             .catch(driverPromiseLoop);
                     }
 

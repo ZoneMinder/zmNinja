@@ -1,1 +1,0 @@
-See project [website](http://arielfaur.github.io/ionic-pullup) for documentation and demo

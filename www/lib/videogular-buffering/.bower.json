@@ -13,7 +13,7 @@
     "commit": "84fa91b8b28631336e3bb9a8108d3a04e76508d3"
   },
   "_source": "https://github.com/2fdevs/bower-videogular-buffering.git",
-  "_target": "1.4.4",
+  "_target": "~1.4.4",
   "_originalSource": "videogular-buffering",
   "_direct": true
 }

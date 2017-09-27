@@ -2,6 +2,7 @@ import createBlob from '../utils/createBlob';
 import idb from '../utils/idb';
 import Promise from '../utils/promise';
 import executeCallback from '../utils/executeCallback';
+import executeTwoCallbacks from '../utils/executeTwoCallbacks';
 
 // Some code originally from async_storage.js in
 // [Gaia](https://github.com/mozilla-b2g/gaia).
@@ -9,6 +10,7 @@ import executeCallback from '../utils/executeCallback';
 var DETECT_BLOB_SUPPORT_STORE = 'local-forage-detect-blob-support';
 var supportsBlobs;
 var dbContexts;
+var toString = Object.prototype.toString;
 
 // Transform a binary string to an array buffer, because otherwise
 // weird stuff happens when you try to work with the binary string directly.
@@ -38,10 +40,11 @@ function _binStringToArrayBuffer(bin) {
 // FileReader bug: https://code.google.com/p/chromium/issues/detail?id=447836
 //
 // Code borrowed from PouchDB. See:
-// https://github.com/pouchdb/pouchdb/blob/9c25a23/src/adapters/idb/blobSupport.js
+// https://github.com/pouchdb/pouchdb/blob/master/packages/node_modules/pouchdb-adapter-idb/src/blobSupport.js
 //
-function _checkBlobSupportWithoutCaching(txn) {
+function _checkBlobSupportWithoutCaching(idb) {
     return new Promise(function(resolve) {
+        var txn = idb.transaction(DETECT_BLOB_SUPPORT_STORE, 'readwrite');
         var blob = createBlob(['']);
         txn.objectStore(DETECT_BLOB_SUPPORT_STORE).put(blob, 'key');
 
@@ -154,7 +157,8 @@ function _getConnection(dbInfo, upgradeNeeded) {
             };
         }
 
-        openreq.onerror = function() {
+        openreq.onerror = function(e) {
+            e.preventDefault();
             reject(openreq.error);
         };
 
@@ -254,7 +258,7 @@ function _fullyReady(callback) {
         }
     });
 
-    promise.then(callback, callback);
+    executeTwoCallbacks(promise, callback, callback);
     return promise;
 }
 
@@ -448,7 +452,7 @@ function setItem(key, value, callback) {
         var dbInfo;
         self.ready().then(function() {
             dbInfo = self._dbInfo;
-            if (value instanceof Blob) {
+            if (toString.call(value) === '[object Blob]') {
                 return _checkBlobSupport(dbInfo.db).then(function(blobSupport) {
                     if (blobSupport) {
                         return value;
@@ -460,6 +464,7 @@ function setItem(key, value, callback) {
         }).then(function(value) {
             var transaction = dbInfo.db.transaction(dbInfo.storeName, 'readwrite');
             var store = transaction.objectStore(dbInfo.storeName);
+            var req = store.put(value, key);
 
             // The reason we don't _save_ null is because IE 10 does
             // not support saving the `null` type in IndexedDB. How
@@ -486,8 +491,6 @@ function setItem(key, value, callback) {
                 var err = req.error ? req.error : req.transaction.error;
                 reject(err);
             };
-
-            var req = store.put(value, key);
         }).catch(reject);
     });
 

@@ -1,0 +1,20 @@
+{
+  "name": "zmNinja",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.3.3"
+  },
+  "dependencies": {
+    "ionic-content-banner": "https://github.com/pliablepixels/ionic-content-banner",
+    "localforage": "~1.4.2",
+    "localforage-cordovasqlitedriver": "localForage-cordovaSQLiteDriver#~1.4.1",
+    "ng-mfb": "~0.4.0",
+    "ngCordova": "~0.1.27-alpha",
+    "videogular": "~1.4.4",
+    "videogular-buffering": "~1.4.4",
+    "videogular-controls": "~1.4.4",
+    "videogular-cuepoints": "~2.1.0",
+    "videogular-overlay-play": "~1.4.4",
+    "videogular-themes-default": "~1.4.4"
+  }
+}
