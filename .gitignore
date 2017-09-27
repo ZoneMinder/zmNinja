@@ -2,6 +2,8 @@
 # http://git-scm.com/docs/gitignore
 
 ionic.project
+!www/lib/ionic
+www/lib/
 node_modules/
 platforms/
 release_files/
