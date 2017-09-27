@@ -15,4 +15,5 @@ zmNinja.sublime-workspace
 .vscode/
 typings/
 jsconfig.json
+package-lock.json
 
