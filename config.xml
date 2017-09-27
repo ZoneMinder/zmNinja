@@ -125,7 +125,6 @@
     <plugin name="cordova-plugin-pin-dialog" spec="^0.1.3" />
     <plugin name="cordova-plugin-settings-hook" spec="^0.2.7" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
-    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
     <plugin name="cordova-plugin-touchid" spec="^0.4.0" />
     <plugin name="cordova-plugin-websocket" spec="^0.12.2" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
@@ -141,4 +140,5 @@
     <engine name="ios" spec="~4.4.0" />
     <engine name="android" spec="~6.2.3" />
     <plugin name="com.jcjee.plugins.emailcomposer" spec="https://github.com/pliablepixels/email-composer" />
+    <plugin name="cordova-plugin-statusbar" spec="https://github.com/apache/cordova-plugin-statusbar" />
 </widget>
