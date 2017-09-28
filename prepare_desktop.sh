@@ -14,6 +14,8 @@ echo Use this to download electron images
 echo You really need to do this one time
 echo ----------------------------------------------------
 echo
+echo This will delete all files in desktop/ and also remove icon associations
+read -p "Press a key to continue or Ctrl-C to break..."
 
 
 iswget=`which ${WGET}`
@@ -45,16 +47,23 @@ do
     if [ "${release_names[$i]}" != "darwin-x64" ]; then
         exe mkdir electron-${REL}-${release_names[$i]} >/dev/null 2>&1
         exe rm -fr electron-${REL}-${release_names[$i]}/* >/dev/null 2>&1
-        exe ${UNZIP}  -f electron-${REL}-${release_names[$i]}.zip  ${UNZIP_ARGS} electron-${REL}-${release_names[$i]} >/dev/null 2>&1
+        exe ${UNZIP}  electron-${REL}-${release_names[$i]}.zip  ${UNZIP_ARGS} electron-${REL}-${release_names[$i]} 2>/dev/null 
         exe mv electron-${REL}-${release_names[$i]} ${release_renames[$i]} >/dev/null 2>&1
-    else
-        exe ${UNZIP} -f electron-${REL}-${release_names[$i]}.zip  >/dev/null 2>&1
+        mv ${release_renames[$i]}/electron.exe ${release_renames[$i]}/zmNinja.exe >/dev/null 2>&1
+        mv ${release_renames[$i]}/electron ${release_renames[$i]}/zmNinja >/dev/null 2>&1
+
+    else # OSX
+        exe ${UNZIP} electron-${REL}-${release_names[$i]}.zip  2>/dev/null 
         exe mv Electron.app ${release_renames[$i]}
+        
     fi 
     
-    rm LICENSE* 2>/dev/null
-    rm version 2>/dev/null
+    rm LICENSE* >/dev/null 2>&1
+    rm version >/dev/null 2>&1
 done
+
+rm *.zip >/dev/null 2>&1
+
 echo
 echo =========================================================
 echo All done. Use ./make_desktop now

@@ -21,12 +21,15 @@ declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNi
 for i in "${app_ports[@]}"
 do
 if [ -d "$i" ]; then
-	DIRNAME=`expr "$i" : '\.\./\(.*\)/'`
-        echo "Dirname:" $DIRNAME
-        PDIRNAME=`echo "$DIRNAME" | sed "s/\/Contents//"  `
-        echo "Pdirname:" $PDIRNAME
-        ZIPNAME="${PDIRNAME}_${APPVER}.zip"
-	echo "------------------------------------------------------------------------"
+	DIRNAME=$i
+
+	if [ "${i}" == "desktop/zmNinja-mac.app/Contents/Resources" ]; then
+		BASENAME="desktop/zmNinja-mac.app/Contents"
+	else
+		BASENAME=`expr "$i" : '\(.*\)/resources'`
+	fi
+
+    echo "------------------------------------------------------------------------"
 	echo "Working on packaging $i"
 	echo "------------------------------------------------------------------------"
 	exe rm -fr $i/app
@@ -38,9 +41,9 @@ if [ -d "$i" ]; then
         exe cp -R node_modules/deep-equal $i/app/node_modules
 	exe cp -R www/* $i/app/
 	exe cp electron_js/* $i/app
-	exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt ../$DIRNAME
-        echo $APPVER > ../$DIRNAME/version
-	exe cp resources/icon.png ../$DIRNAME
+	exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt $BASENAME
+        echo $APPVER > $BASENAME/version
+	exe cp resources/icon.png $BASENAME
 	exe cd $i
 	cat app/js/DataModel.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/js/DataModel.js.tmp
 	exe rm -fr app/js/DataModel.js
