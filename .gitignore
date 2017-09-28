@@ -1,6 +1,7 @@
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
+*.swp
 ionic.project
 www/lib/
 desktop/
@@ -10,11 +11,13 @@ release_files/
 plugins/*
 engine/
 /ionic.project
-.DS_Store
+**/.DS_Store
 zmNinja.sublime-project
 zmNinja.sublime-workspace
 .vscode/
 typings/
 jsconfig.json
 package-lock.json
+
+
 
