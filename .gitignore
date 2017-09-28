@@ -3,6 +3,7 @@
 
 ionic.project
 www/lib/
+desktop/
 node_modules/
 platforms/
 release_files/

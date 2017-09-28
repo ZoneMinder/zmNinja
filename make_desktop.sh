@@ -2,6 +2,13 @@
 
 exe() { echo "\$ $@" ; "$@" ; }
 
+if [ ! -d "desktop" ]; then
+	echo "You have not downloaded desktop images"
+	echo "Please run ./prepare_desktop.sh"
+	echo
+	exit
+fi
+
 echo ----------------------------------------------------
 echo Pliable Pixels Desktop build process
 echo ----------------------------------------------------
@@ -9,7 +16,7 @@ APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns
 APPVER+="D"
 echo "Application version:$APPVER"
 
-declare -a app_ports=("../zmNinja-mac.app/Contents/Resources" "../zmNinja-linux32bit/resources" "../zmNinja-linux64bit/resources" "../zmNinja-win32-64bit/resources"  "../zmNinja-linuxarm/resources")
+declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNinja-linux32bit/resources" "desktop/zmNinja-linux64bit/resources" "desktop/zmNinja-win32-64bit/resources"  "desktop/zmNinja-linuxarm/resources")
 
 for i in "${app_ports[@]}"
 do
