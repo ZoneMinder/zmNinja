@@ -53,7 +53,12 @@ if [ -d "$i" ]; then
 	
 	
 	rm -fr app.asar
-	exe asar pack app app.asar
+
+	# No idea why but asar is causing problems in windows
+	# main.js changes are not showig up. wuh? - Sep 29, 2017
+
+	#exe asar pack app app.asar
+	#read -p "Press a key to remove app dir for $i..."
 	#exe rm -fr app
 	exe cd - 
     #OSX ditto does a better job than zip!

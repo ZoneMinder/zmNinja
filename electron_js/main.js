@@ -6,8 +6,9 @@ const {dialog} = require('electron')
 // Module to create native browser window.
 const {BrowserWindow} = electron;
 var isFs = false;
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(1));
 
+console.log ("ARGV="+JSON.stringify(argv));
 
 if (argv.path) {
   console.log ("PATH SET TO "+argv.path);
@@ -39,8 +40,10 @@ if (shouldQuit) {
 
 function createWindow() {
 
+
 const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
-    console.log('CommandOrControl+F is pressed');
+
+    console.log('Command Or Control+F is pressed');
     isFs = !isFs;
     win.setFullScreen(isFs);
   })
