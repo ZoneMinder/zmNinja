@@ -16,7 +16,7 @@ APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns
 APPVER+="D"
 echo "Application version:$APPVER"
 
-declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNinja-linux32bit/resources" "desktop/zmNinja-linux64bit/resources" "desktop/zmNinja-win32-64bit/resources"  "desktop/zmNinja-linuxarm/resources")
+declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNinja-linux32bit/resources" "desktop/zmNinja-linux64bit/resources" "desktop/zmNinja-win32-x64bit/resources" "desktop/zmNinja-win32-ia32bit/resources"  "desktop/zmNinja-linuxarm/resources")
 
 for i in "${app_ports[@]}"
 do
@@ -35,10 +35,12 @@ if [ -d "$i" ]; then
 	exe rm -fr $i/app
 	exe mkdir $i/app
 	exe mkdir $i/app/node_modules
-        exe cp -R node_modules/electron-window-state $i/app/node_modules
-        exe cp -R node_modules/jsonfile $i/app/node_modules
-        exe cp -R node_modules/mkdirp $i/app/node_modules
-        exe cp -R node_modules/deep-equal $i/app/node_modules
+    exe cp -R node_modules/electron-window-state $i/app/node_modules
+    exe cp -R node_modules/jsonfile $i/app/node_modules
+    exe cp -R node_modules/mkdirp $i/app/node_modules
+    exe cp -R node_modules/deep-equal $i/app/node_modules
+	exe cp -R node_modules/minimist $i/app/node_modules
+	
 	exe cp -R www/* $i/app/
 	exe cp electron_js/* $i/app
 	exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt $BASENAME
@@ -52,7 +54,7 @@ if [ -d "$i" ]; then
 	
 	rm -fr app.asar
 	exe asar pack app app.asar
-	exe rm -fr app
+	#exe rm -fr app
 	exe cd - 
     #OSX ditto does a better job than zip!
     #echo "Creating ZIP $ZIPNAME..."
