@@ -16,7 +16,7 @@ APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns
 APPVER+="D"
 echo "Application version:$APPVER"
 
-declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNinja-linux32bit/resources" "desktop/zmNinja-linux64bit/resources" "desktop/zmNinja-win32-x64bit/resources" "desktop/zmNinja-win32-ia32bit/resources"  "desktop/zmNinja-linuxarm/resources")
+declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNinja-linux32bit/resources" "desktop/zmNinja-linux64bit/resources" "desktop/zmNinja-win-x64bit/resources" "desktop/zmNinja-win-ia32bit/resources"  "desktop/zmNinja-linuxarm/resources")
 
 for i in "${app_ports[@]}"
 do
