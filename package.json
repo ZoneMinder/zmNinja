@@ -49,9 +49,9 @@
             "phonegap-plugin-push": {
                 "SENDER_ID": "710936220256"
             },
-            "cordova-plugin-certificates": {},
             "com.jcjee.plugins.emailcomposer": {},
-            "cordova-plugin-statusbar": {}
+            "cordova-plugin-statusbar": {},
+            "cordova-plugin-certificates": {}
         }
     },
     "dependencies": {

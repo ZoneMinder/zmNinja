@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from __future__ import absolute_import, division, print_function, unicode_literals
 import sys
-import json
+import simplejson as json
 import os
 import getopt
 
@@ -53,8 +53,8 @@ def compare(fname):
   with open (i) as json_data:
       try:
         newKeys = json.load(json_data)
-      except ValueError:
-        print('could not parse %s, skipping!' %fname)
+      except ValueError as err:
+        print('could not parse %s, skipping! %s' %(fname, err))
         globBad+=1
         return
       json_data.close()

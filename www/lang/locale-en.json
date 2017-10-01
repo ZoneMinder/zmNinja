@@ -72,7 +72,7 @@
     "kDiscoveringPortal"         :"discovering portal",
     "kDone"                      :"done",
     "kDownload"                  :"download",
-    "kEmailNotConfigured"        : "Email not configured",
+    "kEmailNotConfigured"        :"Email not configured",
     "kEnable24hr"                :"enable 24hr time format",
     "kEnableDebug"               :"Enable debug logs",
     "kEnableGIFMP4"              :"Enable GIF/MP4 downloads",

@@ -1,5 +1,28 @@
 # Change Log
 
+## [1.2.503](https://github.com/pliablepixels/zmNinja/tree/1.2.503) (2017-10-01)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.44...1.2.503)
+
+**Implemented enhancements:**
+
+- Allow running multiple, different instances of zmNinja \(desktop\) [\#542](https://github.com/pliablepixels/zmNinja/issues/542)
+- Abstract zmNinja out from ZM specifics [\#318](https://github.com/pliablepixels/zmNinja/issues/318)
+
+**Fixed bugs:**
+
+- German language - JSON corrupted -affects 1.2.500 [\#545](https://github.com/pliablepixels/zmNinja/issues/545)
+
+**Closed issues:**
+
+- make it easier to make desktop builds [\#541](https://github.com/pliablepixels/zmNinja/issues/541)
+- Explore upgrading electron wrapper to solve white screen issues [\#539](https://github.com/pliablepixels/zmNinja/issues/539)
+- All monitors view refresh rate 0 or very low on my PC/Windows installation of ZMNinja [\#527](https://github.com/pliablepixels/zmNinja/issues/527)
+
+**Merged pull requests:**
+
+- Email not configured [\#544](https://github.com/pliablepixels/zmNinja/pull/544) ([florie1706](https://github.com/florie1706))
+- kEmailNotConfigured [\#540](https://github.com/pliablepixels/zmNinja/pull/540) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.2.44](https://github.com/pliablepixels/zmNinja/tree/v1.2.44) (2017-09-25)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.41...v1.2.44)
 
