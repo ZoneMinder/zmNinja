@@ -1,7 +1,20 @@
 # Change Log
 
-## [1.2.503](https://github.com/pliablepixels/zmNinja/tree/1.2.503) (2017-10-01)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.44...1.2.503)
+## [Unreleased](https://github.com/pliablepixels/zmNinja/tree/HEAD)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.503...HEAD)
+
+**Fixed bugs:**
+
+- 1.2.503 broke timeline in Android & Desktop [\#549](https://github.com/pliablepixels/zmNinja/issues/549)
+
+**Closed issues:**
+
+- System edit privileges required to permit non-admin to change camera mode [\#548](https://github.com/pliablepixels/zmNinja/issues/548)
+- Support for multiple screens \(desktop\) [\#543](https://github.com/pliablepixels/zmNinja/issues/543)
+
+## [v1.2.503](https://github.com/pliablepixels/zmNinja/tree/v1.2.503) (2017-10-01)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.44...v1.2.503)
 
 **Implemented enhancements:**
 
@@ -331,7 +344,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -358,11 +371,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
-
 ## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
+
+## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
 
 **Implemented enhancements:**
 
