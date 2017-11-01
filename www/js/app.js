@@ -1178,6 +1178,10 @@ angular.module('zmApp', [
 
     .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, NVRDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions, $translate, $localstorage) {
 
+
+       $ionicPlatform.ready(function () {
+        console.log (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
+
         $rootScope.appName = "zmNinja";
         $rootScope.zmGlobalCookie = "";
         $rootScope.isEventFilterOn = false;
@@ -1207,7 +1211,9 @@ angular.module('zmApp', [
         $rootScope.exitApp = function () {
             NVRDataModel.log("user exited app");
 
-            ionic.Platform.exitApp();
+           ionic.Platform.exitApp();
+           //navigator.app.exitApp();
+
         };
 
         // This is a global exception interceptor
@@ -1279,13 +1285,17 @@ angular.module('zmApp', [
         // and takes it to the menu.
         //console.log (">>>>>>>>>>>>>>>>>>BACK BUTTON REGISTERED");
         $ionicPlatform.registerBackButtonAction(function (e) {
-            e.preventDefault();
+            
             //console.log ("******** back called with isOpenLeft: " + $ionicSideMenuDelegate.isOpenLeft());
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
+                e.preventDefault();
                 $ionicSideMenuDelegate.toggleLeft();
                 //console.log("Status of SIDE MENU IS : " + $ionicSideMenuDelegate.isOpen());
             } else {
-                navigator.app.exitApp();
+              
+                window.stop();
+                //ionic.Platform.exitApp();
+                //navigator.app.exitApp();
             }
         }, 501);
 
@@ -1388,8 +1398,20 @@ angular.module('zmApp', [
             NVRDataModel.debug("text zoom factor is " + $rootScope.textScaleFactor);
         }
 
-        $ionicPlatform.ready(function () {
+       // $ionicPlatform.ready(function () {
 
+
+            /*if (window.cordova) {
+                
+                                    alert ("Permissions");
+                                    var permissions = cordova.plugins.permissions;
+                                    permissions.requestPermission(permissions.READ_EXTERNAL_STORAGE, null, nopermerr);
+                                }
+                                
+
+            function nopermerr() {
+                displayBanner('error', ['Storage permission must be allowed'], "", 4000);
+            }*/
 
 
             // handles URL launches
@@ -1711,6 +1733,8 @@ console.log ("forage driver");
                 // resume handler
                 //----------------------------------------------------------------------------
                 document.addEventListener("resume", function () {
+
+                    $ionicPlatform.ready(function () {
                     NVRDataModel.log("App is resuming from background");
                     $rootScope.isDownloading = false;
                     var forceDelay = NVRDataModel.getLogin().resumeDelay;
@@ -1758,7 +1782,7 @@ console.log ("forage driver");
                         }
 
                     }, forceDelay);
-
+                });
                 }, false);
 
                 //---------------------------------------------------------------------------
@@ -1778,14 +1802,17 @@ console.log ("forage driver");
 
                     var ld = NVRDataModel.getLogin();
 
-                    if (ld.exitOnSleep && $rootScope.platformOS == "android") {
-                        NVRDataModel.log("user exited app");
-                        ionic.Platform.exitApp();
-                    }
+                    
 
                     zmAutoLogin.stop();
                     if ($rootScope.zmPopup)
                         $rootScope.zmPopup.close();
+
+
+                        if (ld.exitOnSleep && $rootScope.platformOS == "android") {
+                            NVRDataModel.log("user exited app");
+                            ionic.Platform.exitApp();
+                        }
 
                 }, false);
 
