@@ -53,14 +53,7 @@
             "cordova-custom-config": {},
             "cordova.plugins.diagnostic": {},
             "cordova-plugin-email": {},
-            "cordova-plugin-crosswalk-webview": {
-                "XWALK_MODE": "lite",
-                "XWALK_VERSION": "17.46.459.1",
-                "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
-                "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
-                "XWALK_MULTIPLEAPK": "true"
-            },
-            "cordova-plugin-crosswalk-certificate": {}
+            "cordova-plugin-certificates": {}
         }
     },
     "dependencies": {
@@ -74,10 +67,9 @@
         "cordova-plugin-android-permissions": "^1.0.0",
         "cordova-plugin-app-version": "^0.1.9",
         "cordova-plugin-canvas2image": "git+https://github.com/flache/Canvas2ImagePlugin.git",
+        "cordova-plugin-certificates": "git+https://github.com/hypery2k/cordova-certificate-plugin.git",
         "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-console": "^1.1.0",
-        "cordova-plugin-crosswalk-certificate": "git+https://github.com/danjarvis/cordova-plugin-crosswalk-certificate.git",
-        "cordova-plugin-crosswalk-webview": "^2.2.0",
         "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-email": "git+https://github.com/pliablepixels/cordova-email-plugin.git",

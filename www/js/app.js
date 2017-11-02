@@ -1242,6 +1242,7 @@ angular.module('zmApp', [
 
        window.addEventListener('beforeunload', function (ev) {
 
+        // This was causing android reload issues - holy palooza
        /* if ($rootScope.platformOS != 'desktop') {
           ev.returnValue = "true";
           return;
