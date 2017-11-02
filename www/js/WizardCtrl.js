@@ -802,7 +802,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         {
             disableBack: true
         });
-        $state.go("login",
+        $state.go("app.login",
         {
             "wizard": true
         });

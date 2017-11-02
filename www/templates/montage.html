@@ -167,7 +167,7 @@
         </nav>
         <span class="modal-alarm-badge">
             <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive" 
-                    ng-click="handleAlarmsWhileMinimized();" ng-if="$root.isAlarm"></a>
+                    ng-click="handleAlarmsWhileMinimized();" ng-if="!$root.isAlarm"></a>
         </span>
     </div>
     <br/>

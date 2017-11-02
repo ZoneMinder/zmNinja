@@ -55,7 +55,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             {
                 disableBack: true
             });
-            $state.go("events",
+            $state.go("app.events",
             {
                 "id": 0,
                 "playEvent": false
@@ -247,7 +247,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         NVRDataModel.debug("Saving settings before going to Event Server settings");
         //console.log ( "My loginData saved " + JSON.stringify($scope.loginData));
         NVRDataModel.setLogin($scope.loginData);
-        $state.go("eventserversettings");
+        $state.go("app.eventserversettings");
         return;
     };
 

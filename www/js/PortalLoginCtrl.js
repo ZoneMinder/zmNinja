@@ -85,7 +85,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         disableAnimate: true,
                         disableBack: true
                     });
-                    $state.go('first-use');
+                    $state.go('app.first-use');
                     return;
                 }
                 else
@@ -97,7 +97,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                             disableAnimate: true,
                             disableBack: true
                         });
-                        $state.go("login",
+                        $state.go("app.login",
                         {
                             "wizard": false
                         });
@@ -156,7 +156,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 if (NVRDataModel.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0")
                                 {
 
-                                    $state.go('lowversion',
+                                    $state.go('app.lowversion',
                                     {
                                         "ver": data
                                     });
@@ -166,7 +166,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 if (NVRDataModel.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0")
                                 {
 
-                                    $state.go('importantmessage',
+                                    $state.go('app.importantmessage',
                                     {
                                         "ver": data
                                     });
@@ -187,7 +187,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 // coming here means continue
                                 EventServer.refresh();
 
-                                var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
+                                var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
                                 //NVRDataModel.debug ("logging state transition");
                                 NVRDataModel.debug("2nd Auth: Transitioning state to: " +
                                     statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
@@ -231,7 +231,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
             if (ld.onTapScreen == $translate.instant('kTapMontage'))
             {
                 NVRDataModel.debug("Going to montage");
-                $state.go("montage",
+                $state.go("app.montage",
                 {},
                 {
                     reload: true
@@ -242,7 +242,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
             else if (ld.onTapScreen == $translate.instant('kTapEvents'))
             {
                 NVRDataModel.debug("Going to events");
-                $state.go("events",
+                $state.go("app.events",
                 {
                     "id": 0,
                     "playEvent": false
@@ -255,7 +255,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
             else // we go to live
             {
                 NVRDataModel.debug("Going to live view ");
-                $state.go("monitors",
+                $state.go("app.monitors",
                 {},
                 {
                     reload: true
@@ -299,7 +299,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     if (NVRDataModel.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0")
                                     {
 
-                                        $state.go('lowversion',
+                                        $state.go('app.lowversion',
                                         {
                                             "ver": data
                                         });
@@ -311,7 +311,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                                         // console.log (">>>>>>>>>>>>> HERE AND VERSION SAYS " +NVRDataModel.versionCompare(data, zm.recommendedAppVersion)); 
                                         //console.log ("GOING TO IMPORTANT");
-                                        $state.go('importantmessage',
+                                        $state.go('app.importantmessage',
                                         {
                                             "ver": data
                                         });
@@ -339,7 +339,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     if ($rootScope.tappedNotification != 1)
                                     {
                                         console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
-                                        var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'montage';
+                                        var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
                                         NVRDataModel.debug("logging state transition");
                                         NVRDataModel.debug("Transitioning state to: " +
                                             statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
@@ -372,7 +372,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                                                     if ($rootScope.apiValid == true)
                                                     {
-                                                        $state.go("login",
+                                                        $state.go("app.login",
                                                         {
                                                             "wizard": false
                                                         });
@@ -380,7 +380,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                                     }
                                                     else
                                                     {
-                                                        $state.go("invalidapi");
+                                                        $state.go("app.invalidapi");
                                                         return;
                                                     }
                                                         
@@ -409,7 +409,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 disableAnimate: true,
                                 disableBack: true
                             });
-                            $state.go("login",
+                            $state.go("app.login",
                             {
                                 "wizard": false
                             });
@@ -419,7 +419,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         {
                             // if user cancelled auth I guess we go to login
                             $rootScope.userCancelledAuth = false;
-                            $state.go("login",
+                            $state.go("app.login",
                             {
                                 "wizard": false
                             });

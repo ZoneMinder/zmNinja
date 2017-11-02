@@ -1511,6 +1511,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                             data.control.Control.HasHomePreset = '1';*/
                             // *** Only for testing - comment out - end //
 
+
+                            //data.control.Control.HasPresets = '1';
+                            //data.control.Control.HasHomePreset = '1'
+
+
                             $scope.ptzMoveCommand = "move"; // start with as move;
                             $scope.ptzStopCommand = "";
 

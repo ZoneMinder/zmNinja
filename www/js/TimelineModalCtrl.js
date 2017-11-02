@@ -37,7 +37,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
             {
                 disableBack: true
             });
-            $state.go("events",
+            $state.go("app.events",
             {
                 "id": 0,
                 "playEvent": false

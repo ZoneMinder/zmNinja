@@ -47,7 +47,7 @@
     "videogular-cuepoints": "~2.1.0",
     "videogular-overlay-play": "~1.4.4",
     "videogular-themes-default": "~1.4.4",
-    "vis": "~4.17.0"
+    "vis": "~4.20.0"
   },
   "resolutions": {
     "angular-sanitize": "1.5.3",

@@ -34,7 +34,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             {
                 disableBack: true
             });
-            $state.go("events",
+            $state.go("app.events",
             {
                 "id": 0,
                 "playEvent": false
@@ -642,7 +642,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             $scope.follow.time = NVRDataModel.getLogin().followTimeLine;
             $scope.currentMode = "custom";
             $rootScope.customTimelineRange = true;
-            $state.go('events-date-time-filter');
+            $state.go('app.events-date-time-filter');
             return;
         }
 

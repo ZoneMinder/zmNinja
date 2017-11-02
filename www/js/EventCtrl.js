@@ -87,7 +87,7 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.afterEnter', function()
     {
-        //console.log ("********* AFTER ENTER");
+        console.log ("********* AFTER ENTER");
         //
         $ionicListDelegate.canSwipeItems(true);
         NVRDataModel.debug ("enabling options swipe");
@@ -112,9 +112,14 @@ angular.module('zmApp.controllers')
         }
 
         $scope.events = [];
-        getInitialEvents();
-        setupWatchers();
-        footerExpand();
+
+        $timeout ( function() {
+            console.log ("DEFERRED ACTION EVENTS");
+            getInitialEvents();
+            setupWatchers();
+            footerExpand();
+        },100);
+        
     });
 
     $scope.$on('$ionicView.beforeEnter', function()
@@ -128,7 +133,7 @@ angular.module('zmApp.controllers')
         $scope.id = parseInt($stateParams.id, 10);
         $scope.showEvent = $stateParams.playEvent || false;
 
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        console.log("BEFORE ENTER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
         NVRDataModel.log("EventCtrl called with: EID=" + $scope.id + " playEvent =  " + $scope.showEvent);
 
@@ -319,7 +324,7 @@ angular.module('zmApp.controllers')
             {
                 disableBack: true
             });
-            $state.go("login",
+            $state.go("app.login",
             {
                 "wizard": false
             });
@@ -338,9 +343,12 @@ angular.module('zmApp.controllers')
             nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
         if ($rootScope.toString)
             nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+
+           // console.log ("GETTING EVENTS USING "+$scope.id+" "+nolangFrom+" "+ nolangTo)
         NVRDataModel.getEventsPages($scope.id, nolangFrom, nolangTo)
             .then(function(data)
             {
+             //   console.log ("WE GOT PAGES="+JSON.stringify(data));
                 eventsPage = data.pageCount || 1;
                 NVRDataModel.debug("EventCtrl: found " + eventsPage + " pages of events");
 
@@ -359,6 +367,7 @@ angular.module('zmApp.controllers')
                     .then(function(data)
                     {
 
+                       // console.log ("WE GOT EVENTS="+JSON.stringify(data));
                         var myevents = data;
                         NVRDataModel.debug("EventCtrl: success, got " + myevents.length + " events");
                         var loginData = NVRDataModel.getLogin();
@@ -379,6 +388,8 @@ angular.module('zmApp.controllers')
                                     }
                                 }
                             }
+
+                            console.log ("IDFOUND="+idfound + " AND MON LEN="+$scope.monitors.length);
 
                             myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
                             myevents[i].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[i].Event.MonitorId);
@@ -413,13 +424,17 @@ angular.module('zmApp.controllers')
                             else
                                 myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
 
-                            if (idfound)
+                           // if (idfound)
+                           if (idfound)
                             {
+                                
+                                console.log ("PUSHING "+JSON.stringify(myevents[i]));
                                 $scope.events.push(myevents[i]);
+                                console.log ("SCOPE EVENTS LEN="+$scope.events.length);
                             }
                             else
                             {
-                                //console.log ("Skipping Event MID = " + myevents[i].Event.MonitorId);
+                                console.log ("Skipping Event MID = " + myevents[i].Event.MonitorId);
                             }
 
                         } //for
@@ -1023,7 +1038,9 @@ angular.module('zmApp.controllers')
 
         // reloading - may solve https://github.com/pliablepixels/zmNinja/issues/36
         // if you are in the same mid event page $state.go won't work
-        $state.go("events",
+
+        console.log ("---> SENDING TO EVENTS WITH mid " + monitorId);
+        $state.go("app.events",
         {
             "id": monitorId,
             "playEvent": false
@@ -1046,7 +1063,7 @@ angular.module('zmApp.controllers')
             {
                 disableBack: true
             });
-            $state.go("events",
+            $state.go("app.events",
             {
                 "id": 0,
                 "playEvent": false
@@ -1783,7 +1800,7 @@ angular.module('zmApp.controllers')
                 {
                     disableBack: true
                 });
-                $state.go("events",
+                $state.go("app.events",
                 {
                     "id": 0,
                     "playEvent": false
@@ -1988,6 +2005,8 @@ angular.module('zmApp.controllers')
 
     $scope.scrollPosition = function()
     {
+        if (!$ionicScrollDelegate.$getByHandle("mainScroll")) return "";
+        if (!$ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition()) return "";
         var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
         var item = Math.round(scrl / eventsListDetailsHeight);
         if ($scope.events == undefined || !$scope.events.length || $scope.events[item] == undefined)

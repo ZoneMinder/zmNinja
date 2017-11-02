@@ -49,27 +49,38 @@
             "phonegap-plugin-push": {
                 "SENDER_ID": "710936220256"
             },
-            "com.jcjee.plugins.emailcomposer": {},
             "cordova-plugin-statusbar": {},
-            "cordova-plugin-certificates": {}
+            "cordova-custom-config": {},
+            "cordova.plugins.diagnostic": {},
+            "cordova-plugin-email": {},
+            "cordova-plugin-crosswalk-webview": {
+                "XWALK_MODE": "lite",
+                "XWALK_VERSION": "17.46.459.1",
+                "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
+                "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
+                "XWALK_MULTIPLEAPK": "true"
+            },
+            "cordova-plugin-crosswalk-certificate": {}
         }
     },
     "dependencies": {
         "EmailComposer": "git+https://github.com/pliablepixels/email-composer.git",
-        "com.jcjee.plugins.emailcomposer": "https://github.com/pliablepixels/email-composer",
         "com.telerik.plugins.nativepagetransitions": "^0.6.5",
         "cordova-android": "^6.2.3",
+        "cordova-custom-config": "^4.0.2",
         "cordova-ios": "^4.4.0",
         "cordova-library-helper": "^1.0.4",
         "cordova-plugin-add-swift-support": "^1.7.0",
         "cordova-plugin-android-permissions": "^1.0.0",
         "cordova-plugin-app-version": "^0.1.9",
         "cordova-plugin-canvas2image": "git+https://github.com/flache/Canvas2ImagePlugin.git",
-        "cordova-plugin-certificates": "git+https://github.com/hypery2k/cordova-certificate-plugin.git",
         "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-console": "^1.1.0",
+        "cordova-plugin-crosswalk-certificate": "git+https://github.com/danjarvis/cordova-plugin-crosswalk-certificate.git",
+        "cordova-plugin-crosswalk-webview": "^2.2.0",
         "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^1.1.6",
+        "cordova-plugin-email": "git+https://github.com/pliablepixels/cordova-email-plugin.git",
         "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-file-transfer": "^1.6.3",
         "cordova-plugin-globalization": "^1.0.7",
@@ -87,7 +98,9 @@
         "cordova-plugin-websocket": "^0.12.2",
         "cordova-plugin-whitelist": "^1.3.2",
         "cordova-sqlite-storage": "^1.5.3",
+        "cordova.plugins.diagnostic": "^3.7.1",
         "deep-equal": "^1.0.1",
+        "default-passive-events": "^0.1.1",
         "electron-window-state": "^4.1.1",
         "ionic-plugin-keyboard": "^2.2.1",
         "json-file": "^0.1.0",

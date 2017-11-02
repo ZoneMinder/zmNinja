@@ -9,8 +9,8 @@
 
 angular.module('zmApp.controllers')
 
-.service('NVRDataModel', ['$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions', '$translate', '$cordovaSQLite',
-    function($http, $q, $ionicLoading, $ionicBackdrop, $fileLogger,
+.service('NVRDataModel', ['$ionicPlatform', '$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions', '$translate', '$cordovaSQLite',
+    function($ionicPlatform, $http, $q, $ionicLoading, $ionicBackdrop, $fileLogger,
         zm, $rootScope, $ionicContentBanner, $timeout, $cordovaPinDialog,
         $ionicPopup, $localstorage, $state, $ionicNativeTransitions, $translate)
     {
@@ -276,13 +276,18 @@ angular.module('zmApp.controllers')
                     val = val.replace(regex1, "<password removed>");
                     val = val.replace(regex2, "<password removed>");
                 }
-                $fileLogger.debug(val);
+
+                $ionicPlatform.ready(function () {
+                    $fileLogger.debug(val);
+                });
                 //console.log (val);
             }
         }
 
         function log(val, logtype)
         {
+            
+            
             if (loginData.enableLogs)
             {
                 if (val !== undefined)
@@ -298,7 +303,9 @@ angular.module('zmApp.controllers')
                 // make sure password is removed
                 //"username":"zmninja","password":"xyz",
                 //val = val.replace(/\"password:\",
-                $fileLogger.log(logtype, val);
+                $ionicPlatform.ready(function () {
+                    $fileLogger.log(logtype, val);
+                });
                 // console.log (val);
             }
         }
@@ -651,6 +658,9 @@ angular.module('zmApp.controllers')
             init: function()
             {
                 // console.log("****** DATAMODEL INIT SERVICE CALLED ********");
+
+                
+
 
                 log("ZMData init: checking for stored variables & setting up log file");
 

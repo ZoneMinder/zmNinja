@@ -730,20 +730,21 @@ angular.module('zmApp.controllers')
         {
             $rootScope.isAlarm = !$rootScope.isAlarm;
             if (!$rootScope.isAlarm)
+           // if (1)
             {
                 $rootScope.alarmCount = "0";
                 $ionicHistory.nextViewOptions(
                 {
                     disableBack: true
                 });
-                $state.go("events",
+                $state.go("app.events",
                 {
                     "id": 0,
                     "playEvent": false
-                },
+                }/*,
                 {
                     reload: true
-                });
+                }*/);
                 return;
             }
         };
@@ -767,7 +768,7 @@ angular.module('zmApp.controllers')
                 {
                     disableBack: true
                 });
-                $state.go("events",
+                $state.go("app.events",
                 {
                     "id": 0,
                     "playEvent": false
@@ -811,7 +812,7 @@ angular.module('zmApp.controllers')
                 disableAnimate: true,
                 disableBack: true
             });
-            $state.go("montage",
+            $state.go("app.montage",
             {
                 minimal: $scope.minimal,
                 isRefresh: true
@@ -934,7 +935,7 @@ angular.module('zmApp.controllers')
             {
                 $scope.MontageMonitors[ndx].Monitor.selectStyle = "dragborder-selected";
             }
-            //console.log ("Switched value to " + $scope.MontageMonitors[ndx].Monitor.selectStyle);
+            //console.log ("Switched value to " + $scope.MontageMonitors[ndx] .Monitor.selectStyle);
         };
 
         //---------------------------------------------------------------------
@@ -1157,7 +1158,6 @@ angular.module('zmApp.controllers')
             $interval.cancel(intervalHandleMontageCycle);
             $interval.cancel(intervalHandleAlarmStatus);
             // $interval.cancel(modalIntervalHandle);
-
             // FIXME: Do I need to  setAwake(false) here?
         }
 
@@ -1651,7 +1651,7 @@ angular.module('zmApp.controllers')
                 {
                     disableBack: true
                 });
-                $state.go("login",
+                $state.go("app.login",
                 {
                     "wizard": false
                 });

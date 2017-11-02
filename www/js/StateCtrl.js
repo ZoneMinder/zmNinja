@@ -120,7 +120,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
             {
                 disableBack: true
             });
-            $state.go("events",
+            $state.go("app.events",
             {
                 "id": 0,
                 "playEvent": false

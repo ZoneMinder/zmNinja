@@ -79,7 +79,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             {
                 disableBack: true
             });
-            $state.go("events",
+            $state.go("app.events",
             {
                 "id": 0,
                 "playEvent": false
@@ -97,6 +97,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
     $scope.sendEmail = function(logstring)
     {
+        logstring = logstring.substring (0,20000);
         $ionicPopup.confirm(
             {
                 title: $translate.instant('kSensitiveTitle'),
@@ -155,7 +156,32 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 logstring = logstring.replace(re4, "<server>");
             }
 
-            window.plugins.emailComposer.showEmailComposerWithCallback(callback, $rootScope.appName + ' logs', logstring, [zm.authoremail]);
+            /* window.plugins.emailComposer.showEmailComposerWithCallback(callback, $rootScope.appName + ' logs', logstring, [zm.authoremail]);*/
+
+            
+            cordova.plugins.email.isAvailable(		 
+                function (isAvailable) {		
+ 		
+                    if (isAvailable) {		
+                         cordova.plugins.email.open({		
+                          to: zm.authoremail,		
+                          subject: $rootScope.appName + ' logs',		
+                          body: logstring		
+                          });		
+                     }		
+                     else {		
+                         // kEmailNotConfigured		
+                         $rootScope.zmPopup = SecuredPopups.show('alert',		
+                         {		
+                             title: $translate.instant('kError'),		
+                             template: $translate.instant('kEmailNotConfigured'),		
+                             okText: $translate.instant('kButtonOk'),		
+                             cancelText: $translate.instant('kButtonCancel'),		
+                         });		
+                     }		
+        		
+             });		
+ 
 
         }
         else
