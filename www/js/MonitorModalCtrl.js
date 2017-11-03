@@ -98,6 +98,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 content: '',
                 cssClass: 'fa fa-chevron-circle-up',
                 empty: false,
+                size: 'small',
                 onclick: function()
                 {
                     controlPTZ($scope.monitorId, $scope.ptzMoveCommand + 'Down');
