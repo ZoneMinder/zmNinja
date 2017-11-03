@@ -1180,13 +1180,35 @@ angular.module('zmApp', [
     $ionicPlatform.ready(function () {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
+      $rootScope.textScaleFactor = 1.0;
+      $rootScope.apiValid = false;
 
-      if (window.cordova) {
+      $rootScope.db = null;
+      $rootScope.runMode = NVRDataModel.getBandwidth();
 
-        cordova.plugins.diagnostic.requestExternalStorageAuthorization(okperm, nopermerr);
+      $rootScope.platformOS = "desktop";
+      NVRDataModel.log("Device is ready");
 
 
-      }
+      // var ld = NVRDataModel.getLogin();
+      if ($ionicPlatform.is('ios'))
+        $rootScope.platformOS = "ios";
+      if ($ionicPlatform.is('android'))
+        $rootScope.platformOS = "android";
+
+      NVRDataModel.log("You are running on " + $rootScope.platformOS);
+
+
+      /*if (window.cordova && $rootScope.platformOS == 'android') {
+
+        cordova.plugins.diagnostic.isExternalStorageAuthorized(function (authorized) {
+          if (!authorized) cordova.plugins.diagnostic.requestExternalStorageAuthorization(okperm, nopermerr);
+        }, function (err) {
+          console.log("diagnostic external storage error " + err);
+        });
+
+
+      }*/
 
 
       function nopermerr() {
@@ -1213,7 +1235,7 @@ angular.module('zmApp', [
       $rootScope.tappedMid = 0;
       //var eventsToDisplay=[];
       $rootScope.alarmCount = "0";
-      $rootScope.platformOS = "desktop";
+      
       $rootScope.currentServerGroup = "defaultServer";
       $rootScope.validMonitorId = "";
       $rootScope.newVersionAvailable = "";
@@ -1240,27 +1262,27 @@ angular.module('zmApp', [
 
       if ($rootScope.platformOS == 'desktop') {
 
-       window.addEventListener('beforeunload', function (ev) {
+        window.addEventListener('beforeunload', function (ev) {
 
-        // This was causing android reload issues - holy palooza
-       /* if ($rootScope.platformOS != 'desktop') {
-          ev.returnValue = "true";
-          return;
-        }*/
+          // This was causing android reload issues - holy palooza
+          /* if ($rootScope.platformOS != 'desktop') {
+             ev.returnValue = "true";
+             return;
+           }*/
 
-        localforage.setItem('last-desktop-state', {
-          'name': $ionicHistory.currentView().stateName,
-          'params': $ionicHistory.currentView().stateParams
-        }).then(function () {
-          return localforage.getItem('last-desktop-state');
-        }).then(function (value) {
-          ev.returnValue = "true";
-        }).catch(function (err) {
-          ev.returnValue = "true";
+          localforage.setItem('last-desktop-state', {
+            'name': $ionicHistory.currentView().stateName,
+            'params': $ionicHistory.currentView().stateParams
+          }).then(function () {
+            return localforage.getItem('last-desktop-state');
+          }).then(function (value) {
+            ev.returnValue = "true";
+          }).catch(function (err) {
+            ev.returnValue = "true";
+          });
+
         });
-
-      });
-    }
+      }
 
       // register callbacks for online/offline
       // lets see if it really works
@@ -1448,24 +1470,7 @@ angular.module('zmApp', [
 
       };
 
-      $rootScope.textScaleFactor = 1.0;
-      $rootScope.apiValid = false;
-
-      $rootScope.db = null;
-      $rootScope.runMode = NVRDataModel.getBandwidth();
-
-      $rootScope.platformOS = "desktop";
-      NVRDataModel.log("Device is ready");
-
-
-      // var ld = NVRDataModel.getLogin();
-      if ($ionicPlatform.is('ios'))
-        $rootScope.platformOS = "ios";
-      if ($ionicPlatform.is('android'))
-        $rootScope.platformOS = "android";
-
-      NVRDataModel.log("You are running on " + $rootScope.platformOS);
-
+      
       console.log("Mobile acc");
       if (window.cordova)
         MobileAccessibility.getTextZoom(getTextZoomCallback);
@@ -1612,7 +1617,7 @@ angular.module('zmApp', [
           console.log("statusbar");
           NVRDataModel.log("Updating statusbar");
           StatusBar.styleDefault();
-          //StatusBar.overlaysWebView(false);
+          //StatusBar.overlaysWebView(true);
           StatusBar.backgroundColorByHexString("#2980b9");
         }
 
@@ -1707,7 +1712,7 @@ angular.module('zmApp', [
               if (succ) {
                 $rootScope.lastState = succ.name;
                 if ($rootScope.lastState.indexOf("app.") == -1) {
-                  $rootScope.lastState = "app."+$rootScope.lastState;
+                  $rootScope.lastState = "app." + $rootScope.lastState;
                 }
                 $rootScope.lastStateParam = succ.params;
 

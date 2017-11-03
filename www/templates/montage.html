@@ -25,6 +25,9 @@
     </ion-nav-buttons>
     <ion-content ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate" overflow-scroll="false">
     <!--<ion-content scroll-sista ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate" overflow-scroll="false">-->
+      
+          
+      
         <div ng-if="!minimal && toggleSubMenu" >
             <!-- this is header -->
             <br/>
@@ -167,7 +170,7 @@
         </nav>
         <span class="modal-alarm-badge">
             <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive" 
-                    ng-click="handleAlarmsWhileMinimized();" ng-if="!$root.isAlarm"></a>
+                    ng-click="handleAlarmsWhileMinimized();" ng-if="$root.isAlarm"></a>
         </span>
     </div>
     <br/>
