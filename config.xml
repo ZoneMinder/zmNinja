@@ -8,15 +8,8 @@
 	Pliable Pixels
     </author>
     <content src="index.html" />
-    <allow-intent href="*" />
-    <access origin="*" />
-    <allow-navigation href="http://ionic.local/*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
+    <access launch-external="yes" origin="mailto:*" />
     <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
     <allow-navigation href="*" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="iosPersistentFileLocation" value="Library" />
@@ -103,7 +96,7 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
-    <preference name="SplashShowOnlyFirstTime" value="true" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
     <engine name="android" spec="^6.2.3" />
     <engine name="ios" spec="^4.4.0" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="^0.6.5" />

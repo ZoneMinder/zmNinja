@@ -1,57 +1,61 @@
-<meta name="format-detection" content="telephone=no" />
-<ion-view title="{{'kTimeline' | translate}}" cache-view="false">
+<div>
+  <meta name="format-detection" content="telephone=no" />
+  <ion-view title="{{'kTimeline' | translate}}" cache-view="false">
     <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        &nbsp;
-        <button class="button button-icon button-clear ion-arrow-left-c" ng-click="moveDays(-1);"></button>
-        <button class="button button-icon button-clear ion-arrow-right-c" ng-click="moveDays(1);"></button>
-        <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+      <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+      &nbsp;
+      <button class="button button-icon button-clear ion-arrow-left-c" ng-click="moveDays(-1);"></button>
+      <button class="button button-icon button-clear ion-arrow-right-c" ng-click="moveDays(1);"></button>
+      <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
+        ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-android-more-vertical" ng-click="popover.show($event); ">&nbsp;&nbsp;&nbsp;</button>
-        <button class="button button-icon button-clear ion-arrow-move" ng-click="toggleNav();"></button>
-        <!--
+      <button class="button button-icon button-clear ion-android-more-vertical" ng-click="popover.show($event); ">&nbsp;&nbsp;&nbsp;</button>
+      <button class="button button-icon button-clear ion-arrow-move" ng-click="toggleNav();"></button>
+      <!--
  <button class="button button-icon button-clear ion-log-in" ng-click="zoom(-0.2)"></button>
         <button class="button button-icon button-clear ion-log-out" ng-click="zoom(0.2)"></button>&nbsp;-->
     </ion-nav-buttons>
     <!--<ion-content data-tap-disabled="true">-->
     <ion-content scroll-sista delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
-        <div style="padding-left:15px; font-size:10px; color:grey">
-            {{prettify(fromDate)}} - {{prettify(toDate)}} &nbsp;{{tzAbbr}}&nbsp; ({{'kTimelineOnlyDisplaying1' | translate:translationData}})
-            <strong><br/>{{'kTimelineControlDisplay'|translate}}</strong>
-        </div>
-        <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!graphLoaded"></ion-spinner>
-        <div ng-if="!graphLoaded">
-            <br/>
-            <br/>
-            <center>
-                <p>{{'kWorkingOnGraph' | translate}}...</p>
-            </center>
-        </div>
-        <div style="padding-left:15px; padding-right:15px;">
-            <div id="visualization">
-            </div>
-        </div>
+      <div style="padding-left:15px; font-size:10px; color:grey">
+        {{prettify(fromDate)}} - {{prettify(toDate)}} &nbsp;{{tzAbbr}}&nbsp; ({{'kTimelineOnlyDisplaying1' | translate:translationData}})
+        <strong>
+          <br/>{{'kTimelineControlDisplay'|translate}}</strong>
+      </div>
+      <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!graphLoaded"></ion-spinner>
+      <div ng-if="!graphLoaded">
         <br/>
-        <div style="padding-left:15px; font-size:10px; color:grey">
-            <button ng-click="toggleFollowTime()" ng-class="follow.time? 'button button-small button-balanced':'button button-small button-assertive'">
-                {{'kUpdateTimeline' | translate}}:&nbsp;{{follow.time? ('kTrue' | translate) : ('kFalse' | translate)}}
-            </button>
-            <button ng-click="gotoNow()" class="button button-small button-balanced">
-                {{'kNow' | translate}}
-            </button>
-            <div ng-if="follow.time">
-                <p>{{newEvents}}</p>
-            </div>
+        <br/>
+        <center>
+          <p>{{'kWorkingOnGraph' | translate}}...</p>
+        </center>
+      </div>
+      <div style="padding-left:15px; padding-right:15px;">
+        <div id="visualization">
         </div>
+      </div>
+      <br/>
+      <div style="padding-left:15px; font-size:10px; color:grey">
+        <button ng-click="toggleFollowTime()" ng-class="follow.time? 'button button-small button-balanced':'button button-small button-assertive'">
+          {{'kUpdateTimeline' | translate}}:&nbsp;{{follow.time? ('kTrue' | translate) : ('kFalse' | translate)}}
+        </button>
+        <button ng-click="gotoNow()" class="button button-small button-balanced">
+          {{'kNow' | translate}}
+        </button>
+        <div ng-if="follow.time">
+          <p>{{newEvents}}</p>
+        </div>
+      </div>
     </ion-content>
-</ion-view>
-<div ng-show="graphLoaded && navControls">
+  </ion-view>
+  <div ng-show="graphLoaded && navControls">
     <div class="timelinebuttons">
-        <circular id="timeline-ctrl" options="radialMenuOptions" class="animated bounceInRight">
-            <!---->
-        </circular>
-        <!-- -->
+      <circular id="timeline-ctrl" options="radialMenuOptions" class="animated bounceInRight">
+        <!---->
+      </circular>
+      <!-- -->
     </div>
-</div>
+  </div>
 
+</div>
