@@ -344,7 +344,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
 
 .ptzcenteredbotbutton {
     position: absolute;
-    top: 80%;
+    top: 85%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -1297,6 +1297,17 @@ fill-opacity: 0.8;
     fill: #1F3A93;
 }
 
+
+
+
+.ptzHalf {
+    height:50%;
+    display:block;
+}
+
+
+
+
 @media (min-width:600px) {
     .montage-time {
         display: block !important;
@@ -1313,7 +1324,7 @@ fill-opacity: 0.8;
 body {
     font-family: sans-serif;
     height:100%;
-    padding-top: constant(safe-area-inset-top);
+  
 }
 
 

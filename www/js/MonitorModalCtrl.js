@@ -20,6 +20,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var _moveStart = false;
     var targetID = "";
     $scope.imageZoomable = true;
+    $scope.ptzButtonsShown = true;
+
 
 
     $scope.csize = ($rootScope.platformOS == 'desktop') ? 10:20;
@@ -714,9 +716,26 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.controlPTZ = function(monitorId, cmd)
     {
+
+        if (cmd == "special-hide-unhide") {
+            hideUnhidePresets();
+            return;
+        }
         console.log ("PTZ command is"+cmd);
         controlPTZ(monitorId, cmd);
     };
+
+    function hideUnhidePresets() {
+        console.log ("**********HIDEUNHIDE");
+        $scope.ptzButtonsShown = !$scope.ptzButtonsShown;
+
+        if ($scope.ptzPresets.length > 0) {
+            dirn = $scope.ptzButtonsShown ? "up":"down";
+          
+            $scope.ptzPresets[0].icon = "ion-chevron-"+dirn;
+        }
+
+    }
 
     function controlPTZ(monitorId, cmd)
     {
@@ -1587,6 +1606,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                             NVRDataModel.debug("ConfigurePTZ Preset value is " + data.control.Control.HasPresets);
                             $scope.ptzPresets = [];
 
+
+                        
+
                             if (data.control.Control.HasPresets == '1')
                             {
                                 //$scope.presetAndControl = $translate.instant('kPresets');
@@ -1619,6 +1641,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                                     });
 
                                 }
+
+                                /* MAKE SURE THIS IS THE FIRST ICON */
+                                $scope.ptzPresets.unshift(
+                                    {
+                                       // name: 'W',
+                                        icon: "ion-chevron-up",
+                                        cmd: 'special-hide-unhide',
+                                        style: 'button-royal button-dark ',
+                                    });
+
 
                             }
                             /*else
