@@ -28,7 +28,8 @@ angular.module('zmApp', [
     'pascalprecht.translate',
     'jett.ionic.scroll.sista',
     'uk.ac.soton.ecs.videogular.plugins.cuepoints',
-    'dcbImgFallback'
+    'dcbImgFallback',
+
 
   ])
 
@@ -482,8 +483,13 @@ angular.module('zmApp', [
             // console.log ("DIRECTIVE: IMAGE ERROR");
             loader.remove();
 
+            
             var url = 'img/novideo.png';
-            $element.prop('src', url);
+          //  var hurl = "holder.js/2000x$2000?auto=yes&theme=sky&text=...";
+
+           $element.prop('src', url);
+          // $element.prop('data-src', hurl);
+
             imageLoadingDataShare.set(0);
           });
 
@@ -1619,7 +1625,11 @@ angular.module('zmApp', [
           console.log("statusbar");
           NVRDataModel.log("Updating statusbar");
           StatusBar.styleDefault();
-          //StatusBar.overlaysWebView(true);
+          if ($rootScope.platformOS=='ios') {
+            console.log ("<<<<<<<<<<<<<<<< OVERLAY");
+            StatusBar.overlaysWebView(false);
+          }
+          
           StatusBar.backgroundColorByHexString("#2980b9");
         }
 
