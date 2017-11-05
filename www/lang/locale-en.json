@@ -263,6 +263,7 @@
     "kPlaceHolderZMAuthPass"     :"zm auth password",
     "kPlaceHolderZMAuthUser"     :"zm auth user name",
     "kPlaybackInterval"          :"playback interval",
+    "kPleaseAuthenticate"        :"Please Authenticate",
     "kPleaseCheckCredentials"    :"Please check your credentials",
     "kPleaseConfirm"             :"Please Confirm",
     "kPleaseSave"                :"Please Save",

@@ -3,7 +3,7 @@
 /*This is for the loop closure I am using in line 143 */
 /* jslint browser: true*/
 /* global vis,cordova,StatusBar,angular,console,moment */
-angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', '$cordovaTouchID', 'EventServer', '$translate', function($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, $cordovaTouchID, EventServer, $translate)
+angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', 'EventServer', '$translate', function($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, EventServer, $translate)
 {
 
     $scope.$on('$ionicView.enter',
@@ -32,9 +32,52 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 NVRDataModel.log("User credentials are provided");
 
                 // You can login either via touch ID or typing in your code     
-                if ($ionicPlatform.is('ios') && loginData.usePin)
+
+
+                if ($ionicPlatform.is('android') && loginData.usePin) {
+
+                    FingerprintAuth.isAvailable(function (result) {
+                        console.log("FingerprintAuth available: " + JSON.stringify(result));
+                        if (result.isAvailable == true && result.hasEnrolledFingerprints == true) {
+                            var encryptConfig = {
+                                clientId: "zmNinja",
+                                username: "doesntmatter",
+                                password: "doesntmatter",
+                                maxAttempts: 5,
+                                locale: "en_US",
+                                dialogTitle: $translate.instant('kPleaseAuthenticate'),
+                                dialogMessage: $translate.instant('kPleaseAuthenticate'),
+                                dialogHint: "",
+                            }; // See config object for required parameters
+                            FingerprintAuth.encrypt(encryptConfig, function (succ) {
+                                NVRDataModel.log ("Touch success"); unlock(true);
+                            }, function (err) {
+                                NVRDataModel.log("Touch Failed " + JSON.stringify(msg));
+                            });
+                        } // if available                            
+                    },
+                    function (err) {
+                        NVRDataModel.log ("Fingerprint auth not available or not compatible with Android specs: "+ JSON.stringify(err));
+                    }
+                
+                );//isAvailable
+
+                }
+
+                else if ($ionicPlatform.is('ios') && loginData.usePin)
                 {
-                    $cordovaTouchID.checkSupport()
+
+                    window.plugins.touchid.isAvailable(
+                    function () {
+                        window.plugins.touchid.verifyFingerprint(
+                            $translate.instant('kPleaseAuthenticate'), // this will be shown in the native scanner popup
+                             function(msg) {NVRDataModel.log ("Touch success"); unlock(true);}, // success handler: fingerprint accepted
+                             function(msg) { NVRDataModel.log("Touch Failed " + JSON.stringify(msg));} // error handler with errorcode and localised reason
+                          );
+                    },
+                    function (err) {});
+
+                   /* $cordovaTouchID.checkSupport()
                         .then(function()
                         {
                             // success, TouchID supported
@@ -53,7 +96,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         }, function(error)
                         {
                             NVRDataModel.log("TouchID not supported");
-                        });
+                        });*/
                 }
                 else // touch was not used
                 {
