@@ -167,6 +167,8 @@ angular.module('zmApp.controllers')
             'enableGIFMP4': false,
             'enableStrictSSL': false,
             'enableSlowLoading': false,
+            'isFullScreen': false,
+            'reloadInMontage': false,
 
         };
 
@@ -370,22 +372,28 @@ angular.module('zmApp.controllers')
 
         function setLogin(newLogin)
         {
+            //var d = $q.defer();
+
             loginData = angular.copy(newLogin);
             serverGroupList[loginData.serverName] = angular.copy(loginData);
 
             var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
+            return localforage.setItem("serverGroupList", ct)
+            .then (function() { return localforage.setItem("defaultServerName", loginData.serverName);})
+            .catch ( function (err) {log("localforage store error " + JSON.stringify(err));});
 
             //console.log ("****serverLogin was encrypted to " + ct);
             //$localstorage.setObject("serverGroupList", serverGroupList);
-            localforage.setItem("serverGroupList", ct, function(err)
+           /* return  localforage.setItem("serverGroupList", ct, function(err)
             {
                 if (err) log("localforage store error " + JSON.stringify(err));
             });
             //$localstorage.set("defaultServerName", loginData.serverName);
-            localforage.setItem("defaultServerName", loginData.serverName, function(err)
+            return localforage.setItem("defaultServerName", loginData.serverName, function(err)
             {
                 if (err) log("localforage store error " + JSON.stringify(err));
-            });
+            });*/
+           // return (d.promise);
 
         }
 
@@ -920,6 +928,20 @@ angular.module('zmApp.controllers')
 
                                 }
 
+                                if (typeof loginData.isFullScreen == 'undefined')
+                                {
+                                    
+                                    loginData.isFullScreen = false;
+
+                                }
+
+                                if (typeof loginData.reloadInMontage == 'undefined')
+                                {
+                                    
+                                    loginData.reloadInMontage = false;
+
+                                }
+
                                 if (typeof loginData.soundOnPush == 'undefined')
                                 {
                                     debug("sound on push not found, setting to true");
@@ -1319,8 +1341,9 @@ angular.module('zmApp.controllers')
             setLogin: function(newLogin)
             {
 
-                setLogin(newLogin);
                 $rootScope.showBlog = newLogin.enableBlog;
+                return setLogin(newLogin);
+                
 
             },
 

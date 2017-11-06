@@ -102,7 +102,7 @@ angular.module('zmApp', [
     maxGifWidth: 800.0,
     quantSample: 15,
     hashSecret: 'unused at the moment',
-    forceMontageReloadDelay: 3600 // 1 hr
+    forceMontageReloadDelay: 30 //3600 // 1 hr
 
 
   })

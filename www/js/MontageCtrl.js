@@ -141,8 +141,16 @@ angular.module('zmApp.controllers')
 
         }
 
+        var ld = NVRDataModel.getLogin();
+        ld.reloadInMontage = true;
         NVRDataModel.log ("Reloading view to keep memory in check...");
-       $window.location.reload();
+        NVRDataModel.setLogin(ld)
+        .then (function() {$window.location.reload();});
+
+       
+
+        
+       
        /*$ionicHistory.nextViewOptions(
         {
             disableAnimate: true,

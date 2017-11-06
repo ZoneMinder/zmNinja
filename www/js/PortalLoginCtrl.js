@@ -33,8 +33,18 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                 // You can login either via touch ID or typing in your code     
 
+                var ld = NVRDataModel.getLogin();
 
-                if ($ionicPlatform.is('android') && loginData.usePin) {
+                if (ld.reloadInMontage == true) {
+                    // we are in montage reload, so don't re-auth
+                    NVRDataModel.log ("skipping validation, as this is montage reload");
+                    ld.reloadInMontage = false;
+                    NVRDataModel.setLogin(ld);
+                     unlock(true);
+
+                }
+
+                else if ($ionicPlatform.is('android') && loginData.usePin) {
 
                     FingerprintAuth.isAvailable(function (result) {
                         console.log("FingerprintAuth available: " + JSON.stringify(result));
