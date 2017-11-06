@@ -1,12 +1,11 @@
 # Change Log
 
-## [Unreleased](https://github.com/pliablepixels/zmNinja/tree/HEAD)
-
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.504...HEAD)
+## [v1.2.507](https://github.com/pliablepixels/zmNinja/tree/v1.2.507) (2017-11-06)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.504...v1.2.507)
 
 **Implemented enhancements:**
 
-- Add finger print auth for android \(needs to conform to Android Auth specs\) [\#555](https://github.com/pliablepixels/zmNinja/issues/555)
+- Add finger print auth for android \(already exists for iOS\) [\#555](https://github.com/pliablepixels/zmNinja/issues/555)
 - Re-orient the PTZ UI for limited space orientations [\#554](https://github.com/pliablepixels/zmNinja/issues/554)
 
 **Fixed bugs:**
@@ -97,7 +96,7 @@
 - Added new strings according to v1.2.41 [\#512](https://github.com/pliablepixels/zmNinja/pull/512) ([florie1706](https://github.com/florie1706))
 
 ## [v1.2.41](https://github.com/pliablepixels/zmNinja/tree/v1.2.41) (2017-04-11)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.41)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v1.2.41)
 
 **Implemented enhancements:**
 
@@ -124,11 +123,11 @@
 - montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
 -  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
 
-## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v/1.2.40)
-
 ## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.40)
+
+## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v/1.2.40)
 
 **Fixed bugs:**
 
