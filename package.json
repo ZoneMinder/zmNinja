@@ -51,10 +51,10 @@
             "cordova-custom-config": {},
             "cordova.plugins.diagnostic": {},
             "cordova-plugin-email": {},
-            "cordova-plugin-certificates": {},
             "cordova-plugin-touch-id": {},
             "cordova-plugin-android-fingerprint-auth": {},
-            "cordova-plugin-statusbar": {}
+            "cordova-plugin-statusbar": {},
+            "cordova-plugin-certificates": {}
         }
     },
     "dependencies": {
