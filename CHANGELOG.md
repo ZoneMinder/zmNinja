@@ -2,7 +2,31 @@
 
 ## [Unreleased](https://github.com/pliablepixels/zmNinja/tree/HEAD)
 
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.503...HEAD)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.504...HEAD)
+
+**Implemented enhancements:**
+
+- Add finger print auth for android \(needs to conform to Android Auth specs\) [\#555](https://github.com/pliablepixels/zmNinja/issues/555)
+- Re-orient the PTZ UI for limited space orientations [\#554](https://github.com/pliablepixels/zmNinja/issues/554)
+
+**Fixed bugs:**
+
+- increased CPU and/or memory usage over time [\#553](https://github.com/pliablepixels/zmNinja/issues/553)
+- Selecting Timeline in zmNinja IOS app causes application freeze [\#551](https://github.com/pliablepixels/zmNinja/issues/551)
+- "the connection to the server was unsuccessful file ///android\_asset/www/index.html" [\#550](https://github.com/pliablepixels/zmNinja/issues/550)
+- zmninja 1.2.35D \(desktop\) for macos hangs with white screen [\#441](https://github.com/pliablepixels/zmNinja/issues/441)
+
+**Closed issues:**
+
+- Login Auth Sucess but api failed Issue [\#552](https://github.com/pliablepixels/zmNinja/issues/552)
+- Lag when left in Full Screen Montage [\#526](https://github.com/pliablepixels/zmNinja/issues/526)
+
+**Merged pull requests:**
+
+-  \#555 - android auth code [\#556](https://github.com/pliablepixels/zmNinja/pull/556) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.2.504](https://github.com/pliablepixels/zmNinja/tree/v1.2.504) (2017-10-09)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.503...v1.2.504)
 
 **Fixed bugs:**
 
@@ -73,7 +97,7 @@
 - Added new strings according to v1.2.41 [\#512](https://github.com/pliablepixels/zmNinja/pull/512) ([florie1706](https://github.com/florie1706))
 
 ## [v1.2.41](https://github.com/pliablepixels/zmNinja/tree/v1.2.41) (2017-04-11)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v1.2.41)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.41)
 
 **Implemented enhancements:**
 
@@ -100,11 +124,11 @@
 - montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
 -  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
 
-## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.40)
-
 ## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v/1.2.40)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v/1.2.40)
+
+## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
 
 **Fixed bugs:**
 
@@ -344,7 +368,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -371,11 +395,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
-
 ## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
+
+## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
 
 **Implemented enhancements:**
 
