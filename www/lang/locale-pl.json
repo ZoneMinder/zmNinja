@@ -263,6 +263,7 @@
     "kPlaceHolderZMAuthPass"     :"hasło uwierzytelniania ZM",
     "kPlaceHolderZMAuthUser"     :"użytkownik uwierzytelniania ZM",
     "kPlaybackInterval"          :"Interwał Odtwarzania",
+    "kPleaseAuthenticate"        :"Uwierzytelnij",
     "kPleaseCheckCredentials"    :"Sprawdź dane logowania",
     "kPleaseConfirm"             :"Proszę Potwierdzić",
     "kPleaseSave"                :"Proszę Zapisać",
