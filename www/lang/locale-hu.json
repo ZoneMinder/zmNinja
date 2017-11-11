@@ -48,6 +48,7 @@
     "kCustomRange"               :"Egyéni tartomány",
     "kCycleMonitors"             :"Forgó kamerák",
     "kCycleMonitorsInterval"     :"Kamera forgási intervallum",
+    "kCycleMontageInterval"      :"montázs ciklus intervallum",
     "kDay"                       :"Nap",
     "kCycleMontageInterval"      :"Montázs ciklus intervalum",
     "kDecreaseSize"              :"Csökken a méret",
