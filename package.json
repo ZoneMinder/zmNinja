@@ -62,7 +62,7 @@
         "com.telerik.plugins.nativepagetransitions": "^0.6.5",
         "cordova-android": "^6.2.3",
         "cordova-custom-config": "^4.0.2",
-        "cordova-ios": "^4.4.0",
+        "cordova-ios": "^4.5.1",
         "cordova-library-helper": "^1.0.4",
         "cordova-plugin-add-swift-support": "^1.7.0",
         "cordova-plugin-android-fingerprint-auth": "^1.4.0",
