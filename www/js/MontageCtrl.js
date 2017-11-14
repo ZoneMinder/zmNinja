@@ -1,3 +1,4 @@
+
 // Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
@@ -26,6 +27,9 @@ angular.module('zmApp.controllers')
     var ld;
     var refreshSec;
     var reloadPage = zm.forceMontageReloadDelay;
+
+    var multiPortZms = 0;
+
 
     $rootScope.$on("auth-success", function () {
          NVRDataModel.debug("REAUTH");
@@ -565,6 +569,10 @@ angular.module('zmApp.controllers')
 
     function loadNotifications()
     {
+        if (multiPortZms) {
+            console.log ("Skipping timer as multiportZMS="+multiPortZms);
+            return;
+        }
 
         randEachTime();
         //console.log ($scope.randToAvoidCacheMem);
@@ -1576,6 +1584,17 @@ angular.module('zmApp.controllers')
 
     };
 
+
+       $scope.getMode = function() {
+        var x =  multiPortZms == 0 ? 'single': 'jpeg';
+       // console.log ("Port="+x);
+        return x;
+        
+     };
+        
+
+
+
     $scope.toggleSubMenuFunction = function()
     {
 
@@ -1591,11 +1610,25 @@ angular.module('zmApp.controllers')
     // minimal has to be beforeEnter or header won't hide
     $scope.$on('$ionicView.beforeEnter', function()
     {
+
+    
        // $scope.minimal = $stateParams.minimal;
         var ld = NVRDataModel.getLogin();
         $scope.minimal = ld.isFullScreen;
         //console.log ("**************** MINIMAL ENTER " + $scope.minimal);
         $scope.zmMarginTop = $scope.minimal ? 0 : 15;
+
+        NVRDataModel.getZmsMultiPortSupport()
+           .then ( function (data) { 
+            multiPortZms = data;
+            console.log ("****** MULTIPORT="+multiPortZms);
+        },
+        function (err) {
+            console.log ("******* SHOULD NEVER HAPPEN - MULTIPORT ERROR");
+            multiPortZms = 0;
+
+        }
+    )
 
     });
 

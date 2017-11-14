@@ -824,6 +824,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     $scope.saveItems = function()
     {
 
+        NVRDataModel.clearZmsMultiPortSupport();
         if (!$scope.loginData.serverName)
         {
             $rootScope.zmPopup = $ionicPopup.alert(
