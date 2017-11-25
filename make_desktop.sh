@@ -9,6 +9,24 @@ if [ ! -d "desktop" ]; then
 	exit
 fi
 
+while [[ $# -gt 0 ]]
+do
+arg="$1"
+case $arg in
+      -p|--port)
+      PORT="$2"
+      shift
+      shift
+      ;;
+      *)
+      echo "Unknown argument $1, ignoring..."
+      shift
+      ;;
+esac
+done
+
+[[ ! -z $PORT ]]  && echo "Only creating build for $PORT" && PORT="-$PORT"
+
 echo ----------------------------------------------------
 echo Pliable Pixels Desktop build process
 echo ----------------------------------------------------
@@ -20,6 +38,12 @@ declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNi
 
 for i in "${app_ports[@]}"
 do
+if [[ "$i" =~ $PORT ]]; then
+        echo "$i contains $PORT, so building"
+else
+        echo "$i will be skipped"
+        continue
+fi
 if [ -d "$i" ]; then
 	DIRNAME=$i
 
@@ -70,6 +94,7 @@ if [ -d "$i" ]; then
 else
 	echo "$i does not exist, skipping"
 fi
+        echo "(Note, SASS changes won't be reflected. Run "ionic build" for that)"
 done
 
 
