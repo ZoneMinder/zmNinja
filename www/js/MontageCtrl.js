@@ -1628,7 +1628,7 @@ angular.module('zmApp.controllers')
             multiPortZms = 0;
 
         }
-    )
+    );
 
     });
 

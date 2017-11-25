@@ -1563,25 +1563,25 @@ angular.module('zmApp.controllers')
                             monitors[i].Monitor.isAlarmed = false;
                             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
-                            var st = loginData.streamingurl;
+                             var st2 = loginData.streamingurl;
 
                             if (zmsPort >0) {
                                 // we need to insert minport
-                                st = "";
-                                var p = URI.parse(loginData.streamingurl);
-                                st += p.scheme + "://";
-                                if (!p.host) {
-                                    p.host = p.path;
-                                    p.path = undefined;
+                                st2 = "";
+                                var p2 = URI.parse(loginData.streamingurl);
+                                st2 += p2.scheme + "://";
+                                if (!p2.host) {
+                                    p2.host = p2.path;
+                                    p2.path = undefined;
                                 }
-                                st += p.host;
-                                var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                                st = st + ':'+sport;
-                                if (p.path) st += p.path;
+                                st2 += p2.host;
+                                var sport2 = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
+                                st2 = st2 + ':'+sport2;
+                                if (p2.path) st2 += p2.path;
                               }
 
-                              monitors[i].Monitor.streamingURL = st;
-                              console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st);
+                              monitors[i].Monitor.streamingURL = st2;
+                              console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
                             monitors[i].Monitor.baseURL = loginData.url;
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
 
@@ -1652,7 +1652,7 @@ angular.module('zmApp.controllers')
                     $ionicLoading.hide();
                     monitorsLoaded = 0;
                   });
-              })
+              });
 
             return d.promise;
 
