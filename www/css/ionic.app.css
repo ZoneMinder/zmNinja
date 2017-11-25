@@ -4114,7 +4114,7 @@ a.subdued {
     text-decoration: none; }
   .bar-stable .button.active, .bar-stable .button.activated {
     border-color: #2F81B7;
-    background-color: #e5e5e5; }
+    background-color: #25648e; }
   .bar-stable .button.button-clear {
     border-color: transparent;
     background: none;
@@ -5820,7 +5820,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   .item .item-content.active.item-stable,
   .item .item-content.activated.item-stable {
     border-color: #2F81B7;
-    background-color: #e5e5e5; }
+    background-color: #25648e; }
     .item.active.item-stable.item-complex > .item-content,
     .item.activated.item-stable.item-complex > .item-content,
     .item-complex.active .item-content.item-stable.item-complex > .item-content,
@@ -5828,7 +5828,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
     .item .item-content.active.item-stable.item-complex > .item-content,
     .item .item-content.activated.item-stable.item-complex > .item-content {
       border-color: #2F81B7;
-      background-color: #e5e5e5; }
+      background-color: #25648e; }
   .item.active.item-positive,
   .item.activated.item-positive,
   .item-complex.active .item-content.item-positive,
@@ -6044,10 +6044,10 @@ a.item-content {
   color: #fff; }
   .item-complex.item-stable > .item-content.active, .item-complex.item-stable > .item-content:active {
     border-color: #2F81B7;
-    background-color: #e5e5e5; }
+    background-color: #25648e; }
     .item-complex.item-stable > .item-content.active.item-complex > .item-content, .item-complex.item-stable > .item-content:active.item-complex > .item-content {
       border-color: #2F81B7;
-      background-color: #e5e5e5; }
+      background-color: #25648e; }
 
 .item-complex.item-positive > .item-content {
   border-color: #2F81B7;
@@ -8589,7 +8589,7 @@ progress {
     text-decoration: none; }
   .button.active, .button.activated {
     border-color: #2F81B7;
-    background-color: #e5e5e5; }
+    background-color: #25648e; }
   .button:after {
     position: absolute;
     top: -6px;
@@ -8653,7 +8653,7 @@ progress {
       text-decoration: none; }
     .button.button-stable.active, .button.button-stable.activated {
       border-color: #2F81B7;
-      background-color: #e5e5e5; }
+      background-color: #25648e; }
     .button.button-stable.button-clear {
       border-color: transparent;
       background: none;
