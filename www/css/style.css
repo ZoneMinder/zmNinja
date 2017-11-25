@@ -1333,6 +1333,7 @@ body {
     font-family: -apple-system, "Helvetica Neue", sans-serif;
 }
 
+
 /*Disabling platform specific tweaks */
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header
 {
