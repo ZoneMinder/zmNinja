@@ -98,15 +98,15 @@
                     </div>
                     <span style="float:right">
                         <div ng-if="event.Event.EndTime || 1">
-                             <button class="button button-small button-outline icon icon-left ion-stats-bars"
+                             <button class="button button-stable button-small button-outline icon icon-left ion-stats-bars"
                                             ng-click="closeIfOpen(event);analyzeEvent(event)" > 
                                              <span translate="kAnalyze"></span>
                             </button>
-                            <button class="button button-outline button-small icon icon-left ion-ios-eye" ng-click="toggleGroupScrub(event,$index,event.Event.Frames)"> <span translate="kScrub"></span>
+                            <button class="button button-stable button-outline button-small icon icon-left ion-ios-eye" ng-click="toggleGroupScrub(event,$index,event.Event.Frames)"> <span translate="kScrub"></span>
                             </button>
-                            <button ng-if="event.Event.AlarmFrames > 0" class="button button-outline button-small icon icon-left ion-ios-bell" ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)"> <span translate="kAlarms"></span>
+                            <button ng-if="event.Event.AlarmFrames > 0" class="button button-stable button-outline button-small icon icon-left ion-ios-bell" ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)"> <span translate="kAlarms"></span>
                             </button>
-                            <button class="button button-outline button-small icon icon-left ion-ios-eye" ng-click="closeIfOpen(event);openModal(event)"> <span translate="kFootage"></span>
+                            <button class="button button-stable button-outline button-small icon icon-left ion-ios-eye" ng-click="closeIfOpen(event);openModal(event)"> <span translate="kFootage"></span>
                             </button>
 
                             
@@ -123,11 +123,11 @@
                     <p>
                         <!--scroll <i class="icon ion-arrow-left-c"></i> 
                                 <i class="icon ion-arrow-right-c"></i>-->
-                        <button ng-click="toggleTypeOfAlarms()" class="button button-small button-assertive button-outline">
+                        <button ng-click="toggleTypeOfAlarms()" class="button button-small button-assertive button-stable button-outline">
                             <span translate="kType"></span>:{{typeOfFrames}}
                         </button>
                         <button 
-                         ng-click="toggleMotionOutline()" class="button button-small button-assertive button-outline">
+                         ng-click="toggleMotionOutline()" class="button button-small button-assertive button-stable button-outline">
                             <span translate="kOutlineMotion"></span>:{{outlineMotion}}
                         </button>
                     </p>
