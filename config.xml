@@ -34,7 +34,7 @@
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
     <platform name="ios">
-         <resource-file src="GoogleService-Info.plist" />
+        <resource-file src="GoogleService-Info.plist" />
         <config-file parent="NSPhotoLibraryAddUsageDescription" platform="ios" target="*-Info.plist">
             <string>Store photos of events and live feeds</string>
         </config-file>
