@@ -392,10 +392,12 @@ angular.module('zmApp.controllers')
                     {
                         "ios":
                         {
-                            "alert": true,
-                            "badge": true,
+                            "alert": "true",
+                            "badge": "true",
                             "sound": ld.soundOnPush,
-                            "clearBadge": true
+                            //"sound": "true",
+                            "clearBadge": "true",
+                           // "fcmSandbox": true
                         }
                     }
 
@@ -412,9 +414,9 @@ angular.module('zmApp.controllers')
                     {
                         "android":
                         {
-                            "senderID": zm.gcmSenderId,
+                           // "senderID": zm.gcmSenderId,
                             "icon": "ic_stat_notification",
-                            sound: ld.soundOnPush,
+                            sound: "true",
                             vibrate: ld.vibrateOnPush
                                 //"sound": android_media_file
                         }
