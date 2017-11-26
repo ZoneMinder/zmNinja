@@ -166,7 +166,7 @@ angular.module('zmApp.controllers')
                         $rootScope.zmPopup = $ionicPopup.alert(
                         {
                             title: $translate.instant('kEventServerVersionTitle'),
-                            template: $translate.instant('kEventServerVersionBody1') + " " + str.version + ". " + $translate.instant('kEventServerVersionBody2') +
+                            template: $translate.instant('kEventServerVersionBody1') + " " + str.version + ". " + $translate.instant('kEventServerVersionBody2') + " "+
                                 zm.minEventServerVersion,
                                 okText: $translate.instant('kButtonOk'),
                                 cancelText: $translate.instant('kButtonCancel'),
@@ -397,7 +397,7 @@ angular.module('zmApp.controllers')
                             "sound": ld.soundOnPush,
                             //"sound": "true",
                             "clearBadge": "true",
-                           // "fcmSandbox": true
+                           //"fcmSandbox": "true"
                         }
                     }
 
