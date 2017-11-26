@@ -1,6 +1,17 @@
 #!/bin/bash
+RED='\033[0;31m'
+NC='\033[1m\033[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+GREY='\033[0;37m'
 
-exe() { echo "\$ $@" ; "$@" ; }
+
+err() { echo -e "${RED}$@${NC}"; }
+warn() { echo -e "${ORANGE}$@${NC}"; }
+success() { echo -e "${GREEN}$@${NC}"; }
+debug() { echo -e "${GREY}->$@${NC}"; }
+
+exe() {  debug "\$ $@" ; "$@" ; }
 
 if [ ! -d "desktop" ]; then
 	echo "You have not downloaded desktop images"
@@ -11,18 +22,34 @@ fi
 
 while [[ $# -gt 0 ]]
 do
-arg="$1"
-case $arg in
-      -p|--port)
-      PORT="$2"
-      shift
-      shift
-      ;;
-      *)
-      echo "Unknown argument $1, ignoring..."
-      shift
-      ;;
-esac
+        arg="$1"
+        case $arg in
+              -h|--help)
+                      echo "./make_desktop.sh [--port|-p mac|linux32|linux64|linuxarm|win32|win64|arm|<any substring that matches one or more port names>]"
+                      echo "                  so -p linux will build linux32/64/arm as they all match linux"
+                      echo "                  [--nocolor|nc] to disable color output"
+                      echo
+                      exit
+                      ;;
+
+              -p|--port)
+                      PORT="$2"
+                      shift
+                      shift
+                      ;;
+              -nc|--nocolor)
+                      RED=''
+                      NC=''
+                      GREEN=''
+                      ORANGE=''
+                      GREY=''
+                      shift
+                      ;;
+              *)
+                      echo "Unknown argument $1, ignoring..."
+                      shift
+                      ;;
+        esac
 done
 
 [[ ! -z $PORT ]]  && echo "Only creating build for $PORT" && PORT="-$PORT"
@@ -38,63 +65,69 @@ declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNi
 
 for i in "${app_ports[@]}"
 do
-if [[ "$i" =~ $PORT ]]; then
-        echo "$i contains $PORT, so building"
-else
-        echo "$i will be skipped"
-        continue
-fi
-if [ -d "$i" ]; then
-	DIRNAME=$i
+        if [[ "$i" =~ $PORT || -z $PORT ]]; then
+                :
+        else
+                warn "$i will be skipped (did not match $PORT)"
+                continue
+        fi
+        if [ -d "$i" ]; then
+        	DIRNAME=$i
 
-	if [ "${i}" == "desktop/zmNinja-mac.app/Contents/Resources" ]; then
-		BASENAME="desktop/zmNinja-mac.app/Contents"
-	else
-		BASENAME=`expr "$i" : '\(.*\)/resources'`
-	fi
+        	if [ "${i}" == "desktop/zmNinja-mac.app/Contents/Resources" ]; then
+        		BASENAME="desktop/zmNinja-mac.app/Contents"
+        	else
+        		BASENAME=`expr "$i" : '\(.*\)/resources'`
+        	fi
 
-    echo "------------------------------------------------------------------------"
-	echo "Working on packaging $i"
-	echo "------------------------------------------------------------------------"
-	exe rm -fr $i/app
-	exe mkdir $i/app
-	exe mkdir $i/app/node_modules
-    exe cp -R node_modules/electron-window-state $i/app/node_modules
-    exe cp -R node_modules/jsonfile $i/app/node_modules
-    exe cp -R node_modules/mkdirp $i/app/node_modules
-    exe cp -R node_modules/deep-equal $i/app/node_modules
-	exe cp -R node_modules/minimist $i/app/node_modules
-	
-	exe cp -R www/* $i/app/
-	exe cp electron_js/* $i/app
-	exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt $BASENAME
-        echo $APPVER > $BASENAME/version
-	exe cp resources/icon.png $BASENAME
-	exe cd $i
-	cat app/js/DataModel.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/js/DataModel.js.tmp
-	exe rm -fr app/js/DataModel.js
-	exe mv app/js/DataModel.js.tmp app/js/DataModel.js
-	
-	
-	rm -fr app.asar
+                echo "------------------------------------------------------------------------"
+                success "Working on packaging $i"
+                echo "------------------------------------------------------------------------"
+                echo Creating paths...
+                exe rm -fr $i/app
+                exe mkdir $i/app
+                exe mkdir $i/app/node_modules
+                echo Copying over relevant node modules...
+                exe cp -R node_modules/electron-window-state $i/app/node_modules
+                exe cp -R node_modules/jsonfile $i/app/node_modules
+                exe cp -R node_modules/mkdirp $i/app/node_modules
+                exe cp -R node_modules/deep-equal $i/app/node_modules
+                exe cp -R node_modules/minimist $i/app/node_modules
+                
+                echo Copying over zmNinja code...
+                exe cp -R www/* $i/app/
+                exe cp electron_js/* $i/app
+                exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt $BASENAME
+                echo $APPVER > $BASENAME/version
+                exe cp resources/icon.png $BASENAME
+                exe cd $i 
+                cat app/js/DataModel.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/js/DataModel.js.tmp
+                exe rm -fr app/js/DataModel.js
+                exe mv app/js/DataModel.js.tmp app/js/DataModel.js
+                
+                
+                rm -fr app.asar
 
-	# No idea why but asar is causing problems in windows
-	# main.js changes are not showig up. wuh? - Sep 29, 2017
+                # No idea why but asar is causing problems in windows
+                # main.js changes are not showig up. wuh? - Sep 29, 2017
 
-	#exe asar pack app app.asar
-	#read -p "Press a key to remove app dir for $i..."
-	#exe rm -fr app
-	exe cd - 
-    #OSX ditto does a better job than zip!
-    #echo "Creating ZIP $ZIPNAME..."
-	#exe zip -r ../$ZIPNAME ../$DIRNAME
+                #exe asar pack app app.asar
+                #read -p "Press a key to remove app dir for $i..."
+                #exe rm -fr app
+                cd - 
+                #OSX ditto does a better job than zip!
+                #echo "Creating ZIP $ZIPNAME..."
+                #exe zip -r ../$ZIPNAME ../$DIRNAME
 
-	echo "Done!"
-	
-else
-	echo "$i does not exist, skipping"
-fi
-        echo "(Note, SASS changes won't be reflected. Run "ionic build" for that)"
+                success "Done!"
+                echo
+                
+        else # dirname exists
+        	echo "$i does not exist, skipping"
+        fi
 done
+echo
+warn "Note, SASS changes won't be reflected. Run 'ionic build' for that"
+echo
 
 
