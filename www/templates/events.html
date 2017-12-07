@@ -61,7 +61,7 @@
                             </span>
                         </div>
                         <!-- col col left-->
-                        <div class="col col-80">
+                        <div class="col">
                             <div class="item-text-wrap">
                                 
                                 <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b> ({{event.Event.Id}}) &nbsp;
@@ -75,12 +75,8 @@
                              <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && loginData.enableGIFMP4 " class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)"> 
                             </button>
 
-                            <!-- thumbnail -->
-                            
-                            <img ng-if="loginData.enableThumbs" style="float:right;max-width:150px; max-height:200px;" ng-src="{{event.Event.baseURL}}/index.php?view=image&fid={{event.Event.MaxScoreFrameId}}" on-tap="showThumbnail(event.Event.baseURL,event.Event.MaxScoreFrameId)" />
-
-
                             </div>
+
 
                             <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                             <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
@@ -88,6 +84,13 @@
 
                             
                         </div>
+
+                        <div ng-if="loginData.enableThumbs" class = "col col-left">
+                            <!-- thumbnail -->
+                       
+                           <img style="max-width:150px; max-height:200px;" ng-src="{{event.Event.baseURL}}/index.php?view=image&fid={{event.Event.MaxScoreFrameId}}" on-tap="showThumbnail(event.Event.baseURL,event.Event.MaxScoreFrameId)" />
+                       
+                       </div>
                     </div>
                     <!--row-->
                     <div class="row" style="font-size:80%; color:rgb(110,110,110)">
