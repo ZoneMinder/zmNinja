@@ -75,6 +75,10 @@
                              <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && loginData.enableGIFMP4 " class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)"> 
                             </button>
 
+                            <!-- thumbnail -->
+                            
+                            <img ng-if="loginData.enableThumbs" style="float:right;max-width:150px; max-height:200px;" ng-src="{{event.Event.baseURL}}/index.php?view=image&fid={{event.Event.MaxScoreFrameId}}" on-tap="showThumbnail(event.Event.baseURL,event.Event.MaxScoreFrameId)" />
+
 
                             </div>
 

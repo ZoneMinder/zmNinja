@@ -50,17 +50,17 @@
       "cordova-plugin-email": {},
       "cordova-plugin-touch-id": {},
       "cordova-plugin-android-fingerprint-auth": {},
-      "cordova-plugin-certificates": {},
       "phonegap-plugin-push": {
         "FCM_VERSION": "11.0.1"
       },
-      "cordova-plugin-statusbar": {}
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-certificates": {}
     }
   },
   "dependencies": {
     "EmailComposer": "git+https://github.com/pliablepixels/email-composer.git",
     "com.telerik.plugins.nativepagetransitions": "^0.6.5",
-    "cordova-android": "6.4.0",
+    "cordova-android": "^6.3.0",
     "cordova-custom-config": "^4.0.2",
     "cordova-ios": "4.5.4",
     "cordova-library-helper": "^1.0.4",
