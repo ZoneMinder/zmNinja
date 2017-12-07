@@ -65,9 +65,12 @@ angular.module('zmApp.controllers')
     $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
     $scope.outlineMotion = false;
     $scope.outlineMotionParam = "";
+
+
     var eventsListScrubHeight = eventsListScrubHeight;
     var eventsListDetailsHeight = eventsListDetailsHeight;
 
+   
     //---------------------------------------------------
     // initial code
     //---------------------------------------------------
@@ -147,6 +150,14 @@ angular.module('zmApp.controllers')
 
         eventsListDetailsHeight = parseInt(zm.eventsListDetailsHeight * $rootScope.textScaleFactor);
         eventsListScrubHeight = parseInt(zm.eventsListScrubHeight * $rootScope.textScaleFactor);
+
+
+        if (NVRDataModel.getLogin().enableThumbs) {
+            NVRDataModel.debug ("--> thumbnail means increasing row size");
+            eventsListScrubHeight=370;
+            eventsListDetailsHeight=300;
+    
+        }
 
         NVRDataModel.debug(">>>height of list/scrub set to " + eventsListDetailsHeight + " and " + eventsListScrubHeight);
 
@@ -2681,6 +2692,32 @@ angular.module('zmApp.controllers')
         //console.log ("************** FOOTAGE CLOSED");
 
     });
+
+
+    
+    $scope.showThumbnail = function (b,f) {
+
+
+        $scope.thumbnailLarge=b+'/index.php?view=image&fid='+f;
+        $ionicModal.fromTemplateUrl('templates/image-modal.html',
+        {
+            scope: $scope,
+            animation: 'slide-in-up',
+            id: 'thumbnail',
+        })
+        .then(function(modal)
+        {
+            $scope.modal = modal;
+            
+
+            $scope.modal.show();
+
+            var ld = NVRDataModel.getLogin();
+
+        });        
+
+    };
+
 
     //--------------------------------------------------------
     //This is called when we first tap on an event to see
