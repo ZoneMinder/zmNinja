@@ -64,7 +64,7 @@
                         <div class="col">
                             <div class="item-text-wrap">
                                 
-                                <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b> <span ng-if"!loginData.enableThumbs || !event.Event.MaxScore">({{event.Event.Id}})</span> &nbsp;
+                                <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b> <span ng-if="!loginData.enableThumbs &&event.Event.MaxScoreFrameId">({{event.Event.Id}})</span> &nbsp;
                                 <button ng-if="gifshotSupported && loginData.enableGIFMP4 " class="button button-small button-clear icon gif-icon" ng-click="permissionsDownload(event)"> 
                             </button>
 
@@ -85,11 +85,12 @@
                             
                         </div>
 
-                        <div ng-if="loginData.enableThumbs && event.Event.MaxScore" class = "col col-left">
+                        <div ng-if="loginData.enableThumbs && event.Event.MaxScoreFrameId" class = "col col-left" style="max-height:150px" >
                             <!-- thumbnail -->
                        
-                                    <!--  ng-image-appear transition-duration="0.5s" animation="fillIn" bg-color="#50a4e2"  -->
-                                    <img  ng-image-appear transition-duration="0.3s" animation="fillIn" bg-color="#50a4e2" width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" ng-src="{{event.Event.baseURL}}/index.php?view=image&fid={{event.Event.MaxScoreFrameId}}&width={{event.Event.thumbWidth*2}}&height={{event.Event.thumbHeight*2}}" on-tap="showThumbnail(event.Event.baseURL,event.Event.MaxScoreFrameId)" />
+                                    <!--  ng-image-appear transition-duration="0.5s" animation="fillIn" bg-color="#50a4e2"  {{event.Event.thumbWidth}}X{{event.Event.thumbHeight}}-->
+                                    
+                                    <img   ng-image-appear transition-duration="0.3s" animation="fillIn" bg-color="#50a4e2" width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" ng-src="{{event.Event.baseURL}}/index.php?view=image&fid={{event.Event.MaxScoreFrameId}}&width={{event.Event.thumbWidth*2}}&height={{event.Event.thumbHeight*2}}" on-tap="showThumbnail(event.Event.baseURL,event.Event.MaxScoreFrameId)" />
                                     <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
                             
                        
