@@ -427,7 +427,9 @@ angular.module('zmApp.controllers')
                                 var ratio;
                                 var mw = parseInt(tempMon.Monitor.Width);
                                 var mh = parseInt(tempMon.Monitor.Height);
-                                var mo = Math.abs(parseInt(tempMon.Monitor.Orientation));
+                                var mo =parseInt(tempMon.Monitor.Orientation);
+
+                                myevents[i].Event.Rotation = '';
 
                                 // scale by X if width > height                                
                                 if (mw > mh ) {
@@ -443,10 +445,15 @@ angular.module('zmApp.controllers')
 
                                 }
 
-                                if (mo == 90) {
-                                    var t = myevents[i].Event.thumbHeight;
-                                    myevents[i].Event.thumbWidth = myevents[i].Event.thumbHeight;
-                                    myevents[i].Event.thumbHeight = t;
+                                if (mo != 0) {
+                                  /*
+                                  myevents[i].Event.Rotation = {
+                                        'transform' : 'rotate('+mo+'deg'+')'
+                                    };  */
+                                    
+                                 var tmp = myevents[i].Event.thumbHeight;
+                                 myevents[i].Event.thumbHeight = myevents[i].Event.thumbWidth;
+                                 myevents[i].Event.thumbWidth = tmp;
 
 
                                 } // swap 
@@ -2968,7 +2975,7 @@ angular.module('zmApp.controllers')
                                 var ratio;
                                 var mw = parseInt(tempMon.Monitor.Width);
                                 var mh = parseInt(tempMon.Monitor.Height);
-                                var mo = Math.abs(parseInt(tempMon.Monitor.Orientation));
+                                var mo = parseInt(tempMon.Monitor.Orientation);
 
                                 // scale by X if width > height                                
                                 if (mw > mh ) {
@@ -2983,13 +2990,16 @@ angular.module('zmApp.controllers')
                                     myevents[i].Event.thumbWidth = Math.round(mw/ratio);
 
                                 }
+                                if (mo != 0) {
 
-                                if (mo == 90) {
-                                    var t = myevents[i].Event.thumbHeight;
-                                    myevents[i].Event.thumbWidth = myevents[i].Event.thumbHeight;
-                                    myevents[i].Event.thumbHeight = t;
+                                    /*myevents[i].Event.Rotation = {
+                                        'transform' : 'rotate('+mo+'deg'+')'
+                                    };   */
 
-
+                                    var tmp = myevents[i].Event.thumbHeight;
+                                    myevents[i].Event.thumbHeight = myevents[i].Event.thumbWidth;
+                                    myevents[i].Event.thumbWidth = tmp;
+                                    
                                 } // swap 
                             }
 
