@@ -25,7 +25,7 @@
         <!-- lets make sure the events list is not empty as collection repeat needs height -->
         <div ng-if="!eventsBeingLoaded">
             <ion-list show-delete="eventList.showDelete">
-                <ion-item collection-repeat="event in events| filter:search.text |  eventListFilter
+                <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter
                 " item-height="event.Event.height" id="item-{{$index}}" on-swipe-left="checkSwipe($index);">
                     <span style="float:left;margin-top:-18px;background-color:#96281B;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;</span>&nbsp;&nbsp;
                     <span style="float:left;margin-top:-18px;background-color:#fff;color:#888;font-size:11px;opacity:1;">&nbsp;&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{event.Event.humanizeTime}} <span ng-if="!event.Event.EndTime">(<span translate="kRecordingProgress"></span>)</span>
@@ -61,10 +61,10 @@
                             </span>
                         </div>
                         <!-- col col left-->
-                        <div class="col col-80">
+                        <div class="col">
                             <div class="item-text-wrap">
                                 
-                                <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b> ({{event.Event.Id}}) &nbsp;
+                                <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b> <span ng-if="!loginData.enableThumbs &&event.Event.MaxScoreFrameId">({{event.Event.Id}})</span> &nbsp;
                                 <button ng-if="gifshotSupported && loginData.enableGIFMP4 " class="button button-small button-clear icon gif-icon" ng-click="permissionsDownload(event)"> 
                             </button>
 
@@ -72,18 +72,29 @@
 
                             <a ng-if="(event.Event.DefaultVideo!='' && event.Event.DefaultVideo!==undefined) && $root.platformOS=='desktop' && loginData.enableGIFMP4 " class="button button-clear button-small icon mp4-icon" href="{{event.Event.videoPath}}" download="{{event.Event.Id}}-video.mp4" ng-click="mp4warning()"></a>
 
-                             <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && loginData.enableGIFMP4 " class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)"> 
+                             <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && lpoginData.enableGIFMP4 " class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)"> 
                             </button>
-
 
                             </div>
 
+
                             <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                             <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
-                            <i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}
+                            <!--<i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}-->
 
                             
                         </div>
+
+                        <div ng-if="loginData.enableThumbs && event.Event.MaxScoreFrameId" class = "col col-left" style="max-height:150px" >
+                            <!-- thumbnail -->
+                       
+                                    <!--  ng-image-appear transition-duration="0.5s" animation="fillIn" bg-color="#50a4e2"  {{event.Event.thumbWidth}}X{{event.Event.thumbHeight}}-->
+                                    
+                                    <img   ng-image-appear transition-duration="0.3s" animation="fillIn" bg-color="#50a4e2" width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" ng-src="{{event.Event.baseURL}}/index.php?view=image&fid={{event.Event.MaxScoreFrameId}}&width={{event.Event.thumbWidth*2}}&height={{event.Event.thumbHeight*2}}" on-tap="showThumbnail(event.Event.baseURL,event.Event.MaxScoreFrameId)" />
+                                    <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
+                            
+                       
+                       </div>
                     </div>
                     <!--row-->
                     <div class="row" style="font-size:80%; color:rgb(110,110,110)">
@@ -98,15 +109,15 @@
                     </div>
                     <span style="float:right">
                         <div ng-if="event.Event.EndTime || 1">
-                             <button class="button button-small button-outline icon icon-left ion-stats-bars"
+                             <button class="button button-stable button-small button-outline icon icon-left ion-stats-bars"
                                             ng-click="closeIfOpen(event);analyzeEvent(event)" > 
                                              <span translate="kAnalyze"></span>
                             </button>
-                            <button class="button button-outline button-small icon icon-left ion-ios-eye" ng-click="toggleGroupScrub(event,$index,event.Event.Frames)"> <span translate="kScrub"></span>
+                            <button class="button button-stable button-outline button-small icon icon-left ion-ios-eye" ng-click="toggleGroupScrub(event,$index,event.Event.Frames)"> <span translate="kScrub"></span>
                             </button>
-                            <button ng-if="event.Event.AlarmFrames > 0" class="button button-outline button-small icon icon-left ion-ios-bell" ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)"> <span translate="kAlarms"></span>
+                            <button ng-if="event.Event.AlarmFrames > 0" class="button button-stable button-outline button-small icon icon-left ion-ios-bell" ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)"> <span translate="kAlarms"></span>
                             </button>
-                            <button class="button button-outline button-small icon icon-left ion-ios-eye" ng-click="closeIfOpen(event);openModal(event)"> <span translate="kFootage"></span>
+                            <button class="button button-stable button-outline button-small icon icon-left ion-ios-eye" ng-click="closeIfOpen(event);openModal(event)"> <span translate="kFootage"></span>
                             </button>
 
                             
@@ -123,11 +134,11 @@
                     <p>
                         <!--scroll <i class="icon ion-arrow-left-c"></i> 
                                 <i class="icon ion-arrow-right-c"></i>-->
-                        <button ng-click="toggleTypeOfAlarms()" class="button button-small button-assertive button-outline">
+                        <button ng-click="toggleTypeOfAlarms()" class="button button-small button-assertive button-stable button-outline">
                             <span translate="kType"></span>:{{typeOfFrames}}
                         </button>
                         <button 
-                         ng-click="toggleMotionOutline()" class="button button-small button-assertive button-outline">
+                         ng-click="toggleMotionOutline()" class="button button-small button-assertive button-stable button-outline">
                             <span translate="kOutlineMotion"></span>:{{outlineMotion}}
                         </button>
                     </p>

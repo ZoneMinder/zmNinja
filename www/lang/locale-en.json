@@ -80,6 +80,7 @@
     "kEnableNewsUpdates"         :"enable news updates",
     "kEnableSlowLoading"         :"Use large HTTP timeouts",
     "kEnableStrictSSL"           :"Enable strict SSL check",
+    "kEnableThumbs"              :"Enable thumbnails in events list",
     "kEnterPin"                  :"Enter PIN",
     "kError"                     :"Error",
     "kErrorChangingMonitors"     :"Error changing monitors. Please check logs",
