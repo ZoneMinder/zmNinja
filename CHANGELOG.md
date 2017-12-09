@@ -7,7 +7,7 @@
 
 - migrate push to firebase for a server less APNS/FCM solution [\#562](https://github.com/pliablepixels/zmNinja/issues/562)
 - Support new zms multiport feature \(isaac fork only, for now\) [\#561](https://github.com/pliablepixels/zmNinja/issues/561)
-- Thumbs in event page [\#91](https://github.com/pliablepixels/zmNinja/issues/91)
+- Thumbs in event page \(needs API update\) [\#91](https://github.com/pliablepixels/zmNinja/issues/91)
 
 **Closed issues:**
 
