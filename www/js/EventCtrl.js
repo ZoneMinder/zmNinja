@@ -155,7 +155,7 @@ angular.module('zmApp.controllers')
         if (NVRDataModel.getLogin().enableThumbs) {
             NVRDataModel.debug ("--> thumbnail means increasing row size");
             eventsListScrubHeight=370;
-            eventsListDetailsHeight=300;
+            eventsListDetailsHeight=330;
     
         }
 
@@ -380,6 +380,7 @@ angular.module('zmApp.controllers')
 
                        // console.log ("WE GOT EVENTS="+JSON.stringify(data));
                         var myevents = data;
+
                         NVRDataModel.debug("EventCtrl: success, got " + myevents.length + " events");
                         var loginData = NVRDataModel.getLogin();
                         for (var i = 0; i < myevents.length; i++)
@@ -417,6 +418,46 @@ angular.module('zmApp.controllers')
                             // now construct base path
                             myevents[i].Event.BasePath = computeBasePath(myevents[i]);
                             myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
+
+                            // get thumbW/H
+
+                            var tempMon = NVRDataModel.getMonitorObject(myevents[i].Event.MonitorId);
+                            if (tempMon != undefined) {
+
+                                var ratio;
+                                var mw = parseInt(tempMon.Monitor.Width);
+                                var mh = parseInt(tempMon.Monitor.Height);
+                                var mo = Math.abs(parseInt(tempMon.Monitor.Orientation));
+
+                                // scale by X if width > height                                
+                                if (mw > mh ) {
+                                    ratio = mw / zm.thumbWidth;
+                                    myevents[i].Event.thumbWidth = 200;
+                                    myevents[i].Event.thumbHeight = Math.round(mh/ratio);
+                                }
+                                else {
+
+                                    ratio = mh / zm.thumbWidth;
+                                    myevents[i].Event.thumbHeight = 200;
+                                    myevents[i].Event.thumbWidth = Math.round(mw/ratio);
+
+                                }
+
+                                if (mo == 90) {
+                                    var t = myevents[i].Event.thumbHeight;
+                                    myevents[i].Event.thumbWidth = myevents[i].Event.thumbHeight;
+                                    myevents[i].Event.thumbHeight = t;
+
+
+                                } // swap 
+
+                                console.log ("--------->" +"MW:"+myevents[i].Event.thumbWidth+ " MH:"+ myevents[i].Event.thumbHeight + " for Monitor:" + myevents[i].Event.MonitorName);
+
+                                
+                               
+
+
+                            }
 
                             // in multiserver BasePath is login url for frames 
                             // http://login.url/index.php?view=frame&eid=19696772&fid=21
@@ -2918,6 +2959,40 @@ angular.module('zmApp.controllers')
                         myevents[i].Event.BasePath = computeBasePath(myevents[i]);
                         myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
                         myevents[i].Event.height = eventsListDetailsHeight;
+
+                        // get thumbW/H
+
+                            var tempMon = NVRDataModel.getMonitorObject(myevents[i].Event.MonitorId);
+                            if (tempMon != undefined) {
+
+                                var ratio;
+                                var mw = parseInt(tempMon.Monitor.Width);
+                                var mh = parseInt(tempMon.Monitor.Height);
+                                var mo = Math.abs(parseInt(tempMon.Monitor.Orientation));
+
+                                // scale by X if width > height                                
+                                if (mw > mh ) {
+                                    ratio = mw / zm.thumbWidth;
+                                    myevents[i].Event.thumbWidth = 200;
+                                    myevents[i].Event.thumbHeight = Math.round(mh/ratio);
+                                }
+                                else {
+
+                                    ratio = mh / zm.thumbWidth;
+                                    myevents[i].Event.thumbHeight = 200;
+                                    myevents[i].Event.thumbWidth = Math.round(mw/ratio);
+
+                                }
+
+                                if (mo == 90) {
+                                    var t = myevents[i].Event.thumbHeight;
+                                    myevents[i].Event.thumbWidth = myevents[i].Event.thumbHeight;
+                                    myevents[i].Event.thumbHeight = t;
+
+
+                                } // swap 
+                            }
+
 
                         if (myevents[i].Event.imageMode == 'path')
                         //if (1)
