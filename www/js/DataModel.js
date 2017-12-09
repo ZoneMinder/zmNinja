@@ -2028,7 +2028,7 @@ angular.module('zmApp.controllers')
             }
 
           }
-          return "(Unknown)";
+          return undefined;
         },
 
         getImageMode: function (id) {
