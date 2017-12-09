@@ -1,2 +1,0 @@
-include-labels = zoneminder,breaking,bug,enhancement
-exclude-labels = not supported/no plans
