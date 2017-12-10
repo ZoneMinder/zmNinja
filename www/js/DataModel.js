@@ -1553,11 +1553,11 @@ angular.module('zmApp.controllers')
                             console.log ("STEP 3: ST="+st);
 
 
-                            //console.log ("----------STREAMING URL PARSED AS " + st);
+                            console.log ("----------STREAMING URL PARSED AS " + st);
 
-                            monitors[i].Monitor.streamingURL = streamingurl;
+                            monitors[i].Monitor.streamingURL = st;
                             monitors[i].Monitor.baseURL = baseurl;
-                            console.log ("** Streaming="+streamingurl+" **base="+baseurl);
+                            console.log ("** Streaming="+st+" **base="+baseurl);
                             // starting 1.30 we have fid=xxx mode to return images
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
                             debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
