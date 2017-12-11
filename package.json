@@ -4,8 +4,8 @@
   "displayName": "zmNinja",
   "cordova": {
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ],
     "plugins": {
       "com.telerik.plugins.nativepagetransitions": {},

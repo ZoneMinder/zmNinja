@@ -17,12 +17,14 @@ angular.module('zmApp.controllers')
 
         var localNotificationId = 0;
         var firstError = true;
+        var pushInited = false;
 
         //--------------------------------------------------------------------------
         // called when the websocket is opened
         //--------------------------------------------------------------------------
         function openHandshake()
         {
+            NVRDataModel.log ("Inside openHandshake");
             var loginData = NVRDataModel.getLogin();
             if (loginData.isUseEventServer == false || loginData.eventServer == "")
             {
@@ -30,11 +32,15 @@ angular.module('zmApp.controllers')
                 return;
             }
 
-            NVRDataModel.log("openHandshake: Websocket open");
-            ws.$emit('auth',
+            NVRDataModel.log("openHandshake: Websocket open, sending Auth");
+            ws.send(
             {
-                user: loginData.username,
-                password: loginData.password
+                event:'auth',
+                data: {
+                        user: loginData.username,
+                        password: loginData.password    
+                }
+                
             });
 
             if ($rootScope.apnsToken != '')
@@ -52,14 +58,17 @@ angular.module('zmApp.controllers')
                 if (1)
                 {
                     //console.log ("HANDSHAKE MESSAGE WITH "+$rootScope.monstring);
-                    ws.$emit('push',
+                    ws.send(
                     {
-                        type: 'token',
-                        platform: plat,
-                        token: $rootScope.apnsToken,
-                        monlist:$rootScope.monstring,
-                        intlist:$rootScope.intstring,
-                        state: pushstate
+                        event:'push',
+                        data :{
+                            type: 'token',
+                            platform: plat,
+                            token: $rootScope.apnsToken,
+                            monlist:$rootScope.monstring,
+                            intlist:$rootScope.intstring,
+                            state: pushstate
+                        }
                     });
                 }
             }
@@ -89,7 +98,7 @@ angular.module('zmApp.controllers')
             }
 
             //if (!$rootScope.apnsToken)
-            pushInit();
+            if (!pushInited) pushInit();
 
             if (typeof ws !== 'undefined')
             {
@@ -99,20 +108,24 @@ angular.module('zmApp.controllers')
             }
 
             NVRDataModel.log("Initializing Websocket with URL " +
-                loginData.eventServer + " , will connect later...");
-            ws = $websocket.$new(
+                loginData.eventServer );
+           /* ws = $websocket.$new(
             {
                 url: loginData.eventServer,
                 reconnect: true,
                 reconnectInterval: 60000,
                 lazy: true
-            });
+            });*/
+
+            ws = $websocket(loginData.eventServer,{reconnectIfNotNormalClose: true});
+            ws.onOpen(openHandshake);
 
             // Transmit auth information to server              
-            ws.$on('$open', openHandshake);
+           // ws.$on('$open', openHandshake);
 
             NVRDataModel.debug("Setting up websocket error handler");
-            ws.$on('$error', function(e)
+            //ws.$on('$error', function(e)
+            ws.onError(function (e)
             {
 
                 // we don't need this check as I changed reconnect interval to 60s
@@ -126,21 +139,33 @@ angular.module('zmApp.controllers')
                     }, 3000); // leave 3 seconds for transitions
                     firstError = false;
                     lastEventServerCheck = Date.now();
+                    ws.close();
+                    ws = undefined;
+                
+                   // NVRDataModel.log ("Will try to reconnect in 10 sec..");
+                   // $timeout ( init, 10000 );
                 }
                 //console.log ("VALUE TIME " + lastEventServerCheck);
                 //console.log ("NOW TIME " + Date.now());
             });
 
-            ws.$on('$close', function()
+            ws.onClose( function ()
+           // ws.$on('$close', function()
             {
                 NVRDataModel.log("Websocket closed");
+                ws = undefined;
 
             });
 
             // Handles responses back from ZM ES
 
-            ws.$on('$message', function(str)
+            ws.onMessage (function (str)
+           // ws.$on('$message', function(str)
             {
+                if (str.isTrusted) {
+                    NVRDataModel.log ("Got isTrusted="+str.isTrusted);
+                    return;
+                }
                 NVRDataModel.log("Real-time event: " + JSON.stringify(str));
 
                 // Error messages
@@ -150,7 +175,7 @@ angular.module('zmApp.controllers')
 
                     if (str.reason == 'APNSDISABLED')
                     {
-                        ws.$close();
+                        ws.close();
                         NVRDataModel.displayBanner('error', ['Event Server: APNS disabled'], 2000, 6000);
                         $rootScope.apnsToken = "";
                     }
@@ -261,10 +286,11 @@ angular.module('zmApp.controllers')
             if (typeof ws === 'undefined')
                 return;
 
-            ws.$close();
-            ws.$un('open');
-            ws.$un('close');
-            ws.$un('message');
+           // ws.$close();
+           ws.close();
+           // ws.$un('open');
+           // ws.$un('close');
+           // ws.$un('message');
             ws = undefined;
 
         }
@@ -292,7 +318,12 @@ angular.module('zmApp.controllers')
                 return;
             }
 
-            if (ws.$status() == ws.$CLOSED)
+            ws.send({
+                'event':type, 
+                'data': obj
+            });
+
+            /*if (ws.$status() == ws.$CLOSED)
             {
                 NVRDataModel.log("Websocket was closed, trying to re-open");
                 ws.$un('$open');
@@ -313,11 +344,11 @@ angular.module('zmApp.controllers')
                 });
 
             }
-            else
+            else*
             {
-                ws.$emit(type, obj);
+                ws.send(type, obj);
                // console.log("sending " + type + " " + JSON.stringify(obj));
-            }
+            }*/
 
         }
 
@@ -337,11 +368,11 @@ angular.module('zmApp.controllers')
 
                 if (typeof ws !== 'undefined')
                 {
-                    if (ws.$status() != ws.$CLOSED)
+                    /*(if (ws.$status() != ws.$CLOSED)
                     {
                         NVRDataModel.debug("Closing open websocket as event server was disabled");
                         ws.$close();
-                    }
+                    }*/
                 }
 
                 return;
@@ -360,11 +391,11 @@ angular.module('zmApp.controllers')
             // c) The network died
             // Seems to me in all cases we should give re-open a shot
 
-            if (ws.$status() == ws.$CLOSED)
+            /*if (ws.$status() == ws.$CLOSED)
             {
                 NVRDataModel.log("Websocket was closed, trying to re-open");
                 ws.$open();
-            }
+            }*/
 
         }
 
@@ -431,6 +462,7 @@ angular.module('zmApp.controllers')
 
             push.on('registration', function(data)
             {
+                pushInited = true;
                 NVRDataModel.debug("Push Notification registration ID received: " + JSON.stringify(data));
                 $rootScope.apnsToken = data.registrationId;
 

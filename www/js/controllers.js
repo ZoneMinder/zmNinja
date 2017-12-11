@@ -4,7 +4,7 @@
 
 
 
-angular.module('zmApp.controllers', ['ionic', 'ionic.utils', 'ngCordova', 'ng-mfb', 'angularCircularNavigation', 'jett.ionic.content.banner', 'ionic-pullup', 'ngWebsocket'])
+angular.module('zmApp.controllers', ['ionic', 'ionic.utils', 'ngCordova', 'ng-mfb', 'angularCircularNavigation', 'jett.ionic.content.banner', 'ionic-pullup'])
 
 .controller('zmApp.BaseController', function ($scope, $ionicSideMenuDelegate, $ionicPlatform, $timeout, $rootScope) {
     $scope.openMenu = function () {
