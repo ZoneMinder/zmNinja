@@ -29,7 +29,8 @@ angular.module('zmApp', [
     'jett.ionic.scroll.sista',
     'uk.ac.soton.ecs.videogular.plugins.cuepoints',
     'dcbImgFallback',
-    'ngImageAppear'
+    'ngImageAppear',
+    'angular-websocket' 
 
 
   ])

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninjapro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.2.510" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninjapro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.2.512" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>zmNinja</name>
     <description>
 	High performance ZoneMinder client
@@ -9,6 +9,7 @@
     </author>
     <content src="index.html" />
     <access launch-external="yes" origin="mailto:*" />
+    <access allows-arbitrary-loads-for-media="true" allows-arbitrary-loads-in-web-content="true" allows-local-networking="true" origin="*" />
     <allow-intent href="mailto:*" />
     <allow-navigation href="*" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
@@ -100,8 +101,8 @@
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
-    <engine name="ios" spec="4.5.4" />
     <engine name="android" spec="^6.3.0" />
+    <engine name="ios" spec="4.5.4" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="^0.6.5" />
     <plugin name="cordova-library-helper" spec="^1.0.4">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Save media to your Camera Roll" />
