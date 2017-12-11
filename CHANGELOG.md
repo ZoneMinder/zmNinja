@@ -1,7 +1,8 @@
 # Change Log
 
-## [1.2.510](https://github.com/pliablepixels/zmNinja/tree/1.2.510) (2017-12-09)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.507...1.2.510)
+## [1.2.513](https://github.com/pliablepixels/zmNinja/tree/1.2.513) (2017-12-11)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.511...1.2.513)
+
 
 **Implemented enhancements:**
 
@@ -15,6 +16,7 @@
 
 **Merged pull requests:**
 
+- 565 websocket migrate [\#566](https://github.com/pliablepixels/zmNinja/pull/566) ([pliablepixels](https://github.com/pliablepixels))
 - Fcm [\#564](https://github.com/pliablepixels/zmNinja/pull/564) ([pliablepixels](https://github.com/pliablepixels))
 - Signed-off-by: Veress Krisztián \<krive001@gmail.com\> [\#560](https://github.com/pliablepixels/zmNinja/pull/560) ([krive001](https://github.com/krive001))
 - Signed-off-by: Veress Krisztián \<krive001@gmail.com\> [\#559](https://github.com/pliablepixels/zmNinja/pull/559) ([krive001](https://github.com/krive001))
@@ -116,7 +118,7 @@
 - Added new strings according to v1.2.41 [\#512](https://github.com/pliablepixels/zmNinja/pull/512) ([florie1706](https://github.com/florie1706))
 
 ## [v1.2.41](https://github.com/pliablepixels/zmNinja/tree/v1.2.41) (2017-04-11)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v1.2.41)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.41)
 
 **Implemented enhancements:**
 
@@ -142,6 +144,9 @@
 
 - montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
 -  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
+
+## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v/1.2.40)
 
 ## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
@@ -318,7 +323,10 @@
 - New items [\#413](https://github.com/pliablepixels/zmNinja/pull/413) ([BoskSpb](https://github.com/BoskSpb))
 
 ## [v1.2.33](https://github.com/pliablepixels/zmNinja/tree/v1.2.33) (2016-12-09)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.31...v1.2.33)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.32...v1.2.33)
+
+## [v1.2.32](https://github.com/pliablepixels/zmNinja/tree/v1.2.32) (2016-12-09)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.31...v1.2.32)
 
 **Implemented enhancements:**
 
@@ -381,7 +389,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -407,6 +415,9 @@
 - Create help-pl.html [\#370](https://github.com/pliablepixels/zmNinja/pull/370) ([maymaymay](https://github.com/maymaymay))
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
+
+## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
 
 ## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
@@ -545,7 +556,10 @@
 - modal close via back action on Android - make  sure all timers re-start/resources released [\#305](https://github.com/pliablepixels/zmNinja/issues/305)
 
 ## [v1.2.0](https://github.com/pliablepixels/zmNinja/tree/v1.2.0) (2016-08-10)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.96...v1.2.0)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/vv1.2.0...v1.2.0)
+
+## [vv1.2.0](https://github.com/pliablepixels/zmNinja/tree/vv1.2.0) (2016-08-10)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.96...vv1.2.0)
 
 **Implemented enhancements:**
 
@@ -645,7 +659,10 @@
 - Italian Translations first commit [\#266](https://github.com/pliablepixels/zmNinja/pull/266) ([mcbittech](https://github.com/mcbittech))
 
 ## [v1.1.92](https://github.com/pliablepixels/zmNinja/tree/v1.1.92) (2016-05-21)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.7...v1.1.92)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.9...v1.1.92)
+
+## [v1.1.9](https://github.com/pliablepixels/zmNinja/tree/v1.1.9) (2016-05-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.1.7...v1.1.9)
 
 **Implemented enhancements:**
 
@@ -960,41 +977,19 @@
 - \[DESKTOP\] Lift 200 last entries limit for timeline [\#88](https://github.com/pliablepixels/zmNinja/issues/88)
 
 ## [v0.87.1](https://github.com/pliablepixels/zmNinja/tree/v0.87.1) (2015-11-18)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.86...v0.87.1)
+
 **Implemented enhancements:**
 
 - Event page is overcrowded for mocord users - add option to show only alarmed frames [\#89](https://github.com/pliablepixels/zmNinja/issues/89)
 - Ability to specify multiple ZM servers and switch between them [\#83](https://github.com/pliablepixels/zmNinja/issues/83)
 - add per monitor 'alarmed' status indicator to montage view [\#82](https://github.com/pliablepixels/zmNinja/issues/82)
-- Make Back button to exit from live view [\#61](https://github.com/pliablepixels/zmNinja/issues/61)
-- video branch support for zmNinja  [\#60](https://github.com/pliablepixels/zmNinja/issues/60)
-- ability to run all screens of zmNinja on a desktop without console errors [\#59](https://github.com/pliablepixels/zmNinja/issues/59)
-- changing servers requires reload of monitors - should be automatically done [\#58](https://github.com/pliablepixels/zmNinja/issues/58)
-- offer an option to force web sockets even if push is supported [\#53](https://github.com/pliablepixels/zmNinja/issues/53)
-- In playback mode, add the ability to swipe to the next event of whichever monitor has the next event and/or initiate gapless playback of same. [\#49](https://github.com/pliablepixels/zmNinja/issues/49)
-- In playback mode, add the ability to swipe to the next event of the same monitor and/or initiate gapless playback. [\#48](https://github.com/pliablepixels/zmNinja/issues/48)
-- customize screen to load on push notification tap [\#47](https://github.com/pliablepixels/zmNinja/issues/47)
-- ability to restrict monitors in all views - depending on some global selection [\#42](https://github.com/pliablepixels/zmNinja/issues/42)
-- make it optional to swipe between live view of monitors [\#41](https://github.com/pliablepixels/zmNinja/issues/41)
-- review security approach - switch to auth token instead of passing u+p in url [\#2](https://github.com/pliablepixels/zmNinja/issues/2)
 
 **Fixed bugs:**
 
 - zmNinja adds cgi-bin on its own to cgi path. This is a problem for Centos  [\#92](https://github.com/pliablepixels/zmNinja/issues/92)
 - Can't toggle gapless playback when viewing timeline events  [\#85](https://github.com/pliablepixels/zmNinja/issues/85)
 - desktop app no video from timeline [\#70](https://github.com/pliablepixels/zmNinja/issues/70)
-- fix version check - in one part of the code, I'm not doing a \>= check resulting in new ZM versions failing [\#57](https://github.com/pliablepixels/zmNinja/issues/57)
-- notifications delivered while the app is running should also produce the same sound [\#55](https://github.com/pliablepixels/zmNinja/issues/55)
-- iOS notifications are not showing style and sound options [\#54](https://github.com/pliablepixels/zmNinja/issues/54)
-- Ssl toggle and https in login [\#52](https://github.com/pliablepixels/zmNinja/issues/52)
-- Swiping to the left should reveal next monitor, not prev monitor \(seen on iOS 9\) [\#51](https://github.com/pliablepixels/zmNinja/issues/51)
-- rev 0.83, event icon is a solid block [\#50](https://github.com/pliablepixels/zmNinja/issues/50)
-- Monitor view: events not showing for deselected monitors \(and should since the goal in monitor view is to see all monitors which would include their events\). 	 	 [\#46](https://github.com/pliablepixels/zmNinja/issues/46)
-- Montage view: swipe shows deselected monitors \(and should not\). [\#45](https://github.com/pliablepixels/zmNinja/issues/45)
-- tapping on events before they complete causes issues [\#44](https://github.com/pliablepixels/zmNinja/issues/44)
-- Timeline more menu bonked again [\#43](https://github.com/pliablepixels/zmNinja/issues/43)
-- if apis can't be reached the app assumes version is 0.0.0 and moves app to low version screen [\#40](https://github.com/pliablepixels/zmNinja/issues/40)
-- Check multiple web sockets created in android -- seems old web sockets don't get deleted [\#39](https://github.com/pliablepixels/zmNinja/issues/39)
-- Background mode: Popover menus stick around [\#33](https://github.com/pliablepixels/zmNinja/issues/33)
 
 **Closed issues:**
 
@@ -1014,18 +1009,93 @@
 - make email logs work in desktop mode by opening default client [\#69](https://github.com/pliablepixels/zmNinja/issues/69)
 - in quick scrub/footage mode - start playing without waiting for a tap [\#68](https://github.com/pliablepixels/zmNinja/issues/68)
 - make mouse wheel work in desktop mode [\#67](https://github.com/pliablepixels/zmNinja/issues/67)
+
+**Merged pull requests:**
+
+- prevents checkin of unessicary file from osx [\#79](https://github.com/pliablepixels/zmNinja/pull/79) ([jsloyer](https://github.com/jsloyer))
+- move license file to correct filename [\#77](https://github.com/pliablepixels/zmNinja/pull/77) ([jsloyer](https://github.com/jsloyer))
+
+## [v0.86](https://github.com/pliablepixels/zmNinja/tree/v0.86) (2015-11-06)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.85...v0.86)
+
+**Implemented enhancements:**
+
+- Make Back button to exit from live view [\#61](https://github.com/pliablepixels/zmNinja/issues/61)
+- ability to run all screens of zmNinja on a desktop without console errors [\#59](https://github.com/pliablepixels/zmNinja/issues/59)
+- In playback mode, add the ability to swipe to the next event of whichever monitor has the next event and/or initiate gapless playback of same. [\#49](https://github.com/pliablepixels/zmNinja/issues/49)
+- In playback mode, add the ability to swipe to the next event of the same monitor and/or initiate gapless playback. [\#48](https://github.com/pliablepixels/zmNinja/issues/48)
+
+**Fixed bugs:**
+
+- tapping on events before they complete causes issues [\#44](https://github.com/pliablepixels/zmNinja/issues/44)
+
+**Closed issues:**
+
 - If swiping is enabled, don't swipe if image is zoomed in -- causes pan/zoom conflicts [\#66](https://github.com/pliablepixels/zmNinja/issues/66)
 - getDiskStatus seems to be a performance bottleneck - disable for now in System State screen [\#65](https://github.com/pliablepixels/zmNinja/issues/65)
 - clean up non-reachable code during portal check [\#64](https://github.com/pliablepixels/zmNinja/issues/64)
+
+## [v0.85](https://github.com/pliablepixels/zmNinja/tree/v0.85) (2015-11-01)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.84...v0.85)
+
+**Implemented enhancements:**
+
+- video branch support for zmNinja  [\#60](https://github.com/pliablepixels/zmNinja/issues/60)
+- changing servers requires reload of monitors - should be automatically done [\#58](https://github.com/pliablepixels/zmNinja/issues/58)
+
+**Fixed bugs:**
+
+- fix version check - in one part of the code, I'm not doing a \>= check resulting in new ZM versions failing [\#57](https://github.com/pliablepixels/zmNinja/issues/57)
+- notifications delivered while the app is running should also produce the same sound [\#55](https://github.com/pliablepixels/zmNinja/issues/55)
+- iOS notifications are not showing style and sound options [\#54](https://github.com/pliablepixels/zmNinja/issues/54)
+
+**Closed issues:**
+
 - permissions on Android [\#56](https://github.com/pliablepixels/zmNinja/issues/56)
-- Monitor change makes enabled 0 [\#38](https://github.com/pliablepixels/zmNinja/issues/38)
+
+## [v0.84](https://github.com/pliablepixels/zmNinja/tree/v0.84) (2015-10-28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.83...v0.84)
+
+**Implemented enhancements:**
+
+- offer an option to force web sockets even if push is supported [\#53](https://github.com/pliablepixels/zmNinja/issues/53)
+- customize screen to load on push notification tap [\#47](https://github.com/pliablepixels/zmNinja/issues/47)
+
+**Fixed bugs:**
+
+- Ssl toggle and https in login [\#52](https://github.com/pliablepixels/zmNinja/issues/52)
+- Swiping to the left should reveal next monitor, not prev monitor \(seen on iOS 9\) [\#51](https://github.com/pliablepixels/zmNinja/issues/51)
+- rev 0.83, event icon is a solid block [\#50](https://github.com/pliablepixels/zmNinja/issues/50)
+- Monitor view: events not showing for deselected monitors \(and should since the goal in monitor view is to see all monitors which would include their events\). 	 	 [\#46](https://github.com/pliablepixels/zmNinja/issues/46)
+- Montage view: swipe shows deselected monitors \(and should not\). [\#45](https://github.com/pliablepixels/zmNinja/issues/45)
+- Timeline more menu bonked again [\#43](https://github.com/pliablepixels/zmNinja/issues/43)
+
+**Closed issues:**
+
 - custom range dates shown even if pullup overwrites them [\#37](https://github.com/pliablepixels/zmNinja/issues/37)
 - Latest Events panel doesn't initialize correctly on first use. [\#36](https://github.com/pliablepixels/zmNinja/issues/36)
+- Android client: System Status view returns HTTP error [\#32](https://github.com/pliablepixels/zmNinja/issues/32)
+- app causes ZM crash/bad behavior after it's been asleep for a while [\#30](https://github.com/pliablepixels/zmNinja/issues/30)
+
+## [v0.83](https://github.com/pliablepixels/zmNinja/tree/v0.83) (2015-10-24)
+**Implemented enhancements:**
+
+- ability to restrict monitors in all views - depending on some global selection [\#42](https://github.com/pliablepixels/zmNinja/issues/42)
+- make it optional to swipe between live view of monitors [\#41](https://github.com/pliablepixels/zmNinja/issues/41)
+- review security approach - switch to auth token instead of passing u+p in url [\#2](https://github.com/pliablepixels/zmNinja/issues/2)
+
+**Fixed bugs:**
+
+- if apis can't be reached the app assumes version is 0.0.0 and moves app to low version screen [\#40](https://github.com/pliablepixels/zmNinja/issues/40)
+- Check multiple web sockets created in android -- seems old web sockets don't get deleted [\#39](https://github.com/pliablepixels/zmNinja/issues/39)
+- Background mode: Popover menus stick around [\#33](https://github.com/pliablepixels/zmNinja/issues/33)
+
+**Closed issues:**
+
+- Monitor change makes enabled 0 [\#38](https://github.com/pliablepixels/zmNinja/issues/38)
 - Restarting ZM in state control results in client freezing [\#35](https://github.com/pliablepixels/zmNinja/issues/35)
 - radial menu is broken [\#34](https://github.com/pliablepixels/zmNinja/issues/34)
-- Android client: System Status view returns HTTP error [\#32](https://github.com/pliablepixels/zmNinja/issues/32)
 - monitor buttons to navigate can overlap exit,zoom,refresh buttons [\#31](https://github.com/pliablepixels/zmNinja/issues/31)
-- app causes ZM crash/bad behavior after it's been asleep for a while [\#30](https://github.com/pliablepixels/zmNinja/issues/30)
 - pinch zoom on monitor too sensitive, detects false swipes [\#29](https://github.com/pliablepixels/zmNinja/issues/29)
 - Montage re-order does not work with large list of monitors [\#28](https://github.com/pliablepixels/zmNinja/issues/28)
 - investigate when timeline barfs with a "no parent" error [\#27](https://github.com/pliablepixels/zmNinja/issues/27)
@@ -1051,8 +1121,6 @@
 
 **Merged pull requests:**
 
-- prevents checkin of unessicary file from osx [\#79](https://github.com/pliablepixels/zmNinja/pull/79) ([jsloyer](https://github.com/jsloyer))
-- move license file to correct filename [\#77](https://github.com/pliablepixels/zmNinja/pull/77) ([jsloyer](https://github.com/jsloyer))
 - Build docs [\#24](https://github.com/pliablepixels/zmNinja/pull/24) ([bklang](https://github.com/bklang))
 - Add additional JS build dependencies [\#23](https://github.com/pliablepixels/zmNinja/pull/23) ([bklang](https://github.com/bklang))
 
