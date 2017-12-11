@@ -161,12 +161,11 @@ angular.module('zmApp.controllers')
 
             ws.onMessage (function (str)
            // ws.$on('$message', function(str)
+    
             {
-                if (str.isTrusted) {
-                    NVRDataModel.log ("Got isTrusted="+str.isTrusted);
-                    return;
-                }
-                NVRDataModel.log("Real-time event: " + JSON.stringify(str));
+                str = JSON.parse(str.data);
+                //console.log ("FULL MESSAGE="+JSON.stringify(str.data));
+                NVRDataModel.debug("Real-time event: " + JSON.stringify(str));
 
                 // Error messages
                 if (str.status != 'Success')
