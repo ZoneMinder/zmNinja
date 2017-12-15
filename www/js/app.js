@@ -1244,6 +1244,7 @@ angular.module('zmApp', [
       $rootScope.apnsToken = '';
       $rootScope.tappedNotification = 0;
       $rootScope.tappedMid = 0;
+      $rootScope.tappedEid = 0;
       //var eventsToDisplay=[];
       $rootScope.alarmCount = "0";
       
@@ -1462,17 +1463,18 @@ angular.module('zmApp', [
 
 
       // handles URL launches
-      // if you just launch zmninja:// then it will honor the settings in "tap screen" -> events or montage
-      // if you launch with zmninja://<mid> it will take you to live view for that mid
+      
       window.handleOpenURL = function (url) {
-        $rootScope.tappedNotification = 1;
+        $rootScope.tappedNotification = 2; // 1 is push
         $rootScope.tappedMid = 0;
         var c = URI.parse(url);
         //NVRDataModel.log ("***********launched with "+ JSON.stringify(c));
         if (c.query) {
           var qm = getQueryVariable(c.query, "mid");
+          var qe = getQueryVariable(c.query, "eid");
+          if (qe) $rootScope.tappedEid = parseInt(qe);
           if (qm) $rootScope.tappedMid = parseInt(qm);
-          NVRDataModel.log("external URL called with MID=" + $rootScope.tappedMid);
+          NVRDataModel.log("external URL called with MID=" + $rootScope.tappedMid + " and/or EID="+$rootScope.tappedEid);
           //console.log (">>>>>>>>> EID="+getQueryVariable(c.query, "eid"));
 
         }

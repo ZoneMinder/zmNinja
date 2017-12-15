@@ -269,10 +269,51 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
     function evaluateTappedNotification()
     {
-        if ($rootScope.tappedNotification)
+        var ld = NVRDataModel.getLogin();
+      
+
+        if ($rootScope.tappedNotification == 2) { // url launch
+            NVRDataModel.debug("Came via app url launch with mid="+$rootScope.tappedMid);
+            NVRDataModel.debug("Came via app url launch with eid="+$rootScope.tappedEid);
+            $rootScope.tappedNotification = 0;
+            $ionicHistory.nextViewOptions(
+            {
+                disableBack: true
+            });
+
+            if (parseInt($rootScope.tappedMid) > 0) 
+            {
+                NVRDataModel.debug("Going to live view ");
+                $state.go("app.monitors",
+                {},
+                {
+                    reload: true
+                });
+                return;
+
+            }
+
+            else if (parseInt($rootScope.tappedEid) > 0) {
+                NVRDataModel.debug("Going to events with EID=" + $rootScope.tappedEid);
+                $state.go("app.events",
+                {
+                    //"id": $rootScope.tappedEid,
+                    "id": 0,
+                    "playEvent": true
+                },
+                {
+                    reload: true
+                });
+                return;
+            }
+            // go with monitor first, then event - just because I feel like ;)
+
+            
+        }
+        else if ($rootScope.tappedNotification == 1) // push
         {
 
-            var ld = NVRDataModel.getLogin();
+            
             NVRDataModel.log("Came via push tap. onTapScreen=" + ld.onTapScreen);
             //console.log ("***** NOTIFICATION TAPPED  ");
             $rootScope.tappedNotification = 0;
@@ -389,7 +430,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     NVRDataModel.getKeyConfigParams(1);
                                     NVRDataModel.getTimeZone();
                                     EventServer.refresh();
-                                    if ($rootScope.tappedNotification != 1)
+                                    if ($rootScope.tappedNotification == 0)
                                     {
                                         console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
                                         var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
