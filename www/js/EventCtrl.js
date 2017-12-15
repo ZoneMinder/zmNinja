@@ -121,9 +121,33 @@ angular.module('zmApp.controllers')
             getInitialEvents();
             setupWatchers();
             footerExpand();
+            // now do event playback if asked
+
+            if (parseInt($rootScope.tappedEid) > 0) {
+                NVRDataModel.debug (" Trying ot live play " + $rootScope.tappedEid);
+                playSpecificEvent($rootScope.tappedEid);
+                
+            }
+
         },100);
         
     });
+
+
+    function playSpecificEvent (eid) {
+        NVRDataModel.log ("Stuffing EID to play back "+ eid);
+        $rootScope.tappedEid = 0;
+        var event = {
+            Event: {
+                Id:eid
+            }
+
+        };
+        $scope.event = event;
+        $scope.currentEvent = event;
+        openModal(event);
+
+    }
 
     $scope.$on('$ionicView.beforeEnter', function()
     {
@@ -139,6 +163,8 @@ angular.module('zmApp.controllers')
         console.log("BEFORE ENTER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
         NVRDataModel.log("EventCtrl called with: EID=" + $scope.id + " playEvent =  " + $scope.showEvent);
+
+
 
         // This is the only view that hardcodes row size due to
         // collection repeat, so lets re-get the text size if it has changed
@@ -2778,6 +2804,11 @@ angular.module('zmApp.controllers')
     $scope.openModal = function(event)
     {
 
+        openModal(event);
+
+    };
+
+    function openModal (event) {
         NVRDataModel.debug("unbinding eventCtrl watchers as modal has its own");
         ionRangeWatcher();
         mycarouselWatcher();
@@ -2812,8 +2843,7 @@ angular.module('zmApp.controllers')
                 var ld = NVRDataModel.getLogin();
 
             });
-
-    };
+    }
 
     //--------------------------------------------------------
     //We need to destroy because we are instantiating
