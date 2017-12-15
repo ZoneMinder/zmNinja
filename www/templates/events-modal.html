@@ -96,7 +96,7 @@
         <a mfb-button icon="ion-play" label="{{'kNormalPlay'|translate}}" ng-click="adjustSpeed('np');"></a>
         <a mfb-button icon="ion-pause" label="{{'kPause'|translate}}" ng-click="adjustSpeed('p');"> </a>
     </nav>
-    <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] </div>
+    <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] <span class="events-range-modal-warning-text">{{eventWarning}}</span> </div>
     <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
         <ul>
             <li>

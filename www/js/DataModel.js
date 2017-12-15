@@ -1860,6 +1860,8 @@ angular.module('zmApp.controllers')
         // monitorId == 0 means all monitors (ZM starts from 1)
         //-----------------------------------------------------------------------------
 
+        // new reminder
+        // https://zm/api/events.json?&sort=StartTime&direction=desc
         getEvents: function (monitorId, pageId, loadingStr, startTime, endTime) {
 
           //console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
