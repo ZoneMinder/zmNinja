@@ -1591,6 +1591,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     var event = success.data.event;
                     currentEvent = event;
 
+                    $scope.eventWarning = '';
+
+                    if (!event.Event.EndTime) {
+                        $scope.eventWarning = $translate.instant('kEventStillRecording');
+                    }
+
                     event.Event.BasePath = computeBasePath(event);
                     event.Event.relativePath = computeRelativePath(event);
 

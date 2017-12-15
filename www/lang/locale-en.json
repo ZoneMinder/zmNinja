@@ -92,6 +92,7 @@
     "kErrorRetrievingState"      :"error retrieving state",
     "kErrorSave"                 :"Error - could not save",
     "kEvent"                     :"event",
+    "kEventStillRecording"       :"still recording",
     "kEventHistFaster"           :"faster",
     "kEventHistHrs"              :"hours ago",
     "kEventHistPause"            :"pause",
