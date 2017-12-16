@@ -488,9 +488,32 @@ angular.module('zmApp', [
 
             
             var url = 'img/novideo.png';
+
+
+            var w = $attributes.imgSpinnerW;
+            var h = $attributes.imgSpinnerH;
+
+         /*   $element.css({
+             //width: w+'px',
+            // height: h+'px',
+              display: ($attributes.imgSpinnerW && $attributes.imgSpinnerH? 'inline-block' : null),
+              background:'red',
+              objectFit: 'fill'
+          });*/
+          
+
+            console.log ("**********"+w+"X"+h);
           //  var hurl = "holder.js/2000x$2000?auto=yes&theme=sky&text=...";
 
-           $element.prop('src', url);
+           $attributes.$set('data-src', 'holder.js/'+w+'x'+h+'?auto=yes&theme=industrial&text=...');
+           Holder.run({images:$element[0], nocss:false});
+
+          // $element.prop ('width', w+'px');
+          // $element.prop ('height', h+'px');
+
+           
+          // $element.css({backgroundImage: 'url("' + url + '")'});
+           //$attributes.$set('src', url);
           // $element.prop('data-src', hurl);
 
             imageLoadingDataShare.set(0);
