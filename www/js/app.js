@@ -502,7 +502,7 @@ angular.module('zmApp', [
           });*/
           
 
-            console.log ("**********"+w+"X"+h);
+           // console.log ("**********"+w+"X"+h);
           //  var hurl = "holder.js/2000x$2000?auto=yes&theme=sky&text=...";
 
            $attributes.$set('data-src', 'holder.js/'+w+'x'+h+'?auto=yes&theme=industrial&text=...');
