@@ -7,21 +7,42 @@
 
     <ion-nav-buttons side="right">
 
-            <a  class="button button-icon icon ion-grid" ng-click="reLayout()" ;></a>
+            <a  class="button button-icon icon ion-android-more-vertical" ng-click="toggleSubMenu()" ;></a>
 
-            <a  class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)" ;>&nbsp;&nbsp;&nbsp;</a>
+            <a  class="button button-icon icon ion-chevron-down" ng-click="popover.show($event)" ;>&nbsp;&nbsp;&nbsp;</a>
             
     </ion-nav-buttons>
-    <ion-content class="padding" scroll-sista delegate-handle="moment-delegate" overflow-scroll="false" mouse-wheel-scroll style="background-color:#444444" >
+    <ion-content class="padding" delegate-handle="moment-delegate" overflow-scroll="false" mouse-wheel-scroll style="background-color:#444444" >
+
+
+        <div ng-if="isSubMenu">
+            <br/>
+                <div id="flyoutmenu" style="float:left">
+                        <ul>
+                            <li>
+                                <a href="" ng-click="sizeChanged(1)"> <i class="ion-plus-circled"></i></a>
+                            </li>
+                            <li>
+                                <a href="" ng-click="sizeChanged(-1)"> <i class="ion-minus-circled"></i></a>
+                            </li>
+                            <li>
+                                    <a href="" ng-click="reLayout()"> <i class="ion-grid"></i></a>
+                            </li>
+                        </ul>
+                </div>
+            <div style="clear: both;"></div>
+            <br/>
+        </div>
+        
         
         <div style="color:white" ng-if="!moments.length">
             Nothing to show yet...
         </div>
 
         <div class="grid" id="mygrid">
-            <div class="grid-sizer grid-item-10"></div>
            
-            <figure class="grid-item" ng-repeat="moment in moments | onlyEnabledMoments">
+           
+            <figure class="grid-item grid-item-{{gridSize}}" ng-repeat="moment in moments | onlyEnabledMoments">
                 <figcaption class="normal-figheader">{{moment.Event.monitorName}}<span style="float:right"><button class="button button-small button-icon icon  {{moment.Event.icon}}" ng-click="toggleCollapse(moment.Event.MonitorId, moment.Event.Id)"></button>{{moment.Event.collapseCount}}&nbsp;</span></figcaption>
                  <img   image-spinner-src="{{moment.Event.baseURL}}/index.php?view=image&fid={{moment.Event.MaxScoreFrameId}}&width={{moment.Event.thumbWidth*2}}&height={{moment.Event.thumbHeight*2}}" img-spinner-w="{{moment.Event.width}}"
                  img-spinner-h="{{moment.Event.height}}" image-spinner-loader="lines" 

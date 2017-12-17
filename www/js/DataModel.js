@@ -169,6 +169,8 @@ angular.module('zmApp.controllers')
         'enableSlowLoading': false,
         'isFullScreen': false,
         'reloadInMontage': false,
+        'momentGridSize': 40,
+
 
       };
 
@@ -1015,6 +1017,12 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.enableStrictSSL == 'undefined') {
 
                     loginData.enableStrictSSL = false;
+
+                  }
+
+                  if (typeof loginData.momentGridSize == 'undefined') {
+
+                    loginData.momentGridSize = 40;
 
                   }
 
