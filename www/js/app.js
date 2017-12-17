@@ -133,6 +133,29 @@ angular.module('zmApp', [
 
   })
 
+
+  // filter for montage iteration
+  .filter('onlyEnabledMoments', function () {
+
+    // Create the return function and set the required parameter name to **input**
+    return function (input) {
+
+      var out = [];
+
+      angular.forEach(input, function (item) {
+
+        if (!item.Event.hide ) 
+        {
+          out.push(item);
+        }
+
+      });
+
+      return out;
+    };
+
+  })
+
   // filter for montage iteration
   .filter('onlyEnabled', function () {
 
@@ -2106,6 +2129,24 @@ angular.module('zmApp', [
         url: "/state",
         templateUrl: "templates/state.html",
         controller: 'zmApp.StateCtrl',
+
+      })
+
+
+      .state('app.moment', {
+        data: {
+          requireLogin: true
+        },
+        resolve: {
+          message: function (NVRDataModel) {
+            //console.log("Inside app.events resolve");
+            return NVRDataModel.getMonitors(0);
+          }
+        },
+        cache: false,
+        url: "/moment",
+        templateUrl: "templates/moment.html",
+        controller: 'zmApp.MomentCtrl',
 
       })
 
