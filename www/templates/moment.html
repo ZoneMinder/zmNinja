@@ -23,7 +23,7 @@
            
             <figure class="grid-item" ng-repeat="moment in moments | onlyEnabledMoments">
                 <figcaption class="normal-figheader">{{moment.Event.monitorName}}<span style="float:right"><button class="button button-small button-icon icon  {{moment.Event.icon}}" ng-click="toggleCollapse(moment.Event.MonitorId, moment.Event.Id)"></button>{{moment.Event.collapseCount}}&nbsp;</span></figcaption>
-                 <img   image-spinner-src="{{moment.Event.baseURL}}/index.php?view=image&fid={{moment.Event.MaxScoreFrameId}}" img-spinner-w="{{moment.Event.width}}"
+                 <img   image-spinner-src="{{moment.Event.baseURL}}/index.php?view=image&fid={{moment.Event.MaxScoreFrameId}}&width={{moment.Event.thumbWidth*2}}&height={{moment.Event.thumbHeight*2}}" img-spinner-w="{{moment.Event.width}}"
                  img-spinner-h="{{moment.Event.height}}" image-spinner-loader="lines" 
             on-tap="showThumbnail(moment.Event.baseURL,moment.Event.MaxScoreFrameId)"/>
             <figcaption class="normal-figcaption">{{moment.Event.humanizeTime}}<span style="float:right">{{hourmin(moment.Event.StartTime)}}</span></figcaption>
