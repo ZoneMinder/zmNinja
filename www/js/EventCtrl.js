@@ -2771,7 +2771,20 @@ angular.module('zmApp.controllers')
     
     $scope.showThumbnail = function (b,f) {
 
+        if (!f)  {// api update needed
 
+            $ionicPopup.alert(
+                {
+                    title: $translate.instant('kNote'),
+                    template: "{{'kApiUpgrade' | translate }}",
+                    okText: $translate.instant('kButtonOk'),
+                    cancelText: $translate.instant('kButtonCancel'),
+                });
+                return;
+
+        }
+
+ 
         $scope.thumbnailLarge=b+'/index.php?view=image&fid='+f;
         $ionicModal.fromTemplateUrl('templates/image-modal.html',
         {

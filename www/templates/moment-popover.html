@@ -1,0 +1,12 @@
+<ion-popover-view class="fit">
+    <ion-content>
+        <div class="list" ng-click="popover.hide()">
+           
+            <a class="item" ng-href="" ng-click="popover.hide();getMoments('StartTime');">
+              {{'kMomentMenuByTime' | translate}}
+            </a>
+            <a class="item" ng-href="" ng-click="popover.hide();getMoments('MaxScore');">{{'kMomentMenuByScore' | translate}}</a>
+     
+        </div>
+    </ion-content>
+</ion-popover-view>

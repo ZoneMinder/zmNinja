@@ -256,7 +256,21 @@ figcaption {
     left: 0;
     right: 0;
     opacity: 1;
+    font-size: 80%;
 }
+
+.normal-figheader {
+    background: rgba(0, 0, 0, 0.2);
+    color: #FFF;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: 1;
+    font-size: 80%;
+}
+
+
 
 .alarmed-figcaption {
     background: #ba3e3e;
