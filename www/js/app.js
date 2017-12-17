@@ -1405,6 +1405,7 @@ angular.module('zmApp', [
 
       var checkOrientation = function () {
         var pixelRatio = window.devicePixelRatio || 1;
+        $rootScope.pixelRatio = pixelRatio;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
         //console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
@@ -1660,6 +1661,7 @@ angular.module('zmApp', [
       function continueInitialInit() {
         console.log("continueinit");
         var pixelRatio = window.devicePixelRatio || 1;
+        $rootScope.pixelRatio = pixelRatio;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
         // for making sure we canuse $state.go with ng-click

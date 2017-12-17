@@ -111,6 +111,27 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     }
 
+    $scope.toggleSubMenu = function() {
+    
+       
+        $scope.isSubMenu = !$scope.isSubMenu;
+        console.log ($scope.isSubMenu);    };
+
+    $scope.sizeChanged = function (dirn) {
+        var sz = $scope.gridSize;
+        sz = sz + 5 * dirn;
+        if (sz < 5) sz = 5;
+        if (sz > 100) sz = 100;
+        $scope.gridSize = sz;
+
+        var ld = NVRDataModel.getLogin();
+        ld.momentGridSize = $scope.gridSize;
+        NVRDataModel.setLogin(ld);
+
+        $timeout (function () {masonry.layout();},300);
+
+
+    };
 
     $scope.reLayout = function () {
         NVRDataModel.log ("relaying masonry");
@@ -198,11 +219,11 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         masonry = new Masonry('.grid',
         {
             itemSelector: '.grid-item',
-            percentPosition: true,
-            columnWidth: '.grid-sizer',
+           // columnWidth: 10
             horizontalOrder: true,
             gutter: 2,
-            initLayout: true
+            initLayout: true,
+            percentPosition:true,
 
         });
         //console.log ("**** mygrid is " + JSON.stringify(elem));
@@ -427,6 +448,25 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         masonry.destroy();
     });
 
+
+
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+        /*var w = Math.round(parseInt($rootScope.devWidth) / parseInt($rootScope.pixelRatio)) ;
+
+        w = $rootScope.devWidth;
+
+        var p = w / 100;
+
+        console.log ("old P="+p);
+        p = Math.ceil(p/5)*5;
+        console.log ("P="+p);*/
+
+        var ld = NVRDataModel.getLogin();
+
+        $scope.gridSize = ld.momentGridSize;
+        $scope.isSubMenu = false;
+    });
    
     $scope.$on('$ionicView.afterEnter', function()
     {
