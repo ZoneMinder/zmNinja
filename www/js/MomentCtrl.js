@@ -1,11 +1,13 @@
 /* jshint -W041 */
+/*jshint -W069 */
+/*jshint sub:true*/
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry */
 
 
 //https:///zm/api/events/index/AlarmFrames%20%3E=:1/StartTime%20%3E=:2017-12-16%2009:08:50.json?sort=TotScore&direction=desc
 
-angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$q', '$templateRequest', '$sce', '$compile', '$http', '$ionicLoading', 'zm', '$timeout', '$q', '$ionicPopover','$ionicPopup','message', function($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $q, $templateRequest, $sce, $compile, $http, $ionicLoading,zm, $timeout, $q, $ionicPopover, $ionicPopup, message)
+angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$templateRequest', '$sce', '$compile', '$http', '$ionicLoading', 'zm', '$timeout', '$q', '$ionicPopover','$ionicPopup','message', '$ionicScrollDelegate',function($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $templateRequest, $sce, $compile, $http, $ionicLoading,zm, $timeout, $q, $ionicPopover, $ionicPopup, message, $ionicScrollDelegate)
 {
 
     var timeFrom;
@@ -103,7 +105,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
                     width: monitors[i].Monitor.Width,
                     height:monitors[i].Monitor.Height,
                     orientation:monitors[i].Monitor.Orientation
-                }
+                };
             }
         }
 
@@ -140,7 +142,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
                 }
             } //for
             if (collapseCount) {
-                $scope.moments[collapseId].Event.collapseCount = collapseCount
+                $scope.moments[collapseId].Event.collapseCount = collapseCount;
             } else {
                 $scope.moments[collapseId].Event.collapseCount="";
             }
@@ -154,9 +156,13 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
         masonry.once( 'layoutComplete', function( laidOutItems ) {
             $timeout ( function () {masonry.layout();},300);
-        }  )
+        }  );
 
-        $timeout ( function () {masonry.layout();},300);
+        $timeout ( function () {
+            masonry.layout();
+            $ionicScrollDelegate.$getByHandle("moment-delegate").scrollTop();
+        
+        },600);
 
     };
 
@@ -270,7 +276,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     $scope.getMoments = function (cond) {
         getMoments (cond);
-    }
+    };
 
     function getMoments(sortCondition) {
 
@@ -380,8 +386,10 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
            // if we use any other condition, we need to first sort by cond and then time
            if (sortCondition != "StartTime") {
+               var ascordesc = true; 
+               if (sortCondition == 'monitorName') ascordesc=false;
                console.log ("SORTING BY "+sortCondition);
-            moments = objSort(moments,[sortCondition, true],["dateObject", true]);
+            moments = objSort(moments,[sortCondition, ascordesc],["dateObject", true]);
            }
 
 
@@ -411,7 +419,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
 
 
-    };
+    }
 
     $scope.$on('$ionicView.beforeLeave', function()
     {
