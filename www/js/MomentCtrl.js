@@ -43,6 +43,57 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         }
     };
 
+    // credit https://stackoverflow.com/a/17265125/1361529
+    function objSort() {
+        var args = arguments,
+            array = args[0],
+            case_sensitive, keys_length, key, desc, a, b, i;
+    
+        if (typeof arguments[arguments.length - 1] === 'boolean') {
+            case_sensitive = arguments[arguments.length - 1];
+            keys_length = arguments.length - 1;
+        } else {
+            case_sensitive = false;
+            keys_length = arguments.length;
+        }
+    
+        return array.sort(function (obj1, obj2) {
+
+           // console.log ("obj1="+JSON.stringify(obj1));
+          //  console.log ("obj2="+JSON.stringify(obj2));
+            for (i = 1; i < keys_length; i++) {
+                key = args[i];
+                if (typeof key !== 'string') {
+                   // console.log ("ARGS I 0"+args[i][0]);
+                    desc = key[1];
+                    key = key[0];
+                    a = obj1["Event"][args[i][0]];
+                    b = obj2["Event"][args[i][0]];
+                } else {
+                    desc = false;
+                    a = obj1["Event"][args[i]];
+                    b = obj2["Event"][args[i]];
+                }
+               // console.log ("a="+a);
+              //  console.log ("b="+b);
+
+                if (case_sensitive === false && typeof a === 'string') {
+                    a = a.toLowerCase();
+                    b = b.toLowerCase();
+                }
+    
+                if (! desc) {
+                    if (a < b) return -1;
+                    if (a > b) return 1;
+                } else {
+                    if (a > b) return -1;
+                    if (a < b) return 1;
+                }
+            }
+            return 0;
+        });
+    } //end of objSort() function
+
     function getMonitorDimensions(mid) {
 
         for (var i=0; i < monitors.length; i++) {
@@ -50,7 +101,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
             if (mid==monitors[i].Monitor.Id) {
                 return {
                     width: monitors[i].Monitor.Width,
-                    height:monitors[i].Monitor.Height
+                    height:monitors[i].Monitor.Height,
+                    orientation:monitors[i].Monitor.Orientation
                 }
             }
         }
@@ -226,6 +278,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
             $scope.type = $translate.instant('kMomentMenuByScore');
         else if (sortCondition == 'StartTime')
             $scope.type = $translate.instant('kMomentMenuByTime');
+            else if (sortCondition == 'MonitorId')
+            $scope.type = $translate.instant('kMomentMenuByMonitor');
 
         $scope.apiurl = NVRDataModel.getLogin().apiurl;
         moments.length = 0;
@@ -242,10 +296,12 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         //https:///zm/api/events/index/AlarmFrames%20%3E=:1/StartTime%20%3E=:2017-12-16%2009:08:50.json?sort=TotScore&direction=desc
 
         var ld = NVRDataModel.getLogin();
-        var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1/StartTime >=:"+timeFrom+".json?sort="+sortCondition+"direction=desc";
+
+        // in API, always sort by StartTime so all monitors are represented
+        var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1/StartTime >=:"+timeFrom+".json?sort="+"StartTime"+"&direction=desc";
         NVRDataModel.debug ("Retrieving "+ myurl);
        
-        $http.get(myurl+'/&page='+page)
+        $http.get(myurl+'&page='+page)
         .then (function (rawdata) {
 
             
@@ -259,6 +315,38 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
               if (d) {
                 data.events[i].Event.width = d.width;
                 data.events[i].Event.height= d.height;
+
+
+                var ratio;
+                var mw = d.width;
+                var mh = d.height;
+                var mo = d.orientation;
+
+                // scale by X if width > height                                
+                if (mw > mh ) {
+                    ratio = mw / zm.thumbWidth;
+                    data.events[i].Event.thumbWidth = 200;
+                    data.events[i].Event.thumbHeight = Math.round(mh/ratio);
+                }
+                else {
+
+                    ratio = mh / zm.thumbWidth;
+                    data.events[i].Event.thumbHeight = 200;
+                    data.events[i].Event.thumbWidth = Math.round(mw/ratio);
+
+                }
+                if (mo != 0) {
+
+                    /*myevents[i].Event.Rotation = {
+                        'transform' : 'rotate('+mo+'deg'+')'
+                    };   */
+
+                    var tmp = data.events[i].Event.thumbHeight;
+                    data.events[i].Event.thumbHeight =data.events[i].Event.thumbWidth;
+                    data.events[i].Event.thumbWidth = tmp;
+                    
+                } // swap 
+
                 //console.log (d.width+"*"+d.height);
 
               }
@@ -274,6 +362,9 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
                var mid = data.events[i].Event.MonitorId;
                data.events[i].Event.order = i;
+
+
+              // console.log ("---> PUSHING "+data.events[i].Event.StartTime);
                moments.push (data.events[i]);
            }
 
@@ -286,6 +377,23 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
                     return da>db ? -1 : da<db ? 1 : 0;
                 });
            }
+
+           // if we use any other condition, we need to first sort by cond and then time
+           if (sortCondition != "StartTime") {
+               console.log ("SORTING BY "+sortCondition);
+            moments = objSort(moments,[sortCondition, true],["dateObject", true]);
+           }
+
+
+          /* if (sortCondition == "MonitorId") {
+            moments.sort(function(a, b) {
+                var da = a.Event.MonitorId;
+                var db = b.Event.MonitorId;
+                return da>db ? -1 : da<db ? 1 : 0;
+            });
+       }*/
+
+
            
 
            $scope.moments = moments;
