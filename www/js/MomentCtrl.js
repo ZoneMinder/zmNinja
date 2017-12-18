@@ -442,6 +442,10 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     }
 
+    function processEvents(data, pages) {
+
+    }
+
     $scope.$on('$ionicView.beforeLeave', function()
     {
         NVRDataModel.debug ("Destroying masonry");
