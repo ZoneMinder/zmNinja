@@ -505,10 +505,23 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
           moments = objSort(moments, [sortCondition, ascordesc], ["dateObject", true]);
         }
 
-        $scope.moments = moments;
+        if (moments.length && !moments[0].Event.MaxScoreFramed) {
+            $ionicPopup.alert({
+                title: $translate.instant('kNote'),
+                template: "{{'kApiUpgrade' | translate }}",
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
+              });
+        }
+
+        else {
+            $scope.moments = moments;
         $timeout(function () {
           initMasonry();
         }, 300);
+
+        }
+        
 
         /* if (sortCondition == "MonitorId") {
         moments.sort(function(a, b) {
