@@ -2,14 +2,18 @@
     <ion-nav-title>{{'kMoment24Heading' | translate}} {{type}}</ion-nav-title>
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        <button class="button button-icon button-clear ion-gear-b" ng-click="hideUnhide()"></button>
+
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
 
-            <a  class="button button-icon icon ion-android-more-vertical" ng-click="toggleSubMenu()" ;></a>
+            <a  class="button button-icon icon ion-chevron-down" ng-click="toggleSubMenu()" ;></a>
 
-            <a  class="button button-icon icon ion-chevron-down" ng-click="popover.show($event)" ;>&nbsp;&nbsp;&nbsp;</a>
+            <a  class="button button-icon icon ion-android-more-vertical " ng-click="popover.show($event)" ;>&nbsp;&nbsp;&nbsp;</a>
+
+
             
     </ion-nav-buttons>
     <ion-content class="padding" delegate-handle="moment-delegate" overflow-scroll="false" mouse-wheel-scroll style="background-color:#444444" >
