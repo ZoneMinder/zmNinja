@@ -1442,7 +1442,7 @@ angular.module('zmApp', [
         var requireLogin = toState.data.requireLogin;
 
 
-        console.log("HERE");
+        //console.log("HERE");
 
         if ($rootScope.apiValid == false && toState.name != 'invalidapi' && toState.data.requireLogin == true) {
           event.preventDefault();
@@ -1659,7 +1659,7 @@ angular.module('zmApp', [
       });
 
       function continueInitialInit() {
-        console.log("continueinit");
+      //  console.log("continueinit");
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.pixelRatio = pixelRatio;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
@@ -1670,16 +1670,16 @@ angular.module('zmApp', [
         $rootScope.$stateParams = $stateParams;
 
         if (window.cordova && window.cordova.plugins.Keyboard) {
-          console.log("no keyboard");
+         // console.log("no keyboard");
           // cordova.plugins.Keyboard.disableScroll(true);
         }
         if (window.StatusBar) {
           // org.apache.cordova.statusbar required
-          console.log("statusbar");
+        //  console.log("statusbar");
           NVRDataModel.log("Updating statusbar");
           StatusBar.styleDefault();
           if ($rootScope.platformOS=='ios') {
-            console.log ("<<<<<<<<<<<<<<<< OVERLAY");
+           // console.log ("<<<<<<<<<<<<<<<< OVERLAY");
             StatusBar.overlaysWebView(false);
           }
           
@@ -1687,12 +1687,12 @@ angular.module('zmApp', [
         }
 
         if (window.cordova) {
-          console.log("Hiding splash");
+         // console.log("Hiding splash");
           $cordovaSplashscreen.hide();
 
 
 
-          console.log("app version");
+         // console.log("app version");
           cordova.getAppVersion.getVersionNumber().then(function (version) {
             appVersion = version;
             NVRDataModel.log("App Version: " + appVersion);
@@ -1700,7 +1700,7 @@ angular.module('zmApp', [
           });
         }
 
-        console.log("file logger");
+       // console.log("file logger");
         $fileLogger.checkFile().then(function (resp) {
           if (parseInt(resp.size) > zm.logFileMaxSize) {
             console.log("inside file logger");

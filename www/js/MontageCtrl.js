@@ -244,7 +244,7 @@ angular.module('zmApp.controllers')
         {
 
             var result = img.isLoaded ? 'loaded' : 'broken';
-            NVRDataModel.debug('~~loaded image is ' + result + ' for ' + img.img.src);
+           // NVRDataModel.debug('~~loaded image is ' + result + ' for ' + img.img.src);
 
             // lay out every image if a pre-arranged position has not been found
 

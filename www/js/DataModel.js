@@ -355,11 +355,11 @@ angular.module('zmApp.controllers')
             if (!positionFound) {
               if (loginData.currentMontageProfile != $translate.instant('kMontageDefaultProfile')) {
                 monitors[m].Monitor.listDisplay = 'noshow';
-                console.log("*************DISABLE NEW MONITOR");
+                //console.log("*************DISABLE NEW MONITOR");
               } else // make sure we add it because its show all view
               {
                 monitors[m].Monitor.listDisplay = 'show';
-                console.log("*************ENABLE NEW MONITOR");
+                //console.log("*************ENABLE NEW MONITOR");
               }
 
 
@@ -487,7 +487,7 @@ angular.module('zmApp.controllers')
         },
 
         setLatestBlogPostChecked: function (val) {
-          console.log(">>>>>>>>>>>> Setting blog date: " + val);
+          //console.log(">>>>>>>>>>>> Setting blog date: " + val);
           latestBlogPostChecked = val;
           localforage.setItem("latestBlogPostChecked", latestBlogPostChecked);
         },
@@ -1475,10 +1475,10 @@ angular.module('zmApp.controllers')
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors.json";
             //console.log ("API:"+myurl);
-            console.log ("gettign zms port");
+          //  console.log ("gettign zms port");
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
-                debug ("ZMS Multiport reported: "+zmsPort);
+                //debug ("ZMS Multiport reported: "+zmsPort);
                 $http.get(myurl /*,{timeout:15000}*/ )
                   .success(function (data) {
                     //console.log("HTTP success got " + JSON.stringify(data.monitors));
@@ -1542,14 +1542,14 @@ angular.module('zmApp.controllers')
                             }
 
                             st += s.host;
-                            console.log ("STEP 1: ST="+st);
+                           // console.log ("STEP 1: ST="+st);
 
                             if (zmsPort <=0 )
                             {
                                 if (p.port || s.port) {
                                     st += (s.port ? ":" + s.port : ":" + p.port);
                                     streamingurl = st;
-                                    console.log ("STEP 2 no ZMS: ST="+st);
+                                  //  console.log ("STEP 2 no ZMS: ST="+st);
       
                                   }
                             }
@@ -1559,7 +1559,7 @@ angular.module('zmApp.controllers')
 
                                 if (p.port || s.port)
                                      st += (s.port ? ":" + s.port : ":" + p.port);
-                                console.log ("STEP 2: ST="+st);
+                            //    console.log ("STEP 2: ST="+st);
                           
                             }
                             
@@ -1569,17 +1569,17 @@ angular.module('zmApp.controllers')
                             st += (s.path ? s.path : p.path);
                             streamingurl += (s.path ? s.path : p.path);
 
-                            console.log ("STEP 3: ST="+st);
+                            //console.log ("STEP 3: ST="+st);
 
 
-                            console.log ("----------STREAMING URL PARSED AS " + st);
+                            //console.log ("----------STREAMING URL PARSED AS " + st);
 
                             monitors[i].Monitor.streamingURL = st;
                             monitors[i].Monitor.baseURL = baseurl;
-                            console.log ("** Streaming="+st+" **base="+baseurl);
+                            //console.log ("** Streaming="+st+" **base="+baseurl);
                             // starting 1.30 we have fid=xxx mode to return images
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
-                            debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
+                          //  debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
 
                             //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
                             //debug ("Base URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.baseURL );
