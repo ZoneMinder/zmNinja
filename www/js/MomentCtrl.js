@@ -545,7 +545,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var ld = NVRDataModel.getLogin();
 
     $scope.gridSize = ld.momentGridSize;
-    excludeMonitors = JSON.parse(ld.momentMonitorFilter);
+    excludeMonitors = JSON.parse(ld.momentMonitorFilter || []);
     console.log ("RETRIEVED EXCLUDE="+JSON.stringify(excludeMonitors));
     constructMask();
     $scope.isSubMenu = false;
