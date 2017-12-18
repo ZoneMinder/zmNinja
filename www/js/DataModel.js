@@ -170,6 +170,7 @@ angular.module('zmApp.controllers')
         'isFullScreen': false,
         'reloadInMontage': false,
         'momentGridSize': 40,
+        'momentMonitorFilter': []
 
 
       };
@@ -1025,6 +1026,16 @@ angular.module('zmApp.controllers')
                     loginData.momentGridSize = 40;
 
                   }
+
+                  if (typeof loginData.momentMonitorFilter == 'undefined') {
+
+                    loginData.momentMonitorFilter = JSON.stringify([]);
+
+                  }
+                  
+
+                  
+                  
 
                   log("DataModel init recovered this loginData as " + JSON.stringify(loginData));
                 } else {
