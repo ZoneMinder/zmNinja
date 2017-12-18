@@ -432,9 +432,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     EventServer.refresh();
                                     if ($rootScope.tappedNotification == 0)
                                     {
-                                        console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
+                                        //console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
                                         var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
-                                        NVRDataModel.debug("logging state transition");
+                                      //  NVRDataModel.debug("logging state transition");
                                         NVRDataModel.debug("Transitioning state to: " +
                                             statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
 
