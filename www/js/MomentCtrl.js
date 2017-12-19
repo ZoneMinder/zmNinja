@@ -221,33 +221,44 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   };
 
-  $scope.toggleCollapse = function (mid, eid) {
+
+// When a user taps on collapse on an eid,
+// all events after that for the same monitor should be collapsed
+// events before that should remain
+
+// when a user expands back on an eid, all eids after that for the
+// same monitor should expand, even if they were grouped earlier
+
+  $scope.toggleCollapse = function (mid, eid, ndx) {
     NVRDataModel.debug("toggling collapse for:" + mid);
     var collapseCount = 0;
-    collapseId = 0;
-    for (var i = 0; i < $scope.moments.length; i++) {
-      if ($scope.moments[i].Event.Id == eid) {
+    var hide = false;
+  
 
-        $scope.moments[i].Event.hide = false;
-        collapseId = i;
+    $scope.moments[ndx].Event.hide = false;
+    if ($scope.moments[ndx].Event.icon == 'ion-code-working') {
+      // we want to hide 
+      hide = true;
+      $scope.moments[ndx].Event.icon = 'ion-images';
+    }
+    else { // we want to show
+      hide = false;
+      $scope.moments[ndx].Event.icon = 'ion-code-working';
+    }
 
-        $scope.moments[i].Event.icon = $scope.moments[i].Event.icon == "ion-code-working" ? "ion-images" : "ion-code-working";
-
-
-
-
-      } else if ($scope.moments[i].Event.MonitorId == mid) {
-        // same monitor, but different ID
-
-        $scope.moments[i].Event.hide = !$scope.moments[i].Event.hide;
-        if ($scope.moments[i].Event.hide) collapseCount++;
+    for (var i = ndx+1; i < $scope.moments.length; i++ ) {
+     if ($scope.moments[i].Event.MonitorId == mid) {
+        $scope.moments[i].Event.hide = hide;
+        $scope.moments[i].Event.icon = "ion-code-working";
+        $scope.moments[i].Event.collapseCount = "";
+        if (hide) collapseCount++;
         //console.log ("Hiding " + i);
       }
     } //for
-    if (collapseCount) {
-      $scope.moments[collapseId].Event.collapseCount = collapseCount;
+    if (hide) {
+      $scope.moments[ndx].Event.collapseCount = collapseCount;
     } else {
-      $scope.moments[collapseId].Event.collapseCount = "";
+      $scope.moments[ndx].Event.collapseCount = "";
     }
 
 
