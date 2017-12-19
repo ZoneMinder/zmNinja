@@ -458,7 +458,30 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   }
 
 
-  function getMoments(sortCondition) {
+  $scope.changeFrom = function (dirn) {
+
+    var f;
+    if (dirn==1) { // add a day
+      t = moment(timeTo);
+      t.add (1, "day");
+      if (t > moment()) {
+        NVRDataModel.log ("Future date selected, ignoring");
+        return;
+      }
+      console.log ("T="+t.format("MMM DD,YYYY HH:mm"));
+    }
+    else {
+      t = moment(timeTo);
+      t.subtract (1, "day");
+      console.log ("T="+t.format("MMM DD,YYYY HH:mm"));
+
+    }
+    var newTo = t.format("YYYY-MM-DD HH:mm:ss");
+    getMoments(momentType,newTo);
+
+  };
+
+  function getMoments(sortCondition, to) {
 
     if (sortCondition == 'MaxScore')
       $scope.type = $translate.instant('kMomentMenuByScore');
@@ -471,11 +494,28 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     moments.length = 0;
 
     NVRDataModel.setAwake(false);
-    var tmptimeto = moment();
-    var tmptimefrom = tmptimeto.subtract(24, 'hours');
+
+    var tmptimeto, tmptimefrom;
+
+    if (!to)  {// assume current time
+      tmptimeto = moment();
+    }
+    else {
+      tmptimeto = moment(to);
+    }
+
+     
+    tmptimefrom = angular.copy(tmptimeto);
+    tmptimefrom.subtract(24, 'hours'); // mutable, hence deep copy above
+
+
     var page = 1;
     timeFrom = tmptimefrom.format('YYYY-MM-DD HH:mm:ss');
     timeTo = tmptimeto.format('YYYY-MM-DD HH:mm:ss');
+
+
+    $scope.displayTimeFrom = moment(timeFrom).format("MMM DD,"+NVRDataModel.getTimeFormat());
+    $scope.displayTimeTo = moment(timeTo).format("MMM DD,"+NVRDataModel.getTimeFormat());
 
     NVRDataModel.debug("Moments from " + timeFrom + " to " + timeTo);
 
@@ -484,7 +524,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var ld = NVRDataModel.getLogin();
 
     // in API, always sort by StartTime so all monitors are represented
-    var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1"+excludeMonitorsFilter+"/StartTime >=:" + timeFrom + ".json?sort=" + "StartTime" + "&direction=desc";
+    var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1"+excludeMonitorsFilter+"/StartTime >=:" + timeFrom + "/StartTime <=:"+timeTo+ ".json?sort=" + "StartTime" + "&direction=desc";
     NVRDataModel.debug("Retrieving " + myurl);
 
 
@@ -498,6 +538,11 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       ])
       .then(function () {
         NVRDataModel.debug ("$a.all Parallel queries completed");
+
+        if (!moments.length) {
+          $scope.loadingStatus = $translate.instant('kMomentNoneFound');
+        }
+
         // not really sure we need this
         // will see later
         if (sortCondition == "StartTime") {
@@ -570,6 +615,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     var ld = NVRDataModel.getLogin();
 
+    $scope.loadingStatus = $translate.instant('kLoading');
     $scope.gridSize = ld.momentGridSize;
     excludeMonitors = JSON.parse(ld.momentMonitorFilter || []);
     console.log ("RETRIEVED EXCLUDE="+JSON.stringify(excludeMonitors));
@@ -591,7 +637,6 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   $scope.$on('$ionicView.afterEnter', function () {
 
 
-  
 
     
     $ionicPopover.fromTemplateUrl('templates/moment-popover.html', {

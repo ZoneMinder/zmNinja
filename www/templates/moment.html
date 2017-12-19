@@ -16,6 +16,12 @@
 
             
     </ion-nav-buttons>
+
+    <div class="events-float-filter" >
+            {{displayTimeFrom}} - {{displayTimeTo}}</span>
+    </div>
+
+
     <ion-content class="padding" delegate-handle="moment-delegate" overflow-scroll="false" mouse-wheel-scroll style="background-color:#444444" >
 
 
@@ -34,13 +40,26 @@
                             </li>
                         </ul>
                 </div>
+
+                <div id="flyoutmenu" style="float:right">
+                        <ul>
+                            <li>
+                                <a href="" ng-click="changeFrom(-1)"> <i class="ion-chevron-left"></i></a>
+                            </li>
+                            <li>
+                                <a href="" ng-click="changeFrom(1)"> <i class="ion-chevron-right"></i></a>
+                            </li>
+                            
+                        </ul>
+                </div>
+
             <div style="clear: both;"></div>
             <br/>
         </div>
         
         
         <div style="color:white" ng-if="!moments.length">
-            Nothing to show yet...
+           {{loadingStatus}}
         </div>
 
         <div class="grid" id="mygrid">
