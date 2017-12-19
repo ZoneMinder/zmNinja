@@ -343,7 +343,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
                 $scope.modal.show();
             });
 
-  }
+  };
 
   function humanizeTime(str) {
     //console.log ("Time:"+str+" TO LOCAL " + moment(str).local().toString());
@@ -505,7 +505,9 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
           moments = objSort(moments, [sortCondition, ascordesc], ["dateObject", true]);
         }
 
-        if (moments.length && !moments[0].Event.MaxScoreFramed) {
+        // check the very first element for presence of maxscoreframe id
+        // if its not there, we can't show snuff
+        if (moments.length && !moments[0].Event.MaxScoreFrameId) {
             $ionicPopup.alert({
                 title: $translate.instant('kNote'),
                 template: "{{'kApiUpgrade' | translate }}",
