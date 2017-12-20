@@ -100,7 +100,12 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
       data.events[i].Event.hide = false;
       data.events[i].Event.icon = "ion-code-working";
-      data.events[i].Event.baseURL = NVRDataModel.getBaseURL(data.events[i].Event.MonitorId);
+      //data.events[i].Event.baseURL = NVRDataModel.getBaseURL(data.events[i].Event.MonitorId);
+
+      // huh? why did I need the above?
+      data.events[i].Event.baseURL = NVRDataModel.getLogin().url;
+
+
       data.events[i].Event.monitorName = NVRDataModel.getMonitorName(data.events[i].Event.MonitorId);
 
       data.events[i].Event.dateObject = new Date(data.events[i].Event.StartTime);
@@ -192,6 +197,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
 
     $scope.isSubMenu = !$scope.isSubMenu;
+    if ($scope.isSubMenu)
+      $ionicScrollDelegate.$getByHandle("moment-delegate").scrollTop();
     //($scope.isSubMenu);
   };
 
@@ -415,6 +422,47 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     }
 
   };
+
+  $scope.playEvent = function (event) {
+
+    $scope.currentEvent = event;
+    $scope.event = event;
+    $scope.monitors = monitors;
+    NVRDataModel.setAwake(NVRDataModel.getKeepAwake());
+    $scope.followSameMonitor = "0";
+    $scope.mycarousel = {
+      index: 0
+  };
+
+  $scope.ionRange = {
+      index: 1
+  };
+
+    $ionicModal.fromTemplateUrl('templates/events-modal.html',
+            {
+                scope: $scope,
+                animation: 'slide-in-up',
+                id: 'footage',
+            })
+            .then(function(modal)
+            {
+                $scope.modal = modal;
+
+                $ionicLoading.show(
+                {
+                    template: $translate.instant('kPleaseWait') + "...",
+                    noBackdrop: true,
+                    duration: 10000
+                });
+
+                $scope.modal.show();
+
+                var ld = NVRDataModel.getLogin();
+
+            });
+
+
+  }
 
   $scope.showThumbnail = function (b, f) {
 
