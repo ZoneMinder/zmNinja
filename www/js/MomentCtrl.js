@@ -197,6 +197,12 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
 
     $scope.isSubMenu = !$scope.isSubMenu;
+
+    var ld = NVRDataModel.getLogin();
+    ld.enableMomentSubMenu = $scope.isSubMenu;
+    NVRDataModel.setLogin(ld);
+
+
     if ($scope.isSubMenu)
       $ionicScrollDelegate.$getByHandle("moment-delegate").scrollTop();
     //($scope.isSubMenu);
@@ -263,7 +269,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       }
     } //for
     if (hide) {
-      $scope.moments[ndx].Event.collapseCount = collapseCount;
+      // +1 for the marked frame which doesn't get counted
+      $scope.moments[ndx].Event.collapseCount = collapseCount+1;
     } else {
       $scope.moments[ndx].Event.collapseCount = "";
     }
@@ -310,7 +317,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         }
 
     }
-    console.log ("ENDED");
+    //console.log ("ENDED");
     constructMask();
 
     var ld = NVRDataModel.getLogin();
@@ -462,7 +469,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
             });
 
 
-  }
+  };
 
   $scope.showThumbnail = function (b, f) {
 
@@ -668,7 +675,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     excludeMonitors = JSON.parse(ld.momentMonitorFilter || []);
     console.log ("RETRIEVED EXCLUDE="+JSON.stringify(excludeMonitors));
     constructMask();
-    $scope.isSubMenu = false;
+    $scope.isSubMenu = ld.enableMomentSubMenu;
 
     monitors = angular.copy(message);
 
