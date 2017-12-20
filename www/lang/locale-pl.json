@@ -214,6 +214,7 @@
     "kMomentMenuByMonitor"       :"po kamerze",
     "kMomentMenuByTime"          :"po czasie",
     "kMomentMenuByScore"         :"po punktacji",
+    "kMomentNoneFound"           :"Nie znaleziono zdarzeń",
     "kMonAlarmed"                :"zaalarmowany",
     "kMonAlert"                  :"alert",
     "kMonIdle"                   :"bezczynny",
