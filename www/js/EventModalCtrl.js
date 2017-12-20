@@ -968,7 +968,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         NVRDataModel.log(">>>Modal was exited, not starting checkAllEvents");
                     }
 
-                }, 5000);
+                }, 2000);
             }
 
         }

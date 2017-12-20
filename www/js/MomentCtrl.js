@@ -115,6 +115,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       var mid = data.events[i].Event.MonitorId;
       data.events[i].Event.order = i;
 
+      data.events[i].Event.pinned = false;
+      data.events[i].Event.pinnedIcon = "ion-pin";
 
       // console.log ("---> PUSHING "+data.events[i].Event.StartTime);
       moments.push(data.events[i]);
@@ -234,6 +236,18 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   };
 
+  $scope.togglePin =function(ndx) {
+    $scope.moments[ndx].Event.pinned = !$scope.moments[ndx].Event.pinned;
+    if ($scope.moments[ndx].Event.pinned) {
+      $scope.moments[ndx].Event.pinnedIcon ="animated infinite flash ion-pin";
+    }
+    else {
+      $scope.moments[ndx].Event.pinnedIcon ="ion-pin";
+
+    }
+
+
+  };
 
 // When a user taps on collapse on an eid,
 // all events after that for the same monitor should be collapsed
@@ -260,7 +274,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     }
 
     for (var i = ndx+1; i < $scope.moments.length; i++ ) {
-     if ($scope.moments[i].Event.MonitorId == mid) {
+     if ($scope.moments[i].Event.MonitorId == mid && !$scope.moments[i].Event.pinned ) {
         $scope.moments[i].Event.hide = hide;
         $scope.moments[i].Event.icon = "ion-code-working";
         $scope.moments[i].Event.collapseCount = "";
@@ -394,7 +408,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       itemSelector: '.grid-item',
       // columnWidth: 10
       horizontalOrder: true,
-      gutter: 2,
+      gutter: 0,
       initLayout: true,
       percentPosition: true,
 
