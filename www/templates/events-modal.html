@@ -72,13 +72,14 @@
                     <canvas style="padding-left:23px;
                         padding-right:23px;" id="eventchart" width="auto" height="20"></canvas>
                 </div>
+                
                 <div ng-if="checkEventOn" id="event_slider" data-tap-disabled="false">
                     <div class="range">
                         <input on-drag="enableSliderBlock()" on-release="youChangedSlider()" type="range" min="0" max="{{currentEventDuration}}" ng-model="sliderProgress.progress">
                     </div>
                 </div>
                 <div id="event_rate_text">
-                    @{{currentRate}}x {{'kAt' | translate}}:{{currentProgress.progress}}s
+                    @{{currentRate}}x {{'kAt' | translate}}:{{currentProgress.progress}}s 
                 </div>
             </div>
             
