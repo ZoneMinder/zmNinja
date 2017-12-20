@@ -171,7 +171,7 @@ angular.module('zmApp.controllers')
         'reloadInMontage': false,
         'momentGridSize': 40,
         'momentMonitorFilter': [],
-        'enableMomentSubMenu': false,
+        'enableMomentSubMenu': true,
 
 
       };
@@ -1030,7 +1030,7 @@ angular.module('zmApp.controllers')
 
                   if (typeof loginData.enableMomentSubMenu == 'undefined') {
 
-                    loginData.enableMomentSubMenu = false;
+                    loginData.enableMomentSubMenu = true;
 
                   }
 

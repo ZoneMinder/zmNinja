@@ -239,7 +239,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   $scope.togglePin =function(ndx) {
     $scope.moments[ndx].Event.pinned = !$scope.moments[ndx].Event.pinned;
     if ($scope.moments[ndx].Event.pinned) {
-      $scope.moments[ndx].Event.pinnedIcon ="animated infinite flash ion-pin";
+      $scope.moments[ndx].Event.pinnedIcon =" ion-pin assertive";
     }
     else {
       $scope.moments[ndx].Event.pinnedIcon ="ion-pin";
@@ -518,7 +518,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   };
 
   $scope.getMoments = function (cond) {
-    momentType = cond;
+    if (!cond)  cond = momentType;
     getMoments(cond);
   };
 
@@ -670,6 +670,10 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   });
 
 
+  $scope.toggleIcons = function() {
+
+    $scope.showIcons = !$scope.showIcons;
+  };
 
   $scope.$on('$ionicView.beforeEnter', function () {
     /*var w = Math.round(parseInt($rootScope.devWidth) / parseInt($rootScope.pixelRatio)) ;
@@ -681,6 +685,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     console.log ("old P="+p);
     p = Math.ceil(p/5)*5;
     console.log ("P="+p);*/
+
+    $scope.showIcons = true;
 
     var ld = NVRDataModel.getLogin();
 
