@@ -170,7 +170,8 @@ angular.module('zmApp.controllers')
         'isFullScreen': false,
         'reloadInMontage': false,
         'momentGridSize': 40,
-        'momentMonitorFilter': []
+        'momentMonitorFilter': [],
+        'enableMomentSubMenu': false,
 
 
       };
@@ -1024,6 +1025,12 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.momentGridSize == 'undefined') {
 
                     loginData.momentGridSize = 40;
+
+                  }
+
+                  if (typeof loginData.enableMomentSubMenu == 'undefined') {
+
+                    loginData.enableMomentSubMenu = false;
 
                   }
 
@@ -2067,8 +2074,8 @@ angular.module('zmApp.controllers')
         getStreamingURL: function (id) {
           var idnum = parseInt(id);
           for (var i = 0; i < monitors.length; i++) {
+            // console.log ("Matched, exiting getMonitorname");
             if (parseInt(monitors[i].Monitor.Id) == idnum) {
-              // console.log ("Matched, exiting getMonitorname");
               return monitors[i].Monitor.streamingURL;
             }
 
