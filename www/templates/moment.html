@@ -1,89 +1,110 @@
-<ion-view cache-view="false" >
-    <ion-nav-title>{{'kMoment24Heading' | translate}} {{type}}</ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        <button class="button button-icon button-clear ion-gear-b" ng-click="hideUnhide()"></button>
+<ion-view cache-view="false">
+  <ion-nav-title>{{'kMoment24Heading' | translate}} {{type}}</ion-nav-title>
+  <ion-nav-buttons side="left">
+    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    <button class="button button-icon button-clear ion-gear-b" ng-click="hideUnhide()"></button>
 
-        <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-    </ion-nav-buttons>
+    <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
+      ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+  </ion-nav-buttons>
 
-    <ion-nav-buttons side="right">
+  <ion-nav-buttons side="right">
 
-            <a  class="button button-icon icon ion-chevron-down" ng-click="toggleSubMenu()" ;></a>
+    <a class="button button-icon icon ion-chevron-down" ng-click="toggleSubMenu()" ;></a>
 
-            <a  class="button button-icon icon ion-android-more-vertical " ng-click="popover.show($event)" ;>&nbsp;&nbsp;&nbsp;</a>
+    <a class="button button-icon icon ion-android-more-vertical " ng-click="popover.show($event)" ;>&nbsp;&nbsp;&nbsp;</a>
 
 
-            
-    </ion-nav-buttons>
 
-    <div class="events-float-filter" >
-            {{displayTimeFrom}} - {{displayTimeTo}}</span>
+  </ion-nav-buttons>
+
+  <div class="events-float-filter">
+    {{displayTimeFrom}} - {{displayTimeTo}}</span>
+  </div>
+
+
+  <ion-content delegate-handle="moment-delegate" overflow-scroll="false" mouse-wheel-scroll style="background-color:#444444">
+    <div ng-if="isSubMenu">
+      <br/>
+      <div id="flyoutmenu" style="float:left">
+        <ul>
+          <li>
+            <a href="" ng-click="sizeChanged(1)">
+              <i class="ion-plus-circled"></i>
+            </a>
+          </li>
+          <li>
+            <a href="" ng-click="sizeChanged(-1)">
+              <i class="ion-minus-circled"></i>
+            </a>
+          </li>
+          <li>
+            <a href="" ng-click="reLayout()">
+              <i class="ion-grid"></i>
+            </a>
+          </li>
+          <li>
+            <a href="" ng-click="toggleIcons()">
+              <i ng-class="showIcons? 'ion-eye':'ion-eye-disabled'"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div id="flyoutmenu" style="float:right">
+        <ul>
+          <li>
+            <a href="" ng-click="changeFrom(-1)">
+              <i class="ion-chevron-left"></i>
+            </a>
+          </li>
+          <li>
+            <a href="" ng-click="getMoments()">
+              <i class="ion-location"></i>
+            </a>
+          </li>
+          <li>
+            <a href="" ng-click="changeFrom(1)">
+              <i class="ion-chevron-right"></i>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <div style="clear: both;"></div>
+      <br/>
     </div>
 
 
-    <ion-content delegate-handle="moment-delegate" overflow-scroll="false" mouse-wheel-scroll style="background-color:#444444" >
+    <div style="color:white; text-align:center" ng-if="!moments.length">
+      {{loadingStatus}}
+    </div>
+
+    <div class="grid" id="mygrid">
 
 
-        <div ng-if="isSubMenu">
-            <br/>
-                <div id="flyoutmenu" style="float:left">
-                        <ul>
-                            <li>
-                                <a href="" ng-click="sizeChanged(1)"> <i class="ion-plus-circled"></i></a>
-                            </li>
-                            <li>
-                                <a href="" ng-click="sizeChanged(-1)"> <i class="ion-minus-circled"></i></a>
-                            </li>
-                            <li>
-                                    <a href="" ng-click="reLayout()"> <i class="ion-grid"></i></a>
-                            </li>
-                            <li>
-                                <a href="" ng-click="toggleIcons()"> <i ng-class="showIcons? 'ion-eye':'ion-eye-disabled'"></i></a>
-                        </li>
-                        </ul>
-                </div>
+      <figure class="grid-item grid-item-{{gridSize}}" ng-repeat="moment in moments | onlyEnabledMoments">
+        <figcaption ng-if="showIcons" class="normal-figheader">&nbsp;{{moment.Event.monitorName}}
+          <span style="float:right">
+            <button class="button button-small button-icon icon  {{moment.Event.icon}}" ng-click="toggleCollapse(moment.Event.MonitorId, moment.Event.Id, $index)"></button>{{moment.Event.collapseCount}}&nbsp;</span>
+        </figcaption>
+        <img image-spinner-src="{{moment.Event.baseURL}}/index.php?view=image&fid={{moment.Event.MaxScoreFrameId}}&width={{moment.Event.thumbWidth*2}}&height={{moment.Event.thumbHeight*2}}"
+          img-spinner-w="{{moment.Event.width}}" img-spinner-h="{{moment.Event.height}}" image-spinner-loader="lines" on-tap="playEvent(moment)"
+        />
 
-                <div id="flyoutmenu" style="float:right">
-                        <ul>
-                            <li>
-                                <a href="" ng-click="changeFrom(-1)"> <i class="ion-chevron-left"></i></a>
-                            </li>
-                            <li>
-                                <a href="" ng-click="getMoments()"> <i class="ion-location"></i></a>
-                            </li>
-                            <li>
-                                <a href="" ng-click="changeFrom(1)"> <i class="ion-chevron-right"></i></a>
-                            </li>
-                            
-                        </ul>
-                </div>
+        <figcaption ng-if="showIcons" class="normal-subfigcaption">
+          <span style="float:right">
+            <button class="button button-small button-icon icon  {{moment.Event.pinnedIcon}}" ng-click="togglePin( $index)"></button>
+          </span>
+        </figcaption>
+        <!--on-tap="showThumbnail(moment.Event.baseURL,moment.Event.MaxScoreFrameId)"-->
+        <figcaption ng-if="showIcons" class="normal-figcaption">&nbsp;{{moment.Event.humanizeTime}}
+          <span style="float:right">{{hourmin(moment.Event.StartTime)}}&nbsp;</span>
+        </figcaption>
+      </figure>
 
-            <div style="clear: both;"></div>
-            <br/>
-        </div>
-        
-        
-        <div style="color:white; text-align:center" ng-if="!moments.length">
-           {{loadingStatus}}
-        </div>
+    </div>
 
-        <div class="grid" id="mygrid">
-           
-           
-            <figure class="grid-item grid-item-{{gridSize}}" ng-repeat="moment in moments | onlyEnabledMoments">
-                <figcaption ng-if="showIcons" class="normal-figheader">&nbsp;{{moment.Event.monitorName}}<span style="float:right"><button class="button button-small button-icon icon  {{moment.Event.icon}}" ng-click="toggleCollapse(moment.Event.MonitorId, moment.Event.Id, $index)"></button>{{moment.Event.collapseCount}}&nbsp;</span></figcaption>
-                 <img   image-spinner-src="{{moment.Event.baseURL}}/index.php?view=image&fid={{moment.Event.MaxScoreFrameId}}&width={{moment.Event.thumbWidth*2}}&height={{moment.Event.thumbHeight*2}}" img-spinner-w="{{moment.Event.width}}"
-                 img-spinner-h="{{moment.Event.height}}" image-spinner-loader="lines" 
-            on-tap="playEvent(moment)"/>
-
-            <figcaption ng-if="showIcons" class="normal-subfigcaption"><span style="float:right"><button class="button button-small button-icon icon  {{moment.Event.pinnedIcon}}" ng-click="togglePin( $index)"></button></span></figcaption>
-            
-            <!--on-tap="showThumbnail(moment.Event.baseURL,moment.Event.MaxScoreFrameId)"-->
-            <figcaption  ng-if="showIcons" class="normal-figcaption">&nbsp;{{moment.Event.humanizeTime}}<span style="float:right">{{hourmin(moment.Event.StartTime)}}&nbsp;</span></figcaption>
-            </figure>
-            
-        </div>
-
-    </ion-content>
+  </ion-content>
 </ion-view>
