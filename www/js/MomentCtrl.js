@@ -55,6 +55,21 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     NVRDataModel.debug("Constructed Monitor Filter =" + excludeMonitorsFilter);
   }
 
+  //----------------------------------------------------------------
+  // calculates array index from eid
+  // we can't pass $index as events get collapsed messing up $index
+  //----------------------------------------------------------------
+
+  function getIndexFromEID(eid) {
+    var found = -1;
+    for (var i=0; i < moments.length; i++) {
+      if (parseInt(moments[i].Event.Id) == parseInt(eid)) {
+          found = i;
+          break; 
+      }
+    }
+    return found; // really should never be -1
+  }
 
   //----------------------------------------------------------------
   // Given a payload of raw events from JSON, massages it with more
@@ -227,7 +242,12 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   // down quickly.
   //----------------------------------------------------------------
 
-  $scope.togglePin = function (ndx) {
+  $scope.togglePin = function (eid) {
+    var ndx = getIndexFromEID(eid);
+    if (ndx == -1) {
+      NVRDataModel.log ("Uh oh, ndx returned -1, this should never happen. Event passed was "+eid); 
+      return;
+    }
     $scope.moments[ndx].Event.pinned = !$scope.moments[ndx].Event.pinned;
     if ($scope.moments[ndx].Event.pinned) {
       $scope.moments[ndx].Event.pinnedIcon = " ion-pin assertive";
@@ -249,11 +269,16 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   // when a user expands back on an eid, all eids after that for the
   // same monitor should expand, even if they were grouped earlier
 
-  $scope.toggleCollapse = function (mid, eid, ndx) {
+  $scope.toggleCollapse = function (mid, eid) {
     NVRDataModel.debug("toggling collapse for:" + mid);
     var collapseCount = 0;
     var hide = false;
 
+    var ndx = getIndexFromEID(eid);
+    if (ndx == -1) {
+      NVRDataModel.log ("Uh oh, ndx returned -1, this should never happen. Event passed was "+eid); 
+      return;
+    }
 
     $scope.moments[ndx].Event.hide = false;
     if ($scope.moments[ndx].Event.icon == 'ion-code-working') {
