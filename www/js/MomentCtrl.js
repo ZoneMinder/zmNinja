@@ -41,6 +41,26 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     }
   };
 
+
+  function jiggleAway() {
+    $timeout(function () {
+      masonry.reloadItems();
+
+    }, 100);
+
+    masonry.once('layoutComplete', function (laidOutItems) {
+      $timeout(function () {
+        masonry.layout();
+      }, 300);
+    });
+
+    $timeout(function () {
+      masonry.layout();
+      // $ionicScrollDelegate.$getByHandle("moment-delegate").scrollTop();
+
+    }, 600);
+  }
+
   //----------------------------------------------------------------
   // Given a set of monitor IDs, constructs a string that can
   // be directly passed to the cake PHP API (/MonitorId != X/...)
@@ -123,7 +143,6 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       data.events[i].Event.order = i; // likely not needed if I stop force sorting
 
       data.events[i].Event.pinned = false;
-      data.events[i].Event.pinnedIcon = "ion-pin";
       moments.push(data.events[i]);
 
 
@@ -249,15 +268,62 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       return;
     }
     $scope.moments[ndx].Event.pinned = !$scope.moments[ndx].Event.pinned;
-    if ($scope.moments[ndx].Event.pinned) {
-      $scope.moments[ndx].Event.pinnedIcon = " ion-pin assertive";
-    } else {
-      $scope.moments[ndx].Event.pinnedIcon = "ion-pin";
-
-    }
-
 
   };
+
+  $scope.toggleExpandOrCollapse = function() {
+   
+    if ($scope.expand) expandAll();
+    else collapseAll();
+    $scope.expand = !$scope.expand;
+
+  };
+
+ function expandAll() {
+    for (var i=0; i < $scope.moments.length; i++) {
+      $scope.moments[i].Event.hide = false;
+      $scope.moments[i].Event.icon = 'ion-code-working';
+      $scope.moments[i].Event.collapseCount = '';
+    }
+    jiggleAway();
+  }
+
+  function collapseAll() {
+
+    for (var i=0; i < monitors.length; i++) {
+      var firstFound = false;
+      var firstIndex = -1;
+      var collapseCount = 0;
+      for (var j=0; j < $scope.moments.length; j++) {
+        if ($scope.moments[j].Event.MonitorId == monitors[i].Monitor.Id) {
+
+          if (!firstFound) {
+            firstIndex = j; // remember this to create a collapsecount
+            $scope.moments[j].Event.hide = false;
+            $scope.moments[j].Event.icon = 'ion-images';
+            firstFound = true;
+          }
+          else  if (!$scope.moments[j].Event.pinned) {
+          // mid matches, but not first, and not pinned so collapse
+              $scope.moments[j].Event.hide = true;
+              $scope.moments[j].Event.icon = 'ion-code-working';
+              collapseCount++;
+          }
+        } // if same mid
+      } // moment for j
+      if (firstIndex !=-1) {
+        if (collapseCount>0) {
+          $scope.moments[firstIndex].Event.collapseCount = collapseCount;
+        }
+        else { // nothing to group
+          $scope.moments[firstIndex].Event.icon = 'ion-code-working';
+          $scope.moments[firstIndex].Event.collapseCount = "";
+        }
+
+      } // firstIndex
+    } // monitor for i
+    jiggleAway();
+  }
 
   //----------------------------------------------------------------
   // fold/unfold monitor groups
@@ -300,26 +366,18 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     } //for
     if (hide) {
       // +1 for the marked frame which doesn't get counted
-      $scope.moments[ndx].Event.collapseCount = collapseCount + 1;
+      if (collapseCount >0) {
+        $scope.moments[ndx].Event.collapseCount = collapseCount + 1;
+      }
+      else { // nothing to collapse
+        $scope.moments[ndx].Event.collapseCount = "";
+        $scope.moments[ndx].Event.icon = 'ion-code-working';
+
+      }
     } else {
       $scope.moments[ndx].Event.collapseCount = "";
     }
-    $timeout(function () {
-      masonry.reloadItems();
-
-    }, 100);
-
-    masonry.once('layoutComplete', function (laidOutItems) {
-      $timeout(function () {
-        masonry.layout();
-      }, 300);
-    });
-
-    $timeout(function () {
-      masonry.layout();
-      // $ionicScrollDelegate.$getByHandle("moment-delegate").scrollTop();
-
-    }, 600);
+    jiggleAway();
 
   };
 
@@ -710,6 +768,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   $scope.$on('$ionicView.beforeEnter', function () {
 
     $scope.showIcons = true;
+    $scope.expand = false;
     var ld = NVRDataModel.getLogin();
 
     $scope.loadingStatus = $translate.instant('kLoading');

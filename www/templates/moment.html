@@ -44,6 +44,11 @@
             </a>
           </li>
           <li>
+              <a href="" ng-click="toggleExpandOrCollapse()">
+                <i ng-class="expand ? 'ion-arrow-expand':'ion-arrow-shrink'"></i>
+              </a>
+          </li>
+          <li>
             <a href="" ng-click="toggleIcons()">
               <i ng-class="showIcons? 'ion-eye':'ion-eye-disabled'"></i>
             </a>
@@ -95,8 +100,9 @@
 
         <figcaption ng-if="showIcons" class="normal-subfigcaption">
           <span style="float:right">
-            <button class="button button-small button-icon icon  {{moment.Event.pinnedIcon}}" ng-click="togglePin(moment.Event.Id)"></button>
-          </span>
+
+          
+             <button ng-class="moment.Event.pinned?  'button button-small button-icon icon ion-pin assertive': 'button button-small button-icon icon ion-pin'" ng-click="togglePin(moment.Event.Id)"></button>
         </figcaption>
         <!--on-tap="showThumbnail(moment.Event.baseURL,moment.Event.MaxScoreFrameId)"-->
         <figcaption ng-if="showIcons" class="normal-figcaption">&nbsp;{{moment.Event.humanizeTime}}
