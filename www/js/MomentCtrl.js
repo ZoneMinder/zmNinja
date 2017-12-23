@@ -774,7 +774,15 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     $scope.loadingStatus = $translate.instant('kLoading');
     $scope.gridSize = ld.momentGridSize;
-    excludeMonitors = JSON.parse(ld.momentMonitorFilter || []);
+    //console.log ("---------->Filter before "+ld.momentMonitorFilter);
+
+    try {
+      excludeMonitors = JSON.parse(ld.momentMonitorFilter);
+    }
+    catch (e) {
+      excludeMonitors = [];
+    }
+  
     console.log("RETRIEVED EXCLUDE=" + JSON.stringify(excludeMonitors));
     constructMask();
     $scope.isSubMenu = ld.enableMomentSubMenu;
