@@ -314,7 +314,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       } // moment for j
       if (firstIndex !=-1) {
         if (collapseCount>0) {
-          $scope.moments[firstIndex].Event.collapseCount = collapseCount;
+          $scope.moments[firstIndex].Event.collapseCount = collapseCount+1;
         }
         else { // nothing to group
           $scope.moments[firstIndex].Event.icon = 'ion-code-working';
