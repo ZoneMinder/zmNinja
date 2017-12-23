@@ -267,6 +267,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       NVRDataModel.log ("Uh oh, ndx returned -1, this should never happen. Event passed was "+eid); 
       return;
     }
+
     $scope.moments[ndx].Event.pinned = !$scope.moments[ndx].Event.pinned;
 
   };

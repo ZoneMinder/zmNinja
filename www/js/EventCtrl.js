@@ -37,7 +37,7 @@ angular.module('zmApp.controllers')
 
 })
 
-.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', '$ionicListDelegate',function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile, $ionicListDelegate)
+.controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', '$ionicListDelegate', 'ionPullUpFooterState',function($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile, $ionicListDelegate,ionPullUpFooterState)
 {
 
     // events in last 5 minutes
@@ -114,10 +114,11 @@ angular.module('zmApp.controllers')
             $scope.tzAbbr = moment().tz(NVRDataModel.getTimeZoneNow()).zoneAbbr();
         }
 
+        //console.log ("************** CLEARING EVENTS");
         $scope.events = [];
 
         $timeout ( function() {
-            console.log ("DEFERRED ACTION EVENTS");
+           // console.log ("DEFERRED ACTION EVENTS");
             getInitialEvents();
             setupWatchers();
             footerExpand();
@@ -154,6 +155,8 @@ angular.module('zmApp.controllers')
 
         //console.log ("********* BEFORE ENTER");
         //
+
+        $scope.footerState  = ionPullUpFooterState.MINIMIZED;
         $scope.gifshotSupported = true;
         document.addEventListener("pause", onPause, false);
         //console.log("I got STATE PARAM " + $stateParams.id);
@@ -162,7 +165,7 @@ angular.module('zmApp.controllers')
 
         console.log("BEFORE ENTER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-        NVRDataModel.log("EventCtrl called with: EID=" + $scope.id + " playEvent =  " + $scope.showEvent);
+        NVRDataModel.log("EventCtrl called with: E/MID=" + $scope.id + " playEvent =  " + $scope.showEvent);
 
 
 
@@ -345,7 +348,7 @@ angular.module('zmApp.controllers')
              var tempMon = message;
              $scope.monitors = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2)[0];
          } else*/
-        $scope.monitors = message;
+        $scope.monitors =message;
 
         if ($scope.monitors.length == 0)
         {
@@ -409,6 +412,9 @@ angular.module('zmApp.controllers')
 
                         NVRDataModel.debug("EventCtrl: success, got " + myevents.length + " events");
                         var loginData = NVRDataModel.getLogin();
+
+                        //console.log ("-------->MON LEN"+$scope.monitors.length);
+
                         for (var i = 0; i < myevents.length; i++)
                         {
 
@@ -420,6 +426,7 @@ angular.module('zmApp.controllers')
                                 {
                                     if ($scope.monitors[ii].Monitor.Id == myevents[i].Event.MonitorId && (NVRDataModel.isNotHidden(myevents[i].Event.MonitorId) || showHiddenMonitors))
                                     {
+                                       // console.log ("FOUND IT");
 
                                         idfound = true;
                                         break;
@@ -427,7 +434,7 @@ angular.module('zmApp.controllers')
                                 }
                             }
 
-                            console.log ("IDFOUND="+idfound + " AND MON LEN="+$scope.monitors.length);
+                            //console.log ("IDFOUND="+idfound + " AND MON LEN="+$scope.monitors.length);
 
                             myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
                             myevents[i].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[i].Event.MonitorId);
@@ -484,7 +491,7 @@ angular.module('zmApp.controllers')
 
                                 } // swap 
 
-                                console.log ("--------->" +"MW:"+myevents[i].Event.thumbWidth+ " MH:"+ myevents[i].Event.thumbHeight + " for Monitor:" + myevents[i].Event.MonitorName);
+                               // console.log ("--------->" +"MW:"+myevents[i].Event.thumbWidth+ " MH:"+ myevents[i].Event.thumbHeight + " for Monitor:" + myevents[i].Event.MonitorName);
 
                                 
                                
@@ -513,9 +520,9 @@ angular.module('zmApp.controllers')
                            if (idfound)
                             {
                                 
-                                console.log ("PUSHING "+JSON.stringify(myevents[i]));
+                                //console.log ("PUSHING "+JSON.stringify(myevents[i]));
                                 $scope.events.push(myevents[i]);
-                                console.log ("SCOPE EVENTS LEN="+$scope.events.length);
+                                //console.log ("SCOPE EVENTS LEN="+$scope.events.length);
                             }
                             else
                             {
@@ -534,8 +541,9 @@ angular.module('zmApp.controllers')
                         //console.log("**Loading Next Page ***");
                         if (myevents.length < 50)
                         {
+                            console.log ("EVENTS LOADED="+JSON.stringify($scope.events));
                             NVRDataModel.debug("EventCtrl:loading one more page just in case we don't have enough to display");
-                            loadMore();
+                           loadMore();
                         }
                     });
 
@@ -1124,7 +1132,12 @@ angular.module('zmApp.controllers')
         // reloading - may solve https://github.com/pliablepixels/zmNinja/issues/36
         // if you are in the same mid event page $state.go won't work
 
-        console.log ("---> SENDING TO EVENTS WITH mid " + monitorId);
+        $scope.id = monitorId;
+        $scope.showEvent = false;
+        $scope.footerState = ionPullUpFooterState.MINIMIZED;
+        getInitialEvents();
+
+       /* console.log ("---> SENDING TO EVENTS WITH mid " + monitorId);
         $state.go("app.events",
         {
             "id": monitorId,
@@ -1132,7 +1145,7 @@ angular.module('zmApp.controllers')
         },
         {
             reload: true
-        });
+        });*/
     };
 
     //----------------------------------------------------------------
@@ -1881,6 +1894,13 @@ angular.module('zmApp.controllers')
                 $rootScope.toTime = "";
                 $rootScope.fromString = "";
                 $rootScope.toString = "";
+
+                $scope.id = 0;
+                $scope.showEvent = false;
+                $scope.footerState = ionPullUpFooterState.MINIMIZED;
+                getInitialEvents();
+
+                /*
                 $ionicHistory.nextViewOptions(
                 {
                     disableBack: true
@@ -1888,8 +1908,10 @@ angular.module('zmApp.controllers')
                 $state.go("app.events",
                 {
                     "id": 0,
-                    "playEvent": false
-                });
+                    "playEvent": false,
+                    refresh:true
+                });*/
+
                 return;
             }
             else
