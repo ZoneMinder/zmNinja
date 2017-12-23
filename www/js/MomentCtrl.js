@@ -43,22 +43,22 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
 
   function jiggleAway() {
-    $timeout(function () {
-      masonry.reloadItems();
 
-    }, 100);
+    
 
+    // STEP 3: Called when step 2 completes for the finale
     masonry.once('layoutComplete', function (laidOutItems) {
       $timeout(function () {
         masonry.layout();
-      }, 300);
+      }, 10);
     });
 
+    // STEP2: Trigger a layout to re-pack
     $timeout(function () {
       masonry.layout();
       // $ionicScrollDelegate.$getByHandle("moment-delegate").scrollTop();
 
-    }, 600);
+    }, 300);
   }
 
   //----------------------------------------------------------------
@@ -286,7 +286,14 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       $scope.moments[i].Event.icon = 'ion-code-working';
       $scope.moments[i].Event.collapseCount = '';
     }
-    jiggleAway();
+
+
+    $timeout(function () {
+      masonry.reloadItems();
+      jiggleAway();
+
+    }, 100);
+   
   }
 
   function collapseAll() {
@@ -323,7 +330,12 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
       } // firstIndex
     } // monitor for i
-    jiggleAway();
+   
+    $timeout(function () {
+      masonry.reloadItems();
+      jiggleAway();
+
+    }, 100);
   }
 
   //----------------------------------------------------------------
@@ -378,7 +390,12 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     } else {
       $scope.moments[ndx].Event.collapseCount = "";
     }
-    jiggleAway();
+    
+    $timeout(function () {
+      masonry.reloadItems();
+      jiggleAway();
+
+    }, 100);
 
   };
 
@@ -497,14 +514,12 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
       NVRDataModel.debug("All images loaded");
       $ionicLoading.hide();
-
-      $timeout(function () {
-        masonry.layout();
-      }, 300);
+      jiggleAway();
 
       if (!progressCalled) {
         NVRDataModel.log("***  PROGRESS WAS NOT CALLED");
         masonry.reloadItems();
+        jiggleAway();
       }
 
     });
