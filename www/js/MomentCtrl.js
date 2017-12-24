@@ -256,6 +256,28 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   };
 
+
+  
+//----------------------------------------------------------------
+// construct popover only when needed
+// so that we can use one-time binding for the compare function
+//----------------------------------------------------------------
+  $scope.isChecked=function(val) {
+    //console.log ("COMPARE");
+    return  $translate.instant(val) == $scope.type;
+  }
+
+  $scope.showPopover = function($event) {
+
+    $ionicPopover.fromTemplateUrl('templates/moment-popover.html', {
+      scope: $scope,
+    }).then(function (popover) {
+      $scope.popover = popover;
+      popover.show($event);
+    });
+
+  }
+
   //----------------------------------------------------------------
   // Pinning a thumbnail means don't collapse it. Useful to drill
   // down quickly.
@@ -660,13 +682,21 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   function getMoments(sortCondition, to) {
 
-    if (sortCondition == 'MaxScore')
-      $scope.type = $translate.instant('kMomentMenuByScore');
-    else if (sortCondition == 'StartTime')
+    if (sortCondition == 'MaxScore') {
+      $scope.type = $translate.instant
+      ('kMomentMenuByScore');
+      $scope.typeIcon = "ion-arrow-graph-up-right";
+    }
+    else if (sortCondition == 'StartTime') {
       $scope.type = $translate.instant('kMomentMenuByTime');
-    else if (sortCondition == 'monitorName')
+      $scope.typeIcon = "ion-clock";
+    }
+    else if (sortCondition == 'monitorName') {
       $scope.type = $translate.instant('kMomentMenuByMonitor');
+      $scope.typeIcon = "ion-ios-videocam";
 
+    }
+      
     $scope.apiurl = NVRDataModel.getLogin().apiurl;
     moments.length = 0;
 
@@ -820,11 +850,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   });
 
   $scope.$on('$ionicView.afterEnter', function () {
-    $ionicPopover.fromTemplateUrl('templates/moment-popover.html', {
-      scope: $scope,
-    }).then(function (popover) {
-      $scope.popover = popover;
-    });
+   
 
     getMoments(momentType);
 
