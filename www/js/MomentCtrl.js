@@ -617,6 +617,10 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   //----------------------------------------------------------------
   $scope.getMoments = function (cond) {
     if (!cond) cond = momentType;
+
+    var ld = NVRDataModel.getLogin();
+    ld.momentArrangeBy = cond;
+    NVRDataModel.setLogin(ld);
     getMoments(cond);
   };
 
@@ -660,7 +664,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       $scope.type = $translate.instant('kMomentMenuByScore');
     else if (sortCondition == 'StartTime')
       $scope.type = $translate.instant('kMomentMenuByTime');
-    else if (sortCondition == 'MonitorId')
+    else if (sortCondition == 'monitorName')
       $scope.type = $translate.instant('kMomentMenuByMonitor');
 
     $scope.apiurl = NVRDataModel.getLogin().apiurl;
@@ -789,6 +793,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     $scope.loadingStatus = $translate.instant('kLoading');
     $scope.gridSize = ld.momentGridSize;
+    momentType = ld.momentArrangeBy;
     //console.log ("---------->Filter before "+ld.momentMonitorFilter);
 
     try {
