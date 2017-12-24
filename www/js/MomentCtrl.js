@@ -265,7 +265,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   $scope.isChecked=function(val) {
     //console.log ("COMPARE");
     return  $translate.instant(val) == $scope.type;
-  }
+  };
 
   $scope.showPopover = function($event) {
 
@@ -276,7 +276,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       popover.show($event);
     });
 
-  }
+  };
 
   //----------------------------------------------------------------
   // Pinning a thumbnail means don't collapse it. Useful to drill
