@@ -172,6 +172,7 @@ angular.module('zmApp.controllers')
         'momentGridSize': 40,
         'momentMonitorFilter': [],
         'enableMomentSubMenu': true,
+        'momentArrangeBy': 'StartTime',
 
 
       };
@@ -1037,6 +1038,13 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.momentMonitorFilter == 'undefined') {
 
                     loginData.momentMonitorFilter = JSON.stringify([]);
+
+                  }
+
+
+                  if (typeof loginData.momentArrangeBy == 'undefined') {
+
+                    loginData.momentArrangeBy = "StartTime";
 
                   }
                   
