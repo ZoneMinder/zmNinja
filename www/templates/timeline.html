@@ -21,7 +21,7 @@
       <div style="padding-left:15px; font-size:10px; color:grey">
         {{prettify(fromDate)}} - {{prettify(toDate)}} &nbsp;{{tzAbbr}}&nbsp; ({{'kTimelineOnlyDisplaying1' | translate:translationData}})
         <strong>
-          <br/>{{'kTimelineControlDisplay'|translate}}</strong>
+          <br/>{{timelineControls}}</strong>
       </div>
       <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!graphLoaded"></ion-spinner>
       <div ng-if="!graphLoaded">
@@ -37,6 +37,11 @@
       </div>
       <br/>
       <div style="padding-left:15px; font-size:10px; color:grey">
+
+          <button ng-click="toggleTap()" class="button button-small button-dark">
+              {{'kTimelineTap' | translate}}:{{onTap}}
+            </button>
+
         <button ng-click="toggleFollowTime()" ng-class="follow.time? 'button button-small button-balanced':'button button-small button-assertive'">
           {{'kUpdateTimeline' | translate}}:&nbsp;{{follow.time? ('kTrue' | translate) : ('kFalse' | translate)}}
         </button>

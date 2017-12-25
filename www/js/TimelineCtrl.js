@@ -315,6 +315,28 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     });
 
+    //-------------------------------------------
+    // Entire reason for existence:
+    // double tap doesn't reliably work
+    // when paired with tap on mobiles
+    //-------------------------------------------
+
+    $scope.toggleTap = function() {
+
+        if ($scope.onTap == $translate.instant('kTimelineEvent')) {
+            $scope.onDTap = $translate.instant('kTimelineEvent');
+            $scope.onTap = $translate.instant('kTimelineGraph');
+
+        }
+        else {
+            $scope.onTap = $translate.instant('kTimelineEvent');
+            $scope.onDTap = $translate.instant('kTimelineGraph');
+        }
+        $scope.timelineControls = $translate.instant('kTimelineTap')+':'+$scope.onTap+" / "+$translate.instant('kTimelineDTap')+':'+$scope.onDTap;
+
+    };
+
+
     //-------------------------------------------------
     // FIXME: shitty hackery -- Im using a rootScope
     // to know if you just went to custom range
@@ -324,11 +346,17 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // we come here - so make sure we update the
     // graph range
     //-------------------------------------------------
+    
 
     $scope.$on('$ionicView.afterEnter', function()
     {
 
         $scope.monitors = message;
+
+        $scope.onTap = $translate.instant('kTimelineEvent');
+        $scope.onDTap = $translate.instant('kTimelineGraph');
+        $scope.timelineControls = $translate.instant('kTimelineTap')+':'+$scope.onTap+" / "+$translate.instant('kTimelineDTap')+':'+$scope.onDTap;
+        
         //console.log("***AFTER ENTER");
 
         $scope.follow = {
@@ -479,6 +507,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var groups, graphData;
     var isProcessNewEventsWaiting = false;
     var options;
+    var dblclick = false;
 
     $scope.mycarousel = {
         index: 0
@@ -1292,7 +1321,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             $scope.graphLoaded = true;
                             NVRDataModel.debug("graph loaded: " + $scope.graphLoaded);
                             $scope.navControls = false;
-                            var dblclick = false;
+                            dblclick = false;
 
                             // we don't really need this anymore - as we have an interval timer 
                             // ticking away
@@ -1331,141 +1360,20 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                             timeline.on('click', function(prop)
                             {
                                 console.log ("CLICK");
+                                if ($scope.onTap==$translate.instant('kTimelineGraph'))
+                                    timelineAnalyzeFrames(prop);
+                                else
+                                    timelineShowEvent(prop);
 
-                                $timeout(function()
-                                {
-                                    if (dblclick)
-                                    {
-                                        //console.log ("IGNORING CLICK AS DBL CLICK");
-                                        $timeout(function()
-                                        {
-                                            dblclick = false;
-                                        }, 400);
-                                        return;
-                                    }
-                                    //console.log ("CLICK");
-                                    //console.log ("I GOT " + JSON.stringify(prop));
-                                    // console.log ("EVENT IS " + JSON.stringify(properties.event));
-                                    //var properties =  timeline.getEventProperties(prop);
-                                    // console.log ( "I GOT " + properties);
-                                    var itm = prop.item;
-                                    //console.log ("ITEM CLICKED " + itm);
-                                    if (itm && !isNaN(itm))
-                                    {
-                                        NVRDataModel.debug("TimelineCtrl/drawGraph:You clicked on item " + itm);
-                                        var item = graphData.get(itm);
-                                        NVRDataModel.debug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
-                                        showEvent(item.myevent);
-
-                                    }
-                                    else
-                                    {
-                                        NVRDataModel.debug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
-                                        if (prop.group)
-                                        {
-                                            var visible = timeline.getVisibleItems();
-                                            NVRDataModel.debug("Visible items=" + JSON.stringify(visible));
-                                            var closestItem = null;
-                                            var minDist = 99999;
-                                            var _item;
-                                            for (var x = 0; x < visible.length; x++)
-                                            {
-                                                _item = timeline.itemSet.items[x];
-                                                if (_item.data.group == prop.group)
-                                                {
-                                                    if (Math.abs(_item.left - prop.x) < minDist)
-                                                    {
-                                                        closestItem = _item;
-                                                        minDist = Math.abs(_item.left - prop.x);
-                                                        NVRDataModel.debug("Temporary closest " + _item.left);
-                                                        //console.log (_item);
-                                                    }
-                                                }
-
-                                            }
-
-                                            if (closestItem != null)
-                                            {
-                                                NVRDataModel.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
-                                                showEvent(closestItem.data.myevent);
-                                            }
-                                            else
-                                            {
-                                                NVRDataModel.log("Did not find a visible item match");
-                                            }
-                                        }
-                                        else // no group row tapped, do nothing
-                                        {
-
-                                            /*$ionicLoading.show({
-                                                template: "",
-                                                animation: 'fade-in',
-                                                showBackdrop: true,
-                                                maxWidth: 200,
-                                                showDelay: 0,
-                                                duration: 1500,
-                                            });*/
-                                        }
-                                        // console.log("Zoomed out too far to playback events");
-                                    }
-                                }, 400);
 
                             });
 
                             timeline.on('doubleClick', function(prop)
                             {
-                                console.log ("DOUBLE");
-                                dblclick = true;
-                                var itm = prop.item;
-                                //console.log ("ITEM CLICKED " + itm);
-                                if (itm && !isNaN(itm))
-                                {
-                                    NVRDataModel.debug("TimelineCtrl/drawGraph:You clicked on item " + itm);
-                                    var item = graphData.get(itm);
-                                    NVRDataModel.debug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
-                                    eventDetails(item.myevent);
-
-                                }
+                                if ($scope.onDTap==$translate.instant('kTimelineGraph'))
+                                    timelineAnalyzeFrames(prop);
                                 else
-                                {
-
-                                    NVRDataModel.debug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
-                                    if (prop.group)
-                                    {
-                                        var visible = timeline.getVisibleItems();
-                                        NVRDataModel.debug("Visible items=" + JSON.stringify(visible));
-                                        var closestItem = null;
-                                        var minDist = 99999;
-                                        var _item;
-                                        for (var x = 0; x < visible.length; x++)
-                                        {
-                                            _item = timeline.itemSet.items[x];
-                                            if (_item.data.group == prop.group)
-                                            {
-                                                if (Math.abs(_item.left - prop.x) < minDist)
-                                                {
-                                                    closestItem = _item;
-                                                    minDist = Math.abs(_item.left - prop.x);
-                                                    NVRDataModel.debug("Temporary closest " + _item.left);
-                                                    //console.log (_item);
-                                                }
-                                            }
-
-                                        }
-                                        NVRDataModel.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
-                                        if (closestItem != null)
-                                        {
-                                            NVRDataModel.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
-                                            showEvent(closestItem.data.myevent);
-                                        }
-                                        else
-                                        {
-                                            NVRDataModel.log("Did not find a visible item match");
-                                        }
-                                    }
-
-                                    // console.log("Zoomed out too far to playback events");
-                                }
+                                    timelineShowEvent(prop);
 
                             }); 
                         },
@@ -1477,6 +1385,141 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                     ); // get Events
             });
+    }
+
+    function timelineShowEvent(prop) {
+        $timeout(function()
+        {
+            if (dblclick)
+            {
+                //console.log ("IGNORING CLICK AS DBL CLICK");
+                $timeout(function()
+                {
+                    dblclick = false;
+                }, 400);
+                return;
+            }
+            //console.log ("CLICK");
+            //console.log ("I GOT " + JSON.stringify(prop));
+            // console.log ("EVENT IS " + JSON.stringify(properties.event));
+            //var properties =  timeline.getEventProperties(prop);
+            // console.log ( "I GOT " + properties);
+            var itm = prop.item;
+            //console.log ("ITEM CLICKED " + itm);
+            if (itm && !isNaN(itm))
+            {
+                NVRDataModel.debug("TimelineCtrl/drawGraph:You clicked on item " + itm);
+                var item = graphData.get(itm);
+                NVRDataModel.debug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
+                showEvent(item.myevent);
+
+            }
+            else
+            {
+                NVRDataModel.debug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
+                if (prop.group)
+                {
+                    var visible = timeline.getVisibleItems();
+                    NVRDataModel.debug("Visible items=" + JSON.stringify(visible));
+                    var closestItem = null;
+                    var minDist = 99999;
+                    var _item;
+                    for (var x = 0; x < visible.length; x++)
+                    {
+                        _item = timeline.itemSet.items[x];
+                        if (_item.data.group == prop.group)
+                        {
+                            if (Math.abs(_item.left - prop.x) < minDist)
+                            {
+                                closestItem = _item;
+                                minDist = Math.abs(_item.left - prop.x);
+                                NVRDataModel.debug("Temporary closest " + _item.left);
+                                //console.log (_item);
+                            }
+                        }
+
+                    }
+
+                    if (closestItem != null)
+                    {
+                        NVRDataModel.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
+                        showEvent(closestItem.data.myevent);
+                    }
+                    else
+                    {
+                        NVRDataModel.log("Did not find a visible item match");
+                    }
+                }
+                else // no group row tapped, do nothing
+                {
+
+                    /*$ionicLoading.show({
+                        template: "",
+                        animation: 'fade-in',
+                        showBackdrop: true,
+                        maxWidth: 200,
+                        showDelay: 0,
+                        duration: 1500,
+                    });*/
+                }
+                // console.log("Zoomed out too far to playback events");
+            }
+        }, 400);
+    }
+
+    function timelineAnalyzeFrames(prop) {
+        console.log ("DOUBLE");
+        dblclick = true;
+        var itm = prop.item;
+        //console.log ("ITEM CLICKED " + itm);
+        if (itm && !isNaN(itm))
+        {
+            NVRDataModel.debug("TimelineCtrl/drawGraph:You clicked on item " + itm);
+            var item = graphData.get(itm);
+            NVRDataModel.debug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
+            eventDetails(item.myevent);
+
+        }
+        else
+        {
+
+            NVRDataModel.debug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
+            if (prop.group)
+            {
+                var visible = timeline.getVisibleItems();
+                NVRDataModel.debug("Visible items=" + JSON.stringify(visible));
+                var closestItem = null;
+                var minDist = 99999;
+                var _item;
+                for (var x = 0; x < visible.length; x++)
+                {
+                    _item = timeline.itemSet.items[x];
+                    if (_item.data.group == prop.group)
+                    {
+                        if (Math.abs(_item.left - prop.x) < minDist)
+                        {
+                            closestItem = _item;
+                            minDist = Math.abs(_item.left - prop.x);
+                            NVRDataModel.debug("Temporary closest " + _item.left);
+                            //console.log (_item);
+                        }
+                    }
+
+                }
+                NVRDataModel.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
+                if (closestItem != null)
+                {
+                    NVRDataModel.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
+                    showEvent(closestItem.data.myevent);
+                }
+                else
+                {
+                    NVRDataModel.log("Did not find a visible item match");
+                }
+            }
+
+            // console.log("Zoomed out too far to playback events");
+        }
     }
 
     $scope.radialMenuOptions = {
