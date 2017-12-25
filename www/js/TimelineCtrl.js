@@ -87,6 +87,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         ld.enableAlarmCount = !ld.enableAlarmCount;
 
         NVRDataModel.setLogin(ld);
+        $scope.loginData = ld;
 
         drawGraph(curFromDate, curToDate, curCount);
 
@@ -1329,6 +1330,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                             timeline.on('click', function(prop)
                             {
+                                console.log ("CLICK");
 
                                 $timeout(function()
                                 {
@@ -1412,7 +1414,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                             timeline.on('doubleClick', function(prop)
                             {
-                                //console.log ("DOUBLE");
+                                console.log ("DOUBLE");
                                 dblclick = true;
                                 var itm = prop.item;
                                 //console.log ("ITEM CLICKED " + itm);
@@ -1465,7 +1467,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                     // console.log("Zoomed out too far to playback events");
                                 }
 
-                            });
+                            }); 
                         },
                         function(error)
                         {

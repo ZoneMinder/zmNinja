@@ -1,6 +1,9 @@
 <ion-popover-view class="fit">
     <ion-content>
+
         <div class="list" ng-click="popover.hide()">
+  
+
             <a class="item" ng-href="" ng-click="popover.hide();toggleMinAlarmFrameCount();" ng-if="loginData.enableAlarmCount">{{'kShowAllEvents' | translate}}</a>
             <a class="item" ng-href="" ng-click="popover.hide();toggleMinAlarmFrameCount();" ng-if="!loginData.enableAlarmCount"> {{'kShowAlarmedEvents' | translate}}</a>
             <a class="item" ng-href="" ng-click="popover.hide();buttonClicked(0);">{{'kMonth' | translate}}</a>
