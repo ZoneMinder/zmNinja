@@ -384,7 +384,7 @@ angular.module('zmApp.controllers')
         if ($rootScope.toString)
             nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-           // console.log ("GETTING EVENTS USING "+$scope.id+" "+nolangFrom+" "+ nolangTo)
+           //NVRDataModel.debug ("GETTING EVENTS USING "+$scope.id+" "+nolangFrom+" "+ nolangTo);
         NVRDataModel.getEventsPages($scope.id, nolangFrom, nolangTo)
             .then(function(data)
             {
@@ -520,13 +520,13 @@ angular.module('zmApp.controllers')
                            if (idfound)
                             {
                                 
-                                //console.log ("PUSHING "+JSON.stringify(myevents[i]));
+                                //NVRDataModel.debug ("PUSHING "+JSON.stringify(myevents[i]));
                                 $scope.events.push(myevents[i]);
                                 //console.log ("SCOPE EVENTS LEN="+$scope.events.length);
                             }
                             else
                             {
-                                console.log ("Skipping Event MID = " + myevents[i].Event.MonitorId);
+                                //NVRDataModel.debug ("Skipping Event MID = " + myevents[i].Event.MonitorId);
                             }
 
                         } //for
@@ -1203,7 +1203,7 @@ angular.module('zmApp.controllers')
 
     //----------------------------------------------------------
     // create an array of images
-    // too keep memory manageable, we are only  going to pick up alarmed frames
+    // to keep memory manageable, we are only  going to pick up alarmed frames
     // and that too, max 1ps
     // --------------------------------------------------------------
     function prepareImages(e)
