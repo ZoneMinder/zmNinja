@@ -366,7 +366,7 @@
     "kTimelineTap"               :"dotknij",
     "kTimelineDTap"              :"dotknij dwa razy",
     "kTimelineEvent"             :"przeglądaj zdarzenia",
-    "kTimelineGraph"             :"analizuj ramki",
+    "kTimelineGraph"             :"analizuj klatki",
     "kTimelineMessage"           :"Podwójne stuknięcie - wyjście. Dotknięcie i przesuwanie elementów pozwala przeglądać klatki",
     "kTimelineOnlyDisplaying1"   :"wyświetla tylko {{maxItemsVal}} ostatnich zdarzeń",
     "kTitleNotLoggedIn"          :"Nie zalogowany",
