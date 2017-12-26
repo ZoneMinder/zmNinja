@@ -61,7 +61,7 @@
         <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
         <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87" />
         <splash src="resources/Default@2x~universal~anyany.png" />
-        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
+        <icon height="1024" src="resources/icon_for_apppublish_1024x1024_no_alpha.jpg" width="1024" />
         <splash src="resources/ios/splash/Default@2x~universal~anyany.png" />
         <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
         <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
