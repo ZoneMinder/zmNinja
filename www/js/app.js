@@ -954,7 +954,7 @@ angular.module('zmApp', [
             // first try to login, if it works, good
             // else try to do reachability
 
-            console.log(">>>>>>>>>>>> CALLING DO LOGIN");
+            //console.log(">>>>>>>>>>>> CALLING DO LOGIN");
             proceedWithLogin()
               .then(function (success) {
 

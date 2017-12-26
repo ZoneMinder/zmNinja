@@ -350,7 +350,7 @@ angular.module('zmApp.controllers')
               if (monitors[m].Monitor.Id == positions[p].attr) {
                 monitors[m].Monitor.listDisplay = positions[p].display;
                 positionFound = true;
-                debug("DataModel: Setting MID:" + monitors[m].Monitor.Id + " to " + monitors[m].Monitor.listDisplay);
+                //debug("DataModel: Setting MID:" + monitors[m].Monitor.Id + " to " + monitors[m].Monitor.listDisplay);
               }
 
             }
