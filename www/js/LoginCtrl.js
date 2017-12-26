@@ -4,11 +4,13 @@
 
 angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$stateParams', '$translate', function($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $stateParams, $translate)
 {
+
+    var oldLoginData = ''; // used to track any changes    
     $scope.openMenu = function()
     {
 
-    if ($scope.loginData.serverName)
-            saveItems(false);
+   // if ($scope.loginData.serverName)
+   //         saveItems(false);
         $ionicSideMenuDelegate.toggleLeft();
 
     };
@@ -260,6 +262,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function()
     {
+        oldLoginData = '';
         //console.log("**VIEW ** LoginCtrl  Entered");
         NVRDataModel.setAwake(false);
         var ld = NVRDataModel.getLogin();
@@ -327,11 +330,24 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             });
         }
 
+        oldLoginData = JSON.stringify($scope.loginData);
+
     });
 
     $scope.$on('$ionicView.beforeLeave', function()
     {
         //console.log("**VIEW ** LoginCtrl  Entered");
+        var newLoginData  = JSON.stringify($scope.loginData);
+        if ($scope.loginData.serverName && newLoginData != oldLoginData) {
+            NVRDataModel.log ("Login data changed, saving...");
+            saveItems(false);
+        }
+        else {
+            NVRDataModel.log ("Login data not changed, not saving");
+        }
+            
+       
+
 
     });
 
