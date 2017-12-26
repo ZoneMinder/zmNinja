@@ -371,7 +371,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   // same monitor should expand, even if they were grouped earlier
 
   $scope.toggleCollapse = function (mid, eid) {
-    NVRDataModel.debug("toggling collapse for:" + mid);
+    //NVRDataModel.debug("toggling collapse for:" + mid);
     var collapseCount = 0;
     var hide = false;
 
