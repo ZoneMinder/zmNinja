@@ -18,6 +18,7 @@ angular.module('zmApp.controllers')
         var localNotificationId = 0;
         var firstError = true;
         var pushInited = false;
+        var isTimerOn = false;
 
         //--------------------------------------------------------------------------
         // called when the websocket is opened
@@ -91,6 +92,9 @@ angular.module('zmApp.controllers')
             $rootScope.isAlarm = 0;
             $rootScope.alarmCount = "0";
 
+            isTimerOn = false;
+
+            
             var d = $q.defer();
 
             var loginData = NVRDataModel.getLogin();
@@ -109,7 +113,7 @@ angular.module('zmApp.controllers')
 
             if (typeof ws !== 'undefined')
             {
-                NVRDataModel.debug("Event server already initialized");
+                NVRDataModel.debug("websocket already initialized ?!?");
                 d.resolve("true");
                 return d.promise;
             }
@@ -137,21 +141,30 @@ angular.module('zmApp.controllers')
 
                 // we don't need this check as I changed reconnect interval to 60s
                 //if ((Date.now() - lastEventServerCheck > 30000.0) || firstError)
-                if (1)
+            
+                NVRDataModel.debug("Websocket Errorhandler called");
+                $timeout(function()
                 {
-                    NVRDataModel.debug("Websocket Errorhandler called");
-                    $timeout(function()
-                    {
-                        NVRDataModel.displayBanner('error', ['Event Server connection error']);
-                    }, 3000); // leave 3 seconds for transitions
-                    firstError = false;
-                    lastEventServerCheck = Date.now();
-                    if (typeof ws !== 'undefined') ws.close();
-                    ws = undefined;
-                
-                   // NVRDataModel.log ("Will try to reconnect in 10 sec..");
-                   // $timeout ( init, 10000 );
+                    NVRDataModel.displayBanner('error', ['Event Server connection error']);
+                }, 3000); // leave 3 seconds for transitions
+                firstError = false;
+                lastEventServerCheck = Date.now();
+                if (typeof ws !== 'undefined'){
+                    NVRDataModel.debug ("-->Forcing socket close");
+                    ws.close(true);
+
                 }
+                    
+                ws = undefined;
+            
+                NVRDataModel.log ("Will try to reconnect in 10 sec..");
+                if (!isTimerOn) 
+                {
+                    $timeout ( init, 10000 );
+                    isTimerOn = true;
+                }
+                
+              
                 //console.log ("VALUE TIME " + lastEventServerCheck);
                 //console.log ("NOW TIME " + Date.now());
             });
@@ -161,6 +174,15 @@ angular.module('zmApp.controllers')
             {
                 NVRDataModel.log("Websocket closed");
                 ws = undefined;
+
+                var ld = NVRDataModel.getLogin();
+        
+                if (ld.isUseEventServer && !isTimerOn) {
+                    // this means remote error, because zmN still
+                    // wants it on
+                    $timeout ( init, 10000 );
+                    isTimerOn = true;
+                }
 
             });
 
