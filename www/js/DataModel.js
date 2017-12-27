@@ -384,6 +384,9 @@ angular.module('zmApp.controllers')
       function setLogin(newLogin) {
         //var d = $q.defer();
 
+        // if we are here, we should remove cache
+        localforage.removeItem("settings-temp-data");
+
         loginData = angular.copy(newLogin);
         serverGroupList[loginData.serverName] = angular.copy(loginData);
 
@@ -736,7 +739,7 @@ angular.module('zmApp.controllers')
                   if (loginData.onTapScreen != $translate.instant('kTapMontage') &&
                     loginData.onTapScreen != $translate.instant('kTapEvents') &&
                     loginData.onTapScreen != $translate.instant('kTapLiveMonitor')) {
-                    log("Invalid onTap setting found, resetting");
+                    log("Invalid onTap setting found, resetting. I got " + loginData.onTapScreen);
                     loginData.onTapScreen = $translate.instant('kMontage');
                   }
 

@@ -32,6 +32,13 @@ angular.module('zmApp.controllers')
                 return;
             }
 
+            if (typeof ws == 'undefined') {
+                NVRDataModel.debug ("websocket is undefined, need to create ws before I can sent auth");
+                ws = $websocket(loginData.eventServer,{reconnectIfNotNormalClose: false});
+               // ws.onOpen(openHandshake);
+               // return;
+            }
+
             NVRDataModel.log("openHandshake: Websocket open, sending Auth");
             ws.send(
             {
@@ -117,7 +124,7 @@ angular.module('zmApp.controllers')
                 lazy: true
             });*/
 
-            ws = $websocket(loginData.eventServer,{reconnectIfNotNormalClose: true});
+            ws = $websocket(loginData.eventServer,{reconnectIfNotNormalClose: false});
             ws.onOpen(openHandshake);
 
             // Transmit auth information to server              
@@ -139,7 +146,7 @@ angular.module('zmApp.controllers')
                     }, 3000); // leave 3 seconds for transitions
                     firstError = false;
                     lastEventServerCheck = Date.now();
-                    ws.close();
+                    if (typeof ws !== 'undefined') ws.close();
                     ws = undefined;
                 
                    // NVRDataModel.log ("Will try to reconnect in 10 sec..");
@@ -541,6 +548,8 @@ angular.module('zmApp.controllers')
                     $rootScope.isAlarm = 0;
                     $rootScope.tappedNotification = 1;
                     var mid = data.additionalData.mid;
+                    var eid = data.additionalData.eid;
+
 
                     // if Multiple mids, take the first one
                     var mi = mid.indexOf(',');
@@ -551,6 +560,7 @@ angular.module('zmApp.controllers')
                     mid = parseInt(mid);
 
                     $rootScope.tappedMid = mid;
+                    $rootScope.tappedEid = eid;
                     NVRDataModel.log("Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
 
                     if ($rootScope.platformOS == 'ios')
