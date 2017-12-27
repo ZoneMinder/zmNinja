@@ -19,6 +19,7 @@ angular.module('zmApp.controllers')
         var firstError = true;
         var pushInited = false;
         var isTimerOn = false;
+        
 
         //--------------------------------------------------------------------------
         // called when the websocket is opened
@@ -94,7 +95,7 @@ angular.module('zmApp.controllers')
 
             isTimerOn = false;
 
-            
+
             var d = $q.defer();
 
             var loginData = NVRDataModel.getLogin();
