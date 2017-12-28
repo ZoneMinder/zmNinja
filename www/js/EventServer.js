@@ -19,7 +19,7 @@ angular.module('zmApp.controllers')
         var firstError = true;
         var pushInited = false;
         var isTimerOn = false;
-        
+
 
         //--------------------------------------------------------------------------
         // called when the websocket is opened
@@ -566,42 +566,60 @@ angular.module('zmApp.controllers')
                     // set tappedMid to monitor 
                     //*** PUSH DATA>>>>{"sound":"blop","message":"Alarms: Basement (2854) ","additionalData":{"mid":"2","coldstart":false,"collapse_key":"do_not_collapse","foreground":false}}
 
-                    NVRDataModel.debug("Notification Tapped");
-                    $rootScope.alarmCount = "0";
-                    $rootScope.isAlarm = 0;
-                    $rootScope.tappedNotification = 1;
-                    var mid = data.additionalData.mid;
-                    var eid = data.additionalData.eid;
-
-
-                    // if Multiple mids, take the first one
-                    var mi = mid.indexOf(',');
-                    if (mi > 0)
+                    if (data.additionalData.dismissed != undefined) // user tapped on notification
                     {
-                        mid = mid.slice(0, mi);
-                    }
-                    mid = parseInt(mid);
+                        NVRDataModel.debug("Notification Tapped");
+                        $rootScope.alarmCount = "0";
+                        $rootScope.isAlarm = 0;
+                        $rootScope.tappedNotification = 1;
+                        var mid = data.additionalData.mid;
+                        var eid = data.additionalData.eid;
 
-                    $rootScope.tappedMid = mid;
-                    $rootScope.tappedEid = eid;
-                    NVRDataModel.log("Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
 
-                    if ($rootScope.platformOS == 'ios')
-                    {
-
-                        NVRDataModel.debug("iOS only: clearing background push");
-                        push.finish(function()
+                        // if Multiple mids, take the first one
+                        var mi = mid.indexOf(',');
+                        if (mi > 0)
                         {
-                            NVRDataModel.debug("processing of push data is finished");
-                        });
+                            mid = mid.slice(0, mi);
+                        }
+                        mid = parseInt(mid);
+
+                        $rootScope.tappedMid = mid;
+                        $rootScope.tappedEid = eid;
+                        NVRDataModel.log("Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
+
+                        if ($rootScope.platformOS == 'ios')
+                        {
+
+                            NVRDataModel.debug("iOS only: clearing background push");
+                            push.finish(function()
+                            {
+                                NVRDataModel.debug("processing of push data is finished");
+                            });
+                        }
+
                     }
+                    else {
+                        NVRDataModel.debug ("App started via icon, not notification");
+                        $rootScope.tappedNotification = 0;
+                        $rootScope.tappedEid = 0;
+                        $rootScope.tappedMid = 0;
+                    }
+                    
 
                 }
-                else
+                else // app is foreground
                 {
 
                     // this flag honors the HW mute button. Go figure
                     // http://ilee.co.uk/phonegap-plays-sound-on-mute/
+
+                    NVRDataModel.debug ("--> Either app icon tapped, or app is already in foreground");
+
+                    $rootScope.tappedNotification = 0;
+                    $rootScope.tappedEid = 0;
+                    $rootScope.tappedMid = 0;
+
                     if (ld.soundOnPush)
                     {
                         media.play(
