@@ -93,7 +93,7 @@
     "kErrorRetrievingState"      :"error retrieving state",
     "kErrorSave"                 :"Error - could not save",
     "kEvent"                     :"event",
-    "kEventStillRecording"       :"still recording, may take time to display...",
+    "kEventStillRecording"       :"still recording - display will start after recording is complete",
     "kEventHistFaster"           :"faster",
     "kEventHistHrs"              :"hours ago",
     "kEventHistPause"            :"pause",

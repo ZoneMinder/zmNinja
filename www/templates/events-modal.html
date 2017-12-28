@@ -9,7 +9,9 @@
                     <div ng-if="( (defaultVideo=='') || (loginData.enableh264==false)) && (loginData.useNphZmsForEvents==true)">
                         <!--<div style="color:white">connkey:{{connKey}}</div>-->
                         <div style="width:100vw; height:100vh;">
-                            <img image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay={{currentStreamMode}}&rate=100&connkey={{connKey}}&scale={{singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();" />
+                            <img image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay={{currentStreamMode}}&rate=100&connkey={{connKey}}&scale={{singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
+                            img-spinner-w="1024" img-spinner-h="768"
+                            />
                             <div ng-if="isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999" class="header-paused">
                                 &nbsp;<i class="ion-pause"></i> {{'kPaused' | translate}}&nbsp;
                             </div>
