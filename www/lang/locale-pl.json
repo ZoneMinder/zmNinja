@@ -92,7 +92,7 @@
     "kErrorRetrievingState"      :"błąd odczytu stanu",
     "kErrorSave"                 :"Błąd - nie mogłem zapisać",
     "kEvent"                     :"zdarzenie",
-    "kEventStillRecording"       :"nadal nagrywa, wyświetlenie może potrwać...",
+    "kEventStillRecording"       :"nadal nagrywa - wyświetlenie nastąpi po zakończeniu nagrywania",
     "kEventHistFaster"           :"szybciej",
     "kEventHistHrs"              :"godzin temu",
     "kEventHistPause"            :"pauza",
