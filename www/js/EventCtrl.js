@@ -541,7 +541,7 @@ angular.module('zmApp.controllers')
                         //console.log("**Loading Next Page ***");
                         if (myevents.length < 50)
                         {
-                            console.log ("EVENTS LOADED="+JSON.stringify($scope.events));
+                            //console.log ("EVENTS LOADED="+JSON.stringify($scope.events));
                             NVRDataModel.debug("EventCtrl:loading one more page just in case we don't have enough to display");
                            loadMore();
                         }
