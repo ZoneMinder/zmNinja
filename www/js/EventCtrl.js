@@ -90,6 +90,7 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.afterEnter', function()
     {
+       
         console.log ("********* AFTER ENTER");
         //
         $ionicListDelegate.canSwipeItems(true);
@@ -1153,11 +1154,12 @@ angular.module('zmApp.controllers')
     //----------------------------------------------------------------
     $scope.handleAlarms = function()
     {
-        $rootScope.isAlarm = !$rootScope.isAlarm;
-        if (!$rootScope.isAlarm)
+       // $rootScope.isAlarm = !$rootScope.isAlarm;
+        if ($rootScope.isAlarm)
         {
             $rootScope.alarmCount = "0";
-            $ionicHistory.nextViewOptions(
+            $rootScope.isAlarm = !$rootScope.isAlarm;
+            /*$ionicHistory.nextViewOptions(
             {
                 disableBack: true
             });
@@ -1168,7 +1170,8 @@ angular.module('zmApp.controllers')
             },
             {
                 reload: true
-            });
+            }); */
+            getInitialEvents();
             return;
         }
     };
