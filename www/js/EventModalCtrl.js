@@ -1276,6 +1276,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.onSwipeEvent = function(eid, dirn)
     {
+        if ($scope.liveFeedMid) return;
         //console.log("HERE");
         var ld = NVRDataModel.getLogin();
         if (!ld.canSwipeMonitors) return;
@@ -1583,6 +1584,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         NVRDataModel.log("*** Constructed API for detailed events: " + myurl);
         $scope.humanizeTime = "...";
         $scope.mName = "...";
+        $scope.liveFeedMid = '';
         $http.get(myurl)
             .then(function(success)
                 {
@@ -1595,6 +1597,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     if (!event.Event.EndTime) {
                         $scope.eventWarning = $translate.instant('kEventStillRecording');
+                         // if this happens we get to live feed 
+                        $scope.liveFeedMid = event.Event.MonitorId;
+                        NVRDataModel.log ("Event not ready, setting live view, with MID="+$scope.liveFeedMid);
                     }
 
                     event.Event.BasePath = computeBasePath(event);
