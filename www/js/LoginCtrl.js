@@ -312,7 +312,13 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         else
         {
             var savedData;
-            localforage.getItem("settings-temp-data").then(function(value)
+
+            // this thing is crappy - not sure why it keeps removing
+            // ES stuff. removing it as of Jan 18
+            // this means if you back out while entering login data
+            // you'll get a blank. small price to pay... 
+
+            /*localforage.getItem("settings-temp-data").then(function(value)
             {
                 savedData = value;
                 //= zmStorageService.getObject ("settings-temp-data");
@@ -327,7 +333,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 {
                     NVRDataModel.log("Not recovering login data as its empty");
                 }
-            });
+            });*/
         }
 
         oldLoginData = JSON.stringify($scope.loginData);

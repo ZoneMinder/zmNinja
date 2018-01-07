@@ -123,10 +123,10 @@
      $scope.selectScreen = function()
      {
 
-         var ld = NVRDataModel.getLogin();
+        // var ld = NVRDataModel.getLogin();
 
          $scope.myopt = {
-             selectedState: ld.onTapScreen
+             selectedState: $scope.loginData.onTapScreen
          };
 
          var options = '<ion-radio-fix ng-model="myopt.selectedState" ng-value="\'' + $translate.instant('kTapEvents') + '\'">' + $translate.instant('kTapEvents') + '</ion-radio-fix>';
@@ -140,7 +140,7 @@
              template: options,
 
              title: 'View to navigate to:',
-             subTitle: 'currently set to: ' + ld.onTapScreen,
+             subTitle: 'currently set to: ' + $scope.loginData.onTapScreen,
              buttons: [
              {
                  text: $translate.instant('kButtonCancel'),
@@ -151,11 +151,11 @@
                  onTap: function(e)
                  {
 
-                     ld.onTapScreen = $scope.myopt.selectedState;
-                     NVRDataModel.log("Setting new onTap State:" + ld.onTapScreen);
-                     NVRDataModel.setLogin(ld);
+                     $scope.loginData.onTapScreen = $scope.myopt.selectedState;
+                     NVRDataModel.log("Setting new onTap State:" + $scope.loginData.onTapScreen);
+                     NVRDataModel.setLogin($scope.loginData);
                      $scope.defScreen = $scope.myopt.selectedState;
-                     $scope.loginData = ld;
+                     //$scope.loginData = ld;
 
                  }
              }]

@@ -347,6 +347,7 @@ angular.module('zmApp.controllers')
                 return;
             }
 
+            console.log (">>>>>>>>>>>>>>>>>EVENT SERVER SENDING: type="+type+" DATA="+JSON.stringify(obj));
             ws.send({
                 'event':type, 
                 'data': obj
@@ -517,8 +518,8 @@ angular.module('zmApp.controllers')
                         // load previous monlist and intlist
                         // so we don't overwrite 
                         monstring = ld.eventServerMonitors;
-                        intlist = ld.eventServerInterval;
-                        NVRDataModel.debug ("loading saved monitor list and interval of "+monstring+">>"+intlist);
+                        intstring = ld.eventServerInterval;
+                        NVRDataModel.debug ("loading saved monitor list and interval of "+monstring+">>"+intstring);
 
                     }
 
