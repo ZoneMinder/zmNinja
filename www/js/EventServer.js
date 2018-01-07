@@ -512,15 +512,31 @@ angular.module('zmApp.controllers')
                 NVRDataModel.getMonitors()
                 .then (function(succ) {
                     var mon = succ;
-                    for (var i = 0; i < mon.length; i++) {
-                        monstring = monstring + mon[i].Monitor.Id + ",";
-                        intstring = intstring + '0,';
-                    }
-                    if (monstring.charAt(monstring.length - 1) == ',')
-                        monstring = monstring.substr(0, monstring.length - 1);
 
-                    if (intstring.charAt(intstring.length - 1) == ',')
-                        intstring = intstring.substr(0, intstring.length - 1);
+                    if (ld.eventServerMonitors !='' ) {
+                        // load previous monlist and intlist
+                        // so we don't overwrite 
+                        monstring = ld.eventServerMonitors;
+                        intlist = ld.eventServerInterval;
+                        NVRDataModel.debug ("loading saved monitor list and interval of "+monstring+">>"+intlist);
+
+                    }
+
+                    else { // build new list
+
+                        for (var i = 0; i < mon.length; i++) {
+                            monstring = monstring + mon[i].Monitor.Id + ",";
+                            intstring = intstring + '0,';
+                        }
+                        if (monstring.charAt(monstring.length - 1) == ',')
+                            monstring = monstring.substr(0, monstring.length - 1);
+    
+                        if (intstring.charAt(intstring.length - 1) == ',')
+                            intstring = intstring.substr(0, intstring.length - 1);
+
+                    }
+
+                 
 
                     //console.log ("WUTPUT SENDING REG WITH "+monstring);
 
