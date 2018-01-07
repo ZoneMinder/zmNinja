@@ -312,7 +312,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                                     function(error)
                                     {
                                         $ionicLoading.hide();
-                                        console.log("No cgi-bin found: " + JSON.stringify(error));
+                                        NVRDataModel.debug("No cgi-bin found: " + JSON.stringify(error));
                                         $scope.wizard.streamingValidText = $translate.instant('kPortalCgiBinFailed');
                                         $scope.wizard.streamingColor = "#e74c3c";
                                         d.reject(false);

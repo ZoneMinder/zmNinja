@@ -163,7 +163,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         // we need this timeout to avoid load interrupting
         // play -- I suppose its an angular digest foo thing
-        console.log ("*********** ON PLAY READY");
+        //console.log ("*********** ON PLAY READY");
+        NVRDataModel.debug ("On Play Ready invoked");
         handle = api;
 
         $ionicLoading.show(
@@ -186,7 +187,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.onPlaybackUpdate = function(rate)
     {
-        console.log ("UPDATED RATE TO "+rate);
+       // console.log ("UPDATED RATE TO "+rate);
         var ld = NVRDataModel.getLogin();
         ld.videoPlaybackSpeed = rate;
         NVRDataModel.setLogin(ld);
@@ -195,7 +196,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.onCanPlay = function()
     {
         
-        console.log ("*********** CAN PLAY");
+        //console.log ("*********** CAN PLAY");
         $ionicLoading.hide();
         NVRDataModel.debug("This video can be played");
         $scope.videoObject.config.cuepoints.points = [];
@@ -726,7 +727,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.selectEventUrl = url;
         $scope.slideIndex = $scope.mycarousel.index;
         $scope.slideLastIndex = $scope.slides.length - 1;
-        console.log ("FRAMES LENGTH IS " +$scope.slideLastIndex );
+       // console.log ("FRAMES LENGTH IS " +$scope.slideLastIndex );
 
         // console.log ("URL TO DISPLAY " + url);
 
@@ -748,7 +749,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
                         //NVRDataModel.log("selected frame is " + $scope.slideIndex);
 
-                        console.log("URL TO DISPLAY " + $scope.slides[$scope.slideIndex].img);
+                        //console.log("URL TO DISPLAY " + $scope.slides[$scope.slideIndex].img);
 
                         e.preventDefault();
                     }
@@ -762,7 +763,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         if ($scope.slideIndex < $scope.slideLastIndex) $scope.slideIndex++;
                         $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
                         //NVRDataModel.log("selected frame is " + $scope.slideIndex);
-                        console.log("URL TO DISPLAY " + $scope.slides[$scope.slideIndex].img);
+                        //console.log("URL TO DISPLAY " + $scope.slides[$scope.slideIndex].img);
                         e.preventDefault();
                     }
                 },
@@ -897,7 +898,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
 
         $scope.imageFit = !$scope.imageFit;
-        console.log("Switching image style to " + $scope.imageFit);
+        //console.log("Switching image style to " + $scope.imageFit);
     };
 
     $scope.$on('$ionicView.enter', function()
@@ -1063,7 +1064,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.$on('modal.removed', function(e, m)
     {
-        console.log("************* REMOVE CALLED");
+        //console.log("************* REMOVE CALLED");
         $interval.cancel(eventQueryHandle);
         if (m.id != 'footage')
             return;
@@ -1658,7 +1659,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     //videoURL = "http://arjunrc.ddns.net:8888/foo2.mp4";
                     $scope.video_url = videoURL;
 
-                    console.log("************** VIDEO IS " + videoURL);
+                    //console.log("************** VIDEO IS " + videoURL);
 
                     NVRDataModel.debug("Video url passed to player is: " + videoURL);
 

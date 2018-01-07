@@ -67,7 +67,7 @@
          $scope.loginData = NVRDataModel.getLogin();
          //console.log ("Event server - before Enter, loginData is " + JSON.stringify($scope.loginData));
 
-         console.log ("BEFORE ENTER I GOT " + JSON.stringify($scope.loginData));
+         //console.log ("BEFORE ENTER I GOT " + JSON.stringify($scope.loginData));
 
 
 
@@ -223,7 +223,7 @@
          $scope.loginData.eventServerMonitors = monstring;
          $scope.loginData.eventServerInterval = intervalstring;
 
-         console.log ("SAVED: " + JSON.stringify($scope.loginData));
+        // console.log ("SAVED: " + JSON.stringify($scope.loginData));
          NVRDataModel.setLogin($scope.loginData);
 
          var pushstate = "enabled";

@@ -388,7 +388,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     $scope.$on('$ionicView.leave', function()
     {
-        console.log("**VIEW ** State Ctrl Left");
+       // console.log("**VIEW ** State Ctrl Left");
         // FIXME not the best way...
         // If the user exits a view before its complete,
         // make sure he can come back in and redo
@@ -397,7 +397,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
     $scope.doRefresh = function()
     {
-        console.log("***Pull to Refresh");
+        //console.log("***Pull to Refresh");
         NVRDataModel.debug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
         getRunStatus();
         $timeout(getLoadStatus, 2000);

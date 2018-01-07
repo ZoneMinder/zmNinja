@@ -651,10 +651,10 @@ angular.module('zmApp', [
         }
 
         if ($rootScope.apiAuth) {
-          console.log("********** API AUTH");
+         // console.log("********** API AUTH");
           if (config.url.indexOf("/api/") > -1) {
             config.url = config.url + "&auth=" + $rootScope.authSession;
-            console.log("********** API AUTH muggled to:" + config.url);
+           // console.log("********** API AUTH muggled to:" + config.url);
 
           }
         }
@@ -932,7 +932,7 @@ angular.module('zmApp', [
 
           // coming here means login is needed
           function (error) {
-            console.log(">>>>>>>>>>>> FAST FAILED - THIS IS OK");
+           // console.log(">>>>>>>>>>>> FAST FAILED - THIS IS OK");
 
             var statename = $ionicHistory.currentStateName();
 
@@ -966,7 +966,7 @@ angular.module('zmApp', [
                 function (error)
                 // login to main failed, so try others
                 {
-                  console.log(">>>>>>>>>>>> Failed  first login, trying reachability");
+                  NVRDataModel.debug(">>>>>>>>>>>> Failed  first login, trying reachability");
                   NVRDataModel.getReachableConfig(true)
                     .then(function (data) {
                         proceedWithLogin()
@@ -1025,7 +1025,7 @@ angular.module('zmApp', [
 
 
 
-              console.log(">>>>>>>>>>>>>> ISRECAPTCHA");
+              //console.log(">>>>>>>>>>>>>> ISRECAPTCHA");
 
               NVRDataModel.isReCaptcha()
                 .then(function (result) {
@@ -1052,7 +1052,7 @@ angular.module('zmApp', [
                 });
 
               var loginData = NVRDataModel.getLogin();
-              console.log(">>>>>>>>>>>>>> PARALLEL POST WITH RECAPTCHA TO " + loginData.url);
+             // console.log(">>>>>>>>>>>>>> PARALLEL POST WITH RECAPTCHA TO " + loginData.url);
 
               /*  console.log ("-----------------------SECRET IS "+zm.hashSecret);
                $http.get (ld.apiurl+'/host/remoteIp.json')
@@ -1119,7 +1119,7 @@ angular.module('zmApp', [
                   }
                 })
                 .success(function (data, status, headers) {
-                  console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
+                 // console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
                   $ionicLoading.hide();
 
                   // Coming here does not mean success
@@ -1174,7 +1174,7 @@ angular.module('zmApp', [
                 })
                 .error(function (error, status) {
 
-                  console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
+                 // console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
                   $ionicLoading.hide();
 
                   //console.log("**** ZM Login FAILED");
@@ -1235,7 +1235,7 @@ angular.module('zmApp', [
 
 
     $ionicPlatform.ready(function () {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
+      //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
       $rootScope.textScaleFactor = 1.0;
       $rootScope.apiValid = false;
@@ -1273,7 +1273,7 @@ angular.module('zmApp', [
       }
 
       function okperm() {
-        console.log("cool");
+        //console.log("cool");
         NVRDataModel.displayBanner('success', ['Storage permission acquired'], "", 4000);
       }
 
@@ -1531,14 +1531,14 @@ angular.module('zmApp', [
       };
 
       
-      console.log("Mobile acc");
+      //console.log("Mobile acc");
       if (window.cordova)
         MobileAccessibility.getTextZoom(getTextZoomCallback);
 
       // $rootScope.lastState = "events";
       //$rootScope.lastStateParam = "0";
 
-      console.log("localforage config");
+      //console.log("localforage config");
       localforage.config({
         name: zm.dbName
 
@@ -1565,7 +1565,7 @@ angular.module('zmApp', [
 
       }
 
-      console.log("forage driver");
+      //console.log("forage driver");
       localforage.defineDriver(window.cordovaSQLiteDriver).then(function () {
         return localforage.setDriver(
           // Try setting cordovaSQLiteDriver if available,
@@ -1703,7 +1703,7 @@ angular.module('zmApp', [
        // console.log("file logger");
         $fileLogger.checkFile().then(function (resp) {
           if (parseInt(resp.size) > zm.logFileMaxSize) {
-            console.log("inside file logger");
+            //console.log("inside file logger");
 
             $fileLogger.deleteLogfile().then(function () {
               NVRDataModel.log("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
@@ -1784,7 +1784,7 @@ angular.module('zmApp', [
               }
               loadServices();
             }, function (err) {
-              console.log("ERR " + JSON.stringify(err));
+              //console.log("ERR " + JSON.stringify(err));
               loadServices();
             });
         } else

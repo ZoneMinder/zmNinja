@@ -293,7 +293,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         {
             $interval.cancel(updateInterval);
             timeline.destroy();
-            console.log("**Destroying Timeline");
+            //console.log("**Destroying Timeline");
 
         }
     });
@@ -421,7 +421,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             }
             else
             {
-                console.log("From:" + $rootScope.fromString + " To:" + $rootScope.toString);
+                //console.log("From:" + $rootScope.fromString + " To:" + $rootScope.toString);
                 //console.log("FROM & TO IS CUSTOM INVALID");
 
                 if (NVRDataModel.getLogin().useLocalTimeZone)
@@ -1359,7 +1359,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                             timeline.on('click', function(prop)
                             {
-                                console.log ("CLICK");
+                                //console.log ("CLICK");
                                 if ($scope.onTap==$translate.instant('kTimelineGraph'))
                                     timelineAnalyzeFrames(prop);
                                 else
@@ -1468,7 +1468,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     }
 
     function timelineAnalyzeFrames(prop) {
-        console.log ("DOUBLE");
+       // console.log ("DOUBLE");
         dblclick = true;
         var itm = prop.item;
         //console.log ("ITEM CLICKED " + itm);

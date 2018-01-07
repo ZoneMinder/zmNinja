@@ -108,7 +108,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
                     tcGraph.data = onlyalarm_data;
             tcGraph.update();*/
             tcGraph.destroy();
-            console.log("GRAPH TYPE IS " + btype);
+           // console.log("GRAPH TYPE IS " + btype);
             tcGraph = new Chart(ctx,
             {
                 type: btype,
@@ -126,7 +126,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     $scope.showImage = function(p, r, f, fid, e, imode, id)
     {
         var img;
-        console.log("Image Mode " + imode);
+        //console.log("Image Mode " + imode);
         if (imode == 'path')
 
             img = "<img width='100%' ng-src='" + p + "/index.php?view=image&path=" + r + f + "'>";

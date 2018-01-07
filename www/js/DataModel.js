@@ -1625,7 +1625,7 @@ angular.module('zmApp.controllers')
                               }
 
                               monitors[i].Monitor.streamingURL = st2;
-                              console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
+                              //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
                             monitors[i].Monitor.baseURL = loginData.url;
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
 
@@ -1635,7 +1635,7 @@ angular.module('zmApp.controllers')
                               monitors[i].Monitor.imageMode = 'path';
                             }
 
-                            debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
+                           // debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
                           }
                         }
                         // now get packery hide if applicable
@@ -1726,9 +1726,9 @@ angular.module('zmApp.controllers')
             d.reject("not implemented");
             return d.promise;
           }
-          console.log("inside processFastLogin");
+         // console.log("inside processFastLogin");
           if (!loginData.fastLogin) {
-            console.log("Fast login not set");
+            //console.log("Fast login not set");
             d.reject("fast login not enabled");
             debug("fast login not enabled");
             return d.promise;
@@ -1737,7 +1737,7 @@ angular.module('zmApp.controllers')
           {
             localforage.getItem("lastLogin")
               .then(function (succ) {
-                  console.log("fast login DB found");
+                  //console.log("fast login DB found");
                   var dt = moment(succ);
 
                   if (dt.isValid()) {
@@ -1750,14 +1750,14 @@ angular.module('zmApp.controllers')
                       return d.promise;
                     }
                   } else {
-                    console.log("Invalid date found");
+                    //console.log("Invalid date found");
                     d.reject("last-login invalid");
                     return d.promise;
 
                   }
                 },
                 function (e) {
-                  console.log("fastlogin DB not found");
+                  //console.log("fastlogin DB not found");
                   d.reject("last-login not found, fastlogin rejected");
                   return d.promise;
                 });

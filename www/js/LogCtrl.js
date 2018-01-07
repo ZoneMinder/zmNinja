@@ -36,7 +36,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             $scope.logEntity = $rootScope.appName;
         else
             $scope.logEntity = 'ZoneMinder';
-        console.log ("Flipped");
+        //console.log ("Flipped");
         loadLogs();
 
     };
@@ -214,9 +214,9 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
         .then (function (success) {
             $ionicLoading.hide();
             $scope.zmMaxPage = success.data.pagination.pageCount;
-            console.log ("PAGES="+$scope.zmMaxPage);
+           // console.log ("PAGES="+$scope.zmMaxPage);
             var tLogs = "";
-            console.log (JSON.stringify(success));
+           // console.log (JSON.stringify(success));
             for (var i=0; i< success.data.logs.length; i++)
             {
                 tLogs = tLogs + moment.unix(success.data.logs[i].Log.TimeKey).format ("MM/DD/YY hh:mm:ss") +" "+

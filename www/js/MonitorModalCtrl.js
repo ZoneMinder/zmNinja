@@ -465,11 +465,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     //t.addEventListener("mouseup",moveStop);
 
 
-                    console.log ("Found circle-"+i);   
+                    //console.log ("Found circle-"+i);   
                 }
                 else
                 {
-                    console.log ("did not find circle-"+i);
+                   // console.log ("did not find circle-"+i);
                 }
                 
             }
@@ -503,7 +503,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.circleTouch = function (evt)
     {
-        console.log ("TOUCH");
+       // console.log ("TOUCH");
     };
 
     //$scope.circleOnDrag = function (evt, ndx)
@@ -513,7 +513,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
        
         // we get screen X/Y - need to translate
         // to SVG points
-        console.log ("recompute with",ax,"&",ay);
+        //console.log ("recompute with",ax,"&",ay);
         var svg=document.getElementById('zsvg');
         var pt = svg.createSVGPoint();
         pt.x = ax;
@@ -532,7 +532,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             {
                 newPoints = newPoints  + " " +$scope.circlePoints[i].x+","+$scope.circlePoints[i].y;
             }
-            console.log ("recomputed polygon:", newPoints);
+            //console.log ("recomputed polygon:", newPoints);
         }
        // console.log ("OLD ZONE FOR:"+zi+" is "+$scope.zoneArray[zi].coords );
         //console.log ("NEW ZONE FOR:"+zi+" is "+newPoints);
@@ -557,7 +557,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     {
         if (!_moveStart) {return;}
         
-            console.log ("CONTINUE: target id="+targetID);
+           // console.log ("CONTINUE: target id="+targetID);
             
 
             /*if(event.preventDefault) event.preventDefault();
@@ -567,7 +567,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             var x,y;
 
             var z = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom;
-            console.log ("zoom is:"+z);
+           // console.log ("zoom is:"+z);
            
             //console.log(event, this, "t");
             if (event.touches)
@@ -587,7 +587,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             }
             
           
-            console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
+           // console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
             $timeout (function() {recomputePolygons (x,y,targetID,1);});
 
 
@@ -596,7 +596,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     function moveStop (event)
     {
         _moveStart = false;
-        console.log ("STOP");
+       // console.log ("STOP");
     }
 
     function moveStart(event)
@@ -604,14 +604,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         
             _moveStart=true;
             targetID = event.target.id.substring(7);
-            console.log ("START: target id="+targetID);
+           // console.log ("START: target id="+targetID);
 
             if(event.preventDefault) event.preventDefault();
             if (event.gesture) event.gesture.preventDefault() ;
             if (event.gesture) event.gesture.stopPropagation();
 
             var z = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom;
-            console.log ("zoom is:"+z);
+            //console.log ("zoom is:"+z);
 
             var x,y;
             // perhaps event.targetTouches[0]?
@@ -629,7 +629,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 y = event.clientY  ;
 
             }
-            console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
+            //console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
 
     }
     
@@ -679,7 +679,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         for (i=0; i < $scope.zoneArray.length; i++)
         {
             /*jshint loopfunc: true */
-            console.log ("ZONE ARRAY="+$scope.zoneArray[i].coords);
+           // console.log ("ZONE ARRAY="+$scope.zoneArray[i].coords);
              $scope.zoneArray[i].coords.split(' ')
              .forEach( function(itm) 
                 { 
@@ -723,12 +723,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             hideUnhidePresets();
             return;
         }
-        console.log ("PTZ command is"+cmd);
+        //console.log ("PTZ command is"+cmd);
         controlPTZ(monitorId, cmd);
     };
 
     function hideUnhidePresets() {
-        console.log ("**********HIDEUNHIDE");
+        //console.log ("**********HIDEUNHIDE");
         $scope.ptzButtonsShown = !$scope.ptzButtonsShown;
 
         if ($scope.ptzPresets.length > 0) {
@@ -1540,7 +1540,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                             $scope.ptzMoveCommand = "move"; // start with as move;
                             $scope.ptzStopCommand = "";
 
-                            console.log ("GOT CONTROL "+JSON.stringify(data.control.Control));
+                           // console.log ("GOT CONTROL "+JSON.stringify(data.control.Control));
 
                             if (data.control.Control.CanZoom == '1')
                             {
@@ -1573,7 +1573,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                                 // so no prefix
                                 $scope.ptzMoveCommand = "";
                                 $scope.ptzStopCommand = "moveStop";
-                                console.log ("MoveAbs set");
+                               // console.log ("MoveAbs set");
                             }
 
                             if (data.control.Control.CanMoveAbs == '1')
@@ -1581,7 +1581,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                                 $scope.ptzMoveCommand = "moveAbs";
                                 $scope.ptzStopCommand = "moveStop";
-                                console.log ("MoveAbs set");
+                              //  console.log ("MoveAbs set");
                             }
 
                             if (data.control.Control.CanMoveRel == '1')
@@ -1736,7 +1736,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         originalZones = [];
         $http.get (api)
         .then (function (succ) {
-            console.log (JSON.stringify(succ));
+           // console.log (JSON.stringify(succ));
             for (var i=0; i < succ.data.zones.length; i++)
             {
                 originalZones.push ({
