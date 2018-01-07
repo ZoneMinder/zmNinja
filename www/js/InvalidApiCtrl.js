@@ -14,7 +14,7 @@ angular.module('zmApp.controllers').controller('zmApp.InvalidApiCtrl', ['$scope'
     //------------------------------------------------------------------------
     $scope.$on('$ionicView.enter', function()
     {
-        console.log("**VIEW ** InvalidAPI Ctrl Entered");
+       // console.log("**VIEW ** InvalidAPI Ctrl Entered");
         $ionicSideMenuDelegate.canDragContent(true);
     });
 

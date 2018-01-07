@@ -47,7 +47,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 else if ($ionicPlatform.is('android') && loginData.usePin) {
 
                     FingerprintAuth.isAvailable(function (result) {
-                        console.log("FingerprintAuth available: " + JSON.stringify(result));
+                        NVRDataModel.debug("FingerprintAuth available: " + JSON.stringify(result));
                         if (result.isAvailable == true && result.hasEnrolledFingerprints == true) {
                             var encryptConfig = {
                                 clientId: "zmNinja",

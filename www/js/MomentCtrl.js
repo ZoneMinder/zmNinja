@@ -664,11 +664,11 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         NVRDataModel.log("Future date selected, ignoring");
         return;
       }
-      console.log("T=" + t.format("MMM DD,YYYY HH:mm"));
+      //console.log("T=" + t.format("MMM DD,YYYY HH:mm"));
     } else {
       t = moment(timeTo);
       t.subtract(1, "day");
-      console.log("T=" + t.format("MMM DD,YYYY HH:mm"));
+      //console.log("T=" + t.format("MMM DD,YYYY HH:mm"));
 
     }
     var newTo = t.format("YYYY-MM-DD HH:mm:ss");
@@ -833,7 +833,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       excludeMonitors = [];
     }
   
-    console.log("RETRIEVED EXCLUDE=" + JSON.stringify(excludeMonitors));
+    //console.log("RETRIEVED EXCLUDE=" + JSON.stringify(excludeMonitors));
     constructMask();
     $scope.isSubMenu = ld.enableMomentSubMenu;
 
@@ -842,7 +842,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     for (var i = 0; i < monitors.length; i++) {
       if (excludeMonitors.indexOf(monitors[i].Monitor.Id) != -1) {
         monitors[i].Monitor.listDisplay = 'noshow';
-        console.log("Marking monitor " + monitors[i].Monitor.Id + " as noshow");
+        //console.log("Marking monitor " + monitors[i].Monitor.Id + " as noshow");
       }
 
     }

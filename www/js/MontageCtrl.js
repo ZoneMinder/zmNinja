@@ -34,7 +34,7 @@ angular.module('zmApp.controllers')
 
     $rootScope.$on("auth-success", function () {
          NVRDataModel.debug("REAUTH");
-        console.log ("RETAUTH");
+        //console.log ("RETAUTH");
         NVRDataModel.stopNetwork();
     });
 
@@ -303,7 +303,7 @@ angular.module('zmApp.controllers')
                                 if (isNaN(positions[j].size)) positions[j].size=20;
                                 $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
                                 $scope.MontageMonitors[i].Monitor.listDisplay = positions[j].display;
-                                NVRDataModel.debug("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " + positions[j].size + " and display:" + positions[j].display);
+                               // NVRDataModel.debug("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " + positions[j].size + " and display:" + positions[j].display);
                             }
                             //console.log ("Index:"+positions[j].attr+ " with size: " + positions[j].size);
                         }
@@ -317,7 +317,7 @@ angular.module('zmApp.controllers')
                     //NVRDataModel.log("Force calling resize");
                     ///pckry.reloadItems();
                     ///positions is defined only if layouttype was false
-                    console.log (">>> Positions is "+ JSON.stringify(positions));
+                   // console.log (">>> Positions is "+ JSON.stringify(positions));
                     if (!layouttype) pckry.initShiftLayout(positions, "data-item-id");
                     // now do a jiggle 
                     $timeout(function()
@@ -345,7 +345,7 @@ angular.module('zmApp.controllers')
                 //console.log ("POSITIONS MAP " + JSON.stringify(positions));
                 var ld = NVRDataModel.getLogin();
                 ld.packeryPositions = JSON.stringify(positions);
-                console.log ("Saving " + ld.packeryPositions);
+              //  console.log ("Saving " + ld.packeryPositions);
                // console.log ("FULL OBJECT "+ JSON.stringify(ld));
                 ld.currentMontageProfile = "";
                 $scope.currentProfileName = $translate.instant ('kMontage');
@@ -409,15 +409,15 @@ angular.module('zmApp.controllers')
     function findNext (key,obj)
     {
 
-      console.log (" key is: "+ key);
-      console.log ("array is " + JSON.stringify (obj));
+     // console.log (" key is: "+ key);
+     // console.log ("array is " + JSON.stringify (obj));
        var keys = Object.keys(obj);
 
        var len = keys.length;
        var curindex = keys.indexOf(key);
        var modulus = (curindex +  1) % len;
 
-       console.log ("*********** len="+len+" curr="+curindex+" next="+modulus);
+       //console.log ("*********** len="+len+" curr="+curindex+" next="+modulus);
 
        //console.log ("Keys array "+ JSON.stringify(keys));
 
@@ -571,7 +571,7 @@ angular.module('zmApp.controllers')
     function loadNotifications()
     {
         if (multiPortZms) {
-            console.log ("Skipping timer as multiportZMS="+multiPortZms);
+           // console.log ("Skipping timer as multiportZMS="+multiPortZms);
             return;
         }
 
@@ -969,7 +969,7 @@ angular.module('zmApp.controllers')
             $timeout(function()
             {
                 var positions = pckry.getShiftPositions('data-item-id');
-                console.log("SAVING");
+               // console.log("SAVING");
                 var ld = NVRDataModel.getLogin();
 
                 ld.packeryPositions = JSON.stringify(positions);
@@ -1521,7 +1521,7 @@ angular.module('zmApp.controllers')
 
         }).then(function(res)
         {
-            console.log(res);
+            //console.log(res);
             if (res) // ok
             {
 
@@ -1622,10 +1622,11 @@ angular.module('zmApp.controllers')
         NVRDataModel.getZmsMultiPortSupport()
            .then ( function (data) { 
             multiPortZms = data;
-            console.log ("****** MULTIPORT="+multiPortZms);
+            //console.log ("****** MULTIPORT="+multiPortZms);
+            NVRDataModel.debug ("Multiport="+multiPortZms);
         },
         function (err) {
-            console.log ("******* SHOULD NEVER HAPPEN - MULTIPORT ERROR");
+            NVRDataModel.debug("******* SHOULD NEVER HAPPEN - MULTIPORT ERROR");
             multiPortZms = 0;
 
         }
@@ -1929,7 +1930,7 @@ angular.module('zmApp.controllers')
                 $timeout(function()
                 {
                     var positions = pckry.getShiftPositions('data-item-id');
-                    console.log("SAVING");
+                    //console.log("SAVING");
                     var ld = NVRDataModel.getLogin();
 
                     ld.packeryPositions = JSON.stringify(positions);
@@ -1957,7 +1958,7 @@ angular.module('zmApp.controllers')
 
         if ($scope.sliderChanging)
         {
-            console.log("too fast my friend");
+           // console.log("too fast my friend");
             //$scope.slider.monsize = oldSliderVal;
             return;
         }
@@ -1980,7 +1981,7 @@ angular.module('zmApp.controllers')
             var sz = elem.getAttribute("data-item-size");
             if (isNaN(sz)) sz=20;
             oldScales[id] = sz;
-            console.log("REMEMBERING " + id + ":" + sz);
+           // console.log("REMEMBERING " + id + ":" + sz);
 
         });
 
@@ -2031,7 +2032,7 @@ angular.module('zmApp.controllers')
 
         $timeout(function()
         {
-            console.log("Calling re-layout");
+            //console.log("Calling re-layout");
             //pckry.reloadItems(); 
 
             if (dirn == 1) //expand
@@ -2041,10 +2042,10 @@ angular.module('zmApp.controllers')
                     var id = elem.getAttribute("data-item-id");
                     var sz = elem.getAttribute("data-item-size");
                     if (isNaN(sz)) sz=20;
-                    console.log("NOW IT IS-> " + id + ":" + sz);
+                    //console.log("NOW IT IS-> " + id + ":" + sz);
                     if (oldScales[id] != sz)
                     {
-                        console.log("Calling FIT on " + id + " size:" + oldScales[id] + "->" + sz);
+                        //console.log("Calling FIT on " + id + " size:" + oldScales[id] + "->" + sz);
                         pckry.once('fitComplete', resizeComplete);
                         pckry.fit(elem);
 
@@ -2053,7 +2054,7 @@ angular.module('zmApp.controllers')
             }
             else //shrink
             {
-                console.log("Calling shift");
+                //console.log("Calling shift");
                 pckry.once('layoutComplete', resizeComplete);
                 pckry.shiftLayout();
 
@@ -2079,7 +2080,7 @@ angular.module('zmApp.controllers')
             $timeout(function()
             {
                 var positions = pckry.getShiftPositions('data-item-id');
-                console.log("SAVING");
+                //console.log("SAVING");
                 var ld = NVRDataModel.getLogin();
 
                 ld.packeryPositions = JSON.stringify(positions);
