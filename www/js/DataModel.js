@@ -1100,7 +1100,7 @@ angular.module('zmApp.controllers')
           }
         },
 
-        isLoggedIn: function () {
+        hasLoginInfo: function () {
 
           if ((loginData.username != "" && loginData.password != "" && loginData.url != "" &&
               loginData.apiurl != "") || (loginData.isUseAuth != '1')) {

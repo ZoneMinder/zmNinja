@@ -27,7 +27,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
             $scope.pinPrompt = false; // if true, then PIN is displayed else skip 
 
-            if (NVRDataModel.isLoggedIn())
+            if (NVRDataModel.hasLoginInfo())
             {
                 NVRDataModel.log("User credentials are provided");
 

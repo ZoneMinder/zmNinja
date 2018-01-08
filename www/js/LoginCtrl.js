@@ -249,8 +249,25 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         NVRDataModel.debug("Saving settings before going to Event Server settings");
         //console.log ( "My loginData saved " + JSON.stringify($scope.loginData));
         NVRDataModel.setLogin($scope.loginData);
-        $state.go("app.eventserversettings");
-        return;
+
+
+        if (!$rootScope.isLoggedIn) {
+            $rootScope.zmPopup = $ionicPopup.alert(
+                {
+                    title: $translate.instant('kError'),
+                    template: $translate.instant('kEventServerNotLoggedIn'),
+                    okText: $translate.instant('kButtonOk'),
+                    cancelText: $translate.instant('kButtonCancel'),
+                });
+                return;            
+
+        }
+        else {
+            $state.go("app.eventserversettings");
+            return;
+        }
+
+        
     };
 
     //-------------------------------------------------------------------------
