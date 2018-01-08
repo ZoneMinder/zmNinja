@@ -223,6 +223,10 @@
          $scope.loginData.eventServerMonitors = monstring;
          $scope.loginData.eventServerInterval = intervalstring;
 
+         $rootScope.monstring = monstring;
+         $rootScope.intstring = intervalstring;
+
+
         // console.log ("SAVED: " + JSON.stringify($scope.loginData));
          NVRDataModel.setLogin($scope.loginData);
 
