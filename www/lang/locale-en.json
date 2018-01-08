@@ -110,6 +110,9 @@
     "kEventServerVersionBody1"   :"You are running version",
     "kEventServerVersionBody2"   :"Please upgrade to",
     "kEventServerVersionTitle"   :"Event Server version not supported",
+
+    "kEventServerNotLoggedIn"     :"You are not yet logged in. Please make sure you have logged in successfully  (save your login data, and ensure login is successful)",
+
     "kEventSingleImageScale"     :"Event single image scale",
     "kEventView"                 :"Event View",
     "kEvents"                    :"events",
@@ -372,6 +375,7 @@
     "kTimelineOnlyDisplaying1"   :"only displaying last {{maxItemsVal}} events",
     "kTitleNotLoggedIn"          :"Not logged in",
     "kTitleNotLoggedInBody"      :"It doesn't look like you are logged in. For detection to work, you must fill in your login details, portal URL and then tap on Save. Then come back to this feature.",
+
     "kTitlePortalNotConfigured"  :"Portal not configured",
     "kTo"                        :"to",
     "kToDate"                    :"To Date",

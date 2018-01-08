@@ -865,6 +865,8 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     $rootScope.$on("auth-success", function () {
+
+      $rootScope.isLoggedIn = true;
       var contentBannerInstance = $ionicContentBanner.show({
         text: ['ZoneMinder' + $translate.instant('kAuthSuccess')],
         interval: 2000,
@@ -1238,6 +1240,7 @@ angular.module('zmApp', [
       //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
       $rootScope.textScaleFactor = 1.0;
+      $rootScope.isLoggedIn = false;
       $rootScope.apiValid = false;
 
       $rootScope.db = null;
@@ -1451,7 +1454,7 @@ angular.module('zmApp', [
 
         }
 
-        if (NVRDataModel.isLoggedIn() || toState.data.requireLogin == false) {
+        if (NVRDataModel.hasLoginInfo() || toState.data.requireLogin == false) {
           //console.log("State transition is authorized");
 
           return;
