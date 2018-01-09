@@ -583,7 +583,7 @@ angular.module('zmApp.controllers')
                     // set tappedMid to monitor 
                     //*** PUSH DATA>>>>{"sound":"blop","message":"Alarms: Basement (2854) ","additionalData":{"mid":"2","coldstart":false,"collapse_key":"do_not_collapse","foreground":false}}
 
-                    if (data.additionalData.dismissed != undefined) // user tapped on notification
+                    if (data.additionalData.dismissed != undefined || data.additionalData.coldstart == true) // user tapped on notification
                     {
                         NVRDataModel.debug("Notification Tapped");
                         $rootScope.alarmCount = "0";
@@ -622,7 +622,7 @@ angular.module('zmApp.controllers')
                         $rootScope.tappedEid = 0;
                         $rootScope.tappedMid = 0;
                     }
-                    
+                    $rootScope.$emit('process-push');
 
                 }
                 else // app is foreground
@@ -631,7 +631,7 @@ angular.module('zmApp.controllers')
                     // this flag honors the HW mute button. Go figure
                     // http://ilee.co.uk/phonegap-plays-sound-on-mute/
 
-                    NVRDataModel.debug ("--> Either app icon tapped, or app is already in foreground");
+                    NVRDataModel.debug ("--> *** PUSH IN FOREGROUND");
 
                     $rootScope.tappedNotification = 0;
                     $rootScope.tappedEid = 0;
