@@ -350,7 +350,6 @@
     "kTime"                      :"Heure",
     "kTimeZoneNotSupported"      :"Non supporté par votre API",
     "kTimeline"                  :"Calendrier",
-    "kTimelineControlDisplay"    :"appui simple : voir l'événement, appui double : voir le graphique",
     "kTimelineMessage"           :"Effectuez un double-clic ou un appui double pour quitter. Utilisez le tactile ou la souris pour déplacer les éléments et voir les images",
     "kTimelineOnlyDisplaying1"   :"uniquement les {{maxItemsVal}} derniers événements",
     "kTitleNotLoggedIn"          :"Non connecté",

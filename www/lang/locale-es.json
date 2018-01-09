@@ -350,7 +350,6 @@
     "kTime"                      :"tiempo",
     "kTimeZoneNotSupported"      :"tu API no consta con esta función",
     "kTimeline"                  :"Cronograma",
-    "kTimelineControlDisplay"    :"tap:ver evento, doble-tap:ver gráfica",
     "kTimelineMessage"           :"Doble-tap salir. Tocar/pasar el ratón y arrastrar sobre los items para ver los cuadros.",
     "kTimelineOnlyDisplaying1"   :"mostrar únicamente los últimos {{maxItemsVal}} eventos",
     "kTitleNotLoggedIn"          :"No se ha iniciado sesión",
