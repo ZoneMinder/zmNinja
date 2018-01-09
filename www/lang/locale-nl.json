@@ -344,7 +344,6 @@
     "kTime"                      :"tijd",
     "kTimeZoneNotSupported"      :"uw API ondersteund dit niet",
     "kTimeline"                  :"Tijdlijn",
-    "kTimelineControlDisplay"    :"tik:gebeurtenis tonen, dubbel-tik:beeld grafiek tonen",
     "kTimelineMessage"           :"afsluiten via dubbel-klik. aanraken/muis-over en slepen over items tonen beelden",
     "kTimelineOnlyDisplaying1"   :"Laatste {{maxItemsVal}} gebeurtenissen worden getoond",
     "kTitleNotLoggedIn"          :"Niet ingelogd",

@@ -323,7 +323,6 @@
     "kTime"                      :"tempo",
     "kTimeZoneNotSupported"      :"A sua API não suporta isto",
     "kTimeline"                  :"Timeline",
-    "kTimelineControlDisplay"    :"clique:ver evento, clique-duplo:ver gráfico de frames",
     "kTimelineMessage"           :"clique-duplo sai. clique/rato-por-cima e arraste por cima dos items para ver frames",
     "kTimelineOnlyDisplaying1"   :"mostrando apenas os ultimos {{maxItemsVal}} eventos",
     "kTitleNotLoggedIn"          :"Você não está logado",

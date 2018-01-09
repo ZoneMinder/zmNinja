@@ -354,7 +354,6 @@
     "kTime"                      :"idő",
     "kTimeZoneNotSupported"      :"Az API nem támogatja ezt",
     "kTimeline"                  :"Idővonal",
-    "kTimelineControlDisplay"    :"Érintse meg: megtekintheti az eseményt, dupla érintéssel: nézze meg a keretgrafikont",
     "kTimelineMessage"           :"Duplán koppintson a kilépésre. Érintse meg a / egérrel és húzza az elemeket az elemek megtekintéséhez keretek megjelenítéséhez",
     "kTimelineOnlyDisplaying1"   :"Csak az utolsó {{maxItemsVal}} eseményeket jeleníti meg",
     "kTitleNotLoggedIn"          :"Nincs bejelentkezve",

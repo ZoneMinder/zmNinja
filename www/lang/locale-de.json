@@ -363,7 +363,6 @@
     "kTime"                      :"Zeit",
     "kTimeZoneNotSupported"      :"wird von Deiner API nicht unterstützt.",
     "kTimeline"                  :"Zeitachse",
-    "kTimelineControlDisplay"    :"einfacher Klick: zeige Ereignis, Doppelklick: zeige Diagramm",
     "kTimelineMessage"           :"Berühre das Diagramm bzw. einen roten Punkt um das jeweilige Einzelbild zu sehen. Doppelklick schließt dieses Fenster.",
     "kTimelineOnlyDisplaying1"   :"zeige nur die neusten {{maxItemsVal}} Ereignisse",
     "kTitleNotLoggedIn"          :"nicht angemeldet",

@@ -303,7 +303,6 @@
     "kThanksForUsing"            :"Grazie per usare",
     "kTime"                      :"tempo",
     "kTimeline"                  :"Timeline",
-    "kTimelineControlDisplay"    :"tap:mostra eventi, double-tap:mostra grafico frames",
     "kTimelineMessage"           :"Doppio Tap Esci. Trascina per vedere i frame",
     "kTimelineOnlyDisplaying1"   :"Visualizzo solo gli ultimi {{maxItemsVal}} eventi",
     "kTitleNotLoggedIn"          :"Non loggato",

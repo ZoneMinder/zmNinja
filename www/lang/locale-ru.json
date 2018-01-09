@@ -329,7 +329,6 @@
     "kTime"                      :"время",
     "kTimeZoneNotSupported"      :"Ваш API не поддерживает это",
     "kTimeline"                  :"Временная Диаграмма",
-    "kTimelineControlDisplay"    :"тап:просмотр события, двойной-тап:просмотр графа кадров",
     "kTimelineMessage"           :"двойной-тап выход. коснуться/провести мышкой-над/тянуть над элементами чтобы просмотреть кадры",
     "kTimelineOnlyDisplaying1"   :"только отображать {{maxItemsVal}} последних событий",
     "kTitleNotLoggedIn"          :"Не залогинен",
