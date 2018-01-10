@@ -9,8 +9,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     var processPush = false;
 
     $scope.$on ('$ionicView.beforeEnter', function() {
-        processPush = false;
-        NVRDataModel.debug ("BeforeEnter in Portal: setting ProcessPush to false");
+        //processPush = false;
+       // NVRDataModel.debug ("BeforeEnter in Portal: setting ProcessPush to false");
     });
 
     $scope.$on('$ionicView.enter',
@@ -279,6 +279,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     $rootScope.$on("process-push", function () {
         NVRDataModel.debug("*** PROCESS PUSH HANDLER CALLED INSIDE PORTAL LOGIN, setting ProcessPush to true");
         processPush = true;
+        evaluateTappedNotification();
 
        
    });
@@ -286,7 +287,12 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
    function evaluateTappedNotification()
       {
           var ld = NVRDataModel.getLogin();
-          processPush = false;
+
+          // give enough time for state conflicts to work out
+          // that way PortalLogin doesn't override this
+          // and I thought I was eliminating hacks....
+          $timeout (function() {processPush = false;},1000);
+          
           
           if ($rootScope.tappedNotification == 2) { // url launch
               NVRDataModel.debug("Came via app url launch with mid="+$rootScope.tappedMid);
@@ -374,6 +380,18 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   return;
               }
           }
+          else {
+             /* NVRDataModel.debug ("Inside evaluateTapped, but no tap occured.");
+              NVRDataModel.debug ("This can happen if timing mismatch and holy foo happens");
+              $state.go("app.montage",
+                  {},
+                  {
+                      reload: true
+                  });
+  
+                  return;*/
+              
+          }
   
       }
   
@@ -449,6 +467,13 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     NVRDataModel.getKeyConfigParams(1);
                                     NVRDataModel.getTimeZone();
                                     EventServer.refresh();
+
+                                    // if push broadcast happens BEFORE this, then no 
+                                    // state change will occur here which is good
+
+                                    // if push happens AFTER this, then while going to
+                                    // lastState, it will interrupt and go to onTap
+                                    // (I HOPE...)
                                     if (!processPush)
                                     {
                                         //console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
@@ -461,8 +486,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         return;
 
                                     }
-                                    else
-                                       evaluateTappedNotification();
+                                  //  else
+                                   //    evaluateTappedNotification();
                                     
 
                                 },
