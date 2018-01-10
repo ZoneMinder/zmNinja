@@ -43,7 +43,7 @@ angular.module('zmApp', [
   .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     recommendedAppVersion: '1.29',
-    minEventServerVersion: '0.98.2',
+    minEventServerVersion: '0.98.3',
     castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
@@ -862,105 +862,7 @@ angular.module('zmApp', [
 
 
 
-    $rootScope.$on("process-push", function () {
-      NVRDataModel.debug("*** PROCESS PUSH HANDLER CALLED");
-     evaluateTappedNotification();
- });
-
- function evaluateTappedNotification()
-    {
-        var ld = NVRDataModel.getLogin();
-      
-
-        if ($rootScope.tappedNotification == 2) { // url launch
-            NVRDataModel.debug("Came via app url launch with mid="+$rootScope.tappedMid);
-            NVRDataModel.debug("Came via app url launch with eid="+$rootScope.tappedEid);
-            $rootScope.tappedNotification = 0;
-            $ionicHistory.nextViewOptions(
-            {
-                disableBack: true
-            });
-
-            if (parseInt($rootScope.tappedMid) > 0) 
-            {
-                NVRDataModel.debug("Going to live view ");
-                $state.go("app.monitors",
-                {},
-                {
-                    reload: true
-                });
-                return;
-
-            }
-
-            else if (parseInt($rootScope.tappedEid) > 0) {
-                NVRDataModel.debug("Going to events with EID=" + $rootScope.tappedEid);
-                $state.go("app.events",
-                {
-                    //"id": $rootScope.tappedEid,
-                    "id": 0,
-                    "playEvent": true
-                },
-                {
-                    reload: true
-                });
-                return;
-            }
-            // go with monitor first, then event - just because I feel like ;)
-
-            
-        }
-        else if ($rootScope.tappedNotification == 1) // push
-        {
-
-            
-            NVRDataModel.log("Came via push tap. onTapScreen=" + ld.onTapScreen);
-            $rootScope.pushOverride = true;
-            //console.log ("***** NOTIFICATION TAPPED  ");
-            $rootScope.tappedNotification = 0;
-            $ionicHistory.nextViewOptions(
-            {
-                disableBack: true
-            });
-
-            if (ld.onTapScreen == $translate.instant('kTapMontage'))
-            {
-                NVRDataModel.debug("Going to montage");
-                $state.go("app.montage",
-                {},
-                {
-                    reload: true
-                });
-
-                return;
-            }
-            else if (ld.onTapScreen == $translate.instant('kTapEvents'))
-            {
-                NVRDataModel.debug("Going to events");
-                $state.go("app.events",
-                {
-                    "id": 0,
-                    "playEvent": false
-                },
-                {
-                    reload: true
-                });
-                return;
-            }
-            else // we go to live
-            {
-                NVRDataModel.debug("Going to live view ");
-                $state.go("app.monitors",
-                {},
-                {
-                    reload: true
-                });
-                return;
-            }
-        }
-
-    }
-
+   
 
 
     //------------------------------------------------------------------
