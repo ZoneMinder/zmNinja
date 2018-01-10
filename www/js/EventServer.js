@@ -112,6 +112,8 @@ angular.module('zmApp.controllers')
             //if (!$rootScope.apnsToken)
             if (!pushInited) pushInit();
 
+            console.log ("WS TYPEOF="+ typeof ws);
+           // console.log ("WS="+JSON.stringify(ws));
             if (typeof ws !== 'undefined')
             {
                 NVRDataModel.debug("websocket already initialized ?!?");
@@ -583,14 +585,29 @@ angular.module('zmApp.controllers')
                     // set tappedMid to monitor 
                     //*** PUSH DATA>>>>{"sound":"blop","message":"Alarms: Basement (2854) ","additionalData":{"mid":"2","coldstart":false,"collapse_key":"do_not_collapse","foreground":false}}
 
-                    if (data.additionalData.dismissed != undefined || data.additionalData.coldstart == true) // user tapped on notification
+                    if (data.additionalData.dismissed != undefined || data.additionalData.coldstart == true || $rootScope.platformOS == 'ios') // user tapped on notification
+                    // in iOS case, since content-av is not there this notification won't be called unless you tap
                     {
                         NVRDataModel.debug("Notification Tapped");
                         $rootScope.alarmCount = "0";
                         $rootScope.isAlarm = 0;
                         $rootScope.tappedNotification = 1;
-                        var mid = data.additionalData.mid;
-                        var eid = data.additionalData.eid;
+
+                        var mid;
+                        var eid;
+
+                        // we are using FCM on IOS too 
+                      /*  if ($rootScope.platformOS == 'ios') {
+                            mid = data.additionalData.gcm.notification.mid;
+                            eid = data.additionalData.gcm.notification.eid;
+
+                        }
+                        else {*/
+
+                        mid = data.additionalData.mid;
+                        eid = data.additionalData.eid;
+                       // }
+                        
 
 
                         // if Multiple mids, take the first one

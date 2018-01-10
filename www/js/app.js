@@ -915,6 +915,7 @@ angular.module('zmApp', [
 
             
             NVRDataModel.log("Came via push tap. onTapScreen=" + ld.onTapScreen);
+            $rootScope.pushOverride = true;
             //console.log ("***** NOTIFICATION TAPPED  ");
             $rootScope.tappedNotification = 0;
             $ionicHistory.nextViewOptions(
@@ -1983,6 +1984,8 @@ angular.module('zmApp', [
         document.addEventListener("pause", function () {
           NVRDataModel.setBackground(true);
           NVRDataModel.setJustResumed(true); // used for window stop
+
+          EventServer.disconnect();
 
           NVRDataModel.log("ROOT APP:App is going into background");
 
