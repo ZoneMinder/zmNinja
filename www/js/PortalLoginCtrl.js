@@ -6,10 +6,18 @@
 angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', 'EventServer', '$translate', function($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, EventServer, $translate)
 {
 
+    var processPush = false;
+
+    $scope.$on ('$ionicView.beforeEnter', function() {
+        processPush = false;
+        NVRDataModel.debug ("BeforeEnter in Portal: setting ProcessPush to false");
+    });
+
     $scope.$on('$ionicView.enter',
         function()
         {
 
+            
             NVRDataModel.debug("Inside Portal login Enter handler");
             loginData = NVRDataModel.getLogin();
 
@@ -267,6 +275,108 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
         return (d.promise);
     }
 
+
+    $rootScope.$on("process-push", function () {
+        NVRDataModel.debug("*** PROCESS PUSH HANDLER CALLED INSIDE PORTAL LOGIN, setting ProcessPush to true");
+        processPush = true;
+
+       
+   });
+  
+   function evaluateTappedNotification()
+      {
+          var ld = NVRDataModel.getLogin();
+          processPush = false;
+          
+          if ($rootScope.tappedNotification == 2) { // url launch
+              NVRDataModel.debug("Came via app url launch with mid="+$rootScope.tappedMid);
+              NVRDataModel.debug("Came via app url launch with eid="+$rootScope.tappedEid);
+              $rootScope.tappedNotification = 0;
+              $ionicHistory.nextViewOptions(
+              {
+                  disableBack: true
+              });
+  
+              if (parseInt($rootScope.tappedMid) > 0) 
+              {
+                  NVRDataModel.debug("Going to live view ");
+                  $state.go("app.monitors",
+                  {},
+                  {
+                      reload: true
+                  });
+                  return;
+  
+              }
+  
+              else if (parseInt($rootScope.tappedEid) > 0) {
+                  NVRDataModel.debug("Going to events with EID=" + $rootScope.tappedEid);
+                  $state.go("app.events",
+                  {
+                      //"id": $rootScope.tappedEid,
+                      "id": 0,
+                      "playEvent": true
+                  },
+                  {
+                      reload: true
+                  });
+                  return;
+              }
+              // go with monitor first, then event - just because I feel like ;)
+  
+              
+          }
+          else if ($rootScope.tappedNotification == 1) // push
+          {
+  
+              
+              NVRDataModel.log("Came via push tap. onTapScreen=" + ld.onTapScreen);
+              $rootScope.pushOverride = true;
+              //console.log ("***** NOTIFICATION TAPPED  ");
+              $rootScope.tappedNotification = 0;
+              $ionicHistory.nextViewOptions(
+              {
+                  disableBack: true
+              });
+  
+              if (ld.onTapScreen == $translate.instant('kTapMontage'))
+              {
+                  NVRDataModel.debug("Going to montage");
+                  $state.go("app.montage",
+                  {},
+                  {
+                      reload: true
+                  });
+  
+                  return;
+              }
+              else if (ld.onTapScreen == $translate.instant('kTapEvents'))
+              {
+                  NVRDataModel.debug("Going to events");
+                  $state.go("app.events",
+                  {
+                      "id": 0,
+                      "playEvent": false
+                  },
+                  {
+                      reload: true
+                  });
+                  return;
+              }
+              else // we go to live
+              {
+                  NVRDataModel.debug("Going to live view ");
+                  $state.go("app.monitors",
+                  {},
+                  {
+                      reload: true
+                  });
+                  return;
+              }
+          }
+  
+      }
+  
     
 
     function unlock(idVerified)
@@ -339,7 +449,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     NVRDataModel.getKeyConfigParams(1);
                                     NVRDataModel.getTimeZone();
                                     EventServer.refresh();
-                                    if ($rootScope.tappedNotification == 0)
+                                    if (!processPush)
                                     {
                                         //console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
                                         var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
@@ -351,8 +461,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                         return;
 
                                     }
-                                    //else
-                                       // evaluateTappedNotification();
+                                    else
+                                       evaluateTappedNotification();
                                     
 
                                 },

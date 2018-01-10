@@ -134,7 +134,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
 
         NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
-        NVRDataModel.stopNetwork("Auth-Success inside EventModalCtrl");
+       // NVRDataModel.stopNetwork("Auth-Success inside EventModalCtrl");
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
         //console.log ("********* OFFSET FROM AUTH SUCC");
         $timeout(function()
@@ -981,7 +981,15 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
 
         var cv = document.getElementById("eventchart");
-        var ctx = cv.getContext("2d");
+        var ctx;
+        try {
+            ctx = cv.getContext("2d");
+        }
+        catch (e) {
+            NVRDataModel.debug ("2D Context ERROR, maybe live play");
+            
+        }
+        
 
         frameoptions = {
             responsive: true,
