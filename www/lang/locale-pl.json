@@ -82,7 +82,7 @@
     "kEnableSlowLoading"         :"Użyj dużych opóźnień HTTP",
     "kEnableStrictSSL"           :"Włącz rygorystyczne sprawdzanie SSL",
     "kEnableThumbs"              :"Włącz miniatury na liście zdarzeń",
-    "kEnableThumbsSub"           :"(wymaga ZM 1.31 lub aktualizacji API)",  
+    "kEnableThumbsSub"           :"(wymaga ZM 1.31 lub aktualizacji API)",
     "kEnterPin"                  :"Wprowadź PIN",
     "kError"                     :"Błąd",
     "kErrorChangingMonitors"     :"Błąd zmiany monitorów. Proszę sprawdzić logi",
