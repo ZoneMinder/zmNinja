@@ -1,8 +1,50 @@
 # Change Log
 
-## [1.2.513](https://github.com/pliablepixels/zmNinja/tree/1.2.513) (2017-12-11)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.511...1.2.513)
+## [v1.2.515](https://github.com/pliablepixels/zmNinja/tree/v1.2.515) (2018-01-11)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.513...v1.2.515)
 
+**Implemented enhancements:**
+
+- Introduce a new feature to give a 24 hr image only preview [\#570](https://github.com/pliablepixels/zmNinja/issues/570)
+- external app launch for monitor live view or event ID view [\#569](https://github.com/pliablepixels/zmNinja/issues/569)
+- play event on tap after new alarm notification received [\#563](https://github.com/pliablepixels/zmNinja/issues/563)
+
+**Fixed bugs:**
+
+- if event server goes down, zmNinja keeps spawning new connections in "pending auth" state [\#579](https://github.com/pliablepixels/zmNinja/issues/579)
+- timeline tap/double-tap doesn't work well on mobile devices [\#577](https://github.com/pliablepixels/zmNinja/issues/577)
+- cleanup events page - avoid reloading view for filters & pullup footer often shows no entries  [\#576](https://github.com/pliablepixels/zmNinja/issues/576)
+- Saving event server settings is erratic + push received for monitors that are unchecked [\#499](https://github.com/pliablepixels/zmNinja/issues/499)
+
+**Closed issues:**
+
+- Visibility icon is too close to Menu icon [\#582](https://github.com/pliablepixels/zmNinja/issues/582)
+- undefined Push notification error - Cannot save event server settings [\#572](https://github.com/pliablepixels/zmNinja/issues/572)
+- migrate from ng-websocket to angular-websocket [\#565](https://github.com/pliablepixels/zmNinja/issues/565)
+- UWP app in the works? [\#521](https://github.com/pliablepixels/zmNinja/issues/521)
+
+**Merged pull requests:**
+
+- removed extra timeline key [\#584](https://github.com/pliablepixels/zmNinja/pull/584) ([maymaymay](https://github.com/maymaymay))
+-  \#563 if you tap on an event which is being recorded, show live instead [\#583](https://github.com/pliablepixels/zmNinja/pull/583) ([maymaymay](https://github.com/maymaymay))
+- other nits [\#581](https://github.com/pliablepixels/zmNinja/pull/581) ([maymaymay](https://github.com/maymaymay))
+-  \#563 - made playback warning more explicit. If you tap as soon as rec… [\#580](https://github.com/pliablepixels/zmNinja/pull/580) ([maymaymay](https://github.com/maymaymay))
+-  \#577 timeline tap toggling [\#578](https://github.com/pliablepixels/zmNinja/pull/578) ([maymaymay](https://github.com/maymaymay))
+-  \#570 ability to page forward and back by 24 hrs [\#575](https://github.com/pliablepixels/zmNinja/pull/575) ([maymaymay](https://github.com/maymaymay))
+- \#570 ability to page forward and back by 24 hrs [\#574](https://github.com/pliablepixels/zmNinja/pull/574) ([florie1706](https://github.com/florie1706))
+-  \#570 allowed multi sorting and fixes in sorting logic [\#573](https://github.com/pliablepixels/zmNinja/pull/573) ([maymaymay](https://github.com/maymaymay))
+- December-Update for locale-de [\#571](https://github.com/pliablepixels/zmNinja/pull/571) ([florie1706](https://github.com/florie1706))
+- added note on API update [\#567](https://github.com/pliablepixels/zmNinja/pull/567) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.2.513](https://github.com/pliablepixels/zmNinja/tree/v1.2.513) (2017-12-11)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.511...v1.2.513)
+
+**Merged pull requests:**
+
+- 565 websocket migrate [\#566](https://github.com/pliablepixels/zmNinja/pull/566) ([pliablepixels](https://github.com/pliablepixels))
+
+## [v1.2.511](https://github.com/pliablepixels/zmNinja/tree/v1.2.511) (2017-12-10)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.507...v1.2.511)
 
 **Implemented enhancements:**
 
@@ -16,7 +58,6 @@
 
 **Merged pull requests:**
 
-- 565 websocket migrate [\#566](https://github.com/pliablepixels/zmNinja/pull/566) ([pliablepixels](https://github.com/pliablepixels))
 - Fcm [\#564](https://github.com/pliablepixels/zmNinja/pull/564) ([pliablepixels](https://github.com/pliablepixels))
 - Signed-off-by: Veress Krisztián \<krive001@gmail.com\> [\#560](https://github.com/pliablepixels/zmNinja/pull/560) ([krive001](https://github.com/krive001))
 - Signed-off-by: Veress Krisztián \<krive001@gmail.com\> [\#559](https://github.com/pliablepixels/zmNinja/pull/559) ([krive001](https://github.com/krive001))
