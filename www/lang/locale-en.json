@@ -210,7 +210,7 @@
     "kMinVersion"                :"Minimum Required Version",
     "kMinimumIntervals"          :"minimum interval",
     "kMode"                      :"Mode",
-    "kMoment24Heading"           :"24hr Preview",
+    "kMoment24Heading"           :"24hr Review",
     "kMomentLoadError"           :"Error retrieving moments",
     "kMomentMenuByMonitor"       :"by camera",
     "kMomentMenuByScore"         :"by score",
