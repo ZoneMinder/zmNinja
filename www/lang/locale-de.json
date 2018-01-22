@@ -209,7 +209,7 @@
     "kMinVersion"                :"benötigte Version",
     "kMinimumIntervals"          :"kleinstes Intervall",
     "kMode"                      :"Modus",
-    "kMoment24Heading"           : "24-Std. Vorschau",
+    "kMoment24Heading"           : "24-Std. Rückblick",
     "kMomentLoadError"           : "Fehler beim Laden der Momente",
     "kMomentMenuByMonitor"       :"nach Kamera",
     "kMomentMenuByTime"          : "nach Zeit",
