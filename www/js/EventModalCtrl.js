@@ -16,6 +16,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var event;
     var gEvent;
     var handle;
+    var showLive = true;
 
     var framearray = {
 
@@ -914,6 +915,15 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
             return;
 
+        showLive = true;
+        if (m.showLive == 'disabled') {
+            showLive = false;
+            NVRDataModel.debug ("I was explictly asked not to show live, cross my fingers...");
+        }
+        else {
+
+            NVRDataModel.debug ("If recording is in progress, live feed will be shown");
+        }
         $scope.isToggleListMenu = true;
         $scope.videoDynamicTime = "";
         $scope.videoIsReady = false;
@@ -1604,7 +1614,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     $scope.eventWarning = '';
 
-                    if (!event.Event.EndTime) {
+                    if (!event.Event.EndTime && showLive) {
                         $scope.eventWarning = $translate.instant('kEventStillRecording');
                          // if this happens we get to live feed 
                         $scope.liveFeedMid = event.Event.MonitorId;
