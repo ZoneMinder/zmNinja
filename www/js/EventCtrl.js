@@ -2864,6 +2864,7 @@ angular.module('zmApp.controllers')
                 scope: $scope,
                 animation: 'slide-in-up',
                 id: 'footage',
+                showLive:'disabled', // seems bool is not allowed...
             })
             .then(function(modal)
             {
