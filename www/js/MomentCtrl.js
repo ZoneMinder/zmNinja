@@ -575,10 +575,17 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       index: 1
     };
 
+    var ld = NVRDataModel.getLogin();
+    var sl = 'disabled';
+    if (ld.showLiveForInProgressEvents) {
+            sl = 'enabled';
+        }
+
     $ionicModal.fromTemplateUrl('templates/events-modal.html', {
         scope: $scope,
         animation: 'slide-in-up',
         id: 'footage',
+        showLive:sl, 
       })
       .then(function (modal) {
         $scope.modal = modal;
