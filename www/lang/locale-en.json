@@ -340,6 +340,7 @@
     "kShowAlarmedEvents"         :"Show alarmed events",
     "kShowAllEvents"             :"Show all events",
     "kShowAllFrames"             :"all",
+    "kShowLiveForInProgress"     :"play live feed if event recording in progress",
     "kShowTimeDiffFrames"        :"unique times",
     "kShowTip"                   :"show tip",
     "kShowing"                   :"Showing",

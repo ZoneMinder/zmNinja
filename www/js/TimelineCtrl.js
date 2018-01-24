@@ -192,11 +192,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         //prepareModalEvent(event.Event.Id);
 
+        var ld = NVRDataModel.getLogin();
+        var sl = 'disabled';
+        if (ld.showLiveForInProgressEvents) {
+            sl = 'enabled';
+        }
+
         $ionicModal.fromTemplateUrl('templates/events-modal.html',
             {
                 scope: $scope, // give ModalCtrl access to this scope
                 animation: 'slide-in-up',
-                id: 'footage'
+                id: 'footage',
+                showLive:sl
             })
             .then(function(modal)
             {

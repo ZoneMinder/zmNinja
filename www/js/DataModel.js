@@ -173,6 +173,7 @@ angular.module('zmApp.controllers')
         'momentMonitorFilter': [],
         'enableMomentSubMenu': true,
         'momentArrangeBy': 'StartTime',
+        'showLiveForInProgressEvents': true
 
 
       };
@@ -1048,6 +1049,13 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.momentArrangeBy == 'undefined') {
 
                     loginData.momentArrangeBy = "StartTime";
+
+                  }
+                  
+
+                  if (typeof loginData.showLiveForInProgressEvents == 'undefined') {
+
+                    loginData.showLiveForInProgressEvents = true;
 
                   }
                   

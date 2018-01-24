@@ -24,6 +24,12 @@
                 <ion-toggle ng-model="loginData.useLocalTimeZone" ng-checked="{{loginData.useLocalTimeZone}}" ng-disabled="!isTzSupported()" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kLocalTimeZone' | translate}}<span ng-if="!isTzSupported()"><p>{{'kTimeZoneNotSupported' | translate}}</p></span><span ng-if="isTzSupported()"><p>{{'kServerTimeZone' | translate}}:{{getTimeZoneNow()}}</p></span></span>
                 </ion-toggle>
             </label>
+
+            <label>
+                <ion-toggle ng-model="loginData.showLiveForInProgressEvents" ng-checked="{{loginData.showLiveForInProgressEvents}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kShowLiveForInProgress' | translate}}</span>
+                </ion-toggle>
+            </label>
+
             <div ng-if="$root.platformOS=='android'">
                 <label>
                     <ion-toggle ng-model="loginData.exitOnSleep" ng-checked="{{loginData.exitOnSleep}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kExitAppBackground' | translate}}</span></ion-toggle>

@@ -2859,12 +2859,18 @@ angular.module('zmApp.controllers')
         $scope.currentEvent = event;
         $scope.followSameMonitor = ($stateParams.id == "0") ? "0" : "1";
 
+        var ld = NVRDataModel.getLogin();
+        var sl = 'disabled';
+        if (ld.showLiveForInProgressEvents) {
+            sl = 'enabled';
+        }
+
         $ionicModal.fromTemplateUrl('templates/events-modal.html',
             {
                 scope: $scope,
                 animation: 'slide-in-up',
                 id: 'footage',
-                showLive:'disabled', // seems bool is not allowed...
+                showLive:sl, // seems bool is not allowed...
             })
             .then(function(modal)
             {
