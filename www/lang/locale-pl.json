@@ -340,6 +340,7 @@
     "kShowAlarmedEvents"         :"Pokaż zaalarmowane Zdarzenia",
     "kShowAllEvents"             :"Pokaż wszystkie Zdarzenia",
     "kShowAllFrames"             :"wszystkie",
+    "kShowLiveForInProgress"     :"odtwórz na żywo w trakcie nagrywania Wydarzenia",
     "kShowTimeDiffFrames"        :"unikatowe czasy",
     "kShowTip"                   :"pokaż podpowiedź",
     "kShowing"                   :"Pokazywanie",
