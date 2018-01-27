@@ -593,7 +593,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.streamingurl = addhttp($scope.loginData.streamingurl);
         $scope.loginData.eventServer = addWsOrWss($scope.loginData.eventServer);
 
-        if ($scope.loginData.useSSL)
+       /* if ($scope.loginData.useSSL)
         {
             // replace all http with https
             $scope.loginData.url = $scope.loginData.url.replace("http:", "https:");
@@ -609,7 +609,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             $scope.loginData.apiurl = $scope.loginData.apiurl.replace("https:", "http:");
             $scope.loginData.streamingurl = $scope.loginData.streamingurl.replace("https:", "http:");
             // don't do it for WSS - lets mandate that
-        }
+        }*/
 
         var apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
         var portalurl = $scope.loginData.url + '/index.php';

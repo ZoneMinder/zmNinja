@@ -103,7 +103,7 @@ angular.module('zmApp.controllers')
         'singleImageQuality': "100", // event single streaming quality in %
         'monSingleImageQuality': "100", // live view quality
         'montageHistoryQuality': "50",
-        'useSSL': false, // "1" if HTTPS
+        'useSSL': false, // "1" if HTTPS --> not used #589
         'keepAwake': true, // don't dim/dim during live view
         'isUseAuth': true, // true if user wants ZM auth
         'isUseEventServer': false, // true if you configure the websocket event server
