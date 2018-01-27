@@ -71,9 +71,9 @@
                     <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();" ng-checked="{{loginData.usePin}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kPassword' | translate}} {{'kProtect'|translate}}</span></ion-toggle>
                 </label>
             </div>
-            <label>
+            <!--<label>
                 <ion-toggle ng-model="loginData.useSSL" ng-checked="{{loginData.useSSL}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kUseSSL' | translate}}</span></ion-toggle>
-            </label>
+            </label>-->
             <div ng-if="$root.platformOS != 'desktop'">
                 <label>
                     <ion-toggle ng-model="loginData.keepAwake" ng-checked="{{loginData.keepAwake}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kAwake1'|translate}}
