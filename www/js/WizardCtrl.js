@@ -732,7 +732,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             return false;
         }
 
-        $scope.wizard.portalurl = $scope.wizard.portalurl.toLowerCase().trim();
+        //$scope.wizard.portalurl = $scope.wizard.portalurl.toLowerCase().trim();
+        $scope.wizard.portalurl = $scope.wizard.portalurl.trim();
 
         NVRDataModel.log("Wizard: stripped url:" + $scope.wizard.portalurl);
 
@@ -766,6 +767,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         if (c.host) $scope.wizard.portalurl += c.host;
         if (c.port) $scope.wizard.portalurl += ":" + c.port;
         if (c.path) $scope.wizard.portalurl += c.path;
+
+        $scope.wizard.portalurl = $scope.wizard.portalurl.toLowerCase();
         NVRDataModel.log("Wizard: normalized url:" + $scope.wizard.portalurl);
         return true;
     };
