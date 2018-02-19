@@ -831,6 +831,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         req.success(function(resp)
         {
+            //console.log("SUCCESS: " + JSON.stringify(resp));
             $ionicLoading.hide();
 
         });
