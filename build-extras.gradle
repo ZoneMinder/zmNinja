@@ -1,0 +1,8 @@
+configurations.all {
+    resolutionStrategy {
+	force 'com.android.support:support-v4:27.1.0'
+    }
+}
+configurations {
+    all*.exclude group: 'com.android.support', module: 'support-v13'
+}

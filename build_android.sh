@@ -37,6 +37,7 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
     echo "Adding crosswalk..."
     #cordova plugin add cordova-plugin-crosswalk-webview
     cordova plugin add cordova-plugin-crosswalk-webview@2.2.0  --variable XWALK_MODE="lite" --variable "XWALK_VERSION"="17.46.459.1"
+    #cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_VERSION="22+"
     #ionic plugin add cordova-plugin-crosswalk-webview 
     # crosswalk handles SSL certificate handling in a different way
     # need to switch plugins
