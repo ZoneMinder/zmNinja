@@ -28,6 +28,7 @@ angular.module('zmApp.controllers')
     var ld;
     var refreshSec;
     var reloadPage = zm.forceMontageReloadDelay;
+    //var reloadPage = 30;
 
     var multiPortZms = 0;
 
@@ -150,7 +151,34 @@ angular.module('zmApp.controllers')
         ld.reloadInMontage = true;
         NVRDataModel.log ("Reloading view to keep memory in check...");
         NVRDataModel.setLogin(ld)
-        .then (function() {$window.location.reload();});
+        .then (function() {
+            //window.location.reload(true);
+            //location.reload();
+            //$ionicHistory.clearCache();
+            //$state.go('app.montage');
+
+            console.log ("======HOPPAAAAA!!!========"+$state.current.name);
+            /*$ionicHistory.clearCache([$state.current.name]).then(function() {
+                $state.go('app.montage', $stateParams, {reload:true, inherit:false});
+              });*/
+              $ionicHistory.nextViewOptions({
+                disableAnimate: true,
+                disableBack: true
+              });
+           
+              $state.go('app.refresh',
+              {
+                  "view": 'app.montage'
+              });
+          
+
+           /* $state.transitionTo($state.current, $stateParams, {
+                reload: true,
+                inherit: false,
+                notify: true
+            });*/
+            
+        });
 
        
 
