@@ -15,6 +15,16 @@ echo Curr Dir: `pwd`
 #else
 #	echo "Directory plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/ does not exist, skipping..."
 #fi
+#echo "Copying gradle hack for push-plugin-2.1.3"
+#echo "-------------------------------------------"
+#
+#if [ -d "platforms/android" ]; then
+#	exe cp www/external/build-extras.gradle platforms/android
+#else
+#	echo "Directory platforms/android does not exist, skipping..."
+#fi
+
+
 
 echo "Copying custom sound"
 echo "---------------------"
