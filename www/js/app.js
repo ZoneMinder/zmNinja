@@ -1452,7 +1452,7 @@ angular.module('zmApp', [
 
         //console.log("HERE");
 
-        if ($rootScope.apiValid == false && toState.name != 'invalidapi' && toState.data.requireLogin == true) {
+      if ($rootScope.apiValid == false && toState.name != 'invalidapi' && toState.data.requireLogin == true) {
           event.preventDefault();
           $state.transitionTo('app.invalidapi');
           return;
@@ -2087,6 +2087,20 @@ angular.module('zmApp', [
 
       })
 
+
+      .state('app.refresh', {
+        data: {
+          requireLogin: false
+        },
+
+        url: "/refresh/:view",
+        cache: false,
+        nativeTransitions: null,
+        templateUrl: "templates/refresh.html",
+        controller: 'zmApp.RefreshCtrl',
+
+      })
+
       .state('app.importantmessage', {
         data: {
           requireLogin: false
@@ -2285,6 +2299,7 @@ angular.module('zmApp', [
         },
         url: "/montage",
         cache: false,
+        nativeTransitions: null,
         templateUrl: "templates/montage.html",
         controller: 'zmApp.MontageCtrl',
         params: {
