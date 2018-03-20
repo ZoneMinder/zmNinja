@@ -68,6 +68,15 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
         height: mainWindowState.height,
         webPreferences:{nodeIntegration:false}});
 
+
+       win.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
+    if(d.responseHeaders['x-frame-options'] || d.responseHeaders['X-Frame-Options']){
+        delete d.responseHeaders['x-frame-options'];
+        delete d.responseHeaders['X-Frame-Options'];
+    }
+    c({cancel: false, responseHeaders: d.responseHeaders});
+  });
+
   mainWindowState.manage(win);
   // fs will be arg 1 if its not run in electron debug mode
   if (argv.fs)
@@ -75,6 +84,7 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
         win.setFullScreen(true);
         isFs = true;
   }
+
 
     
 
@@ -89,6 +99,7 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
+    win.removeAllListeners();
     win = null;
   });
 }
