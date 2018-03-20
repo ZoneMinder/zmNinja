@@ -239,7 +239,7 @@ angular.module('zmApp.controllers')
                     if (str.supplementary != 'true')
                     {
                         new Audio('sounds/blop.mp3').play();
-                        localNotText = "Latest Alarms: ";
+                        localNotText = "";
                         $rootScope.isAlarm = 1;
 
                         // Show upto a max of 99 when it comes to display
@@ -263,8 +263,11 @@ angular.module('zmApp.controllers')
                     for (var iter = 0; iter < str.events.length; iter++)
                     {
                         // lets stack the display so they don't overwrite
-                        eventsToDisplay.push(str.events[iter].Name + ": latest new alarm (" + str.events[iter].EventId + ")");
-                        localNotText = localNotText + str.events[iter].Name + ",";
+                        //eventsToDisplay.push(str.events[iter].Name + ": latest new alarm (" + str.events[iter].EventId + ")");
+                        var txt = str.events[iter].EventId;
+                        if (str.events[iter].Cause) { txt = str.events[iter].Cause};
+                        eventsToDisplay.push(str.events[iter].Name + ": " + txt);
+                        localNotText = localNotText + str.events[iter].Name + ": " +txt+ ",";
                         listOfMonitors.push(str.events[iter].MonitorId);
 
                     }
