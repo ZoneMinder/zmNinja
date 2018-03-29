@@ -200,12 +200,12 @@ angular.module('zmApp.controllers')
     function initPackery()
     {
 
-        $ionicLoading.show(
+       /* $ionicLoading.show(
         {
             template: $translate.instant('kArrangingImages'),
             noBackdrop: true,
             duration: zm.loadingTimeout
-        });
+        });*/
 
         var progressCalled = false;
         draggies = [];

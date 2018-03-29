@@ -509,11 +509,11 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   // of images. Pretty important for a timeline related function
   //----------------------------------------------------------------
   function initMasonry() {
-    $ionicLoading.show({
+    /*$ionicLoading.show({
       template: $translate.instant('kArrangingImages'),
       noBackdrop: true,
       duration: zm.loadingTimeout
-    });
+    });*/
     var progressCalled = false;
 
     var ld = NVRDataModel.getLogin();
