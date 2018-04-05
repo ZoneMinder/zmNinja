@@ -157,7 +157,6 @@ angular.module('zmApp.controllers')
             //$ionicHistory.clearCache();
             //$state.go('app.montage');
 
-            console.log ("======HOPPAAAAA!!!========"+$state.current.name);
             /*$ionicHistory.clearCache([$state.current.name]).then(function() {
                 $state.go('app.montage', $stateParams, {reload:true, inherit:false});
               });*/
@@ -207,6 +206,8 @@ angular.module('zmApp.controllers')
             duration: zm.loadingTimeout
         });*/
 
+
+        $scope.areImagesLoading = true;
         var progressCalled = false;
         draggies = [];
         var layouttype = true;
@@ -599,7 +600,7 @@ angular.module('zmApp.controllers')
     function loadNotifications()
     {
         if (multiPortZms) {
-           // console.log ("Skipping timer as multiportZMS="+multiPortZms);
+          // console.log ("Skipping timer as multiportZMS="+multiPortZms);
             return;
         }
 
