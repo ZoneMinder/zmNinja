@@ -514,6 +514,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       noBackdrop: true,
       duration: zm.loadingTimeout
     });*/
+
+    $scope.areImagesLoading = true;
     var progressCalled = false;
 
     var ld = NVRDataModel.getLogin();
@@ -536,6 +538,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
       NVRDataModel.debug("All images loaded");
       $ionicLoading.hide();
+      $scope.areImagesLoading = false;
       jiggleAway();
 
       if (!progressCalled) {
@@ -825,6 +828,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   $scope.$on('$ionicView.beforeEnter', function () {
 
     $scope.showIcons = true;
+    $scope.areImagesLoading = true;
     $scope.expand = false;
     var ld = NVRDataModel.getLogin();
 
@@ -858,7 +862,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   $scope.$on('$ionicView.afterEnter', function () {
    
-
+    
     getMoments(momentType);
 
 

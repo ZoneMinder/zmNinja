@@ -454,6 +454,24 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     width: 95% !important;
 }
 
+
+.screen-note {
+    position: absolute;
+    top:0;
+    left:50%;
+    transform: translate(-50%, 0%);
+    background-color:#82589F;
+    color:white;
+    font-size: 11px;
+    border-radius: 0px 0px 5px 5px;
+    z-index: 99999;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left:5px;
+    padding-right:5px;
+    opacity: 0.7;
+}
+
 .events-modal-camera-icon {
     position: absolute;
     bottom: 120px;
@@ -535,7 +553,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     -webkit-writing-mode: vertical-lr;
     position: absolute;
     top: 30%;
-    transform: translateY(-50%: );
+    transform: translateY(-50%);
     right: 0;
     background-color: #f1c40f;
     color: #000;
