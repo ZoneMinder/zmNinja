@@ -14,6 +14,9 @@ angular.module('zmApp.controllers')
       zm, $rootScope, $ionicContentBanner, $timeout, $cordovaPinDialog,
       $ionicPopup, $localstorage, $state, $ionicNativeTransitions, $translate) {
 
+      var currentServerMultiPortSupported = false;
+      var currentServerVersion = '';
+
       var zmAppVersion = "unknown";
       var isBackground = false;
       var justResumed = false;
@@ -289,6 +292,7 @@ angular.module('zmApp.controllers')
           $http.get(myurl)
             .success(function (data) {
               configParams.ZM_MIN_STREAMING_PORT = data.config.Value;
+              setCurrentServerMultiPortSupported(true);
               log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
               d.resolve(configParams.ZM_MIN_STREAMING_PORT);
               return (d.promise);
@@ -296,6 +300,7 @@ angular.module('zmApp.controllers')
             .error(function (err) {
               configParams.ZM_MIN_STREAMING_PORT = 0;
               log("ZM_MIN_STREAMING_PORT not supported");
+              setCurrentServerMultiPortSupported(false);
               d.resolve(configParams.ZM_MIN_STREAMING_PORT);
               return (d.promise);
             });
@@ -456,7 +461,35 @@ angular.module('zmApp.controllers')
         }, mytimer || 6000);
       }
 
+      function setCurrentServerMultiPortSupported (val) {
+        debug ("Setting multi-port to:"+val);
+        currentServerMultiPortSupported = val;
+      }
+      
+      function setCurrentServerVersion (val) {
+        currentServerMultiPortSupported = val;
+        debug ("Setting server version to:"+val);
+      }
+
+
       return {
+        setCurrentServerMultiPortSupported:function (val) {
+          setCurrentServerMultiPortSupported(val);
+        },
+
+        setCurrentServerVersion: function (val) {
+         setCurrentServerVersion(val);
+        },
+
+
+        getCurrentServerMultiPortSupported: function () {
+          return (currentServerMultiPortSupported);
+        },
+
+        getCurrentServerVersion :function () {
+          return (currentServerMultiPortSupported);
+        },
+
 
         //-------------------------------------------------------------
         // used by various controllers to log messages to file
@@ -1279,9 +1312,11 @@ angular.module('zmApp.controllers')
             .then(function (success) {
                 if (success.data.version) {
                   $rootScope.apiValid = true;
+                  setCurrentServerVersion(success.data.version);
                   d.resolve(success.data.version);
                 } else {
                   $rootScope.apiValid = false;
+                  setCurrentServerVersion("");
                   d.reject("-1.-1.-1");
                 }
                 return (d.promise);
@@ -1290,6 +1325,7 @@ angular.module('zmApp.controllers')
               function (error) {
                 debug("getAPIversion error handler " + JSON.stringify(error));
                 d.reject("-1.-1.-1");
+                setCurrentServerVersion("");
                 $rootScope.apiValid = false;
                 return (d.promise);
               });
@@ -2113,7 +2149,12 @@ angular.module('zmApp.controllers')
 
           }
           return "(Unknown)";
-        },
+        }
+
+       
+
+
+
 
       };
     }

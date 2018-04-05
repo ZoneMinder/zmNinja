@@ -265,7 +265,7 @@ angular.module('zmApp.controllers')
                         // lets stack the display so they don't overwrite
                         //eventsToDisplay.push(str.events[iter].Name + ": latest new alarm (" + str.events[iter].EventId + ")");
                         var txt = str.events[iter].EventId;
-                        if (str.events[iter].Cause) { txt = str.events[iter].Cause};
+                        if (str.events[iter].Cause) { txt = str.events[iter].Cause;}
                         eventsToDisplay.push(str.events[iter].Name + ": " + txt);
                         localNotText = localNotText + str.events[iter].Name + ": " +txt+ ",";
                         listOfMonitors.push(str.events[iter].MonitorId);
