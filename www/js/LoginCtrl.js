@@ -536,6 +536,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         //console.log ("*********** SAVE ITEMS CALLED ");
         //console.log('Saving login');
         NVRDataModel.setFirstUse(false);
+        NVRDataModel.setCurrentServerVersion('');
+        NVRDataModel.setCurrentServerMultiPortSupported(false);
 
         // used for menu display
 

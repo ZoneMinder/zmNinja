@@ -898,6 +898,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     });*/
     $scope.$on('$ionicView.beforeEnter', function()
     {
+        $scope.isMultiPort = NVRDataModel.getCurrentServerMultiPortSupported();
         //  NVRDataModel.log ("Before Enter History: initing connkeys");
     });
     $scope.$on('$ionicView.beforeLeave', function()
@@ -1448,9 +1449,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $scope.currentLimit = $scope.LoginData.maxMontage;
         if ($rootScope.platformOS != 'ios')
         {
-            NVRDataModel.log("Limiting montage to 5, thanks to Chrome's stupid connection limit");
-            $scope.currentLimit = 5;
-            $scope.monLimit = 5;
+            if (!NVRDataModel.getCurrentServerMultiPortSupported()) {
+                NVRDataModel.log("Limiting montage to 5, thanks to Chrome's stupid connection limit");
+                $scope.currentLimit = 5;
+                $scope.monLimit = 5;
+            }
+            else {
+                NVRDataModel.debug ("Since Multiport is supported, taking off Chrome limit!");
+            }
+            
+            
         }
         $rootScope.authSession = "undefined";
         $ionicLoading.show(
