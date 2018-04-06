@@ -467,7 +467,7 @@ angular.module('zmApp.controllers')
       }
       
       function setCurrentServerVersion (val) {
-        currentServerMultiPortSupported = val;
+        currentServerVersion = val;
         debug ("Setting server version to:"+val);
       }
 
@@ -487,7 +487,7 @@ angular.module('zmApp.controllers')
         },
 
         getCurrentServerVersion :function () {
-          return (currentServerMultiPortSupported);
+          return (currentServerVersion);
         },
 
 
@@ -1536,11 +1536,14 @@ angular.module('zmApp.controllers')
             log((forceReload == 1) ? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors.json";
+            
             //console.log ("API:"+myurl);
           //  console.log ("gettign zms port");
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
-                //debug ("ZMS Multiport reported: "+zmsPort);
+               
+                debug ("ZMS Multiport reported: "+zmsPort);
+                debug ("Monitor URL to fetch is:"+myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
                   .success(function (data) {
                     //console.log("HTTP success got " + JSON.stringify(data.monitors));
@@ -2149,7 +2152,40 @@ angular.module('zmApp.controllers')
 
           }
           return "(Unknown)";
+        },
+
+        logout: function () {
+          log (loginData.url +"=>Logging out of any existing ZM sessions...");
+          return $http(
+            {
+                method: 'POST',
+                timeout:10000,
+                //withCredentials: true,
+                url: loginData.url + '/index.php',
+                headers:
+                {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                },
+                transformRequest: function(obj)
+                {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                    var params = str.join("&");
+                    return params;
+                },
+
+                data:
+                {
+                    action: "logout",
+                    view: "login"
+                }
+            });
         }
+
+
 
        
 
