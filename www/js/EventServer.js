@@ -315,13 +315,15 @@ angular.module('zmApp.controllers')
 
         function disconnect()
         {
-            NVRDataModel.log("Disconnecting and deleting Event Server socket...");
-
-            if (typeof ws === 'undefined')
+           
+            if (typeof ws === 'undefined') {
+                NVRDataModel.log("Event server socket is empty, nothing to disconnect");
                 return;
-
+            }
+                
+            NVRDataModel.log("Disconnecting and deleting Event Server socket...");
            // ws.$close();
-           ws.close();
+           ws.close(true); // force close
            // ws.$un('open');
            // ws.$un('close');
            // ws.$un('message');

@@ -297,6 +297,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     function onResume()
     {
+        if (1) return; // Do we really need this as it should go to Portal Login
         NVRDataModel.debug("ModalCtrl: Modal resume called");
         if ($scope.isModalActive)
         {
