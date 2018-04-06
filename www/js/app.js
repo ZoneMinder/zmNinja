@@ -617,7 +617,7 @@ angular.module('zmApp', [
   .factory('timeoutHttpIntercept', ['$rootScope', '$q', 'zm', '$injector', function ($rootScope, $q, zm, $injector) {
     $rootScope.zmCookie = "";
     //console.log ("HHHHHHHHHHHHHH**************************");
-
+    //console.log ("HERE TIMEOUT");
     return {
 
       'request': function (config) {
@@ -646,6 +646,7 @@ angular.module('zmApp', [
 
         if ($rootScope.zmCookie) {
           config.headers.Cookie = "ZMSESSID=" + $rootScope.zmCookie;
+         // console.log (">>>>> WOOOT HAVE COOKIE AND USING: "+$rootScope.zmCookie);
         } else {
           //  console.log ("No cookie present in " + config.url);
         }
@@ -690,7 +691,7 @@ angular.module('zmApp', [
           if (zmSess) {
             if (zmSess[1]) {
 
-              // console.log ("***** SETTING COOKIE TO "  + zmCookie);
+              //console.log ("***** SETTING COOKIE TO "  + zmCookie);
               $rootScope.zmCookie = zmSess[1];
             }
           }
@@ -910,12 +911,22 @@ angular.module('zmApp', [
     // which actually means auth failed, but ZM treats it as a success
     //------------------------------------------------------------------
 
+
+    function doLogoutAndLogin(str) {
+     return  NVRDataModel.logout()
+      .finally(function(ans) {
+        doLogin(str);
+
+      });
+    }
+
+
     function doLogin(str) {
-
-
       var d = $q.defer();
       var ld = NVRDataModel.getLogin();
 
+
+      console.log ("INSIDE REAL DO LOGIN");
 
       /*$rootScope.authSession = 'Test';
       $rootScope.apiAuth = true;
@@ -1230,7 +1241,7 @@ angular.module('zmApp', [
     return {
       start: start,
       stop: stop,
-      doLogin: doLogin
+      doLogin: doLogoutAndLogin
     };
   })
 
@@ -1721,7 +1732,7 @@ angular.module('zmApp', [
         });
 
         $fileLogger.setStorageFilename(zm.logFile);
-        $fileLogger.setTimestampFormat('MMM d, y ' + NVRDataModel.getTimeFormat());
+        $fileLogger.setTimestampFormat('MMM d, y ' + NVRDataModel.getTimeFormatSec());
 
         if (NVRDataModel.getLogin().disableNative) {
           NVRDataModel.log("Disabling native transitions...");
