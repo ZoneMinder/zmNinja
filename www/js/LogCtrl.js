@@ -109,7 +109,11 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             {
                 if (res)
                 { 
-                    logstring = "Logs for version:" + $scope.zmAppVersion + " ("+$rootScope.platformOS+")\n" + logstring;
+                    
+                    logstring = "zmNinja version:" + $scope.zmAppVersion   +
+                                " ("+$rootScope.platformOS+")\n" +
+                                "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion()+"\n" +
+                                logstring;
                     sendEmailReally(logstring);
                 }
 
@@ -121,6 +125,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     //--------------------------------------------------------------------------
     function sendEmailReally(logstring)
     {
+
+        //console.log ("LOGSTRING:"+logstring);
         if (window.cordova)
         {
 
@@ -156,6 +162,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 logstring = logstring.replace(re4, "<server>");
             }
 
+            //console.log ("NEW LOGSTRING:"+logstring);
             /* window.plugins.emailComposer.showEmailComposerWithCallback(callback, $rootScope.appName + ' logs', logstring, [zm.authoremail]);*/
 
             
@@ -163,6 +170,9 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
                 function (isAvailable) {		
  		
                     if (isAvailable) {		
+                        // body encapsulation requires br :^
+                        // see https://github.com/katzer/cordova-plugin-email-composer/issues/150
+                        logstring = logstring.split('\n').join('<br/>');
                          cordova.plugins.email.open({		
                           to: zm.authoremail,		
                           subject: $rootScope.appName + ' logs',		
@@ -259,7 +269,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             $fileLogger.getLogfile().then(function(l)
             {
 
-                $scope.log.logString = l.split('\n').reverse().join('\n');
+               $scope.log.logString = l.split('\n').reverse().join('\n');
+               //$scope.log.logString = l;
 
                 $ionicLoading.hide();
             },
