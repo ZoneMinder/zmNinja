@@ -2156,6 +2156,8 @@ angular.module('zmApp.controllers')
 
         logout: function () {
           log (loginData.url +"=>Logging out of any existing ZM sessions...");
+          $rootScope.authSession = "undefined";
+
           return $http(
             {
                 method: 'POST',
