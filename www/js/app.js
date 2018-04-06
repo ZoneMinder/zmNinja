@@ -925,9 +925,6 @@ angular.module('zmApp', [
       var d = $q.defer();
       var ld = NVRDataModel.getLogin();
 
-
-      console.log ("INSIDE REAL DO LOGIN");
-
       /*$rootScope.authSession = 'Test';
       $rootScope.apiAuth = true;
       d.resolve ("Login Success");
