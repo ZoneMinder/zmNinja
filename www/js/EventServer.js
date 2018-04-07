@@ -116,9 +116,10 @@ angular.module('zmApp.controllers')
            // console.log ("WS="+JSON.stringify(ws));
             if (typeof ws !== 'undefined')
             {
-                NVRDataModel.debug("websocket already initialized ?!?");
-                d.resolve("true");
-                return d.promise;
+                NVRDataModel.debug("websocket already initialized -- thats not right.Forcing close");
+                ws.close(true);
+                ws=undefined;
+                
             }
 
             NVRDataModel.log("Initializing Websocket with URL " +
