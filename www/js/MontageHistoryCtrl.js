@@ -226,6 +226,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $scope.isDragabillyOn = false;
         $ionicSideMenuDelegate.canDragContent(false);
         NVRDataModel.stopNetwork("MontageHistory-footerCollapse");
+
+        NVRDataModel.regenConnKeys();
         var ld = NVRDataModel.getLogin();
         $scope.sliderVal.realRate = $scope.sliderVal.rate * 100;
 
@@ -898,41 +900,20 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     });*/
     $scope.$on('$ionicView.beforeEnter', function()
     {
-        $scope.isMultiPort = NVRDataModel.getCurrentServerMultiPortSupported();
+        $scope.isSimulStreaming = ($rootScope.platformOS == 'ios') ? true: NVRDataModel.getCurrentServerMultiPortSupported();
+
+        NVRDataModel.regenConnKeys();
         //  NVRDataModel.log ("Before Enter History: initing connkeys");
     });
     $scope.$on('$ionicView.beforeLeave', function()
     {
         //console.log("**VIEW ** Event History Ctrl Left, force removing modal");
         if ($scope.modal) $scope.modal.remove();
-        NVRDataModel.log("BeforeLeave: Nullifying the streams...");
-        for (i = 0; i < $scope.MontageMonitors.length; i++)
-        {
-            var element = document.getElementById("img-" + i);
-            /*if (element)
-            {
-                NVRDataModel.debug("BeforeLeave: Nullifying  " + element.src);
-                element.src="";
-                //element.removeAttribute('src');
-                
-                //$scope.$apply(nullify(element));
-                //element.src="";
-            }*/
-        }
         NVRDataModel.log("Cancelling event query timer");
         $interval.cancel($rootScope.eventQueryInterval);
         NVRDataModel.log("MontageHistory:Stopping network pull...");
         // make sure this is applied in scope digest to stop network pull
         // thats why we are doing it beforeLeave
-        for (i = 0; i < $scope.MontageMonitors.length; i++)
-        {
-            if ($scope.MontageMonitors[i].Monitor.connKey != '' && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noevent.png' && $scope.MontageMonitors[i].Monitor.Function != 'None' && $scope.MontageMonitors[i].Monitor.lisDisplay != 'noshow' && $scope.MontageMonitors[i].Monitor.Enabled != '0')
-            {
-                NVRDataModel.log("Before leave: Calling kill with " + $scope.MontageMonitors[i].Monitor.connKey);
-                var tmpCK = angular.copy($scope.MontageMonitors[i].Monitor.connKey);
-                timedControlEventStream(2500, 17, "", tmpCK, -1);
-            }
-        }
         pckry.destroy();
         window.removeEventListener("resize", orientationChanged, false);
         NVRDataModel.log("Forcing a window.stop() here");
@@ -1447,19 +1428,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $scope.LoginData = NVRDataModel.getLogin();
         $scope.monLimit = $scope.LoginData.maxMontage;
         $scope.currentLimit = $scope.LoginData.maxMontage;
-        if ($rootScope.platformOS != 'ios')
+        if (!$scope.isSimulStreaming)
         {
-            if (!NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS != 'ios') {
+          
                 NVRDataModel.log("Limiting montage to 5, thanks to Chrome's stupid connection limit");
                 $scope.currentLimit = 5;
                 $scope.monLimit = 5;
-            }
-            else {
-                NVRDataModel.debug ("Since Multiport is supported, or you are on iOS, taking off Chrome limit!");
-            }
-            
-            
         }
+        else {
+                NVRDataModel.debug ("Since Multiport is supported, or you are on iOS, taking off Chrome limit!");
+        }
+     
         $rootScope.authSession = "undefined";
         $ionicLoading.show(
         {

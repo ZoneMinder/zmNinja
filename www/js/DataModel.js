@@ -1573,7 +1573,7 @@ angular.module('zmApp.controllers')
 
         regenConnKeys: function () {
 
-          ddebug ("Regenerating connkeys...");
+          debug ("Regenerating connkeys...");
           for (var i=0; i < monitors.length; i++){
             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
           }
