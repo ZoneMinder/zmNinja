@@ -16,9 +16,9 @@ angular.module('zmApp.controllers')
         var ws;
 
         var localNotificationId = 0;
-        var firstError = true;
         var pushInited = false;
         var isTimerOn = false;
+        var initCalled = false;
 
 
         //--------------------------------------------------------------------------
@@ -135,6 +135,7 @@ angular.module('zmApp.controllers')
             ws = $websocket(loginData.eventServer,{reconnectIfNotNormalClose: false});
             ws.onOpen(openHandshake);
 
+            initCalled = true;
             // Transmit auth information to server              
            // ws.$on('$open', openHandshake);
 
@@ -146,12 +147,20 @@ angular.module('zmApp.controllers')
                 // we don't need this check as I changed reconnect interval to 60s
                 //if ((Date.now() - lastEventServerCheck > 30000.0) || firstError)
             
+
+
                 NVRDataModel.debug("Websocket Errorhandler called");
+
+                if (!initCalled) {
+                    NVRDataModel.log ("Ignoring websocket error as init not yet called");
+                    return;
+                }
+
                 $timeout(function()
                 {
                     NVRDataModel.displayBanner('error', ['Event Server connection error']);
                 }, 3000); // leave 3 seconds for transitions
-                firstError = false;
+                
                 lastEventServerCheck = Date.now();
                 if (typeof ws !== 'undefined'){
                     NVRDataModel.debug ("-->Forcing socket close");

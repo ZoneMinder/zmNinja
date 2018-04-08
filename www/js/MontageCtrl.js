@@ -6,7 +6,7 @@
 /* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded, ConnectSDK, moment */
 
 angular.module('zmApp.controllers')
-.controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups',  function($scope, $rootScope, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups)
+.controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups', 'EventServer', function($scope, $rootScope, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups, EventServer)
 {
 
     //---------------------------------------------------------------------
@@ -30,13 +30,20 @@ angular.module('zmApp.controllers')
     var reloadPage = zm.forceMontageReloadDelay;
     //var reloadPage = 30;
 
-    var simulStreaming = 0; // will be 1 if you are on iOS or have multiport
+    var simulStreaming = 0; // will be 1 if you  multiport
 
 
     $rootScope.$on("auth-success", function () {
-         NVRDataModel.debug("REAUTH");
+         NVRDataModel.debug("Montage Re-auth handler; stopping network...");
         //console.log ("RETAUTH");
         NVRDataModel.stopNetwork();
+
+        if (NVRDataModel.getLogin().isUseEventServer) {
+            NVRDataModel.debug ("Restablishing event server connection...");
+            EventServer.disconnect();
+            EventServer.init();
+        }
+        
     });
 
 
@@ -1710,11 +1717,11 @@ angular.module('zmApp.controllers')
             //console.log ("****** MULTIPORT="+multiPortZms);
             NVRDataModel.debug ("Multiport="+data);
 
-            if ($rootScope.platformOS == 'ios') {
+           /* if ($rootScope.platformOS == 'ios') {
                 simulStreaming = '1';
                 NVRDataModel.debug ("IOS detected, force enabling simulStreams");
             }
-
+*/
             if (ld.disableSimulStreaming) {
                 simulStreaming = '0';
                 NVRDataModel.debug ("Forcing simulStreams off as you have disabled it");
