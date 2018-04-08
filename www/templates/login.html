@@ -42,6 +42,9 @@
                     </label>
                 </div>
             </div>
+
+            <p ng-if="basicAuthUsed" style="font-size:0.8em; color:#e84118">{{'kWarningBasicAuth' | translate}}</p>
+
             <label class="item item-input item-floating-label">
                 <span class="input-label">{{'kPortalUrl' | translate}}</span>
                 <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kPortalUrlExample' | translate}}" ng-model="loginData.url" ng-keyup="portalKeypress($event)">

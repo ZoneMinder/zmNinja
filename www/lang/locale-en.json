@@ -401,6 +401,7 @@
     "kVideoLoading"              :"Loading Video",
     "kVideoMp4Warning"           :"It is currently not possible to know when video is fully downloaded. Please track file size of download.",
     "kWake"                      :"Wake",
+    "kWarningBasicAuth"          :"Basic auth may interfere with live streaming. Please read FAQ",
     "kWarningLargeTimeline"      :"A large value can affect timeline performance. If you find timeline performance slow, try reducing the value to 200 and work your way up from there.",
     "kWeek"                      :"Week",
     "kWelcomeWizard"             :"Welcome to zmWizard",
