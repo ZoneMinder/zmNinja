@@ -41,13 +41,15 @@
                         <!--<p >{{'kWizPasswdNote' | translate}}</p>-->
                     </label>
                 </div>
-                <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" ng-checked="wizard.usebasicauth" toggle-class="toggle-calm">{{'kWizBasicAuth' | translate}}</ion-toggle>
+                <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" ng-checked="wizard.usebasicauth" toggle-class="toggle-calm">{{'kWizBasicAuth' | translate}}<p ng-show="wizard.usebasicauth">{{'kWarningBasicAuth'|translate}}</p></ion-toggle>
+                
                 <label class="item item-input item-floating-label" ng-show="wizard.usebasicauth">
                     <span class="input-label">{{'kUserName' | translate}}</span>
                     <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.basicuser" placeholder="{{'kPlaceHolderBasicAuthUser'|translate}}">
                 </label>
                 <label class="item item-input item-text-wrap item-floating-label" ng-show="wizard.usebasicauth">
                     <span class="input-label">{{'kPassword' | translate}}</span>
+                    
                     <input type="password" ng-model="wizard.basicpassword" placeholder="{{'kPlaceHolderBasicAuthPass'|translate}}">
                     <p>{{'kWizPasswdNote' | translate}}</p>
                 </label>
