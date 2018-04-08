@@ -292,8 +292,18 @@ angular.module('zmApp.controllers')
           $http.get(myurl)
             .success(function (data) {
               configParams.ZM_MIN_STREAMING_PORT = data.config.Value;
-              setCurrentServerMultiPortSupported(true);
+
+              if (!data.config.Value) {
+                setCurrentServerMultiPortSupported(false);
+                log ("ZM_MIN_STREAMING_PORT not configure, disabling"); 
+                configParams.ZM_MIN_STREAMING_PORT = 0;     
+              }
+              else {
+                setCurrentServerMultiPortSupported(true);
               log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
+              }
+
+              
               d.resolve(configParams.ZM_MIN_STREAMING_PORT);
               return (d.promise);
             })
@@ -1517,6 +1527,58 @@ angular.module('zmApp.controllers')
           return monitors;
         },
 
+        killStream: function (ck) {
+          debug ("Killing connKey: "+ck);
+          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+          var req = $http(
+            {
+                method: 'POST',
+                /*timeout: 15000,*/
+                url: loginData.url + '/index.php',
+                headers:
+                {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    //'Accept': '*/*',
+                },
+                transformRequest: function(obj)
+                {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                    var foo = str.join("&");
+                    //console.log("****RETURNING " + foo);
+                    return foo;
+                },
+    
+                data:
+                {
+                    view: "request",
+                    request: "stream",
+                    connkey: ck,
+                    command: 17,
+                    auth: myauthtoken,
+    
+                }
+            })
+            .then (function (succ) {
+                console.log ("KILL OK WITH: " + JSON.stringify(succ));
+            },
+            function (err) {
+              console.log ("KILL ERROR WITH: " + JSON.stringify(err));
+            });
+
+
+        },
+
+        regenConnKeys: function () {
+
+          ddebug ("Regenerating connkeys...");
+          for (var i=0; i < monitors.length; i++){
+            monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+          }
+        },
+        
         getMonitors: function (forceReload) {
           //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
 
@@ -1556,6 +1618,7 @@ angular.module('zmApp.controllers')
 
                     reloadMonitorDisplayStatus();
 
+                    debug ("Inside getMonitors, will also regen connkeys");
                     debug("Now trying to get multi-server data, if present");
                     $http.get(apiurl + "/servers.json")
                       .success(function (data) {
@@ -1564,6 +1627,7 @@ angular.module('zmApp.controllers')
                         log("multi server list loaded" + JSON.stringify(data));
                         multiservers = data.servers;
 
+                        
                         for (var i = 0; i < monitors.length; i++) {
 
                           // make them all show for now
