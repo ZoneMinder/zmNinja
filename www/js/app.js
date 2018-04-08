@@ -765,7 +765,7 @@ angular.module('zmApp', [
         $http.get(zm.blogUrl, {
             transformResponse: function (d, h) {
               var trunc = "])}while(1);</x>";
-              d = d.substr(trunc.length);
+              if (d) {d = d.substr(trunc.length);}
               return d;
             }
           })
@@ -1411,7 +1411,7 @@ angular.module('zmApp', [
 
         //console.log("HERE");
 
-      if ($rootScope.apiValid == false && toState.name != 'invalidapi' && toState.data.requireLogin == true) {
+      if ($rootScope.apiValid == false && toState.name != 'app.invalidapi' && toState.data.requireLogin == true) {
           event.preventDefault();
           $state.transitionTo('app.invalidapi');
           return;
@@ -1740,16 +1740,19 @@ angular.module('zmApp', [
 
           localforage.getItem('last-desktop-state')
             .then(function (succ) {
-              // console.log ("FOUND " + JSON.stringify(succ) + ":"+succ);
+              //console.log ("FOUND  STATE" + JSON.stringify(succ) + ":"+succ);
               if (succ) {
-                if ( succ == 'app.invalidapi' || succ == 'app.refresh') {
-                  succ = 'app.montage';
+                if ( succ.name == 'app.invalidapi' || succ.name == 'app.refresh') {
+                  succ.name = 'app.montage';
                 }
                 $rootScope.lastState = succ.name;
                 if ($rootScope.lastState.indexOf("app.") == -1) {
                   $rootScope.lastState = "app." + $rootScope.lastState;
                 }
                 $rootScope.lastStateParam = succ.params;
+
+
+                NVRDataModel.debug ("last state="+$rootScope.lastState+" param="+$rootScope.lastStateParam);
 
               }
               loadServices();

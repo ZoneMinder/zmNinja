@@ -1449,13 +1449,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $scope.currentLimit = $scope.LoginData.maxMontage;
         if ($rootScope.platformOS != 'ios')
         {
-            if (!NVRDataModel.getCurrentServerMultiPortSupported()) {
+            if (!NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS != 'ios') {
                 NVRDataModel.log("Limiting montage to 5, thanks to Chrome's stupid connection limit");
                 $scope.currentLimit = 5;
                 $scope.monLimit = 5;
             }
             else {
-                NVRDataModel.debug ("Since Multiport is supported, taking off Chrome limit!");
+                NVRDataModel.debug ("Since Multiport is supported, or you are on iOS, taking off Chrome limit!");
             }
             
             
