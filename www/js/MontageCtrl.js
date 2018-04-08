@@ -1714,6 +1714,12 @@ angular.module('zmApp.controllers')
                 simulStreaming = '1';
                 NVRDataModel.debug ("IOS detected, force enabling simulStreams");
             }
+
+            if (ld.disableSimulStreaming) {
+                simulStreaming = '0';
+                NVRDataModel.debug ("Forcing simulStreams off as you have disabled it");
+
+            }
         },
         function (err) {
             NVRDataModel.debug("******* SHOULD NEVER HAPPEN - MULTIPORT ERROR");
