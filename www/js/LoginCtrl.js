@@ -245,6 +245,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     oldLoginData = '';
     //console.log("**VIEW ** LoginCtrl  Entered");
     NVRDataModel.setAwake(false);
+    $scope.basicAuthUsed = false;
     var ld = NVRDataModel.getLogin();
     oldName = ld.serverName;
 
@@ -424,6 +425,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       $scope.loginData.apiurl = $scope.loginData.url + "/api";
       $scope.loginData.streamingurl = $scope.loginData.url + "/cgi-bin";
     }
+
+    $scope.basicAuthUsed = ($scope.loginData.url.indexOf('@') == -1) ? false:true;
+
+   
 
   };
   //-------------------------------------------------------------------------------
