@@ -1677,7 +1677,7 @@ angular.module('zmApp.controllers')
             return "&connkey="+ck;
         else   
             return "";
-     }
+     };
 
     $scope.toggleSubMenuFunction = function()
     {
