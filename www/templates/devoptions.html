@@ -153,6 +153,13 @@
                     <p>{{'kDisableAlarmMontageSub' | translate}}</p></span>
                 </ion-toggle>
             </label>
+
+            <label>
+                    <ion-toggle ng-model="loginData.disableSimulStreaming" ng-checked="loginData.disableSimulStreaming" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableSimulStreaming' | translate}}
+                      </span>
+                    </ion-toggle>
+                </label>
+
             <label>
                 <ion-toggle ng-model="loginData.enableLogs" ng-checked="{{loginData.enableLogs}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableLogs' | translate}}</span></ion-toggle>
             </label>

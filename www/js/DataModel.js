@@ -176,7 +176,8 @@ angular.module('zmApp.controllers')
         'momentMonitorFilter': [],
         'enableMomentSubMenu': true,
         'momentArrangeBy': 'StartTime',
-        'showLiveForInProgressEvents': true
+        'showLiveForInProgressEvents': true,
+        'disableSimulStreaming': false,
 
 
       };
@@ -841,6 +842,12 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.defaultPushSound == 'undefined') {
                     debug("defaultPushSound does not exist. Setting to false");
                     loginData.defaultPushSound = false;
+                  }
+
+
+                  if (typeof loginData.disableSimulStreaming == 'undefined') {
+                   
+                    loginData.disableSimulStreaming = false;
                   }
 
                   if (typeof loginData.exitOnSleep == 'undefined') {

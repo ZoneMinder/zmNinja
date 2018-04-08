@@ -67,6 +67,7 @@
     "kDisableNativeSub"          :"Enable if the menu is freezing",
     "kDisablePush"               :"disable APNS/GCM",
     "kDisableSamsung"            :"If you are on a samsung device and are facing input issues, please temporarily disable auto-correction",
+    "kDisableSimulStreaming"     :"Disable Montage real-time streaming",
     "kDiscovering"               :"discovering",
     "kDiscoveringAPI"            :"discovering api",
     "kDiscoveringCGI"            :"discovering cgi",
