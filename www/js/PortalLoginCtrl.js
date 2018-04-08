@@ -246,7 +246,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     return;
                                 }*/
                                 // coming here means continue
-                                EventServer.refresh();
+                                //EventServer.init();
 
                                 var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
                                 //NVRDataModel.debug ("logging state transition");
@@ -466,7 +466,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                     
                                     NVRDataModel.getKeyConfigParams(1);
                                     NVRDataModel.getTimeZone();
-                                    EventServer.refresh();
+                                    EventServer.init();
 
                                     // if push broadcast happens BEFORE this, then no 
                                     // state change will occur here which is good

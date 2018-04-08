@@ -36,13 +36,7 @@ angular.module('zmApp.controllers')
     $rootScope.$on("auth-success", function () {
          NVRDataModel.debug("Montage Re-auth handler; stopping network...");
         //console.log ("RETAUTH");
-        NVRDataModel.stopNetwork();
-
-        if (NVRDataModel.getLogin().isUseEventServer) {
-            NVRDataModel.debug ("Restablishing event server connection...");
-            EventServer.disconnect();
-            EventServer.init();
-        }
+       // NVRDataModel.stopNetwork();
         
     });
 

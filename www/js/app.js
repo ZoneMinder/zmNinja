@@ -1774,7 +1774,7 @@ angular.module('zmApp', [
           // now do SSL check
           //setSSLCerts();
 
-          EventServer.init();
+          //EventServer.init();
           zmCheckUpdates.start();
           NVRDataModel.log("Setting up POST LOGIN timer");
           zmAutoLogin.start();
