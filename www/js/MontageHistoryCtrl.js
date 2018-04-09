@@ -5,15 +5,17 @@
 // FIXME: This is a copy of montageCtrl - needs a lot of code cleanup
 angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$scope', '$rootScope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$translate', 'qHttp', '$q', function($scope, $rootScope, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $translate, qHttp, $q)
 {
+    var broadcastHandles = [];
     //--------------------------------------------------------------------------------------
     // Handles bandwidth change, if required
     //
     //--------------------------------------------------------------------------------------
-    $rootScope.$on("bandwidth-change", function(e, data)
+    var bc = $rootScope.$on("bandwidth-change", function(e, data)
     {
         // nothing to do for now
         // eventUrl will use lower BW in next query cycle
     });
+    broadcastHandles.push(bc);
 
     $scope.getLocalTZ = function()
     {
@@ -908,6 +910,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.$on('$ionicView.beforeLeave', function()
     {
         //console.log("**VIEW ** Event History Ctrl Left, force removing modal");
+
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
+        
+        
         if ($scope.modal) $scope.modal.remove();
         NVRDataModel.log("Cancelling event query timer");
         $interval.cancel($rootScope.eventQueryInterval);

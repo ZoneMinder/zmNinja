@@ -20,6 +20,17 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     var current_options;
     var btype;
     var data, options;
+    var broadCastHandles = [];
+
+
+    $scope.$on('modal.removed', function(e, m)
+    {
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
+    });
 
     $scope.$on('modal.shown', function(e, m)
     {
@@ -104,12 +115,13 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------
 
-    $rootScope.$on("auth-success", function()
+    var as = $rootScope.$on("auth-success", function()
     {
 
         NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
 
     });
+    broadCastHandles.push(as);
 
     //-------------------------------------------------------
     // I was kidding, this is where it really is drawn

@@ -61,6 +61,7 @@ angular.module('zmApp.controllers')
     var mycarouselWatcher;
     var nolangFrom;
     var nolangTo;
+    var broadcastHandles = [];
 
     $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
     $scope.outlineMotion = false;
@@ -76,17 +77,19 @@ angular.module('zmApp.controllers')
     //---------------------------------------------------
 
     //we come here is TZ is updated after the view loads
-    $rootScope.$on('tz-updated', function()
+    var tzu = $rootScope.$on('tz-updated', function()
     {
         $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
         NVRDataModel.debug("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
     });
+    broadcastHandles.push(tzu);
 
-    $rootScope.$on("language-changed", function()
+    var lc = $rootScope.$on("language-changed", function()
     {
         NVRDataModel.log(">>>>>>>>>>>>>>> language changed");
         doRefresh();
     });
+    broadcastHandles.push(lc);
 
     $scope.$on('$ionicView.afterEnter', function()
     {
@@ -150,6 +153,17 @@ angular.module('zmApp.controllers')
         openModal(event);
 
     }
+
+
+    $scope.$on('$ionicView.beforeLeave', function()
+    {
+
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
+    });
 
     $scope.$on('$ionicView.beforeEnter', function()
     {
@@ -2138,6 +2152,12 @@ angular.module('zmApp.controllers')
     {
         NVRDataModel.debug("EventCtrl:onpause called");
         if ($scope.popover) $scope.popover.remove();
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
+
 
     }
     //-------------------------------------------------------------------------
