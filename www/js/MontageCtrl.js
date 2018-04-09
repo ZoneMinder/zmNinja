@@ -32,13 +32,16 @@ angular.module('zmApp.controllers')
 
     var simulStreaming = 0; // will be 1 if you  multiport
 
+    var broadcastHandles = [];
 
-    $rootScope.$on("auth-success", function () {
-         NVRDataModel.debug("Montage Re-auth handler; stopping network...");
+
+    var as = $rootScope.$on("auth-success", function () {
+         NVRDataModel.debug("Montage Re-auth handler");
         //console.log ("RETAUTH");
        // NVRDataModel.stopNetwork();
         
     });
+    broadcastHandles.push(as);
 
 
     //--------------------------------------------------------------------------------------
@@ -46,7 +49,7 @@ angular.module('zmApp.controllers')
     //
     //--------------------------------------------------------------------------------------
 
-    $rootScope.$on("bandwidth-change", function(e, data)
+    var bc = $rootScope.$on("bandwidth-change", function(e, data)
     {
         // not called for offline, I'm only interested in BW switches
         NVRDataModel.debug("Got network change:" + data);
@@ -92,6 +95,8 @@ angular.module('zmApp.controllers')
 
         }
     });
+
+    broadcastHandles.push(bc);
 
     // --------------------------------------------------------
     // Handling of back button in case modal is open should
@@ -768,7 +773,7 @@ angular.module('zmApp.controllers')
     //----------------------------------------------------------------
     // Alarm emit handling
     //----------------------------------------------------------------
-    $rootScope.$on("alarm", function(event, args)
+    var al = $rootScope.$on("alarm", function(event, args)
     {
         // FIXME: I should probably unregister this instead
         if (typeof $scope.monitors === undefined)
@@ -792,6 +797,8 @@ angular.module('zmApp.controllers')
         }
 
     });
+
+    broadcastHandles.push(al);
 
     function scheduleRemoveFlash(id)
     {
@@ -1295,11 +1302,18 @@ angular.module('zmApp.controllers')
         $interval.cancel(intervalHandleAlarmStatus);
         $interval.cancel(intervalHandleReloadPage);
 
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
+        
+
         // if modal is open stream gets killed
         // inside monitorModal
         if (!$scope.singleMonitorModalOpen && simulStreaming=='1')  {
             NVRDataModel.debug ("Killing all streams in montage to save memory/nw...");
-            for (var i=0; i < $scope.MontageMonitors.length; i++) {
+            for (i=0; i < $scope.MontageMonitors.length; i++) {
                 NVRDataModel.killStream($scope.MontageMonitors[i].Monitor.connKey);
             }
         }
@@ -1927,6 +1941,13 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.beforeLeave', function()
     {
+
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
+
         // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
 
         //console.log ("beforeLeave:Cancelling timer");

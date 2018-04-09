@@ -53,13 +53,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------
 
-    $rootScope.$on("auth-success", function()
-    {
-
-        NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
-
-    });
-
+  
     $scope.scrollUp = function()
     {
         //console.log ("SWIPE UP");

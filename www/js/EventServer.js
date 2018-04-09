@@ -116,7 +116,7 @@ angular.module('zmApp.controllers')
            // console.log ("WS="+JSON.stringify(ws));
             if (typeof ws !== 'undefined')
             {
-                NVRDataModel.debug("websocket already initialized -- thats not right.Forcing close");
+                NVRDataModel.debug("websocket already initialized --Forcing close");
                 ws.close(true);
                 ws=undefined;
                 
@@ -139,6 +139,10 @@ angular.module('zmApp.controllers')
             // Transmit auth information to server              
            // ws.$on('$open', openHandshake);
 
+           if (ws) {
+               ws.onErrorCallbacks = [];
+               NVRDataModel.debug("Removing error handlers for websocket");
+           }
             NVRDataModel.debug("Setting up websocket error handler");
             //ws.$on('$error', function(e)
             ws.onError(function (e)

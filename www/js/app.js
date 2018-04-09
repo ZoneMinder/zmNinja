@@ -1328,7 +1328,8 @@ angular.module('zmApp', [
           $rootScope.online = true;
 
           $timeout(function () {
-            var networkState = navigator.connection.type;
+            var networkState="browser not supported";
+             if (navigator.connection) networkState = navigator.connection.type;
             NVRDataModel.debug("Detected network type as: " + networkState);
             var strState = NVRDataModel.getBandwidth();
             NVRDataModel.debug("getBandwidth() normalized it as: " + strState);

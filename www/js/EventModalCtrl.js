@@ -17,6 +17,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var gEvent;
     var handle;
     var showLive = true;
+    var broadcastHandles = [];
 
     var framearray = {
 
@@ -107,7 +108,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     //
     //--------------------------------------------------------------------------------------
 
-    $rootScope.$on("bandwidth-change", function(e, data)
+    var bc = $rootScope.$on("bandwidth-change", function(e, data)
     {
         // not called for offline, I'm only interested in BW switches
         NVRDataModel.debug("Got network change:" + data);
@@ -126,12 +127,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         $scope.singleImageQuality = (NVRDataModel.getBandwidth() == "lowbw") ? zm.eventSingleImageQualityLowBW : ld.singleImageQuality;
     });
+    broadcastHandles.push(bc);
 
     //-------------------------------------------------------
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------
 
-    $rootScope.$on("auth-success", function()
+    var as = $rootScope.$on("auth-success", function()
     {
 
         NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
@@ -146,6 +148,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
 
     });
+    broadcastHandles.push(as);
 
     //-------------------------------------------------------
     // tap to pause
@@ -437,6 +440,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function onPause()
     {
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
+        
 
         // $interval.cancel(modalIntervalHandle);
 
@@ -1082,6 +1091,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.$on('modal.removed', function(e, m)
     {
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
+        
         //console.log("************* REMOVE CALLED");
         $interval.cancel(eventQueryHandle);
         if (m.id != 'footage')

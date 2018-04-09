@@ -14,6 +14,7 @@
 
 angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', 'message', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', '$ionicContentBanner', '$ionicHistory', '$sce', '$stateParams', '$translate', '$ionicPopup', '$interval', function($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, message, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, $ionicContentBanner, $ionicHistory, $sce, $stateParams, $translate, $ionicPopup, $interval)
 {
+    var broadcastHandles = [];
 
     //console.log("Inside Timeline controller");
     $scope.openMenu = function()
@@ -282,11 +283,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     }
 
-    $rootScope.$on('tz-updated', function()
+   var tzu =  $rootScope.$on('tz-updated', function()
     {
         $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
         NVRDataModel.debug("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
     });
+    broadcastHandles.push(tzu);
 
     //-------------------------------------------------
     // Make sure we delete the timeline
@@ -295,6 +297,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //-------------------------------------------------
     $scope.$on('$ionicView.leave', function()
     {
+
+        NVRDataModel.debug ("Deregistering broadcast handles");
+        for (var i=0; i < broadcastHandles.length; i++) {
+            broadcastHandles[i]();
+        }
+        broadcastHandles = [];
 
         if (timeline)
         {
