@@ -227,7 +227,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $scope.dragBorder = "";
         $scope.isDragabillyOn = false;
         $ionicSideMenuDelegate.canDragContent(false);
-        NVRDataModel.stopNetwork("MontageHistory-footerCollapse");
+
+        for (i=0; i < $scope.MontageMonitors.length; i++) {
+            NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
+        }
 
         NVRDataModel.regenConnKeys();
         var ld = NVRDataModel.getLogin();
@@ -927,8 +930,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         // thats why we are doing it beforeLeave
         pckry.destroy();
         window.removeEventListener("resize", orientationChanged, false);
-        NVRDataModel.log("Forcing a window.stop() here");
-        NVRDataModel.stopNetwork("MontageHistory-beforeLeave");
+        //NVRDataModel.log("Forcing a window.stop() here");
+        //NVRDataModel.stopNetwork("MontageHistory-beforeLeave");
+
+        for (i=0; i < $scope.MontageMonitors.length; i++) {
+            NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
+        }
     });
     $scope.$on('$ionicView.unloaded', function() {});
     $scope.sliderChanged = function(dirn)

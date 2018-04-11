@@ -199,7 +199,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     NVRDataModel.debug("MonitorModalCtrl: Re-login detected, resetting everything & re-generating connkey");
     //NVRDataModel.stopNetwork("MonitorModal-auth success");
-    NVRDataModel.killStream($scope.connKey);
+    NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
     $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
   });
@@ -266,7 +266,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $interval.cancel(cycleHandle);
 
     NVRDataModel.debug("Killing single stream...");
-    NVRDataModel.killStream($scope.connKey);
+    NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
     // $interval.cancel(modalIntervalHandle);
 
     // FIXME: Do I need to  setAwake(false) here?
@@ -1172,7 +1172,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     $scope.isModalActive = false;
     NVRDataModel.debug("Single monitor exited, killing stream");
-    NVRDataModel.killStream($scope.connKey);
+    NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
 
 
 
