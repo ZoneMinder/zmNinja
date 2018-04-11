@@ -1108,12 +1108,8 @@ angular.module('zmApp.controllers')
                     loginData.showLiveForInProgressEvents = true;
 
                   }
-                  
-
-                  
-                  
-
-                  log("DataModel init recovered this loginData as " + JSON.stringify(loginData));
+              
+                  log("DataModel init retrieved store loginData");
                 } else {
                   log("defaultServer configuration NOT found. Keeping login at defaults");
                 }
@@ -1142,7 +1138,7 @@ angular.module('zmApp.controllers')
         },
 
         setJustResumed: function (val) {
-          justResumed = true;
+          justResumed = val;
         },
 
         stopNetwork: function (str) {
@@ -1151,10 +1147,11 @@ angular.module('zmApp.controllers')
           if (justResumed) {
             // we don't call stop as we did stop on pause
             log(s + " Not calling window stop as we just resumed");
-            justResumed = false;
+            
           } else {
-            log(s + " Calling window.stop()");
-            window.stop();
+            log(s + " stopNework: Calling window.stop()");
+            $timeout (function() {window.stop();},10);
+            
           }
         },
 
@@ -1534,6 +1531,32 @@ angular.module('zmApp.controllers')
           return monitors;
         },
 
+        killLiveStream: function (mon) {
+
+          var ck = mon.Monitor.connKey;
+         // monitors[i].Monitor.mportControlURL = mportControlUrl;
+          var url = mon.Monitor.mportControlURL;
+       // console.log (JSON.stringify(mon));
+         // return;
+
+          debug ("Killing live stream ck:"+ck);
+          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+          var req = url+'/index.php';
+          req = req + "?view=request&request=stream";
+          req = req + "&connkey="+ck;
+          req = req + "&auth="+myauthtoken;
+          req = req + "&command=1";
+          debug ("Kill command:"+req);
+          $http.get(req)
+          .then (
+            function (s) {
+              debug ("success with:"+JSON.stringify(s));
+            },
+            function (e) {debug ("error with:"+JSON.stringify(e));}
+          );
+
+        },
+
         killStream: function (ck) {
           debug ("Killing connKey: "+ck);
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
@@ -1563,13 +1586,13 @@ angular.module('zmApp.controllers')
                     view: "request",
                     request: "stream",
                     connkey: ck,
-                    command: 17,
+                    command: 3,
                     auth: myauthtoken,
     
                 }
             })
             .then (function (succ) {
-                console.log ("KILL OK WITH: " + JSON.stringify(succ));
+                console.log ("STOP/KILL OK WITH: " + JSON.stringify(succ));
             },
             function (err) {
               console.log ("KILL ERROR WITH: " + JSON.stringify(err));
@@ -1610,6 +1633,8 @@ angular.module('zmApp.controllers')
           //  console.log ("gettign zms port");
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
+
+                var mportControlUrl = "";
                
                 debug ("ZMS Multiport reported: "+zmsPort);
                 debug ("Monitor URL to fetch is:"+myurl);
@@ -1668,8 +1693,11 @@ angular.module('zmApp.controllers')
                             var st = "";
                             var baseurl = "";
                             var streamingurl = "";
+                            
 
                             st += (s.scheme ? s.scheme : p.scheme) + "://"; // server scheme overrides 
+
+                           
 
                             // if server doesn't have a protocol, what we want is in path
                             if (!s.host) {
@@ -1678,6 +1706,7 @@ angular.module('zmApp.controllers')
                             }
 
                             st += s.host;
+                          
                            // console.log ("STEP 1: ST="+st);
 
                             if (zmsPort <=0 )
@@ -1688,6 +1717,7 @@ angular.module('zmApp.controllers')
                                   //  console.log ("STEP 2 no ZMS: ST="+st);
       
                                   }
+                                 
                             }
                             else {
                                 var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
@@ -1701,6 +1731,7 @@ angular.module('zmApp.controllers')
                             
 
                             baseurl = st;
+                            mportControlUrl =st;
 
                             st += (s.path ? s.path : p.path);
                             streamingurl += (s.path ? s.path : p.path);
@@ -1712,12 +1743,13 @@ angular.module('zmApp.controllers')
 
                             monitors[i].Monitor.streamingURL = st;
                             monitors[i].Monitor.baseURL = baseurl;
+                            monitors[i].Monitor.mportControlURL = mportControlUrl;
                             //console.log ("** Streaming="+st+" **base="+baseurl);
                             // starting 1.30 we have fid=xxx mode to return images
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
                           //  debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
 
-                            debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
+                            //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
                             //debug ("Base URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.baseURL );
 
                           } else {
@@ -1731,6 +1763,7 @@ angular.module('zmApp.controllers')
                                 // we need to insert minport
                                 st2 = "";
                                 var p2 = URI.parse(loginData.streamingurl);
+                                var p3 = URI.parse( loginData.url);
                                 st2 += p2.scheme + "://";
                                 if (!p2.host) {
                                     p2.host = p2.path;
@@ -1739,11 +1772,16 @@ angular.module('zmApp.controllers')
                                 st2 += p2.host;
                                 var sport2 = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
                                 st2 = st2 + ':'+sport2;
+
+                                mportControlUrl = st2;
+
                                 if (p2.path) st2 += p2.path;
+                                if (p3.path) mportControlUrl +=p3.path;
                               }
 
                               monitors[i].Monitor.streamingURL = st2;
-                              debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
+                              monitors[i].Monitor.mportControlURL = mportControlUrl;
+                              //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
                               //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
                             monitors[i].Monitor.baseURL = loginData.url;
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
@@ -1789,10 +1827,11 @@ angular.module('zmApp.controllers')
                           }
 
                           monitors[i].Monitor.streamingURL = st;
-                          console.log ("CONSTRUCTED STREAMING PATH="+st);
+                         // console.log ("CONSTRUCTED STREAMING PATH="+st);
                           monitors[i].Monitor.baseURL = loginData.url;
+                          
                           monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
-                          debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
+                          //debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
 
                         }
                         d.resolve(monitors);
