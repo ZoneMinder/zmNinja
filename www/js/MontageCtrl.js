@@ -6,7 +6,7 @@
 /* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded, ConnectSDK, moment */
 
 angular.module('zmApp.controllers')
-.controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups', 'EventServer', function($scope, $rootScope, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups, EventServer)
+.controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups', 'EventServer', function($scope, $rootScope, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups, EventServer)
 {
 
     //---------------------------------------------------------------------
@@ -28,6 +28,10 @@ angular.module('zmApp.controllers')
     var ld;
     var refreshSec;
     var reloadPage = zm.forceMontageReloadDelay;
+    var viewCleaned = false;
+
+    var isKilled = false;
+    
     //var reloadPage = 30;
 
     var simulStreaming = 0; // will be 1 if you  multiport
@@ -1119,7 +1123,7 @@ angular.module('zmApp.controllers')
         if (simulStreaming=='1') {
             NVRDataModel.debug ("Killing all streams in montage to save memory/nw...");
             for (var i=0; i < $scope.MontageMonitors.length; i++) {
-                NVRDataModel.killStream($scope.MontageMonitors[i].Monitor.connKey);
+                NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
             }
         }
         
@@ -1294,15 +1298,36 @@ angular.module('zmApp.controllers')
     // refreshes to the server for images we are not seeing
     //---------------------------------------------------------------------
 
-    function onPause()
-    {
-        NVRDataModel.debug("MontageCtrl: onpause called");
+
+    // so when we go to pause, 
+    // doing connkey kills is a bad idea
+    // because root window stop messes up return
+
+    function pauseViewCleanup() {
+        viewCleaned = true;
+        if (pckry) pckry.destroy();
         $interval.cancel(intervalHandleMontage);
         $interval.cancel(intervalHandleMontageCycle);
         $interval.cancel(intervalHandleAlarmStatus);
         $interval.cancel(intervalHandleReloadPage);
 
-        NVRDataModel.debug ("Deregistering broadcast handles");
+
+    }
+
+    function viewCleanup() {
+
+        if (viewCleaned) {
+            NVRDataModel.debug ("Montage View Cleanup was already done, skipping");
+            return;
+        }
+        viewCleaned = true;
+        $interval.cancel(intervalHandleMontage);
+        $interval.cancel(intervalHandleMontageCycle);
+        $interval.cancel(intervalHandleAlarmStatus);
+        $interval.cancel(intervalHandleReloadPage);
+        if (pckry) pckry.destroy();
+
+        NVRDataModel.debug ("Montage: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
             broadcastHandles[i]();
         }
@@ -1314,20 +1339,26 @@ angular.module('zmApp.controllers')
         if (!$scope.singleMonitorModalOpen && simulStreaming=='1')  {
             NVRDataModel.debug ("Killing all streams in montage to save memory/nw...");
             for (i=0; i < $scope.MontageMonitors.length; i++) {
-                NVRDataModel.killStream($scope.MontageMonitors[i].Monitor.connKey);
+                NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
             }
         }
 
-        // $interval.cancel(modalIntervalHandle);
-        // FIXME: Do I need to  setAwake(false) here?
+
+    }
+
+    function onPause()
+    {
+        NVRDataModel.debug("MontageCtrl: onpause called");
+        viewCleanup();
     }
 
     function onResume()
     {
 
-        NVRDataModel.debug ("Montage resume called, regenerating all connkeys");
-        NVRDataModel.regenConnKeys();
-        $scope.MontageMonitors = NVRDataModel.getMonitorsNow();
+        // we should be going to portal login so no need here
+        //NVRDataModel.debug ("Montage resume called, regenerating all connkeys");
+        //NVRDataModel.regenConnKeys();
+       // $scope.MontageMonitors = NVRDataModel.getMonitorsNow();
 
     }
 
@@ -1341,8 +1372,10 @@ angular.module('zmApp.controllers')
         $ionicSideMenuDelegate.toggleLeft();
     };
 
+
     $scope.$on('$destroy', function() {
 
+        console.log ("MONTAGE DESTROYED!!!!!!!!!!!!!!!!!");
     });
 
     $scope.$on('$ionicView.loaded', function()
@@ -1476,7 +1509,8 @@ angular.module('zmApp.controllers')
         pckry.destroy();
         NVRDataModel.reloadMonitorDisplayStatus();
         NVRDataModel.regenConnKeys();
-        $scope.MontageMonitors = NVRDataModel.getMonitorsNow();
+        $scope.monitors = NVRDataModel.getMonitorsNow();
+        $scope.MontageMonitors = angular.copy($scope.monitors);
         $timeout (function() {initPackery();},zm.packeryTimer);
         
         
@@ -1682,13 +1716,60 @@ angular.module('zmApp.controllers')
        $scope.getMode = function() {
 
        // console.log ("SIMUL="+simulStreaming);
-           return (simulStreaming == '1') ? 'jpeg': 'single';
+           var mode =  (simulStreaming == '1' && !$scope.areImagesLoading) ? 'jpeg': 'single';
+           //console.log ("mode="+mode);
+           return mode;
      };
+
+     function getMode() {
+        var mode =  (simulStreaming == '1' && !$scope.areImagesLoading) ? 'jpeg': 'single';
+        //console.log ("mode="+mode);
+        return mode;
+
+     }
         
 
+     $scope.killAllImages= function() {
+         //isKilled = !isKilled;
+
+         if (simulStreaming=='1') {
+            NVRDataModel.debug ("Killing all streams in montage to save memory/nw...");
+            for (var i=0; i < $scope.MontageMonitors.length; i++) {
+                NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
+            }
+        }
+         
+        
+
+     };
+
+     $scope.constructStream = function(monitor) {
+
+        var stream = '';
+
+        if (!isKilled)
+        stream = monitor.Monitor.streamingURL + 
+                    "/nph-zms?mode="+getMode() +
+                    "&monitor="+monitor.Monitor.Id +
+                    "&scale="+$scope.LoginData.montageQuality + 
+                    $rootScope.authSession + 
+                    //"&rand="+$scope.randToAvoidCacheMem +
+                    appendConnKey (monitor.Monitor.connKey);
+
+        return stream;
+
+     };
+
+     function appendConnKey (ck) {
+        if (simulStreaming == '1' && !$scope.areImagesLoading)
+        return "&connkey="+ck;
+    else   
+        return "";
+     }
+ 
      // using connkey in snapshot results in error
      $scope.appendConnKey =function(ck) {
-         if (simulStreaming == '1')
+         if (simulStreaming == '1' && !$scope.areImagesLoading)
             return "&connkey="+ck;
         else   
             return "";
@@ -1710,7 +1791,17 @@ angular.module('zmApp.controllers')
     $scope.$on('$ionicView.beforeEnter', function()
     {
 
-    
+       // NVRDataModel.regenConnKeys();
+        $scope.monitors = NVRDataModel.getMonitorsNow();
+
+       
+
+        $scope.MontageMonitors = angular.copy($scope.monitors);
+
+        for (var ck=0; ck < $scope.MontageMonitors.length; ck++) {
+            console.log ("Monitor: " + $scope.MontageMonitors[ck].Monitor.Name  + " Connkey:"+ $scope.MontageMonitors[ck].Monitor.connKey  );
+        }
+
         $scope.singleMonitorModalOpen = false;
        // $scope.minimal = $stateParams.minimal;
         var ld = NVRDataModel.getLogin();
@@ -1800,9 +1891,6 @@ angular.module('zmApp.controllers')
         $scope.monLimit = $scope.LoginData.maxMontage;
         $scope.toggleSubMenu = NVRDataModel.getLogin().showMontageSubMenu;
 
-
-        $scope.monitors = message;
-        $scope.MontageMonitors = angular.copy(message);
         $scope.sliderChanging = false;
         loginData = NVRDataModel.getLogin();
 
@@ -1935,49 +2023,15 @@ angular.module('zmApp.controllers')
         window.addEventListener("resize", orientationChanged, false);
 
         document.addEventListener("pause", onPause, false);
-        document.addEventListener("resume", onResume, false);
+      //  document.addEventListener("resume", onResume, false);
 
     });
 
     $scope.$on('$ionicView.beforeLeave', function()
     {
 
-        NVRDataModel.debug ("Deregistering broadcast handles");
-        for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
-        }
-        broadcastHandles = [];
-
-        // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
-
-        //console.log ("beforeLeave:Cancelling timer");
-        $interval.cancel(intervalHandleMontage);
-        $interval.cancel(intervalHandleMontageCycle);
-        $interval.cancel(intervalHandleAlarmStatus);
-        $interval.cancel(intervalHandleReloadPage);
-        pckry.destroy();
-        window.removeEventListener("resize", orientationChanged, false);
-
-        // killing connkeys STILL leaks apache
-        NVRDataModel.log("MontageCtrl:Stopping network pull...");
-            NVRDataModel.stopNetwork();
-
-       /* if (!$scope.singleMonitorModalOpen) {
-            NVRDataModel.debug ("Killing all streams in montage before exit");
-            for (var i=0; i < $scope.MontageMonitors.length; i++) {
-                NVRDataModel.killStream($scope.MontageMonitors[i].Monitor.connKey);
-            }
-        }*/
-
-        // make sure this is applied in scope digest to stop network pull
-        // thats why we are doing it beforeLeave
-
-        /*if (NVRDataModel.isForceNetworkStop())
-        {
-            NVRDataModel.log("MontageCtrl:Stopping network pull...");
-            NVRDataModel.stopNetwork();
-
-        }*/
+        isKilled =true;
+        viewCleanup();
 
     });
 
