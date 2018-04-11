@@ -158,7 +158,7 @@ angular.module('zmApp.controllers')
     $scope.$on('$ionicView.beforeLeave', function()
     {
 
-        NVRDataModel.debug ("Deregistering broadcast handles");
+        NVRDataModel.debug ("EventCtrl: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
             broadcastHandles[i]();
         }
@@ -2152,7 +2152,7 @@ angular.module('zmApp.controllers')
     {
         NVRDataModel.debug("EventCtrl:onpause called");
         if ($scope.popover) $scope.popover.remove();
-        NVRDataModel.debug ("Deregistering broadcast handles");
+        NVRDataModel.debug ("EventCtrl Pause:Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
             broadcastHandles[i]();
         }

@@ -26,8 +26,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
     function onResume()
     {
-        NVRDataModel.debug("LogCtrl: resume called, starting log timer");
-        loadLogs();
+       // NVRDataModel.debug("LogCtrl: resume called, starting log timer");
+      loadLogs();
     }
 
     $scope.flipLogs = function()
