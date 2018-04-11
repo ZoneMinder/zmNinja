@@ -9,13 +9,13 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     var processPush = false;
     var broadcastHandles = [];
 
-    $scope.$on ('$ionicView.beforeEnter', function() {
+    $scope.$on ('$ionicView.beforeLeave', function() {
         //processPush = false;
        // NVRDataModel.debug ("BeforeEnter in Portal: setting ProcessPush to false");
     });
 
     $scope.$on ('$ionicView.beforeLeave', function() {
-       NVRDataModel.debug ("Deregistering broadcast handles");
+       NVRDataModel.debug ("Portal: Deregistering broadcast handles");
        for (var i=0; i < broadcastHandles.length; i++) {
            broadcastHandles[i]();
        }
@@ -25,7 +25,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     $scope.$on('$ionicView.enter',
         function()
         {
-
+            NVRDataModel.setJustResumed(false);
             
             NVRDataModel.debug("Inside Portal login Enter handler");
             loginData = NVRDataModel.getLogin();

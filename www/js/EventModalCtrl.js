@@ -440,7 +440,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function onPause()
     {
-        NVRDataModel.debug ("Deregistering broadcast handles");
+        NVRDataModel.debug ("EventModal Pause: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
             broadcastHandles[i]();
         }
@@ -457,8 +457,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function onResume()
     {
-        NVRDataModel.debug("EventModalCtrl: Modal resume called");
-        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+       /* NVRDataModel.debug("EventModalCtrl: Modal resume called");
+        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);*/
 
     }
 

@@ -30,7 +30,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   document.addEventListener("resume", onResume, false);
 
   function onResume() {
-    NVRDataModel.log("Login screen resumed");
+   // NVRDataModel.log("Login screen resumed");
 
   }
 
