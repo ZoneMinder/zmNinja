@@ -1123,11 +1123,12 @@ angular.module('zmApp.controllers')
         if (simulStreaming=='1') {
             NVRDataModel.debug ("Killing all streams in montage to save memory/nw...");
             for (var i=0; i < $scope.MontageMonitors.length; i++) {
-                NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
+                NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
             }
         }
         
 
+        $scope.controlURL = monitor.Monitor.controlURL;
         openModal(mid, controllable, controlid, connKey, monitor);
 
 
@@ -1216,10 +1217,9 @@ angular.module('zmApp.controllers')
        // single connkey is removed in monitorModal
 
         NVRDataModel.debug ("Regenerating connkeys for montage...");
-        for (var i=0; i < $scope.MontageMonitors.length; i++) {
-            $scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-        }
-
+        NVRDataModel.regenConnKeys();
+        $scope.monitors = NVRDataModel.getMonitorsNow();
+        $scope.MontageMonitors = angular.copy($scope.monitors);
         $scope.modal.remove();
         // we did the montage, so redo flow
         $timeout (function() {initPackery();},zm.packeryTimer);
@@ -1339,7 +1339,7 @@ angular.module('zmApp.controllers')
         if (!$scope.singleMonitorModalOpen && simulStreaming=='1')  {
             NVRDataModel.debug ("Killing all streams in montage to save memory/nw...");
             for (i=0; i < $scope.MontageMonitors.length; i++) {
-                NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
+                NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
             }
         }
 
@@ -1374,8 +1374,6 @@ angular.module('zmApp.controllers')
 
 
     $scope.$on('$destroy', function() {
-
-        console.log ("MONTAGE DESTROYED!!!!!!!!!!!!!!!!!");
     });
 
     $scope.$on('$ionicView.loaded', function()
@@ -1735,7 +1733,7 @@ angular.module('zmApp.controllers')
          if (simulStreaming=='1') {
             NVRDataModel.debug ("Killing all streams in montage to save memory/nw...");
             for (var i=0; i < $scope.MontageMonitors.length; i++) {
-                NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
+                NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
             }
         }
          
@@ -1746,7 +1744,6 @@ angular.module('zmApp.controllers')
      $scope.constructStream = function(monitor) {
 
         var stream = '';
-
         if (!isKilled)
         stream = monitor.Monitor.streamingURL + 
                     "/nph-zms?mode="+getMode() +

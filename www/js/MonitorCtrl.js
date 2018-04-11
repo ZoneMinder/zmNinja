@@ -374,6 +374,7 @@ angular.module('zmApp.controllers')
                 NVRDataModel.debug("MonitorCtrl:Open Monitor Modal with monitor Id=" + mid +
                     " and Controllable:" + controllable + " with control ID:" + controlid);
 
+                $scope.controlURL = monitor.Monitor.controlURL;
                 $scope.monitor = monitor;
                 //console.log (">>>>>>>>>>>> MONITOR CRL " + $scope.monitor.
                 $scope.monitorId = mid;
@@ -402,7 +403,7 @@ angular.module('zmApp.controllers')
 
                 $scope.presetOn = false;
 
-                $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+               
                 $scope.isControllable = controllable;
 
                 $rootScope.modalRand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;

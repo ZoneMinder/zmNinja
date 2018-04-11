@@ -1531,22 +1531,24 @@ angular.module('zmApp.controllers')
           return monitors;
         },
 
-        killLiveStream: function (mon) {
+        killLiveStream: function (ck,url) {
 
-          var ck = mon.Monitor.connKey;
-         // monitors[i].Monitor.mportControlURL = mportControlUrl;
-          var url = mon.Monitor.mportControlURL;
+          
+         // monitors[i].Monitor.mportControlURL = controlURL;
+         if (!url) url = loginData.url;
+        //  var url = mon.Monitor.mportControlURL;
        // console.log (JSON.stringify(mon));
          // return;
 
-          debug ("Killing live stream ck:"+ck);
+        
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
           var req = url+'/index.php';
           req = req + "?view=request&request=stream";
           req = req + "&connkey="+ck;
           req = req + "&auth="+myauthtoken;
           req = req + "&command=1";
-          debug ("Kill command:"+req);
+
+          debug ("DataModel: Killing live stream ck:"+ck+ " with:"+req);
           $http.get(req)
           .then (
             function (s) {
@@ -1557,18 +1559,18 @@ angular.module('zmApp.controllers')
 
         },
 
-        killStream: function (ck) {
+        /*killStream: function (ck) {
           debug ("Killing connKey: "+ck);
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
           var req = $http(
             {
                 method: 'POST',
-                /*timeout: 15000,*/
+      
                 url: loginData.url + '/index.php',
                 headers:
                 {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    //'Accept': '*/*',
+                    ,
                 },
                 transformRequest: function(obj)
                 {
@@ -1599,7 +1601,7 @@ angular.module('zmApp.controllers')
             });
 
 
-        },
+      },*/
 
         regenConnKeys: function () {
 
@@ -1634,7 +1636,7 @@ angular.module('zmApp.controllers')
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
 
-                var mportControlUrl = "";
+                var controlURL = "";
                
                 debug ("ZMS Multiport reported: "+zmsPort);
                 debug ("Monitor URL to fetch is:"+myurl);
@@ -1731,7 +1733,7 @@ angular.module('zmApp.controllers')
                             
 
                             baseurl = st;
-                            mportControlUrl =st;
+                            controlURL =st;
 
                             st += (s.path ? s.path : p.path);
                             streamingurl += (s.path ? s.path : p.path);
@@ -1743,7 +1745,7 @@ angular.module('zmApp.controllers')
 
                             monitors[i].Monitor.streamingURL = st;
                             monitors[i].Monitor.baseURL = baseurl;
-                            monitors[i].Monitor.mportControlURL = mportControlUrl;
+                            monitors[i].Monitor.controlURL = controlURL;
                             //console.log ("** Streaming="+st+" **base="+baseurl);
                             // starting 1.30 we have fid=xxx mode to return images
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
@@ -1773,14 +1775,14 @@ angular.module('zmApp.controllers')
                                 var sport2 = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
                                 st2 = st2 + ':'+sport2;
 
-                                mportControlUrl = st2;
+                                controlURL = st2;
 
                                 if (p2.path) st2 += p2.path;
-                                if (p3.path) mportControlUrl +=p3.path;
+                                if (p3.path) controlURL +=p3.path;
                               }
 
                               monitors[i].Monitor.streamingURL = st2;
-                              monitors[i].Monitor.mportControlURL = mportControlUrl;
+                              monitors[i].Monitor.controlURL = controlURL;
                               //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
                               //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
                             monitors[i].Monitor.baseURL = loginData.url;
