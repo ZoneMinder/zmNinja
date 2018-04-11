@@ -865,6 +865,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     function onResume()
     {}
+
     $scope.openMenu = function()
     {
         $timeout(function()
@@ -911,13 +912,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     {
         //console.log("**VIEW ** Event History Ctrl Left, force removing modal");
 
-        NVRDataModel.debug ("Deregistering broadcast handles");
+        NVRDataModel.debug ("Montage History: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
             broadcastHandles[i]();
         }
         broadcastHandles = [];
         
-        
+
         if ($scope.modal) $scope.modal.remove();
         NVRDataModel.log("Cancelling event query timer");
         $interval.cancel($rootScope.eventQueryInterval);

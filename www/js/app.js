@@ -853,7 +853,7 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     $rootScope.$on("init-complete", function () {
-      NVRDataModel.log(">>>>>>>>>>>>>>> All init over, going to portal login");
+      NVRDataModel.log("Inside init-complete in app.js: All init over, going to portal login");
       $ionicHistory.nextViewOptions({
         disableAnimate: true
       });
@@ -1795,6 +1795,7 @@ angular.module('zmApp', [
         //----------------------------------------------------------------------------
         document.addEventListener("resume", function () {
 
+          NVRDataModel.setJustResumed(true);
           $ionicPlatform.ready(function () {
             NVRDataModel.log("App is resuming from background");
             $rootScope.isDownloading = false;
@@ -1851,7 +1852,8 @@ angular.module('zmApp', [
         //----------------------------------------------------------------------------
         document.addEventListener("pause", function () {
           NVRDataModel.setBackground(true);
-          NVRDataModel.setJustResumed(true); // used for window stop
+          NVRDataModel.setJustResumed(false);
+         // NVRDataModel.setJustResumed(true); // used for window stop
 
           EventServer.disconnect();
 
@@ -1859,18 +1861,21 @@ angular.module('zmApp', [
 
           $interval.cancel($rootScope.eventQueryInterval);
           $interval.cancel($rootScope.intervalHandle);
+          zmAutoLogin.stop();
+          if ($rootScope.zmPopup)
+            $rootScope.zmPopup.close();
 
-          NVRDataModel.log("ROOT APP: Stopping network pull...");
-          window.stop(); // dont call stopNetwork - we need to stop here 
+
+          NVRDataModel.log("ROOT APP: Stopping network ");
+          NVRDataModel.stopNetwork("called from app.js");
+
+          // dont call stopNetwork - we need to stop here 
 
           var ld = NVRDataModel.getLogin();
 
 
 
-          zmAutoLogin.stop();
-          if ($rootScope.zmPopup)
-            $rootScope.zmPopup.close();
-
+         
 
           if (ld.exitOnSleep && $rootScope.platformOS == "android") {
             NVRDataModel.log("user exited app");
@@ -2259,6 +2264,7 @@ angular.module('zmApp', [
         resolve: {
           message: function (NVRDataModel) {
             //console.log("Inside app.events resolve");
+            NVRDataModel.regenConnKeys();
             return NVRDataModel.getMonitors(0);
           }
 
