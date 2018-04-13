@@ -105,7 +105,8 @@ angular.module('zmApp', [
     quantSample: 15,
     hashSecret: 'unused at the moment',
     forceMontageReloadDelay: 3600, // 1 hr,
-    thumbWidth:200
+    thumbWidth:200,
+    alarmStatusTime: 10,
 
 
   })
