@@ -1646,6 +1646,7 @@ angular.module('zmApp.controllers')
           debug ("DataModel: Regenerating connkeys...");
           for (var i=0; i < monitors.length; i++){
             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+            monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
           }
         },
         
@@ -1706,6 +1707,7 @@ angular.module('zmApp.controllers')
                           monitors[i].Monitor.listDisplay = 'show';
                           monitors[i].Monitor.isAlarmed = false;
                           monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                          monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
                           var serverFound = false;
                           for (var j = 0; j < multiservers.length; j++) {
@@ -1796,6 +1798,7 @@ angular.module('zmApp.controllers')
                             //monitors[i].Monitor.listDisplay = 'show';
                             monitors[i].Monitor.isAlarmed = false;
                             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                            monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
                              var st2 = loginData.streamingurl;
 
@@ -1847,6 +1850,7 @@ angular.module('zmApp.controllers')
                           //monitors[i].Monitor.listDisplay = 'show';
                           monitors[i].Monitor.isAlarmed = false;
                           monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                          monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                           var st = loginData.streamingurl;
                           if (zmsPort >0) {
                             // we need to insert minport
