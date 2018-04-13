@@ -835,20 +835,38 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     }
     while (found != 1);
 
+    // now kill stream and set up next
+    NVRDataModel.debug("Killing stream before we move on to next monitor...");
+
+    $scope.isModalStreamPaused = true;
+    var element = angular.element(document.getElementById("monitorimage"));
     var slidein;
     var slideout;
-    var dirn = d;
-    if (dirn == 1) {
-      slideout = "animated slideOutLeft";
-      slidein = "animated slideInRight";
-    } else {
-      slideout = "animated slideOutRight";
-      slidein = "animated slideInLeft";
-    }
+    $timeout (function() {
+      NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
 
-    var element = angular.element(document.getElementById("monitorimage"));
-    element.addClass(slideout)
-      .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
+      // we should now have a paused stream, time to animate out
+
+
+      $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString(); // get new key for new id
+
+     
+      var dirn = d;
+      if (dirn == 1) {
+        slideout = "animated slideOutLeft";
+        slidein = "animated slideInRight";
+      } else {
+        slideout = "animated slideOutRight";
+        slidein = "animated slideInLeft";
+      }
+  
+      
+      element.addClass(slideout)
+        .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
+    });
+
+    
+
 
     function outWithOld() {
 
@@ -864,6 +882,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.monitorId = mid;
         $scope.monitorName = NVRDataModel.getMonitorName(mid);
         $scope.monitor = NVRDataModel.getMonitorObject(mid);
+        $scope.controlURL = $scope.monitor.Monitor.controlURL;
         $scope.zoneArray = [];
         $scope.circlePoints = [];
         getZones();
@@ -875,6 +894,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
       element.removeClass(slidein);
       $scope.animationInProgress = false;
+      $scope.isModalStreamPaused = false;
 
       NVRDataModel.log("New image loaded in");
       var ld = NVRDataModel.getLogin();
