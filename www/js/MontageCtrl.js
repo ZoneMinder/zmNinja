@@ -1258,7 +1258,7 @@ angular.module('zmApp.controllers')
         // let modal go to snapshot mode in render
         $timeout (function () {
             $scope.modal.remove();
-        })
+        });
 
         // We now need to regen connkeys
         // once regenerated 
@@ -1766,6 +1766,7 @@ angular.module('zmApp.controllers')
                     "&monitor="+monitor.Monitor.Id +
                     "&scale="+$scope.LoginData.montageQuality + 
                     $rootScope.authSession + 
+                    "&rand="+monitor.Monitor.rndKey;
                     //"&rand="+$scope.randToAvoidCacheMem +
                     appendConnKey (monitor.Monitor.connKey);
 
