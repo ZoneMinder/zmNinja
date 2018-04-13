@@ -1531,32 +1531,70 @@ angular.module('zmApp.controllers')
           return monitors;
         },
 
-        killLiveStream: function (ck,url) {
-
-          
-         // monitors[i].Monitor.mportControlURL = controlURL;
-         if (!url) url = loginData.url;
-        //  var url = mon.Monitor.mportControlURL;
-       // console.log (JSON.stringify(mon));
-         // return;
-
-        
+        pauseLiveStream: function (ck,url) {
+          if (!url) url = loginData.url;
+       
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
           var req = url+'/index.php';
           req = req + "?view=request&request=stream";
           req = req + "&connkey="+ck;
           req = req + "&auth="+myauthtoken;
-          req = req + "&command=1";
+         // req = req + "&command=17";
 
-          debug ("DataModel: Killing live stream ck:"+ck+ " with:"+req);
-          $http.get(req)
+          debug ("DataModel: Pausing live stream ck:"+ck);
+          return $http.get(req+"&command=1")
           .then (
             function (s) {
-              debug ("success with:"+JSON.stringify(s));
+              debug ("pause success for ck:"+ck+" with:"+JSON.stringify(s));
+              
             },
-            function (e) {debug ("error with:"+JSON.stringify(e));}
+            function (e) {debug ("pause success for ck:"+ck+" with:"+JSON.stringify(e));}
           );
 
+        },
+
+        resumeLiveStream: function (ck,url) {
+          if (!url) url = loginData.url;
+       
+          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+          var req = url+'/index.php';
+          req = req + "?view=request&request=stream";
+          req = req + "&connkey="+ck;
+          req = req + "&auth="+myauthtoken;
+         // req = req + "&command=17";
+
+          debug ("DataModel: Resuming live stream ck:"+ck);
+          return $http.get(req+"&command=2")
+          .then (
+            function (s) {
+              debug ("play success for ck:"+ck+" with:"+JSON.stringify(s));
+              
+            },
+            function (e) {debug ("play success for ck:"+ck+" with:"+JSON.stringify(e));}
+          );
+
+        },
+
+        killLiveStream: function (ck,url,name) {
+
+         if (!url) url = loginData.url;
+       
+          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+          var req = url+'/index.php';
+          req = req + "?view=request&request=stream";
+          req = req + "&connkey="+ck;
+          req = req + "&auth="+myauthtoken;
+         // req = req + "&command=17";
+          if (name==undefined) name="";
+          debug ("DataModel: killing "+name+" live stream ck:"+ck);
+          return $http.get(req+"&command=17")
+          .then (
+            function (s) {
+              debug ("kill success for ck:"+ck+" with:"+JSON.stringify(s));
+              
+            },
+            function (e) {ebug ("kill success for ck:"+ck+" with:"+JSON.stringify(e));}
+          );
         },
 
         /*killStream: function (ck) {
@@ -1605,7 +1643,7 @@ angular.module('zmApp.controllers')
 
         regenConnKeys: function () {
 
-          debug ("Regenerating connkeys...");
+          debug ("DataModel: Regenerating connkeys...");
           for (var i=0; i < monitors.length; i++){
             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
           }
