@@ -90,7 +90,7 @@
 
                   
 
-            <span ng-if="!singleMonitorModalOpen" ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit">
+            <span ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit">
                <div  class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} ">
 
                   <!--  <figure>

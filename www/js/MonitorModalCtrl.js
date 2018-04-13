@@ -10,7 +10,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.isModalActive = true;
   var intervalModalHandle;
   var cycleHandle;
-  var nphTimer;
   var ld = NVRDataModel.getLogin();
   $scope.svgReady = false;
   $scope.zoneArray = [];
@@ -20,6 +19,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   var targetID = "";
   $scope.imageZoomable = true;
   $scope.ptzButtonsShown = true;
+  
+  
 
 
 
@@ -73,11 +74,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     //  console.log ("Refreshing Image...");
   }.bind(this), 5000);
 
-  $timeout.cancel(nphTimer);
-  nphTimer = $timeout(function () {
-    $scope.currentStreamMode = 'jpeg';
-    NVRDataModel.log("Switching playback via nphzms");
-  }, zm.nphSwitchTimer);
+ 
 
   // This is the PTZ menu
 
@@ -882,18 +879,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       NVRDataModel.log("New image loaded in");
       var ld = NVRDataModel.getLogin();
       carouselUtils.setStop(false);
-      if (ld.useNphZms == true) {
-        $scope.currentStreamMode = 'single';
-        NVRDataModel.log("Setting timer to play nph-zms mode");
-        // first 5 seconds, load a snapshot, then switch to real FPS display
-        // this is to avoid initial image load delay
-        // FIXME: 5 seconds fair?
-        $timeout.cancel(nphTimer);
-        nphTimer = $timeout(function () {
-          $scope.currentStreamMode = 'jpeg';
-          NVRDataModel.log("Switching playback via nphzms");
-        }, zm.nphSwitchTimer);
-      }
 
     }
 
@@ -1114,6 +1099,33 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     }
   }
 
+
+  $scope.constructSingleStream = function() {
+    var stream;
+    stream = $scope.monitor.Monitor.streamingURL + 
+                    "/nph-zms?mode="+getSingleStreamMode() +
+                    "&monitor="+$scope.monitorId +
+                    "&scale="+$scope.quality + 
+                    $rootScope.authSession + 
+                    "&rand="+$rootScope.modalRand +
+                    appendSingleStreamConnKey();
+                
+
+        return stream;
+
+
+  };
+
+
+  function getSingleStreamMode() {
+    return $scope.isModalStreamPaused ? 'single': 'jpeg';
+  }
+
+function appendSingleStreamConnKey()  {
+   return $scope.isModalStreamPaused ? "": "&connkey="+$scope.connKey;
+
+  };
+
   //-------------------------------------------------------------
   //reloaads mon - do we need it?
   //-------------------------------------------------------------
@@ -1171,10 +1183,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.$on('modal.removed', function () {
 
     $scope.isModalActive = false;
-    NVRDataModel.debug("Single monitor exited, killing stream");
-    NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
-
-
+    NVRDataModel.debug("Single monitor exited killing stream");
+    NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);  
 
     //console.log("**MODAL REMOVED: Stopping modal timer");
     $interval.cancel(intervalModalHandle);
