@@ -1239,7 +1239,7 @@ angular.module('zmApp.controllers')
         {
             loadAlarmStatus();
             //  console.log ("Refreshing Image...");
-        }.bind(this), 5000);
+        }.bind(this), zm.alarmStatusTime * 1000);
 
         intervalHandleMontageCycle = $interval(function()
         {
@@ -1946,7 +1946,7 @@ angular.module('zmApp.controllers')
         {
             loadAlarmStatus();
             //  console.log ("Refreshing Image...");
-        }.bind(this), 5000);
+        }.bind(this), zm.alarmStatusTime * 1000);
 
         intervalHandleReloadPage = $interval(function()
         {

@@ -1593,7 +1593,7 @@ angular.module('zmApp.controllers')
               debug ("kill success for ck:"+ck+" with:"+JSON.stringify(s));
               
             },
-            function (e) {ebug ("kill success for ck:"+ck+" with:"+JSON.stringify(e));}
+            function (e) {debug ("kill success for ck:"+ck+" with:"+JSON.stringify(e));}
           );
         },
 
