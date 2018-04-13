@@ -32,7 +32,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }, false);
 
 
-  $rootScope.authSession = "undefined";
+  //$rootScope.authSession = "undefined";
 
   $ionicLoading.show({
     template: $translate.instant('kNegotiatingStreamAuth') + '...',
@@ -49,7 +49,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   NVRDataModel.debug("MonitorModalCtrl called from " + $ionicHistory.currentStateName());
  
 
-  $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
+  //no need to recompute auth in modal
+  /*$rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
   NVRDataModel.getAuthKey($rootScope.validMonitorId, $scope.monitors[0].Monitor.connKey)
     .then(function (success) {
         $ionicLoading.hide();
@@ -64,7 +65,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //$rootScope.authSession="";
         NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
       });
-
+*/
 
   $interval.cancel(intervalModalHandle);
   $interval.cancel(cycleHandle);
@@ -1144,7 +1145,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 function appendSingleStreamConnKey()  {
    return $scope.isModalStreamPaused ? "": "&connkey="+$scope.connKey;
 
-  };
+  }
 
   //-------------------------------------------------------------
   //reloaads mon - do we need it?
