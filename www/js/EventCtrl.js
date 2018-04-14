@@ -77,14 +77,14 @@ angular.module('zmApp.controllers')
     //---------------------------------------------------
 
     //we come here is TZ is updated after the view loads
-    var tzu = $rootScope.$on('tz-updated', function()
+    var tzu = $scope.$on('tz-updated', function()
     {
         $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
         NVRDataModel.debug("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
     });
     broadcastHandles.push(tzu);
 
-    var lc = $rootScope.$on("language-changed", function()
+    var lc = $scope.$on("language-changed", function()
     {
         NVRDataModel.log(">>>>>>>>>>>>>>> language changed");
         doRefresh();
@@ -160,7 +160,7 @@ angular.module('zmApp.controllers')
 
         NVRDataModel.debug ("EventCtrl: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
+           // broadcastHandles[i]();
         }
         broadcastHandles = [];
     });
@@ -2154,7 +2154,7 @@ angular.module('zmApp.controllers')
         if ($scope.popover) $scope.popover.remove();
         NVRDataModel.debug ("EventCtrl Pause:Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
+          //  broadcastHandles[i]();
         }
         broadcastHandles = [];
 

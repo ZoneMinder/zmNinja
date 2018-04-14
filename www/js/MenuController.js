@@ -42,7 +42,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                 {
                     NVRDataModel.log("Language selected:" + $scope.myopt.lang);
                     NVRDataModel.setDefaultLanguage($scope.myopt.lang, true);
-                    $rootScope.$emit('language-changed');
+                    $rootScope.$broadcast('language-changed');
 
                     //return "OK";
 

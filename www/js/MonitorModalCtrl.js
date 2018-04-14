@@ -34,14 +34,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   //$rootScope.authSession = "undefined";
 
-  $ionicLoading.show({
+ /* $ionicLoading.show({
     template: $translate.instant('kNegotiatingStreamAuth') + '...',
     animation: 'fade-in',
     showBackdrop: true,
     duration: zm.loadingTimeout,
     maxWidth: 300,
     showDelay: 0
-  });
+  });*/
 
   $scope.currentStreamMode = 'single';
   NVRDataModel.log("Using stream mode " + $scope.currentStreamMode);
@@ -73,7 +73,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   intervalModalHandle = $interval(function () {
     loadModalNotifications();
     //  console.log ("Refreshing Image...");
-  }.bind(this), 5000);
+  }.bind(this), zm.alarmStatusTime);
 
  
 
@@ -193,12 +193,20 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   // On re-auth, we need a new zms
   //-------------------------------------------------------------
 
-  $rootScope.$on("auth-success", function () {
+  var as = $scope.$on("auth-success", function () {
 
     NVRDataModel.debug("MonitorModalCtrl: Re-login detected, resetting everything & re-generating connkey");
     //NVRDataModel.stopNetwork("MonitorModal-auth success");
-    NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
+    $scope.isModalStreamPaused = false;
+
+    $timeout (function() {
+      NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
+
+    
     $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+    });
+
+    
 
   });
 
@@ -283,7 +291,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
       intervalModalHandle = $interval(function () {
         loadModalNotifications();
-      }.bind(this), 5000);
+      }.bind(this), zm.alarmStatusTime);
 
       if (ld.cycleMonitors) {
         NVRDataModel.debug("Cycling enabled at " + ld.cycleMonitorsInterval);
@@ -575,46 +583,38 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   // this is a good time to calculate scaled zone points
   function imageLoaded() {
 
+    if ($scope.animationInProgress) return;
+    /*
     var img = document.getElementById("singlemonitor");
-
-    //$scope.cw = img.naturalWidth;
-    //$scope.ch = img.naturalHeight;
-
     $scope.cw = img.naturalWidth;
     $scope.ch = img.naturalHeight;
 
-    //console.log ("REPORTED DIM:" + $scope.cw+ "x"+$scope.ch );
-    //console.log ("ORIGINAL DIM:" + img.naturalWidth+ "x"+img.naturalHeight);
-    //https://server/zm/api/zones/forMonitor/7.json
-    //
+    
     $scope.zoneArray = [];
     $scope.circlePoints = [];
 
     var ow = $scope.monitor.Monitor.Width;
-    var oh = $scope.monitor.Monitor.Height;
+    var oh = $scope.monitor.Monitor.Height;*/
 
     // console.log ("MONITOR IS: "+JSON.stringify($scope.monitor));
 
     // console.log ("ORIGINAL WH="+ow+"x"+oh);
 
-    for (var i = 0; i < originalZones.length; i++) {
+    /*for (var i = 0; i < originalZones.length; i++) {
       var sx = $scope.cw / ow;
       var sy = $scope.ch / oh;
-      //$scope.zoneArray.push({
-      // coords:scaleCoords(originalZones[i].coords,sx,sy),
-      //   type:originalZones[i].type});
       $scope.zoneArray.push({
         coords: originalZones[i].coords,
         type: originalZones[i].type
       });
 
 
-    }
+    }*/
 
     // now create a points array for circle handles
-    for (i = 0; i < $scope.zoneArray.length; i++) {
-      /*jshint loopfunc: true */
-      // console.log ("ZONE ARRAY="+$scope.zoneArray[i].coords);
+
+   /* for (i = 0; i < $scope.zoneArray.length; i++) {
+      //jshint loopfunc: true 
       $scope.zoneArray[i].coords.split(' ')
         .forEach(function (itm) {
           var o = itm.split(',');
@@ -627,8 +627,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           // console.log ("CIRCLE X="+o[0]+"Y="+o[1]);
         });
 
-    }
+  }*/
 
+    $scope.isModalStreamPaused = false;
+    NVRDataModel.debug ("Modal image loaded, switching to streaming");
 
 
 
@@ -636,18 +638,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   }
 
-  //-------------------------------------------------------------
-  // this is checked to make sure we are not pulling images
-  // when app is in background. This is a problem with Android,
-  // for example
-  //-------------------------------------------------------------
-
-  $scope.isBackground = function () {
-    // console.log ("Is background called from ModalCtrl and returned " +    
-    // NVRDataModel.isBackground());
-    return NVRDataModel.isBackground();
-  };
-
+ 
   //-------------------------------------------------------------
   // Send PTZ command to ZM
   // Note: PTZ fails on desktop, don't bother about it
@@ -797,6 +788,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   function moveToMonitor(m, d) {
 
+    $scope.animationInProgress = true;
     if ($scope.isZoneEdit) {
       NVRDataModel.log("Not cycling, as you are editing zones");
     }
@@ -847,9 +839,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
 
       // we should now have a paused stream, time to animate out
-
-
-      $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString(); // get new key for new id
+    
 
      
       var dirn = d;
@@ -871,22 +861,24 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     function outWithOld() {
 
-      NVRDataModel.log("ModalCtrl:Stopping network pull...");
-      NVRDataModel.stopNetwork("MonitorModal-outwithOld");
+      NVRDataModel.log(">>>Old image out");
+     // NVRDataModel.log("ModalCtrl:Stopping network pull...");
+      //NVRDataModel.stopNetwork("MonitorModal-outwithOld");
       $scope.rand = Math.floor((Math.random() * 100000) + 1);
-      $scope.animationInProgress = true;
+     
 
       $timeout(function () {
         element.removeClass(slideout);
         element.addClass(slidein)
           .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
+        
         $scope.monitorId = mid;
         $scope.monitorName = NVRDataModel.getMonitorName(mid);
         $scope.monitor = NVRDataModel.getMonitorObject(mid);
         $scope.controlURL = $scope.monitor.Monitor.controlURL;
         $scope.zoneArray = [];
         $scope.circlePoints = [];
-        getZones();
+       // getZones();
         configurePTZ($scope.monitorId);
       }, 200);
     }
@@ -894,13 +886,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     function inWithNew() {
 
       element.removeClass(slidein);
-      $scope.animationInProgress = false;
+      
       $scope.isModalStreamPaused = false;
 
-      NVRDataModel.log("New image loaded in");
+     
       var ld = NVRDataModel.getLogin();
       carouselUtils.setStop(false);
-
+      $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString(); // get new key for new id
+      $scope.animationInProgress = false; // has to be AFTER new connkey
+          NVRDataModel.log("<<<New image loaded in with ck:"+$scope.connKey);
     }
 
     $ionicLoading.hide();
@@ -1122,6 +1116,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
 
   $scope.constructSingleStream = function() {
+
+    
     var stream;
     stream = $scope.monitor.Monitor.streamingURL + 
                     "/nph-zms?mode="+getSingleStreamMode() +
@@ -1131,6 +1127,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     "&rand="+$rootScope.modalRand +
                     appendSingleStreamConnKey();
                 
+        //console.log ("STREAM="+stream);
 
         return stream;
 
@@ -1203,6 +1200,7 @@ function appendSingleStreamConnKey()  {
 
   $scope.$on('modal.removed', function () {
 
+    as(); // dregister auth success
     $scope.isModalActive = false;
     NVRDataModel.debug("Single monitor exited killing stream");
     NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);  
@@ -1621,7 +1619,7 @@ function appendSingleStreamConnKey()  {
 
     $scope.showZones = false;
 
-    getZones();
+    //getZones();
 
     var ld = NVRDataModel.getLogin();
     //currentEvent = $scope.currentEvent;

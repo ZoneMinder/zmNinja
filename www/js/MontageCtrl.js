@@ -29,8 +29,10 @@ angular.module('zmApp.controllers')
     var refreshSec;
     var reloadPage = zm.forceMontageReloadDelay;
     var viewCleaned = false;
+    var randToAvoidCacheMem;
 
-    var areStreamsStopped = false;
+
+    var areStreamsStopped = true; // first load snapshot
     $scope.isModalStreamPaused = false; // used in Monitor Modal
     
     //var reloadPage = 30;
@@ -39,22 +41,42 @@ angular.module('zmApp.controllers')
 
     var broadcastHandles = [];
 
-
-    var as = $rootScope.$on("auth-success", function () {
-         NVRDataModel.debug("Montage Re-auth handler");
-        //console.log ("RETAUTH");
-       // NVRDataModel.stopNetwork();
+    var as = $scope.$on("auth-success", function () {
+         
+        if ($scope.singleMonitorModalOpen) {
+            NVRDataModel.debug ("Montage: Not creating streams, as modal is open");
+            return;
+        }
         
-    });
-    broadcastHandles.push(as);
+        
+        NVRDataModel.debug("Montage Re-auth handler");
 
+        areStreamsStopped = true;
+
+       $timeout (function () { // after render
+        if (simulStreaming) {
+            NVRDataModel.debug ("Re-creating all stream connkeys in montage ...");
+            NVRDataModel.regenConnKeys();
+            $scope.monitors = NVRDataModel.getMonitorsNow();
+            $scope.MontageMonitors = angular.copy($scope.monitors);
+            $timeout(function() // after render
+            {
+                initPackery();
+            }, zm.packeryTimer);
+
+     
+        }
+      });
+      broadcastHandles.push(as);
+      //console.log (">>>>>>>>>>>>>>>>>>>>>>>>>>>AS="+as);
+    });
 
     //--------------------------------------------------------------------------------------
     // Handles bandwidth change, if required
     //
     //--------------------------------------------------------------------------------------
 
-    var bc = $rootScope.$on("bandwidth-change", function(e, data)
+    var bc = $scope.$on("bandwidth-change", function(e, data)
     {
         // not called for offline, I'm only interested in BW switches
         NVRDataModel.debug("Got network change:" + data);
@@ -89,7 +111,7 @@ angular.module('zmApp.controllers')
         intervalHandleReloadPage = $interval(function()
         {
             forceReloadPage();
-        }.bind(this), reloadPage * 1000);
+        }.bind(this), reloadPage);
 
         if (NVRDataModel.getBandwidth() == 'lowbw')
         {
@@ -152,7 +174,7 @@ angular.module('zmApp.controllers')
     function forceReloadPage() {
         if ($scope.isDragabillyOn)
         {
-            NVRDataModel.debug ("not cycling, edit in progress");
+            NVRDataModel.debug ("not reloading, edit in progress");
             return;
 
         }
@@ -216,6 +238,7 @@ angular.module('zmApp.controllers')
             duration: zm.loadingTimeout
         });*/
 
+        areStreamsStopped = true;
 
         $scope.areImagesLoading = true;
         var progressCalled = false;
@@ -303,9 +326,10 @@ angular.module('zmApp.controllers')
         {
             //console.log ("******** ALL IMAGES LOADED");
             // $scope.$digest();
-            NVRDataModel.debug("All images loaded");
+            NVRDataModel.debug("All images loaded, switching to streaming if applicable");
 
             $scope.areImagesLoading = false;
+            areStreamsStopped = false;
 
             $ionicLoading.hide();
 
@@ -600,7 +624,7 @@ angular.module('zmApp.controllers')
     }
 
     function randEachTime() {
-      $scope.randToAvoidCacheMem =  new Date().getTime();
+      randToAvoidCacheMem =  new Date().getTime();
       //$scope.randToAvoidCacheMem =  "1";
       //console.log ("Generating:"+$scope.randToAvoidCacheMem);
     }
@@ -777,7 +801,7 @@ angular.module('zmApp.controllers')
     //----------------------------------------------------------------
     // Alarm emit handling
     //----------------------------------------------------------------
-    var al = $rootScope.$on("alarm", function(event, args)
+    var al = $scope.$on("alarm", function(event, args)
     {
         // FIXME: I should probably unregister this instead
         if (typeof $scope.monitors === undefined)
@@ -1121,7 +1145,7 @@ angular.module('zmApp.controllers')
     {
         
        areStreamsStopped = true;
-       $scope.isModalStreamPaused = false; // we stop montage and start modal stream
+       $scope.isModalStreamPaused = true; // we stop montage and start modal stream in snapshot first
        $timeout (function () { // after render
         if (simulStreaming) {
            NVRDataModel.debug ("Killing all streams in montage to save memory/nw...");
@@ -1195,12 +1219,12 @@ angular.module('zmApp.controllers')
             {
                 $scope.modal = modal;
 
-                $ionicLoading.show(
+               /* $ionicLoading.show(
                 {
                     template: $translate.instant('kPleaseWait'),
                     noBackdrop: true,
                     duration: zm.loadingTimeout
-                });
+                });*/
 
                 // we don't really need this as we have stopped the timer
                 // $scope.isModalActive = true;
@@ -1239,7 +1263,7 @@ angular.module('zmApp.controllers')
         {
             loadAlarmStatus();
             //  console.log ("Refreshing Image...");
-        }.bind(this), zm.alarmStatusTime * 1000);
+        }.bind(this), zm.alarmStatusTime);
 
         intervalHandleMontageCycle = $interval(function()
         {
@@ -1250,7 +1274,7 @@ angular.module('zmApp.controllers')
         intervalHandleReloadPage = $interval(function()
         {
             forceReloadPage();
-        }.bind(this), reloadPage * 1000);
+        }.bind(this), reloadPage);
 
     
 
@@ -1268,7 +1292,7 @@ angular.module('zmApp.controllers')
             $scope.monitors = NVRDataModel.getMonitorsNow();
             $scope.MontageMonitors = angular.copy($scope.monitors);
 
-            areStreamsStopped = false;
+            //areStreamsStopped = false;
             $timeout(function() // after render
             {
                 initPackery();
@@ -1326,7 +1350,8 @@ angular.module('zmApp.controllers')
 
         NVRDataModel.debug ("Montage: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
+           // broadcastHandles[i]();
+            //console.log ("DEREGISTER "+broadcastHandles[i]);
         }
         broadcastHandles = [];
         
@@ -1766,10 +1791,10 @@ angular.module('zmApp.controllers')
                     "&monitor="+monitor.Monitor.Id +
                     "&scale="+$scope.LoginData.montageQuality + 
                     $rootScope.authSession + 
-                    "&rand="+monitor.Monitor.rndKey;
+                    "&rand="+randToAvoidCacheMem;
                     //"&rand="+$scope.randToAvoidCacheMem +
                     appendConnKey (monitor.Monitor.connKey);
-
+     //   console.log ("MODE="+getMode());
         return stream;
 
      };
@@ -1805,6 +1830,9 @@ angular.module('zmApp.controllers')
     $scope.$on('$ionicView.beforeEnter', function()
     {
 
+        broadcastHandles = [];
+        randToAvoidCacheMem =  new Date().getTime();
+        areStreamsStopped = true;
        // NVRDataModel.regenConnKeys();
         $scope.monitors = NVRDataModel.getMonitorsNow();
         $scope.MontageMonitors = angular.copy($scope.monitors);
@@ -1947,12 +1975,12 @@ angular.module('zmApp.controllers')
         {
             loadAlarmStatus();
             //  console.log ("Refreshing Image...");
-        }.bind(this), zm.alarmStatusTime * 1000);
+        }.bind(this), zm.alarmStatusTime);
 
         intervalHandleReloadPage = $interval(function()
         {
             forceReloadPage();
-        }.bind(this), reloadPage * 1000);
+        }.bind(this), reloadPage);
 
         loadNotifications();
 

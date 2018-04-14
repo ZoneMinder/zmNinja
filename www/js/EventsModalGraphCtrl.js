@@ -27,7 +27,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     {
         NVRDataModel.debug ("Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
+           // broadcastHandles[i]();
         }
         broadcastHandles = [];
     });
@@ -115,7 +115,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------
 
-    var as = $rootScope.$on("auth-success", function()
+    var as = $scope.$on("auth-success", function()
     {
 
         NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");

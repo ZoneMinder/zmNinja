@@ -1121,7 +1121,7 @@ angular.module('zmApp.controllers')
 
                 // FIXME: HACK: This is the latest entry point into dataModel init, so start portal login after this
                 // not the neatest way
-                $rootScope.$emit('init-complete');
+                $rootScope.$broadcast('init-complete');
               });
 
             monitorsLoaded = 0;
@@ -1392,7 +1392,7 @@ angular.module('zmApp.controllers')
 
           // Skipping monitor number as I only need an auth key
           // so no need to generate an image
-          var myurl = loginData.url + "/index.php?view=watch&mid=" + mid + "&connkey=" + ck;
+          var myurl = loginData.url + "/index.php?view=watch&mid=" + mid 
           debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
           $http.get(myurl)
             .then(function (success) {
@@ -2015,7 +2015,7 @@ angular.module('zmApp.controllers')
                     isTzSupported = true;
                   else
                     isTzSupported = false;
-                  $rootScope.$emit('tz-updated');
+                  $rootScope.$broadcast('tz-updated');
                   return (d.promise);
 
                 },

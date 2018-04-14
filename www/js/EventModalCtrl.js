@@ -108,7 +108,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     //
     //--------------------------------------------------------------------------------------
 
-    var bc = $rootScope.$on("bandwidth-change", function(e, data)
+    var bc = $scope.$on("bandwidth-change", function(e, data)
     {
         // not called for offline, I'm only interested in BW switches
         NVRDataModel.debug("Got network change:" + data);
@@ -133,7 +133,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------
 
-    var as = $rootScope.$on("auth-success", function()
+    var as = $scope.$on("auth-success", function()
     {
 
         NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
@@ -442,7 +442,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
         NVRDataModel.debug ("EventModal Pause: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
+           // broadcastHandles[i]();
         }
         broadcastHandles = [];
         
@@ -1093,7 +1093,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
         NVRDataModel.debug ("Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
+           // broadcastHandles[i]();
         }
         broadcastHandles = [];
         
