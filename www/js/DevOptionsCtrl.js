@@ -72,6 +72,10 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
         return NVRDataModel.getTimeZoneNow();
     };
 
+    $scope.checkMultiPortToggle = function() {
+        if ($rootScope.platformOS == 'ios')
+            $scope.loginData.disableSimulStreaming = true;
+    };
     //------------------------------------------------------------------
     // Perform the login action when the user submits the login form
     //------------------------------------------------------------------
@@ -109,6 +113,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
             $scope.loginData.singleImageQuality = zm.safeImageQuality.toString();
         }
 
+        if (!$scope.loginData.disableSimulStreaming && $rootScope.platformOS=='ios') {
+            $scope.loginData.disableSimulStreaming = true;
+        }
         NVRDataModel.debug("SaveDevOptions: Saving to disk");
         NVRDataModel.setLogin($scope.loginData);
         NVRDataModel.getMonitors(1);

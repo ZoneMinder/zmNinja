@@ -848,7 +848,13 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.disableSimulStreaming == 'undefined') {
                    
                     loginData.disableSimulStreaming = false;
+                    
                   }
+                  // iOS it is always off, webkit bug
+
+                  if  ($rootScope.platformOS=='ios') {
+                    loginData.disableSimulStreaming = true;
+                }
 
                   if (typeof loginData.exitOnSleep == 'undefined') {
                     debug("exitOnSleep does not exist. Setting to false");
@@ -1150,7 +1156,7 @@ angular.module('zmApp.controllers')
             
           } else {
             log(s + " stopNework: Calling window.stop()");
-            $timeout (function() {window.stop();},10);
+            $timeout (function() {window.stop();});
             
           }
         },

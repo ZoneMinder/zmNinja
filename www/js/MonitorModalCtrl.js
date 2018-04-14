@@ -200,7 +200,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.isModalStreamPaused = false;
 
     $timeout (function() {
-      NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
+
+      if (0 && $rootScope.platformOS == 'ios') {
+        NVRDataModel.debug ("Webkit hack, hammering window.stop();");
+        NVRDataModel.stopNetwork();
+      }
+      else {
+        NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
+      }
+     
 
     
     $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
@@ -272,7 +280,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $interval.cancel(cycleHandle);
 
     NVRDataModel.debug("Killing single stream...");
+    
+    if (0 && $rootScope.platformOS == 'ios') {
+      NVRDataModel.debug ("Webkit hack, hammering window.stop();");
+      NVRDataModel.stopNetwork();
+    } else { 
     NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
+    }
     // $interval.cancel(modalIntervalHandle);
 
     // FIXME: Do I need to  setAwake(false) here?
@@ -1202,8 +1216,19 @@ function appendSingleStreamConnKey()  {
 
     as(); // dregister auth success
     $scope.isModalActive = false;
-    NVRDataModel.debug("Single monitor exited killing stream");
-    NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);  
+
+    if (1 || $rootScope.platformOS != 'ios') {
+    
+      // ios calls window stop...
+      NVRDataModel.debug("Single monitor exited killing stream");
+      NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);  
+    }
+
+    else {
+     
+        NVRDataModel.debug("Webkit hack, hammering window.stop();");
+        NVRDataModel.stopNetwork();
+    }
 
     //console.log("**MODAL REMOVED: Stopping modal timer");
     $interval.cancel(intervalModalHandle);
@@ -1601,6 +1626,13 @@ function appendSingleStreamConnKey()  {
   }
 
   $scope.$on('modal.shown', function () {
+
+
+    if (0 && $rootScope.platformOS == 'ios') {
+      NVRDataModel.debug("Webkit hack, hammering window.stop();");
+      NVRDataModel.stopNetwork();
+    }
+
     $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
     $scope.monStatus = "";
     $scope.isToggleListMenu = true;
