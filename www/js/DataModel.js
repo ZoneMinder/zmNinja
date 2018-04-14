@@ -1392,7 +1392,7 @@ angular.module('zmApp.controllers')
 
           // Skipping monitor number as I only need an auth key
           // so no need to generate an image
-          var myurl = loginData.url + "/index.php?view=watch&mid=" + mid 
+          var myurl = loginData.url + "/index.php?view=watch&mid=" + mid ;
           debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
           $http.get(myurl)
             .then(function (success) {
