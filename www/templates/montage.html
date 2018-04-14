@@ -33,9 +33,9 @@
             <br/>
             <div id="flyoutmenu" style="float:left">
                 <ul>
-                        <li>
+                       <!-- <li>
                                 <a href="" ng-click="killAllImages()"> <i class="ion-ionic"></i></a>
-                            </li>
+                            </li>-->
 
                     <li>
                         <a href="" ng-click="sliderChanged(1)"> <i class="ion-plus-circled"></i></a>
@@ -90,7 +90,7 @@
 
                   
 
-            <span ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit">
+            <span ng-if="!singleMonitorModalOpen" ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit">
                <div  class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} ">
 
                   <!--  <figure>

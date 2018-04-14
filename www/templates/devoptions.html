@@ -124,6 +124,7 @@
 
             <label ng-if="$root.platformOS!='desktop'">
                 <ion-toggle ng-model="loginData.enableStrictSSL" ng-checked="loginData.enableStrictSSL" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableStrictSSL' | translate}}
+
                    </span>
                 </ion-toggle>
             </label>
@@ -155,7 +156,9 @@
             </label>
 
             <label>
-                    <ion-toggle ng-model="loginData.disableSimulStreaming" ng-checked="loginData.disableSimulStreaming" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableSimulStreaming' | translate}}
+                    <ion-toggle ng-model="loginData.disableSimulStreaming" ng-checked="loginData.disableSimulStreaming"
+                    ng-change="checkMultiPortToggle()" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableSimulStreaming' | translate}}
+                    <p ng-if="$root.platformOS=='ios'">{{'kDisableSimulStreamingNote' | translate}}</p>
                       </span>
                     </ion-toggle>
                 </label>
