@@ -2,9 +2,6 @@
   <ion-modal-view cache-view="false" style="background-color:#444444">
     <ion-content ng-cloak on-double-tap="closeModal();" scroll="false">
 
-
-      
-
       <div id="imagecontainer">
         <ion-scroll ng-if="!isZoneEdit" on-scroll="checkZoom()" delegate-handle="imgscroll" has-bouncing=false min-zoom=1 zooming="true"
           direction="xy" style="width: 100%;" overflow-scroll="false">
@@ -12,14 +9,15 @@
           <!--  -->
           <div id="monitorimage" style="height: 100vh;" class="main">
             <div ng-if="$root.authSession!='undefined'">
-              <div ng-if="!animationInProgress && !isBackground() && connKey">
+              <div ng-if="!animationInProgress">
+                
                 <!--<span style="color:white">{{currentStreamMode}}</span>-->
 
                 <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines" image-spinner-src="{{constructSingleStream()}}"
                   ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-swipe-left="onSwipe(monitorId,1)"
                   on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();" imageonload="imageLoaded()" />
               </div>
-              <div ng-if="animationInProgress || isBackground()">
+              <div ng-if="animationInProgress">
                 <img style="width:100vw; height:100vh" ng-src="img/pausevideo.png" class="object-fit_contain" />
               </div>
             </div>

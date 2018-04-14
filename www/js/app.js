@@ -52,10 +52,7 @@ angular.module('zmApp', [
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
     logFileMaxSize: 20000, // after this limit log gets reset
-    //loginInterval: 300000, //5m*60s*1000 - ZM auto login after 5 mins
-    loginInterval: 1800000, //30m*60s*1000 - ZM auto login after 30 mins
-
-    //loginInterval: 30000,
+    
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
     slowLoadingTimeout: 60000,
@@ -93,6 +90,8 @@ angular.module('zmApp', [
     cipherKey: 'sdf#@#%FSXSA_AR',
     minCycleTime: 5,
 
+    loginInterval: 1800000, //30m*60s*1000 - ZM auto login after 30 mins
+    //loginInterval: 20000,
     eventPlaybackQueryLowBW: 6000,
     loginIntervalLowBW: 1800000, //30m login
     eventSingleImageQualityLowBW: 70,
@@ -104,9 +103,9 @@ angular.module('zmApp', [
     maxGifWidth: 800.0,
     quantSample: 15,
     hashSecret: 'unused at the moment',
-    forceMontageReloadDelay: 3600, // 1 hr,
+    forceMontageReloadDelay: 4500000, // 1 hr 15m,
     thumbWidth:200,
-    alarmStatusTime: 10,
+    alarmStatusTime: 10000,
 
 
   })
@@ -841,7 +840,7 @@ angular.module('zmApp', [
 
     $rootScope.$on("auth-error", function () {
 
-      NVRDataModel.debug("zmAutoLogin: Inside auth-error emit");
+      NVRDataModel.debug("zmAutoLogin: Inside auth-error broadcast");
       NVRDataModel.displayBanner('error', ['ZoneMinder authentication failed', 'Please check settings']);
 
     });
@@ -884,7 +883,7 @@ angular.module('zmApp', [
       $timeout(function () {
         contentBannerInstance();
       }, 2000);
-      NVRDataModel.debug("auth-success emit:Successful");
+      NVRDataModel.debug("auth-success broadcast:Successful");
     });
 
     $rootScope.getProfileName = function () {
@@ -930,7 +929,7 @@ angular.module('zmApp', [
         // coming here means login not needed, old login is valid
         .then(function (success) {
             d.resolve("Login Success due to fast login");
-            $rootScope.$emit('auth-success', "fast login mode");
+            $rootScope.$broadcast('auth-success', "fast login mode");
             return d.promise;
           },
 
@@ -1011,7 +1010,7 @@ angular.module('zmApp', [
                 NVRDataModel.log("Auth is disabled!");
                 d.resolve("Login Success");
 
-                $rootScope.$emit('auth-success', 'no auth');
+                $rootScope.$broadcast('auth-success', 'no auth');
                 return (d.promise);
 
               }
@@ -1103,14 +1102,14 @@ angular.module('zmApp', [
 
                     d.resolve("Login Success");
 
-                    $rootScope.$emit('auth-success', data);
+                    $rootScope.$broadcast('auth-success', data);
 
                   } else //  this means login error
                   {
                     $rootScope.loggedIntoZm = -1;
                     //console.log("**** ZM Login FAILED");
                     NVRDataModel.log("zmAutologin Error: Bad Credentials ", "error");
-                    $rootScope.$emit('auth-error', "incorrect credentials");
+                    $rootScope.$broadcast('auth-error', "incorrect credentials");
 
                     d.reject("Login Error");
                     return (d.promise);
@@ -1151,7 +1150,7 @@ angular.module('zmApp', [
                   NVRDataModel.log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
                   // bad urls etc come here
                   $rootScope.loggedIntoZm = -1;
-                  $rootScope.$emit('auth-error', error);
+                  $rootScope.$broadcast('auth-error', error);
 
                   d.reject("Login Error");
                   return d.promise;
@@ -1338,7 +1337,7 @@ angular.module('zmApp', [
             if ((NVRDataModel.getLogin().autoSwitchBandwidth == true) &&
               (NVRDataModel.getLogin().enableLowBandwidth == true)) {
               NVRDataModel.debug("Setting app state to: " + strState);
-              $rootScope.$emit('bandwidth-change', strState);
+              $rootScope.$broadcast('bandwidth-change', strState);
             } else {
               NVRDataModel.debug("Not changing bandwidth state, as auto change is not on");
             }

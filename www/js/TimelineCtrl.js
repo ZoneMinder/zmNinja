@@ -283,7 +283,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     }
 
-   var tzu =  $rootScope.$on('tz-updated', function()
+   var tzu =  $scope.$on('tz-updated', function()
     {
         $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
         NVRDataModel.debug("Timezone API updated timezone to " + NVRDataModel.getTimeZoneNow());
@@ -300,7 +300,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         NVRDataModel.debug ("Timeline: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
+           // broadcastHandles[i]();
         }
         broadcastHandles = [];
 

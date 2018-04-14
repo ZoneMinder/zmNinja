@@ -292,7 +292,7 @@ angular.module('zmApp.controllers')
                     {
 
                         //emit alarm details - this is when received over websockets
-                        $rootScope.$emit('alarm',
+                        $rootScope.$broadcast('alarm',
                         {
                             message: listOfMonitors
                         });
@@ -658,7 +658,7 @@ angular.module('zmApp.controllers')
                         $rootScope.tappedEid = 0;
                         $rootScope.tappedMid = 0;
                     }
-                    $rootScope.$emit('process-push');
+                    $rootScope.$broadcast('process-push');
 
                 }
                 else // app is foreground

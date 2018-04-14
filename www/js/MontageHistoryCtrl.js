@@ -10,7 +10,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // Handles bandwidth change, if required
     //
     //--------------------------------------------------------------------------------------
-    var bc = $rootScope.$on("bandwidth-change", function(e, data)
+    var bc = $scope.$on("bandwidth-change", function(e, data)
     {
         // nothing to do for now
         // eventUrl will use lower BW in next query cycle
@@ -917,7 +917,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
         NVRDataModel.debug ("Montage History: Deregistering broadcast handles");
         for (var i=0; i < broadcastHandles.length; i++) {
-            broadcastHandles[i]();
+            //broadcastHandles[i]();
         }
         broadcastHandles = [];
         

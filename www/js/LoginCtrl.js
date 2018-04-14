@@ -358,7 +358,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       }
   });*/
 
-  $rootScope.$on('$stateChangeSuccess', function () {
+  $scope.$on('$stateChangeSuccess', function () {
     $scope.ignoreDirty = false;
   });
 
