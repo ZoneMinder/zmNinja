@@ -850,10 +850,15 @@ angular.module('zmApp.controllers')
         disableAnimate: true,
         disableBack: true
       });
-      $state.go("app.montage", {
+
+      $state.go('app.refresh', {
+        "view": 'app.montage'
+      });
+
+    /*  $state.go("app.montage", {
         minimal: $scope.minimal,
         isRefresh: true
-      });
+      });*/
       return;
     };
 
@@ -1623,7 +1628,7 @@ angular.module('zmApp.controllers')
     $scope.constructStream = function (monitor) {
 
       var stream;
-      //if (areStreamsStopped) return ""; //getmode doing snapshot now
+      if (areStreamsStopped) return ""; 
       stream = monitor.Monitor.streamingURL +
         "/nph-zms?mode=" + getMode() +
         "&monitor=" + monitor.Monitor.Id +

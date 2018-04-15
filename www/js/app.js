@@ -644,12 +644,12 @@ angular.module('zmApp', [
 
         //console.log (">>>>>>>>>>>>> INTERCEPT OBJECT " + JSON.stringify(config));
 
-        if ($rootScope.zmCookie) {
-          config.headers.Cookie = "ZMSESSID=" + $rootScope.zmCookie;
+       // if ($rootScope.zmCookie) {
+        //  config.headers.Cookie = "ZMSESSID=" + // $rootScope.zmCookie;
          // console.log (">>>>> WOOOT HAVE COOKIE AND USING: "+$rootScope.zmCookie);
-        } else {
+       // } else {
           //  console.log ("No cookie present in " + config.url);
-        }
+     //   }
 
         if ($rootScope.apiAuth) {
          // console.log("********** API AUTH");

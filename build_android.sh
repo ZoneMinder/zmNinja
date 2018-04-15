@@ -82,7 +82,8 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
 
     # use the right plugin for SSL certificate mgmt
     cordova plugin remove cordova-plugin-crosswalk-certificate
-    cordova plugin add https://github.com/hypery2k/cordova-certificate-plugin
+    cordova plugin add https://github.com/hypery2k/cordova-certificate-plugin.git
+    #cordova plugin add https://github.com/hypery2k/cordova-certificate-plugin
     #ionic platform remove android
     #ionic platform add android
     cp "$NINJAKEYSTORE" platforms/android/
