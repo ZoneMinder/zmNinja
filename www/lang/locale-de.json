@@ -68,6 +68,7 @@
     "kDisablePush"               :"deaktiviere APNS/GCM",
     "kDisableSamsung"            :"Bei Samsung-Geräten kann es zu Eingabeproblemen kommen. Schalte bitte kurzzeitig die Auto-Korrektur ab, falls Du davon betroffen bist.",
     "kDisableSimulStreaming"     :"Deaktiviere Echtzeitstreaming",
+    "kDisableSimulStreamingNote" :"(Bei iOS immer deaktiviert)",
     "kDiscovering"               :"Suche",
     "kDiscoveringAPI"            :"Suche API",
     "kDiscoveringCGI"            :"Suche CGI",
