@@ -1170,15 +1170,14 @@ angular.module('zmApp.controllers')
         NVRDataModel.regenConnKeys();
         $scope.monitors = NVRDataModel.getMonitorsNow();
         $scope.MontageMonitors = angular.copy($scope.monitors);
+      }
 
+      // we need to do this as we hide the view for snapshot as well
         //areStreamsStopped = false;
         $timeout(function () // after render
           {
             initPackery();
           }, zm.packeryTimer);
-
-
-      }
        
     }
         
