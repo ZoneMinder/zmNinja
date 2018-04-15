@@ -9672,7 +9672,9 @@ a.button {
     padding-right: calc(constant(safe-area-inset-right) + 54px); }
     .item-icon-right .icon {
       right: calc(constant(safe-area-inset-right) + 11px); }
-  .item-complex, a.item.item-complex, button.item.item-complex {
+  .item-complex,
+  a.item.item-complex,
+  button.item.item-complex {
     padding: 0; }
     .item-complex .item-content, a.item.item-complex .item-content, button.item.item-complex .item-content {
       padding: 16px calc(constant(safe-area-inset-right) + 49px) 16px calc(constant(safe-area-inset-left) + 16px); }

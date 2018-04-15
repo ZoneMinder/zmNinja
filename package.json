@@ -22,7 +22,6 @@
       "cordova-plugin-globalization": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-insomnia": {},
-      "cordova-plugin-ios-longpress-fix": {},
       "cordova-plugin-media": {
         "MICROPHONE_USAGE_DESCRIPTION": " "
       },
@@ -53,32 +52,25 @@
       "cordova-plugin-device": {},
       "cordova-plugin-file": {},
       "cordova-plugin-add-swift-support": {},
-      "cordova-plugin-crosswalk-certificate": {},
-      "cordova-plugin-crosswalk-webview": {
-        "XWALK_MODE": "lite",
-        "XWALK_VERSION": "17.46.459.1",
-        "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
-        "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
-        "XWALK_MULTIPLEAPK": "true"
-      }
+      "cordova-plugin-certificates": {}
     }
   },
   "dependencies": {
+    "@ionic/cli-utils": "^1.19.2",
     "EmailComposer": "git+https://github.com/pliablepixels/email-composer.git",
     "com.telerik.plugins.nativepagetransitions": "^0.6.5",
+    "cordova": "^8.0.0",
     "cordova-android": "^6.3.0",
     "cordova-custom-config": "~4.0.2",
-    "cordova-ios": "4.5.4",
+    "cordova-ios": "^4.5.4",
     "cordova-library-helper": "^1.0.4",
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-version": "^0.1.9",
     "cordova-plugin-canvas2image": "git+https://github.com/flache/Canvas2ImagePlugin.git",
-    "cordova-plugin-compat": "^1.2.0",
+    "cordova-plugin-certificates": "git+https://github.com/hypery2k/cordova-certificate-plugin.git",
     "cordova-plugin-console": "^1.1.0",
-    "cordova-plugin-crosswalk-certificate": "git+https://github.com/danjarvis/cordova-plugin-crosswalk-certificate.git",
-    "cordova-plugin-crosswalk-webview": "^2.2.0",
     "cordova-plugin-customurlscheme": "^4.3.0",
     "cordova-plugin-device": "^2.0.1",
     "cordova-plugin-email": "git+https://github.com/pliablepixels/cordova-email-plugin.git",
@@ -87,7 +79,6 @@
     "cordova-plugin-globalization": "^1.0.7",
     "cordova-plugin-inappbrowser": "^1.7.1",
     "cordova-plugin-insomnia": "^4.3.0",
-    "cordova-plugin-ios-longpress-fix": "^1.1.0",
     "cordova-plugin-media": "git+https://github.com/pliablepixels/cordova-plugin-media.git",
     "cordova-plugin-network-information": "^2.0.1",
     "cordova-plugin-photo-library": "^1.2.2",
@@ -118,6 +109,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0"
+    "gulp-sass": "^3.1.0",
+    "npm": "^5.8.0"
   }
 }

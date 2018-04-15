@@ -75,6 +75,7 @@
         <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
     </platform>
     <platform name="android">
         <resource-file src="build-extras.gradle" target="build-extras.gradle" />
@@ -102,8 +103,6 @@
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
-    <engine name="ios" spec="4.5.4" />
-    <engine name="android" spec="^6.3.0" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="^0.6.5" />
     <plugin name="cordova-library-helper" spec="^1.0.4">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Save media to your Camera Roll" />
@@ -118,7 +117,6 @@
     <plugin name="cordova-plugin-globalization" spec="^1.0.7" />
     <plugin name="cordova-plugin-inappbrowser" spec="^1.7.1" />
     <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
-    <plugin name="cordova-plugin-ios-longpress-fix" spec="^1.1.0" />
     <plugin name="cordova-plugin-media" spec="git+https://github.com/pliablepixels/cordova-plugin-media.git">
         <variable name="MICROPHONE_USAGE_DESCRIPTION" value=" " />
     </plugin>
@@ -149,12 +147,7 @@
     <plugin name="cordova-plugin-device" spec="^2.0.1" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-add-swift-support" spec="^1.7.1" />
-    <plugin name="cordova-plugin-crosswalk-certificate" spec="git+https://github.com/danjarvis/cordova-plugin-crosswalk-certificate.git" />
-    <plugin name="cordova-plugin-crosswalk-webview" spec="^2.2.0">
-        <variable name="XWALK_MODE" value="lite" />
-        <variable name="XWALK_VERSION" value="17.46.459.1" />
-        <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
-        <variable name="XWALK_COMMANDLINE" value="--disable-pull-to-refresh-effect" />
-        <variable name="XWALK_MULTIPLEAPK" value="true" />
-    </plugin>
+    <plugin name="cordova-plugin-certificates" spec="https://github.com/hypery2k/cordova-certificate-plugin.git" />
+    <engine name="ios" spec="^4.5.4" />
+    <engine name="android" spec="^6.3.0" />
 </widget>
