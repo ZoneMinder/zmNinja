@@ -222,6 +222,13 @@ angular.module('zmApp.controllers')
 
       $scope.areImagesLoading = true;
       var progressCalled = false;
+
+     if (draggies) {
+        draggies.forEach(function (drag) {
+          drag.destroy();
+        });
+      }
+      
       draggies = [];
       var layouttype = true;
       var ld = NVRDataModel.getLogin();
@@ -344,8 +351,8 @@ angular.module('zmApp.controllers')
             //NVRDataModel.log("Force calling resize");
             ///pckry.reloadItems();
             ///positions is defined only if layouttype was false
-            // console.log (">>> Positions is "+ JSON.stringify(positions));
-            if (!layouttype) pckry.initShiftLayout(positions, "data-item-id");
+            console.log (">>> Positions is "+ JSON.stringify(positions));
+            if (!layouttype && positions) pckry.initShiftLayout(positions, "data-item-id");
             // now do a jiggle 
             $timeout(function () {
               NVRDataModel.debug("doing the jiggle and dance...");
@@ -1041,7 +1048,7 @@ angular.module('zmApp.controllers')
             
           } else {
             for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-              NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
+              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
             }
           }
         }
@@ -1222,26 +1229,16 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("Montage View Cleanup was already done, skipping");
         return;
       }
-      viewCleaned = true;
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
       $interval.cancel(intervalHandleReloadPage);
       if (pckry) pckry.destroy();
 
-      NVRDataModel.debug("Montage: Deregistering broadcast handles");
-      for (var i = 0; i < broadcastHandles.length; i++) {
-        // broadcastHandles[i]();
-        //console.log ("DEREGISTER "+broadcastHandles[i]);
-      }
+     
       broadcastHandles = [];
 
       areStreamsStopped = true;
-
-
-
-      // if modal is open stream gets killed
-      // inside monitorModal
 
       $timeout(function () {
         if (!$scope.singleMonitorModalOpen && simulStreaming) {
@@ -1252,7 +1249,7 @@ angular.module('zmApp.controllers')
             NVRDataModel.stopNetwork();
           } else {
             for (i = 0; i < $scope.MontageMonitors.length; i++) {
-              NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
+              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
 
             }
           }
@@ -1269,6 +1266,7 @@ angular.module('zmApp.controllers')
     function onPause() {
       NVRDataModel.debug("MontageCtrl: onpause called");
       viewCleanup();
+      viewCleaned = true;
     }
 
     function onResume() {
@@ -1384,6 +1382,8 @@ angular.module('zmApp.controllers')
         //  console.log ("Refreshing Image...");
       }.bind(this), NVRDataModel.getLogin().cycleMontageInterval * 1000);
 
+  
+ 
 
       //console.log ("SELECTED " + $scope.data.selectedVal);
       var ld = NVRDataModel.getLogin();
@@ -1393,23 +1393,39 @@ angular.module('zmApp.controllers')
       $scope.currentProfileName = mName;
       //console.log ("NEW POS="+ld.packeryPositions);
       NVRDataModel.setLogin(ld);
-      //console.log ("SAVING "+ld.packeryPositions.name+ " but "+$scope.data.selectedVal);
+     
+      areStreamsStopped = true;
+      $timeout(function () { // after render
 
-      //$scope.MontageMonitors = angular.copy(NVRDataModel.getMonitorsNow());
+
+        if (simulStreaming) {
+  
+          NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
+
+          if ($rootScope.platformOS == 'ios') {
+            
+          } else {
+           
+            for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+             if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
+            }
+          }
+
+        NVRDataModel.regenConnKeys();
+        $scope.monitors = NVRDataModel.getMonitorsNow();
+        $scope.MontageMonitors = angular.copy($scope.monitors);
+        $timeout(function () {
+          initPackery();
+        }, zm.packeryTimer);
+      
+        }
 
 
-      draggies.forEach(function (drag) {
-        drag.destroy();
+
       });
-      draggies = [];
-      pckry.destroy();
-      NVRDataModel.reloadMonitorDisplayStatus();
-      NVRDataModel.regenConnKeys();
-      $scope.monitors = NVRDataModel.getMonitorsNow();
-      $scope.MontageMonitors = angular.copy($scope.monitors);
-      $timeout(function () {
-        initPackery();
-      }, zm.packeryTimer);
+
+      
+        
 
 
 
@@ -1601,7 +1617,7 @@ angular.module('zmApp.controllers')
         if (simulStreaming && areStreamsStopped) {
           NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
           for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-            NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
+            if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
           }
         }
 
@@ -1889,6 +1905,7 @@ angular.module('zmApp.controllers')
 
       areStreamsStopped = true;
       viewCleanup();
+      viewCleaned = true;
 
     });
 
