@@ -153,10 +153,10 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     flex-wrap: wrap;
 }
 
-.wrapper > * {
-    /*padding: 5px;*/
-    /*flex: 1 100%; -- I commented this out - the wrapper was taking up full width in Chrome*/
-}
+/*.wrapper > * {
+    padding: 5px;
+    flex: 1 100%; -- I commented this out - the wrapper was taking up full width in Chrome
+}*/
 
 .header {
     background: #333333;
@@ -210,6 +210,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 #slowpulse {
     -webkit-animation-duration: 1500ms;
+    animation-duration: 1500ms;
 }
 
 .alarmed-body {
@@ -403,6 +404,8 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     -webkit-transform: rotate(-90deg) translateY(-1000%);
     -webkit-transform-origin: 100% 0%;
     -moz-transform: rotate(-90deg);
+    transform:rotate(-90deg) translateY(-1000%);
+    transform-origin: 100% 0%;
     top: 50%;
     margin-top: -50px;
     left: 100%;
@@ -666,7 +669,7 @@ progress[role]
 
 {
     /* Turns off styling - not usually needed, but good to know. */
-    appearance: none;
+    /* appearance: none;*/
     -moz-appearance: none;
     -webkit-appearance: none;
     /* gets rid of default border in Firefox and Opera. */
@@ -895,6 +898,7 @@ input[type=range]::-webkit-slider-thumb {
 
 .eventDeleteSpeed {
     -webkit-animation-duration: 300ms;
+    animation-duration: 300ms;
 }
 
 .content-banner.alarm {
@@ -969,22 +973,28 @@ videogular div.event-time {
 
 #full-screen-event {
     -webkit-animation-duration: 200ms;
+    animation-duration: 200ms;
 }
 
 #monitorimage {
     -webkit-animation-duration: 200ms;
+    animation-duration: 200ms;
 }
 
 #firstuse {
     -webkit-animation-delay: 1s;
+    animation-delay: 1s;
+
 }
 
 #transition-delay {
     -webkit-animation-delay: 1s;
+    animation-delay: 1s;
 }
 
 #really-your-fault {
     -webkit-animation-delay: 4s;
+    animation-delay: 4s;
 }
 
 
@@ -1190,16 +1200,20 @@ videogular div.event-time {
     /*background: rgba(192, 57, 43, 0.7);*/
     background: rgba(108, 122, 137, 0.7);
     -webkit-border-radius: 5px 0 0 5px;
+    border-radius: 5px 0 0 5px;
 }
 
 #flyoutmenu li:only-child {
     /*background: rgba(192, 57, 43, 0.7);*/
     background: rgba(108, 122, 137, 0.7);
     -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+
 }
 
 #flyoutmenu li:last-child {
     -webkit-border-radius: 0 5px 5px 0;
+    border-radius: 0 5px 5px 0;
 }
 
 
@@ -1212,6 +1226,7 @@ videogular div.event-time {
     
     background: rgba(108, 122, 137, 0.7);
     -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
 }
 
 #flyoutmenu li:nth-child(n+2) {
