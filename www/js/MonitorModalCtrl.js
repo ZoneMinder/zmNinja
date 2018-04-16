@@ -1016,26 +1016,26 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var color = "";
     switch ($scope.monStatus) {
       case "":
-        color = "background-color:none";
+        color = "none";
         break;
       case status[0]:
-        color = "background-color:#4B77BE";
+        color = "#4B77BE";
         break;
       case status[1]:
-        color = "background-color:#e67e22";
+        color = "#e67e22";
         break;
       case status[2]:
-        color = "background-color:#D91E18";
+        color = "#D91E18";
         break;
       case status[3]:
-        color = "background-color:#e67e22";
+        color = "#e67e22";
         break;
       case status[4]:
-        color = "background-color:#26A65B";
+        color = "#26A65B";
         break;
     }
 
-    return "padding-left:4px;padding-right:4px;" + color;
+    return color;
   };
 
   //-----------------------------------------------------------------------

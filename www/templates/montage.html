@@ -118,7 +118,7 @@
                             <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'" >&nbsp;
                                 
                                     <span ng-if="monitor.Monitor.isStamp && isDragabillyOn"><i  class="animated infinite flash ion-pin"></i>&nbsp;</span><i class="ion-ios-videocam"></i>&nbsp;
-                                   {{monitor.Monitor.Name}}&nbsp;<i ng-if="$root.runMode!='lowbw'" style="{{monitor.Monitor.alarmState}}" class="ion-record"></i>&nbsp;
+                                   {{monitor.Monitor.Name}}&nbsp;<i ng-if="$root.runMode!='lowbw'" ng-style="{'color':monitor.Monitor.alarmState}" class="ion-record"></i>&nbsp;
 
                             </figcaption>
 

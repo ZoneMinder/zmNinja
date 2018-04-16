@@ -508,6 +508,7 @@ angular.module('zmApp.controllers')
         (NVRDataModel.getBandwidth() == 'lowbw') ||
         (NVRDataModel.getLogin().disableAlarmCheckMontage == true)) {
 
+         // console.log ("NOT DOING ALARMS");
         return;
       }
 
@@ -540,19 +541,19 @@ angular.module('zmApp.controllers')
             var sid = parseInt(data.data.status);
             switch (sid) {
               case 0: // idle
-                monitor.Monitor.alarmState = 'color:rgba(0,0,0,0);';
+                monitor.Monitor.alarmState = 'rgba(0,0,0,0)';
                 break;
               case 1: // pre alarm
-                monitor.Monitor.alarmState = 'color:#e67e22;';
+                monitor.Monitor.alarmState = '#e67e22';
                 break;
               case 2: // alarm
-                monitor.Monitor.alarmState = 'color:#D91E18;';
+                monitor.Monitor.alarmState = '#D91E18';
                 break;
               case 3: // alert
-                monitor.Monitor.alarmState = 'color:#e67e22;';
+                monitor.Monitor.alarmState = '#e67e22';
                 break;
               case 4:
-                monitor.Monitor.alarmState = 'color:#26A65B;';
+                monitor.Monitor.alarmState = '#26A65B';
                 break;
 
             }
@@ -560,7 +561,7 @@ angular.module('zmApp.controllers')
           },
           function (error) {
 
-            monitor.Monitor.alarmState = 'color:rgba(0,0,0,0);';
+            monitor.Monitor.alarmState = 'rgba(0,0,0,0)';
             NVRDataModel.debug("Error in monitor alarmed status ");
           });
     }
@@ -1847,7 +1848,7 @@ angular.module('zmApp.controllers')
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         $scope.MontageMonitors[i].Monitor.gridScale = "50";
         $scope.MontageMonitors[i].Monitor.selectStyle = "";
-        $scope.MontageMonitors[i].Monitor.alarmState = 'color:rgba(0,0,0,0);';
+        $scope.MontageMonitors[i].Monitor.alarmState = 'rgba(0,0,0,0)';
         $scope.MontageMonitors[i].Monitor.isStamp = false;
 
       }

@@ -202,6 +202,6 @@
     </ul>
   </div>
   <div ng-if="!showPTZ" class="monitor-modal-text">{{monitorName}} &nbsp;
-    <span style="{{stateColor()}}">{{monStatus}}&nbsp;</span>
+    <span ng-style="{'background-color':stateColor()}">&nbsp;{{monStatus}}&nbsp;</span>
   </div>
 </div>
