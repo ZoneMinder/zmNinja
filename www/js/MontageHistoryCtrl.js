@@ -229,10 +229,17 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         $ionicSideMenuDelegate.canDragContent(false);
 
         for (i=0; i < $scope.MontageMonitors.length; i++) {
-            NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
+            if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show')  NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
         }
 
         NVRDataModel.regenConnKeys();
+        $scope.monitors = NVRDataModel.getMonitorsNow();
+        $scope.MontageMonitors = angular.copy($scope.monitors);
+        $timeout(function () {
+          initPackery();
+        }, zm.packeryTimer);
+
+        
         var ld = NVRDataModel.getLogin();
         $scope.sliderVal.realRate = $scope.sliderVal.rate * 100;
 
@@ -934,7 +941,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         //NVRDataModel.stopNetwork("MontageHistory-beforeLeave");
 
         for (i=0; i < $scope.MontageMonitors.length; i++) {
-            NVRDataModel.killLiveStream($scope.MontageMonitors[i]);
+            if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
         }
     });
     $scope.$on('$ionicView.unloaded', function() {});
