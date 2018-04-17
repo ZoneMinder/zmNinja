@@ -320,7 +320,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                             // console.log ("Old value of event url " + $scope.MontageMonitors[j].eventUrl);
                             //console.log ("ldurl is " + ld.streamingurl);
                             var bw = NVRDataModel.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
-                            $scope.MontageMonitors[j].Monitor.eventUrl = ld.streamingurl + "/nph-zms?source=event&mode=jpeg&event=" + eid + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[j].Monitor.connKey + "&scale=" + bw + "&rand=" + $rootScope.rand;
+                            $scope.MontageMonitors[j].Monitor.eventUrl = $scope.MontageMonitors[j].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + eid + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[j].Monitor.connKey + "&scale=" + bw + "&rand=" + $rootScope.rand;
                             //console.log ("Setting event URL to " +$scope.MontageMonitors[j].Monitor.eventUrl);
                             //   console.log ("SWITCHING TO " + $scope.MontageMonitors[j].eventUrl);
                             $scope.MontageMonitors[j].Monitor.eventUrlTime = stime;
@@ -404,7 +404,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         if (!NVRDataModel.isBackground())
                         {
                             var bw = NVRDataModel.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
-                            $scope.MontageMonitors[i].Monitor.eventUrl = ld.streamingurl + "/nph-zms?source=event&mode=jpeg&event=" + data.events[0].Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[i].Monitor.connKey + "&scale=" + bw + "&rand=" + $rootScope.rand;
+                            $scope.MontageMonitors[i].Monitor.eventUrl = $scope.MontageMonitors[i].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + data.events[0].Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[i].Monitor.connKey + "&scale=" + bw + "&rand=" + $rootScope.rand;
                             //console.log ("SWITCHING TO " + $scope.MontageMonitors[i].eventUrl);
                             $scope.MontageMonitors[i].Monitor.eventUrlTime = data.events[0].Event.StartTime;
                             $scope.MontageMonitors[i].Monitor.eid = data.events[0].Event.Id;
@@ -667,7 +667,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                         element.addClass('animated flipInX');
                         $scope.MontageMonitors[ndx].Monitor.eventUrlTime = data.event.Event.StartTime;
                         var bw = NVRDataModel.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
-                        $scope.MontageMonitors[ndx].Monitor.eventUrl = ld.streamingurl + "/nph-zms?source=event&mode=jpeg&event=" + data.event.Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[ndx].Monitor.connKey + "&scale=" + bw + "&rand=" + $rootScope.rand;
+                        $scope.MontageMonitors[ndx].Monitor.eventUrl = $scope.MontageMonitors[ndx].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + data.event.Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[ndx].Monitor.connKey + "&scale=" + bw + "&rand=" + $rootScope.rand;
                         $scope.MontageMonitors[ndx].Monitor.eid = data.event.Event.Id;
                         $scope.MontageMonitors[ndx].Monitor.sliderProgress = {
                             progress: 0
