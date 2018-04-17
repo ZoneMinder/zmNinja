@@ -106,6 +106,7 @@ angular.module('zmApp', [
     forceMontageReloadDelay: 4500000, // 1 hr 15m,
     thumbWidth:200,
     alarmStatusTime: 10000,
+    eventServerErrorDelay:5000, // time to wait till I report initial connect errors
 
 
   })
@@ -1772,10 +1773,7 @@ angular.module('zmApp', [
           NVRDataModel.log("Language file loaded, continuing with rest");
           NVRDataModel.init();
 
-          // now do SSL check
-          //setSSLCerts();
-
-          //EventServer.init();
+         
           zmCheckUpdates.start();
           NVRDataModel.log("Setting up POST LOGIN timer");
           zmAutoLogin.start();
@@ -1855,9 +1853,8 @@ angular.module('zmApp', [
           NVRDataModel.setJustResumed(false);
          // NVRDataModel.setJustResumed(true); // used for window stop
 
-          EventServer.disconnect();
-
           NVRDataModel.log("ROOT APP:App is going into background");
+          EventServer.disconnect();
 
           $interval.cancel($rootScope.eventQueryInterval);
           $interval.cancel($rootScope.intervalHandle);
@@ -1866,8 +1863,8 @@ angular.module('zmApp', [
             $rootScope.zmPopup.close();
 
 
-          NVRDataModel.log("ROOT APP: Stopping network ");
-          NVRDataModel.stopNetwork("called from app.js");
+         // NVRDataModel.log("ROOT APP: Stopping network ");
+          //NVRDataModel.stopNetwork("called from app.js");
 
           // dont call stopNetwork - we need to stop here 
 
