@@ -7,7 +7,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 {
     var broadcastHandles = [];
     var isSimulStreaming = false;
+    $scope.isSimulStreaming = isSimulStreaming;
     var areStreamsStopped = false;
+    var viewCleaned = false;
     //--------------------------------------------------------------------------------------
     // Handles bandwidth change, if required
     //
@@ -895,10 +897,33 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     function onPause()
     {
         NVRDataModel.debug("MontageHistoryCtrl: onpause called");
-        $interval.cancel($rootScope.eventQueryInterval);
-        $interval.cancel(intervalHandle);
-        // $interval.cancel(modalIntervalHandle);
-        // FIXME: Do I need to  setAwake(false) here?
+        viewCleanup();
+        viewCleaned = true;
+    }
+
+    function viewCleanup() {
+
+        if (viewCleaned) {
+          NVRDataModel.debug("Montage History View Cleanup was already done, skipping");
+          return;
+        }
+        $interval.cancel(eventQueryHandle);
+        if (pckry) pckry.destroy();
+  
+       
+        broadcastHandles = [];
+  
+        areStreamsStopped = true;
+  
+        $timeout(function () {
+       
+            NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
+              for (i = 0; i < $scope.MontageMonitors.length; i++) {
+                if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
+  
+              }
+    
+        });
     }
 
     function onResume()
@@ -939,7 +964,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.$on('$ionicView.beforeLeave', function()
     {
         //console.log("**VIEW ** Event History Ctrl Left, force removing modal");
-
+        areStreamsStopped = true;
+        viewCleanup();
+        viewCleaned = true;
+        
 
        // if ($scope.modal) $scope.modal.remove();
         NVRDataModel.log("Cancelling event query timer");
@@ -1206,6 +1234,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             isSimulStreaming = false;
             NVRDataModel.log ("IOS detected, disabling simulstreaming");
         }
+        $scope.isSimulStreaming = isSimulStreaming;
         areStreamsStopped = true;
 
         NVRDataModel.regenConnKeys();
@@ -1374,8 +1403,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         stream = monitor.Monitor.eventUrl +
         $rootScope.authSession +
         appendConnKey(monitor.Monitor.connKey);
-        console.log (JSON.stringify(monitor));
-        console.log("STREAM=" + stream);
+        //console.log (JSON.stringify(monitor));
+        //console.log("STREAM=" + stream);
         return stream;
   
       };
