@@ -109,6 +109,9 @@ angular.module('zmApp.controllers')
         'useSSL': false, // "1" if HTTPS --> not used #589
         'keepAwake': true, // don't dim/dim during live view
         'isUseAuth': true, // true if user wants ZM auth
+        'isUseBasicAuth': false,
+        'basicAuthUser': '',
+        'basicAuthPassword': '',
         'isUseEventServer': false, // true if you configure the websocket event server
         'disablePush': false, // true if only websocket mode is desired
         'eventServerMonitors': '', // list of monitors to notify from ES
@@ -771,6 +774,52 @@ angular.module('zmApp.controllers')
                   // always true Oct 27 2016
                   loginData.persistMontageOrder = true;
                   loginData.enableh264 = true;
+
+                  if (typeof loginData.isUseBasicAuth === 'undefined') {
+                    loginData.isUseBasicAuth = false;
+                    loginData.basicAuthUser = '';
+                    loginData.basicAuthPassword = '';
+                    $rootScope.basicAuthHeader='';
+                  }
+
+                  if (loginData.url.indexOf('@') != -1) {
+                    log (">> "+loginData.url);
+                    log (">>User/Password detected in URL, changing to new auth handling...");
+                    loginData.isUseBasicAuth = true;
+
+                    var components = URI.parse(loginData.url);
+                    loginData.url = components.scheme + "://" + components.host;
+                    if (components.port) loginData.url = loginData.url + ":" + components.port;
+                    if (components.path) loginData.url = loginData.url + components.path;
+
+                    components = URI.parse(loginData.streamingurl);
+                    loginData.streamingurl = components.scheme + "://" + components.host;
+                    if (components.port) loginData.streamingurl = loginData.streamingurl + ":" + components.port;
+                    if (components.path) loginData.streamingurl = loginData.streamingurl + components.path;
+
+
+                     components = URI.parse(loginData.apiurl);
+                    loginData.apiurl = components.scheme + "://" + components.host;
+                    if (components.port) loginData.apiurl = loginData.apiurl + ":" + components.port;
+                    if (components.path) loginData.apiurl = loginData.apiurl + components.path;
+                    
+                    $rootScope.basicAuthHeader = 'Basic ' + btoa(components.userinfo);
+                    //console.log (">>>> SET BASIC AUTH TO  " + $rootScope.basicAuthHeader);
+
+                    var up = components.userinfo.split(':');
+                    loginData.basicAuthPassword = up[1];
+                    loginData.basicAuthUser = up[0];
+                    console.log ("SETTING "+loginData.basicAuthUser+" "+loginData.basicAuthPassword);
+
+                  }
+
+                  if (loginData.isUseBasicAuth) {
+                    $rootScope.basicAuthHeader = 'Basic ' + btoa(loginData.basicAuthUser+':'+loginData.basicAuthPassword);
+
+                    console.log ("BASIC AUTH SET TO:"+$rootScope.basicAuthHeader);
+
+                  }
+
 
                   if (typeof loginData.enableAlarmCount === 'undefined') {
                     debug("enableAlarmCount does not exist, setting to true");
