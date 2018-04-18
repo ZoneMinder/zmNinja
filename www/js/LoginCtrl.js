@@ -16,15 +16,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   var oldName;
   var serverbuttons = [];
   var availableServers;
-  $scope.loginData = NVRDataModel.getLogin();
 
-  $scope.check = {
-    isUseAuth: false,
-    isUseEventServer: false
-  };
 
-  $scope.check.isUseAuth = ($scope.loginData.isUseAuth) ? true : false;
-  $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
 
   document.addEventListener("pause", onPause, false);
   document.addEventListener("resume", onResume, false);
@@ -131,8 +124,6 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         //console.log ("NEW LOGIN OBJECT IS " + JSON.stringify($scope.loginData));
 
-        $scope.check.isUseAuth = ($scope.loginData.isUseAuth) ? true : false;
-        $scope.check.isUseEventServer = ($scope.loginData.isUseEventServer == true) ? true : false;
 
         NVRDataModel.debug("Retrieved state for this profile:" + JSON.stringify($scope.loginData));
 
@@ -241,11 +232,15 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   // reset power state on exit as if it is called after we enter another
   // state, that effectively overwrites current view power management needs
   //------------------------------------------------------------------------
-  $scope.$on('$ionicView.enter', function () {
+  $scope.$on('$ionicView.beforeEnter', function () {
     oldLoginData = '';
+
+    $scope.loginData = NVRDataModel.getLogin();
+
+    //console.log (JSON.stringify($scope.loginData));
     //console.log("**VIEW ** LoginCtrl  Entered");
     NVRDataModel.setAwake(false);
-    $scope.basicAuthUsed = false;
+    //$scope.basicAuthUsed = false;
     var ld = NVRDataModel.getLogin();
     oldName = ld.serverName;
 
@@ -281,31 +276,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.useSSL = true;
       }
 
-    } else {
-      var savedData;
-
-      // this thing is crappy - not sure why it keeps removing
-      // ES stuff. removing it as of Jan 18
-      // this means if you back out while entering login data
-      // you'll get a blank. small price to pay... 
-
-      /*localforage.getItem("settings-temp-data").then(function(value)
-      {
-          savedData = value;
-          //= zmStorageService.getObject ("settings-temp-data");
-          if (!NVRDataModel.isEmpty(savedData))
-          {
-              $scope.loginData = savedData;
-              NVRDataModel.log("retrieved pre-stored loginData on past pause: " + JSON.stringify($scope.loginData));
-              localforage.removeItem("settings-temp-data");
-              //zmStorageService.setObject("settings-temp-data", {});
-          }
-          else
-          {
-              NVRDataModel.log("Not recovering login data as its empty");
-          }
-      });*/
-    }
+    } 
 
     oldLoginData = JSON.stringify($scope.loginData);
 
@@ -426,7 +397,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       $scope.loginData.streamingurl = $scope.loginData.url + "/cgi-bin";
     }
 
-    $scope.basicAuthUsed = ($scope.loginData.url.indexOf('@') == -1) ? false:true;
+    //$scope.basicAuthUsed = ($scope.loginData.url.indexOf('@') == -1) ? false:true;
 
    
 
@@ -483,9 +454,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $scope.loginData.username = $scope.loginData.username.trim();
 
-    $scope.loginData.isUseAuth = ($scope.check.isUseAuth) ? true : false;
-    $scope.loginData.isUseEventServer = ($scope.check.isUseEventServer) ? true : false;
-
+    
     if ($scope.loginData.url.slice(-1) == '/') {
       $scope.loginData.url = $scope.loginData.url.slice(0, -1);
 
@@ -541,7 +510,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     var portalurl = $scope.loginData.url + '/index.php';
 
     // Check if isUseAuth is set make sure u/p have a dummy value
-    if ($scope.check.isUseAuth) {
+    if ($scope.loginData.isUseAuth) {
       if (!$scope.loginData.username) $scope.loginData.username = "x";
       if (!$scope.loginData.password) $scope.loginData.password = "x";
       //NVRDataModel.log("Authentication is disabled, setting dummy user & pass");
@@ -553,7 +522,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     // do this before setLogin so message is sent
 
-    if (!$scope.check.isUseEventServer) {
+    if (!$scope.loginData.isUseEventServer) {
       $rootScope.isAlarm = 0;
       if ($rootScope.apnsToken) {
         NVRDataModel.log("Making sure we don't get push notifications");
@@ -566,13 +535,23 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       }
     }
 
+    if (!$scope.loginData.isUseBasicAuth) {
+      $rootScope.basicAuthHeader = '';
+     // console.log ("CLEARING AUTH");
+    }
+    else {
+      $rootScope.basicAuthHeader = 'Basic ' + btoa($scope.loginData.basicAuthUser+':'+$scope.loginData.basicAuthPassword);
+
+    }
+
+    //console.log ("SAVING: "+JSON.stringify($scope.loginData));
     NVRDataModel.setLogin($scope.loginData);
 
     $rootScope.runMode = NVRDataModel.getBandwidth();
 
     oldName = $scope.loginData.serverName;
 
-    if ($scope.check.isUseEventServer) {
+    if ($scope.loginData.isUseEventServer) {
       EventServer.init();
       if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
         NVRDataModel.log("Making sure we get push notifications");

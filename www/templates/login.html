@@ -29,8 +29,8 @@
             </span>
             <p ng-if="$root.platformOS!='desktop'" style="font-size:0.8em; color:gray">{{'kDisableSamsung' | translate}}</p>
             <div class="item item-text-wrap">
-                <ion-checkbox ng-model="check.isUseAuth">{{'kUseZmAuth' | translate }}</ion-checkbox>
-                <div ng-if="check.isUseAuth">
+                <ion-checkbox ng-model="loginData.isUseAuth">{{'kUseZmAuth' | translate }}</ion-checkbox>
+                <div ng-if="loginData.isUseAuth">
                     <label class="item item-input item-floating-label">
                         <span class="input-label">{{'kUserName'|translate}}</span>
                         <input  autocapitalize="none" autocomplete="off" autocorrect="off" type="text" 
@@ -43,7 +43,22 @@
                 </div>
             </div>
 
-            <p ng-if="basicAuthUsed" style="font-size:0.8em; color:#e84118">{{'kWarningBasicAuth' | translate}}</p>
+            <div class="item item-text-wrap">
+                <ion-checkbox ng-model="loginData.isUseBasicAuth">{{'kUseBasicAuth' | translate }}</ion-checkbox>
+                <div ng-if="loginData.isUseBasicAuth">
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">{{'kUserName'|translate}}</span>
+                        <input  autocapitalize="none" autocomplete="off" autocorrect="off" type="text" 
+                        placeholder="{{'kUserName' | translate}}" ng-model="loginData.basicAuthUser">
+                    </label>
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">{{'kPassword' | translate}}</span>
+                        <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.basicAuthPassword">
+                    </label>
+                </div>
+            </div>
+
+            <p ng-if="loginData.isUseBasicAuth" style="font-size:0.8em; color:#e84118">{{'kWarningBasicAuth' | translate}}</p>
 
             <label class="item item-input item-floating-label">
                 <span class="input-label">{{'kPortalUrl' | translate}}</span>
