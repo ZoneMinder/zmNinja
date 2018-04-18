@@ -265,11 +265,27 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       $scope.loginData.url = $rootScope.wizard.loginURL;
       $scope.loginData.apiurl = $rootScope.wizard.apiURL;
       $scope.loginData.streamingurl = $rootScope.wizard.streamingURL;
+
       if ($rootScope.wizard.useauth && $rootScope.wizard.usezmauth) {
         $scope.loginData.username = $rootScope.wizard.zmuser;
         $scope.loginData.password = $rootScope.wizard.zmpassword;
+        $scope.loginData.isUseAuth = true;
+
+
       } else {
         $scope.loginData.isUseAuth = false;
+      }
+
+    //  'isUseBasicAuth': false,
+    //  'basicAuthUser': '',
+    //  'basicAuthPassword': '',
+
+      if ($rootScope.wizard.useauth && $rootScope.wizard.usebasicauth) {
+        $scope.loginData.basicAuthUser = $rootScope.wizard.basicuser;
+        $scope.loginData.basicAuthPassword = $rootScope.wizard.basicpassword;
+        $scope.loginData.isUseBasicAuth = true;
+      } else {
+        $scope.loginData.isUseBasicAuth = false;
       }
 
       if ((/^https:\/\//i.test($scope.loginData.url))) {
