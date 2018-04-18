@@ -474,8 +474,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         var b = "";
         if ($scope.wizard.useauth && $scope.wizard.usebasicauth)
         {
-            b = $scope.wizard.basicuser + ":" + $scope.wizard.basicpassword + "@";
+           // b = $scope.wizard.basicuser + ":" + $scope.wizard.basicpassword + "@";
             //console.log("B=" + b);
+            $rootScope.basicAuthHeader = 'Basic ' + btoa($scope.wizard.basicuser+':'+$scope.wizard.basicpassword);
+            //console.log (">>>> WIZARD SET BASIC AUTH TO  " + $rootScope.basicAuthHeader);
         }
         var u = c.scheme + "://" + b + c.host;
         if (c.port) u += ":" + c.port;

@@ -625,23 +625,31 @@ angular.module('zmApp', [
         if (!config) return config;
         if (!config.url) return config;
 
-        // NOTE ON TIMEOUTS: As of Oct 10 2016, it seems
-        // the Http queue often gets messed up when there is a timeout
-        // and the # of requests are plentiful. I'm going to disable it and see
 
-        // console.log (">>>>"+config.url);
+       
+        if ($rootScope.basicAuthHeader) {
+          // console.log ("BASIC AUTH="+$rootScope.basicAuthHeader);
+           config.headers.Authorization = $rootScope.basicAuthHeader;
+        }
+          
+
         // handle basic auth properly
         if (config.url.indexOf("@") > -1) {
-          //console.log ("HTTP basic auth INTERCEPTOR URL IS "  + config.url);
-          var components = URI.parse(config.url);
-          // console.log ("Parsed data is " + JSON.stringify(components));
+
+          NVRDataModel.debug (">>>>>>>>>> ERROR!!!!! url has a basic auth u:p!"+config.url);
+      
+         /* var components = URI.parse(config.url);
           var credentials = btoa(components.userinfo);
-          //var authorization = {'Authorization': 'Basic ' + credentials};
-          //config.headers.Authorization = 'Basic ' + credentials;
+          var authorization = {'Authorization': 'Basic ' + credentials};
+          config.headers.Authorization = 'Basic ' + credentials;
+          console.log ("Full headers: " + JSON.stringify(config.headers));
+          config.url = components.scheme + "://" + components.host;
+          if (components.port) config.url = config.url + ":" + components.port;
+          if (components.path) config.url = config.url + components.path;
 
-          // console.log ("Full headers: " + JSON.stringify(config.headers));
+          console.log ("REWRITING URL TO: "+config.url);} */
 
-        }
+        
 
         //console.log (">>>>>>>>>>>>> INTERCEPT OBJECT " + JSON.stringify(config));
 
@@ -652,13 +660,13 @@ angular.module('zmApp', [
           //  console.log ("No cookie present in " + config.url);
      //   }
 
-        if ($rootScope.apiAuth) {
+       // if ($rootScope.apiAuth) {
          // console.log("********** API AUTH");
-          if (config.url.indexOf("/api/") > -1) {
-            config.url = config.url + "&auth=" + $rootScope.authSession;
+          /*if (config.url.indexOf("/api/") > -1) {
+            config.url = config.url + "&auth=" + $rootScope.authSession;*/
            // console.log("********** API AUTH muggled to:" + config.url);
 
-          }
+     //     }
         }
 
         if ((config.url.indexOf("/api/states/change/") > -1) ||
@@ -671,14 +679,7 @@ angular.module('zmApp', [
           // these can take time, so lets bump up timeout
           config.timeout = zm.largeHttpTimeout;
 
-        } else if ((config.url.indexOf("view=view_video") > -1) ||
-          config.url.indexOf(".mp4") > -1) {
-          // console.log(">>> skipping timers for MP4");
-          // put a timeout for zms urls
-        } else if (config.url.indexOf("zms?") > -1) {
-          // config.timeout = zm.httpTimeout;
-
-        }
+        } 
 
         return config;
       },
