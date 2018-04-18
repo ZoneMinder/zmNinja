@@ -11,12 +11,14 @@
                         <div style="width:100vw; height:100vh;">
                             <img ng-if="!liveFeedMid" image-spinner-src="{{loginData.streamingurl}}/nph-zms?source=event&mode=jpeg&event={{eventId}}&frame=1&replay={{currentStreamMode}}&rate=100&connkey={{connKey}}&scale={{singleImageQuality}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
                             img-spinner-w="1024" img-spinner-h="768"
+                            onload="imageLoaded()"
                             />
 
 
                             <div ng-if="liveFeedMid">
                                 <img  image-spinner-src="{{loginData.streamingurl}}/nph-zms?mode=jpeg&monitor={{liveFeedMid}}&connkey={{connKey}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
                                 img-spinner-w="1024" img-spinner-h="768"
+                                onload="imageLoaded()"
                                 />
                                 <div class="events-range-modal-text"><span class="events-range-modal-warning-text">{{eventWarning}}</span> </div>
                             </div>

@@ -18,6 +18,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var handle;
     var showLive = true;
     var broadcastHandles = [];
+    var isStreamPaused = true;
 
     var framearray = {
 
@@ -440,10 +441,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function onPause()
     {
-        NVRDataModel.debug ("EventModal Pause: Deregistering broadcast handles");
-        for (var i=0; i < broadcastHandles.length; i++) {
-           // broadcastHandles[i]();
-        }
+       
         broadcastHandles = [];
         
 
@@ -451,7 +449,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         // FIXME: Do I need to  setAwake(false) here?
         $interval.cancel(eventQueryHandle);
-        NVRDataModel.log("EventModalCtrl: paused, killing timer");
+        NVRDataModel.log("EventModalCtrl: paused");
+        if ($scope.connKey) sendCommand(17, $scope.connKey);
 
     }
 
@@ -904,6 +903,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.isModalActive = true;
     };
 
+    $scope.constructStream = function (monitor) {
+
+    };
+
     $scope.scaleImage = function()
     {
 
@@ -911,11 +914,16 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //console.log("Switching image style to " + $scope.imageFit);
     };
 
-    $scope.$on('$ionicView.enter', function()
+    $scope.$on('$ionicView.beforeEnter', function()
     {
         //console.log (">>>>>>>>>>>>>>>>>>>> MODAL VIEW ENTER");
+        isStreamPaused = true;
 
     });
+
+    $scope.imageLoaded = function() {
+        isStreamPaused = false;
+    }
 
     $scope.$on('modal.shown', function(e, m)
     {
@@ -1105,7 +1113,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.isModalActive = false;
 
         NVRDataModel.debug("Modal removed - killing connkey");
-        sendCommand(17, $scope.connKey);
+        if ($scope.connKey) sendCommand(17, $scope.connKey);
         //$timeout (function(){NVRDataModel.stopNetwork("Modal removed inside EventModalCtrl");},400);
 
         // Execute action

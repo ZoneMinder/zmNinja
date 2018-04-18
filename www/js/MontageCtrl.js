@@ -613,6 +613,7 @@ angular.module('zmApp.controllers')
     }
 
     $scope.cancelReorder = function () {
+      areStreamsStopped = false;
       $scope.modal.remove();
     };
 
@@ -621,21 +622,34 @@ angular.module('zmApp.controllers')
 
       // redo packery as monitor status has changed
       // DOM may need reloading if you've hidden/unhidden stuff
-      $scope.MontageMonitors = $scope.copyMontage;
+      
+
+      // The montage screens might change here so we need
+      // to destroy/re-create
+      
       $scope.modal.remove();
+      
+    
+          // assign new arrangement
+          $scope.MontageMonitors = $scope.copyMontage;
+          
 
-      $timeout(function () {
+          // manually recreate connkeys in new copy
+          for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+            $scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+          }
+          areStreamsStopped = false;
+          $timeout(function () // after render
+          {
+             draggies.forEach(function (drag) {
+                drag.destroy();
+             });
 
-        draggies.forEach(function (drag) {
-          drag.destroy();
-        });
-
-        pckry.reloadItems();
-        draggies = [];
-        pckry.once('layoutComplete', savePackeryOrder);
-        pckry.layout();
-
-      }, 400);
+              pckry.reloadItems();
+              draggies = [];
+              pckry.once('layoutComplete', savePackeryOrder);
+              pckry.layout();
+          }, zm.packeryTimer);
 
     };
 
@@ -699,6 +713,19 @@ angular.module('zmApp.controllers')
       }
       // make a copy of the current list and work on that
       // this is to avoid packery screw ups while you are hiding/unhiding
+
+      if (simulStreaming) {
+        NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
+        areStreamsStopped = true;
+        $timeout (function () {
+
+          // remove old monitors
+          for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+            if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
+          }
+        });
+      }
+      
       $scope.copyMontage = angular.copy($scope.MontageMonitors);
       $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
           scope: $scope,
@@ -1645,7 +1672,7 @@ angular.module('zmApp.controllers')
     $scope.constructStream = function (monitor) {
 
       var stream;
-      if (areStreamsStopped) return ""; 
+      if (areStreamsStopped || monitor.Monitor.listDisplay == 'noshow') return ""; 
       stream = monitor.Monitor.streamingURL +
         "/nph-zms?mode=" + getMode() +
         "&monitor=" + monitor.Monitor.Id +
