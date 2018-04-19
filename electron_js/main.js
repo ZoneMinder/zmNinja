@@ -6,6 +6,7 @@ const {dialog} = require('electron')
 // Module to create native browser window.
 const {BrowserWindow} = electron;
 var isFs = false;
+var isProxy = false;
 var argv = require('minimist')(process.argv.slice(1));
 
 console.log ("ARGV="+JSON.stringify(argv));
@@ -69,6 +70,9 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
         webPreferences:{nodeIntegration:false}});
 
 
+     
+
+
        win.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
     if(d.responseHeaders['x-frame-options'] || d.responseHeaders['X-Frame-Options']){
         delete d.responseHeaders['x-frame-options'];
@@ -86,7 +90,10 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
   }
 
 
-    
+  if (argv.proxy) {
+    console.log ("PROXY SET: "+argv.proxy);
+       win.webContents.session.setProxy({proxyRules:argv.proxy}, function() {});
+  }
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
