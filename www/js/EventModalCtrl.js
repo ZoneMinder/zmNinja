@@ -260,14 +260,21 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         //console.log ("Event timer");
         //console.log ("Event timer");
-        $scope.checkEventOn = true;
+        
         if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '')
         {
             //console.log("playing video, not using zms, skipping event commands");
         }
         else
         {
-            processEvent('99', $scope.connKey);
+                processEvent('99', $scope.connKey)
+                .then (function (succ) {
+                    $scope.checkEventOn = true;
+                },
+            function (err) {
+                //$scope.checkEventOn = true; // umm are we sure?
+
+            });
         }
     }
 
@@ -355,7 +362,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //console.log("sending process Event command to " + loginData.url);
         var myauthtoken = $rootScope.authSession.replace("&auth=", "");
         //&auth=
-        var req = $http(
+        return $http(
         {
             method: 'POST',
             /*timeout: 15000,*/
@@ -386,9 +393,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 // user: loginData.username,
                 // pass: loginData.password
             }
-        });
-
-        req.success(function(resp)
+        })
+        .success(function(resp)
         {
             // NVRDataModel.debug ("processEvent success:"+JSON.stringify(resp));
 
@@ -418,19 +424,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             {
                 NVRDataModel.debug("Hmm I found an error " + JSON.stringify(resp));
                 //window.stop();
-                $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+               // $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
                 // console.log (JSON.stringify(resp));
-                $timeout(function()
+                /*$timeout(function()
                 {
                     sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
                 }, 500);
-                NVRDataModel.debug("so I'm regenerating Connkey to " + $scope.connKey);
-                //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+                NVRDataModel.debug("so I'm regenerating Connkey to " + $scope.connKey);*/
+             
             }
-        });
-
-        req.error(function(resp)
+        })
+        .error(function(resp)
         {
             NVRDataModel.debug("processEvent error:" + JSON.stringify(resp));
             //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
@@ -985,6 +990,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         //eventQueryHandle  = $timeout (checkEvent(), zm.eventPlaybackQuery);
 
                         $interval.cancel(eventQueryHandle);
+                        checkEvent();
                         eventQueryHandle = $interval(function()
                         {
                             checkEvent();
