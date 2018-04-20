@@ -330,6 +330,58 @@ angular.module('zmApp.controllers')
       }
 
 
+      function getAuthKey (mid,ck) {
+        var d = $q.defer();
+          var as = 'undefined';
+
+          if (!mid) {
+            log("Deferring auth key, as monitorId unknown");
+            d.resolve("undefined");
+            $rootScope.authSession = as;
+            return (d.promise);
+          }
+
+          // Skipping monitor number as I only need an auth key
+          // so no need to generate an image
+          var myurl = loginData.url + "/index.php?view=watch&mid=" + mid ;
+          debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
+          $http.get(myurl)
+            .then(function (success) {
+                // console.log ("**** RESULT IS " + JSON.stringify(success));
+                // Look for auth=
+                var auth = success.data.match("auth=(.*?)&");
+                if (auth && (auth[1] != null)) {
+                  log("DataModel: Extracted a stream authentication key of: " + auth[1]);
+                  as = "&auth="+auth[1];
+                  $rootScope.authSession = as;
+                  d.resolve(as);
+                } else {
+                  log("DataModel: Did not find a stream auth key, looking for user=");
+                  auth = success.data.match("user=(.*?)&");
+                  if (auth && (auth[1] != null)) {
+                    log("DataModel: Found simple stream auth mode (user=)");
+                    as = "&user=" + loginData.username + "&pass=" + loginData.password;
+                    $rootScope.authSession = as;
+                    d.resolve(as);
+                  } else {
+                    log("Data Model: Did not find any  stream mode of auth");
+                    as="";
+                    d.resolve(as);
+                  }
+                
+                  return (d.promise);
+                }
+
+              },
+              function (error) {
+                log("DataModel: Error resolving auth key " + JSON.stringify(error));
+                d.resolve("undefined");
+                return (d.promise);
+              });
+          return (d.promise);
+
+      }
+
       function log(val, logtype) {
 
 
@@ -1437,47 +1489,7 @@ angular.module('zmApp.controllers')
         // need a mid as restricted users won't be able to get
         // auth with just &watch
         getAuthKey: function (mid, ck) {
-          var d = $q.defer();
-
-          if (!mid) {
-            log("Deferring auth key, as monitorId unknown");
-            d.resolve("");
-            return (d.promise);
-          }
-
-          // Skipping monitor number as I only need an auth key
-          // so no need to generate an image
-          var myurl = loginData.url + "/index.php?view=watch&mid=" + mid ;
-          debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
-          $http.get(myurl)
-            .then(function (success) {
-                // console.log ("**** RESULT IS " + JSON.stringify(success));
-                // Look for auth=
-                var auth = success.data.match("auth=(.*?)&");
-                if (auth && (auth[1] != null)) {
-                  log("DataModel: Extracted a stream authentication key of: " + auth[1]);
-                  d.resolve("&auth=" + auth[1]);
-                } else {
-                  log("DataModel: Did not find a stream auth key, looking for user=");
-                  auth = success.data.match("user=(.*?)&");
-                  if (auth && (auth[1] != null)) {
-                    log("DataModel: Found simple stream auth mode (user=)");
-                    d.resolve("&user=" + loginData.username + "&pass=" + loginData.password);
-                  } else {
-                    log("Data Model: Did not find any  stream mode of auth");
-                    d.resolve("");
-                  }
-                  return (d.promise);
-                }
-
-              },
-              function (error) {
-                log("DataModel: Error resolving auth key " + JSON.stringify(error));
-                d.resolve("");
-                return (d.promise);
-              });
-          return (d.promise);
-
+          return getAuthKey (mid,ck);
         },
 
         //-----------------------------------------------------------------------------
@@ -1738,6 +1750,11 @@ angular.module('zmApp.controllers')
                   .success(function (data) {
                     //console.log("HTTP success got " + JSON.stringify(data.monitors));
                     monitors = data.monitors;
+
+                    if ($rootScope.authSession == 'undefined') {
+                      log ("Now that we have monitors, lets get AuthKey...");
+                      getAuthKey(monitors[0].Monitor.Id, (Math.floor((Math.random() * 999999) + 1)).toString())
+                    }
                     monitors.sort(function (a, b) {
                       return parseInt(a.Monitor.Sequence) - parseInt(b.Monitor.Sequence);
                     });

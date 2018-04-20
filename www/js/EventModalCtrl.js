@@ -6,6 +6,12 @@
 angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', '$filter', 'SecuredPopups', function($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate, $filter, SecuredPopups)
 {
 
+
+    const streamState = {
+        SNAPSHOT:1,
+        ACTIVE:2,
+        STOPPED:3
+    };
     // from parent scope
     var currentEvent = $scope.currentEvent;
     var nphTimer;
@@ -17,8 +23,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var gEvent;
     var handle;
     var showLive = true;
+    var maxAlarmFid = 0;
+
+
+
     var broadcastHandles = [];
-    var isStreamPaused = true;
+    var currentStreamState = streamState.STOPPED;
+ 
 
     var framearray = {
 
@@ -66,16 +77,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
 
-    $rootScope.authSession = "undefined";
-    $ionicLoading.show(
-    {
-        template: $translate.instant('kNegotiatingStreamAuth'),
-        animation: 'fade-in',
-        showBackdrop: true,
-        duration: zm.loadingTimeout,
-        maxWidth: 300,
-        showDelay: 0
-    });
+    
     var ld = NVRDataModel.getLogin();
 
     $scope.currentStreamMode = ld.gapless ? 'gapless' : 'single';
@@ -87,7 +89,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     NVRDataModel.debug("Setting playback to " + $scope.streamMode);
 
     $rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-    NVRDataModel.getAuthKey($rootScope.validMonitorId, (Math.floor((Math.random() * 999999) + 1)).toString())
+
+   /* NVRDataModel.getAuthKey($rootScope.validMonitorId, (Math.floor((Math.random() * 999999) + 1)).toString())
         .then(function(success)
             {
                 $ionicLoading.hide();
@@ -102,7 +105,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 NVRDataModel.debug("ModalCtrl: Error details of stream auth:" + error);
                 //$rootScope.authSession="";
                 NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-            });
+            });*/
+    
 
     //--------------------------------------------------------------------------------------
     // Handles bandwidth change, if required
@@ -250,6 +254,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function checkEvent()
     {
+
+        if (currentStreamState == streamState.SNAPSHOT) return;
 
         if ($scope.modalFromTimelineIsOpen == false)
         {
@@ -910,7 +916,47 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.constructStream = function (monitor) {
 
+
+       
+        var stream="";
+        // eventId gets populated when prepareModal completes
+        // if maxAlarmFrame was not set and we don't have an eventID yet,
+        // we can't show a snapshot
+        if (currentStreamState == streamState.STOPPED || (maxAlarmFid == 0 && !$scope.eventId)) {
+            stream="";
+        } 
+        else if (currentStreamState == streamState.SNAPSHOT) {
+            stream = $scope.loginData.url +
+            "/index.php?view=image" +
+
+            (maxAlarmFid? "&fid="+maxAlarmFid: "&eid="+$scope.eventId+"&fid=1") +
+            "&scale="+$scope.singleImageQuality + 
+            $rootScope.authSession 
+        }
+        else if (currentStreamState == streamState.ACTIVE) {
+            stream = $scope.loginData.streamingurl +
+            "/nph-zms?source=event&mode=jpeg" +
+            "&event="+$scope.eventId+"&frame=1" +
+            "&replay="+$scope.currentStreamMode +
+            "&rate=100" +
+            "&connkey="+$scope.connKey + 
+            "&scale="+$scope.singleImageQuality + 
+            $rootScope.authSession 
+        }
+    
+       // console.log ("STREAM="+stream);
+        return stream;
+
     };
+
+    $scope.isSnapShot = function () {
+       // console.log (currentStreamState);
+        return currentStreamState == streamState.SNAPSHOT;
+    };
+
+    $scope.convertSnapShotToStream = function() {
+        currentStreamState = streamState.ACTIVE;
+    }; 
 
     $scope.scaleImage = function()
     {
@@ -921,23 +967,35 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.$on('$ionicView.beforeEnter', function()
     {
-        //console.log (">>>>>>>>>>>>>>>>>>>> MODAL VIEW ENTER");
-        isStreamPaused = true;
+       
+        currentStreamState = streamState.STOPPED;
 
     });
 
-    $scope.imageLoaded = function() {
-        isStreamPaused = false;
-    }
+    $scope.modalImageLoaded = function() {
+        console.log ("MODAL IMAGE LOADED");
+        if (m.snapshot != 'enabled') currentStreamState = streamState.ACTIVE;
+    };
 
     $scope.$on('modal.shown', function(e, m)
     {
 
+        console.log ("AUTH="+$rootScope.authSession);
         if (m.id != 'footage')
 
             return;
 
         showLive = true;
+
+        if (m.snapshot == 'enabled') {
+            currentStreamState = streamState.SNAPSHOT;
+            maxAlarmFid = m.snapshotId;
+          
+        }
+
+        else currentStreamState  = streamState.ACTIVE;
+
+    
         if (m.showLive == 'disabled') {
             showLive = false;
             NVRDataModel.debug ("I was explictly asked not to show live, cross my fingers...");
