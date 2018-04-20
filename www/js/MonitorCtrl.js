@@ -420,13 +420,6 @@ angular.module('zmApp.controllers')
                     .then(function(modal)
                     {
                         $scope.modal = modal;
-
-                        $ionicLoading.show(
-                        {
-                            template: $translate.instant('kPleaseWait') + "...",
-                            noBackdrop: true,
-                            duration: zm.loadingTimeout
-                        });
                         $scope.isModalActive = true;
                         $scope.modal.show();
                     });

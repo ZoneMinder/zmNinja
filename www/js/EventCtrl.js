@@ -2896,13 +2896,6 @@ angular.module('zmApp.controllers')
             {
                 $scope.modal = modal;
 
-                $ionicLoading.show(
-                {
-                    template: $translate.instant('kPleaseWait') + "...",
-                    noBackdrop: true,
-                    duration: 10000
-                });
-
                 $scope.modal.show();
 
                 var ld = NVRDataModel.getLogin();

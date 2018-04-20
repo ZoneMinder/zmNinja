@@ -589,15 +589,14 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         animation: 'slide-in-up',
         id: 'footage',
         showLive:sl, 
+        snapshot: 'enabled',
+        snapshotId:event.Event.MaxScoreFrameId,
+
       })
       .then(function (modal) {
         $scope.modal = modal;
 
-        $ionicLoading.show({
-          template: $translate.instant('kPleaseWait') + "...",
-          noBackdrop: true,
-          duration: 10000
-        });
+        
 
         $scope.modal.show();
 
