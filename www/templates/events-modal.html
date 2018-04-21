@@ -7,10 +7,7 @@
 
             <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" overflow-scroll="false">
                 <div id="full-screen-event" style="height: 100vh;">
-                    <!--<div>-->
-                    <!-- route via ZMS -->
-
-                    Default Video: {{defaultVideo}}
+ 
                     <div ng-if="defaultVideo=='' || isSnapShot()">
                         <!--<div style="color:white">connkey:{{connKey}}</div>-->
                         <div style="width:100vw; height:100vh;">
