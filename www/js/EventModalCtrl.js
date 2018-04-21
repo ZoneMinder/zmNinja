@@ -158,6 +158,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //console.log ("*********** ON PLAY READY");
         NVRDataModel.debug ("On Play Ready invoked");
         handle = api;
+        handle.mediaElement.attr("playsinline", "");
 
         $ionicLoading.show(
         {
@@ -1815,7 +1816,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
-                    currentStreamState = streamState.ACTIVE;
+                    if (currentStreamState!=streamState.SNAPSHOT)       
+                        currentStreamState = streamState.ACTIVE;
 
 
                     //console.log("loginData is " + JSON.stringify($scope.loginData));
