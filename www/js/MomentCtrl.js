@@ -591,6 +591,9 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         showLive:sl, 
         snapshot: 'enabled',
         snapshotId:event.Event.MaxScoreFrameId,
+        eventId:event.Event.Id
+        //eventId:event.Event.Id
+      
 
       })
       .then(function (modal) {

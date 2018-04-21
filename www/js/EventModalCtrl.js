@@ -24,6 +24,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var handle;
     var showLive = true;
     var maxAlarmFid = 0;
+    var eventId = 0;
+    var isSnapShotEnabled = false;
 
 
 
@@ -972,11 +974,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     });
 
-    $scope.modalImageLoaded = function() {
-        console.log ("MODAL IMAGE LOADED");
-        if (m.snapshot != 'enabled') currentStreamState = streamState.ACTIVE;
-    };
-
+   
     $scope.$on('modal.shown', function(e, m)
     {
 
@@ -988,8 +986,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         showLive = true;
 
         if (m.snapshot == 'enabled') {
+            isSnapShotEnabled = true;
             currentStreamState = streamState.SNAPSHOT;
             maxAlarmFid = m.snapshotId;
+            eventId = m.eventId;
           
         }
 
@@ -1140,6 +1140,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         });
     }
+
+    $scope.modalImageLoaded = function() {
+        console.log ("MODAL IMAGE LOADED");
+      //  if (m.snapshot != 'enabled') currentStreamState = streamState.ACTIVE;
+    };
+
 
     $scope.videoTime = function(s, c)
     {
@@ -1382,10 +1388,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.onSwipeEvent = function(eid, dirn)
     {
-        if ($scope.liveFeedMid) return;
-        //console.log("HERE");
-        var ld = NVRDataModel.getLogin();
-        if (!ld.canSwipeMonitors) return;
 
         if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1)
         {
@@ -1393,17 +1395,35 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             return;
         }
 
-        if (ld.useNphZmsForEvents)
-        {
-            NVRDataModel.log("using zms to move ");
-            jumpToEventZms($scope.connKey, dirn);
-            // sendCommand ( dirn==1?'13':'12',$scope.connKey);
+        if ($scope.liveFeedMid) return;
+        var ld = NVRDataModel.getLogin();
+        if (!ld.canSwipeMonitors) return;
 
+        if ($state.current.name=="app.moment") {
+           // console.log ("Searching for eid:"+eventId);
+            var i;
+            for (i=0; i < $scope.moments.length;i++) {
+                if ($scope.moments[i].Event.Id == eventId) break;
+            }
+           // console.log ("Event found at index:"+i);
+            if (dirn == -1 && i > 0) i--;
+            if (dirn == 1 && i < $scope.moments.length -1) i++;
+            NVRDataModel.debug ("Next is index:"+i+" maxScoreId:"+$scope.moments[i].Event.MaxScoreFrameId);
+            maxAlarmFid = $scope.moments[i].Event.MaxScoreFrameId;
+            eventId = $scope.moments[i].Event.Id;
         }
-        else
+
+            if (currentStreamState == streamState.ACTIVE) {
+                NVRDataModel.log("using zms to move ");
+                jumpToEventZms($scope.connKey, dirn);
+            }
+
+           
+
+      /*  else
         {
             jumpToEvent(eid, dirn);
-        }
+        }*/
 
         //console.log("JUMPING");
 
