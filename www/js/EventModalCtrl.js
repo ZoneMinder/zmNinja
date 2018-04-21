@@ -7,7 +7,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 {
 
 
-    const streamState = {
+    var streamState = {
         SNAPSHOT:1,
         ACTIVE:2,
         STOPPED:3
@@ -931,7 +931,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
             (maxAlarmFid? "&fid="+maxAlarmFid: "&eid="+$scope.eventId+"&fid=1") +
             "&scale="+$scope.singleImageQuality + 
-            $rootScope.authSession 
+            $rootScope.authSession ;
         }
         else if (currentStreamState == streamState.ACTIVE) {
             stream = $scope.loginData.streamingurl +
@@ -941,7 +941,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             "&rate=100" +
             "&connkey="+$scope.connKey + 
             "&scale="+$scope.singleImageQuality + 
-            $rootScope.authSession 
+            $rootScope.authSession ;
         }
     
        // console.log ("STREAM="+stream);

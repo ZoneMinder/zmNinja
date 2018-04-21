@@ -186,6 +186,15 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     transform: translate(-50%, -50%);
 }
 
+.event-modal-play {
+    opacity: 80%;
+    transform: translate(-50%, -50%);
+    position:absolute;
+    z-index:9999;
+    top:50%;
+    left:50%;
+}
+
 .alarmed-header {
     background: #ba3e3e;
     color: #ffffff;

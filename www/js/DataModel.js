@@ -1753,7 +1753,7 @@ angular.module('zmApp.controllers')
 
                     if ($rootScope.authSession == 'undefined') {
                       log ("Now that we have monitors, lets get AuthKey...");
-                      getAuthKey(monitors[0].Monitor.Id, (Math.floor((Math.random() * 999999) + 1)).toString())
+                      getAuthKey(monitors[0].Monitor.Id, (Math.floor((Math.random() * 999999) + 1)).toString());
                     }
                     monitors.sort(function (a, b) {
                       return parseInt(a.Monitor.Sequence) - parseInt(b.Monitor.Sequence);
