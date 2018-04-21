@@ -1388,7 +1388,83 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             return;
         }
 
-        if ($scope.liveFeedMid) return;
+        //if ($scope.liveFeedMid) return;
+        
+        jumpToEvent(eid,dirn);
+      /*  else
+        {
+            jumpToEvent(eid, dirn);
+        }*/
+
+        //console.log("JUMPING");
+
+    };
+
+    $scope.jumpToEvent = function(eid, dirn)
+    {
+        jumpToEvent (eid,dirn);
+    };
+
+    function jumpToEvent(eid, dirn)
+    {
+        NVRDataModel.log("Event jump called with:" + eid);
+        if (eid == "")
+        {
+            $ionicLoading.show(
+            {
+                template: $translate.instant('kNoMoreEvents'),
+                noBackdrop: true,
+                duration: 2000
+            });
+
+            return;
+        }
+
+        var slidein;
+        var slideout;
+        if (dirn == 1)
+        {
+            slideout = "animated slideOutLeft";
+            slidein = "animated slideInRight";
+        }
+        else
+        {
+            slideout = "animated slideOutRight";
+            slidein = "animated slideInLeft";
+        }
+        var element = angular.element(document.getElementById("full-screen-event"));
+        element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
+
+        function outWithOld()
+        {
+
+            NVRDataModel.log("ModalCtrl:Stopping network pull...");
+            NVRDataModel.stopNetwork("EventModalCtrl-out with old");
+            $scope.animationInProgress = true;
+            // give digest time for image to swap
+            // 100 should be enough
+            $timeout(function()
+            {
+                element.removeClass(slideout);
+                element.addClass(slidein)
+                    .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
+                    processMove(eid,dirn);
+            }, 200);
+        }
+
+        function inWithNew()
+        {
+            element.removeClass(slidein);
+            $scope.animationInProgress = false;
+            carouselUtils.setStop(false);
+          
+
+
+        }
+
+    }
+
+    function processMove(eid,dirn) {
         var ld = NVRDataModel.getLogin();
         if (!ld.canSwipeMonitors) return;
 
@@ -1455,87 +1531,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             }
 
            
-
-      /*  else
-        {
-            jumpToEvent(eid, dirn);
-        }*/
-
-        //console.log("JUMPING");
-
-    };
-
-    $scope.jumpToEvent = function(eid, dirn)
-    {
-        // console.log("jumptoevent");
-        var ld = NVRDataModel.getLogin();
-        if (ld.useNphZmsForEvents)
-        {
-            NVRDataModel.log("using zms to move ");
-            jumpToEventZms($scope.connKey, dirn);
-            // sendCommand ( dirn==1?'13':'12',$scope.connKey);
-
-        }
-        else
-        {
-            jumpToEvent(eid, dirn);
-        }
-
-    };
-
-    function jumpToEvent(eid, dirn)
-    {
-        NVRDataModel.log("Event jump called with:" + eid);
-        if (eid == "")
-        {
-            $ionicLoading.show(
-            {
-                template: $translate.instant('kNoMoreEvents'),
-                noBackdrop: true,
-                duration: 2000
-            });
-
-            return;
-        }
-
-        var slidein;
-        var slideout;
-        if (dirn == 1)
-        {
-            slideout = "animated slideOutLeft";
-            slidein = "animated slideInRight";
-        }
-        else
-        {
-            slideout = "animated slideOutRight";
-            slidein = "animated slideInLeft";
-        }
-        var element = angular.element(document.getElementById("full-screen-event"));
-        element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
-
-        function outWithOld()
-        {
-
-            NVRDataModel.log("ModalCtrl:Stopping network pull...");
-            NVRDataModel.stopNetwork("EventModalCtrl-out with old");
-            $scope.animationInProgress = true;
-            // give digest time for image to swap
-            // 100 should be enough
-            $timeout(function()
-            {
-                element.removeClass(slideout);
-                element.addClass(slidein)
-                    .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
-                prepareModalEvent(eid);
-            }, 200);
-        }
-
-        function inWithNew()
-        {
-            element.removeClass(slidein);
-            $scope.animationInProgress = false;
-            carouselUtils.setStop(false);
-        }
 
     }
 
