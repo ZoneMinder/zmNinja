@@ -933,7 +933,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $rootScope.authSession ;
         }
     
-       // console.log ("STREAM="+stream);
+      // console.log ("STREAM="+stream);
         return stream;
 
     };
@@ -1408,6 +1408,16 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if (currentStreamState == streamState.ACTIVE) {
                // NVRDataModel.log("using zms to move ");
 
+               if ($scope.defaultVideo == '' || $scope.defaultVideo == 'undefined') {
+                // need to kill zms
+                currentStreamState = streamState.STOPPED;
+                $timeout (function() {
+                    NVRDataModel.killLiveStream($scope.connKey);
+                   
+                });
+               
+            }
+
                if ($scope.defaultVideo != "" && $scope.defaultVideo != 'undefined') {
 
                 if (handle){
@@ -1418,6 +1428,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
               
                     
                 } 
+
+             
+        
                 playerReady = false;
                 $scope.defaultVideo = "";
                 $scope.video_url="";
@@ -1743,6 +1756,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     function prepareModalEvent(eid)
     {
 
+
+
         // Lets get the detailed event API
         var loginData = NVRDataModel.getLogin();
         var myurl = loginData.apiurl + '/events/' + eid + ".json";
@@ -1750,11 +1765,15 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.humanizeTime = "...";
         $scope.mName = "...";
         $scope.liveFeedMid = '';
+
+       
         $http.get(myurl)
             .then(function(success)
                 {
 
                     // console.log ("DUCCESS::"+JSON.stringify(success));
+
+                    
                     var event = success.data.event;
                     currentEvent = event;
 
@@ -1786,11 +1805,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     $scope.mName = NVRDataModel.getMonitorName(event.Event.MonitorId);
                     //console.log (">>>>>>>>HUMANIZE " + $scope.humanizeTime);
 
-                    //console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
-                    if (typeof event.Event.DefaultVideo === 'undefined')
+                    console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
+                    if (typeof event.Event.DefaultVideo === 'undefined' || event.Event.DefaultVideo == '') {
                         event.Event.DefaultVideo = "";
+                    }
+                        
 
                     $scope.defaultVideo = event.Event.DefaultVideo;
+
+                    $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+
+                    currentStreamState = streamState.ACTIVE;
+
 
                     //console.log("loginData is " + JSON.stringify($scope.loginData));
                     //console.log("Event ID is " + $scope.eventId);
@@ -1820,7 +1846,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
                     // hack
                     //videoURL = "http://static.videogular.com/assets/videos/videogular.mp4";
-                    //videoURL = "http://arjunrc.ddns.net:8888/foo2.mp4";
+                    
                     $scope.video_url = videoURL;
 
                     //console.log("************** VIDEO IS " + videoURL);
