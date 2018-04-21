@@ -236,6 +236,7 @@
 
          if ($scope.loginData.isUseEventServer == true)
          {
+             EventServer.disconnect();
              EventServer.init()
                  .then(function(data)
                  {
@@ -267,7 +268,7 @@
 
                  });
 
-         }
+         } // no event server configured/enabled
          else
          {
              if ($rootScope.apnsToken != "")
@@ -288,7 +289,7 @@
              }
              // Give the above some time to transmit
 
-             EventServer.disconnect();
+             $timeout ( function() {EventServer.disconnect();},1000);
 
          }
 

@@ -461,6 +461,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         // $interval.cancel(modalIntervalHandle);
 
         // FIXME: Do I need to  setAwake(false) here?
+
+        if ($scope.modal !== undefined) {
+            $scope.modal.remove();
+          }
         $interval.cancel(eventQueryHandle);
         NVRDataModel.log("EventModalCtrl: paused");
         if ($scope.connKey) sendCommand(17, $scope.connKey);
