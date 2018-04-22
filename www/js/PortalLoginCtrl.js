@@ -236,11 +236,19 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                 if (NVRDataModel.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0")
                                 {
 
-                                    $state.go('app.importantmessage',
-                                    {
-                                        "ver": data
+                                    NVRDataModel.hrsSinceChecked("zmVersion")
+                                    .then (function (val) {
+                                        if (val >=24) {
+                                            NVRDataModel.updateHrsSinceChecked("zmVersion");
+                                            $state.go('app.importantmessage',
+                                            {
+                                                "ver": data
+                                            });
+                                            return;
+                                        }
+                                      
                                     });
-                                    return;
+                                   
                                 }
 
                                 /*if (data == "0.0.0")
@@ -449,16 +457,23 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                                     if (NVRDataModel.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0")
                                     {
+    
+                                        NVRDataModel.hrsSinceChecked("zmVersion")
+                                        .then (function (val) {
+                                             if (val >=24) {
+                                                NVRDataModel.updateHrsSinceChecked("zmVersion");
+                                                $state.go('app.importantmessage',
+                                                {
+                                                    "ver": data
+                                                });
+                                                return;
 
-                                        // console.log (">>>>>>>>>>>>> HERE AND VERSION SAYS " +NVRDataModel.versionCompare(data, zm.recommendedAppVersion)); 
-                                        //console.log ("GOING TO IMPORTANT");
-                                        $state.go('app.importantmessage',
-                                        {
-                                            "ver": data
+                                             }
+                                           
                                         });
-                                        return;
+                                       
                                     }
-
+    
                                     /*if (data == "0.0.0")
                                     {
 

@@ -1360,6 +1360,44 @@ angular.module('zmApp.controllers')
 
         },
 
+        updateHrsSinceChecked:function (key) {
+          var tnow = moment();
+          debug ("Updating "+key+" to "+JSON.stringify(tnow));
+          localforage.setItem(key, JSON.stringify(tnow));
+        },
+
+        hrsSinceChecked: function(key) {
+             var tnow = moment();
+             var d = $q.defer();
+
+              localforage.getItem(key) 
+              .then (function (val) {
+                if (val == null) {  
+                  // doesn't exist
+                  localforage.setItem(key, JSON.stringify(tnow));
+                  debug ( key + " doesn't exist, storing it as:"+tnow);
+                  d.resolve(365*12*24);
+                  return (d.promise);
+                } 
+                else {
+                  val = JSON.parse(val);
+                  var duration = moment.duration(tnow.diff(val)).asHours().toFixed(1);
+                  debug ("It has been "+duration+" hours since "+key+" was checked" );
+                  d.resolve(duration);
+                  return (d.promise);
+                }
+                return (d.promise);
+
+              },
+              function (err) {
+                debug ("Hmm? hrsSinceCheck failed");
+                d.resolve (365*12*24); 
+                return d.promise;}
+            );
+            return d.promise;
+
+        },
+
         versionCompare: function (l, r) {
           return versionCompare(l, r);
         },

@@ -166,7 +166,7 @@
     "kImpMsg1"                   :"Important Message",
     "kImpMsg2"                   :"I'd appreciate if you upgraded ZoneMinder",
     "kImpMsg3"                   :"You are running",
-    "kImpMsg4"                   :"has some important fixes that enhance the API amongst other things. This is required to avail of the new alarm APIs and other new features.",
+    "kImpMsg4"                   :"has some important fixes that enhance functionality and fix bugs that this version of zmNinja relies on. The app will still work, but some functions may be unpredictable.",
     "kImpMsg5"                   :"Reported Version",
     "kImpMsg6"                   :"Recommended Version",
     "kImpMsg7"                   :"Ok, got it",
