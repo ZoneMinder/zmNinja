@@ -2814,6 +2814,9 @@ angular.module('zmApp.controllers')
 
 
     
+   
+
+
     $scope.showThumbnail = function (b,f) {
 
         if (!f)  {// api update needed
@@ -2859,6 +2862,11 @@ angular.module('zmApp.controllers')
     //earlier won't work
     //--------------------------------------------------------
 
+    $scope.openModalWithSnapshot = function (event) {
+        openModal (event,'enabled');
+
+    };
+
     $scope.openModal = function(event)
     {
 
@@ -2866,7 +2874,7 @@ angular.module('zmApp.controllers')
 
     };
 
-    function openModal (event) {
+    function openModal (event, snapshot) {
         NVRDataModel.debug("unbinding eventCtrl watchers as modal has its own");
         ionRangeWatcher();
         mycarouselWatcher();
@@ -2891,6 +2899,8 @@ angular.module('zmApp.controllers')
                 animation: 'slide-in-up',
                 id: 'footage',
                 showLive:sl, // seems bool is not allowed...
+                snapshot:snapshot,
+                eventId:event.Event.Id
             })
             .then(function(modal)
             {
