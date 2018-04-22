@@ -17,8 +17,7 @@ angular.module('zmApp.controllers')
         var localNotificationId = 0;
         var pushInited = false;
         var isTimerOn = false;
-        var initCalled = false;
-        var timeOfInit = -1;
+    
 
 
         //--------------------------------------------------------------------------
@@ -90,8 +89,8 @@ angular.module('zmApp.controllers')
         function init()
         {
 
-            // only log the time for the first init
-            if (timeOfInit == -1) timeOfInit = new Date();
+       
+           
             $rootScope.isAlarm = 0;
             $rootScope.alarmCount = "0";
 
@@ -150,26 +149,8 @@ angular.module('zmApp.controllers')
             ws.onError(function (e)
             {
 
-                // we don't need this check as I changed reconnect interval to 60s
-                //if ((Date.now() - lastEventServerCheck > 30000.0) || firstError)
             
-
-
                 NVRDataModel.debug("Websocket Errorhandler called");
-
-                var curr = new Date();
-                var sec = Math.round((curr.getTime() - timeOfInit.getTime())/1000);
-                console.log (">>> TIME ELAPSED:"+sec);
-
-                if (!initCalled || timeOfInit == -1) {
-                    NVRDataModel.log ("Ignoring websocket error as init not yet called");
-                    return;
-                }
-
-                if (sec < zm.eventServerErrorDelay) {
-                    NVRDataModel.log ("Ignoring websocket error as its too soon ("+sec+"s), may be residual error ");
-                    return;
-                }
 
                 $timeout(function()
                 {
@@ -206,12 +187,12 @@ angular.module('zmApp.controllers')
 
                 var ld = NVRDataModel.getLogin();
         
-                if (ld.isUseEventServer && !isTimerOn) {
+              /*  if (ld.isUseEventServer && !isTimerOn) {
                     // this means remote error, because zmN still
                     // wants it on
                     $timeout ( init, 10000 );
                     isTimerOn = true;
-                }
+                }*/
 
             });
 
@@ -342,7 +323,6 @@ angular.module('zmApp.controllers')
         function disconnect()
         {
            
-            timeOfInit = -1;
             if (typeof ws === 'undefined') {
                 NVRDataModel.log("Event server socket is empty, nothing to disconnect");
                 return;
