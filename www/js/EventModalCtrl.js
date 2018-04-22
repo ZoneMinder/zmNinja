@@ -976,7 +976,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if (m.snapshot == 'enabled') {
             isSnapShotEnabled = true;
             currentStreamState = streamState.SNAPSHOT;
-            maxAlarmFid = m.snapshotId;
+            if (m.snapshotId) maxAlarmFid = m.snapshotId;
             eventId = m.eventId;
             $scope.eventId = m.eventId;
           
@@ -1480,12 +1480,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             NVRDataModel.debug ("Next is index:"+i+" maxScoreId:"+$scope.moments[i].Event.MaxScoreFrameId);
             maxAlarmFid = $scope.moments[i].Event.MaxScoreFrameId;
             eventId = $scope.moments[i].Event.Id;
+            return;
         }
 
-            if (currentStreamState == streamState.ACTIVE) {
+            if (1) {
                // NVRDataModel.log("using zms to move ");
 
-               if ($scope.defaultVideo == '' || $scope.defaultVideo == 'undefined') {
+               if (currentStreamState == streamState.ACTIVE && ($scope.defaultVideo == '' || $scope.defaultVideo == 'undefined')) {
                 // need to kill zms
                 currentStreamState = streamState.STOPPED;
                 $timeout (function() {
