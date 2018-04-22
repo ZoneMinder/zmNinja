@@ -15,6 +15,9 @@
                                 <div ng-if="isSnapShot()" class="event-modal-play">
                                         <button class="button button-assertive icon ion-play" ng-click="convertSnapShotToStream()">&nbsp;{{'kPlay'|translate}}</button>
                                 </div>
+                                <div ng-if="isSnapShot()">
+                                    <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] <span class="events-range-modal-warning-text">{{eventWarning}}</span> </div>
+                                </div>
 
                             <img ng-if="!liveFeedMid" image-spinner-src="{{constructStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
                             img-spinner-w="1024" img-spinner-h="768" image-spinner-loader="lines" 

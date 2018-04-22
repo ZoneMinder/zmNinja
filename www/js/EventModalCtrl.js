@@ -966,7 +966,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.$on('modal.shown', function(e, m)
     {
 
-        console.log ("AUTH="+$rootScope.authSession);
+        $ionicLoading.hide();
+       // console.log ("AUTH="+$rootScope.authSession);
         if (m.id != 'footage')
 
             return;
