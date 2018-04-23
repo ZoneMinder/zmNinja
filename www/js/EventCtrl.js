@@ -2900,6 +2900,7 @@ angular.module('zmApp.controllers')
                 id: 'footage',
                 showLive:sl, // seems bool is not allowed...
                 snapshot:snapshot,
+                snapshotId: event.Event.MaxScoreFrameId,
                 eventId:event.Event.Id
             })
             .then(function(modal)
