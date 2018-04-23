@@ -15,7 +15,7 @@
   <ion-content scroll-sista has-bouncing="false" style="background-color:#444444" delegate-handle="none" overflow-scroll="false"
     mouse-wheel-scroll>
     <div class="timeline_text"> {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}} ({{humanizeTime(datetimeValueFrom.value)}})
-      <div ng-if="!isSimulStreaming">({{'kChromeMax' | translate}})</div>
+      <div ng-if="!isMultiPort">({{'kChromeMax' | translate}})</div>
     </div>
     <div class="grid" id="mygrid">
       <div class="grid-sizer grid-item-10"></div>

@@ -1930,10 +1930,21 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.beforeLeave', function () {
 
-      areStreamsStopped = true;
-      viewCleanup();
-      viewCleaned = true;
+      if ($rootScope.platformOS == 'ios') {
+        // we need to force a window stop thanks to the webkit streaming bug
+        areStreamsStopped = true;
+        $timeout (function() {NVRDataModel.stopNetwork();viewCleaned = true;});
+        
+        
+      } else {
 
+        areStreamsStopped = true;
+        viewCleanup();
+        viewCleaned = true;
+
+
+      }
+      
     });
 
     $scope.$on('$ionicView.unloaded', function () {
