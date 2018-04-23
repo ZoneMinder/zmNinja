@@ -42,7 +42,7 @@ angular.module('zmApp', [
 
   .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
-    recommendedAppVersion: '1.29',
+    recommendedAppVersion: '1.32.0',
     minEventServerVersion: '1.0',
     castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
