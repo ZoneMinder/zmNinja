@@ -934,7 +934,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $rootScope.authSession ;
         }
     
-      // console.log ("STREAM="+stream);
+       //console.log ("STREAM="+stream);
         return stream;
 
     };
