@@ -9,6 +9,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
   $scope.isMultiPort = isMultiPort;
   var areStreamsStopped = false;
   var viewCleaned = false;
+  $scope.isScreenReady = false;
+
   //--------------------------------------------------------------------------------------
   // Handles bandwidth change, if required
   //
@@ -175,10 +177,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
   /* Note this is also called when the view is first loaded */
   function footerCollapse() {
 
+    NVRDataModel.debug ("Inside footerCollapse");
     if (readyToRun == false) {
       NVRDataModel.debug("fake call to footerCollapse - ignoring");
       return;
     }
+
 
     if ($scope.MontageMonitors == undefined) {
       NVRDataModel.debug("montage array is undefined and not ready");
@@ -292,6 +296,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 // console.log ("Old value of event url " + $scope.MontageMonitors[j].eventUrl);
                 //console.log ("ldurl is " + ld.streamingurl);
                 var bw = NVRDataModel.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
+
                 $scope.MontageMonitors[j].Monitor.eventUrl = $scope.MontageMonitors[j].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + eid + "&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[j].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
                 //console.log ("Setting event URL to " +$scope.MontageMonitors[j].Monitor.eventUrl);
                 //   console.log ("SWITCHING TO " + $scope.MontageMonitors[j].eventUrl);
@@ -307,7 +312,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
               }
             }
-          }
+          }// for
+
         }
         // make sure we do our best to get that duration for all monitors
         // in the above call, is possible some did not make the cut in the first page
@@ -324,7 +330,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
           }
 
         }
-        $q.all(promises).then(doPackery);
+        $q.all(promises).then( function() {
+            $scope.isScreenReady = true;
+            $timeout (function() { doPackery();});
+           
+        }
+            
+        );
 
         // At this stage, we have both a general events grab, and specific event grabs for MIDS that were empty
 
@@ -334,6 +346,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
           NVRDataModel.debug("Re-creating packery and draggy");
         
             // remove current draggies
+            if (draggies) 
             draggies.forEach(function (drag) {
               drag.destroy();
             });
@@ -383,11 +396,15 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
               }
             }
             d.resolve(true);
+            
             return d.promise;
+
           },
           function (err) {
             d.resolve(true);
+     
             return d.promise;
+
           }
 
         );
@@ -596,7 +613,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             element.addClass('animated flipInX');
             $scope.MontageMonitors[ndx].Monitor.eventUrlTime = data.event.Event.StartTime;
             var bw = NVRDataModel.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
-            $scope.MontageMonitors[ndx].Monitor.eventUrl = $scope.MontageMonitors[ndx].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + data.event.Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[ndx].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
+
+            // you don't have to change url - its taken care of in cmd?
+            
+           // $scope.MontageMonitors[ndx].Monitor.eventUrl = $scope.MontageMonitors[ndx].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + data.event.Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[ndx].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
             $scope.MontageMonitors[ndx].Monitor.eid = data.event.Event.Id;
             $scope.MontageMonitors[ndx].Monitor.sliderProgress = {
               progress: 0
@@ -1045,6 +1065,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.showControls = true;
     $scope.packeryDone = false;
     readyToRun = false;
+    $scope.isScreenReady = false;
     // $scope.MontageMonitors = message;
 
 
@@ -1161,8 +1182,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
   var pckry;
   var draggies;
   var i;
-  var draggie;
   var loginData;
+  var draggie;
   var oldmonitors;
   var gridcontainer;
   var montageOrder, hiddenOrder;
@@ -1207,6 +1228,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     var stream;
     if (areStreamsStopped) return "";
+    //if (monitor.Monitor.isPaused) return "";
     stream = monitor.Monitor.eventUrl; //eventUrl already has all the foo
     //console.log("STREAM=" + stream);
     return stream;
@@ -1340,8 +1362,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     ld = NVRDataModel.getLogin();
 
     $timeout(function () {
-        initPackery();
+       // initPackery();
         readyToRun = true;
+        NVRDataModel.debug ("Calling footerCollapse from doInit");
         footerCollapse();
       }, zm.packeryTimer);
 

@@ -17,7 +17,7 @@
     <div class="timeline_text"> {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}} ({{humanizeTime(datetimeValueFrom.value)}})
       <div ng-if="!isMultiPort">({{'kChromeMax' | translate}})</div>
     </div>
-    <div class="grid" id="mygrid">
+    <div ng-if="isScreenReady" class="grid" id="mygrid">
       <div class="grid-sizer grid-item-10"></div>
       <!-- <span ng-repeat="monitor in MontageMonitors|limitTo: monLimit" ng- -->
       <span ng-repeat="monitor in MontageMonitors | onlyEnabledAndEventHas |limitTo: currentLimit">
