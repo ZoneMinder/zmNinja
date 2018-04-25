@@ -794,6 +794,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       NVRDataModel.debug("Montage History View Cleanup was already done, skipping");
       return;
     }
+    
+    
     $interval.cancel($rootScope.eventQueryInterval);
     if (pckry) pckry.destroy();
 
@@ -805,7 +807,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $timeout(function () {
 
       NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
-      for (i = 0; i < $scope.MontageMonitors.length; i++) {
+      for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noevent.png') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL,$scope.MontageMonitors[i].Monitor.Name);
 
       }
