@@ -334,6 +334,10 @@ angular.module('zmApp.controllers')
         var d = $q.defer();
           var as = 'undefined';
 
+          if (!mid && monitors.length > 0) {
+            mid = monitors[0].Monitor.Id;
+          }
+
           if (!mid) {
             log("Deferring auth key, as monitorId unknown");
             d.resolve("undefined");
