@@ -804,15 +804,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
     areStreamsStopped = true;
 
-    $timeout(function () {
+      $timeout(function () {
 
-      NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
-      for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-        if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noevent.png') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL,$scope.MontageMonitors[i].Monitor.Name);
+        NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
+        for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+          if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noevent.png') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL,$scope.MontageMonitors[i].Monitor.Name);
+  
+        }
+  
+      });
 
-      }
-
-    });
   }
 
   function onResume() {
@@ -861,7 +862,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     pckry.destroy();
     window.removeEventListener("resize", orientationChanged, false);
     //NVRDataModel.log("Forcing a window.stop() here");
-    NVRDataModel.stopNetwork("MontageHistory-beforeLeave");
+    //NVRDataModel.stopNetwork("MontageHistory-beforeLeave");
 
   });
   $scope.$on('$ionicView.unloaded', function () {});
@@ -1071,7 +1072,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // $scope.MontageMonitors = message;
 
 
-    isMultiPort = NVRDataModel.getCurrentServerMultiPortSupported();
+    isMultiPort = NVRDataModel.getCurrentServerMultiPortSupported() && !NVRDataModel.getLogin().disableSimulStreaming;
 
 
     // don't do this - we are simulstreaming in this view 
@@ -1351,7 +1352,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.LoginData = NVRDataModel.getLogin();
     $scope.monLimit = $scope.LoginData.maxMontage;
     $scope.currentLimit = $scope.LoginData.maxMontage;
-    if (!isMultiPort) {
+    ld = NVRDataModel.getLogin();
+
+    if (!isMultiPort ||  ld.disableSimulStreaming) {
 
       NVRDataModel.log("Limiting montage to 5, thanks to max connection  per domain limit");
       $scope.currentLimit = 5;
@@ -1361,7 +1364,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       NVRDataModel.log("You have multiport on, so no montage limits");
     }
 
-    ld = NVRDataModel.getLogin();
+ 
 
     $timeout(function () {
        // initPackery();

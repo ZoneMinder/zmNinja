@@ -107,7 +107,7 @@ angular.module('zmApp', [
     thumbWidth:200,
     alarmStatusTime: 10000,
     eventServerErrorDelay:5000, // time to wait till I report initial connect errors
-
+    zmVersionCheckNag: 15 * 24 // in hrs 
 
   })
 
@@ -916,7 +916,7 @@ angular.module('zmApp', [
 
     function doLogoutAndLogin(str) {
      return  NVRDataModel.logout()
-      .finally(function(ans) {
+      .then(function(ans) {
         doLogin(str);
 
       });

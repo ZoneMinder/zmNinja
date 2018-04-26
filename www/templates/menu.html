@@ -1,3 +1,4 @@
+<div ng-controller="MenuController">
 <ion-side-menus delegate-handle="sideMenu" ng-cloak>
     <ion-side-menu-content>
         <ion-nav-bar class="bar-stable nav-title-slide-ios7">
@@ -14,48 +15,50 @@
         <ion-content has-header="true" mouse-wheel-scroll>
             <!-- <ion-scroll scrollbar-y="false" style="height:100%" >-->
             <ion-list>
-                <ion-item href="#/app/montage" menu-close>
+                <ion-item ng-click="navigateView('app.montage')" menu-close>
                     <!--<span ng-if="$root.runMode=='lowbw'" style="float:right;margin-top:-18px;background-color:#f1c40f;color:#000;font-size:11px;opacity:0.7;width:20px;border-radius: 0px 0px 5px 5px;display:inline-block;text-align:center;">&nbsp;<i class="icon ion-arrow-graph-down-left"></i>&nbsp;</span>-->
                     <span class=" item-icon-left">
                         <i class="icon ion-grid"></i>
                     </span>{{'kMenuMontage'|translate}}
                 </ion-item>
                
-                <ion-item href="#/app/timeline" menu-close>
+                <ion-item ng-click="navigateView('app.timeline')" menu-close>
                     <span class=" item-icon-left">
                         <i class="icon ion-android-time"></i>
                     </span>{{'kMenuTimeline'|translate}}
                 </ion-item>
-                <ion-item href="#/app/events/0/false" menu-close>
+                <ion-item ng-click="navigateView('app.events', {id:0,playEvent:false})"  menu-close>
                     <span class=" item-icon-left">
                         <i class="icon ion-ios-calendar-outline"></i>
                     </span>{{'kMenuEvents'|translate}}
                 </ion-item>
 
-                <ion-item href="#/app/moment" menu-close>
+                <ion-item  ng-click="navigateView('app.moment')" menu-close>
                     <span class=" item-icon-left">
                         <i class="icon ion-star"></i>
                     </span>{{'kMoment24Heading'|translate}}
                 </ion-item>
 
-                 <ion-item href="#/app/montage-history" menu-close>
+                 <ion-item  ng-click="navigateView('app.montage-history')" menu-close>
                     <span class=" item-icon-left">
                         <i class="icon ion-ios-keypad-outline"></i>
                     </span>{{'kMenuEventMontage'|translate}}
                 </ion-item>
 
                 
-                <ion-item href="#/app/monitors" menu-close>
+                <ion-item ng-click="navigateView('app.monitors')" menu-close>
                     <span class=" item-icon-left">
                         <i class="icon ion-ios-videocam-outline"></i>
                     </span>{{'kMenuMonitors'|translate}}
                 </ion-item>
-                <ion-item href="#/app/state" menu-close>
+
+                <ion-item ng-click="navigateView('app.state')" menu-close>
                     <span class=" item-icon-left">
                         <i class="icon ion-information-circled"></i>
                     </span> {{'kMenuSystemStatus'|translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/login/false">
+
+                <ion-item nav-clear menu-close ng-click="navigateView('app.login', {wizard:false})" >
                     <span class=" item-icon-left">
                             <i class="icon ion-person"></i>
                             {{'kMenuZMSettings'|translate}}
@@ -65,36 +68,37 @@
                     <span style="float:right; margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;display:inline-block;text-align:center;">&nbsp;{{$root.getProfileName();}}&nbsp;</span>
                     </span>
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/devoptions">
+                <ion-item nav-clear menu-close ng-click="navigateView('app.devoptions')">
                     <span class=" item-icon-left">
                         <i class="icon ion-settings"></i>
                     </span> {{'kMenuDevSettings'|translate}}
                 </ion-item>
-                <div ng-controller="MenuController">
-                    <ion-item ng-click="switchLang()" nav-clear menu-close href="">
+               
+                    <ion-item ng-click="switchLang()" nav-clear menu-close>
                         <span class=" item-icon-left">
                         <i class="icon ion-earth"></i>
                     </span> {{'kLanguage'|translate}}
                     </ion-item>
-                </div>
-                <ion-item nav-clear menu-close href="#/app/help">
+               
+                <ion-item nav-clear menu-close ng-click="navigateView('app.help')" >
                     <span class=" item-icon-left">
                         <i class="icon ion-help"></i>
                     </span> {{'kMenuHelp'|translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/wizard">
+                <ion-item nav-clear menu-close ng-click="navigateView('app.wizard')" >
                     <span class=" item-icon-left">
                         <i class="icon ion-wand"></i>
                     </span> {{'kMenuWizard'|translate}}
                 </ion-item>
+
                 <div ng-if="$root.showBlog">
-                    <ion-item nav-clear menu-close href="#/app/news">
+                    <ion-item nav-clear menu-close ng-click="navigateView('app.news')" >
                         <span class=" item-icon-left">
                             <i class="icon ion-radio-waves"></i>
                         </span>{{'kMenuNews'|translate}}<span style="color:#268d3a;"> {{$root.newBlogPost}}</span>
                     </ion-item>
                 </div>
-                <ion-item nav-clear menu-close href="#/app/log">
+                <ion-item nav-clear menu-close ng-click="navigateView('app.log')" >
                     <span class=" item-icon-left">
                         <i class="icon ion-clipboard"></i>
                     </span> {{'kMenuLogs'|translate}}
@@ -123,3 +127,4 @@
         </ion-content>
     </ion-side-menu>
 </ion-side-menus>
+</div>

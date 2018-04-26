@@ -54,10 +54,18 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     // reset power state on exit as if it is called after we enter another
     // state, that effectively overwrites current view power management needs
     //------------------------------------------------------------------------
-    $scope.$on('$ionicView.enter', function()
+    $scope.$on('$ionicView.beforeEnter', function()
     {
         //console.log("**VIEW ** DevOptions Ctrl Entered");
         $scope.loginData = NVRDataModel.getLogin();
+        $scope.isMultiPort = false;
+        
+        NVRDataModel.getZmsMultiPortSupport()
+        .then (function (data) {
+            $scope.isMultiPort = (data == 0) ? false:true;
+            NVRDataModel.debug ("Multiport report:"+$scope.isMultiPort);
+        });
+        
 
         NVRDataModel.setAwake(false);
     });
@@ -73,8 +81,8 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     };
 
     $scope.checkMultiPortToggle = function() {
-        if ($rootScope.platformOS == 'ios')
-            $scope.loginData.disableSimulStreaming = true;
+      //  if ($rootScope.platformOS == 'ios')
+        //    $scope.loginData.disableSimulStreaming = true;
     };
     //------------------------------------------------------------------
     // Perform the login action when the user submits the login form
@@ -113,9 +121,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
             $scope.loginData.singleImageQuality = zm.safeImageQuality.toString();
         }
 
-        if (!$scope.loginData.disableSimulStreaming && $rootScope.platformOS=='ios') {
-            $scope.loginData.disableSimulStreaming = true;
-        }
+        
         NVRDataModel.debug("SaveDevOptions: Saving to disk");
         NVRDataModel.setLogin($scope.loginData);
         NVRDataModel.getMonitors(1);

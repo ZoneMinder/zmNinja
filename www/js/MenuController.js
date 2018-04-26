@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVRDataModel', '$rootScope', '$ionicPopup', '$translate', function($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVRDataModel, $rootScope, $ionicPopup, $translate)
+angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVRDataModel', '$rootScope', '$ionicPopup', '$translate', '$timeout', function($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVRDataModel, $rootScope, $ionicPopup, $translate, $timeout)
 {
     $scope.openMenu = function()
     {
@@ -13,6 +13,30 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
     // This controller sits along with the main app to  bring up 
     // the language menu from the main menu
     //----------------------------------------------------------------
+
+
+
+    $scope.navigateView = function(view,args) {
+
+        if (view == $state.current.name) return;
+        NVRDataModel.debug ("Navigating view to: " + view);
+        $ionicHistory.nextViewOptions({
+            disableBack: true
+          });
+          $state.go(view,args);
+
+        /*  $timeout (function() {
+            window.stop();
+            // after window stop executes, in next cycle
+            // this _should_ ensure stop concludes before
+            // exit/entry lifecycles kick in?
+            $timeout (function() {$state.go(view,args);});
+            
+          });*/
+          
+    };
+
+
     $scope.switchLang = function()
     {
         $scope.lang = NVRDataModel.getLanguages();
