@@ -952,14 +952,10 @@ angular.module('zmApp.controllers')
 
                   if (typeof loginData.disableSimulStreaming == 'undefined') {
                    
-                    loginData.disableSimulStreaming = false;
-                    
+                    loginData.disableSimulStreaming = ($rootScope.platformOS == 'ios')?true:false;
+                  
                   }
-                  // iOS it is always off, webkit bug
-
-                  if  ($rootScope.platformOS=='ios') {
-                    loginData.disableSimulStreaming = true;
-                }
+                  
 
                   if (typeof loginData.exitOnSleep == 'undefined') {
                     debug("exitOnSleep does not exist. Setting to false");
@@ -1253,17 +1249,25 @@ angular.module('zmApp.controllers')
         },
 
         stopNetwork: function (str) {
+          var d = $q.defer();
           var s = "";
           if (str) s = str + ":";
           if (justResumed) {
             // we don't call stop as we did stop on pause
             log(s + " Not calling window stop as we just resumed");
+            d.resolve (true);
+            return (d.promise);
             
           } else {
             log(s + " stopNework: Calling window.stop()");
-            $timeout (function() {window.stop();});
+            $timeout (function() {
+              window.stop();
+              d.resolve(true);
+              return (d.promise);
+            });
             
           }
+          return d.promise;
         },
 
         hasLoginInfo: function () {
@@ -2423,10 +2427,12 @@ angular.module('zmApp.controllers')
         },
 
         logout: function () {
+
+          var d = $q.defer();
           log (loginData.url +"=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "undefined";
 
-          return $http(
+           $http(
             {
                 method: 'POST',
                 timeout:10000,
@@ -2452,7 +2458,10 @@ angular.module('zmApp.controllers')
                     action: "logout",
                     view: "login"
                 }
-            });
+            })
+            .then (function (succ) {d.resolve(true);return d.promise;},
+                  function (err) {d.resolve(true);return d.promise;});
+            return d.promise;
         }
 
 
