@@ -1745,7 +1745,7 @@ angular.module('zmApp', [
             .then(function (succ) {
               //console.log ("FOUND  STATE" + JSON.stringify(succ) + ":"+succ);
               if (succ) {
-                if ( succ.name == 'app.invalidapi' || succ.name == 'app.refresh') {
+                if ( succ.name == 'app.invalidapi' || succ.name == 'app.refresh' || succ.name == 'app.importantmessage') {
                   succ.name = 'app.montage';
                 }
                 $rootScope.lastState = succ.name;

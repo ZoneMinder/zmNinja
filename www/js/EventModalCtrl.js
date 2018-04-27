@@ -1132,7 +1132,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
     $scope.modalImageLoaded = function() {
-        console.log ("MODAL IMAGE LOADED");
+       // console.log ("MODAL IMAGE LOADED");
       //  if (m.snapshot != 'enabled') currentStreamState = streamState.ACTIVE;
     };
 
@@ -1553,11 +1553,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         NVRDataModel.debug ("Asking nearest video EID using "+url);
         $http.get(url)
         .then ( function (succ) {
-            console.log ("GOT "+JSON.stringify(succ));
+           // console.log ("GOT "+JSON.stringify(succ));
 
         },
                 function (err) {
-                    console.log ("ERR GOT "+JSON.stringify(succ));
+                   // console.log ("ERR GOT "+JSON.stringify(succ));
                 }
         );
     }
@@ -1803,7 +1803,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     $scope.mName = NVRDataModel.getMonitorName(event.Event.MonitorId);
                     //console.log (">>>>>>>>HUMANIZE " + $scope.humanizeTime);
 
-                    console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
+                   // console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
                     if (typeof event.Event.DefaultVideo === 'undefined' || event.Event.DefaultVideo == '') {
                         event.Event.DefaultVideo = "";
                     }

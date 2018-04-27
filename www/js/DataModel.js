@@ -865,14 +865,15 @@ angular.module('zmApp.controllers')
                     var up = components.userinfo.split(':');
                     loginData.basicAuthPassword = up[1];
                     loginData.basicAuthUser = up[0];
-                    console.log ("SETTING "+loginData.basicAuthUser+" "+loginData.basicAuthPassword);
+                    //console.log ("SETTING "+loginData.basicAuthUser+" "+loginData.basicAuthPassword);
 
                   }
 
                   if (loginData.isUseBasicAuth) {
                     $rootScope.basicAuthHeader = 'Basic ' + btoa(loginData.basicAuthUser+':'+loginData.basicAuthPassword);
+                    debug ("Basic authentication detected, constructing Authorization Header");
 
-                    console.log ("BASIC AUTH SET TO:"+$rootScope.basicAuthHeader);
+                   // console.log ("BASIC AUTH SET TO:"+$rootScope.basicAuthHeader);
 
                   }
 
@@ -1703,10 +1704,11 @@ angular.module('zmApp.controllers')
           return $http.get(req+"&command=17")
           .then (
             function (s) {
-              debug ("kill success for ck:"+ck+" with:"+JSON.stringify(s));
+            //  debug ("kill success for ck:"+ck+" with:"+JSON.stringify(s));
               
             },
-            function (e) {debug ("kill success for ck:"+ck+" with:"+JSON.stringify(e));}
+            function (e) {//debug ("kill success for ck:"+ck+" with:"+JSON.stringify(e));
+            }
           );
         },
 

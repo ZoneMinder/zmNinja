@@ -238,6 +238,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                                     NVRDataModel.hrsSinceChecked("zmVersion")
                                     .then (function (val) {
+                                        NVRDataModel.debug ("ZM Version nag: Checking "+val+" with "+zm.zmVersionCheckNag);
                                         if (val >=zm.zmVersionCheckNag) {
                                             NVRDataModel.updateHrsSinceChecked("zmVersion");
                                             $state.go('app.importantmessage',
@@ -460,7 +461,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     
                                         NVRDataModel.hrsSinceChecked("zmVersion")
                                         .then (function (val) {
-                                             if (val >=24) {
+                                            
+                                            NVRDataModel.debug ("ZM Version nag: Checking "+val+" with "+zm.zmVersionCheckNag);
+                                             if (val >=zm.zmVersionCheckNag ) {
                                                 NVRDataModel.updateHrsSinceChecked("zmVersion");
                                                 $state.go('app.importantmessage',
                                                 {
