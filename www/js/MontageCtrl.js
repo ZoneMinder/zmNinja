@@ -708,7 +708,7 @@ angular.module('zmApp.controllers')
 
     $scope.isCycleOn = function() {
       return NVRDataModel.getLogin().cycleMontageProfiles;
-    }
+    };
 
     $scope.getCycleStatus = function () {
       var c = NVRDataModel.getLogin().cycleMontageProfiles;
