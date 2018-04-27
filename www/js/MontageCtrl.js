@@ -369,7 +369,7 @@ angular.module('zmApp.controllers')
             //NVRDataModel.log("Force calling resize");
             ///pckry.reloadItems();
             ///positions is defined only if layouttype was false
-            console.log(">>> Positions is " + JSON.stringify(positions));
+            //(">>> Positions is " + JSON.stringify(positions));
             if (!layouttype && positions) pckry.initShiftLayout(positions, "data-item-id");
             // now do a jiggle 
             $timeout(function () {
@@ -1751,9 +1751,7 @@ angular.module('zmApp.controllers')
       $scope.monitors = NVRDataModel.getMonitorsNow();
       $scope.MontageMonitors = angular.copy($scope.monitors);
 
-      for (var ck = 0; ck < $scope.MontageMonitors.length; ck++) {
-        console.log("Monitor: " + $scope.MontageMonitors[ck].Monitor.Name + " Connkey:" + $scope.MontageMonitors[ck].Monitor.connKey);
-      }
+     
 
       $scope.singleMonitorModalOpen = false;
       // $scope.minimal = $stateParams.minimal;

@@ -1028,7 +1028,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     function drawGraph(fromDate, toDate, count)
     {
 
-        console.log("INSIDE DRAW");
+       // console.log("INSIDE DRAW");
 
         $scope.newEvents = "";
         // we only need this for day mode
@@ -1289,7 +1289,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                                 }
                             }
 
-                            console.log(">>>>> CREATING NEW TIMELINE with " + JSON.stringify(options));
+                          //  console.log(">>>>> CREATING NEW TIMELINE with " + JSON.stringify(options));
                             timeline = new vis.Timeline(container[0], null, options);
                             // console.log ("GRAPH DATA");
                             timeline.setItems(graphData);

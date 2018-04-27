@@ -94,7 +94,7 @@ angular.module('zmApp.controllers')
     $scope.$on('$ionicView.afterEnter', function()
     {
        
-        console.log ("********* AFTER ENTER");
+       // console.log ("********* AFTER ENTER");
         //
         $ionicListDelegate.canSwipeItems(true);
         NVRDataModel.debug ("enabling options swipe");
@@ -178,7 +178,7 @@ angular.module('zmApp.controllers')
         $scope.id = parseInt($stateParams.id, 10);
         $scope.showEvent = $stateParams.playEvent || false;
 
-        console.log("BEFORE ENTER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        //console.log("BEFORE ENTER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
         NVRDataModel.log("EventCtrl called with: E/MID=" + $scope.id + " playEvent =  " + $scope.showEvent);
 
@@ -703,7 +703,7 @@ angular.module('zmApp.controllers')
 
     function writeFile(path, __filename, __data){
         var d = $q.defer();
-        console.log ("inside write file");
+        //console.log ("inside write file");
         window.requestFileSystem(LocalFileSystem.TEMPORARY, __data.size+5000, onFileSystemSuccess, fail);
 
         function fail(e)
@@ -731,16 +731,16 @@ angular.module('zmApp.controllers')
                   break;
               }
 
-              console.log('Error: ' + msg);
+              //console.log('Error: ' + msg);
         }
         function onFileSystemSuccess()
         {
-            console.log ("Got temporary FS");
+           // console.log ("Got temporary FS");
             window.resolveLocalFileSystemURL(path, function(dir){
                 dir.getFile(__filename, {create:true}, function(file){            
                     file.createWriter(function(fileWriter){
                         //var blob = new Blob([__data], {type:'text/plain'});
-                        console.log ("about to write "+__data.size+" bytes");
+                       // console.log ("about to write "+__data.size+" bytes");
                         //var blob = new Blob([__data], {type:'text/plain'});
                         fileWriter.write(__data);
                         fileWriter.onwrite = function(e) {
@@ -798,7 +798,7 @@ angular.module('zmApp.controllers')
 
             function onError(error)
             {
-                console.log("Error: " + error);
+               // console.log("Error: " + error);
 
             }
         }
@@ -880,7 +880,7 @@ angular.module('zmApp.controllers')
 
             function onError(error)
             {
-                console.log("Error: " + error);
+                //console.log("Error: " + error);
 
             }
         }
@@ -1314,7 +1314,7 @@ angular.module('zmApp.controllers')
         else
         {
 
-            console.log("in perms");
+            //console.log("in perms");
             cordova.plugins.photoLibrary.getLibrary(
                 function(library)
                 {
@@ -1476,7 +1476,7 @@ angular.module('zmApp.controllers')
                             noBackdrop: true
                         });
 
-                        console.log("URL=" + frame);
+                       // console.log("URL=" + frame);
                         URL.revokeObjectURL(img.src);
                         ctx.drawImage(img, 0, 0);
 
@@ -1592,14 +1592,14 @@ angular.module('zmApp.controllers')
                                     writeFile2(tp,"temp-file.gif",blob,false)
                                     .then (function (succ) {
                                         NVRDataModel.debug ("write to file successful");
-                                        console.log( "write file successful");
+                                      //  console.log( "write file successful");
                                         $ionicLoading.hide();
 
                                         var ntp = tp;
                                         //ntp = tp.indexOf('file://') === 0 ? tp.slice(7) : tp;
 
                                          ntp = ntp+"temp-file.gif";
-                                        console.log ("ntp="+ntp);
+                                       // console.log ("ntp="+ntp);
 
                                         moveImageToGallery(ntp);
                                         $rootScope.isDownloading = false;
@@ -1643,7 +1643,7 @@ angular.module('zmApp.controllers')
             .then(function(imgs)
                 {
 
-                    console.log("TOTAL IMAGES TO GIF=" + imgs.length);
+                   // console.log("TOTAL IMAGES TO GIF=" + imgs.length);
                     //console.log(JSON.stringify(imgs));
 
                     var ad = adjustAspect(e);
@@ -2462,7 +2462,7 @@ angular.module('zmApp.controllers')
                 else
                     videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
 
-                console.log("************** VIDEO IS " + videoURL);
+            //    console.log("************** VIDEO IS " + videoURL);
                 event.Event.video.config = {
                     autoPlay: true,
                     sources: [

@@ -16,7 +16,7 @@ angular.module('zmApp.controllers').controller('zmApp.RefreshCtrl', ['$scope', '
     {
         //console.log("**VIEW ** LowVersion Ctrl Entered");
         $ionicSideMenuDelegate.canDragContent(false);
-        console.log ("jumping to: "+$stateParams.view);
+        //console.log ("jumping to: "+$stateParams.view);
         $ionicHistory.nextViewOptions({
             disableAnimate: true,
             disableBack: true

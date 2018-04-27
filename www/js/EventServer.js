@@ -113,7 +113,7 @@ angular.module('zmApp.controllers')
             //if (!$rootScope.apnsToken)
             if (!pushInited) pushInit();
 
-            console.log ("WS TYPEOF="+ typeof ws);
+           // console.log ("WS TYPEOF="+ typeof ws);
            // console.log ("WS="+JSON.stringify(ws));
             if (typeof ws !== 'undefined')
             {
@@ -361,7 +361,7 @@ angular.module('zmApp.controllers')
                 return;
             }
 
-            console.log (">>>>>>>>>>>>>>>>>EVENT SERVER SENDING: type="+type+" DATA="+JSON.stringify(obj));
+           // console.log (">>>>>>>>>>>>>>>>>EVENT SERVER SENDING: type="+type+" DATA="+JSON.stringify(obj));
             ws.send({
                 'event':type, 
                 'data': obj
