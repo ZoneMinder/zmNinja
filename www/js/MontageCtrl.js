@@ -604,7 +604,7 @@ angular.module('zmApp.controllers')
 
     function loadNotifications() {
       if (simulStreaming) {
-        console.log ("Skipping timer as simulStreaming");
+       // console.log ("Skipping timer as simulStreaming");
         return;
       }
 
@@ -704,6 +704,10 @@ angular.module('zmApp.controllers')
           },100);
         }
       }, 20);
+    }
+
+    $scope.isCycleOn = function() {
+      return NVRDataModel.getLogin().cycleMontageProfiles;
     }
 
     $scope.getCycleStatus = function () {
@@ -1460,12 +1464,12 @@ angular.module('zmApp.controllers')
       //console.log ("NEW POS="+ld.packeryPositions);
       NVRDataModel.setLogin(ld);
 
-      currentStreamState = streamState.STOPPED;
+      
       $timeout(function () { // after render
 
 
         if (simulStreaming) {
-
+          currentStreamState = streamState.STOPPED;
           NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
 
           if ($rootScope.platformOS == 'ios') {
@@ -1492,6 +1496,14 @@ angular.module('zmApp.controllers')
           });
          
 
+        }
+        else {
+          NVRDataModel.regenConnKeys();
+            $scope.monitors = NVRDataModel.getMonitorsNow();
+            $scope.MontageMonitors = angular.copy($scope.monitors);
+            $timeout(function () {
+              initPackery();
+            }, zm.packeryTimer);
         }
 
 

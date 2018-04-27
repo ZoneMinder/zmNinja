@@ -47,7 +47,7 @@
                         <a href="" ng-click="squeezeMonitors()"> <i class="ion-android-apps"></i></a>
                     </li>
 
-                        <li ng-if="!isDragabillyOn">
+                        <li ng-style="{'background-color': isCycleOn()?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}" ng-if="!isDragabillyOn">
                             <a href="" ng-click="toggleCycle()"> <i class="ion-android-bicycle"></i>:{{getCycleStatus()}}</a>
                         </li>
                     
