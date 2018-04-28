@@ -115,13 +115,13 @@ angular.module('zmApp.controllers')
 
            // console.log ("WS TYPEOF="+ typeof ws);
            // console.log ("WS="+JSON.stringify(ws));
-            if (typeof ws !== 'undefined')
+            /*if (typeof ws !== 'undefined')
             {
                 NVRDataModel.debug("websocket already initialized --Forcing close");
                 ws.close(true);
                 ws=undefined;
                 
-            }
+            }*/
 
             NVRDataModel.log("Initializing Websocket with URL " +
                 loginData.eventServer );
@@ -152,18 +152,37 @@ angular.module('zmApp.controllers')
             
                 NVRDataModel.debug("Websocket Errorhandler called");
 
-                $timeout(function()
-                {
-                    var eserr = $translate.instant('kEventServerConnErr');
-                    NVRDataModel.displayBanner('error', [eserr]);
-                }, 1000); // leave time for transitions
+                var timeElapsedSinceResume = NVRDataModel.getTimeSinceResumed();
+
+                if (timeElapsedSinceResume == -1 ) {
+                    // so we display error 
+                    timeElapsedSinceResume = moment().subtract('1',hour);
+                }
+
+                var duration = moment.duration(moment().diff(timeElapsedSinceResume)).asSeconds().toFixed(1);
+
+                NVRDataModel.debug (">> time since resumed is "+duration+" seconds");
+
+                if (duration > zm.waitTimeTillResume) {
+
+                    $timeout(function()
+                    {
+                        var eserr = $translate.instant('kEventServerConnErr');
+                        NVRDataModel.displayBanner('error', [eserr]);
+                    }, 1000); // leave time for transitions
+                    
+                }
+                else {
+                    NVRDataModel.debug ("ES error happened "+timeElapsedSinceResume+" secs after resume, maybe fake, lets wait...");
+                }
+
                 
              
-                if (typeof ws !== 'undefined'){
+                /*if (typeof ws !== 'undefined'){
                     NVRDataModel.debug ("-->Forcing socket close");
                     ws.close(true);
 
-                }
+                }*/
                     
                 ws = undefined;
             

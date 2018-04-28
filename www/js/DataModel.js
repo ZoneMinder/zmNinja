@@ -20,7 +20,9 @@ angular.module('zmApp.controllers')
       var zmAppVersion = "unknown";
       var isBackground = false;
       var justResumed = false;
+      var timeSinceResumed = -1;
       var monitorsLoaded = 0;
+   
 
       //var montageSize = 3;
       var monitors = [];
@@ -1247,6 +1249,12 @@ angular.module('zmApp.controllers')
 
         setJustResumed: function (val) {
           justResumed = val;
+          if (val) { timeSinceResumed =  moment();}
+         },
+
+        getTimeSinceResumed: function () {
+          // will be -1 if never resumed
+            return timeSinceResumed;
         },
 
         stopNetwork: function (str) {
