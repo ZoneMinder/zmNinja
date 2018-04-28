@@ -803,6 +803,13 @@ angular.module('zmApp.controllers')
             }
         }
 
+    $scope.readyToPlay = function(api) {
+        
+        api.mediaElement.attr("playsinline", "");
+
+
+    };
+
     $scope.downloadFileToDevice = function(path, eid)
     {
 
@@ -2457,10 +2464,10 @@ angular.module('zmApp.controllers')
                 var videoURL;
 
                 //if (event.Event.imageMode == 'path')
-                if (1)
-                    videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
-                else
-                    videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
+               
+                   /* videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;*/
+                   videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
+              
 
             //    console.log("************** VIDEO IS " + videoURL);
                 event.Event.video.config = {
