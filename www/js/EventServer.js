@@ -347,8 +347,10 @@ angular.module('zmApp.controllers')
                 return;
             }
                 
-            NVRDataModel.log("Disconnecting and deleting Event Server socket...");
+            NVRDataModel.log("Clearing error/close cbk, disconnecting and deleting Event Server socket...");
            // ws.$close();
+           ws.onErrorCallbacks = [];
+           ws.onCloseCallbacks = [];
            ws.close(true); // force close
            // ws.$un('open');
            // ws.$un('close');
