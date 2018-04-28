@@ -183,7 +183,7 @@
         </a>
       </li>
 
-      <li ng-if="isToggleListMenu">
+      <li ng-if="isToggleListMenu" ng-style="{'background-color': isCycle?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}" >
         <a href="" ng-click="toggleCycle()">
           <i class="icon  ion-android-bicycle"></i>-{{cycleText}}</a>
       </li>
