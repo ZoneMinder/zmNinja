@@ -1233,8 +1233,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     if (areStreamsStopped) return "";
     //if (monitor.Monitor.isPaused) return "";
     stream = monitor.Monitor.eventUrl; //eventUrl already has all the foo
-    //console.log("STREAM=" + stream);
+   
     stream += NVRDataModel.insertBasicAuthToken();
+   // console.log("STREAM=" + stream);
     return stream;
 
   };
