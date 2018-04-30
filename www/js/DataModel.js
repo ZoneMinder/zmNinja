@@ -333,7 +333,51 @@ angular.module('zmApp.controllers')
 
 
       function getAuthKey (mid,ck) {
+
         var d = $q.defer();
+        var myurl;
+
+        // disable for now, getAuthHash needs work
+
+        if (versionCompare(currentServerVersion, "1.31.41") != -1 ) {
+          
+          myurl = loginData.apiurl+'/host/getAuthKey.json';
+          debug ("Server version > 1.31.41, so using AuthHash API:"+myurl);
+          $http.get(myurl) 
+          .then (function (s) {
+
+            console.log ("GOT " + JSON.stringify(s));
+            if (!s.data || !s.data.auth_key ) {
+              $rootScope.authSession = "undefined";
+              d.resolve($rootScope.authSession);
+              debug ("AuthHash API Succeded, but did NOT return auth_key key: "+JSON.stringify(s));
+              return d.promise;
+               
+            }
+            else {
+              $rootScope.authSession = "&"+s.data.auth_key;
+              if (s.data.append_password=='1') {
+                $rootScope.athSession = $rootScope.authSession + 
+                loginData.password;
+              }
+              d.resolve($rootScope.authSession);
+              return d.promise;
+            }
+            
+          },
+          function(e) {
+            $rootScope.authSession = "undefined";
+            d.resolve($rootScope.authSession);
+            debug ("AuthHash API Error: "+JSON.stringify(e));
+            return d.promise;
+            
+          }
+        );
+        return d.promise;
+          
+        }
+        //currentServerVersion
+       
           var as = 'undefined';
 
           if (!mid && monitors.length > 0) {
@@ -349,7 +393,7 @@ angular.module('zmApp.controllers')
 
           // Skipping monitor number as I only need an auth key
           // so no need to generate an image
-          var myurl = loginData.url + "/index.php?view=watch&mid=" + mid ;
+           myurl = loginData.url + "/index.php?view=watch&mid=" + mid ;
           debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
           $http.get(myurl)
             .then(function (success) {
