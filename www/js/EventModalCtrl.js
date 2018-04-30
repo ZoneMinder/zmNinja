@@ -1919,6 +1919,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     else
                         videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
 
+                        if ($rootScope.authSession != 'undefined') videoURL +=$rootScope.authSession;
+                        if ($rootScope.basicAuthToken) videoURL = videoURL+"&basicauth="+$rootScope.basicAuthToken;
+                    
                     // hack
                     //videoURL = "http://static.videogular.com/assets/videos/videogular.mp4";
                     
