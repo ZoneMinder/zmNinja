@@ -225,6 +225,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   //----------------------------------
   // toggles monitor cycling
   //----------------------------------
+
   $scope.toggleCycle = function () {
     //console.log ("HERE");
     $scope.isCycle = !$scope.isCycle;
@@ -1079,8 +1080,17 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var canvas, context, imageDataUrl, imageData;
     var loginData = NVRDataModel.getLogin();
     var url = loginData.streamingurl +
-      '/zms?mode=single&monitor=' + mid +
-      $rootScope.authSession;
+      '/zms?mode=single&monitor=' + mid;
+
+      if ($rootScope.authSession !='undefined'){
+        url +=$rootScope.authSession;
+       
+     } 
+     if ($rootScope.basicAuthToken) {
+         url +="&basicauth="+$rootScope.basicAuthToken;
+       
+     } 
+
     NVRDataModel.log("SavetoPhone:Trying to save image from " + url);
 
     var img = new Image();
@@ -1142,6 +1152,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                     appendSingleStreamConnKey();
                 
         //console.log ("STREAM="+stream);
+
+        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
 
         return stream;
 

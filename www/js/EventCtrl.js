@@ -960,6 +960,17 @@ angular.module('zmApp.controllers')
 
         //$rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
 
+        if ($rootScope.authSession !='undefined'){
+            $scope.imgsrc +=$rootScope.authSession;
+            $scope.fallbackImgSrc +=$rootScope.authSession;
+        } 
+
+        if ($rootScope.basicAuthToken) {
+            $scope.imgsrc +="&basicauth="+$rootScope.basicAuthToken;
+            $scope.fallbackImgSrc +="&basicauth="+$rootScope.basicAuthToken;
+        } 
+
+
         $rootScope.zmPopup = $ionicPopup.show(
         {
             template: '<center>' + $translate.instant('kFrame') + ':{{parray[ndx].frameid}}@{{prettifyTimeSec(parray[ndx].time)}}</center><br/><img ng-src="{{imgsrc}}" fallback-src="{{fallbackImgSrc}}" width="100%"  />',
@@ -3137,6 +3148,61 @@ angular.module('zmApp.controllers')
     {
         loadMore();
 
+    };
+
+    $scope.constructThumbnail = function(event) {
+        var stream = "";
+        stream = event.Event.baseURL+
+        "/index.php?view=image&fid=" +event.Event.MaxScoreFrameId +
+        "&width="+event.Event.thumbWidth*2 +
+        "&height="+event.Event.thumbHeight*2;
+        if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
+        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+        return stream;
+      
+    };
+
+    $scope.constructScrubFrame = function (event,slide) {
+
+        var stream = "";
+        if (event.Event.imageMode=='path') {
+            stream = event.Event.baseURL+"/index.php?view=image"+
+                "&path="+event.Event.relativePath+slide.img+"&height=380";
+
+        }
+        else if (event.Event.imageMode == 'fid') {
+            stream = event.Event.baseURL+"/index.php?view=image"+
+            "&fid="+slide.id;
+        }
+        if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
+        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+        
+        return stream;
+    }
+
+    $scope.constructAlarmFrame = function(event, alarm, motion) {
+        var stream = "";
+
+        if (event.Event.imageMode=='fid') {
+            stream = event.Event.baseURL+
+            "/index.php?view=image&fid=" +alarm.id;
+            if (motion) stream+=$scope.outlineMotionParam;
+
+        }
+        else if (event.Event.imageMode=='path') {
+            st
+            ream = event.Event.baseURL+
+            "/index.php?view=image&path=" +event.Event.relativePath +
+            motion? alarm.aname:alarm.fname +
+            "&height=380";
+
+
+        }
+        if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
+        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+        
+        return stream;
+      
     };
 
     $scope.toggleMinAlarmFrameCount = function()

@@ -102,7 +102,7 @@
               <!--  ng-image-appear transition-duration="0.5s" animation="fillIn" bg-color="#50a4e2"  {{event.Event.thumbWidth}}X{{event.Event.thumbHeight}}-->
 
               <img ng-image-appear transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" width="{{event.Event.thumbWidth}}px"
-                height="{{event.Event.thumbHeight}}px" ng-src="{{event.Event.baseURL}}/index.php?view=image&fid={{event.Event.MaxScoreFrameId}}&width={{event.Event.thumbWidth*2}}&height={{event.Event.thumbHeight*2}}"
+                height="{{event.Event.thumbHeight}}px" ng-src="{{constructThumbnail(event)}}"
                 on-tap="closeIfOpen(event);openModalWithSnapshot(event)" />
               <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
 
@@ -171,15 +171,12 @@
                         <span translate="kFrame"></span>:{{alarm.frameid}},
                         <span translate="kScore"></span>:{{alarm.score}},
                         <span translate="kTime"></span>: {{prettifyTimeSec(alarm.time)}}</figcaption>
-                      <img ng-if="event.Event.imageMode=='path'" ng-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{outlineMotion? alarm.aname:alarm.fname}}&height=380"
-                        fallback-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{alarm.fname}}&height=380"
+                      <img ng-src="{{constructAlarmFrame(event,alarm,true)}}" 
+                        fallback-src="{{constructAlarmFrame(event,alarm,false)}}"
                         style="width: auto; height: auto;max-width: 100%;max-height: 170px" on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.frameid, event.Event.Id, event.Event.imageMode, alarm.id, alarm_images, $index)"
                       />
 
-                      <img ng-if="event.Event.imageMode=='fid'" ng-src="{{event.Event.baseURL}}/index.php?view=image&fid={{alarm.id}}{{outlineMotionParam}}"
-                        fallback-src="{{event.Event.baseURL}}/index.php?view=image&fid={{alarm.id}}" style="width: auto; height: auto;max-width: 100%;max-height: 170px"
-                        on-tap="showImage(event.Event.baseURL,event.Event.relativePath,alarm.fname, alarm.frameid, event.Event.Id, event.Event.imageMode, alarm.id, alarm_images, $index)"
-                      />
+                
                     </figure>
                   </span>
                 </ion-scroll>
@@ -202,10 +199,9 @@
                   <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true" rn-carousel-index="mycarousel.index"
                     rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover rn-platform="{{$root.platformOS}}">
                     <li ng-repeat="slide in slides">
-                      <img ng-if="event.Event.imageMode=='path'" imageonload="finishedLoadingImage($index)" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&path={{event.Event.relativePath}}{{slide.img}}&height=380"
+                      <img imageonload="finishedLoadingImage($index)" image-spinner-src="{{constructScrubFrame(event,slide)}}"
                         image-spinner-loader="lines" height="190px" ;/>
-                      <img ng-if="event.Event.imageMode=='fid'" imageonload="finishedLoadingImage($index)" image-spinner-src="{{event.Event.baseURL}}/index.php?view=image&fid={{slide.id}}"
-                        image-spinner-loader="lines" height="190px" ;/>
+                    
                       <br/>
                     </li>
                   </ul>
