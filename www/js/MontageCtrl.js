@@ -706,6 +706,18 @@ angular.module('zmApp.controllers')
       }, 20);
     }
 
+
+    $scope.reorderFrame = function (item) {
+        var frame =  "";
+        frame = item.Monitor.streamingURL+"/nph-zms?mode=single" +
+                "&monitor="+item.Monitor.Id +
+                "&scale=50";
+
+        if ($rootScope.authSession!='undefined') frame+=$rootScope.authSession;
+        frame += NVRDataModel.insertBasicAuthToken();
+                return frame;
+    };
+
     $scope.isCycleOn = function() {
       return NVRDataModel.getLogin().cycleMontageProfiles;
     };
