@@ -64,7 +64,8 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
         }
         if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
-        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+
+       stream+=  NVRDataModel.insertBasicAuthToken();
         return stream;
     };
 

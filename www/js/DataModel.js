@@ -183,6 +183,7 @@ angular.module('zmApp.controllers')
         'momentArrangeBy': 'StartTime',
         'showLiveForInProgressEvents': true,
         'disableSimulStreaming': false,
+        'insertBasicAuthToken': false,
 
 
       };
@@ -589,6 +590,14 @@ angular.module('zmApp.controllers')
 
 
       return {
+
+
+        insertBasicAuthToken: function () {
+
+          return loginData.insertBasicAuthToken && $rootScope.basicAuthToken ? "&basicauth="+$rootScope.basicAuthToken:"";
+
+        },
+
         setCurrentServerMultiPortSupported:function (val) {
           setCurrentServerMultiPortSupported(val);
         },
@@ -1256,6 +1265,12 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.momentArrangeBy == 'undefined') {
 
                     loginData.momentArrangeBy = "StartTime";
+
+                  }
+
+                  if (typeof loginData.insertBasicAuthToken == 'undefined') {
+
+                    loginData.insertBasicAuthToken = false;
 
                   }
                   

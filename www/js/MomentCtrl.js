@@ -265,7 +265,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
            "&height="+moment.Event.thumbHeight*2;
 
     if ($rootScope.authSession != 'undefined') stream +=$rootScope.authSession;
-    if ($rootScope.basicAuthToken) stream = stream+"&basicauth="+$rootScope.basicAuthToken;
+    stream += NVRDataModel.insertBasicAuthToken();
     return stream;
 
   };

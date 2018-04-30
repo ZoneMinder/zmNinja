@@ -1086,10 +1086,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         url +=$rootScope.authSession;
        
      } 
-     if ($rootScope.basicAuthToken) {
-         url +="&basicauth="+$rootScope.basicAuthToken;
-       
-     } 
+     url += NVRDataModel.insertBasicAuthToken();
 
     NVRDataModel.log("SavetoPhone:Trying to save image from " + url);
 
@@ -1153,8 +1150,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 
         //console.log ("STREAM="+stream);
 
-        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
-
+        stream += NVRDataModel.insertBasicAuthToken();
         return stream;
 
 

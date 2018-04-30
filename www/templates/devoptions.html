@@ -155,13 +155,19 @@
                 </ion-toggle>
             </label>
 
+            <label>
+                <ion-toggle ng-model="loginData.insertBasicAuthToken" ng-checked="loginData.insertBasicAuthToken" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kInsertBasicAuthToken' | translate}}
+                    <p>{{'kInsertBasicAuthTokenNote' | translate}}</p></span>
+                </ion-toggle>
+            </label>
+
             <label ng-if="isMultiPort">
                     <ion-toggle ng-model="loginData.disableSimulStreaming" ng-checked="loginData.disableSimulStreaming"
                     ng-change="checkMultiPortToggle()" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableSimulStreaming' | translate}}
                     <p ng-if="$root.platformOS=='ios'">{{'kDisableSimulStreamingNote' | translate}}</p>
                       </span>
                     </ion-toggle>
-                </label>
+            </label>
 
             <label>
                 <ion-toggle ng-model="loginData.enableLogs" ng-checked="{{loginData.enableLogs}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableLogs' | translate}}</span></ion-toggle>
