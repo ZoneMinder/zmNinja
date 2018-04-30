@@ -8,14 +8,10 @@
     </ion-header-bar>
     <ion-content>
         <div class="list">
-            <span ng-repeat="item in copyMontage">
-
-                    
-             
-                    
+            <span ng-repeat="item in copyMontage">     
                     <a ng-class="{ 'item  item-avatar item-icon-right' :  item.Monitor.listDisplay == 'show', 'item  item-avatar item-icon-right eye-background-red' : item.Monitor.listDisplay!='show' }"  ng-click="toggleHide($index)" href="" >
 
-                        <img src="{{item.Monitor.streamingURL}}/nph-zms?mode=single&monitor={{item.Monitor.Id}}&scale=50{{$root.authSession}}"  fallback-src />
+                        <img src="{{reorderFrame(item)}}"  fallback-src />
 
                         <i ng-class="{'icon ion-eye':item.Monitor.listDisplay=='show','eye-red icon ion-eye-disabled':item.Monitor.listDisplay!='show'}"> </i><h2><span ng-class="{'eye-red':item.Monitor.listDisplay!='show'}">{{item.Monitor.Name}}</span></h2><p>{{'kId' | translate}}:{{item.Monitor.Id}}, {{'kMode' | translate}}:{{item.Monitor.Function}}</p>
                        
