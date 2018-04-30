@@ -339,7 +339,7 @@ angular.module('zmApp.controllers')
 
         // disable for now, getAuthHash needs work
 
-        if (versionCompare(currentServerVersion, "1.31.41") != -1 ) {
+     /*   if (versionCompare(currentServerVersion, "1.31.41") != -1 ) {
           
           myurl = loginData.apiurl+'/host/getAuthKey.json';
           debug ("Server version > 1.31.41, so using AuthHash API:"+myurl);
@@ -375,7 +375,7 @@ angular.module('zmApp.controllers')
         );
         return d.promise;
           
-        }
+        }*/
         //currentServerVersion
        
           var as = 'undefined';
