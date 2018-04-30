@@ -553,10 +553,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     if (!$scope.loginData.isUseBasicAuth) {
       $rootScope.basicAuthHeader = '';
+      $rootScope.basicAuthToken = '';
      // console.log ("CLEARING AUTH");
     }
     else {
-      $rootScope.basicAuthHeader = 'Basic ' + btoa($scope.loginData.basicAuthUser+':'+$scope.loginData.basicAuthPassword);
+      $rootScope.basicAuthToken = btoa($scope.loginData.basicAuthUser+':'+$scope.loginData.basicAuthPassword);
+      $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken ;
 
     }
 

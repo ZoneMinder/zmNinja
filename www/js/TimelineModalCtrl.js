@@ -49,6 +49,25 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         }
     };
 
+
+    $scope.constructFrames = function (event,alarm) {
+
+        var stream = "";
+        if (event.Event.imageMode=='path') {
+            stream = event.Event.baseURL + "/index.php?view=image" +
+                    "&path="+event.Event.relativePath+alarm.fname +
+                    "&height=380";
+        }
+        else if (event.Event.imageMode == 'fid') {
+            stream = event.Event.baseURL + "/index.php?view=image" +
+                    "&fid="+alarm.id;
+
+        }
+        if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
+        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+        return stream;
+    };
+
     //-------------------------------------------------------
     // we use this to reload the connkey if authkey changed
     //------------------------------------------------------

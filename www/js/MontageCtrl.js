@@ -1713,6 +1713,10 @@ angular.module('zmApp.controllers')
         "&buffer=1000" +
         $rootScope.authSession +
         appendConnKey(monitor.Monitor.connKey);
+      
+        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+
+      
 //"&rand=" + randToAvoidCacheMem;
       //"&rand="+$scope.randToAvoidCacheMem +
       

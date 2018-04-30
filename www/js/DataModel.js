@@ -882,6 +882,7 @@ angular.module('zmApp.controllers')
                     loginData.basicAuthUser = '';
                     loginData.basicAuthPassword = '';
                     $rootScope.basicAuthHeader='';
+                    $rootScope.basicAuthToken='';
                   }
 
                   if (loginData.url.indexOf('@') != -1) {
@@ -905,7 +906,8 @@ angular.module('zmApp.controllers')
                     if (components.port) loginData.apiurl = loginData.apiurl + ":" + components.port;
                     if (components.path) loginData.apiurl = loginData.apiurl + components.path;
                     
-                    $rootScope.basicAuthHeader = 'Basic ' + btoa(components.userinfo);
+                    $rootScope.basicAuthToken = btoa(components.userinfo);
+                    $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken;
                     //console.log (">>>> SET BASIC AUTH TO  " + $rootScope.basicAuthHeader);
 
                     var up = components.userinfo.split(':');
@@ -916,7 +918,8 @@ angular.module('zmApp.controllers')
                   }
 
                   if (loginData.isUseBasicAuth) {
-                    $rootScope.basicAuthHeader = 'Basic ' + btoa(loginData.basicAuthUser+':'+loginData.basicAuthPassword);
+                    $rootScope.basicAuthToken = btoa(loginData.basicAuthUser+':'+loginData.basicAuthPassword);
+                    $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken;
                     debug ("Basic authentication detected, constructing Authorization Header");
 
                    // console.log ("BASIC AUTH SET TO:"+$rootScope.basicAuthHeader);
