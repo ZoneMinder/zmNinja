@@ -965,10 +965,10 @@ angular.module('zmApp.controllers')
             $scope.fallbackImgSrc +=$rootScope.authSession;
         } 
 
-        if ($rootScope.basicAuthToken) {
-            $scope.imgsrc +="&basicauth="+$rootScope.basicAuthToken;
-            $scope.fallbackImgSrc +="&basicauth="+$rootScope.basicAuthToken;
-        } 
+      
+         $scope.imgsrc +=NVRDataModel.insertBasicAuthToken();
+         $scope.fallbackImgSrc +=NVRDataModel.insertBasicAuthToken();
+       
 
 
         $rootScope.zmPopup = $ionicPopup.show(
@@ -2479,9 +2479,9 @@ angular.module('zmApp.controllers')
                    /* videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;*/
                    videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
                    if ($rootScope.authSession != 'undefined') videoURL +=$rootScope.authSession;
-                   if ($rootScope.basicAuthToken) videoURL = videoURL+"&basicauth="+$rootScope.basicAuthToken;
-              
-
+                   vidoeURL+=NVRDataModel.insertBasicAuthToken();
+                
+    
                console.log("************** VIDEO IS " + videoURL);
                 event.Event.video.config = {
                     autoPlay: true,
@@ -3159,7 +3159,8 @@ angular.module('zmApp.controllers')
         "&width="+event.Event.thumbWidth*2 +
         "&height="+event.Event.thumbHeight*2;
         if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
-        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+
+        stream += NVRDataModel.insertBasicAuthToken();
         return stream;
       
     };
@@ -3177,7 +3178,9 @@ angular.module('zmApp.controllers')
             "&fid="+slide.id;
         }
         if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
-        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+
+        stream +=NVRDataModel.insertBasicAuthToken();
+        
         
         return stream;
     }
@@ -3201,8 +3204,8 @@ angular.module('zmApp.controllers')
 
         }
         if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
-        if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
-        
+        stream += NVRDataModel.insertBasicAuthToken();
+       
         return stream;
       
     };
