@@ -257,7 +257,20 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   };
 
 
+  $scope.constructFrame = function(moment) {
+    var stream = "";
+    stream = moment.Event.baseURL+"/index.php?view=image" +
+           "&fid="+moment.Event.MaxScoreFrameId+
+           "&width="+moment.Event.thumbWidth*2 +
+           "&height="+moment.Event.thumbHeight*2;
+
+    if ($rootScope.authSession != 'undefined') stream +=$rootScope.authSession;
+    if ($rootScope.basicAuthToken) stream = stream+"&basicauth="+$rootScope.basicAuthToken;
+    return stream;
+
+  };
   
+
 //----------------------------------------------------------------
 // construct popover only when needed
 // so that we can use one-time binding for the compare function
