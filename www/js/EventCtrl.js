@@ -3183,7 +3183,7 @@ angular.module('zmApp.controllers')
         
         
         return stream;
-    }
+    };
 
     $scope.constructAlarmFrame = function(event, alarm, motion) {
         var stream = "";
@@ -3195,8 +3195,7 @@ angular.module('zmApp.controllers')
 
         }
         else if (event.Event.imageMode=='path') {
-            st
-            ream = event.Event.baseURL+
+            stream = event.Event.baseURL+
             "/index.php?view=image&path=" +event.Event.relativePath +
             motion? alarm.aname:alarm.fname +
             "&height=380";
