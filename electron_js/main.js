@@ -68,7 +68,7 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
         width: mainWindowState.width,
         height: mainWindowState.height,
         webPreferences:{nodeIntegration:false}});
-
+//
 
      
 
