@@ -2479,7 +2479,7 @@ angular.module('zmApp.controllers')
                    /* videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;*/
                    videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
                    if ($rootScope.authSession != 'undefined') videoURL +=$rootScope.authSession;
-                   vidoeURL+=NVRDataModel.insertBasicAuthToken();
+                   videoURL+=NVRDataModel.insertBasicAuthToken();
                 
     
                console.log("************** VIDEO IS " + videoURL);
