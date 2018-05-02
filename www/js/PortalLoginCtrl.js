@@ -294,7 +294,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     }
 
 
-    var pp = $scope.$on("process-push", function () {
+    //this needs to be rootScope so it lives even when we are out of view
+    var pp = $rootScope.$on("process-push", function () {
         NVRDataModel.debug("*** PROCESS PUSH HANDLER CALLED INSIDE PORTAL LOGIN, setting ProcessPush to true");
         processPush = true;
         evaluateTappedNotification();
