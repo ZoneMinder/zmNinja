@@ -326,11 +326,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
               if (parseInt($rootScope.tappedMid) > 0) 
               {
                   NVRDataModel.debug("Going to live view ");
-                  $state.go("app.monitors",
-                  {},
-                  {
-                      reload: true
-                  });
+                  $state.go("app.monitors");
                   return;
   
               }
@@ -368,11 +364,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
               if (ld.onTapScreen == $translate.instant('kTapMontage'))
               {
                   NVRDataModel.debug("Going to montage");
-                  $state.go("app.montage",
-                  {},
-                  {
-                      reload: true
-                  });
+                  $state.go("app.montage");
   
                   return;
               }
@@ -383,20 +375,13 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   {
                       "id": 0,
                       "playEvent": false
-                  },
-                  {
-                      reload: true
                   });
                   return;
               }
               else // we go to live
               {
                   NVRDataModel.debug("Going to live view ");
-                  $state.go("app.monitors",
-                  {},
-                  {
-                      reload: true
-                  });
+                  $state.go("app.monitors");
                   return;
               }
           }
