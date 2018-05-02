@@ -171,6 +171,8 @@
     "kImpMsg6"                   :"Rekomendowana Wersja",
     "kImpMsg7"                   :"Ok, załapałem",
     "kIncreaseSize"              :"zwiększ rozmiar",
+    "kInsertBasicAuthToken"      :"Dołącz podstawowy, obrazkowy token uwierzytelniania",
+    "kInsertBasicAuthTokenNote"  :"jeśli nie używasz HTTPS, nie jest to najlepszy pomysł",
     "kInvalidAPIBody"            :"Problem z dostępem do API. Upewnij się, że odpowiednio skonfigurowałeś API i jest ono dostępne. Wciśnij poniższy przycisk, żeby przeczytać instrukcję.",
     "kInvalidAPIHeader"          :"Błąd dostępu do API",
     "kInvalidAPIRead"            :"Przeczytaj FAQ",
