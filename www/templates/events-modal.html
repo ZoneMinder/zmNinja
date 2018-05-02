@@ -45,7 +45,8 @@
                     <div ng-if="defaultVideo!==undefined && defaultVideo!='' && !isSnapShot()">
                         <div ng-if="videoIsReady">
                         
-                            <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">
+                            <!--<div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">-->
+                            <div ng-style="{'height':$root.devHeight+'px', 'width':$root.devWidth+'px'}"
                             
                             <!--
 
