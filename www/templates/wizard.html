@@ -66,9 +66,9 @@
                 <br/>
                 <br/>
                 <h4>{{'kWizResults' | translate}}</h4>
-                <span ng-if="wizard.portalValidText" style="color:{{wizard.portalColor}};"><i ng-class="wizard.portalColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.portalValidText}}<br/></span>
-                <span ng-if="wizard.apiValidText" style="color:{{wizard.apiColor}};"><i ng-class=" wizard.apiColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.apiValidText}}<br/></span>
-                <span ng-if="wizard.streamingValidText" style="color:{{wizard.streamingColor}};"><i ng-class="wizard.streamingColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.streamingValidText}}<br/></span>
+                <span ng-if="wizard.portalValidText" ng-style="{'color':wizard.portalColor}"><i ng-class="wizard.portalColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.portalValidText}}<br/></span>
+                <span ng-if="wizard.apiValidText" ng-style="{'color':wizard.apiColor}"><i ng-class=" wizard.apiColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.apiValidText}}<br/></span>
+                <span ng-if="wizard.streamingValidText" ng-style="{'color':wizard.streamingColor}"><i ng-class="wizard.streamingColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.streamingValidText}}<br/></span>
                 <br/>
                 <div class="wizardtip">
                     {{'kWizNextStep1' | translate}}:

@@ -229,15 +229,15 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     {
                         case 1:
                             $scope.zmRun = $translate.instant('kZMRunning');
-                            $scope.color = 'color:green;';
+                            $scope.color = 'green';
                             break;
                         case 0:
                             $scope.zmRun = $translate.instant('kZMStopped');
-                            $scope.color = 'color:red;';
+                            $scope.color = 'red';
                             break;
                         default:
                             $scope.zmRun = $translate.instant('kZMUndetermined');
-                            $scope.color = 'color:orange;';
+                            $scope.color = 'orange';
 
                             break;
                     }
@@ -248,7 +248,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                 {
                     //console.log("ERROR in getRun: " + JSON.stringify(error));
                     NVRDataModel.log("Error getting RunStatus " + JSON.stringify(error), "error");
-                    $scope.color = 'color:red;';
+                    $scope.color = 'red';
                     $scope.zmRun = $translate.instant('kZMUndetermined');
                 }
             );
@@ -292,7 +292,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
         NVRDataModel.debug("inside performZMoperation with " + str);
 
         $scope.zmRun = "...";
-        $scope.color = 'color:orange;';
+        $scope.color = 'orange';
         $scope.customState = "";
         NVRDataModel.debug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
         inProgress = 1;
@@ -306,11 +306,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     {
                         case "stop":
                             $scope.zmRun = $translate.instant('kZMStopped');
-                            $scope.color = 'color:red;';
+                            $scope.color = 'red';
                             break;
                         default:
                             $scope.zmRun = $translate.instant('kZMRunning');
-                            $scope.color = 'color:green;';
+                            $scope.color = 'green';
                             getCurrentState();
                             break;
 
@@ -325,7 +325,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
                     NVRDataModel.debug("StateCtrl/controlZM: returned error");
                     NVRDataModel.log("Error in change run state:" + JSON.stringify(error), "error");
                     $scope.zmRun = $translate.instant('kZMUndetermined');
-                    $scope.color = 'color:orange;';
+                    $scope.color = 'orange';
                     inProgress = 0;
 
                 });
