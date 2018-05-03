@@ -1728,6 +1728,8 @@ angular.module('zmApp.controllers')
       
         stream += NVRDataModel.insertBasicAuthToken();
 
+
+
       
 //"&rand=" + randToAvoidCacheMem;
       //"&rand="+$scope.randToAvoidCacheMem +
