@@ -1,4 +1,4 @@
-﻿{
+{
     "k1DaySummary"               :"1 napos összefoglaló",
     "k1HourSummary"              :"1 órás összefoglaló",
     "k1MonthSummary"             :"1 hünapos összefoglaló",
@@ -48,9 +48,8 @@
     "kCustomRange"               :"Egyéni tartomány",
     "kCycleMonitors"             :"Forgó kamerák",
     "kCycleMonitorsInterval"     :"Kamera forgási intervallum",
-    "kCycleMontageInterval"      :"montázs ciklus intervallum",
-    "kDay"                       :"Nap",
     "kCycleMontageInterval"      :"Montázs ciklus intervalum",
+    "kDay"                       :"Nap",
     "kDecreaseSize"              :"Csökken a méret",
     "kDelete"                    :"Töröl",
     "kDeleteEventError1"         :"Nem sikerült törölni az eseményt",
@@ -381,7 +380,7 @@
     "kVibrateOnPush"             :"Rezgés érintéskor",
     "kVideo"                     :"Videó",
     "kVideoError"                :"A videó nem játszható le.",
-    "kVideoErrorMobile"          :"A videó nem játszható. Próbálja engedélyezni a \"Elérési út az eseményekhez\" lehetőséget az eszköz beállításaiban. A formátum is összeegyeztethetetlen a mobil rendszer nézettel",
+    "kVideoErrorMobile"          :"A videó nem játszható. Próbálja engedélyezni a "Elérési út az eseményekhez" lehetőséget az eszköz beállításaiban. A formátum is összeegyeztethetetlen a mobil rendszer nézettel",
     "kVideoLoading"              :"Videó betöltése",
     "kVideoMp4Warning"           :"Jelenleg nem lehet tudni, hogy a videó teljesen letöltődik-e. Kérjük, kövesse nyomon a letöltés fájlméretét.",
     "kWake"                      :"Ébredés",
