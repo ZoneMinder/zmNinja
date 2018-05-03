@@ -47,6 +47,7 @@ def beautify(fi,ki):
 #Compares keys in language file
 
 def compare(fname):
+  
   beaut="no"
   global globGood, globBad,globOverwrite, globFile, globBeautify
   with open (i) as json_data:
@@ -67,6 +68,8 @@ def compare(fname):
   else:
     status = "ERROR"
     globBad+=1
+    if globBeautify and (globFile == fname or globFile == ""):
+      beaut="YES"
   print("\n-------Checking:%s:%s, beautify:%s---------" % (fname,status,beaut))
   print("master keys:%d, %s keys:%d" % (len(origKeys), i, len(newKeys)))
   if beaut=="YES":
