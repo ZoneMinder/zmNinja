@@ -12,7 +12,7 @@
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
-  <ion-content scroll-sista has-bouncing="false" style="background-color:#444444" delegate-handle="none" overflow-scroll="false"
+  <ion-content  has-bouncing="false" style="background-color:#444444" delegate-handle="none" overflow-scroll="false"
     mouse-wheel-scroll>
     <div class="timeline_text"> {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}} ({{humanizeTime(datetimeValueFrom.value)}})
       <div ng-if="!isMultiPort">({{'kChromeMax' | translate}})</div>

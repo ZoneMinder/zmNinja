@@ -3,7 +3,7 @@
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
-    <ion-content scroll-sista delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
+    <ion-content  delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
         <ion-refresher pulling-text="{{'kPullToReload' | translate}}..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
         <ion-list>
             <ion-item>
