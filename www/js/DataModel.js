@@ -340,10 +340,10 @@ angular.module('zmApp.controllers')
 
         // disable for now, getAuthHash needs work
 
-     /*   if (versionCompare(currentServerVersion, "1.31.41") != -1 ) {
+       if (versionCompare(currentServerVersion, "1.31.41") != -1 ) {
           
-          myurl = loginData.apiurl+'/host/getAuthKey.json';
-          debug ("Server version > 1.31.41, so using AuthHash API:"+myurl);
+          myurl = loginData.apiurl+'/host/getCredentials.json';
+          debug ("Server version > 1.31.41, so using getCredentials API:"+myurl);
           $http.get(myurl) 
           .then (function (s) {
 
@@ -376,7 +376,7 @@ angular.module('zmApp.controllers')
         );
         return d.promise;
           
-        }*/
+        }
         //currentServerVersion
        
           var as = 'undefined';
@@ -1009,10 +1009,13 @@ angular.module('zmApp.controllers')
                   }
 
 
+                  console.log ("INIT SIMUL="+loginData.disableSimulStreaming);
+                  console.log ("INIT PLATFORM IS="+$rootScope.platformOS);
                   if (typeof loginData.disableSimulStreaming == 'undefined') {
                    
+                    
                     loginData.disableSimulStreaming = ($rootScope.platformOS == 'ios')?true:false;
-                  
+                    console.log ("INIT DISABLING SIMUL:"+loginData.disableSimulStreaming);
                   }
                   
 
@@ -1941,7 +1944,7 @@ angular.module('zmApp.controllers')
                           
                            // console.log ("STEP 1: ST="+st);
 
-                            if (zmsPort <=0 )
+                            if (zmsPort <=0 || loginData.disableSimulStreaming)
                             {
                                 if (p.port || s.port) {
                                     st += (s.port ? ":" + s.port : ":" + p.port);
@@ -1992,7 +1995,7 @@ angular.module('zmApp.controllers')
 
                              var st2 = loginData.streamingurl;
 
-                            if (zmsPort >0) {
+                            if (zmsPort >0 &&  !loginData.disableSimulStreaming) {
                                 // we need to insert minport
                                 st2 = "";
                                 var p2 = URI.parse(loginData.streamingurl);
