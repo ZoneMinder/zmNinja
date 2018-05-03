@@ -129,7 +129,6 @@
     <plugin name="cordova-plugin-websocket" spec="^0.12.2" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-sqlite-storage" spec="^1.5.3" />
-    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="org.devgeeks.Canvas2ImagePlugin" spec="https://github.com/flache/Canvas2ImagePlugin">
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value=" " />
     </plugin>
@@ -148,6 +147,7 @@
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-add-swift-support" spec="^1.7.1" />
     <plugin name="cordova-plugin-certificates" spec="https://github.com/hypery2k/cordova-certificate-plugin.git" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <engine name="ios" spec="^4.5.4" />
     <engine name="android" spec="^6.3.0" />
 </widget>

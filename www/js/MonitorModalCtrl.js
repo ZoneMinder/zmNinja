@@ -288,8 +288,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     } else { 
     NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
     }
-    // $interval.cancel(modalIntervalHandle);
-
+    // $interval.cancel(modalIntervalHandle)
     // FIXME: Do I need to  setAwake(false) here?
   }
 

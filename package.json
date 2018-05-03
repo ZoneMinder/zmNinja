@@ -34,7 +34,6 @@
       "cordova-plugin-websocket": {},
       "cordova-plugin-whitelist": {},
       "cordova-sqlite-storage": {},
-      "ionic-plugin-keyboard": {},
       "org.devgeeks.Canvas2ImagePlugin": {
         "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
       },
@@ -52,7 +51,8 @@
       "cordova-plugin-device": {},
       "cordova-plugin-file": {},
       "cordova-plugin-add-swift-support": {},
-      "cordova-plugin-certificates": {}
+      "cordova-plugin-certificates": {},
+      "ionic-plugin-keyboard": {}
     }
   },
   "dependencies": {
