@@ -20,7 +20,7 @@
     </ion-header-bar>
   </div>
   <!-- collection repeat forces js scrolling, thing to remember -->
-  <ion-content scroll-sista ng-cloak on-tap="tapped();" delegate-handle="mainScroll" mouse-wheel-scroll>
+  <ion-content  ng-cloak on-tap="tapped();" delegate-handle="mainScroll" mouse-wheel-scroll>
     <!-- needed for header-shrink so first item doesn't go below header-->
     <!-- <div style="height: 64px;"></div>-->
     <!-- lets make sure the events list is not empty as collection repeat needs height -->
@@ -82,7 +82,7 @@
                   class="button button-clear button-small icon mp4-icon" href="{{event.Event.videoPath}}" download="{{event.Event.Id}}-video.mp4"
                   ng-click="mp4warning()"></a>
 
-                <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && lpoginData.enableGIFMP4 "
+                <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && loginData.enableGIFMP4 "
                   class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)">
                 </button>
 
