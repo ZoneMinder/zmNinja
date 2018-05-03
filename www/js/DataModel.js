@@ -340,25 +340,25 @@ angular.module('zmApp.controllers')
 
         // disable for now, getAuthHash needs work
 
-       if (versionCompare(currentServerVersion, "1.31.41") != -1 ) {
+       if (versionCompare(currentServerVersion, "1.31.44") != -1 ) {
           
           myurl = loginData.apiurl+'/host/getCredentials.json';
           debug ("Server version > 1.31.41, so using getCredentials API:"+myurl);
           $http.get(myurl) 
           .then (function (s) {
 
-            console.log ("GOT " + JSON.stringify(s));
-            if (!s.data || !s.data.auth_key ) {
+            debug("Credentials API returned: " + JSON.stringify(s));
+            if (!s.data || !s.data.credentials ) {
               $rootScope.authSession = "undefined";
               d.resolve($rootScope.authSession);
-              debug ("AuthHash API Succeded, but did NOT return auth_key key: "+JSON.stringify(s));
+              debug ("getCredentials() API Succeded, but did NOT return credentials key: "+JSON.stringify(s));
               return d.promise;
                
             }
             else {
-              $rootScope.authSession = "&"+s.data.auth_key;
+              $rootScope.authSession = "&"+s.data.credentials;
               if (s.data.append_password=='1') {
-                $rootScope.athSession = $rootScope.authSession + 
+                $rootScope.authSession = $rootScope.authSession + 
                 loginData.password;
               }
               d.resolve($rootScope.authSession);
