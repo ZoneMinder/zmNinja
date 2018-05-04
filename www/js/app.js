@@ -106,7 +106,7 @@ angular.module('zmApp', [
     thumbWidth:200,
     alarmStatusTime: 10000,
     eventServerErrorDelay:5000, // time to wait till I report initial connect errors
-    zmVersionCheckNag: 30 * 24, // in hrs 
+    zmVersionCheckNag: 60 * 24, // in hrs 
     waitTimeTillResume: 5 // in sec, for ES error
 
   })
