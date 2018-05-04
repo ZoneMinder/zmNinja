@@ -1726,7 +1726,7 @@ angular.module('zmApp.controllers')
         $rootScope.authSession +
         appendConnKey(monitor.Monitor.connKey);
       
-        stream += NVRDataModel.insertBasicAuthToken();
+        if (stream) stream += NVRDataModel.insertBasicAuthToken();
 
 
 
