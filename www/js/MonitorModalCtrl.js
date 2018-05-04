@@ -1149,7 +1149,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                 
         //console.log ("STREAM="+stream);
 
-        stream += NVRDataModel.insertBasicAuthToken();
+        if (stream) stream += NVRDataModel.insertBasicAuthToken();
         return stream;
 
 

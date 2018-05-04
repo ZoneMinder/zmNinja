@@ -982,6 +982,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.constructStream = function (monitor) {
 
 
+        if ($scope.animationInProgress) return "";
        
         var stream="";
         // eventId gets populated when prepareModal completes
@@ -1010,7 +1011,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         }
     
        //console.log ("STREAM="+stream);
-       if ($rootScope.basicAuthToken) stream +="&basicauth="+$rootScope.basicAuthToken;
+       if ($rootScope.basicAuthToken && stream) stream +="&basicauth="+$rootScope.basicAuthToken;
         return stream;
 
     };
@@ -1019,6 +1020,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
        // console.log (currentStreamState);
         return currentStreamState == streamState.SNAPSHOT;
     };
+
+    $scope.isStreamStopped = function () {
+       // console.log ("STATE = " + currentStreamState);
+        return currentStreamState == streamState.STOPPED;
+        
+    }
 
     $scope.convertSnapShotToStream = function() {
         currentStreamState = streamState.ACTIVE;
@@ -1396,6 +1403,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function neighborEvents(eid)
     {
+        // redo https:/server/zm/api/events/index/MonitorId =:5/Alarm Frames =:1.json
         var d = $q.defer();
         // now get event details to show alarm frames
         var loginData = NVRDataModel.getLogin();
@@ -1557,6 +1565,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     function jumpToEvent(eid, dirn)
     {
+        maxAlarmFid = 0;
+        var oState;
         NVRDataModel.log("Event jump called with:" + eid);
         if (eid == "")
         {
@@ -1599,6 +1609,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 element.addClass(slidein)
                     .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
                     processMove(eid,dirn);
+                    oState = currentStreamState;
+                    currentStreamState = streamState.SNAPSHOT;
             }, 200);
         }
 
@@ -1607,7 +1619,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             element.removeClass(slidein);
             $scope.animationInProgress = false;
             carouselUtils.setStop(false);
-          
+            currentStreamState = oState;
 
 
         }

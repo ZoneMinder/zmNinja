@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <!-- no default video -->
-                    <div ng-if="defaultVideo!==undefined && defaultVideo!='' && !isSnapShot()">
+                    <div ng-if="defaultVideo!==undefined && defaultVideo!='' && !isSnapShot() && !isStreamStopped()">
                         <div ng-if="videoIsReady">
                         
                            <!-- <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">-->
