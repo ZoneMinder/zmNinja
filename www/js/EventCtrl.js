@@ -171,6 +171,8 @@ angular.module('zmApp.controllers')
         //console.log ("********* BEFORE ENTER");
         //
 
+        $scope.modalData = {"doRefresh":false};
+
         $scope.footerState  = ionPullUpFooterState.MINIMIZED;
         $scope.gifshotSupported = true;
         document.addEventListener("pause", onPause, false);
@@ -1843,8 +1845,15 @@ angular.module('zmApp.controllers')
     // Takes care of deleting individual events
     //--------------------------------------------------------------------------
 
+
+    
     $scope.deleteEvent = function(id, itemid)
     {
+        deleteEvent(id,itemid);
+
+    };
+
+    function deleteEvent (id,itemid) {
         //$scope.eventList.showDelete = false;
         //curl -XDELETE http://server/zm/api/events/1.json
         var loginData = NVRDataModel.getLogin();
@@ -1861,7 +1870,7 @@ angular.module('zmApp.controllers')
 
 
 
-        $http.delete(apiDelete)
+        return $http.delete(apiDelete)
             .success(function(data)
             {
                 $ionicLoading.hide();
@@ -1880,14 +1889,14 @@ angular.module('zmApp.controllers')
                 else
                 {
 
-
+                $ionicLoading.hide();
                    $ionicLoading.show(
                     {
                         template: "{{'kSuccess' | translate}}...",
                         noBackdrop: true,
                         duration: 1000
                     });
-                   $scope.events.splice(itemid, 1);
+                   if (itemid > 0) $scope.events.splice(itemid, 1);
                    
                 }
 
@@ -1905,8 +1914,7 @@ angular.module('zmApp.controllers')
                 NVRDataModel.debug("delete error: " + JSON.stringify(data));
                 NVRDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);
             });
-
-    };
+    }
 
     //------------------------------------------------
     // Tapping on the filter sign lets you reset it
@@ -2908,6 +2916,8 @@ angular.module('zmApp.controllers')
         mycarouselWatcher();
         //NVRDataModel.debug("EventCtrl: Open Modal with Base path " + relativepath);
 
+        $scope.modalData = {"doRefresh":false};
+
         $scope.event = event;
 
         NVRDataModel.setAwake(NVRDataModel.getKeepAwake());
@@ -2954,6 +2964,12 @@ angular.module('zmApp.controllers')
         {
             $scope.modal.remove();
         }
+        if ($scope.modalData.doRefresh) {
+            $scope.modalData.doRefresh = false;
+            NVRDataModel.debug ("Reloading events since we deleted some...");
+            doRefresh();
+        }
+        
 
     };
 
