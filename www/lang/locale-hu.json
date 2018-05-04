@@ -373,7 +373,7 @@
     "kVibrateOnPush"             :"Rezgés érintéskor",
     "kVideo"                     :"Videó",
     "kVideoError"                :"A videó nem játszható le.",
-    "kVideoErrorMobile"          :"A videó nem játszható. Próbálja engedélyezni a "Elérési út az eseményekhez" lehetőséget az eszköz beállításaiban. A formátum is összeegyeztethetetlen a mobil rendszer nézettel",
+    "kVideoErrorMobile"          :"A videó nem játszható. Próbálja engedélyezni a 'Elérési út az eseményekhez' lehetőséget az eszköz beállításaiban. A formátum is összeegyeztethetetlen a mobil rendszer nézettel",
     "kVideoLoading"              :"Videó betöltése",
     "kVideoMp4Warning"           :"Jelenleg nem lehet tudni, hogy a videó teljesen letöltődik-e. Kérjük, kövesse nyomon a letöltés fájlméretét.",
     "kWake"                      :"Ébredés",
