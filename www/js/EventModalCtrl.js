@@ -1452,6 +1452,79 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     };
 
+    
+
+    $scope.deleteAndMoveNext = function (id) {
+        NVRDataModel.debug ("Delete and move next called with: "+id);
+        deleteEvent(id)
+        .then (function (succ) {
+            $ionicLoading.hide();
+            $scope.modalData.doRefresh = true;
+            jumpToEvent(id,1);
+
+        })
+    };
+
+    function deleteEvent (id) {
+        //$scope.eventList.showDelete = false;
+        //curl -XDELETE http://server/zm/api/events/1.json
+        var loginData = NVRDataModel.getLogin();
+        var apiDelete = loginData.apiurl + "/events/" + id + ".json";
+        NVRDataModel.debug("DeleteEvent: ID=" + id );
+        NVRDataModel.log("Delete event " + apiDelete);
+
+        $ionicLoading.show(
+        {
+            template: "{{'kDeletingEvent' | translate}}...",
+            noBackdrop: true,
+            duration: zm.httpTimeout
+        });
+
+        return $http.delete(apiDelete)
+            .success(function(data)
+            {
+                $ionicLoading.hide();
+                NVRDataModel.debug("delete output: " + JSON.stringify(data));
+
+                if (data.message == 'Error')
+                {
+                   $ionicLoading.show(
+                    {
+                        template: "{{'kError' | translate}}...",
+                        noBackdrop: true,
+                        duration: 1500
+                    });
+
+                }
+                else
+                {
+
+                $ionicLoading.hide();
+                   $ionicLoading.show(
+                    {
+                        template: "{{'kSuccess' | translate}}...",
+                        noBackdrop: true,
+                        duration: 1000
+                    });
+                   
+                   
+                }
+
+               // NVRDataModel.displayBanner('info', [$translate.instant('kDeleteEventSuccess')], 2000, 2000);
+
+                
+
+
+                //doRefresh();
+
+            })
+            .error(function(data)
+            {
+                $ionicLoading.hide();
+                NVRDataModel.debug("delete error: " + JSON.stringify(data));
+                NVRDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);
+            });
+    }
     //--------------------------------------------------------
     //Navigate to next/prev event in full screen mode
     //--------------------------------------------------------

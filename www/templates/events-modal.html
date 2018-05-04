@@ -136,6 +136,13 @@
                 <li ng-if="$root.isAlarm">
                     <a data-badge="{{$root.alarmCount}}" class="notification-badge animated infinite tada" href="" ng-click="handleAlarms()"><i class="ion-ios-bell"></i></a>
                 </li>
+
+                <li>
+                    <a href="" ng-click="deleteAndMoveNext(eventId)"><i class="ion-trash-a"></i></a>
+                </li>
+               
+
+
             </ul>
         </div>
     </div> <!-- not live feed or snapshot -->
