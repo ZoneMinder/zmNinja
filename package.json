@@ -9,9 +9,6 @@
     ],
     "plugins": {
       "com.telerik.plugins.nativepagetransitions": {},
-      "cordova-library-helper": {
-        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Save media to your Camera Roll"
-      },
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-app-version": {},
       "cordova-plugin-console": {},
@@ -52,7 +49,8 @@
       "cordova-plugin-file": {},
       "cordova-plugin-add-swift-support": {},
       "cordova-plugin-certificates": {},
-      "ionic-plugin-keyboard": {}
+      "ionic-plugin-keyboard": {},
+      "cordova-library-helper": {}
     }
   },
   "dependencies": {
@@ -63,7 +61,7 @@
     "cordova-android": "^6.3.0",
     "cordova-custom-config": "~4.0.2",
     "cordova-ios": "^4.5.4",
-    "cordova-library-helper": "^1.0.4",
+    "cordova-library-helper": "git+https://github.com/FlyingDonkeyDev/cordova-library-helper.git",
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",
     "cordova-plugin-android-permissions": "^1.0.0",

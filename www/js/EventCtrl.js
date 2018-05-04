@@ -810,6 +810,7 @@ angular.module('zmApp.controllers')
 
     };
 
+    
     $scope.downloadFileToDevice = function(path, eid)
     {
 
@@ -821,7 +822,14 @@ angular.module('zmApp.controllers')
             tp = cordova.file.dataDirectory + "temp-video.mp4";
 
         var th = true;
+
         var opt = {};
+
+        if ($rootScope.basicAuthHeader) {
+            opt.headers = {"Authorization": $rootScope.basicAuthHeader};
+            NVRDataModel.debug ("download with auth options is:"+JSON.stringify(opt));
+        }
+       
         //path = "http://techslides.com/demos/sample-videos/small.mp4";
 
         NVRDataModel.debug("Saving temporary video to: " + tp);

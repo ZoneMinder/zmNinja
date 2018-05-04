@@ -104,9 +104,6 @@
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="^0.6.5" />
-    <plugin name="cordova-library-helper" spec="^1.0.4">
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Save media to your Camera Roll" />
-    </plugin>
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <plugin name="cordova-plugin-console" spec="^1.1.0" />
@@ -148,6 +145,7 @@
     <plugin name="cordova-plugin-add-swift-support" spec="^1.7.1" />
     <plugin name="cordova-plugin-certificates" spec="https://github.com/hypery2k/cordova-certificate-plugin.git" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="cordova-library-helper" spec="https://github.com/FlyingDonkeyDev/cordova-library-helper.git" />
     <engine name="ios" spec="^4.5.4" />
     <engine name="android" spec="^6.3.0" />
 </widget>
