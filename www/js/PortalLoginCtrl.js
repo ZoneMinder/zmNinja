@@ -450,6 +450,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                                             
                                             NVRDataModel.debug ("ZM Version nag: Checking "+val+" with "+zm.zmVersionCheckNag);
                                              if (val >=zm.zmVersionCheckNag  ) {
+                                                //https://api.github.com/repos/zoneminder/zoneminder/releases/latest
+                                                //tag_name
                                                 NVRDataModel.updateHrsSinceChecked("zmVersion");
                                                 $state.go('app.importantmessage',
                                                 {
