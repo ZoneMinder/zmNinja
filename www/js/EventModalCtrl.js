@@ -1011,7 +1011,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $rootScope.authSession ;
         }
     
-       console.log ("STREAM="+stream);
+       //console.log ("STREAM="+stream);
        if ($rootScope.basicAuthToken && stream) stream +="&basicauth="+$rootScope.basicAuthToken;
         return stream;
 
