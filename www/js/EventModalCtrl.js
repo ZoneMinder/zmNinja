@@ -1725,7 +1725,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 else if (dirn==2) {
                     // this is called when you delete
                     var id="";
-                    if ($scope.nextId > 0) id = $scope.nextId 
+                    if ($scope.nextId > 0) id = $scope.nextId ;
                     else if ($scope.prevId > 0) id = $scope.prevId;
                     NVRDataModel.debug ("after delete, moving to "+id);
                     prepareModalEvent(id);
