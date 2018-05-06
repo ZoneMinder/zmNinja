@@ -1,3 +1,4 @@
+
 // Common Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
@@ -1010,7 +1011,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $rootScope.authSession ;
         }
     
-       //console.log ("STREAM="+stream);
+       console.log ("STREAM="+stream);
        if ($rootScope.basicAuthToken && stream) stream +="&basicauth="+$rootScope.basicAuthToken;
         return stream;
 
@@ -1025,7 +1026,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
        // console.log ("STATE = " + currentStreamState);
         return currentStreamState == streamState.STOPPED;
         
-    }
+    };
 
     $scope.convertSnapShotToStream = function() {
         currentStreamState = streamState.ACTIVE;
@@ -1401,46 +1402,77 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
 
 
-    function neighborEvents(eid)
+    function neighborEvents(eid,mid)
     {
-        // redo https:/server/zm/api/events/index/MonitorId =:5/Alarm Frames =:1.json
-        var d = $q.defer();
-        // now get event details to show alarm frames
-        var loginData = NVRDataModel.getLogin();
-        var myurl = loginData.apiurl + '/events/' + eid + ".json";
+
         var neighbors = {
             prev: "",
             next: ""
         };
-        $http.get(myurl)
-            .success(function(data)
-            {
+       // prev https://zm/api/events/index/StartTime <: 2018-05-05 11:50:00 =:7/AlarmFrames >=:1.json?sort=StartTime&direction=desc&limit=1 
 
-                // In Timeline view, gapless should stick to the same monitor
-                if ($scope.followSameMonitor == "1") // we are viewing only one monitor
-                {
-                    NVRDataModel.debug("Getting next event for same monitor Id ");
-                    neighbors.prev = data.event.Event.PrevOfMonitor ? data.event.Event.PrevOfMonitor : "";
-                    neighbors.next = data.event.Event.NextOfMonitor ? data.event.Event.NextOfMonitor : "";
-                }
-                else
-                {
-                    neighbors.prev = data.event.Event.Prev ? data.event.Event.Prev : "";
-                    neighbors.next = data.event.Event.Next ? data.event.Event.Next : "";
-                }
-                NVRDataModel.debug("Neighbor events of " + eid + "are Prev:" +
-                    neighbors.prev + " and Next:" + neighbors.next);
+       //next 
+       //zm/api/events/index/StartTime >: 2018-05-05 11:50:00/MonitorId =:7/AlarmFrames >=:1.json?sort=StartTime&direction=asc&limit=1
 
+        var d = $q.defer();
+        // now get event details to show alarm frames
+        var loginData = NVRDataModel.getLogin();
+        var myurl = loginData.apiurl + '/events/' + eid + ".json";
+
+        var nextEvent = loginData.apiurl+"/events/index"+
+                        "/StartTime >: "+currentEvent.Event.StartTime+
+                        ($scope.followSameMonitor == '1' ? "/MonitorId =: "+currentEvent.Monitor.Id: "") + 
+                        "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0) +
+                        ".json?sort=StartTime&direction=asc&limit=1";
+
+
+        var prevEvent = loginData.apiurl+"/events/index"+
+                        "/StartTime <: "+currentEvent.Event.StartTime+
+                        ($scope.followSameMonitor == '1' ? "/MonitorId =: "+currentEvent.Monitor.Id: "") + 
+                        "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0) +
+                        ".json?sort=StartTime&direction=desc&limit=1";
+
+
+        NVRDataModel.debug ("Neighbor next URL="+nextEvent);
+        NVRDataModel.debug ("Neighbor pre URL="+prevEvent);
+
+        var nextPromise = $http.get(nextEvent);
+        var prePromise = $http.get(prevEvent);
+
+        var preId = "";
+        var nextId = "";
+
+        $q.all ([nextPromise, prePromise])
+        .then (function (data) {
+
+           // console.log ("NEXT OBJ="+JSON.stringify(data[0]));
+           // console.log ("PRE OBJ="+JSON.stringify(data[1]));
+            // next
+                if (data[0] && data[0].data && data[0].data.events.length >0) {
+                    nextId = data[0].data.events[0].Event.Id;
+                  
+                }
+
+                if (data[1] && data[1].data && data[1].data.events.length >0) {
+                     preId = data[1].data.events[0].Event.Id;
+                    
+                }
+                NVRDataModel.debug  ("neighbors of "+currentEvent.Event.Id +"are pre="+preId+" next="+nextId);
+                neighbors.next = nextId;
+                neighbors.prev  = preId;
                 d.resolve(neighbors);
-                return (d.promise);
-            })
-            .error(function(err)
-            {
-                NVRDataModel.log("Error retrieving neighbors" + JSON.stringify(err));
-                d.reject(neighbors);
-                return (d.promise);
+                return d.promise;
 
-            });
+
+            // prev
+          //  console.log ("NEXT:",JSON.stringify(data[0].data),"PREV:",JSON.stringify(data[1].data));
+        }, function (error) {
+            NVRDataModel.log("Error retrieving neighbors" + JSON.stringify(err));
+            d.reject(neighbors);
+            return (d.promise);
+
+        });
+
         return (d.promise);
 
     }
@@ -1468,9 +1500,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         .then (function (succ) {
             $ionicLoading.hide();
             $scope.modalData.doRefresh = true;
-            jumpToEvent(id,1);
 
-        })
+            var dirn = 1;
+            if (!$scope.nextId && $scope.prevId) dirn = -1;
+            jumpToEvent(id,dirn);
+
+        });
     };
 
     function deleteEvent (id) {
@@ -1492,7 +1527,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             .success(function(data)
             {
                 $ionicLoading.hide();
-                NVRDataModel.debug("delete output: " + JSON.stringify(data));
+               // NVRDataModel.debug("delete output: " + JSON.stringify(data));
 
                 if (data.message == 'Error')
                 {
@@ -1567,7 +1602,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     {
         maxAlarmFid = 0;
         var oState;
-        NVRDataModel.log("Event jump called with:" + eid);
+        NVRDataModel.log("HERE: Event jump called with:" + eid);
         if (eid == "")
         {
             $ionicLoading.show(
@@ -1592,6 +1627,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             slideout = "animated slideOutRight";
             slidein = "animated slideInLeft";
         }
+
+        oState = currentStreamState;
         var element = angular.element(document.getElementById("full-screen-event"));
         element.addClass(slideout).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
 
@@ -1609,7 +1646,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 element.addClass(slidein)
                     .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
                     processMove(eid,dirn);
-                    oState = currentStreamState;
+                    
                     currentStreamState = streamState.SNAPSHOT;
             }, 200);
         }
@@ -1684,6 +1721,16 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 if (dirn==1) { 
                     NVRDataModel.debug ("Moving to:"+$scope.nextId) ;
                     prepareModalEvent($scope.nextId);
+                }
+                else if (dirn==2) {
+                    // this is called when you delete
+                    var id="";
+                    if ($scope.nextId > 0) id = $scope.nextId 
+                    else if ($scope.prevId > 0) id = $scope.prevId;
+                    NVRDataModel.debug ("after delete, moving to "+id);
+                    prepareModalEvent(id);
+
+
                 }
                 else if (dirn==-1 && $scope.prevId > 0) {
                     NVRDataModel.debug ("Moving to:"+$scope.prevId) ;
@@ -1878,7 +1925,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if ($scope.loginData.gapless)
         {
 
-            neighborEvents(currentEvent.Event.Id)
+            neighborEvents(currentEvent.Event.Id, currentEvent.Monitor.Id)
                 .then(function(success)
                     {
 
