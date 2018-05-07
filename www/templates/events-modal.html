@@ -3,9 +3,22 @@
     <ion-modal-view cache-view="false">
         <ion-content style="background-color:#444444" ng-cloak>
 
-                
+        
+            <!-- alarm frames in snapshot-->
+            <div ng-if="isSnapShot() && !liveFeedMid">
+                    <ion-scroll direction="x" overflow-scroll="false" >
+                    <div style="white-space:nowrap;">
+                        <span ng-repeat="alarm in alarm_images">
+                                <figure class="animated slideInLeft" style="display:inline-block">
+                                        <img ng-src="{{constructFrame(alarm.frameid)}}" fallback-src="img/frameerror.png" style="width: auto; height: auto;max-width: 100%;max-height: 100px" ng-click="changeSnapshot(alarm.frameid)" />  
+                                </figure>  
+                            </span>
+                        </div>
 
-            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" delegate-handle="imgscroll" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" overflow-scroll="false">
+                    </ion-scroll>
+            </div>
+
+            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" delegate-handle="imgscroll" overflow-scroll="false" scrollbar-x="false" scrollbar-y="false">
                 <div id="full-screen-event" style="height: 100vh;">
  
                     <div ng-if="defaultVideo=='' || isSnapShot()">
@@ -15,13 +28,16 @@
                                 <div ng-if="isSnapShot() && !liveFeedMid" class="event-modal-play">
                                         <button class="button button-assertive icon ion-play" ng-click="convertSnapShotToStream()">&nbsp;{{'kPlay'|translate}}</button>
                                 </div>
+
+                                
+
                                 <div ng-if="isSnapShot() && !liveFeedMid">
                                     <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] <span class="events-range-modal-warning-text">{{eventWarning}}</span> </div>
                                 </div>
 
                             <img ng-if="!liveFeedMid" image-spinner-src="{{constructStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
                             img-spinner-w="1024" img-spinner-h="768" image-spinner-loader="lines" 
-                            imageonload="modalImageLoaded()"
+                            imageonload="modalImageLoaded()" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" 
                             />
 
 
@@ -29,7 +45,7 @@
                                 <img  image-spinner-src="{{loginData.streamingurl}}/nph-zms?mode=jpeg&monitor={{liveFeedMid}}&connkey={{connKey}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
                                 img-spinner-w="1024" img-spinner-h="768"
                                 image-spinner-loader="lines"
-                                imageonload="modalImageLoaded()"
+                                imageonload="modalImageLoaded()" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" 
                                 />
                                 <div class="events-range-modal-text"><span class="events-range-modal-warning-text">{{eventWarning}}</span> </div>
                             </div>
@@ -46,7 +62,7 @@
                         <div ng-if="videoIsReady">
                         
                            <!-- <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">-->
-                            <div ng-style="{'height':$root.devHeight+'px', 'width':$root.devWidth+'px'}">
+                            <div on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)"  ng-style="{'height':$root.devHeight+'px', 'width':$root.devWidth+'px'}">
                             
                                 <videogular  vg-can-play="onCanPlay()"  vg-native-fullscreen="videoObject.config.nativeFullScreen" vg-player-ready="onPlayerReady($API)" 
                                 vg-update-playback="onPlaybackUpdate($playBack)"

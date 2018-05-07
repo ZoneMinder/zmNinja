@@ -980,6 +980,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.isModalActive = true;
     };
 
+
+    $scope.changeSnapshot = function(id) {
+        $scope.snapshotFrameId  = id;
+        maxAlarmFid = 0;
+    };
+
     $scope.constructStream = function (monitor) {
 
 
@@ -994,9 +1000,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         } 
         else if (currentStreamState == streamState.SNAPSHOT) {
             stream = $scope.loginData.url +
-            "/index.php?view=image" +
+            "/index.php?view=image" + 
 
-            (maxAlarmFid? "&fid="+maxAlarmFid: "&eid="+$scope.eventId+"&fid=1") +
+            (maxAlarmFid? "&fid="+maxAlarmFid: "&eid="+$scope.eventId+"&fid="+$scope.snapshotFrameId) +
             "&scale="+$scope.singleImageQuality + 
             $rootScope.authSession ;
         }
@@ -1012,6 +1018,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         }
     
        //console.log ("STREAM="+stream);
+       //console.log ("EID="+$scope.eventId);
        if ($rootScope.basicAuthToken && stream) stream +="&basicauth="+$rootScope.basicAuthToken;
         return stream;
 
@@ -1041,7 +1048,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $scope.$on('$ionicView.beforeEnter', function()
     {
-       
+        $scope.alarm_images = [];
+        $scope.snapshotFrameId = 1;
         currentStreamState = streamState.STOPPED;
 
     });
@@ -1575,6 +1583,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.onSwipeEvent = function(eid, dirn)
     {
 
+        console.log ("CALLED WITH "+eid+" dirn "+dirn);
         if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1)
         {
             //console.log("Image is zoomed in - not honoring swipe");
@@ -1601,6 +1610,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     function jumpToEvent(eid, dirn)
     {
         maxAlarmFid = 0;
+        $scope.snapshotFrameId = 1;
         var oState;
         NVRDataModel.log("HERE: Event jump called with:" + eid);
         if (eid == "")
@@ -1950,6 +1960,47 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         }
     }
 
+    function computeAlarmFrames(data) {
+        $scope.alarm_images = [];
+        tempAlarms = [];
+        $scope.FrameArray = data.event.Frame;
+
+        for (i = 0; i < data.event.Frame.length; i++)
+        {
+            if (data.event.Frame[i].Type == "Alarm")
+            {
+
+               // console.log ("**ONLY ALARM AT " + i + "of " + data.event.Frame.length);
+                
+                tempAlarms.push(
+                {
+                    
+                    id: data.event.Frame[i].Id,
+                    frameid: data.event.Frame[i].FrameId,
+                });
+               
+            }
+
+        }
+        if (tempAlarms.length > 1) // don't do it for just one too
+            $scope.alarm_images = tempAlarms;
+        
+    }
+
+    $scope.constructFrame = function (fid) {
+
+        var frame = "";
+        frame = currentEvent.Event.baseURL+"/index.php?view=image" +
+            "&eid="+currentEvent.Event.Id + 
+            "&fid="+fid +
+            "&height="+200;
+
+        if ($rootScope.authSession != 'undefined') frame +=$rootScope.authSession;
+        frame += NVRDataModel.insertBasicAuthToken();
+       // console.log (frame);
+        return frame;
+    };
+
     //--------------------------------------------------------
     // Called by openModal as well as jump to event
     // what it basically does is get a detailed event API
@@ -1983,6 +2034,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                     var event = success.data.event;
                     currentEvent = event;
 
+                    computeAlarmFrames(success.data);
                     $scope.eventWarning = '';
 
                     if (!event.Event.EndTime && showLive) {
