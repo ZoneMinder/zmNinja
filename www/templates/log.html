@@ -1,6 +1,9 @@
 <ion-view view-title="{{logEntity}} {{'kLogs' | translate}}">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+
+        <button ng-class="selectOn? 'button button-icon button-clear ion-ios-copy':'button button-icon button-clear ion-ios-copy-outline'" ng-click="selectToggle()"></button>
+
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
@@ -27,6 +30,7 @@
         <b>{{$root.appName}} {{'kVersion'|translate}}: {{zmAppVersion}} ({{$root.platformOS}})</b>
         </div>
 
+        <div ng-if="selectOn" class="aside-1">{{'kLogsCopyPaste' | translate }}</div>
         <div ng-if="logEntity!=$root.appName">
         <b>ZoneMinder</b>
         </div>
@@ -34,5 +38,5 @@
 
         <br/>
         <!-- don't indent here its a pre-->
-        <pre>{{log.logString}}</pre>
+        <pre class="selectable" data-tap-disabled="{{selectOn}}">{{log.logString}}</pre>
     </ion-content>

@@ -190,6 +190,7 @@
     "kLoginValidAPIFailedTitle"  :"Login validated but API failed",
     "kLoginValidatedTitle"       :"Login Validated",
     "kLogs"                      :"Logs",
+    "kLogsCopyPaste"             :"Text select is on, touch scrolling is disabled. Tap icon again to revert",
     "kLowBWDisplay"              :"low bandwidth",
     "kLowBandwidth"              :"low bandwidth mode",
     "kManageServerGroups"        :"Manage Server Groups",
