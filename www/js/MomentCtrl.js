@@ -570,6 +570,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       $scope.modal.remove();
     }
 
+    if ($scope.modalData.doRefresh)  getMoments(momentType, timeTo);
   };
 
   //----------------------------------------------------------------
@@ -597,6 +598,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
             sl = 'enabled';
         }
 
+    $scope.modalData = {doRefresh:false};
     $ionicModal.fromTemplateUrl('templates/events-modal.html', {
         scope: $scope,
         animation: 'slide-in-up',

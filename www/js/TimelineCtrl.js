@@ -199,6 +199,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             sl = 'enabled';
         }
 
+        $scope.modalData = {doRefresh:false};
         $ionicModal.fromTemplateUrl('templates/events-modal.html',
             {
                 scope: $scope, // give ModalCtrl access to this scope
@@ -241,6 +242,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         if ($scope.modal !== undefined)
         {
             $scope.modal.remove();
+        }
+
+        if ($scope.modalData.doRefresh) {
+
+            $timeout (function() {drawGraph ($scope.fromDate, $scope.toDate, maxItems );},500);
+            
         }
 
     };
