@@ -1499,7 +1499,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         deleteEvent(id)
         .then (function (succ) {
             $ionicLoading.hide();
-            $scope.modalData.doRefresh = true;
+            if ($scope.modalData) $scope.modalData.doRefresh = true;
 
             var dirn = 1;
             if (!$scope.nextId && $scope.prevId) dirn = -1;
@@ -1667,7 +1667,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         var ld = NVRDataModel.getLogin();
         if (!ld.canSwipeMonitors) return;
 
-        if ($state.current.name=="app.moment") {
+      /*  if ($state.current.name=="app.moment") {
            // console.log ("Searching for eid:"+eventId);
             var i;
             for (i=0; i < $scope.moments.length;i++) {
@@ -1680,7 +1680,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             maxAlarmFid = $scope.moments[i].Event.MaxScoreFrameId;
             eventId = $scope.moments[i].Event.Id;
             return;
-        }
+        }*/
 
             if (1) {
                // NVRDataModel.log("using zms to move ");
