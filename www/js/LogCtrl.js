@@ -244,6 +244,10 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
     }
 
+    $scope.selectToggle = function() {
+        $scope.selectOn = !$scope.selectOn;
+    };
+
     $scope.changePage = function(p)
     {
         $scope.zmPage = $scope.zmPage + p;
@@ -295,6 +299,9 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     $scope.$on('$ionicView.enter', function()
     {
         //console.log("**VIEW ** Log Ctrl Entered");
+
+        $ionicSideMenuDelegate.canDragContent(false);
+        $scope.selectOn = false;
         NVRDataModel.setAwake(false);
         $scope.logEntity = $rootScope.appName;
         $scope.zmPage = 1;

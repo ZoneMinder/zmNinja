@@ -93,6 +93,9 @@ do
                 exe cp -R node_modules/mkdirp $i/app/node_modules
                 exe cp -R node_modules/deep-equal $i/app/node_modules
                 exe cp -R node_modules/minimist $i/app/node_modules
+                exe cp -R node_modules/menu $i/app/node_modules
+                exe cp -R node_modules/clivas $i/app/node_modules
+                exe cp -R node_modules/keypress $i/app/node_modules
                 
                 echo Copying over zmNinja code...
                 exe cp -R www/* $i/app/

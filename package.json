@@ -56,6 +56,7 @@
   "dependencies": {
     "@ionic/cli-utils": "^1.19.2",
     "EmailComposer": "git+https://github.com/pliablepixels/email-composer.git",
+    "clivas": "^0.2.0",
     "com.telerik.plugins.nativepagetransitions": "^0.6.5",
     "cordova": "^8.0.0",
     "cordova-android": "^6.3.0",
@@ -94,6 +95,8 @@
     "electron-window-state": "^4.1.1",
     "ionic-plugin-keyboard": "^2.2.1",
     "json-file": "^0.1.0",
+    "keypress": "^0.2.1",
+    "menu": "^0.2.5",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "org.devgeeks.Canvas2ImagePlugin": "https://github.com/flache/Canvas2ImagePlugin",
