@@ -28,8 +28,8 @@
                 <h4>{{'kWizPortalAuth' | translate}}</h4>
                 <!--<img src="img/wizard.svg" width="100px" style="float:left"/>-->
                 <p>{{'kWizPortalText' | translate}}</p>
-                <ion-toggle ng-change="toggleAuth()" ng-model="wizard.useauth" ng-checked="wizard.useauth" toggle-class="toggle-calm">{{'kWizUseAuth' | translate}}</ion-toggle>
-                <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usezmauth" ng-checked="wizard.usezmauth" toggle-class="toggle-calm">{{'kWizZMAuth' | translate}}</ion-toggle>
+                <ion-toggle ng-change="toggleAuth()" ng-model="wizard.useauth" toggle-class="toggle-calm">{{'kWizUseAuth' | translate}}</ion-toggle>
+                <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usezmauth" toggle-class="toggle-calm">{{'kWizZMAuth' | translate}}</ion-toggle>
                 <div ng-if="wizard.usezmauth">
                     <label class="item item-input item-floating-label">
                         <span class="input-label">{{'kUserName' | translate}}</span>
@@ -41,7 +41,7 @@
                         <!--<p >{{'kWizPasswdNote' | translate}}</p>-->
                     </label>
                 </div>
-                <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" ng-checked="wizard.usebasicauth" toggle-class="toggle-calm">{{'kWizBasicAuth' | translate}}<p ng-show="wizard.usebasicauth">{{'kWarningBasicAuth'|translate}}</p></ion-toggle>
+                <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth"  toggle-class="toggle-calm">{{'kWizBasicAuth' | translate}}<p ng-show="wizard.usebasicauth">{{'kWarningBasicAuth'|translate}}</p></ion-toggle>
                 
                 <label class="item item-input item-floating-label" ng-show="wizard.usebasicauth">
                     <span class="input-label">{{'kUserName' | translate}}</span>

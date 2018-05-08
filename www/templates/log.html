@@ -2,7 +2,7 @@
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
 
-        <button ng-class="selectOn? 'button button-icon button-clear ion-ios-copy':'button button-icon button-clear ion-ios-copy-outline'" ng-click="selectToggle()"></button>
+        &nbsp;<button ng-class="selectOn? 'button button-icon button-clear ion-ios-copy':'button button-icon button-clear ion-ios-copy-outline'" ng-click="selectToggle()"></button>
 
         <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>

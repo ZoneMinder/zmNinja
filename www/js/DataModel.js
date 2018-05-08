@@ -981,6 +981,8 @@ angular.module('zmApp.controllers')
                     debug("reachability does not exist. Setting to true");
                     loginData.reachability = true;
                   }
+
+                 
                   // force it - this may not be the problem
                   loginData.reachability = true;
 
@@ -1283,12 +1285,17 @@ angular.module('zmApp.controllers')
                     loginData.showLiveForInProgressEvents = true;
 
                   }
+
+                  loginData.canSwipeMonitors = true;
+                  loginData.forceImageModePath = false;
+                  loginData.enableBlog = true;
               
                   log("DataModel init retrieved store loginData");
                 } else {
                   log("defaultServer configuration NOT found. Keeping login at defaults");
                 }
 
+                //console.log ("LOGS="+JSON.stringify(loginData.enableLogs));
                 // now set up SSL - need to do it after data return
                 // from local forage
                 setSSLCerts();

@@ -65,7 +65,7 @@
     "kDisableAlarmMontageSub"    :"may help if server gets overloaded",
     "kDisableNative"             :"Disable Native transitions",
     "kDisableNativeSub"          :"Enable if the menu is freezing",
-    "kDisablePush"               :"disable APNS/GCM",
+    "kDisablePush"               :"disable FCM",
     "kDisableSamsung"            :"If you are on a samsung device and are facing input issues, please temporarily disable auto-correction",
     "kDisableSimulStreaming"     :"Ignore ZM 1.32.0 multi-port",
     "kDisableSimulStreamingNote" :"(disabling in iOS may cause issues)",
