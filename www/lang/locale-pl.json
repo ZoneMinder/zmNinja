@@ -190,6 +190,7 @@
     "kLoginValidAPIFailedTitle"  :"Login potwierdzony ale API zawiodło",
     "kLoginValidatedTitle"       :"Login Potwierdzony",
     "kLogs"                      :"Logi",
+    "kLogsCopyPaste"             :"Wybieranie tekstu włączone, przewijanie dotykowe jest wyłączone. W celu zmiany, klinknij w ikonę",
     "kLowBWDisplay"              :"niska przepustowość",
     "kLowBandwidth"              :"Tryb niskiej przepustowości",
     "kManageServerGroups"        :"Zarządzaj Serwerem Grup",
