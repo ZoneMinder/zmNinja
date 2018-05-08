@@ -190,7 +190,7 @@
     "kLoginValidAPIFailedTitle"  :"Login validiert, aber API fehlgeschlagen",
     "kLoginValidatedTitle"       :"Login validiert",
     "kLogs"                      :"Logs",
-    "kLogsCopyPaste"             :"Texteingabe aktiviert, Scrollen is dakativiert. Bitte Icon anklicken um dies umzudrehen",
+    "kLogsCopyPaste"             :"Texteingabe aktiviert, Scrollen is deaktiviert. Bitte Icon anklicken um dies umzudrehen",
     "kLowBWDisplay"              :"niedrige Bandbreite",
     "kLowBandwidth"              :"niedrige Bandbreite",
     "kManageServerGroups"        :"Verwalte Servergruppen",
