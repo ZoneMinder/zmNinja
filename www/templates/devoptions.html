@@ -18,36 +18,24 @@
                 </label>
             </div>
             <label>
-                <ion-toggle ng-model="loginData.use24hr" ng-checked="{{loginData.use24hr}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnable24hr' | translate}}</span></ion-toggle>
+                <ion-toggle ng-model="loginData.use24hr" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnable24hr' | translate}}</span></ion-toggle>
             </label>
             <label>
-                <ion-toggle ng-model="loginData.useLocalTimeZone" ng-checked="{{loginData.useLocalTimeZone}}" ng-disabled="!isTzSupported()" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kLocalTimeZone' | translate}}<span ng-if="!isTzSupported()"><p>{{'kTimeZoneNotSupported' | translate}}</p></span><span ng-if="isTzSupported()"><p>{{'kServerTimeZone' | translate}}:{{getTimeZoneNow()}}</p></span></span>
+                <ion-toggle ng-model="loginData.useLocalTimeZone"  ng-disabled="!isTzSupported()" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kLocalTimeZone' | translate}}<span ng-if="!isTzSupported()"><p>{{'kTimeZoneNotSupported' | translate}}</p></span><span ng-if="isTzSupported()"><p>{{'kServerTimeZone' | translate}}:{{getTimeZoneNow()}}</p></span></span>
                 </ion-toggle>
             </label>
 
             <label>
-                <ion-toggle ng-model="loginData.showLiveForInProgressEvents" ng-checked="{{loginData.showLiveForInProgressEvents}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kShowLiveForInProgress' | translate}}</span>
+                <ion-toggle ng-model="loginData.showLiveForInProgressEvents"  toggle-class="toggle-calm"><span class="item-text-wrap">{{'kShowLiveForInProgress' | translate}}</span>
                 </ion-toggle>
             </label>
 
             <div ng-if="$root.platformOS=='android'">
                 <label>
-                    <ion-toggle ng-model="loginData.exitOnSleep" ng-checked="{{loginData.exitOnSleep}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kExitAppBackground' | translate}}</span></ion-toggle>
+                    <ion-toggle ng-model="loginData.exitOnSleep" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kExitAppBackground' | translate}}</span></ion-toggle>
                 </label>
             </div>
-            <!--
-            <label>
-                <ion-toggle ng-model="loginData.useNphZms"
-                            ng-checked="{{loginData.useNphZms}}"
-                            toggle-class="toggle-calm">use ZMS for single live view</ion-toggle>
-            </label>
-            
-            <label>
-                <ion-toggle ng-model="loginData.useNphZmsForEvents"
-                            ng-checked="{{loginData.useNphZmsForEvents}}"
-                            toggle-class="toggle-calm">use ZMS for events footage</ion-toggle>
-            </label>
-            -->
+         
             <div class="item item-text-wrap item-input-inset">
                 {{'kMaxMonitorsMontage' | translate }}&nbsp;
                 <label class="item-input-wrapper">
@@ -117,52 +105,52 @@
             </div>
 
             <label>
-                <ion-toggle ng-model="loginData.hideArchived" ng-checked="loginData.hideArchived" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kHideArchived' | translate}}
+                <ion-toggle ng-model="loginData.hideArchived" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kHideArchived' | translate}}
                    </span>
                 </ion-toggle>
             </label>
 
             <label ng-if="$root.platformOS!='desktop'">
-                <ion-toggle ng-model="loginData.enableStrictSSL" ng-checked="loginData.enableStrictSSL" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableStrictSSL' | translate}}
+                <ion-toggle ng-model="loginData.enableStrictSSL" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableStrictSSL' | translate}}
 
                    </span>
                 </ion-toggle>
             </label>
 
             <label>
-                <ion-toggle ng-model="loginData.enableGIFMP4" ng-checked="loginData.enableGIFMP4" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableGIFMP4' | translate}}
+                <ion-toggle ng-model="loginData.enableGIFMP4" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableGIFMP4' | translate}}
                    </span>
                 </ion-toggle>
             </label>
 
 
             <label>
-                <ion-toggle ng-model="loginData.enableThumbs" ng-checked="loginData.enableThumbs" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableThumbs' | translate}}
+                <ion-toggle ng-model="loginData.enableThumbs" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableThumbs' | translate}}
                 <p>{{'kEnableThumbsSub' | translate}}</p>
                    </span>
                 </ion-toggle>
             </label>
 
             <label>
-                <ion-toggle ng-model="loginData.enableSlowLoading" ng-checked="loginData.enableSlowLoading" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableSlowLoading' | translate}}
+                <ion-toggle ng-model="loginData.enableSlowLoading" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableSlowLoading' | translate}}
                    </span>
                 </ion-toggle>
             </label>
 
             <label>
-                <ion-toggle ng-model="loginData.disableAlarmCheckMontage" ng-checked="loginData.disableAlarmCheckMontage" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableAlarmMontage' | translate}}
+                <ion-toggle ng-model="loginData.disableAlarmCheckMontage"  toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableAlarmMontage' | translate}}
                     <p>{{'kDisableAlarmMontageSub' | translate}}</p></span>
                 </ion-toggle>
             </label>
 
             <label>
-                <ion-toggle ng-model="loginData.insertBasicAuthToken" ng-checked="loginData.insertBasicAuthToken" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kInsertBasicAuthToken' | translate}}
+                <ion-toggle ng-model="loginData.insertBasicAuthToken" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kInsertBasicAuthToken' | translate}}
                     <p>{{'kInsertBasicAuthTokenNote' | translate}}</p></span>
                 </ion-toggle>
             </label>
 
             <label ng-if="isMultiPort">
-                    <ion-toggle ng-model="loginData.disableSimulStreaming" ng-checked="loginData.disableSimulStreaming"
+                    <ion-toggle ng-model="loginData.disableSimulStreaming" 
                     ng-change="checkMultiPortToggle()" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kDisableSimulStreaming' | translate}}
                     <p ng-if="$root.platformOS=='ios'">{{'kDisableSimulStreamingNote' | translate}}</p>
                       </span>
@@ -170,8 +158,13 @@
             </label>
 
             <label>
-                <ion-toggle ng-model="loginData.enableLogs" ng-checked="{{loginData.enableLogs}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableLogs' | translate}}</span></ion-toggle>
+                <ion-toggle ng-model="loginData.enableLogs" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableLogs' | translate}}</span></ion-toggle>
             </label>
+
+            <label>
+                <ion-toggle ng-if="loginData.enableLogs" ng-model="loginData.enableDebug"  toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableDebug' | translate}}</span></ion-toggle>
+            </label>
+
             <div class="item item-text-wrap item-input-inset">
                 {{'kCycleMonitorsInterval'|translate}}({{'kSec'|translate}}.)&nbsp;
                 <label class="item-input-wrapper">
@@ -187,25 +180,10 @@
             </div>
 
 
-            <label>
-                <ion-toggle ng-if="loginData.enableLogs" ng-model="loginData.enableDebug" ng-checked="{{loginData.enableDebug}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kEnableDebug' | translate}}</span></ion-toggle>
-            </label>
-            <label>
-                <ion-toggle ng-model="loginData.canSwipeMonitors" ng-checked="{{loginData.canSwipeMonitors}}" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kSwipeToChangeMon' | translate}}</span></ion-toggle>
-            </label>
-            <label>
-                <ion-toggle ng-model="loginData.forceImageModePath" ng-checked="{{loginData.forceImageModePath}}" toggle-class="toggle-calm"> <span class="item-text-wrap">{{'kForceImagePath' | translate}}</span></ion-toggle>
-            </label>
-            <!--
-            <label>
-                <ion-toggle ng-model="loginData.reachability" ng-checked="{{loginData.reachability}}" toggle-class="toggle-calm"> {{'kReachability' | translate}}</ion-toggle>
-            </label>
-            -->
-            <label>
-                <ion-toggle ng-model="loginData.enableBlog" ng-checked="{{loginData.enableBlog}}" toggle-class="toggle-calm"> <span class="item-text-wrap">{{'kEnableNewsUpdates' | translate}}</span></ion-toggle>
-            </label>
+          
+          
             <label ng-if="$root.platformOS != 'desktop'">
-                <ion-toggle ng-model="loginData.disableNative" ng-checked="{{loginData.disableNative}}" toggle-class="toggle-calm"> <span class="item-text-wrap">{{'kDisableNative' | translate}}
+                <ion-toggle ng-model="loginData.disableNative" toggle-class="toggle-calm"> <span class="item-text-wrap">{{'kDisableNative' | translate}}
                     <p>{{'kDisableNativeSub' | translate}}</p></span>
                 </ion-toggle>
             </label>

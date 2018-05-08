@@ -10,7 +10,7 @@
                     <div style="white-space:nowrap;">
                         <span ng-repeat="alarm in alarm_images">
                                 <figure class="animated slideInLeft" style="display:inline-block">
-                                        <img ng-src="{{constructFrame(alarm.frameid)}}" fallback-src="img/frameerror.png" style="width: auto; height: auto;max-width: 100%;max-height: 100px" ng-click="changeSnapshot(alarm.frameid)" />  
+                                        <img ng-src="{{constructFrame(alarm.frameid)}}" fallback-src="img/frameerror.png" style="width: auto; height: auto;max-width: 100%;max-height: 100px" ng-click="changeSnapshot(alarm.frameid)" on-double-tap="closeModal();" />  
                                 </figure>  
                             </span>
                         </div>
@@ -26,6 +26,7 @@
                         <div style="width:100vw; height:100vh;">
 
                                 <div ng-if="isSnapShot() && !liveFeedMid" class="event-modal-play">
+                                       
                                         <button class="button button-assertive icon ion-play" ng-click="convertSnapShotToStream()">&nbsp;{{'kPlay'|translate}}</button>
                                 </div>
 
