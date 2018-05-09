@@ -1865,10 +1865,7 @@ angular.module('zmApp.controllers')
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors";
             myurl += "/index/Type !=:WebSite.json";
-            https://arjunrc.ddns.net:8889/zm/api/monitors/index/Type !=:WebSite.json
-            
-            //console.log ("API:"+myurl);
-          //  console.log ("gettign zms port");
+
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
 
