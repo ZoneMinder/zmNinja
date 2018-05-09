@@ -22,9 +22,7 @@ angular.module('zmApp.controllers')
       var justResumed = false;
       var timeSinceResumed = -1;
       var monitorsLoaded = 0;
-   
 
-      //var montageSize = 3;
       var monitors = [];
       var multiservers = [];
       var oldevents = [];
@@ -80,12 +78,6 @@ angular.module('zmApp.controllers')
           value: 'ru'
         },
 
-
-
-        /* {
-             text: 'Hindi',
-             value: 'hi'
-         }*/
       ];
 
       var serverGroupList = {};
@@ -197,6 +189,11 @@ angular.module('zmApp.controllers')
       };
 
 
+      /**
+       * Allows/Disallows self signed certs
+       * 
+       * @returns 
+       */
       function setSSLCerts() {
         if (!window.cordova) return;
         if (!loginData.enableStrictSSL) {
@@ -213,7 +210,12 @@ angular.module('zmApp.controllers')
       }
 
 
-      // credit: http://stackoverflow.com/questions/4994201/is-object-empty
+      /**
+       * Checks if a complex object is empty
+       * 
+       * @param {any} obj 
+       * @returns 
+       */
       function isEmpty(obj) {
 
         // null and undefined are "empty"
@@ -302,15 +304,14 @@ angular.module('zmApp.controllers')
 
               if (!data.config.Value) {
                 setCurrentServerMultiPortSupported(false);
-                log ("ZM_MIN_STREAMING_PORT not configure, disabling"); 
-                configParams.ZM_MIN_STREAMING_PORT = 0;     
-              }
-              else {
+                log("ZM_MIN_STREAMING_PORT not configure, disabling");
+                configParams.ZM_MIN_STREAMING_PORT = 0;
+              } else {
                 setCurrentServerMultiPortSupported(true);
-              log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
+                log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
               }
 
-              
+
               d.resolve(configParams.ZM_MIN_STREAMING_PORT);
               return (d.promise);
             })
@@ -333,103 +334,102 @@ angular.module('zmApp.controllers')
       }
 
 
-      function getAuthKey (mid,ck) {
+      function getAuthKey(mid, ck) {
 
         var d = $q.defer();
         var myurl;
 
         // disable for now, getAuthHash needs work
 
-       if (versionCompare(currentServerVersion, "1.31.44") != -1 ) {
-          
-          myurl = loginData.apiurl+'/host/getCredentials.json';
-          debug ("Server version > 1.31.41, so using getCredentials API:"+myurl);
-          $http.get(myurl) 
-          .then (function (s) {
+        if (versionCompare(currentServerVersion, "1.31.44") != -1) {
 
-            debug("Credentials API returned: " + JSON.stringify(s));
-            if (!s.data || !s.data.credentials ) {
-              $rootScope.authSession = "undefined";
-              d.resolve($rootScope.authSession);
-              debug ("getCredentials() API Succeded, but did NOT return credentials key: "+JSON.stringify(s));
-              return d.promise;
-               
-            }
-            else {
-              $rootScope.authSession = "&"+s.data.credentials;
-              if (s.data.append_password=='1') {
-                $rootScope.authSession = $rootScope.authSession + 
-                loginData.password;
-              }
-              d.resolve($rootScope.authSession);
-              return d.promise;
-            }
-            
-          },
-          function(e) {
-            $rootScope.authSession = "undefined";
-            d.resolve($rootScope.authSession);
-            debug ("AuthHash API Error: "+JSON.stringify(e));
-            return d.promise;
-            
-          }
-        );
-        return d.promise;
-          
-        }
-        //currentServerVersion
-       
-          var as = 'undefined';
-
-          if (!mid && monitors.length > 0) {
-            mid = monitors[0].Monitor.Id;
-          }
-
-          if (!mid) {
-            log("Deferring auth key, as monitorId unknown");
-            d.resolve("undefined");
-            $rootScope.authSession = as;
-            return (d.promise);
-          }
-
-          // Skipping monitor number as I only need an auth key
-          // so no need to generate an image
-           myurl = loginData.url + "/index.php?view=watch&mid=" + mid ;
-          debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
+          myurl = loginData.apiurl + '/host/getCredentials.json';
+          debug("Server version > 1.31.41, so using getCredentials API:" + myurl);
           $http.get(myurl)
-            .then(function (success) {
-                // console.log ("**** RESULT IS " + JSON.stringify(success));
-                // Look for auth=
-                var auth = success.data.match("auth=(.*?)&");
-                if (auth && (auth[1] != null)) {
-                  log("DataModel: Extracted a stream authentication key of: " + auth[1]);
-                  as = "&auth="+auth[1];
-                  $rootScope.authSession = as;
-                  d.resolve(as);
+            .then(function (s) {
+
+                debug("Credentials API returned: " + JSON.stringify(s));
+                if (!s.data || !s.data.credentials) {
+                  $rootScope.authSession = "undefined";
+                  d.resolve($rootScope.authSession);
+                  debug("getCredentials() API Succeded, but did NOT return credentials key: " + JSON.stringify(s));
+                  return d.promise;
+
                 } else {
-                  log("DataModel: Did not find a stream auth key, looking for user=");
-                  auth = success.data.match("user=(.*?)&");
-                  if (auth && (auth[1] != null)) {
-                    log("DataModel: Found simple stream auth mode (user=)");
-                    as = "&user=" + loginData.username + "&pass=" + loginData.password;
-                    $rootScope.authSession = as;
-                    d.resolve(as);
-                  } else {
-                    log("Data Model: Did not find any  stream mode of auth");
-                    as="";
-                    d.resolve(as);
+                  $rootScope.authSession = "&" + s.data.credentials;
+                  if (s.data.append_password == '1') {
+                    $rootScope.authSession = $rootScope.authSession +
+                      loginData.password;
                   }
-                
-                  return (d.promise);
+                  d.resolve($rootScope.authSession);
+                  return d.promise;
                 }
 
               },
-              function (error) {
-                log("DataModel: Error resolving auth key " + JSON.stringify(error));
-                d.resolve("undefined");
-                return (d.promise);
-              });
+              function (e) {
+                $rootScope.authSession = "undefined";
+                d.resolve($rootScope.authSession);
+                debug("AuthHash API Error: " + JSON.stringify(e));
+                return d.promise;
+
+              }
+            );
+          return d.promise;
+
+        }
+        //currentServerVersion
+
+        var as = 'undefined';
+
+        if (!mid && monitors.length > 0) {
+          mid = monitors[0].Monitor.Id;
+        }
+
+        if (!mid) {
+          log("Deferring auth key, as monitorId unknown");
+          d.resolve("undefined");
+          $rootScope.authSession = as;
           return (d.promise);
+        }
+
+        // Skipping monitor number as I only need an auth key
+        // so no need to generate an image
+        myurl = loginData.url + "/index.php?view=watch&mid=" + mid;
+        debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
+        $http.get(myurl)
+          .then(function (success) {
+              // console.log ("**** RESULT IS " + JSON.stringify(success));
+              // Look for auth=
+              var auth = success.data.match("auth=(.*?)&");
+              if (auth && (auth[1] != null)) {
+                log("DataModel: Extracted a stream authentication key of: " + auth[1]);
+                as = "&auth=" + auth[1];
+                $rootScope.authSession = as;
+                d.resolve(as);
+              } else {
+                log("DataModel: Did not find a stream auth key, looking for user=");
+                auth = success.data.match("user=(.*?)&");
+                if (auth && (auth[1] != null)) {
+                  log("DataModel: Found simple stream auth mode (user=)");
+                  as = "&user=" + loginData.username + "&pass=" + loginData.password;
+                  $rootScope.authSession = as;
+                  d.resolve(as);
+                } else {
+                  log("Data Model: Did not find any  stream mode of auth");
+                  as = "";
+                  d.resolve(as);
+                }
+
+                return (d.promise);
+              }
+
+            },
+            function (error) {
+              log("DataModel: Error resolving auth key " + JSON.stringify(error));
+              d.resolve("undefined");
+              return (d.promise);
+            });
+        return (d.promise);
 
       }
 
@@ -463,7 +463,7 @@ angular.module('zmApp.controllers')
         //console.log ("positionStr="+positionsStr);
         var positions = {};
         if (loginData.packeryPositions != '' && loginData.packeryPositions != undefined) {
-         // console.log("positions=" + loginData.packeryPositions);
+          // console.log("positions=" + loginData.packeryPositions);
 
 
           positions = JSON.parse(positionsStr);
@@ -578,14 +578,14 @@ angular.module('zmApp.controllers')
         }, mytimer || 6000);
       }
 
-      function setCurrentServerMultiPortSupported (val) {
-        debug ("Setting multi-port to:"+val);
+      function setCurrentServerMultiPortSupported(val) {
+        debug("Setting multi-port to:" + val);
         currentServerMultiPortSupported = val;
       }
-      
-      function setCurrentServerVersion (val) {
+
+      function setCurrentServerVersion(val) {
         currentServerVersion = val;
-        debug ("Setting server version to:"+val);
+        debug("Setting server version to:" + val);
       }
 
 
@@ -594,16 +594,16 @@ angular.module('zmApp.controllers')
 
         insertBasicAuthToken: function () {
 
-          return loginData.insertBasicAuthToken && $rootScope.basicAuthToken ? "&basicauth="+$rootScope.basicAuthToken:"";
+          return loginData.insertBasicAuthToken && $rootScope.basicAuthToken ? "&basicauth=" + $rootScope.basicAuthToken : "";
 
         },
 
-        setCurrentServerMultiPortSupported:function (val) {
+        setCurrentServerMultiPortSupported: function (val) {
           setCurrentServerMultiPortSupported(val);
         },
 
         setCurrentServerVersion: function (val) {
-         setCurrentServerVersion(val);
+          setCurrentServerVersion(val);
         },
 
 
@@ -611,7 +611,7 @@ angular.module('zmApp.controllers')
           return (currentServerMultiPortSupported);
         },
 
-        getCurrentServerVersion :function () {
+        getCurrentServerVersion: function () {
           return (currentServerVersion);
         },
 
@@ -890,13 +890,13 @@ angular.module('zmApp.controllers')
                     loginData.isUseBasicAuth = false;
                     loginData.basicAuthUser = '';
                     loginData.basicAuthPassword = '';
-                    $rootScope.basicAuthHeader='';
-                    $rootScope.basicAuthToken='';
+                    $rootScope.basicAuthHeader = '';
+                    $rootScope.basicAuthToken = '';
                   }
 
                   if (loginData.url.indexOf('@') != -1) {
-                    log (">> "+loginData.url);
-                    log (">>User/Password detected in URL, changing to new auth handling...");
+                    log(">> " + loginData.url);
+                    log(">>User/Password detected in URL, changing to new auth handling...");
                     loginData.isUseBasicAuth = true;
 
                     var components = URI.parse(loginData.url);
@@ -910,11 +910,11 @@ angular.module('zmApp.controllers')
                     if (components.path) loginData.streamingurl = loginData.streamingurl + components.path;
 
 
-                     components = URI.parse(loginData.apiurl);
+                    components = URI.parse(loginData.apiurl);
                     loginData.apiurl = components.scheme + "://" + components.host;
                     if (components.port) loginData.apiurl = loginData.apiurl + ":" + components.port;
                     if (components.path) loginData.apiurl = loginData.apiurl + components.path;
-                    
+
                     $rootScope.basicAuthToken = btoa(components.userinfo);
                     $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken;
                     //console.log (">>>> SET BASIC AUTH TO  " + $rootScope.basicAuthHeader);
@@ -927,11 +927,11 @@ angular.module('zmApp.controllers')
                   }
 
                   if (loginData.isUseBasicAuth) {
-                    $rootScope.basicAuthToken = btoa(loginData.basicAuthUser+':'+loginData.basicAuthPassword);
+                    $rootScope.basicAuthToken = btoa(loginData.basicAuthUser + ':' + loginData.basicAuthPassword);
                     $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken;
-                    debug ("Basic authentication detected, constructing Authorization Header");
+                    debug("Basic authentication detected, constructing Authorization Header");
 
-                   // console.log ("BASIC AUTH SET TO:"+$rootScope.basicAuthHeader);
+                    // console.log ("BASIC AUTH SET TO:"+$rootScope.basicAuthHeader);
 
                   }
 
@@ -982,7 +982,7 @@ angular.module('zmApp.controllers')
                     loginData.reachability = true;
                   }
 
-                 
+
                   // force it - this may not be the problem
                   loginData.reachability = true;
 
@@ -1011,15 +1011,15 @@ angular.module('zmApp.controllers')
                   }
 
 
-                  console.log ("INIT SIMUL="+loginData.disableSimulStreaming);
-                  console.log ("INIT PLATFORM IS="+$rootScope.platformOS);
+                  console.log("INIT SIMUL=" + loginData.disableSimulStreaming);
+                  console.log("INIT PLATFORM IS=" + $rootScope.platformOS);
                   if (typeof loginData.disableSimulStreaming == 'undefined') {
-                   
-                    
-                    loginData.disableSimulStreaming = ($rootScope.platformOS == 'ios')?true:false;
-                    console.log ("INIT DISABLING SIMUL:"+loginData.disableSimulStreaming);
+
+
+                    loginData.disableSimulStreaming = ($rootScope.platformOS == 'ios') ? true : false;
+                    console.log("INIT DISABLING SIMUL:" + loginData.disableSimulStreaming);
                   }
-                  
+
 
                   if (typeof loginData.exitOnSleep == 'undefined') {
                     debug("exitOnSleep does not exist. Setting to false");
@@ -1230,9 +1230,9 @@ angular.module('zmApp.controllers')
                   }
 
                   if (typeof loginData.enableThumbs == 'undefined') {
-                    
-                     loginData.enableThumbs = true;
-                    
+
+                    loginData.enableThumbs = true;
+
                   }
 
                   if (typeof loginData.enableSlowLoading == 'undefined') {
@@ -1278,7 +1278,7 @@ angular.module('zmApp.controllers')
                     loginData.insertBasicAuthToken = false;
 
                   }
-                  
+
 
                   if (typeof loginData.showLiveForInProgressEvents == 'undefined') {
 
@@ -1289,7 +1289,7 @@ angular.module('zmApp.controllers')
                   loginData.canSwipeMonitors = true;
                   loginData.forceImageModePath = false;
                   loginData.enableBlog = true;
-              
+
                   log("DataModel init retrieved store loginData");
                 } else {
                   log("defaultServer configuration NOT found. Keeping login at defaults");
@@ -1321,12 +1321,14 @@ angular.module('zmApp.controllers')
 
         setJustResumed: function (val) {
           justResumed = val;
-          if (val) { timeSinceResumed =  moment();}
-         },
+          if (val) {
+            timeSinceResumed = moment();
+          }
+        },
 
         getTimeSinceResumed: function () {
           // will be -1 if never resumed
-            return timeSinceResumed;
+          return timeSinceResumed;
         },
 
         stopNetwork: function (str) {
@@ -1336,17 +1338,17 @@ angular.module('zmApp.controllers')
           if (justResumed) {
             // we don't call stop as we did stop on pause
             log(s + " Not calling window stop as we just resumed");
-            d.resolve (true);
+            d.resolve(true);
             return (d.promise);
-            
+
           } else {
             log(s + " stopNework: Calling window.stop()");
-            $timeout (function() {
+            $timeout(function () {
               window.stop();
               d.resolve(true);
               return (d.promise);
             });
-            
+
           }
           return d.promise;
         },
@@ -1449,29 +1451,28 @@ angular.module('zmApp.controllers')
 
         },
 
-        updateHrsSinceChecked:function (key) {
+        updateHrsSinceChecked: function (key) {
           var tnow = moment();
-          debug ("Updating "+key+" to "+JSON.stringify(tnow));
+          debug("Updating " + key + " to " + JSON.stringify(tnow));
           localforage.setItem(key, JSON.stringify(tnow));
         },
 
-        hrsSinceChecked: function(key) {
-             var tnow = moment();
-             var d = $q.defer();
+        hrsSinceChecked: function (key) {
+          var tnow = moment();
+          var d = $q.defer();
 
-              localforage.getItem(key) 
-              .then (function (val) {
-                if (val == null) {  
+          localforage.getItem(key)
+            .then(function (val) {
+                if (val == null) {
                   // doesn't exist
                   localforage.setItem(key, JSON.stringify(tnow));
-                  debug ( key + " doesn't exist, storing it as:"+tnow);
-                  d.resolve(365*12*24);
+                  debug(key + " doesn't exist, storing it as:" + tnow);
+                  d.resolve(365 * 12 * 24);
                   return (d.promise);
-                } 
-                else {
+                } else {
                   val = JSON.parse(val);
                   var duration = moment.duration(tnow.diff(val)).asHours().toFixed(1);
-                  debug ("It has been "+duration+" hours since "+key+" was checked" );
+                  debug("It has been " + duration + " hours since " + key + " was checked");
                   d.resolve(duration);
                   return (d.promise);
                 }
@@ -1479,11 +1480,12 @@ angular.module('zmApp.controllers')
 
               },
               function (err) {
-                debug ("Hmm? hrsSinceCheck failed");
-                d.resolve (365*12*24); 
-                return d.promise;}
+                debug("Hmm? hrsSinceCheck failed");
+                d.resolve(365 * 12 * 24);
+                return d.promise;
+              }
             );
-            return d.promise;
+          return d.promise;
 
         },
 
@@ -1616,7 +1618,7 @@ angular.module('zmApp.controllers')
         // need a mid as restricted users won't be able to get
         // auth with just &watch
         getAuthKey: function (mid, ck) {
-          return getAuthKey (mid,ck);
+          return getAuthKey(mid, ck);
         },
 
         //-----------------------------------------------------------------------------
@@ -1624,8 +1626,8 @@ angular.module('zmApp.controllers')
         //-----------------------------------------------------------------------------
 
         clearZmsMultiPortSupport: function () {
-            debug ("Clearing Multiport...");
-            configParams.ZM_MIN_STREAMING_PORT = -1;
+          debug("Clearing Multiport...");
+          configParams.ZM_MIN_STREAMING_PORT = -1;
         },
 
         getZmsMultiPortSupport: function () {
@@ -1725,71 +1727,75 @@ angular.module('zmApp.controllers')
           return monitors;
         },
 
-        pauseLiveStream: function (ck,url) {
+        pauseLiveStream: function (ck, url) {
           if (!url) url = loginData.url;
-       
-          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
-          var req = url+'/index.php';
-          req = req + "?view=request&request=stream";
-          req = req + "&connkey="+ck;
-          req = req + "&auth="+myauthtoken;
-         // req = req + "&command=17";
 
-          debug ("DataModel: Pausing live stream ck:"+ck);
-          return $http.get(req+"&command=1")
-          .then (
-            function (s) {
-              debug ("pause success for ck:"+ck+" with:"+JSON.stringify(s));
-              
-            },
-            function (e) {debug ("pause success for ck:"+ck+" with:"+JSON.stringify(e));}
-          );
+          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+          var req = url + '/index.php';
+          req = req + "?view=request&request=stream";
+          req = req + "&connkey=" + ck;
+          req = req + "&auth=" + myauthtoken;
+          // req = req + "&command=17";
+
+          debug("DataModel: Pausing live stream ck:" + ck);
+          return $http.get(req + "&command=1")
+            .then(
+              function (s) {
+                debug("pause success for ck:" + ck + " with:" + JSON.stringify(s));
+
+              },
+              function (e) {
+                debug("pause success for ck:" + ck + " with:" + JSON.stringify(e));
+              }
+            );
 
         },
 
-        resumeLiveStream: function (ck,url) {
+        resumeLiveStream: function (ck, url) {
           if (!url) url = loginData.url;
-       
-          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
-          var req = url+'/index.php';
-          req = req + "?view=request&request=stream";
-          req = req + "&connkey="+ck;
-          req = req + "&auth="+myauthtoken;
-         // req = req + "&command=17";
 
-          debug ("DataModel: Resuming live stream ck:"+ck);
-          return $http.get(req+"&command=2")
-          .then (
-            function (s) {
-              debug ("play success for ck:"+ck+" with:"+JSON.stringify(s));
-              
-            },
-            function (e) {debug ("play success for ck:"+ck+" with:"+JSON.stringify(e));}
-          );
+          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+          var req = url + '/index.php';
+          req = req + "?view=request&request=stream";
+          req = req + "&connkey=" + ck;
+          req = req + "&auth=" + myauthtoken;
+          // req = req + "&command=17";
+
+          debug("DataModel: Resuming live stream ck:" + ck);
+          return $http.get(req + "&command=2")
+            .then(
+              function (s) {
+                debug("play success for ck:" + ck + " with:" + JSON.stringify(s));
+
+              },
+              function (e) {
+                debug("play success for ck:" + ck + " with:" + JSON.stringify(e));
+              }
+            );
 
         },
 
-        killLiveStream: function (ck,url,name) {
+        killLiveStream: function (ck, url, name) {
 
-         if (!url) url = loginData.url;
-       
+          if (!url) url = loginData.url;
+
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
-          var req = url+'/index.php';
+          var req = url + '/index.php';
           req = req + "?view=request&request=stream";
-          req = req + "&connkey="+ck;
-          req = req + "&auth="+myauthtoken;
-         // req = req + "&command=17";
-          if (name==undefined) name="";
-          debug ("DataModel: killing "+name+" live stream ck:"+ck);
-          return $http.get(req+"&command=17")
-          .then (
-            function (s) {
-            //  debug ("kill success for ck:"+ck+" with:"+JSON.stringify(s));
-              
-            },
-            function (e) {//debug ("kill success for ck:"+ck+" with:"+JSON.stringify(e));
-            }
-          );
+          req = req + "&connkey=" + ck;
+          req = req + "&auth=" + myauthtoken;
+          // req = req + "&command=17";
+          if (name == undefined) name = "";
+          debug("DataModel: killing " + name + " live stream ck:" + ck);
+          return $http.get(req + "&command=17")
+            .then(
+              function (s) {
+                //  debug ("kill success for ck:"+ck+" with:"+JSON.stringify(s));
+
+              },
+              function (e) { //debug ("kill success for ck:"+ck+" with:"+JSON.stringify(e));
+              }
+            );
         },
 
         /*killStream: function (ck) {
@@ -1838,13 +1844,13 @@ angular.module('zmApp.controllers')
 
         regenConnKeys: function () {
 
-          debug ("DataModel: Regenerating connkeys...");
-          for (var i=0; i < monitors.length; i++){
+          debug("DataModel: Regenerating connkeys...");
+          for (var i = 0; i < monitors.length; i++) {
             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
             monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
           }
         },
-        
+
         getMonitors: function (forceReload) {
           //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
 
@@ -1870,9 +1876,9 @@ angular.module('zmApp.controllers')
               .then(function (zmsPort) {
 
                 var controlURL = "";
-               
-                debug ("ZMS Multiport reported: "+zmsPort);
-                debug ("Monitor URL to fetch is:"+myurl);
+
+                debug("ZMS Multiport reported: " + zmsPort);
+                debug("Monitor URL to fetch is:" + myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
                   .success(function (data) {
                     //console.log("HTTP success got " + JSON.stringify(data.monitors));
@@ -1880,7 +1886,7 @@ angular.module('zmApp.controllers')
 
 
                     if ($rootScope.authSession == 'undefined') {
-                      log ("Now that we have monitors, lets get AuthKey...");
+                      log("Now that we have monitors, lets get AuthKey...");
                       getAuthKey(monitors[0].Monitor.Id, (Math.floor((Math.random() * 999999) + 1)).toString());
                     }
                     monitors.sort(function (a, b) {
@@ -1891,7 +1897,7 @@ angular.module('zmApp.controllers')
 
                     reloadMonitorDisplayStatus();
 
-                    debug ("Inside getMonitors, will also regen connkeys");
+                    debug("Inside getMonitors, will also regen connkeys");
                     debug("Now trying to get multi-server data, if present");
                     $http.get(apiurl + "/servers.json")
                       .success(function (data) {
@@ -1900,7 +1906,7 @@ angular.module('zmApp.controllers')
                         log("multi server list loaded" + JSON.stringify(data));
                         multiservers = data.servers;
 
-                        
+
                         for (var i = 0; i < monitors.length; i++) {
 
                           // make them all show for now
@@ -1921,7 +1927,7 @@ angular.module('zmApp.controllers')
                           }
                           if (serverFound) {
 
-                           debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
+                            debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
 
                             // Now here is the logic, I need to retrieve serverhostname,
                             // and slap on the host protocol and path. Meh.
@@ -1929,17 +1935,17 @@ angular.module('zmApp.controllers')
                             var p = URI.parse(loginData.streamingurl);
                             var s = URI.parse(multiservers[j].Server.Hostname);
 
-                          //  debug("recording server parsed is " + JSON.stringify(s));
-                           // debug("portal  parsed is " + JSON.stringify(p));
+                            //  debug("recording server parsed is " + JSON.stringify(s));
+                            // debug("portal  parsed is " + JSON.stringify(p));
 
                             var st = "";
                             var baseurl = "";
                             var streamingurl = "";
-                            
+
 
                             st += (s.scheme ? s.scheme : p.scheme) + "://"; // server scheme overrides 
 
-                           
+
 
                             // if server doesn't have a protocol, what we want is in path
                             if (!s.host) {
@@ -1948,32 +1954,30 @@ angular.module('zmApp.controllers')
                             }
 
                             st += s.host;
-                          
-                           // console.log ("STEP 1: ST="+st);
 
-                            if (zmsPort <=0 || loginData.disableSimulStreaming)
-                            {
-                                if (p.port || s.port) {
-                                    st += (s.port ? ":" + s.port : ":" + p.port);
-                                    streamingurl = st;
-                                  //  console.log ("STEP 2 no ZMS: ST="+st);
-      
-                                  }
-                                 
-                            }
-                            else {
-                                var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                                streamingurl = st + ':'+sport;
+                            // console.log ("STEP 1: ST="+st);
 
-                                if (p.port || s.port)
-                                     st += (s.port ? ":" + s.port : ":" + p.port);
-                            //    console.log ("STEP 2: ST="+st);
-                          
+                            if (zmsPort <= 0 || loginData.disableSimulStreaming) {
+                              if (p.port || s.port) {
+                                st += (s.port ? ":" + s.port : ":" + p.port);
+                                streamingurl = st;
+                                //  console.log ("STEP 2 no ZMS: ST="+st);
+
+                              }
+
+                            } else {
+                              var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
+                              streamingurl = st + ':' + sport;
+
+                              if (p.port || s.port)
+                                st += (s.port ? ":" + s.port : ":" + p.port);
+                              //    console.log ("STEP 2: ST="+st);
+
                             }
-                            
+
 
                             baseurl = st;
-                            controlURL =st;
+                            controlURL = st;
 
                             st += (s.path ? s.path : p.path);
                             streamingurl += (s.path ? s.path : p.path);
@@ -1989,7 +1993,7 @@ angular.module('zmApp.controllers')
                             //console.log ("** Streaming="+st+" **base="+baseurl);
                             // starting 1.30 we have fid=xxx mode to return images
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
-                          //  debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
+                            //  debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
 
                             //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
                             //debug ("Base URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.baseURL );
@@ -2000,32 +2004,32 @@ angular.module('zmApp.controllers')
                             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                             monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
-                             var st2 = loginData.streamingurl;
+                            var st2 = loginData.streamingurl;
 
-                            if (zmsPort >0 &&  !loginData.disableSimulStreaming) {
-                                // we need to insert minport
-                                st2 = "";
-                                var p2 = URI.parse(loginData.streamingurl);
-                                var p3 = URI.parse( loginData.url);
-                                st2 += p2.scheme + "://";
-                                if (!p2.host) {
-                                    p2.host = p2.path;
-                                    p2.path = undefined;
-                                }
-                                st2 += p2.host;
-                                var sport2 = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                                st2 = st2 + ':'+sport2;
-
-                                controlURL = st2;
-
-                                if (p2.path) st2 += p2.path;
-                                if (p3.path) controlURL +=p3.path;
+                            if (zmsPort > 0 && !loginData.disableSimulStreaming) {
+                              // we need to insert minport
+                              st2 = "";
+                              var p2 = URI.parse(loginData.streamingurl);
+                              var p3 = URI.parse(loginData.url);
+                              st2 += p2.scheme + "://";
+                              if (!p2.host) {
+                                p2.host = p2.path;
+                                p2.path = undefined;
                               }
+                              st2 += p2.host;
+                              var sport2 = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
+                              st2 = st2 + ':' + sport2;
 
-                              monitors[i].Monitor.streamingURL = st2;
-                              monitors[i].Monitor.controlURL = controlURL;
-                              //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
-                              //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
+                              controlURL = st2;
+
+                              if (p2.path) st2 += p2.path;
+                              if (p3.path) controlURL += p3.path;
+                            }
+
+                            monitors[i].Monitor.streamingURL = st2;
+                            monitors[i].Monitor.controlURL = controlURL;
+                            //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
+                            //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
                             monitors[i].Monitor.baseURL = loginData.url;
                             monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
 
@@ -2035,7 +2039,7 @@ angular.module('zmApp.controllers')
                               monitors[i].Monitor.imageMode = 'path';
                             }
 
-                           // debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
+                            // debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
                           }
                         }
                         // now get packery hide if applicable
@@ -2052,28 +2056,28 @@ angular.module('zmApp.controllers')
                           monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                           monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                           var st = loginData.streamingurl;
-                          if (zmsPort >0) {
+                          if (zmsPort > 0) {
                             // we need to insert minport
                             st = "";
                             var p = URI.parse(loginData.streamingurl);
                             st += p.scheme + "://";
                             if (!p.host) {
-                                p.host = p.path;
-                                p.path = undefined;
+                              p.host = p.path;
+                              p.path = undefined;
                             }
                             st += p.host;
                             var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                            st = st + ':'+sport;
+                            st = st + ':' + sport;
                             if (p.path) st += p.path;
 
-                            
+
 
                           }
 
                           monitors[i].Monitor.streamingURL = st;
-                         // console.log ("CONSTRUCTED STREAMING PATH="+st);
+                          // console.log ("CONSTRUCTED STREAMING PATH="+st);
                           monitors[i].Monitor.baseURL = loginData.url;
-                          
+
                           monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
                           //debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
 
@@ -2128,7 +2132,7 @@ angular.module('zmApp.controllers')
             d.reject("not implemented");
             return d.promise;
           }
-         // console.log("inside processFastLogin");
+          // console.log("inside processFastLogin");
           if (!loginData.fastLogin) {
             //console.log("Fast login not set");
             d.reject("fast login not enabled");
@@ -2511,48 +2515,42 @@ angular.module('zmApp.controllers')
         logout: function () {
 
           var d = $q.defer();
-          log (loginData.url +"=>Logging out of any existing ZM sessions...");
+          log(loginData.url + "=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "undefined";
 
-           $http(
-            {
-                method: 'POST',
-                timeout:10000,
-                //withCredentials: true,
-                url: loginData.url + '/index.php',
-                headers:
-                {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json',
-                },
-                transformRequest: function(obj)
-                {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" +
-                            encodeURIComponent(obj[p]));
-                    var params = str.join("&");
-                    return params;
-                },
+          $http({
+              method: 'POST',
+              timeout: 10000,
+              //withCredentials: true,
+              url: loginData.url + '/index.php',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+              },
+              transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                  str.push(encodeURIComponent(p) + "=" +
+                    encodeURIComponent(obj[p]));
+                var params = str.join("&");
+                return params;
+              },
 
-                data:
-                {
-                    action: "logout",
-                    view: "login"
-                }
+              data: {
+                action: "logout",
+                view: "login"
+              }
             })
-            .then (function (succ) {d.resolve(true);return d.promise;},
-                  function (err) {d.resolve(true);return d.promise;});
-            return d.promise;
+            .then(function (succ) {
+                d.resolve(true);
+                return d.promise;
+              },
+              function (err) {
+                d.resolve(true);
+                return d.promise;
+              });
+          return d.promise;
         }
-
-
-
-       
-
-
-
-
       };
     }
   ]);
