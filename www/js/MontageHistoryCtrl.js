@@ -1179,7 +1179,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
   var readyToRun;
   var frameoptions;
   var timeto, timefrom;
-  var commonCss;
   var sizeInProgress;
   var ld;
   var pckry;
@@ -1210,9 +1209,43 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     realtime: true,
     step: 1,
     className: "mySliderClass", //modelLabels:function(val) {return "";},
+    callback: function(value, released)
+    {
+        //console.log("CALLBACK"+value+released);
+        $ionicScrollDelegate.freezeScroll(!released);
+        //NVRDataModel.debug("EventCtrl: freezeScroll called with " + !released);
+
+    },
     smooth: false,
-    css: commonCss,
-    dimension: 'X'
+    dimension: 'X',
+    css:
+    {
+        background:
+        {
+            "background-color": "silver"
+        },
+        before:
+        {
+            "background-color": "purple"
+        },
+        default:
+        {
+            "background-color": "white"
+        }, // default value: 1px
+        after:
+        {
+            "background-color": "green"
+        }, // zone after default value
+        pointer:
+        {
+            "background-color": "red"
+        }, // circle pointer
+        range:
+        {
+            "background-color": "red"
+        } // use it if double value
+    },
+    
   };
 
   $scope.datetimeValueFrom = {
@@ -1272,26 +1305,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.datetimeValueFrom.value = timefrom.toDate();
     $scope.datetimeValueFrom.hrs = Math.round(moment.duration(moment().diff(moment($scope.datetimeValueFrom.value))).asHours());
 
-    commonCss = {
-      background: {
-        "background-color": "silver"
-      },
-      before: {
-        "background-color": "purple"
-      },
-      default: {
-        "background-color": "white"
-      }, // default value: 1px
-      after: {
-        "background-color": "green"
-      }, // zone after default value
-      pointer: {
-        "background-color": "red"
-      }, // circle pointer
-      range: {
-        "background-color": "red"
-      } // use it if double value
-    };
 
     $scope.monitorSize = []; // array with montage sizes per monitor
     $scope.scaleDirection = []; // 1 = increase -1 = decrease
