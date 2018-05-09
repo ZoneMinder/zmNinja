@@ -949,7 +949,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     if (m.id != 'footage')
 
       return;
-      
+
     showLive = true;
 
     if (m.snapshot == 'enabled') {
@@ -1457,6 +1457,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   function jumpToEvent(eid, dirn) {
     $scope.snapshotFrameId = 1;
+    isGlobalFid = false;
     var oState;
     NVRDataModel.log("HERE: Event jump called with:" + eid);
     if (eid == "") {
