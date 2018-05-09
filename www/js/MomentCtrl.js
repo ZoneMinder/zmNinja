@@ -16,6 +16,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   var excludeMonitors = [];
   var excludeMonitorsFilter = "";
   var momentType = "StartTime";
+  $scope.isMaxScoreFramePresent = false;
 
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
@@ -259,8 +260,9 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   $scope.constructFrame = function(moment) {
     var stream = "";
+   // console.log ($scope.isMaxScoreFramePresent);
     stream = moment.Event.baseURL+"/index.php?view=image" +
-           "&fid="+moment.Event.MaxScoreFrameId+
+          ($scope.isMaxScoreFramePresent? "&fid="+moment.Event.MaxScoreFrameId: "&eid="+moment.Event.Id+"&fid=1")+
            "&width="+moment.Event.thumbWidth*2 +
            "&height="+moment.Event.thumbHeight*2;
 
@@ -605,7 +607,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         id: 'footage',
         showLive:sl, 
         snapshot: 'enabled',
-        snapshotId:event.Event.MaxScoreFrameId,
+        snapshotId: $scope.isMaxScoreFramePresent?event.Event.MaxScoreFrameId:undefined,
         eventId:event.Event.Id
         //eventId:event.Event.Id
       
@@ -625,42 +627,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   };
 
-  //----------------------------------------------------------------
-  // Not used for now - superceded by play Event
-  //----------------------------------------------------------------
-
-  $scope.showThumbnail = function (b, f) {
-
-    if (!f) { // api update needed
-
-      $ionicPopup.alert({
-        title: $translate.instant('kNote'),
-        template: "{{'kApiUpgrade' | translate }}",
-        okText: $translate.instant('kButtonOk'),
-        cancelText: $translate.instant('kButtonCancel'),
-      });
-      return;
-
-    }
-
-    $scope.thumbnailLarge = b + '/index.php?view=image&fid=' + f;
-    $ionicModal.fromTemplateUrl('templates/image-modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up',
-        id: 'thumbnail',
-      })
-      .then(function (modal) {
-        $scope.modal = modal;
-
-
-        $scope.modal.show();
-
-        var ld = NVRDataModel.getLogin();
-
-      });
-
-  };
-
+  
   //----------------------------------------------------------------
   // Only called by "here" button without cond. So prev type is used
   //----------------------------------------------------------------
@@ -772,7 +739,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
       ])
       .then(function () {
-        NVRDataModel.debug("$a.all Parallel queries completed");
+        NVRDataModel.debug("$q.all Parallel queries completed");
 
         if (!moments.length) {
           $scope.loadingStatus = $translate.instant('kMomentNoneFound');
@@ -799,19 +766,15 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         // check the very first element for presence of maxscoreframe id
         // if its not there, we can't show snuff
         if (moments.length && !moments[0].Event.MaxScoreFrameId) {
-          $ionicPopup.alert({
-            title: $translate.instant('kNote'),
-            template: "{{'kApiUpgrade' | translate }}",
-            okText: $translate.instant('kButtonOk'),
-            cancelText: $translate.instant('kButtonCancel'),
-          });
+           $scope.isMaxScoreFramePresent =false;
+          
         } else {
-          $scope.moments = moments;
+          $scope.isMaxScoreFramePresent = true;
+        }
+        $scope.moments = moments;
           $timeout(function () {
             initMasonry();
           }, 300);
-
-        }
 
       });
 
@@ -847,6 +810,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     $scope.showIcons = true;
     $scope.areImagesLoading = true;
     $scope.expand = false;
+    $scope.isMaxScoreFramePresent = false;
     var ld = NVRDataModel.getLogin();
 
     $scope.loadingStatus = $translate.instant('kLoading');
