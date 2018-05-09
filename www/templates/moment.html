@@ -26,6 +26,8 @@
   <ion-content delegate-handle="moment-delegate" overflow-scroll="false" mouse-wheel-scroll style="background-color:#444444">
 
       <div ng-if="areImagesLoading" class="screen-note">&nbsp;{{ 'kArrangingImages' | translate }}...&nbsp;</div>
+
+      <div ng-if="!areImagesLoading &&  !isMaxScoreFramePresent" class="screen-note">&nbsp;{{ 'kApiUpgrade' | translate }}&nbsp;</div>
       
     <div ng-if="isSubMenu">
       <br/>
