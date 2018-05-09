@@ -394,10 +394,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if (resp.result == "Ok")
             {
 
-                $scope.currentProgress.progress = resp.status.progress;
-                $scope.eventId = resp.status.event;
+                if (resp.status) $scope.currentProgress.progress = resp.status.progress;
+                if (resp.status) $scope.eventId = resp.status.event;
                 $scope.d_eventId = $scope.eventId;
-                $scope.currentRate = resp.status.rate;
+                if (resp.status) $scope.currentRate = resp.status.rate;
 
                 if ($scope.currentProgress.progress > $scope.currentEventDuration) $scope.currentProgress.progress = $scope.currentEventDuration;
                 $scope.progressText = "At " + $scope.currentProgress.progress + "s of " + $scope.currentEventDuration + "s";
@@ -1017,7 +1017,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $rootScope.authSession ;
         }
     
-       //console.log ("STREAM="+stream);
+       // console.log ($scope.currentStreamMode );
+      // console.log ("STREAM="+stream);
        //console.log ("EID="+$scope.eventId);
        if ($rootScope.basicAuthToken && stream) stream +="&basicauth="+$rootScope.basicAuthToken;
         return stream;
@@ -1391,15 +1392,28 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.loginData.gapless = !$scope.loginData.gapless;
         NVRDataModel.setLogin($scope.loginData);
 
+        $scope.currentStreamMode = $scope.loginData.gapless ? 'gapless' : 'single';
+
         NVRDataModel.debug("EventModalCtrl: gapless has changed resetting everything & re-generating connkey");
+        
         NVRDataModel.stopNetwork("EventModalCtrl-toggle gapless");
+        currentStreamState = streamState.STOPPED;
         NVRDataModel.debug("Regenerating connkey as gapless has changed");
         // console.log ("********* OFFSET FROM TOGGLE GAPLESS");
-        $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-        $timeout(function()
-        {
-            sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
-        }, 500);
+        $timeout (function() {
+            $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+            currentStreamState = streamState.ACTIVE;
+
+           /* $timeout(function()
+            {
+                sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
+            }, 500);*/
+
+        });
+        
+
+        
+        
         //$timeout.cancel(eventQueryHandle);
         //eventQueryHandle  = $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
 
