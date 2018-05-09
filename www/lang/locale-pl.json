@@ -65,7 +65,7 @@
     "kDisableAlarmMontageSub"    :"może pomóc jeśli serwer się przeciąży",
     "kDisableNative"             :"Wyłącz natywne przejścia",
     "kDisableNativeSub"          :"Włącz jeśli manu się blokuje",
-    "kDisablePush"               :"wyłącz APNS/GCM",
+    "kDisablePush"               :"wyłącz FCM",
     "kDisableSamsung"            :"Jeśli jesteś na urządzeniu Samsung i masz problem z wypełnianiem pól, czasowo wyłącz autokorektę",
     "kDisableSimulStreaming"     :"Wyłącz streaming na żywo w Montażu",
     "kDisableSimulStreamingNote" :"(zawsze wyłączone w iOS)",
