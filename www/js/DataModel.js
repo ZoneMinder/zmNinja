@@ -1863,7 +1863,9 @@ angular.module('zmApp.controllers')
             //console.log("NVRDataModel: Invoking HTTP get to load monitors");
             log((forceReload == 1) ? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
             var apiurl = loginData.apiurl;
-            var myurl = apiurl + "/monitors.json";
+            var myurl = apiurl + "/monitors";
+            myurl += "/index/Type !=:WebSite.json";
+            https://arjunrc.ddns.net:8889/zm/api/monitors/index/Type !=:WebSite.json
             
             //console.log ("API:"+myurl);
           //  console.log ("gettign zms port");
@@ -1878,6 +1880,7 @@ angular.module('zmApp.controllers')
                   .success(function (data) {
                     //console.log("HTTP success got " + JSON.stringify(data.monitors));
                     monitors = data.monitors;
+
 
                     if ($rootScope.authSession == 'undefined') {
                       log ("Now that we have monitors, lets get AuthKey...");
