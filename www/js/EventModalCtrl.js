@@ -906,7 +906,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $rootScope.authSession;
     }
 
-    // console.log ($scope.currentStreamMode );
+    //console.log ($scope.connKey );
     // console.log ("STREAM="+stream);
     //console.log ("EID="+$scope.eventId);
     if ($rootScope.basicAuthToken && stream) stream += "&basicauth=" + $rootScope.basicAuthToken;
@@ -959,7 +959,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           $scope.snapshotFrameId = m.snapshotId;
           isGlobalFid = true;
       }
-      else { $scope.snapshotFrameId = 1;}
+      else { $scope.snapshotFrameId = 1; isSnapShotEnabled = false}
 
       eventId = m.eventId;
       $scope.eventId = m.eventId;
@@ -1138,6 +1138,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   // Playback speed adjuster
   $scope.adjustSpeed = function (val) {
 
+    if (currentStreamState != streamState.ACTIVE) return;
+
     if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
 
       $ionicLoading.show({
@@ -1150,7 +1152,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     var ld = NVRDataModel.getLogin();
 
-    if (ld.useNphZmsForEvents) {
+ 
 
       var cmd;
       $scope.isPaused = false;
@@ -1189,46 +1191,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           }
         );
 
-    } else // not using nph
-    {
-
-      switch (val) {
-
-        case "super":
-          $scope.eventSpeed = 20 / $scope.event.Event.Frames;
-          carouselUtils.setDuration($scope.eventSpeed);
-          break;
-        case "normal":
-          $scope.eventSpeed = $scope.event.Event.Length / $scope.event.Event.Frames;
-          //$scope.eventSpeed = 5;
-          carouselUtils.setDuration($scope.eventSpeed);
-
-          break;
-        case "faster":
-          $scope.eventSpeed = $scope.eventSpeed / 2;
-          if ($scope.eventSpeed < 20 / $scope.event.Event.Frames)
-            $scope.eventSpeed = 10 / $scope.event.Event.Frames;
-          carouselUtils.setDuration($scope.eventSpeed);
-          break;
-        case "slower":
-          $scope.eventSpeed = $scope.eventSpeed * 2;
-          carouselUtils.setDuration($scope.eventSpeed);
-
-          break;
-        default:
-
-      }
-      NVRDataModel.debug("Set playback speed to " + $scope.eventSpeed);
-
-      $ionicLoading.show({
-        template: $translate.instant('kPlaybackInterval') + ': ' + $scope.eventSpeed.toFixed(3) + "ms",
-        animation: 'fade-in',
-        showBackdrop: false,
-        duration: 1500,
-        maxWidth: 300,
-        showDelay: 0
-      });
-    }
 
   };
 
@@ -1459,6 +1421,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   function jumpToEvent(eid, dirn) {
     $scope.snapshotFrameId = 1;
+    $scope.isPaused = false;
     isGlobalFid = false;
     var oState;
     NVRDataModel.log("HERE: Event jump called with:" + eid);
@@ -1499,6 +1462,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
         processMove(eid, dirn);
 
+        // FIXME: why does making this STOPPED show video playable error?
         currentStreamState = streamState.SNAPSHOT;
       }, 200);
     }
