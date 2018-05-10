@@ -103,6 +103,7 @@ angular.module('zmApp', [
     quantSample: 15,
     hashSecret: 'unused at the moment',
     forceMontageReloadDelay: 4500000, // 1 hr 15m,
+    //forceMontageReloadDelay: 5000, // 1 hr 15m,
     thumbWidth:200,
     alarmStatusTime: 10000,
     eventServerErrorDelay:5000, // time to wait till I report initial connect errors
@@ -1315,8 +1316,9 @@ angular.module('zmApp', [
       // lets see if it really works
       $rootScope.online = navigator.onLine;
 
-      $window.addEventListener("offline", function () {
-        $rootScope.$apply(function () {
+        document.addEventListener("offline", function () {
+        //console.log ("OFFLINE------------------------------------");
+       $timeout(function () {
           $rootScope.online = false;
           NVRDataModel.log("Your network went offline");
 
@@ -1325,8 +1327,11 @@ angular.module('zmApp', [
         });
       }, false);
 
-      $window.addEventListener("online", function () {
-        $rootScope.$apply(function () {
+      document.addEventListener("online", function () {
+        //console.log ("ONLINE------------------------------------");
+        $timeout(function () {
+          NVRDataModel.log("Your network came back online");
+         
           $rootScope.online = true;
 
           $timeout(function () {
