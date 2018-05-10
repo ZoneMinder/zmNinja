@@ -959,7 +959,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           $scope.snapshotFrameId = m.snapshotId;
           isGlobalFid = true;
       }
-      else { $scope.snapshotFrameId = 1; isSnapShotEnabled = false}
+      else { $scope.snapshotFrameId = 1; isSnapShotEnabled = false;}
 
       eventId = m.eventId;
       $scope.eventId = m.eventId;
