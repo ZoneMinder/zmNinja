@@ -3268,7 +3268,8 @@ angular.module('zmApp.controllers')
         var min = Math.floor(num/60);
         var sec = Math.floor(num - min * 60);
         stime="";
-        if (min) stime += min+"m,";
+        if (min) stime += min+"m ";
+
         if (sec) stime += sec+"s";
         return stime;
     };
