@@ -103,7 +103,7 @@ angular.module('zmApp', [
     quantSample: 15,
     hashSecret: 'unused at the moment',
     forceMontageReloadDelay: 4500000, // 1 hr 15m,
-    //forceMontageReloadDelay: 5000, // 1 hr 15m,
+    //forceMontageReloadDelay: 10000, // testing 10s
     thumbWidth:200,
     alarmStatusTime: 10000,
     eventServerErrorDelay:5000, // time to wait till I report initial connect errors
