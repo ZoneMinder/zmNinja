@@ -887,6 +887,7 @@ angular.module('zmApp.controllers')
 
             function onSuccess(results)
             {
+                $ionicLoading.hide();
                 NVRDataModel.debug("Removing temp file");
 
                 if ($rootScope.platformOS == 'ios')
@@ -898,7 +899,8 @@ angular.module('zmApp.controllers')
 
             function onError(error)
             {
-                //console.log("Error: " + error);
+                $ionicLoading.hide();
+                console.log("Error: " + error);
 
             }
         }
@@ -3180,9 +3182,10 @@ angular.module('zmApp.controllers')
     $scope.constructThumbnail = function(event) {
         var stream = "";
         stream = event.Event.baseURL+
-        "/index.php?view=image&fid=" +event.Event.MaxScoreFrameId +
-        "&width="+event.Event.thumbWidth*2 +
-        "&height="+event.Event.thumbHeight*2;
+        "/index.php?view=image&fid=" +
+        (event.Event.MaxScoreFrameId ?  event.Event.MaxScoreFrameId:  "1&eid="+event.Event.Id) +
+       "&width="+event.Event.thumbWidth*2 +
+       "&height="+event.Event.thumbHeight*2;
         if ($rootScope.authSession !='undefined') stream+=$rootScope.authSession;
 
         stream += NVRDataModel.insertBasicAuthToken();
@@ -3259,6 +3262,16 @@ angular.module('zmApp.controllers')
         //  return moment(str).fromNow();
 
     }
+
+    $scope.humanize = function (num) {
+
+        var min = Math.floor(num/60);
+        var sec = Math.floor(num - min * 60);
+        stime="";
+        if (min) stime += min+"m,";
+        if (sec) stime += sec+"s";
+        return stime;
+    };
 
     $scope.prettifyDate = function(str)
     {

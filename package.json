@@ -48,9 +48,9 @@
       "cordova-plugin-device": {},
       "cordova-plugin-file": {},
       "cordova-plugin-add-swift-support": {},
-      "cordova-plugin-certificates": {},
       "ionic-plugin-keyboard": {},
-      "cordova-library-helper": {}
+      "cordova-library-helper": {},
+      "cordova-plugin-certificates": {}
     }
   },
   "dependencies": {
