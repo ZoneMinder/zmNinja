@@ -1,163 +1,186 @@
 <div ng-controller="EventModalCtrl">
-    <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
-    <ion-modal-view cache-view="false">
-        <ion-content style="background-color:#444444" ng-cloak>
+  <!-- style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;"-->
+  <ion-modal-view cache-view="false">
+    <ion-content style="background-color:#444444" ng-cloak>
 
-        
-            <!-- alarm frames in snapshot-->
-            <div ng-if="isSnapShot() && !liveFeedMid">
-                    <ion-scroll direction="x" overflow-scroll="false" >
-                    <div style="white-space:nowrap;">
-                        <span ng-repeat="alarm in alarm_images">
-                                <figure class="animated slideInLeft" style="display:inline-block">
-                                        <img ng-src="{{constructFrame(alarm.frameid)}}" fallback-src="img/frameerror.png" style="width: auto; height: auto;max-width: 100%;max-height: 100px" ng-click="changeSnapshot(alarm.frameid)" on-double-tap="closeModal();" />  
-                                </figure>  
-                            </span>
-                        </div>
 
-                    </ion-scroll>
+      <!-- alarm frames in snapshot-->
+      <div ng-if="isSnapShot() && !liveFeedMid">
+        <ion-scroll direction="x" overflow-scroll="false">
+          <div style="white-space:nowrap;">
+            <span ng-repeat="alarm in alarm_images">
+              <figure class="animated slideInLeft" style="display:inline-block">
+                <img ng-src="{{constructFrame(alarm.frameid)}}" fallback-src="img/frameerror.png" style="width: auto; height: auto;max-width: 100%;max-height: 100px"
+                  ng-click="changeSnapshot(alarm.frameid)" on-double-tap="closeModal();" />
+              </figure>
+            </span>
+          </div>
+
+        </ion-scroll>
+      </div>
+
+      <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" delegate-handle="imgscroll" overflow-scroll="false"
+        scrollbar-x="false" scrollbar-y="false">
+        <div id="full-screen-event" style="height: 100vh;">
+
+          <div ng-if="defaultVideo=='' || isSnapShot()">
+            <!--<div style="color:white">connkey:{{connKey}}</div>-->
+            <div style="width:100vw; height:100vh;">
+
+              <div ng-if="isSnapShot() && !liveFeedMid" class="event-modal-play">
+
+                <button class="button button-assertive icon ion-play" ng-click="convertSnapShotToStream()">&nbsp;{{'kPlay'|translate}}</button>
+              </div>
+
+
+
+              <img ng-if="!liveFeedMid" image-spinner-src="{{constructStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"
+                on-double-tap="closeModal();" img-spinner-w="1024" img-spinner-h="768" image-spinner-loader="lines" imageonload="modalImageLoaded()"
+                on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" />
+
+
+              <div ng-if="liveFeedMid">
+                <img image-spinner-src="{{loginData.streamingurl}}/nph-zms?mode=jpeg&monitor={{liveFeedMid}}&connkey={{connKey}}{{$root.authSession}}"
+                  ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
+                  img-spinner-w="1024" img-spinner-h="768" image-spinner-loader="lines" imageonload="modalImageLoaded()" on-swipe-left="onSwipeEvent(nextId,1)"
+                  on-swipe-right="onSwipeEvent(prevId,-1)" />
+                <div class="events-range-modal-text">
+                  <span class="events-range-modal-warning-text">{{eventWarning}}</span>
+                </div>
+              </div>
+
+
+
+              <div ng-if="isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999" class="header-paused">
+                &nbsp;
+                <i class="ion-pause"></i> {{'kPaused' | translate}}&nbsp;
+              </div>
             </div>
+          </div>
+          <!-- no default video -->
+          <div ng-if="defaultVideo!==undefined && defaultVideo!='' && !isSnapShot() && !isStreamStopped()">
+            <div ng-if="videoIsReady">
 
-            <ion-scroll has-bouncing=false min-zoom=1 zooming="true" direction="xy" delegate-handle="imgscroll" overflow-scroll="false" scrollbar-x="false" scrollbar-y="false">
-                <div id="full-screen-event" style="height: 100vh;">
- 
-                    <div ng-if="defaultVideo=='' || isSnapShot()">
-                        <!--<div style="color:white">connkey:{{connKey}}</div>-->
-                        <div style="width:100vw; height:100vh;">
+              <!-- <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">-->
+              <div on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" ng-style="{'height':$root.devHeight+'px', 'width':$root.devWidth+'px'}">
 
-                                <div ng-if="isSnapShot() && !liveFeedMid" class="event-modal-play">
-                                       
-                                        <button class="button button-assertive icon ion-play" ng-click="convertSnapShotToStream()">&nbsp;{{'kPlay'|translate}}</button>
-                                </div>
+                <videogular vg-can-play="onCanPlay()" vg-native-fullscreen="videoObject.config.nativeFullScreen" vg-player-ready="onPlayerReady($API)"
+                  vg-update-playback="onPlaybackUpdate($playBack)" vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme"
+                  vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay"
+                  vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)"
+                  vg-error="onVideoError($event)">
+                  <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
+                  </vg-media>
+                  <vg-controls>
+                    <vg-playback-button></vg-playback-button>
+                    <vg-play-pause-button></vg-play-pause-button>
+                    <vg-time-display>{{ videoTime(event.Event.StartTime, currentTime ); }}</vg-time-display>
+                    <vg-scrub-bar>
+                      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                      <vg-cuepoints vg-cuepoints-config="videoObject.config.cuepoints" vg-cuepoints-theme="videoObject.config.cuepoints.theme.url">
+                      </vg-cuepoints>
+                    </vg-scrub-bar>
+                    <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                    <vg-fullscreen-button></vg-fullscreen-button>
+                    <vg-volume>
+                      <vg-mute-button></vg-mute-button>
+                    </vg-volume>
+                  </vg-controls>
 
-                                
-
-                            <img ng-if="!liveFeedMid" image-spinner-src="{{constructStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
-                            img-spinner-w="1024" img-spinner-h="768" image-spinner-loader="lines" 
-                            imageonload="modalImageLoaded()" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" 
-                            />
-
-
-                            <div ng-if="liveFeedMid">
-                                <img  image-spinner-src="{{loginData.streamingurl}}/nph-zms?mode=jpeg&monitor={{liveFeedMid}}&connkey={{connKey}}{{$root.authSession}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
-                                img-spinner-w="1024" img-spinner-h="768"
-                                image-spinner-loader="lines"
-                                imageonload="modalImageLoaded()" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" 
-                                />
-                                <div class="events-range-modal-text"><span class="events-range-modal-warning-text">{{eventWarning}}</span> </div>
-                            </div>
-
-
-
-                            <div ng-if="isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999" class="header-paused">
-                                &nbsp;<i class="ion-pause"></i> {{'kPaused' | translate}}&nbsp;
-                            </div>
-                        </div>
-                    </div>
-                    <!-- no default video -->
-                    <div ng-if="defaultVideo!==undefined && defaultVideo!='' && !isSnapShot() && !isStreamStopped()">
-                        <div ng-if="videoIsReady">
-                        
-                           <!-- <div style="height:{{$root.devHeight}}px; width:{{$root.devWidth}}px;">-->
-                            <div on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)"  ng-style="{'height':$root.devHeight+'px', 'width':$root.devWidth+'px'}">
-                            
-                                <videogular  vg-can-play="onCanPlay()"  vg-native-fullscreen="videoObject.config.nativeFullScreen" vg-player-ready="onPlayerReady($API)" 
-                                vg-update-playback="onPlaybackUpdate($playBack)"
-                                vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()" on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)" vg-error="onVideoError($event)">
-                                    <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
-                                    </vg-media>
-                                    <vg-controls>
-                                        <vg-playback-button></vg-playback-button>
-                                        <vg-play-pause-button></vg-play-pause-button>
-                                        <vg-time-display>{{ videoTime(event.Event.StartTime, currentTime ); }}</vg-time-display>
-                                        <vg-scrub-bar>
-                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                            <vg-cuepoints vg-cuepoints-config="videoObject.config.cuepoints"
-                                                            vg-cuepoints-theme="videoObject.config.cuepoints.theme.url">
-                                                        </vg-cuepoints>
-                                        </vg-scrub-bar>
-                                        <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
-                                        <vg-fullscreen-button></vg-fullscreen-button>
-                                        <vg-volume>
-                                            <vg-mute-button></vg-mute-button>
-                                        </vg-volume>
-                                    </vg-controls>
-                            
-                                </videogular>
-                            </div>
-                        </div>
-                        <!--<div id="event_canvas_video">
+                </videogular>
+              </div>
+            </div>
+            <!--<div id="event_canvas_video">
                             <canvas id="eventchart" width="100%" height="20px"></canvas>
                         </div>-->
-                    </div>
-                </div>
-                <!-- 100vh -->
-            </ion-scroll>
-
-            
-            <div ng-show="defaultVideo=='' && !liveFeedMid && !isSnapShot()">
-                <div id="event_canvas">
-                    <canvas style="padding-left:23px;
-                        padding-right:23px;" id="eventchart" width="auto" height="20"></canvas>
-                </div>
-                
-                <div ng-if="checkEventOn" id="event_slider" data-tap-disabled="false">
-                    <div class="range">
-                        <input on-drag="enableSliderBlock()" on-release="youChangedSlider()" type="range" min="0" max="{{currentEventDuration}}" ng-model="sliderProgress.progress">
-                    </div>
-                </div>
-                <div id="event_rate_text">
-                    @{{currentRate}}x {{'kAt' | translate}}:{{currentProgress.progress}}s 
-                </div>
-            </div>
-            
-          
-        
-        </ion-content>
-    </ion-modal-view>
-
-
-   
-    <div ng-show="!liveFeedMid">
-        <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
-            <a mfb-button icon="ion-arrow-right-c" label="{{'kNextEvent'|translate}}" ng-click="jumpToEvent(nextId,1);"></a>
-            <a mfb-button icon="ion-arrow-left-c" label="{{'kPrevEvent'|translate}}" ng-click="jumpToEvent(prevId,-1);"></a>
-            <a ng-if="!isSnapShot()" mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFillScreen' | translate):('kFitScreen' | translate)}}" ng-click="scaleImage();"></a>
-            <a mfb-button icon="ion-close" label="{{'kExitEventView' | translate}}" ng-click="closeModal()"> </a>
-        </nav>
-        <nav ng-if=" !isSnapShot() && defaultVideo==''" mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
-            <a mfb-button icon="ion-skip-backward" label="{{'kFastRewind'|translate}}" ng-click="adjustSpeed('fr');"></a>
-            <a mfb-button icon="ion-skip-forward" label="{{'kFastForward'|translate}}" ng-click="adjustSpeed('ff');"></a>
-            <a mfb-button icon="ion-play" label="{{'kNormalPlay'|translate}}" ng-click="adjustSpeed('np');"></a>
-            <a mfb-button icon="ion-pause" label="{{'kPause'|translate}}" ng-click="adjustSpeed('p');"> </a>
-        </nav>
-        
-        <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] <span class="events-range-modal-warning-text">{{eventWarning}}</span> </div>
-        <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
-            <ul>
-                <li>
-                    <a href="" ng-click="toggleListMenu()"> <i ng-class="(isToggleListMenu) ? 'icon  ion-chevron-left': 'icon ion-chevron-right'"></i></a>
-                </li>
-                <li ng-if="defaultVideo=='' && isToggleListMenu" ng-style="{'background-color': loginData.gapless?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}">
-                    <a href="" ng-click="toggleGapless()"> <i class="ion-ios-loop-strong"></i>-{{loginData.gapless? ('kOn' | translate): ('kOff' | translate)}}</a>
-                </li>
-                <li ng-if="defaultVideo=='' && isToggleListMenu">
-                    <a href="" ng-click="saveEventImageToPhoneWithPerms(false)"> <i class="ion-ios-camera"></i></a>
-                </li>
-                <li ng-if="defaultVideo=='' && isToggleListMenu">
-                    <a href="" ng-click="saveEventImageToPhoneWithPerms(true)"> <i class="ion-android-notifications"></i></a>
-                </li>
-                <li ng-if="$root.isAlarm">
-                    <a data-badge="{{$root.alarmCount}}" class="notification-badge animated infinite tada" href="" ng-click="handleAlarms()"><i class="ion-ios-bell"></i></a>
-                </li>
-
-                <li>
-                    <a href="" ng-click="deleteAndMoveNext(eventId)"><i class="ion-trash-a"></i></a>
-                </li>
-               
-
-
-            </ul>
+          </div>
         </div>
-    </div> <!-- not live feed or snapshot -->
+        <!-- 100vh -->
+      </ion-scroll>
+
+
+      <div ng-show="defaultVideo=='' && !liveFeedMid && !isSnapShot()">
+        <div id="event_canvas">
+          <canvas style="padding-left:23px;
+                        padding-right:23px;" id="eventchart" width="auto" height="20"></canvas>
+        </div>
+
+        <div ng-if="checkEventOn" id="event_slider" data-tap-disabled="false">
+          <div class="range">
+            <input on-drag="enableSliderBlock()" on-release="youChangedSlider()" type="range" min="0" max="{{currentEventDuration}}"
+              ng-model="sliderProgress.progress">
+          </div>
+        </div>
+        <div id="event_rate_text">
+          @{{currentRate}}x {{'kAt' | translate}}:{{currentProgress.progress}}s
+        </div>
+      </div>
+
+
+
+    </ion-content>
+  </ion-modal-view>
+
+
+
+  <div ng-show="!liveFeedMid">
+    <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up"
+      toggling-method="click">
+      <a mfb-button icon="ion-arrow-right-c" label="{{'kNextEvent'|translate}}" ng-click="jumpToEvent(nextId,1);"></a>
+      <a mfb-button icon="ion-arrow-left-c" label="{{'kPrevEvent'|translate}}" ng-click="jumpToEvent(prevId,-1);"></a>
+      <a ng-if="!isSnapShot()" mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFillScreen' | translate):('kFitScreen' | translate)}}"
+        ng-click="scaleImage();"></a>
+      <a mfb-button icon="ion-close" label="{{'kExitEventView' | translate}}" ng-click="closeModal()"> </a>
+    </nav>
+    <nav ng-if=" !isSnapShot() && defaultVideo==''" mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}"
+      active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
+      <a mfb-button icon="ion-skip-backward" label="{{'kFastRewind'|translate}}" ng-click="adjustSpeed('fr');"></a>
+      <a mfb-button icon="ion-skip-forward" label="{{'kFastForward'|translate}}" ng-click="adjustSpeed('ff');"></a>
+      <a mfb-button icon="ion-play" label="{{'kNormalPlay'|translate}}" ng-click="adjustSpeed('np');"></a>
+      <a mfb-button icon="ion-pause" label="{{'kPause'|translate}}" ng-click="adjustSpeed('p');"> </a>
+    </nav>
+
+    <div class="events-range-modal-text">{{mName}}&nbsp;
+      <i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}]
+      <span class="events-range-modal-warning-text">{{eventWarning}}</span>
+    </div>
+    <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
+      <ul>
+        <li>
+          <a href="" ng-click="toggleListMenu()">
+            <i ng-class="(isToggleListMenu) ? 'icon  ion-chevron-left': 'icon ion-chevron-right'"></i>
+          </a>
+        </li>
+        <li ng-if="defaultVideo=='' && isToggleListMenu" ng-style="{'background-color': loginData.gapless?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}">
+          <a href="" ng-click="toggleGapless()">
+            <i class="ion-ios-loop-strong"></i>-{{loginData.gapless? ('kOn' | translate): ('kOff' | translate)}}</a>
+        </li>
+        <li ng-if="defaultVideo=='' && isToggleListMenu">
+          <a href="" ng-click="saveEventImageToPhoneWithPerms(false)">
+            <i class="ion-ios-camera"></i>
+          </a>
+        </li>
+        <li ng-if="defaultVideo=='' && isToggleListMenu">
+          <a href="" ng-click="saveEventImageToPhoneWithPerms(true)">
+            <i class="ion-android-notifications"></i>
+          </a>
+        </li>
+        <li ng-if="$root.isAlarm">
+          <a data-badge="{{$root.alarmCount}}" class="notification-badge animated infinite tada" href="" ng-click="handleAlarms()">
+            <i class="ion-ios-bell"></i>
+          </a>
+        </li>
+
+        <li>
+          <a href="" ng-click="deleteAndMoveNext(eventId)">
+            <i class="ion-trash-a"></i>
+          </a>
+        </li>
+
+
+
+      </ul>
+    </div>
+  </div>
+  <!-- not live feed or snapshot -->
 </div>

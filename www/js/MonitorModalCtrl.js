@@ -19,8 +19,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   var targetID = "";
   $scope.imageZoomable = true;
   $scope.ptzButtonsShown = true;
-  
-  
+
+
 
 
 
@@ -34,20 +34,20 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   //$rootScope.authSession = "undefined";
 
- /* $ionicLoading.show({
-    template: $translate.instant('kNegotiatingStreamAuth') + '...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    duration: zm.loadingTimeout,
-    maxWidth: 300,
-    showDelay: 0
-  });*/
+  /* $ionicLoading.show({
+     template: $translate.instant('kNegotiatingStreamAuth') + '...',
+     animation: 'fade-in',
+     showBackdrop: true,
+     duration: zm.loadingTimeout,
+     maxWidth: 300,
+     showDelay: 0
+   });*/
 
   $scope.currentStreamMode = 'single';
   NVRDataModel.log("Using stream mode " + $scope.currentStreamMode);
 
   NVRDataModel.debug("MonitorModalCtrl called from " + $ionicHistory.currentStateName());
- 
+
 
   //no need to recompute auth in modal
   /*$rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
@@ -75,7 +75,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     //  console.log ("Refreshing Image...");
   }.bind(this), zm.alarmStatusTime);
 
- 
+
 
   // This is the PTZ menu
 
@@ -199,22 +199,21 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     //NVRDataModel.stopNetwork("MonitorModal-auth success");
     $scope.isModalStreamPaused = false;
 
-    $timeout (function() {
+    $timeout(function () {
 
       if (0 && $rootScope.platformOS == 'ios') {
-        NVRDataModel.debug ("Webkit hack, hammering window.stop();");
+        NVRDataModel.debug("Webkit hack, hammering window.stop();");
         NVRDataModel.stopNetwork();
-      }
-      else {
+      } else {
         NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
       }
-     
 
-    
-    $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+
+
+      $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
     });
 
-    
+
 
   });
 
@@ -281,12 +280,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $interval.cancel(cycleHandle);
 
     NVRDataModel.debug("Killing single stream...");
-    
+
     if (0 && $rootScope.platformOS == 'ios') {
-      NVRDataModel.debug ("Webkit hack, hammering window.stop();");
+      NVRDataModel.debug("Webkit hack, hammering window.stop();");
       NVRDataModel.stopNetwork();
-    } else { 
-    NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
+    } else {
+      NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
     }
     // $interval.cancel(modalIntervalHandle)
     // FIXME: Do I need to  setAwake(false) here?
@@ -627,7 +626,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     // now create a points array for circle handles
 
-   /* for (i = 0; i < $scope.zoneArray.length; i++) {
+    /* for (i = 0; i < $scope.zoneArray.length; i++) {
       //jshint loopfunc: true 
       $scope.zoneArray[i].coords.split(' ')
         .forEach(function (itm) {
@@ -644,7 +643,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }*/
 
     $scope.isModalStreamPaused = false;
-    NVRDataModel.debug ("Modal image loaded, switching to streaming");
+    NVRDataModel.debug("Modal image loaded, switching to streaming");
 
 
 
@@ -652,7 +651,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   }
 
- 
+
   //-------------------------------------------------------------
   // Send PTZ command to ZM
   // Note: PTZ fails on desktop, don't bother about it
@@ -849,13 +848,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var element = angular.element(document.getElementById("monitorimage"));
     var slidein;
     var slideout;
-    $timeout (function() {
+    $timeout(function () {
       NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
 
       // we should now have a paused stream, time to animate out
-    
 
-     
+
+
       var dirn = d;
       if (dirn == 1) {
         slideout = "animated slideOutLeft";
@@ -864,35 +863,35 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         slideout = "animated slideOutRight";
         slidein = "animated slideInLeft";
       }
-  
-      
+
+
       element.addClass(slideout)
         .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
     });
 
-    
+
 
 
     function outWithOld() {
 
       NVRDataModel.log(">>>Old image out");
-     // NVRDataModel.log("ModalCtrl:Stopping network pull...");
+      // NVRDataModel.log("ModalCtrl:Stopping network pull...");
       //NVRDataModel.stopNetwork("MonitorModal-outwithOld");
       $scope.rand = Math.floor((Math.random() * 100000) + 1);
-     
+
 
       $timeout(function () {
         element.removeClass(slideout);
         element.addClass(slidein)
           .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', inWithNew);
-        
+
         $scope.monitorId = mid;
         $scope.monitorName = NVRDataModel.getMonitorName(mid);
         $scope.monitor = NVRDataModel.getMonitorObject(mid);
         $scope.controlURL = $scope.monitor.Monitor.controlURL;
         $scope.zoneArray = [];
         $scope.circlePoints = [];
-       // getZones();
+        // getZones();
         configurePTZ($scope.monitorId);
       }, 200);
     }
@@ -900,15 +899,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     function inWithNew() {
 
       element.removeClass(slidein);
-      
+
       $scope.isModalStreamPaused = false;
 
-     
+
       var ld = NVRDataModel.getLogin();
       carouselUtils.setStop(false);
       $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString(); // get new key for new id
       $scope.animationInProgress = false; // has to be AFTER new connkey
-          NVRDataModel.log("<<<New image loaded in with ck:"+$scope.connKey);
+      NVRDataModel.log("<<<New image loaded in with ck:" + $scope.connKey);
     }
 
     $ionicLoading.hide();
@@ -1081,11 +1080,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var url = loginData.streamingurl +
       '/zms?mode=single&monitor=' + mid;
 
-      if ($rootScope.authSession !='undefined'){
-        url +=$rootScope.authSession;
-       
-     } 
-     url += NVRDataModel.insertBasicAuthToken();
+    if ($rootScope.authSession != 'undefined') {
+      url += $rootScope.authSession;
+
+    }
+    url += NVRDataModel.insertBasicAuthToken();
 
     NVRDataModel.log("SavetoPhone:Trying to save image from " + url);
 
@@ -1135,33 +1134,33 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }
 
 
-  $scope.constructSingleStream = function() {
+  $scope.constructSingleStream = function () {
 
-    
+
     var stream;
-    stream = $scope.monitor.Monitor.streamingURL + 
-                    "/nph-zms?mode="+getSingleStreamMode() +
-                    "&monitor="+$scope.monitorId +
-                    "&scale="+$scope.quality + 
-                    $rootScope.authSession + 
-                    "&rand="+$rootScope.modalRand +
-                    appendSingleStreamConnKey();
-                
-        //console.log ("STREAM="+stream);
+    stream = $scope.monitor.Monitor.streamingURL +
+      "/nph-zms?mode=" + getSingleStreamMode() +
+      "&monitor=" + $scope.monitorId +
+      "&scale=" + $scope.quality +
+      $rootScope.authSession +
+      "&rand=" + $rootScope.modalRand +
+      appendSingleStreamConnKey();
 
-        if (stream) stream += NVRDataModel.insertBasicAuthToken();
-        return stream;
+    //console.log ("STREAM="+stream);
+
+    if (stream) stream += NVRDataModel.insertBasicAuthToken();
+    return stream;
 
 
   };
 
 
   function getSingleStreamMode() {
-    return $scope.isModalStreamPaused ? 'single': 'jpeg';
+    return $scope.isModalStreamPaused ? 'single' : 'jpeg';
   }
 
-function appendSingleStreamConnKey()  {
-   return $scope.isModalStreamPaused ? "": "&connkey="+$scope.connKey;
+  function appendSingleStreamConnKey() {
+    return $scope.isModalStreamPaused ? "" : "&connkey=" + $scope.connKey;
 
   }
 
@@ -1225,16 +1224,14 @@ function appendSingleStreamConnKey()  {
     $scope.isModalActive = false;
 
     if (1 || $rootScope.platformOS != 'ios') {
-    
+
       // ios calls window stop...
       NVRDataModel.debug("Single monitor exited killing stream");
-      NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);  
-    }
+      NVRDataModel.killLiveStream($scope.connKey, $scope.controlURL);
+    } else {
 
-    else {
-     
-        NVRDataModel.debug("Webkit hack, hammering window.stop();");
-        NVRDataModel.stopNetwork();
+      NVRDataModel.debug("Webkit hack, hammering window.stop();");
+      NVRDataModel.stopNetwork();
     }
 
     //console.log("**MODAL REMOVED: Stopping modal timer");

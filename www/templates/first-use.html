@@ -1,38 +1,39 @@
 <ion-view view-title="{{$root.appName}}" hide-nav-bar="true" hide-back-button="true" cache-view="false">
-    <ion-content class="pin-background">
-        <div style="margin-left:20px; margin-right:20px">
-            <center>
-                <br/>
-                <br/>
-                <div id="responsive-image">
-                    <img src="img/authlogo.png">
-                </div>
-                <br/>
-                <span style="color:white">
-                    <h2 style="color:white" >Hi There!</h2>
-                    <br/>
-                    <h4 style="color:white">{{'kThanksForUsing' | translate}} {{$root.appName}}. <br/><br/>
-                        {{'kNeedToKnow' | translate}}
-                    </h4>
-                    <br/>
-                    
-                    </span>
-                <br/>
-                <div id="firstuse">
-                    <button class="button icon icon-left ion-wand button-stable animated bounceInUp" ng-click="goToWizard()">
-                        {{'kWizard' | translate}}
-                    </button>
-                    <button class="button icon icon-left ion-university button-stable animated bounceInUp" ng-click="goToLogin()">
-                        {{'kExpert' | translate }}
-                    </button>
-                    <br/>
-                    <center>
-                        <button class="button button-clear icon icon-left ion-android-globe white-button-text animated bounceInUp" ng-click="switchLang()">
-                            {{'kLanguage' | translate}}
-                        </button>
-                    </center>
-                </div>
-            </center>
+  <ion-content class="pin-background">
+    <div style="margin-left:20px; margin-right:20px">
+      <center>
+        <br/>
+        <br/>
+        <div id="responsive-image">
+          <img src="img/authlogo.png">
         </div>
-    </ion-content>
+        <br/>
+        <span style="color:white">
+          <h2 style="color:white">Hi There!</h2>
+          <br/>
+          <h4 style="color:white">{{'kThanksForUsing' | translate}} {{$root.appName}}.
+            <br/>
+            <br/> {{'kNeedToKnow' | translate}}
+          </h4>
+          <br/>
+
+        </span>
+        <br/>
+        <div id="firstuse">
+          <button class="button icon icon-left ion-wand button-stable animated bounceInUp" ng-click="goToWizard()">
+            {{'kWizard' | translate}}
+          </button>
+          <button class="button icon icon-left ion-university button-stable animated bounceInUp" ng-click="goToLogin()">
+            {{'kExpert' | translate }}
+          </button>
+          <br/>
+          <center>
+            <button class="button button-clear icon icon-left ion-android-globe white-button-text animated bounceInUp" ng-click="switchLang()">
+              {{'kLanguage' | translate}}
+            </button>
+          </center>
+        </div>
+      </center>
+    </div>
+  </ion-content>
 </ion-view>

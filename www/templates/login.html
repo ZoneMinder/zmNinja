@@ -1,102 +1,110 @@
 <ion-view view-title="{{'kSettings' | translate}}" cache-view="false">
-    <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>&nbsp;
-        <button class="button button-icon button-clear ion-arrow-down-b" ng-click="serverActionSheet()"></button>
-        <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <button class="button button-clear" ng-click="saveItems()">{{'kSave' | translate}}</button>
-    </ion-nav-buttons>
-    <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
-        <div class="item item-text-wrap  item-input-inset">
-            {{'kServerName' | translate }}:&nbsp;
-            <label class="item-input-wrapper">
-                <input autocorrect="off" type="text" placeholder="{{'kExampleServer' | translate}}" ng-model="loginData.serverName">
-            </label>
+  <ion-nav-buttons side="left">
+    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>&nbsp;
+    <button class="button button-icon button-clear ion-arrow-down-b" ng-click="serverActionSheet()"></button>
+    <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
+      ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ng-click="saveItems()">{{'kSave' | translate}}</button>
+  </ion-nav-buttons>
+  <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
+    <div class="item item-text-wrap  item-input-inset">
+      {{'kServerName' | translate }}:&nbsp;
+      <label class="item-input-wrapper">
+        <input autocorrect="off" type="text" placeholder="{{'kExampleServer' | translate}}" ng-model="loginData.serverName">
+      </label>
+    </div>
+    <label>
+      <ion-toggle ng-model="loginData.enableLowBandwidth" toggle-class="toggle-calm">
+        <span class="item-text-wrap">{{'kLowBandwidth'|translate}}</span>
+      </ion-toggle>
+    </label>
+    <label ng-if="loginData.enableLowBandwidth">
+      <ion-toggle ng-model="loginData.autoSwitchBandwidth" toggle-class="toggle-calm">
+        <span class="item-text-wrap">{{'kAutoSwitchBW'|translate}}</span>
+      </ion-toggle>
+    </label>
+    <div class="list list-inset">
+      <span style="color:rgb(100,100,100)">
+        <i class="ion-android-home" style="font-size:150%"></i>
+        {{'kZMSettingsFor' | translate}} {{loginData.serverName || ('kUnknown' | translate)}}
+      </span>
+      <p ng-if="$root.platformOS!='desktop'" style="font-size:0.8em; color:gray">{{'kDisableSamsung' | translate}}</p>
+      <div class="item item-text-wrap">
+        <ion-checkbox ng-model="loginData.isUseAuth">{{'kUseZmAuth' | translate }}</ion-checkbox>
+        <div ng-if="loginData.isUseAuth">
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kUserName'|translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}" ng-model="loginData.username">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kPassword' | translate}}</span>
+            <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.password">
+          </label>
         </div>
-        <label>
-            <ion-toggle ng-model="loginData.enableLowBandwidth" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kLowBandwidth'|translate}}</span>
-            </ion-toggle>
-        </label>
-        <label ng-if="loginData.enableLowBandwidth">
-            <ion-toggle ng-model="loginData.autoSwitchBandwidth" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kAutoSwitchBW'|translate}}</span>
-            </ion-toggle>
-        </label>
-        <div class="list list-inset">
-            <span style="color:rgb(100,100,100)">
-                <i class="ion-android-home" style="font-size:150%"></i>
-               {{'kZMSettingsFor' | translate}} {{loginData.serverName || ('kUnknown' | translate)}}
-            </span>
-            <p ng-if="$root.platformOS!='desktop'" style="font-size:0.8em; color:gray">{{'kDisableSamsung' | translate}}</p>
-            <div class="item item-text-wrap">
-                <ion-checkbox ng-model="loginData.isUseAuth">{{'kUseZmAuth' | translate }}</ion-checkbox>
-                <div ng-if="loginData.isUseAuth">
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">{{'kUserName'|translate}}</span>
-                        <input  autocapitalize="none" autocomplete="off" autocorrect="off" type="text" 
-                        placeholder="{{'kUserName' | translate}}" ng-model="loginData.username">
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">{{'kPassword' | translate}}</span>
-                        <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.password">
-                    </label>
-                </div>
-            </div>
+      </div>
 
-            <div class="item item-text-wrap">
-                <ion-checkbox ng-model="loginData.isUseBasicAuth">{{'kUseBasicAuth' | translate }}</ion-checkbox>
-                <div ng-if="loginData.isUseBasicAuth">
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">{{'kUserName'|translate}}</span>
-                        <input  autocapitalize="none" autocomplete="off" autocorrect="off" type="text" 
-                        placeholder="{{'kUserName' | translate}}" ng-model="loginData.basicAuthUser">
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">{{'kPassword' | translate}}</span>
-                        <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.basicAuthPassword">
-                    </label>
-                </div>
-            </div>
+      <div class="item item-text-wrap">
+        <ion-checkbox ng-model="loginData.isUseBasicAuth">{{'kUseBasicAuth' | translate }}</ion-checkbox>
+        <div ng-if="loginData.isUseBasicAuth">
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kUserName'|translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}" ng-model="loginData.basicAuthUser">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kPassword' | translate}}</span>
+            <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.basicAuthPassword">
+          </label>
+        </div>
+      </div>
 
-            <p ng-if="loginData.isUseBasicAuth" style="font-size:0.8em; color:#e84118">{{'kWarningBasicAuth' | translate}}</p>
+      <p ng-if="loginData.isUseBasicAuth" style="font-size:0.8em; color:#e84118">{{'kWarningBasicAuth' | translate}}</p>
 
-            <label class="item item-input item-floating-label">
-                <span class="input-label">{{'kPortalUrl' | translate}}</span>
-                <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kPortalUrlExample' | translate}}" ng-model="loginData.url" ng-keyup="portalKeypress($event)">
-            </label>
-            <!--<button class="button button-small button-clear icon-left ion-wand" ng-click="detectCgi()">tap here to discover cgi-bin
+      <label class="item item-input item-floating-label">
+        <span class="input-label">{{'kPortalUrl' | translate}}</span>
+        <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kPortalUrlExample' | translate}}"
+          ng-model="loginData.url" ng-keyup="portalKeypress($event)">
+      </label>
+      <!--<button class="button button-small button-clear icon-left ion-wand" ng-click="detectCgi()">tap here to discover cgi-bin
                 </button>-->
-            <label class="item item-input item-floating-label">
-                <!--<span style="float:right;margin-top:-7px;background-color:#6d0909;color:#fff;font-size:14px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;" on-tap="detectCgi();">&nbsp;&nbsp;&nbsp;<i class="ion-wand"></i>discover</span>-->
-                <span class="input-label">{{'kPathToCgi' | translate}}</span>
-                <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kPathToCgiExample' | translate}}" ng-model="loginData.streamingurl">
-            </label>
-            <label class="item item-input item-floating-label">
-                <span class="input-label">{{'kApiUrl' | translate}}</span>
-                <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kApiUrlExample' | translate}}" ng-model="loginData.apiurl">
-            </label>
-            <a class="item item-icon-right" href="" ng-click="selectFallback()">
-                <i class="icon ion-ios-arrow-right">
-                </i> {{'kFallback' | translate}}
-                <p>{{loginData.fallbackConfiguration}}</p>
-            </a>
-            <a class="item item-icon-right" href="" ng-click="eventServerSettings()">
-                <i class="icon ion-ios-arrow-right">
-                </i> {{'kEventServer' | translate}}
-            </a>
-            <div ng-if="$root.platformOS != 'desktop'">
-                <label>
-                    <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();"  toggle-class="toggle-calm"><span class="item-text-wrap">{{'kPassword' | translate}} {{'kProtect'|translate}}</span></ion-toggle>
-                </label>
-            </div>
-           
-            <div ng-if="$root.platformOS != 'desktop'">
-                <label>
-                    <ion-toggle ng-model="loginData.keepAwake" toggle-class="toggle-calm"><span class="item-text-wrap">{{'kAwake1'|translate}}
-                        <p>{{'kAwake2'| translate}}</p></span>
-                    </ion-toggle>
-                </label>
-            </div>
-        </div>
-    </ion-content>
+      <label class="item item-input item-floating-label">
+        <!--<span style="float:right;margin-top:-7px;background-color:#6d0909;color:#fff;font-size:14px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;" on-tap="detectCgi();">&nbsp;&nbsp;&nbsp;<i class="ion-wand"></i>discover</span>-->
+        <span class="input-label">{{'kPathToCgi' | translate}}</span>
+        <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kPathToCgiExample' | translate}}"
+          ng-model="loginData.streamingurl">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">{{'kApiUrl' | translate}}</span>
+        <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kApiUrlExample' | translate}}"
+          ng-model="loginData.apiurl">
+      </label>
+      <a class="item item-icon-right" href="" ng-click="selectFallback()">
+        <i class="icon ion-ios-arrow-right">
+        </i> {{'kFallback' | translate}}
+        <p>{{loginData.fallbackConfiguration}}</p>
+      </a>
+      <a class="item item-icon-right" href="" ng-click="eventServerSettings()">
+        <i class="icon ion-ios-arrow-right">
+        </i> {{'kEventServer' | translate}}
+      </a>
+      <div ng-if="$root.platformOS != 'desktop'">
+        <label>
+          <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();" toggle-class="toggle-calm">
+            <span class="item-text-wrap">{{'kPassword' | translate}} {{'kProtect'|translate}}</span>
+          </ion-toggle>
+        </label>
+      </div>
+
+      <div ng-if="$root.platformOS != 'desktop'">
+        <label>
+          <ion-toggle ng-model="loginData.keepAwake" toggle-class="toggle-calm">
+            <span class="item-text-wrap">{{'kAwake1'|translate}}
+              <p>{{'kAwake2'| translate}}</p>
+            </span>
+          </ion-toggle>
+        </label>
+      </div>
+    </div>
+  </ion-content>
 </ion-view>

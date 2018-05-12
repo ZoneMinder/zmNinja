@@ -1,55 +1,57 @@
 <ion-view cache-view="false">
-    <ion-nav-title>{{'kEventServer' | translate}}/{{getTitle();}} </ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-        <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge" ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <button class="button button-clear" ng-click="saveItems()">{{'kSave'|translate}}</button>
-    </ion-nav-buttons>
-    <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
-        <div class="list list-inset">
-            {{'kEventServerConfig1' | translate }}
-        </div>
-        <ion-checkbox ng-model="loginData.isUseEventServer">{{'kUseEventServer' | translate}}</ion-checkbox>
-        <ion-item ng-href="" ng-click="selectScreen()">
-            {{'kOnTapNavigate' | translate}}: {{defScreen}}
+  <ion-nav-title>{{'kEventServer' | translate}}/{{getTitle();}} </ion-nav-title>
+  <ion-nav-buttons side="left">
+    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
+      ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ng-click="saveItems()">{{'kSave'|translate}}</button>
+  </ion-nav-buttons>
+  <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
+    <div class="list list-inset">
+      {{'kEventServerConfig1' | translate }}
+    </div>
+    <ion-checkbox ng-model="loginData.isUseEventServer">{{'kUseEventServer' | translate}}</ion-checkbox>
+    <ion-item ng-href="" ng-click="selectScreen()">
+      {{'kOnTapNavigate' | translate}}: {{defScreen}}
+    </ion-item>
+    <label class="item item-input item-floating-label" ng-if="loginData.isUseEventServer">
+      <span class="input-label">{{'kEventServer' | translate}}</span>
+      <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kEventNotificationUrl' | translate}}"
+        ng-model="loginData.eventServer">
+    </label>
+    <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush" toggle-class="toggle-calm" class="item-text-wrap">{{'kOnlyUseWebSocket'| translate }}
+      <br/>
+      <p>{{'kDisablePush' | translate }}</p>
+    </ion-toggle>
+    <!-- vibrate app setting is not av. on iOS-->
+    <ion-toggle ng-if="loginData.isUseEventServer && $root.platformOS !='ios'" ng-model="loginData.vibrateOnPush" toggle-class="toggle-calm">{{'kVibrateOnPush'| translate }}</ion-toggle>
+    <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.soundOnPush" toggle-class="toggle-calm" class="item-text-wrap">{{'kSoundOnPush'| translate }}</ion-toggle>
+
+    <ion-list>
+      <div ng-repeat="monitor in monitors">
+        <ion-item class="custom-list" ng-click="toggleGroup(monitor)" ng-class="{active: isGroupShown(monitor)}">
+          <i class="icon" ng-class="isGroupShown(monitor) ? 'ion-minus' : 'ion-plus'"></i> &nbsp; {{monitor.Monitor.Name}}
         </ion-item>
-        <label class="item item-input item-floating-label" ng-if="loginData.isUseEventServer">
-            <span class="input-label">{{'kEventServer' | translate}}</span>
-            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kEventNotificationUrl' | translate}}" ng-model="loginData.eventServer">
-        </label>
-        <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush" toggle-class="toggle-calm" class="item-text-wrap">{{'kOnlyUseWebSocket'| translate }}
-            <br/>
-            <p>{{'kDisablePush' | translate }}</p>
-        </ion-toggle>
-        <!-- vibrate app setting is not av. on iOS-->
-        <ion-toggle ng-if="loginData.isUseEventServer && $root.platformOS !='ios'" ng-model="loginData.vibrateOnPush"  toggle-class="toggle-calm">{{'kVibrateOnPush'| translate }}</ion-toggle>
-        <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.soundOnPush" toggle-class="toggle-calm" class="item-text-wrap">{{'kSoundOnPush'| translate }}</ion-toggle>
-      
-        <ion-list>
-            <div ng-repeat="monitor in monitors">
-                <ion-item class="custom-list" ng-click="toggleGroup(monitor)" ng-class="{active: isGroupShown(monitor)}">
-                    <i class="icon" ng-class="isGroupShown(monitor) ? 'ion-minus' : 'ion-plus'"></i> &nbsp; {{monitor.Monitor.Name}}
-                </ion-item>
-                <ion-item class="item-accordion" ng-show="isGroupShown(monitor)">
-                    <span class="item-checkbox">
-                
-                    {{'kReportEvents' | translate }}
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="monitor.Monitor.isChecked" >
-                    </label>
-                    </span>
-                </ion-item>
-                <ion-item class="item-accordion" ng-show="isGroupShown(monitor)">
-                    <div class="item-input-inset">
-                        <label class="item-input-wrapper">
-                            <input type="tel" placeholder="{{'kSec' | translate}}" ng-model="monitor.Monitor.reportingInterval">
-                        </label>
-                        &nbsp;{{'kMinimumIntervals' | translate}}
-                    </div>
-                </ion-item>
-            </div>
-        </ion-list>
-    </ion-content>
+        <ion-item class="item-accordion" ng-show="isGroupShown(monitor)">
+          <span class="item-checkbox">
+
+            {{'kReportEvents' | translate }}
+            <label class="checkbox">
+              <input type="checkbox" ng-model="monitor.Monitor.isChecked">
+            </label>
+          </span>
+        </ion-item>
+        <ion-item class="item-accordion" ng-show="isGroupShown(monitor)">
+          <div class="item-input-inset">
+            <label class="item-input-wrapper">
+              <input type="tel" placeholder="{{'kSec' | translate}}" ng-model="monitor.Monitor.reportingInterval">
+            </label>
+            &nbsp;{{'kMinimumIntervals' | translate}}
+          </div>
+        </ion-item>
+      </div>
+    </ion-list>
+  </ion-content>
 </ion-view>

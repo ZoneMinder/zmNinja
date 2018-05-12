@@ -1,8 +1,10 @@
 <ion-view cache-view="false">
-  <ion-nav-title><i class="{{typeIcon}}"></i> {{'kMoment24Heading' | translate}}</ion-nav-title>
+  <ion-nav-title>
+    <i class="{{typeIcon}}"></i> {{'kMoment24Heading' | translate}}</ion-nav-title>
   <ion-nav-buttons side="left">
     <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-    &nbsp;<button class="button button-icon button-clear ion-gear-b" ng-click="hideUnhide()"></button>
+    &nbsp;
+    <button class="button button-icon button-clear ion-gear-b" ng-click="hideUnhide()"></button>
 
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
@@ -25,10 +27,10 @@
 
   <ion-content delegate-handle="moment-delegate" overflow-scroll="false" mouse-wheel-scroll style="background-color:#444444">
 
-      <div ng-if="areImagesLoading" class="screen-note">&nbsp;{{ 'kArrangingImages' | translate }}...&nbsp;</div>
+    <div ng-if="areImagesLoading" class="screen-note">&nbsp;{{ 'kArrangingImages' | translate }}...&nbsp;</div>
 
-      <div ng-if="!areImagesLoading &&  !isMaxScoreFramePresent" class="screen-note">&nbsp;{{ 'kApiUpgrade' | translate }}&nbsp;</div>
-      
+    <div ng-if="!areImagesLoading &&  !isMaxScoreFramePresent" class="screen-note">&nbsp;{{ 'kApiUpgrade' | translate }}&nbsp;</div>
+
     <div ng-if="isSubMenu">
       <br/>
       <div id="flyoutmenu" style="float:left">
@@ -49,9 +51,9 @@
             </a>
           </li>
           <li>
-              <a href="" ng-click="toggleExpandOrCollapse()">
-                <i ng-class="expand ? 'ion-arrow-expand':'ion-arrow-shrink'"></i>
-              </a>
+            <a href="" ng-click="toggleExpandOrCollapse()">
+              <i ng-class="expand ? 'ion-arrow-expand':'ion-arrow-shrink'"></i>
+            </a>
           </li>
           <li>
             <a href="" ng-click="toggleIcons()">
@@ -65,17 +67,20 @@
         <ul>
           <li>
             <a href="" ng-click="changeFrom(-1)">
-              &nbsp;<i class="ion-chevron-left"></i>&nbsp;
+              &nbsp;
+              <i class="ion-chevron-left"></i>&nbsp;
             </a>
           </li>
           <li>
             <a href="" ng-click="getMoments()">
-              &nbsp;<i class="ion-location"></i>&nbsp;
+              &nbsp;
+              <i class="ion-location"></i>&nbsp;
             </a>
           </li>
           <li>
             <a href="" ng-click="changeFrom(1)">
-              &nbsp;<i class="ion-chevron-right"></i>&nbsp;
+              &nbsp;
+              <i class="ion-chevron-right"></i>&nbsp;
             </a>
           </li>
 
@@ -99,13 +104,14 @@
           <span style="float:right">
             <button class="button button-small button-icon icon  {{moment.Event.icon}}" ng-click="toggleCollapse(moment.Event.MonitorId, moment.Event.Id)"></button>{{moment.Event.collapseCount}}&nbsp;</span>
         </figcaption>
-        <img image-spinner-src="{{constructFrame(moment)}}"
-          img-spinner-w="{{moment.Event.width}}" img-spinner-h="{{moment.Event.height}}" image-spinner-loader="lines" on-tap="playEvent(moment)" on-swipe-left="showThumbnail(moment.Event.baseURL,moment.Event.MaxScoreFrameId)" 
+        <img image-spinner-src="{{constructFrame(moment)}}" img-spinner-w="{{moment.Event.width}}" img-spinner-h="{{moment.Event.height}}"
+          image-spinner-loader="lines" on-tap="playEvent(moment)" on-swipe-left="showThumbnail(moment.Event.baseURL,moment.Event.MaxScoreFrameId)"
         />
 
-        <div ng-if="showIcons" class="normal-subfigcaption" >     
-             <button ng-class="moment.Event.pinned?  'button button-small button-icon icon ion-ios-flag assertive': 'button button-small button-icon icon ion-pin'" ng-click="togglePin(moment.Event.Id)"></button>
-         
+        <div ng-if="showIcons" class="normal-subfigcaption">
+          <button ng-class="moment.Event.pinned?  'button button-small button-icon icon ion-ios-flag assertive': 'button button-small button-icon icon ion-pin'"
+            ng-click="togglePin(moment.Event.Id)"></button>
+
         </div>
         <!--on-tap="showThumbnail(moment.Event.baseURL,moment.Event.MaxScoreFrameId)"-->
         <figcaption ng-if="showIcons" class="normal-figcaption">&nbsp;{{moment.Event.humanizeTime}}
