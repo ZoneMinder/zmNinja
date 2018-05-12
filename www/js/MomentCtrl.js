@@ -45,7 +45,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   function jiggleAway() {
 
-    
+
 
     // STEP 3: Called when step 2 completes for the finale
     masonry.once('layoutComplete', function (laidOutItems) {
@@ -83,10 +83,10 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   function getIndexFromEID(eid) {
     var found = -1;
-    for (var i=0; i < moments.length; i++) {
+    for (var i = 0; i < moments.length; i++) {
       if (parseInt(moments[i].Event.Id) == parseInt(eid)) {
-          found = i;
-          break; 
+        found = i;
+        break;
       }
     }
     return found; // really should never be -1
@@ -258,31 +258,31 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   };
 
 
-  $scope.constructFrame = function(moment) {
+  $scope.constructFrame = function (moment) {
     var stream = "";
-   // console.log ($scope.isMaxScoreFramePresent);
-    stream = moment.Event.baseURL+"/index.php?view=image" +
-          ($scope.isMaxScoreFramePresent? "&fid="+moment.Event.MaxScoreFrameId: "&eid="+moment.Event.Id+"&fid=1")+
-           "&width="+moment.Event.thumbWidth*2 +
-           "&height="+moment.Event.thumbHeight*2;
+    // console.log ($scope.isMaxScoreFramePresent);
+    stream = moment.Event.baseURL + "/index.php?view=image" +
+      ($scope.isMaxScoreFramePresent ? "&fid=" + moment.Event.MaxScoreFrameId : "&eid=" + moment.Event.Id + "&fid=1") +
+      "&width=" + moment.Event.thumbWidth * 2 +
+      "&height=" + moment.Event.thumbHeight * 2;
 
-    if ($rootScope.authSession != 'undefined') stream +=$rootScope.authSession;
+    if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
     stream += NVRDataModel.insertBasicAuthToken();
     return stream;
 
   };
-  
 
-//----------------------------------------------------------------
-// construct popover only when needed
-// so that we can use one-time binding for the compare function
-//----------------------------------------------------------------
-  $scope.isChecked=function(val) {
+
+  //----------------------------------------------------------------
+  // construct popover only when needed
+  // so that we can use one-time binding for the compare function
+  //----------------------------------------------------------------
+  $scope.isChecked = function (val) {
     //console.log ("COMPARE");
-    return  $translate.instant(val) == $scope.type;
+    return $translate.instant(val) == $scope.type;
   };
 
-  $scope.showPopover = function($event) {
+  $scope.showPopover = function ($event) {
 
     $ionicPopover.fromTemplateUrl('templates/moment-popover.html', {
       scope: $scope,
@@ -301,7 +301,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   $scope.togglePin = function (eid) {
     var ndx = getIndexFromEID(eid);
     if (ndx == -1) {
-      NVRDataModel.log ("Uh oh, ndx returned -1, this should never happen. Event passed was "+eid); 
+      NVRDataModel.log("Uh oh, ndx returned -1, this should never happen. Event passed was " + eid);
       return;
     }
 
@@ -309,16 +309,16 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   };
 
-  $scope.toggleExpandOrCollapse = function() {
-   
+  $scope.toggleExpandOrCollapse = function () {
+
     if ($scope.expand) expandAll();
     else collapseAll();
     $scope.expand = !$scope.expand;
 
   };
 
- function expandAll() {
-    for (var i=0; i < $scope.moments.length; i++) {
+  function expandAll() {
+    for (var i = 0; i < $scope.moments.length; i++) {
       $scope.moments[i].Event.hide = false;
       $scope.moments[i].Event.icon = 'ion-code-working';
       $scope.moments[i].Event.collapseCount = '';
@@ -330,16 +330,16 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       jiggleAway();
 
     }, 100);
-   
+
   }
 
   function collapseAll() {
 
-    for (var i=0; i < monitors.length; i++) {
+    for (var i = 0; i < monitors.length; i++) {
       var firstFound = false;
       var firstIndex = -1;
       var collapseCount = 0;
-      for (var j=0; j < $scope.moments.length; j++) {
+      for (var j = 0; j < $scope.moments.length; j++) {
         if ($scope.moments[j].Event.MonitorId == monitors[i].Monitor.Id) {
 
           if (!firstFound) {
@@ -347,27 +347,25 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
             $scope.moments[j].Event.hide = false;
             $scope.moments[j].Event.icon = 'ion-images';
             firstFound = true;
-          }
-          else  if (!$scope.moments[j].Event.pinned) {
-          // mid matches, but not first, and not pinned so collapse
-              $scope.moments[j].Event.hide = true;
-              $scope.moments[j].Event.icon = 'ion-code-working';
-              collapseCount++;
+          } else if (!$scope.moments[j].Event.pinned) {
+            // mid matches, but not first, and not pinned so collapse
+            $scope.moments[j].Event.hide = true;
+            $scope.moments[j].Event.icon = 'ion-code-working';
+            collapseCount++;
           }
         } // if same mid
       } // moment for j
-      if (firstIndex !=-1) {
-        if (collapseCount>0) {
-          $scope.moments[firstIndex].Event.collapseCount = collapseCount+1;
-        }
-        else { // nothing to group
+      if (firstIndex != -1) {
+        if (collapseCount > 0) {
+          $scope.moments[firstIndex].Event.collapseCount = collapseCount + 1;
+        } else { // nothing to group
           $scope.moments[firstIndex].Event.icon = 'ion-code-working';
           $scope.moments[firstIndex].Event.collapseCount = "";
         }
 
       } // firstIndex
     } // monitor for i
-   
+
     $timeout(function () {
       masonry.reloadItems();
       jiggleAway();
@@ -392,7 +390,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     var ndx = getIndexFromEID(eid);
     if (ndx == -1) {
-      NVRDataModel.log ("Uh oh, ndx returned -1, this should never happen. Event passed was "+eid); 
+      NVRDataModel.log("Uh oh, ndx returned -1, this should never happen. Event passed was " + eid);
       return;
     }
 
@@ -416,10 +414,9 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     } //for
     if (hide) {
       // +1 for the marked frame which doesn't get counted
-      if (collapseCount >0) {
+      if (collapseCount > 0) {
         $scope.moments[ndx].Event.collapseCount = collapseCount + 1;
-      }
-      else { // nothing to collapse
+      } else { // nothing to collapse
         $scope.moments[ndx].Event.collapseCount = "";
         $scope.moments[ndx].Event.icon = 'ion-code-working';
 
@@ -427,7 +424,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     } else {
       $scope.moments[ndx].Event.collapseCount = "";
     }
-    
+
     $timeout(function () {
       masonry.reloadItems();
       jiggleAway();
@@ -544,7 +541,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       percentPosition: true,
 
     });
-  
+
     imagesLoaded(elem).on('progress', function (instance, img) {
       masonry.layout();
 
@@ -572,7 +569,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       $scope.modal.remove();
     }
 
-    if ($scope.modalData.doRefresh)  getMoments(momentType, timeTo);
+    if ($scope.modalData.doRefresh) getMoments(momentType, timeTo);
   };
 
   //----------------------------------------------------------------
@@ -597,26 +594,28 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var ld = NVRDataModel.getLogin();
     var sl = 'disabled';
     if (ld.showLiveForInProgressEvents) {
-            sl = 'enabled';
-        }
+      sl = 'enabled';
+    }
 
-    $scope.modalData = {doRefresh:false};
+    $scope.modalData = {
+      doRefresh: false
+    };
     $ionicModal.fromTemplateUrl('templates/events-modal.html', {
         scope: $scope,
         animation: 'slide-in-up',
         id: 'footage',
-        showLive:sl, 
+        showLive: sl,
         snapshot: 'enabled',
-        snapshotId: $scope.isMaxScoreFramePresent?event.Event.MaxScoreFrameId:undefined,
-        eventId:event.Event.Id
+        snapshotId: $scope.isMaxScoreFramePresent ? event.Event.MaxScoreFrameId : undefined,
+        eventId: event.Event.Id
         //eventId:event.Event.Id
-      
+
 
       })
       .then(function (modal) {
         $scope.modal = modal;
 
-        
+
 
         $scope.modal.show();
 
@@ -627,7 +626,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   };
 
-  
+
   //----------------------------------------------------------------
   // Only called by "here" button without cond. So prev type is used
   //----------------------------------------------------------------
@@ -677,20 +676,17 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   function getMoments(sortCondition, to) {
 
     if (sortCondition == 'MaxScore') {
-      $scope.type = $translate.instant
-      ('kMomentMenuByScore');
+      $scope.type = $translate.instant('kMomentMenuByScore');
       $scope.typeIcon = "ion-arrow-graph-up-right";
-    }
-    else if (sortCondition == 'StartTime') {
+    } else if (sortCondition == 'StartTime') {
       $scope.type = $translate.instant('kMomentMenuByTime');
       $scope.typeIcon = "ion-clock";
-    }
-    else if (sortCondition == 'monitorName') {
+    } else if (sortCondition == 'monitorName') {
       $scope.type = $translate.instant('kMomentMenuByMonitor');
       $scope.typeIcon = "ion-ios-videocam";
 
     }
-      
+
     $scope.apiurl = NVRDataModel.getLogin().apiurl;
     moments.length = 0;
 
@@ -766,15 +762,15 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         // check the very first element for presence of maxscoreframe id
         // if its not there, we can't show snuff
         if (moments.length && !moments[0].Event.MaxScoreFrameId) {
-           $scope.isMaxScoreFramePresent =false;
-          
+          $scope.isMaxScoreFramePresent = false;
+
         } else {
           $scope.isMaxScoreFramePresent = true;
         }
         $scope.moments = moments;
-          $timeout(function () {
-            initMasonry();
-          }, 300);
+        $timeout(function () {
+          initMasonry();
+        }, 300);
 
       });
 
@@ -820,11 +816,10 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     try {
       excludeMonitors = JSON.parse(ld.momentMonitorFilter);
-    }
-    catch (e) {
+    } catch (e) {
       excludeMonitors = [];
     }
-  
+
     //console.log("RETRIEVED EXCLUDE=" + JSON.stringify(excludeMonitors));
     constructMask();
     $scope.isSubMenu = ld.enableMomentSubMenu;
@@ -842,8 +837,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   });
 
   $scope.$on('$ionicView.afterEnter', function () {
-   
-    
+
+
     getMoments(momentType);
 
 

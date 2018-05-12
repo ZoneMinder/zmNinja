@@ -23,7 +23,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   document.addEventListener("resume", onResume, false);
 
   function onResume() {
-   // NVRDataModel.log("Login screen resumed");
+    // NVRDataModel.log("Login screen resumed");
 
   }
 
@@ -263,7 +263,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       $scope.loginData = angular.copy(NVRDataModel.getDefaultLoginObject());
 
       // default object has this as false
-      if ($rootScope.platformOS=='ios') {
+      if ($rootScope.platformOS == 'ios') {
         $scope.loginData.disableSimulStreaming = true;
       }
 
@@ -282,9 +282,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.isUseAuth = false;
       }
 
-    //  'isUseBasicAuth': false,
-    //  'basicAuthUser': '',
-    //  'basicAuthPassword': '',
+      //  'isUseBasicAuth': false,
+      //  'basicAuthUser': '',
+      //  'basicAuthPassword': '',
 
       if ($rootScope.wizard.useauth && $rootScope.wizard.usebasicauth) {
         $scope.loginData.basicAuthUser = $rootScope.wizard.basicuser;
@@ -298,7 +298,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $scope.loginData.useSSL = true;
       }
 
-    } 
+    }
 
     oldLoginData = JSON.stringify($scope.loginData);
 
@@ -421,7 +421,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     //$scope.basicAuthUsed = ($scope.loginData.url.indexOf('@') == -1) ? false:true;
 
-   
+
 
   };
   //-------------------------------------------------------------------------------
@@ -476,7 +476,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $scope.loginData.username = $scope.loginData.username.trim();
 
-    
+
     if ($scope.loginData.url.slice(-1) == '/') {
       $scope.loginData.url = $scope.loginData.url.slice(0, -1);
 
@@ -560,11 +560,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     if (!$scope.loginData.isUseBasicAuth) {
       $rootScope.basicAuthHeader = '';
       $rootScope.basicAuthToken = '';
-     // console.log ("CLEARING AUTH");
-    }
-    else {
-      $rootScope.basicAuthToken = btoa($scope.loginData.basicAuthUser+':'+$scope.loginData.basicAuthPassword);
-      $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken ;
+      // console.log ("CLEARING AUTH");
+    } else {
+      $rootScope.basicAuthToken = btoa($scope.loginData.basicAuthUser + ':' + $scope.loginData.basicAuthPassword);
+      $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken;
 
     }
 

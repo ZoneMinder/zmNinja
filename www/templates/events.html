@@ -44,32 +44,32 @@
                                         depending on the cause of the event -->
               <span ng-switch on="event.Event.Cause">
                 <span ng-switch-when="Motion">
-                  <i class="ion-android-walk" style="font-size:150%;" ></i>&nbsp;
-                 <!-- <i ng-class="(event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!='')? 'ion-ios-videocam':'ion-images'" style="float:left; padding-left:5px; font-size:100%;"></i>-->
-                
+                  <i class="ion-android-walk" style="font-size:150%;"></i>&nbsp;
+                  <!-- <i ng-class="(event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!='')? 'ion-ios-videocam':'ion-images'" style="float:left; padding-left:5px; font-size:100%;"></i>-->
+
                 </span>
                 <span ng-switch-when="Signal">
-                  <i class="ion-wifi" style="font-size:150%;" ></i>&nbsp;
+                  <i class="ion-wifi" style="font-size:150%;"></i>&nbsp;
                   <!--<i ng-class="(event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!='')? 'ion-ios-videocam':'ion-images'" style="float:left; padding-left:5px; font-size:100%;"></i>-->
-                 
+
                 </span>
                 <span ng-switch-default>
                   <i class="ion-ionic" style="font-size:150%;"></i>&nbsp;
-              
-                
+
+
                 </span>
               </span>
               <!-- ng switch -->
               <!-- {{event.Event.Cause}} -->
-          
-              
-          
-            <!-- col col left-->
-        
-                <b>
-                  <i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
-                  <span ng-if="!loginData.enableThumbs">({{event.Event.Id}})</span> &nbsp;
-                <br/>
+
+
+
+              <!-- col col left-->
+
+              <b>
+                <i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
+              <span ng-if="!loginData.enableThumbs">({{event.Event.Id}})</span> &nbsp;
+              <br/>
 
               <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
               <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
@@ -90,22 +90,21 @@
               </button>
               <!--<i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}-->
 
+            </div>
+
+
+            <div class="col col-40" align="right" ng-if="loginData.enableThumbs">
+              <!-- thumbnail -->
+
+              <!--  ng-image-appear transition-duration="0.5s" animation="fillIn" bg-color="#50a4e2"  {{event.Event.thumbWidth}}X{{event.Event.thumbHeight}}-->
+              <div style="max-height:200px; max-width:200px">
+                <img ng-image-appear transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="100%" height="100%" />
+                <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
               </div>
 
+            </div>
 
-              <div class="col col-40" align="right" ng-if="loginData.enableThumbs">
-                <!-- thumbnail -->
-                
-                  <!--  ng-image-appear transition-duration="0.5s" animation="fillIn" bg-color="#50a4e2"  {{event.Event.thumbWidth}}X{{event.Event.thumbHeight}}-->
-                <div style="max-height:200px; max-width:200px">
-                  <img   ng-image-appear  transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" 
-                    ng-src="{{constructThumbnail(event)}}" on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="100%"
-                    height="100%"  />
-                  <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
-                </div>
-
-              </div>
-      
           </div>
           <!--row-->
           <div class="row" style="font-size:80%; color:rgb(110,110,110)">

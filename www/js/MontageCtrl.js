@@ -31,10 +31,10 @@ angular.module('zmApp.controllers')
 
 
     var streamState = {
-      SNAPSHOT:1,
-      ACTIVE:2,
-      STOPPED:3
-  };
+      SNAPSHOT: 1,
+      ACTIVE: 2,
+      STOPPED: 3
+    };
 
     var currentStreamState = streamState.SNAPSHOT; // first load snapshot
     $scope.isModalStreamPaused = false; // used in Monitor Modal
@@ -317,14 +317,14 @@ angular.module('zmApp.controllers')
         $scope.areImagesLoading = false;
         currentStreamState = streamState.SNAPSHOT;
 
-        if (simulStreaming)  {
+        if (simulStreaming) {
 
-          $timeout (function() {
-            NVRDataModel.debug ("Switching mode to active...");
+          $timeout(function () {
+            NVRDataModel.debug("Switching mode to active...");
             currentStreamState = streamState.ACTIVE;
-          },100);
+          }, 100);
         }
-        
+
 
         $ionicLoading.hide();
 
@@ -593,7 +593,7 @@ angular.module('zmApp.controllers')
 
     function randEachTime() {
       randToAvoidCacheMem = new Date().getTime();
-      
+
       //$scope.randToAvoidCacheMem =  "1";
       //console.log ("Generating:"+$scope.randToAvoidCacheMem);
     }
@@ -604,7 +604,7 @@ angular.module('zmApp.controllers')
 
     function loadNotifications() {
       if (simulStreaming) {
-       // console.log ("Skipping timer as simulStreaming");
+        // console.log ("Skipping timer as simulStreaming");
         return;
       }
 
@@ -642,7 +642,7 @@ angular.module('zmApp.controllers')
       $scope.modal.remove();
       $scope.MontageMonitors = $scope.copyMontage;
       finishReorder();
-      
+
     };
 
     function finishReorder() {
@@ -696,29 +696,29 @@ angular.module('zmApp.controllers')
         $scope.areImagesLoading = false;
         currentStreamState = streamState.SNAPSHOT;
 
-        if (simulStreaming)  {
+        if (simulStreaming) {
 
-          $timeout (function() {
-            NVRDataModel.debug ("Switching mode to active...");
+          $timeout(function () {
+            NVRDataModel.debug("Switching mode to active...");
             currentStreamState = streamState.ACTIVE;
-          },100);
+          }, 100);
         }
       }, 20);
     }
 
 
     $scope.reorderFrame = function (item) {
-        var frame =  "";
-        frame = item.Monitor.streamingURL+"/nph-zms?mode=single" +
-                "&monitor="+item.Monitor.Id +
-                "&scale=50";
+      var frame = "";
+      frame = item.Monitor.streamingURL + "/nph-zms?mode=single" +
+        "&monitor=" + item.Monitor.Id +
+        "&scale=50";
 
-        if ($rootScope.authSession!='undefined') frame+=$rootScope.authSession;
-        frame += NVRDataModel.insertBasicAuthToken();
-                return frame;
+      if ($rootScope.authSession != 'undefined') frame += $rootScope.authSession;
+      frame += NVRDataModel.insertBasicAuthToken();
+      return frame;
     };
 
-    $scope.isCycleOn = function() {
+    $scope.isCycleOn = function () {
       return NVRDataModel.getLogin().cycleMontageProfiles;
     };
 
@@ -761,12 +761,27 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
         currentStreamState = streamState.STOPPED;
         NVRDataModel.stopNetwork()
-        .then (function (succ) {
-          for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-            if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
-          }
-          // in context of timeout
-          $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
+          .then(function (succ) {
+            for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
+            }
+            // in context of timeout
+            $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up',
+                id: 'reorder',
+              })
+              .then(function (modal) {
+                $scope.modal = modal;
+                $scope.reOrderActive = true;
+                $scope.modal.show();
+              });
+
+          });
+
+
+      } else {
+        $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
             scope: $scope,
             animation: 'slide-in-up',
             id: 'reorder',
@@ -776,22 +791,6 @@ angular.module('zmApp.controllers')
             $scope.reOrderActive = true;
             $scope.modal.show();
           });
-
-        });
-
-         
-      }
-      else {
-        $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
-          scope: $scope,
-          animation: 'slide-in-up',
-          id: 'reorder',
-        })
-        .then(function (modal) {
-          $scope.modal = modal;
-          $scope.reOrderActive = true;
-          $scope.modal.show();
-        });
 
       }
 
@@ -1324,21 +1323,21 @@ angular.module('zmApp.controllers')
       broadcastHandles = [];
 
       currentStreamState = streamState.STOPPED;
-        $timeout(function () {
-          if (!$scope.singleMonitorModalOpen && simulStreaming) {
-            NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
+      $timeout(function () {
+        if (!$scope.singleMonitorModalOpen && simulStreaming) {
+          NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
 
-              for (i = 0; i < $scope.MontageMonitors.length; i++) {
-                if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
-  
-              }
-  
+          for (i = 0; i < $scope.MontageMonitors.length; i++) {
+            if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
+
           }
-  
-        });
-  
 
-  
+        }
+
+      });
+
+
+
 
 
 
@@ -1348,7 +1347,7 @@ angular.module('zmApp.controllers')
       NVRDataModel.debug("MontageCtrl: onpause called");
       viewCleanup();
       viewCleaned = true;
-    
+
     }
 
     function onResume() {
@@ -1476,7 +1475,7 @@ angular.module('zmApp.controllers')
       //console.log ("NEW POS="+ld.packeryPositions);
       NVRDataModel.setLogin(ld);
 
-      
+
       $timeout(function () { // after render
 
 
@@ -1496,7 +1495,7 @@ angular.module('zmApp.controllers')
           }
 
           // in timeout for iOS as we call stopNetwork
-          $timeout (function() {
+          $timeout(function () {
 
             NVRDataModel.regenConnKeys();
             $scope.monitors = NVRDataModel.getMonitorsNow();
@@ -1506,16 +1505,15 @@ angular.module('zmApp.controllers')
             }, zm.packeryTimer);
 
           });
-         
 
-        }
-        else {
+
+        } else {
           NVRDataModel.regenConnKeys();
-            $scope.monitors = NVRDataModel.getMonitorsNow();
-            $scope.MontageMonitors = angular.copy($scope.monitors);
-            $timeout(function () {
-              initPackery();
-            }, zm.packeryTimer);
+          $scope.monitors = NVRDataModel.getMonitorsNow();
+          $scope.MontageMonitors = angular.copy($scope.monitors);
+          $timeout(function () {
+            initPackery();
+          }, zm.packeryTimer);
         }
 
 
@@ -1701,7 +1699,7 @@ angular.module('zmApp.controllers')
 
     function getMode() {
 
-      var mode = (simulStreaming && currentStreamState!=streamState.SNAPSHOT && currentStreamState != streamState.STOPPED) ? 'jpeg' : 'single';
+      var mode = (simulStreaming && currentStreamState != streamState.SNAPSHOT && currentStreamState != streamState.STOPPED) ? 'jpeg' : 'single';
       //console.log ("mode="+mode);
       return mode;
 
@@ -1713,7 +1711,7 @@ angular.module('zmApp.controllers')
 
       var stream;
       if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' || $rootScope.authSession == 'undefined') {
-      // console.log ("STREAM=empty");
+        // console.log ("STREAM=empty");
         return "";
       }
 
@@ -1725,17 +1723,17 @@ angular.module('zmApp.controllers')
         "&buffer=1000" +
         $rootScope.authSession +
         appendConnKey(monitor.Monitor.connKey);
-      
-        if (stream) stream += NVRDataModel.insertBasicAuthToken();
+
+      if (stream) stream += NVRDataModel.insertBasicAuthToken();
 
 
 
-      
-//"&rand=" + randToAvoidCacheMem;
+
+      //"&rand=" + randToAvoidCacheMem;
       //"&rand="+$scope.randToAvoidCacheMem +
-      
 
-     // console.log("STREAM=" + stream);
+
+      // console.log("STREAM=" + stream);
       return stream;
 
     };
@@ -1747,7 +1745,7 @@ angular.module('zmApp.controllers')
         return "";
     }
 
-  
+
     $scope.toggleSubMenuFunction = function () {
 
       $scope.toggleSubMenu = !$scope.toggleSubMenu;
@@ -1769,7 +1767,7 @@ angular.module('zmApp.controllers')
       $scope.monitors = NVRDataModel.getMonitorsNow();
       $scope.MontageMonitors = angular.copy($scope.monitors);
 
-     
+
 
       $scope.singleMonitorModalOpen = false;
       // $scope.minimal = $stateParams.minimal;
@@ -1785,10 +1783,10 @@ angular.module('zmApp.controllers')
             //console.log ("****** MULTIPORT="+multiPortZms);
             NVRDataModel.debug("Multiport=" + data);
 
-          /*  if ($rootScope.platformOS == 'ios') {
-              simulStreaming = false;
-              NVRDataModel.debug("IOS detected, DISABLING simul streaming");
-            }*/
+            /*  if ($rootScope.platformOS == 'ios') {
+                simulStreaming = false;
+                NVRDataModel.debug("IOS detected, DISABLING simul streaming");
+              }*/
 
             if (ld.disableSimulStreaming) {
               simulStreaming = false;
@@ -1822,7 +1820,7 @@ angular.module('zmApp.controllers')
     };
 
     $scope.$on('$ionicView.afterEnter', function () {
-     // NVRDataModel.debug("Setting image mode to snapshot, will change to image when packery is all done");
+      // NVRDataModel.debug("Setting image mode to snapshot, will change to image when packery is all done");
       $scope.areImagesLoading = true;
       $scope.isDragabillyOn = false;
       $scope.reOrderActive = false;
@@ -1933,9 +1931,9 @@ angular.module('zmApp.controllers')
       }
 
 
-          $timeout(function () {
-            initPackery();
-          }, zm.packeryTimer);
+      $timeout(function () {
+        initPackery();
+      }, zm.packeryTimer);
       //console.log("**VIEW ** Montage Ctrl AFTER ENTER");
       window.addEventListener("resize", orientationChanged, false);
 
@@ -1946,9 +1944,9 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.beforeLeave', function () {
 
-        currentStreamState = streamState.STOPPED;
-        viewCleanup();
-        viewCleaned = true;
+      currentStreamState = streamState.STOPPED;
+      viewCleanup();
+      viewCleaned = true;
 
     });
 

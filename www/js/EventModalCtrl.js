@@ -955,11 +955,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     if (m.snapshot == 'enabled') {
       isSnapShotEnabled = true;
       currentStreamState = streamState.SNAPSHOT;
-      if (m.snapshotId)   {
-          $scope.snapshotFrameId = m.snapshotId;
-          isGlobalFid = true;
+      if (m.snapshotId) {
+        $scope.snapshotFrameId = m.snapshotId;
+        isGlobalFid = true;
+      } else {
+        $scope.snapshotFrameId = 1;
+        isSnapShotEnabled = false;
       }
-      else { $scope.snapshotFrameId = 1; isSnapShotEnabled = false;}
 
       eventId = m.eventId;
       $scope.eventId = m.eventId;
@@ -1152,44 +1154,44 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     var ld = NVRDataModel.getLogin();
 
- 
 
-      var cmd;
-      $scope.isPaused = false;
-      switch (val) {
-        case 'ff':
-          cmd = 4;
-          break;
-        case 'fr':
-          cmd = 7;
-          break;
-        case 'np':
-          cmd = 2;
-          break;
-        case 'p':
-          cmd = 1;
-          $scope.isPaused = true;
-          break;
-        default:
-          cmd = 0;
-      }
 
-      $ionicLoading.show({
-        template: $translate.instant('kPleaseWait') + "...",
-        noBackdrop: true,
-        duration: zm.httpTimeout
-      });
+    var cmd;
+    $scope.isPaused = false;
+    switch (val) {
+      case 'ff':
+        cmd = 4;
+        break;
+      case 'fr':
+        cmd = 7;
+        break;
+      case 'np':
+        cmd = 2;
+        break;
+      case 'p':
+        cmd = 1;
+        $scope.isPaused = true;
+        break;
+      default:
+        cmd = 0;
+    }
 
-      sendCommand(cmd, $scope.connKey)
-        .then(function (success) {
-            $ionicLoading.hide();
+    $ionicLoading.show({
+      template: $translate.instant('kPleaseWait') + "...",
+      noBackdrop: true,
+      duration: zm.httpTimeout
+    });
 
-          },
-          function (err) {
-            $ionicLoading.hide();
-            NVRDataModel.debug("Error in adjust speed: " + JSON.stringify(err));
-          }
-        );
+    sendCommand(cmd, $scope.connKey)
+      .then(function (success) {
+          $ionicLoading.hide();
+
+        },
+        function (err) {
+          $ionicLoading.hide();
+          NVRDataModel.debug("Error in adjust speed: " + JSON.stringify(err));
+        }
+      );
 
 
   };
