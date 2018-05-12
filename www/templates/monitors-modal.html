@@ -106,7 +106,7 @@
       </div>
     </div>
   </ion-modal-view>
-  <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up"
+  <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up" resting-icon="ion-chevron-down"
     toggling-method="click">
     <button mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFillScreen' | translate):('kFitScreen' | translate)}}" ng-click="scaleImage();">
     </button>
@@ -115,7 +115,7 @@
     <button mfb-button icon="ion-arrow-expand" label="{{'kControl'| translate}}" ng-click="togglePTZ();">
     </button>
   </nav>
-  <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up" resting-icon="ion-chevron-down"
+  <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up"
     toggling-method="click">
     <button mfb-button icon="ion-android-arrow-back" label="{{'kPrevMonitor' | translate}} " ng-click="onTap(monitorId,-1);">
     </button>

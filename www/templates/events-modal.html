@@ -32,10 +32,6 @@
 
                                 
 
-                                <div ng-if="isSnapShot() && !liveFeedMid">
-                                    <div class="events-range-modal-text">{{mName}}&nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}] <span class="events-range-modal-warning-text">{{eventWarning}}</span> </div>
-                                </div>
-
                             <img ng-if="!liveFeedMid" image-spinner-src="{{constructStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
                             img-spinner-w="1024" img-spinner-h="768" image-spinner-loader="lines" 
                             imageonload="modalImageLoaded()" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" 
@@ -123,13 +119,13 @@
 
    
     <div ng-show="!liveFeedMid">
-        <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
+        <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
             <a mfb-button icon="ion-arrow-right-c" label="{{'kNextEvent'|translate}}" ng-click="jumpToEvent(nextId,1);"></a>
             <a mfb-button icon="ion-arrow-left-c" label="{{'kPrevEvent'|translate}}" ng-click="jumpToEvent(prevId,-1);"></a>
             <a ng-if="!isSnapShot()" mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFillScreen' | translate):('kFitScreen' | translate)}}" ng-click="scaleImage();"></a>
             <a mfb-button icon="ion-close" label="{{'kExitEventView' | translate}}" ng-click="closeModal()"> </a>
         </nav>
-        <nav ng-if=" !isSnapShot() && defaultVideo==''" mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up" toggling-method="click">
+        <nav ng-if=" !isSnapShot() && defaultVideo==''" mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up" resting-icon="ion-chevron-down" toggling-method="click">
             <a mfb-button icon="ion-skip-backward" label="{{'kFastRewind'|translate}}" ng-click="adjustSpeed('fr');"></a>
             <a mfb-button icon="ion-skip-forward" label="{{'kFastForward'|translate}}" ng-click="adjustSpeed('ff');"></a>
             <a mfb-button icon="ion-play" label="{{'kNormalPlay'|translate}}" ng-click="adjustSpeed('np');"></a>
