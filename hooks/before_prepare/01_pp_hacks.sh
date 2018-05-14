@@ -49,6 +49,8 @@ echo "Copying Android notification icons to resource dir"
 echo "--------------------------------------------------"
 if [ -d "platforms/android/res/" ]; then
 	exe cp -R www/external/android-notification-icons/ platforms/android/res/
+	exe cp -f www/external/android-tv-banner/banner.png platforms/android/res/drawable
+
 else
 	echo "Directory platforms/android/res/ does not exist, skipping..."
 fi

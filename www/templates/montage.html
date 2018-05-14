@@ -1,28 +1,28 @@
 <ion-view cache-view="false" hide-nav-bar="{{minimal}}">
   <ion-nav-title>{{currentProfileName}}</ion-nav-title>
   <ion-nav-buttons side="left">
-    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    <button  id="montage-move-1"  class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
     &nbsp;
-    <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
+    <button  class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
     </button>
-    <button class="button button-icon button-clear ion-chevron-down" ng-click="toggleSubMenuFunction();">&nbsp;
+    <button  id="montage-move-2" class="button button-icon button-clear ion-chevron-down" ng-click="toggleSubMenuFunction();">&nbsp;
     </button>
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
-    <span ng-click="toggleTimeType()" class="icon montage-time">
+    <span  ng-click="toggleTimeType()" class="icon montage-time">
       <i ng-class="(iconTimeNow=='server')?'icon-server':'ion-ios-location'"></i>
       {{timeNow}}&nbsp;</span>
-    <button class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp;
+    <button  class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp;
     </button>
     <!--
         <button class="button button-icon button-clear ion-monitor" ng-click="cast();">&nbsp;
         </button>
         -->
-    <button class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
+    <button  id="montage-move-3" class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
     </button>
-    <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
+    <button   class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
     </button>
   </ion-nav-buttons>
   <ion-content ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate" overflow-scroll="false">
@@ -39,34 +39,34 @@
                                 <a href="" ng-click="killAllImages()"> <i class="ion-ionic"></i></a>
                             </li>-->
 
-          <li>
-            <a href="" ng-click="sliderChanged(1)">
+          <li >
+            <a  id="montage-move-4" ng-click="sliderChanged(1)"  >
               <i class="ion-plus-circled"></i>
             </a>
           </li>
-          <li>
-            <a href="" ng-click="sliderChanged(-1)">
+          <li >
+            <a   id="montage-move-5" ng-click="sliderChanged(-1)" >
               <i class="ion-minus-circled"></i>
             </a>
           </li>
-          <li>
-            <a href="" ng-click="squeezeMonitors()">
+          <li  >
+            <a id="montage-move-6"   ng-click="squeezeMonitors()" >
               <i class="ion-android-apps"></i>
             </a>
           </li>
 
           <li ng-style="{'background-color': isCycleOn()?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}" ng-if="!isDragabillyOn">
-            <a href="" ng-click="toggleCycle()">
+            <a  ng-click="toggleCycle()">
               <i class="ion-android-bicycle"></i>:{{getCycleStatus()}}</a>
           </li>
 
           <li ng-if="isDragabillyOn">
-            <a href="" ng-click="hideMonitor(monitor.Monitor.Id)">
+            <a  ng-click="hideMonitor(monitor.Monitor.Id)">
               <i class="ion-close-circled"></i>
             </a>
           </li>
           <li ng-if="isDragabillyOn">
-            <a href="" ng-click="toggleStamp()">
+            <a   ng-click="toggleStamp()">
               <i class="ion-pin"></i>
             </a>
           </li>
