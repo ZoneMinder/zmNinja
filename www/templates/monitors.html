@@ -1,6 +1,6 @@
 <ion-view view-title="{{'kMonitors' | translate}}" cache-view="false">
   <ion-nav-buttons side="left">
-    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()">
+    <button  id="monitors-move-2" class="button button-icon button-clear ion-navicon" ng-click="openMenu()">
     </button>
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
@@ -9,7 +9,7 @@
     <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
     </ion-refresher>
     <div style="float:right;margin-top:3px;margin-right:8px;">
-      <a class="button button-small icon icon-left icon ion-ios-world-outline" href="" ng-click="changeConfig('All', '','1','Monitor');">{{'kGlobalConfiguration' | translate}}</a>
+      <a id="monitors-move-2" class="button button-small icon icon-left icon ion-ios-world-outline" href="" ng-click="changeConfig('All', '','1','Monitor');">{{'kGlobalConfiguration' | translate}}</a>
     </div>
     <br/>
     <div class="list card" ng-repeat="monitor in monitors">
@@ -53,7 +53,7 @@
         <div style="float:right;">
           <a class="button button-small icon icon-left icon ion-gear-a" href="" ng-click="changeConfig(monitor.Monitor.Name, monitor.Monitor.Id,monitor.Monitor.Enabled,monitor.Monitor.Function);">{{'kConfiguration' | translate}}</a>
           <a class="button button-small icon icon-left ion-calendar" href="#/app/events/{{monitor.Monitor.Id}}/false">{{'kEventsCap'|translate}}</a>
-          <a class="button button-small icon icon-left ion-ios-eye" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,  monitor)">{{'kLiveView' | translate}}</a>
+          <a  class="button button-small icon icon-left ion-ios-eye" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,  monitor)">{{'kLiveView' | translate}} </a>
         </div>
       </div>
     </div>

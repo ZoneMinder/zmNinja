@@ -50,8 +50,7 @@
       "ionic-plugin-keyboard": {},
       "cordova-library-helper": {},
       "cordova-plugin-certificates": {},
-      "cordova.plugins.diagnostic": {},
-      "cordova-plugin-android-tv": {}
+      "cordova.plugins.diagnostic": {}
     }
   },
   "dependencies": {
@@ -67,7 +66,6 @@
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",
     "cordova-plugin-android-permissions": "^1.0.0",
-    "cordova-plugin-android-tv": "git+https://github.com/pliablepixels/cordova-plugin-android-tv.git",
     "cordova-plugin-app-version": "^0.1.9",
     "cordova-plugin-canvas2image": "git+https://github.com/flache/Canvas2ImagePlugin.git",
     "cordova-plugin-certificates": "git+https://github.com/hypery2k/cordova-certificate-plugin.git",

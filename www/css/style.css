@@ -1036,8 +1036,15 @@ videogular div.event-time {
     border: 2px dotted #3498db;
 }
 
+
+
 .dragborder-selected {
     border: 4px solid #e74c3c;
+}
+
+.dpadSelected {
+   border: 4px solid #45AAF2 !important;
+    
 }
 
 .grid-sizer {
