@@ -146,7 +146,6 @@
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="cordova-library-helper" spec="git+https://github.com/FlyingDonkeyDev/cordova-library-helper.git" />
     <plugin name="cordova-plugin-certificates" spec="git+https://github.com/hypery2k/cordova-certificate-plugin.git" />
-    <plugin name="cordova-plugin-android-tv" spec="https://github.com/pliablepixels/cordova-plugin-android-tv.git" />
     <engine name="ios" spec="^4.5.4" />
     <engine name="android" spec="6.4.0" />
 </widget>

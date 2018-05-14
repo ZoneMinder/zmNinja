@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVRDataModel', '$rootScope', '$ionicPopup', '$translate', '$timeout', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVRDataModel, $rootScope, $ionicPopup, $translate, $timeout) {
+angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVRDataModel', '$rootScope', '$ionicPopup', '$translate', '$timeout', '$location',function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVRDataModel, $rootScope, $ionicPopup, $translate, $timeout, $location) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -13,6 +13,17 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
   //----------------------------------------------------------------
 
 
+  $scope.go = function(p) {
+   
+    
+    $ionicHistory.nextViewOptions({
+      historyRoot: true,
+      disableAnimate: true,
+      expire: 300
+    });
+    $ionicSideMenuDelegate.toggleLeft();
+    $location.path(p);
+  };  
 
   $scope.navigateView = function (view, args) {
 
