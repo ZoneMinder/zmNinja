@@ -1,12 +1,12 @@
 <ion-view view-title="{{'kDevOptions' | translate}}">
   <ion-nav-buttons side="left">
-    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    <button id="devoptions-move-1" class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
     &nbsp;
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
-    <button class="button button-clear" ng-click="saveDevOptions()">{{'kSave' | translate}}</button>
+    <button id="devoptions-move-2" class="button button-clear" ng-click="saveDevOptions()">{{'kSave' | translate}}</button>
   </ion-nav-buttons>
   <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
     <div class="list list-inset">
@@ -16,11 +16,11 @@
       <div class="item item-input-inset">
         {{'kFrameUpdate'|translate}} ({{'kSec'|translate}}.)&nbsp;
         <label class="item-input-wrapper">
-          <input type="tel" placeholder="min is 1s" ng-model="loginData.refreshSec">
+          <input id="devoptions-move-3" type="tel" placeholder="min is 1s" ng-model="loginData.refreshSec">
         </label>
       </div>
       <label>
-        <ion-toggle ng-model="loginData.use24hr" toggle-class="toggle-calm">
+        <ion-toggle id="devoptions-move-4" ng-model="loginData.use24hr" toggle-class="toggle-calm">
           <span class="item-text-wrap">{{'kEnable24hr' | translate}}</span>
         </ion-toggle>
       </label>
