@@ -49,8 +49,8 @@
       "cordova-plugin-add-swift-support": {},
       "ionic-plugin-keyboard": {},
       "cordova-library-helper": {},
-      "cordova-plugin-certificates": {},
-      "cordova.plugins.diagnostic": {}
+      "cordova.plugins.diagnostic": {},
+      "cordova-plugin-certificates": {}
     }
   },
   "dependencies": {
@@ -59,7 +59,7 @@
     "clivas": "^0.2.0",
     "com.telerik.plugins.nativepagetransitions": "^0.6.5",
     "cordova": "^8.0.0",
-    "cordova-android": "6.4.0",
+    "cordova-android": "^6.3.0",
     "cordova-custom-config": "~4.0.2",
     "cordova-ios": "^4.5.4",
     "cordova-library-helper": "git+https://github.com/FlyingDonkeyDev/cordova-library-helper.git",
