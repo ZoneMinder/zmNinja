@@ -339,6 +339,12 @@ angular.module('zmApp.controllers')
         var d = $q.defer();
         var myurl;
 
+        if (!loginData.isUseAuth) {
+          $rootScope.authSession = "";
+          d.resolve($rootScope.authSession);
+          return d.promise;
+        }
+
         // disable for now, getAuthHash needs work
 
         if (versionCompare(currentServerVersion, "1.31.44") != -1) {
