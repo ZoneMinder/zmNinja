@@ -601,6 +601,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
       .then(function (data) {
 
+        console.log ("DOLOGIN RETURNED "+ JSON.stringify(data));
+
         // Now let's validate if the API works
 
         // note that due to reachability, it might have switched to another server
