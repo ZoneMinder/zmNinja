@@ -49,7 +49,7 @@ iOS and Android. Make sure you install it and go through the prompts
 
 For example, in iOS, when you double tap on the certificate, you get a screen like this - you need to tap on Install on the top right
 
-![] (https://i.imgur.com/T2sBwWD.png "SSL Cert")
+![](https://i.imgur.com/T2sBwWD.png "SSL Cert")
 
 On Android, you will get a dialog box prompting you to install the certificate
 
