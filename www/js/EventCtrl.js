@@ -59,7 +59,7 @@ angular.module('zmApp.controllers')
 
     $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
     $scope.outlineMotion = false;
-    $scope.outlineMotionParam = "";
+    $scope.outlineMotionParam = "&show=capture";
 
 
     var eventsListScrubHeight = eventsListScrubHeight;
@@ -1006,7 +1006,7 @@ angular.module('zmApp.controllers')
       if ($scope.outlineMotion)
         $scope.outlineMotionParam = "&show=analyse";
       else
-        $scope.outlineMotionParam = "";
+        $scope.outlineMotionParam = "&show=capture";
     };
 
     $scope.toggleTypeOfAlarms = function () {
@@ -2827,7 +2827,7 @@ angular.module('zmApp.controllers')
     $scope.constructThumbnail = function (event) {
       var stream = "";
       stream = event.Event.baseURL +
-        "/index.php?view=image&fid=" +
+        "/index.php?view=image&show=capture&fid=" +
         (event.Event.MaxScoreFrameId ? event.Event.MaxScoreFrameId : "1&eid=" + event.Event.Id) +
         "&width=" + event.Event.thumbWidth * 2 +
         "&height=" + event.Event.thumbHeight * 2;
@@ -2847,7 +2847,7 @@ angular.module('zmApp.controllers')
 
       } else if (event.Event.imageMode == 'fid') {
         stream = event.Event.baseURL + "/index.php?view=image" +
-          "&fid=" + slide.id;
+          "&fid=" + slide.id + $scope.outlineMotionParam;
       }
       if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
 
