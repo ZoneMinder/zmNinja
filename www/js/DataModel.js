@@ -1599,10 +1599,10 @@ angular.module('zmApp.controllers')
 
           var myurl = loginData.url;
           log("Checking if reCaptcha is enabled in ZM...");
-          console.log ("Recaptcha: "+myurl);
+//          console.log ("Recaptcha: "+myurl);
           $http.get(myurl)
             .then(function (success) {
-              console.log ("Inside recaptcha success");
+   //           console.log ("Inside recaptcha success");
               if (success.data.search("g-recaptcha") != -1) {
                 // recaptcha enable. zmNinja won't work
                 log("ZM has recaptcha enabled", "error");
@@ -1618,7 +1618,7 @@ angular.module('zmApp.controllers')
             },
             function (err) {
               // for whatever reason recaptcha check failed
-              console.log ("Inside recaptcha fail");
+            //  console.log ("Inside recaptcha fail");
               d.resolve(false);
                 log("Recaptcha failed, but assuming ZM has recaptcha disabled");
                 return (d.promise);
@@ -2530,6 +2530,7 @@ angular.module('zmApp.controllers')
 
         logout: function () {
 
+          // always resolves
           var d = $q.defer();
           log(loginData.url + "=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "undefined";
