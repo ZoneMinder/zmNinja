@@ -35,28 +35,10 @@
           </div>
         </div>
       </ion-item>
-      <!--
-            <ion-item>
-                <div class="row">
-                    <div class="col col-10">
-                        <i class="ion-social-buffer" style="font-size:150%;"></i>
-                    </div>
-                    
-                    <div class="col">
-
-                        Disk Usage:
-                    </div>
-                    <div class="col" style="text-align:right;">
-                        {{zmDisk}}
-                    </div>
-                </div>
-            </ion-item>
-            -->
+      
       <ion-item>
-        <button class="button button-full {{dangerButtonColor[showDanger?1:0]}}" ng-click="showDanger=!showDanger">
-          <i class="ion-alert-circled" "style:font-size:300%;"></i> {{dangerText[showDanger?1:0]}}
-        </button>
-        <div ng-show="showDanger">
+
+        <div>
           <div class="row">
             <div class="col text-center">
               <a class="button button-small button-outline button-dark " ng-click="selectCustomState();" href="">{{'kChangeState'|translate}}</a>

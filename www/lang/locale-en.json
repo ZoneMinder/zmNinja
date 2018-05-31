@@ -26,6 +26,7 @@
     "kBannerPleaseCheck"         :"Please check settings",
     "kBeCareful"                 :"be careful",
     "kBodyPortalNotConfigured"   :"Please fill in your login details as well as portal URL and save it before you try to detect the cgi-path",
+    "kBookmark"                  : "Bookmark",
     "kButtonCancel"              :"Cancel",
     "kButtonClear"               :"Clear",
     "kButtonNo"                  :"No",

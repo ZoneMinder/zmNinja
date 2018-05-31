@@ -4,8 +4,8 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', function (
-  $ionicPopup, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', '$stateParams', function (
+  $ionicPopup, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate, $stateParams) {
 
   //----------------------------------------------------------------------
   // Controller main
@@ -63,6 +63,16 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   $scope.$on('$ionicView.enter', function () {
     // console.log("**VIEW ** Montage Ctrl Entered");
     NVRDataModel.setAwake(false);
+   
+  });
+
+  $scope.$on('$ionicView.afterEnter', function () {
+    // console.log("**VIEW ** Montage Ctrl Entered");
+   
+    console.log ("STATE SHORTCUT: " + JSON.stringify($stateParams));
+    $stateParams.shortcut &&  $stateParams.shortcut.fn && 
+    $scope[$stateParams.shortcut.fn]($stateParams.shortcut.fnargs); // jshint ignore:line
+    
   });
 
   //---------------------------------------------------------
@@ -121,6 +131,10 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   // Allows the user to select a custom run state
   //---------------------------------------------------------
   $scope.selectCustomState = function () {
+    selectCustomState();
+  };
+
+  function selectCustomState() {
     $scope.myopt = {
       selectedState: ""
     };
@@ -158,7 +172,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
           controlZM($scope.myopt.selectedState);
       }
     });
-  };
+  }
 
   //----------------------------------------------------------------------
   // returns disk space in gigs taken up by events
