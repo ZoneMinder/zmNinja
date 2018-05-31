@@ -456,6 +456,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     //console.log ("*********** SAVE ITEMS CALLED ");
     //console.log('Saving login');
+    
+    NVRDataModel.debug ("Inside save Items");
+   
     NVRDataModel.setFirstUse(false);
     NVRDataModel.setCurrentServerVersion('');
     NVRDataModel.setCurrentServerMultiPortSupported(false);
@@ -601,7 +604,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
       .then(function (data) {
 
-        console.log ("DOLOGIN RETURNED "+ JSON.stringify(data));
+        //console.log ("DOLOGIN RETURNED "+ JSON.stringify(data));
 
         // Now let's validate if the API works
 
@@ -727,6 +730,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
   $scope.saveItems = function () {
 
+    NVRDataModel.debug ("User tapped save, calling SaveItems");
     NVRDataModel.clearZmsMultiPortSupport();
     if (!$scope.loginData.serverName) {
       $rootScope.zmPopup = $ionicPopup.alert({
