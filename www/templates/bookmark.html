@@ -1,0 +1,51 @@
+<ion-view cache-view="false" view-title="{{'kBookmark' | translate}}">
+  <ion-nav-buttons side="left">
+    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
+      ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+  </ion-nav-buttons>
+  <ion-content class="padding" delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
+
+    <div class="row" ng-repeat="bookmark in bookmarks" ng-if="$index % 4 === 0">
+
+      <div class="col col-25" ng-if="$index < bookmarks.length" ng-click="action(bookmarks[$index])">
+        <div class="bookmarkButton">
+          <i ng-class="(bookmarks[$index].text=='') ? 'ion-plus-circled':'ion-share'">
+            <br/>
+            <span class="bookmark_text"> {{bookmarks[$index].text}}</span>
+          </i>
+        </div>
+      </div>
+
+
+      <div class="col col-25" ng-if="$index + 1 < bookmarks.length" ng-click="action(bookmarks[$index+1])">
+        <div class="bookmarkButton">
+          <i ng-class="(bookmarks[$index+1].text=='') ? 'ion-plus-circled':'ion-share'">
+            <br/>
+            <span class="bookmark_text"> {{bookmarks[$index+1].text}}</span>
+          </i>
+        </div>
+        </div>
+
+        <div class="col col-25" ng-if="$index + 2 < bookmarks.length" ng-click="action(bookmarks[$index+2])">
+          <div class="bookmarkButton">
+            <i ng-class="(bookmarks[$index+2].text=='') ? 'ion-plus-circled':'ion-share'">
+              <br/>
+              <span class="bookmark_text"> {{bookmarks[$index+2].text}}</span>
+            </i>
+          </div>
+        </div>
+
+        <div class="col col-25" ng-if="$index + 3 < bookmarks.length" ng-click="action(bookmarks[$index+3])">
+          <div class="bookmarkButton">
+            <i ng-class="(bookmarks[$index+3].text=='') ? 'ion-plus-circled':'ion-share'">
+              <br/>
+              <span class="bookmark_text"> {{bookmarks[$index+3].text}}</span>
+            </i>
+
+          </div>
+        </div>
+      </div>
+
+  </ion-content>
+</ion-view>
