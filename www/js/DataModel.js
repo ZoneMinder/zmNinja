@@ -514,33 +514,33 @@ angular.module('zmApp.controllers')
         //var d = $q.defer();
 
         // if we are here, we should remove cache
-        localforage.removeItem("settings-temp-data");
+        
 
         loginData = angular.copy(newLogin);
         serverGroupList[loginData.serverName] = angular.copy(loginData);
 
         var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
-        return localforage.setItem("serverGroupList", ct)
-          .then(function () {
+
+        //debug ("Crypto is: " + ct);
+
+        localforage.setItem("serverGroupList", ct)
+        .then(function () {
+          debug ("saving serverGroupList worked");
             return localforage.setItem("defaultServerName", loginData.serverName);
-          })
-          .catch(function (err) {
-            log("localforage store error " + JSON.stringify(err));
+        })
+        .then (function () {
+            debug ("saving defaultServerName worked");
+            return localforage.removeItem("settings-temp-data");
+        })
+        .then (function() {
+          debug ("removing  settings-temp-data worked");
+        })
+        .catch(function (err) {
+            log("SetLogin localforage store error " + JSON.stringify(err));
           });
 
-        //console.log ("****serverLogin was encrypted to " + ct);
-        //$localstorage.setObject("serverGroupList", serverGroupList);
-        /* return  localforage.setItem("serverGroupList", ct, function(err)
-         {
-             if (err) log("localforage store error " + JSON.stringify(err));
-         });
-         //$localstorage.set("defaultServerName", loginData.serverName);
-         return localforage.setItem("defaultServerName", loginData.serverName, function(err)
-         {
-             if (err) log("localforage store error " + JSON.stringify(err));
-         });*/
-        // return (d.promise);
 
+       
       }
 
       //credit: https://gist.github.com/alexey-bass/1115557
@@ -1507,7 +1507,10 @@ angular.module('zmApp.controllers')
           //localforage.setItem("isFirstUse", val, 
           //   function(err) {if (err) log ("localforage error, //storing isFirstUse: " + JSON.stringify(err));});
           isFirstUse = val;
-          localforage.setItem("isFirstUse", val);
+          debug ("Setting isFirstUse to:"+val);
+          localforage.setItem("isFirstUse", val)
+          .then (function (succ) { debug ("Saved isFirstUse ok");})
+          .catch (function (err) { debug ("Error Saving isFirstUse:" + JSON.stringify(err));});
           //console.log (">>>>>>setting isFirstUse to " + val);
 
         },
@@ -2515,6 +2518,91 @@ angular.module('zmApp.controllers')
           }
           return "(Unknown)";
         },
+
+        // tries to set up a DB
+        // set/get a value and if it fails
+        // goes back to localstorage
+        // needed for some old Android phones where index setting works, but actually fails
+
+        configureStorageDB: function () {
+
+          debug ("Inside configureStorageDB");
+          var d = $q.defer();
+          localforage.config({
+            name: zm.dbName
+    
+          });
+
+          if ($rootScope.platformOS == 'ios') {
+            order = [window.cordovaSQLiteDriver._driver,
+              localforage.INDEXEDDB,
+              localforage.LOCALSTORAGE
+            ];
+          } else {
+            // don't do SQL for Android
+            // large keys hang on some devices
+            // see https://github.com/litehelpers/Cordova-sqlite-storage/issues/533
+            order = [
+              localforage.INDEXEDDB,
+              localforage.LOCALSTORAGE,
+            ];
+          }
+
+          debug ("configureStorageDB: trying order:" + JSON.stringify(order));
+          
+          localforage.defineDriver(window.cordovaSQLiteDriver).then(function () {
+            return localforage.setDriver(
+              // Try setting cordovaSQLiteDriver if available,
+              // for desktops, it will pick the next one
+              order
+            );
+          })
+          .then ( function (succ) {
+            log("configureStorageDB:localforage driver for storage:" + localforage.driver());
+            debug ("configureStorageDB:Making sure this storage driver works...");
+            return localforage.setItem('testPromiseKey', 'testPromiseValue');
+          })
+          .then (function (succ) {
+            return localforage.getItem('testPromiseKey');
+          })
+          .then (function (succ) {
+            if (succ != 'testPromiseValue') {
+              log ("configureStorageDB:this driver could not restore a test val, reverting to localstorage and hoping for the best...");
+               return forceLocalStorage();
+            }
+            else {
+              debug ("configureStorageDB:test get/set worked, this driver is ok...");
+              d.resolve(true);
+              return d.promise;
+            }
+          })
+          .catch (function (err) {
+            log ("configureStorageDB:this driver errored, reverting to localstorage and hoping for the best...: " + JSON.stringify(err));
+            return forceLocalStorage();
+          });
+         
+          return d.promise;
+
+          function forceLocalStorage() {
+
+           // var d = $q.defer();
+            localforage.setDriver (localforage.LOCALSTORAGE)
+            .then (function (succ) {
+              log ("configureStorageDB:localforage forced setting to localstorage returned a driver of: " + localforage.driver());
+              d.resolve(true);
+              return d.promise;
+            },
+            function (err) {
+              log ("*** configureStorageDB: Error setting localStorage too, zmNinja WILL NOT SAVE ***");
+              log ("*** configureStorageDB: Dance, rejoice, keep re-configuring everytime you run ***");
+              d.resolve(true);
+              return d.promise;
+            });
+            return d.promise;
+
+          }
+
+      },
 
         getBaseURL: function (id) {
           var idnum = parseInt(id);
