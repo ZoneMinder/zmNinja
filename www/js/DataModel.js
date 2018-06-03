@@ -423,7 +423,9 @@ angular.module('zmApp.controllers')
                 } else {
                   log("Data Model: Did not find any  stream mode of auth");
                   as = "";
+                  $rootScope.authSession = "";
                   d.resolve(as);
+                  return d.promise;
                 }
 
                 return (d.promise);
