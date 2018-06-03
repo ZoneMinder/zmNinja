@@ -1,7 +1,32 @@
 # Change Log
 
-## [1.3.0](https://github.com/pliablepixels/zmNinja/tree/1.3.0) (2018-05-17)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.515...1.3.0)
+## [1.3.004](https://github.com/pliablepixels/zmNinja/tree/1.3.004) (2018-06-03)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.002...1.3.004)
+
+**Fixed bugs:**
+
+- Certain android phones cannot store data [\#636](https://github.com/pliablepixels/zmNinja/issues/636)
+- Login succeeded but API failed [\#635](https://github.com/pliablepixels/zmNinja/issues/635)
+- 1.3.0 - live view not working if no auth is used [\#634](https://github.com/pliablepixels/zmNinja/issues/634)
+
+**Closed issues:**
+
+- zmNinja - montage view - monitors don't show on first run, but show after login saved [\#641](https://github.com/pliablepixels/zmNinja/issues/641)
+- Desktop, at certain windows sizes the 24hr Preview frames will jiggle. [\#600](https://github.com/pliablepixels/zmNinja/issues/600)
+- Missing events if logged in zmNinja with non admin user [\#568](https://github.com/pliablepixels/zmNinja/issues/568)
+- Enhance System Status to show disk space details [\#430](https://github.com/pliablepixels/zmNinja/issues/430)
+- Desktop: Window Title is Inconsistent [\#170](https://github.com/pliablepixels/zmNinja/issues/170)
+- Order of persisted monitors should be reflected in timeline and when swiping prev/next in fullscreen view. [\#62](https://github.com/pliablepixels/zmNinja/issues/62)
+
+**Merged pull requests:**
+
+- placeholder code for bookmarks - not enabled [\#637](https://github.com/pliablepixels/zmNinja/pull/637) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.3.002](https://github.com/pliablepixels/zmNinja/tree/v1.3.002) (2018-05-24)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.001...v1.3.002)
+
+## [v1.3.001](https://github.com/pliablepixels/zmNinja/tree/v1.3.001) (2018-05-21)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.515...v1.3.001)
 
 **Implemented enhancements:**
 
@@ -32,6 +57,9 @@
 - remove basic auth user:password in URLs and convert to Authorization header [\#613](https://github.com/pliablepixels/zmNinja/issues/613)
 - cleanup streaming - big time [\#606](https://github.com/pliablepixels/zmNinja/issues/606)
 - New thumbnails don't load in Events List and 24hr Preview [\#599](https://github.com/pliablepixels/zmNinja/issues/599)
+- jesus christ [\#597](https://github.com/pliablepixels/zmNinja/issues/597)
+- testing probotsentiment [\#596](https://github.com/pliablepixels/zmNinja/issues/596)
+- bullshit issue - testing request info bot [\#595](https://github.com/pliablepixels/zmNinja/issues/595)
 - Live view not working in zmNinja Pro but is working in web browser and another APP [\#594](https://github.com/pliablepixels/zmNinja/issues/594)
 - Event listing time is incorrect  [\#592](https://github.com/pliablepixels/zmNinja/issues/592)
 - PTZ issues ... was working but doesn't seem to be now [\#590](https://github.com/pliablepixels/zmNinja/issues/590)
