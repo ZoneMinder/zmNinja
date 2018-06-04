@@ -1,4 +1,4 @@
-Before you create an issue, please make sure you have read the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ). Common questions on API, no image etc are covered there.
+Before you create an issue, please make sure you have read the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ). Common questions on API, no image etc are covered there. Please also read [HOWTO REPORT ISSUES](https://github.com/pliablepixels/zmNinja/wiki/FAQ#how-to-report-errors)
 
 
 
