@@ -1711,7 +1711,7 @@ angular.module('zmApp.controllers')
 
       var stream;
       if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' || $rootScope.authSession == 'undefined') {
-        // console.log ("STREAM=empty");
+        //console.log ("STREAM=empty and auth="+$rootScope.authSession);
         return "";
       }
 

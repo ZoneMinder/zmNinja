@@ -1006,7 +1006,8 @@ angular.module('zmApp', [
 
         // This is a good time to check if auth is used :-p
         if (!ld.isUseAuth) {
-          NVRDataModel.log("Auth is disabled!");
+          NVRDataModel.log("Auth is disabled, setting authSession to ''");
+          $rootScope.authSession='';
           d.resolve("Login Success");
 
           $rootScope.$broadcast('auth-success', 'no auth');
