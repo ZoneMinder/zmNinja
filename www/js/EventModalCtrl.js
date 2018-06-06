@@ -1730,17 +1730,23 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.alarm_images = [];
     tempAlarms = [];
     $scope.FrameArray = data.event.Frame;
+    var ts = 0;
 
     for (i = 0; i < data.event.Frame.length; i++) {
       if (data.event.Frame[i].Type == "Alarm") {
 
         // console.log ("**ONLY ALARM AT " + i + "of " + data.event.Frame.length);
 
-        tempAlarms.push({
+        if (ts != data.event.Frame[i].TimeStamp)
+        {
+          tempAlarms.push({
 
-          id: data.event.Frame[i].Id,
-          frameid: data.event.Frame[i].FrameId,
-        });
+            id: data.event.Frame[i].Id,
+            frameid: data.event.Frame[i].FrameId,
+          });
+          ts = data.event.Frame[i].TimeStamp;
+        }
+        
 
       }
 
