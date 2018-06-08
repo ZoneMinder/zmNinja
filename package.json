@@ -8,7 +8,8 @@
       "android"
     ],
     "plugins": {
-      "com.telerik.plugins.nativepagetransitions": {},
+      "cordova-plugin-add-swift-support": {},
+      "com.telerik.plugins.nativepaget,ransitions": {},
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-app-version": {},
       "cordova-plugin-customurlscheme": {
@@ -48,8 +49,7 @@
       "ionic-plugin-keyboard": {},
       "cordova-library-helper": {},
       "cordova.plugins.diagnostic": {},
-      "cordova-plugin-certificates": {},
-      "cordova-plugin-add-swift-support": {}
+      "cordova-plugin-certificates": {}
     }
   },
   "dependencies": {
