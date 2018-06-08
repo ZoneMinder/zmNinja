@@ -53,10 +53,10 @@
     }
   },
   "dependencies": {
-    "com.telerik.plugins.nativepagetransitions": "^0.6.5",
-    "cordova-android": "^6.3.0",
-    "cordova-custom-config": "~4.0.2",
+    "cordova-android": "^7.1.0",
     "cordova-ios": "^4.5.4",
+    "com.telerik.plugins.nativepagetransitions": "^0.6.5",
+    "cordova-custom-config": "~4.0.2",
     "cordova-library-helper": "https://github.com/FlyingDonkeyDev/cordova-library-helper.git",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",

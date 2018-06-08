@@ -147,5 +147,5 @@
     <plugin name="cordova.plugins.diagnostic" spec="^3.7.1" />
     <plugin name="cordova-plugin-certificates" spec="https://github.com/hypery2k/cordova-certificate-plugin.git" />
     <engine name="ios" spec="^4.5.4" />
-    <engine name="android" spec="^6.3.0" />
+    <engine name="android" spec="^7.1.0" />
 </widget>
