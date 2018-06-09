@@ -67,7 +67,7 @@
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-version": "^0.1.9",
-    "cordova-plugin-canvas2image": "git+https://github.com/flache/Canvas2ImagePlugin.git",
+    "cordova-plugin-canvas2image": "git+https://github.com/pliablepixels/Canvas2ImagePlugin.git",
     "cordova-plugin-certificates": "git+https://github.com/hypery2k/cordova-certificate-plugin.git",
     "cordova-plugin-console": "^1.1.0",
     "cordova-plugin-customurlscheme": "^4.3.0",
@@ -99,7 +99,6 @@
     "menu": "^0.2.5",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
-    "org.devgeeks.Canvas2ImagePlugin": "https://github.com/flache/Canvas2ImagePlugin",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "phonegap-plugin-push": "^2.1.3",
     "tostr": "^0.1.0"
