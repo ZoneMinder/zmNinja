@@ -37,7 +37,7 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
     echo "--------------------------------------------"
     echo "Removing android and re-adding..."
     cordova platform remove android
-    cordova platform add android
+    cordova platform add android@6.3.0
     cordova plugin remove cordova-plugin-crosswalk-webview --nosave
     echo "Adding crosswalk..."
     #cordova plugin add cordova-plugin-crosswalk-webview
@@ -81,7 +81,7 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     
     echo "Removing android and re-adding..."
     cordova platform remove android
-    cordova platform add android
+    cordova platform add android@6.3.0
 
    #clean up past build stuff
     echo "Adding default browser..."
