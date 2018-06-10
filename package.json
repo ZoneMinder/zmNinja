@@ -19,9 +19,6 @@
       "cordova-plugin-globalization": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-insomnia": {},
-      "cordova-plugin-media": {
-        "MICROPHONE_USAGE_DESCRIPTION": " "
-      },
       "cordova-plugin-photo-library": {
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "images to gallery"
       },
@@ -31,15 +28,10 @@
       "cordova-plugin-websocket": {},
       "cordova-plugin-whitelist": {},
       "cordova-sqlite-storage": {},
-      "org.devgeeks.Canvas2ImagePlugin": {
-        "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
-      },
       "phonegap-plugin-mobile-accessibility": {},
       "cordova-custom-config": {},
-      "cordova-plugin-email": {},
       "cordova-plugin-touch-id": {},
       "cordova-plugin-android-fingerprint-auth": {},
-      "cordova-plugin-statusbar": {},
       "phonegap-plugin-push": {
         "FCM_VERSION": "11.6.2"
       },
@@ -47,9 +39,15 @@
       "cordova-plugin-device": {},
       "cordova-plugin-file": {},
       "ionic-plugin-keyboard": {},
-      "cordova-library-helper": {},
       "cordova.plugins.diagnostic": {},
-      "cordova-plugin-certificates": {}
+      "cordova-plugin-canvas2image-pp-fork": {
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
+      },
+      "cordova-plugin-media-pp-fork": {},
+      "cordova-plugin-email": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-certificates": {},
+      "cordova-library-helper-pp-fork": {}
     }
   },
   "dependencies": {
@@ -57,34 +55,34 @@
     "cordova-android": "^6.3.0",
     "cordova-custom-config": "~4.0.2",
     "cordova-ios": "^4.5.4",
-    "cordova-library-helper": "https://github.com/FlyingDonkeyDev/cordova-library-helper.git",
+    "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-version": "^0.1.9",
-    "cordova-plugin-certificates": "https://github.com/hypery2k/cordova-certificate-plugin.git",
+    "cordova-plugin-canvas2image-pp-fork": "^0.6.0",
+    "cordova-plugin-certificates": "^0.6.4",
     "cordova-plugin-customurlscheme": "^4.3.0",
     "cordova-plugin-device": "^2.0.1",
-    "cordova-plugin-email": "https://github.com/pliablepixels/cordova-email-plugin.git",
+    "cordova-plugin-email": "^1.2.7",
     "cordova-plugin-file": "^6.0.1",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-globalization": "^1.0.7",
     "cordova-plugin-inappbrowser": "^1.7.1",
     "cordova-plugin-insomnia": "^4.3.0",
-    "cordova-plugin-media": "https://github.com/pliablepixels/cordova-plugin-media.git",
+    "cordova-plugin-media-pp-fork": "^1.0.2-dev",
     "cordova-plugin-network-information": "^2.0.1",
     "cordova-plugin-photo-library": "^1.2.2",
     "cordova-plugin-pin-dialog": "^0.1.3",
     "cordova-plugin-settings-hook": "^0.2.7",
     "cordova-plugin-splashscreen": "^4.0.3",
-    "cordova-plugin-statusbar": "https://github.com/apache/cordova-plugin-statusbar.git",
+    "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-touch-id": "^3.2.0",
     "cordova-plugin-websocket": "^0.12.2",
     "cordova-plugin-whitelist": "^1.3.2",
     "cordova-sqlite-storage": "^1.5.3",
     "cordova.plugins.diagnostic": "^3.7.1",
     "ionic-plugin-keyboard": "^2.2.1",
-    "org.devgeeks.Canvas2ImagePlugin": "https://github.com/pliablepixels/Canvas2ImagePlugin.git",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "phonegap-plugin-push": "~2.1.3"
   }
