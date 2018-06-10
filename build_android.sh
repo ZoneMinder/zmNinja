@@ -89,7 +89,7 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
 
     # use the right plugin for SSL certificate mgmt
     cordova plugin remove cordova-plugin-crosswalk-certificate-pp-fork
-    cordova plugin add cordova-plugin-cerfificates
+    cordova plugin add cordova-plugin-certificates
     cp "$NINJAKEYSTORE" platforms/android/
 
     # Make sure native builds are only deployed in devices < Android 5
