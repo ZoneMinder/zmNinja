@@ -1943,8 +1943,7 @@ angular.module('zmApp', [
           $interval.cancel($rootScope.eventQueryInterval);
           $interval.cancel($rootScope.intervalHandle);
           zmAutoLogin.stop();
-          if ($rootScope.zmPopup)
-            $rootScope.zmPopup.close();
+          
 
 
           // NVRDataModel.log("ROOT APP: Stopping network ");
@@ -1960,9 +1959,24 @@ angular.module('zmApp', [
 
           if (ld.exitOnSleep && $rootScope.platformOS == "android") {
             NVRDataModel.log("user exited app");
-            window.stop();
+            navigator.app.exitApp();
+
             //  ionic.Platform.exitApp();
           }
+
+          if (NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS == "android" && !NVRDataModel.isMultiPortDisabled()) {
+            NVRDataModel.log ("Multiport is active, killing app to make sure no streams continue in background...");
+            navigator.app.exitApp();
+          } else {
+            NVRDataModel.debug ("Not exiting app because:");
+            NVRDataModel.debug ("getCurrentServerMultiPortSupported:"+NVRDataModel.getCurrentServerMultiPortSupported());
+            NVRDataModel.debug ("platform:"+$rootScope.platformOS);
+            NVRDataModel.debug ("isMultiPortDisabled:"+NVRDataModel.isMultiPortDisabled());
+
+          }
+
+          if ($rootScope.zmPopup)
+            $rootScope.zmPopup.close();
 
         }, false);
 

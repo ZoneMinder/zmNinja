@@ -619,6 +619,10 @@ angular.module('zmApp.controllers')
           return (currentServerMultiPortSupported);
         },
 
+        isMultiPortDisabled: function () {
+            return loginData.disableSimulStreaming;
+        },
+
         getCurrentServerVersion: function () {
           return (currentServerVersion);
         },

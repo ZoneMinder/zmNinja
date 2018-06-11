@@ -1308,7 +1308,7 @@ angular.module('zmApp.controllers')
 
 
     function viewCleanup() {
-
+      currentStreamState = streamState.STOPPED;
       if (viewCleaned) {
         NVRDataModel.debug("Montage View Cleanup was already done, skipping");
         return;
@@ -1322,7 +1322,7 @@ angular.module('zmApp.controllers')
 
       broadcastHandles = [];
 
-      currentStreamState = streamState.STOPPED;
+      
       $timeout(function () {
         if (!$scope.singleMonitorModalOpen && simulStreaming) {
           NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
@@ -1711,7 +1711,7 @@ angular.module('zmApp.controllers')
 
       var stream;
       if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' || $rootScope.authSession == 'undefined') {
-        //console.log ("STREAM=empty and auth="+$rootScope.authSession);
+       // console.log ("STREAM=empty and auth="+$rootScope.authSession);
         return "";
       }
 
@@ -1733,7 +1733,7 @@ angular.module('zmApp.controllers')
       //"&rand="+$scope.randToAvoidCacheMem +
 
 
-      //console.log("STREAM=" + stream);
+     // console.log("STREAM=" + stream);
       return stream;
 
     };
