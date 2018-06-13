@@ -1954,6 +1954,10 @@ angular.module('zmApp', [
           var ld = NVRDataModel.getLogin();
 
 
+          if ($rootscope.platformOS == "android") {
+            NVRDataModel.log("force exiting app since its android");
+            navigator.app.exitApp();
+          }
 
 
 
