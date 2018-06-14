@@ -1101,6 +1101,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
 
   $scope.videoTime = function (s, c) {
+
+   // console.log ("VIDEO TIME WITH "+s+ " and "+c);
     var a, o;
     if (NVRDataModel.getLogin().useLocalTimeZone) {
       a = moment.tz(s, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess());
@@ -1795,11 +1797,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $http.get(myurl)
       .then(function (success) {
 
-          // console.log ("DUCCESS::"+JSON.stringify(success));
-
-
           var event = success.data.event;
           currentEvent = event;
+          $scope.event = event;
+
 
           computeAlarmFrames(success.data);
           $scope.eventWarning = '';
