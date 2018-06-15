@@ -1694,7 +1694,7 @@ angular.module('zmApp.controllers')
               noBackdrop: true,
               duration: 1000
             });
-            if (itemid > 0) $scope.events.splice(itemid, 1);
+            if (itemid >= 0) $scope.events.splice(itemid, 1);
 
           }
 
