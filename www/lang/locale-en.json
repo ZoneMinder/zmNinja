@@ -49,6 +49,7 @@
     "kCycleMonitors"             :"cycle monitors",
     "kCycleMonitorsInterval"     :"monitor cycle interval",
     "kCycleMontageInterval"      :"montage cycle interval",
+    "kDataPrivacy"              : "Data Privacy",
     "kDay"                       :"Day",
     "kDecreaseSize"              :"decrease size",
     "kDelete"                    :"Delete",
