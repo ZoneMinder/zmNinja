@@ -603,6 +603,13 @@ angular.module('zmApp.controllers')
     //-----------------------------------------------------------------------
 
     function loadNotifications() {
+
+      if ($scope.iconTimeNow == 'local')
+        $scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
+      else
+        $scope.timeNow = moment().tz(NVRDataModel.getTimeZoneNow()).format(NVRDataModel.getTimeFormatSec());
+
+        
       if (simulStreaming) {
         // console.log ("Skipping timer as simulStreaming");
         return;
@@ -621,10 +628,7 @@ angular.module('zmApp.controllers')
 
       // if you see the time move, montage should move
 
-      if ($scope.iconTimeNow == 'local')
-        $scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
-      else
-        $scope.timeNow = moment().tz(NVRDataModel.getTimeZoneNow()).format(NVRDataModel.getTimeFormatSec());
+      
       //$scope.timeNow = moment().format(NVRDataModel.getTimeFormatSec());
 
       //console.log ("Inside Montage timer...");
