@@ -1957,7 +1957,7 @@ angular.module('zmApp', [
 
           if ($rootScope.platformOS == "android") {
             NVRDataModel.log(" force exiting app since its android");
-             //navigator.app.exitApp();
+            navigator.app.exitApp();
             $timeout (function () {
               if (NVRDataModel.isBackground()) {
                 NVRDataModel.log ("If this shows up, then the app did not exit...");
