@@ -1880,6 +1880,7 @@ angular.module('zmApp', [
         //----------------------------------------------------------------------------
         document.addEventListener("resume", function () {
 
+          NVRDataModel.setBackground(false);
           NVRDataModel.setJustResumed(true);
           $ionicPlatform.ready(function () {
             NVRDataModel.log("App is resuming from background");
@@ -1887,7 +1888,7 @@ angular.module('zmApp', [
             
             var ld = NVRDataModel.getLogin();
 
-            NVRDataModel.setBackground(false);
+          
             // don't animate
             $ionicHistory.nextViewOptions({
               disableAnimate: true,
@@ -1954,21 +1955,32 @@ angular.module('zmApp', [
           var ld = NVRDataModel.getLogin();
 
 
-          if ($rootscope.platformOS == "android") {
-            NVRDataModel.log("force exiting app since its android");
-            navigator.app.exitApp();
+          if ($rootScope.platformOS == "android") {
+            NVRDataModel.log(" force exiting app since its android");
+             //navigator.app.exitApp();
+            $timeout (function () {
+              if (NVRDataModel.isBackground()) {
+                NVRDataModel.log ("If this shows up, then the app did not exit...");
+                window.stop();
+              }
+              else {
+                NVRDataModel.log ("window stop delay timeout called as part of pause, but app no longer in background");
+              }
+             
+
+            },5000);
           }
 
 
 
-          if (ld.exitOnSleep && $rootScope.platformOS == "android") {
+         /* if (ld.exitOnSleep && $rootScope.platformOS == "android") {
             NVRDataModel.log("user exited app");
             navigator.app.exitApp();
 
             //  ionic.Platform.exitApp();
-          }
+          }*/
 
-          if (NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS == "android" && !NVRDataModel.isMultiPortDisabled()) {
+       /*   if (NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS == "android" && !NVRDataModel.isMultiPortDisabled()) {
             NVRDataModel.log ("Multiport is active, killing app to make sure no streams continue in background...");
             navigator.app.exitApp();
           } else {
@@ -1977,7 +1989,7 @@ angular.module('zmApp', [
             NVRDataModel.debug ("platform:"+$rootScope.platformOS);
             NVRDataModel.debug ("isMultiPortDisabled:"+NVRDataModel.isMultiPortDisabled());
 
-          }
+          }*/
 
           if ($rootScope.zmPopup)
             $rootScope.zmPopup.close();
