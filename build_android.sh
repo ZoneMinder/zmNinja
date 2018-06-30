@@ -75,9 +75,6 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
 
     echo "${ver}: Building Release mode for android 5+..."
     echo "--------------------------------------------"
-    APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns.*/\1/'`
-    a=( ${APPVER//./ } )
-    vcode="$(((a[0]*10000+a[1]*100+a[2])))9"
     
     echo "Removing android and re-adding..."
     cordova platform remove android
