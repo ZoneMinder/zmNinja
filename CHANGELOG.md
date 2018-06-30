@@ -1,7 +1,35 @@
 # Change Log
 
-## [1.3.004](https://github.com/pliablepixels/zmNinja/tree/1.3.004) (2018-06-03)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.002...1.3.004)
+## [1.3.008](https://github.com/pliablepixels/zmNinja/tree/1.3.008) (2018-06-30)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.004...1.3.008)
+
+**Fixed bugs:**
+
+- Event list incorrect after deleting first event in the list [\#651](https://github.com/pliablepixels/zmNinja/issues/651)
+- Time not properly displayed in the event modal when selecting 'next event' [\#649](https://github.com/pliablepixels/zmNinja/issues/649)
+- Android App sucked all my high speed data plan [\#647](https://github.com/pliablepixels/zmNinja/issues/647)
+- zmNinja - montage view - monitors don't show on first run, but show after login saved [\#641](https://github.com/pliablepixels/zmNinja/issues/641)
+
+**Closed issues:**
+
+- Don't delete logs on coldstart. Android now that that every time [\#661](https://github.com/pliablepixels/zmNinja/issues/661)
+- Build instructions required for various platforms [\#659](https://github.com/pliablepixels/zmNinja/issues/659)
+- Cameras Slow [\#656](https://github.com/pliablepixels/zmNinja/issues/656)
+- Add privacy/transparency link [\#653](https://github.com/pliablepixels/zmNinja/issues/653)
+- Add hook before sending notification [\#652](https://github.com/pliablepixels/zmNinja/issues/652)
+
+**Merged pull requests:**
+
+- initial translation [\#660](https://github.com/pliablepixels/zmNinja/pull/660) ([florie1706](https://github.com/florie1706))
+-  \#653 typo [\#657](https://github.com/pliablepixels/zmNinja/pull/657) ([maymaymay](https://github.com/maymaymay))
+- \#653 add app link [\#655](https://github.com/pliablepixels/zmNinja/pull/655) ([florie1706](https://github.com/florie1706))
+- \#653 add app link [\#654](https://github.com/pliablepixels/zmNinja/pull/654) ([maymaymay](https://github.com/maymaymay))
+- Even more translation fixes [\#646](https://github.com/pliablepixels/zmNinja/pull/646) ([florie1706](https://github.com/florie1706))
+- Cordova8 [\#645](https://github.com/pliablepixels/zmNinja/pull/645) ([pliablepixels](https://github.com/pliablepixels))
+- improved translation [\#643](https://github.com/pliablepixels/zmNinja/pull/643) ([florie1706](https://github.com/florie1706))
+
+## [v1.3.004](https://github.com/pliablepixels/zmNinja/tree/v1.3.004) (2018-06-03)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.002...v1.3.004)
 
 **Fixed bugs:**
 
@@ -11,7 +39,6 @@
 
 **Closed issues:**
 
-- zmNinja - montage view - monitors don't show on first run, but show after login saved [\#641](https://github.com/pliablepixels/zmNinja/issues/641)
 - Desktop, at certain windows sizes the 24hr Preview frames will jiggle. [\#600](https://github.com/pliablepixels/zmNinja/issues/600)
 - Missing events if logged in zmNinja with non admin user [\#568](https://github.com/pliablepixels/zmNinja/issues/568)
 - Enhance System Status to show disk space details [\#430](https://github.com/pliablepixels/zmNinja/issues/430)
@@ -26,7 +53,10 @@
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.001...v1.3.002)
 
 ## [v1.3.001](https://github.com/pliablepixels/zmNinja/tree/v1.3.001) (2018-05-21)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.515...v1.3.001)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.0...v1.3.001)
+
+## [v1.3.0](https://github.com/pliablepixels/zmNinja/tree/v1.3.0) (2018-05-18)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.515...v1.3.0)
 
 **Implemented enhancements:**
 
