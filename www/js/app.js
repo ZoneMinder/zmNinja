@@ -52,7 +52,7 @@ angular.module('zmApp', [
     largeHttpTimeout: 60000,
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
-    logFileMaxSize: 20000, // after this limit log gets reset
+    logFileMaxSize: 30000, // after this limit log gets reset
 
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
@@ -1198,6 +1198,23 @@ angular.module('zmApp', [
     $ionicPlatform.ready(function () {
       //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
+      $fileLogger.setStorageFilename(zm.logFile);
+      $fileLogger.setTimestampFormat('MMM d, y ' + NVRDataModel.getTimeFormatSec());
+
+      $fileLogger.checkFile().then(function (resp) {
+        if (parseInt(resp.size) > zm.logFileMaxSize) {
+          //console.log("inside file logger");
+
+          $fileLogger.deleteLogfile().then(function () {
+            NVRDataModel.log("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
+
+          });
+        }
+      });
+
+      
+
+
       $rootScope.dpadId = 0;
       $rootScope.textScaleFactor = 1.0;
       $rootScope.isLoggedIn = false;
@@ -1755,20 +1772,7 @@ angular.module('zmApp', [
         }
 
         // console.log("file logger");
-        $fileLogger.checkFile().then(function (resp) {
-          if (parseInt(resp.size) > zm.logFileMaxSize) {
-            //console.log("inside file logger");
-
-            $fileLogger.deleteLogfile().then(function () {
-              NVRDataModel.log("Deleting old log file as it exceeds " + zm.logFileMaxSize + " bytes");
-
-            });
-          }
-        });
-
-        $fileLogger.setStorageFilename(zm.logFile);
-        $fileLogger.setTimestampFormat('MMM d, y ' + NVRDataModel.getTimeFormatSec());
-
+      
         if (NVRDataModel.getLogin().disableNative) {
           NVRDataModel.log("Disabling native transitions...");
           $ionicNativeTransitions.enable(false);
