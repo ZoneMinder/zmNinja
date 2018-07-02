@@ -46,7 +46,7 @@ Key Features (just watch the video already)
 Thanks
 ------
 To the zonemider community in general, and the awesome Stack Overflow community.
-But specifically, [Andrew Bauer](https://github.com/knnniggett) (knnniggett) who egged me on to take up this project.
+But specifically, [Andrew Bauer](https://github.com/knight-of-ni) (knight-of-ni) who egged me on to take up this project.
 
 Important Notes
 ---------------
