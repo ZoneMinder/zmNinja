@@ -78,3 +78,8 @@ Screenshots:
 ![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0762.PNG?raw=true)
 
 
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/pliablepixels/zmNinja/badge.svg?style=beer-square)](https://beerpay.io/pliablepixels/zmNinja)  [![Beerpay](https://beerpay.io/pliablepixels/zmNinja/make-wish.svg?style=flat-square)](https://beerpay.io/pliablepixels/zmNinja?focus=wish)
