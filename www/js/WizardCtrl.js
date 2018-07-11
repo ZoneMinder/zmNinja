@@ -461,6 +461,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           noBackdrop: true,
           duration: zm.httpTimeout
         });
+        NVRDataModel.setCurrentServerVersion("");
         login(u, zmu, zmp)
           .then(function (success) {
               $ionicLoading.hide();
