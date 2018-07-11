@@ -991,6 +991,8 @@ angular.module('zmApp', [
 
       return d.promise;
 
+
+
       function proceedWithLogin() {
         // recompute rand anyway so even if you don't have auth
         // your stream should not get frozen
@@ -1007,7 +1009,7 @@ angular.module('zmApp', [
         // This is a good time to check if auth is used :-p
         if (!ld.isUseAuth) {
           NVRDataModel.log("Auth is disabled, setting authSession to ''");
-          $rootScope.authSession='';
+          $rootScope.authSession = '';
           d.resolve("Login Success");
 
           $rootScope.$broadcast('auth-success', 'no auth');
@@ -1025,131 +1027,205 @@ angular.module('zmApp', [
 
         //console.log(">>>>>>>>>>>>>> ISRECAPTCHA");
 
-        NVRDataModel.isReCaptcha()
-          .then(function (result) {
-            if (result == true) {
-              $ionicLoading.hide();
-              NVRDataModel.displayBanner('error', ['reCaptcha must be disabled', ], "", 8000);
-              var alertPopup = $ionicPopup.alert({
-                title: 'reCaptcha enabled',
-                template: $translate.instant('kRecaptcha'),
-                okText: $translate.instant('kButtonOk'),
-                cancelText: $translate.instant('kButtonCancel'),
-              });
-
-              // close it after 5 seconds
-              $timeout(function () {
-
-                alertPopup.close();
-              }, 5000);
-
-              d.reject("Error-disable recaptcha");
-              return (d.promise);
-            }
-
-          });
-
         var loginData = NVRDataModel.getLogin();
+        var currentServerVersion = NVRDataModel.getCurrentServerVersion();
 
-        var hDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
-        //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
-        $http({
 
-            method: 'POST',
-            timeout: hDelay,
-            //withCredentials: true,
-            url: loginData.url + '/index.php',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'Accept': 'application/json',
+        //first login using new API
+        var loginAPI = loginData.apiurl + '/host/getVersion.json?user=' + loginData.username + "&pass=" + loginData.password;
+
+        $http.get(loginAPI)
+          .then(function (succ) {
+
+                console.log("******************* NEW API LOGIN RETURNED " + JSON.stringify(succ));
+                NVRDataModel.setCurrentServerVersion(succ.data.version);
+                $ionicLoading.hide();
+                $rootScope.loggedIntoZm = 1;
+                NVRDataModel.log("zmAutologin successfully logged into Zoneminder via API");
+
+                d.resolve("Login Success");
+
+                $rootScope.$broadcast('auth-success', succ);
+
+                // Now go ahead and re-get auth key 
+                // if login was a success
+                $rootScope.authSession = "undefined";
+                var ld = NVRDataModel.getLogin();
+                NVRDataModel.getAuthKey($rootScope.validMonitorId)
+                  .then(function (success) {
+
+                      //console.log(success);
+                      $rootScope.authSession = success;
+                      NVRDataModel.log("Stream authentication construction: " +
+                        $rootScope.authSession);
+
+                    },
+                    function (error) {
+                      //console.log(error);
+
+                      NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                      NVRDataModel.debug("Error was: " + JSON.stringify(error));
+                    });
+
+       
+
+
+
+
             },
-            transformRequest: function (obj) {
-              var str = [];
-              for (var p in obj)
-                str.push(encodeURIComponent(p) + "=" +
-                  encodeURIComponent(obj[p]));
-              var params = str.join("&");
-              return params;
-            },
+            function (err) {
+              console.log("******************* API login error " + JSON.stringify(err));
+              $ionicLoading.hide();
 
-            data: {
-              username: loginData.username,
-              password: loginData.password,
-              action: "login",
-              view: "console"
-            }
-          })
-          .success(function (data, status, headers) {
-            // console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
-            $ionicLoading.hide();
 
-            // Coming here does not mean success
-            // it could also be a bad login, but
-            // ZM returns you to login.php and returns 200 OK
-            // so we will check if the data has
-            // <title>ZM - Login</title> -- it it does then its the login page
+              if ('success' in err.data) {
+                console.log("API based login not supported, need to use web scraping...");
+                // login using old web scraping
 
-            if (data.indexOf(zm.loginScreenString) == -1) {
-              //eventServer.start();
-              $rootScope.loggedIntoZm = 1;
+                NVRDataModel.debug("Logging in using old web-scrape method");
+                NVRDataModel.isReCaptcha()
+                  .then(function (result) {
+                    if (result == true) {
+                      $ionicLoading.hide();
+                      NVRDataModel.displayBanner('error', ['reCaptcha must be disabled', ], "", 8000);
+                      var alertPopup = $ionicPopup.alert({
+                        title: 'reCaptcha enabled',
+                        template: $translate.instant('kRecaptcha'),
+                        okText: $translate.instant('kButtonOk'),
+                        cancelText: $translate.instant('kButtonCancel'),
+                      });
 
-              NVRDataModel.log("zmAutologin successfully logged into Zoneminder");
+                      // close it after 5 seconds
+                      $timeout(function () {
 
-              d.resolve("Login Success");
+                        alertPopup.close();
+                      }, 5000);
 
-              $rootScope.$broadcast('auth-success', data);
+                      d.reject("Error-disable recaptcha");
+                      return (d.promise);
+                    }
 
-            } else //  this means login error
-            {
-              $rootScope.loggedIntoZm = -1;
+                  });
+
+                var hDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
+                //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
+                $http({
+
+                    method: 'POST',
+                    timeout: hDelay,
+                    //withCredentials: true,
+                    url: loginData.url + '/index.php',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'Accept': 'application/json',
+                    },
+                    transformRequest: function (obj) {
+                      var str = [];
+                      for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" +
+                          encodeURIComponent(obj[p]));
+                      var params = str.join("&");
+                      return params;
+                    },
+
+                    data: {
+                      username: loginData.username,
+                      password: loginData.password,
+                      action: "login",
+                      view: "console"
+                    }
+                  })
+                  .success(function (data, status, headers) {
+                    // console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
+                    $ionicLoading.hide();
+
+                    // Coming here does not mean success
+                    // it could also be a bad login, but
+                    // ZM returns you to login.php and returns 200 OK
+                    // so we will check if the data has
+                    // <title>ZM - Login</title> -- it it does then its the login page
+
+                    if (data.indexOf(zm.loginScreenString) == -1) {
+                      //eventServer.start();
+                      $rootScope.loggedIntoZm = 1;
+
+                      NVRDataModel.log("zmAutologin successfully logged into Zoneminder");
+
+                      d.resolve("Login Success");
+
+                      $rootScope.$broadcast('auth-success', data);
+
+                    } else //  this means login error
+                    {
+                      $rootScope.loggedIntoZm = -1;
+                      //console.log("**** ZM Login FAILED");
+                      NVRDataModel.log("zmAutologin Error: Bad Credentials ", "error");
+                      $rootScope.$broadcast('auth-error', "incorrect credentials");
+
+                      d.reject("Login Error");
+                      return (d.promise);
+                    }
+
+                    // Now go ahead and re-get auth key 
+                    // if login was a success
+                    $rootScope.authSession = "undefined";
+                    var ld = NVRDataModel.getLogin();
+                    NVRDataModel.getAuthKey($rootScope.validMonitorId)
+                      .then(function (success) {
+
+                          //console.log(success);
+                          $rootScope.authSession = success;
+                          NVRDataModel.log("Stream authentication construction: " +
+                            $rootScope.authSession);
+
+                        },
+                        function (error) {
+                          //console.log(error);
+
+                          NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                          NVRDataModel.debug("Error was: " + JSON.stringify(error));
+                        });
+
+                    return (d.promise);
+
+                  })
+                  .error(function (error, status) {
+
+                    // console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
+                    $ionicLoading.hide();
+
+                    //console.log("**** ZM Login FAILED");
+
+                    // FIXME: Is this sometimes results in null
+
+                    NVRDataModel.log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
+                    // bad urls etc come here
+                    $rootScope.loggedIntoZm = -1;
+                    $rootScope.$broadcast('auth-error', error);
+
+                    d.reject("Login Error");
+                    return d.promise;
+                  });
+
+
+              }  
+              else {
+                 $rootScope.loggedIntoZm = -1;
               //console.log("**** ZM Login FAILED");
-              NVRDataModel.log("zmAutologin Error: Bad Credentials ", "error");
-              $rootScope.$broadcast('auth-error', "incorrect credentials");
+              NVRDataModel.log("zmAutologin Error via API: some meta foo", "error");
+              $rootScope.$broadcast('auth-error', "I'm confused why");
 
               d.reject("Login Error");
               return (d.promise);
+
+              }
+
+             
             }
+          );
 
-            // Now go ahead and re-get auth key 
-            // if login was a success
-            $rootScope.authSession = "undefined";
-            var ld = NVRDataModel.getLogin();
-            NVRDataModel.getAuthKey($rootScope.validMonitorId)
-              .then(function (success) {
 
-                  //console.log(success);
-                  $rootScope.authSession = success;
-                  NVRDataModel.log("Stream authentication construction: " +
-                    $rootScope.authSession);
 
-                },
-                function (error) {
-                  //console.log(error);
-
-                  NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-                  NVRDataModel.debug("Error was: " + JSON.stringify(error));
-                });
-
-            return (d.promise);
-
-          })
-          .error(function (error, status) {
-
-            // console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
-            $ionicLoading.hide();
-
-            //console.log("**** ZM Login FAILED");
-
-            // FIXME: Is this sometimes results in null
-
-            NVRDataModel.log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
-            // bad urls etc come here
-            $rootScope.loggedIntoZm = -1;
-            $rootScope.$broadcast('auth-error', error);
-
-            d.reject("Login Error");
-            return d.promise;
-          });
         return d.promise;
       }
 
@@ -1212,7 +1288,7 @@ angular.module('zmApp', [
         }
       });
 
-      
+
 
 
       $rootScope.dpadId = 0;
@@ -1326,11 +1402,11 @@ angular.module('zmApp', [
       // when ready add ionic cordova plugin add https://github.com/pliablepixels/cordova-plugin-android-tv.git
 
       // console.log (JSON.stringify(ionic.Platform.device()));
-    /*  if (0 && $ionicPlatform.is('android')) {
-        window.addEventListener('keydown', dPadHandler, true);
-      } else {
-        NVRDataModel.log("Not registering D-PAD handler, as you are not on android");
-      }*/
+      /*  if (0 && $ionicPlatform.is('android')) {
+          window.addEventListener('keydown', dPadHandler, true);
+        } else {
+          NVRDataModel.log("Not registering D-PAD handler, as you are not on android");
+        }*/
 
 
       function dPadHandler(evt) {
@@ -1642,92 +1718,92 @@ angular.module('zmApp', [
 
       //console.log("localforage config");
       NVRDataModel.configureStorageDB()
-      .then(function () {
-        // this should alert "cordovaSQLiteDriver" when in an emulator or a device
-        NVRDataModel.log("localforage driver for storage:" + localforage.driver());
+        .then(function () {
+          // this should alert "cordovaSQLiteDriver" when in an emulator or a device
+          NVRDataModel.log("localforage driver for storage:" + localforage.driver());
 
-        // Now lets import old data if it exists:
-        var defaultServerName = $localstorage.get("defaultServerName");
+          // Now lets import old data if it exists:
+          var defaultServerName = $localstorage.get("defaultServerName");
 
-        localforage.getItem("defaultServerName")
-          .then(function (val) {
-            //  console.log (">>>> localforage reported defaultServerName as " + val);
-            // if neither, we are in first use, mates!
-            if (!val && !defaultServerName) {
-              continueInitialInit();
-              /*  NVRDataModel.debug ("Neither localstorage or forage  - First use, showing warm and fuzzy...");
-                    $ionicHistory.nextViewOptions({
-                        disableAnimate: true,
-                        disableBack: true
-                    });
-                    $state.go('first-use');*/
-            } else if (!val && defaultServerName) {
-              NVRDataModel.log(">>>>Importing data from localstorage....");
+          localforage.getItem("defaultServerName")
+            .then(function (val) {
+              //  console.log (">>>> localforage reported defaultServerName as " + val);
+              // if neither, we are in first use, mates!
+              if (!val && !defaultServerName) {
+                continueInitialInit();
+                /*  NVRDataModel.debug ("Neither localstorage or forage  - First use, showing warm and fuzzy...");
+                      $ionicHistory.nextViewOptions({
+                          disableAnimate: true,
+                          disableBack: true
+                      });
+                      $state.go('first-use');*/
+              } else if (!val && defaultServerName) {
+                NVRDataModel.log(">>>>Importing data from localstorage....");
 
-              var dsn = defaultServerName;
-              var dl = $localstorage.get('defaultLang') || 'en';
-              var ifu = ($localstorage.get('isFirstUse') == '0' ? false : true);
-              var luc = $localstorage.get('lastUpdateCheck');
-              var lbpc = $localstorage.get('latestBlogPostChecked');
-              var sgl = $localstorage.getObject('serverGroupList');
+                var dsn = defaultServerName;
+                var dl = $localstorage.get('defaultLang') || 'en';
+                var ifu = ($localstorage.get('isFirstUse') == '0' ? false : true);
+                var luc = $localstorage.get('lastUpdateCheck');
+                var lbpc = $localstorage.get('latestBlogPostChecked');
+                var sgl = $localstorage.getObject('serverGroupList');
 
-              NVRDataModel.log(">>>Localstorage data found as below:");
-              NVRDataModel.log("server name:" + dsn);
-              NVRDataModel.log("default lang :" + dl);
-              NVRDataModel.log("is first use:" + ifu);
-              NVRDataModel.log("last update check:" + luc);
-              NVRDataModel.log("latest blog post check:" + lbpc);
-              NVRDataModel.log("server group list:" + JSON.stringify(sgl));
+                NVRDataModel.log(">>>Localstorage data found as below:");
+                NVRDataModel.log("server name:" + dsn);
+                NVRDataModel.log("default lang :" + dl);
+                NVRDataModel.log("is first use:" + ifu);
+                NVRDataModel.log("last update check:" + luc);
+                NVRDataModel.log("latest blog post check:" + lbpc);
+                NVRDataModel.log("server group list:" + JSON.stringify(sgl));
 
-              localforage.setItem('defaultLang', dl)
-                .then(function () {
+                localforage.setItem('defaultLang', dl)
+                  .then(function () {
 
-                  NVRDataModel.log(">>>>migrated defaultLang...");
-                  NVRDataModel.setFirstUse(ifu);
-                  NVRDataModel.log ("migration: setting isFirstUse = "+ifu);
-                  return localforage.setItem('isFirstUse', ifu);
-                })
-                .then(function () {
-                  NVRDataModel.log(">>>>migrated isFirstUse...");
-                  return localforage.setItem('lastUpdateCheck', ifu);
-                })
-                .then(function () {
-                  NVRDataModel.log(">>>>migrated lastUpdateCheck...");
-                  return localforage.setItem('latestBlogPostChecked', lbpc);
-                })
-                .then(function () {
-                  NVRDataModel.log(">>>>migrated latestBlogPostChecked...");
-                  // lets encrypt serverGroupList
-                  NVRDataModel.log("server group list is " + JSON.stringify(sgl));
-                  var ct = CryptoJS.AES.encrypt(JSON.stringify(sgl), zm.cipherKey);
-                  NVRDataModel.log("encrypted server group list is " + ct);
-                  ct = sgl;
-                  return localforage.setItem('serverGroupList', ct);
-                })
-                .then(function () {
-                  NVRDataModel.log(">>>>migrated serverGroupList...");
-                  return localforage.setItem('defaultServerName', dsn);
-                })
-                .then(function () {
-                  NVRDataModel.log(">>>>migrated defaultServerName...");
-                  NVRDataModel.log(">>>>Migrated all values, continuing...");
-                  //NVRDataModel.migrationComplete();
-                  continueInitialInit();
-                })
-                .catch(function (err) {
-                  NVRDataModel.log("Migration error : " + JSON.stringify(err));
-                  continueInitialInit();
-                });
+                    NVRDataModel.log(">>>>migrated defaultLang...");
+                    NVRDataModel.setFirstUse(ifu);
+                    NVRDataModel.log("migration: setting isFirstUse = " + ifu);
+                    return localforage.setItem('isFirstUse', ifu);
+                  })
+                  .then(function () {
+                    NVRDataModel.log(">>>>migrated isFirstUse...");
+                    return localforage.setItem('lastUpdateCheck', ifu);
+                  })
+                  .then(function () {
+                    NVRDataModel.log(">>>>migrated lastUpdateCheck...");
+                    return localforage.setItem('latestBlogPostChecked', lbpc);
+                  })
+                  .then(function () {
+                    NVRDataModel.log(">>>>migrated latestBlogPostChecked...");
+                    // lets encrypt serverGroupList
+                    NVRDataModel.log("server group list is " + JSON.stringify(sgl));
+                    var ct = CryptoJS.AES.encrypt(JSON.stringify(sgl), zm.cipherKey);
+                    NVRDataModel.log("encrypted server group list is " + ct);
+                    ct = sgl;
+                    return localforage.setItem('serverGroupList', ct);
+                  })
+                  .then(function () {
+                    NVRDataModel.log(">>>>migrated serverGroupList...");
+                    return localforage.setItem('defaultServerName', dsn);
+                  })
+                  .then(function () {
+                    NVRDataModel.log(">>>>migrated defaultServerName...");
+                    NVRDataModel.log(">>>>Migrated all values, continuing...");
+                    //NVRDataModel.migrationComplete();
+                    continueInitialInit();
+                  })
+                  .catch(function (err) {
+                    NVRDataModel.log("Migration error : " + JSON.stringify(err));
+                    continueInitialInit();
+                  });
 
-            } else {
-              NVRDataModel.log(">>>>No data to import....");
-              //NVRDataModel.migrationComplete();
-              continueInitialInit();
-            }
+              } else {
+                NVRDataModel.log(">>>>No data to import....");
+                //NVRDataModel.migrationComplete();
+                continueInitialInit();
+              }
 
-          });
+            });
 
-      });
+        });
 
       function continueInitialInit() {
         //  console.log("continueinit");
@@ -1772,7 +1848,7 @@ angular.module('zmApp', [
         }
 
         // console.log("file logger");
-      
+
         if (NVRDataModel.getLogin().disableNative) {
           NVRDataModel.log("Disabling native transitions...");
           $ionicNativeTransitions.enable(false);
@@ -1809,12 +1885,12 @@ angular.module('zmApp', [
                 localforage.getItem("isFirstUse")
                   .then(function (val) {
                     //console.log ("isFirstUse is " + val);
-                    NVRDataModel.debug ("isFirstUse returned: "+val);
-                    if (val == null || val == true ) {
+                    NVRDataModel.debug("isFirstUse returned: " + val);
+                    if (val == null || val == true) {
                       NVRDataModel.log("First time detected ");
                       $state.go("app.first-use");
-                     return;
-                     //continueRestOfInit();
+                      return;
+                      //continueRestOfInit();
                     } else {
                       continueRestOfInit();
                     }
@@ -1889,10 +1965,10 @@ angular.module('zmApp', [
           $ionicPlatform.ready(function () {
             NVRDataModel.log("App is resuming from background");
             $rootScope.isDownloading = false;
-            
+
             var ld = NVRDataModel.getLogin();
 
-          
+
             // don't animate
             $ionicHistory.nextViewOptions({
               disableAnimate: true,
@@ -1930,7 +2006,7 @@ angular.module('zmApp', [
               return;
             }
 
-         
+
           });
         }, false);
 
@@ -1948,7 +2024,7 @@ angular.module('zmApp', [
           $interval.cancel($rootScope.eventQueryInterval);
           $interval.cancel($rootScope.intervalHandle);
           zmAutoLogin.stop();
-          
+
 
 
           // NVRDataModel.log("ROOT APP: Stopping network ");
@@ -1962,38 +2038,37 @@ angular.module('zmApp', [
           if ($rootScope.platformOS == "android") {
             NVRDataModel.log(" force exiting app since its android");
             navigator.app.exitApp();
-            $timeout (function () {
+            $timeout(function () {
               if (NVRDataModel.isBackground()) {
-                NVRDataModel.log ("If this shows up, then the app did not exit...");
+                NVRDataModel.log("If this shows up, then the app did not exit...");
                 window.stop();
+              } else {
+                NVRDataModel.log("window stop delay timeout called as part of pause, but app no longer in background");
               }
-              else {
-                NVRDataModel.log ("window stop delay timeout called as part of pause, but app no longer in background");
-              }
-             
 
-            },5000);
+
+            }, 5000);
           }
 
 
 
-         /* if (ld.exitOnSleep && $rootScope.platformOS == "android") {
-            NVRDataModel.log("user exited app");
-            navigator.app.exitApp();
+          /* if (ld.exitOnSleep && $rootScope.platformOS == "android") {
+             NVRDataModel.log("user exited app");
+             navigator.app.exitApp();
 
-            //  ionic.Platform.exitApp();
-          }*/
+             //  ionic.Platform.exitApp();
+           }*/
 
-       /*   if (NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS == "android" && !NVRDataModel.isMultiPortDisabled()) {
-            NVRDataModel.log ("Multiport is active, killing app to make sure no streams continue in background...");
-            navigator.app.exitApp();
-          } else {
-            NVRDataModel.debug ("Not exiting app because:");
-            NVRDataModel.debug ("getCurrentServerMultiPortSupported:"+NVRDataModel.getCurrentServerMultiPortSupported());
-            NVRDataModel.debug ("platform:"+$rootScope.platformOS);
-            NVRDataModel.debug ("isMultiPortDisabled:"+NVRDataModel.isMultiPortDisabled());
+          /*   if (NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS == "android" && !NVRDataModel.isMultiPortDisabled()) {
+               NVRDataModel.log ("Multiport is active, killing app to make sure no streams continue in background...");
+               navigator.app.exitApp();
+             } else {
+               NVRDataModel.debug ("Not exiting app because:");
+               NVRDataModel.debug ("getCurrentServerMultiPortSupported:"+NVRDataModel.getCurrentServerMultiPortSupported());
+               NVRDataModel.debug ("platform:"+$rootScope.platformOS);
+               NVRDataModel.debug ("isMultiPortDisabled:"+NVRDataModel.isMultiPortDisabled());
 
-          }*/
+             }*/
 
           if ($rootScope.zmPopup)
             $rootScope.zmPopup.close();
@@ -2089,7 +2164,7 @@ angular.module('zmApp', [
         url: '/app',
         abstract: true,
         templateUrl: 'templates/menu.html',
-       
+
         cache: false,
 
         //controller: 'AppCtrl'
