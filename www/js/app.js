@@ -1032,45 +1032,42 @@ angular.module('zmApp', [
 
 
         //first login using new API
-        var loginAPI = loginData.apiurl + '/host/getVersion.json?user=' + loginData.username + "&pass=" + loginData.password;
+        var loginAPI = loginData.apiurl + '/host/login.json?user=' + loginData.username + "&pass=" + loginData.password;
 
         $http.get(loginAPI)
           .then(function (succ) {
 
-                console.log("******************* NEW API LOGIN RETURNED " + JSON.stringify(succ));
+                NVRDataModel.debug ("API based login returned: "+JSON.stringify(succ));
                 NVRDataModel.setCurrentServerVersion(succ.data.version);
                 $ionicLoading.hide();
                 $rootScope.loggedIntoZm = 1;
+                $rootScope.authSession = ''; 
+
+                if (succ.data.credentials) {
+                  $rootScope.authSession = "&" + succ.data.credentials;
+                  if (succ.data.append_password == '1') {
+                    $rootScope.authSession = $rootScope.authSession +
+                      loginData.password;
+                  }
+                }
+                
+                NVRDataModel.log("Stream authentication construction: " +
+                $rootScope.authSession);
+
                 NVRDataModel.log("zmAutologin successfully logged into Zoneminder via API");
+
+                /*
+                {
+                    "credentials": "auth=fsdfdsfsd,
+                    "append_password": 0,
+                    "version": "1.31.44",
+                    "apiversion": "1.0"
+                }
+                */
 
                 d.resolve("Login Success");
 
                 $rootScope.$broadcast('auth-success', succ);
-
-                // Now go ahead and re-get auth key 
-                // if login was a success
-                $rootScope.authSession = "undefined";
-                var ld = NVRDataModel.getLogin();
-                NVRDataModel.getAuthKey($rootScope.validMonitorId)
-                  .then(function (success) {
-
-                      //console.log(success);
-                      $rootScope.authSession = success;
-                      NVRDataModel.log("Stream authentication construction: " +
-                        $rootScope.authSession);
-
-                    },
-                    function (error) {
-                      //console.log(error);
-
-                      NVRDataModel.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-                      NVRDataModel.debug("Error was: " + JSON.stringify(error));
-                    });
-
-       
-
-
-
 
             },
             function (err) {

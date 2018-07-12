@@ -14,6 +14,9 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
   function login(u, zmu, zmp) {
     var d = $q.defer();
 
+
+    
+
     $http({
         method: 'POST',
         //withCredentials: true,
