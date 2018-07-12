@@ -1063,19 +1063,16 @@ angular.module('zmApp', [
                   }
                 }
                 
+                var ld = NVRDataModel.getLogin();
+                ld.loginAPISupported = true;
+                NVRDataModel.setLogin(ld);
+                
                 NVRDataModel.log("Stream authentication construction: " +
                 $rootScope.authSession);
 
                 NVRDataModel.log("zmAutologin successfully logged into Zoneminder via API");
 
-                /*
-                {
-                    "credentials": "auth=fsdfdsfsd,
-                    "append_password": 0,
-                    "version": "1.31.44",
-                    "apiversion": "1.0"
-                }
-                */
+              
 
                 d.resolve("Login Success");
 
