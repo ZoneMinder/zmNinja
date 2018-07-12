@@ -1032,9 +1032,21 @@ angular.module('zmApp', [
 
 
         //first login using new API
-        var loginAPI = loginData.apiurl + '/host/login.json?user=' + loginData.username + "&pass=" + loginData.password;
+        var loginAPI = loginData.apiurl + '/host/login.json';
 
-        $http.get(loginAPI)
+        $http({
+          method:'POST',
+          url: loginAPI,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformRequest: function(obj) {
+            var str = [];
+            for(var p in obj)
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            return str.join("&");
+          },
+          data: {user: loginData.username, pass: loginData.password}
+        })
+        //$http.get(loginAPI)
           .then(function (succ) {
 
                 NVRDataModel.debug ("API based login returned: "+JSON.stringify(succ));
