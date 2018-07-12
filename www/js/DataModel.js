@@ -176,6 +176,7 @@ angular.module('zmApp.controllers')
         'showLiveForInProgressEvents': true,
         'disableSimulStreaming': false,
         'insertBasicAuthToken': false,
+        'loginAPISupported': false,
 
 
       };
@@ -347,7 +348,7 @@ angular.module('zmApp.controllers')
 
         // disable for now, getAuthHash needs work
 
-        if (versionCompare(currentServerVersion, "1.31.44") != -1) {
+        if (versionCompare(currentServerVersion, "1.31.44") != -1 || loginData.loginAPISupported) {
 
           myurl = loginData.apiurl + '/host/getCredentials.json';
           debug("Server version > 1.31.41, so using getCredentials API:" + myurl);
@@ -1295,6 +1296,13 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.showLiveForInProgressEvents == 'undefined') {
 
                     loginData.showLiveForInProgressEvents = true;
+
+                  }
+
+
+                  if (typeof loginData.loginAPISupported == 'undefined') {
+
+                    loginData.loginAPISupported = false;
 
                   }
 
@@ -2629,6 +2637,28 @@ angular.module('zmApp.controllers')
           log(loginData.url + "=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "undefined";
 
+
+          if (versionCompare(currentServerVersion, "1.31.44") != -1 || loginData.loginAPISupported) {
+
+            debug ("Logging out using API method");
+            $http.get(loginData.apiurl+'/host/logout.json')
+            .then (function(s) {
+              debug ("Logout returned "+JSON.stringify(s));
+              d.resolve(true);
+              return d.promise;
+            },
+            function (e) {
+              debug ("Logout errored "+JSON.stringify(e));
+              d.resolve(true);
+              return d.promise;
+            }
+          );
+          return d.promise;
+          }
+
+
+          // old logout mode
+          debug ("Logging out using Web method");
           $http({
               method: 'POST',
               timeout: 10000,
