@@ -116,9 +116,10 @@ angular.module('zmApp', [
 
   // to take care of electron changing
   // window title and going out of sync
-  .controller('zmApp.appCtrl', function ($scope) {
+  // seems to get stuck in mobile
+  .controller('zmApp.appCtrl', function ($scope, $rootScope) {
     $scope.$on('$ionicView.afterEnter', function(ev, data) { 
-      ev.stopPropagation();
+      if ($rootScope.platformOS == 'desktop') ev.stopPropagation();
     });
   })
 
