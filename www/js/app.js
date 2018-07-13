@@ -114,6 +114,14 @@ angular.module('zmApp', [
 
   })
 
+  // to take care of electron changing
+  // window title and going out of sync
+  .controller('zmApp.appCtrl', function ($scope) {
+    $scope.$on('$ionicView.afterEnter', function(ev, data) { 
+      ev.stopPropagation();
+    });
+  })
+
   //http://stackoverflow.com/a/24519069/1361529
   .filter('trusted', ['$sce', function ($sce) {
     return function (url) {
@@ -2170,11 +2178,13 @@ angular.module('zmApp', [
         url: '/app',
         abstract: true,
         templateUrl: 'templates/menu.html',
-
+        controller: 'zmApp.appCtrl',
         cache: false,
 
         //controller: 'AppCtrl'
       })
+
+     
 
       .state('app.login', {
         data: {
