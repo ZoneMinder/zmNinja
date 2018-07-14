@@ -346,9 +346,7 @@ angular.module('zmApp.controllers')
           return d.promise;
         }
 
-        // disable for now, getAuthHash needs work
-
-        if (versionCompare(currentServerVersion, "1.31.44") != -1 || loginData.loginAPISupported) {
+        if (versionCompare(currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported) {
 
           myurl = loginData.apiurl + '/host/getCredentials.json';
           debug("Server version > 1.31.41, so using getCredentials API:" + myurl);
@@ -384,7 +382,7 @@ angular.module('zmApp.controllers')
           return d.promise;
 
         }
-        //currentServerVersion
+        //old way without login API
 
         var as = 'undefined';
 
@@ -2638,7 +2636,7 @@ angular.module('zmApp.controllers')
           $rootScope.authSession = "undefined";
 
 
-          if (versionCompare(currentServerVersion, "1.31.44") != -1 || loginData.loginAPISupported) {
+          if (versionCompare(currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported) {
 
             debug ("Logging out using API method");
             $http.get(loginData.apiurl+'/host/logout.json')
