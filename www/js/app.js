@@ -103,14 +103,14 @@ angular.module('zmApp', [
     maxGifCount2: 100,
     maxGifWidth: 800.0,
     quantSample: 15,
-    hashSecret: 'unused at the moment',
     forceMontageReloadDelay: 4500000, // 1 hr 15m,
     //forceMontageReloadDelay: 10000, // testing 10s
     thumbWidth: 200,
     alarmStatusTime: 10000,
     eventServerErrorDelay: 5000, // time to wait till I report initial connect errors
     zmVersionCheckNag: 60 * 24, // in hrs 
-    waitTimeTillResume: 5 // in sec, for ES error
+    waitTimeTillResume: 5, // in sec, for ES error
+    versionWithLoginAPI: "1.31.44"
 
   })
 
