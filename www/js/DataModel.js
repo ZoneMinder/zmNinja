@@ -177,6 +177,7 @@ angular.module('zmApp.controllers')
         'disableSimulStreaming': false,
         'insertBasicAuthToken': false,
         'loginAPISupported': false,
+        'montageResizeSteps': 5,
 
 
       };
@@ -1303,6 +1304,13 @@ angular.module('zmApp.controllers')
                     loginData.loginAPISupported = false;
 
                   }
+
+                  if (typeof loginData.montageResizeSteps == 'undefined') {
+
+                    loginData.montageResizeSteps = 5;
+
+                  }
+
 
                   loginData.canSwipeMonitors = true;
                   loginData.forceImageModePath = false;

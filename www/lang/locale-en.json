@@ -225,6 +225,7 @@
     "kMontageDefaultProfile"     :"all monitors",
     "kMontageImageScale"         :"Montage image scale",
     "kMontageNoSavedProfiles"    :"No saved montage profiles",
+    "kMontageResizeSteps"        :"Montage resize factor",
     "kMontageSave"               :"Save Montage Profile",
     "kMontageSaveDefaultWarning" :"This profile does not allow monitors to be hidden. Any hidden monitors are now unhidden",
     "kMontageSaveSubtitle"       :"please enter a profile name to save current settings",

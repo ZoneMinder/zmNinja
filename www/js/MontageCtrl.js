@@ -286,10 +286,11 @@ angular.module('zmApp.controllers')
       pckry = new Packery('.grid', {
         itemSelector: '.grid-item',
         percentPosition: true,
-        columnWidth: '.grid-sizer',
+       //columnWidth: '.grid-sizer',
         gutter: 0,
         initLayout: layouttype,
-        shiftPercentResize: true
+        shiftPercentResize: true,
+        transitionDuration: 0
 
       });
 
@@ -2054,6 +2055,7 @@ angular.module('zmApp.controllers')
       }
 
       $scope.sliderChanging = true;
+      var ld = NVRDataModel.getLogin();
 
       $ionicLoading.show({
         template: $translate.instant('kPleaseWait'),
@@ -2077,7 +2079,7 @@ angular.module('zmApp.controllers')
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
 
         var curVal = parseInt($scope.MontageMonitors[i].Monitor.gridScale) || 20;
-        curVal = curVal + (5 * dirn);
+        curVal = curVal + (ld.montageResizeSteps * dirn);
         if (curVal < 10) curVal = 10;
         if (curVal > 100) curVal = 100;
         //console.log ("For Index: " + i + " From: " + $scope.MontageMonitors[i].Monitor.gridScale + " To: " + curVal);
@@ -2102,7 +2104,7 @@ angular.module('zmApp.controllers')
       {
         for (i = 0; i < $scope.MontageMonitors.length; i++) {
           var cv = parseInt($scope.MontageMonitors[i].Monitor.gridScale) || 20;
-          cv = cv + (5 * dirn);
+          cv = cv + (ld.montageResizeSteps * dirn);
           if (cv < 10) cv = 10;
           if (cv > 100) cv = 100;
           $scope.MontageMonitors[i].Monitor.gridScale = cv;
@@ -2118,7 +2120,10 @@ angular.module('zmApp.controllers')
 
         if (dirn == 1) //expand
         {
-          pckry.getItemElements().forEach(function (elem) {
+          pckry.once('layoutComplete', resizeComplete);
+          pckry.layout();
+
+         /* pckry.getItemElements().forEach(function (elem) {
             var id = elem.getAttribute("data-item-id");
             var sz = elem.getAttribute("data-item-size");
             if (isNaN(sz)) sz = 20;
@@ -2129,7 +2134,7 @@ angular.module('zmApp.controllers')
               pckry.fit(elem);
 
             }
-          });
+          });*/
         } else //shrink
         {
           //console.log("Calling shift");
@@ -2138,7 +2143,7 @@ angular.module('zmApp.controllers')
 
         }
 
-      }, 20);
+      }, 150);
 
       /* if (!somethingReset) {
            //console.log (">>>SOMETHING NOT RESET");
