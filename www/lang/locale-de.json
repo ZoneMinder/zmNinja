@@ -225,6 +225,7 @@
     "kMontageDefaultProfile"     :"Alle Kameras",
     "kMontageImageScale"         :"Livebild Bildgröße",
     "kMontageNoSavedProfiles"    :"Keine Livebild-Profile gespeichert",
+    "kMontageResizeSteps"        :"Livebild Zoom",
     "kMontageSave"               :"Übersicht speichern",
     "kMontageSaveDefaultWarning" :"In diesem Profil können keine Kameras versteckt werden. Versteckte Kameras werden nun sichtbar gemacht.",
     "kMontageSaveSubtitle"       :"Bitte Profilnamen eingeben, um die aktuellen Einstellungen zu speichern.",
