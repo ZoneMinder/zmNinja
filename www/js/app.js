@@ -92,9 +92,10 @@ angular.module('zmApp', [
     minCycleTime: 5,
 
     loginInterval: 1800000, //30m*60s*1000 - ZM auto login after 30 mins
-    //loginInterval: 20000,
+    //loginInterval: 60000, // testing 1 min
     eventPlaybackQueryLowBW: 6000,
     loginIntervalLowBW: 1800000, //30m login
+
     eventSingleImageQualityLowBW: 70,
     monSingleImageQualityLowBW: 70,
     montageQualityLowBW: 50,
@@ -1636,8 +1637,8 @@ angular.module('zmApp', [
 
         if ($rootScope.apiValid == false && toState.name != 'app.invalidapi' && toState.data.requireLogin == true) {
           event.preventDefault();
-          $rootScope.dpadState = "invalidapi";
-          $state.transitionTo('invalidapi');
+          $rootScope.dpadState = "app.invalidapi";
+          $state.transitionTo('app.invalidapi');
           return;
 
         }

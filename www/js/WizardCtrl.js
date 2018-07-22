@@ -138,10 +138,12 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         // this is actually a success - I might get empty status
         // or something
         if (err.status < 300) {
-          NVRDataModel.log("I am taking this as a cgi-bin success - " + urls[0]);
+          NVRDataModel.log("A 2xx is a success, I think - " + urls[0]);
           d.resolve(urls[0]);
           return d.promise;
         }
+
+        
         return findFirstReachableUrl(urls.slice(1), tail);
       });
     } else {
@@ -391,6 +393,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
   //--------------------------------------------------------------------------
   // tries to log into the portal and then discover api and cgi-bin
   //--------------------------------------------------------------------------
+
+  function validateDataNewAPI() {
+    
+  }
 
   function validateData() {
     $rootScope.authSession = 'undefined';
