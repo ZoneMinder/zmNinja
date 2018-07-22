@@ -11,6 +11,7 @@ angular.module('zmApp.controllers')
     // Controller main
     //---------------------------------------------------------------------
 
+    var timeInMontage = new Date();
     var intervalHandleMontage; // image re-load handler
     var intervalHandleAlarmStatus; // status of each alarm state
     var intervalHandleMontageCycle;
@@ -47,6 +48,30 @@ angular.module('zmApp.controllers')
 
     var as = $scope.$on("auth-success", function () {
 
+     /* var tnow = new Date();
+      var s = Math.round((tnow - timeInMontage) / 1000);
+      NVRDataModel.debug ("Montage re-auth: time since we are here: " + s + 
+     " seconds");
+      if (s >= 20)  {// lets not regen connkey if we just got into montage
+        NVRDataModel.debug ("Montage-reauth: Regenerating connkeys");
+        $timeout(function () { // after render
+          if (simulStreaming) {
+            NVRDataModel.debug("Re-creating all stream connkeys in montage ...");
+            NVRDataModel.regenConnKeys();
+            $scope.monitors = NVRDataModel.getMonitorsNow();
+            $scope.MontageMonitors = angular.copy($scope.monitors);
+            $timeout(function () // after render
+              {
+                initPackery();
+              }, zm.packeryTimer);
+  
+  
+          }
+        });
+      }
+      else {
+        NVRDataModel.debug ("Montage re-auth: ignoring as time is only "+s+" seconds");
+      }*/
       // do nothing, we are reloading here anyway?
       /*
       if ($scope.singleMonitorModalOpen) {
@@ -1765,6 +1790,7 @@ angular.module('zmApp.controllers')
     // minimal has to be beforeEnter or header won't hide
     $scope.$on('$ionicView.beforeEnter', function () {
 
+      timeInMontage = new Date();
       broadcastHandles = [];
       randToAvoidCacheMem = new Date().getTime();
       currentStreamState = streamState.SNAPSHOT;
