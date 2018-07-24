@@ -277,6 +277,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   //-------------------------------------------------
   $scope.$on('$ionicView.leave', function () {
 
+    if ($rootScope.platformOS == 'desktop') { 
+      NVRDataModel.debug ("Removing keyboard handler");
+      window.removeEventListener('keydown', keyboardHandler, true);
+  
+    }
+
     NVRDataModel.debug("Timeline: Deregistering broadcast handles");
     for (var i = 0; i < broadcastHandles.length; i++) {
       // broadcastHandles[i]();
@@ -305,7 +311,74 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     timeline = '';
     $scope.newEvents = '';
 
+    if ($rootScope.platformOS == 'desktop') { 
+      window.addEventListener('keydown', keyboardHandler, true);
+  
+    }
+  
+
   });
+
+  // Keyboard handler for desktop versions 
+   function keyboardHandler(evt) {
+
+    var handled = false;
+    var keyCodes = {
+
+      //events
+      LEFT: 37,
+      RIGHT: 39,
+      UP:38,
+      DOWN:40,
+
+      ESC: 27,
+     
+      PREVDAY_A: 65,
+      NEXTDAY_D: 68,
+    
+    };
+
+    $timeout (function () {
+      var keyCode = evt.keyCode;
+     
+      console.log (keyCode + " PRESSED");
+
+      if (keyCode == keyCodes.UP) {
+
+        timeline.zoomIn(0.2);
+
+      }
+      else if (keyCode == keyCodes.DOWN) {
+
+        timeline.zoomIn(0.2);
+
+      }
+      else if (keyCode == keyCodes.LEFT) {
+       
+        move (-0.2);
+      }
+      else if (keyCode == keyCodes.RIGHT) {
+        move (0.2);
+      }
+
+      else if (keyCode == keyCodes.ESC) {
+        timeline.fit();
+      }
+
+      else if (keyCode == keyCodes.PREVDAY_A) {
+        $scope.moveDays(-1);
+      }
+
+      else if (keyCode == keyCodes.NEXTDAY_D) {
+        $scope.moveDays(1);
+      }
+     
+
+      handled = true;
+      return handled;
+
+    })
+  }
 
   //-------------------------------------------
   // Entire reason for existence:
