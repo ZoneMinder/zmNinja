@@ -86,6 +86,54 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   NVRDataModel.debug("Setting playback to " + $scope.streamMode);
 
+  if ($rootScope.platformOS == 'desktop') { 
+    window.addEventListener('keydown', keyboardHandler, true);
+
+  }
+
+   // Keyboard handler for desktop versions 
+   function keyboardHandler(evt) {
+
+    var handled = false;
+    var keyCodes = {
+
+      //events
+      LEFT: 37,
+      RIGHT: 39,
+
+      ESC: 27,
+      FITFILL_F: 70
+    
+    };
+
+    $timeout (function () {
+      var keyCode = evt.keyCode;
+     
+      console.log (keyCode + " PRESSED");
+
+      if (keyCode == keyCodes.ESC) {
+
+        $scope.closeModal();
+
+      }
+      else if (keyCode == keyCodes.LEFT) {
+       
+       $scope.jumpToEvent($scope.prevId, -1);
+      }
+      else if (keyCode == keyCodes.RIGHT) {
+        $scope.jumpToEvent($scope.nextId, 1);
+      }
+      else if (keyCode == keyCodes.FITFILL_F) {
+        $scope.scaleImage();
+      }
+
+      handled = true;
+      return handled;
+
+    })
+  }
+
+
 
   //--------------------------------------------------------------------------------------
   // Handles bandwidth change, if required
@@ -127,6 +175,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   });
   broadcastHandles.push(as);
+
+
 
   //-------------------------------------------------------
   // tap to pause
@@ -1119,6 +1169,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   };
 
   $scope.$on('modal.removed', function (e, m) {
+
+    if ($rootScope.platformOS == 'desktop') { 
+      NVRDataModel.debug ("Removing keyboard handler");
+      window.removeEventListener('keydown', keyboardHandler, true);
+  
+    }
+
     NVRDataModel.debug("Deregistering broadcast handles");
     for (var i = 0; i < broadcastHandles.length; i++) {
       // broadcastHandles[i]();
