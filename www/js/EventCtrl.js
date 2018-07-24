@@ -1084,6 +1084,10 @@ angular.module('zmApp.controllers')
     //----------------------------------------------------------------
     $scope.handleAlarms = function () {
       // $rootScope.isAlarm = !$rootScope.isAlarm;
+
+      if ($scope.modal !== undefined) {
+        $scope.modal.remove();
+      }
       if ($rootScope.isAlarm) {
         $rootScope.alarmCount = "0";
         $rootScope.isAlarm = !$rootScope.isAlarm;
@@ -1099,6 +1103,7 @@ angular.module('zmApp.controllers')
         {
             reload: true
         }); */
+     
         getInitialEvents();
         return;
       }
