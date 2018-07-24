@@ -147,7 +147,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           case keyCodes.UP_W:cmd = 'Up'; break;
           case keyCodes.UPRIGHT_E:cmd = 'UpRight'; break;
           case keyCodes.LEFT_A:cmd = 'Left'; break;
-          case keyCodes.CENTER_S: cmd = ''; break;
+          case keyCodes.CENTER_S: cmd = 'presetHome'; break;
           case keyCodes.RIGHT_D: cmd = 'Right'; break;
           case keyCodes.DOWNLEFT_Z: cmd = 'UpLeft'; break;
           case keyCodes.DOWN_X: cmd = 'Down'; break;
@@ -155,6 +155,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         }
         if (cmd) {
           NVRDataModel.debug ("Invoking controlPTZ with "+cmd);
+          $scope.controlPTZ($scope.monitorId, cmd);
         }
         else {
           NVRDataModel.debug ("ignoring invalid PTZ command");
