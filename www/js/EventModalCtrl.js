@@ -102,7 +102,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       RIGHT: 39,
 
       ESC: 27,
-      FITFILL_F: 70
+      FITFILL_F: 70,
+      PLAY_SELECT:13
     
     };
 
@@ -125,6 +126,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       }
       else if (keyCode == keyCodes.FITFILL_F) {
         $scope.scaleImage();
+      }
+      else if (keyCode == keyCodes.PLAY_SELECT) {
+        if ($scope.isSnapShot() && !$scope.liveFeedMid) {
+          $scope.convertSnapShotToStream();
+        }
+        else {
+          NVRDataModel.debug ("Not in snapshot mode, ignoring");
+        }
       }
 
       handled = true;
