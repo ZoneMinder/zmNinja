@@ -1594,6 +1594,7 @@ angular.module('zmApp.controllers')
                   setCurrentServerVersion(success.data.version);
                   d.resolve(success.data.version);
                 } else {
+                  debug ("Setting APIValid to false as API version was not retrieved");
                   $rootScope.apiValid = false;
                   setCurrentServerVersion("");
                   d.reject("-1.-1.-1");
