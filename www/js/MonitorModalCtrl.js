@@ -76,6 +76,100 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }.bind(this), zm.alarmStatusTime);
 
 
+  
+
+  if ($rootScope.platformOS == 'desktop') { 
+    window.addEventListener('keydown', keyboardHandler, true);
+
+  }
+
+  // Keyboard handler for desktop versions 
+  function keyboardHandler(evt) {
+
+    var handled = false;
+    var keyCodes = {
+
+      //monitors
+      LEFT: 37,
+      RIGHT: 39,
+
+      // ptz
+
+      TOGGLEPTZ_P: 80,
+
+      UPLEFT_Q: 81,
+      UP_W:87,
+      UPRIGHT_E:69,
+
+      LEFT_A:65,
+      CENTER_S: 83,
+      RIGHT_D:68,
+
+      DOWNLEFT_Z:90,
+      DOWN_X:88,
+      DOWNRIGHT_C:67,
+
+      ESC: 27
+    
+    };
+
+    $timeout (function () {
+      var keyCode = evt.keyCode;
+     
+      console.log (keyCode + " PRESSED");
+
+      if (keyCode == keyCodes.ESC) {
+
+        $scope.closeModal();
+
+      }
+      else if (keyCode == keyCodes.LEFT) {
+        $scope.monStatus = "";
+        moveToMonitor($scope.monitorId, -1);
+      }
+      else if (keyCode == keyCodes.RIGHT) {
+        $scope.monStatus = "";
+        moveToMonitor($scope.monitorId, 1);
+      }
+
+      else if (keyCode == keyCodes.TOGGLEPTZ_P) {
+        $scope.togglePTZ();
+      }
+      else { // rest of the functions are PTZ
+        if (!$scope.showPTZ) {
+          NVRDataModel.debug ("PTZ is not on, or disabled");
+          return;
+        }
+        // coming here means PTZ is on
+        var cmd = "";
+        switch (keyCode) {
+          case keyCodes.UPLEFT_Q: cmd = 'UpLeft'; break;
+          case keyCodes.UP_W:cmd = 'Up'; break;
+          case keyCodes.UPRIGHT_E:cmd = 'UpRight'; break;
+          case keyCodes.LEFT_A:cmd = 'Left'; break;
+          case keyCodes.CENTER_S: cmd = ''; break;
+          case keyCodes.RIGHT_D: cmd = 'Right'; break;
+          case keyCodes.DOWNLEFT_Z: cmd = 'UpLeft'; break;
+          case keyCodes.DOWN_X: cmd = 'Down'; break;
+          case keyCodes.DOWNRIGHT_C: cmd = 'DownRight'; break;
+        }
+        if (cmd) {
+          NVRDataModel.debug ("Invoking controlPTZ with "+cmd);
+        }
+        else {
+          NVRDataModel.debug ("ignoring invalid PTZ command");
+        }
+
+      }
+
+      handled = true;
+      return handled;
+
+    })
+  }
+
+
+
 
   // This is the PTZ menu
 
@@ -1220,6 +1314,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   $scope.$on('modal.removed', function () {
 
+    if ($rootScope.platformOS == 'desktop') { 
+      NVRDataModel.debug ("Removing keyboard handler");
+      window.removeEventListener('keydown', keyboardHandler, true);
+  
+    }
     as(); // dregister auth success
     $scope.isModalActive = false;
 
