@@ -377,7 +377,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       handled = true;
       return handled;
 
-    })
+    });
   }
 
   //-------------------------------------------
