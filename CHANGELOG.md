@@ -1,13 +1,42 @@
 # Change Log
 
-## [1.3.008](https://github.com/pliablepixels/zmNinja/tree/1.3.008) (2018-06-30)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.004...1.3.008)
+## [v1.3.011](https://github.com/pliablepixels/zmNinja/tree/v1.3.011) (2018-07-25)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.008...v1.3.011)
+
+**Implemented enhancements:**
+
+- Add zmNinja keybindings for desktop [\#675](https://github.com/pliablepixels/zmNinja/issues/675)
+- Allow montage resize to work with finer grained control [\#669](https://github.com/pliablepixels/zmNinja/issues/669)
+- support new API login mechanism [\#668](https://github.com/pliablepixels/zmNinja/issues/668)
+- Enhancement: For desktop instances, would be cool to control cams motion \(PTZ\) using keyboard arrow keys [\#648](https://github.com/pliablepixels/zmNinja/issues/648)
+
+**Fixed bugs:**
+
+- Fix FreeNAS 1.30.4 API issues + other stuff related to 1.32.0 login process vs 1.30.4 [\#676](https://github.com/pliablepixels/zmNinja/issues/676)
+
+**Closed issues:**
+
+- Updating EventsController.php [\#672](https://github.com/pliablepixels/zmNinja/issues/672)
+- Montage frame rate  [\#666](https://github.com/pliablepixels/zmNinja/issues/666)
+- Zmeventnotification.pl Working but no push notifications [\#664](https://github.com/pliablepixels/zmNinja/issues/664)
+- Montage cannot load images and monitor streams will not load, but API calls succeed [\#658](https://github.com/pliablepixels/zmNinja/issues/658)
+- ZmNinjaDesktop on Linux64 \( ubuntu 16.04 \) touchscreen scrolling [\#642](https://github.com/pliablepixels/zmNinja/issues/642)
+- Enhancement: Change between running states from main menu big buttons or widget [\#633](https://github.com/pliablepixels/zmNinja/issues/633)
+
+**Merged pull requests:**
+
+- \#669 - customizable montage scaling granularity [\#671](https://github.com/pliablepixels/zmNinja/pull/671) ([florie1706](https://github.com/florie1706))
+- \#669 - customizable montage scaling granularity [\#670](https://github.com/pliablepixels/zmNinja/pull/670) ([maymaymay](https://github.com/maymaymay))
+- Updated translation [\#663](https://github.com/pliablepixels/zmNinja/pull/663) ([florie1706](https://github.com/florie1706))
+- missed "here" [\#662](https://github.com/pliablepixels/zmNinja/pull/662) ([florie1706](https://github.com/florie1706))
+
+## [v1.3.008](https://github.com/pliablepixels/zmNinja/tree/v1.3.008) (2018-06-30)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.004...v1.3.008)
 
 **Fixed bugs:**
 
 - Event list incorrect after deleting first event in the list [\#651](https://github.com/pliablepixels/zmNinja/issues/651)
 - Time not properly displayed in the event modal when selecting 'next event' [\#649](https://github.com/pliablepixels/zmNinja/issues/649)
-- Android App sucked all my high speed data plan [\#647](https://github.com/pliablepixels/zmNinja/issues/647)
 - zmNinja - montage view - monitors don't show on first run, but show after login saved [\#641](https://github.com/pliablepixels/zmNinja/issues/641)
 
 **Closed issues:**
@@ -42,7 +71,6 @@
 - Desktop, at certain windows sizes the 24hr Preview frames will jiggle. [\#600](https://github.com/pliablepixels/zmNinja/issues/600)
 - Missing events if logged in zmNinja with non admin user [\#568](https://github.com/pliablepixels/zmNinja/issues/568)
 - Enhance System Status to show disk space details [\#430](https://github.com/pliablepixels/zmNinja/issues/430)
-- Desktop: Window Title is Inconsistent [\#170](https://github.com/pliablepixels/zmNinja/issues/170)
 - Order of persisted monitors should be reflected in timeline and when swiping prev/next in fullscreen view. [\#62](https://github.com/pliablepixels/zmNinja/issues/62)
 
 **Merged pull requests:**
@@ -283,7 +311,7 @@
 - Added new strings according to v1.2.41 [\#512](https://github.com/pliablepixels/zmNinja/pull/512) ([florie1706](https://github.com/florie1706))
 
 ## [v1.2.41](https://github.com/pliablepixels/zmNinja/tree/v1.2.41) (2017-04-11)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.41)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v1.2.41)
 
 **Implemented enhancements:**
 
@@ -310,11 +338,11 @@
 - montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
 -  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
 
-## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v/1.2.40)
-
 ## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.40)
+
+## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v/1.2.40)
 
 **Fixed bugs:**
 
