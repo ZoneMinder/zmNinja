@@ -15,7 +15,6 @@ angular.module('zmApp.controllers')
       $ionicPopup, $localstorage, $state, $ionicNativeTransitions, $translate) {
 
       var currentServerMultiPortSupported = false;
-      var currentServerVersion = '';
 
       var zmAppVersion = "unknown";
       var isBackground = false;
@@ -178,6 +177,7 @@ angular.module('zmApp.controllers')
         'insertBasicAuthToken': false,
         'loginAPISupported': false,
         'montageResizeSteps': 5,
+        'currentServerVersion': '',
 
 
       };
@@ -349,10 +349,10 @@ angular.module('zmApp.controllers')
           return d.promise;
         }
 
-        if (currentServerVersion && (versionCompare(currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
+        if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
           myurl = loginData.apiurl + '/host/getCredentials.json';
-          debug("Server version " + currentServerVersion+ " > 1.31.41, so using getCredentials API:" + myurl);
+          debug("Server version " + loginData.currentServerVersion+ " > 1.31.41, so using getCredentials API:" + myurl);
           $http.get(myurl)
             .then(function (s) {
 
@@ -594,7 +594,8 @@ angular.module('zmApp.controllers')
       }
 
       function setCurrentServerVersion(val) {
-        currentServerVersion = val;
+        loginData.currentServerVersion = val;
+        setLogin(loginData);
         debug("Setting server version to:" + val);
       }
 
@@ -626,7 +627,7 @@ angular.module('zmApp.controllers')
         },
 
         getCurrentServerVersion: function () {
-          return (currentServerVersion);
+          return (loginData.currentServerVersion);
         },
 
 
@@ -2648,9 +2649,9 @@ angular.module('zmApp.controllers')
           $rootScope.authSession = "undefined";
 
 
-//          console.log ("CURRENT SERVER: "+currentServerVersion);
+          console.log ("CURRENT SERVER: "+loginData.currentServerVersion);
 
-          if (currentServerVersion && (versionCompare(currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
+          if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
             debug ("Logging out using API method");
             $http.get(loginData.apiurl+'/host/logout.json')
