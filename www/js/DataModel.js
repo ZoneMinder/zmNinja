@@ -302,17 +302,19 @@ angular.module('zmApp.controllers')
           var myurl = apiurl + '/configs/viewByName/ZM_MIN_STREAMING_PORT.json';
           $http.get(myurl)
             .success(function (data) {
-              configParams.ZM_MIN_STREAMING_PORT = data.config.Value;
+              //console.log ("GOT " + JSON.stringify(data));
 
-              if (!data.config.Value) {
-                setCurrentServerMultiPortSupported(false);
-                log("ZM_MIN_STREAMING_PORT not configure, disabling");
-                configParams.ZM_MIN_STREAMING_PORT = 0;
-              } else {
+              if (data.config && data.config.Value) {
+                configParams.ZM_MIN_STREAMING_PORT = data.config.Value;
                 setCurrentServerMultiPortSupported(true);
                 log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
               }
-
+              else {
+                setCurrentServerMultiPortSupported(false);
+                log("ZM_MIN_STREAMING_PORT not configure, disabling");
+                configParams.ZM_MIN_STREAMING_PORT = 0;
+              }
+          
 
               d.resolve(configParams.ZM_MIN_STREAMING_PORT);
               return (d.promise);
@@ -347,10 +349,10 @@ angular.module('zmApp.controllers')
           return d.promise;
         }
 
-        if (versionCompare(currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported) {
+        if (currentServerVersion && (versionCompare(currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
           myurl = loginData.apiurl + '/host/getCredentials.json';
-          debug("Server version > 1.31.41, so using getCredentials API:" + myurl);
+          debug("Server version " + currentServerVersion+ " > 1.31.41, so using getCredentials API:" + myurl);
           $http.get(myurl)
             .then(function (s) {
 
@@ -1590,6 +1592,7 @@ angular.module('zmApp.controllers')
           $http.get(apiurl)
             .then(function (success) {
                 if (success.data.version) {
+                 // console.log ("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
                   setCurrentServerVersion(success.data.version);
                   d.resolve(success.data.version);
@@ -1921,7 +1924,7 @@ angular.module('zmApp.controllers')
                 debug("Monitor URL to fetch is:" + myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
                   .success(function (data) {
-                    //console.log("HTTP success got " + JSON.stringify(data.monitors));
+                  //  console.log("HTTP success got " + JSON.stringify(data.monitors));
                     monitors = data.monitors;
 
 
@@ -2645,17 +2648,19 @@ angular.module('zmApp.controllers')
           $rootScope.authSession = "undefined";
 
 
-          if (versionCompare(currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported) {
+//          console.log ("CURRENT SERVER: "+currentServerVersion);
+
+          if (currentServerVersion && (versionCompare(currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
             debug ("Logging out using API method");
             $http.get(loginData.apiurl+'/host/logout.json')
             .then (function(s) {
-              debug ("Logout returned "+JSON.stringify(s));
+              debug ("Logout returned... ");
               d.resolve(true);
               return d.promise;
             },
             function (e) {
-              debug ("Logout errored "+JSON.stringify(e));
+              debug ("Logout errored but really don't worry, your ZM version may not support it");
               d.resolve(true);
               return d.promise;
             }
