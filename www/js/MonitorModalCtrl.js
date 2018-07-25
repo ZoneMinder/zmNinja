@@ -166,7 +166,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       handled = true;
       return handled;
 
-    })
+    });
   }
 
 

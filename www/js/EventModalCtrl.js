@@ -139,7 +139,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       handled = true;
       return handled;
 
-    })
+    });
   }
 
 
