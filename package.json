@@ -4,8 +4,8 @@
   "displayName": "zmNinja",
   "cordova": {
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ],
     "plugins": {
       "cordova-plugin-add-swift-support": {},
@@ -39,7 +39,6 @@
       "cordova-plugin-device": {},
       "cordova-plugin-file": {},
       "ionic-plugin-keyboard": {},
-      "cordova.plugins.diagnostic": {},
       "cordova-plugin-canvas2image-pp-fork": {
         "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
       },
@@ -55,7 +54,6 @@
     "com.telerik.plugins.nativepagetransitions": "^0.6.5",
     "cordova-android": "^6.3.0",
     "cordova-custom-config": "~4.0.2",
-    "cordova-ios": "^4.5.4",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",
@@ -82,7 +80,6 @@
     "cordova-plugin-websocket": "^0.12.2",
     "cordova-plugin-whitelist": "^1.3.2",
     "cordova-sqlite-storage": "^1.5.3",
-    "cordova.plugins.diagnostic": "^3.7.1",
     "deep-equal": "^1.0.1",
     "electron-window-state": "^4.1.1",
     "ionic-plugin-keyboard": "^2.2.1",
@@ -92,7 +89,8 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
-    "phonegap-plugin-push": "~2.1.3"
+    "phonegap-plugin-push": "~2.1.3",
+    "cordova-ios": "~4.5.4"
   },
   "devDependencies": {
     "bower": "^1.8.4",
