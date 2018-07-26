@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninjapro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.3.011" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninjapro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.3.012" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>zmNinja</name>
     <description>
 	High performance ZoneMinder client
@@ -42,6 +42,9 @@
         </config-file>
         <config-file parent="NSPhotoLibraryUsageDescription" platform="ios" target="*-Info.plist">
             <string>Store photos of events and live feeds</string>
+        </config-file>
+        <config-file parent="NSFaceIDUsageDescription" platform="ios" target="*-Info.plist">
+            <string>Use Face ID for authentication into app</string>
         </config-file>
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
@@ -135,15 +138,14 @@
     <plugin name="cordova-plugin-device" spec="^2.0.1" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <plugin name="cordova.plugins.diagnostic" spec="^3.7.1" />
     <plugin name="cordova-plugin-canvas2image-pp-fork" spec="^0.6.0">
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value=" " />
     </plugin>
     <plugin name="cordova-plugin-media-pp-fork" spec="^1.0.2-dev" />
     <plugin name="cordova-plugin-email" spec="^1.2.7" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
-    <plugin name="cordova-library-helper-pp-fork" spec="^1.0.1" />
     <plugin name="cordova-plugin-certificates" spec="^0.6.4" />
-    <engine name="ios" spec="^4.5.4" />
+    <plugin name="cordova-library-helper-pp-fork" spec="^1.0.1" />
     <engine name="android" spec="^6.3.0" />
+    <engine name="ios" spec="~4.5.4" />
 </widget>
