@@ -1369,6 +1369,14 @@ angular.module('zmApp', [
 
       NVRDataModel.log("You are running on " + $rootScope.platformOS);
 
+      if (1) {
+        console.log ("Will deep code detect this?");
+      }
+      else {
+        console.log ("You know it will never reach here");
+        also add a syntax error;
+      }
+
 
       /*if (window.cordova && $rootScope.platformOS == 'android') {
 
