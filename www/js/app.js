@@ -1114,7 +1114,8 @@ angular.module('zmApp', [
               $ionicLoading.hide();
 
 
-              if ('success' in err.data) {
+              if (1) {
+              //if (err  && err.data && 'success' in err.data) {
                 console.log("API based login not supported, need to use web scraping...");
                 // login using old web scraping
                 var ld = NVRDataModel.getLogin();
