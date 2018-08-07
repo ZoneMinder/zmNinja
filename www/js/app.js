@@ -111,7 +111,7 @@ angular.module('zmApp', [
     eventServerErrorDelay: 5000, // time to wait till I report initial connect errors
     zmVersionCheckNag: 60 * 24, // in hrs 
     waitTimeTillResume: 5, // in sec, for ES error
-    versionWithLoginAPI: "1.31.44"
+    versionWithLoginAPI: "1.31.45"
 
   })
 
@@ -793,6 +793,7 @@ angular.module('zmApp', [
 
           .success(function (datastr) {
 
+            console.log ("2 PARSE HERE : "+datastr);
             var data = JSON.parse(datastr);
             $rootScope.newBlogPost = "";
             if (data.payload.posts.length <= 0) {
@@ -1082,7 +1083,7 @@ angular.module('zmApp', [
                 NVRDataModel.debug ("API based login returned... ");
                 NVRDataModel.setCurrentServerVersion(succ.data.version);
                 $ionicLoading.hide();
-                $rootScope.loggedIntoZm = 1;
+                //$rootScope.loggedIntoZm = 1;
                 $rootScope.authSession = ''; 
 
                 if (succ.data.credentials) {
@@ -1134,7 +1135,7 @@ angular.module('zmApp', [
 
               }  
               else {
-                 $rootScope.loggedIntoZm = -1;
+                // $rootScope.loggedIntoZm = -1;
               //console.log("**** ZM Login FAILED");
               NVRDataModel.log("zmAutologin Error via API: some meta foo", "error");
               $rootScope.$broadcast('auth-error', "I'm confused why");
@@ -1225,7 +1226,7 @@ angular.module('zmApp', [
 
           if (data.indexOf(zm.loginScreenString) == -1) {
             //eventServer.start();
-            $rootScope.loggedIntoZm = 1;
+            //$rootScope.loggedIntoZm = 1;
 
             NVRDataModel.log("zmAutologin successfully logged into Zoneminder");
             $rootScope.apiValid = true;
@@ -1234,7 +1235,7 @@ angular.module('zmApp', [
 
           } else //  this means login error
           {
-            $rootScope.loggedIntoZm = -1;
+           // $rootScope.loggedIntoZm = -1;
             //console.log("**** ZM Login FAILED");
             NVRDataModel.log("zmAutologin Error: Bad Credentials ", "error");
             $rootScope.$broadcast('auth-error', "incorrect credentials");
@@ -1283,7 +1284,7 @@ angular.module('zmApp', [
 
           NVRDataModel.log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
           // bad urls etc come here
-          $rootScope.loggedIntoZm = -1;
+          //$rootScope.loggedIntoZm = -1;
           $rootScope.$broadcast('auth-error', error);
 
           d.reject("Login Error");
@@ -1295,7 +1296,7 @@ angular.module('zmApp', [
     function start() {
       var ld = NVRDataModel.getLogin();
       // lets keep this timer irrespective of auth or no auth
-      $rootScope.loggedIntoZm = 0;
+      //$rootScope.loggedIntoZm = 0;
       $interval.cancel(zmAutoLoginHandle);
       //doLogin();
       zmAutoLoginHandle = $interval(function () {
@@ -1311,7 +1312,7 @@ angular.module('zmApp', [
       var ld = NVRDataModel.getLogin();
 
       $interval.cancel(zmAutoLoginHandle);
-      $rootScope.loggedIntoZm = 0;
+     // $rootScope.loggedIntoZm = 0;
       NVRDataModel.log("Cancelling zmAutologin timer");
 
     }
@@ -1401,7 +1402,7 @@ angular.module('zmApp', [
       $rootScope.toTime = "";
       $rootScope.fromString = "";
       $rootScope.toString = "";
-      $rootScope.loggedIntoZm = 0;
+     // $rootScope.loggedIntoZm = 0;
       $rootScope.apnsToken = '';
       $rootScope.tappedNotification = 0;
       $rootScope.tappedMid = 0;
@@ -1585,29 +1586,35 @@ angular.module('zmApp', [
       document.addEventListener("online", function () {
         //console.log ("ONLINE------------------------------------");
         $timeout(function () {
+
+
           NVRDataModel.log("Your network came back online");
 
           $rootScope.online = true;
 
           $timeout(function () {
-            var networkState = "browser not supported";
-            if (navigator.connection) networkState = navigator.connection.type;
-            NVRDataModel.debug("Detected network type as: " + networkState);
-            var strState = NVRDataModel.getBandwidth();
-            NVRDataModel.debug("getBandwidth() normalized it as: " + strState);
-            $rootScope.runMode = strState;
-            if ((NVRDataModel.getLogin().autoSwitchBandwidth == true) &&
-              (NVRDataModel.getLogin().enableLowBandwidth == true)) {
-              NVRDataModel.debug("Setting app state to: " + strState);
-              $rootScope.$broadcast('bandwidth-change', strState);
-            } else {
-              NVRDataModel.debug("Not changing bandwidth state, as auto change is not on");
+           // NVRDataModel.debug ("Ignoring - Alex R. Hack");
+            if (0) {
+              var networkState = "browser not supported";
+              if (navigator.connection) networkState = navigator.connection.type;
+              NVRDataModel.debug("Detected network type as: " + networkState);
+              var strState = NVRDataModel.getBandwidth();
+              NVRDataModel.debug("getBandwidth() normalized it as: " + strState);
+              $rootScope.runMode = strState;
+              if ((NVRDataModel.getLogin().autoSwitchBandwidth == true) &&
+                (NVRDataModel.getLogin().enableLowBandwidth == true)) {
+                NVRDataModel.debug("Setting app state to: " + strState);
+                $rootScope.$broadcast('bandwidth-change', strState);
+              } else {
+                NVRDataModel.debug("Not changing bandwidth state, as auto change is not on");
+              }
+              NVRDataModel.log("Your network is online, re-authenticating");
+              zmAutoLogin.doLogin($translate.instant('kReAuthenticating'));    
             }
-
+           
           }, 1000); // need a time gap, seems network type registers late
 
-          NVRDataModel.log("Your network is online, re-authenticating");
-          zmAutoLogin.doLogin($translate.instant('kReAuthenticating'));
+        
 
         });
       }, false);
