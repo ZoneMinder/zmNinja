@@ -537,5 +537,6 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
   NVRDataModel.log("Entering Portal Main");
   var loginData;
   $ionicSideMenuDelegate.canDragContent(true);
+  
 
 }]);
