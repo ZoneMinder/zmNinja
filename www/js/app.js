@@ -793,7 +793,6 @@ angular.module('zmApp', [
 
           .success(function (datastr) {
 
-            console.log ("2 PARSE HERE : "+datastr);
             var data = JSON.parse(datastr);
             $rootScope.newBlogPost = "";
             if (data.payload.posts.length <= 0) {

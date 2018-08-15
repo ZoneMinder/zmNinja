@@ -21,6 +21,7 @@ angular.module('ionic.utils', [])
         $window.localStorage[key] = JSON.stringify(value);
       },
       getObject: function (key) {
+        
         return JSON.parse($window.localStorage[key] || '{}');
       }
     };
