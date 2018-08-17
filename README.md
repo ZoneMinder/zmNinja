@@ -14,9 +14,14 @@ by many for home and commercial security monitoring.
 <a href="https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro&hl=en&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" width="200px"/></a>
 
 
-Problems with zmNinja?
------------------------
-zmNinja has a detailed [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ). Please do read it - it has answers to many common questions.
+
+Help
+-----
+* zmNinja has [instructional videos](https://github.com/pliablepixels/zmNinja/wiki/Help-Videos-for-zmNinja) to help you with usage questions - I'll add more over time
+* If you believe you've discovered a bug, please create a [GitHub issue](https://github.com/pliablepixels/zmNinja/issues/)
+* There is a detailed [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ). Please do read it - it has answers to many common questions
+* Post in the [ZoneMinder Mobile App forum](https://forums.zoneminder.com/viewforum.php?f=33) or find me on ZoneMinder's slack channel (you can join [here](http://zoneminder-chat.herokuapp.com/))
+
 
 Video Demo
 -------------
