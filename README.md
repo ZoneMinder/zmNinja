@@ -1,3 +1,6 @@
+[![Donate with Bitcoin](https://en.cryptobadges.io/badge/micro/32YBHDAnnDUWwjsscJQQ1Z92UWJgpsDF86)](https://en.cryptobadges.io/donate/32YBHDAnnDUWwjsscJQQ1Z92UWJgpsDF86)
+
+
 ![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/zmn.png?raw=true "icon") 
 
 [zmNinja website](http://pliablepixels.github.io)
