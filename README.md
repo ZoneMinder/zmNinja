@@ -18,9 +18,15 @@ by many for home and commercial security monitoring.
 Help
 -----
 * zmNinja has [instructional videos](https://github.com/pliablepixels/zmNinja/wiki/Help-Videos-for-zmNinja) to help you with usage questions - I'll add more over time
-* If you believe you've discovered a bug, please create a [GitHub issue](https://github.com/pliablepixels/zmNinja/issues/)
 * There is a detailed [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ). Please do read it - it has answers to many common questions
 * Post in the [ZoneMinder Mobile App forum](https://forums.zoneminder.com/viewforum.php?f=33) or find me on ZoneMinder's slack channel (you can join [here](http://zoneminder-chat.herokuapp.com/))
+* If you believe you've discovered a bug, please create a [GitHub issue](https://github.com/pliablepixels/zmNinja/issues/)
+
+Before you ask for help
+-----------------------
+* Make sure you have read the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ)
+* Make sure you have [validated](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) that your APIs are working (if not, its a ZM issue, please post in ZM forums)
+* Please don't ask me for help with source compilation if you are not familiar with coding mobile apps - you should try and solve your own problems
 
 
 Video Demo
@@ -50,26 +56,23 @@ Key Features (just watch the video already)
 * Events history and list
 * Timeline view
 * Camera pan/tilt/zoom (needs to have ZM support it first)
+* 24hr review 
 
 Thanks
 ------
 To the zonemider community in general, and the awesome Stack Overflow community.
-But specifically, [Andrew Bauer](https://github.com/knight-of-ni) (knight-of-ni) who egged me on to take up this project.
+But specifically, [Andrew Bauer](https://github.com/knight-of-ni) (knight-of-ni) who egged me on to take up this project and [Isaac Connor](http://github.com/connortechnology/) who has been incredibly supportive in helping fix various ZM issues that affected zmNinja
 
 Important Notes
 ---------------
 * zmNinja needs APIs enabled in ZoneMinder. If you are running ZM 1.29 or above, APIs should automatically be available. See [this](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) for instructions on how to make sure your APIs are working. If they are not working, zmNinja **will not** work.
 
-Before you ask for help
------------------------
-* Make sure you have read the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ)
-* Make sure you have [validated](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) that your APIs are working (if not, its a ZM issue, please post in ZM forums)
-* Please don't ask me for help with source compilation if you are not familiar with coding mobile apps - you should try and solve your own problems
 
-
-Objective
-----------
-I wanted to learn how to write a mobile app. It was (and is) fun. 
+Why did I develop zmNinja?
+------------------------------
+* I wanted to learn how to write a mobile app. It was (and is) fun. 
+* I originally reached out to tinyCam to see if they were willing to do an app - did not get a response
+* I found zmView limited for my needs
 
 Running from source
 ----------------------
