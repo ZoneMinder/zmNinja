@@ -48,8 +48,8 @@ angular.module('zmApp', [
     castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
-    httpTimeout: 15000,
-    largeHttpTimeout: 60000,
+    httpTimeout: 10000,
+    largeHttpTimeout: 30000,
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
     logFileMaxSize: 30000, // after this limit log gets reset
@@ -947,6 +947,7 @@ angular.module('zmApp', [
       var ld = NVRDataModel.getLogin();
 
       var statename = $ionicHistory.currentStateName();
+     
 
       if (statename == "montage-history") {
         NVRDataModel.log("Skipping login process as we are in montage history. Re-logging will mess up the stream");
@@ -978,21 +979,29 @@ angular.module('zmApp', [
           function (error)
           // login to main failed, so try others
           {
+            $ionicLoading.show({
+              template: $translate.instant('kReachabilityFailed'),
+              noBackdrop: true,
+              
+            }); 
             NVRDataModel.debug(">>>>>>>>>>>> Failed  first login, trying reachability");
             NVRDataModel.getReachableConfig(true)
               .then(function (data) {
                   proceedWithLogin()
                     .then(function (success) {
                         d.resolve(success);
+                        $ionicLoading.hide();
                         return d.promise;
                       },
                       function (error) {
+                        $ionicLoading.hide();
                         d.reject(error);
                         return d.promise;
                       });
 
                 },
                 function (error) {
+                  $ionicLoading.hide();
                   d.reject(error);
                   return d.promise;
                 });
@@ -1014,7 +1023,7 @@ angular.module('zmApp', [
         var d = $q.defer();
         var ld = NVRDataModel.getLogin();
         NVRDataModel.log("zmAutologin called");
-
+        var httpDelay = NVRDataModel.getLogin().enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
 
         // This is a good time to check if auth is used :-p
         if (!ld.isUseAuth) {
@@ -1028,11 +1037,13 @@ angular.module('zmApp', [
 
         }
 
+        if (!str) str = $translate.instant ('kAuthenticating');
+
         if (str) {
           $ionicLoading.show({
             template: str,
             noBackdrop: true,
-            duration: zm.httpTimeout
+            duration: httpDelay
           });
         }
 
@@ -1044,11 +1055,14 @@ angular.module('zmApp', [
 
         //first login using new API
         var loginAPI = loginData.apiurl + '/host/login.json';
+     
 
         $http({
           method:'POST',
           url: loginAPI,
+          timeout:httpDelay,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          
           transformRequest: function(obj) {
             var str = [];
             for(var p in obj)
@@ -1060,7 +1074,7 @@ angular.module('zmApp', [
         //$http.get(loginAPI)
           .then(function (succ) {
 
-               
+                $ionicLoading.hide();
                 if (!succ.data.version) {
 
                   NVRDataModel.debug ("API login returned fake success, going back to webscrape");
@@ -1074,6 +1088,7 @@ angular.module('zmApp', [
                       return d.promise;
                    },
                   function (err) {
+                    $ionicLoading.hide();
                     d.reject("Login Error");
                     return (d.promise);
                   });
@@ -1161,11 +1176,20 @@ angular.module('zmApp', [
       var loginData = NVRDataModel.getLogin();
       var d = $q.defer();
       NVRDataModel.debug("Logging in using old web-scrape method");
+
+      $ionicLoading.show({
+        template: $translate.instant('kAuthenticatingWebScrape'),
+        noBackdrop: true,
+        duration: httpDelay
+      });
+      
+
       NVRDataModel.isReCaptcha()
         .then(function (result) {
           if (result == true) {
             $ionicLoading.hide();
             NVRDataModel.displayBanner('error', ['reCaptcha must be disabled', ], "", 8000);
+            $ionicLoading.hide();
             var alertPopup = $ionicPopup.alert({
               title: 'reCaptcha enabled',
               template: $translate.instant('kRecaptcha'),
@@ -1185,12 +1209,12 @@ angular.module('zmApp', [
 
         });
 
-      var hDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
+      var httpDelay = NVRDataModel.getLogin().enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
       //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
       $http({
 
           method: 'POST',
-          timeout: hDelay,
+          timeout: httpDelay,
           //withCredentials: true,
           url: loginData.url + '/index.php',
           headers: {
@@ -2078,7 +2102,7 @@ angular.module('zmApp', [
         //---------------------------------------------------------------------------
         // background handler
         //----------------------------------------------------------------------------
-        document.addEventListener("pause", function () {
+        document.addEventListener("pause", function (mtask) {
           NVRDataModel.setBackground(true);
           NVRDataModel.setJustResumed(false);
           // NVRDataModel.setJustResumed(true); // used for window stop
