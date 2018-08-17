@@ -2644,6 +2644,13 @@ angular.module('zmApp.controllers')
         logout: function () {
 
           // always resolves
+
+          $ionicLoading.show({
+            template: $translate.instant('kCleaningUp'),
+            noBackdrop: true,
+        
+          }); 
+
           var d = $q.defer();
           log(loginData.url + "=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "undefined";
@@ -2654,14 +2661,16 @@ angular.module('zmApp.controllers')
           if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
             debug ("Logging out using API method");
-            $http.get(loginData.apiurl+'/host/logout.json')
+            $http.get(loginData.apiurl+'/host/logout.json',{timeout: 7000})
             .then (function(s) {
               debug ("Logout returned... ");
               d.resolve(true);
+              $ionicLoading.hide();
               return d.promise;
             },
             function (e) {
               debug ("Logout errored but really don't worry, your ZM version may not support it");
+              $ionicLoading.hide();
               d.resolve(true);
               return d.promise;
             }
@@ -2674,7 +2683,7 @@ angular.module('zmApp.controllers')
           debug ("Logging out using Web method");
           $http({
               method: 'POST',
-              timeout: 10000,
+              timeout: 7000,
               //withCredentials: true,
               url: loginData.url + '/index.php',
               headers: {
