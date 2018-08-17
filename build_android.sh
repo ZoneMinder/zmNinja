@@ -89,7 +89,7 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     cordova plugin add cordova-plugin-certificates
     cp "$NINJAKEYSTORE" platforms/android/
 
-    # Make sure native builds are only deployed in devices < Android 5
+    # Make sure native builds are only deployed in devices >= Android 5
     cordova build android --release -- --minSdkVersion=21 --versionCode=${ver}
 
     # copy build to release folder and sign
