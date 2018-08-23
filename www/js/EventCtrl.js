@@ -87,6 +87,7 @@ angular.module('zmApp.controllers')
 
       // console.log ("********* AFTER ENTER");
       //
+      window.addEventListener("resize", recomputeThumbSize, false);
       $ionicListDelegate.canSwipeItems(true);
       NVRDataModel.debug("enabling options swipe");
 
@@ -142,6 +143,8 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.beforeLeave', function () {
 
+      NVRDataModel.debug("EventCtrl: Deregistering resize listener");
+      window.removeEventListener("resize", recomputeThumbSize, false);
       NVRDataModel.debug("EventCtrl: Deregistering broadcast handles");
       for (var i = 0; i < broadcastHandles.length; i++) {
         // broadcastHandles[i]();
@@ -2782,8 +2785,37 @@ angular.module('zmApp.controllers')
 
     };
 
+    
+    function recomputeThumbSize() {
+      NVRDataModel.debug ("EventCtrl: recompute thumbnails");
+
+      for (var i=0; i < $scope.events.length; i++) {
+        var tempMon = NVRDataModel.getMonitorObject($scope.events[i].Event.MonitorId);
+        if (tempMon != undefined) {
+
+          var mw = parseInt(tempMon.Monitor.Width);
+          var mh = parseInt(tempMon.Monitor.Height);
+          var mo = parseInt(tempMon.Monitor.Orientation);
+
+          // in recompute, we've already taken care of orientation
+          // so don't pass it again
+          var th = computeThumbnailSize(mw, mh, mo);
+          $scope.events[i].Event.thumbWidth = th.w;
+          $scope.events[i].Event.thumbHeight = th.h;
+          console.log ("Setting to "+th.w+"*"+th.h);
+
+        }
+
+
+      }
+
+    }
 
     function computeThumbnailSize(mw, mh, mo) {
+    
+      
+      tw = Math.min(Math.round(0.35 * $rootScope.devWidth),200);
+      th = 150;
 
       var ratio = mw / mh;
       var result = {
@@ -2800,15 +2832,15 @@ angular.module('zmApp.controllers')
 
       if (mw > mh) {
         ratio = mh / mw;
-        mw = zm.thumbWidth;
-        mh = zm.thumbWidth * ratio;
+        mw = tw;
+        mh = tw * ratio;
       } else if (mh > mw) {
         ratio = mw / mh;
-        mh = zm.thumbWidth;
-        mw = zm.thumbWidth * ratio;
+        mh = th;
+        mw = th * ratio;
       } else {
-        mw = zm.thumbWidth;
-        mw = zm.thumbWidth;
+        mw = tw;
+        mw = tw;
       }
       mw = Math.round(mw);
       mh = Math.round(mh);
