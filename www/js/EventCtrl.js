@@ -2800,7 +2800,7 @@ angular.module('zmApp.controllers')
           var th = computeThumbnailSize(mw, mh, mo);
           $scope.events[i].Event.thumbWidth = th.w;
           $scope.events[i].Event.thumbHeight = th.h;
-          console.log ("Setting to "+th.w+"*"+th.h);
+          //console.log ("Setting to "+th.w+"*"+th.h);
 
         }
 
