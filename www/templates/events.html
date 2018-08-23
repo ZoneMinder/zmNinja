@@ -93,15 +93,12 @@
             </div>
 
 
-            <div class="col col-40" align="right" ng-if="loginData.enableThumbs">
-              <!-- thumbnail -->
-
-              <!--  ng-image-appear transition-duration="0.5s" animation="fillIn" bg-color="#50a4e2"  {{event.Event.thumbWidth}}X{{event.Event.thumbHeight}}-->
-              <div >
-                <img ng-image-appear no-loader transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
-                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}" height="{{event.Event.thumbHeight}}"  />
+            <div align="right" class="col col-40" ng-if="loginData.enableThumbs" >
+              
+                <img  ng-image-appear no-loader transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)"  width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" />
                 <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
-              </div>
+            
 
             </div>
 
