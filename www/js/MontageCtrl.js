@@ -1406,6 +1406,11 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.leave', function () {
       // console.log("**VIEW ** Montage Ctrl Left, force removing modal");
+      if ($rootScope.platformOS == 'android') {
+        NVRDataModel.debug ("Deregistering handlers for multi-window");
+        window.MultiWindowPlugin.deregisterOnStop("montage-pause");
+      
+      }
       if ($scope.modal) $scope.modal.remove();
     });
 
@@ -1968,7 +1973,13 @@ angular.module('zmApp.controllers')
       //console.log("**VIEW ** Montage Ctrl AFTER ENTER");
       window.addEventListener("resize", orientationChanged, false);
 
-      document.addEventListener("pause", onPause, false);
+      if ($rootScope.platformOS != 'android') {
+        document.addEventListener("pause", onPause, false);
+      }
+      else {
+        NVRDataModel.debug ("MontageCtrl: Android detected, using cordova-multiwindow plugin for onStop/onStart instead");
+          window.MultiWindowPlugin.registerOnStop("montage-pause", onPause);
+      }
       //  document.addEventListener("resume", onResume, false);
 
     });
