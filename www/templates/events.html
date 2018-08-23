@@ -97,9 +97,9 @@
               <!-- thumbnail -->
 
               <!--  ng-image-appear transition-duration="0.5s" animation="fillIn" bg-color="#50a4e2"  {{event.Event.thumbWidth}}X{{event.Event.thumbHeight}}-->
-              <div style="max-height:200px; max-width:200px">
+              <div >
                 <img ng-image-appear no-loader transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
-                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="100%" height="100%" />
+                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}" height="{{event.Event.thumbHeight}}"  />
                 <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
               </div>
 
