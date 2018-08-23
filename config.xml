@@ -145,8 +145,9 @@
     <plugin name="cordova-plugin-email" spec="^1.2.7" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-library-helper-pp-fork" spec="^1.0.1" />
-    <plugin name="cordova-plugin-certificates" spec="^0.6.4" />
     <plugin name="cordova-plugin-multi-window" spec="0.0.3" />
-    <engine name="android" spec="^6.3.0" />
+    <plugin name="cordova-plugin-ignore-lint-translation" spec="0.0.1" />
+    <plugin name="cordova-plugin-certificates" spec="^0.6.4" />
     <engine name="ios" spec="^4.5.5" />
+    <engine name="android" spec="^6.3.0" />
 </widget>
