@@ -2044,11 +2044,26 @@ angular.module('zmApp', [
 
       function setupPauseAndResume() {
         NVRDataModel.log("Setting up pause and resume handler AFTER language is loaded...");
-        //---------------------------------------------------------------------------
-        // resume handler
-        //----------------------------------------------------------------------------
-        document.addEventListener("resume", function () {
+       
+        if ($rootScope.platformOS != 'android') {
+            document.addEventListener("resume", function () {
+              resumeHandler();
+          }, false);
 
+          document.addEventListener("pause", function () {
+            pauseHandler();
+          }, false);
+        }
+        else {
+          NVRDataModel.debug ("Android detected, using cordova-multiwindow plugin for onStop/onStart instead");
+          window.MultiWindowPlugin.registerOnStop("app-pause", pauseHandler);
+          window.MultiWindowPlugin.registerOnStart("app-resume", resumeHandler);
+         
+
+        }
+
+      
+        function resumeHandler() {
           NVRDataModel.setBackground(false);
           NVRDataModel.setJustResumed(true);
           $ionicPlatform.ready(function () {
@@ -2097,12 +2112,9 @@ angular.module('zmApp', [
 
 
           });
-        }, false);
+        }
 
-        //---------------------------------------------------------------------------
-        // background handler
-        //----------------------------------------------------------------------------
-        document.addEventListener("pause", function (mtask) {
+        function pauseHandler() {
           NVRDataModel.setBackground(true);
           NVRDataModel.setJustResumed(false);
           // NVRDataModel.setJustResumed(true); // used for window stop
@@ -2113,13 +2125,6 @@ angular.module('zmApp', [
           $interval.cancel($rootScope.eventQueryInterval);
           $interval.cancel($rootScope.intervalHandle);
           zmAutoLogin.stop();
-
-
-
-          // NVRDataModel.log("ROOT APP: Stopping network ");
-          //NVRDataModel.stopNetwork("called from app.js");
-
-          // dont call stopNetwork - we need to stop here 
 
           var ld = NVRDataModel.getLogin();
 
@@ -2139,30 +2144,9 @@ angular.module('zmApp', [
             }, 5000);
           }
 
-
-
-          /* if (ld.exitOnSleep && $rootScope.platformOS == "android") {
-             NVRDataModel.log("user exited app");
-             navigator.app.exitApp();
-
-             //  ionic.Platform.exitApp();
-           }*/
-
-          /*   if (NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS == "android" && !NVRDataModel.isMultiPortDisabled()) {
-               NVRDataModel.log ("Multiport is active, killing app to make sure no streams continue in background...");
-               navigator.app.exitApp();
-             } else {
-               NVRDataModel.debug ("Not exiting app because:");
-               NVRDataModel.debug ("getCurrentServerMultiPortSupported:"+NVRDataModel.getCurrentServerMultiPortSupported());
-               NVRDataModel.debug ("platform:"+$rootScope.platformOS);
-               NVRDataModel.debug ("isMultiPortDisabled:"+NVRDataModel.isMultiPortDisabled());
-
-             }*/
-
           if ($rootScope.zmPopup)
             $rootScope.zmPopup.close();
-
-        }, false);
+        }
 
       }
 

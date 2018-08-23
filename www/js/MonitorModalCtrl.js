@@ -1315,6 +1315,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   $scope.$on('modal.removed', function () {
 
+    if ($rootScope.platformOS == 'android') {
+      NVRDataModel.debug ("Deregistering handlers for multi-window");
+
+      window.MultiWindowPlugin.deregisterOnStop("monitormodal-pause");
+      window.MultiWindowPlugin.deregisterOnStart("monitormodal-resume");
+ 
+    }
+
     if ($rootScope.platformOS == 'desktop') { 
       NVRDataModel.debug ("Removing keyboard handler");
       window.removeEventListener('keydown', keyboardHandler, true);
@@ -1741,16 +1749,18 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.monStatus = "";
     $scope.isToggleListMenu = true;
     //console.log (">>>>>>>>>>>>>>>>>>>STOOOP");
-    document.addEventListener("pause", onPause, false);
-    document.addEventListener("resume", onResume, false);
 
-    /*document.addEventListener("mouseup", moveStop, false);
-    document.addEventListener("touchend", moveStop, false);
+    if ($rootScope.platformOS != 'android') {
 
-    document.addEventL`istener("mousemove", moveContinue, false);
-    document.addEventListener("touchmove", moveContinue, false);*/
+      document.addEventListener("pause", onPause, false);
+      document.addEventListener("resume", onResume, false);
 
-
+    }
+    else {
+      NVRDataModel.debug ("MonitorModal: Android detected, using cordova-multiwindow plugin for onStop/onStart instead");
+          window.MultiWindowPlugin.registerOnStop("monitormodal-pause", onPause);
+          window.MultiWindowPlugin.registerOnStart("monitormodal-resume", onResume);
+    }
 
 
     $scope.showZones = false;
