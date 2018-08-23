@@ -434,46 +434,15 @@ angular.module('zmApp.controllers')
                 var tempMon = NVRDataModel.getMonitorObject(myevents[i].Event.MonitorId);
                 if (tempMon != undefined) {
 
-                  var ratio;
                   var mw = parseInt(tempMon.Monitor.Width);
                   var mh = parseInt(tempMon.Monitor.Height);
                   var mo = parseInt(tempMon.Monitor.Orientation);
-
                   myevents[i].Event.Rotation = '';
+                 
+                  var th = computeThumbnailSize(mw,mh,mo);
+                myevents[i].Event.thumbWidth = th.w;
+                myevents[i].Event.thumbHeight = th.h;
 
-                  // scale by X if width > height                                
-                  if (mw > mh) {
-                    ratio = mw / zm.thumbWidth;
-                    myevents[i].Event.thumbWidth = 200;
-                    myevents[i].Event.thumbHeight = Math.round(mh / ratio);
-                  } else {
-
-                    ratio = mh / zm.thumbWidth;
-                    myevents[i].Event.thumbHeight = 200;
-                    myevents[i].Event.thumbWidth = Math.round(mw / ratio);
-
-                  }
-
-                  if (mo != 0) {
-                    /*
-                    myevents[i].Event.Rotation = {
-                          'transform' : 'rotate('+mo+'deg'+')'
-                      };  */
-
-                    var tmp = myevents[i].Event.thumbHeight;
-                    myevents[i].Event.thumbHeight = myevents[i].Event.thumbWidth;
-                    myevents[i].Event.thumbWidth = tmp;
-
-
-                  } // swap 
-
-                  // console.log ("--------->" +"MW:"+myevents[i].Event.thumbWidth+ " MH:"+ myevents[i].Event.thumbHeight + " for Monitor:" + myevents[i].Event.MonitorName);
-
-
-
-
-
-                }
 
                 // in multiserver BasePath is login url for frames 
                 // http://login.url/index.php?view=frame&eid=19696772&fid=21
@@ -2771,34 +2740,18 @@ angular.module('zmApp.controllers')
               var tempMon = NVRDataModel.getMonitorObject(myevents[i].Event.MonitorId);
               if (tempMon != undefined) {
 
-                var ratio;
+              
                 var mw = parseInt(tempMon.Monitor.Width);
                 var mh = parseInt(tempMon.Monitor.Height);
                 var mo = parseInt(tempMon.Monitor.Orientation);
 
-                // scale by X if width > height                                
-                if (mw > mh) {
-                  ratio = mw / zm.thumbWidth;
-                  myevents[i].Event.thumbWidth = 200;
-                  myevents[i].Event.thumbHeight = Math.round(mh / ratio);
-                } else {
+                myevents[i].Event.Rotation = '';
 
-                  ratio = mh / zm.thumbWidth;
-                  myevents[i].Event.thumbHeight = 200;
-                  myevents[i].Event.thumbWidth = Math.round(mw / ratio);
-
-                }
-                if (mo != 0) {
-
-                  /*myevents[i].Event.Rotation = {
-                      'transform' : 'rotate('+mo+'deg'+')'
-                  };   */
-
-                  var tmp = myevents[i].Event.thumbHeight;
-                  myevents[i].Event.thumbHeight = myevents[i].Event.thumbWidth;
-                  myevents[i].Event.thumbWidth = tmp;
-
-                } // swap 
+               
+                var th = computeThumbnailSize(mw,mh,mo);
+              myevents[i].Event.thumbWidth = th.w;
+              myevents[i].Event.thumbHeight = th.h;
+               
               }
 
 
@@ -2829,13 +2782,50 @@ angular.module('zmApp.controllers')
 
     };
 
+
+    function computeThumbnailSize(mw,mh, mo) {
+
+      var ratio = mw/mh;
+      var result = {w:0, h:0};
+
+      if (mo!=0) {
+        
+        var tmp = mw;
+        mw = mh;
+        mh = tmp;
+      }
+
+     if (mw > mh) {
+       ratio = mh/mw;
+       mw = zm.thumbWidth;
+       mh = zm.thumbWidth * ratio;
+     }
+     else if (mh > mw) {
+      ratio = mw/mh;
+      mh = zm.thumbWidth;
+      mw = zm.thumbWidth * ratio;
+     }
+
+     else {
+       mw = zm.thumbWidth;
+       mw = zm.thumbWidth;
+     }
+     mw = Math.round(mw);
+     mh = Math.round(mh);
+
+    result.w = mw;
+    result.h = mh;
+    return result;
+
+    }
+
     $scope.constructThumbnail = function (event) {
       var stream = "";
       stream = event.Event.baseURL +
         "/index.php?view=image&show=capture&fid=" +
         (event.Event.MaxScoreFrameId ? event.Event.MaxScoreFrameId : "1&eid=" + event.Event.Id) +
-        "&width=" + event.Event.thumbWidth * 2 +
-        "&height=" + event.Event.thumbHeight * 2;
+        "&width=" + event.Event.thumbWidth*2 +
+        "&height=" + event.Event.thumbHeight*2;
       if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
 
       stream += NVRDataModel.insertBasicAuthToken();
