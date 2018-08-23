@@ -442,7 +442,7 @@ angular.module('zmApp.controllers')
                         var th = computeThumbnailSize(mw, mh, mo);
                         myevents[i].Event.thumbWidth = th.w;
                         myevents[i].Event.thumbHeight = th.h;
-
+                      }
 
                         // in multiserver BasePath is login url for frames 
                         // http://login.url/index.php?view=frame&eid=19696772&fid=21
