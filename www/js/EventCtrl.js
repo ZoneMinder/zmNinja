@@ -2797,8 +2797,6 @@ angular.module('zmApp.controllers')
           var mh = parseInt(tempMon.Monitor.Height);
           var mo = parseInt(tempMon.Monitor.Orientation);
 
-          // in recompute, we've already taken care of orientation
-          // so don't pass it again
           var th = computeThumbnailSize(mw, mh, mo);
           $scope.events[i].Event.thumbWidth = th.w;
           $scope.events[i].Event.thumbHeight = th.h;
