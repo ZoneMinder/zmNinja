@@ -4,8 +4,8 @@
   "displayName": "zmNinja",
   "cordova": {
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ],
     "plugins": {
       "cordova-plugin-add-swift-support": {},
@@ -46,7 +46,9 @@
       "cordova-plugin-email": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-certificates": {},
-      "cordova-library-helper-pp-fork": {}
+      "cordova-library-helper-pp-fork": {},
+      "cordova-plugin-multi-window": {},
+      "cordova-plugin-ignore-lint-translation": {}
     }
   },
   "dependencies": {
@@ -68,9 +70,11 @@
     "cordova-plugin-file": "^6.0.1",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-globalization": "^1.0.7",
+    "cordova-plugin-ignore-lint-translation": "0.0.1",
     "cordova-plugin-inappbrowser": "^1.7.1",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-media-pp-fork": "^1.0.2-dev",
+    "cordova-plugin-multi-window": "0.0.3",
     "cordova-plugin-network-information": "^2.0.1",
     "cordova-plugin-photo-library": "^1.2.2",
     "cordova-plugin-pin-dialog": "^0.1.3",
