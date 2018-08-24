@@ -1,11 +1,44 @@
 # Change Log
 
+## [v1.3.016](https://github.com/pliablepixels/zmNinja/tree/v1.3.016) (2018-08-24)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.013...v1.3.016)
+
+**Implemented enhancements:**
+
+- Support multi-window view on Android [\#682](https://github.com/pliablepixels/zmNinja/issues/682)
+- Add zmNinja keybindings for desktop [\#675](https://github.com/pliablepixels/zmNinja/issues/675)
+
+**Fixed bugs:**
+
+- Not auto switching to fallback server [\#681](https://github.com/pliablepixels/zmNinja/issues/681)
+- Settings keep disappearing [\#680](https://github.com/pliablepixels/zmNinja/issues/680)
+- Authentication issues between zm 1.30.4 and zmNinja 1.3.013 [\#679](https://github.com/pliablepixels/zmNinja/issues/679)
+- Desktop - Event list thumbnails knock buttons out of view [\#673](https://github.com/pliablepixels/zmNinja/issues/673)
+
+**Closed issues:**
+
+- Push Notification issue [\#639](https://github.com/pliablepixels/zmNinja/issues/639)
+
+**Merged pull requests:**
+
+- \#682 - various updates to handle multi-window pause state [\#687](https://github.com/pliablepixels/zmNinja/pull/687) ([pliablepixels](https://github.com/pliablepixels))
+- link to instructional videos [\#686](https://github.com/pliablepixels/zmNinja/pull/686) ([florie1706](https://github.com/florie1706))
+- \#681 make sure falllback happens in reasonable tim [\#685](https://github.com/pliablepixels/zmNinja/pull/685) ([florie1706](https://github.com/florie1706))
+- link to instructional videos [\#684](https://github.com/pliablepixels/zmNinja/pull/684) ([maymaymay](https://github.com/maymaymay))
+- \#681 make sure falllback happens in reasonable time, also improve pro… [\#683](https://github.com/pliablepixels/zmNinja/pull/683) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.3.013](https://github.com/pliablepixels/zmNinja/tree/v1.3.013) (2018-07-31)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.011...v1.3.013)
+
+**Fixed bugs:**
+
+- Android App sucked all my high speed data plan [\#647](https://github.com/pliablepixels/zmNinja/issues/647)
+
 ## [v1.3.011](https://github.com/pliablepixels/zmNinja/tree/v1.3.011) (2018-07-25)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.008...v1.3.011)
 
 **Implemented enhancements:**
 
-- Add zmNinja keybindings for desktop [\#675](https://github.com/pliablepixels/zmNinja/issues/675)
 - Allow montage resize to work with finer grained control [\#669](https://github.com/pliablepixels/zmNinja/issues/669)
 - support new API login mechanism [\#668](https://github.com/pliablepixels/zmNinja/issues/668)
 - Enhancement: For desktop instances, would be cool to control cams motion \(PTZ\) using keyboard arrow keys [\#648](https://github.com/pliablepixels/zmNinja/issues/648)
@@ -311,7 +344,7 @@
 - Added new strings according to v1.2.41 [\#512](https://github.com/pliablepixels/zmNinja/pull/512) ([florie1706](https://github.com/florie1706))
 
 ## [v1.2.41](https://github.com/pliablepixels/zmNinja/tree/v1.2.41) (2017-04-11)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v1.2.41)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.41)
 
 **Implemented enhancements:**
 
@@ -338,11 +371,11 @@
 - montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
 -  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
 
-## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.40)
-
 ## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v/1.2.40)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v/1.2.40)
+
+## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
 
 **Fixed bugs:**
 
