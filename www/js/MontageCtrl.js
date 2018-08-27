@@ -340,7 +340,8 @@ angular.module('zmApp.controllers')
         // $scope.$digest();
         NVRDataModel.debug("All images loaded, switching to snapshot...");
 
-        $scope.areImagesLoading = false;
+        $timeout (function() {$scope.areImagesLoading = false;});
+        
         currentStreamState = streamState.SNAPSHOT;
 
         if (simulStreaming) {
