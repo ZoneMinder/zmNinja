@@ -293,6 +293,7 @@ angular.module('zmApp.controllers')
         }
       }
 
+   
 
       function getZmsMultiPortSupport(forceReload) {
         var d = $q.defer();
@@ -2160,6 +2161,58 @@ angular.module('zmApp.controllers')
             return d.promise;
           }
 
+        },
+
+        zmPrivacyProcessed: function() {
+          var apiurl = loginData.apiurl;
+          var myurl = apiurl + '/configs/viewByName/ZM_SHOW_PRIVACY.json';
+          var d = $q.defer();
+
+          $http({
+            url: myurl,
+            method: 'GET',
+            transformResponse: undefined
+        })
+         // $http.get(myurl)
+          .then (function (textsucc) {
+           
+              var succ;
+              try {
+                console.log (textsucc);
+                succ = JSON.parse(textsucc.data);
+                if (succ.data) succ = succ.data;
+                if (succ.config) {
+                  if (succ.config.Value=='1') {
+                    debug ("Real value of PRIVACY is:"+succ.config.Value);
+                    d.resolve(false);
+                  }
+                  else  {
+                    debug ("Real value of PRIVACY is:"+succ.config.Value);
+                    d.resolve(true);
+                  }
+                  return d.promise;
+                }
+                else {
+                  debug ("ZM_SHOW_PRIVACY likely does not exist");
+                  d.resolve(true);
+                  return d.promise;
+                }
+                
+              }
+              catch (e) {
+                debug ("ZM_SHOW_PRIVACY parsing error, assuming it doesn't exist");
+                d.resolve(true);
+                return d.promise;
+              }
+
+            },
+          function (err) {
+            debug ("ZM_SHOW_PRIVACY returned an error, it likely doesn't exist");
+            d.resolve(true);
+            return d.promise;
+            
+          });
+          return d.promise;
         },
 
         //-----------------------------------------------------------------------------
