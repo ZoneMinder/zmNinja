@@ -51,6 +51,7 @@
     "kCycleMonitorsInterval"     :"Interwał cyklu monitora",
     "kCycleMontageInterval"      :"Interwał cyklu Podglądu",
     "kDataPrivacy"               :"Prywatność Danych",
+    "kDataPrivacyZM"             :"zmNinja nie będzie działał właściwie dokąd nie odczytasz polityki prywatności. Proszę otworzyć panel web ZoneMinder'a i zaakceptować bądź odrzucić politykę prywatności.",
     "kDay"                       :"Dzień",
     "kDecreaseSize"              :"zmniejsz rozmiar",
     "kDelete"                    :"Usuń",
