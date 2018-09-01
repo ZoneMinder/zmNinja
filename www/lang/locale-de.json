@@ -51,6 +51,7 @@
     "kCycleMonitorsInterval"     :"Durchwechselintervall Kameras",
     "kCycleMontageInterval"      :"Durchwechselintervall Übersicht",
     "kDataPrivacy"               :"Datenschutzhinweis",
+    "kDataPrivacyZM"             :"zmNinja wird nicht richtig funktionieren, bis Du die Datenschutzhinweise in ZoneMinder entweder aktzeptiert oder abgelehnt hast. Öffne bitte die Weboberfläche von ZoneMinder um dies zu tun.",
     "kDay"                       :"Tag",
     "kDecreaseSize"              :"verkleinern",
     "kDelete"                    :"Löschen",
