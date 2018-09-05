@@ -111,7 +111,8 @@ angular.module('zmApp', [
     eventServerErrorDelay: 5000, // time to wait till I report initial connect errors
     zmVersionCheckNag: 60 * 24, // in hrs 
     waitTimeTillResume: 5, // in sec, for ES error
-    versionWithLoginAPI: "1.31.45"
+    versionWithLoginAPI: "1.31.45",
+    androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw"
 
   })
 
@@ -1807,11 +1808,12 @@ angular.module('zmApp', [
 
       //console.log("localforage config");
       NVRDataModel.configureStorageDB()
-        .then(function () {
+      .then (function () {NVRDataModel.log ("localforage driver:"+localforage.driver()); return NVRDataModel.cloudSync(); } )
+      .then(function () {
           // this should alert "cordovaSQLiteDriver" when in an emulator or a device
-          NVRDataModel.log("localforage driver for storage:" + localforage.driver());
-
+         
           // Now lets import old data if it exists:
+          NVRDataModel.log ("Cloudsync operation complete, continuing...");
           var defaultServerName = $localstorage.get("defaultServerName");
 
           localforage.getItem("defaultServerName")
@@ -1979,7 +1981,7 @@ angular.module('zmApp', [
                       NVRDataModel.log("First time detected ");
                       $state.go("app.first-use");
                       return;
-                      //continueRestOfInit();
+    
                     } else {
                       continueRestOfInit();
                     }
@@ -2028,14 +2030,10 @@ angular.module('zmApp', [
         function loadServices() {
           NVRDataModel.log("Language file loaded, continuing with rest");
           NVRDataModel.init();
-
-
           zmCheckUpdates.start();
           NVRDataModel.log("Setting up POST LOGIN timer");
           zmAutoLogin.start();
-          setupPauseAndResume();
-
-
+          setupPauseAndResume();  
 
         }
 

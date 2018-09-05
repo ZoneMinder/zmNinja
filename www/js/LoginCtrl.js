@@ -573,6 +573,49 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //console.log ("SAVING: "+JSON.stringify($scope.loginData));
     NVRDataModel.setLogin($scope.loginData);
 
+
+    if ($rootScope.platformOS != 'desktop') {
+
+      if ($scope.loginData.saveToCloud) {
+        NVRDataModel.debug ("writing data to cloud");
+        
+        var serverGroupList = NVRDataModel.getServerGroups();
+        serverGroupList[$scope.loginData.serverName] = angular.copy($scope.loginData);
+
+        var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
+
+        window.cordova.plugin.cloudsettings.save({
+          'serverGroupList': ct,
+          'defaultServerName': $scope.loginData.serverName
+        },
+        function () {
+          NVRDataModel.debug("local data synced with cloud...");
+        
+        },
+        function () {
+          NVRDataModel.debug("error syncing cloud data...");
+         
+        }, true);
+      
+      }
+      else {
+        NVRDataModel.debug ("Clearing cloud settings...");
+        window.cordova.plugin.cloudsettings.save({
+        },
+        function () {
+          NVRDataModel.debug("cloud data cleared");
+        
+        },
+        function (err) {
+          NVRDataModel.debug("error clearing cloud data: " + err);
+         
+        }, true);
+      }
+
+
+    }
+
+
     $rootScope.runMode = NVRDataModel.getBandwidth();
 
     oldName = $scope.loginData.serverName;

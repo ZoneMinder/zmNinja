@@ -178,6 +178,7 @@ angular.module('zmApp.controllers')
         'loginAPISupported': false,
         'montageResizeSteps': 5,
         'currentServerVersion': '',
+        'saveToCloud': true
 
 
       };
@@ -293,7 +294,7 @@ angular.module('zmApp.controllers')
         }
       }
 
-   
+
 
       function getZmsMultiPortSupport(forceReload) {
         var d = $q.defer();
@@ -309,13 +310,12 @@ angular.module('zmApp.controllers')
                 configParams.ZM_MIN_STREAMING_PORT = data.config.Value;
                 setCurrentServerMultiPortSupported(true);
                 log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
-              }
-              else {
+              } else {
                 setCurrentServerMultiPortSupported(false);
                 log("ZM_MIN_STREAMING_PORT not configure, disabling");
                 configParams.ZM_MIN_STREAMING_PORT = 0;
               }
-          
+
 
               d.resolve(configParams.ZM_MIN_STREAMING_PORT);
               return (d.promise);
@@ -353,7 +353,7 @@ angular.module('zmApp.controllers')
         if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
           myurl = loginData.apiurl + '/host/getCredentials.json';
-          debug("Server version " + loginData.currentServerVersion+ " > 1.31.41, so using getCredentials API:" + myurl);
+          debug("Server version " + loginData.currentServerVersion + " > 1.31.41, so using getCredentials API:" + myurl);
           $http.get(myurl)
             .then(function (s) {
 
@@ -519,7 +519,7 @@ angular.module('zmApp.controllers')
         //var d = $q.defer();
 
         // if we are here, we should remove cache
-        
+
 
         loginData = angular.copy(newLogin);
         serverGroupList[loginData.serverName] = angular.copy(loginData);
@@ -528,24 +528,24 @@ angular.module('zmApp.controllers')
 
         //debug ("Crypto is: " + ct);
 
-        localforage.setItem("serverGroupList", ct)
-        .then(function () {
-          debug ("saving serverGroupList worked");
+        return localforage.setItem("serverGroupList", ct)
+          .then(function () {
+
             return localforage.setItem("defaultServerName", loginData.serverName);
-        })
-        .then (function () {
-            debug ("saving defaultServerName worked");
+          })
+          .then(function () {
+            //debug("saving defaultServerName worked");
             return localforage.removeItem("settings-temp-data");
-        })
-        .then (function() {
-          debug ("removing  settings-temp-data worked");
-        })
-        .catch(function (err) {
+          })
+
+          .catch(function (err) {
             log("SetLogin localforage store error " + JSON.stringify(err));
           });
 
 
-       
+
+
+
       }
 
       //credit: https://gist.github.com/alexey-bass/1115557
@@ -624,7 +624,7 @@ angular.module('zmApp.controllers')
         },
 
         isMultiPortDisabled: function () {
-            return loginData.disableSimulStreaming;
+          return loginData.disableSimulStreaming;
         },
 
         getCurrentServerVersion: function () {
@@ -815,11 +815,130 @@ angular.module('zmApp.controllers')
 
         },
 
+        cloudSync: function () {
+
+          var d = $q.defer();
+          if (!window.cordova) {
+            log("Cloud settings plugin not found, skipping cloud sync...");
+            d.resolve(true);
+            return d.promise;
+          }
+
+          window.cordova.plugin.cloudsettings.enableDebug(function(){
+            console.log("Debug mode enabled");
+        });
+        
+          log("CloudSync: Syncing with cloud if enabled...");
+
+          var sgl = "";
+          var decodedSgl = "";
+          var dsn = "";
+
+          localforage.getItem("serverGroupList")
+            .then(function (_sgl) {
+              sgl = _sgl;
+              return localforage.getItem("defaultServerName");
+            })
+            .then(function (_dsn) {
+              dsn = _dsn;
+              return true;
+            })
+            .then(function () {
+              if (sgl && dsn) {
+
+                if (typeof sgl == 'string') {
+                  log("user profile encrypted, decoding...");
+                  var bytes = CryptoJS.AES.decrypt(sgl.toString(), zm.cipherKey);
+                  decodedSgl = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    
+                }
+                else {
+                  decodedSgl = sgl;
+                }
+               
+
+                var loadedData = decodedSgl[dsn];
+         
+                if (!isEmpty(loadedData)) {
+                
+                  if (!loadedData.saveToCloud) {
+                    log ("Cloud sync is disabled, exiting...");
+                    d.resolve(true);
+                    return d.promise;
+                  }
+                }
+                log("Found valid local configuration, overwriting cloud settings...");
+                //console.log (">>>>>>>>>>>>>>SAVING: " + sgl + dsn);
+                window.cordova.plugin.cloudsettings.save({
+                    'serverGroupList': sgl,
+                    'defaultServerName': dsn
+                  },
+                  function () {
+                    log("local data synced with cloud...");
+                    d.resolve(true);
+                    return d.promise;
+                  },
+                  function () {
+                    log("error syncing cloud data...");
+                    d.resolve(true);
+                    return d.promise;
+                  }, true);
+
+              }
+              // bad or missing local config
+              else {
+                log("Did not find a valid local configuration, trying cloud...");
+
+                window.cordova.plugin.cloudsettings.exists(function (exists) {
+                  log ("A cloud configuration has been found");
+                  if (exists) {
+                    window.cordova.plugin.cloudsettings.load(function (cloudData) {
+                      console.log ("CLOUD DATA FOUND"+JSON.stringify(cloudData));
+                      if (cloudData && cloudData.defaultServerName && cloudData.serverGroupList) {
+                        log("retrieved a valid cloud config with a defaultServerName of:"+cloudData.defaultServerName);
+                        log("replacing local DB with cloud...");
+                        localforage.setItem('isFirstUse', false)
+                          .then(function () {
+                            log("cleared first use");
+                            return localforage.setItem("defaultServerName", cloudData.defaultServerName);
+                          })
+                          .then(function () {
+                            log("saved defaultServerName");
+                            return localforage.setItem("serverGroupList", cloudData.serverGroupList);
+                          })
+                          .then(function () {
+                            log("saved serverGroupList, returning from cloudSync()");
+                            d.resolve(true);
+                            return d.promise;
+                          });
+
+
+                      }
+                      // cloud did not have (useable)data
+                      else {
+                        log("Did not find a valid cloud config");
+                        d.resolve(true);
+                        return d.promise;
+                      }
+
+                    });
+                  } else {
+                    log("Cloud data does not exist");
+                    d.resolve(true);
+                    return d.promise;
+                  }
+                });
+
+              }
+            });
+
+
+          return d.promise;
+
+        },
+
         init: function () {
-          // console.log("****** DATAMODEL INIT SERVICE CALLED ********");
-
-
-
+          // console.log("****** DATAMODEL INIT SERVICE CALLED ********")
 
           log("ZMData init: checking for stored variables & setting up log file");
 
@@ -857,29 +976,6 @@ angular.module('zmApp.controllers')
 
             $ionicLoading.hide();
             serverGroupList = decodedVal;
-
-            // console.log(">>>> DECRYPTED serverGroupList " + JSON.stringify(serverGroupList));
-            var demoServer = "{\"serverName\":\"zmNinjaDemo\",\"username\":\"zmninja\",\"password\":\"zmNinja$xc129\",\"url\":\"https://demo.zoneminder.com/zm\",\"apiurl\":\"https://demo.zoneminder.com/zm/api\",\"eventServer\":\"\",\"maxMontage\":\"40\",\"streamingurl\":\"https://demo.zoneminder.com/cgi-bin-zm\",\"maxFPS\":\"3\",\"montageQuality\":\"50\",\"singleImageQuality\":\"100\",\"montageHistoryQuality\":\"50\",\"useSSL\":true,\"keepAwake\":true,\"isUseAuth\":\"1\",\"isUseEventServer\":false,\"disablePush\":false,\"eventServerMonitors\":\"\",\"eventServerInterval\":\"\",\"refreshSec\":\"2\",\"enableDebug\":false,\"usePin\":false,\"pinCode\":\"\",\"canSwipeMonitors\":true,\"persistMontageOrder\":false,\"onTapScreen\":\"Events\",\"enableh264\":true,\"gapless\":false,\"montageOrder\":\"\",\"montageHiddenOrder\":\"\",\"montageArraySize\":\"0\",\"graphSize\":2000,\"enableAlarmCount\":true,\"montageSize\":\"3\",\"useNphZms\":true,\"useNphZmsForEvents\":true,\"packMontage\":false,\"exitOnSleep\":false,\"forceNetworkStop\":false,\"defaultPushSound\":false,\"enableBlog\":true,\"use24hr\":false, \"packeryPositions\":\"\"}";
-            var demoS = JSON.parse(demoServer);
-            //console.log("JSON parsed demo" + JSON.stringify(demoS));
-
-            var isFoundDemo = false;
-            var as = Object.keys(serverGroupList);
-            for (var x = 0; x < as.length; x++) {
-              if (as[x] == 'zmNinjaDemo')
-                isFoundDemo = true;
-              //console.log ("************ FOUND SERVER NAME " + as[x]);
-              // if serverGroupList[x]
-            }
-
-            // Don't add the demo if there is another server
-            // because this means the user deleted it 
-
-            if (!isFoundDemo && as.length == 0) {
-              debug("Pushing demo server config to server groups");
-              //serverGroupList.push(demoS);
-              serverGroupList[demoS.serverName] = angular.copy(demoS);
-            }
 
             var sname;
             $ionicLoading.show({
@@ -1315,6 +1411,12 @@ angular.module('zmApp.controllers')
 
                   }
 
+                  if (typeof loginData.saveToCloud == 'undefined') {
+
+                    loginData.saveToCloud = true;
+
+                  }
+
 
                   loginData.canSwipeMonitors = true;
                   loginData.forceImageModePath = false;
@@ -1531,10 +1633,14 @@ angular.module('zmApp.controllers')
           //localforage.setItem("isFirstUse", val, 
           //   function(err) {if (err) log ("localforage error, //storing isFirstUse: " + JSON.stringify(err));});
           isFirstUse = val;
-          debug ("Setting isFirstUse to:"+val);
+          debug("Setting isFirstUse to:" + val);
           localforage.setItem("isFirstUse", val)
-          .then (function (succ) { debug ("Saved isFirstUse ok");})
-          .catch (function (err) { debug ("Error Saving isFirstUse:" + JSON.stringify(err));});
+            .then(function (succ) {
+              debug("Saved isFirstUse ok");
+            })
+            .catch(function (err) {
+              debug("Error Saving isFirstUse:" + JSON.stringify(err));
+            });
           //console.log (">>>>>>setting isFirstUse to " + val);
 
         },
@@ -1594,12 +1700,12 @@ angular.module('zmApp.controllers')
           $http.get(apiurl)
             .then(function (success) {
                 if (success.data.version) {
-                 // console.log ("API VERSION RETURNED: " + JSON.stringify(success));
+                  // console.log ("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
                   setCurrentServerVersion(success.data.version);
                   d.resolve(success.data.version);
                 } else {
-                  debug ("Setting APIValid to false as API version was not retrieved");
+                  debug("Setting APIValid to false as API version was not retrieved");
                   $rootScope.apiValid = false;
                   setCurrentServerVersion("");
                   d.reject("-1.-1.-1");
@@ -1628,30 +1734,30 @@ angular.module('zmApp.controllers')
 
           var myurl = loginData.url;
           log("Checking if reCaptcha is enabled in ZM...");
-//          console.log ("Recaptcha: "+myurl);
+          //          console.log ("Recaptcha: "+myurl);
           $http.get(myurl)
             .then(function (success) {
-   //           console.log ("Inside recaptcha success");
-              if (success.data.search("g-recaptcha") != -1) {
-                // recaptcha enable. zmNinja won't work
-                log("ZM has recaptcha enabled", "error");
-                displayBanner('error', ['Recaptcha must be disabled in Zoneminder', $rootScope.appName + ' will not work with recaptcha'], "", 8000);
-                d.resolve(true);
-                return (d.promise);
+                //           console.log ("Inside recaptcha success");
+                if (success.data.search("g-recaptcha") != -1) {
+                  // recaptcha enable. zmNinja won't work
+                  log("ZM has recaptcha enabled", "error");
+                  displayBanner('error', ['Recaptcha must be disabled in Zoneminder', $rootScope.appName + ' will not work with recaptcha'], "", 8000);
+                  d.resolve(true);
+                  return (d.promise);
 
-              } else {
+                } else {
+                  d.resolve(false);
+                  log("ZM has recaptcha disabled - good");
+                  return (d.promise);
+                }
+              },
+              function (err) {
+                // for whatever reason recaptcha check failed
+                //  console.log ("Inside recaptcha fail");
                 d.resolve(false);
-                log("ZM has recaptcha disabled - good");
-                return (d.promise);
-              }
-            },
-            function (err) {
-              // for whatever reason recaptcha check failed
-            //  console.log ("Inside recaptcha fail");
-              d.resolve(false);
                 log("Recaptcha failed, but assuming ZM has recaptcha disabled");
                 return (d.promise);
-            });
+              });
           return (d.promise);
         },
 
@@ -1926,7 +2032,7 @@ angular.module('zmApp.controllers')
                 debug("Monitor URL to fetch is:" + myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
                   .success(function (data) {
-                  //  console.log("HTTP success got " + JSON.stringify(data.monitors));
+                    //  console.log("HTTP success got " + JSON.stringify(data.monitors));
                     monitors = data.monitors;
 
 
@@ -2163,55 +2269,52 @@ angular.module('zmApp.controllers')
 
         },
 
-        zmPrivacyProcessed: function() {
+        zmPrivacyProcessed: function () {
           var apiurl = loginData.apiurl;
           var myurl = apiurl + '/configs/viewByName/ZM_SHOW_PRIVACY.json';
           var d = $q.defer();
 
           $http({
-            url: myurl,
-            method: 'GET',
-            transformResponse: undefined
-        })
-         // $http.get(myurl)
-          .then (function (textsucc) {
-           
-              var succ;
-              try {
-                console.log (textsucc);
-                succ = JSON.parse(textsucc.data);
-                if (succ.data) succ = succ.data;
-                if (succ.config) {
-                  if (succ.config.Value=='1') {
-                    debug ("Real value of PRIVACY is:"+succ.config.Value);
-                    d.resolve(false);
-                  }
-                  else  {
-                    debug ("Real value of PRIVACY is:"+succ.config.Value);
+              url: myurl,
+              method: 'GET',
+              transformResponse: undefined
+            })
+            // $http.get(myurl)
+            .then(function (textsucc) {
+
+                var succ;
+                try {
+                  console.log(textsucc);
+                  succ = JSON.parse(textsucc.data);
+                  if (succ.data) succ = succ.data;
+                  if (succ.config) {
+                    if (succ.config.Value == '1') {
+                      debug("Real value of PRIVACY is:" + succ.config.Value);
+                      d.resolve(false);
+                    } else {
+                      debug("Real value of PRIVACY is:" + succ.config.Value);
+                      d.resolve(true);
+                    }
+                    return d.promise;
+                  } else {
+                    debug("ZM_SHOW_PRIVACY likely does not exist");
                     d.resolve(true);
+                    return d.promise;
                   }
-                  return d.promise;
-                }
-                else {
-                  debug ("ZM_SHOW_PRIVACY likely does not exist");
+
+                } catch (e) {
+                  debug("ZM_SHOW_PRIVACY parsing error, assuming it doesn't exist");
                   d.resolve(true);
                   return d.promise;
                 }
-                
-              }
-              catch (e) {
-                debug ("ZM_SHOW_PRIVACY parsing error, assuming it doesn't exist");
+
+              },
+              function (err) {
+                debug("ZM_SHOW_PRIVACY returned an error, it likely doesn't exist");
                 d.resolve(true);
                 return d.promise;
-              }
 
-            },
-          function (err) {
-            debug ("ZM_SHOW_PRIVACY returned an error, it likely doesn't exist");
-            d.resolve(true);
-            return d.promise;
-            
-          });
+              });
           return d.promise;
         },
 
@@ -2604,11 +2707,11 @@ angular.module('zmApp.controllers')
 
         configureStorageDB: function () {
 
-          debug ("Inside configureStorageDB");
+          debug("Inside configureStorageDB");
           var d = $q.defer();
           localforage.config({
             name: zm.dbName
-    
+
           });
 
           if ($rootScope.platformOS == 'ios') {
@@ -2626,61 +2729,60 @@ angular.module('zmApp.controllers')
             ];
           }
 
-          debug ("configureStorageDB: trying order:" + JSON.stringify(order));
-          
+          debug("configureStorageDB: trying order:" + JSON.stringify(order));
+
           localforage.defineDriver(window.cordovaSQLiteDriver).then(function () {
-            return localforage.setDriver(
-              // Try setting cordovaSQLiteDriver if available,
-              // for desktops, it will pick the next one
-              order
-            );
-          })
-          .then ( function (succ) {
-            log("configureStorageDB:localforage driver for storage:" + localforage.driver());
-            debug ("configureStorageDB:Making sure this storage driver works...");
-            return localforage.setItem('testPromiseKey', 'testPromiseValue');
-          })
-          .then (function (succ) {
-            return localforage.getItem('testPromiseKey');
-          })
-          .then (function (succ) {
-            if (succ != 'testPromiseValue') {
-              log ("configureStorageDB:this driver could not restore a test val, reverting to localstorage and hoping for the best...");
-               return forceLocalStorage();
-            }
-            else {
-              debug ("configureStorageDB:test get/set worked, this driver is ok...");
-              d.resolve(true);
-              return d.promise;
-            }
-          })
-          .catch (function (err) {
-            log ("configureStorageDB:this driver errored, reverting to localstorage and hoping for the best...: " + JSON.stringify(err));
-            return forceLocalStorage();
-          });
-         
+              return localforage.setDriver(
+                // Try setting cordovaSQLiteDriver if available,
+                // for desktops, it will pick the next one
+                order
+              );
+            })
+            .then(function (succ) {
+              log("configureStorageDB:localforage driver for storage:" + localforage.driver());
+              debug("configureStorageDB:Making sure this storage driver works...");
+              return localforage.setItem('testPromiseKey', 'testPromiseValue');
+            })
+            .then(function (succ) {
+              return localforage.getItem('testPromiseKey');
+            })
+            .then(function (succ) {
+              if (succ != 'testPromiseValue') {
+                log("configureStorageDB:this driver could not restore a test val, reverting to localstorage and hoping for the best...");
+                return forceLocalStorage();
+              } else {
+                debug("configureStorageDB:test get/set worked, this driver is ok...");
+                d.resolve(true);
+                return d.promise;
+              }
+            })
+            .catch(function (err) {
+              log("configureStorageDB:this driver errored, reverting to localstorage and hoping for the best...: " + JSON.stringify(err));
+              return forceLocalStorage();
+            });
+
           return d.promise;
 
           function forceLocalStorage() {
 
-           // var d = $q.defer();
-            localforage.setDriver (localforage.LOCALSTORAGE)
-            .then (function (succ) {
-              log ("configureStorageDB:localforage forced setting to localstorage returned a driver of: " + localforage.driver());
-              d.resolve(true);
-              return d.promise;
-            },
-            function (err) {
-              log ("*** configureStorageDB: Error setting localStorage too, zmNinja WILL NOT SAVE ***");
-              log ("*** configureStorageDB: Dance, rejoice, keep re-configuring everytime you run ***");
-              d.resolve(true);
-              return d.promise;
-            });
+            // var d = $q.defer();
+            localforage.setDriver(localforage.LOCALSTORAGE)
+              .then(function (succ) {
+                  log("configureStorageDB:localforage forced setting to localstorage returned a driver of: " + localforage.driver());
+                  d.resolve(true);
+                  return d.promise;
+                },
+                function (err) {
+                  log("*** configureStorageDB: Error setting localStorage too, zmNinja WILL NOT SAVE ***");
+                  log("*** configureStorageDB: Dance, rejoice, keep re-configuring everytime you run ***");
+                  d.resolve(true);
+                  return d.promise;
+                });
             return d.promise;
 
           }
 
-      },
+        },
 
         getBaseURL: function (id) {
           var idnum = parseInt(id);
@@ -2701,39 +2803,41 @@ angular.module('zmApp.controllers')
           $ionicLoading.show({
             template: $translate.instant('kCleaningUp'),
             noBackdrop: true,
-        
-          }); 
+
+          });
 
           var d = $q.defer();
           log(loginData.url + "=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "undefined";
 
 
-          console.log ("CURRENT SERVER: "+loginData.currentServerVersion);
+          console.log("CURRENT SERVER: " + loginData.currentServerVersion);
 
           if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
-            debug ("Logging out using API method");
-            $http.get(loginData.apiurl+'/host/logout.json',{timeout: 7000})
-            .then (function(s) {
-              debug ("Logout returned... ");
-              d.resolve(true);
-              $ionicLoading.hide();
-              return d.promise;
-            },
-            function (e) {
-              debug ("Logout errored but really don't worry, your ZM version may not support it");
-              $ionicLoading.hide();
-              d.resolve(true);
-              return d.promise;
-            }
-          );
-          return d.promise;
+            debug("Logging out using API method");
+            $http.get(loginData.apiurl + '/host/logout.json', {
+                timeout: 7000
+              })
+              .then(function (s) {
+                  debug("Logout returned... ");
+                  d.resolve(true);
+                  $ionicLoading.hide();
+                  return d.promise;
+                },
+                function (e) {
+                  debug("Logout errored but really don't worry, your ZM version may not support it");
+                  $ionicLoading.hide();
+                  d.resolve(true);
+                  return d.promise;
+                }
+              );
+            return d.promise;
           }
 
 
           // old logout mode
-          debug ("Logging out using Web method");
+          debug("Logging out using Web method");
           $http({
               method: 'POST',
               timeout: 7000,
