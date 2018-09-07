@@ -1,7 +1,10 @@
 {
   "name": "com.pliablepixels.zmninjapro",
-  "version": "1.3.005",
+  "description": "Home security mobile app for ZoneMinder",
+  "version": "1.3.018",
   "displayName": "zmNinja",
+  "author": "Pliable Pixels",
+  "license": "custom see LICENSE.md",
   "cordova": {
     "platforms": [
       "ios",
@@ -100,10 +103,36 @@
   },
   "devDependencies": {
     "bower": "^1.8.4",
+    "electron": "^2.0.8",
+    "electron-builder": "^20.28.3",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-rename": "^1.2.3",
-    "gulp-sass": "^4.0.1"
+    "gulp-sass": "^4.0.1",
+    "npm-version": "^1.1.0"
+  },
+  "scripts": {
+    "electron": "electron .",
+    "pack": "electron-builder -mw --dir",
+    "dist": "electron-builder -mw"
+  },
+  "main": "electron_js/main.js",
+  "build": {
+    "asar": true,
+    "appId": "com.pliablepixels.zmninja_pro",
+    "files": [
+      "electron_js/main.js",
+      "www/**/*"
+    ],
+    "mac": {
+      "category": "productivity",
+      "icon": "resources/icon.png",
+      "target": "zip"
+    },
+    "win": {
+      "icon": "resources/icon.png",
+      "target": "portable"
+    }
   }
 }
