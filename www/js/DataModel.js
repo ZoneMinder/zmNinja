@@ -2078,7 +2078,13 @@ angular.module('zmApp.controllers')
                           }
                           if (serverFound) {
 
+                            if (!/^https?:\/\//i.test(multiservers[j].Server.Hostname)) {
+                              multiservers[j].Server.Hostname = 'http://' + multiservers[j].Server.Hostname;
+                            }
+
                             debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
+
+
 
                             // Now here is the logic, I need to retrieve serverhostname,
                             // and slap on the host protocol and path. Meh.
@@ -2086,8 +2092,23 @@ angular.module('zmApp.controllers')
                             var p = URI.parse(loginData.streamingurl);
                             var s = URI.parse(multiservers[j].Server.Hostname);
 
-                            //  debug("recording server parsed is " + JSON.stringify(s));
-                            // debug("portal  parsed is " + JSON.stringify(p));
+                           /* if (!p.port && !isNaN(p.path)) {
+                              debug ("Portal: port path reversed?");
+                              var tp = p.port;
+                              p.port = p.path;
+                              p.path = tp;
+                            }
+
+                            if (!s.port && !isNaN(s.path)) {
+                              debug ("Recording: port path reversed?");
+                              var tp = s.port;
+                              s.port = s.path;
+                              s.path = tp;
+                            }
+*/
+                           
+                           debug("recording server parsed is " + JSON.stringify(s));
+                           debug("portal  parsed is " + JSON.stringify(p));
 
                             var st = "";
                             var baseurl = "";
@@ -2106,13 +2127,13 @@ angular.module('zmApp.controllers')
 
                             st += s.host;
 
-                            // console.log ("STEP 1: ST="+st);
+                            //console.log ("STEP 1: ST="+st);
 
                             if (zmsPort <= 0 || loginData.disableSimulStreaming) {
                               if (p.port || s.port) {
                                 st += (s.port ? ":" + s.port : ":" + p.port);
                                 streamingurl = st;
-                                //  console.log ("STEP 2 no ZMS: ST="+st);
+                                 //console.log ("STEP 2 no ZMS: ST="+st);
 
                               }
 
@@ -2122,7 +2143,7 @@ angular.module('zmApp.controllers')
 
                               if (p.port || s.port)
                                 st += (s.port ? ":" + s.port : ":" + p.port);
-                              //    console.log ("STEP 2: ST="+st);
+                                 //console.log ("STEP 2: ST="+st);
 
                             }
 
