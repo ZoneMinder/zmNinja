@@ -1751,6 +1751,7 @@ angular.module('zmApp.controllers')
         return "";
       }
 
+      //console.log ("STREAMING="+monitor.Monitor.streamingURL);
       stream = monitor.Monitor.streamingURL +
         "/nph-zms?mode=" + getMode() +
         "&monitor=" + monitor.Monitor.Id +
