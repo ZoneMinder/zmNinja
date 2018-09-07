@@ -87,6 +87,9 @@ do
                 exe rm -fr $i/app
                 exe mkdir $i/app
                 exe mkdir $i/app/node_modules
+                exe mkdir $i/app/www
+                exe mkdir $i/app/electron_js
+
                 echo Copying over relevant node modules...
                 exe cp -R node_modules/electron-window-state $i/app/node_modules
                 exe cp -R node_modules/jsonfile $i/app/node_modules
@@ -98,15 +101,16 @@ do
                 exe cp -R node_modules/keypress $i/app/node_modules
                 
                 echo Copying over zmNinja code...
-                exe cp -R www/* $i/app/
-                exe cp electron_js/* $i/app
+                exe cp package.json $i/app
+                exe cp -R www/* $i/app/www
+                exe cp electron_js/main.js $i/app/electron_js
                 exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt $BASENAME
                 echo $APPVER > $BASENAME/version
                 exe cp resources/icon.png $BASENAME
                 exe cd $i 
-                cat app/js/DataModel.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/js/DataModel.js.tmp
-                exe rm -fr app/js/DataModel.js
-                exe mv app/js/DataModel.js.tmp app/js/DataModel.js
+                cat app/www/js/DataModel.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/www/js/DataModel.js.tmp
+                exe rm -fr app/www/js/DataModel.js
+                exe mv app/www/js/DataModel.js.tmp app/www/js/DataModel.js
                 
                 
                 rm -fr app.asar

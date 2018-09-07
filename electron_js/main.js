@@ -2,6 +2,8 @@ const electron = require('electron');
 const windowStateKeeper = require('electron-window-state');
 const {app, globalShortcut, Menu} = electron;
 const {dialog} = require('electron')
+const path = require('path');
+const url = require('url');
 
 // Module to create native browser window.
 const {BrowserWindow} = electron;
@@ -98,7 +100,15 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
   }
 
   // and load the index.html of the app.
-  win.loadURL(`file://${__dirname}/index.html`);
+
+  const startUrl = process.env.ELECTRON_START_URL || url.format({
+    pathname: path.join(__dirname, '/../www/index.html'),
+    protocol: 'file:',
+    slashes: true
+  });
+
+  win.loadURL(startUrl);
+  //win.loadURL(`file://${__dirname}/index.html`);
 
   // Create the Application's main menu
 
