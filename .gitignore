@@ -18,6 +18,7 @@ zmNinja.sublime-workspace
 typings/
 jsconfig.json
 package-lock.json
+dist/
 
 
 
