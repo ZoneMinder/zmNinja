@@ -6,9 +6,13 @@ Before you create an issue, please make sure you have read the [FAQ](https://git
 
 (example only, please edit this line) Android 6.0 Marshmallow
 
-**The version of the app you are reporting:**
+**The version of zmNinja you are reporting:**
 
 (example only, please edit this line) 1.1
+
+**The version of ZoneMinder you are using:**
+
+(example only, please edit this line) 1.30.4
 
 **Device details:**
 
