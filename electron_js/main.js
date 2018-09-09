@@ -71,8 +71,10 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
         y: mainWindowState.y,
         width: mainWindowState.width,
         height: mainWindowState.height,
+        icon: path.join(__dirname, '/../icon.png'),
         webPreferences:{nodeIntegration:false}});
 //
+    console.log (__dirname+'/../icon.png');
 
      
 
@@ -149,7 +151,7 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
       role: 'window',
       submenu: [
         {role: 'minimize'},
-        {role: 'close'}
+        {role: 'quit'}
       ]
     },
     {

@@ -1458,9 +1458,13 @@ angular.module('zmApp', [
         NVRDataModel.debug("**EXCEPTION**" + error.reason + " caused by " + error.cause);
       };
 
-      if ($rootScope.platformOS == 'desktop') {
+      
+      if ($rootScope.platformOS == 'desktop' && 0) {
 
         window.addEventListener('beforeunload', function (ev) {
+
+          // I don't think this works on windows
+          // the callback is not called, it seems
 
           // This was causing android reload issues - holy palooza
           /* if ($rootScope.platformOS != 'desktop') {
@@ -1480,7 +1484,7 @@ angular.module('zmApp', [
           });
 
         });
-      }
+  }
 
       // DPAD Handler - disabled for now
       // when ready add ionic cordova plugin add https://github.com/pliablepixels/cordova-plugin-android-tv.git
@@ -1707,7 +1711,7 @@ angular.module('zmApp', [
 
         $rootScope.dpadId = 0;
 
-        //console.log("HERE");
+       
 
         if ($rootScope.apiValid == false && toState.name != 'app.invalidapi' && toState.data.requireLogin == true) {
           event.preventDefault();
@@ -1717,8 +1721,15 @@ angular.module('zmApp', [
 
         }
 
+
+       
         if (NVRDataModel.hasLoginInfo() || toState.data.requireLogin == false) {
           //console.log("State transition is authorized");
+          NVRDataModel.debug ("Setting last-desktop-state to:"+JSON.stringify(toState));
+          localforage.setItem('last-desktop-state', {
+            'name': toState.name,
+            'params': toState.params
+          });
           $rootScope.dpadState = toState.name.replace("app.", "");
           return;
         } else {
@@ -1744,6 +1755,16 @@ angular.module('zmApp', [
           $state.transitionTo('app.login');
           return;
         }
+
+        // right about now, store last-state as the callback doesn't seem
+        // to work in Windows
+
+      
+        NVRDataModel.debug ("Setting last-desktop-state to:"+JSON.stringify(toState));
+        localforage.setItem('last-desktop-state', {
+          'name': toState,
+          'params': toParams
+        });
 
         return;
 
@@ -2000,19 +2021,29 @@ angular.module('zmApp', [
 
           localforage.getItem('last-desktop-state')
             .then(function (succ) {
-              //console.log ("FOUND  STATE" + JSON.stringify(succ) + ":"+succ);
+              console.log ("FOUND  STATE" + JSON.stringify(succ) + ":"+succ);
+
+              // sanitize this
+              if (!succ.name || typeof succ.name !== 'string') {succ.name = "app.montage"};
+              
+              if (!succ.params) {succ.params = {}};
               if (succ) {
-                if (succ.name == 'app.invalidapi' || succ.name == 'app.refresh' || succ.name == 'app.importantmessage') {
+                if (succ.name == 'app.invalidapi' || succ.name == 'app.refresh' || succ.name == 'app.importantmessage' || succ.name == "app.first-use" || !succ.name) {
                   succ.name = 'app.montage';
+                  localforage.setItem('last-desktop-state', succ.name);
                 }
                 $rootScope.lastState = succ.name;
                 if ($rootScope.lastState.indexOf("app.") == -1) {
                   $rootScope.lastState = "app." + $rootScope.lastState;
+                
+
                 }
                 $rootScope.lastStateParam = succ.params;
 
 
                 NVRDataModel.debug("last state=" + $rootScope.lastState + " param=" + $rootScope.lastStateParam);
+
+                
 
               }
               loadServices();

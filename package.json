@@ -1,7 +1,7 @@
 {
-  "name": "com.pliablepixels.zmninjapro",
+  "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version": "1.4.1",
+  "version":"1.3.018",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -114,25 +114,75 @@
   },
   "scripts": {
     "electron": "electron .",
-    "pack": "electron-builder -mw --dir",
-    "dist": "electron-builder -mw"
+    "dist-mac": "./electron_js/sync_versions.sh && electron-builder -m",
+    "dist-win": "./electron_js/sync_versions.sh && electron-builder -w",
+    "dist-lin": "./electron_js/sync_versions.sh && electron-builder -l",
+    "dist-all": "./electron_js/sync_versions.sh && electron-builder -mwl"
+ 
   },
   "main": "electron_js/main.js",
+
+ 
   "build": {
-    "asar": true,
-    "appId": "com.pliablepixels.zmninja_pro",
+    "appId": "com.pliablepixels.zmninjapro",
+    "productName":"zmninjapro",
+    "compression": "normal",
+    "asar":true,
+    "directories": {
+      "buildResources": "electron_js/icons"
+    },
     "files": [
       "electron_js/main.js",
-      "www/**/*"
+      "www/**/*",
+      "!node_modules/**/*"
     ],
+    "extraResources": [
+      "node_modules/electron-window-state/**/*",
+      "node_modules/jsonfile/**/*",
+      "node_modules/mkdirp/**/*",
+      "node_modules/deep-equal/**/*",
+      "node_modules/minimist/**/*",
+      "node_modules/menu/**/*",
+      "node_modules/clivas/**/*",
+      "node_modules/keypress/**/*"
+
+    ],
+
+    "extraFiles": [ 
+    {
+        "from":"resources/",
+        "to": "resources/app",
+        "filter": "icon.png"
+    }],
+ 
     "mac": {
       "category": "productivity",
-      "icon": "resources/icon.png",
-      "target": "zip"
+      "target": "dmg",
+      "icon": "icon.png"
     },
     "win": {
-      "icon": "resources/icon.png",
-      "target": "portable"
+      "icon": "icon.ico",
+      "target": [{
+        "target": "nsis",
+        "arch": [
+          "x64",
+          "ia32"
+        ]
+      }]
+    },
+    "linux": {
+      "category": "Utility",
+      "target": [{
+          "target": "AppImage",
+         
+          "arch": [
+            "x64",
+            "ia32",
+            "armv7l"
+        
+          ]}
+         
+      ]
     }
   }
 }

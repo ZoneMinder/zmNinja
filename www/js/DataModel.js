@@ -16,7 +16,11 @@ angular.module('zmApp.controllers')
 
       var currentServerMultiPortSupported = false;
 
-      var zmAppVersion = "unknown";
+      /*
+        DO NOT TOUCH zmAppVersion
+        It is changed by sync_version.sh
+      */
+      var zmAppVersion = "1.3.018";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
