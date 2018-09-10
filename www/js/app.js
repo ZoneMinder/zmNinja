@@ -1063,7 +1063,7 @@ angular.module('zmApp', [
           url: loginAPI,
           timeout:httpDelay,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          
+          transformResponse: undefined,
           transformRequest: function(obj) {
             var str = [];
             for(var p in obj)
@@ -1073,17 +1073,70 @@ angular.module('zmApp', [
           data: {user: loginData.username, pass: loginData.password}
         })
         //$http.get(loginAPI)
-          .then(function (succ) {
+          .then(function (textsucc) {
 
                 $ionicLoading.hide();
-                if (!succ.data.version) {
 
-                  NVRDataModel.debug ("API login returned fake success, going back to webscrape");
-                  var ld = NVRDataModel.getLogin();
+              var succ;
+
+          
+              try {
+
+                succ = JSON.parse(textsucc.data);
+
+                  if (!succ.version) {
+                    NVRDataModel.debug ("API login returned fake success, going back to webscrape");
+                    var ld = NVRDataModel.getLogin();
+                    ld.loginAPISupported = false;
+                    NVRDataModel.setLogin(ld);
+              
+                     loginWebScrape()
+                     .then ( function (succ) {
+                        d.resolve("Login Success");
+                        return d.promise;
+                     },
+                    function (err) {
+                      $ionicLoading.hide();
+                      d.reject("Login Error");
+                      return (d.promise);
+                    });
+                    return d.promise;
+                  }
+                  NVRDataModel.debug ("API based login returned... ");
+                  NVRDataModel.setCurrentServerVersion(succ.version);
+                  $ionicLoading.hide();
+                  //$rootScope.loggedIntoZm = 1;
+                  $rootScope.authSession = ''; 
+  
+                  if (succ.credentials) {
+                    $rootScope.authSession = "&" + succ.credentials;
+                    if (succ.append_password == '1') {
+                      $rootScope.authSession = $rootScope.authSession +
+                        loginData.password;
+                    }
+                  }
+                  
+                  var ldg = NVRDataModel.getLogin();
+                  ldg.loginAPISupported = true;
+                  NVRDataModel.setLogin(ldg);
+                  
+                  NVRDataModel.log("Stream authentication construction: " +
+                  $rootScope.authSession);
+  
+                  NVRDataModel.log("zmAutologin successfully logged into Zoneminder via API");
+  
+                
+  
+                  d.resolve("Login Success");
+  
+                  $rootScope.$broadcast('auth-success', succ);
+              }
+              catch (e) {
+                NVRDataModel.debug ("Login API approach did not work...");
+                var ld = NVRDataModel.getLogin();
                   ld.loginAPISupported = false;
                   NVRDataModel.setLogin(ld);
-            
-                   loginWebScrape()
+                  loginWebScrape()
                    .then ( function (succ) {
                       d.resolve("Login Success");
                       return d.promise;
@@ -1094,35 +1147,10 @@ angular.module('zmApp', [
                     return (d.promise);
                   });
                   return d.promise;
-                }
-                NVRDataModel.debug ("API based login returned... ");
-                NVRDataModel.setCurrentServerVersion(succ.data.version);
-                $ionicLoading.hide();
-                //$rootScope.loggedIntoZm = 1;
-                $rootScope.authSession = ''; 
 
-                if (succ.data.credentials) {
-                  $rootScope.authSession = "&" + succ.data.credentials;
-                  if (succ.data.append_password == '1') {
-                    $rootScope.authSession = $rootScope.authSession +
-                      loginData.password;
-                  }
-                }
+              }
+
                 
-                var ldg = NVRDataModel.getLogin();
-                ldg.loginAPISupported = true;
-                NVRDataModel.setLogin(ldg);
-                
-                NVRDataModel.log("Stream authentication construction: " +
-                $rootScope.authSession);
-
-                NVRDataModel.log("zmAutologin successfully logged into Zoneminder via API");
-
-              
-
-                d.resolve("Login Success");
-
-                $rootScope.$broadcast('auth-success', succ);
 
             },
             function (err) {
