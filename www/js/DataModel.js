@@ -2842,7 +2842,8 @@ angular.module('zmApp.controllers')
 
             debug("Logging out using API method");
             $http.get(loginData.apiurl + '/host/logout.json', {
-                timeout: 7000
+                timeout: 7000,
+                transformResponse: undefined
               })
               .then(function (s) {
                   debug("Logout returned... ");
