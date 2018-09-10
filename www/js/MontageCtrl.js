@@ -381,6 +381,7 @@ angular.module('zmApp.controllers')
               for (var j = 0; j < positions.length; j++) {
                 if ($scope.MontageMonitors[i].Monitor.Id == positions[j].attr) {
                   if (isNaN(positions[j].size)) positions[j].size = 20;
+                  if (positions[j].size == 0) positions[j].size = 20;
                   $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
                   $scope.MontageMonitors[i].Monitor.listDisplay = positions[j].display;
                   // NVRDataModel.debug("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " + positions[j].size + " and display:" + positions[j].display);
