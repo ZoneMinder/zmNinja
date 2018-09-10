@@ -2061,6 +2061,13 @@ angular.module('zmApp.controllers')
                         log("multi server list loaded" + JSON.stringify(data));
                         multiservers = data.servers;
 
+                        var multiserver_scheme = "http://";
+                        console.log ("PORTAL URL IS:"+loginData.url);
+                        if (loginData.url && (loginData.url.toLowerCase().indexOf("https://") != -1)) {
+                          debug ("Portal scheme is https, will use https for any multi-server");
+                          multiserver_scheme = "https://";
+                        }
+                        debug ("multi-server protocol will be:"+multiserver_scheme);
 
                         for (var i = 0; i < monitors.length; i++) {
 
@@ -2081,9 +2088,8 @@ angular.module('zmApp.controllers')
 
                           }
                           if (serverFound) {
-
                             if (!/^https?:\/\//i.test(multiservers[j].Server.Hostname)) {
-                              multiservers[j].Server.Hostname = 'http://' + multiservers[j].Server.Hostname;
+                              multiservers[j].Server.Hostname = multiserver_scheme + multiservers[j].Server.Hostname;
                             }
 
                             debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
