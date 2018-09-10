@@ -16,7 +16,6 @@ zmNinja.sublime-project
 zmNinja.sublime-workspace
 .vscode/
 typings/
-jsconfig.json
 package-lock.json
 dist/
 
