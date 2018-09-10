@@ -2062,7 +2062,7 @@ angular.module('zmApp.controllers')
                         multiservers = data.servers;
 
                         var multiserver_scheme = "http://";
-                        console.log ("PORTAL URL IS:"+loginData.url);
+                        //console.log ("PORTAL URL IS:"+loginData.url);
                         if (loginData.url && (loginData.url.toLowerCase().indexOf("https://") != -1)) {
                           debug ("Portal scheme is https, will use https for any multi-server");
                           multiserver_scheme = "https://";
