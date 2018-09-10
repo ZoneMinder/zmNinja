@@ -1,0 +1,10 @@
+{
+    "include": [
+        "www/**/*"
+    ],
+    "exclude": [
+        "node_modules/",
+        "dist/",
+        "platforms/"
+    ]
+}
