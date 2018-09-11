@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.3.018",
+  "version": "1.3.018",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -118,16 +118,13 @@
     "dist-win": "./electron_js/sync_versions.sh && electron-builder -w",
     "dist-lin": "./electron_js/sync_versions.sh && electron-builder -l",
     "dist-all": "./electron_js/sync_versions.sh && electron-builder -mwl"
- 
   },
   "main": "electron_js/main.js",
-
- 
   "build": {
     "appId": "com.pliablepixels.zmninjapro",
-    "productName":"zmninjapro",
+    "productName": "zmninjapro",
     "compression": "normal",
-    "asar":true,
+    "asar": true,
     "directories": {
       "buildResources": "electron_js/icons"
     },
@@ -145,16 +142,14 @@
       "node_modules/menu/**/*",
       "node_modules/clivas/**/*",
       "node_modules/keypress/**/*"
-
     ],
-
-    "extraFiles": [ 
-    {
-        "from":"resources/",
+    "extraFiles": [
+      {
+        "from": "resources/",
         "to": "resources/app",
         "filter": "icon.png"
-    }],
- 
+      }
+    ],
     "mac": {
       "category": "productivity",
       "target": "dmg",
@@ -162,26 +157,27 @@
     },
     "win": {
       "icon": "icon.ico",
-      "target": [{
-        "target": "nsis",
-        "arch": [
-          "x64",
-          "ia32"
-        ]
-      }]
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "linux": {
       "category": "Utility",
-      "target": [{
+      "target": [
+        {
           "target": "AppImage",
-         
           "arch": [
             "x64",
             "ia32",
             "armv7l"
-        
-          ]}
-         
+          ]
+        }
       ]
     }
   }

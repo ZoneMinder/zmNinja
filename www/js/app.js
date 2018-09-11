@@ -2052,9 +2052,9 @@ angular.module('zmApp', [
               console.log ("FOUND  STATE" + JSON.stringify(succ) + ":"+succ);
 
               // sanitize this
-              if (!succ.name || typeof succ.name !== 'string') {succ.name = "app.montage"};
-              
-              if (!succ.params) {succ.params = {}};
+              if (!succ.name || typeof succ.name !== 'string') {succ.name = "app.montage";}
+            
+              if (!succ.params) {succ.params = {};}
               if (succ) {
                 if (succ.name == 'app.invalidapi' || succ.name == 'app.refresh' || succ.name == 'app.importantmessage' || succ.name == "app.first-use" || !succ.name) {
                   succ.name = 'app.montage';
