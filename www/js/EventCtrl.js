@@ -166,6 +166,9 @@ angular.module('zmApp.controllers')
       document.addEventListener("pause", onPause, false);
       //console.log("I got STATE PARAM " + $stateParams.id);
       $scope.id = parseInt($stateParams.id, 10);
+
+      if (isNaN($scope.id)) $scope.id = 0;
+      
       $scope.showEvent = $stateParams.playEvent || false;
       $scope.monitors = NVRDataModel.getMonitorsNow();
 

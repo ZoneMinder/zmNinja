@@ -1788,7 +1788,7 @@ angular.module('zmApp', [
         // to work in Windows
 
       
-        NVRDataModel.debug ("Setting last-desktop-state to:"+JSON.stringify(toState));
+        NVRDataModel.debug ("Setting last-desktop-state to:"+JSON.stringify(toState)+" with params:"+JSON.stringify(toParams));
         localforage.setItem('last-desktop-state', {
           'name': toState,
           'params': toParams
