@@ -587,8 +587,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     sendCommand('1', $scope.connKey).
     then(function (resp) {
 
-        // console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
-        $scope.currentProgress.progress = resp.data.status.progress;
+        console.log ("PAUSE ANSWER IS " + JSON.stringify(resp));
+
+        if (resp && resp.data && resp.data.status)
+          $scope.currentProgress.progress = resp.data.status.progress;
+        else 
+        $scope.currentProgress.progress = 100;
+        
         // console.log ("STEP 0 progress is " + $scope.currentProgress.progress);
         $scope.slides = [];
 
