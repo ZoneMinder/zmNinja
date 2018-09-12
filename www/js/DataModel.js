@@ -182,7 +182,8 @@ angular.module('zmApp.controllers')
         'loginAPISupported': false,
         'montageResizeSteps': 5,
         'currentServerVersion': '',
-        'saveToCloud': true
+        'saveToCloud': true,
+        'montageReviewCollapse': true,
 
 
       };
@@ -1418,6 +1419,14 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.saveToCloud == 'undefined') {
 
                     loginData.saveToCloud = true;
+
+                  }
+
+                  
+
+                  if (typeof loginData.montageReviewCollapse == 'undefined') {
+
+                    loginData.montageReviewCollapse = true;
 
                   }
 
