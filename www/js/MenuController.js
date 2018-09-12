@@ -131,6 +131,10 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                           .then (function () {
 
               
+                            $ionicHistory.nextViewOptions({
+                              disableBack: true
+                            });
+
                             $state.go('app.refresh', {
                               "view": $state.current.name
                             });
@@ -144,6 +148,10 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                          
                           $rootScope.apiVersion = "0.0.0";
                           NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+
+                          $ionicHistory.nextViewOptions({
+                            disableBack: true
+                          });
 
                           $state.go('app.refresh', {
                             "view": $state.current.name
@@ -168,6 +176,9 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                       .then(function (data) {
                           var refresh = NVRDataModel.getMonitors(1);
                           $rootScope.apiVersion = data;
+                          $ionicHistory.nextViewOptions({
+                            disableBack: true
+                          });
                           $state.go('app.refresh', {
                             "view": $state.current.name
                           });
@@ -177,6 +188,9 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                           var refresh = NVRDataModel.getMonitors(1);
                           $rootScope.apiVersion = "0.0.0";
                           NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+                          $ionicHistory.nextViewOptions({
+                            disableBack: true
+                          });
                           $state.go('app.refresh', {
                             "view": $state.current.name
                           });
@@ -207,7 +221,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
     $scope.newServer = {
       val:""
-    }
+    };
     $scope.avs = Object.keys(NVRDataModel.getServerGroups());
 
     $scope.avs = $scope.avs.filter(function() { return true; });
