@@ -458,6 +458,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //console.log('Saving login');
     
     NVRDataModel.debug ("Inside save Items");
+
+    $rootScope.alarmCount = 0;
    
     NVRDataModel.setFirstUse(false);
     NVRDataModel.setCurrentServerVersion('');
