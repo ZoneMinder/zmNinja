@@ -48,10 +48,8 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
   function switchToServer(s) {
 
     $rootScope.alarmCount = 0;
-    if ($ionicSideMenuDelegate.isOpen()) {
-      $ionicSideMenuDelegate.toggleLeft();
-  
-    }
+    $rootScope.isAlarm = false;
+    
    
     // First lets kill current stuf
     NVRDataModel.debug ("** Resetting existing server");
@@ -227,7 +225,10 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
       buttons: [{
           text: $translate.instant('kButtonCancel'),
           onTap: function (e) {
-            //return "CANCEL";
+            if ($ionicSideMenuDelegate.isOpen()) {
+              $ionicSideMenuDelegate.toggleLeft();
+          
+            }
           }
 
         },
@@ -235,7 +236,12 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
           text: $translate.instant('kButtonOk'),
           onTap: function (e) {
             NVRDataModel.log("Server selected:" + $scope.newServer.val);
-            switchToServer($scope.newServer.val);
+            if ($ionicSideMenuDelegate.isOpen()) {
+              $ionicSideMenuDelegate.toggleLeft();
+          
+            }
+            if (NVRDataModel.getLogin().serverName != $scope.newServer.val)
+              switchToServer($scope.newServer.val);
 
             //$rootScope.$broadcast('server-changed');
 
