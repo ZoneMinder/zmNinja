@@ -9,6 +9,7 @@
 
 angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$templateRequest', '$sce', '$compile', '$http', '$ionicLoading', 'zm', '$timeout', '$q', '$ionicPopover', '$ionicPopup', 'message', '$ionicScrollDelegate', function ($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $templateRequest, $sce, $compile, $http, $ionicLoading, zm, $timeout, $q, $ionicPopover, $ionicPopup, message, $ionicScrollDelegate) {
 
+  var masonry = null;
   var timeFrom;
   var timeTo;
   var moments = [];
@@ -148,6 +149,11 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
 
     }
+
+    if ($scope.expand) 
+      _expandAll(moments);
+    else _collapseAll(moments);
+
   }
 
   // credit https://stackoverflow.com/a/17265125/1361529
@@ -311,66 +317,93 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   $scope.toggleExpandOrCollapse = function () {
 
+    $scope.expand = !$scope.expand;
     if ($scope.expand) expandAll();
     else collapseAll();
-    $scope.expand = !$scope.expand;
+   
+    
+    var ld = NVRDataModel.getLogin();
+    ld.montageReviewCollapse = $scope.expand;
+
+    console.log (">>>>>>>>> SAVING EXPAND AS:"+$scope.expand);
+    NVRDataModel.setLogin(ld);
 
   };
 
   function expandAll() {
-    for (var i = 0; i < $scope.moments.length; i++) {
-      $scope.moments[i].Event.hide = false;
-      $scope.moments[i].Event.icon = 'ion-code-working';
-      $scope.moments[i].Event.collapseCount = '';
+  
+    _expandAll($scope.moments);
+
+  }
+
+  function _expandAll(arr) {
+
+    NVRDataModel.debug ("Expanding all images");
+    for (var i = 0; i < arr.length; i++) {
+      arr[i].Event.hide = false;
+      arr[i].Event.icon = 'ion-code-working';
+      arr[i].Event.collapseCount = '';
     }
 
 
-    $timeout(function () {
-      masonry.reloadItems();
-      jiggleAway();
-
-    }, 100);
-
+    if (masonry) {
+      $timeout(function () {
+        masonry.reloadItems();
+        jiggleAway();
+  
+      }, 100);
+    }
+    
   }
 
   function collapseAll() {
 
+    _collapseAll($scope.moments);
+  }
+
+  function _collapseAll(arr) {
+    
+    NVRDataModel.debug ("Collapsing all images");
     for (var i = 0; i < monitors.length; i++) {
       var firstFound = false;
       var firstIndex = -1;
       var collapseCount = 0;
-      for (var j = 0; j < $scope.moments.length; j++) {
-        if ($scope.moments[j].Event.MonitorId == monitors[i].Monitor.Id) {
+      for (var j = 0; j < arr.length; j++) {
+        if (arr[j].Event.MonitorId == monitors[i].Monitor.Id) {
 
           if (!firstFound) {
             firstIndex = j; // remember this to create a collapsecount
-            $scope.moments[j].Event.hide = false;
-            $scope.moments[j].Event.icon = 'ion-images';
+            arr[j].Event.hide = false;
+            arr[j].Event.icon = 'ion-images';
             firstFound = true;
-          } else if (!$scope.moments[j].Event.pinned) {
+          } else if (!arr[j].Event.pinned) {
             // mid matches, but not first, and not pinned so collapse
-            $scope.moments[j].Event.hide = true;
-            $scope.moments[j].Event.icon = 'ion-code-working';
+            arr[j].Event.hide = true;
+            arr[j].Event.icon = 'ion-code-working';
             collapseCount++;
           }
         } // if same mid
       } // moment for j
       if (firstIndex != -1) {
         if (collapseCount > 0) {
-          $scope.moments[firstIndex].Event.collapseCount = collapseCount + 1;
+          arr[firstIndex].Event.collapseCount = collapseCount + 1;
         } else { // nothing to group
-          $scope.moments[firstIndex].Event.icon = 'ion-code-working';
-          $scope.moments[firstIndex].Event.collapseCount = "";
+          arr[firstIndex].Event.icon = 'ion-code-working';
+          arr[firstIndex].Event.collapseCount = "";
         }
 
       } // firstIndex
     } // monitor for i
 
-    $timeout(function () {
-      masonry.reloadItems();
-      jiggleAway();
+    if (masonry) {
 
-    }, 100);
+      $timeout(function () {
+        masonry.reloadItems();
+        jiggleAway();
+  
+      }, 100);
+    }
+    
   }
 
   //----------------------------------------------------------------
@@ -803,12 +836,20 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
   $scope.$on('$ionicView.beforeEnter', function () {
 
-    $scope.showIcons = true;
-    $scope.areImagesLoading = true;
-    $scope.expand = false;
-    $scope.isMaxScoreFramePresent = false;
+    //console.log ("HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+    monitors = angular.copy(message); // don't mess up the main monitors list
+    masonry = null;
     var ld = NVRDataModel.getLogin();
 
+    $scope.showIcons = true;
+    $scope.areImagesLoading = true;
+
+
+    $scope.expand = ld.montageReviewCollapse;
+    console.log (">>>>>>>>> RESTORING EXPAND AS:"+$scope.expand);
+    $scope.isMaxScoreFramePresent = false;
+    
     $scope.loadingStatus = $translate.instant('kLoading');
     $scope.gridSize = ld.momentGridSize;
     momentType = ld.momentArrangeBy;
@@ -824,7 +865,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     constructMask();
     $scope.isSubMenu = ld.enableMomentSubMenu;
 
-    monitors = angular.copy(message); // don't mess up the main monitors list
+   
 
     for (var i = 0; i < monitors.length; i++) {
       if (excludeMonitors.indexOf(monitors[i].Monitor.Id) != -1) {
