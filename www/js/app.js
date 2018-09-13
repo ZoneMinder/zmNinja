@@ -111,7 +111,7 @@ angular.module('zmApp', [
     eventServerErrorDelay: 5000, // time to wait till I report initial connect errors
     zmVersionCheckNag: 60 * 24, // in hrs 
     waitTimeTillResume: 5, // in sec, for ES error
-    versionWithLoginAPI: "1.31.45",
+    versionWithLoginAPI: "1.31.47",
     androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw"
 
   })
@@ -1055,7 +1055,7 @@ angular.module('zmApp', [
 
 
         //first login using new API
-        var loginAPI = loginData.apiurl + '/host/login.json';
+        var loginAPI = loginData.apiurl + '/host/logins.json';
      
 
         $http({
@@ -1754,7 +1754,11 @@ angular.module('zmApp', [
         if ((NVRDataModel.hasLoginInfo() || toState.data.requireLogin == false) && toState.name != "app.invalidapi" )  {
           //console.log("State transition is authorized");
 
-          if (toState.name != "app.refresh" && toState.name != "app.first-use") {
+          if (toState.name != "app.refresh" && 
+              toState.name != "app.first-use" &&
+              toState.name != "app.zm-portal-login"
+          )
+         {
 
             NVRDataModel.debug ("Setting last-desktop-state to:"+JSON.stringify(toState));
             localforage.setItem('last-desktop-state', {
@@ -2063,7 +2067,7 @@ angular.module('zmApp', [
             
               if (!succ.params) {succ.params = {};}
               if (succ) {
-                if (succ.name == 'app.invalidapi' || succ.name == 'app.refresh' || succ.name == 'app.importantmessage' || succ.name == "app.first-use" || !succ.name) {
+                if (succ.name == 'app.invalidapi' || succ.name == 'app.refresh' || succ.name == 'app.importantmessage' || succ.name == "app.first-use" || succ.name == "app.zm-portal-login" || !succ.name) {
                   succ.name = 'app.montage';
                   localforage.setItem('last-desktop-state', succ.name);
                 }
