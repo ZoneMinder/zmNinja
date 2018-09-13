@@ -1707,15 +1707,17 @@ angular.module('zmApp.controllers')
         // returns API version or none 
         //-------------------------------------------------------
         getAPIversion: function () {
-          debug("getAPIversion called");
+         
           var d = $q.defer();
           var apiurl = loginData.apiurl + '/host/getVersion.json';
+          debug("getAPIversion called with "+apiurl);
           $http.get(apiurl)
             .then(function (success) {
                 if (success.data.version) {
                   // console.log ("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
                   setCurrentServerVersion(success.data.version);
+                  debug("getAPI version succeded with "+success.data.version);
                   d.resolve(success.data.version);
                 } else {
                   debug("Setting APIValid to false as API version was not retrieved");

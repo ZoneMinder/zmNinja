@@ -3,8 +3,8 @@
         "www/**/*"
     ],
     "exclude": [
-        "node_modules/",
-        "dist/",
-        "platforms/"
+        "node_modules",
+        "dist",
+        "platforms"
     ]
 }
