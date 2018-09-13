@@ -2905,10 +2905,12 @@ angular.module('zmApp.controllers')
               }
             })
             .then(function (succ) {
+              $ionicLoading.hide();
                 d.resolve(true);
                 return d.promise;
               },
               function (err) {
+                $ionicLoading.hide();
                 d.resolve(true);
                 return d.promise;
               });

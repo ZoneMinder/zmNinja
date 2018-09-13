@@ -1754,7 +1754,7 @@ angular.module('zmApp', [
         if ((NVRDataModel.hasLoginInfo() || toState.data.requireLogin == false) && toState.name != "app.invalidapi" )  {
           //console.log("State transition is authorized");
 
-          if (toState.name != "app.refresh") {
+          if (toState.name != "app.refresh" && toState.name != "app.first-use") {
 
             NVRDataModel.debug ("Setting last-desktop-state to:"+JSON.stringify(toState));
             localforage.setItem('last-desktop-state', {
