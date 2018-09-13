@@ -49,6 +49,8 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
     $rootScope.alarmCount = 0;
     $rootScope.isAlarm = false;
+    $rootScope.authSession = '';
+   
     
     
    
@@ -68,6 +70,8 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
     var loginData = zmServers[s];
     NVRDataModel.debug("Retrieved state for this profile:" + JSON.stringify(loginData));
     NVRDataModel.setLogin(loginData);
+
+   
 
     if (!loginData.isUseBasicAuth) {
       $rootScope.basicAuthHeader = '';
