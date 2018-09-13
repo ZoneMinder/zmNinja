@@ -50,6 +50,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
     $rootScope.alarmCount = 0;
     $rootScope.isAlarm = false;
     
+    
    
     // First lets kill current stuf
     NVRDataModel.debug ("** Resetting existing server");
@@ -62,10 +63,21 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
     NVRDataModel.debug ("**Switching to new server...");
 
+    NVRDataModel.clearZmsMultiPortSupport();
     var zmServers = NVRDataModel.getServerGroups();
     var loginData = zmServers[s];
     NVRDataModel.debug("Retrieved state for this profile:" + JSON.stringify(loginData));
     NVRDataModel.setLogin(loginData);
+
+    if (!loginData.isUseBasicAuth) {
+      $rootScope.basicAuthHeader = '';
+      $rootScope.basicAuthToken = '';
+      // console.log ("CLEARING AUTH");
+    } else {
+      $rootScope.basicAuthToken = btoa(loginData.basicAuthUser + ':' + loginData.basicAuthPassword);
+      $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken;
+
+    }
 
     if (loginData.isUseEventServer) {
       EventServer.init();

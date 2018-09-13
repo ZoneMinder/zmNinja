@@ -1055,7 +1055,7 @@ angular.module('zmApp', [
 
 
         //first login using new API
-        var loginAPI = loginData.apiurl + '/host/logins.json';
+        var loginAPI = loginData.apiurl + '/host/login.json';
      
 
         $http({
