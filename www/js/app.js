@@ -1751,15 +1751,22 @@ angular.module('zmApp', [
 
 
        
-        if ((NVRDataModel.hasLoginInfo() || toState.data.requireLogin == false) && toState.name != "app.invalidapi" && toState.name != "app.refresh")  {
+        if ((NVRDataModel.hasLoginInfo() || toState.data.requireLogin == false) && toState.name != "app.invalidapi" )  {
           //console.log("State transition is authorized");
-          NVRDataModel.debug ("Setting last-desktop-state to:"+JSON.stringify(toState));
-          localforage.setItem('last-desktop-state', {
-            'name': toState.name,
-            'params': toState.params
-          });
+
+          if (toState.name != "app.refresh") {
+
+            NVRDataModel.debug ("Setting last-desktop-state to:"+JSON.stringify(toState));
+            localforage.setItem('last-desktop-state', {
+              'name': toState.name,
+              'params': toState.params
+            });
+            
+          
+          }
           $rootScope.dpadState = toState.name.replace("app.", "");
           return;
+          
         } else {
           NVRDataModel.log("In Auth State trans: Not logged in, requested to go to " + JSON.stringify(toState));
           // event.preventDefault();

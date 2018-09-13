@@ -1804,6 +1804,9 @@ angular.module('zmApp.controllers')
       currentStreamState = streamState.SNAPSHOT;
       // NVRDataModel.regenConnKeys();
       $scope.monitors = NVRDataModel.getMonitorsNow();
+
+      console.log ("MONITORS:"+JSON.stringify($scope.monitors));
+
       $scope.MontageMonitors = angular.copy($scope.monitors);
 
 

@@ -135,6 +135,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                               disableBack: true
                             });
 
+                            console.log ("+++ state go after getMonitors force");
                             $state.go('app.refresh', {
                               "view": $state.current.name
                             });
@@ -145,7 +146,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                         },
                         function (error) {
                           var refresh = NVRDataModel.getMonitors(1);
-                         
+                          console.log ("+++ state go after API version error: "+error);
                           $rootScope.apiVersion = "0.0.0";
                           NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
 
@@ -153,6 +154,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                             disableBack: true
                           });
 
+                         
                           $state.go('app.refresh', {
                             "view": $state.current.name
                           });
@@ -174,15 +176,20 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                     NVRDataModel.debug("refreshing API version...");
                     NVRDataModel.getAPIversion()
                       .then(function (data) {
-                          var refresh = NVRDataModel.getMonitors(1);
-                          $rootScope.apiVersion = data;
+                          var refresh = NVRDataModel.getMonitors(1)
+                          .then (function () {
+                            $rootScope.apiVersion = data;
                           $ionicHistory.nextViewOptions({
                             disableBack: true
                           });
+
+                          console.log ("+++ state go after 5xx");
                           $state.go('app.refresh', {
                             "view": $state.current.name
                           });
                           return;
+                          });
+                          
                         },
                         function (error) {
                           var refresh = NVRDataModel.getMonitors(1);
@@ -191,6 +198,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                           $ionicHistory.nextViewOptions({
                             disableBack: true
                           });
+                          console.log ("+++ state go after API version force");
                           $state.go('app.refresh', {
                             "view": $state.current.name
                           });
@@ -234,7 +242,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
       scope: $scope,
       template: '<ion-radio-fix ng-if="item" ng-repeat="item in avs" ng-value="item" ng-model="newServer.val"> {{item}} </ion-radio-fix>',
 
-      title: $translate.instant('kSelectLanguage'),
+      title: $translate.instant('kSelect'),
 
       buttons: [{
           text: $translate.instant('kButtonCancel'),
