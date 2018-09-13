@@ -145,20 +145,25 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
                         },
                         function (error) {
-                          var refresh = NVRDataModel.getMonitors(1);
-                          console.log ("+++ state go after API version error: "+error);
-                          $rootScope.apiVersion = "0.0.0";
-                          NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+                          var refresh = NVRDataModel.getMonitors(1)
+                          .then (function() {
+                            console.log ("+++ state go after API version error: "+error);
+                            $rootScope.apiVersion = "0.0.0";
+                            NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+  
+                            $ionicHistory.nextViewOptions({
+                              disableBack: true
+                            });
+  
+                           
+                            $state.go('app.refresh', {
+                              "view": $state.current.name
+                            });
+                            return;
 
-                          $ionicHistory.nextViewOptions({
-                            disableBack: true
                           });
 
                          
-                          $state.go('app.refresh', {
-                            "view": $state.current.name
-                          });
-                          return;
 
                         });
 
@@ -192,17 +197,21 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                           
                         },
                         function (error) {
-                          var refresh = NVRDataModel.getMonitors(1);
-                          $rootScope.apiVersion = "0.0.0";
-                          NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
-                          $ionicHistory.nextViewOptions({
-                            disableBack: true
+                          var refresh = NVRDataModel.getMonitors(1)
+                          .then (function() {
+                            $rootScope.apiVersion = "0.0.0";
+                            NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+                            $ionicHistory.nextViewOptions({
+                              disableBack: true
+                            });
+                            console.log ("+++ state go after API version force");
+                            $state.go('app.refresh', {
+                              "view": $state.current.name
+                            });
+                            return;
+
                           });
-                          console.log ("+++ state go after API version force");
-                          $state.go('app.refresh', {
-                            "view": $state.current.name
-                          });
-                          return;
+                         
                         });
 
                   });
