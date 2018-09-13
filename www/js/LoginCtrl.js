@@ -461,6 +461,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $rootScope.alarmCount = 0;
     $rootScope.isAlarm = false;
+    $rootScope.newBlogPost = '';
    
     NVRDataModel.setFirstUse(false);
     NVRDataModel.setCurrentServerVersion('');
@@ -576,6 +577,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //console.log ("SAVING: "+JSON.stringify($scope.loginData));
     NVRDataModel.setLogin($scope.loginData);
 
+
+    $rootScope.authSession = '';
 
     if ($rootScope.platformOS != 'desktop') {
 
