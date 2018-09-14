@@ -320,8 +320,6 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     $scope.expand = !$scope.expand;
     if ($scope.expand) expandAll();
     else collapseAll();
-   
-    
     var ld = NVRDataModel.getLogin();
     ld.montageReviewCollapse = $scope.expand;
 
