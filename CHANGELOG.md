@@ -1,5 +1,36 @@
 # Change Log
 
+## [v1.3.018](https://github.com/pliablepixels/zmNinja/tree/v1.3.018) (2018-09-14)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.016...v1.3.018)
+
+**Implemented enhancements:**
+
+- Allow easier switching between profiles [\#704](https://github.com/pliablepixels/zmNinja/issues/704)
+
+**Fixed bugs:**
+
+- If multi-server recording server name doesn't have a protocol, zmN doesn't show feeds [\#702](https://github.com/pliablepixels/zmNinja/issues/702)
+- Authentification with new iOs app version [\#690](https://github.com/pliablepixels/zmNinja/issues/690)
+- Authentication broken with API Access Error [\#689](https://github.com/pliablepixels/zmNinja/issues/689)
+
+**Closed issues:**
+
+- Allow better desktop packaging schemes [\#701](https://github.com/pliablepixels/zmNinja/issues/701)
+- Thumbnails not appearing in Events list [\#700](https://github.com/pliablepixels/zmNinja/issues/700)
+- switch between different Zoneminder servers [\#699](https://github.com/pliablepixels/zmNinja/issues/699)
+- Enable cloud sync [\#697](https://github.com/pliablepixels/zmNinja/issues/697)
+- Live Streaming Does Not Work for iOS 11.4.1 [\#694](https://github.com/pliablepixels/zmNinja/issues/694)
+- Check for privacy disclaimer accept/reject status in ZM 1.31.47 and beyond [\#692](https://github.com/pliablepixels/zmNinja/issues/692)
+- Desktop - Clicking the event notify icon when an event is being viewed results in a "No events to display message" [\#674](https://github.com/pliablepixels/zmNinja/issues/674)
+- Desktop: Window Title is Inconsistent [\#170](https://github.com/pliablepixels/zmNinja/issues/170)
+
+**Merged pull requests:**
+
+- \#697 initial code for cloud sync [\#703](https://github.com/pliablepixels/zmNinja/pull/703) ([florie1706](https://github.com/florie1706))
+- \#697 initial code for cloud sync [\#698](https://github.com/pliablepixels/zmNinja/pull/698) ([maymaymay](https://github.com/maymaymay))
+- \#692 zoneminder privacy warning [\#695](https://github.com/pliablepixels/zmNinja/pull/695) ([florie1706](https://github.com/florie1706))
+- \#692 zoneminder privacy warning [\#693](https://github.com/pliablepixels/zmNinja/pull/693) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.3.016](https://github.com/pliablepixels/zmNinja/tree/v1.3.016) (2018-08-24)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.013...v1.3.016)
 
