@@ -461,7 +461,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     $rootScope.alarmCount = 0;
     $rootScope.isAlarm = false;
-    $rootScope.newBlogPost = '';
+  
    
     NVRDataModel.setFirstUse(false);
     NVRDataModel.setCurrentServerVersion('');
