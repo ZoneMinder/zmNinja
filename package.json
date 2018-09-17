@@ -143,13 +143,7 @@
       "node_modules/clivas/**/*",
       "node_modules/keypress/**/*"
     ],
-    "extraFiles": [
-      {
-        "from": "resources/",
-        "to": "resources/app",
-        "filter": "icon.png"
-      }
-    ],
+   
     "mac": {
       "category": "productivity",
       "target": "dmg",
