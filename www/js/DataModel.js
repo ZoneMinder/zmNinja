@@ -1903,7 +1903,7 @@ angular.module('zmApp.controllers')
           req = req + "&auth=" + myauthtoken;
           // req = req + "&command=17";
 
-          debug("DataModel: Pausing live stream ck:" + ck+" for "+name);
+          debug("DataModel: Pausing live stream ck:" + ck+" for "+name + " url:"+url);
           return $http.get(req + "&command=1")
             .then(
               function (s) {
