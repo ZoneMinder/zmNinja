@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.018";
+      var zmAppVersion = "1.3.020";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -829,9 +829,9 @@ angular.module('zmApp.controllers')
             return d.promise;
           }
 
-          window.cordova.plugin.cloudsettings.enableDebug(function(){
+       /*   window.cordova.plugin.cloudsettings.enableDebug(function(){
             console.log("Debug mode enabled");
-        });
+        });*/
         
           log("CloudSync: Syncing with cloud if enabled...");
 
@@ -883,8 +883,8 @@ angular.module('zmApp.controllers')
                     d.resolve(true);
                     return d.promise;
                   },
-                  function () {
-                    log("error syncing cloud data...");
+                  function (err) {
+                    log("error syncing cloud data..."+err);
                     d.resolve(true);
                     return d.promise;
                   }, true);
@@ -1893,7 +1893,7 @@ angular.module('zmApp.controllers')
           return monitors;
         },
 
-        pauseLiveStream: function (ck, url) {
+        pauseLiveStream: function (ck, url, name) {
           if (!url) url = loginData.url;
 
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
@@ -1903,7 +1903,7 @@ angular.module('zmApp.controllers')
           req = req + "&auth=" + myauthtoken;
           // req = req + "&command=17";
 
-          debug("DataModel: Pausing live stream ck:" + ck);
+          debug("DataModel: Pausing live stream ck:" + ck+" for "+name);
           return $http.get(req + "&command=1")
             .then(
               function (s) {
@@ -1917,7 +1917,7 @@ angular.module('zmApp.controllers')
 
         },
 
-        resumeLiveStream: function (ck, url) {
+        resumeLiveStream: function (ck, url, name) {
           if (!url) url = loginData.url;
 
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
@@ -1927,7 +1927,7 @@ angular.module('zmApp.controllers')
           req = req + "&auth=" + myauthtoken;
           // req = req + "&command=17";
 
-          debug("DataModel: Resuming live stream ck:" + ck);
+          debug("DataModel: Resuming live stream ck:" + ck+ " for "+name);
           return $http.get(req + "&command=2")
             .then(
               function (s) {
