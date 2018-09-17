@@ -34,7 +34,8 @@ angular.module('zmApp.controllers')
     var streamState = {
       SNAPSHOT: 1,
       ACTIVE: 2,
-      STOPPED: 3
+      STOPPED: 3,
+      PAUSED:4
     };
 
     var currentStreamState = streamState.SNAPSHOT; // first load snapshot
@@ -304,6 +305,7 @@ angular.module('zmApp.controllers')
 
       var elem = angular.element(document.getElementById("mygrid"));
 
+      var loadCount = 0;
       //console.log ("**** mygrid is " + JSON.stringify(elem));
 
       if (pckry) pckry.destroy();
@@ -327,18 +329,43 @@ angular.module('zmApp.controllers')
         // lay out every image if a pre-arranged position has not been found
 
         $timeout(function () {
-          if (layouttype) pckry.layout();
+          if (layouttype || 1) pckry.layout();
         }, 100);
 
         progressCalled = true;
+        loadCount++;
+        console.log ("loaded "+loadCount+" of "+positions.length);
 
         // if (layouttype) $timeout (function(){layout(pckry);},100);
       });
+
+      $timeout (function() {
+
+        if ($scope.areImagesLoading) {
+          NVRDataModel.debug ("Images still loading after 15secs?");
+          allImagesLoadedOrFailed();
+        }
+
+      }, 15000);
 
       imagesLoaded(elem).on('always', function () {
         //console.log ("******** ALL IMAGES LOADED");
         // $scope.$digest();
         NVRDataModel.debug("All images loaded, switching to snapshot...");
+        allImagesLoadedOrFailed();
+      });
+
+
+
+      imagesLoaded(elem).on('fail', function () {
+        NVRDataModel.debug("All images loaded, but some broke, switching to snapshot...");
+        //console.log ("******** ALL IMAGES LOADED");
+        // $scope.$digest();
+        allImagesLoadedOrFailed();
+      });
+
+      function allImagesLoadedOrFailed() {
+       
 
         $timeout (function() {$scope.areImagesLoading = false;});
         
@@ -411,7 +438,7 @@ angular.module('zmApp.controllers')
 
         }, 20);
 
-      });
+      }
 
       function itemDragged(item) {
         NVRDataModel.debug("drag complete");
@@ -1152,21 +1179,19 @@ angular.module('zmApp.controllers')
 
     $scope.openModal = function (mid, controllable, controlid, connKey, monitor) {
 
-      currentStreamState = streamState.STOPPED;
+      currentStreamState = streamState.PAUSED;
       $scope.isModalStreamPaused = true; // we stop montage and start modal stream in snapshot first
       $timeout(function () { // after render
 
 
         if (simulStreaming) {
-          NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
+          NVRDataModel.debug("Pausing all streams in montage to save memory/nw...");
 
-          if ($rootScope.platformOS == 'ios') {
-
-          } else {
+       
             for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
+              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.pauseLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
             }
-          }
+      
         }
 
       });
@@ -1295,19 +1320,17 @@ angular.module('zmApp.controllers')
       // once regenerated 
       if (simulStreaming) {
 
-        NVRDataModel.debug("Re-creating all stream connkeys in montage ...");
-        NVRDataModel.regenConnKeys();
+        NVRDataModel.debug("Resuming all stream connkeys in montage ...");
+
+        for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+          if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVRDataModel.resumeLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
+        }
+       /* NVRDataModel.regenConnKeys();
         $scope.monitors = NVRDataModel.getMonitorsNow();
-        $scope.MontageMonitors = angular.copy($scope.monitors);
+        $scope.MontageMonitors = angular.copy($scope.monitors);*/
       }
 
-      // we need to do this as we hide the view for snapshot as well
-      //streamState = false;
-      $timeout(function () // after render
-        {
-          initPackery();
-        }, zm.packeryTimer);
-
+     
     }
 
 
