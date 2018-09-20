@@ -42,6 +42,35 @@ if (shouldQuit) {
   return;
 }
 
+function newWindow() {
+  createAlternateWindow();
+}
+
+
+
+function createAlternateWindow() {
+
+
+  var newWin = new BrowserWindow({
+    x: 10,
+    y: 10,
+    width: 800,
+    height: 800,
+    icon: path.join(__dirname, '/../icon.png'),
+    webPreferences:{nodeIntegration:false}});
+
+    const startUrl = process.env.ELECTRON_START_URL || url.format({
+      pathname: path.join(__dirname, '/../www/index.html'),
+      protocol: 'file:',
+      slashes: true
+    });
+    
+    newWin.loadURL(startUrl);
+
+}
+
+
+
 
 function createWindow() {
 
@@ -58,9 +87,15 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
     win.webContents.openDevTools();
   })
 
+  const newwinx = globalShortcut.register('CommandOrControl+Alt+N', () => {
+    console.log('CommandOrControl+Alt+N is pressed');
+    createAlternateWindow();
+  })
+
 
   // Create the browser window.
   let mainWindowState = windowStateKeeper({
+      //file: 'main.json',
       defaultWidth: 1000,
       defaultHeight: 800,
       webPreferences:{nodeIntegration:false}
@@ -118,104 +153,104 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
  // Menu.setApplicationMenu(menu)
  
 
-  const template = [
-    {
-      label: 'Edit',
-      submenu: [
-        {role: 'undo'},
-        {role: 'redo'},
-        {type: 'separator'},
-        {role: 'cut'},
-        {role: 'copy'},
-        {role: 'paste'},
-        {role: 'pasteandmatchstyle'},
-        {role: 'delete'},
-        {role: 'selectall'}
-      ]
-    },
-    {
-      label: 'View',
-      submenu: [
-        {role: 'reload'},
-        {role: 'forcereload'},
-        {role: 'toggledevtools'},
-        {type: 'separator'},
-        {role: 'resetzoom'},
-        {role: 'zoomin'},
-        {role: 'zoomout'},
-        {type: 'separator'},
-        {role: 'togglefullscreen'}
-      ]
-    },
-    {
-      role: 'window',
-      submenu: [
-        {role: 'minimize'},
-        {role: 'quit'}
-      ]
-    },
-    {
-      role: 'help',
-      submenu: [
-        {
-          label: 'Learn More',
-          click () { require('electron').shell.openExternal('https://electronjs.org') }
-        }
-      ]
-    }
-  ]
-  
-  if (process.platform === 'darwin') {
-    template.unshift({
-      label: app.getName(),
-      submenu: [
-        {role: 'about'},
-        {type: 'separator'},
-        {role: 'services', submenu: []},
-        {type: 'separator'},
-        {role: 'hide'},
-        {role: 'hideothers'},
-        {role: 'unhide'},
-        {type: 'separator'},
-        {role: 'quit'}
-      ]
-    })
-  
-    // Edit menu
-    template[1].submenu.push(
+ const template = [
+  {
+    label: 'Edit',
+    submenu: [
+      {role: 'undo'},
+      {role: 'redo'},
       {type: 'separator'},
-      {
-        label: 'Speech',
-        submenu: [
-          {role: 'startspeaking'},
-          {role: 'stopspeaking'}
-        ]
-      }
-    )
-  
-    // Window menu
-    template[3].submenu = [
-      {role: 'close'},
+      {role: 'cut'},
+      {role: 'copy'},
+      {role: 'paste'},
+      {role: 'pasteandmatchstyle'},
+      {role: 'delete'},
+      {role: 'selectall'}
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      {role: 'reload'},
+      {role: 'forcereload'},
+      {role: 'toggledevtools'},
+      {type: 'separator'},
+      {role: 'resetzoom'},
+      {role: 'zoomin'},
+      {role: 'zoomout'},
+      {type: 'separator'},
+      {role: 'togglefullscreen'}
+    ]
+  },
+  {
+    role: 'window',
+    submenu: [
       {role: 'minimize'},
-      {role: 'zoom'},
-      {type: 'separator'},
-      {role: 'front'}
+      {role: 'quit'}
+    ]
+  },
+  {
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More',
+        click () { require('electron').shell.openExternal('https://electronjs.org') }
+      }
     ]
   }
-  
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+]
 
-  // Open the DevTools.
-  //win.webContents.openDevTools();
-  // Emitted when the window is closed.
-  win.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    win.removeAllListeners();
-    win = null;
-  });
+if (process.platform === 'darwin') {
+  template.unshift({
+    label: app.getName(),
+    submenu: [
+      {role: 'about'},
+      {type: 'separator'},
+      {role: 'services', submenu: []},
+      {type: 'separator'},
+      {role: 'hide'},
+      {role: 'hideothers'},
+      {role: 'unhide'},
+      {type: 'separator'},
+      {role: 'quit'}
+    ]
+  })
+
+  // Edit menu
+  template[1].submenu.push(
+    {type: 'separator'},
+    {
+      label: 'Speech',
+      submenu: [
+        {role: 'startspeaking'},
+        {role: 'stopspeaking'}
+      ]
+    }
+  )
+
+  // Window menu
+  template[3].submenu = [
+    {role: 'close'},
+    {role: 'minimize'},
+    {role: 'zoom'},
+    {type: 'separator'},
+    {role: 'front'}
+  ]
+}
+
+const menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);
+
+// Open the DevTools.
+//win.webContents.openDevTools();
+// Emitted when the window is closed.
+win.on('closed', () => {
+  // Dereference the window object, usually you would store windows
+  // in an array if your app supports multi windows, this is the time
+  // when you should delete the corresponding element.
+  win.removeAllListeners();
+  win = null;
+});
 }
 
 // This method will be called when Electron has finished
