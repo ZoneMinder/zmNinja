@@ -313,7 +313,7 @@
     "kSave"                      :"Save",
     "kSavingSnapshot"            :"saving snapshot",
     "kSaveToCloud"               :"sync with cloud",
-    "kSaveToCloudIOS"           :"saves settings to your personal iCloud account",
+    "kSaveToCloudIOS"           :"saves settings to your personal iCloud account. May take several hours to sync",
     "kSaveToCloudANDROID"        :"saves settings via Android's Backup Service. May take several hours to sync",
     "kScore"                     :"score",
     "kScrub"                     :"Scrub",

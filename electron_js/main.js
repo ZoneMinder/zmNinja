@@ -87,10 +87,10 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
     win.webContents.openDevTools();
   })
 
-  const newwinx = globalShortcut.register('CommandOrControl+Alt+N', () => {
+  /*const newwinx = globalShortcut.register('CommandOrControl+Alt+N', () => {
     console.log('CommandOrControl+Alt+N is pressed');
     createAlternateWindow();
-  })
+  })*/
 
 
   // Create the browser window.
