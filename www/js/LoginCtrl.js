@@ -596,6 +596,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         },
         function () {
           NVRDataModel.debug("local data synced with cloud...");
+    
         
         },
         function (err) {

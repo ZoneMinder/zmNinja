@@ -260,6 +260,14 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   $scope.$on('$ionicView.enter', function () {
     //console.log("**VIEW ** Log Ctrl Entered");
 
+
+   /*n $scope.cloudString = "loading...";
+    window.cordova.plugin.cloudsettings.load(
+      function (succ) {$scope.cloudString = JSON.stringify(succ);},
+      function (err) {$scope.cloudString = JSON.stringify(err);}
+
+    );*/
+
     $ionicSideMenuDelegate.canDragContent(false);
     $scope.selectOn = false;
     NVRDataModel.setAwake(false);

@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.020";
+      var zmAppVersion = "1.3.022";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -895,10 +895,12 @@ angular.module('zmApp.controllers')
                 log("Did not find a valid local configuration, trying cloud...");
 
                 window.cordova.plugin.cloudsettings.exists(function (exists) {
-                  log ("A cloud configuration has been found");
+               
                   if (exists) {
+                    log ("A cloud configuration has been found");
                     window.cordova.plugin.cloudsettings.load(function (cloudData) {
                       console.log ("CLOUD DATA FOUND"+JSON.stringify(cloudData));
+                      debug ("Cloud data retrieved is:"+JSON.stringify(cloudData));
                       if (cloudData && cloudData.defaultServerName && cloudData.serverGroupList) {
                         log("retrieved a valid cloud config with a defaultServerName of:"+cloudData.defaultServerName);
                         log("replacing local DB with cloud...");
