@@ -1967,9 +1967,9 @@ angular.module('zmApp', [
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
 
-        if (window.cordova && window.cordova.plugins.Keyboard) {
-          // console.log("no keyboard");
-          // cordova.plugins.Keyboard.disableScroll(true);
+        if (window.cordova ) {
+          console.log("------------->Keyboard foonone");
+           //window.cordova.plugins.Keyboard.disableScroll(true);
         }
         if (window.StatusBar) {
           // org.apache.cordova.statusbar required
@@ -2255,7 +2255,7 @@ angular.module('zmApp', [
     }]);
 
     // If you do this, Allow Origin can't be *
-    //$httpProvider.defaults.withCredentials = true;
+    $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
     $ionicConfigProvider.navBar.alignTitle('center');
     //$ionicConfigProvider.backButton.text('').icon('ion-chevron-left');

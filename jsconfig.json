@@ -1,11 +1,18 @@
 {
+
+    
     "include": [
-        "www/**/*"
+        "www/js/**/*",
+        "www/css/**/*",
+        "www/templates/**/*"
        
     ],
     "exclude": [
-        "node_modules/**/*",
-        "dist/**/*",
-        "platforms/**/*"
+        "node_modules",
+        "**/node_modules/*",
+        "dist",
+        "platforms",
+        ".vscode",
+
     ]
 }

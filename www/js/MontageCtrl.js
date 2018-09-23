@@ -334,7 +334,7 @@ angular.module('zmApp.controllers')
 
         progressCalled = true;
         loadCount++;
-        console.log ("loaded "+loadCount+" of "+positions.length);
+       // console.log ("loaded "+loadCount+" of "+positions.length);
 
         // if (layouttype) $timeout (function(){layout(pckry);},100);
       });
@@ -1828,7 +1828,7 @@ angular.module('zmApp.controllers')
       // NVRDataModel.regenConnKeys();
       $scope.monitors = NVRDataModel.getMonitorsNow();
 
-      console.log ("MONITORS:"+JSON.stringify($scope.monitors));
+      //console.log ("MONITORS:"+JSON.stringify($scope.monitors));
 
       $scope.MontageMonitors = angular.copy($scope.monitors);
 
