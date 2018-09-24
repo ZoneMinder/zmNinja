@@ -25,7 +25,7 @@ angular.module('zmApp', [
     'com.2fdevs.videogular',
     'com.2fdevs.videogular.plugins.controls',
     'com.2fdevs.videogular.plugins.overlayplay',
-    'ionic-native-transitions',
+    //'ionic-native-transitions',
     'mgo-angular-wizard',
     'pascalprecht.translate',
     'uk.ac.soton.ecs.videogular.plugins.cuepoints',
@@ -1380,7 +1380,7 @@ angular.module('zmApp', [
   // First run in ionic
   //====================================================================
 
-  .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, NVRDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions, $translate, $localstorage) {
+  .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, NVRDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, /* $ionicNativeTransitions,*/ $translate, $localstorage) {
 
 
     $ionicPlatform.ready(function () {
@@ -2000,13 +2000,14 @@ angular.module('zmApp', [
 
         // console.log("file logger");
 
-        if (NVRDataModel.getLogin().disableNative) {
+        /*if (NVRDataModel.getLogin().disableNative) {
           NVRDataModel.log("Disabling native transitions...");
           $ionicNativeTransitions.enable(false);
         } else {
           NVRDataModel.log("Enabling native transitions...");
           $ionicNativeTransitions.enable(true);
-        }
+        }*/
+
         // At this stage, DataModel.init is not called yet
         // but I do need to know the language
 
@@ -2230,7 +2231,7 @@ angular.module('zmApp', [
   //------------------------------------------------------------------
 
   // My route map connecting menu options to their respective templates and controllers
-  .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, $ionicNativeTransitionsProvider, $logProvider, $translateProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, /*$ionicNativeTransitionsProvider,*/ $logProvider, $translateProvider) {
 
     //$logProvider.debugEnabled(false);
     //$compileProvider.debugInfoEnabled(false);
@@ -2265,10 +2266,11 @@ angular.module('zmApp', [
     // so it messes up scrolldelegate zoom and possibly others
     //$ionicConfigProvider.scrolling.jsScrolling(false);
     $compileProvider.debugInfoEnabled(false);
+    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|cdvphotolibrary):/);
 
-    $ionicNativeTransitionsProvider.setDefaultOptions({
+    /*$ionicNativeTransitionsProvider.setDefaultOptions({
       duration: 250,
-    });
+    }); */
 
     $translateProvider.useStaticFilesLoader({
       prefix: 'lang/locale-',
