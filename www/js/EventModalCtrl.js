@@ -3,7 +3,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment, Chart */
 
-angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', '$filter', 'SecuredPopups', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate, $filter, SecuredPopups) {
+angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', '$filter', 'SecuredPopups', '$cordovaFile',function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate, $filter, SecuredPopups, $cordovaFile) {
 
 
   var playerReady = false;
@@ -520,7 +520,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       noBackdrop: true,
       duration: 2000
     });
-    NVRDataModel.log("Error saving image: " + e.message);
+    //NVRDataModel.log("Error saving image: " + e.message);
     //console.log("***ERROR");
   }
 
@@ -880,37 +880,80 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         noBackdrop: true,
         duration: zm.httpTimeout
       });
+
+
       var url = $scope.selectEventUrl;
-      NVRDataModel.log("saveNow: File path to grab is " + url);
+      NVRDataModel.log(">>saveNow: File path to grab is " + url);
 
-      var img = new Image();
-      img.onload = function () {
-        // console.log("********* ONLOAD");
-        canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        context = canvas.getContext('2d');
-        context.drawImage(img, 0, 0);
-
-        imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-        imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
-
-        if ($rootScope.platformOS != "desktop") {
-          try {
-
-            cordova.exec(
-              SaveSuccess,
-              SaveError,
-              'Canvas2ImagePlugin',
-              'saveImageDataToLibrary', [imageData]
-            );
-            // carouselUtils.setStop(curState);
-          } catch (e) {
-
-            SaveError(e.message);
-            // carouselUtils.setStop(curState);
+      if ($rootScope.platformOS != 'desktop') {
+        
+        var album = 'zmNinja';
+        NVRDataModel.debug ("Trying to save image to album: "+album);
+        cordova.plugins.photoLibrary.requestAuthorization(
+          function () {
+            //url = "https://picsum.photos/200/300/?random";
+  
+            var fileTransfer = new FileTransfer();
+            var urle = encodeURI(url);
+            var fname = "zmninja.jpg";
+  
+            fileTransfer.download(urle, cordova.file.dataDirectory + fname, 
+              function(entry){ 
+                NVRDataModel.debug("local download complete: " + entry.toURL());
+                NVRDataModel.debug("Now trying to move it to album");
+                cordova.plugins.photoLibrary.saveImage(entry.toURL(), album, 
+                  function (cameraRollAssetId) {
+                   SaveSuccess();
+                   $cordovaFile.removeFile(cordova.file.dataDirectory, fname)
+                   .then (
+                    function () {
+                      NVRDataModel.debug ("file removed from data directory");
+                     },
+                     function (e) {
+                       NVRDataModel.debug ("could not delete temp file: "+JSON.stringify(e));
+                     }
+                   );
+         
+  
+                  }, function (err) {
+                      NVRDataModel.debug ("Saving error:" + JSON.stringify(err));
+                      SaveError();
+      
+                    });
+            
+            }, 
+              function(err) { console.log ("error downloading:"+JSON.stringify(err));}, false, {});
+  
+  
+              
+            
+            // User gave us permission to his library, retry reading it!
+          },
+          function (err) {
+            // User denied the access
+            NVRDataModel.debug ("Permission not granted");
+            SaveError();
+          }, // if options not provided, defaults to {read: true}.
+  
+          {
+            read: true,
+            write: true
           }
-        } else {
+        );
+
+      }
+      else {
+        var img = new Image();
+        img.onload = function () {
+          // console.log("********* ONLOAD");
+          canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          context = canvas.getContext('2d');
+          context.drawImage(img, 0, 0);
+  
+          imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+          imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
 
           var fname = $scope.relativePath + $scope.slides[$scope.slideIndex].img + ".png";
           fname = fname.replace(/\//, "-");
@@ -920,15 +963,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             saveAs(blob, fname);
             SaveSuccess();
           });
+        };
+
+        try {
+          img.src = url;
+          console.log ("DESKTOP SAVING IMAGE SOURCE");
+        } catch (e) {
+          SaveError(e.message);
         }
-      };
-      try {
-        img.src = url;
-        // console.log ("SAVING IMAGE SOURCE");
-      } catch (e) {
-        SaveError(e.message);
       }
-    }
+
+      }
+
   }
 
   $scope.reloadView = function () {
