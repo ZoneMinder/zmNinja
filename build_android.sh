@@ -13,8 +13,8 @@ if [ ! -f "$NINJAKEYSTORE" ]; then
         exit
 fi
 
+rm -f release_files 2>/dev/null
 mkdir release_files
-rm -f release_files/*
 
 # no arguments - build both
 # 1 == build crosswalk only
@@ -29,6 +29,11 @@ if [ "$1" = "2" ]; then
         BUILD_MODE="native"
         echo "only building native view (5+)"
 fi
+
+echo "----------> Only building native. Not building crosswalk anymore due to compatibility issues <----------------------"
+BUILD_MODE="native"
+
+ionic cordova plugin remove cordova-plugin-ionic-webview 2>/dev/null
 
 ############ Crosswalk build ####################################
 if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
@@ -76,24 +81,25 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     echo "${ver}: Building Release mode for android 5+..."
     echo "--------------------------------------------"
     
-    echo "Removing android and re-adding..."
-    cordova platform remove android
-    cordova platform add android@6.3.0
+#    No longger needed as we are not supporting Xwalk
+#    echo "Removing android and re-adding..."
+#    cordova platform remove android
+#    cordova platform add android@6.4.0
 
    #clean up past build stuff
-    echo "Adding default browser..."
-    cordova plugin remove cordova-plugin-crosswalk-webview
+#    echo "Adding default browser..."
+#    cordova plugin remove cordova-plugin-crosswalk-webview
 
     # use the right plugin for SSL certificate mgmt
-    cordova plugin remove cordova-plugin-crosswalk-certificate-pp-fork
-    cordova plugin add cordova-plugin-certificates
+#    cordova plugin remove cordova-plugin-crosswalk-certificate-pp-fork
+#    cordova plugin add cordova-plugin-certificates
     cp "$NINJAKEYSTORE" platforms/android/
 
     # Make sure native builds are only deployed in devices >= Android 5
     cordova build android --release -- --minSdkVersion=21 --versionCode=${ver}
 
     # copy build to release folder and sign
-    cp platforms/android/build/outputs/apk/android-release-unsigned.apk release_files/
+    cp platforms/android/build/outputs/apk/release/android-release-unsigned.apk release_files/
     echo "Copied files to release_files"
 
     cd release_files/
