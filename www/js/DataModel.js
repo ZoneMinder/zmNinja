@@ -9,10 +9,10 @@
 
 angular.module('zmApp.controllers')
 
-  .service('NVRDataModel', ['$ionicPlatform', '$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$ionicNativeTransitions', '$translate', '$cordovaSQLite',
+  .service('NVRDataModel', ['$ionicPlatform', '$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$translate', '$cordovaSQLite',
     function ($ionicPlatform, $http, $q, $ionicLoading, $ionicBackdrop, $fileLogger,
       zm, $rootScope, $ionicContentBanner, $timeout, $cordovaPinDialog,
-      $ionicPopup, $localstorage, $state, $ionicNativeTransitions, $translate) {
+      $ionicPopup, $localstorage, $state, $translate) {
 
       var currentServerMultiPortSupported = false;
 
@@ -694,7 +694,8 @@ angular.module('zmApp.controllers')
           if ($rootScope.platformOS == 'desktop')
             $state.go(state, p1, p2);
           else
-            $ionicNativeTransitions.stateGo(state, p1, p2);
+          $state.go(state, p1, p2);
+        //    $ionicNativeTransitions.stateGo(state, p1, p2);
         },
 
         // used when an empty server profile is created
