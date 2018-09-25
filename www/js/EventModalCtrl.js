@@ -550,7 +550,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       SaveError("Error in requestPermission");
     }
 
-  }
+  };
 
 
   //-----------------------------------------------------------------------
