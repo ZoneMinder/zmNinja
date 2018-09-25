@@ -568,7 +568,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
      
       $scope.selectEventUrl = $scope.constructStream();
       NVRDataModel.debug ("just saving current snapshot:"+$scope.selectEventUrl);
-      saveNow();
+      saveNow("image");
       return;
 
     }
@@ -722,6 +722,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     //console.log("Your index is  " + $scope.mycarousel.index);
     //console.log("Associated image is " + $scope.slides[$scope.mycarousel.index].img);
 
+   
+
+
     NVRDataModel.debug("ModalCtrl: SaveEventImageToPhone called");
     var canvas, context, imageDataUrl, imageData;
     var loginData = NVRDataModel.getLogin();
@@ -733,9 +736,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     if ($scope.event.Event.imageMode == 'path') {
       url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.mycarousel.index].img;
     } else {
+
+      console.log ("SLIDES "+JSON.stringify($scope.slides));
+      console.log ("CAROUSEL "+JSON.stringify($scope.mycarousel));
+
       url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand +
         "&eid=" + $scope.eventId +
-        "&fid=" + $scope.slides[$scope.mycarousel.index].id;
+        "&fid=" + $scope.slides[$scope.mycarousel.index -1].id;
     }
 
     if ($rootScope.authSession != 'undefined') {
@@ -879,7 +886,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           text: '',
           type: 'button-positive button-small ion-checkmark-round',
           onTap: function (e) {
-            saveNow();
+            saveNow("image");
 
           }
         }
@@ -890,7 +897,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   }
 
-  function saveNow() {
+  function saveNow(t) {
 
     var fname = "zmninja.jpg";
     var fn = "cordova.plugins.photoLibrary.saveImage";
@@ -901,7 +908,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       //duration: zm.httpTimeout
     });
 
-    if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '') {
+    if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '' && t != "image") {
       $scope.selectEventUrl = $scope.video_url;
       fname = "zmNinja.mp4";
       fn = "cordova.plugins.photoLibrary.saveVideo";
@@ -947,9 +954,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             function(entry){ 
               NVRDataModel.debug("local download complete: " + entry.toURL());
               NVRDataModel.debug("Now trying to move it to album");
+              var pluginName = (fname == "zmNinja.mp4"? "saveVideo": "saveImage");
 
-                if (fname == "zmNinja.mp4") {
-                  cordova.plugins.photoLibrary.saveVideo(entry.toURL(), album, 
+             
+                  cordova.plugins.photoLibrary[pluginName](entry.toURL(), album, 
                   function (cameraRollAssetId) {
                    SaveSuccess();
                    $cordovaFile.removeFile(cordova.file.dataDirectory, fname)
@@ -968,30 +976,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                       SaveError();
       
                     });
-                }
-                else {
-
-                cordova.plugins.photoLibrary.saveImage(entry.toURL(), album, 
-                function (cameraRollAssetId) {
-                 SaveSuccess();
-                 $cordovaFile.removeFile(cordova.file.dataDirectory, fname)
-                 .then (
-                  function () {
-                    NVRDataModel.debug ("file removed from data directory");
-                   },
-                   function (e) {
-                     NVRDataModel.debug ("could not delete temp file: "+JSON.stringify(e));
-                   }
-                 );
-       
-
-                }, function (err) {
-                    NVRDataModel.debug ("Saving error:" + JSON.stringify(err));
-                    SaveError();
     
-                  });
-                  
-                }
+        
                 
           
           }, 
