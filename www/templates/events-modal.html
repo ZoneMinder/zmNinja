@@ -155,11 +155,21 @@
           <a href="" ng-click="toggleGapless()">
             <i class="ion-ios-loop-strong"></i>-{{loginData.gapless? ('kOn' | translate): ('kOff' | translate)}}</a>
         </li>
-        <li ng-if="isToggleListMenu ">
-          <a href="" ng-click="saveEventImageToPhoneWithPerms(false)">
+        <li ng-if="isToggleListMenu">
+          <a href="" ng-click="saveEventImageToPhoneWithPerms(false, 'any')">
+            <i class="ion-camera"></i>
+          </a>
+        </li>
+
+        
+
+        <li ng-if="isToggleListMenu && defaultVideo !='' && defaultVideo != undefined">
+          <a href="" ng-click="saveEventVideoToPhoneWithPerms()">
             <i class="ion-android-download"></i>
           </a>
         </li>
+
+
         <li ng-if="defaultVideo=='' && isToggleListMenu">
           <a href="" ng-click="saveEventImageToPhoneWithPerms(true)">
             <i class="ion-android-notifications"></i>

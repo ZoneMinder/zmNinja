@@ -1241,35 +1241,17 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     else {
 
-    var img = new Image();
-    img.onload = function () {
-      // console.log("********* ONLOAD");
-      canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      context = canvas.getContext('2d');
-      context.drawImage(img, 0, 0);
-
-      imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-      imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
-
-        var fname = $scope.monitorName + "-" +
-          moment().format('MMM-DD-YY_HH-mm-ss') + ".png";
-        canvas.toBlob(function (blob) {
-          saveAs(blob, fname);
-          SaveSuccess();
-
-        });
-      
-    };
-    try {
-      img.src = url;
-      // console.log ("SAVING IMAGE SOURCE");
-    } catch (e) {
-      SaveError(e.message);
-
-    }
+      $ionicLoading.hide();
+  
+      $rootScope.zmPopup = SecuredPopups.show('alert', {
+         title: $translate.instant('kNote'),
+         template: $translate.instant('kDownloadVideoImage')+"<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download=\"balls.jpg\">"+" "+$translate.instant('kDownload')+"</a></center>",
+         okText: $translate.instant('kDismiss'),
+         okType:'button-stable'
+       });
+   
   }
+  
   }
 
 
