@@ -1039,8 +1039,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
      $rootScope.zmPopup = SecuredPopups.show('alert', {
         title: $translate.instant('kNote'),
         template: $translate.instant('kDownloadVideoImage')+"<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download>"+" "+$translate.instant('kDownload')+"</a></center>",
-        cancelText: $translate.instant('kDismiss'),
-        cancelType:'button-stable'
+        okText: $translate.instant('kDismiss'),
+        okType:'button-stable'
       });
 
 
