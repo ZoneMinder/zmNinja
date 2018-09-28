@@ -785,16 +785,16 @@ angular.module('zmApp', [
 
         NVRDataModel.log("Checking for news updates");
         $http.get(zm.blogUrl, {
-            transformResponse: function (d, h) {
-              var trunc = "])}while(1);</x>";
-              if (d) {
-                d = d.substr(trunc.length);
-              }
-              return d;
-            }
+            responseType:'text',
+            transformResponse:undefined
           })
 
           .then(function (datastr) {
+            // again, for cordova-http
+
+            datastr = datastr.data;
+            var trunc = "])}while(1);</x>";
+            datastr = datastr.substr(trunc.length);
 
             var data = JSON.parse(datastr);
             $rootScope.newBlogPost = "";
@@ -2260,100 +2260,81 @@ angular.module('zmApp', [
     }]);
 
 
+    // Wraps around $http that switches between browser XHR
+    // or cordova-advanced-http based on if cordova is available 
+    // credits:
+    // a) https://www.exratione.com/2013/08/angularjs-wrapping-http-for-fun-and-profit/
+    // b) https://gist.github.com/adamreisnz/354364e2a58786e2be71
+
     $provide.decorator('$http', ['$delegate', '$q', function($delegate, $q) {
       // create function which overrides $http function
       var $http = $delegate;
 
       var wrapper = function () {
-
-       
-
         var url;
         var method;
 
          url = arguments[0].url;
          method = arguments[0].method;
-
-
-
-        console.log ("+++++ IN WRAPPER WITH "+method+" for "+url);
-
         var isOutgoingRequest = /^(http|https):\/\//.test(url);
-
-
         if (window.cordova && isOutgoingRequest) {
-          console.log ("**** -->"+method+"<-- using native HTTP with:"+url);
-          console.log ("ARGUMENTS="+JSON.stringify(arguments));
+          console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url));
           var d = $q.defer();
-
           var options = {
             method: method,
             data: arguments[0].data,
             headers: arguments[0].headers,
             timeout: arguments[0].timeout,
             responseType: arguments[0].responseType
-            
           };
-
-         /* RGUMENTS={"0":{"method":"POST","timeout":7000,"url":"8889/zm/index.php","headers":{"Content-Type":"application/x-www-form-urlencoded","Accept":"application/json"},"data":{"action":"logout","view":"login"}}}*/
 
            cordova.plugin.http.sendRequest(encodeURI(url),options,
             function (succ) {
-              console.log ("***  Inside native HTTP success with:"+JSON.stringify(succ));
-
-              try {
-
-
-                if (options.responseType =='text')
-                    d.resolve({"data":succ.data});
-                else 
-                d.resolve({"data":JSON.parse(succ.data)});
-                return d.promise;
-
-              }
-              catch (e) {
+              // automatic JSON parse if no responseType: text
+              // fall back to text if JSON parse fails too
+              if (options.responseType =='text') {
+                // don't parse into JSON
                 d.resolve({"data":succ.data});
                 return d.promise;
               }
-             
+              else {
+                try {
+                  d.resolve({"data":JSON.parse(succ.data)});
+                  return d.promise;
+                }
+                catch (e) {
+
+                  console.log ("*** Native HTTP response: JSON parsing failed for "+url+", returning text");
+                  d.resolve({"data":succ.data});
+                  return d.promise;
+                }
+
+              }
             }, 
             function (err) {
-              console.log ("***  Inside native HTTP error");
+              console.log ("***  Inside native HTTP error: "+JSON.stringify(err));
               d.reject(err);
               return d.promise;
             });
             return d.promise;
           
         }
-        else {
+        else { // not cordova, so lets go back to default http
           console.log ("**** "+method+" using XHR HTTP for "+url);
           return $http.apply($http, arguments);
         }
 
-
       };
 
-      Object.keys($http).forEach( function (key) {
-
-        console.log ("----> "+key+" IS "+typeof($http[key]));
-      });
-
-      
-
+      // wrap around all HTTP methods
       Object.keys($http).filter(function (key) {
         return (typeof $http[key] === 'function');
       }).forEach(function (key) {
         wrapper[key] = function () {
-   
-          // Apply global changes to arguments, or perform other
-          // nefarious acts.
-
-         // console.log ("KEY="+key);
-   
           return $http[key].apply($http, arguments);
         };
       });
-     console.log ("*** WRAPPING EASY");
+    // wrap convenience functions
       $delegate.get = function (url,config) {
        
         return wrapper(angular.extend(config || {}, {
@@ -2362,97 +2343,23 @@ angular.module('zmApp', [
         }));
       };
 
-      $delegate.post = function (url,config) {
+      $delegate.post = function (url,data,config) {
        
         return wrapper(angular.extend(config || {}, {
           method: 'post',
-          url: url
+          url: url,
+          data:data
         }));
       };
 
       $delegate.delete = function (url,config) {
-       
         return wrapper(angular.extend(config || {}, {
           method: 'delete',
           url: url
         }));
       };
 
-
       return wrapper;
-    
-/*
-      $delegate.post = function(args) {
-        var isOutgoingRequest = /^(http|https):\/\//.test(args);
-
-        if (window.cordova && isOutgoingRequest) {
-          console.log ("**** POST using native HTTP2 with:"+args);
-          console.log ("POST ARGUMENTS="+JSON.stringify(arguments));
-          var d = $q.defer();
-
-          var options = {
-            method: 'post',
-            
-          };
-
-           cordova.plugin.http.sendRequest(args,options,
-            function (succ) {
-              console.log ("*** POST Inside native HTTP success");
-
-              d.resolve({"data":JSON.parse(succ.data)});
-              return d.promise;
-            }, 
-            function (err) {
-              console.log ("*** POST Inside native HTTP error");
-              d.reject(err);
-              return d.promise;
-            });
-            return d.promise;
-          
-        }
-        else {
-          console.log ("**** POST using XHR HTTP with "+args);
-          return originalPost.apply(this, arguments);
-        }
-        
-    };
-
-      $delegate.get = function(args) {
-        var isOutgoingRequest = /^(http|https):\/\//.test(args);
-        if (window.cordova && isOutgoingRequest) {
-          console.log ("**** using native HTTP2 with:"+args);
-          console.log ("ARGUMENTS="+JSON.stringify(arguments));
-          var d = $q.defer();
-
-          var options = {
-            method: 'get',
-            
-          };
-
-           cordova.plugin.http.sendRequest(args,options,
-            function (succ) {
-              console.log ("*** GET Inside native HTTP success");
-
-              d.resolve({"data":JSON.parse(succ.data)});
-              return d.promise;
-            }, 
-            function (err) {
-              console.log ("*** GET Inside native HTTP error");
-              d.reject(err);
-              return d.promise;
-            });
-            return d.promise;
-          
-        }
-        else {
-          console.log ("**** GET using XHR HTTP with:"+args);
-          return originalGet.apply(this, arguments);
-        }
-        
-    };
-
-    return $delegate;
-    */
     }]);
 
     // If you do this, Allow Origin can't be *

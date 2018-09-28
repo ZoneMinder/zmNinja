@@ -202,18 +202,27 @@ angular.module('zmApp.controllers')
        * 
        * @returns 
        */
-      function setSSLCerts() {
-        if (!window.cordova) return;
+      function setCordovaHttpOptions() {
+        
+        if (loginData.isUseBasicAuth) {
+          debug ("Cordova HTTP: configuring basic auth");
+          cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
+        }
+
         if (!loginData.enableStrictSSL) {
 
           //alert("Enabling insecure SSL");
           log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
-          cordova.plugins.certificates.trustUnsecureCerts(true);
+          cordova.plugin.http.setSSLCertMode('nocheck', function() {
+           debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+          }, function() {
+            console.log('-->Error setting SSL permissive');
+          });
 
         } else {
 
           log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
-          cordova.plugins.certificates.trustUnsecureCerts(false);
+
         }
       }
 
@@ -1444,10 +1453,9 @@ angular.module('zmApp.controllers')
                   log("defaultServer configuration NOT found. Keeping login at defaults");
                 }
 
-                //console.log ("LOGS="+JSON.stringify(loginData.enableLogs));
-                // now set up SSL - need to do it after data return
+               
                 // from local forage
-                setSSLCerts();
+                if (window.cordova) setCordovaHttpOptions();
 
 
                 // FIXME: HACK: This is the latest entry point into dataModel init, so start portal login after this
@@ -2871,7 +2879,7 @@ angular.module('zmApp.controllers')
             $http.get(loginData.apiurl + '/host/logout.json', {
                 timeout: 7000,
                 transformResponse: undefined,
-                responseType:'text',
+               // responseType:'text',
               })
               .then(function (s) {
                   debug("Logout returned... ");

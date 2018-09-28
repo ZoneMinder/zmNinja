@@ -100,8 +100,11 @@
 
             <div align="right" class="col col-40" ng-if="loginData.enableThumbs" >
               
-                <img  ng-image-appear no-loader transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
-                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)"  width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" />
+
+              <img  ng-image-appear no-loader transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+              on-tap="closeIfOpen(event);openModalWithSnapshot(event)"  width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" />
+
+            
                 <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
             
 

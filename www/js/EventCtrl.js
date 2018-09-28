@@ -1761,7 +1761,7 @@ angular.module('zmApp.controllers')
 
       var af = "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
-      var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour" + af + ".json";
+      var apiurl = ld.apiurl + "/events/consoleEvents/1 hour" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
 
       $http.get(apiurl)
@@ -1798,7 +1798,7 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1%20day" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 day" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {
@@ -1831,7 +1831,7 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1%20week" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 week" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {
@@ -1865,7 +1865,7 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1%20month" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 month" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {

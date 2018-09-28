@@ -582,6 +582,27 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     if ($rootScope.platformOS != 'desktop') {
 
+      if ($scope.loginData.isUseBasicAuth) {
+        debug ("Cordova HTTP: configuring basic auth");
+        cordova.plugin.http.useBasicAuth($scope.loginData.basicAuthUser, $scope.loginData.basicAuthPassword);
+      }
+
+      if (!$scope.loginData.enableStrictSSL) {
+
+        //alert("Enabling insecure SSL");
+        log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+        cordova.plugin.http.setSSLCertMode('nocheck', function() {
+         debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+        }, function() {
+          console.log('-->Error setting SSL permissive');
+        });
+
+      } else {
+
+        log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+
+      }
+
       if ($scope.loginData.saveToCloud) {
         NVRDataModel.debug ("writing data to cloud");
         
