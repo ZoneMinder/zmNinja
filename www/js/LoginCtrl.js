@@ -672,8 +672,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         NVRDataModel.log("Validating APIs at " + apiurl);
         $http.get(apiurl)
-          .success(function (data) {
+          .then(function (data) {
 
+            data = data.data;
             NVRDataModel.getTimeZone(true);
             var loginStatus = $translate.instant('kExploreEnjoy') + " " + $rootScope.appName + "!";
             EventServer.refresh();
@@ -688,7 +689,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 NVRDataModel.log("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
 
                 $http.get(ld.streamingurl + "/zms")
-                  .success(function (data) {
+                  .then(function (data) {
+                    data = data.data;
                     NVRDataModel.debug("Urk! cgi-path returned  success, but it should not have come here");
                     loginStatus = $translate.instant('kLoginStatusNoCgi');
 
@@ -717,8 +719,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
                       });
                     }
-                  })
-                  .error(function (error, status) {
+                  },
+                  function (error, status) {
                     // If its 5xx, then the cgi-bin path is valid
                     // if its 4xx then the cgi-bin path is not valid
 
@@ -757,8 +759,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                   });
               });
 
-          })
-          .error(function (error) {
+          },
+          function (error) {
             NVRDataModel.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
             NVRDataModel.log("API login error " + JSON.stringify(error));
 

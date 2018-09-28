@@ -853,17 +853,18 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     });
 
-    req.success(function (resp) {
+    req.then(function (resp) {
       //console.log("SUCCESS: " + JSON.stringify(resp));
       $ionicLoading.hide();
 
-    });
-
-    req.error(function (resp) {
+    }, 
+    function (resp) {
       $ionicLoading.hide();
       //console.log("ERROR: " + JSON.stringify(resp));
       NVRDataModel.log("Error sending PTZ:" + JSON.stringify(resp), "error");
     });
+
+    
   }
 
   $scope.getZoomLevel = function () {
@@ -1446,14 +1447,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
       }
     });
-    req.success(function (resp) {
+    req.then(function (resp) {
 
+      resp = resp.data;
       if (resp.result == "Ok" && ndx != -1) {
         var ld = NVRDataModel.getLogin();
         var apiurl = ld.apiurl + "/events/" + resp.status.event + ".json";
         //console.log ("API " + apiurl);
         $http.get(apiurl)
-          .success(function (data) {
+          .then(function (data) {
+            data = data.data;
             if ($scope.MontageMonitors[ndx].eventUrlTime != data.event.Event.StartTime) {
 
               var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id + "-timeline"));
@@ -1467,19 +1470,21 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
             }
 
-          })
-          .error(function (data) {
+          },
+          function (data) {
             $scope.MontageMonitors[ndx].eventUrlTime = "-";
           });
 
       }
 
-    });
+    },
 
-    req.error(function (resp) {
+    function (resp) {
       //console.log("ERROR: " + JSON.stringify(resp));
       NVRDataModel.log("Error sending event command " + JSON.stringify(resp), "error");
     });
+
+    
   }
 
   $scope.toggleListMenu = function () {
@@ -1544,7 +1549,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var ld = NVRDataModel.getLogin();
     var url = ld.apiurl + "/monitors/" + mid + ".json";
     $http.get(url)
-      .success(function (data) {
+      .then(function (data) {
+        data = data.data;
         $scope.isControllable = data.monitor.Monitor.Controllable;
 
         // *** Only for testing - comment out //
@@ -1559,8 +1565,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           NVRDataModel.debug("configurePTZ : getting controllable data " + myurl);
 
           $http.get(myurl)
-            .success(function (data) {
-
+            .then(function (data) {
+              data = data.data;
               // *** Only for testing - comment out  - start//
               /*data.Control.Control.CanSleep = '1';
               data.Control.Control.CanWake = '1';
@@ -1722,8 +1728,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
               }
 
               NVRDataModel.log("ConfigurePTZ Modal: ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
-            })
-            .error(function (data) {
+            },
+            function (data) {
               //  console.log("** Error retrieving move PTZ command");
               NVRDataModel.log("ConfigurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
             });
@@ -1731,8 +1737,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         } else {
           NVRDataModel.log("configurePTZ " + mid + " is not PTZ controllable");
         }
-      })
-      .error(function (data) {
+      },
+      function (data) {
         //  console.log("** Error retrieving move PTZ command");
         NVRDataModel.log("configurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
       });

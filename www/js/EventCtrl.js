@@ -257,8 +257,8 @@ angular.module('zmApp.controllers')
       var apiurl = NVRDataModel.getLogin().apiurl + '/events/' + eid + '.json';
 
       $http.get(apiurl)
-        .success(function (data) {})
-        .error(function (err) {});
+        .then(function (data) {},
+        function (err) {});
 
     }
 
@@ -1655,7 +1655,8 @@ angular.module('zmApp.controllers')
 
 
       return $http.delete(apiDelete)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           $ionicLoading.hide();
           NVRDataModel.debug("delete output: " + JSON.stringify(data));
 
@@ -1685,8 +1686,8 @@ angular.module('zmApp.controllers')
 
           //doRefresh();
 
-        })
-        .error(function (data) {
+        },
+        function (data) {
           $ionicLoading.hide();
           NVRDataModel.debug("delete error: " + JSON.stringify(data));
           NVRDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);
@@ -1764,7 +1765,8 @@ angular.module('zmApp.controllers')
       NVRDataModel.debug("consoleEvents API:" + apiurl);
 
       $http.get(apiurl)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           NVRDataModel.debug(JSON.stringify(data));
           $scope.hours = [];
           var p = data.results;
@@ -1799,7 +1801,8 @@ angular.module('zmApp.controllers')
       apiurl = ld.apiurl + "/events/consoleEvents/1%20day" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           NVRDataModel.debug(JSON.stringify(data));
           $scope.days = [];
           var p = data.results;
@@ -1831,7 +1834,8 @@ angular.module('zmApp.controllers')
       apiurl = ld.apiurl + "/events/consoleEvents/1%20week" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           NVRDataModel.debug(JSON.stringify(data));
           $scope.weeks = [];
           var p = data.results;
@@ -1864,7 +1868,8 @@ angular.module('zmApp.controllers')
       apiurl = ld.apiurl + "/events/consoleEvents/1%20month" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           NVRDataModel.debug(JSON.stringify(data));
           $scope.months = [];
           var p = data.results;
@@ -2035,7 +2040,8 @@ angular.module('zmApp.controllers')
           var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
           NVRDataModel.log("API for event details" + myurl);
           $http.get(myurl)
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               $scope.FrameArray = data.event.Frame;
               //  $scope.slider_options.scale=[];
 
@@ -2070,8 +2076,8 @@ angular.module('zmApp.controllers')
               oldEvent = event;
 
               //console.log (JSON.stringify(data));
-            })
-            .error(function (err) {
+            },
+           function (err) {
               NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
               NVRDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
             });
@@ -2147,7 +2153,8 @@ angular.module('zmApp.controllers')
             var myurl_frames = loginData.apiurl + '/events/' + event.Event.Id + ".json";
             NVRDataModel.log("API for event details" + myurl_frames);
             $http.get(myurl_frames)
-              .success(function (data) {
+              .then(function (data) {
+                data = data.data;
                 $scope.FrameArray = data.event.Frame;
                 //  $scope.slider_options.scale=[];
 
@@ -2166,8 +2173,8 @@ angular.module('zmApp.controllers')
                 }
 
                 //console.log (JSON.stringify(data));
-              })
-              .error(function (err) {
+              },
+              function (err) {
                 NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
                 NVRDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
               });
@@ -2208,7 +2215,8 @@ angular.module('zmApp.controllers')
           var myurl2 = loginData.apiurl + '/events/' + event.Event.Id + ".json";
           NVRDataModel.log("API for event details" + myurl2);
           $http.get(myurl2)
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               $scope.FrameArray = data.event.Frame;
               //  $scope.slider_options.scale=[];
               $scope.slider_options.scale = [];
@@ -2229,8 +2237,8 @@ angular.module('zmApp.controllers')
               }
 
               //console.log (JSON.stringify(data));
-            })
-            .error(function (err) {
+            },
+            function (err) {
               NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
               NVRDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
             });

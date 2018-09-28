@@ -190,12 +190,13 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
           // console.log("Monitor event URL:" + url);
           NVRDataModel.log("EventGraph: composed url is " + url);
           $http.get(url /*,{timeout:15000}*/ )
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               NVRDataModel.debug("Event count for monitor" +
                 monitors[j].Monitor.Id + " is " + data.pagination.count);
               $scope.chart.data.datasets[0].data[j] = data.pagination.count;
-            })
-            .error(function (data) {
+            },
+            function (data) {
               // ideally I should be treating it as an error
               // but what I am really doing now is treating it like no events
               // works but TBD: make this into a proper error handler
