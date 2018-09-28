@@ -2,14 +2,14 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVRDataModel', '$rootScope', '$ionicPopup', '$translate', '$timeout', '$location','EventServer', 'zmAutoLogin','$http',function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVRDataModel, $rootScope, $ionicPopup, $translate, $timeout, $location, EventServer, zmAutoLogin, $http) {
+angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVRDataModel', '$rootScope', '$ionicPopup', '$translate', '$timeout', '$location','EventServer', 'zmAutoLogin','$http','SecuredPopups',function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVRDataModel, $rootScope, $ionicPopup, $translate, $timeout, $location, EventServer, zmAutoLogin, $http, SecuredPopups) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
 
   //----------------------------------------------------------------
   // This controller sits along with the main app to  bring up 
-  // the language menu from the main menu
+  // the language menu from the main 
   //----------------------------------------------------------------
 
 
@@ -82,6 +82,33 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
       $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken;
 
     }
+
+
+    if (window.cordova) {
+
+      if (loginData.isUseBasicAuth) {
+        NVRDataModel.debug ("Cordova HTTP: configuring basic auth");
+        cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
+      }
+
+      if (loginData.enableStrictSSL) {
+
+        //alert("Enabling insecure SSL");
+        NVRDataModel.log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+        cordova.plugin.http.setSSLCertMode('nocheck', function() {
+          NVRDataModel.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+        }, function() {
+          console.log('-->Error setting SSL permissive');
+        });
+
+      } else {
+
+        NVRDataModel.log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+
+      }
+
+    }
+
 
     if (loginData.isUseEventServer) {
       EventServer.init();

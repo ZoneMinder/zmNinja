@@ -33,7 +33,7 @@ fi
 echo "----------> Only building native. Not building crosswalk anymore due to compatibility issues <----------------------"
 BUILD_MODE="native"
 
-ionic cordova plugin remove cordova-plugin-ionic-webview 2>/dev/null
+#ionic cordova plugin remove cordova-plugin-ionic-webview 2>/dev/null
 
 ############ Crosswalk build ####################################
 if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
