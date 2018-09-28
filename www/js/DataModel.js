@@ -308,7 +308,8 @@ angular.module('zmApp.controllers')
           var apiurl = loginData.apiurl;
           var myurl = apiurl + '/configs/viewByName/ZM_MIN_STREAMING_PORT.json';
           $http.get(myurl)
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               //console.log ("GOT " + JSON.stringify(data));
 
               if (data.config && data.config.Value) {
@@ -324,8 +325,8 @@ angular.module('zmApp.controllers')
 
               d.resolve(configParams.ZM_MIN_STREAMING_PORT);
               return (d.promise);
-            })
-            .error(function (err) {
+            },
+            function (err) {
               configParams.ZM_MIN_STREAMING_PORT = 0;
               log("ZM_MIN_STREAMING_PORT not supported");
               setCurrentServerMultiPortSupported(false);
@@ -1822,14 +1823,14 @@ angular.module('zmApp.controllers')
             var myurl = apiurl + '/configs/viewByName/ZM_EVENT_IMAGE_DIGITS.json';
             debug("Config URL for digits is:" + myurl);
             $http.get(myurl)
-              .success(function (data) {
+              .then(function (data) {
+                data = data.data;
                 log("ZM_EVENT_IMAGE_DIGITS is " + data.config.Value);
                 configParams.ZM_EVENT_IMAGE_DIGITS = data.config.Value;
                 d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
                 return (d.promise);
 
-              })
-              .error(function (err) {
+              },function (err) {
                 log("Error retrieving ZM_EVENT_IMAGE_DIGITS" + JSON.stringify(err), "error");
                 log("Taking a guess, setting ZM_EVENT_IMAGE_DIGITS to 5");
                 // FIXME: take a plunge and keep it at 5?
@@ -1857,12 +1858,13 @@ angular.module('zmApp.controllers')
           var myurl = apiurl + '/configs/viewByName/ZM_PATH_ZMS.json';
           debug("Config URL for ZMS PATH is:" + myurl);
           $http.get(myurl)
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               configParams.ZM_PATH_ZMS = data.config.Value;
               d.resolve(configParams.ZM_PATH_ZMS);
               return (d.promise);
-            })
-            .error(function (error) {
+            },
+            function (error) {
               log("Can't retrieving ZM_PATH_ZMS: " + JSON.stringify(error));
               d.resolve("");
               return (d.promise);
@@ -2049,8 +2051,9 @@ angular.module('zmApp.controllers')
                 debug("ZMS Multiport reported: " + zmsPort);
                 debug("Monitor URL to fetch is:" + myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
-                  .success(function (data) {
+                  .then(function (data) {
                     //  console.log("HTTP success got " + JSON.stringify(data.monitors));
+                    data = data.data;
                     monitors = data.monitors;
 
 
@@ -2069,7 +2072,8 @@ angular.module('zmApp.controllers')
                     debug("Inside getMonitors, will also regen connkeys");
                     debug("Now trying to get multi-server data, if present");
                     $http.get(apiurl + "/servers.json")
-                      .success(function (data) {
+                      .then(function (data) {
+                        data = data.data;
                         // We found a server list API, so lets make sure
                         // we get the hostname as it will be needed for playback
                         log("multi server list loaded" + JSON.stringify(data));
@@ -2241,8 +2245,8 @@ angular.module('zmApp.controllers')
                         // now get packery hide if applicable
                         reloadMonitorDisplayStatus();
                         d.resolve(monitors);
-                      })
-                      .error(function (err) {
+                      },
+                      function (err) {
                         log("multi server list loading error");
                         multiservers = [];
 
@@ -2285,8 +2289,8 @@ angular.module('zmApp.controllers')
                     $ionicLoading.hide();
                     log("Monitor load was successful, loaded " + monitors.length + " monitors");
 
-                  })
-                  .error(function (err) {
+                  },
+                  function (err) {
                     //console.log("HTTP Error " + err);
                     log("Monitor load failed " + JSON.stringify(err), "error");
                     // To keep it simple for now, I'm translating an error
@@ -2322,7 +2326,8 @@ angular.module('zmApp.controllers')
           $http({
               url: myurl,
               method: 'GET',
-              transformResponse: undefined
+              transformResponse: undefined,
+              responseType:'text',
             })
             // $http.get(myurl)
             .then(function (textsucc) {
@@ -2521,14 +2526,15 @@ angular.module('zmApp.controllers')
           //var myurl = (monitorId == 0) ? apiurl + "/events.json?page=1" : apiurl + "/events/index/MonitorId:" + monitorId + ".json?page=1";
           var d = $q.defer();
           $http.get(myurl)
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               $ionicLoading.hide();
               //console.log ("**** EVENTS PAGES I GOT "+JSON.stringify(data));
               //console.log("**** PAGE COUNT IS " + data.pagination.pageCount);
               d.resolve(data.pagination);
               return d.promise;
-            })
-            .error(function (error) {
+            },
+           function (error) {
               $ionicLoading.hide();
               // console.log("*** ERROR GETTING TOTAL PAGES ***");
               log("Error retrieving page count of events " + JSON.stringify(error), "error");
@@ -2598,7 +2604,8 @@ angular.module('zmApp.controllers')
           //console.log (">>>>>Constructed URL " + myurl);
 
           $http.get(myurl /*,{timeout:15000}*/ )
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               if (loadingStr != 'none') $ionicLoading.hide();
               //myevents = data.events;
               myevents = data.events.reverse();
@@ -2610,8 +2617,8 @@ angular.module('zmApp.controllers')
               d.resolve(myevents);
               return d.promise;
 
-            })
-            .error(function (err) {
+            },
+            function (err) {
               if (loadingStr != 'none') $ionicLoading.hide();
               displayBanner('error', ['error retrieving event list', 'please try again']);
               //console.log("HTTP Events error " + err);
@@ -2863,7 +2870,8 @@ angular.module('zmApp.controllers')
             debug("Logging out using API method");
             $http.get(loginData.apiurl + '/host/logout.json', {
                 timeout: 7000,
-                transformResponse: undefined
+                transformResponse: undefined,
+                responseType:'text',
               })
               .then(function (s) {
                   debug("Logout returned... ");

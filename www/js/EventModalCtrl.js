@@ -402,9 +402,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           // pass: loginData.password
         }
       })
-      .success(function (resp) {
+      .then(function (resp) {
         // NVRDataModel.debug ("processEvent success:"+JSON.stringify(resp));
 
+        resp = resp.data;
         if (resp.result == "Ok") {
 
           if (resp.status) $scope.currentProgress.progress = resp.status.progress;
@@ -439,8 +440,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           NVRDataModel.debug("so I'm regenerating Connkey to " + $scope.connKey);*/
 
         }
-      })
-      .error(function (resp) {
+      },
+      function (resp) {
         NVRDataModel.debug("processEvent error:" + JSON.stringify(resp));
         //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
 
@@ -1547,7 +1548,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     });
 
     return $http.delete(apiDelete)
-      .success(function (data) {
+      .then(function (data) {
+        data = data.data;
         $ionicLoading.hide();
         // NVRDataModel.debug("delete output: " + JSON.stringify(data));
 
@@ -1577,8 +1579,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         //doRefresh();
 
-      })
-      .error(function (data) {
+      },
+      function (data) {
         $ionicLoading.hide();
         NVRDataModel.debug("delete error: " + JSON.stringify(data));
         NVRDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);

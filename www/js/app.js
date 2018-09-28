@@ -264,7 +264,6 @@ angular.module('zmApp', [
   })
 
 
-
   // credit https://gist.github.com/Zren/beaafd64f395e23f4604
 
   .directive('mouseWheelScroll', function ($timeout) {
@@ -322,7 +321,7 @@ angular.module('zmApp', [
           //console.log ("requestConfig is " + JSON.stringify(requestConfig));
           imageLoadingDataShare.set(1);
           $http(requestConfig)
-            .success(function (data) {
+            .then(function (data) {
               //console.log ("Inside HTTP after Calling " + requestConfig.url);
               //console.log ("data got " + JSON.stringify(data));
 
@@ -763,6 +762,9 @@ angular.module('zmApp', [
             NVRDataModel.setLastUpdateCheck(moment().toISOString());
             // $localstorage.set("lastUpdateCheck", moment().toISOString());
             //console.log ("FULL STRING " + success.data.tag_name);
+
+           // console.log ("^^^^^^^^^^^^^ GOT: " + JSON.stringify(success));
+
             var res = success.data.tag_name.match("v(.*)");
             zmUpdateVersion = res[1];
             var currentVersion = NVRDataModel.getAppVersion();
@@ -792,7 +794,7 @@ angular.module('zmApp', [
             }
           })
 
-          .success(function (datastr) {
+          .then(function (datastr) {
 
             var data = JSON.parse(datastr);
             $rootScope.newBlogPost = "";
@@ -1059,10 +1061,11 @@ angular.module('zmApp', [
      
 
         $http({
-          method:'POST',
+          method:'post',
           url: loginAPI,
           timeout:httpDelay,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          responseType:'text',
           transformResponse: undefined,
           transformRequest: function(obj) {
             var str = [];
@@ -1242,7 +1245,7 @@ angular.module('zmApp', [
       //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
       $http({
 
-          method: 'POST',
+          method: 'post',
           timeout: httpDelay,
           //withCredentials: true,
           url: loginData.url + '/index.php',
@@ -1266,8 +1269,9 @@ angular.module('zmApp', [
             view: "console"
           }
         })
-        .success(function (data, status, headers) {
+        .then(function (data, status, headers) {
           // console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
+          data = data.data;
           $ionicLoading.hide();
 
           // Coming here does not mean success
@@ -1324,8 +1328,8 @@ angular.module('zmApp', [
 
           return (d.promise);
 
-        })
-        .error(function (error, status) {
+        },
+        function (error, status) {
 
           // console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
           $ionicLoading.hide();
@@ -2253,6 +2257,202 @@ angular.module('zmApp', [
         $delegate(exception, cause);
 
       };
+    }]);
+
+
+    $provide.decorator('$http', ['$delegate', '$q', function($delegate, $q) {
+      // create function which overrides $http function
+      var $http = $delegate;
+
+      var wrapper = function () {
+
+       
+
+        var url;
+        var method;
+
+         url = arguments[0].url;
+         method = arguments[0].method;
+
+
+
+        console.log ("+++++ IN WRAPPER WITH "+method+" for "+url);
+
+        var isOutgoingRequest = /^(http|https):\/\//.test(url);
+
+
+        if (window.cordova && isOutgoingRequest) {
+          console.log ("**** -->"+method+"<-- using native HTTP with:"+url);
+          console.log ("ARGUMENTS="+JSON.stringify(arguments));
+          var d = $q.defer();
+
+          var options = {
+            method: method,
+            data: arguments[0].data,
+            headers: arguments[0].headers,
+            timeout: arguments[0].timeout,
+            responseType: arguments[0].responseType
+            
+          };
+
+         /* RGUMENTS={"0":{"method":"POST","timeout":7000,"url":"8889/zm/index.php","headers":{"Content-Type":"application/x-www-form-urlencoded","Accept":"application/json"},"data":{"action":"logout","view":"login"}}}*/
+
+           cordova.plugin.http.sendRequest(encodeURI(url),options,
+            function (succ) {
+              console.log ("***  Inside native HTTP success with:"+JSON.stringify(succ));
+
+              try {
+
+
+                if (options.responseType =='text')
+                    d.resolve({"data":succ.data});
+                else 
+                d.resolve({"data":JSON.parse(succ.data)});
+                return d.promise;
+
+              }
+              catch (e) {
+                d.resolve({"data":succ.data});
+                return d.promise;
+              }
+             
+            }, 
+            function (err) {
+              console.log ("***  Inside native HTTP error");
+              d.reject(err);
+              return d.promise;
+            });
+            return d.promise;
+          
+        }
+        else {
+          console.log ("**** "+method+" using XHR HTTP for "+url);
+          return $http.apply($http, arguments);
+        }
+
+
+      };
+
+      Object.keys($http).forEach( function (key) {
+
+        console.log ("----> "+key+" IS "+typeof($http[key]));
+      });
+
+      
+
+      Object.keys($http).filter(function (key) {
+        return (typeof $http[key] === 'function');
+      }).forEach(function (key) {
+        wrapper[key] = function () {
+   
+          // Apply global changes to arguments, or perform other
+          // nefarious acts.
+
+         // console.log ("KEY="+key);
+   
+          return $http[key].apply($http, arguments);
+        };
+      });
+     console.log ("*** WRAPPING EASY");
+      $delegate.get = function (url,config) {
+       
+        return wrapper(angular.extend(config || {}, {
+          method: 'get',
+          url: url
+        }));
+      };
+
+      $delegate.post = function (url,config) {
+       
+        return wrapper(angular.extend(config || {}, {
+          method: 'post',
+          url: url
+        }));
+      };
+
+      $delegate.delete = function (url,config) {
+       
+        return wrapper(angular.extend(config || {}, {
+          method: 'delete',
+          url: url
+        }));
+      };
+
+
+      return wrapper;
+    
+/*
+      $delegate.post = function(args) {
+        var isOutgoingRequest = /^(http|https):\/\//.test(args);
+
+        if (window.cordova && isOutgoingRequest) {
+          console.log ("**** POST using native HTTP2 with:"+args);
+          console.log ("POST ARGUMENTS="+JSON.stringify(arguments));
+          var d = $q.defer();
+
+          var options = {
+            method: 'post',
+            
+          };
+
+           cordova.plugin.http.sendRequest(args,options,
+            function (succ) {
+              console.log ("*** POST Inside native HTTP success");
+
+              d.resolve({"data":JSON.parse(succ.data)});
+              return d.promise;
+            }, 
+            function (err) {
+              console.log ("*** POST Inside native HTTP error");
+              d.reject(err);
+              return d.promise;
+            });
+            return d.promise;
+          
+        }
+        else {
+          console.log ("**** POST using XHR HTTP with "+args);
+          return originalPost.apply(this, arguments);
+        }
+        
+    };
+
+      $delegate.get = function(args) {
+        var isOutgoingRequest = /^(http|https):\/\//.test(args);
+        if (window.cordova && isOutgoingRequest) {
+          console.log ("**** using native HTTP2 with:"+args);
+          console.log ("ARGUMENTS="+JSON.stringify(arguments));
+          var d = $q.defer();
+
+          var options = {
+            method: 'get',
+            
+          };
+
+           cordova.plugin.http.sendRequest(args,options,
+            function (succ) {
+              console.log ("*** GET Inside native HTTP success");
+
+              d.resolve({"data":JSON.parse(succ.data)});
+              return d.promise;
+            }, 
+            function (err) {
+              console.log ("*** GET Inside native HTTP error");
+              d.reject(err);
+              return d.promise;
+            });
+            return d.promise;
+          
+        }
+        else {
+          console.log ("**** GET using XHR HTTP with:"+args);
+          return originalGet.apply(this, arguments);
+        }
+        
+    };
+
+    return $delegate;
+    */
     }]);
 
     // If you do this, Allow Origin can't be *

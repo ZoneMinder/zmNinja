@@ -41,7 +41,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           view: "console"
         }
       })
-      .success(function (data, status, headers) {
+      .then(function (data, status, headers) {
+        data = data.data;
         //console.log("LOOKING FOR " + zm.loginScreenString);
         //console.log("DATA RECEIVED " + JSON.stringify(data));
         if (data.indexOf(zm.loginScreenString) == -1) {
@@ -58,8 +59,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           d.reject(false);
           return d.promise;
         }
-      })
-      .error(function (error) {
+      },
+      function (error) {
         //console.log("************ERROR");
         $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
         $scope.wizard.portalColor = "#e74c3c";

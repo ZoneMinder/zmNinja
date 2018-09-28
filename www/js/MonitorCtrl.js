@@ -181,10 +181,10 @@ angular.module('zmApp.controllers')
                       }
 
                     })
-                    .success(function () {
+                    .then(function () {
                       NVRDataModel.debug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
-                    })
-                    .error(function (data, status, headers, config) {
+                    },
+                    function (data, status, headers, config) {
                       NVRDataModel.debug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
                       $scope.monfunc.myfailedIds.push(item);
                     });
@@ -419,7 +419,8 @@ angular.module('zmApp.controllers')
             NVRDataModel.debug("MonitorCtrl:monitorStateCheck: " + apiMonCheck);
             //console.log("**** ZMC CHECK " + apiMonCheck);
             $http.get(apiMonCheck)
-              .success(function (data) {
+              .then(function (data) {
+                data = data.data;
                 NVRDataModel.debug("MonitorCtrl: monitor check state returned: " + JSON.stringify(data));
                 if (data.statustext.indexOf("not running") > -1) {
                   $scope.monitors[j].Monitor.isRunning = "false";
@@ -438,8 +439,8 @@ angular.module('zmApp.controllers')
                 }
 
                 $scope.monitors[j].Monitor.isRunningText = data.statustext;
-              })
-              .error(function (data) {
+              },
+              function (data) {
                 NVRDataModel.debug("MonitorCtrl: Error->monitor check state returned: " +
                   JSON.stringify(data));
                 NVRDataModel.displayBanner('error', [$translate.instant('kErrorRetrievingState'), $translate.instant('kPleaseTryAgain')]);
