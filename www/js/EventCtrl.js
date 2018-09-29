@@ -2863,7 +2863,7 @@ angular.module('zmApp.controllers')
     $scope.constructThumbnail = function (event) {
       var stream = "";
       stream = event.Event.baseURL +
-        "/index.php?view=image&show=capture&fid=" +
+       "/index.php?view=image&show=capture&fid=" +
         (event.Event.MaxScoreFrameId ? event.Event.MaxScoreFrameId : "1&eid=" + event.Event.Id) +
         "&width=" + event.Event.thumbWidth * 2 +
         "&height=" + event.Event.thumbHeight * 2;

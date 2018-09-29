@@ -310,6 +310,7 @@ angular.module('zmApp.controllers')
 
 
 
+
       function getZmsMultiPortSupport(forceReload) {
         var d = $q.defer();
         if (configParams.ZM_MIN_STREAMING_PORT == -1 || forceReload) {
@@ -1821,6 +1822,13 @@ angular.module('zmApp.controllers')
         //-----------------------------------------------------------------------------
         // This function returns the numdigits for padding capture images
         //-----------------------------------------------------------------------------
+
+
+        getAuthHashLogin: function () {
+
+          return $http.get(loginData.apiurl + '/configs/viewByName/ZM_AUTH_HASH_LOGINS.json');
+
+        },
 
         getKeyConfigParams: function (forceReload) {
 
