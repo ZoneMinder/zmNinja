@@ -2337,7 +2337,7 @@ angular.module('zmApp', [
             }, 
             function (err) {
               //console.log ("***  Inside native HTTP error: "+JSON.stringify(err));
-              NVRDataModel.debug ("*** Native HTTP error: "+JSON.stringify(err));
+              
               d.reject(err);
               return d.promise;
             });
