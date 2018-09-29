@@ -908,6 +908,30 @@ angular.module('zmApp', [
         contentBannerInstance();
       }, 2000);
       NVRDataModel.debug("auth-success broadcast:Successful");
+
+
+      var ld = NVRDataModel.getLogin();
+
+      // we need AUTH_HASH_LOGIN to be on for WKWebView /mobile
+      if (ld.isUseAuth && $rootScope.platformOS != 'desktop') {
+          NVRDataModel.getAuthHashLogin()
+          .then (function (data) {
+        
+            if (data.data && data.data.config.Value != '1') {
+              $ionicPopup.alert({
+                title: $translate.instant('kError'),
+                template: $translate.instant('kAuthHashDisabled')
+              });
+            }
+
+          },
+          function (err) {
+          console.log ("AUTH HASH ERROR: "+JSON.stringify(conf));
+          });
+      }
+      
+
+
     });
 
     $rootScope.getProfileName = function () {
@@ -2278,7 +2302,7 @@ angular.module('zmApp', [
          method = arguments[0].method;
         var isOutgoingRequest = /^(http|https):\/\//.test(url);
         if (window.cordova && isOutgoingRequest) {
-          console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url));
+         // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url));
           var d = $q.defer();
           var options = {
             method: method,
@@ -2304,7 +2328,7 @@ angular.module('zmApp', [
                 }
                 catch (e) {
 
-                  console.log ("*** Native HTTP response: JSON parsing failed for "+url+", returning text");
+                 // console.log ("*** Native HTTP response: JSON parsing failed for "+url+", returning text");
                   d.resolve({"data":succ.data});
                   return d.promise;
                 }
@@ -2312,7 +2336,8 @@ angular.module('zmApp', [
               }
             }, 
             function (err) {
-              console.log ("***  Inside native HTTP error: "+JSON.stringify(err));
+              //console.log ("***  Inside native HTTP error: "+JSON.stringify(err));
+              NVRDataModel.debug ("*** Native HTTP error: "+JSON.stringify(err));
               d.reject(err);
               return d.promise;
             });
@@ -2320,7 +2345,7 @@ angular.module('zmApp', [
           
         }
         else { // not cordova, so lets go back to default http
-          console.log ("**** "+method+" using XHR HTTP for "+url);
+         // console.log ("**** "+method+" using XHR HTTP for "+url);
           return $http.apply($http, arguments);
         }
 
@@ -2336,7 +2361,6 @@ angular.module('zmApp', [
       });
     // wrap convenience functions
       $delegate.get = function (url,config) {
-       
         return wrapper(angular.extend(config || {}, {
           method: 'get',
           url: url
@@ -2344,7 +2368,6 @@ angular.module('zmApp', [
       };
 
       $delegate.post = function (url,data,config) {
-       
         return wrapper(angular.extend(config || {}, {
           method: 'post',
           url: url,
