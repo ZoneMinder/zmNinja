@@ -930,6 +930,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     var fname = "zmninja.jpg";
     var fn = "cordova.plugins.photoLibrary.saveImage";
+    var loginData = NVRDataModel.getLogin();
 
     $ionicLoading.show({
       template: $translate.instant('kPleaseWait') + "...",
@@ -1012,8 +1013,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
             },
             function (err) {
-              console.log("error downloading:" + JSON.stringify(err));
-            }, false, {});
+              NVRDataModel.log("error downloading:" + JSON.stringify(err));
+              SaveError();
+            }, !loginData.enableStrictSSL, {});
 
 
 

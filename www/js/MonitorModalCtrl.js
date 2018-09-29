@@ -1220,7 +1220,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                   });
           
           }, 
-            function(err) { console.log ("error downloading:"+JSON.stringify(err));}, false, {});
+            function(err) { NVRDataModel.debug ("error downloading:"+JSON.stringify(err));SaveError();}, !loginData.enableStrictSSL, {});
 
 
             

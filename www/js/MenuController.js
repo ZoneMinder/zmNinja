@@ -91,7 +91,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
         cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
       }
 
-      if (loginData.enableStrictSSL) {
+      if (!loginData.enableStrictSSL) {
 
         //alert("Enabling insecure SSL");
         NVRDataModel.log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
