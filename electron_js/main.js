@@ -56,7 +56,7 @@ function createAlternateWindow() {
     y: 10,
     width: 800,
     height: 800,
-    icon: path.join(__dirname, '/../icon.png'),
+    icon: path.join(__dirname, '/../resources/icon.png'),
     webPreferences:{nodeIntegration:false}});
 
     const startUrl = process.env.ELECTRON_START_URL || url.format({
@@ -64,7 +64,7 @@ function createAlternateWindow() {
       protocol: 'file:',
       slashes: true
     });
-    
+
     newWin.loadURL(startUrl);
 
 }
@@ -106,12 +106,12 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
         y: mainWindowState.y,
         width: mainWindowState.width,
         height: mainWindowState.height,
-        icon: path.join(__dirname, '/../icon.png'),
+        icon: path.join(__dirname, '/../resources/icon.png'),
         webPreferences:{nodeIntegration:false}});
 //
     console.log (__dirname+'/../icon.png');
 
-     
+
 
 
     win.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
@@ -151,7 +151,7 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
 
  // const menu = Menu.buildFromTemplate(template)
  // Menu.setApplicationMenu(menu)
- 
+
 
  const template = [
   {
