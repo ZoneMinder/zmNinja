@@ -148,12 +148,12 @@
         </a>
       </li>
       <li ng-if="isToggleListMenu">
-        <a href="" ng-click="enableAlarm(monitorId,true)">
+        <a href="" ng-click="triggerAlarm(monitorId,'on')">
           <i class="icon  ion-flash"></i>
         </a>
       </li>
       <li ng-if="isToggleListMenu">
-        <a href="" ng-click="enableAlarm(monitorId,false)">
+        <a href="" ng-click="triggerAlarm(monitorId,'off')">
           <i class="icon  ion-flash-off"></i>
         </a>
       </li>
