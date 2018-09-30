@@ -109,7 +109,7 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
         icon: path.join(__dirname, '/../resources/icon.png'),
         webPreferences:{nodeIntegration:false}});
 //
-    console.log (__dirname+'/../icon.png');
+    console.log (path.join(__dirname, '/../resources/icon.png'));
 
 
 
