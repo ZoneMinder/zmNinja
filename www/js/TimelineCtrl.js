@@ -1026,7 +1026,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $ionicLoading.show({
       template: $translate.instant('kLoadingGraph') + "...",
       animation: 'fade-in',
-      showBackdrop: true,
+      showBackdrop: false,
       maxWidth: 200,
       showDelay: 0,
       duration: zm.loadingTimeout, //specifically for Android - http seems to get stuck at times
@@ -1398,7 +1398,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
           /*$ionicLoading.show({
               template: "",
               animation: 'fade-in',
-              showBackdrop: true,
+              showBackdrop: false,
               maxWidth: 200,
               showDelay: 0,
               duration: 1500,

@@ -2044,7 +2044,7 @@ angular.module('zmApp.controllers')
           $ionicLoading.show({
             template: $translate.instant('kLoadingMonitors'),
             animation: 'fade-in',
-            showBackdrop: true,
+            showBackdrop: false,
             duration: zm.loadingTimeout,
             maxWidth: 200,
             showDelay: 0
@@ -2533,7 +2533,7 @@ angular.module('zmApp.controllers')
           $ionicLoading.show({
             template: $translate.instant('kCalcEventSize') + '...',
             animation: 'fade-in',
-            showBackdrop: true,
+            showBackdrop: false,
             duration: zm.loadingTimeout,
             maxWidth: 200,
             showDelay: 0
@@ -2585,7 +2585,7 @@ angular.module('zmApp.controllers')
             $ionicLoading.show({
               template: loadingStr,
               animation: 'fade-in',
-              showBackdrop: true,
+              showBackdrop: false,
               maxWidth: 200,
               showDelay: 0,
               duration: zm.loadingTimeout, //specifically for Android - http seems to get stuck at times
