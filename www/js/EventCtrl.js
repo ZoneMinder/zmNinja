@@ -2658,7 +2658,7 @@ angular.module('zmApp.controllers')
       $ionicLoading.show({
         template: $translate.instant('kSearchCancelled'),
         animation: 'fade-in',
-        showBackdrop: true,
+        showBackdrop: false,
         duration: 2000,
         maxWidth: 200,
         showDelay: 0
