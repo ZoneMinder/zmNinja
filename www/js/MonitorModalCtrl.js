@@ -37,7 +37,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   /* $ionicLoading.show({
      template: $translate.instant('kNegotiatingStreamAuth') + '...',
      animation: 'fade-in',
-     showBackdrop: true,
+     showBackdrop: false,
      duration: zm.loadingTimeout,
      maxWidth: 300,
      showDelay: 0
@@ -1037,9 +1037,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   //-------------------------------------------------------------
   // Turns on or off an alarm forcibly (mode true = on, false = off)
   //-------------------------------------------------------------
-  $scope.enableAlarm = function (mid, mode) {
+  $scope.triggerAlarm = function (mid, mode) {
 
-    if (mode) // trigger alarm
+    if (mode == 'on') // trigger alarm
     {
       $rootScope.zmPopup = SecuredPopups.show('show', {
         title: 'Confirm',
@@ -1047,7 +1047,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         buttons: [{
             text: $translate.instant('kButtonYes'),
             onTap: function (e) {
-              enableAlarm(mid, mode);
+              triggerAlarm(mid, mode);
             }
           },
           {
@@ -1060,11 +1060,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
       });
     } else
-      enableAlarm(mid, mode);
+      triggerAlarm(mid, mode);
 
-    function enableAlarm(mid, mode) {
+    function triggerAlarm(mid, mode) {
       var apiurl = NVRDataModel.getLogin().apiurl;
-      var c = mode ? "on" : "off";
+      var c = mode=='on' ? 'on' : 'off';
       var alarmurl = apiurl + "/monitors/alarm/id:" + mid + "/command:" + c + ".json";
       NVRDataModel.log("Invoking " + alarmurl);
 
@@ -1082,6 +1082,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
               noBackdrop: true,
               duration: 2000,
             });
+
+
           },
           function (error) {
 
@@ -1090,7 +1092,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
               noBackdrop: true,
               duration: 3000,
             });
-            NVRDataModel.debug("Error in enableAlarm " + JSON.stringify(error));
+            NVRDataModel.debug("Error in triggerAlarm " + JSON.stringify(error));
           });
     }
 
