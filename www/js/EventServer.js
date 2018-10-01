@@ -150,7 +150,7 @@ angular.module('zmApp.controllers')
 
         if (timeElapsedSinceResume == -1) {
           // so we display error 
-          timeElapsedSinceResume = moment().subtract('1', hour);
+          timeElapsedSinceResume = moment().subtract('1', 'hour');
         }
 
         var duration = moment.duration(moment().diff(timeElapsedSinceResume)).asSeconds().toFixed(1);
