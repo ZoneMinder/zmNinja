@@ -46,9 +46,6 @@
       "cordova-plugin-cloud-settings": {
         "ANDROID_BACKUP_SERVICE_KEY": "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw"
       },
-      "phonegap-plugin-push": {
-        "FCM_VERSION": "11.6.2"
-      },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-photo-library": {
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Save image alarms todisk"
@@ -56,7 +53,10 @@
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
-      "cordova-plugin-advanced-http": {}
+      "cordova-plugin-advanced-http": {},
+      "phonegap-plugin-push": {
+        "FCM_VERSION": "11.6.2"
+      }
     }
   },
   "dependencies": {
@@ -103,7 +103,7 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
-    "phonegap-plugin-push": "^2.1.3"
+    "phonegap-plugin-push": "~2.1.3"
   },
   "devDependencies": {
     "bower": "^1.8.4",
