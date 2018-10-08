@@ -198,10 +198,13 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
     var urls = [a1, a2, a3, a4, a5];
 
-    NVRDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
+    // can't use getPathZms as loginData is not inited yet
+    $http.get ($scope.wizard.apiURL+"/configs/viewByName/ZM_PATH_ZMS.json")
+    //NVRDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
       .then(function (data) {
           // remove zms or nph-zms
-          var path = data.trim();
+          var str  = data.data.config.Value;
+          var path = str.trim();
           path = path.replace("/nph-zms", "");
           path = path.replace("/zms", "");
           urls.push(baseUri.trim() + path);
