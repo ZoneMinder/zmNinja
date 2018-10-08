@@ -2302,7 +2302,7 @@ angular.module('zmApp', [
          method = arguments[0].method;
         var isOutgoingRequest = /^(http|https):\/\//.test(url);
         if (window.cordova && isOutgoingRequest) {
-         // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url));
+         //console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url));
           var d = $q.defer();
           var options = {
             method: method,
@@ -2328,7 +2328,7 @@ angular.module('zmApp', [
                 }
                 catch (e) {
 
-                 // console.log ("*** Native HTTP response: JSON parsing failed for "+url+", returning text");
+                 //console.log ("*** Native HTTP response: JSON parsing failed for "+url+", returning text");
                   d.resolve({"data":succ.data});
                   return d.promise;
                 }

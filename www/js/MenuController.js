@@ -111,21 +111,20 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
 
     if (loginData.isUseEventServer) {
-      EventServer.init();
-      if ($rootScope.apnsToken && loginData.disablePush != true) {
-        NVRDataModel.log("Making sure we get push notifications");
-        EventServer.sendMessage('push', {
-          type: 'token',
-          platform: $rootScope.platformOS,
-          token: $rootScope.apnsToken,
-          state: "enabled"
-        }, 1);
-      }
-      EventServer.sendMessage("control", {
-        type: 'filter',
-        monlist: loginData.eventServerMonitors,
-        intlist: loginData.eventServerInterval
+      EventServer.init()
+      .then (function (succ) {
+        EventServer.sendMessage("control", {
+          type: 'filter',
+          monlist: loginData.eventServerMonitors,
+          intlist: loginData.eventServerInterval,
+          token: $rootScope.apnsToken
+        });
+      }, 
+      function (err) {
+        NVRDataModel.debug ("EventServer init failed");
       });
+     
+      
     }
 
 
