@@ -583,23 +583,23 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     if ($rootScope.platformOS != 'desktop') {
 
       if ($scope.loginData.isUseBasicAuth) {
-        debug ("Cordova HTTP: configuring basic auth");
+        NVRDataModel.debug ("Cordova HTTP: configuring basic auth");
         cordova.plugin.http.useBasicAuth($scope.loginData.basicAuthUser, $scope.loginData.basicAuthPassword);
       }
 
       if (!$scope.loginData.enableStrictSSL) {
 
         //alert("Enabling insecure SSL");
-        log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+        NVRDataModel.log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
         cordova.plugin.http.setSSLCertMode('nocheck', function() {
-         debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+         NVRDataModel.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
         }, function() {
           console.log('-->Error setting SSL permissive');
         });
 
       } else {
 
-        log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+        NVRDataModel.log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
 
       }
 
@@ -649,21 +649,28 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     oldName = $scope.loginData.serverName;
 
     if ($scope.loginData.isUseEventServer) {
-      EventServer.init();
-      if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
-        NVRDataModel.log("Making sure we get push notifications");
-        EventServer.sendMessage('push', {
-          type: 'token',
-          platform: $rootScope.platformOS,
-          token: $rootScope.apnsToken,
-          state: "enabled"
-        }, 1);
-      }
-      EventServer.sendMessage("control", {
-        type: 'filter',
-        monlist: $scope.loginData.eventServerMonitors,
-        intlist: $scope.loginData.eventServerInterval
+      EventServer.init()
+      .then (function (succ) {
+        if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
+          NVRDataModel.log("Making sure we get push notifications");
+          EventServer.sendMessage('push', {
+            type: 'token',
+            platform: $rootScope.platformOS,
+            token: $rootScope.apnsToken,
+            state: "enabled"
+          }, 1);
+        }
+        EventServer.sendMessage("control", {
+          type: 'filter',
+          monlist: $scope.loginData.eventServerMonitors,
+          intlist: $scope.loginData.eventServerInterval,
+          token: $rootScope.apnsToken
+        });
+      },
+      function (err) {
+        NVRDataModel.log ("Event server init failed");
       });
+      
 
     }
 

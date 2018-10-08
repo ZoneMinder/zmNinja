@@ -1142,13 +1142,13 @@ angular.module('zmApp.controllers')
                   }
 
 
-                  console.log("INIT SIMUL=" + loginData.disableSimulStreaming);
-                  console.log("INIT PLATFORM IS=" + $rootScope.platformOS);
+                  //console.log("INIT SIMUL=" + loginData.disableSimulStreaming);
+                  //console.log("INIT PLATFORM IS=" + $rootScope.platformOS);
                   if (typeof loginData.disableSimulStreaming == 'undefined') {
 
 
                     loginData.disableSimulStreaming = ($rootScope.platformOS == 'ios') ? true : false;
-                    console.log("INIT DISABLING SIMUL:" + loginData.disableSimulStreaming);
+                    //console.log("INIT DISABLING SIMUL:" + loginData.disableSimulStreaming);
                   }
 
 
@@ -1870,12 +1870,16 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         getPathZms: function () {
           var d = $q.defer();
+
+
           var apiurl = loginData.apiurl;
           var myurl = apiurl + '/configs/viewByName/ZM_PATH_ZMS.json';
           debug("Config URL for ZMS PATH is:" + myurl);
           $http.get(myurl)
             .then(function (data) {
+
               data = data.data;
+              //console.log (">>>> GOT: "+JSON.stringify(data));
               configParams.ZM_PATH_ZMS = data.config.Value;
               d.resolve(configParams.ZM_PATH_ZMS);
               return (d.promise);
