@@ -897,10 +897,20 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   function moveToMonitor(m, d) {
 
-    $scope.animationInProgress = true;
+   
     if ($scope.isZoneEdit) {
       NVRDataModel.log("Not cycling, as you are editing zones");
+      return;
     }
+
+    if ($scope.monitors.length <= 1) {
+      NVRDataModel.log("Not cycling, as you only have at most 1 monitors");
+      return;
+    }
+
+
+
+    $scope.animationInProgress = true;
     var curstate = $ionicHistory.currentStateName();
     var found = 0;
     var mid;
