@@ -403,13 +403,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         }
       })
       .then(function (resp) {
-        // NVRDataModel.debug ("processEvent success:"+JSON.stringify(resp));
+        //NVRDataModel.debug ("processEvent success:"+JSON.stringify(resp));
 
         resp = resp.data;
         if (resp.result == "Ok") {
 
           if (resp.status) $scope.currentProgress.progress = resp.status.progress;
-          if (resp.status) $scope.eventId = resp.status.event;
+          if (resp.status && resp.status.event) $scope.eventId = resp.status.event;
           $scope.d_eventId = $scope.eventId;
           if (resp.status) $scope.currentRate = resp.status.rate;
 
@@ -1067,8 +1067,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   $scope.constructStream = function (monitor) {
 
 
+    //console.log ("STREAMSTATE ="+currentStreamState);
     if ($scope.animationInProgress) return "";
-
     var stream = "";
     // eventId gets populated when prepareModal completes
     if (currentStreamState == streamState.STOPPED || !$scope.eventId) {
@@ -1092,7 +1092,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
     //console.log ($scope.connKey );
-    // console.log ("STREAM="+stream);
+    //console.log ("STREAM="+stream);
     //console.log ("EID="+$scope.eventId);
     if ($rootScope.basicAuthToken && stream) stream += "&basicauth=" + $rootScope.basicAuthToken;
     return stream;
