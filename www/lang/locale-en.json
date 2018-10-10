@@ -15,7 +15,7 @@
     "kApplyingChanges"           :"Applying changes. Please wait",
     "kArrangingImages"           :"arranging images",
     "kAt"                        :"at",
-    "kAuthHashDisabled"          :"zmNinja needs AUTH_HASH_LOGINS to be enabled  to be able to display image frames",
+    "kAuthHashDisabled"          :" AUTH_HASH_LOGINS needs to be enabled to display images. Please restart ZM afer enabling it.",
     "kAuthSuccess"               :"authentication success",
     "kAuthenticating"            :"authenticating",
     "kAuthenticatingWebScrape"   : "authenticating via web scrape",
