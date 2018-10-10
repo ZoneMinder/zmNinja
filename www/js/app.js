@@ -44,7 +44,7 @@ angular.module('zmApp', [
   .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     recommendedAppVersion: '1.32.0',
-    minEventServerVersion: '1.0',
+    minEventServerVersion: '2.0',
     castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
@@ -2302,7 +2302,8 @@ angular.module('zmApp', [
          method = arguments[0].method;
         var isOutgoingRequest = /^(http|https):\/\//.test(url);
         if (window.cordova && isOutgoingRequest) {
-         //console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url));
+        
+         
           var d = $q.defer();
           var options = {
             method: method,
@@ -2311,7 +2312,7 @@ angular.module('zmApp', [
             timeout: arguments[0].timeout,
             responseType: arguments[0].responseType
           };
-
+          console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
            cordova.plugin.http.sendRequest(encodeURI(url),options,
             function (succ) {
               // automatic JSON parse if no responseType: text
@@ -2336,7 +2337,7 @@ angular.module('zmApp', [
               }
             }, 
             function (err) {
-              //console.log ("***  Inside native HTTP error: "+JSON.stringify(err));
+              console.log ("***  Inside native HTTP error: "+JSON.stringify(err));
               
               d.reject(err);
               return d.promise;
