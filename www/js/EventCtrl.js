@@ -522,6 +522,11 @@ angular.module('zmApp.controllers')
 
     function saveNow(imgsrc, r, f) {
 
+      var fname = "zmninja.jpg";
+      var fn = "cordova.plugins.photoLibrary.saveImage";
+      var loginData = NVRDataModel.getLogin();
+
+
       $ionicLoading.show({
         template: $translate.instant('kSavingSnapshot') + "...",
         noBackdrop: true,
@@ -530,51 +535,105 @@ angular.module('zmApp.controllers')
       var url = imgsrc;
       NVRDataModel.log("saveNow: File path to grab is " + url);
 
-      var img = new Image();
-      img.onload = function () {
-        // console.log("********* ONLOAD");
-        var canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var context = canvas.getContext('2d');
-        context.drawImage(img, 0, 0);
+      if ($rootScope.platformOS != 'desktop') {
 
-        var imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-        var imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
-
-        if ($rootScope.platformOS != "desktop") {
-          try {
-
-            cordova.exec(
-              SaveSuccess,
-              SaveError,
-              'Canvas2ImagePlugin',
-              'saveImageDataToLibrary', [imageData]
-            );
-            // carouselUtils.setStop(curState);
-          } catch (e) {
-
-            SaveError(e.message);
-            // carouselUtils.setStop(curState);
+        var album = 'zmNinja';
+        NVRDataModel.debug("Trying to save image to album: " + album);
+        cordova.plugins.photoLibrary.requestAuthorization(
+          function () {
+            //url = "https://picsum.photos/200/300/?random";
+  
+            var fileTransfer = new FileTransfer();
+            var urle = encodeURI(url);
+  
+  
+            fileTransfer.onprogress = function (progressEvent) {
+              if (progressEvent.lengthComputable) {
+  
+                $timeout(function () {
+                  var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+                  $ionicLoading.show({
+                    template: $translate.instant('kPleaseWait') + "... (" + perc + "%)",
+                    noBackdrop: true,
+                    //duration: zm.httpTimeout
+                  });
+                });
+  
+  
+              }
+            };
+  
+            fileTransfer.download(urle, cordova.file.dataDirectory + fname,
+              function (entry) {
+                NVRDataModel.debug("local download complete: " + entry.toURL());
+                NVRDataModel.debug("Now trying to move it to album");
+                var pluginName = (fname == "zmNinja.mp4" ? "saveVideo" : "saveImage");
+  
+  
+                cordova.plugins.photoLibrary[pluginName](entry.toURL(), album,
+                  function (cameraRollAssetId) {
+                    SaveSuccess();
+                    $cordovaFile.removeFile(cordova.file.dataDirectory, fname)
+                      .then(
+                        function () {
+                          NVRDataModel.debug("file removed from data directory");
+                        },
+                        function (e) {
+                          NVRDataModel.debug("could not delete temp file: " + JSON.stringify(e));
+                        }
+                      );
+  
+  
+                  },
+                  function (err) {
+                    NVRDataModel.debug("Saving error:" + JSON.stringify(err));
+                    SaveError();
+  
+                  });
+  
+  
+  
+  
+              },
+              function (err) {
+                NVRDataModel.log("error downloading:" + JSON.stringify(err));
+                SaveError();
+              }, !loginData.enableStrictSSL, {});
+  
+  
+  
+  
+            // User gave us permission to his library, retry reading it!
+          },
+          function (err) {
+            // User denied the access
+            NVRDataModel.debug("Permission not granted");
+            SaveError();
+          }, // if options not provided, defaults to {read: true}.
+  
+          {
+            read: true,
+            write: true
           }
-        } else {
-
-          var fname = r + f + ".png";
-          fname = fname.replace(/\//, "-");
-          fname = fname.replace(/\.jpg/, '');
-
-          canvas.toBlob(function (blob) {
-            saveAs(blob, fname);
-            SaveSuccess();
-          });
-        }
-      };
-      try {
-        img.src = url;
-        // console.log ("SAVING IMAGE SOURCE");
-      } catch (e) {
-        SaveError(e.message);
+        );
+  
+      } else {
+        //desktop
+  
+        $ionicLoading.hide();
+    
+       $rootScope.zmPopup = SecuredPopups.show('alert', {
+          title: $translate.instant('kNote'),
+          template: $translate.instant('kDownloadVideoImage')+"<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download>"+" "+$translate.instant('kDownload')+"</a></center>",
+          okText: $translate.instant('kDismiss'),
+          okType:'button-stable'
+        });
+  
+  
+  
       }
+
+      
 
     }
 
