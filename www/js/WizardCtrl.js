@@ -13,12 +13,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
   function login(u, zmu, zmp) {
     var d = $q.defer();
-
-
-    
-
     $http({
-        method: 'POST',
+        method: 'post',
         //withCredentials: true,
         url: u,
         headers: {
@@ -31,6 +27,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             str.push(encodeURIComponent(p) + "=" +
               encodeURIComponent(obj[p]));
           var params = str.join("&");
+          //console.log ("PARAMS in login:"+params);
           return params;
         },
 
@@ -61,7 +58,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         }
       },
       function (error) {
-        //console.log("************ERROR");
+       // console.log("************ERROR:"+ JSON.stringify(error));
         $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
         $scope.wizard.portalColor = "#e74c3c";
         d.reject(false);
