@@ -213,7 +213,7 @@
              type: 'filter',
              monlist: monstring,
              intlist: intervalstring,
-             token: $rootScope.apnsToken,
+             token: $rootScope.apnsToken
            }, 1);
 
            if ($rootScope.apnsToken != "")
