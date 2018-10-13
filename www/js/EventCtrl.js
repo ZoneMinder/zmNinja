@@ -45,7 +45,8 @@ angular.module('zmApp.controllers')
     var oldEvent;
     var scrollbynumber;
     var eventImageDigits = 5; // failsafe
-    var eventsPage;
+    var currEventsPage = 1;
+    var maxEventsPage = 1;
     var moreEvents;
     var pageLoaded;
     var enableLoadMore;
@@ -236,7 +237,7 @@ angular.module('zmApp.controllers')
         });
 
       $scope.showSearch = false;
-      eventsPage = 1;
+ 
       moreEvents = true;
       $scope.viewTitle = {
         title: ""
@@ -342,6 +343,8 @@ angular.module('zmApp.controllers')
            $scope.monitors = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2)[0];
        } else*/
       $scope.monitors = message;
+      currEventsPage = 1;
+      maxEventsPage = 1;
 
       if ($scope.monitors.length == 0) {
         var pTitle = $translate.instant('kNoMonitors');
@@ -374,14 +377,8 @@ angular.module('zmApp.controllers')
         nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
       //NVRDataModel.debug ("GETTING EVENTS USING "+$scope.id+" "+nolangFrom+" "+ nolangTo);
-      NVRDataModel.getEventsPages($scope.id, nolangFrom, nolangTo)
-        .then(function (data) {
-          //   console.log ("WE GOT PAGES="+JSON.stringify(data));
-          eventsPage = data.pageCount || 1;
-          NVRDataModel.debug("EventCtrl: found " + eventsPage + " pages of events");
 
-          pageLoaded = true;
-          $scope.viewTitle.title = data.count;
+    
           NVRDataModel.debug("EventCtrl: grabbing events for: id=" + $scope.id + " Date/Time:" + $rootScope.fromString +
             "-" + $rootScope.toString);
           nolangFrom = "";
@@ -391,11 +388,20 @@ angular.module('zmApp.controllers')
           if ($rootScope.toString)
             nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-          NVRDataModel.getEvents($scope.id, eventsPage, "", nolangFrom, nolangTo)
+          NVRDataModel.getEvents($scope.id, currEventsPage, "", nolangFrom, nolangTo)
             .then(function (data) {
 
+              pageLoaded = true;
+              //$scope.viewTitle.title = data.pagination.count;
+
+              console.log (JSON.stringify(data.pagination));
+              if (data.pagination && data.pagination.pageCount)
+                  maxEventsPage = data.pagination.pageCount;
+             
+              NVRDataModel.debug ("We have a total of "+maxEventsPage+" and are at page="+currEventsPage);
+
               // console.log ("WE GOT EVENTS="+JSON.stringify(data));
-              var myevents = data;
+              var myevents = data.events;
 
               NVRDataModel.debug("EventCtrl: success, got " + myevents.length + " events");
               var loginData = NVRDataModel.getLogin();
@@ -493,7 +499,6 @@ angular.module('zmApp.controllers')
               }
             });
 
-        });
     }
 
     //-------------------------------------------------------
@@ -2733,14 +2738,17 @@ angular.module('zmApp.controllers')
       // the events API does not return an error for anything
       // except greater page limits than reported
 
-      // console.log("***** LOADING MORE INFINITE SCROLL ****");
-      eventsPage--;
-      if ((eventsPage <= 0) && (pageLoaded)) {
+      console.log("***** LOADING MORE INFINITE SCROLL ****");
+      
+      if ((currEventsPage >= maxEventsPage) && (pageLoaded)) {
         moreEvents = false;
-        //console.log("*** At Page " + eventsPage + ", not proceeding");
+        NVRDataModel.debug ("No more - We have a total of "+maxEventsPage+" and are at page="+currEventsPage);
+
+        console.log("*** At Page " + currEventsPage + " of "+maxEventsPage+", not proceeding");
         return;
       }
 
+      currEventsPage++;
       if (!enableLoadMore) {
         moreEvents = false; // Don't ion-scroll till enableLoadMore is true;
         $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -2751,7 +2759,7 @@ angular.module('zmApp.controllers')
 
       var loadingStr = "";
       if ($scope.search.text != "") {
-        var toastStr = $translate.instant('kToastSearchingPage') + eventsPage;
+        var toastStr = $translate.instant('kToastSearchingPage') + currEventsPage;
         $ionicLoading.show({
           maxwidth: 100,
           scope: $scope,
@@ -2768,11 +2776,12 @@ angular.module('zmApp.controllers')
       if ($rootScope.toString)
         nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-      NVRDataModel.getEvents($scope.id, eventsPage, loadingStr, nolangFrom, nolangTo)
+      NVRDataModel.getEvents($scope.id, currEventsPage, loadingStr, nolangFrom, nolangTo)
         .then(function (data) {
             var loginData = NVRDataModel.getLogin();
             // console.log("Got new page of events with Page=" + eventsPage);
-            var myevents = data;
+            var myevents = data.events;
+          
 
             for (var i = 0; i < myevents.length; i++) {
 
@@ -3064,6 +3073,8 @@ angular.module('zmApp.controllers')
       // console.log("***Pull to Refresh");
 
       NVRDataModel.debug("Reloading monitors");
+      maxEventsPage = 1;
+      currEventsPage = 1;
       var refresh = NVRDataModel.getMonitors(1);
       refresh.then(function (data) {
         $scope.monitors = data;

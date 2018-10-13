@@ -28,7 +28,7 @@ angular.module('zmApp.controllers')
 
       var monitors = [];
       var multiservers = [];
-      var oldevents = [];
+    
       var migrationComplete = false;
 
       var tz = "";
@@ -2519,6 +2519,11 @@ angular.module('zmApp.controllers')
 
         getEventsPages: function (monitorId, startTime, endTime) {
           //console.log("********** INSIDE EVENTS PAGES ");
+
+          var d = $q.defer();
+
+
+
           var apiurl = loginData.apiurl;
 
           var myurl = apiurl + "/events/index";
@@ -2544,7 +2549,7 @@ angular.module('zmApp.controllers')
           });
 
           //var myurl = (monitorId == 0) ? apiurl + "/events.json?page=1" : apiurl + "/events/index/MonitorId:" + monitorId + ".json?page=1";
-          var d = $q.defer();
+          
           $http.get(myurl)
             .then(function (data) {
               data = data.data;
@@ -2575,9 +2580,13 @@ angular.module('zmApp.controllers')
         //-----------------------------------------------------------------------------
 
         // new reminder
-        // https://zm/api/events.json?&sort=StartTime&direction=desc
+        // 
+        //https:///zm/api/events.json?&sort=StartTime&direction=desc&page=1
         getEvents: function (monitorId, pageId, loadingStr, startTime, endTime) {
 
+
+
+          if (!pageId) pageId = 1;
           //console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
           if (!loadingStr) {
@@ -2609,14 +2618,11 @@ angular.module('zmApp.controllers')
             myurl = myurl + "/EndTime <=:" + endTime;
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
-          myurl = myurl + ".json";
 
-          if (pageId) {
-            myurl = myurl + "?page=" + pageId;
-          } else {
-            //console.log("**** PAGE WAS " + pageId);
-          }
+          myurl = myurl + ".json?&sort=StartTime&direction=desc&page="+pageId;
 
+        
+           debug ("getEvents:"+myurl);
           // Simulated data
 
           // myurl = "https://api.myjson.com/bins/4jx44.json";
@@ -2628,12 +2634,9 @@ angular.module('zmApp.controllers')
               data = data.data;
               if (loadingStr != 'none') $ionicLoading.hide();
               //myevents = data.events;
-              myevents = data.events.reverse();
-              if (monitorId == 0) {
-                oldevents = myevents;
-              }
-              //console.log (JSON.stringify(data));
-              // console.log("DataModel Returning " + myevents.length + "events for page" + pageId);
+              myevents = data;
+
+             
               d.resolve(myevents);
               return d.promise;
 
@@ -2650,10 +2653,7 @@ angular.module('zmApp.controllers')
 
               d.reject(myevents);
 
-              // FIXME: Check what pagination does to this logic
-              if (monitorId == 0) {
-                oldevents = [];
-              }
+             
               return d.promise;
             });
           return d.promise;
