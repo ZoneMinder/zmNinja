@@ -1026,7 +1026,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $ionicLoading.show({
       template: $translate.instant('kLoadingGraph') + "...",
       animation: 'fade-in',
-      showBackdrop: true,
+      showBackdrop: false,
       maxWidth: 200,
       showDelay: 0,
       duration: zm.loadingTimeout, //specifically for Android - http seems to get stuck at times
@@ -1103,9 +1103,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //console.log ("**NOLANG" + fromDateNoLang  + " " + toDateNoLang);
 
     NVRDataModel.getEventsPages(0, fromDateNoLang, toDateNoLang)
-      .then(function (data) {
-        var pages = data.pageCount || 1;
-        var itemsPerPage = parseInt(data.limit);
+      .then(function (epData) {
+        var pages =  1;
+        var itemsPerPage = parseInt(epData.limit);
         var iterCount;
 
         // So iterCount is the # of HTTP calls I need to make
@@ -1117,17 +1117,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         // for dynamic binding which was easier, but due to performance reasons
         // I am waiting for the full data to load before I draw
         var promises = [];
-        while ((pages > 0) && (iterCount > 0)) {
+        while ((pages <= epData.pageCount) && (iterCount > 0)) {
           var promise = NVRDataModel.getEvents(0, pages, "none", fromDateNoLang, toDateNoLang);
           promises.push(promise);
-          pages--;
+         
+          pages++;
           iterCount--;
 
         }
 
         $q.all(promises)
           .then(function (data) {
-              NVRDataModel.debug("TimelineCtrl/drawgraph: all pages of graph data received");
+              NVRDataModel.debug("TimelineCtrl/drawgraph: all pages of graph data received " );
               graphIndex = 0;
               NVRDataModel.log("Creating " + $scope.monitors.length + " groups for the graph");
               // create groups
@@ -1143,8 +1144,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               }
 
               for (var j = 0; j < data.length; j++) {
-                var myevents = data[j];
+                var myevents = data[j].events;
 
+             //   console.log ("****************DATA ="+JSON.stringify(data[j]));
+               // console.log ("**********************************");
                 if (graphIndex > count) {
                   NVRDataModel.log("Exiting page count graph - reached limit of " + count);
                   break;
@@ -1203,10 +1206,12 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                     }
 
                     //console.log ("ADDED "+tzs+" " +tze);
+
+                    if (!graphData.get(myevents[i].Event.Id)) {
                     graphData.add({
                       //id: graphIndex,
                       id: myevents[i].Event.Id,
-                      content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + "(" + myevents[j].Event.Id + ") " + myevents[i].Event.Notes + "</span>",
+                      content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + "(" + myevents[i].Event.Id + ") " + myevents[i].Event.Notes + "</span>",
 
                       start: tzs,
                       //start: myevents[i].Event.StartTime,
@@ -1224,7 +1229,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                       myevent: myevents[i]
 
                     });
+                    //console.log ("IED="+myevents[i].Event.Id);
                     graphIndex++;
+                  }
                   } else {
                     //console.log ("SKIPPED GRAPH ID " + graphIndex);
                   }
@@ -1375,7 +1382,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
           var _item;
           for (var x = 0; x < visible.length; x++) {
             _item = timeline.itemSet.items[x];
-            if (_item.data.group == prop.group) {
+            if (_item && _item.data && _item.data.group == prop.group) {
               if (Math.abs(_item.left - prop.x) < minDist) {
                 closestItem = _item;
                 minDist = Math.abs(_item.left - prop.x);
@@ -1398,7 +1405,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
           /*$ionicLoading.show({
               template: "",
               animation: 'fade-in',
-              showBackdrop: true,
+              showBackdrop: false,
               maxWidth: 200,
               showDelay: 0,
               duration: 1500,

@@ -25,7 +25,7 @@ angular.module('zmApp', [
     'com.2fdevs.videogular',
     'com.2fdevs.videogular.plugins.controls',
     'com.2fdevs.videogular.plugins.overlayplay',
-    'ionic-native-transitions',
+    //'ionic-native-transitions',
     'mgo-angular-wizard',
     'pascalprecht.translate',
     'uk.ac.soton.ecs.videogular.plugins.cuepoints',
@@ -44,7 +44,7 @@ angular.module('zmApp', [
   .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     recommendedAppVersion: '1.32.0',
-    minEventServerVersion: '1.0',
+    minEventServerVersion: '2.0',
     castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
@@ -264,7 +264,6 @@ angular.module('zmApp', [
   })
 
 
-
   // credit https://gist.github.com/Zren/beaafd64f395e23f4604
 
   .directive('mouseWheelScroll', function ($timeout) {
@@ -322,7 +321,7 @@ angular.module('zmApp', [
           //console.log ("requestConfig is " + JSON.stringify(requestConfig));
           imageLoadingDataShare.set(1);
           $http(requestConfig)
-            .success(function (data) {
+            .then(function (data) {
               //console.log ("Inside HTTP after Calling " + requestConfig.url);
               //console.log ("data got " + JSON.stringify(data));
 
@@ -763,6 +762,9 @@ angular.module('zmApp', [
             NVRDataModel.setLastUpdateCheck(moment().toISOString());
             // $localstorage.set("lastUpdateCheck", moment().toISOString());
             //console.log ("FULL STRING " + success.data.tag_name);
+
+           // console.log ("^^^^^^^^^^^^^ GOT: " + JSON.stringify(success));
+
             var res = success.data.tag_name.match("v(.*)");
             zmUpdateVersion = res[1];
             var currentVersion = NVRDataModel.getAppVersion();
@@ -783,16 +785,16 @@ angular.module('zmApp', [
 
         NVRDataModel.log("Checking for news updates");
         $http.get(zm.blogUrl, {
-            transformResponse: function (d, h) {
-              var trunc = "])}while(1);</x>";
-              if (d) {
-                d = d.substr(trunc.length);
-              }
-              return d;
-            }
+            responseType:'text',
+            transformResponse:undefined
           })
 
-          .success(function (datastr) {
+          .then(function (datastr) {
+            // again, for cordova-http
+
+            datastr = datastr.data;
+            var trunc = "])}while(1);</x>";
+            datastr = datastr.substr(trunc.length);
 
             var data = JSON.parse(datastr);
             $rootScope.newBlogPost = "";
@@ -906,6 +908,30 @@ angular.module('zmApp', [
         contentBannerInstance();
       }, 2000);
       NVRDataModel.debug("auth-success broadcast:Successful");
+
+
+      var ld = NVRDataModel.getLogin();
+
+      // we need AUTH_HASH_LOGIN to be on for WKWebView /mobile
+      if (ld.isUseAuth && $rootScope.platformOS != 'desktop') {
+          NVRDataModel.getAuthHashLogin()
+          .then (function (data) {
+        
+            if (data.data && data.data.config.Value != '1') {
+              $ionicPopup.alert({
+                title: $translate.instant('kError'),
+                template: $translate.instant('kAuthHashDisabled')
+              });
+            }
+
+          },
+          function (err) {
+          console.log ("AUTH HASH ERROR: "+JSON.stringify(conf));
+          });
+      }
+      
+
+
     });
 
     $rootScope.getProfileName = function () {
@@ -1059,10 +1085,11 @@ angular.module('zmApp', [
      
 
         $http({
-          method:'POST',
+          method:'post',
           url: loginAPI,
           timeout:httpDelay,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          responseType:'text',
           transformResponse: undefined,
           transformRequest: function(obj) {
             var str = [];
@@ -1242,7 +1269,7 @@ angular.module('zmApp', [
       //NVRDataModel.debug ("*** AUTH LOGIN URL IS " + loginData.url);
       $http({
 
-          method: 'POST',
+          method: 'post',
           timeout: httpDelay,
           //withCredentials: true,
           url: loginData.url + '/index.php',
@@ -1266,8 +1293,9 @@ angular.module('zmApp', [
             view: "console"
           }
         })
-        .success(function (data, status, headers) {
+        .then(function (data, status, headers) {
           // console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
+          data = data.data;
           $ionicLoading.hide();
 
           // Coming here does not mean success
@@ -1324,8 +1352,8 @@ angular.module('zmApp', [
 
           return (d.promise);
 
-        })
-        .error(function (error, status) {
+        },
+        function (error, status) {
 
           // console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
           $ionicLoading.hide();
@@ -1380,7 +1408,7 @@ angular.module('zmApp', [
   // First run in ionic
   //====================================================================
 
-  .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, NVRDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, $ionicNativeTransitions, $translate, $localstorage) {
+  .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, NVRDataModel, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, /* $ionicNativeTransitions,*/ $translate, $localstorage) {
 
 
     $ionicPlatform.ready(function () {
@@ -1967,9 +1995,9 @@ angular.module('zmApp', [
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
 
-        if (window.cordova && window.cordova.plugins.Keyboard) {
-          // console.log("no keyboard");
-          // cordova.plugins.Keyboard.disableScroll(true);
+        if (window.cordova ) {
+          console.log("------------->Keyboard foonone");
+           //window.cordova.plugins.Keyboard.disableScroll(true);
         }
         if (window.StatusBar) {
           // org.apache.cordova.statusbar required
@@ -2000,13 +2028,14 @@ angular.module('zmApp', [
 
         // console.log("file logger");
 
-        if (NVRDataModel.getLogin().disableNative) {
+        /*if (NVRDataModel.getLogin().disableNative) {
           NVRDataModel.log("Disabling native transitions...");
           $ionicNativeTransitions.enable(false);
         } else {
           NVRDataModel.log("Enabling native transitions...");
           $ionicNativeTransitions.enable(true);
-        }
+        }*/
+
         // At this stage, DataModel.init is not called yet
         // but I do need to know the language
 
@@ -2230,7 +2259,7 @@ angular.module('zmApp', [
   //------------------------------------------------------------------
 
   // My route map connecting menu options to their respective templates and controllers
-  .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, $ionicNativeTransitionsProvider, $logProvider, $translateProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, /*$ionicNativeTransitionsProvider,*/ $logProvider, $translateProvider) {
 
     //$logProvider.debugEnabled(false);
     //$compileProvider.debugInfoEnabled(false);
@@ -2254,8 +2283,111 @@ angular.module('zmApp', [
       };
     }]);
 
+
+    // Wraps around $http that switches between browser XHR
+    // or cordova-advanced-http based on if cordova is available 
+    // credits:
+    // a) https://www.exratione.com/2013/08/angularjs-wrapping-http-for-fun-and-profit/
+    // b) https://gist.github.com/adamreisnz/354364e2a58786e2be71
+
+    $provide.decorator('$http', ['$delegate', '$q', function($delegate, $q) {
+      // create function which overrides $http function
+      var $http = $delegate;
+
+      var wrapper = function () {
+        var url;
+        var method;
+
+         url = arguments[0].url;
+         method = arguments[0].method;
+        var isOutgoingRequest = /^(http|https):\/\//.test(url);
+        if (window.cordova && isOutgoingRequest) {
+        
+         
+          var d = $q.defer();
+          var options = {
+            method: method,
+            data: arguments[0].data,
+            headers: arguments[0].headers,
+            timeout: arguments[0].timeout,
+            responseType: arguments[0].responseType
+          };
+         // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
+           cordova.plugin.http.sendRequest(encodeURI(url),options,
+            function (succ) {
+              // automatic JSON parse if no responseType: text
+              // fall back to text if JSON parse fails too
+              if (options.responseType =='text') {
+                // don't parse into JSON
+                d.resolve({"data":succ.data});
+                return d.promise;
+              }
+              else {
+                try {
+                  d.resolve({"data":JSON.parse(succ.data)});
+                  return d.promise;
+                }
+                catch (e) {
+
+                 //console.log ("*** Native HTTP response: JSON parsing failed for "+url+", returning text");
+                  d.resolve({"data":succ.data});
+                  return d.promise;
+                }
+
+              }
+            }, 
+            function (err) {
+              console.log ("***  Inside native HTTP error: "+JSON.stringify(err));
+              
+              d.reject(err);
+              return d.promise;
+            });
+            return d.promise;
+          
+        }
+        else { // not cordova, so lets go back to default http
+         // console.log ("**** "+method+" using XHR HTTP for "+url);
+          return $http.apply($http, arguments);
+        }
+
+      };
+
+      // wrap around all HTTP methods
+      Object.keys($http).filter(function (key) {
+        return (typeof $http[key] === 'function');
+      }).forEach(function (key) {
+        wrapper[key] = function () {
+          return $http[key].apply($http, arguments);
+        };
+      });
+    // wrap convenience functions
+      $delegate.get = function (url,config) {
+        return wrapper(angular.extend(config || {}, {
+          method: 'get',
+          url: url
+        }));
+      };
+
+      $delegate.post = function (url,data,config) {
+        return wrapper(angular.extend(config || {}, {
+          method: 'post',
+          url: url,
+          data:data
+        }));
+      };
+
+      $delegate.delete = function (url,config) {
+        return wrapper(angular.extend(config || {}, {
+          method: 'delete',
+          url: url
+        }));
+      };
+
+      return wrapper;
+    }]);
+
     // If you do this, Allow Origin can't be *
-    //$httpProvider.defaults.withCredentials = true;
+    $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('timeoutHttpIntercept');
     $ionicConfigProvider.navBar.alignTitle('center');
     //$ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
@@ -2265,10 +2397,11 @@ angular.module('zmApp', [
     // so it messes up scrolldelegate zoom and possibly others
     //$ionicConfigProvider.scrolling.jsScrolling(false);
     $compileProvider.debugInfoEnabled(false);
+    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|cdvphotolibrary):/);
 
-    $ionicNativeTransitionsProvider.setDefaultOptions({
+    /*$ionicNativeTransitionsProvider.setDefaultOptions({
       duration: 250,
-    });
+    }); */
 
     $translateProvider.useStaticFilesLoader({
       prefix: 'lang/locale-',

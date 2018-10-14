@@ -45,7 +45,8 @@ angular.module('zmApp.controllers')
     var oldEvent;
     var scrollbynumber;
     var eventImageDigits = 5; // failsafe
-    var eventsPage;
+    var currEventsPage = 1;
+    var maxEventsPage = 1;
     var moreEvents;
     var pageLoaded;
     var enableLoadMore;
@@ -236,7 +237,7 @@ angular.module('zmApp.controllers')
         });
 
       $scope.showSearch = false;
-      eventsPage = 1;
+ 
       moreEvents = true;
       $scope.viewTitle = {
         title: ""
@@ -257,8 +258,8 @@ angular.module('zmApp.controllers')
       var apiurl = NVRDataModel.getLogin().apiurl + '/events/' + eid + '.json';
 
       $http.get(apiurl)
-        .success(function (data) {})
-        .error(function (err) {});
+        .then(function (data) {},
+        function (err) {});
 
     }
 
@@ -342,6 +343,8 @@ angular.module('zmApp.controllers')
            $scope.monitors = NVRDataModel.applyMontageMonitorPrefs(tempMon, 2)[0];
        } else*/
       $scope.monitors = message;
+      currEventsPage = 1;
+      maxEventsPage = 1;
 
       if ($scope.monitors.length == 0) {
         var pTitle = $translate.instant('kNoMonitors');
@@ -374,14 +377,8 @@ angular.module('zmApp.controllers')
         nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
       //NVRDataModel.debug ("GETTING EVENTS USING "+$scope.id+" "+nolangFrom+" "+ nolangTo);
-      NVRDataModel.getEventsPages($scope.id, nolangFrom, nolangTo)
-        .then(function (data) {
-          //   console.log ("WE GOT PAGES="+JSON.stringify(data));
-          eventsPage = data.pageCount || 1;
-          NVRDataModel.debug("EventCtrl: found " + eventsPage + " pages of events");
 
-          pageLoaded = true;
-          $scope.viewTitle.title = data.count;
+    
           NVRDataModel.debug("EventCtrl: grabbing events for: id=" + $scope.id + " Date/Time:" + $rootScope.fromString +
             "-" + $rootScope.toString);
           nolangFrom = "";
@@ -391,11 +388,20 @@ angular.module('zmApp.controllers')
           if ($rootScope.toString)
             nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-          NVRDataModel.getEvents($scope.id, eventsPage, "", nolangFrom, nolangTo)
+          NVRDataModel.getEvents($scope.id, currEventsPage, "", nolangFrom, nolangTo)
             .then(function (data) {
 
+              pageLoaded = true;
+              //$scope.viewTitle.title = data.pagination.count;
+
+              console.log (JSON.stringify(data.pagination));
+              if (data.pagination && data.pagination.pageCount)
+                  maxEventsPage = data.pagination.pageCount;
+             
+              NVRDataModel.debug ("We have a total of "+maxEventsPage+" and are at page="+currEventsPage);
+
               // console.log ("WE GOT EVENTS="+JSON.stringify(data));
-              var myevents = data;
+              var myevents = data.events;
 
               NVRDataModel.debug("EventCtrl: success, got " + myevents.length + " events");
               var loginData = NVRDataModel.getLogin();
@@ -493,7 +499,6 @@ angular.module('zmApp.controllers')
               }
             });
 
-        });
     }
 
     //-------------------------------------------------------
@@ -522,6 +527,11 @@ angular.module('zmApp.controllers')
 
     function saveNow(imgsrc, r, f) {
 
+      var fname = "zmninja.jpg";
+      var fn = "cordova.plugins.photoLibrary.saveImage";
+      var loginData = NVRDataModel.getLogin();
+
+
       $ionicLoading.show({
         template: $translate.instant('kSavingSnapshot') + "...",
         noBackdrop: true,
@@ -530,51 +540,105 @@ angular.module('zmApp.controllers')
       var url = imgsrc;
       NVRDataModel.log("saveNow: File path to grab is " + url);
 
-      var img = new Image();
-      img.onload = function () {
-        // console.log("********* ONLOAD");
-        var canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var context = canvas.getContext('2d');
-        context.drawImage(img, 0, 0);
+      if ($rootScope.platformOS != 'desktop') {
 
-        var imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-        var imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
-
-        if ($rootScope.platformOS != "desktop") {
-          try {
-
-            cordova.exec(
-              SaveSuccess,
-              SaveError,
-              'Canvas2ImagePlugin',
-              'saveImageDataToLibrary', [imageData]
-            );
-            // carouselUtils.setStop(curState);
-          } catch (e) {
-
-            SaveError(e.message);
-            // carouselUtils.setStop(curState);
+        var album = 'zmNinja';
+        NVRDataModel.debug("Trying to save image to album: " + album);
+        cordova.plugins.photoLibrary.requestAuthorization(
+          function () {
+            //url = "https://picsum.photos/200/300/?random";
+  
+            var fileTransfer = new FileTransfer();
+            var urle = encodeURI(url);
+  
+  
+            fileTransfer.onprogress = function (progressEvent) {
+              if (progressEvent.lengthComputable) {
+  
+                $timeout(function () {
+                  var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+                  $ionicLoading.show({
+                    template: $translate.instant('kPleaseWait') + "... (" + perc + "%)",
+                    noBackdrop: true,
+                    //duration: zm.httpTimeout
+                  });
+                });
+  
+  
+              }
+            };
+  
+            fileTransfer.download(urle, cordova.file.dataDirectory + fname,
+              function (entry) {
+                NVRDataModel.debug("local download complete: " + entry.toURL());
+                NVRDataModel.debug("Now trying to move it to album");
+                var pluginName = (fname == "zmNinja.mp4" ? "saveVideo" : "saveImage");
+  
+  
+                cordova.plugins.photoLibrary[pluginName](entry.toURL(), album,
+                  function (cameraRollAssetId) {
+                    SaveSuccess();
+                    $cordovaFile.removeFile(cordova.file.dataDirectory, fname)
+                      .then(
+                        function () {
+                          NVRDataModel.debug("file removed from data directory");
+                        },
+                        function (e) {
+                          NVRDataModel.debug("could not delete temp file: " + JSON.stringify(e));
+                        }
+                      );
+  
+  
+                  },
+                  function (err) {
+                    NVRDataModel.debug("Saving error:" + JSON.stringify(err));
+                    SaveError();
+  
+                  });
+  
+  
+  
+  
+              },
+              function (err) {
+                NVRDataModel.log("error downloading:" + JSON.stringify(err));
+                SaveError();
+              }, !loginData.enableStrictSSL, {});
+  
+  
+  
+  
+            // User gave us permission to his library, retry reading it!
+          },
+          function (err) {
+            // User denied the access
+            NVRDataModel.debug("Permission not granted");
+            SaveError();
+          }, // if options not provided, defaults to {read: true}.
+  
+          {
+            read: true,
+            write: true
           }
-        } else {
-
-          var fname = r + f + ".png";
-          fname = fname.replace(/\//, "-");
-          fname = fname.replace(/\.jpg/, '');
-
-          canvas.toBlob(function (blob) {
-            saveAs(blob, fname);
-            SaveSuccess();
-          });
-        }
-      };
-      try {
-        img.src = url;
-        // console.log ("SAVING IMAGE SOURCE");
-      } catch (e) {
-        SaveError(e.message);
+        );
+  
+      } else {
+        //desktop
+  
+        $ionicLoading.hide();
+    
+       $rootScope.zmPopup = SecuredPopups.show('alert', {
+          title: $translate.instant('kNote'),
+          template: $translate.instant('kDownloadVideoImage')+"<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download>"+" "+$translate.instant('kDownload')+"</a></center>",
+          okText: $translate.instant('kDismiss'),
+          okType:'button-stable'
+        });
+  
+  
+  
       }
+
+      
 
     }
 
@@ -1655,7 +1719,8 @@ angular.module('zmApp.controllers')
 
 
       return $http.delete(apiDelete)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           $ionicLoading.hide();
           NVRDataModel.debug("delete output: " + JSON.stringify(data));
 
@@ -1685,8 +1750,8 @@ angular.module('zmApp.controllers')
 
           //doRefresh();
 
-        })
-        .error(function (data) {
+        },
+        function (data) {
           $ionicLoading.hide();
           NVRDataModel.debug("delete error: " + JSON.stringify(data));
           NVRDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);
@@ -1760,11 +1825,12 @@ angular.module('zmApp.controllers')
 
       var af = "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
-      var apiurl = ld.apiurl + "/events/consoleEvents/1%20hour" + af + ".json";
+      var apiurl = ld.apiurl + "/events/consoleEvents/1 hour" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
 
       $http.get(apiurl)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           NVRDataModel.debug(JSON.stringify(data));
           $scope.hours = [];
           var p = data.results;
@@ -1796,10 +1862,11 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1%20day" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 day" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           NVRDataModel.debug(JSON.stringify(data));
           $scope.days = [];
           var p = data.results;
@@ -1828,10 +1895,11 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1%20week" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 week" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           NVRDataModel.debug(JSON.stringify(data));
           $scope.weeks = [];
           var p = data.results;
@@ -1861,10 +1929,11 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1%20month" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 month" + af + ".json";
       NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
-        .success(function (data) {
+        .then(function (data) {
+          data = data.data;
           NVRDataModel.debug(JSON.stringify(data));
           $scope.months = [];
           var p = data.results;
@@ -2035,7 +2104,8 @@ angular.module('zmApp.controllers')
           var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
           NVRDataModel.log("API for event details" + myurl);
           $http.get(myurl)
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               $scope.FrameArray = data.event.Frame;
               //  $scope.slider_options.scale=[];
 
@@ -2070,8 +2140,8 @@ angular.module('zmApp.controllers')
               oldEvent = event;
 
               //console.log (JSON.stringify(data));
-            })
-            .error(function (err) {
+            },
+           function (err) {
               NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
               NVRDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
             });
@@ -2147,7 +2217,8 @@ angular.module('zmApp.controllers')
             var myurl_frames = loginData.apiurl + '/events/' + event.Event.Id + ".json";
             NVRDataModel.log("API for event details" + myurl_frames);
             $http.get(myurl_frames)
-              .success(function (data) {
+              .then(function (data) {
+                data = data.data;
                 $scope.FrameArray = data.event.Frame;
                 //  $scope.slider_options.scale=[];
 
@@ -2166,8 +2237,8 @@ angular.module('zmApp.controllers')
                 }
 
                 //console.log (JSON.stringify(data));
-              })
-              .error(function (err) {
+              },
+              function (err) {
                 NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
                 NVRDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
               });
@@ -2208,7 +2279,8 @@ angular.module('zmApp.controllers')
           var myurl2 = loginData.apiurl + '/events/' + event.Event.Id + ".json";
           NVRDataModel.log("API for event details" + myurl2);
           $http.get(myurl2)
-            .success(function (data) {
+            .then(function (data) {
+              data = data.data;
               $scope.FrameArray = data.event.Frame;
               //  $scope.slider_options.scale=[];
               $scope.slider_options.scale = [];
@@ -2229,8 +2301,8 @@ angular.module('zmApp.controllers')
               }
 
               //console.log (JSON.stringify(data));
-            })
-            .error(function (err) {
+            },
+            function (err) {
               NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
               NVRDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
             });
@@ -2650,7 +2722,7 @@ angular.module('zmApp.controllers')
       $ionicLoading.show({
         template: $translate.instant('kSearchCancelled'),
         animation: 'fade-in',
-        showBackdrop: true,
+        showBackdrop: false,
         duration: 2000,
         maxWidth: 200,
         showDelay: 0
@@ -2666,14 +2738,17 @@ angular.module('zmApp.controllers')
       // the events API does not return an error for anything
       // except greater page limits than reported
 
-      // console.log("***** LOADING MORE INFINITE SCROLL ****");
-      eventsPage--;
-      if ((eventsPage <= 0) && (pageLoaded)) {
+      console.log("***** LOADING MORE INFINITE SCROLL ****");
+      
+      if ((currEventsPage >= maxEventsPage) && (pageLoaded)) {
         moreEvents = false;
-        //console.log("*** At Page " + eventsPage + ", not proceeding");
+        NVRDataModel.debug ("No more - We have a total of "+maxEventsPage+" and are at page="+currEventsPage);
+
+        console.log("*** At Page " + currEventsPage + " of "+maxEventsPage+", not proceeding");
         return;
       }
 
+      currEventsPage++;
       if (!enableLoadMore) {
         moreEvents = false; // Don't ion-scroll till enableLoadMore is true;
         $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -2684,7 +2759,7 @@ angular.module('zmApp.controllers')
 
       var loadingStr = "";
       if ($scope.search.text != "") {
-        var toastStr = $translate.instant('kToastSearchingPage') + eventsPage;
+        var toastStr = $translate.instant('kToastSearchingPage') + currEventsPage;
         $ionicLoading.show({
           maxwidth: 100,
           scope: $scope,
@@ -2701,11 +2776,12 @@ angular.module('zmApp.controllers')
       if ($rootScope.toString)
         nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-      NVRDataModel.getEvents($scope.id, eventsPage, loadingStr, nolangFrom, nolangTo)
+      NVRDataModel.getEvents($scope.id, currEventsPage, loadingStr, nolangFrom, nolangTo)
         .then(function (data) {
             var loginData = NVRDataModel.getLogin();
             // console.log("Got new page of events with Page=" + eventsPage);
-            var myevents = data;
+            var myevents = data.events;
+          
 
             for (var i = 0; i < myevents.length; i++) {
 
@@ -2855,7 +2931,7 @@ angular.module('zmApp.controllers')
     $scope.constructThumbnail = function (event) {
       var stream = "";
       stream = event.Event.baseURL +
-        "/index.php?view=image&show=capture&fid=" +
+       "/index.php?view=image&show=capture&fid=" +
         (event.Event.MaxScoreFrameId ? event.Event.MaxScoreFrameId : "1&eid=" + event.Event.Id) +
         "&width=" + event.Event.thumbWidth * 2 +
         "&height=" + event.Event.thumbHeight * 2;
@@ -2997,6 +3073,8 @@ angular.module('zmApp.controllers')
       // console.log("***Pull to Refresh");
 
       NVRDataModel.debug("Reloading monitors");
+      maxEventsPage = 1;
+      currEventsPage = 1;
       var refresh = NVRDataModel.getMonitors(1);
       refresh.then(function (data) {
         $scope.monitors = data;

@@ -582,6 +582,27 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     if ($rootScope.platformOS != 'desktop') {
 
+      if ($scope.loginData.isUseBasicAuth) {
+        NVRDataModel.debug ("Cordova HTTP: configuring basic auth");
+        cordova.plugin.http.useBasicAuth($scope.loginData.basicAuthUser, $scope.loginData.basicAuthPassword);
+      }
+
+      if (!$scope.loginData.enableStrictSSL) {
+
+        //alert("Enabling insecure SSL");
+        NVRDataModel.log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+        cordova.plugin.http.setSSLCertMode('nocheck', function() {
+         NVRDataModel.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+        }, function() {
+          console.log('-->Error setting SSL permissive');
+        });
+
+      } else {
+
+        NVRDataModel.log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+
+      }
+
       if ($scope.loginData.saveToCloud) {
         NVRDataModel.debug ("writing data to cloud");
         
@@ -628,21 +649,28 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     oldName = $scope.loginData.serverName;
 
     if ($scope.loginData.isUseEventServer) {
-      EventServer.init();
-      if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
-        NVRDataModel.log("Making sure we get push notifications");
-        EventServer.sendMessage('push', {
-          type: 'token',
-          platform: $rootScope.platformOS,
-          token: $rootScope.apnsToken,
-          state: "enabled"
-        }, 1);
-      }
-      EventServer.sendMessage("control", {
-        type: 'filter',
-        monlist: $scope.loginData.eventServerMonitors,
-        intlist: $scope.loginData.eventServerInterval
+      EventServer.init()
+      .then (function (succ) {
+        if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
+          NVRDataModel.log("Making sure we get push notifications");
+          EventServer.sendMessage('push', {
+            type: 'token',
+            platform: $rootScope.platformOS,
+            token: $rootScope.apnsToken,
+            state: "enabled"
+          }, 1);
+        }
+        EventServer.sendMessage("control", {
+          type: 'filter',
+          monlist: $scope.loginData.eventServerMonitors,
+          intlist: $scope.loginData.eventServerInterval,
+          token: $rootScope.apnsToken
+        });
+      },
+      function (err) {
+        NVRDataModel.log ("Event server init failed");
       });
+      
 
     }
 
@@ -672,8 +700,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         NVRDataModel.log("Validating APIs at " + apiurl);
         $http.get(apiurl)
-          .success(function (data) {
+          .then(function (data) {
 
+            data = data.data;
             NVRDataModel.getTimeZone(true);
             var loginStatus = $translate.instant('kExploreEnjoy') + " " + $rootScope.appName + "!";
             EventServer.refresh();
@@ -688,7 +717,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                 NVRDataModel.log("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
 
                 $http.get(ld.streamingurl + "/zms")
-                  .success(function (data) {
+                  .then(function (data) {
+                    data = data.data;
                     NVRDataModel.debug("Urk! cgi-path returned  success, but it should not have come here");
                     loginStatus = $translate.instant('kLoginStatusNoCgi');
 
@@ -717,8 +747,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
                       });
                     }
-                  })
-                  .error(function (error, status) {
+                  },
+                  function (error, status) {
                     // If its 5xx, then the cgi-bin path is valid
                     // if its 4xx then the cgi-bin path is not valid
 
@@ -757,8 +787,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                   });
               });
 
-          })
-          .error(function (error) {
+          },
+          function (error) {
             NVRDataModel.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
             NVRDataModel.log("API login error " + JSON.stringify(error));
 
