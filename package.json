@@ -131,7 +131,8 @@
     "files": [
       "electron_js/main.js",
       "www/**/*",
-      "!node_modules/**/*"
+      "!node_modules/**/*",
+      "resources/icon.png"
     ],
     "extraResources": [
       "node_modules/electron-window-state/**/*",
