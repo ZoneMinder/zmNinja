@@ -88,15 +88,12 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
 
 
   $http.get(zm.blogUrl, {
-      transformResponse: function (d, h) {
-        var trunc = "])}while(1);</x>";
-        d = d.substr(trunc.length);
-        return d;
-      }
+              responseType:'text'
     })
-    .success(function (datastr) {
-
-
+    .then(function (datastr) {
+      datastr = datastr.data;
+      var trunc = "])}while(1);</x>";
+        datastr= datastr.substr(trunc.length);
       // console.log ("DATA:"+data);
       // 
       var data = JSON.parse(datastr);

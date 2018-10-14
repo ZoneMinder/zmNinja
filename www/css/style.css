@@ -1844,3 +1844,14 @@ body {
 .platform-ios.platform-cordova:not(.fullscreen) .has-subheader {
   top: 88px !important;
 }
+
+
+
+  /* @media screen and (-webkit-min-device-pixel-ratio:0) { 
+    select,
+    textarea,
+    input {
+      font-size: 16px;
+    }
+  }*/
+  

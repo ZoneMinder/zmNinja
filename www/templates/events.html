@@ -78,12 +78,17 @@
                 {{humanize(event.Event.Length)}}
               </span>
               <br/>
+
+              <!-- No longer needed - direct video download supported now
+                
               <button ng-if="gifshotSupported && loginData.enableGIFMP4 " class="button button-small button-clear icon gif-icon" ng-click="permissionsDownload(event)">
               </button>
 
               <a ng-if="(event.Event.DefaultVideo!='' && event.Event.DefaultVideo!==undefined) && $root.platformOS=='desktop' && loginData.enableGIFMP4 "
                 class="button button-clear button-small icon mp4-icon" href="{{event.Event.videoPath}}" download="{{event.Event.Id}}-video.mp4"
                 ng-click="mp4warning()"></a>
+            -->
+
 
               <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && loginData.enableGIFMP4 "
                 class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)">
@@ -95,8 +100,14 @@
 
             <div align="right" class="col col-40" ng-if="loginData.enableThumbs" >
               
-                <img  ng-image-appear no-loader transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
-                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)"  width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" />
+
+              <img  bg-color="#6C7A89" src="{{constructThumbnail(event)}}"
+              on-tap="closeIfOpen(event);openModalWithSnapshot(event)"  width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" />
+              <!--
+              <img  ng-image-appear no-loader transition-duration="0.3s" animation="fillIn" bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+              on-tap="closeIfOpen(event);openModalWithSnapshot(event)"  width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" />
+              -->
+            
                 <!--<p>{{event.Event.thumbWidth}}px*{{event.Event.thumbHeight}}px</p>-->
             
 

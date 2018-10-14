@@ -212,7 +212,8 @@
            EventServer.sendMessage("control", {
              type: 'filter',
              monlist: monstring,
-             intlist: intervalstring
+             intlist: intervalstring,
+             token: $rootScope.apnsToken
            }, 1);
 
            if ($rootScope.apnsToken != "")
@@ -231,7 +232,12 @@
 
            }
 
-         });
+         },
+         function (err) {
+          NVRDataModel.debug("Event Server init failed");
+         }
+         
+         );
 
      } // no event server configured/enabled
      else {

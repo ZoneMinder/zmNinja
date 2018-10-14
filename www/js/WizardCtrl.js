@@ -13,12 +13,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
   function login(u, zmu, zmp) {
     var d = $q.defer();
-
-
-    
-
     $http({
-        method: 'POST',
+        method: 'post',
         //withCredentials: true,
         url: u,
         headers: {
@@ -31,6 +27,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             str.push(encodeURIComponent(p) + "=" +
               encodeURIComponent(obj[p]));
           var params = str.join("&");
+          //console.log ("PARAMS in login:"+params);
           return params;
         },
 
@@ -41,7 +38,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           view: "console"
         }
       })
-      .success(function (data, status, headers) {
+      .then(function (data, status, headers) {
+        data = data.data;
         //console.log("LOOKING FOR " + zm.loginScreenString);
         //console.log("DATA RECEIVED " + JSON.stringify(data));
         if (data.indexOf(zm.loginScreenString) == -1) {
@@ -58,9 +56,9 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           d.reject(false);
           return d.promise;
         }
-      })
-      .error(function (error) {
-        //console.log("************ERROR");
+      },
+      function (error) {
+       // console.log("************ERROR:"+ JSON.stringify(error));
         $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
         $scope.wizard.portalColor = "#e74c3c";
         d.reject(false);
@@ -197,10 +195,13 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
     var urls = [a1, a2, a3, a4, a5];
 
-    NVRDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
+    // can't use getPathZms as loginData is not inited yet
+    $http.get ($scope.wizard.apiURL+"/configs/viewByName/ZM_PATH_ZMS.json")
+    //NVRDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
       .then(function (data) {
           // remove zms or nph-zms
-          var path = data.trim();
+          var str  = data.data.config.Value;
+          var path = str.trim();
           path = path.replace("/nph-zms", "");
           path = path.replace("/zms", "");
           urls.push(baseUri.trim() + path);
