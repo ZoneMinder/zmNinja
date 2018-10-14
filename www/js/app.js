@@ -2312,7 +2312,7 @@ angular.module('zmApp', [
             timeout: arguments[0].timeout,
             responseType: arguments[0].responseType
           };
-          console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
+         // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
            cordova.plugin.http.sendRequest(encodeURI(url),options,
             function (succ) {
               // automatic JSON parse if no responseType: text

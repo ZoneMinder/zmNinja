@@ -12,7 +12,6 @@
     ],
     "plugins": {
       "cordova-plugin-add-swift-support": {},
-      "com.telerik.plugins.nativepagetransitions": {},
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-app-version": {},
       "cordova-plugin-customurlscheme": {
@@ -34,9 +33,6 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-device": {},
       "cordova-plugin-file": {},
-      "cordova-plugin-canvas2image-pp-fork": {
-        "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
-      },
       "cordova-plugin-media-pp-fork": {},
       "cordova-plugin-email": {},
       "cordova-plugin-statusbar": {},
@@ -56,21 +52,21 @@
       },
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-advanced-websocket": {}
     }
   },
   "dependencies": {
     "clivas": "^0.2.0",
-    "com.telerik.plugins.nativepagetransitions": "^0.6.5",
     "cordova-android": "^6.4.0",
     "cordova-ios": "~4.5.5",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-advanced-http": "^2.0.1",
+    "cordova-plugin-advanced-websocket": "^1.1.3",
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-version": "^0.1.9",
-    "cordova-plugin-canvas2image-pp-fork": "^0.6.0",
     "cordova-plugin-cloud-settings": "^1.0.4",
     "cordova-plugin-customurlscheme": "^4.3.0",
     "cordova-plugin-device": "^2.0.1",
