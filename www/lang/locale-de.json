@@ -313,7 +313,7 @@
     "kSave"                      :"Speichern",
     "kSavingSnapshot"            :"Sichere Einzelbild ",
     "kSaveToCloud"               :"mit der Cloud synchronisieren",
-    "kSaveToCloudIOS"            :"sichere Einstellungen in Dein iCloud-Konto",
+    "kSaveToCloudIOS"            :"sichere Einstellungen in Dein iCloud-Konto. Der Synchronisationsvorgang kann einige Stunden dauern",
     "kSaveToCloudANDROID"        :"sichere Einstellungen über den Backup Service von Android. Der Synchronisationsvorgang kann einige Stunden dauern",
     "kScore"                     :"Punktzahl",
     "kScrub"                     :"Analyse",
