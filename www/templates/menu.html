@@ -10,7 +10,7 @@
     </ion-side-menu-content>
     <ion-side-menu>
       <ion-header-bar class="bar bar-header bar-stable">
-          <button class="button icon ion-person-stalker" ng-click="switchProfiles()"></button>
+        <button class="button icon ion-person-stalker" ng-click="switchProfiles()"></button>
         <h1 class="title">{{'kMenuOptions'|translate}}</h1>
         </button>
       </ion-header-bar>
@@ -21,11 +21,11 @@
 
           <ion-item ng-if="0" href="#/app/bookmark" ng-click="go('/app/bookmark)')">
             <span class=" item-icon-left">
-                <i class="icon ion-bookmark"></i>
-              </span>{{'kBookmark'| translate}}
+              <i class="icon ion-bookmark"></i>
+            </span>{{'kBookmark'| translate}}
           </ion-item>
 
-          <ion-item id="menu-move-1" href="#/app/montage" ng-click="go('/app/montage')" >
+          <ion-item id="menu-move-1" href="#/app/montage" ng-click="go('/app/montage')">
 
             <!--<span ng-if="$root.runMode=='lowbw'" style="float:right;margin-top:-18px;background-color:#f1c40f;color:#000;font-size:11px;opacity:0.7;width:20px;border-radius: 0px 0px 5px 5px;display:inline-block;text-align:center;">&nbsp;<i class="icon ion-arrow-graph-down-left"></i>&nbsp;</span>-->
             <span class=" item-icon-left">
@@ -34,28 +34,28 @@
           </ion-item>
 
           <!--<ion-item ng-click="navigateView('app.timeline')" menu-close>-->
-          <ion-item id="menu-move-2"   href="#/app/timeline"  ng-click="go('/app/timeline')" >
+          <ion-item id="menu-move-2" href="#/app/timeline" ng-click="go('/app/timeline')">
             <span class=" item-icon-left">
               <i class="icon ion-android-time"></i>
             </span>{{'kMenuTimeline'|translate}}
           </ion-item>
 
           <!--<ion-item ng-click="navigateView('app.events', {id:0,playEvent:false})"  menu-close>-->
-          <ion-item id="menu-move-3"  href="#/app/events/0/false" ng-click="go('/app/events/0/false')"  >
+          <ion-item id="menu-move-3" href="#/app/events/0/false" ng-click="go('/app/events/0/false')">
             <span class=" item-icon-left">
               <i class="icon ion-ios-calendar-outline"></i>
             </span>{{'kMenuEvents'|translate}}
           </ion-item>
 
           <!--<ion-item  ng-click="navigateView('app.moment')" menu-close>-->
-          <ion-item id="menu-move-4" ng-click="go('/app/moment')"  href="#/app/moment" ng-click="go('/app/moment')">
+          <ion-item id="menu-move-4" ng-click="go('/app/moment')" href="#/app/moment" ng-click="go('/app/moment')">
             <span class=" item-icon-left">
               <i class="icon ion-star"></i>
             </span>{{'kMoment24Heading'|translate}}
           </ion-item>
 
           <!-- <ion-item  ng-click="navigateView('app.montage-history')" menu-close>-->
-          <ion-item id="menu-move-5"  href="#/app/montage-history" ng-click="go('/app/montage-history')" >
+          <ion-item id="menu-move-5" href="#/app/montage-history" ng-click="go('/app/montage-history')">
             <span class=" item-icon-left">
               <i class="icon ion-ios-keypad-outline"></i>
             </span>{{'kMenuEventMontage'|translate}}
@@ -63,21 +63,21 @@
 
 
           <!--<ion-item ng-click="navigateView('app.monitors')" menu-close>-->
-          <ion-item id="menu-move-6"  href="#/app/monitors"  ng-click="go('/app/monitors')" >
+          <ion-item id="menu-move-6" href="#/app/monitors" ng-click="go('/app/monitors')">
             <span class=" item-icon-left">
               <i class="icon ion-ios-videocam-outline"></i>
             </span>{{'kMenuMonitors'|translate}}
           </ion-item>
 
           <!--<ion-item ng-click="navigateView('app.state')" menu-close>-->
-          <ion-item  id="menu-move-7"  href="#/app/state"  ng-click="go('/app/state')">
+          <ion-item id="menu-move-7" href="#/app/state" ng-click="go('/app/state')">
             <span class=" item-icon-left">
               <i class="icon ion-information-circled"></i>
             </span> {{'kMenuSystemStatus'|translate}}
           </ion-item>
 
           <!--<ion-item nav-clear menu-close ng-click="navigateView('app.login', {wizard:false})" >-->
-          <ion-item id="menu-move-8"  nav-clear  href="#/app/login/false" ng-click="go('/app/login/false')">
+          <ion-item id="menu-move-8" nav-clear href="#/app/login/false" ng-click="go('/app/login/false')">
             <span class=" item-icon-left">
               <i class="icon ion-person"></i>
               {{'kMenuZMSettings'|translate}}
@@ -88,7 +88,7 @@
             </span>
           </ion-item>
 
-          <ion-item id="menu-move-9"  nav-clear  href="#/app/devoptions" ng-click="go('/app/devoptions')" >
+          <ion-item id="menu-move-9" nav-clear href="#/app/devoptions" ng-click="go('/app/devoptions')">
             <!--<ion-item nav-clear menu-close ng-click="navigateView('app.devoptions')">-->
             <span class=" item-icon-left">
               <i class="icon ion-settings"></i>
@@ -102,7 +102,7 @@
           </ion-item>
 
           <!--<ion-item nav-clear menu-close ng-click="navigateView('app.help')" >-->
-          <ion-item id="menu-move-10"  nav-clear  href="#/app/help" ng-click="go('/app/help')">
+          <ion-item id="menu-move-10" nav-clear href="#/app/help" ng-click="go('/app/help')">
             <span class=" item-icon-left">
               <i class="icon ion-help"></i>
             </span> {{'kMenuHelp'|translate}}
@@ -110,7 +110,7 @@
 
 
           <!--<ion-item nav-clear menu-close ng-click="navigateView('app.wizard')" >-->
-          <ion-item id="menu-move-11"  nav-clear  href="#/app/wizard" ng-click="go('/app/wizard')">
+          <ion-item id="menu-move-11" nav-clear href="#/app/wizard" ng-click="go('/app/wizard')">
             <span class=" item-icon-left">
               <i class="icon ion-wand"></i>
             </span> {{'kMenuWizard'|translate}}
@@ -127,7 +127,7 @@
           </div>
 
           <!--<ion-item nav-clear menu-close ng-click="navigateView('app.log')" >-->
-          <ion-item id="menu-move-12"  nav-clear   href="#/app/log" ng-click="go('/app/log')">
+          <ion-item id="menu-move-12" nav-clear href="#/app/log" ng-click="go('/app/log')">
             <span class=" item-icon-left">
               <i class="icon ion-clipboard"></i>
             </span> {{'kMenuLogs'|translate}}
@@ -150,7 +150,7 @@
           </div>
           <ion-item style="color:rgb(106, 106, 106); font-size:90%;">
             <i class="ion-ios-location"></i> {{$root.getLocalTimeZone();}}
-            <br/>
+            <br />
             <span ng-if="$root.isTzSupported()">
               <i class="icon icon-server"></i> {{$root.getServerTimeZoneNow();}} </span>
           </ion-item>

@@ -28,7 +28,7 @@ angular.module('zmApp.controllers')
 
       var monitors = [];
       var multiservers = [];
-    
+
       var migrationComplete = false;
 
       var tz = "";
@@ -41,6 +41,10 @@ angular.module('zmApp.controllers')
         {
           text: 'العربية',
           value: 'ar'
+        },
+        {
+          text: 'Bosnian',
+          value: 'ba'
         },
         {
           text: 'Deutsch',
@@ -201,9 +205,9 @@ angular.module('zmApp.controllers')
        * @returns 
        */
       function setCordovaHttpOptions() {
-        
+
         if (loginData.isUseBasicAuth) {
-          debug ("Cordova HTTP: configuring basic auth");
+          debug("Cordova HTTP: configuring basic auth");
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
         }
 
@@ -211,9 +215,9 @@ angular.module('zmApp.controllers')
 
           //alert("Enabling insecure SSL");
           log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
-          cordova.plugin.http.setSSLCertMode('nocheck', function() {
-           debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
-          }, function() {
+          cordova.plugin.http.setSSLCertMode('nocheck', function () {
+            debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+          }, function () {
             console.log('-->Error setting SSL permissive');
           });
 
@@ -317,30 +321,30 @@ angular.module('zmApp.controllers')
           var myurl = apiurl + '/configs/viewByName/ZM_MIN_STREAMING_PORT.json';
           $http.get(myurl)
             .then(function (data) {
-              data = data.data;
-              //console.log ("GOT " + JSON.stringify(data));
+                data = data.data;
+                //console.log ("GOT " + JSON.stringify(data));
 
-              if (data.config && data.config.Value) {
-                configParams.ZM_MIN_STREAMING_PORT = data.config.Value;
-                setCurrentServerMultiPortSupported(true);
-                log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
-              } else {
-                setCurrentServerMultiPortSupported(false);
-                log("ZM_MIN_STREAMING_PORT not configure, disabling");
+                if (data.config && data.config.Value) {
+                  configParams.ZM_MIN_STREAMING_PORT = data.config.Value;
+                  setCurrentServerMultiPortSupported(true);
+                  log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
+                } else {
+                  setCurrentServerMultiPortSupported(false);
+                  log("ZM_MIN_STREAMING_PORT not configure, disabling");
+                  configParams.ZM_MIN_STREAMING_PORT = 0;
+                }
+
+
+                d.resolve(configParams.ZM_MIN_STREAMING_PORT);
+                return (d.promise);
+              },
+              function (err) {
                 configParams.ZM_MIN_STREAMING_PORT = 0;
-              }
-
-
-              d.resolve(configParams.ZM_MIN_STREAMING_PORT);
-              return (d.promise);
-            },
-            function (err) {
-              configParams.ZM_MIN_STREAMING_PORT = 0;
-              log("ZM_MIN_STREAMING_PORT not supported");
-              setCurrentServerMultiPortSupported(false);
-              d.resolve(configParams.ZM_MIN_STREAMING_PORT);
-              return (d.promise);
-            });
+                log("ZM_MIN_STREAMING_PORT not supported");
+                setCurrentServerMultiPortSupported(false);
+                d.resolve(configParams.ZM_MIN_STREAMING_PORT);
+                return (d.promise);
+              });
         } else {
           log("sending Cached ZM_MIN_STREAMING_PORT " +
             configParams.ZM_MIN_STREAMING_PORT);
@@ -703,8 +707,8 @@ angular.module('zmApp.controllers')
           if ($rootScope.platformOS == 'desktop')
             $state.go(state, p1, p2);
           else
-          $state.go(state, p1, p2);
-        //    $ionicNativeTransitions.stateGo(state, p1, p2);
+            $state.go(state, p1, p2);
+          //    $ionicNativeTransitions.stateGo(state, p1, p2);
         },
 
         // used when an empty server profile is created
@@ -839,10 +843,10 @@ angular.module('zmApp.controllers')
             return d.promise;
           }
 
-       /*   window.cordova.plugin.cloudsettings.enableDebug(function(){
-            console.log("Debug mode enabled");
-        });*/
-        
+          /*   window.cordova.plugin.cloudsettings.enableDebug(function(){
+               console.log("Debug mode enabled");
+           });*/
+
           log("CloudSync: Syncing with cloud if enabled...");
 
           var sgl = "";
@@ -865,19 +869,18 @@ angular.module('zmApp.controllers')
                   log("user profile encrypted, decoding...");
                   var bytes = CryptoJS.AES.decrypt(sgl.toString(), zm.cipherKey);
                   decodedSgl = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    
-                }
-                else {
+
+                } else {
                   decodedSgl = sgl;
                 }
-               
+
 
                 var loadedData = decodedSgl[dsn];
-         
+
                 if (!isEmpty(loadedData)) {
-                
+
                   if (!loadedData.saveToCloud) {
-                    log ("Cloud sync is disabled, exiting...");
+                    log("Cloud sync is disabled, exiting...");
                     d.resolve(true);
                     return d.promise;
                   }
@@ -894,7 +897,7 @@ angular.module('zmApp.controllers')
                     return d.promise;
                   },
                   function (err) {
-                    log("error syncing cloud data..."+err);
+                    log("error syncing cloud data..." + err);
                     d.resolve(true);
                     return d.promise;
                   }, true);
@@ -905,14 +908,14 @@ angular.module('zmApp.controllers')
                 log("Did not find a valid local configuration, trying cloud...");
 
                 window.cordova.plugin.cloudsettings.exists(function (exists) {
-               
+
                   if (exists) {
-                    log ("A cloud configuration has been found");
+                    log("A cloud configuration has been found");
                     window.cordova.plugin.cloudsettings.load(function (cloudData) {
-                      console.log ("CLOUD DATA FOUND"+JSON.stringify(cloudData));
-                      debug ("Cloud data retrieved is:"+JSON.stringify(cloudData));
+                      console.log("CLOUD DATA FOUND" + JSON.stringify(cloudData));
+                      debug("Cloud data retrieved is:" + JSON.stringify(cloudData));
                       if (cloudData && cloudData.defaultServerName && cloudData.serverGroupList) {
-                        log("retrieved a valid cloud config with a defaultServerName of:"+cloudData.defaultServerName);
+                        log("retrieved a valid cloud config with a defaultServerName of:" + cloudData.defaultServerName);
                         log("replacing local DB with cloud...");
                         localforage.setItem('isFirstUse', false)
                           .then(function () {
@@ -1212,7 +1215,7 @@ angular.module('zmApp.controllers')
 
                   }
 
-            
+
 
                   if (typeof loginData.vibrateOnPush == 'undefined') {
                     debug("vibrate on push not found, setting to true");
@@ -1348,7 +1351,7 @@ angular.module('zmApp.controllers')
 
                   }
 
-                
+
 
                   if (typeof loginData.enableThumbs == 'undefined') {
 
@@ -1426,7 +1429,7 @@ angular.module('zmApp.controllers')
 
                   }
 
-                  
+
 
                   if (typeof loginData.montageReviewCollapse == 'undefined') {
 
@@ -1444,7 +1447,7 @@ angular.module('zmApp.controllers')
                   log("defaultServer configuration NOT found. Keeping login at defaults");
                 }
 
-               
+
                 // from local forage
                 if (window.cordova) setCordovaHttpOptions();
 
@@ -1710,17 +1713,17 @@ angular.module('zmApp.controllers')
         // returns API version or none 
         //-------------------------------------------------------
         getAPIversion: function () {
-         
+
           var d = $q.defer();
           var apiurl = loginData.apiurl + '/host/getVersion.json';
-          debug("getAPIversion called with "+apiurl);
+          debug("getAPIversion called with " + apiurl);
           $http.get(apiurl)
             .then(function (success) {
                 if (success.data.version) {
                   // console.log ("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
                   setCurrentServerVersion(success.data.version);
-                  debug("getAPI version succeded with "+success.data.version);
+                  debug("getAPI version succeded with " + success.data.version);
                   d.resolve(success.data.version);
                 } else {
                   debug("Setting APIValid to false as API version was not retrieved");
@@ -1836,7 +1839,7 @@ angular.module('zmApp.controllers')
                 d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
                 return (d.promise);
 
-              },function (err) {
+              }, function (err) {
                 log("Error retrieving ZM_EVENT_IMAGE_DIGITS" + JSON.stringify(err), "error");
                 log("Taking a guess, setting ZM_EVENT_IMAGE_DIGITS to 5");
                 // FIXME: take a plunge and keep it at 5?
@@ -1868,17 +1871,17 @@ angular.module('zmApp.controllers')
           $http.get(myurl)
             .then(function (data) {
 
-              data = data.data;
-              //console.log (">>>> GOT: "+JSON.stringify(data));
-              configParams.ZM_PATH_ZMS = data.config.Value;
-              d.resolve(configParams.ZM_PATH_ZMS);
-              return (d.promise);
-            },
-            function (error) {
-              log("Can't retrieving ZM_PATH_ZMS: " + JSON.stringify(error));
-              d.resolve("");
-              return (d.promise);
-            });
+                data = data.data;
+                //console.log (">>>> GOT: "+JSON.stringify(data));
+                configParams.ZM_PATH_ZMS = data.config.Value;
+                d.resolve(configParams.ZM_PATH_ZMS);
+                return (d.promise);
+              },
+              function (error) {
+                log("Can't retrieving ZM_PATH_ZMS: " + JSON.stringify(error));
+                d.resolve("");
+                return (d.promise);
+              });
           return (d.promise);
 
         },
@@ -1918,7 +1921,7 @@ angular.module('zmApp.controllers')
           req = req + "&auth=" + myauthtoken;
           // req = req + "&command=17";
 
-          debug("DataModel: Pausing live stream ck:" + ck+" for "+name + " url:"+url);
+          debug("DataModel: Pausing live stream ck:" + ck + " for " + name + " url:" + url);
           return $http.get(req + "&command=1")
             .then(
               function (s) {
@@ -1942,7 +1945,7 @@ angular.module('zmApp.controllers')
           req = req + "&auth=" + myauthtoken;
           // req = req + "&command=17";
 
-          debug("DataModel: Resuming live stream ck:" + ck+ " for "+name);
+          debug("DataModel: Resuming live stream ck:" + ck + " for " + name);
           return $http.get(req + "&command=2")
             .then(
               function (s) {
@@ -2062,75 +2065,75 @@ angular.module('zmApp.controllers')
                 debug("Monitor URL to fetch is:" + myurl);
                 $http.get(myurl /*,{timeout:15000}*/ )
                   .then(function (data) {
-                    //  console.log("HTTP success got " + JSON.stringify(data.monitors));
-                    data = data.data;
-                    monitors = data.monitors;
+                      //  console.log("HTTP success got " + JSON.stringify(data.monitors));
+                      data = data.data;
+                      monitors = data.monitors;
 
 
-                    if ($rootScope.authSession == 'undefined') {
-                      log("Now that we have monitors, lets get AuthKey...");
-                      getAuthKey(monitors[0].Monitor.Id, (Math.floor((Math.random() * 999999) + 1)).toString());
-                    }
-                    monitors.sort(function (a, b) {
-                      return parseInt(a.Monitor.Sequence) - parseInt(b.Monitor.Sequence);
-                    });
-                    //console.log("promise resolved inside HTTP success");
-                    monitorsLoaded = 1;
+                      if ($rootScope.authSession == 'undefined') {
+                        log("Now that we have monitors, lets get AuthKey...");
+                        getAuthKey(monitors[0].Monitor.Id, (Math.floor((Math.random() * 999999) + 1)).toString());
+                      }
+                      monitors.sort(function (a, b) {
+                        return parseInt(a.Monitor.Sequence) - parseInt(b.Monitor.Sequence);
+                      });
+                      //console.log("promise resolved inside HTTP success");
+                      monitorsLoaded = 1;
 
-                    reloadMonitorDisplayStatus();
+                      reloadMonitorDisplayStatus();
 
-                    debug("Inside getMonitors, will also regen connkeys");
-                    debug("Now trying to get multi-server data, if present");
-                    $http.get(apiurl + "/servers.json")
-                      .then(function (data) {
-                        data = data.data;
-                        // We found a server list API, so lets make sure
-                        // we get the hostname as it will be needed for playback
-                        log("multi server list loaded" + JSON.stringify(data));
-                        multiservers = data.servers;
+                      debug("Inside getMonitors, will also regen connkeys");
+                      debug("Now trying to get multi-server data, if present");
+                      $http.get(apiurl + "/servers.json")
+                        .then(function (data) {
+                            data = data.data;
+                            // We found a server list API, so lets make sure
+                            // we get the hostname as it will be needed for playback
+                            log("multi server list loaded" + JSON.stringify(data));
+                            multiservers = data.servers;
 
-                        var multiserver_scheme = "http://";
-                        //console.log ("PORTAL URL IS:"+loginData.url);
-                        if (loginData.url && (loginData.url.toLowerCase().indexOf("https://") != -1)) {
-                          debug ("Portal scheme is https, will use https for any multi-server");
-                          multiserver_scheme = "https://";
-                        }
-                        debug ("multi-server protocol will be:"+multiserver_scheme);
-
-                        for (var i = 0; i < monitors.length; i++) {
-
-                          // make them all show for now
-                          monitors[i].Monitor.listDisplay = 'show';
-                          monitors[i].Monitor.isAlarmed = false;
-                          monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-                          monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-
-                          var serverFound = false;
-                          for (var j = 0; j < multiservers.length; j++) {
-                            //console.log ("Comparing " + multiservers[j].Server.Id + " AND " + monitors[i].Monitor.ServerId);
-                            if (multiservers[j].Server.Id == monitors[i].Monitor.ServerId) {
-                              //console.log ("Found match");
-                              serverFound = true;
-                              break;
+                            var multiserver_scheme = "http://";
+                            //console.log ("PORTAL URL IS:"+loginData.url);
+                            if (loginData.url && (loginData.url.toLowerCase().indexOf("https://") != -1)) {
+                              debug("Portal scheme is https, will use https for any multi-server");
+                              multiserver_scheme = "https://";
                             }
+                            debug("multi-server protocol will be:" + multiserver_scheme);
 
-                          }
-                          if (serverFound) {
-                            if (!/^https?:\/\//i.test(multiservers[j].Server.Hostname)) {
-                              multiservers[j].Server.Hostname = multiserver_scheme + multiservers[j].Server.Hostname;
-                            }
+                            for (var i = 0; i < monitors.length; i++) {
 
-                            debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
+                              // make them all show for now
+                              monitors[i].Monitor.listDisplay = 'show';
+                              monitors[i].Monitor.isAlarmed = false;
+                              monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                              monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+
+                              var serverFound = false;
+                              for (var j = 0; j < multiservers.length; j++) {
+                                //console.log ("Comparing " + multiservers[j].Server.Id + " AND " + monitors[i].Monitor.ServerId);
+                                if (multiservers[j].Server.Id == monitors[i].Monitor.ServerId) {
+                                  //console.log ("Found match");
+                                  serverFound = true;
+                                  break;
+                                }
+
+                              }
+                              if (serverFound) {
+                                if (!/^https?:\/\//i.test(multiservers[j].Server.Hostname)) {
+                                  multiservers[j].Server.Hostname = multiserver_scheme + multiservers[j].Server.Hostname;
+                                }
+
+                                debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
 
 
 
-                            // Now here is the logic, I need to retrieve serverhostname,
-                            // and slap on the host protocol and path. Meh.
+                                // Now here is the logic, I need to retrieve serverhostname,
+                                // and slap on the host protocol and path. Meh.
 
-                            var p = URI.parse(loginData.streamingurl);
-                            var s = URI.parse(multiservers[j].Server.Hostname);
+                                var p = URI.parse(loginData.streamingurl);
+                                var s = URI.parse(multiservers[j].Server.Hostname);
 
-                           /* if (!p.port && !isNaN(p.path)) {
+                                /* if (!p.port && !isNaN(p.path)) {
                               debug ("Portal: port path reversed?");
                               var tp = p.port;
                               p.port = p.path;
@@ -2144,174 +2147,174 @@ angular.module('zmApp.controllers')
                               s.path = tp;
                             }
 */
-                           
-                           debug("recording server parsed is " + JSON.stringify(s));
-                           debug("portal  parsed is " + JSON.stringify(p));
 
-                            var st = "";
-                            var baseurl = "";
-                            var streamingurl = "";
+                                debug("recording server parsed is " + JSON.stringify(s));
+                                debug("portal  parsed is " + JSON.stringify(p));
 
-
-                            st += (s.scheme ? s.scheme : p.scheme) + "://"; // server scheme overrides 
+                                var st = "";
+                                var baseurl = "";
+                                var streamingurl = "";
 
 
+                                st += (s.scheme ? s.scheme : p.scheme) + "://"; // server scheme overrides 
 
-                            // if server doesn't have a protocol, what we want is in path
-                            if (!s.host) {
-                              s.host = s.path;
-                              s.path = undefined;
+
+
+                                // if server doesn't have a protocol, what we want is in path
+                                if (!s.host) {
+                                  s.host = s.path;
+                                  s.path = undefined;
+                                }
+
+                                st += s.host;
+
+                                //console.log ("STEP 1: ST="+st);
+
+                                if (zmsPort <= 0 || loginData.disableSimulStreaming) {
+                                  if (p.port || s.port) {
+                                    st += (s.port ? ":" + s.port : ":" + p.port);
+                                    streamingurl = st;
+                                    //console.log ("STEP 2 no ZMS: ST="+st);
+
+                                  }
+
+                                } else {
+                                  var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
+                                  streamingurl = st + ':' + sport;
+
+                                  if (p.port || s.port)
+                                    st += (s.port ? ":" + s.port : ":" + p.port);
+                                  //console.log ("STEP 2: ST="+st);
+
+                                }
+
+
+                                baseurl = st;
+                                controlURL = st;
+
+                                st += (s.path ? s.path : p.path);
+                                streamingurl += (s.path ? s.path : p.path);
+
+                                //console.log ("STEP 3: ST="+st);
+
+
+                                //console.log ("----------STREAMING URL PARSED AS " + st);
+
+                                monitors[i].Monitor.streamingURL = st;
+                                monitors[i].Monitor.baseURL = baseurl;
+                                monitors[i].Monitor.controlURL = controlURL;
+                                //console.log ("** Streaming="+st+" **base="+baseurl);
+                                // starting 1.30 we have fid=xxx mode to return images
+                                monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
+                                //  debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
+
+                                //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
+                                //debug ("Base URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.baseURL );
+
+                              } else {
+                                //monitors[i].Monitor.listDisplay = 'show';
+                                monitors[i].Monitor.isAlarmed = false;
+                                monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                                monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+
+                                var st2 = loginData.streamingurl;
+
+                                if (zmsPort > 0 && !loginData.disableSimulStreaming) {
+                                  // we need to insert minport
+                                  st2 = "";
+                                  var p2 = URI.parse(loginData.streamingurl);
+                                  var p3 = URI.parse(loginData.url);
+                                  st2 += p2.scheme + "://";
+                                  if (!p2.host) {
+                                    p2.host = p2.path;
+                                    p2.path = undefined;
+                                  }
+                                  st2 += p2.host;
+                                  var sport2 = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
+                                  st2 = st2 + ':' + sport2;
+
+                                  controlURL = st2;
+
+                                  if (p2.path) st2 += p2.path;
+                                  if (p3.path) controlURL += p3.path;
+                                }
+
+                                monitors[i].Monitor.streamingURL = st2;
+                                monitors[i].Monitor.controlURL = controlURL;
+                                //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
+                                //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
+                                monitors[i].Monitor.baseURL = loginData.url;
+                                monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
+
+                                // but now check if forced path 
+                                if (loginData.forceImageModePath) {
+                                  debug("Overriding, setting image mode to true as you have requested force enable");
+                                  monitors[i].Monitor.imageMode = 'path';
+                                }
+
+                                // debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
+                              }
                             }
+                            // now get packery hide if applicable
+                            reloadMonitorDisplayStatus();
+                            d.resolve(monitors);
+                          },
+                          function (err) {
+                            log("multi server list loading error");
+                            multiservers = [];
 
-                            st += s.host;
+                            for (var i = 0; i < monitors.length; i++) {
+                              //monitors[i].Monitor.listDisplay = 'show';
+                              monitors[i].Monitor.isAlarmed = false;
+                              monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                              monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                              var st = loginData.streamingurl;
+                              if (zmsPort > 0) {
+                                // we need to insert minport
+                                st = "";
+                                var p = URI.parse(loginData.streamingurl);
+                                st += p.scheme + "://";
+                                if (!p.host) {
+                                  p.host = p.path;
+                                  p.path = undefined;
+                                }
+                                st += p.host;
+                                var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
+                                st = st + ':' + sport;
+                                if (p.path) st += p.path;
 
-                            //console.log ("STEP 1: ST="+st);
 
-                            if (zmsPort <= 0 || loginData.disableSimulStreaming) {
-                              if (p.port || s.port) {
-                                st += (s.port ? ":" + s.port : ":" + p.port);
-                                streamingurl = st;
-                                 //console.log ("STEP 2 no ZMS: ST="+st);
 
                               }
 
-                            } else {
-                              var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                              streamingurl = st + ':' + sport;
+                              monitors[i].Monitor.streamingURL = st;
+                              // console.log ("CONSTRUCTED STREAMING PATH="+st);
+                              monitors[i].Monitor.baseURL = loginData.url;
 
-                              if (p.port || s.port)
-                                st += (s.port ? ":" + s.port : ":" + p.port);
-                                 //console.log ("STEP 2: ST="+st);
+                              monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
+                              //debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
 
                             }
+                            d.resolve(monitors);
 
+                          });
 
-                            baseurl = st;
-                            controlURL = st;
+                      $ionicLoading.hide();
+                      log("Monitor load was successful, loaded " + monitors.length + " monitors");
 
-                            st += (s.path ? s.path : p.path);
-                            streamingurl += (s.path ? s.path : p.path);
-
-                            //console.log ("STEP 3: ST="+st);
-
-
-                            //console.log ("----------STREAMING URL PARSED AS " + st);
-
-                            monitors[i].Monitor.streamingURL = st;
-                            monitors[i].Monitor.baseURL = baseurl;
-                            monitors[i].Monitor.controlURL = controlURL;
-                            //console.log ("** Streaming="+st+" **base="+baseurl);
-                            // starting 1.30 we have fid=xxx mode to return images
-                            monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
-                            //  debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
-
-                            //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
-                            //debug ("Base URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.baseURL );
-
-                          } else {
-                            //monitors[i].Monitor.listDisplay = 'show';
-                            monitors[i].Monitor.isAlarmed = false;
-                            monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-                            monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-
-                            var st2 = loginData.streamingurl;
-
-                            if (zmsPort > 0 && !loginData.disableSimulStreaming) {
-                              // we need to insert minport
-                              st2 = "";
-                              var p2 = URI.parse(loginData.streamingurl);
-                              var p3 = URI.parse(loginData.url);
-                              st2 += p2.scheme + "://";
-                              if (!p2.host) {
-                                p2.host = p2.path;
-                                p2.path = undefined;
-                              }
-                              st2 += p2.host;
-                              var sport2 = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                              st2 = st2 + ':' + sport2;
-
-                              controlURL = st2;
-
-                              if (p2.path) st2 += p2.path;
-                              if (p3.path) controlURL += p3.path;
-                            }
-
-                            monitors[i].Monitor.streamingURL = st2;
-                            monitors[i].Monitor.controlURL = controlURL;
-                            //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
-                            //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
-                            monitors[i].Monitor.baseURL = loginData.url;
-                            monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
-
-                            // but now check if forced path 
-                            if (loginData.forceImageModePath) {
-                              debug("Overriding, setting image mode to true as you have requested force enable");
-                              monitors[i].Monitor.imageMode = 'path';
-                            }
-
-                            // debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
-                          }
-                        }
-                        // now get packery hide if applicable
-                        reloadMonitorDisplayStatus();
-                        d.resolve(monitors);
-                      },
-                      function (err) {
-                        log("multi server list loading error");
-                        multiservers = [];
-
-                        for (var i = 0; i < monitors.length; i++) {
-                          //monitors[i].Monitor.listDisplay = 'show';
-                          monitors[i].Monitor.isAlarmed = false;
-                          monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-                          monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-                          var st = loginData.streamingurl;
-                          if (zmsPort > 0) {
-                            // we need to insert minport
-                            st = "";
-                            var p = URI.parse(loginData.streamingurl);
-                            st += p.scheme + "://";
-                            if (!p.host) {
-                              p.host = p.path;
-                              p.path = undefined;
-                            }
-                            st += p.host;
-                            var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                            st = st + ':' + sport;
-                            if (p.path) st += p.path;
-
-
-
-                          }
-
-                          monitors[i].Monitor.streamingURL = st;
-                          // console.log ("CONSTRUCTED STREAMING PATH="+st);
-                          monitors[i].Monitor.baseURL = loginData.url;
-
-                          monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
-                          //debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
-
-                        }
-                        d.resolve(monitors);
-
-                      });
-
-                    $ionicLoading.hide();
-                    log("Monitor load was successful, loaded " + monitors.length + " monitors");
-
-                  },
-                  function (err) {
-                    //console.log("HTTP Error " + err);
-                    log("Monitor load failed " + JSON.stringify(err), "error");
-                    // To keep it simple for now, I'm translating an error
-                    // to imply no monitors could be loaded. FIXME: conver to proper error
-                    monitors = [];
-                    //console.log("promise resolved inside HTTP fail");
-                    displayBanner('error', ['error retrieving monitor list', 'please try again']);
-                    d.resolve(monitors);
-                    $ionicLoading.hide();
-                    monitorsLoaded = 0;
-                  });
+                    },
+                    function (err) {
+                      //console.log("HTTP Error " + err);
+                      log("Monitor load failed " + JSON.stringify(err), "error");
+                      // To keep it simple for now, I'm translating an error
+                      // to imply no monitors could be loaded. FIXME: conver to proper error
+                      monitors = [];
+                      //console.log("promise resolved inside HTTP fail");
+                      displayBanner('error', ['error retrieving monitor list', 'please try again']);
+                      d.resolve(monitors);
+                      $ionicLoading.hide();
+                      monitorsLoaded = 0;
+                    });
               });
 
             return d.promise;
@@ -2337,7 +2340,7 @@ angular.module('zmApp.controllers')
               url: myurl,
               method: 'GET',
               transformResponse: undefined,
-              responseType:'text',
+              responseType: 'text',
             })
             // $http.get(myurl)
             .then(function (textsucc) {
@@ -2539,25 +2542,25 @@ angular.module('zmApp.controllers')
           });
 
           //var myurl = (monitorId == 0) ? apiurl + "/events.json?page=1" : apiurl + "/events/index/MonitorId:" + monitorId + ".json?page=1";
-          
+
           $http.get(myurl)
             .then(function (data) {
-              data = data.data;
-              $ionicLoading.hide();
-              //console.log ("**** EVENTS PAGES I GOT "+JSON.stringify(data));
-              //console.log("**** PAGE COUNT IS " + data.pagination.pageCount);
-              d.resolve(data.pagination);
-              return d.promise;
-            },
-           function (error) {
-              $ionicLoading.hide();
-              // console.log("*** ERROR GETTING TOTAL PAGES ***");
-              log("Error retrieving page count of events " + JSON.stringify(error), "error");
-              displayBanner('error', ['error retrieving event page count', 'please try again']);
+                data = data.data;
+                $ionicLoading.hide();
+                //console.log ("**** EVENTS PAGES I GOT "+JSON.stringify(data));
+                //console.log("**** PAGE COUNT IS " + data.pagination.pageCount);
+                d.resolve(data.pagination);
+                return d.promise;
+              },
+              function (error) {
+                $ionicLoading.hide();
+                // console.log("*** ERROR GETTING TOTAL PAGES ***");
+                log("Error retrieving page count of events " + JSON.stringify(error), "error");
+                displayBanner('error', ['error retrieving event page count', 'please try again']);
 
-              d.reject(error);
-              return d.promise;
-            });
+                d.reject(error);
+                return d.promise;
+              });
           return d.promise;
 
         },
@@ -2609,10 +2612,10 @@ angular.module('zmApp.controllers')
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
-          myurl = myurl + ".json?&sort=StartTime&direction=desc&page="+pageId;
+          myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId;
 
-        
-           debug ("getEvents:"+myurl);
+
+          debug("getEvents:" + myurl);
           // Simulated data
 
           // myurl = "https://api.myjson.com/bins/4jx44.json";
@@ -2621,31 +2624,31 @@ angular.module('zmApp.controllers')
 
           $http.get(myurl /*,{timeout:15000}*/ )
             .then(function (data) {
-              data = data.data;
-              if (loadingStr != 'none') $ionicLoading.hide();
-              //myevents = data.events;
-              myevents = data;
+                data = data.data;
+                if (loadingStr != 'none') $ionicLoading.hide();
+                //myevents = data.events;
+                myevents = data;
 
-             
-              d.resolve(myevents);
-              return d.promise;
 
-            },
-            function (err) {
-              if (loadingStr != 'none') $ionicLoading.hide();
-              displayBanner('error', ['error retrieving event list', 'please try again']);
-              //console.log("HTTP Events error " + err);
-              log("Error fetching events for page " + pageId + " Err: " + JSON.stringify(err), "error");
-              // I need to reject this as I have infinite scrolling
-              // implemented in EventCtrl.js --> and if it does not know
-              // it got an error going to the next page, it will get into
-              // an infinite loop as we are at the bottom of the list always
+                d.resolve(myevents);
+                return d.promise;
 
-              d.reject(myevents);
+              },
+              function (err) {
+                if (loadingStr != 'none') $ionicLoading.hide();
+                displayBanner('error', ['error retrieving event list', 'please try again']);
+                //console.log("HTTP Events error " + err);
+                log("Error fetching events for page " + pageId + " Err: " + JSON.stringify(err), "error");
+                // I need to reject this as I have infinite scrolling
+                // implemented in EventCtrl.js --> and if it does not know
+                // it got an error going to the next page, it will get into
+                // an infinite loop as we are at the bottom of the list always
 
-             
-              return d.promise;
-            });
+                d.reject(myevents);
+
+
+                return d.promise;
+              });
           return d.promise;
         },
 
@@ -2881,7 +2884,7 @@ angular.module('zmApp.controllers')
             $http.get(loginData.apiurl + '/host/logout.json', {
                 timeout: 7000,
                 transformResponse: undefined,
-               // responseType:'text',
+                // responseType:'text',
               })
               .then(function (s) {
                   debug("Logout returned... ");
@@ -2926,7 +2929,7 @@ angular.module('zmApp.controllers')
               }
             })
             .then(function (succ) {
-              $ionicLoading.hide();
+                $ionicLoading.hide();
                 d.resolve(true);
                 return d.promise;
               },

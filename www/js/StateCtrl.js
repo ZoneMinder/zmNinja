@@ -63,16 +63,16 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   $scope.$on('$ionicView.enter', function () {
     // console.log("**VIEW ** Montage Ctrl Entered");
     NVRDataModel.setAwake(false);
-   
+
   });
 
   $scope.$on('$ionicView.afterEnter', function () {
     // console.log("**VIEW ** Montage Ctrl Entered");
-   
-    console.log ("STATE SHORTCUT: " + JSON.stringify($stateParams));
-    $stateParams.shortcut &&  $stateParams.shortcut.fn && 
-    $scope[$stateParams.shortcut.fn]($stateParams.shortcut.fnargs); // jshint ignore:line
-    
+
+    console.log("STATE SHORTCUT: " + JSON.stringify($stateParams));
+    $stateParams.shortcut && $stateParams.shortcut.fn &&
+      $scope[$stateParams.shortcut.fn]($stateParams.shortcut.fnargs); // jshint ignore:line
+
   });
 
   //---------------------------------------------------------

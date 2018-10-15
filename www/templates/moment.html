@@ -29,10 +29,11 @@
 
     <div ng-if="areImagesLoading" class="screen-note">&nbsp;{{ 'kArrangingImages' | translate }}...&nbsp;</div>
 
-    <div ng-if="!areImagesLoading &&  !isMaxScoreFramePresent" class="screen-note">&nbsp;{{ 'kApiUpgrade' | translate }}&nbsp;</div>
+    <div ng-if="!areImagesLoading &&  !isMaxScoreFramePresent" class="screen-note">&nbsp;{{ 'kApiUpgrade' | translate
+      }}&nbsp;</div>
 
     <div ng-if="isSubMenu">
-      <br/>
+      <br />
       <div id="flyoutmenu" style="float:left">
         <ul>
           <li>
@@ -88,7 +89,7 @@
       </div>
 
       <div style="clear: both;"></div>
-      <br/>
+      <br />
     </div>
 
 
@@ -105,8 +106,7 @@
             <button class="button button-small button-icon icon  {{moment.Event.icon}}" ng-click="toggleCollapse(moment.Event.MonitorId, moment.Event.Id)"></button>{{moment.Event.collapseCount}}&nbsp;</span>
         </figcaption>
         <img image-spinner-src="{{constructFrame(moment)}}" img-spinner-w="{{moment.Event.width}}" img-spinner-h="{{moment.Event.height}}"
-          image-spinner-loader="lines" on-tap="playEvent(moment)"
-        />
+          image-spinner-loader="lines" on-tap="playEvent(moment)" />
 
         <div ng-if="showIcons" class="normal-subfigcaption">
           <button ng-class="moment.Event.pinned?  'button button-small button-icon icon ion-ios-flag assertive': 'button button-small button-icon icon ion-pin'"

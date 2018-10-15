@@ -11,7 +11,8 @@
   <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
     <div class="list list-inset">
       <span style="color:rgb(100,100,100)">
-        <i class="ion-android-settings" style="font-size:150%"></i> {{'kDeveloperOptionsFor'|translate}} {{loginData.serverName}}
+        <i class="ion-android-settings" style="font-size:150%"></i> {{'kDeveloperOptionsFor'|translate}}
+        {{loginData.serverName}}
       </span>
       <div class="item item-input-inset">
         {{'kFrameUpdate'|translate}} ({{'kSec'|translate}}.)&nbsp;
@@ -109,17 +110,17 @@
         {{'kMaxItemsForTimeline' | translate}}&nbsp;
         <label class="item-input-wrapper">
           <input type="tel" placeholder="" ng-model="loginData.graphSize">
-          <br/>
+          <br />
         </label>
-        <br/>
+        <br />
       </div>
       <div class="item item-text-wrap item-input-inset">
         {{'kMinAlarmCount' | translate}}&nbsp;
         <label class="item-input-wrapper">
           <input type="tel" placeholder="" ng-model="loginData.minAlarmCount">
-          <br/>
+          <br />
         </label>
-        <br/>
+        <br />
       </div>
       <div class="item" style="background-color:#C8F7C5" ng-if="loginData.graphSize > 5000">
         <label class="animated fadeInDown item-text-wrap">
@@ -142,7 +143,7 @@
         </ion-toggle>
       </label>
 
-      
+
       <label>
         <ion-toggle ng-model="loginData.enableThumbs" toggle-class="toggle-calm">
           <span class="item-text-wrap">{{'kEnableThumbs' | translate}}

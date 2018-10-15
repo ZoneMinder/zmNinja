@@ -7,7 +7,8 @@
       <!-- portal url -->
       <wz-step wz-title="1" canexit="exitPortal">
         <h4>
-          <i id="transition-delay" class="animated swing ion-wand" style="font-size:2em"></i> {{'kWelcomeWizard' | translate}}</h4>
+          <i id="transition-delay" class="animated swing ion-wand" style="font-size:2em"></i> {{'kWelcomeWizard' |
+          translate}}</h4>
         <img src="img/wizard.svg" width="100px" style="float:left" />
         <p>{{'kWizConfigPain' | translate}}</p>
         <h4>{{'kWizPortalUrl' | translate}}</h4>
@@ -19,10 +20,10 @@
         <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="toggleTip()">{{wizard.tiptext}}</a>
         <div class="wizardtip" ng-show="wizard.tipshow">
           <b>{{'kWizTip' | translate}}: </b>{{'kWizPortalTip' | translate}}
-          <br/>
+          <br />
           <img src="img/portalurl.png" width="30%">
         </div>
-        <br/>
+        <br />
         <button class="button button-small icon icon-right ion-chevron-right" wz-next>{{'kNext' | translate}}</button>
       </wz-step>
       <!-- auth mode -->
@@ -30,12 +31,15 @@
         <h4>{{'kWizPortalAuth' | translate}}</h4>
         <!--<img src="img/wizard.svg" width="100px" style="float:left"/>-->
         <p>{{'kWizPortalText' | translate}}</p>
-        <ion-toggle ng-change="toggleAuth()" ng-model="wizard.useauth" toggle-class="toggle-calm">{{'kWizUseAuth' | translate}}</ion-toggle>
-        <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usezmauth" toggle-class="toggle-calm">{{'kWizZMAuth' | translate}}</ion-toggle>
+        <ion-toggle ng-change="toggleAuth()" ng-model="wizard.useauth" toggle-class="toggle-calm">{{'kWizUseAuth' |
+          translate}}</ion-toggle>
+        <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usezmauth" toggle-class="toggle-calm">{{'kWizZMAuth' |
+          translate}}</ion-toggle>
         <div ng-if="wizard.usezmauth">
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kUserName' | translate}}</span>
-            <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.zmuser" placeholder="{{'kPlaceHolderZMAuthUser'|translate}}">
+            <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.zmuser"
+              placeholder="{{'kPlaceHolderZMAuthUser'|translate}}">
           </label>
           <label class="item item-text-wrap item-input item-floating-label">
             <span class="input-label">{{'kPassword' | translate}}</span>
@@ -43,13 +47,15 @@
             <!--<p >{{'kWizPasswdNote' | translate}}</p>-->
           </label>
         </div>
-        <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" toggle-class="toggle-calm">{{'kWizBasicAuth' | translate}}
+        <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usebasicauth" toggle-class="toggle-calm">{{'kWizBasicAuth'
+          | translate}}
           <p ng-show="wizard.usebasicauth">{{'kWarningBasicAuth'|translate}}</p>
         </ion-toggle>
 
         <label class="item item-input item-floating-label" ng-show="wizard.usebasicauth">
           <span class="input-label">{{'kUserName' | translate}}</span>
-          <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.basicuser" placeholder="{{'kPlaceHolderBasicAuthUser'|translate}}">
+          <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.basicuser"
+            placeholder="{{'kPlaceHolderBasicAuthUser'|translate}}">
         </label>
         <label class="item item-input item-text-wrap item-floating-label" ng-show="wizard.usebasicauth">
           <span class="input-label">{{'kPassword' | translate}}</span>
@@ -60,29 +66,30 @@
         <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="toggleTip()">{{wizard.tiptext}}</a>
         <div class="wizardtip" ng-show="wizard.tipshow">
           <b>{{'kWizTip'| translate}} </b> {{'kWizAuthText1' | translate}}
-          <br/> {{'kWizAuthText2' | translate}}
+          <br /> {{'kWizAuthText2' | translate}}
         </div>
-        <br/>
+        <br />
         <button class="button button-small icon icon-left ion-chevron-left" wz-previous>{{'kPrev' | translate}}</button>
-        <button class="button button-small icon icon-right ion-chevron-right" ng-click="exitAuth()">{{'kNext' | translate}}</button>
+        <button class="button button-small icon icon-right ion-chevron-right" ng-click="exitAuth()">{{'kNext' |
+          translate}}</button>
       </wz-step>
       <wz-step wz-title="3">
-        <br/>
-        <br/>
+        <br />
+        <br />
         <h4>{{'kWizResults' | translate}}</h4>
         <span ng-if="wizard.portalValidText" ng-style="{'color':wizard.portalColor}">
           <i ng-class="wizard.portalColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.portalValidText}}
-          <br/>
+          <br />
         </span>
         <span ng-if="wizard.apiValidText" ng-style="{'color':wizard.apiColor}">
           <i ng-class=" wizard.apiColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.apiValidText}}
-          <br/>
+          <br />
         </span>
         <span ng-if="wizard.streamingValidText" ng-style="{'color':wizard.streamingColor}">
           <i ng-class="wizard.streamingColor=='#16a085' ? 'ion-checkmark-circled':'ion-close-circled'"></i>&nbsp;{{wizard.streamingValidText}}
-          <br/>
+          <br />
         </span>
-        <br/>
+        <br />
         <div class="wizardtip">
           {{'kWizNextStep1' | translate}}:
           <ul class="wiz-list">
@@ -90,10 +97,11 @@
             <li>{{'kWizNextStep3' | translate}}</li>
           </ul>
         </div>
-        <br/>
-        <br/>
+        <br />
+        <br />
         <button class="button button-small icon icon-left ion-chevron-left" wz-previous>{{'kPrev' | translate}}</button>
-        <button class="button button-small icon icon-right ion-chevron-right" ng-click="gotoLoginState()">{{'kWizGotoLogin' | translate}}</button>
+        <button class="button button-small icon icon-right ion-chevron-right" ng-click="gotoLoginState()">{{'kWizGotoLogin'
+          | translate}}</button>
       </wz-step>
     </wizard>
   </ion-content>
