@@ -165,7 +165,6 @@ angular.module('zmApp.controllers')
         'timelineScale': -1,
         'hideArchived': false,
         'videoPlaybackSpeed': 2,
-        'enableGIFMP4': false,
         'enableThumbs': true,
         'enableStrictSSL': false,
         'enableSlowLoading': false,
@@ -1349,11 +1348,7 @@ angular.module('zmApp.controllers')
 
                   }
 
-                  if (typeof loginData.enableGIFMP4 == 'undefined') {
-
-                    loginData.enableGIFMP4 = false;
-
-                  }
+                
 
                   if (typeof loginData.enableThumbs == 'undefined') {
 

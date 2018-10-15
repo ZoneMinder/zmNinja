@@ -2026,15 +2026,6 @@ angular.module('zmApp', [
           });
         }
 
-        // console.log("file logger");
-
-        /*if (NVRDataModel.getLogin().disableNative) {
-          NVRDataModel.log("Disabling native transitions...");
-          $ionicNativeTransitions.enable(false);
-        } else {
-          NVRDataModel.log("Enabling native transitions...");
-          $ionicNativeTransitions.enable(true);
-        }*/
 
         // At this stage, DataModel.init is not called yet
         // but I do need to know the language
