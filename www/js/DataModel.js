@@ -43,6 +43,10 @@ angular.module('zmApp.controllers')
           value: 'ar'
         },
         {
+          text: 'Bosnian',
+          value: 'ba'
+        },
+        {
           text: 'Deutsch',
           value: 'de'
         },
