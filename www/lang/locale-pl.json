@@ -65,8 +65,6 @@
     "kDeveloperOptionsFor"       :"Opcje zaawansowane dla",
     "kDisableAlarmMontage"       :"Wyłącz alarm API w Podglądzie",
     "kDisableAlarmMontageSub"    :"może pomóc jeśli serwer się przeciąży",
-    "kDisableNative"             :"Wyłącz natywne przejścia",
-    "kDisableNativeSub"          :"Włącz jeśli manu się blokuje",
     "kDisablePush"               :"wyłącz FCM",
     "kDisableSamsung"            :"Jeśli jesteś na urządzeniu Samsung i masz problem z wypełnianiem pól, czasowo wyłącz autokorektę",
     "kDisableSimulStreaming"     :"Wyłącz streaming na żywo w Montażu",

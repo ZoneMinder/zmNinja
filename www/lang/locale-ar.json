@@ -56,8 +56,6 @@
     "kDeveloperOptionsFor"       :"الخيارات المتاحة للمطور",
     "kDisableAlarmMontage"       :"إلغاء الإنذارات APIفي المونتاج",
     "kDisableAlarmMontageSub"    :"قد يساعد ان كان هناك ضغظ على الخادم",
-    "kDisableNative"             :"إلغاء المؤثرات الأصلية",
-    "kDisableNativeSub"          :"قم بتفعيلها اذا حدث بطئ في القائمة",
     "kDisablePush"               :"تعطيل APNS/GCM",
     "kDiscovering"               :"جاري البحث",
     "kDiscoveringAPI"            :"API يتم البحث عن",

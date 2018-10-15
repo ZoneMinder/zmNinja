@@ -59,8 +59,6 @@
     "kDeveloperOptionsFor"       :"Ontwikkelaar opties voor",
     "kDisableAlarmMontage"       :"Alarm API uitschakelen in overzicht",
     "kDisableAlarmMontageSub"    :"kan helpen tijdens server overbelasting",
-    "kDisableNative"             :"Native overgangen uitschakelen",
-    "kDisableNativeSub"          :"Aanzetten als het menu bevriest",
     "kDisablePush"               :"uitschakelen APNS/GCM",
     "kDisableSamsung"            :"Waneer u een Samsung apparaat gebruikt en problemen ondervindt met invoer, zet dan tijdelijk auto-correctie uit",
     "kDiscovering"               :"verbinding maken",

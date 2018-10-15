@@ -56,8 +56,6 @@
     "kDeveloperOptionsFor"       :"Configurações de desenvolvimento para o",
     "kDisableAlarmMontage"       :"Desativar API de alarme na montagem",
     "kDisableAlarmMontageSub"    :"pode ajudar se o servidor ficar em sobrecarga",
-    "kDisableNative"             :"Desativar transições nativas",
-    "kDisableNativeSub"          :"Ativar se o menu estiver a congelar",
     "kDisablePush"               :"desativar APNS/GCM",
     "kDisableSamsung"            :"Se você estiver a usar um dispositivo Samsung e estiver enfrentando problemas de entrada, desative temporariamente a correção automática",
     "kDiscovering"               :"descobrindo",

@@ -65,8 +65,6 @@
     "kDeveloperOptionsFor"       :"Opciones de Desarrollador para",
     "kDisableAlarmMontage"       :"Deshabilitar el API de la alarma en montaje",
     "kDisableAlarmMontageSub"    :"puede ser de ayuda si el servidor se sobrecarga",
-    "kDisableNative"             :"Deshabilitar transiciones nativas",
-    "kDisableNativeSub"          :"Habilitar si el menú se congela",
     "kDisablePush"               :"deshabilitar APNS/GCM",
     "kDisableSamsung"            :"Si estás configurando desde un dispositivo samsung y tienes problemas al ingresar los datos, por favor, deshabilita la autocorrección temporalmente.",
     "kDisableSimulStreaming"     :"Ignore el multipuerto de ZM 1.32.0",

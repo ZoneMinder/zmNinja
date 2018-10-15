@@ -56,8 +56,6 @@
     "kDeveloperOptionsFor"       :"Opzioni Sviluppatore per",
     "kDisableAlarmMontage"       :"Disabilita API eventi in montaggio",
     "kDisableAlarmMontageSub"    :"può aiutare se il server è sovraccarico",
-    "kDisableNative"             :"Disabilita transizioni",
-    "kDisableNativeSub"          :"Abilita con menù bloccato",
     "kDisablePush"               :"Disabilita APNS/GCM",
     "kDiscovering"               :"sto cercando",
     "kDiscoveringAPI"            :"Cerco API",

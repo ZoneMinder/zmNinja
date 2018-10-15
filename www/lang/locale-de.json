@@ -65,8 +65,6 @@
     "kDeveloperOptionsFor"       :"Entwickleroptionen für",
     "kDisableAlarmMontage"       :"Alarm-API in Livebilder deaktivieren",
     "kDisableAlarmMontageSub"    :"Wenn die Serverlast zu hoch ist, kann das helfen.",
-    "kDisableNative"             :"Deaktiviere ursprüngliche Übergänge",
-    "kDisableNativeSub"          :"Aktiviere diese Option, wenn das Menü hängt",
     "kDisablePush"               :"deaktiviere FCM",
     "kDisableSamsung"            :"Bei Samsung-Geräten kann es zu Eingabeproblemen kommen. Falls dies bei Dir der Fall ist schalte bitte kurzzeitig die Auto-Korrektur ab.",
     "kDisableSimulStreaming"     :"Ignoriere ZM 1.32.0 Multi-Port",
