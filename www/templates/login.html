@@ -16,12 +16,12 @@
       </label>
     </div>
     <label>
-        
-    <ion-toggle ng-if="$root.platformOS != 'desktop'" ng-model="loginData.saveToCloud" toggle-class="toggle-calm">
+
+      <ion-toggle ng-if="$root.platformOS != 'desktop'" ng-model="loginData.saveToCloud" toggle-class="toggle-calm">
         <span class="item-text-wrap">{{'kSaveToCloud'|translate}}</span>
         <p ng-if="$root.platformOS=='ios'"> <span class="item-text-wrap">{{'kSaveToCloudIOS' | translate}}</span></p>
         <p ng-if="$root.platformOS=='android'"> <span class="item-text-wrap">{{'kSaveToCloudANDROID' | translate}}</span></p>
-    </ion-toggle>
+      </ion-toggle>
 
       <ion-toggle ng-model="loginData.enableLowBandwidth" toggle-class="toggle-calm">
         <span class="item-text-wrap">{{'kLowBandwidth'|translate}}</span>
@@ -43,7 +43,8 @@
         <div ng-if="loginData.isUseAuth">
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kUserName'|translate}}</span>
-            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}" ng-model="loginData.username">
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}"
+              ng-model="loginData.username">
           </label>
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kPassword' | translate}}</span>
@@ -57,7 +58,8 @@
         <div ng-if="loginData.isUseBasicAuth">
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kUserName'|translate}}</span>
-            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}" ng-model="loginData.basicAuthUser">
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}"
+              ng-model="loginData.basicAuthUser">
           </label>
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kPassword' | translate}}</span>

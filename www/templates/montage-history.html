@@ -12,8 +12,10 @@
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
-  <ion-content has-bouncing="false" style="background-color:#444444" delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
-    <div class="timeline_text"> {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}} ({{humanizeTime(datetimeValueFrom.value)}})
+  <ion-content has-bouncing="false" style="background-color:#444444" delegate-handle="none" overflow-scroll="false"
+    mouse-wheel-scroll>
+    <div class="timeline_text"> {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}}
+      ({{humanizeTime(datetimeValueFrom.value)}})
       <div ng-if="!isMultiPort">({{'kChromeMax' | translate}})</div>
     </div>
     <div ng-if="isScreenReady" class="grid" id="mygrid">
@@ -23,13 +25,13 @@
 
 
         <div ng-if="monitor.Monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey !=''">
-          <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}" data-item-size="{{monitor.Monitor.gridScale}}"
-            data-item-listdisplay="{{monitor.Monitor.listDisplay}}">
+          <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}"
+            data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}">
             <figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-if=" monitor.Monitor.listDisplay!='noshow'">
-              <img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{constructStream(monitor)}}" image-spinner-loader="lines"
-                on-tap="!isDragabillyOn?togglePause(monitor.Monitor.Id):toggleSelectItem($index)" on-swipe-left="toggleControls()"
-                on-swipe-right="toggleControls()" img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}"
-              />
+              <img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{constructStream(monitor)}}"
+                image-spinner-loader="lines" on-tap="!isDragabillyOn?togglePause(monitor.Monitor.Id):toggleSelectItem($index)"
+                on-swipe-left="toggleControls()" on-swipe-right="toggleControls()" img-spinner-w="{{monitor.Monitor.Width}}"
+                img-spinner-h="{{monitor.Monitor.Height}}" />
               <figcaption class="normal-figcaption">
 
                 &nbsp;
@@ -42,23 +44,26 @@
                 </span> {{monitor.Monitor.Name}}&nbsp;
                 <div ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px"
                   class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">[{{monitor.Monitor.eid}}]
-                  <i class="ion-clock"></i> {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}} ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp;
+                  <i class="ion-clock"></i> {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}}
+                  ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp;
                 </div>
               </figcaption>
             </figure>
             <!-- wait for packery otherwise we get large ranges -->
             <div ng-show="packeryDone">
               <div class="range" style="position:absolute;top:5%;width:95%;z-index:999">
-                <input on-release="seek(monitor.Monitor.Id,monitor.Monitor.sliderProgress.progress )" type="range" min="0" max="{{monitor.Monitor.eventDuration}}"
-                  ng-model="monitor.Monitor.sliderProgress.progress">
+                <input on-release="seek(monitor.Monitor.Id,monitor.Monitor.sliderProgress.progress )" type="range" min="0"
+                  max="{{monitor.Monitor.eventDuration}}" ng-model="monitor.Monitor.sliderProgress.progress">
               </div>
               <div id="history_canvas_video">
                 <canvas style="padding-left:23px;
-                        padding-right:23px;z-index:998" id="eventchart-{{monitor.Monitor.Id}}" width="auto" height="20"></canvas>
+                        padding-right:23px;z-index:998" id="eventchart-{{monitor.Monitor.Id}}"
+                  width="auto" height="20"></canvas>
               </div>
             </div>
             <div ng-if="monitor.Monitor.seek" style="position:absolute;top:0px; left: 0px; width:100%;height:100%; background-color:rgba(0,0,0,0.3); z-index:99999">
-              <div style="position:relative;top:50%;text-align:center;color:white;background-color:rgba(0,0,0,0.5);">{{'kPleaseWait' | translate}}</div>
+              <div style="position:relative;top:50%;text-align:center;color:white;background-color:rgba(0,0,0,0.5);">{{'kPleaseWait'
+                | translate}}</div>
             </div>
           </div>
         </div>
@@ -109,7 +114,8 @@
           </div>
         </div>
         <ion-item>
-          <div ion-datetime-picker title="From" am-pm={{!loginData.use24hr}} ng-model="datetimeValueFrom.value" ng-change="dateChanged()">
+          <div ion-datetime-picker title="From" am-pm={{!loginData.use24hr}} ng-model="datetimeValueFrom.value"
+            ng-change="dateChanged()">
             <b>{{'kFrom' | translate }}: </b>{{datetimeValueFrom.value | date: timeFormat}}
           </div> ({{humanizeTime(datetimeValueFrom.value)}})
         </ion-item>
@@ -117,11 +123,11 @@
 
         <div class="row">
           <div class="col col-75">
-            <br/>
+            <br />
             <div style="width:90%;color:black;">
               <input ng-model="sliderVal.rate" type="text" id="mySlider6" slider options="slider_modal_options_rate" />
             </div>
-            <br/>
+            <br />
           </div>
           <div class="col col-25" style="background-color:#AEA8D3;text-align:center"> {{'kSpeed' | translate }} </div>
         </div>

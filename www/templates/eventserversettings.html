@@ -21,18 +21,22 @@
       <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kEventNotificationUrl' | translate}}"
         ng-model="loginData.eventServer">
     </label>
-    <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush" toggle-class="toggle-calm" class="item-text-wrap">{{'kOnlyUseWebSocket'| translate }}
-      <br/>
+    <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.disablePush" toggle-class="toggle-calm" class="item-text-wrap">{{'kOnlyUseWebSocket'|
+      translate }}
+      <br />
       <p>{{'kDisablePush' | translate }}</p>
     </ion-toggle>
     <!-- vibrate app setting is not av. on iOS-->
-    <ion-toggle ng-if="loginData.isUseEventServer && $root.platformOS !='ios'" ng-model="loginData.vibrateOnPush" toggle-class="toggle-calm">{{'kVibrateOnPush'| translate }}</ion-toggle>
-    <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.soundOnPush" toggle-class="toggle-calm" class="item-text-wrap">{{'kSoundOnPush'| translate }}</ion-toggle>
+    <ion-toggle ng-if="loginData.isUseEventServer && $root.platformOS !='ios'" ng-model="loginData.vibrateOnPush"
+      toggle-class="toggle-calm">{{'kVibrateOnPush'| translate }}</ion-toggle>
+    <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.soundOnPush" toggle-class="toggle-calm" class="item-text-wrap">{{'kSoundOnPush'|
+      translate }}</ion-toggle>
 
     <ion-list>
       <div ng-repeat="monitor in monitors">
         <ion-item class="custom-list" ng-click="toggleGroup(monitor)" ng-class="{active: isGroupShown(monitor)}">
-          <i class="icon" ng-class="isGroupShown(monitor) ? 'ion-minus' : 'ion-plus'"></i> &nbsp; {{monitor.Monitor.Name}}
+          <i class="icon" ng-class="isGroupShown(monitor) ? 'ion-minus' : 'ion-plus'"></i> &nbsp;
+          {{monitor.Monitor.Name}}
         </ion-item>
         <ion-item class="item-accordion" ng-show="isGroupShown(monitor)">
           <span class="item-checkbox">

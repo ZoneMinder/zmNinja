@@ -19,14 +19,15 @@
     <!--<ion-content data-tap-disabled="true">-->
     <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
       <div style="padding-left:15px; font-size:10px; color:grey">
-        {{prettify(fromDate)}} - {{prettify(toDate)}} &nbsp;{{tzAbbr}}&nbsp; ({{'kTimelineOnlyDisplaying1' | translate:translationData}})
+        {{prettify(fromDate)}} - {{prettify(toDate)}} &nbsp;{{tzAbbr}}&nbsp; ({{'kTimelineOnlyDisplaying1' |
+        translate:translationData}})
         <strong>
-          <br/>{{timelineControls}}</strong>
+          <br />{{timelineControls}}</strong>
       </div>
       <ion-spinner icon="spiral" style="position:absolute; top:50%;left:50%" ng-if="!graphLoaded"></ion-spinner>
       <div ng-if="!graphLoaded">
-        <br/>
-        <br/>
+        <br />
+        <br />
         <center>
           <p>{{'kWorkingOnGraph' | translate}}...</p>
         </center>
@@ -35,7 +36,7 @@
         <div id="visualization" data-tap-disabled="true">
         </div>
       </div>
-      <br/>
+      <br />
       <div style="padding-left:15px; font-size:10px; color:grey">
 
         <button ng-click="toggleTap()" class="button button-small button-dark">
