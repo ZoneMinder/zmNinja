@@ -70,7 +70,6 @@
     "kEmailNotConfigured"        :"Email nincs konfigurálva",
     "kEnable24hr"                :"24 órás időformátum engedélyezése",
     "kEnableDebug"               :"Engedélyezze a hibakeresési naplókat",
-    "kEnableGIFMP4"              :"GIF / MP4 letöltések engedélyezése",
     "kEnableLogs"                :"Naplók engedélyezése",
     "kEnableSlowLoading"         :"Használjon nagy HTTP-időtúllépéseket",
     "kEnableStrictSSL"           :"Szigorú SSL-ellenőrzés engedélyezése",

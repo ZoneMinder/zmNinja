@@ -79,21 +79,6 @@
               </span>
               <br/>
 
-              <!-- No longer needed - direct video download supported now
-                
-              <button ng-if="gifshotSupported && loginData.enableGIFMP4 " class="button button-small button-clear icon gif-icon" ng-click="permissionsDownload(event)">
-              </button>
-
-              <a ng-if="(event.Event.DefaultVideo!='' && event.Event.DefaultVideo!==undefined) && $root.platformOS=='desktop' && loginData.enableGIFMP4 "
-                class="button button-clear button-small icon mp4-icon" href="{{event.Event.videoPath}}" download="{{event.Event.Id}}-video.mp4"
-                ng-click="mp4warning()"></a>
-            -->
-
-
-              <button ng-if="event.Event.DefaultVideo!='' && event.Event.DefaultVideo!=undefined && $root.platformOS!='desktop' && loginData.enableGIFMP4 "
-                class="button button-small button-clear icon mp4-icon" ng-click="downloadFileToDevice(event.Event.videoPath, event.Event.Id)">
-              </button>
-              <!--<i class="ion-arrow-graph-up-right"></i> {{event.Event.TotScore}}-->
 
             </div>
 
