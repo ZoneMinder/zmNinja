@@ -56,8 +56,6 @@
     "kDeveloperOptionsFor"       :"Опции разработчика для",
     "kDisableAlarmMontage"       :"Отключить API тревогу в монтаже",
     "kDisableAlarmMontageSub"    :"может помочь, если сервер перегружен",
-    "kDisableNative"             :"Отключить встроенные переходы",
-    "kDisableNativeSub"          :"Включить если меню подвисает",
     "kDisablePush"               :"Отключить APNS/GCM",
     "kDisableSamsung"            :"Если вы используете устройство samsung и сталкиваетесь с проблемами источника, пожалуйста временно отключите автокоррекцию",
     "kDiscovering"               :"обнаружение",

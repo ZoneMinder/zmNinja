@@ -66,8 +66,6 @@
     "kDeveloperOptionsFor"       :"Developer Options for",
     "kDisableAlarmMontage"       :"Disable alarm API in montage",
     "kDisableAlarmMontageSub"    :"may help if server gets overloaded",
-    "kDisableNative"             :"Disable Native transitions",
-    "kDisableNativeSub"          :"Enable if the menu is freezing",
     "kDisablePush"               :"disable FCM",
     "kDisableSamsung"            :"If you are on a samsung device and are facing input issues, please temporarily disable auto-correction",
     "kDisableSimulStreaming"     :"Ignore ZM 1.32.0 multi-port",

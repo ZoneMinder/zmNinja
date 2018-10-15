@@ -60,8 +60,6 @@
     "kDeveloperOptionsFor"       :"Fejlesztői beállítások a következőhöz:",
     "kDisableAlarmMontage"       :"A riasztási API kikapcsolása montázsban",
     "kDisableAlarmMontageSub"    :"Segíthet, ha a szerver túlterhelt",
-    "kDisableNative"             :"Letiltja a natív átmeneteket",
-    "kDisableNativeSub"          :"Engedélyezze, ha a menü befagy",
     "kDisablePush"               :"Tiltsa le az APNS / GCM-et",
     "kDisableSamsung"            :"Ha egy Samsung készüléken tartózkodik, és bemeneti problémákkal szembesül, kérjük, ideiglenesen tiltsa le az automatikus javítást",
     "kDiscovering"               :"felderítése",

@@ -150,7 +150,6 @@ angular.module('zmApp.controllers')
         'language': 'en',
         'reachability': true,
         'forceImageModePath': false,
-        'disableNative': false,
         'vibrateOnPush': true,
         'soundOnPush': true,
         'cycleMonitors': false,
@@ -1214,11 +1213,7 @@ angular.module('zmApp.controllers')
 
                   }
 
-                  if (typeof loginData.disableNative == 'undefined') {
-                    debug("disableNative not found, setting to false");
-                    loginData.disableNative = false;
-
-                  }
+            
 
                   if (typeof loginData.vibrateOnPush == 'undefined') {
                     debug("vibrate on push not found, setting to true");
