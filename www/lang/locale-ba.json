@@ -401,7 +401,7 @@
     "kWizNextStep1"              :"Kada se auto detekcija završi, možete",
     "kWizNextStep2"              :"Vrati se na prethodni korak",
     "kWizNextStep3"              :"Idite na login zaslon sa ovim podacima.",
-    "kWizPasswdNote"             :"napomena: ukoliko vaša lozinka sadrži specijalne znakove kao što su #?@ ili ampersand, moguće je da carobnjak nece detektovati cgi. U tom slucaju privremeno izmjenite svoju lozinku, kasnije je mo�ete vratiti.",
+    "kWizPasswdNote"             :"napomena: ukoliko vaša lozinka sadrži specijalne znakove kao što su #?@ ili ampersand, moguće je da carobnjak nece detektovati cgi. U tom slucaju privremeno izmjenite svoju lozinku, kasnije je mo�ete vratiti.",
     "kWizPortalAuth"             :"Portal autentifikacija",
     "kWizPortalText"             :"Ukoliko ste omogućili autentifikaciju u Zoneminderu aktivirajte ovo dugme.",
     "kWizPortalTip"              :"Zoneminder URL je ona adresa koju vidite u adresnom polju vašeg omiljenog pretraživaca. ",
