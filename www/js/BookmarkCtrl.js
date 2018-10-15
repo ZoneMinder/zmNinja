@@ -27,7 +27,7 @@ angular.module('zmApp.controllers').controller('zmApp.BookmarkCtrl', ['$scope', 
     }
   };
 
-  
+
   //-------------------------------------------------------------------------
   // Lets make sure we set screen dim properly as we enter
   // The problem is we enter other states before we leave previous states
@@ -41,54 +41,51 @@ angular.module('zmApp.controllers').controller('zmApp.BookmarkCtrl', ['$scope', 
 
     $scope.bookmarks = [];
 
-    
-       
-            $scope.bookmarks.push(
-            {
-                text:"Change State", 
-                state:"app.state",
-                params: {
-                  shortcut: {
-                  fn:"selectCustomState",
-                  fnargs:null,
-                  }
-                }
-            },
-            { 
-              text:"Stop ZM", 
-              state:"app.state",
-              params: {
-                shortcut: {
-                fn:"controlZM",
-                fnargs:'stop',
-                }
-              }, 
-            },
-            { 
-              text:"Start ZM", 
-              state:"app.state",
-              params: {
-                shortcut: {
-                fn:"controlZM",
-                fnargs:'start',
-                }
-              }, 
-            },
-            { 
-              text:"Restart ZM", 
-              state:"app.state",
-              params: {
-                shortcut: {
-                fn:"controlZM",
-                fnargs:'restart',
-                }
-              }, 
-            }
-        );
-       
-        $scope.bookmarks.push({text:""});
-   
-   
+
+
+    $scope.bookmarks.push({
+      text: "Change State",
+      state: "app.state",
+      params: {
+        shortcut: {
+          fn: "selectCustomState",
+          fnargs: null,
+        }
+      }
+    }, {
+      text: "Stop ZM",
+      state: "app.state",
+      params: {
+        shortcut: {
+          fn: "controlZM",
+          fnargs: 'stop',
+        }
+      },
+    }, {
+      text: "Start ZM",
+      state: "app.state",
+      params: {
+        shortcut: {
+          fn: "controlZM",
+          fnargs: 'start',
+        }
+      },
+    }, {
+      text: "Restart ZM",
+      state: "app.state",
+      params: {
+        shortcut: {
+          fn: "controlZM",
+          fnargs: 'restart',
+        }
+      },
+    });
+
+    $scope.bookmarks.push({
+      text: ""
+    });
+
+
   });
 
   $scope.action = function (item) {
@@ -98,7 +95,7 @@ angular.module('zmApp.controllers').controller('zmApp.BookmarkCtrl', ['$scope', 
       disableAnimate: true,
       expire: 300
     });
-    console.log ("GOIN WITH "+ JSON.stringify(item.params));
+    console.log("GOIN WITH " + JSON.stringify(item.params));
     $state.go(item.state, item.params);
   };
 

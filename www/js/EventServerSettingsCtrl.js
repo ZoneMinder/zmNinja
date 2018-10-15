@@ -207,36 +207,36 @@
        EventServer.disconnect();
        EventServer.init()
          .then(function (data) {
-           // console.log("Sending control filter");
-           NVRDataModel.debug("Sending Control message 'filter' with monlist=" + monstring + " and interval=" + intervalstring);
-           EventServer.sendMessage("control", {
-             type: 'filter',
-             monlist: monstring,
-             intlist: intervalstring,
-             token: $rootScope.apnsToken
-           }, 1);
-
-           if ($rootScope.apnsToken != "")
-           // if its defined then this is post init work
-           // so lets transmit state here 
-
-           {
-             // we need to disable the token
-             NVRDataModel.debug("Sending token state " + pushstate);
-             EventServer.sendMessage('push', {
-               type: 'token',
-               platform: plat,
-               token: $rootScope.apnsToken,
-               state: pushstate
+             // console.log("Sending control filter");
+             NVRDataModel.debug("Sending Control message 'filter' with monlist=" + monstring + " and interval=" + intervalstring);
+             EventServer.sendMessage("control", {
+               type: 'filter',
+               monlist: monstring,
+               intlist: intervalstring,
+               token: $rootScope.apnsToken
              }, 1);
 
+             if ($rootScope.apnsToken != "")
+             // if its defined then this is post init work
+             // so lets transmit state here 
+
+             {
+               // we need to disable the token
+               NVRDataModel.debug("Sending token state " + pushstate);
+               EventServer.sendMessage('push', {
+                 type: 'token',
+                 platform: plat,
+                 token: $rootScope.apnsToken,
+                 state: pushstate
+               }, 1);
+
+             }
+
+           },
+           function (err) {
+             NVRDataModel.debug("Event Server init failed");
            }
 
-         },
-         function (err) {
-          NVRDataModel.debug("Event Server init failed");
-         }
-         
          );
 
      } // no event server configured/enabled

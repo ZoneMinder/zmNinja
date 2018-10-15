@@ -103,12 +103,12 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     if ($scope.loginData.montageResizeSteps < 1) {
       $scope.loginData.montageResizeSteps = 1;
 
-    } 
+    }
 
     if ($scope.loginData.montageResizeSteps > 50) {
       $scope.loginData.montageResizeSteps = 50;
 
-    } 
+    }
 
     if ((parseInt($scope.loginData.montageQuality) < zm.safeMontageLimit) ||
       (parseInt($scope.loginData.montageQuality) > 100)) {

@@ -456,13 +456,13 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     //console.log ("*********** SAVE ITEMS CALLED ");
     //console.log('Saving login');
-    
-    NVRDataModel.debug ("Inside save Items");
+
+    NVRDataModel.debug("Inside save Items");
 
     $rootScope.alarmCount = 0;
     $rootScope.isAlarm = false;
-  
-   
+
+
     NVRDataModel.setFirstUse(false);
     NVRDataModel.setCurrentServerVersion('');
     NVRDataModel.setCurrentServerMultiPortSupported(false);
@@ -583,7 +583,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     if ($rootScope.platformOS != 'desktop') {
 
       if ($scope.loginData.isUseBasicAuth) {
-        NVRDataModel.debug ("Cordova HTTP: configuring basic auth");
+        NVRDataModel.debug("Cordova HTTP: configuring basic auth");
         cordova.plugin.http.useBasicAuth($scope.loginData.basicAuthUser, $scope.loginData.basicAuthPassword);
       }
 
@@ -591,9 +591,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         //alert("Enabling insecure SSL");
         NVRDataModel.log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
-        cordova.plugin.http.setSSLCertMode('nocheck', function() {
-         NVRDataModel.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
-        }, function() {
+        cordova.plugin.http.setSSLCertMode('nocheck', function () {
+          NVRDataModel.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+        }, function () {
           console.log('-->Error setting SSL permissive');
         });
 
@@ -604,40 +604,38 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       }
 
       if ($scope.loginData.saveToCloud) {
-        NVRDataModel.debug ("writing data to cloud");
-        
+        NVRDataModel.debug("writing data to cloud");
+
         var serverGroupList = NVRDataModel.getServerGroups();
         serverGroupList[$scope.loginData.serverName] = angular.copy($scope.loginData);
 
         var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
 
         window.cordova.plugin.cloudsettings.save({
-          'serverGroupList': ct,
-          'defaultServerName': $scope.loginData.serverName
-        },
-        function () {
-          NVRDataModel.debug("local data synced with cloud...");
-    
-        
-        },
-        function (err) {
-          NVRDataModel.debug("error syncing cloud data..."+JSON.stringify(err));
-         
-        }, true);
-      
-      }
-      else {
-        NVRDataModel.debug ("Clearing cloud settings...");
-        window.cordova.plugin.cloudsettings.save({
-        },
-        function () {
-          NVRDataModel.debug("cloud data cleared");
-        
-        },
-        function (err) {
-          NVRDataModel.debug("error clearing cloud data: " + err);
-         
-        }, true);
+            'serverGroupList': ct,
+            'defaultServerName': $scope.loginData.serverName
+          },
+          function () {
+            NVRDataModel.debug("local data synced with cloud...");
+
+
+          },
+          function (err) {
+            NVRDataModel.debug("error syncing cloud data..." + JSON.stringify(err));
+
+          }, true);
+
+      } else {
+        NVRDataModel.debug("Clearing cloud settings...");
+        window.cordova.plugin.cloudsettings.save({},
+          function () {
+            NVRDataModel.debug("cloud data cleared");
+
+          },
+          function (err) {
+            NVRDataModel.debug("error clearing cloud data: " + err);
+
+          }, true);
       }
 
 
@@ -650,27 +648,27 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
     if ($scope.loginData.isUseEventServer) {
       EventServer.init()
-      .then (function (succ) {
-        if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
-          NVRDataModel.log("Making sure we get push notifications");
-          EventServer.sendMessage('push', {
-            type: 'token',
-            platform: $rootScope.platformOS,
-            token: $rootScope.apnsToken,
-            state: "enabled"
-          }, 1);
-        }
-        EventServer.sendMessage("control", {
-          type: 'filter',
-          monlist: $scope.loginData.eventServerMonitors,
-          intlist: $scope.loginData.eventServerInterval,
-          token: $rootScope.apnsToken
-        });
-      },
-      function (err) {
-        NVRDataModel.log ("Event server init failed");
-      });
-      
+        .then(function (succ) {
+            if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
+              NVRDataModel.log("Making sure we get push notifications");
+              EventServer.sendMessage('push', {
+                type: 'token',
+                platform: $rootScope.platformOS,
+                token: $rootScope.apnsToken,
+                state: "enabled"
+              }, 1);
+            }
+            EventServer.sendMessage("control", {
+              type: 'filter',
+              monlist: $scope.loginData.eventServerMonitors,
+              intlist: $scope.loginData.eventServerInterval,
+              token: $rootScope.apnsToken
+            });
+          },
+          function (err) {
+            NVRDataModel.log("Event server init failed");
+          });
+
 
     }
 
@@ -702,103 +700,103 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         $http.get(apiurl)
           .then(function (data) {
 
-            data = data.data;
-            NVRDataModel.getTimeZone(true);
-            var loginStatus = $translate.instant('kExploreEnjoy') + " " + $rootScope.appName + "!";
-            EventServer.refresh();
+              data = data.data;
+              NVRDataModel.getTimeZone(true);
+              var loginStatus = $translate.instant('kExploreEnjoy') + " " + $rootScope.appName + "!";
+              EventServer.refresh();
 
-            // now grab and report PATH_ZMS
-            NVRDataModel.getPathZms()
-              .then(function (data) {
-                var ld = NVRDataModel.getLogin();
-                var zm_cgi = data.toLowerCase();
+              // now grab and report PATH_ZMS
+              NVRDataModel.getPathZms()
+                .then(function (data) {
+                  var ld = NVRDataModel.getLogin();
+                  var zm_cgi = data.toLowerCase();
 
-                var user_cgi = (ld.streamingurl).toLowerCase();
-                NVRDataModel.log("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
+                  var user_cgi = (ld.streamingurl).toLowerCase();
+                  NVRDataModel.log("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
 
-                $http.get(ld.streamingurl + "/zms")
-                  .then(function (data) {
-                    data = data.data;
-                    NVRDataModel.debug("Urk! cgi-path returned  success, but it should not have come here");
-                    loginStatus = $translate.instant('kLoginStatusNoCgi');
+                  $http.get(ld.streamingurl + "/zms")
+                    .then(function (data) {
+                        data = data.data;
+                        NVRDataModel.debug("Urk! cgi-path returned  success, but it should not have come here");
+                        loginStatus = $translate.instant('kLoginStatusNoCgi');
 
-                    NVRDataModel.debug("refreshing API version...");
-                    NVRDataModel.getAPIversion()
-                      .then(function (data) {
-                          var refresh = NVRDataModel.getMonitors(1);
-                          $rootScope.apiVersion = data;
-                        },
-                        function (error) {
-                          var refresh = NVRDataModel.getMonitors(1);
-                          $rootScope.apiVersion = "0.0.0";
-                          NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
-                        });
+                        NVRDataModel.debug("refreshing API version...");
+                        NVRDataModel.getAPIversion()
+                          .then(function (data) {
+                              var refresh = NVRDataModel.getMonitors(1);
+                              $rootScope.apiVersion = data;
+                            },
+                            function (error) {
+                              var refresh = NVRDataModel.getMonitors(1);
+                              $rootScope.apiVersion = "0.0.0";
+                              NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+                            });
 
-                    if (showalert) {
-                      $rootScope.zmPopup = SecuredPopups.show('alert', {
-                        title: $translate.instant('kLoginValidatedTitle'),
-                        template: loginStatus,
-                        okText: $translate.instant('kButtonOk'),
-                        cancelText: $translate.instant('kButtonCancel'),
-                      }).then(function (res) {
+                        if (showalert) {
+                          $rootScope.zmPopup = SecuredPopups.show('alert', {
+                            title: $translate.instant('kLoginValidatedTitle'),
+                            template: loginStatus,
+                            okText: $translate.instant('kButtonOk'),
+                            cancelText: $translate.instant('kButtonCancel'),
+                          }).then(function (res) {
 
-                        $ionicSideMenuDelegate.toggleLeft();
-                        NVRDataModel.debug("Force reloading monitors...");
+                            $ionicSideMenuDelegate.toggleLeft();
+                            NVRDataModel.debug("Force reloading monitors...");
+
+                          });
+                        }
+                      },
+                      function (error, status) {
+                        // If its 5xx, then the cgi-bin path is valid
+                        // if its 4xx then the cgi-bin path is not valid
+
+                        if (status < 500) {
+                          loginStatus = $translate.instant('kLoginStatusNoCgiAlt');
+                        }
+
+                        if (showalert) {
+                          $rootScope.zmPopup = SecuredPopups.show('alert', {
+                            title: $translate.instant('kLoginValidatedTitle'),
+                            template: loginStatus,
+                            okText: $translate.instant('kButtonOk'),
+                            cancelText: $translate.instant('kButtonCancel'),
+                          }).then(function (res) {
+
+                            $ionicSideMenuDelegate.toggleLeft();
+                            NVRDataModel.debug("Force reloading monitors...");
+
+                          });
+                        } else // make sure CGI error is always shown
+                        {
+                          NVRDataModel.displayBanner((status < 500) ? 'error' : 'info', [loginStatus]);
+                        }
+                        NVRDataModel.debug("refreshing API version...");
+                        NVRDataModel.getAPIversion()
+                          .then(function (data) {
+                              var refresh = NVRDataModel.getMonitors(1);
+                              $rootScope.apiVersion = data;
+                            },
+                            function (error) {
+                              var refresh = NVRDataModel.getMonitors(1);
+                              $rootScope.apiVersion = "0.0.0";
+                              NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+                            });
 
                       });
-                    }
-                  },
-                  function (error, status) {
-                    // If its 5xx, then the cgi-bin path is valid
-                    // if its 4xx then the cgi-bin path is not valid
+                });
 
-                    if (status < 500) {
-                      loginStatus = $translate.instant('kLoginStatusNoCgiAlt');
-                    }
+            },
+            function (error) {
+              NVRDataModel.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
+              NVRDataModel.log("API login error " + JSON.stringify(error));
 
-                    if (showalert) {
-                      $rootScope.zmPopup = SecuredPopups.show('alert', {
-                        title: $translate.instant('kLoginValidatedTitle'),
-                        template: loginStatus,
-                        okText: $translate.instant('kButtonOk'),
-                        cancelText: $translate.instant('kButtonCancel'),
-                      }).then(function (res) {
-
-                        $ionicSideMenuDelegate.toggleLeft();
-                        NVRDataModel.debug("Force reloading monitors...");
-
-                      });
-                    } else // make sure CGI error is always shown
-                    {
-                      NVRDataModel.displayBanner((status < 500) ? 'error' : 'info', [loginStatus]);
-                    }
-                    NVRDataModel.debug("refreshing API version...");
-                    NVRDataModel.getAPIversion()
-                      .then(function (data) {
-                          var refresh = NVRDataModel.getMonitors(1);
-                          $rootScope.apiVersion = data;
-                        },
-                        function (error) {
-                          var refresh = NVRDataModel.getMonitors(1);
-                          $rootScope.apiVersion = "0.0.0";
-                          NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
-                        });
-
-                  });
+              $rootScope.zmPopup = SecuredPopups.show('alert', {
+                title: $translate.instant('kLoginValidAPIFailedTitle'),
+                template: $translate.instant('kBannerPleaseCheck'),
+                okText: $translate.instant('kButtonOk'),
+                cancelText: $translate.instant('kButtonCancel'),
               });
-
-          },
-          function (error) {
-            NVRDataModel.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
-            NVRDataModel.log("API login error " + JSON.stringify(error));
-
-            $rootScope.zmPopup = SecuredPopups.show('alert', {
-              title: $translate.instant('kLoginValidAPIFailedTitle'),
-              template: $translate.instant('kBannerPleaseCheck'),
-              okText: $translate.instant('kButtonOk'),
-              cancelText: $translate.instant('kButtonCancel'),
             });
-          });
       });
 
   }
@@ -810,7 +808,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
   $scope.saveItems = function () {
 
-    NVRDataModel.debug ("User tapped save, calling SaveItems");
+    NVRDataModel.debug("User tapped save, calling SaveItems");
     NVRDataModel.clearZmsMultiPortSupport();
     if (!$scope.loginData.serverName) {
       $rootScope.zmPopup = $ionicPopup.alert({

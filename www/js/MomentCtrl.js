@@ -150,7 +150,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     }
 
-    if ($scope.expand) 
+    if ($scope.expand)
       _expandAll(moments);
     else _collapseAll(moments);
 
@@ -323,20 +323,20 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var ld = NVRDataModel.getLogin();
     ld.montageReviewCollapse = $scope.expand;
 
-    console.log (">>>>>>>>> SAVING EXPAND AS:"+$scope.expand);
+    console.log(">>>>>>>>> SAVING EXPAND AS:" + $scope.expand);
     NVRDataModel.setLogin(ld);
 
   };
 
   function expandAll() {
-  
+
     _expandAll($scope.moments);
 
   }
 
   function _expandAll(arr) {
 
-    NVRDataModel.debug ("Expanding all images");
+    NVRDataModel.debug("Expanding all images");
     for (var i = 0; i < arr.length; i++) {
       arr[i].Event.hide = false;
       arr[i].Event.icon = 'ion-code-working';
@@ -348,10 +348,10 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       $timeout(function () {
         masonry.reloadItems();
         jiggleAway();
-  
+
       }, 100);
     }
-    
+
   }
 
   function collapseAll() {
@@ -360,8 +360,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   }
 
   function _collapseAll(arr) {
-    
-    NVRDataModel.debug ("Collapsing all images");
+
+    NVRDataModel.debug("Collapsing all images");
     for (var i = 0; i < monitors.length; i++) {
       var firstFound = false;
       var firstIndex = -1;
@@ -398,10 +398,10 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
       $timeout(function () {
         masonry.reloadItems();
         jiggleAway();
-  
+
       }, 100);
     }
-    
+
   }
 
   //----------------------------------------------------------------
@@ -845,9 +845,9 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
 
     $scope.expand = ld.montageReviewCollapse;
-    console.log (">>>>>>>>> RESTORING EXPAND AS:"+$scope.expand);
+    console.log(">>>>>>>>> RESTORING EXPAND AS:" + $scope.expand);
     $scope.isMaxScoreFramePresent = false;
-    
+
     $scope.loadingStatus = $translate.instant('kLoading');
     $scope.gridSize = ld.momentGridSize;
     momentType = ld.momentArrangeBy;
@@ -863,7 +863,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     constructMask();
     $scope.isSubMenu = ld.enableMomentSubMenu;
 
-   
+
 
     for (var i = 0; i < monitors.length; i++) {
       if (excludeMonitors.indexOf(monitors[i].Monitor.Id) != -1) {

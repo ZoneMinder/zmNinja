@@ -319,24 +319,23 @@ angular.module('zmApp.controllers')
 
       NVRDataModel.log("Clearing error/close cbk, disconnecting and deleting Event Server socket...");
 
-      if ($rootScope.platforOS == 'desktop'){
+      if ($rootScope.platforOS == 'desktop') {
         if (typeof ws === 'undefined') {
           NVRDataModel.log("Event server socket is empty, nothing to disconnect");
           return;
         }
-  
-        
+
+
         ws.onmessage = null;
         ws.close();
         ws = undefined;
-      } 
-      else {
+      } else {
         if (nativeWebSocketId != -1) //native;
-            CordovaWebsocketPlugin.wsClose(nativeWebSocketId, 1000, "Connection closed");
-            nativeWebSocketId = -1;
+          CordovaWebsocketPlugin.wsClose(nativeWebSocketId, 1000, "Connection closed");
+        nativeWebSocketId = -1;
 
       }
-      
+
 
     }
 
@@ -371,13 +370,12 @@ angular.module('zmApp.controllers')
       NVRDataModel.debug("~~~~ sendMessage: Sending->" + jmsg);
 
       if ($rootScope.platformOS == 'desktop') {
-      ws.send(jmsg);
-      }
-      else {
+        ws.send(jmsg);
+      } else {
         if (nativeWebSocketId != -1)
-            CordovaWebsocketPlugin.wsSend(nativeWebSocketId, jmsg);
-        else 
-            NVRDataModel.debug ("ERROR:native websocket not initialized, can't send "+jmsg);
+          CordovaWebsocketPlugin.wsSend(nativeWebSocketId, jmsg);
+        else
+          NVRDataModel.debug("ERROR:native websocket not initialized, can't send " + jmsg);
       }
 
 
