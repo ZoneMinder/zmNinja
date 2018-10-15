@@ -77,7 +77,6 @@
     "kEmailNotConfigured"        :"Email nie został skonfigurowany",
     "kEnable24hr"                :"Włącz format czasu 24 godz.",
     "kEnableDebug"               :"Włącz dzienniki debugowania",
-    "kEnableGIFMP4"              :"Włącz pobieranie GIF/MP4",
     "kEnableLogs"                :"Włącz dziennik",
     "kEnableSlowLoading"         :"Użyj dużych opóźnień HTTP",
     "kEnableStrictSSL"           :"Włącz rygorystyczne sprawdzanie SSL",

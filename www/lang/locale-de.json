@@ -77,7 +77,6 @@
     "kEmailNotConfigured"        :"Email nicht eingerichtet",
     "kEnable24hr"                :"24-Stunden Zeitformat aktivieren",
     "kEnableDebug"               :"Aktiviere Debug Logs",
-    "kEnableGIFMP4"              :"Aktiviere GIF/MP4 Downloads",
     "kEnableLogs"                :"Aktiviere Logs",
     "kEnableSlowLoading"         :"Benutze lange HTTP Timeouts",
     "kEnableStrictSSL"           :"Aktiviere strikten SSL Check",

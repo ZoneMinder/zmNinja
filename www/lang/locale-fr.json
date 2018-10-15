@@ -68,7 +68,6 @@
     "kDone"                      :"Fait",
     "kEnable24hr"                :"Activer le format 24h",
     "kEnableDebug"               :"Activer les logs de debug",
-    "kEnableGIFMP4"              :"Activer les téléchargements GIF/MP4",
     "kEnableLogs"                :"Activer les logs",
     "kEnableSlowLoading"         :"Utiliser des timeouts HTTP élevés",
     "kEnableStrictSSL"           :"Activer la vérification SSL stricte",
