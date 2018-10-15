@@ -182,12 +182,12 @@ angular.module('zmApp.controllers')
 
                     })
                     .then(function () {
-                      NVRDataModel.debug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
-                    },
-                    function (data, status, headers, config) {
-                      NVRDataModel.debug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
-                      $scope.monfunc.myfailedIds.push(item);
-                    });
+                        NVRDataModel.debug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
+                      },
+                      function (data, status, headers, config) {
+                        NVRDataModel.debug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
+                        $scope.monfunc.myfailedIds.push(item);
+                      });
 
                   $scope.monfunc.mypromises.push(httpPromise);
                 });
@@ -420,34 +420,34 @@ angular.module('zmApp.controllers')
             //console.log("**** ZMC CHECK " + apiMonCheck);
             $http.get(apiMonCheck)
               .then(function (data) {
-                data = data.data;
-                NVRDataModel.debug("MonitorCtrl: monitor check state returned: " + JSON.stringify(data));
-                if (data.statustext.indexOf("not running") > -1) {
-                  $scope.monitors[j].Monitor.isRunning = "false";
-                  $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
-                  $scope.monitors[j].Monitor.char = "ion-close-circled";
-                } else if (data.statustext.indexOf("pending") > -1) {
-                  $scope.monitors[j].Monitor.isRunning = "pending";
-                  $scope.monitors[j].Monitor.color = zm.monitorPendingColor;
-                } else if (data.statustext.indexOf("running since") > -1) {
-                  $scope.monitors[j].Monitor.isRunning = "true";
-                  $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
-                } else if (data.statustext.indexOf("Unable to connect") > -1) {
-                  $scope.monitors[j].Monitor.isRunning = "false";
-                  $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
-                  $scope.monitors[j].Monitor.char = "ion-close-circled";
-                }
+                  data = data.data;
+                  NVRDataModel.debug("MonitorCtrl: monitor check state returned: " + JSON.stringify(data));
+                  if (data.statustext.indexOf("not running") > -1) {
+                    $scope.monitors[j].Monitor.isRunning = "false";
+                    $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
+                    $scope.monitors[j].Monitor.char = "ion-close-circled";
+                  } else if (data.statustext.indexOf("pending") > -1) {
+                    $scope.monitors[j].Monitor.isRunning = "pending";
+                    $scope.monitors[j].Monitor.color = zm.monitorPendingColor;
+                  } else if (data.statustext.indexOf("running since") > -1) {
+                    $scope.monitors[j].Monitor.isRunning = "true";
+                    $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
+                  } else if (data.statustext.indexOf("Unable to connect") > -1) {
+                    $scope.monitors[j].Monitor.isRunning = "false";
+                    $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
+                    $scope.monitors[j].Monitor.char = "ion-close-circled";
+                  }
 
-                $scope.monitors[j].Monitor.isRunningText = data.statustext;
-              },
-              function (data) {
-                NVRDataModel.debug("MonitorCtrl: Error->monitor check state returned: " +
-                  JSON.stringify(data));
-                NVRDataModel.displayBanner('error', [$translate.instant('kErrorRetrievingState'), $translate.instant('kPleaseTryAgain')]);
-                $scope.monitors[j].Monitor.isRunning = "error";
-                $scope.monitors[j].Monitor.color = zm.monitorErrorColor;
-                $scope.monitors[j].Monitor.char = "ion-help-circled";
-              });
+                  $scope.monitors[j].Monitor.isRunningText = data.statustext;
+                },
+                function (data) {
+                  NVRDataModel.debug("MonitorCtrl: Error->monitor check state returned: " +
+                    JSON.stringify(data));
+                  NVRDataModel.displayBanner('error', [$translate.instant('kErrorRetrievingState'), $translate.instant('kPleaseTryAgain')]);
+                  $scope.monitors[j].Monitor.isRunning = "error";
+                  $scope.monitors[j].Monitor.color = zm.monitorErrorColor;
+                  $scope.monitors[j].Monitor.char = "ion-help-circled";
+                });
 
           })(i);
         }

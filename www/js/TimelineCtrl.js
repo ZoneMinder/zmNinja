@@ -277,10 +277,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   //-------------------------------------------------
   $scope.$on('$ionicView.leave', function () {
 
-    if ($rootScope.platformOS == 'desktop') { 
-      NVRDataModel.debug ("Removing keyboard handler");
+    if ($rootScope.platformOS == 'desktop') {
+      NVRDataModel.debug("Removing keyboard handler");
       window.removeEventListener('keydown', keyboardHandler, true);
-  
+
     }
 
     NVRDataModel.debug("Timeline: Deregistering broadcast handles");
@@ -311,16 +311,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     timeline = '';
     $scope.newEvents = '';
 
-    if ($rootScope.platformOS == 'desktop') { 
+    if ($rootScope.platformOS == 'desktop') {
       window.addEventListener('keydown', keyboardHandler, true);
-  
+
     }
-  
+
 
   });
 
   // Keyboard handler for desktop versions 
-   function keyboardHandler(evt) {
+  function keyboardHandler(evt) {
 
     var handled = false;
     var keyCodes = {
@@ -328,51 +328,42 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       //events
       LEFT: 37,
       RIGHT: 39,
-      UP:38,
-      DOWN:40,
+      UP: 38,
+      DOWN: 40,
 
       ESC: 27,
-     
+
       PREVDAY_A: 65,
       NEXTDAY_D: 68,
-    
+
     };
 
-    $timeout (function () {
+    $timeout(function () {
       var keyCode = evt.keyCode;
-     
-      console.log (keyCode + " PRESSED");
+
+      console.log(keyCode + " PRESSED");
 
       if (keyCode == keyCodes.UP) {
 
         timeline.zoomIn(0.2);
 
-      }
-      else if (keyCode == keyCodes.DOWN) {
+      } else if (keyCode == keyCodes.DOWN) {
 
         timeline.zoomIn(0.2);
 
-      }
-      else if (keyCode == keyCodes.LEFT) {
-       
-        move (-0.2);
-      }
-      else if (keyCode == keyCodes.RIGHT) {
-        move (0.2);
-      }
+      } else if (keyCode == keyCodes.LEFT) {
 
-      else if (keyCode == keyCodes.ESC) {
+        move(-0.2);
+      } else if (keyCode == keyCodes.RIGHT) {
+        move(0.2);
+      } else if (keyCode == keyCodes.ESC) {
         timeline.fit();
-      }
-
-      else if (keyCode == keyCodes.PREVDAY_A) {
+      } else if (keyCode == keyCodes.PREVDAY_A) {
         $scope.moveDays(-1);
-      }
-
-      else if (keyCode == keyCodes.NEXTDAY_D) {
+      } else if (keyCode == keyCodes.NEXTDAY_D) {
         $scope.moveDays(1);
       }
-     
+
 
       handled = true;
       return handled;
@@ -1104,7 +1095,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     NVRDataModel.getEventsPages(0, fromDateNoLang, toDateNoLang)
       .then(function (epData) {
-        var pages =  1;
+        var pages = 1;
         var itemsPerPage = parseInt(epData.limit);
         var iterCount;
 
@@ -1120,7 +1111,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         while ((pages <= epData.pageCount) && (iterCount > 0)) {
           var promise = NVRDataModel.getEvents(0, pages, "none", fromDateNoLang, toDateNoLang);
           promises.push(promise);
-         
+
           pages++;
           iterCount--;
 
@@ -1128,7 +1119,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
         $q.all(promises)
           .then(function (data) {
-              NVRDataModel.debug("TimelineCtrl/drawgraph: all pages of graph data received " );
+              NVRDataModel.debug("TimelineCtrl/drawgraph: all pages of graph data received ");
               graphIndex = 0;
               NVRDataModel.log("Creating " + $scope.monitors.length + " groups for the graph");
               // create groups
@@ -1146,8 +1137,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               for (var j = 0; j < data.length; j++) {
                 var myevents = data[j].events;
 
-             //   console.log ("****************DATA ="+JSON.stringify(data[j]));
-               // console.log ("**********************************");
+                //   console.log ("****************DATA ="+JSON.stringify(data[j]));
+                // console.log ("**********************************");
                 if (graphIndex > count) {
                   NVRDataModel.log("Exiting page count graph - reached limit of " + count);
                   break;
@@ -1208,30 +1199,30 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                     //console.log ("ADDED "+tzs+" " +tze);
 
                     if (!graphData.get(myevents[i].Event.Id)) {
-                    graphData.add({
-                      //id: graphIndex,
-                      id: myevents[i].Event.Id,
-                      content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + "(" + myevents[i].Event.Id + ") " + myevents[i].Event.Notes + "</span>",
+                      graphData.add({
+                        //id: graphIndex,
+                        id: myevents[i].Event.Id,
+                        content: "<span class='my-vis-font'>" + "( <i class='ion-android-notifications'></i>" + myevents[i].Event.AlarmFrames + ") " + "(" + myevents[i].Event.Id + ") " + myevents[i].Event.Notes + "</span>",
 
-                      start: tzs,
-                      //start: myevents[i].Event.StartTime,
-                      //end: myevents[i].Event.EndTime,
-                      end: tze,
-                      group: myevents[i].Event.MonitorId,
-                      //type: "range",
-                      style: "background-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length] +
-                        ";border-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length],
-                      myframes: myevents[i].Event.Frames,
-                      mydur: myevents[i].Event.Length,
-                      myeid: myevents[i].Event.Id,
-                      myename: myevents[i].Event.Name,
-                      myvideo: myevents[i].Event.DefaultVideo,
-                      myevent: myevents[i]
+                        start: tzs,
+                        //start: myevents[i].Event.StartTime,
+                        //end: myevents[i].Event.EndTime,
+                        end: tze,
+                        group: myevents[i].Event.MonitorId,
+                        //type: "range",
+                        style: "background-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length] +
+                          ";border-color:" + colors[parseInt(myevents[i].Event.MonitorId) % colors.length],
+                        myframes: myevents[i].Event.Frames,
+                        mydur: myevents[i].Event.Length,
+                        myeid: myevents[i].Event.Id,
+                        myename: myevents[i].Event.Name,
+                        myvideo: myevents[i].Event.DefaultVideo,
+                        myevent: myevents[i]
 
-                    });
-                    //console.log ("IED="+myevents[i].Event.Id);
-                    graphIndex++;
-                  }
+                      });
+                      //console.log ("IED="+myevents[i].Event.Id);
+                      graphIndex++;
+                    }
                   } else {
                     //console.log ("SKIPPED GRAPH ID " + graphIndex);
                   }

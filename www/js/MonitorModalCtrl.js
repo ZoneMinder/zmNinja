@@ -76,9 +76,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }.bind(this), zm.alarmStatusTime);
 
 
-  
 
-  if ($rootScope.platformOS == 'desktop') { 
+
+  if ($rootScope.platformOS == 'desktop') {
     window.addEventListener('keydown', keyboardHandler, true);
 
   }
@@ -98,67 +98,79 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       TOGGLEPTZ_P: 80,
 
       UPLEFT_Q: 81,
-      UP_W:87,
-      UPRIGHT_E:69,
+      UP_W: 87,
+      UPRIGHT_E: 69,
 
-      LEFT_A:65,
+      LEFT_A: 65,
       CENTER_S: 83,
-      RIGHT_D:68,
+      RIGHT_D: 68,
 
-      DOWNLEFT_Z:90,
-      DOWN_X:88,
-      DOWNRIGHT_C:67,
+      DOWNLEFT_Z: 90,
+      DOWN_X: 88,
+      DOWNRIGHT_C: 67,
 
       ESC: 27
-    
+
     };
 
-    $timeout (function () {
+    $timeout(function () {
       var keyCode = evt.keyCode;
-     
-      console.log (keyCode + " PRESSED");
+
+      console.log(keyCode + " PRESSED");
 
       if (keyCode == keyCodes.ESC) {
 
         $scope.closeModal();
 
-      }
-      else if (keyCode == keyCodes.LEFT) {
+      } else if (keyCode == keyCodes.LEFT) {
         $scope.monStatus = "";
         moveToMonitor($scope.monitorId, -1);
-      }
-      else if (keyCode == keyCodes.RIGHT) {
+      } else if (keyCode == keyCodes.RIGHT) {
         $scope.monStatus = "";
         moveToMonitor($scope.monitorId, 1);
-      }
-
-      else if (keyCode == keyCodes.TOGGLEPTZ_P) {
+      } else if (keyCode == keyCodes.TOGGLEPTZ_P) {
         $scope.togglePTZ();
-      }
-      else { // rest of the functions are PTZ
+      } else { // rest of the functions are PTZ
         if (!$scope.showPTZ) {
-          NVRDataModel.debug ("PTZ is not on, or disabled");
+          NVRDataModel.debug("PTZ is not on, or disabled");
           return;
         }
         // coming here means PTZ is on
         var cmd = "";
         switch (keyCode) {
-          case keyCodes.UPLEFT_Q: cmd = 'UpLeft'; break;
-          case keyCodes.UP_W:cmd = 'Up'; break;
-          case keyCodes.UPRIGHT_E:cmd = 'UpRight'; break;
-          case keyCodes.LEFT_A:cmd = 'Left'; break;
-          case keyCodes.CENTER_S: cmd = 'presetHome'; break;
-          case keyCodes.RIGHT_D: cmd = 'Right'; break;
-          case keyCodes.DOWNLEFT_Z: cmd = 'UpLeft'; break;
-          case keyCodes.DOWN_X: cmd = 'Down'; break;
-          case keyCodes.DOWNRIGHT_C: cmd = 'DownRight'; break;
+          case keyCodes.UPLEFT_Q:
+            cmd = 'UpLeft';
+            break;
+          case keyCodes.UP_W:
+            cmd = 'Up';
+            break;
+          case keyCodes.UPRIGHT_E:
+            cmd = 'UpRight';
+            break;
+          case keyCodes.LEFT_A:
+            cmd = 'Left';
+            break;
+          case keyCodes.CENTER_S:
+            cmd = 'presetHome';
+            break;
+          case keyCodes.RIGHT_D:
+            cmd = 'Right';
+            break;
+          case keyCodes.DOWNLEFT_Z:
+            cmd = 'UpLeft';
+            break;
+          case keyCodes.DOWN_X:
+            cmd = 'Down';
+            break;
+          case keyCodes.DOWNRIGHT_C:
+            cmd = 'DownRight';
+            break;
         }
         if (cmd) {
-          NVRDataModel.debug ("Invoking controlPTZ with "+cmd);
+          NVRDataModel.debug("Invoking controlPTZ with " + cmd);
           $scope.controlPTZ($scope.monitorId, cmd);
-        }
-        else {
-          NVRDataModel.debug ("ignoring invalid PTZ command");
+        } else {
+          NVRDataModel.debug("ignoring invalid PTZ command");
         }
 
       }
@@ -854,17 +866,17 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     });
 
     req.then(function (resp) {
-      //console.log("SUCCESS: " + JSON.stringify(resp));
-      $ionicLoading.hide();
+        //console.log("SUCCESS: " + JSON.stringify(resp));
+        $ionicLoading.hide();
 
-    }, 
-    function (resp) {
-      $ionicLoading.hide();
-      //console.log("ERROR: " + JSON.stringify(resp));
-      NVRDataModel.log("Error sending PTZ:" + JSON.stringify(resp), "error");
-    });
+      },
+      function (resp) {
+        $ionicLoading.hide();
+        //console.log("ERROR: " + JSON.stringify(resp));
+        NVRDataModel.log("Error sending PTZ:" + JSON.stringify(resp), "error");
+      });
 
-    
+
   }
 
   $scope.getZoomLevel = function () {
@@ -897,7 +909,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   function moveToMonitor(m, d) {
 
-   
+
     if ($scope.isZoneEdit) {
       NVRDataModel.log("Not cycling, as you are editing zones");
       return;
@@ -1074,7 +1086,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     function triggerAlarm(mid, mode) {
       var apiurl = NVRDataModel.getLogin().apiurl;
-      var c = mode=='on' ? 'on' : 'off';
+      var c = mode == 'on' ? 'on' : 'off';
       var alarmurl = apiurl + "/monitors/alarm/id:" + mid + "/command:" + c + ".json";
       NVRDataModel.log("Invoking " + alarmurl);
 
@@ -1198,7 +1210,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     if ($rootScope.platformOS != 'desktop') {
       var album = 'zmNinja';
-      NVRDataModel.debug ("Trying to save image to album: "+album);
+      NVRDataModel.debug("Trying to save image to album: " + album);
       cordova.plugins.photoLibrary.requestAuthorization(
         function () {
           //url = "https://picsum.photos/200/300/?random";
@@ -1207,41 +1219,45 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           var urle = encodeURI(url);
           var fname = "zmninja.jpg";
 
-          fileTransfer.download(urle, cordova.file.dataDirectory + fname, 
-            function(entry){ 
+          fileTransfer.download(urle, cordova.file.dataDirectory + fname,
+            function (entry) {
               NVRDataModel.debug("local download complete: " + entry.toURL());
               NVRDataModel.debug("Now trying to move it to album");
-              cordova.plugins.photoLibrary.saveImage(entry.toURL(), album, 
+              cordova.plugins.photoLibrary.saveImage(entry.toURL(), album,
                 function (cameraRollAssetId) {
-                 SaveSuccess();
-                 $cordovaFile.removeFile(cordova.file.dataDirectory, fname)
-                 .then (
-                  function () {
-                    NVRDataModel.debug ("file removed from data directory");
-                   },
-                   function (e) {
-                     NVRDataModel.debug ("could not delete temp file: "+JSON.stringify(e));
-                   }
-                 );
-       
-
-                }, function (err) {
-                    NVRDataModel.debug ("Saving error:" + JSON.stringify(err));
-                    SaveError();
-    
-                  });
-          
-          }, 
-            function(err) { NVRDataModel.debug ("error downloading:"+JSON.stringify(err));SaveError();}, !loginData.enableStrictSSL, {});
+                  SaveSuccess();
+                  $cordovaFile.removeFile(cordova.file.dataDirectory, fname)
+                    .then(
+                      function () {
+                        NVRDataModel.debug("file removed from data directory");
+                      },
+                      function (e) {
+                        NVRDataModel.debug("could not delete temp file: " + JSON.stringify(e));
+                      }
+                    );
 
 
-            
-          
+                },
+                function (err) {
+                  NVRDataModel.debug("Saving error:" + JSON.stringify(err));
+                  SaveError();
+
+                });
+
+            },
+            function (err) {
+              NVRDataModel.debug("error downloading:" + JSON.stringify(err));
+              SaveError();
+            }, !loginData.enableStrictSSL, {});
+
+
+
+
           // User gave us permission to his library, retry reading it!
         },
         function (err) {
           // User denied the access
-          NVRDataModel.debug ("Permission not granted");
+          NVRDataModel.debug("Permission not granted");
           SaveError();
         }, // if options not provided, defaults to {read: true}.
 
@@ -1250,21 +1266,19 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           write: true
         }
       );
-  }
-
-    else {
+    } else {
 
       $ionicLoading.hide();
-  
+
       $rootScope.zmPopup = SecuredPopups.show('alert', {
-         title: $translate.instant('kNote'),
-         template: $translate.instant('kDownloadVideoImage')+"<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download=\"balls.jpg\">"+" "+$translate.instant('kDownload')+"</a></center>",
-         okText: $translate.instant('kDismiss'),
-         okType:'button-stable'
-       });
-   
-  }
-  
+        title: $translate.instant('kNote'),
+        template: $translate.instant('kDownloadVideoImage') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download=\"balls.jpg\">" + " " + $translate.instant('kDownload') + "</a></center>",
+        okText: $translate.instant('kDismiss'),
+        okType: 'button-stable'
+      });
+
+    }
+
   }
 
 
@@ -1355,17 +1369,17 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.$on('modal.removed', function () {
 
     if ($rootScope.platformOS == 'android') {
-      NVRDataModel.debug ("Deregistering handlers for multi-window");
+      NVRDataModel.debug("Deregistering handlers for multi-window");
 
       window.MultiWindowPlugin.deregisterOnStop("monitormodal-pause");
       window.MultiWindowPlugin.deregisterOnStart("monitormodal-resume");
- 
+
     }
 
-    if ($rootScope.platformOS == 'desktop') { 
-      NVRDataModel.debug ("Removing keyboard handler");
+    if ($rootScope.platformOS == 'desktop') {
+      NVRDataModel.debug("Removing keyboard handler");
       window.removeEventListener('keydown', keyboardHandler, true);
-  
+
     }
     as(); // dregister auth success
     $scope.isModalActive = false;
@@ -1461,42 +1475,42 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     });
     req.then(function (resp) {
 
-      resp = resp.data;
-      if (resp.result == "Ok" && ndx != -1) {
-        var ld = NVRDataModel.getLogin();
-        var apiurl = ld.apiurl + "/events/" + resp.status.event + ".json";
-        //console.log ("API " + apiurl);
-        $http.get(apiurl)
-          .then(function (data) {
-            data = data.data;
-            if ($scope.MontageMonitors[ndx].eventUrlTime != data.event.Event.StartTime) {
+        resp = resp.data;
+        if (resp.result == "Ok" && ndx != -1) {
+          var ld = NVRDataModel.getLogin();
+          var apiurl = ld.apiurl + "/events/" + resp.status.event + ".json";
+          //console.log ("API " + apiurl);
+          $http.get(apiurl)
+            .then(function (data) {
+                data = data.data;
+                if ($scope.MontageMonitors[ndx].eventUrlTime != data.event.Event.StartTime) {
 
-              var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id + "-timeline"));
-              element.removeClass('animated slideInRight');
-              element.addClass('animated slideOutRight');
-              $timeout(function () {
-                element.removeClass('animated slideOutRight');
-                element.addClass('animated slideInRight');
-                $scope.MontageMonitors[ndx].eventUrlTime = data.event.Event.StartTime;
-              }, 300);
+                  var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id + "-timeline"));
+                  element.removeClass('animated slideInRight');
+                  element.addClass('animated slideOutRight');
+                  $timeout(function () {
+                    element.removeClass('animated slideOutRight');
+                    element.addClass('animated slideInRight');
+                    $scope.MontageMonitors[ndx].eventUrlTime = data.event.Event.StartTime;
+                  }, 300);
 
-            }
+                }
 
-          },
-          function (data) {
-            $scope.MontageMonitors[ndx].eventUrlTime = "-";
-          });
+              },
+              function (data) {
+                $scope.MontageMonitors[ndx].eventUrlTime = "-";
+              });
 
-      }
+        }
 
-    },
+      },
 
-    function (resp) {
-      //console.log("ERROR: " + JSON.stringify(resp));
-      NVRDataModel.log("Error sending event command " + JSON.stringify(resp), "error");
-    });
+      function (resp) {
+        //console.log("ERROR: " + JSON.stringify(resp));
+        NVRDataModel.log("Error sending event command " + JSON.stringify(resp), "error");
+      });
 
-    
+
   }
 
   $scope.toggleListMenu = function () {
@@ -1562,198 +1576,198 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var url = ld.apiurl + "/monitors/" + mid + ".json";
     $http.get(url)
       .then(function (data) {
-        data = data.data;
-        $scope.isControllable = data.monitor.Monitor.Controllable;
+          data = data.data;
+          $scope.isControllable = data.monitor.Monitor.Controllable;
 
-        // *** Only for testing - comment out //
-        //$scope.isControllable = '1';
-        // for testing only
-        // $scope.isControllable = 1;
-        $scope.controlid = data.monitor.Monitor.ControlId;
-        if ($scope.isControllable == '1') {
+          // *** Only for testing - comment out //
+          //$scope.isControllable = '1';
+          // for testing only
+          // $scope.isControllable = 1;
+          $scope.controlid = data.monitor.Monitor.ControlId;
+          if ($scope.isControllable == '1') {
 
-          var apiurl = NVRDataModel.getLogin().apiurl;
-          var myurl = apiurl + "/controls/" + $scope.controlid + ".json";
-          NVRDataModel.debug("configurePTZ : getting controllable data " + myurl);
+            var apiurl = NVRDataModel.getLogin().apiurl;
+            var myurl = apiurl + "/controls/" + $scope.controlid + ".json";
+            NVRDataModel.debug("configurePTZ : getting controllable data " + myurl);
 
-          $http.get(myurl)
-            .then(function (data) {
-              data = data.data;
-              // *** Only for testing - comment out  - start//
-              /*data.Control.Control.CanSleep = '1';
-              data.Control.Control.CanWake = '1';
-              data.Control.Control.CanReset = '1';
-              data.Control.Control.CanZoom = '1';
-              data.control.Control.HasPresets = '1';
-              data.control.Control.HasHomePreset = '1';*/
-              // *** Only for testing - comment out - end //
-
-
-              //data.control.Control.HasPresets = '1';
-              //data.control.Control.HasHomePreset = '1'
+            $http.get(myurl)
+              .then(function (data) {
+                  data = data.data;
+                  // *** Only for testing - comment out  - start//
+                  /*data.Control.Control.CanSleep = '1';
+                  data.Control.Control.CanWake = '1';
+                  data.Control.Control.CanReset = '1';
+                  data.Control.Control.CanZoom = '1';
+                  data.control.Control.HasPresets = '1';
+                  data.control.Control.HasHomePreset = '1';*/
+                  // *** Only for testing - comment out - end //
 
 
-              $scope.ptzMoveCommand = "move"; // start with as move;
-              $scope.ptzStopCommand = "";
-
-              // console.log ("GOT CONTROL "+JSON.stringify(data.control.Control));
-
-              if (data.control.Control.CanZoom == '1') {
-                $scope.canZoom = true;
-                if (data.control.Control.CanZoomCon == '1') {
-                  $scope.zoomInCommand = "zoomConTele";
-                  $scope.zoomOutCommand = "zoomConWide";
-
-                } else if (data.control.Control.CanZoomRel == '1') {
-                  $scope.zoomInCommand = "zoomRelTele";
-                  $scope.zoomOutCommand = "zoomRelWide";
-                } else if (data.control.Control.CanZoomAbs == '1') {
-                  $scope.zoomInCommand = "zoomRelAbs";
-                  $scope.zoomOutCommand = "zoomRelAbs";
-                }
-              }
-
-              NVRDataModel.debug("configurePTZ: control data returned " + JSON.stringify(data));
+                  //data.control.Control.HasPresets = '1';
+                  //data.control.Control.HasHomePreset = '1'
 
 
-              if (data.control.Control.CanMoveMap == '1') {
+                  $scope.ptzMoveCommand = "move"; // start with as move;
+                  $scope.ptzStopCommand = "";
 
-                //seems moveMap uses Up/Down/Left/Right, 
-                // so no prefix
-                $scope.ptzMoveCommand = "";
-                $scope.ptzStopCommand = "moveStop";
-                // console.log ("MoveAbs set");
-              }
+                  // console.log ("GOT CONTROL "+JSON.stringify(data.control.Control));
 
-              if (data.control.Control.CanMoveAbs == '1') {
+                  if (data.control.Control.CanZoom == '1') {
+                    $scope.canZoom = true;
+                    if (data.control.Control.CanZoomCon == '1') {
+                      $scope.zoomInCommand = "zoomConTele";
+                      $scope.zoomOutCommand = "zoomConWide";
 
-                $scope.ptzMoveCommand = "moveAbs";
-                $scope.ptzStopCommand = "moveStop";
-                //  console.log ("MoveAbs set");
-              }
+                    } else if (data.control.Control.CanZoomRel == '1') {
+                      $scope.zoomInCommand = "zoomRelTele";
+                      $scope.zoomOutCommand = "zoomRelWide";
+                    } else if (data.control.Control.CanZoomAbs == '1') {
+                      $scope.zoomInCommand = "zoomRelAbs";
+                      $scope.zoomOutCommand = "zoomRelAbs";
+                    }
+                  }
 
-              if (data.control.Control.CanMoveRel == '1') {
-
-                $scope.ptzMoveCommand = "moveRel";
-                $scope.ptzStopCommand = "moveStop";
-              }
-
+                  NVRDataModel.debug("configurePTZ: control data returned " + JSON.stringify(data));
 
 
-              // Prefer con over rel if both enabled
-              // I've tested con
+                  if (data.control.Control.CanMoveMap == '1') {
 
-              if (data.control.Control.CanMoveCon == '1') {
+                    //seems moveMap uses Up/Down/Left/Right, 
+                    // so no prefix
+                    $scope.ptzMoveCommand = "";
+                    $scope.ptzStopCommand = "moveStop";
+                    // console.log ("MoveAbs set");
+                  }
 
-                $scope.ptzMoveCommand = "moveCon";
-                $scope.ptzStopCommand = "moveStop";
-              }
-              //CanMoveMap
+                  if (data.control.Control.CanMoveAbs == '1') {
 
-              // presets
-              NVRDataModel.debug("ConfigurePTZ Preset value is " + data.control.Control.HasPresets);
-              $scope.ptzPresets = [];
+                    $scope.ptzMoveCommand = "moveAbs";
+                    $scope.ptzStopCommand = "moveStop";
+                    //  console.log ("MoveAbs set");
+                  }
+
+                  if (data.control.Control.CanMoveRel == '1') {
+
+                    $scope.ptzMoveCommand = "moveRel";
+                    $scope.ptzStopCommand = "moveStop";
+                  }
 
 
 
+                  // Prefer con over rel if both enabled
+                  // I've tested con
 
-              if (data.control.Control.HasPresets == '1') {
-                //$scope.presetAndControl = $translate.instant('kPresets');
+                  if (data.control.Control.CanMoveCon == '1') {
 
-                $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
-                //$scope.ptzPresetCount =80;
+                    $scope.ptzMoveCommand = "moveCon";
+                    $scope.ptzStopCommand = "moveStop";
+                  }
+                  //CanMoveMap
 
-                NVRDataModel.debug("ConfigurePTZ Number of presets is " + $scope.ptzPresetCount);
+                  // presets
+                  NVRDataModel.debug("ConfigurePTZ Preset value is " + data.control.Control.HasPresets);
+                  $scope.ptzPresets = [];
 
-                for (var p = 0; p < $scope.ptzPresetCount; p++) {
-                  $scope.ptzPresets.push({
-                    name: (p + 1).toString(),
-                    icon: '',
-                    cmd: "presetGoto" + (p + 1).toString(),
-                    style: 'button-royal'
-                  });
 
-                }
 
-                if (data.control.Control.HasHomePreset == '1') {
-                  $scope.ptzPresets.unshift({
-                    name: '',
-                    icon: "ion-ios-home",
-                    cmd: 'presetHome',
-                    style: 'button-royal'
-                  });
 
-                }
+                  if (data.control.Control.HasPresets == '1') {
+                    //$scope.presetAndControl = $translate.instant('kPresets');
 
-                /* MAKE SURE THIS IS THE FIRST ICON */
-                $scope.ptzPresets.unshift({
-                  // name: 'W',
-                  icon: "ion-chevron-up",
-                  cmd: 'special-hide-unhide',
-                  style: 'button-royal button-dark ',
+                    $scope.ptzPresetCount = parseInt(data.control.Control.NumPresets);
+                    //$scope.ptzPresetCount =80;
+
+                    NVRDataModel.debug("ConfigurePTZ Number of presets is " + $scope.ptzPresetCount);
+
+                    for (var p = 0; p < $scope.ptzPresetCount; p++) {
+                      $scope.ptzPresets.push({
+                        name: (p + 1).toString(),
+                        icon: '',
+                        cmd: "presetGoto" + (p + 1).toString(),
+                        style: 'button-royal'
+                      });
+
+                    }
+
+                    if (data.control.Control.HasHomePreset == '1') {
+                      $scope.ptzPresets.unshift({
+                        name: '',
+                        icon: "ion-ios-home",
+                        cmd: 'presetHome',
+                        style: 'button-royal'
+                      });
+
+                    }
+
+                    /* MAKE SURE THIS IS THE FIRST ICON */
+                    $scope.ptzPresets.unshift({
+                      // name: 'W',
+                      icon: "ion-chevron-up",
+                      cmd: 'special-hide-unhide',
+                      style: 'button-royal button-dark ',
+                    });
+
+
+                  }
+                  /*else
+                  {
+                      $scope.presetAndControl = $translate.instant('kMore');
+                  }*/
+                  // lets add these to the end
+                  // strictly speaking, they aren't really presets, but meh for now
+
+                  // no need to darken these buttons if presets are not there
+                  var buttonAccent = "button-dark";
+                  if ($scope.ptzPresets.length == 0) {
+                    buttonAccent = "";
+                  }
+
+                  if (data.control.Control.CanWake == '1') {
+
+                    $scope.ptzPresets.push({
+                      name: 'W',
+                      icon: "ion-eye",
+                      cmd: 'wake',
+                      style: 'button-royal ' + buttonAccent
+                    });
+
+                  }
+
+                  if (data.control.Control.CanSleep == '1') {
+                    $scope.ptzPresets.push({
+                      name: 'S',
+                      icon: "ion-eye-disabled",
+                      cmd: 'sleep',
+                      style: 'button-royal ' + buttonAccent
+                    });
+
+                  }
+
+                  if (data.control.Control.CanReset == '1') {
+                    $scope.ptzPresets.push({
+                      name: 'R',
+                      icon: "ion-ios-loop-strong",
+                      cmd: 'reset',
+                      style: 'button-royal ' + buttonAccent
+                    });
+
+                  }
+
+                  NVRDataModel.log("ConfigurePTZ Modal: ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
+                },
+                function (data) {
+                  //  console.log("** Error retrieving move PTZ command");
+                  NVRDataModel.log("ConfigurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
                 });
 
-
-              }
-              /*else
-              {
-                  $scope.presetAndControl = $translate.instant('kMore');
-              }*/
-              // lets add these to the end
-              // strictly speaking, they aren't really presets, but meh for now
-
-              // no need to darken these buttons if presets are not there
-              var buttonAccent = "button-dark";
-              if ($scope.ptzPresets.length == 0) {
-                buttonAccent = "";
-              }
-
-              if (data.control.Control.CanWake == '1') {
-
-                $scope.ptzPresets.push({
-                  name: 'W',
-                  icon: "ion-eye",
-                  cmd: 'wake',
-                  style: 'button-royal ' + buttonAccent
-                });
-
-              }
-
-              if (data.control.Control.CanSleep == '1') {
-                $scope.ptzPresets.push({
-                  name: 'S',
-                  icon: "ion-eye-disabled",
-                  cmd: 'sleep',
-                  style: 'button-royal ' + buttonAccent
-                });
-
-              }
-
-              if (data.control.Control.CanReset == '1') {
-                $scope.ptzPresets.push({
-                  name: 'R',
-                  icon: "ion-ios-loop-strong",
-                  cmd: 'reset',
-                  style: 'button-royal ' + buttonAccent
-                });
-
-              }
-
-              NVRDataModel.log("ConfigurePTZ Modal: ControlDB reports PTZ command to be " + $scope.ptzMoveCommand);
-            },
-            function (data) {
-              //  console.log("** Error retrieving move PTZ command");
-              NVRDataModel.log("ConfigurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
-            });
-
-        } else {
-          NVRDataModel.log("configurePTZ " + mid + " is not PTZ controllable");
-        }
-      },
-      function (data) {
-        //  console.log("** Error retrieving move PTZ command");
-        NVRDataModel.log("configurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
-      });
+          } else {
+            NVRDataModel.log("configurePTZ " + mid + " is not PTZ controllable");
+          }
+        },
+        function (data) {
+          //  console.log("** Error retrieving move PTZ command");
+          NVRDataModel.log("configurePTZ : Error retrieving PTZ command  " + JSON.stringify(data), "error");
+        });
 
   }
 
@@ -1799,11 +1813,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       document.addEventListener("pause", onPause, false);
       document.addEventListener("resume", onResume, false);
 
-    }
-    else {
-      NVRDataModel.debug ("MonitorModal: Android detected, using cordova-multiwindow plugin for onStop/onStart instead");
-          window.MultiWindowPlugin.registerOnStop("monitormodal-pause", onPause);
-          window.MultiWindowPlugin.registerOnStart("monitormodal-resume", onResume);
+    } else {
+      NVRDataModel.debug("MonitorModal: Android detected, using cordova-multiwindow plugin for onStop/onStart instead");
+      window.MultiWindowPlugin.registerOnStop("monitormodal-pause", onPause);
+      window.MultiWindowPlugin.registerOnStart("monitormodal-resume", onResume);
     }
 
 

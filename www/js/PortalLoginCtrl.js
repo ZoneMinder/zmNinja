@@ -3,7 +3,7 @@
 /*This is for the loop closure I am using in line 143 */
 /* jslint browser: true*/
 /* global vis,cordova,StatusBar,angular,console,moment */
-angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', 'EventServer', '$translate', '$ionicPopup',function ($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, EventServer, $translate, $ionicPopup) {
+angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', 'EventServer', '$translate', '$ionicPopup', function ($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, EventServer, $translate, $ionicPopup) {
 
   var processPush = false;
   var broadcastHandles = [];
@@ -437,18 +437,18 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   EventServer.init();
 
                   NVRDataModel.zmPrivacyProcessed()
-                  .then (function (val) {
-                    console.log(">>>>>>>>>>>>>>>>>>> PRIVACY PROCEESSED:"+val);
-                   if (!val) {
-                    var alertPopup = $ionicPopup.alert({
-                      title: $translate.instant ('kNote'),
-                      template: $translate.instant('kDataPrivacyZM'),
-                      okText: $translate.instant('kButtonOk'),
-                      cancelText: $translate.instant('kButtonCancel'),
-                    });
+                    .then(function (val) {
+                      console.log(">>>>>>>>>>>>>>>>>>> PRIVACY PROCEESSED:" + val);
+                      if (!val) {
+                        var alertPopup = $ionicPopup.alert({
+                          title: $translate.instant('kNote'),
+                          template: $translate.instant('kDataPrivacyZM'),
+                          okText: $translate.instant('kButtonOk'),
+                          cancelText: $translate.instant('kButtonCancel'),
+                        });
 
-                   }
-                  });
+                      }
+                    });
 
                   // if push broadcast happens BEFORE this, then no 
                   // state change will occur here which is good
@@ -551,6 +551,6 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
   NVRDataModel.log("Entering Portal Main");
   var loginData;
   $ionicSideMenuDelegate.canDragContent(true);
-  
+
 
 }]);

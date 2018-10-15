@@ -261,12 +261,12 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     //console.log("**VIEW ** Log Ctrl Entered");
 
 
-   /*n $scope.cloudString = "loading...";
-    window.cordova.plugin.cloudsettings.load(
-      function (succ) {$scope.cloudString = JSON.stringify(succ);},
-      function (err) {$scope.cloudString = JSON.stringify(err);}
+    /*n $scope.cloudString = "loading...";
+     window.cordova.plugin.cloudsettings.load(
+       function (succ) {$scope.cloudString = JSON.stringify(succ);},
+       function (err) {$scope.cloudString = JSON.stringify(err);}
 
-    );*/
+     );*/
 
     $ionicSideMenuDelegate.canDragContent(false);
     $scope.selectOn = false;

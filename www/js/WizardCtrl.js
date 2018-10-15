@@ -39,32 +39,32 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
         }
       })
       .then(function (data, status, headers) {
-        data = data.data;
-        //console.log("LOOKING FOR " + zm.loginScreenString);
-        //console.log("DATA RECEIVED " + JSON.stringify(data));
-        if (data.indexOf(zm.loginScreenString) == -1) {
+          data = data.data;
+          //console.log("LOOKING FOR " + zm.loginScreenString);
+          //console.log("DATA RECEIVED " + JSON.stringify(data));
+          if (data.indexOf(zm.loginScreenString) == -1) {
 
-          $scope.wizard.loginURL = $scope.wizard.fqportal;
-          $scope.wizard.portalValidText = $translate.instant('kPortal') + ": " + $scope.wizard.loginURL;
-          $scope.wizard.portalColor = "#16a085";
-          d.resolve(true);
-          return d.promise;
-        } else {
-          //console.log("************ERROR");
+            $scope.wizard.loginURL = $scope.wizard.fqportal;
+            $scope.wizard.portalValidText = $translate.instant('kPortal') + ": " + $scope.wizard.loginURL;
+            $scope.wizard.portalColor = "#16a085";
+            d.resolve(true);
+            return d.promise;
+          } else {
+            //console.log("************ERROR");
+            $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
+            $scope.wizard.portalColor = "#e74c3c";
+            d.reject(false);
+            return d.promise;
+          }
+        },
+        function (error) {
+          // console.log("************ERROR:"+ JSON.stringify(error));
           $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
           $scope.wizard.portalColor = "#e74c3c";
           d.reject(false);
           return d.promise;
-        }
-      },
-      function (error) {
-       // console.log("************ERROR:"+ JSON.stringify(error));
-        $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
-        $scope.wizard.portalColor = "#e74c3c";
-        d.reject(false);
-        return d.promise;
 
-      });
+        });
 
     return d.promise;
 
@@ -141,7 +141,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           return d.promise;
         }
 
-        
+
         return findFirstReachableUrl(urls.slice(1), tail);
       });
     } else {
@@ -196,11 +196,11 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     var urls = [a1, a2, a3, a4, a5];
 
     // can't use getPathZms as loginData is not inited yet
-    $http.get ($scope.wizard.apiURL+"/configs/viewByName/ZM_PATH_ZMS.json")
-    //NVRDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
+    $http.get($scope.wizard.apiURL + "/configs/viewByName/ZM_PATH_ZMS.json")
+      //NVRDataModel.getPathZms() // what does ZM have stored in PATH_ZMS?
       .then(function (data) {
           // remove zms or nph-zms
-          var str  = data.data.config.Value;
+          var str = data.data.config.Value;
           var path = str.trim();
           path = path.replace("/nph-zms", "");
           path = path.replace("/zms", "");
@@ -396,7 +396,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
   //--------------------------------------------------------------------------
 
   function validateDataNewAPI() {
-    
+
   }
 
   function validateData() {
