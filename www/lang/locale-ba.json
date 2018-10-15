@@ -65,8 +65,6 @@
     "kDeveloperOptionsFor"       :"Razvojne opcije za",
     "kDisableAlarmMontage"       :"Onemogućite alarm API u grupi",
     "kDisableAlarmMontageSub"    :"može pomoci kada je server preopterećen",
-    "kDisableNative"             :"Isključi nativne prijevode",
-    "kDisableNativeSub"          :"Uključi ukoliko izbornik zaledi",
     "kDisablePush"               :"isključi FCM",
     "kDisableSamsung"            :"Ukoliko imate Samsungov aparat i imate probleme sa unosom, privremeno iskljucite automatsko ispravljanje.",
     "kDisableSimulStreaming"     :"Zanemari ZM 1.32.0 multi-port",
