@@ -2,7 +2,7 @@
 <ion-modal-view cache-view="false">
   <ion-content ng-cloak on-double-tap="closeModal()" delegate-handle="timeline-modal-delegate">
     <div ng-controller="TimelineModalCtrl">
-      <br/>
+      <br />
       <div class="item item-divider">{{mName}}&nbsp;
         <i class="ion-arrow-right-b"></i>&nbsp;{{'kEvent' | translate}}:{{eid}} ({{humanizeTime}})
         <button class="button icon-left button-small  button-positive" style="float:right; opacity:0.7" ng-click="switchType()">
@@ -41,8 +41,8 @@
 
   </ion-content>
 
-  <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-down" resting-icon="ion-chevron-up"
-    toggling-method="click">
+  <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-down"
+    resting-icon="ion-chevron-up" toggling-method="click">
     <a mfb-button icon="ion-close" label="{{'kExit' | translate}}" ng-click="closeModal()"> </a>
 
   </nav>

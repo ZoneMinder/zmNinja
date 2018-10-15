@@ -191,18 +191,18 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
           NVRDataModel.log("EventGraph: composed url is " + url);
           $http.get(url /*,{timeout:15000}*/ )
             .then(function (data) {
-              data = data.data;
-              NVRDataModel.debug("Event count for monitor" +
-                monitors[j].Monitor.Id + " is " + data.pagination.count);
-              $scope.chart.data.datasets[0].data[j] = data.pagination.count;
-            },
-            function (data) {
-              // ideally I should be treating it as an error
-              // but what I am really doing now is treating it like no events
-              // works but TBD: make this into a proper error handler
-              $scope.chart.data.datasets[0].data[j] = 0;
-              NVRDataModel.log("Error retrieving events for graph " + JSON.stringify(data), "error");
-            });
+                data = data.data;
+                NVRDataModel.debug("Event count for monitor" +
+                  monitors[j].Monitor.Id + " is " + data.pagination.count);
+                $scope.chart.data.datasets[0].data[j] = data.pagination.count;
+              },
+              function (data) {
+                // ideally I should be treating it as an error
+                // but what I am really doing now is treating it like no events
+                // works but TBD: make this into a proper error handler
+                $scope.chart.data.datasets[0].data[j] = 0;
+                NVRDataModel.log("Error retrieving events for graph " + JSON.stringify(data), "error");
+              });
         })(i); // j
       } //for
     });

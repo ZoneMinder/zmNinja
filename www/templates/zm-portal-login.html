@@ -2,8 +2,8 @@
   <ion-content class="pin-background" scroll="false">
     <div style="margin-left:20px; margin-right:20px">
       <center>
-        <br/>
-        <br/>
+        <br />
+        <br />
         <div id="responsive-image">
           <img src="img/authlogo.png">
         </div>
@@ -12,15 +12,15 @@
           <div class="pinCode">
             <input id="pin-box" type="number" pattern="[0-9]*" ng-model="pindata.pin" ng-keyup="pinChange()" />
           </div>
-          <br/>
+          <br />
           <span style="color:white">{{pindata.status}}</span>
-          <br/>
+          <br />
           <button class="button  button-dark icon ion-unlocked" ng-click="unlock()"> Unlock
           </button>
         </div>
         <div id="really-your-fault" class="animated fadeIn" style="color:white">{{'kPortalNotice' | translate}}
-          <br/>
-          <br/>{{'kPortalNoticeSub' | translate}}</div>
+          <br />
+          <br />{{'kPortalNoticeSub' | translate}}</div>
       </center>
     </div>
   </ion-content>

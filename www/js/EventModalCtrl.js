@@ -403,49 +403,49 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         }
       })
       .then(function (resp) {
-        //NVRDataModel.debug ("processEvent success:"+JSON.stringify(resp));
+          //NVRDataModel.debug ("processEvent success:"+JSON.stringify(resp));
 
-        resp = resp.data;
-        if (resp.result == "Ok") {
+          resp = resp.data;
+          if (resp.result == "Ok") {
 
-          if (resp.status) $scope.currentProgress.progress = resp.status.progress;
-          if (resp.status && resp.status.event) $scope.eventId = resp.status.event;
-          $scope.d_eventId = $scope.eventId;
-          if (resp.status) $scope.currentRate = resp.status.rate;
+            if (resp.status) $scope.currentProgress.progress = resp.status.progress;
+            if (resp.status && resp.status.event) $scope.eventId = resp.status.event;
+            $scope.d_eventId = $scope.eventId;
+            if (resp.status) $scope.currentRate = resp.status.rate;
 
-          if ($scope.currentProgress.progress > $scope.currentEventDuration) $scope.currentProgress.progress = $scope.currentEventDuration;
-          $scope.progressText = "At " + $scope.currentProgress.progress + "s of " + $scope.currentEventDuration + "s";
+            if ($scope.currentProgress.progress > $scope.currentEventDuration) $scope.currentProgress.progress = $scope.currentEventDuration;
+            $scope.progressText = "At " + $scope.currentProgress.progress + "s of " + $scope.currentEventDuration + "s";
 
-          $scope.sliderProgress.progress = $scope.currentProgress.progress;
+            $scope.sliderProgress.progress = $scope.currentProgress.progress;
 
-          // lets not do this and use zms to move forward or back
-          // as this code conflicts with fast rev etc
-          //if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
+            // lets not do this and use zms to move forward or back
+            // as this code conflicts with fast rev etc
+            //if (Math.floor(resp.status.progress) >=$scope.currentEventDuration)
 
-          //$timeout (checkEvent(), zm.eventPlaybackQuery);
+            //$timeout (checkEvent(), zm.eventPlaybackQuery);
+            //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
+
+          } else // resp.result was messed up
+
+          {
+            NVRDataModel.debug("Hmm I found an error " + JSON.stringify(resp));
+            //window.stop();
+            // $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+
+            // console.log (JSON.stringify(resp));
+            /*$timeout(function()
+            {
+                sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
+            }, 500);
+            NVRDataModel.debug("so I'm regenerating Connkey to " + $scope.connKey);*/
+
+          }
+        },
+        function (resp) {
+          NVRDataModel.debug("processEvent error:" + JSON.stringify(resp));
           //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
 
-        } else // resp.result was messed up
-
-        {
-          NVRDataModel.debug("Hmm I found an error " + JSON.stringify(resp));
-          //window.stop();
-          // $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-
-          // console.log (JSON.stringify(resp));
-          /*$timeout(function()
-          {
-              sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
-          }, 500);
-          NVRDataModel.debug("so I'm regenerating Connkey to " + $scope.connKey);*/
-
-        }
-      },
-      function (resp) {
-        NVRDataModel.debug("processEvent error:" + JSON.stringify(resp));
-        //eventQueryHandle  =  $timeout (function(){checkEvent();}, zm.eventPlaybackQuery);
-
-      });
+        });
 
   }
 
@@ -1038,12 +1038,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       //desktop
 
       $ionicLoading.hide();
-  
-     $rootScope.zmPopup = SecuredPopups.show('alert', {
+
+      $rootScope.zmPopup = SecuredPopups.show('alert', {
         title: $translate.instant('kNote'),
-        template: $translate.instant('kDownloadVideoImage')+"<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download>"+" "+$translate.instant('kDownload')+"</a></center>",
+        template: $translate.instant('kDownloadVideoImage') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download>" + " " + $translate.instant('kDownload') + "</a></center>",
         okText: $translate.instant('kDismiss'),
-        okType:'button-stable'
+        okType: 'button-stable'
       });
 
 
@@ -1551,42 +1551,42 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     return $http.delete(apiDelete)
       .then(function (data) {
-        data = data.data;
-        $ionicLoading.hide();
-        // NVRDataModel.debug("delete output: " + JSON.stringify(data));
-
-        if (data.message == 'Error') {
-          $ionicLoading.show({
-            template: "{{'kError' | translate}}...",
-            noBackdrop: true,
-            duration: 1500
-          });
-
-        } else {
-
+          data = data.data;
           $ionicLoading.hide();
-          $ionicLoading.show({
-            template: "{{'kSuccess' | translate}}...",
-            noBackdrop: true,
-            duration: 1000
-          });
+          // NVRDataModel.debug("delete output: " + JSON.stringify(data));
+
+          if (data.message == 'Error') {
+            $ionicLoading.show({
+              template: "{{'kError' | translate}}...",
+              noBackdrop: true,
+              duration: 1500
+            });
+
+          } else {
+
+            $ionicLoading.hide();
+            $ionicLoading.show({
+              template: "{{'kSuccess' | translate}}...",
+              noBackdrop: true,
+              duration: 1000
+            });
 
 
-        }
+          }
 
-        // NVRDataModel.displayBanner('info', [$translate.instant('kDeleteEventSuccess')], 2000, 2000);
-
-
+          // NVRDataModel.displayBanner('info', [$translate.instant('kDeleteEventSuccess')], 2000, 2000);
 
 
-        //doRefresh();
 
-      },
-      function (data) {
-        $ionicLoading.hide();
-        NVRDataModel.debug("delete error: " + JSON.stringify(data));
-        NVRDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);
-      });
+
+          //doRefresh();
+
+        },
+        function (data) {
+          $ionicLoading.hide();
+          NVRDataModel.debug("delete error: " + JSON.stringify(data));
+          NVRDataModel.displayBanner('error', [$translate.instant('kDeleteEventError1'), $translate.instant('kDeleteEventError2')]);
+        });
   }
   //--------------------------------------------------------
   //Navigate to next/prev event in full screen mode
