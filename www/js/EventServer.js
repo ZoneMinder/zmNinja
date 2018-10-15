@@ -209,7 +209,7 @@ angular.module('zmApp.controllers')
       NVRDataModel.log("Initializing Websocket with URL " +
         loginData.eventServer);
 
-      if ($rootScope.platforOS == 'desktop') {
+      if ($rootScope.platformOS == 'desktop') {
         NVRDataModel.debug("Using browser websockets...");
         return setupDesktopSocket();
       } else {
@@ -269,6 +269,7 @@ angular.module('zmApp.controllers')
 
     function setupDesktopSocket() {
 
+      var loginData = NVRDataModel.getLogin();
       var d = $q.defer();
       ws = new WebSocket(loginData.eventServer);
 
