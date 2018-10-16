@@ -2745,11 +2745,13 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("No more - We have a total of " + maxEventsPage + " and are at page=" + currEventsPage);
 
         console.log("*** At Page " + currEventsPage + " of " + maxEventsPage + ", not proceeding");
+        $ionicLoading.hide();
         return;
       }
 
       currEventsPage++;
       if (!enableLoadMore) {
+        $ionicLoading.hide();
         moreEvents = false; // Don't ion-scroll till enableLoadMore is true;
         $scope.$broadcast('scroll.infiniteScrollComplete');
 
@@ -2759,11 +2761,15 @@ angular.module('zmApp.controllers')
 
       var loadingStr = "";
       if ($scope.search.text != "") {
-        var toastStr = $translate.instant('kToastSearchingPage') + currEventsPage;
+    
+        var toastStr = $translate.instant('kPleaseWait') +'...'+ currEventsPage;
+        console.log ("SHOW " + toastStr );
         $ionicLoading.show({
           maxwidth: 100,
+          noBackdrop:true,
           scope: $scope,
-          template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >' + toastStr + '</button>'
+          template: toastStr,
+         // template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >' + toastStr + '</button>'
         });
 
         loadingStr = "none";
@@ -2854,6 +2860,7 @@ angular.module('zmApp.controllers')
           function (error) {
             // console.log("*** No More Events to Load, Stop Infinite Scroll ****");
             moreEvents = false;
+            $ionicLoading.hide();
             $scope.$broadcast('scroll.infiniteScrollComplete');
 
           });
