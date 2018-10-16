@@ -1814,9 +1814,23 @@ angular.module('zmApp.controllers')
     // data for events ranges summaries using the consolveEvents facility of ZM
     //--------------------------------------------------------------------------
 
+
+    $scope.footerToggle = function() {
+
+      if ($scope.footerState == ionPullUpFooterState.EXPANDED)
+        $scope.footerCollapse();
+      else 
+        $scope.footerExpand();
+    };
+
     $scope.footerExpand = function () {
+      $scope.footerState = ionPullUpFooterState.EXPANDED;
       footerExpand();
 
+    };
+
+    $scope.footerCollapse = function() {
+      $scope.footerState = ionPullUpFooterState.MINIMIZED;
     };
 
     function footerExpand() {
