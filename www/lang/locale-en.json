@@ -351,6 +351,7 @@
     "kStatus"                    :"Status",
     "kStop"                      :"Stop",
     "kSuccess"                   :"Success",
+    "kToggleSummary"             :"toggle summary",
     "kSwitchingEvents"           :"switching events",
     "kSystemStatus"              :"System Status",
     "kTapEvents"                 :"Events",
