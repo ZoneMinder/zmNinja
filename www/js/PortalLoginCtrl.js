@@ -29,9 +29,12 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
       loginData = NVRDataModel.getLogin();
 
       $ionicHistory.nextViewOptions({
+        disableAnimate:true,
         disableBack: true
       });
 
+
+    
       $scope.pindata = {};
       if ($ionicSideMenuDelegate.isOpen()) {
         $ionicSideMenuDelegate.toggleLeft();
@@ -153,6 +156,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
               disableAnimate: true,
               disableBack: true
             });
+
             $state.go("app.login", {
               "wizard": false
             });
