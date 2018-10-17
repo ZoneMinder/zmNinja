@@ -272,9 +272,10 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
   //this needs to be rootScope so it lives even when we are out of view
   var pp = $rootScope.$on("process-push", function () {
-    NVRDataModel.debug("*** PROCESS PUSH HANDLER CALLED INSIDE PORTAL LOGIN, setting ProcessPush to true");
     processPush = true;
-    evaluateTappedNotification();
+    NVRDataModel.debug("processPush set to true, but will act after login is complete...");
+   
+    
 
 
   });
@@ -282,13 +283,6 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
   function evaluateTappedNotification() {
     var ld = NVRDataModel.getLogin();
-
-    // give enough time for state conflicts to work out
-    // that way PortalLogin doesn't override this
-    // and I thought I was eliminating hacks....
-    $timeout(function () {
-      processPush = false;
-    }, 1000);
 
 
     if ($rootScope.tappedNotification == 2) { // url launch
@@ -442,7 +436,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                   NVRDataModel.zmPrivacyProcessed()
                     .then(function (val) {
-                      console.log(">>>>>>>>>>>>>>>>>>> PRIVACY PROCEESSED:" + val);
+                    //  console.log(">>>>>>>>>>>>>>>>>>> PRIVACY PROCESSED:" + val);
                       if (!val) {
                         var alertPopup = $ionicPopup.alert({
                           title: $translate.instant('kNote'),
@@ -470,6 +464,11 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     $state.go(statetoGo, $rootScope.lastStateParam);
                     return;
 
+                  }
+                  else {
+                    NVRDataModel.debug ("Authentication over, now processing push...");
+                    evaluateTappedNotification();
+                    processPush = false;
                   }
                   //  else
                   //    evaluateTappedNotification();
