@@ -1364,7 +1364,7 @@ angular.module('zmApp.controllers')
                     loginData.enableSlowLoading = false;
 
                   }
-                  log("SlowDelay is: " + loginData.enableSlowLoading);
+                 
 
                   if (typeof loginData.enableStrictSSL == 'undefined') {
 
@@ -2347,7 +2347,7 @@ angular.module('zmApp.controllers')
 
                 var succ;
                 try {
-                  console.log(textsucc);
+                  //console.log(textsucc);
                   succ = JSON.parse(textsucc.data);
                   if (succ.data) succ = succ.data;
                   if (succ.config) {
