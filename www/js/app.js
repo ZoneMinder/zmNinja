@@ -1515,12 +1515,16 @@ angular.module('zmApp', [
         //navigator.app.exitApp();
 
       };
-
+ 
       // This is a global exception interceptor
       $rootScope.exceptionMessage = function (error) {
         NVRDataModel.debug("**EXCEPTION**" + error.reason + " caused by " + error.cause);
       };
 
+      // for .config block
+      $rootScope.debug = function (msg) {
+        NVRDataModel.debug(msg);
+      };
 
       if ($rootScope.platformOS == 'desktop' && 0) {
 
@@ -1663,12 +1667,16 @@ angular.module('zmApp', [
       // lets see if it really works
       $rootScope.online = navigator.onLine;
 
-      NVRDataModel.log ("--------->Setting up network state handlers....");
+      // set up network state handlers after 3secs
+      // android seems to howl about this at app start?
+      $timeout (function() {
+
+        NVRDataModel.log ("--------->Setting up network state handlers....");
       document.addEventListener("offline", function () {
         //console.log ("OFFLINE------------------------------------");
         $timeout(function () {
           $rootScope.online = false;
-          NVRDataModel.log("Your network went offline");
+          NVRDataModel.log("************** Your network went offline");
 
           //$rootScope.$emit('network-change', "offline");
 
@@ -1679,14 +1687,13 @@ angular.module('zmApp', [
         //console.log ("ONLINE------------------------------------");
         $timeout(function () {
 
-
-          NVRDataModel.log("Your network came back online");
+          NVRDataModel.log("************ Your network came back online");
 
           $rootScope.online = true;
 
           $timeout(function () {
             // NVRDataModel.debug ("Ignoring - Alex R. Hack");
-            if (0) {
+            if (1) {
               var networkState = "browser not supported";
               if (navigator.connection) networkState = navigator.connection.type;
               NVRDataModel.debug("Detected network type as: " + networkState);
@@ -1710,6 +1717,9 @@ angular.module('zmApp', [
 
         });
       }, false);
+
+      },3000);
+      
 
       // This code takes care of trapping the Android back button
       // and takes it to the menu.
@@ -2263,7 +2273,7 @@ angular.module('zmApp', [
   //------------------------------------------------------------------
 
   // My route map connecting menu options to their respective templates and controllers
-  .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, /*$ionicNativeTransitionsProvider,*/ $logProvider, $translateProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, /*$ionicNativeTransitionsProvider,*/ $logProvider, $translateProvider, $injector) {
 
     //$logProvider.debugEnabled(false);
     //$compileProvider.debugInfoEnabled(false);
@@ -2294,9 +2304,10 @@ angular.module('zmApp', [
     // a) https://www.exratione.com/2013/08/angularjs-wrapping-http-for-fun-and-profit/
     // b) https://gist.github.com/adamreisnz/354364e2a58786e2be71
 
-    $provide.decorator('$http', ['$delegate', '$q', function ($delegate, $q) {
+    $provide.decorator('$http', ['$delegate', '$q', '$injector', function ($delegate, $q, $injector) {
       // create function which overrides $http function
       var $http = $delegate;
+      var logger = $injector.get("$rootScope");
 
       var wrapper = function () {
         var url;
@@ -2346,7 +2357,7 @@ angular.module('zmApp', [
               }
             },
             function (err) {
-              console.log("***  Inside native HTTP error: " + JSON.stringify(err));
+              logger.debug("***  Inside native HTTP error: " + JSON.stringify(err));
 
               d.reject(err);
               return d.promise;
