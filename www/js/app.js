@@ -958,6 +958,12 @@ angular.module('zmApp', [
 
 
     function doLogoutAndLogin(str) {
+      if (window.cordova) {
+        // we need to do this or ZM will send same auth hash
+        // this was fixed in a PR dated Oct 18
+        NVRDataModel.debug ("Clearing cookies");
+        cordova.plugin.http.clearCookies();
+      }
       return NVRDataModel.logout()
         .then(function (ans) {
           return doLogin(str);
@@ -1132,6 +1138,7 @@ angular.module('zmApp', [
                   return d.promise;
                 }
                 NVRDataModel.debug("API based login returned... ");
+                console.log (JSON.stringify(succ));
                 NVRDataModel.setCurrentServerVersion(succ.version);
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
@@ -1656,6 +1663,7 @@ angular.module('zmApp', [
       // lets see if it really works
       $rootScope.online = navigator.onLine;
 
+      NVRDataModel.log ("--------->Setting up network state handlers....");
       document.addEventListener("offline", function () {
         //console.log ("OFFLINE------------------------------------");
         $timeout(function () {
@@ -1998,7 +2006,7 @@ angular.module('zmApp', [
         $rootScope.$stateParams = $stateParams;
 
         if (window.cordova) {
-          console.log("------------->Keyboard foonone");
+          
           //window.cordova.plugins.Keyboard.disableScroll(true);
         }
         if (window.StatusBar) {
@@ -2082,7 +2090,7 @@ angular.module('zmApp', [
 
           localforage.getItem('last-desktop-state')
             .then(function (succ) {
-              console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
+//              console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
 
               // sanitize this
               if (!succ.name || typeof succ.name !== 'string') {
@@ -2300,12 +2308,13 @@ angular.module('zmApp', [
         if (window.cordova && isOutgoingRequest) {
 
 
+
           var d = $q.defer();
           var options = {
             method: method,
             data: arguments[0].data,
             headers: arguments[0].headers,
-            timeout: arguments[0].timeout,
+            timeout: arguments[0].timeout || 10,
             responseType: arguments[0].responseType
           };
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
