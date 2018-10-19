@@ -9,3 +9,6 @@ echo "see https://forum.ionicframework.com/t/how-to-build-ionic-cordova-with-xco
 
 echo "-- building --"
 ionic cordova build ios --release --buildConfig="./build-auto.json"
+
+echo "********* Done *************"
+echo "Make sure you are using Legacy build in XCode (File->Workspace) or push/etc may stop working"
