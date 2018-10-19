@@ -1148,7 +1148,7 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.disableSimulStreaming == 'undefined') {
 
 
-                    loginData.disableSimulStreaming = ($rootScope.platformOS == 'ios') ? true : false;
+                    loginData.disableSimulStreaming = false;
                     //console.log("INIT DISABLING SIMUL:" + loginData.disableSimulStreaming);
                   }
 
