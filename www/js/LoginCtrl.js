@@ -262,11 +262,6 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       NVRDataModel.log("Creating new login entry for wizard");
       $scope.loginData = angular.copy(NVRDataModel.getDefaultLoginObject());
 
-      // default object has this as false
-      if ($rootScope.platformOS == 'ios') {
-        $scope.loginData.disableSimulStreaming = true;
-      }
-
       $scope.loginData.serverName = $rootScope.wizard.serverName;
       $scope.loginData.url = $rootScope.wizard.loginURL;
       $scope.loginData.apiurl = $rootScope.wizard.apiURL;
