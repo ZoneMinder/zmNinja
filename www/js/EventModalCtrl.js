@@ -762,9 +762,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       $scope.mycarousel.index = 1;
 
 
-    if ($scope.event.Event.imageMode == 'path') {
-      url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.mycarousel.index].img;
-    } else {
+    
 
       console.log("SLIDES " + JSON.stringify($scope.slides));
       console.log("CAROUSEL " + JSON.stringify($scope.mycarousel));
@@ -772,7 +770,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand +
         "&eid=" + $scope.eventId +
         "&fid=" + $scope.slides[$scope.mycarousel.index - 1].id;
-    }
+    
 
     if ($rootScope.authSession != 'undefined') {
       url += $rootScope.authSession;
@@ -803,11 +801,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           onTap: function (e) {
             if ($scope.slideIndex > 0) $scope.slideIndex--;
 
-            if ($scope.event.Event.imageMode == 'path') {
-              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
-            } else {
+       
               $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id;
-            }
+            
             if ($rootScope.authSession != 'undefined') {
               $scope.selectEventUrl += $rootScope.authSession;
 
@@ -831,11 +827,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           onTap: function (e) {
             if ($scope.slideIndex < $scope.slideLastIndex) $scope.slideIndex++;
 
-            if ($scope.event.Event.imageMode == 'path') {
-              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
-            } else {
+       
               $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id;
-            }
+            
             if ($rootScope.authSession != 'undefined') {
               $scope.selectEventUrl += $rootScope.authSession;
 
@@ -860,11 +854,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if (tempVar < 0) tempVar = 0;
             $scope.slideIndex = tempVar;
 
-            if ($scope.event.Event.imageMode == 'path') {
-              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
-            } else {
+       
               $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id;
-            }
+            
             if ($rootScope.authSession != 'undefined') {
               $scope.selectEventUrl += $rootScope.authSession;
 
@@ -889,11 +881,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $scope.slideIndex = tempVar;
             if ($scope.slideIndex < $scope.slideLastIndex) $scope.slideIndex++;
 
-            if ($scope.event.Event.imageMode == 'path') {
-              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&path=" + $scope.relativePath + $scope.slides[$scope.slideIndex].img;
-            } else {
+          
               $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id;
-            }
+            
             if ($rootScope.authSession != 'undefined') {
               $scope.selectEventUrl += $rootScope.authSession;
 
@@ -1170,10 +1160,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.singleImageQuality = (NVRDataModel.getBandwidth() == "lowbw") ? zm.eventSingleImageQualityLowBW : ld.singleImageQuality;
     $scope.blockSlider = false;
     $scope.checkEventOn = false;
-    //$scope.singleImageQuality = 100;
-
-    //$scope.commandURL = $scope.currentEvent.Event.baseURL+"/index.php";
-    // NVRDataModel.log (">>>>>>>>>>>>>>>>>>ZMS url command is " + $scope.commandURL);
+    
 
     currentEvent = $scope.currentEvent;
 
@@ -1924,7 +1911,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   function computeAlarmFrames(data) {
     $scope.alarm_images = [];
     tempAlarms = [];
-    $scope.FrameArray = data.event.Frame;
+    $scope.FrameArray = [];
+
+    console.log ("FRAME ARRAY: "+JSON.stringify(data));
+    if (data.event && data.event.Frame) $scope.FrameArray = data.event.Frame;
     var ts = 0;
 
     for (i = 0; i < data.event.Frame.length; i++) {
@@ -1953,7 +1943,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   $scope.constructFrame = function (fid) {
 
     var frame = "";
-    frame = currentEvent.Event.baseURL + "/index.php?view=image" +
+    frame = currentEvent.Event.recordingURL + "/index.php?view=image" +
       "&eid=" + currentEvent.Event.Id +
       "&fid=" + fid +
       "&height=" + 200;
@@ -1985,7 +1975,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.mName = "...";
     $scope.liveFeedMid = '';
 
-
     $http.get(myurl)
       .then(function (success) {
 
@@ -1993,7 +1982,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           currentEvent = event;
           $scope.event = event;
 
-
+          console.log ("prepareModal DATA:"+JSON.stringify(success.data));
           computeAlarmFrames(success.data);
           $scope.eventWarning = '';
 
@@ -2008,8 +1997,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           event.Event.relativePath = computeRelativePath(event);
 
           event.Event.streamingURL = NVRDataModel.getStreamingURL(event.Event.MonitorId);
-          //  event.Event.baseURL = NVRDataModel.getBaseURL (event.Event.MonitorId);
-          event.Event.baseURL = loginData.url;
+          
+          event.Event.recordingURL = loginData.url;
           event.Event.imageMode = NVRDataModel.getImageMode(event.Event.MonitorId);
 
           //console.log (JSON.stringify( success));
@@ -2056,10 +2045,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           event.Event.video = {};
           var videoURL;
 
-          if ((event.Event.imageMode == 'path') || NVRDataModel.getLogin().forceImageModePath)
-            videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;
-          else
-            videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
+            videoURL = event.Event.recordingURL + "/index.php?view=view_video&eid=" + event.Event.Id;
 
           if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
           if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
@@ -2073,10 +2059,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
           NVRDataModel.debug("Video url passed to player is: " + videoURL);
 
-          // console.log (">>>>>>>>>>>>>"+loginData.url+"-VS-"+event.Event.baseURL);
-
-          //console.log("************** VIDEO IS " + videoURL);
-
+         
           $scope.videoObject = {
             config: {
               autoPlay: true,

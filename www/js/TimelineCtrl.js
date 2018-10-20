@@ -864,11 +864,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 myevents[j].Event.MonitorName = NVRDataModel.getMonitorName(myevents[j].Event.MonitorId);
 
                 myevents[j].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[j].Event.MonitorId);
-                myevents[j].Event.baseURL = NVRDataModel.getBaseURL(myevents[j].Event.MonitorId);
+                myevents[j].Event.recordingURL = NVRDataModel.getRecordingURL(myevents[j].Event.MonitorId);
                 myevents[j].Event.imageMode = NVRDataModel.getImageMode(myevents[j].Event.MonitorId);
-                if (NVRDataModel.getLogin().url != myevents[j].Event.baseURL) {
+                if (NVRDataModel.getLogin().url != myevents[j].Event.recordingURL) {
 
-                  myevents[j].Event.baseURL = NVRDataModel.getLogin().url;
+                  myevents[j].Event.recordingURL = NVRDataModel.getLogin().url;
                 }
 
                 if (typeof myevents[j].Event.DefaultVideo === 'undefined')
@@ -1168,16 +1168,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                   // now construct base path
 
                   myevents[i].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[i].Event.MonitorId);
-                  myevents[i].Event.baseURL = NVRDataModel.getBaseURL(myevents[i].Event.MonitorId);
+                  myevents[i].Event.recordingURL = NVRDataModel.getRecordingURL(myevents[i].Event.MonitorId);
                   myevents[i].Event.imageMode = NVRDataModel.getImageMode(myevents[i].Event.MonitorId);
-                  if (NVRDataModel.getLogin().url != myevents[i].Event.baseURL) {
+                  if (NVRDataModel.getLogin().url != myevents[i].Event.recordingURL) {
                     //NVRDataModel.debug ("Multi server, changing base");
-                    myevents[i].Event.baseURL = NVRDataModel.getLogin().url;
+                    myevents[i].Event.recordingURL = NVRDataModel.getLogin().url;
 
                   }
-                  // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
-
-                  //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
+               
 
                   if (idfound) {
 

@@ -32,7 +32,7 @@ angular.module('zmApp.controllers')
 
   })
 
-  .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', '$ionicListDelegate', 'ionPullUpFooterState', function ($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile, $ionicListDelegate, ionPullUpFooterState) {
+  .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', '$ionicListDelegate', 'ionPullUpFooterState', 'SecuredPopups', function ($scope, $rootScope, zm, NVRDataModel, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile, $ionicListDelegate, ionPullUpFooterState,SecuredPopups) {
 
     // events in last 5 minutes
     // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -427,19 +427,18 @@ angular.module('zmApp.controllers')
 
             myevents[i].Event.humanizeTime = humanizeTime(myevents[i].Event.StartTime);
             myevents[i].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[i].Event.MonitorId);
-            myevents[i].Event.baseURL = NVRDataModel.getBaseURL(myevents[i].Event.MonitorId);
+            myevents[i].Event.recordingURL = NVRDataModel.getRecordingURL(myevents[i].Event.MonitorId);
             myevents[i].Event.imageMode = NVRDataModel.getImageMode(myevents[i].Event.MonitorId);
 
             //console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
 
-            // console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
+            // console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.recordingURL);
 
             myevents[i].Event.MonitorName = NVRDataModel.getMonitorName(myevents[i].Event.MonitorId);
             myevents[i].Event.ShowScrub = false;
             myevents[i].Event.height = eventsListDetailsHeight;
             // now construct base path
-            myevents[i].Event.BasePath = computeBasePath(myevents[i]);
-            myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
+        
 
             // get thumbW/H
 
@@ -459,18 +458,11 @@ angular.module('zmApp.controllers')
             // in multiserver BasePath is login url for frames 
             // http://login.url/index.php?view=frame&eid=19696772&fid=21
 
-            //  console.log ("COMPARING "+NVRDataModel.getLogin().url+ " TO " +myevents[i].Event.baseURL);
-            if (NVRDataModel.getLogin().url != myevents[i].Event.baseURL) {
-              //NVRDataModel.debug ("Multi server, changing base");
-              myevents[i].Event.baseURL = NVRDataModel.getLogin().url;
+            //  console.log ("COMPARING "+NVRDataModel.getLogin().url+ " TO " +myevents[i].Event.recordingURL);
+          
 
-            }
-
-            if (myevents[i].Event.imageMode == 'path')
-              //if (1)
-              myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/events/" + myevents[i].Event.relativePath + myevents[i].Event.DefaultVideo;
-            else
-              myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
+          
+              myevents[i].Event.videoPath = myevents[i].Event.recordingURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
 
             // if (idfound)
             if (idfound) {
@@ -525,7 +517,7 @@ angular.module('zmApp.controllers')
     }
 
 
-    function saveNow(imgsrc, r, f) {
+    function saveNow(imgsrc) {
 
       var fname = "zmninja.jpg";
       var fn = "cordova.plugins.photoLibrary.saveImage";
@@ -874,8 +866,10 @@ angular.module('zmApp.controllers')
       });
     };
 
-    $scope.showImage = function (p, r, f, fid, e, imode, id, parray, ndx) {
+    $scope.showImage = function (p, f, fid, e, imode, id, parray, ndx) {
       var img;
+
+      console.log ("P="+p+" F="+f+" E="+e+" imode="+imode+"  id="+id+" parray="+JSON.stringify(parray)+" ndx="+ndx);
 
       //console.log ("HERE");
       $scope.kFrame = $translate.instant('kFrame');
@@ -903,20 +897,11 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("No index adjustment necessary as we are using all frames");
       }
 
-      // console.log ("Image Mode " + imode);
-      // console.log ("parray :  " + JSON.stringify(parray));
-      // console.log ("index: " + ndx);
-      if ($scope.imode == 'path') {
-        if ($scope.outlineMotion)
-          $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].aname;
-        else
-          $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-        $scope.fallbackImgSrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-      } else {
+     
         $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam;
         $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
 
-      }
+   
 
       //$rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
 
@@ -944,7 +929,7 @@ angular.module('zmApp.controllers')
             type: 'button-assertive button-small ion-camera',
             onTap: function (e) {
               e.preventDefault();
-              saveNow($scope.imgsrc, r, parray[$scope.ndx].fname);
+              saveNow($scope.imgsrc);
 
             }
           },
@@ -969,17 +954,11 @@ angular.module('zmApp.controllers')
               if (nndx == null) nndx = $scope.ndx;
               $scope.ndx = nndx;
 
-              if ($scope.imode == 'path') {
-                if ($scope.outlineMotion)
-                  $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].aname;
-                else
-                  $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-                $scope.fallbackImgSrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-              } else {
+             
                 $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam;
                 $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
 
-              }
+         
 
 
               e.preventDefault();
@@ -1008,17 +987,11 @@ angular.module('zmApp.controllers')
               if (nndx == null) nndx = $scope.ndx;
               $scope.ndx = nndx;
 
-              if ($scope.imode == 'path') {
-                if ($scope.outlineMotion)
-                  $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].aname;
-                else
-                  $scope.imgsrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-                $scope.fallbackImgSrc = p + "/index.php?view=image&path=" + r + $scope.parray[$scope.ndx].fname;
-              } else {
+             
                 $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam;
                 $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
 
-              }
+              
 
 
               e.preventDefault();
@@ -1193,14 +1166,9 @@ angular.module('zmApp.controllers')
               {
                 var fname;
                 //console.log ("PATH="+e.Event.imageMode);
-                if (e.Event.imageMode == 'path')
-                //if (1)
-                {
-                  var rfp = padToN(data.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg";
-                  fname = e.Event.baseURL + "/index.php?view=image&width=" + zm.maxGifWidth + "&path=" + e.Event.relativePath + rfp;
-                } else {
-                  fname = e.Event.baseURL + "/index.php?view=image&width=" + zm.maxGifWidth + "&fid=" + data.event.Frame[i].Id;
-                }
+                
+                  fname = e.Event.recordingURL + "/index.php?view=image&width=" + zm.maxGifWidth + "&fid=" + data.event.Frame[i].Id;
+             
 
                 if (data.event.Frame[i].TimeStamp != lastTime /*|| fps < 2*/ )
 
@@ -2119,7 +2087,17 @@ angular.module('zmApp.controllers')
           NVRDataModel.log("API for event details" + myurl);
           $http.get(myurl)
             .then(function (data) {
+
+              
                 data = data.data;
+             
+       
+             //  var ndata = data.replace(/<pre class="cake-error">/,'');
+
+           //    console.log ("NDATA:"+ndata);
+                //<pre class="cake-error">
+
+
                 $scope.FrameArray = data.event.Frame;
                 //  $scope.slider_options.scale=[];
 
@@ -2214,20 +2192,7 @@ angular.module('zmApp.controllers')
           $scope.slides = [];
           var i;
 
-          if (event.Event.imageMode == 'path') {
-            NVRDataModel.debug("EventCtrl: found " + frames + " frames to scrub");
-
-            for (i = 1; i <= frames; i++) {
-              var fname = padToN(i, eventImageDigits) + "-capture.jpg";
-
-              $scope.slides.push({
-                id: i,
-                img: fname
-              });
-
-            }
-          } else // we need fids
-          {
+          
             var myurl_frames = loginData.apiurl + '/events/' + event.Event.Id + ".json";
             NVRDataModel.log("API for event details" + myurl_frames);
             $http.get(myurl_frames)
@@ -2257,7 +2222,7 @@ angular.module('zmApp.controllers')
                   NVRDataModel.displayBanner('error', [$translate.instant('kErrorFrameBanner'), $translate.instant('kErrorPleaseTryAgain')]);
                 });
 
-          }
+          
 
           // now get event details to show alarm frames
           loginData = NVRDataModel.getLogin();
@@ -2268,10 +2233,8 @@ angular.module('zmApp.controllers')
           event.Event.video = {};
           var videoURL;
 
-          //if (event.Event.imageMode == 'path')
-
-          /* videoURL = event.Event.baseURL + "/events/" + event.Event.relativePath + event.Event.DefaultVideo;*/
-          videoURL = event.Event.baseURL + "/index.php?view=view_video&eid=" + event.Event.Id;
+        
+          videoURL = event.Event.recordingURL + "/index.php?view=view_video&eid=" + event.Event.Id;
           if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
           videoURL += NVRDataModel.insertBasicAuthToken();
 
@@ -2494,56 +2457,8 @@ angular.module('zmApp.controllers')
       }
     };
 
-    //--------------------------------------------------------
-    // utility function
-    //--------------------------------------------------------
-
-    function computeRelativePath(event) {
-      var relativePath = "";
-      var loginData = NVRDataModel.getLogin();
-      var str = event.Event.StartTime;
-      var yy = moment(str).locale('en').format('YY');
-      var mm = moment(str).locale('en').format('MM');
-      var dd = moment(str).locale('en').format('DD');
-      var hh = moment(str).locale('en').format('HH');
-      var min = moment(str).locale('en').format('mm');
-      var sec = moment(str).locale('en').format('ss');
-      relativePath = event.Event.MonitorId + "/" +
-        yy + "/" +
-        mm + "/" +
-        dd + "/" +
-        hh + "/" +
-        min + "/" +
-        sec + "/";
-      return relativePath;
-
-    }
-
-    //--------------------------------------------------------
-    // utility function
-    //--------------------------------------------------------
-
-    function computeBasePath(event) {
-      var basePath = "";
-      var loginData = NVRDataModel.getLogin();
-      var str = event.Event.StartTime;
-      var yy = moment(str).locale('en').format('YY');
-      var mm = moment(str).locale('en').format('MM');
-      var dd = moment(str).locale('en').format('DD');
-      var hh = moment(str).locale('en').format('HH');
-      var min = moment(str).locale('en').format('mm');
-      var sec = moment(str).locale('en').format('ss');
-
-      basePath = event.Event.baseURL + "/events/" +
-        event.Event.MonitorId + "/" +
-        yy + "/" +
-        mm + "/" +
-        dd + "/" +
-        hh + "/" +
-        min + "/" +
-        sec + "/";
-      return basePath;
-    }
+    
+   
 
     $scope.modalGraph = function () {
       $ionicModal.fromTemplateUrl('templates/events-modalgraph.html', {
@@ -2826,15 +2741,13 @@ angular.module('zmApp.controllers')
               // now construct base path
 
               myevents[i].Event.streamingURL = NVRDataModel.getStreamingURL(myevents[i].Event.MonitorId);
-              myevents[i].Event.baseURL = NVRDataModel.getBaseURL(myevents[i].Event.MonitorId);
+              myevents[i].Event.recordingURL = NVRDataModel.getRecordingURL(myevents[i].Event.MonitorId);
               myevents[i].Event.imageMode = NVRDataModel.getImageMode(myevents[i].Event.MonitorId);
               // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
 
-              //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.baseURL);
+              //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.recordingURL);
 
               myevents[i].Event.ShowScrub = false;
-              myevents[i].Event.BasePath = computeBasePath(myevents[i]);
-              myevents[i].Event.relativePath = computeRelativePath(myevents[i]);
               myevents[i].Event.height = eventsListDetailsHeight;
 
               // get thumbW/H
@@ -2857,11 +2770,8 @@ angular.module('zmApp.controllers')
               }
 
 
-              if (myevents[i].Event.imageMode == 'path')
-                //if (1)
-                myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/events/" + myevents[i].Event.relativePath + myevents[i].Event.DefaultVideo;
-              else
-                myevents[i].Event.videoPath = myevents[i].Event.baseURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
+            
+                myevents[i].Event.videoPath = myevents[i].Event.recordingURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
 
               if (idfound) $scope.events.push(myevents[i]);
             }
@@ -2951,7 +2861,7 @@ angular.module('zmApp.controllers')
 
     $scope.constructThumbnail = function (event) {
       var stream = "";
-      stream = event.Event.baseURL +
+      stream = event.Event.recordingURL +
         "/index.php?view=image&show=capture&fid=" +
         (event.Event.MaxScoreFrameId ? event.Event.MaxScoreFrameId : "1&eid=" + event.Event.Id) +
         "&width=" + event.Event.thumbWidth * 2 +
@@ -2966,14 +2876,10 @@ angular.module('zmApp.controllers')
     $scope.constructScrubFrame = function (event, slide) {
 
       var stream = "";
-      if (event.Event.imageMode == 'path') {
-        stream = event.Event.baseURL + "/index.php?view=image" +
-          "&path=" + event.Event.relativePath + slide.img + "&height=380";
-
-      } else if (event.Event.imageMode == 'fid') {
-        stream = event.Event.baseURL + "/index.php?view=image" +
+     
+        stream = event.Event.recordingURL + "/index.php?view=image" +
           "&fid=" + slide.id + $scope.outlineMotionParam;
-      }
+      
       if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
 
       stream += NVRDataModel.insertBasicAuthToken();
@@ -2985,22 +2891,14 @@ angular.module('zmApp.controllers')
     $scope.constructAlarmFrame = function (event, alarm, motion) {
       var stream = "";
 
-      if (event.Event.imageMode == 'fid') {
-        stream = event.Event.baseURL +
+     
+        stream = event.Event.recordingURL +
           "/index.php?view=image&fid=" + alarm.id;
         if (motion) stream += $scope.outlineMotionParam;
-
-      } else if (event.Event.imageMode == 'path') {
-        stream = event.Event.baseURL +
-          "/index.php?view=image&path=" + event.Event.relativePath +
-          motion ? alarm.aname : alarm.fname +
-          "&height=380";
-
-
-      }
       if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
       stream += NVRDataModel.insertBasicAuthToken();
 
+//      console.log ("alarm:"+stream);
       return stream;
 
     };

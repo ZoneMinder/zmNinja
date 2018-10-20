@@ -412,10 +412,7 @@ angular.module('zmApp.controllers')
             $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
             apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
 
-            //apiMonCheck = apiMonCheck.replace(loginData.url, $scope.monitors[j].Monitor.baseURL);
-
-            // in multiserver replace apiurl with baseurl
-
+           
             NVRDataModel.debug("MonitorCtrl:monitorStateCheck: " + apiMonCheck);
             //console.log("**** ZMC CHECK " + apiMonCheck);
             $http.get(apiMonCheck)

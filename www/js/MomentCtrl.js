@@ -134,9 +134,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
       data.events[i].Event.hide = false;
       data.events[i].Event.icon = "ion-code-working";
-      //data.events[i].Event.baseURL = NVRDataModel.getBaseURL(data.events[i].Event.MonitorId);
-      // huh? why did I need the above? eventCtrl reverses it with below...
-      data.events[i].Event.baseURL = NVRDataModel.getLogin().url;
+    
+      data.events[i].Event.recordingURL = NVRDataModel.getLogin().url;
 
       data.events[i].Event.monitorName = NVRDataModel.getMonitorName(data.events[i].Event.MonitorId);
       data.events[i].Event.dateObject = new Date(data.events[i].Event.StartTime);
@@ -267,7 +266,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   $scope.constructFrame = function (moment) {
     var stream = "";
     // console.log ($scope.isMaxScoreFramePresent);
-    stream = moment.Event.baseURL + "/index.php?view=image" +
+    stream = moment.Event.recordingURL + "/index.php?view=image" +
       ($scope.isMaxScoreFramePresent ? "&fid=" + moment.Event.MaxScoreFrameId : "&eid=" + moment.Event.Id + "&fid=1") +
       "&width=" + moment.Event.thumbWidth * 2 +
       "&height=" + moment.Event.thumbHeight * 2;

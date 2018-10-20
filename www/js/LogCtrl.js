@@ -122,8 +122,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
       var urlNoProtocol = loginData.url.replace(/.*?:\/\//, "");
       if (urlNoProtocol != "") {
         var re2 = new RegExp(urlNoProtocol, "g");
-        // just replacing baseurl - that will take care of
-        // masking api but may not be cgi
+       
         logstring = logstring.replace(re2, "<server>");
       }
       urlNoProtocol = loginData.streamingurl.replace(/.*?:\/\//, "");
