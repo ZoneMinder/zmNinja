@@ -2156,7 +2156,7 @@ angular.module('zmApp.controllers')
                                 var streamingurl = "";
 
 
-                                st += (s.scheme ? s.scheme : p.scheme) + "://"; // server scheme overrides 
+                               st += (s.scheme ? s.scheme : p.scheme) + "://"; // server scheme overrides 
 
 
 
@@ -2246,13 +2246,7 @@ angular.module('zmApp.controllers')
                                 monitors[i].Monitor.baseURL = loginData.url;
                                 monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
 
-                                // but now check if forced path 
-                                if (loginData.forceImageModePath) {
-                                  debug("Overriding, setting image mode to true as you have requested force enable");
-                                  monitors[i].Monitor.imageMode = 'path';
-                                }
-
-                                // debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
+                              
                               }
                             }
                             // now get packery hide if applicable
@@ -2847,6 +2841,20 @@ angular.module('zmApp.controllers')
 
           }
 
+        },
+
+
+        getRecordingURL: function (id) {
+          var idnum = parseInt(id);
+          for (var i = 0; i < monitors.length; i++) {
+            if (parseInt(monitors[i].Monitor.Id) == idnum) {
+              // console.log ("Matched, exiting getMonitorname");
+              //console.log ("!!!"+monitors[i].Monitor.controlURL);
+              return monitors[i].Monitor.controlURL;
+            }
+
+          }
+          return "(Unknown)";
         },
 
         getBaseURL: function (id) {

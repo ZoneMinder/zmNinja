@@ -48,6 +48,8 @@
           <br /> {{'kStatus' | translate}}: {{monitor.Monitor.isRunningText}}
           <br /> {{'kId' | translate}}: {{monitor.Monitor.Id}}
           <br /> {{'kEventRecording' | translate}}: {{(monitor.Monitor.VideoWriter>0?'kVideo':'kImages') | translate}}
+          <br />Streaming URL: {{monitor.Monitor.streamingURL}}
+          <br />Portal URL: {{monitor.Monitor.baseURL}}
           <br />
           <br />
         </p>
