@@ -5,7 +5,7 @@
 /* global vis,cordova,StatusBar,angular,console,moment */
 angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', 'EventServer', '$translate', '$ionicPopup', function ($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, EventServer, $translate, $ionicPopup) {
 
-  var processPush = false;
+ 
   var broadcastHandles = [];
 
   $scope.$on('$ionicView.beforeLeave', function () {
@@ -270,95 +270,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
   }
 
 
-  //this needs to be rootScope so it lives even when we are out of view
-  var pp = $rootScope.$on("process-push", function () {
-    processPush = true;
-    NVRDataModel.debug("processPush set to true, but will act after login is complete...");
-   
-    
-
-
-  });
-  broadcastHandles.push(pp);
-
-  function evaluateTappedNotification() {
-    NVRDataModel.debug (">>>Inside evaluateNotifications");
-    var ld = NVRDataModel.getLogin();
-
-
-    if ($rootScope.tappedNotification == 2) { // url launch
-      NVRDataModel.debug("Came via app url launch with mid=" + $rootScope.tappedMid);
-      NVRDataModel.debug("Came via app url launch with eid=" + $rootScope.tappedEid);
-      $rootScope.tappedNotification = 0;
-      $ionicHistory.nextViewOptions({
-        disableBack: true
-      });
-
-      if (parseInt($rootScope.tappedMid) > 0) {
-        NVRDataModel.debug("Going to live view ");
-        $state.go("app.monitors");
-        return;
-
-      } else if (parseInt($rootScope.tappedEid) > 0) {
-        NVRDataModel.debug("Going to events with EID=" + $rootScope.tappedEid);
-        $state.go("app.events", {
-          //"id": $rootScope.tappedEid,
-          "id": 0,
-          "playEvent": true
-        }, {
-          reload: true
-        });
-        return;
-      }
-      // go with monitor first, then event - just because I feel like ;)
-
-
-    } else if ($rootScope.tappedNotification == 1) // push
-    {
-
-
-      NVRDataModel.log("Came via push tap. onTapScreen=" + ld.onTapScreen);
-      $rootScope.pushOverride = true;
-      //console.log ("***** NOTIFICATION TAPPED  ");
-      $rootScope.tappedNotification = 0;
-      $ionicHistory.nextViewOptions({
-        disableBack: true
-      });
-
-      if (ld.onTapScreen == $translate.instant('kTapMontage')) {
-        NVRDataModel.debug("Going to montage");
-        $state.go("app.montage");
-
-        return;
-      } else if (ld.onTapScreen == $translate.instant('kTapEvents')) {
-        NVRDataModel.debug("Going to events");
-        $state.go("app.events", {
-          "id": 0,
-          "playEvent": false
-        });
-        return;
-      } else // we go to live
-      {
-        NVRDataModel.debug("Going to live view ");
-        $state.go("app.monitors");
-        return;
-      }
-    } else {
-      /* NVRDataModel.debug ("Inside evaluateTapped, but no tap occured.");
-              NVRDataModel.debug ("This can happen if timing mismatch and holy foo happens");
-              $state.go("app.montage",
-                  {},
-                  {
-                      reload: true
-                  });
   
-                  return;*/
-
-    }
-
-  }
-
-
+  //broadcastHandles.push(pp);
 
   function unlock(idVerified) {
     /*
@@ -455,7 +368,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   // if push happens AFTER this, then while going to
                   // lastState, it will interrupt and go to onTap
                   // (I HOPE...)
-                  if (!processPush) {
+                
                     //console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
                     var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
                     //  NVRDataModel.debug("logging state transition");
@@ -465,16 +378,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     $state.go(statetoGo, $rootScope.lastStateParam);
                     return;
 
-                  }
-                  else {
-                    NVRDataModel.debug ("Authentication over, now processing push...");
-                    evaluateTappedNotification();
-                    processPush = false;
-                  }
-                  //  else
-                  //    evaluateTappedNotification();
-
-
+               
                 },
                 function (error) { // API Error
                   NVRDataModel.log("API Error handler: going to login getAPI returned error: " + JSON.stringify(error));

@@ -675,6 +675,67 @@ angular.module('zmApp.controllers')
           debug(val);
         },
 
+        evaluateTappedNotification: function() {
+
+          var state = "";
+          var stateParams1 = {};
+          var stateParams2 = {};
+          
+          debug ("Inside evaluateNotifications");
+          
+          if ($rootScope.tappedNotification == 2) { // url launch
+            debug("Came via app url launch with mid=" + $rootScope.tappedMid);
+            debug("Came via app url launch with eid=" + $rootScope.tappedEid);
+         
+          
+            if (parseInt($rootScope.tappedMid) > 0) {
+              debug("Going to live view ");
+              state = "app.monitors";
+
+            } else if (parseInt($rootScope.tappedEid) > 0) {
+              debug("Going to events with EID=" + $rootScope.tappedEid);
+              state = "app.events";
+              stateParams1 = {
+                "id": 0,
+                "playEvent": true
+              };
+              stateParams2 = {
+                reload: true
+              };
+
+            }
+         
+      
+          } // 2
+          else if ($rootScope.tappedNotification == 1) // push
+          {
+      
+      
+            debug("Came via push tap. onTapScreen=" + loginData.onTapScreen);
+            if (loginData.onTapScreen == $translate.instant('kTapMontage')) {
+              debug("Going to montage");
+              state = "app.montage";
+      
+         
+            } else if (loginData.onTapScreen == $translate.instant('kTapEvents')) {
+              debug("Going to events");
+              state = "app.events";
+              stateParams1 = {
+                "id": 0,
+                "playEvent": true
+              };
+           
+            } else // we go to live
+            {
+              debug("Going to live view ");
+              state = "app.monitors";
+            
+            }
+          } 
+          $rootScope.tappedNotification = 0;
+          return [state, stateParams1, stateParams2];
+        },
+
         setLastUpdateCheck: function (val) {
           lastUpdateCheck = val;
           localforage.setItem("lastUpdateCheck", lastUpdateCheck);

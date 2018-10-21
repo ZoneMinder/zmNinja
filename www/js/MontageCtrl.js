@@ -47,6 +47,20 @@ angular.module('zmApp.controllers')
 
     var broadcastHandles = [];
 
+    $scope.$on ( "process-push", function () {
+      NVRDataModel.debug (">> MontageCtrl: push handler");
+      var s = NVRDataModel.evaluateTappedNotification();
+      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);
+    });
+   
+  
+ 
+
     var as = $scope.$on("auth-success", function () {
 
       /* var tnow = new Date();
@@ -2012,6 +2026,11 @@ angular.module('zmApp.controllers')
       currentStreamState = streamState.STOPPED;
       viewCleanup();
       viewCleaned = true;
+      NVRDataModel.debug("Deregistering broadcast handles");
+    for (var i = 0; i < broadcastHandles.length; i++) {
+      broadcastHandles[i]();
+    }
+    broadcastHandles = [];
 
     });
 

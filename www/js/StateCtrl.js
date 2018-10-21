@@ -34,6 +34,18 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   var inProgress = 0; // prevents user from another op if one is in progress
   getRunStatus();
 
+
+  $scope.$on ( "process-push", function () {
+    NVRDataModel.debug (">> StateCtrl: push handler");
+    var s = NVRDataModel.evaluateTappedNotification();
+    NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+    $ionicHistory.nextViewOptions({
+      disableAnimate:true,
+      disableBack: true
+    });
+    $state.go(s[0],s[1],s[2]);
+  });
+
   // Let's stagger this by 500ms each to see if Chrome lets these through
   // This may also help if your Apache is not configured to let multiple connections through
 

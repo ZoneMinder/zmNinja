@@ -26,6 +26,17 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     loadLogs();
   }
 
+  $scope.$on ( "process-push", function () {
+    NVRDataModel.debug (">> LogCtrl: push handler");
+    var s = NVRDataModel.evaluateTappedNotification();
+    NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+    $ionicHistory.nextViewOptions({
+      disableAnimate:true,
+      disableBack: true
+    });
+    $state.go(s[0],s[1],s[2]);
+  });
+
   $scope.flipLogs = function () {
     if ($scope.logEntity == 'ZoneMinder')
       $scope.logEntity = $rootScope.appName;
