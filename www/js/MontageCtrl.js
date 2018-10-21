@@ -218,13 +218,6 @@ angular.module('zmApp.controllers')
             "view": 'app.montage'
           });
 
-
-          /* $state.transitionTo($state.current, $stateParams, {
-               reload: true,
-               inherit: false,
-               notify: true
-           });*/
-
         });
 
 

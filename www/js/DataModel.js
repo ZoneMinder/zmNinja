@@ -703,13 +703,7 @@ angular.module('zmApp.controllers')
         // the ZM authors fix this and streamline the access of images
         // from APIs, I don't have an option
 
-        zmStateGo: function (state, p1, p2) {
-          if ($rootScope.platformOS == 'desktop')
-            $state.go(state, p1, p2);
-          else
-            $state.go(state, p1, p2);
-          //    $ionicNativeTransitions.stateGo(state, p1, p2);
-        },
+      
 
         // used when an empty server profile is created
         getDefaultLoginObject: function () {
