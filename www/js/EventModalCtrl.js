@@ -1064,14 +1064,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     if (currentStreamState == streamState.STOPPED || !$scope.eventId) {
       stream = "";
     } else if (currentStreamState == streamState.SNAPSHOT) {
-      stream = $scope.loginData.url +
+      stream = currentEvent.Event.recordingURL +
         "/index.php?view=image" +
         "&fid=" + $scope.snapshotFrameId +
         (!isGlobalFid ? "&eid=" + $scope.eventId : "") +
         "&scale=" + $scope.singleImageQuality +
         $rootScope.authSession;
     } else if (currentStreamState == streamState.ACTIVE) {
-      stream = $scope.loginData.streamingurl +
+      stream = currentEvent.Event.streamingURL +
         "/nph-zms?source=event&mode=jpeg" +
         "&event=" + $scope.eventId + "&frame=1" +
         "&replay=" + $scope.currentStreamMode +
@@ -1082,9 +1082,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
     //console.log ($scope.connKey );
-    //console.log ("STREAM="+stream);
+    
     //console.log ("EID="+$scope.eventId);
     if ($rootScope.basicAuthToken && stream) stream += "&basicauth=" + $rootScope.basicAuthToken;
+
+    //console.log ("STREAM="+stream);
     return stream;
 
   };
@@ -1131,6 +1133,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       isSnapShotEnabled = true;
       currentStreamState = streamState.SNAPSHOT;
       if (m.snapshotId) {
+       
+        $scope.snapshotFrameId = m.snapshotId;
+        
         $scope.snapshotFrameId = m.snapshotId;
         isGlobalFid = true;
       } else {
@@ -1913,7 +1918,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     tempAlarms = [];
     $scope.FrameArray = [];
 
-    console.log ("FRAME ARRAY: "+JSON.stringify(data));
+    //console.log ("FRAME ARRAY: "+JSON.stringify(data));
     if (data.event && data.event.Frame) $scope.FrameArray = data.event.Frame;
     var ts = 0;
 
@@ -1950,7 +1955,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     if ($rootScope.authSession != 'undefined') frame += $rootScope.authSession;
     frame += NVRDataModel.insertBasicAuthToken();
-    // console.log (frame);
+    //console.log ("alarm:"+frame);
     return frame;
   };
 
@@ -1982,7 +1987,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           currentEvent = event;
           $scope.event = event;
 
-          console.log ("prepareModal DATA:"+JSON.stringify(success.data));
+         // console.log ("prepareModal DATA:"+JSON.stringify(success.data));
           computeAlarmFrames(success.data);
           $scope.eventWarning = '';
 
@@ -1998,7 +2003,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
           event.Event.streamingURL = NVRDataModel.getStreamingURL(event.Event.MonitorId);
           
-          event.Event.recordingURL = loginData.url;
+          event.Event.recordingURL = NVRDataModel.getRecordingURL(event.Event.MonitorId);
           event.Event.imageMode = NVRDataModel.getImageMode(event.Event.MonitorId);
 
           //console.log (JSON.stringify( success));

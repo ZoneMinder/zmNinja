@@ -1813,7 +1813,7 @@ angular.module('zmApp.controllers')
       $http.get(apiurl)
         .then(function (data) {
           data = data.data;
-          NVRDataModel.debug(JSON.stringify(data));
+         // NVRDataModel.debug(JSON.stringify(data));
           $scope.hours = [];
           var p = data.results;
           for (var key in data.results) {
@@ -1849,7 +1849,7 @@ angular.module('zmApp.controllers')
       $http.get(apiurl)
         .then(function (data) {
           data = data.data;
-          NVRDataModel.debug(JSON.stringify(data));
+          //NVRDataModel.debug(JSON.stringify(data));
           $scope.days = [];
           var p = data.results;
           for (var key in data.results) {
@@ -1882,7 +1882,7 @@ angular.module('zmApp.controllers')
       $http.get(apiurl)
         .then(function (data) {
           data = data.data;
-          NVRDataModel.debug(JSON.stringify(data));
+         // NVRDataModel.debug(JSON.stringify(data));
           $scope.weeks = [];
           var p = data.results;
           for (var key in data.results) {
@@ -1916,7 +1916,7 @@ angular.module('zmApp.controllers')
       $http.get(apiurl)
         .then(function (data) {
           data = data.data;
-          NVRDataModel.debug(JSON.stringify(data));
+          //NVRDataModel.debug(JSON.stringify(data));
           $scope.months = [];
           var p = data.results;
           for (var key in data.results) {

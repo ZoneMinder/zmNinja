@@ -282,6 +282,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
   broadcastHandles.push(pp);
 
   function evaluateTappedNotification() {
+    NVRDataModel.debug (">>>Inside evaluateNotifications");
     var ld = NVRDataModel.getLogin();
 
 

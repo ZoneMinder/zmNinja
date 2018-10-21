@@ -716,7 +716,7 @@ angular.module('zmApp', [
         //console.log ("HTTP response");
 
       
-        if (response.data && typeof(response.data) == 'string' && response.data.indexOf("<pre class=\"cake-error\">") != -1) {
+        if (response.data && typeof(response.data) == 'string' && response.data.startsWith("<pre class=\"cake-error\">")) {
             console.log ("cake error detected, attempting fix...");
             response.data = JSON.parse(response.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
             //console.log ("FIXED="+response.data);
@@ -2350,7 +2350,7 @@ angular.module('zmApp', [
               } else {
 
                 // work around for cake-error leak
-                if (succ.data.indexOf("<pre class=\"cake-error\">") != -1) {
+                if (succ.data.startsWith("<pre class=\"cake-error\">") ) {
                   logger.debug ("**** Native: cake-error in message, trying fix...");
                   succ.data = JSON.parse(succ.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
                 }
