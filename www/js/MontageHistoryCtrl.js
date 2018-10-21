@@ -11,6 +11,18 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
   var viewCleaned = false;
   $scope.isScreenReady = false;
 
+
+  $scope.$on ( "process-push", function () {
+    NVRDataModel.debug (">> MontageHistoryCtrl: push handler");
+    var s = NVRDataModel.evaluateTappedNotification();
+    NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+    $ionicHistory.nextViewOptions({
+      disableAnimate:true,
+      disableBack: true
+    });
+    $state.go(s[0],s[1],s[2]);
+  });
+
   //--------------------------------------------------------------------------------------
   // Handles bandwidth change, if required
   //

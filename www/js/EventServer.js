@@ -598,13 +598,13 @@ angular.module('zmApp.controllers')
 
               $rootScope.tappedMid = mid;
               $rootScope.tappedEid = eid;
-              NVRDataModel.log("Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
+              NVRDataModel.log("ES:Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
 
               if ($rootScope.platformOS == 'ios') {
 
-                NVRDataModel.debug("iOS only: clearing background push");
+                NVRDataModel.debug("ES:iOS only: clearing background push");
                 push.finish(function () {
-                  NVRDataModel.debug("processing of push data is finished");
+                  NVRDataModel.debug("ES:processing of push data is finished");
                 });
               }
 
@@ -616,7 +616,9 @@ angular.module('zmApp.controllers')
             }
             // keep this emit not broadcast
             // see Portal latch for reason
-            $rootScope.$emit('process-push');
+
+            NVRDataModel.debug ("EventServer: broadvasting process-push");
+            $rootScope.$broadcast('process-push');
 
           } else // app is foreground
           {

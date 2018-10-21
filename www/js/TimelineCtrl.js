@@ -20,6 +20,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $ionicSideMenuDelegate.toggleLeft();
   };
 
+
+  $scope.$on ( "process-push", function () {
+    NVRDataModel.debug (">> TimelineCtrl: push handler");
+    var s = NVRDataModel.evaluateTappedNotification();
+    NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+    $ionicHistory.nextViewOptions({
+      disableAnimate:true,
+      disableBack: true
+    });
+    $state.go(s[0],s[1],s[2]);
+  });
+
   //---------------------------------------f-------------------------
   // Alarm notification handling
   //----------------------------------------------------------------
@@ -285,7 +297,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     NVRDataModel.debug("Timeline: Deregistering broadcast handles");
     for (var i = 0; i < broadcastHandles.length; i++) {
-      // broadcastHandles[i]();
+      broadcastHandles[i]();
     }
     broadcastHandles = [];
 

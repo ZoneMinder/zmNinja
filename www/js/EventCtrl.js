@@ -71,6 +71,19 @@ angular.module('zmApp.controllers')
     // initial code
     //---------------------------------------------------
 
+
+    $scope.$on ( "process-push", function () {
+      NVRDataModel.debug (">> EventCtrl: push handler");
+      var s = NVRDataModel.evaluateTappedNotification();
+      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);
+    });
+ 
+
     //we come here is TZ is updated after the view loads
     var tzu = $scope.$on('tz-updated', function () {
       $scope.tzAbbr = NVRDataModel.getTimeZoneNow();
@@ -115,8 +128,8 @@ angular.module('zmApp.controllers')
         footerExpand();
         // now do event playback if asked
 
-        if (parseInt($rootScope.tappedEid) > 0) {
-          NVRDataModel.debug(" Trying ot live play " + $rootScope.tappedEid);
+        if (parseInt($rootScope.tappedEid) > 0 && $stateParams.playEvent == 'true') {
+          NVRDataModel.debug(" Trying to  play event due to push:" + $rootScope.tappedEid);
           playSpecificEvent($rootScope.tappedEid);
 
         }
@@ -148,7 +161,7 @@ angular.module('zmApp.controllers')
       window.removeEventListener("resize", recomputeThumbSize, false);
       NVRDataModel.debug("EventCtrl: Deregistering broadcast handles");
       for (var i = 0; i < broadcastHandles.length; i++) {
-        // broadcastHandles[i]();
+      //  broadcastHandles[i]();
       }
       broadcastHandles = [];
     });
