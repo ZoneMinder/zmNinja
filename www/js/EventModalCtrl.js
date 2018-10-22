@@ -1303,7 +1303,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     }
 
-    NVRDataModel.debug("Deregistering broadcast handles");
+   // NVRDataModel.debug("Deregistering broadcast handles");
     for (var i = 0; i < broadcastHandles.length; i++) {
       // broadcastHandles[i]();
     }

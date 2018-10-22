@@ -2026,7 +2026,7 @@ angular.module('zmApp.controllers')
       currentStreamState = streamState.STOPPED;
       viewCleanup();
       viewCleaned = true;
-      NVRDataModel.debug("Deregistering broadcast handles");
+      //NVRDataModel.debug("Deregistering broadcast handles");
     for (var i = 0; i < broadcastHandles.length; i++) {
       broadcastHandles[i]();
     }
