@@ -72,17 +72,7 @@ angular.module('zmApp.controllers')
     //---------------------------------------------------
 
 
-    $scope.$on ( "process-push", function () {
-      NVRDataModel.debug (">> EventCtrl: push handler");
-      var s = NVRDataModel.evaluateTappedNotification();
-      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
-      $ionicHistory.nextViewOptions({
-        disableAnimate:true,
-        disableBack: true
-      });
-      $state.go(s[0],s[1],s[2]);
-    });
- 
+    
 
     //we come here is TZ is updated after the view loads
     var tzu = $scope.$on('tz-updated', function () {
@@ -170,6 +160,18 @@ angular.module('zmApp.controllers')
 
       //console.log ("********* BEFORE ENTER");
       //
+
+      $scope.$on ( "process-push", function () {
+        NVRDataModel.debug (">> EventCtrl: push handler");
+        var s = NVRDataModel.evaluateTappedNotification();
+        NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+        $ionicHistory.nextViewOptions({
+          disableAnimate:true,
+          disableBack: true
+        });
+        $state.go(s[0],s[1],s[2]);
+      });
+   
 
       $scope.modalData = {
         "doRefresh": false

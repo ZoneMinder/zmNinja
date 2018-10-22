@@ -35,16 +35,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   getRunStatus();
 
 
-  $scope.$on ( "process-push", function () {
-    NVRDataModel.debug (">> StateCtrl: push handler");
-    var s = NVRDataModel.evaluateTappedNotification();
-    NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
-    $ionicHistory.nextViewOptions({
-      disableAnimate:true,
-      disableBack: true
-    });
-    $state.go(s[0],s[1],s[2]);
-  });
+
 
   // Let's stagger this by 500ms each to see if Chrome lets these through
   // This may also help if your Apache is not configured to let multiple connections through
@@ -72,6 +63,22 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   // reset power state on exit as if it is called after we enter another
   // state, that effectively overwrites current view power management needs
   //------------------------------------------------------------------------
+  
+  
+  $scope.$on ('$ionicView.beforeEnter', function () {
+
+    $scope.$on ( "process-push", function () {
+      NVRDataModel.debug (">> StateCtrl: push handler");
+      var s = NVRDataModel.evaluateTappedNotification();
+      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);
+    });
+  });
+  
   $scope.$on('$ionicView.enter', function () {
     // console.log("**VIEW ** Montage Ctrl Entered");
     NVRDataModel.setAwake(false);

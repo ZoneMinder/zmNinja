@@ -33,17 +33,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
   }
 
-  $scope.$on ( "process-push", function () {
-    NVRDataModel.debug (">> LoginCtrl: push handler. Not processing push, because you might be here due to login failure");
-    /*var s = NVRDataModel.evaluateTappedNotification();
-    NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
-    $ionicHistory.nextViewOptions({
-      disableAnimate:true,
-      disableBack: true
-    });
-    $state.go(s[0],s[1],s[2]);*/
-  });
-
+ 
   //----------------------------------------------------------------
   // Alarm notification handling
   //----------------------------------------------------------------
@@ -244,6 +234,20 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   // state, that effectively overwrites current view power management needs
   //------------------------------------------------------------------------
   $scope.$on('$ionicView.beforeEnter', function () {
+
+
+    $scope.$on ( "process-push", function () {
+      NVRDataModel.debug (">> LoginCtrl: push handler. Not processing push, because you might be here due to login failure");
+      /*var s = NVRDataModel.evaluateTappedNotification();
+      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);*/
+    });
+
+    
     oldLoginData = '';
 
     $scope.loginData = NVRDataModel.getLogin();

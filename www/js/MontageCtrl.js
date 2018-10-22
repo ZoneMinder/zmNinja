@@ -47,17 +47,7 @@ angular.module('zmApp.controllers')
 
     var broadcastHandles = [];
 
-    $scope.$on ( "process-push", function () {
-      NVRDataModel.debug (">> MontageCtrl: push handler");
-      var s = NVRDataModel.evaluateTappedNotification();
-      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
-      $ionicHistory.nextViewOptions({
-        disableAnimate:true,
-        disableBack: true
-      });
-      $state.go(s[0],s[1],s[2]);
-    });
-   
+    
   
  
 
@@ -1829,6 +1819,19 @@ angular.module('zmApp.controllers')
 
     // minimal has to be beforeEnter or header won't hide
     $scope.$on('$ionicView.beforeEnter', function () {
+
+
+      $scope.$on ( "process-push", function () {
+        NVRDataModel.debug (">> MontageCtrl: push handler");
+        var s = NVRDataModel.evaluateTappedNotification();
+        NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+        $ionicHistory.nextViewOptions({
+          disableAnimate:true,
+          disableBack: true
+        });
+        $state.go(s[0],s[1],s[2]);
+      });
+     
 
       timeInMontage = new Date();
       broadcastHandles = [];
