@@ -343,6 +343,20 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
   function logout(u) {
     var d = $q.defer();
 
+    if (window.cordova) {
+      // we need to do this or ZM will send same auth hash
+      // this was fixed in a PR dated Oct 18
+      NVRDataModel.debug ("Clearing cookies");
+      cordova.plugin.http.clearCookies();
+
+      if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
+        NVRDataModel.debug ("setting basic auth");
+        cordova.plugin.http.useBasicAuth($scope.wizard.basicuser, $scope.wizard.basicpassword);
+
+      }
+    }
+
+
     $http({
         method: 'POST',
         url: u,

@@ -14,12 +14,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
    
   });
 
-  $scope.$on ( "process-push", function () {
-    processPush = true;
-    NVRDataModel.debug (">> PortalLogin: push handler, marking to resolve later");
-    
-  });
-
+  
 
   $scope.$on('$ionicView.beforeLeave', function () {
     //NVRDataModel.debug("Portal: Deregistering broadcast handles");
@@ -31,6 +26,15 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
   $scope.$on('$ionicView.enter',
     function () {
+
+
+      $scope.$on ( "process-push", function () {
+        processPush = true;
+        NVRDataModel.debug (">> PortalLogin: push handler, marking to resolve later");
+        
+      });
+    
+
       NVRDataModel.setJustResumed(false);
 
       NVRDataModel.debug("Inside Portal login Enter handler");
