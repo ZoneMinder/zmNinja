@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry, URI */
 
-angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm', '$ionicLoading', 'WizardHandler', '$translate', function ($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading, WizardHandler, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$ionicPopup', 'SecuredPopups', '$http', '$q', 'zm', '$ionicLoading', 'WizardHandler', '$translate', '$cookies', function ($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $ionicPopup, SecuredPopups, $http, $q, zm, $ionicLoading, WizardHandler, $translate, $cookies) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -342,19 +342,25 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
   function logout(u) {
     var d = $q.defer();
-
+    NVRDataModel.debug ("Clearing cookies");
     if (window.cordova) {
       // we need to do this or ZM will send same auth hash
       // this was fixed in a PR dated Oct 18
-      NVRDataModel.debug ("Clearing cookies");
-      cordova.plugin.http.clearCookies();
+     
+        cordova.plugin.http.clearCookies();
+     }
+      else {
+        angular.forEach($cookies, function (v, k) {
+          $cookies.remove(k);
+         });
+      }
 
       if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
         NVRDataModel.debug ("setting basic auth");
         cordova.plugin.http.useBasicAuth($scope.wizard.basicuser, $scope.wizard.basicpassword);
 
       }
-    }
+    
 
 
     $http({
