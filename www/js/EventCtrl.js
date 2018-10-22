@@ -103,7 +103,7 @@ angular.module('zmApp.controllers')
       //
       window.addEventListener("resize", recomputeThumbSize, false);
       $ionicListDelegate.canSwipeItems(true);
-      NVRDataModel.debug("enabling options swipe");
+     // NVRDataModel.debug("enabling options swipe");
 
       // see if we come from monitors, if so, don't filter events
       if ($ionicHistory.backTitle() == 'Monitors') {
@@ -159,7 +159,7 @@ angular.module('zmApp.controllers')
 
       NVRDataModel.debug("EventCtrl: Deregistering resize listener");
       window.removeEventListener("resize", recomputeThumbSize, false);
-      NVRDataModel.debug("EventCtrl: Deregistering broadcast handles");
+      //NVRDataModel.debug("EventCtrl: Deregistering broadcast handles");
       for (var i = 0; i < broadcastHandles.length; i++) {
       //  broadcastHandles[i]();
       }
@@ -205,7 +205,7 @@ angular.module('zmApp.controllers')
 
 
       if (NVRDataModel.getLogin().enableThumbs) {
-        NVRDataModel.debug("--> thumbnail means increasing row size");
+       // NVRDataModel.debug("--> thumbnail means increasing row size");
         eventsListScrubHeight = 370;
         eventsListDetailsHeight = 330;
 
@@ -1821,7 +1821,7 @@ angular.module('zmApp.controllers')
       var af = "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
       var apiurl = ld.apiurl + "/events/consoleEvents/1 hour" + af + ".json";
-      NVRDataModel.debug("consoleEvents API:" + apiurl);
+      //NVRDataModel.debug("consoleEvents API:" + apiurl);
 
       $http.get(apiurl)
         .then(function (data) {
@@ -1858,7 +1858,7 @@ angular.module('zmApp.controllers')
         });
 
       apiurl = ld.apiurl + "/events/consoleEvents/1 day" + af + ".json";
-      NVRDataModel.debug("consoleEvents API:" + apiurl);
+      //NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {
           data = data.data;
@@ -1891,7 +1891,7 @@ angular.module('zmApp.controllers')
         });
 
       apiurl = ld.apiurl + "/events/consoleEvents/1 week" + af + ".json";
-      NVRDataModel.debug("consoleEvents API:" + apiurl);
+      //NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {
           data = data.data;
@@ -1925,7 +1925,7 @@ angular.module('zmApp.controllers')
         });
 
       apiurl = ld.apiurl + "/events/consoleEvents/1 month" + af + ".json";
-      NVRDataModel.debug("consoleEvents API:" + apiurl);
+      //NVRDataModel.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {
           data = data.data;
@@ -2028,7 +2028,7 @@ angular.module('zmApp.controllers')
         NVRDataModel.debug("disabling options swipe");
       } else {
         $ionicListDelegate.canSwipeItems(true);
-        NVRDataModel.debug("enabling options swipe");
+        //NVRDataModel.debug("enabling options swipe");
       }
 
     };
@@ -2070,11 +2070,11 @@ angular.module('zmApp.controllers')
 
       if (event.Event.ShowScrub == false) {
         $ionicListDelegate.canSwipeItems(true);
-        NVRDataModel.debug("enabling options swipe due to toggle");
+        //NVRDataModel.debug("enabling options swipe due to toggle");
       } else {
         $ionicListDelegate.canSwipeItems(false);
         $ionicListDelegate.closeOptionButtons();
-        NVRDataModel.debug("disabling options swipe due to toggle");
+       // NVRDataModel.debug("disabling options swipe due to toggle");
 
       }
 

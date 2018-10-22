@@ -295,7 +295,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     }
 
-    NVRDataModel.debug("Timeline: Deregistering broadcast handles");
+    //NVRDataModel.debug("Timeline: Deregistering broadcast handles");
     for (var i = 0; i < broadcastHandles.length; i++) {
       broadcastHandles[i]();
     }

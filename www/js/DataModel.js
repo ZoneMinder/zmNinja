@@ -1885,7 +1885,7 @@ angular.module('zmApp.controllers')
           if (forceReload == 1 || configParams.ZM_EVENT_IMAGE_DIGITS == '-1') {
             var apiurl = loginData.apiurl;
             var myurl = apiurl + '/configs/viewByName/ZM_EVENT_IMAGE_DIGITS.json';
-            debug("Config URL for digits is:" + myurl);
+            //debug("Config URL for digits is:" + myurl);
             $http.get(myurl)
               .then(function (data) {
                 data = data.data;
@@ -1903,8 +1903,8 @@ angular.module('zmApp.controllers')
                 return (d.promise);
               });
           } else {
-            log("ZM_EVENT_IMAGE_DIGITS is already configured for " +
-              configParams.ZM_EVENT_IMAGE_DIGITS);
+           // log("ZM_EVENT_IMAGE_DIGITS is already configured for " +
+             // configParams.ZM_EVENT_IMAGE_DIGITS);
             d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
             return (d.promise);
           }
@@ -2939,7 +2939,7 @@ angular.module('zmApp.controllers')
           $rootScope.authSession = "undefined";
 
 
-          console.log("CURRENT SERVER: " + loginData.currentServerVersion);
+         // console.log("CURRENT SERVER: " + loginData.currentServerVersion);
 
           if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 

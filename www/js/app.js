@@ -1009,7 +1009,7 @@ angular.module('zmApp', [
       proceedWithLogin()
         .then(function (success) {
 
-            NVRDataModel.debug("Storing login time as " + moment().toString());
+            //NVRDataModel.debug("Storing login time as " + moment().toString());
             localforage.setItem("lastLogin", moment().toString());
             d.resolve(success);
             return d.promise;
@@ -1813,7 +1813,7 @@ angular.module('zmApp', [
             toState.name != "app.zm-portal-login"
           ) {
 
-            NVRDataModel.debug("Setting last-desktop-state to:" + JSON.stringify(toState));
+           // NVRDataModel.debug("Setting last-desktop-state to:" + JSON.stringify(toState));
             localforage.setItem('last-desktop-state', {
               'name': toState.name,
               'params': toState.params
@@ -1852,7 +1852,7 @@ angular.module('zmApp', [
         // to work in Windows
 
 
-        NVRDataModel.debug("Setting last-desktop-state to:" + JSON.stringify(toState) + " with params:" + JSON.stringify(toParams));
+        //NVRDataModel.debug("Setting last-desktop-state to:" + JSON.stringify(toState) + " with params:" + JSON.stringify(toParams));
         localforage.setItem('last-desktop-state', {
           'name': toState,
           'params': toParams
@@ -2204,8 +2204,8 @@ angular.module('zmApp', [
               $rootScope.lastState = $ionicHistory.currentView().stateName;
               $rootScope.lastStateParam =
                 $ionicHistory.currentView().stateParams;
-              NVRDataModel.debug("Last State recorded:" +
-                JSON.stringify($ionicHistory.currentView()));
+              //NVRDataModel.debug("Last State recorded:" +
+                //JSON.stringify($ionicHistory.currentView()));
 
               if ($rootScope.lastState == "app.zm-portal-login") {
                 NVRDataModel.debug("Last state was portal-login, so forcing montage");
