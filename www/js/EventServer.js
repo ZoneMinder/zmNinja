@@ -617,8 +617,12 @@ angular.module('zmApp.controllers')
             // keep this emit not broadcast
             // see Portal latch for reason
 
-            NVRDataModel.debug ("EventServer: broadvasting process-push");
-            $rootScope.$broadcast('process-push');
+            //https://stackoverflow.com/a/22651128/1361529
+            $timeout ( function () {
+              NVRDataModel.debug ("EventServer: broadcasting process-push");
+              $rootScope.$broadcast('process-push');
+            },100);
+          
 
           } else // app is foreground
           {

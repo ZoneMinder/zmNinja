@@ -7,11 +7,24 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
  
   var broadcastHandles = [];
+  var processPush = false;
 
   $scope.$on('$ionicView.beforeLeave', function () {
-    //processPush = false;
+    processPush = false;
     // NVRDataModel.debug ("BeforeEnter in Portal: setting ProcessPush to false");
   });
+
+
+  
+
+
+  $scope.$on ( "process-push", function () {
+    processPush = true;
+
+    NVRDataModel.debug (">> PortalLogin: push handler, marking to resolve later");
+    
+  });
+
 
   $scope.$on('$ionicView.beforeLeave', function () {
     NVRDataModel.debug("Portal: Deregistering broadcast handles");
@@ -372,11 +385,27 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     //console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
                     var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
                     //  NVRDataModel.debug("logging state transition");
-                    NVRDataModel.debug("Transitioning state to: " +
+
+                    if (!processPush) {
+                      NVRDataModel.debug("Transitioning state to: " +
                       statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
 
                     $state.go(statetoGo, $rootScope.lastStateParam);
                     return;
+                    }
+                    else {
+                      NVRDataModel.debug ("Deferred handling of push:");
+                      processPush = false;
+                      var s = NVRDataModel.evaluateTappedNotification();
+                      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+                      $ionicHistory.nextViewOptions({
+                        disableAnimate:true,
+                        disableBack: true
+                      });
+                      $state.go(s[0],s[1],s[2]);
+                      return;
+                    }
+                   
 
                
                 },
