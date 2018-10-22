@@ -28,7 +28,8 @@ angular.module('zmApp', [
     'uk.ac.soton.ecs.videogular.plugins.cuepoints',
     'dcbImgFallback',
     'ngImageAppear',
-    'angular-websocket'
+    'angular-websocket',
+    'ngCookies'
 
 
   ])
@@ -860,7 +861,7 @@ angular.module('zmApp', [
   // This service automatically logs into ZM at periodic intervals
   //------------------------------------------------------------------
 
-  .factory('zmAutoLogin', function ($interval, NVRDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory, $translate) {
+  .factory('zmAutoLogin', ['$interval', 'NVRDataModel', '$http', 'zm', '$timeout', '$q', '$rootScope', '$ionicLoading', '$ionicPopup', '$state', '$ionicContentBanner', 'EventServer', '$ionicHistory', '$translate', '$cookies',function ($interval, NVRDataModel, $http, zm, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory, $translate, $cookies) {
     var zmAutoLoginHandle;
 
     //------------------------------------------------------------------
@@ -966,11 +967,18 @@ angular.module('zmApp', [
 
 
     function doLogoutAndLogin(str) {
+      NVRDataModel.debug ("Clearing cookies");
+
       if (window.cordova) {
         // we need to do this or ZM will send same auth hash
         // this was fixed in a PR dated Oct 18
-        NVRDataModel.debug ("Clearing cookies");
+       
         cordova.plugin.http.clearCookies();
+      }
+      else {
+       angular.forEach($cookies, function (v, k) {
+         $cookies.remove(k);
+        });
       }
       return NVRDataModel.logout()
         .then(function (ans) {
@@ -1417,7 +1425,7 @@ angular.module('zmApp', [
       stop: stop,
       doLogin: doLogoutAndLogin
     };
-  })
+  }])
 
   //====================================================================
   // First run in ionic
