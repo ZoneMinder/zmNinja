@@ -2341,7 +2341,7 @@ angular.module('zmApp', [
             method: method,
             data: arguments[0].data,
             headers: arguments[0].headers,
-            timeout: arguments[0].timeout || 10,
+            timeout: arguments[0].timeout || 20,
             responseType: arguments[0].responseType
           };
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
