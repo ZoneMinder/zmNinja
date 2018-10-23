@@ -42,7 +42,7 @@ angular.module('zmApp', [
   .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     recommendedAppVersion: '1.32.0',
-    minEventServerVersion: '2.0',
+    minEventServerVersion: '2.1',
     castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
@@ -2341,14 +2341,25 @@ angular.module('zmApp', [
             method: method,
             data: arguments[0].data,
             headers: arguments[0].headers,
-            timeout: arguments[0].timeout || 20,
+           // timeout: arguments[0].timeout, 
             responseType: arguments[0].responseType
           };
+
+          if (arguments[0].timeout) options.timeout = arguments[0].timeout;
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
           cordova.plugin.http.sendRequest(encodeURI(url), options,
             function (succ) {
               // automatic JSON parse if no responseType: text
               // fall back to text if JSON parse fails too
+
+                   // work around for cake-error leak
+
+                  // console.log ("HTTP RESPONSE:" + JSON.stringify(succ.data));
+                   if (succ.data && succ.data.startsWith("<pre class=\"cake-error\">") ) {
+                    logger.debug ("**** Native: cake-error in message, trying fix...");
+                    succ.data = JSON.parse(succ.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
+                  }
+
               if (options.responseType == 'text') {
                 // don't parse into JSON
                 d.resolve({
@@ -2357,11 +2368,7 @@ angular.module('zmApp', [
                 return d.promise;
               } else {
 
-                // work around for cake-error leak
-                if (succ.data.startsWith("<pre class=\"cake-error\">") ) {
-                  logger.debug ("**** Native: cake-error in message, trying fix...");
-                  succ.data = JSON.parse(succ.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
-                }
+           
 
                 try {
                   d.resolve({
