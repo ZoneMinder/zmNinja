@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.026";
+      var zmAppVersion = "1.3.028";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -2178,15 +2178,16 @@ angular.module('zmApp.controllers')
                                   multiservers[j].Server.Hostname = multiserver_scheme + multiservers[j].Server.Hostname;
                                 }
 
-                                debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
+                             //   debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
 
 
 
                                 // Now here is the logic, I need to retrieve serverhostname,
                                 // and slap on the host protocol and path. Meh.
 
-                                var p = URI.parse(loginData.streamingurl);
-                                var s = URI.parse(multiservers[j].Server.Hostname);
+                                var s = URI.parse(loginData.streamingurl);
+                                var m = URI.parse(multiservers[j].Server.Hostname);
+                                var p = URI.parse(loginData.url);
 
                                 /* if (!p.port && !isNaN(p.path)) {
                               debug ("Portal: port path reversed?");
@@ -2203,31 +2204,33 @@ angular.module('zmApp.controllers')
                             }
 */
 
-                                debug("recording server parsed is " + JSON.stringify(s));
+                                debug("recording server reported  is " + JSON.stringify(m));
                                 debug("portal  parsed is " + JSON.stringify(p));
+                                debug("streaming url  parsed is " + JSON.stringify(s));
+                                debug ("multi-port is:"+zmsPort);
 
                                 var st = "";
                                 var baseurl = "";
                                 var streamingurl = "";
 
 
-                               st += (s.scheme ? s.scheme : p.scheme) + "://"; // server scheme overrides 
+                               st += (m.scheme ? m.scheme : p.scheme) + "://"; // server scheme overrides 
 
 
 
                                 // if server doesn't have a protocol, what we want is in path
-                                if (!s.host) {
-                                  s.host = s.path;
-                                  s.path = undefined;
+                                if (!m.host) {
+                                  m.host = m.path;
+                                  m.path = undefined;
                                 }
 
-                                st += s.host;
+                                st += m.host;
 
                                 //console.log ("STEP 1: ST="+st);
 
                                 if (zmsPort <= 0 || loginData.disableSimulStreaming) {
-                                  if (p.port || s.port) {
-                                    st += (s.port ? ":" + s.port : ":" + p.port);
+                                  if (p.port || m.port) {
+                                    st += (m.port ? ":" + m.port : ":" + p.port);
                                     streamingurl = st;
                                     //console.log ("STEP 2 no ZMS: ST="+st);
 
@@ -2235,17 +2238,19 @@ angular.module('zmApp.controllers')
 
                                 } else {
                                   var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                                  streamingurl = st + ':' + sport;
+                                  st = st + ':' + sport;
 
-                                  if (p.port || s.port)
-                                    st += (s.port ? ":" + s.port : ":" + p.port);
+                                  if (p.port || m.port)
+                                    st += (m.port ? ":" + m.port : ":" + p.port);
                                   //console.log ("STEP 2: ST="+st);
 
                                 }
 
 
                                 baseurl = st;
+                  
                                 controlURL = st;
+                                controlURL += (p.path ? p.path:'');
 
                                 st += (s.path ? s.path : p.path);
                                 streamingurl += (s.path ? s.path : p.path);
@@ -2258,6 +2263,9 @@ angular.module('zmApp.controllers')
                                 monitors[i].Monitor.streamingURL = st;
                                 monitors[i].Monitor.baseURL = baseurl;
                                 monitors[i].Monitor.controlURL = controlURL;
+
+
+                                debug ("Storing baseurl="+baseurl+" streamingURL="+st+" recordingURL="+controlURL);
                                 //console.log ("** Streaming="+st+" **base="+baseurl);
                                 // starting 1.30 we have fid=xxx mode to return images
                                 monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
