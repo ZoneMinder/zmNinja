@@ -884,7 +884,7 @@ angular.module('zmApp.controllers')
     $scope.showImage = function (p, f, fid, e, imode, id, parray, ndx) {
       var img;
 
-      console.log ("P="+p+" F="+f+" E="+e+" imode="+imode+"  id="+id+" parray="+JSON.stringify(parray)+" ndx="+ndx);
+//      console.log ("P="+p+" F="+f+" E="+e+" imode="+imode+"  id="+id+" parray="+JSON.stringify(parray)+" ndx="+ndx);
 
       //console.log ("HERE");
       $scope.kFrame = $translate.instant('kFrame');
