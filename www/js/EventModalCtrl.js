@@ -349,7 +349,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         }
       })
       .then(function (resp) {
-          NVRDataModel.debug("sendCmd response:" + JSON.stringify(resp));
+         // NVRDataModel.debug("sendCmd response:" + JSON.stringify(resp));
           d.resolve(resp);
           return (d.promise);
 
@@ -1978,7 +1978,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     NVRDataModel.log("*** Constructed API for detailed events: " + myurl);
     $scope.humanizeTime = "...";
     $scope.mName = "...";
-    $scope.liveFeedMid = '';
+    $scope.liveFeedMid = $scope.mid;
 
     $http.get(myurl)
       .then(function (success) {
@@ -1986,6 +1986,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           var event = success.data.event;
           currentEvent = event;
           $scope.event = event;
+          $scope.currentEvent = event;
 
          // console.log ("prepareModal DATA:"+JSON.stringify(success.data));
           computeAlarmFrames(success.data);
@@ -2192,7 +2193,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         },
         function (err) {
           NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
-          NVRDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+          NVRDataModel.displayBanner('error', ['could not retrieve frame details']);
+          $scope.eventWarning = $translate.instant('kLiveView');
+            // if this happens we get to live feed 
+            $scope.liveFeedMid = $scope.mid;
+    
+
         });
 
   }

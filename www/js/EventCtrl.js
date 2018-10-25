@@ -140,7 +140,7 @@ angular.module('zmApp.controllers')
       };
       $scope.event = event;
       $scope.currentEvent = event;
-      openModal(event);
+      openModal(event, 'enabled');
 
     }
 
@@ -161,10 +161,13 @@ angular.module('zmApp.controllers')
       //console.log ("********* BEFORE ENTER");
       //
 
+      $scope.mid = '';
+
       $scope.$on ( "process-push", function () {
         NVRDataModel.debug (">> EventCtrl: push handler");
         var s = NVRDataModel.evaluateTappedNotification();
         NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+        $scope.mid = $rootScope.tappedMid;
         $ionicHistory.nextViewOptions({
           disableAnimate:true,
           disableBack: true
