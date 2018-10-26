@@ -2153,7 +2153,7 @@ angular.module('zmApp.controllers')
               },
               function (err) {
                 NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
-                NVRDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
+               // NVRDataModel.displayBanner('error', ['could not retrieve frame details', 'please try again']);
               });
 
         } // end of groupType == alarms

@@ -1180,8 +1180,9 @@ angular.module('zmApp', [
 
 
                 d.resolve("Login Success");
-
                 $rootScope.$broadcast('auth-success', succ);
+                return d.promise;
+
               } catch (e) {
                 NVRDataModel.debug("Login API approach did not work...");
                 var ld = NVRDataModel.getLogin();
@@ -1240,7 +1241,7 @@ angular.module('zmApp', [
 
 
             }
-          );
+          ); // post
 
 
 
@@ -1687,9 +1688,15 @@ angular.module('zmApp', [
       // android seems to howl about this at app start?
       $timeout (function() {
 
-        NVRDataModel.log ("--------->Setting up network state handlers....");
-      document.addEventListener("offline", function () {
-        //console.log ("OFFLINE------------------------------------");
+      NVRDataModel.log ("--------->Setting up network state handlers....");
+      document.addEventListener("offline", onOnline, false);
+      document.addEventListener("online", onOffline, false);
+
+      },3000);
+
+
+      function onOnline() {
+
         $timeout(function () {
           $rootScope.online = false;
           NVRDataModel.log("************** Your network went offline");
@@ -1697,19 +1704,19 @@ angular.module('zmApp', [
           //$rootScope.$emit('network-change', "offline");
 
         });
-      }, false);
 
-      document.addEventListener("online", function () {
-        //console.log ("ONLINE------------------------------------");
+      }
+
+      function onOffline() {
+
         $timeout(function () {
 
           NVRDataModel.log("************ Your network came back online");
 
           $rootScope.online = true;
 
-          $timeout(function () {
-            // NVRDataModel.debug ("Ignoring - Alex R. Hack");
-            if (1) {
+
+          
               var networkState = "browser not supported";
               if (navigator.connection) networkState = navigator.connection.type;
               NVRDataModel.debug("Detected network type as: " + networkState);
@@ -1725,16 +1732,11 @@ angular.module('zmApp', [
               }
               NVRDataModel.log("Your network is online, re-authenticating");
               zmAutoLogin.doLogin($translate.instant('kReAuthenticating'));
-            }
-
-          }, 1000); // need a time gap, seems network type registers late
-
-
+    
 
         });
-      }, false);
 
-      },3000);
+      }
       
 
       // This code takes care of trapping the Android back button
@@ -2194,7 +2196,14 @@ angular.module('zmApp', [
           NVRDataModel.setBackground(false);
           NVRDataModel.setJustResumed(true);
           $ionicPlatform.ready(function () {
+
             NVRDataModel.log("App is resuming from background");
+
+            NVRDataModel.log ("-->Re-registering online/offine");
+            document.addEventListener("offline", onOnline, false);
+            document.addEventListener("online", onOffline, false);
+
+
             $rootScope.isDownloading = false;
 
             var ld = NVRDataModel.getLogin();
@@ -2242,6 +2251,11 @@ angular.module('zmApp', [
         }
 
         function pauseHandler() {
+
+          NVRDataModel.log ("-->Clearing online/offine");
+          document.removeEventListener("offline", onOnline, false);
+          document.removeEventListener("online", onOffline, false);
+
           NVRDataModel.setBackground(true);
           NVRDataModel.setJustResumed(false);
           // NVRDataModel.setJustResumed(true); // used for window stop

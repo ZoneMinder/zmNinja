@@ -2193,7 +2193,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         },
         function (err) {
           NVRDataModel.log("Error retrieving detailed frame API " + JSON.stringify(err));
-          NVRDataModel.displayBanner('error', ['could not retrieve frame details']);
+         // NVRDataModel.displayBanner('error', ['could not retrieve frame details']);
           $scope.eventWarning = $translate.instant('kLiveView');
             // if this happens we get to live feed 
             $scope.liveFeedMid = $scope.mid;
