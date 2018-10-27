@@ -287,7 +287,6 @@
     "kSelectRunState"            :"Choix du mode de fonctionnement",
     "kSelectSwitch"              :"Profil à charger",
     "kSendingPTZ"                :"Envoi PTZ",
-    "kSensitiveBody"             :"modifiera les logs lors de la création du rapport afin de supprimer les informations sensibles (mots de passe, URLs, etc.). Cependant il est de votre responsabilité de vérifier que les logs ne contiennent aucun information sensible. Merci de le faire avant l'envoi.",
     "kSensitiveTitle"            :"Informations sensibles",
     "kServerAdd"                 :"Ajouter",
     "kServerEmptyError"          :"Le nom du serveur ne peut être vide",

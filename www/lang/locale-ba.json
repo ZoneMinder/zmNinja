@@ -328,7 +328,6 @@
     "kSelectRunState"            :"Odaberi režim rada",
     "kSelectSwitch"              :"Odabrani profil bit ce učitan",
     "kSendingPTZ"                :"Šaljem PTZ",
-    "kSensitiveBody"             :"zapisnik će biti modificiran kako bi uklonio osjetljive podatke kao što su server url te lozinke. Međutim, vaša je odgovornost da isti provjerite i eventualno ukolinite sve one podatke za koje smatrate da su osjetljive prirode, prije slanja zapisnika.",
     "kSensitiveTitle"            :"Osjetljive informacije",
     "kServerAdd"                 :"Dodaj",
     "kServerEmptyError"          :"Naziv servera ne može biti prazno",

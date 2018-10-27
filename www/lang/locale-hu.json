@@ -290,7 +290,6 @@
     "kSelectRunState"            :"Válassza ki a futási állapotot",
     "kSelectSwitch"              :"A kiválasztott profil betöltődik",
     "kSendingPTZ"                :"PTZ küldése",
-    "kSensitiveBody"             :"Módosítja a naplókat, amikor létrehozza a végső kimenetet az érzékeny adatok - például urls és jelszavak - eltávolításához. Végül azonban az Ön felelőssége, hogy győződjön meg arról, hogy nincsenek érzékeny adatok a naplókban. Kérjük, győződjön meg róla, hogy a naplófájlokat ellenőrizze és szerkesztette, mielőtt elküldené",
     "kSensitiveTitle"            :"Érzékeny információ",
     "kServerAdd"                 :"Hozzáad",
     "kServerEmptyError"          :"A kiszolgáló neve nem lehet üres",

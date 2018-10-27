@@ -250,7 +250,6 @@
     "kSelectLanguage"            :"اختيار اللغة",
     "kSelectRunState"            :"إختار وضع التشغيل",
     "kSendingPTZ"                :"Sending PTZ",
-    "kSensitiveBody"             :"will modify the logs when creating the final output to remove sensitive data like urls and passwords. However it is eventually your responsibility to make sure there is no sensitive data in the logs. Please make sure you review and edit the logs before you send it out",
     "kSensitiveTitle"            :"معلومات حساسة",
     "kServerAdd"                 :"إضافة",
     "kServerEmptyError"          :"اسم الخادم لايمكن ان يكون فارغاً",

@@ -249,7 +249,6 @@
     "kSelectLanguage"            :"Seleziona Lingua",
     "kSelectRunState"            :"Seleziona modo operativo",
     "kSendingPTZ"                :"Invio PTZ",
-    "kSensitiveBody"             :"Dovrai modificare il log,quando lo vorrai inviare, dovrai togliere i tuoi dati sensibili. In ogni caso sarà tua responsabilità assicurarti che non ci siano dati sensibili. Fai attenzione a rimuovere i dati sensibili quando invii il log",
     "kSensitiveTitle"            :"Informazioni sensibili",
     "kServerAdd"                 :"Aggiungi",
     "kServerEmptyError"          :"Il nome del server non può rimanere vuoto",

@@ -328,7 +328,6 @@
     "kSelectRunState"            :"Status auswählen",
     "kSelectSwitch"              :"Ausgewähltes Profil wird geladen",
     "kSendingPTZ"                :"Sende PTZ",
-    "kSensitiveBody"             :"In der Log-Datei, welche nun zum verschicken erstellt wird, werden sensible Daten, wie URLs und Passwörter, entfernt. Überprüfe trotzdem, dass keine sensiblen Daten in dem Log sind, bevor Du die Datei verschickst.",
     "kSensitiveTitle"            :"Vertrauliche Daten",
     "kServerAdd"                 :"Hinzufügen",
     "kServerEmptyError"          :"Servername darf nicht leer sein",

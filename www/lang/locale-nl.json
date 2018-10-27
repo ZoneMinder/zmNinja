@@ -282,7 +282,6 @@
     "kSelectRunState"            :"Uitvoerings modus selecteren",
     "kSelectSwitch"              :"Geselecteerde profiel wordt geladen",
     "kSendingPTZ"                :"PTZ zenden",
-    "kSensitiveBody"             :"in de opgeslagen log bestanden worden gevoelige gegevens zoals urls en wachtwoorden verwijderd. Het is echter uw verantwoordelijkheid om er zeker van te zijn dat er geen gevoelige gegevens achterblijven. Voordat u de bestanden verzendt verzeker u hiervan door deze na te kijken en indien nodig te bewerken.",
     "kSensitiveTitle"            :"Gevoelige informatie",
     "kServerAdd"                 :"Toevoegen",
     "kServerEmptyError"          :"Server naam mag niet leeg zijn",
