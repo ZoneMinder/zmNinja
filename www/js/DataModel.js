@@ -967,8 +967,8 @@ angular.module('zmApp.controllers')
                   if (exists) {
                     log("A cloud configuration has been found");
                     window.cordova.plugin.cloudsettings.load(function (cloudData) {
-                      console.log("CLOUD DATA FOUND" + JSON.stringify(cloudData));
-                      debug("Cloud data retrieved is:" + JSON.stringify(cloudData));
+                      //console.log("CLOUD DATA FOUND" + JSON.stringify(cloudData));
+                     // debug("Cloud data retrieved is:" + JSON.stringify(cloudData));
                       if (cloudData && cloudData.defaultServerName && cloudData.serverGroupList) {
                         log("retrieved a valid cloud config with a defaultServerName of:" + cloudData.defaultServerName);
                         log("replacing local DB with cloud...");
