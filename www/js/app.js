@@ -965,8 +965,12 @@ angular.module('zmApp', [
     // which actually means auth failed, but ZM treats it as a success
     //------------------------------------------------------------------
 
+    function _doLoginNoLogout (str) {
+    
+      return _doLogin(str);
+    }
 
-    function doLogoutAndLogin(str) {
+    function _doLogoutAndLogin(str) {
       NVRDataModel.debug ("Clearing cookies");
 
       if (window.cordova) {
@@ -975,20 +979,20 @@ angular.module('zmApp', [
        
         cordova.plugin.http.clearCookies();
       }
-      else {
+    /*  else {
        angular.forEach($cookies, function (v, k) {
          $cookies.remove(k);
         });
-      }
+      }*/
       return NVRDataModel.logout()
         .then(function (ans) {
-          return doLogin(str);
+          return _doLogin(str);
 
         });
     }
 
 
-    function doLogin(str) {
+    function _doLogin(str) {
       var d = $q.defer();
       var ld = NVRDataModel.getLogin();
 
@@ -1001,13 +1005,6 @@ angular.module('zmApp', [
         return d.promise;
 
       }
-
-      if ($rootScope.isDownloading) {
-        NVRDataModel.log("Skipping login process as we are downloading...");
-        d.resolve("success");
-        return d.promise;
-      }
-
       NVRDataModel.debug("Resetting zmCookie...");
       $rootScope.zmCookie = '';
       // first try to login, if it works, good
@@ -1404,7 +1401,7 @@ angular.module('zmApp', [
       $interval.cancel(zmAutoLoginHandle);
       //doLogin();
       zmAutoLoginHandle = $interval(function () {
-        doLogin("");
+        _doLogin("");
 
       }, zm.loginInterval); // Auto login every 5 minutes
       // PHP timeout is around 10 minutes
@@ -1424,7 +1421,9 @@ angular.module('zmApp', [
     return {
       start: start,
       stop: stop,
-      doLogin: doLogoutAndLogin
+      doLogin: _doLogoutAndLogin,
+      doLoginNoLogout: _doLoginNoLogout
+
     };
   }])
 
@@ -1689,13 +1688,14 @@ angular.module('zmApp', [
       $timeout (function() {
 
       NVRDataModel.log ("--------->Setting up network state handlers....");
-      document.addEventListener("offline", onOnline, false);
+      document.addEventListener("offline", onOffline, false);
       document.addEventListener("online", onOffline, false);
 
       },3000);
 
 
-      function onOnline() {
+      function onOffline() {
+
 
         $timeout(function () {
           $rootScope.online = false;
@@ -1707,10 +1707,15 @@ angular.module('zmApp', [
 
       }
 
-      function onOffline() {
+      function onOnline() {
 
         $timeout(function () {
 
+
+          if ($rootScope.online == true) {
+            NVRDataModel.log ("**** network online, but looks like it was not offline, not doing anything");
+            return;
+          }
           NVRDataModel.log("************ Your network came back online");
 
           $rootScope.online = true;
@@ -1731,7 +1736,7 @@ angular.module('zmApp', [
                 NVRDataModel.debug("Not changing bandwidth state, as auto change is not on");
               }
               NVRDataModel.log("Your network is online, re-authenticating");
-              zmAutoLogin.doLogin($translate.instant('kReAuthenticating'));
+              zmAutoLogin.doLoginNoLogout($translate.instant('kReAuthenticating'));
     
 
         });
