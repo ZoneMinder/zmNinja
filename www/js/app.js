@@ -50,7 +50,7 @@ angular.module('zmApp', [
     largeHttpTimeout: 30000,
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
-    logFileMaxSize: 30000, // after this limit log gets reset
+    logFileMaxSize: 100000, // after this limit log gets reset
 
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
