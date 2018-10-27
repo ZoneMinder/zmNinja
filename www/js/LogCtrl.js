@@ -104,55 +104,45 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   };
 
 
-  $scope.attachLogs = function() {
+  // picks up applogs on the FS and sends an email with it
 
-   
+  $scope.attachLogs = function () {
+    var body = "zmNinja version:" + $scope.zmAppVersion +
+      " (" + $rootScope.platformOS + ")<br/>" +
+      "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion();
+    body = '<b>' + $translate.instant('kSensitiveBody') + '</b><br/><br/>' + body;
 
-          var body = "zmNinja version:" + $scope.zmAppVersion +
-          " (" + $rootScope.platformOS + ")<br/>" +
-          "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion();
+    $fileLogger.checkFile()
+      .then(function (d) {
+          var fileWithPath = cordova.file.dataDirectory + d.name;
+          NVRDataModel.log("file location:" + fileWithPath);
 
+          var onSuccess = function (result) {
+            NVRDataModel.log("Share completed? " + result.completed);
+            NVRDataModel.log("Shared to app: " + result.app);
+          };
 
-          body = '<b>'+$translate.instant('kSensitiveBody')+'</b><br/><br/>'+body;
+          var onError = function (msg) {
+            NVRDataModel.log("Sharing failed with message: " + msg);
+          };
 
+          window.plugins.socialsharing.shareViaEmail(
+            body, //body
+            'zmNinja Logs attached', // subject
+            [zm.authoremail], //to
+            null, // cc
+            null, //bcc
+            [fileWithPath],
+            onSuccess,
+            onError
+          );
 
-           $fileLogger.checkFile()
-           .then (function (d) {
-
-              var url = cordova.file.dataDirectory + d.name;
-              //url = url.replace("file://","");
-              console.log ( "URL:"+url);
-              NVRDataModel.log ( "URL:"+url);
-            
-
-              var onSuccess = function(result) {
-                NVRDataModel.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
-                NVRDataModel.log("Shared to app: " + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
-              };
-              
-              var onError = function(msg) {
-                NVRDataModel.log("Sharing failed with message: " + msg);
-              };
-              
-              window.plugins.socialsharing.shareViaEmail(
-                body, //body
-                'zmNinja Logs attached', // subject
-                [zm.authoremail], //to
-                null, // cc
-                null, //bcc
-                [url],
-                onSuccess,
-                onError
-              );
+        },
+        function (e) {
+          NVRDataModel.debug("Error attaching log file:" + JSON.stringify(e));
+        });
 
 
-
-           },
-           function (e) {
-              NVRDataModel.debug ("Error attaching log file:"+JSON.stringify(e));
-           });
-
-          
   };
   //--------------------------------------------------------------------------
   // Convenience function to send logs via email
@@ -175,7 +165,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
       var urlNoProtocol = loginData.url.replace(/.*?:\/\//, "");
       if (urlNoProtocol != "") {
         var re2 = new RegExp(urlNoProtocol, "g");
-       
+
         logstring = logstring.replace(re2, "<server>");
       }
       urlNoProtocol = loginData.streamingurl.replace(/.*?:\/\//, "");
@@ -309,22 +299,22 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   // reset power state on exit as if it is called after we enter another
   // state, that effectively overwrites current view power management needs
   //------------------------------------------------------------------------
-  
-  
+
+
   $scope.$on('$ionic.beforeEnter', function () {
 
-    $scope.$on ( "process-push", function () {
-      NVRDataModel.debug (">> LogCtrl: push handler");
+    $scope.$on("process-push", function () {
+      NVRDataModel.debug(">> LogCtrl: push handler");
       var s = NVRDataModel.evaluateTappedNotification();
-      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      NVRDataModel.debug("tapped Notification evaluation:" + JSON.stringify(s));
       $ionicHistory.nextViewOptions({
-        disableAnimate:true,
+        disableAnimate: true,
         disableBack: true
       });
-      $state.go(s[0],s[1],s[2]);
+      $state.go(s[0], s[1], s[2]);
     });
   });
-  
+
   $scope.$on('$ionicView.enter', function () {
     //console.log("**VIEW ** Log Ctrl Entered");
 
