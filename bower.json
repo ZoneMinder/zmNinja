@@ -32,7 +32,6 @@
     "angular-ui-router": "0.2.13",
     "angular-wizard": "~0.6.1",
     "crypto-js": "~3.1.6",
-    "filelogger": "~1.3.0",
     "font-awesome": "~4.3.0",
     "ion-datetime-picker": "~0.1.1",
     "ionic-native-transitions": "shprink/ionic-native-transitions#~1.0.2",
@@ -48,7 +47,8 @@
     "videogular-themes-default": "~1.4.4",
     "vis": "~4.20.0",
     "holderjs": "^2.9.4",
-    "localforage": "^1.7.1"
+    "localforage": "^1.7.1",
+    "filelogger": "^1.3.2"
   },
   "resolutions": {
     "angular-sanitize": "1.5.3",

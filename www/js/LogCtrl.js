@@ -103,6 +103,46 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
       });
   };
 
+
+  $scope.attachLogs = function() {
+
+    cordova.plugins.email.isAvailable(
+      function (isAvailable) {
+
+        if (isAvailable) {
+          
+       
+           $fileLogger.checkFile()
+           .then (function (d) {
+
+              var url = cordova.file.dataDirectory + d.name;
+              console.log ( "URL:"+url);
+              cordova.plugins.email.open({
+                to: zm.authoremail,
+                subject: $rootScope.appName + ' logs attached',
+                body: 'logs are attached',
+                attachments: url
+  
+              });
+           },
+           function (e) {
+              NVRDataModel.debug ("Error attaching log file:"+JSON.stringify(e));
+           });
+
+           
+
+        } else {
+          // kEmailNotConfigured		
+          $rootScope.zmPopup = SecuredPopups.show('alert', {
+            title: $translate.instant('kError'),
+            template: $translate.instant('kEmailNotConfigured'),
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
+          });
+        }
+
+      });
+  };
   //--------------------------------------------------------------------------
   // Convenience function to send logs via email
   //--------------------------------------------------------------------------
