@@ -324,7 +324,6 @@
     "kSelectRunState"            :"Seleccionar estado de funcionamiento",
     "kSelectSwitch"              :"El perfil seleccionado será cargado",
     "kSendingPTZ"                :"Enviando PTZ",
-    "kSensitiveBody"             :"Se modificarán los registros cuando se cree la salida final para remover información sensible como urls y contraseñas. Sin embargo eventualmente es su responsabilidad el asegurarse que no haya información sensible en los registros. Por favor asegúrese de haber revisado y editado los registros antes de enviarlos.",
     "kSensitiveTitle"            :"Información Sensible",
     "kServerAdd"                 :"Añadir",
     "kServerEmptyError"          :"El servidor debe tener un nombre válido.",

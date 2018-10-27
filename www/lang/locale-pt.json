@@ -261,7 +261,6 @@
     "kSelectLanguage"            :"Escolher Linguagem",
     "kSelectRunState"            :"Escolher estado de execução",
     "kSendingPTZ"                :"Enviando PTZ",
-    "kSensitiveBody"             :"modificará os logs ao criar o resultado final para remover os dados sensíveis, como URLs e senhas. No entanto, é, eventualmente, da sua responsabilidade certificar-se de que não há dados sensíveis nos logs. Por favor, certifique-se de rever e editar os registos antes de enviá-lo para fora",
     "kSensitiveTitle"            :"Informação Sensivel",
     "kServerAdd"                 :"Adicionar",
     "kServerEmptyError"          :"O Nome do Servidor tem de estar preenchido",

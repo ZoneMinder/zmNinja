@@ -111,7 +111,15 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
         if (isAvailable) {
           
-       
+
+          var body = "zmNinja version:" + $scope.zmAppVersion +
+          " (" + $rootScope.platformOS + ")<br/>" +
+          "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion();
+
+
+          body = '<b>'+$translate.instant('kSensitiveBody')+'</b><br/><br/>'+body;
+
+
            $fileLogger.checkFile()
            .then (function (d) {
 
@@ -120,7 +128,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
               cordova.plugins.email.open({
                 to: zm.authoremail,
                 subject: $rootScope.appName + ' logs attached',
-                body: 'logs are attached',
+                body: body,
+
                 attachments: url
   
               });

@@ -331,7 +331,6 @@
     "kSelectRunState"            :"Wybierz stan działania",
     "kSelectSwitch"              :"Wybrany profil zostanie załadowany",
     "kSendingPTZ"                :"Wysyła PTZ",
-    "kSensitiveBody"             :"tworząc finalny log zmodyfikuje jego zawartość, aby usunąć wrażliwe dane takie jak linki czy hasła. Jednak na Tobie spoczywa odpowiedzialność upewnienia się, że wszystkie dane wrażliwe zostały usunięte. Upewnij się, że przeglądnąłeś i edytowałeś log przed jego wysłaniem",
     "kSensitiveTitle"            :"Dane Wrażliwe",
     "kServerAdd"                 :"Dodaj",
     "kServerEmptyError"          :"Nazwa serwera nie może być pusta",
