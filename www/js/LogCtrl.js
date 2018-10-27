@@ -106,11 +106,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
   $scope.attachLogs = function() {
 
-    cordova.plugins.email.isAvailable(
-      function (isAvailable) {
-
-        if (isAvailable) {
-          
+   
 
           var body = "zmNinja version:" + $scope.zmAppVersion +
           " (" + $rootScope.platformOS + ")<br/>" +
@@ -124,33 +120,39 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
            .then (function (d) {
 
               var url = cordova.file.dataDirectory + d.name;
+              //url = url.replace("file://","");
               console.log ( "URL:"+url);
-              cordova.plugins.email.open({
-                to: zm.authoremail,
-                subject: $rootScope.appName + ' logs attached',
-                body: body,
+              NVRDataModel.log ( "URL:"+url);
+            
 
-                attachments: url
-  
-              });
+              var onSuccess = function(result) {
+                NVRDataModel.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+                NVRDataModel.log("Shared to app: " + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+              };
+              
+              var onError = function(msg) {
+                NVRDataModel.log("Sharing failed with message: " + msg);
+              };
+              
+              window.plugins.socialsharing.shareViaEmail(
+                body, //body
+                'zmNinja Logs attached', // subject
+                [zm.authoremail], //to
+                null, // cc
+                null, //bcc
+                [url],
+                onSuccess,
+                onError
+              );
+
+
+
            },
            function (e) {
               NVRDataModel.debug ("Error attaching log file:"+JSON.stringify(e));
            });
 
-           
-
-        } else {
-          // kEmailNotConfigured		
-          $rootScope.zmPopup = SecuredPopups.show('alert', {
-            title: $translate.instant('kError'),
-            template: $translate.instant('kEmailNotConfigured'),
-            okText: $translate.instant('kButtonOk'),
-            cancelText: $translate.instant('kButtonCancel'),
-          });
-        }
-
-      });
+          
   };
   //--------------------------------------------------------------------------
   // Convenience function to send logs via email
