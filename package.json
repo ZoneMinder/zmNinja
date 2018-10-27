@@ -33,7 +33,6 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-device": {},
       "cordova-plugin-file": {},
-      "cordova-plugin-media-pp-fork": {},
       "cordova-plugin-statusbar": {},
       "cordova-library-helper-pp-fork": {},
       "cordova-plugin-multi-window": {},
@@ -53,7 +52,8 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-advanced-websocket": {},
-      "cordova-plugin-x-socialsharing": {}
+      "cordova-plugin-x-socialsharing": {},
+      "cordova-plugin-media-pp-fork": {}
     }
   },
   "dependencies": {
