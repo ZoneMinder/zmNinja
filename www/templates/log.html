@@ -4,7 +4,10 @@
 
     &nbsp;
     <button ng-class="selectOn? 'button button-icon button-clear ion-ios-copy':'button button-icon button-clear ion-ios-copy-outline'"
-      ng-click="selectToggle()"></button>
+      ng-click="selectToggle()"></button> &nbsp;
+
+
+     
 
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
@@ -13,7 +16,7 @@
     <a class="button button-icon icon ion-arrow-swap" ng-href="" ng-click="flipLogs()"></a>
     <a ng-if="logEntity == $root.appName" class="button button-icon icon ion-trash-a" ng-href="" ng-click="deleteLogs()"></a>
     <div ng-if="$root.platformOS!='desktop'">
-      <a class="button button-icon icon ion-email" ng-href="" ng-click="sendEmail(log.logString)"> </a>
+      <a class="button button-icon icon ion-email" ng-href="" ng-click="attachLogs()"> </a>
     </div>
     <div ng-if="$root.platformOS=='desktop'">
       <a class="button button-icon icon ion-android-download" ng-href="" ng-click="sendEmail(log.logString)"> </a>
@@ -32,6 +35,9 @@
       </button>
       <button class="button button-small button-stable icon ion-chevron-right" ng-click="changePage(-1)">
       </button>
+
+     
+
     </div>
 
     <div ng-if="logEntity==$root.appName">
