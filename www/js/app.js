@@ -1689,7 +1689,7 @@ angular.module('zmApp', [
 
       NVRDataModel.log ("--------->Setting up network state handlers....");
       document.addEventListener("offline", onOffline, false);
-      document.addEventListener("online", onOffline, false);
+      document.addEventListener("online", onOnline, false);
 
       },3000);
 
@@ -2205,8 +2205,8 @@ angular.module('zmApp', [
             NVRDataModel.log("App is resuming from background");
 
             NVRDataModel.log ("-->Re-registering online/offine");
-            document.addEventListener("offline", onOnline, false);
-            document.addEventListener("online", onOffline, false);
+            document.addEventListener("offline", onOffline, false);
+            document.addEventListener("online", onOnline, false);
 
 
             $rootScope.isDownloading = false;
@@ -2258,8 +2258,8 @@ angular.module('zmApp', [
         function pauseHandler() {
 
           NVRDataModel.log ("-->Clearing online/offine");
-          document.removeEventListener("offline", onOnline, false);
-          document.removeEventListener("online", onOffline, false);
+          document.removeEventListener("offline", onOffline, false);
+          document.removeEventListener("online", onOnline, false);
 
           NVRDataModel.setBackground(true);
           NVRDataModel.setJustResumed(false);
