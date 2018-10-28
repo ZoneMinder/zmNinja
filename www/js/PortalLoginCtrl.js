@@ -8,6 +8,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
  
   var broadcastHandles = [];
   var processPush = false;
+  var alreadyTransitioned = false;
 
   $scope.$on('$ionicView.beforeLeave', function () {
     processPush = false;
@@ -24,13 +25,38 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     broadcastHandles = [];
   });
 
+
+  $scope.$on('$ionicView.beforeEnter',
+    function () {
+      alreadyTransitioned = false;
+
+      });
+
+
   $scope.$on('$ionicView.enter',
     function () {
 
 
       $scope.$on ( "process-push", function () {
         processPush = true;
-        NVRDataModel.debug (">> PortalLogin: push handler, marking to resolve later");
+
+        if (!alreadyTransitioned) {
+          NVRDataModel.debug (">> PortalLogin: push handler, marking to resolve later");
+        
+        }
+        else {
+          NVRDataModel.debug (">> PortalLoginCtrl: push handler");
+          processPush = false;
+          var s = NVRDataModel.evaluateTappedNotification();
+          NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+          $ionicHistory.nextViewOptions({
+            disableAnimate:true,
+            disableBack: true
+          });
+          $state.go(s[0],s[1],s[2]);
+          return;
+
+        }
         
       });
     
@@ -260,6 +286,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 //NVRDataModel.debug ("logging state transition");
                 NVRDataModel.debug("2nd Auth: Transitioning state to: " +
                   statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
+
+                alreadyTransitioned = true;
                 $state.go(statetoGo, $rootScope.lastStateParam);
                 return;
 

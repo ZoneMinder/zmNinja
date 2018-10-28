@@ -1437,6 +1437,7 @@ angular.module('zmApp', [
     $ionicPlatform.ready(function () {
       //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
+      NVRDataModel.log("******* app .run device ready");
       $fileLogger.setStorageFilename(zm.logFile);
       $fileLogger.setTimestampFormat('MMM d, y ' + NVRDataModel.getTimeFormatSec());
 
@@ -1475,26 +1476,6 @@ angular.module('zmApp', [
       NVRDataModel.log("You are running on " + $rootScope.platformOS);
 
 
-      /*if (window.cordova && $rootScope.platformOS == 'android') {
-
-        cordova.plugins.diagnostic.isExternalStorageAuthorized(function (authorized) {
-          if (!authorized) cordova.plugins.diagnostic.requestExternalStorageAuthorization(okperm, nopermerr);
-        }, function (err) {
-          console.log("diagnostic external storage error " + err);
-        });
-
-
-      }*/
-
-
-      function nopermerr() {
-        NVRDataModel.displayBanner('error', ['Storage permission must be allowed'], "", 4000);
-      }
-
-      function okperm() {
-        //console.log("cool");
-        NVRDataModel.displayBanner('success', ['Storage permission acquired'], "", 4000);
-      }
 
       $rootScope.appName = "zmNinja";
       $rootScope.zmGlobalCookie = "";
@@ -1695,8 +1676,6 @@ angular.module('zmApp', [
 
 
       function onOffline() {
-
-
         $timeout(function () {
           $rootScope.online = false;
           NVRDataModel.log("************** Your network went offline");
@@ -1704,14 +1683,10 @@ angular.module('zmApp', [
           //$rootScope.$emit('network-change', "offline");
 
         });
-
       }
 
       function onOnline() {
-
         $timeout(function () {
-
-
           if ($rootScope.online == true) {
             NVRDataModel.log ("**** network online, but looks like it was not offline, not doing anything");
             return;
@@ -1719,9 +1694,7 @@ angular.module('zmApp', [
           NVRDataModel.log("************ Your network came back online");
 
           $rootScope.online = true;
-
-
-          
+  
               var networkState = "browser not supported";
               if (navigator.connection) networkState = navigator.connection.type;
               NVRDataModel.debug("Detected network type as: " + networkState);
@@ -2198,10 +2171,12 @@ angular.module('zmApp', [
 
 
         function resumeHandler() {
+         
           NVRDataModel.setBackground(false);
           NVRDataModel.setJustResumed(true);
           $ionicPlatform.ready(function () {
 
+            NVRDataModel.log("******* resumeHandler device ready");
             NVRDataModel.log("App is resuming from background");
 
             NVRDataModel.log ("-->Re-registering online/offine");
