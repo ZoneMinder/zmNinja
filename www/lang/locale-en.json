@@ -331,7 +331,7 @@
     "kSelectRunState"            :"Select run state",
     "kSelectSwitch"              :"Selected profile will be loaded",
     "kSendingPTZ"                :"Sending PTZ",
-    "kSensitiveBody"             :"*** Before you send the logs, please make sure you remove any sensitive information. zmNinja tries to filter out passwords, but its possible that passwords will be included if you include them in URLs, for example ***",
+    "kSensitiveBody"             :"*** Before you send the logs, please make sure you remove any sensitive information. zmNinja tries to filter out passwords, but it is possible that passwords will be included if you include them in URLs, for example ***",
     "kSensitiveTitle"            :"Sensitive Information",
     "kServerAdd"                 :"Add",
     "kServerEmptyError"          :"Server Name cannot be empty",
