@@ -478,6 +478,7 @@ angular.module('zmApp.controllers')
       // console.log("*********** MEDIA BLOG IS " + mediasrc);
       media = $cordovaMedia.newMedia(mediasrc);
 
+
       push.on('registration', function (data) {
         pushInited = true;
         NVRDataModel.debug("Push Notification registration ID received: " + JSON.stringify(data));
@@ -548,6 +549,7 @@ angular.module('zmApp.controllers')
       push.on('notification', function (data) {
 
         $ionicPlatform.ready(function () {
+          NVRDataModel.log("******* notification handler device ready");
           NVRDataModel.debug("received push notification");
 
           var ld = NVRDataModel.getLogin();
