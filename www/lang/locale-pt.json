@@ -312,7 +312,6 @@
     "kVibrateOnPush"             :"Vibrar ao premir",
     "kVideo"                     :"Vídeo",
     "kVideoError"                :"Vídeo não reproduzível.",
-    "kVideoErrorMobile"          :"Vídeo não reproduzível. Experimente ativar 'forçar o caminho da imagem para eventos' em Configurações Dev. O formato também pode ser incompatível com o sistema de visualização do equipamento móvel",
     "kVideoLoading"              :"Carregando Vídeo",
     "kVideoMp4Warning"           :"Não é possível de momento saber quando o vídeo está totalmente carregado. Por favor, verifique o tamnho do arquivo de download.",
     "kWarningLargeTimeline"      :"Um valor elevado pode afetar o desempenho da timeline. Se você achar o desempenho da timeline lento, tente reduzir o valor para 200 e trabalhe a partir daí.",

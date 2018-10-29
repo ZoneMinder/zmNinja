@@ -391,7 +391,6 @@
     "kVibrateOnPush"             :"Wibruj przy dotknięciu",
     "kVideo"                     :"Wideo",
     "kVideoError"                :"Wideo nie odtwarzalne.",
-    "kVideoErrorMobile"          :"Wideo nie odtwarzalne. Spróbuj włączyć 'wymuś ścieżkę obrazu dla zdarzenia' w Ustawieniach Zaawansowanych. Format może być też niekompatybilny z przeglądarką systemu mobilnego",
     "kVideoLoading"              :"Ładuję Wideo",
     "kVideoMp4Warning"           :"Obecnie nie ma możliwości stwierdzenia, czy wideo zostało w pełni ściągnięte. Sprawdź wielkość pliku do ściągnięcia.",
     "kWarningBasicAuth"          :"Prosta autoryzacja może powodować konflikt ze streamingiem na żywo. Proszę, przeczytaj FAQ",

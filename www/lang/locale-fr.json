@@ -340,7 +340,6 @@
     "kVibrateOnPush"             :"Vibrer en cas de notification",
     "kVideo"                     :"Vidéo",
     "kVideoError"                :"Impossible de lire la vidéo.",
-    "kVideoErrorMobile"          :"Impossible de lire la vidéo. Essayez d'activer l'option 'Forcer le chemin des événements' dans les options développeur. Il se peut que le format soit incompatible avec les appareils mobiles",
     "kVideoLoading"              :"Chargement de la vidéo",
     "kVideoMp4Warning"           :"Impossible de déterminer l'avancement du téléchargement de la vidéo. Veuillez suivre la taille du fichier.",
     "kWarningLargeTimeline"      :"Une valeur élevée peut réduire les performances. Si vous trouvez le calendrier lent, essayez de réduire à la valeur 200 puis augmentez progressivement.",

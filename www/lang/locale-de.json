@@ -392,7 +392,6 @@
     "kVibrateOnPush"             :"Bei Push vibrieren",
     "kVideo"                     :"Video",
     "kVideoError"                :"Video nicht abspielbar.",
-    "kVideoErrorMobile"          :"Video nicht abspielbar. Versuche 'force image path for events' in den Entwicklereinstellungen zu aktivieren. Der Format kann auch inkompatibel mit einem mobilen Systenview sein",
     "kVideoLoading"              :"Lade Video",
     "kVideoMp4Warning"           :"Es ist aktuell nicht erkennbar, wann das Video komplett heruntergeladen ist. Bitte Downloadgröße verfolgen.",
     "kWarningBasicAuth"          :"Basisauthentifizierung kann das Abspielen des Livebilds stören. Bitte FAQ lesen",

@@ -387,7 +387,6 @@
     "kVibrateOnPush"             :"Vibriraj",
     "kVideo"                     :"Video",
     "kVideoError"                :"Nije moguće pustiti snimak.",
-    "kVideoErrorMobile"          :"Nije moguće pustti snimak. pokušajte omogućiti opciju 'force image path for events' in postavkama uređaja. Moguće da je i format nekombatibilan u mobilnom prikazu.",
     "kVideoLoading"              :"Učitavam video",
     "kVideoMp4Warning"           :"Trenutno nije moguće znati kada je preuzimanje dovršeno. Molimo pratite preuzetu veličinu u download prikazu.",
     "kWarningBasicAuth"          :"Osnovna autentifikacija može praviti problem prilikom live prikaza. Molimo pročitajte FAQ",

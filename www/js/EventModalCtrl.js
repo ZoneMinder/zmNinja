@@ -261,7 +261,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     NVRDataModel.debug("player reported a video error:" + JSON.stringify(event));
     $rootScope.zmPopup = SecuredPopups.show('alert', {
       title: $translate.instant('kError'),
-      template: $rootScope.platformOS == 'desktop' ? $translate.instant('kVideoError') : $translate.instant('kVideoErrorMobile'),
+      template: $translate.instant('kVideoError'),
       okText: $translate.instant('kButtonOk'),
       cancelText: $translate.instant('kButtonCancel'),
     });
