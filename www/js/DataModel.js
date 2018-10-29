@@ -1980,11 +1980,11 @@ angular.module('zmApp.controllers')
           return $http.get(req + "&command=1")
             .then(
               function (s) {
-                debug("pause success for ck:" + ck + " with:" + JSON.stringify(s));
+              //  debug("pause success for ck:" + ck );
 
               },
               function (e) {
-                debug("pause success for ck:" + ck + " with:" + JSON.stringify(e));
+           //     debug("pause error for ck:" + ck + " with:" + JSON.stringify(e));
               }
             );
 
@@ -2004,11 +2004,11 @@ angular.module('zmApp.controllers')
           return $http.get(req + "&command=2")
             .then(
               function (s) {
-                debug("play success for ck:" + ck + " with:" + JSON.stringify(s));
+            //    debug("play success for ck:" + ck + " with:" + JSON.stringify(s));
 
               },
               function (e) {
-                debug("play success for ck:" + ck + " with:" + JSON.stringify(e));
+            //    debug("play error for ck:" + ck + " with:" + JSON.stringify(e));
               }
             );
 
