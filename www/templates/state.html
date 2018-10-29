@@ -6,6 +6,24 @@
   </ion-nav-buttons>
   <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
     <ion-refresher pulling-text="{{'kPullToReload' | translate}}..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
+
+    <ion-item>
+
+      <div>
+        <div class="row">
+          <div class="col text-center">
+            <a class="button button-small button-outline button-dark " ng-click="selectCustomState();" href="">{{'kChangeState'|translate}}</a>
+            <a class="button  button-small button-outline button-dark " ng-click="controlZM('restart');" href="">{{'kRestart'
+              | translate}}</a>
+            <a class="button  button-small button-outline  button-dark" href="" ng-click="controlZM('stop');">{{'kStop'
+              | translate}}</a>
+            <a class="button  button-small button-outline button-dark" ng-click="controlZM('start');" href="">{{'kStart'
+              | translate}}</a>
+          </div>
+        </div>
+      </div>
+    </ion-item>
+
     <ion-list>
       <ion-item>
         <div class="row">
@@ -35,23 +53,73 @@
           </div>
         </div>
       </ion-item>
-
-      <ion-item>
-
-        <div>
-          <div class="row">
-            <div class="col text-center">
-              <a class="button button-small button-outline button-dark " ng-click="selectCustomState();" href="">{{'kChangeState'|translate}}</a>
-              <a class="button  button-small button-outline button-dark " ng-click="controlZM('restart');" href="">{{'kRestart'
-                | translate}}</a>
-              <a class="button  button-small button-outline  button-dark" href="" ng-click="controlZM('stop');">{{'kStop'
-                | translate}}</a>
-              <a class="button  button-small button-outline button-dark" ng-click="controlZM('start');" href="">{{'kStart'
-                | translate}}</a>
-            </div>
-          </div>
-        </div>
-      </ion-item>
     </ion-list>
+
+   
+    
+      <div class="list" >
+        <div class="item item-divider icon-left" ng-click="toggleStorage()">
+            <i class="icon"  ng-class="showStorage? 'ion-chevron-up':'ion-chevron-down'"></i>
+          {{'kStateStorage' | translate}}
+        </div>
+        <div  ng-repeat = "store in storage">
+          <div class="item item-accordion item-divider item-icon-left " ng-show="showStorage">
+              <i class="icon ion-social-buffer"></i>
+              {{store.Storage.Name}} ({{store.Storage.Id}}) 
+          </div> <!-- divider -->
+          <div class="item item-accordion" ng-show="showStorage">
+   
+              <div class="row">
+                  {{'kStatePath' | translate }}: {{store.Storage.Path}}
+              </div>
+              <div class="row">
+                  {{'kStateDiskUsed' | translate }}: {{ humanFileSize(store.Storage.DiskSpace,true)}}
+              </div>
+              <div class="row">
+                  {{'kScheme' | translate }}: {{ store.Storage.Scheme}}
+              </div>
+              <div ng-if="store.Storage.ServerId" class="row">
+                  {{'kStateServer' | translate }}: {{ matchServer(store.Storage.ServerId)}}
+              </div>
+       
+          </div> <!-- item -->
+        </div> <!-- repeat -->
+ 
+          <div class="item item-divider icon-left" ng-click="toggleServer()">
+              <i class="icon"  ng-class="showServer? 'ion-chevron-up':'ion-chevron-down'"></i>
+            {{'kStateServer' | translate}}
+          </div>
+          <div  ng-repeat = "server in servers">
+            <div class="item item-accordion item-divider item-icon-left " ng-show="showServer">
+                <i class="icon ion-monitor"></i>
+                {{server.Server.Name}} ({{server.Server.Id}}) 
+            </div> <!-- divider -->
+            <div class="item item-accordion" ng-show="showServer">
+        
+                <div class="row">
+                    {{'kStateHost' | translate }}: {{server.Server.Hostname}}
+                </div>
+                <div class="row">
+                    {{'kStatus' | translate }}: {{ server.Server.Status}}
+                </div>
+                <div class="row">
+                    {{'kStateCpuLoad' | translate }}: {{ server.Server.CpuLoad}}
+                </div>
+                <div class="row">
+                    {{'kStateTotalMem' | translate }}: {{ humanFileSize(server.Server.TotalMem, true)}}
+                </div>
+                <div class="row">
+                    {{'kStateFreeMem' | translate }}: {{ humanFileSize(server.Server.FreeMem, true)}}
+                </div>
+
+        
+            </div> <!-- item -->
+          </div> <!-- repeat -->
+        </div> <!-- list ---->
+
+
+
+ 
+
   </ion-content>
 </ion-view>

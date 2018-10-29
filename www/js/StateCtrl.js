@@ -26,30 +26,59 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
   var apiRun = loginData.apiurl + "/host/daemonCheck.json";
   var apiLoad = loginData.apiurl + "/host/getLoad.json";
-  var apiDisk = loginData.apiurl + "/host/getDiskPercent.json";
+  var apiStorage = loginData.apiurl + "/storage.json";
+  var apiServer = loginData.apiurl + "/servers.json";
   var apiCurrentState = loginData.apiurl + "/States.json";
 
   var apiExec = loginData.apiurl + "/states/change/";
 
   var inProgress = 0; // prevents user from another op if one is in progress
   getRunStatus();
+  getLoadStatus();
+  getCurrentState();
+  getStorageStatus();
+  getServerStatus();
 
 
+// credit https://stackoverflow.com/a/14919494/1361529
+  $scope.humanFileSize = function(bytes, si) {
+    var thresh = si ? 1000 : 1024;
+    bytes = parseFloat(bytes);
+    if (isNaN(bytes)) bytes=0;
+    if(Math.abs(bytes) < thresh) {
+        return bytes + ' B';
+    }
+    var units = si? ['kB','MB','GB','TB','PB','EB','ZB','YB']:['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+    var u = -1;
+    do {
+        bytes /= thresh;
+        ++u;
+    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
+    return bytes.toFixed(1)+' '+units[u];
+};
 
+$scope.matchServer = function (id) {
+  var str = id;
+  var name = "";
+  for (var i=0; i< $scope.servers.length; i++) {
+    if ($scope.servers[i].Server.Id == id) {
+      name = $scope.servers[i].Server.Name;
+      break;
+    }
+  }
+  if (name) {
+    str = name + " ("+id+")";
+  }
+  return str;
+};
 
-  // Let's stagger this by 500ms each to see if Chrome lets these through
-  // This may also help if your Apache is not configured to let multiple connections through
+$scope.toggleStorage = function() {
+  $scope.showStorage = !$scope.showStorage;
+};
 
-  $timeout(function () {
-    NVRDataModel.debug("invoking LoadStatus...");
-    getLoadStatus();
-  }, 2000);
-
-  $timeout(function () {
-    NVRDataModel.debug("invoking CurrentState...");
-    getCurrentState();
-  }, 4000);
-
+$scope.toggleServer = function() {
+  $scope.showServer = !$scope.showServer;
+};
   /*
   $timeout(function () {
           NVRDataModel.debug("invoking DiskStatus...");
@@ -66,6 +95,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   
   
   $scope.$on ('$ionicView.beforeEnter', function () {
+
+    $scope.showStorage = true;
+    $scope.showServer = true;
 
     $scope.$on ( "process-push", function () {
       NVRDataModel.debug (">> StateCtrl: push handler");
@@ -194,22 +226,42 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   }
 
   //----------------------------------------------------------------------
-  // returns disk space in gigs taken up by events
+  // returns Storage data
   //----------------------------------------------------------------------
-  function getDiskStatus() {
-    NVRDataModel.debug("StateCtrl/getDiskStatus: " + apiDisk);
-    $http.get(apiDisk)
+  function getStorageStatus() {
+
+    $scope.storage = [];
+    NVRDataModel.debug("StorageStatus: " + apiStorage);
+    $http.get(apiStorage)
       .then(
         function (success) {
-          NVRDataModel.debug("StateCtrl/getDiskStatus: success");
-          NVRDataModel.debug("Disk results: " + JSON.stringify(success));
-          var obj = success.data.usage;
-          if (obj.Total.space != undefined) {
-            $scope.zmDisk = parseFloat(obj.Total.space).toFixed(1).toString() + "G";
-          } else {
-            $scope.zmDisk = "unknown";
-            NVRDataModel.log("Error retrieving disk space, API returned null for obj.Total.space");
-          }
+        
+          $scope.storage = success.data.storage;
+          //console.log (JSON.stringify($scope.storage));
+
+        },
+        function (error) {
+          $scope.zmDisk = "unknown";
+          // console.log("ERROR:" + JSON.stringify(error));
+          NVRDataModel.log("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
+        }
+      );
+  }
+
+
+   //----------------------------------------------------------------------
+  // returns Storage data
+  //----------------------------------------------------------------------
+  function getServerStatus() {
+
+    $scope.servers = [];
+    NVRDataModel.debug("ServerStatus: " + apiStorage);
+    $http.get(apiServer)
+      .then(
+        function (success) {
+        
+          $scope.servers = success.data.servers;
+         // console.log (JSON.stringify($scope.storage));
 
         },
         function (error) {
@@ -386,9 +438,10 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
     //console.log("***Pull to Refresh");
     NVRDataModel.debug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
     getRunStatus();
-    $timeout(getLoadStatus, 2000);
-    $timeout(getCurrentState, 4000);
-    //$timeout (getDiskStatus,6000);
+    getLoadStatus();
+    getCurrentState();
+    getStorageStatus();
+    getServerStatus();
     $scope.$broadcast('scroll.refreshComplete');
 
   };
