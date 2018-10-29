@@ -77,6 +77,7 @@
     "kDismiss"                   :"verwerfen",
     "kDone"                      :"Erledigt",
     "kDownload"                  :"Herunterladen",
+    "kTapDownloadLogs"           :"Klicke auf den Button um die Logdateien herunterzuladen.",
     "kDownloadVideoImage"        :"Drücke den Knopf um das Video herunterzuladen. Bitte achte auf die Dateigröße, da es kein Fortschrittsbalken während des Downloads gibt.",
     "kEmailNotConfigured"        :"Email nicht eingerichtet",
     "kEnable24hr"                :"24-Stunden Zeitformat aktivieren",
