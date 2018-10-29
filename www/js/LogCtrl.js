@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', '$http', function ($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate, $http) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', '$http', 'SecuredPopups', function ($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate, $http, SecuredPopups) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -11,20 +11,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   // Controller main
   //---------------------------------------------------------------
 
-  var intervalLogUpdateHandle;
 
-  document.addEventListener("pause", onPause, false);
-  document.addEventListener("resume", onResume, false);
-
-  function onPause() {
-    NVRDataModel.debug("LogCtrl: pause called, killing log timer");
-    // $interval.cancel(intervalLogUpdateHandle);
-  }
-
-  function onResume() {
-    // NVRDataModel.debug("LogCtrl: resume called, starting log timer");
-    loadLogs();
-  }
 
 
 
@@ -78,33 +65,44 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     }
   };
 
-  //--------------------------------------------------------------------------
-  // Make sure user knows information masking is best effort
-  //--------------------------------------------------------------------------
 
-  $scope.sendEmail = function (logstring) {
-    logstring = logstring.substring(0, 20000);
-    $ionicPopup.confirm({
-        title: $translate.instant('kSensitiveTitle'),
-        template: $rootScope.appName + ' ' + $translate.instant('kSensitiveBody'),
-        okText: $translate.instant('kButtonOk'),
-        cancelText: $translate.instant('kButtonCancel'),
-      })
-      .then(function (res) {
-        if (res) {
+  // desktop download
+  $scope.downloadLogs = function () {
+    var body = "zmNinja version:" + $scope.zmAppVersion +
+      " (" + $rootScope.platformOS + ")\n" +
+      "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion();
 
-          logstring = "zmNinja version:" + $scope.zmAppVersion +
-            " (" + $rootScope.platformOS + ")\n" +
-            "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion() + "\n" +
-            logstring;
-          sendEmailReally(logstring);
-        }
+    body = $translate.instant('kSensitiveBody') + '\n\n\n' + body;
+    var fname = $rootScope.appName + "-logs-" +
+      moment().format('MMM-DD-YY_HH-mm-ss') + ".txt";
+
+    $fileLogger.checkFile()
+      .then(function (d) {
+
+        body = body + window.localStorage[d.name];
+        var file = new Blob([body], {
+          type: 'text/plain'
+        });
+        var url = URL.createObjectURL(file);
+
+        $rootScope.zmPopup = SecuredPopups.show('alert', {
+            title: $translate.instant('kNote'),
+            template: $translate.instant('kTapDownloadLogs') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download='" + fname + "'>" + " " + $translate.instant('kDownload') + "</a></center>",
+            okText: $translate.instant('kDismiss'),
+            okType: 'button-stable'
+          },
+          function (e) {
+            NVRDataModel.debug("Error getting log file:" + JSON.stringify(e));
+          }
+
+        );
 
       });
+
+
   };
 
-
-  // picks up applogs on the FS and sends an email with it
+  // mobile - picks up applogs on the FS and sends an email with it
 
   $scope.attachLogs = function () {
     var body = "zmNinja version:" + $scope.zmAppVersion +
@@ -144,89 +142,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
 
   };
-  //--------------------------------------------------------------------------
-  // Convenience function to send logs via email
-  //--------------------------------------------------------------------------
-  function sendEmailReally(logstring) {
 
-    //console.log ("LOGSTRING:"+logstring);
-    if (window.cordova) {
-
-      // do my best to replace sensitive information
-      var loginData = NVRDataModel.getLogin();
-
-      // We don't need this anymore as log and debug now strip passwords
-      /*if (loginData.password !="")
-      {
-          var re1 = new RegExp(loginData.password, "g");
-          logstring = logstring.replace(re1, "<deleted>");
-      }*/
-      // keep the protocol, helps to debug
-      var urlNoProtocol = loginData.url.replace(/.*?:\/\//, "");
-      if (urlNoProtocol != "") {
-        var re2 = new RegExp(urlNoProtocol, "g");
-
-        logstring = logstring.replace(re2, "<server>");
-      }
-      urlNoProtocol = loginData.streamingurl.replace(/.*?:\/\//, "");
-      if (urlNoProtocol != "") {
-        var re3 = new RegExp(urlNoProtocol, "g");
-        logstring = logstring.replace(re3, "<server>");
-      }
-
-      urlNoProtocol = loginData.eventServer.replace(/.*?:\/\//, "");
-      if (urlNoProtocol != "") {
-        var re4 = new RegExp(urlNoProtocol, "g");
-        logstring = logstring.replace(re4, "<server>");
-      }
-
-      //console.log ("NEW LOGSTRING:"+logstring);
-      /* window.plugins.emailComposer.showEmailComposerWithCallback(callback, $rootScope.appName + ' logs', logstring, [zm.authoremail]);*/
-
-
-      cordova.plugins.email.isAvailable(
-        function (isAvailable) {
-
-          if (isAvailable) {
-            // body encapsulation requires br :^
-            // see https://github.com/katzer/cordova-plugin-email-composer/issues/150
-            logstring = logstring.split('\n').join('<br/>');
-            cordova.plugins.email.open({
-              to: zm.authoremail,
-              subject: $rootScope.appName + ' logs',
-              body: logstring
-            });
-          } else {
-            // kEmailNotConfigured		
-            $rootScope.zmPopup = SecuredPopups.show('alert', {
-              title: $translate.instant('kError'),
-              template: $translate.instant('kEmailNotConfigured'),
-              okText: $translate.instant('kButtonOk'),
-              cancelText: $translate.instant('kButtonCancel'),
-            });
-          }
-
-        });
-
-
-    } else {
-      // console.log("Using default email client to send data");
-
-      var fname = $rootScope.appName + "-logs-" +
-        moment().format('MMM-DD-YY_HH-mm-ss') + ".txt";
-
-      var blob = new Blob([logstring], {
-        type: "text/plain;charset=utf-8"
-      });
-      saveAs(blob, fname);
-    }
-
-  }
-
-  function callback() {
-    // console.log ("EMAIL SENT");
-    NVRDataModel.debug("Email sent callback called");
-  }
 
   function loadZMlogs() {
     var ld = NVRDataModel.getLogin();
