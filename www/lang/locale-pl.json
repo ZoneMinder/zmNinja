@@ -331,6 +331,7 @@
     "kSelectRunState"            :"Wybierz stan działania",
     "kSelectSwitch"              :"Wybrany profil zostanie załadowany",
     "kSendingPTZ"                :"Wysyła PTZ",
+    "kSensitiveBody"             :"*** Zanim wyślesz log, upewnij się, że usunąłeś wszystkie wrażliwe dane. zmNinja spróbuje usunąć hasła, jednak możliwe, że część z nich pozostanie, np. te umieszczone w adresach URL ***",
     "kSensitiveTitle"            :"Dane Wrażliwe",
     "kServerAdd"                 :"Dodaj",
     "kServerEmptyError"          :"Nazwa serwera nie może być pusta",
