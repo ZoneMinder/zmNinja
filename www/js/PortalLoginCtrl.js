@@ -414,6 +414,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     //  NVRDataModel.debug("logging state transition");
 
                     if (!processPush) {
+                      alreadyTransitioned = true;
                       NVRDataModel.debug("Transitioning state to: " +
                       statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
 
