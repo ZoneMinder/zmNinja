@@ -335,7 +335,6 @@
     "kVibrateOnPush"             :"Trillen bij push",
     "kVideo"                     :"Video",
     "kVideoError"                :"Kan video niet afspelen.",
-    "kVideoErrorMobile"          :"Kan video niet afspelen. Probeer 'Dwing gebeurtenissen bestands map te gebruiken' te activeren in ontwikkelaars instellingen. Het formaat is wellicht ook niet compatible met mobiel systeem beeld",
     "kVideoLoading"              :"Video laden",
     "kVideoMp4Warning"           :"Het is niet mogelijk te detecteren wanneer video volledig is gedownload. Vergelijk grootte van de download.",
     "kWarningLargeTimeline"      :"Een hoge waarde kan de tijdlijn prestatie beïnvloeden. Bij slechte prestaties van de tijdlijn start met een waarde van 200 en verhoog deze langzaam.",

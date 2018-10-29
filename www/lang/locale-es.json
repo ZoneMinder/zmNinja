@@ -383,7 +383,6 @@
     "kVibrateOnPush"             :"Vibrar en notificaciones push",
     "kVideo"                     :"Vídeo",
     "kVideoError"                :"El vídeo no se puede reproducir.",
-    "kVideoErrorMobile"          :"El vídeo no se puede reproducir. Trata de habilitar 'forzar el directorio para los eventos' en Opc de Desarrollador. El formato también podría ser incompatible con la vista en sistemas móviles",
     "kVideoLoading"              :"Cargando Vídeo",
     "kVideoMp4Warning"           :"Actualmente no es posible saber cuando el vídeo se ha descargado completamente. Por favor fíjese en el tamaño del archivo para tener un estimado.",
     "kWarningBasicAuth"          :"La autenticación básica puede interferir con stremings en vivo. Por favor lea las preguntas frecuentes.",
