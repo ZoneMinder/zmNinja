@@ -69,16 +69,16 @@
           </div> <!-- divider -->
           <div class="item item-accordion" ng-show="showStorage">
    
-              <div class="row">
+              <div class="row" style="line-height:140%;">
                   {{'kStatePath' | translate }}: {{store.Storage.Path}}
               </div>
-              <div class="row">
+              <div class="row" style="line-height:140%;">
                   {{'kStateDiskUsed' | translate }}: {{ humanFileSize(store.Storage.DiskSpace,true)}}
               </div>
-              <div class="row">
+              <div class="row" style="line-height:140%;">
                   {{'kScheme' | translate }}: {{ store.Storage.Scheme}}
               </div>
-              <div ng-if="store.Storage.ServerId" class="row">
+              <div ng-if="store.Storage.ServerId" class="row" style="line-height:140%;">
                   {{'kStateServer' | translate }}: {{ matchServer(store.Storage.ServerId)}}
               </div>
        
@@ -96,19 +96,19 @@
             </div> <!-- divider -->
             <div class="item item-accordion" ng-show="showServer">
         
-                <div class="row">
+                <div class="row" style="line-height:140%;">
                     {{'kStateHost' | translate }}: {{server.Server.Hostname}}
                 </div>
-                <div class="row">
+                <div class="row" style="line-height:140%;">
                     {{'kStatus' | translate }}: {{ server.Server.Status}}
                 </div>
-                <div class="row">
+                <div class="row" style="line-height:140%;">
                     {{'kStateCpuLoad' | translate }}: {{ server.Server.CpuLoad}}
                 </div>
-                <div class="row">
+                <div class="row" style="line-height:140%;">
                     {{'kStateTotalMem' | translate }}: {{ humanFileSize(server.Server.TotalMem, true)}}
                 </div>
-                <div class="row">
+                <div class="row" style="line-height:140%;">
                     {{'kStateFreeMem' | translate }}: {{ humanFileSize(server.Server.FreeMem, true)}}
                 </div>
 
