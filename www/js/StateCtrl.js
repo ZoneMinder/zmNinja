@@ -261,6 +261,10 @@ $scope.toggleServer = function() {
         function (success) {
         
           $scope.servers = success.data.servers;
+          if ($scope.servers.length > 0) {
+            $scope.zmRun =$translate.instant('kStateMultiServer');
+            $scope.color = 'grey';
+          }
          // console.log (JSON.stringify($scope.storage));
 
         },
@@ -276,6 +280,10 @@ $scope.toggleServer = function() {
   // returns ZM running status
   //----------------------------------------------------------------------
   function getRunStatus() {
+
+
+
+
     NVRDataModel.debug("StateCtrl/getRunStatus: " + apiRun);
     $http.get(apiRun)
       .then(

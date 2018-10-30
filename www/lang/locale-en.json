@@ -353,6 +353,7 @@
     "kStateHideControls"         :"Hide ZoneMinder Controls",
     "kStateShowControls"         :"Show ZoneMinder Controls",
     "kStateStorage"              :"Storage",
+    "kStateMultiServer"          :"multi server",
     "kStateServer"               :"Server",
     "kStatePath"                 :"Path",
     "kStateHost"                 :"Host",

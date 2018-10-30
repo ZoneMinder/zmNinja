@@ -4,7 +4,7 @@
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
-  <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
+  <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll >
     <ion-refresher pulling-text="{{'kPullToReload' | translate}}..." spinner="bubbles" on-refresh="doRefresh()"></ion-refresher>
 
     <ion-item>
@@ -23,6 +23,7 @@
         </div>
       </div>
     </ion-item>
+
 
     <ion-list>
       <ion-item>
@@ -56,67 +57,71 @@
     </ion-list>
 
    
-    
+ 
       <div class="list" >
-        <div class="item item-divider icon-left" ng-click="toggleStorage()">
-            <i class="icon"  ng-class="showStorage? 'ion-chevron-up':'ion-chevron-down'"></i>
+
+           <!-- Storage -->
+        <div class="item item-divider item-icon-left item-icon-right" ng-click="toggleStorage()">
+            <i class="icon"  ng-class="showStorage? 'ion-minus':'ion-plus'"></i>
+            <i class="icon ion-social-buffer"></i>
           {{'kStateStorage' | translate}}
         </div>
         <div  ng-repeat = "store in storage">
-          <div class="item item-accordion item-divider item-icon-left " ng-show="showStorage">
-              <i class="icon ion-social-buffer"></i>
+          <div class="item item-accordion item-divider" ng-show="showStorage">
+              
               {{store.Storage.Name}} ({{store.Storage.Id}}) 
           </div> <!-- divider -->
           <div class="item item-accordion" ng-show="showStorage">
    
-              <div class="row" style="line-height:140%;">
+              <div class="row" style="font-size:80%;line-height:140%;">
                   {{'kStatePath' | translate }}: {{store.Storage.Path}}
               </div>
-              <div class="row" style="line-height:140%;">
+              <div class="row" style="font-size:80%;line-height:140%;">
                   {{'kStateDiskUsed' | translate }}: {{ humanFileSize(store.Storage.DiskSpace,true)}}
               </div>
-              <div class="row" style="line-height:140%;">
+              <div class="row" style="font-size:80%;line-height:140%;">
                   {{'kScheme' | translate }}: {{ store.Storage.Scheme}}
               </div>
-              <div ng-if="store.Storage.ServerId" class="row" style="line-height:140%;">
+              <div ng-if="store.Storage.ServerId" class="row" style="font-size:80%;line-height:140%;">
                   {{'kStateServer' | translate }}: {{ matchServer(store.Storage.ServerId)}}
               </div>
        
           </div> <!-- item -->
         </div> <!-- repeat -->
  
-          <div class="item item-divider icon-left" ng-click="toggleServer()">
-              <i class="icon"  ng-class="showServer? 'ion-chevron-up':'ion-chevron-down'"></i>
+        <!-- server -->
+          <div class="item item-divider item-icon-left item-icon-right" ng-click="toggleServer()">
+              <i class="icon"  ng-class="showServer? 'ion-minus':'ion-plus'"></i>
+              <i class="icon ion-monitor"></i>
             {{'kStateServer' | translate}}
           </div>
           <div  ng-repeat = "server in servers">
-            <div class="item item-accordion item-divider item-icon-left " ng-show="showServer">
-                <i class="icon ion-monitor"></i>
+            <div class="item item-accordion item-divider" ng-show="showServer">
+                
                 {{server.Server.Name}} ({{server.Server.Id}}) 
             </div> <!-- divider -->
             <div class="item item-accordion" ng-show="showServer">
         
-                <div class="row" style="line-height:140%;">
+                <div class="row" style="font-size:80%;line-height:140%;">
                     {{'kStateHost' | translate }}: {{server.Server.Hostname}}
                 </div>
-                <div class="row" style="line-height:140%;">
+                <div class="row" style="font-size:80%;line-height:140%;">
                     {{'kStatus' | translate }}: {{ server.Server.Status}}
                 </div>
-                <div class="row" style="line-height:140%;">
+                <div class="row" style="font-size:80%;line-height:140%;">
                     {{'kStateCpuLoad' | translate }}: {{ server.Server.CpuLoad}}
                 </div>
-                <div class="row" style="line-height:140%;">
+                <div class="row" style="font-size:80%;line-height:140%;">
                     {{'kStateTotalMem' | translate }}: {{ humanFileSize(server.Server.TotalMem, true)}}
                 </div>
-                <div class="row" style="line-height:140%;">
+                <div class="row" style="font-size:80%;line-height:140%;">
                     {{'kStateFreeMem' | translate }}: {{ humanFileSize(server.Server.FreeMem, true)}}
                 </div>
-
         
             </div> <!-- item -->
           </div> <!-- repeat -->
         </div> <!-- list ---->
-
+    
 
 
  
