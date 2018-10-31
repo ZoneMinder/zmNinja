@@ -416,6 +416,7 @@ angular.module('zmApp.controllers')
 
       function monitorStateCheck() {
         
+       // console.log ("Checking monitors");
         var ld = NVRDataModel.getLogin();
         // force get for latest status of monitors if av.
        NVRDataModel.getMonitors(1)
@@ -435,7 +436,7 @@ angular.module('zmApp.controllers')
         function (err) {
           NVRDataModel.debug ("Monitor fetch error, reverting to daemonCheck...");
           forceDaemonCheck();
-        })
+        });
         
       }
 
