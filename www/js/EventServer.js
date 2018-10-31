@@ -17,6 +17,7 @@ angular.module('zmApp.controllers')
     var pushInited = false;
     var isTimerOn = false;
     var nativeWebSocketId = -1;
+    var iClosed = false;
 
 
 
@@ -31,7 +32,10 @@ angular.module('zmApp.controllers')
       NVRDataModel.log("openHandshake: Websocket open, sending Auth");
       sendMessage("auth", {
         user: loginData.username,
-        password: loginData.password
+        password: loginData.password,
+        monlist: loginData.eventServerMonitors,
+        intlist: loginData.eventServerInterval
+      
       });
 
 
@@ -62,6 +66,13 @@ angular.module('zmApp.controllers')
     }
 
     function handleClose(event) {
+
+
+      if (iClosed) {
+        NVRDataModel.debug ("App closed socket, not reconnecting");
+        iClosed = false;
+        return;
+      }
 
       console.log("*********** WEBSOCKET CLOSE CALLED");
 
@@ -99,6 +110,7 @@ angular.module('zmApp.controllers')
 
         if (str.reason == 'APNSDISABLED') {
           console.log("FORCE CLOSING");
+          iClosed=true;
           ws.close();
           NVRDataModel.displayBanner('error', ['Event Server: APNS disabled'], 2000, 6000);
           $rootScope.apnsToken = "";
@@ -319,7 +331,7 @@ angular.module('zmApp.controllers')
 
       NVRDataModel.log("Clearing error/close cbk, disconnecting and deleting Event Server socket...");
 
-      if ($rootScope.platforOS == 'desktop') {
+      if ($rootScope.platformOS == 'desktop') {
         if (typeof ws === 'undefined') {
           NVRDataModel.log("Event server socket is empty, nothing to disconnect");
           return;
@@ -327,10 +339,12 @@ angular.module('zmApp.controllers')
 
 
         ws.onmessage = null;
+        iClosed = true;
         ws.close();
         ws = undefined;
       } else {
         if (nativeWebSocketId != -1) //native;
+        iClosed = true;
           CordovaWebsocketPlugin.wsClose(nativeWebSocketId, 1000, "Connection closed");
         nativeWebSocketId = -1;
 
@@ -522,10 +536,6 @@ angular.module('zmApp.controllers')
                   intstring = intstring.substr(0, intstring.length - 1);
 
               }
-
-
-
-              //console.log ("WUTPUT SENDING REG WITH "+monstring);
 
               $rootScope.monstring = monstring;
               $rootScope.intstring = intstring;
