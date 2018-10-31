@@ -2081,6 +2081,29 @@ angular.module('zmApp.controllers')
 
       },*/
 
+        getMultiServersCached: function () {
+            return multiservers;
+        },
+
+        // use non cached for daemon status
+        getMultiServers: function () {
+          return $http.get (loginData.apiurl+'/servers.json');
+
+        },
+
+        getMultiServer: function (id) {
+
+          var ndx = -1;
+          for (var i=0; i < multiservers.length; i++) {
+            if (multiservers[i].Server.Id == id) {
+              ndx = i;
+              break;
+            }
+          }
+          return ndx == -1 ? {}:multiservers[ndx];
+
+        },
+
         regenConnKeys: function () {
 
           debug("DataModel: Regenerating connkeys...");
@@ -2144,7 +2167,7 @@ angular.module('zmApp.controllers')
                             data = data.data;
                             // We found a server list API, so lets make sure
                             // we get the hostname as it will be needed for playback
-                            log("multi server list loaded" + JSON.stringify(data));
+                            log("multi server list loaded:" + JSON.stringify(data));
                             multiservers = data.servers;
 
                             var multiserver_scheme = "http://";
@@ -2158,6 +2181,8 @@ angular.module('zmApp.controllers')
                             for (var i = 0; i < monitors.length; i++) {
 
                               // make them all show for now
+
+                            
                               monitors[i].Monitor.listDisplay = 'show';
                               monitors[i].Monitor.isAlarmed = false;
                               monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
@@ -2276,11 +2301,13 @@ angular.module('zmApp.controllers')
 
                               } else {
                                 //monitors[i].Monitor.listDisplay = 'show';
+                                debug ("No servers matched, filling defaults...");
                                 monitors[i].Monitor.isAlarmed = false;
                                 monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                                 monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
                                 var st2 = loginData.streamingurl;
+                                controlURL = loginData.url;
 
                                 if (zmsPort > 0 && !loginData.disableSimulStreaming) {
                                   // we need to insert minport
@@ -2301,6 +2328,8 @@ angular.module('zmApp.controllers')
                                   if (p2.path) st2 += p2.path;
                                   if (p3.path) controlURL += p3.path;
                                 }
+
+                                debug ("Storing streaming="+st2+" recording="+controlURL);
 
                                 monitors[i].Monitor.streamingURL = st2;
                                 monitors[i].Monitor.controlURL = controlURL;
