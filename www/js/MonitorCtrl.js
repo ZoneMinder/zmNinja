@@ -415,7 +415,59 @@ angular.module('zmApp.controllers')
       //-----------------------------------------------------------------------
 
       function monitorStateCheck() {
+        
+        var ld = NVRDataModel.getLogin();
+        // force get for latest status of monitors if av.
+       NVRDataModel.getMonitors(1)
+        .then (function (data) {
+         
+          $scope.monitors = data;
+          if (!$scope.monitors[0].Monitor_Status ) {
+            NVRDataModel.debug ("no Monitor_Status found reverting to daemonCheck...");
+            forceDaemonCheck();
+          }
+          else {
+            NVRDataModel.debug ("reporting status of monitors from multi-server API");
+            processMonitorStatus();
+          }
+
+        },
+        function (err) {
+          NVRDataModel.debug ("Monitor fetch error, reverting to daemonCheck...");
+          forceDaemonCheck();
+        })
+        
+      }
+
+      function processMonitorStatus () {
+
+        //array('Unknown','NotRunning','Running','NoSignal','Signal'),
+
+
+       // console.log (JSON.stringify($scope.monitors));
+        for (var j=0; j < $scope.monitors.length; j++) {
+
+          if ($scope.monitors[j].Monitor_Status.Status == 'Connected') {
+            $scope.monitors[j].Monitor.isRunning = "true";
+            $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
+            $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
+            $scope.monitors[j].Monitor.isRunningText = $scope.monitors[j].Monitor_Status.Status;
+          }
+          else {
+            $scope.monitors[j].Monitor.isRunning = "false";
+            $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
+            $scope.monitors[j].Monitor.char = "ion-close-circled";
+            $scope.monitors[j].Monitor.isRunningText = $scope.monitors[j].Monitor_Status.Status;
+          }
+          
+        }
+
+      }
+
+      function forceDaemonCheck() {
         var apiMonCheck;
+
+        $scope.loginData = NVRDataModel.getLogin();
 
         // The status is provided by zmdc.pl
         // "not running", "pending", "running since", "Unable to connect"
@@ -426,7 +478,7 @@ angular.module('zmApp.controllers')
             $scope.monitors[j].Monitor.isRunning = "...";
             $scope.monitors[j].Monitor.color = zm.monitorCheckingColor;
             $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
-            apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
+            apiMonCheck = $scope.loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
 
            
             NVRDataModel.debug("MonitorCtrl:monitorStateCheck: " + apiMonCheck);

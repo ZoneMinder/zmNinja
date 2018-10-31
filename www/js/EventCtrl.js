@@ -2815,7 +2815,7 @@ angular.module('zmApp.controllers')
 
 
     function recomputeThumbSize() {
-      NVRDataModel.debug("EventCtrl: recompute thumbnails");
+    //  NVRDataModel.debug("EventCtrl: recompute thumbnails");
 
       for (var i = 0; i < $scope.events.length; i++) {
         var tempMon = NVRDataModel.getMonitorObject($scope.events[i].Event.MonitorId);
