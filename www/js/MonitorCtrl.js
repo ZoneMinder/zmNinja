@@ -6,11 +6,12 @@
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
 angular.module('zmApp.controllers')
-  .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate', '$q',
-    function ($ionicPopup, zm, $scope, NVRDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q) {
+  .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'NVRDataModel',  '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate', '$q',
+    function ($ionicPopup, zm, $scope, NVRDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q) {
 
 
       var loginData;
+      $scope.monitorLoadStatus = "...";
 
       // --------------------------------------------------------
       // Handling of back button in case modal is open should
@@ -269,24 +270,15 @@ angular.module('zmApp.controllers')
 
       $scope.$on('$ionicView.afterEnter', function () {
         // console.log("**VIEW ** Monitor Ctrl Entered");
+
+        NVRDataModel.debug ("Monitor Control afterEnter");
         $scope.monitors = [];
-        $scope.monitors = message;
+        $scope.monitorLoadStatus = $translate.instant ('kPleaseWait')+'...';
+   
 
         //console.log (">>>>>>>>>>>> MONITOR CTRL " + JSON.stringify($scope.monitors));
 
-        if ($scope.monitors.length == 0) {
-          $rootScope.zmPopup = $ionicPopup.alert({
-            title: $translate.instant('kNoMonitors'),
-            template: $translate.instant('kPleaseCheckCredentials')
-          });
-          $ionicHistory.nextViewOptions({
-            disableBack: true
-          });
-          $state.go("app.login", {
-            "wizard": false
-          });
-          return;
-        }
+       
 
         loginData = NVRDataModel.getLogin();
         monitorStateCheck();
@@ -416,6 +408,11 @@ angular.module('zmApp.controllers')
         .then (function (data) {
          
           $scope.monitors = data;
+
+          if (!$scope.monitors.length) {
+            $scope.monitorLoadStatus = $translate.instant ('kNoMonitors');
+          }
+
           if (!$scope.monitors[0].Monitor_Status ) {
             NVRDataModel.debug ("no Monitor_Status found reverting to daemonCheck...");
             forceDaemonCheck();
@@ -428,6 +425,7 @@ angular.module('zmApp.controllers')
         },
         function (err) {
           NVRDataModel.debug ("Monitor fetch error, reverting to daemonCheck...");
+          $scope.monitorLoadStatus = $translate.instant ('kNoMonitors');
           forceDaemonCheck();
         });
         
