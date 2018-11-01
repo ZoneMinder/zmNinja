@@ -2539,12 +2539,12 @@ angular.module('zmApp', [
         data: {
           requireLogin: true
         },
-        resolve: {
+        /*resolve: {
           message: function (NVRDataModel) {
             // console.log("Inside app.montage resolve");
             return NVRDataModel.getMonitors(0);
           }
-        },
+        },*/
         url: "/monitors",
         cache: false,
         templateUrl: "templates/monitors.html",
