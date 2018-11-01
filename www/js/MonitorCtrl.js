@@ -9,13 +9,6 @@ angular.module('zmApp.controllers')
   .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate', '$q',
     function ($ionicPopup, zm, $scope, NVRDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q) {
 
-      //-----------------------------------------------------------------------
-      // Controller Main
-      //-----------------------------------------------------------------------
-
-      // var isModalOpen = false;
-
-      // console.log("***EVENTS: Waiting for Monitors to load before I proceed");
 
       var loginData;
 
@@ -478,7 +471,7 @@ angular.module('zmApp.controllers')
             $scope.monitors[j].Monitor.isRunningText = "...";
             $scope.monitors[j].Monitor.isRunning = "...";
             $scope.monitors[j].Monitor.color = zm.monitorCheckingColor;
-            $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
+            $scope.monitors[j].Monitor.char = "ion-help-circled";
             apiMonCheck = $scope.loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
 
            
@@ -498,6 +491,7 @@ angular.module('zmApp.controllers')
                   } else if (data.statustext.indexOf("running since") > -1) {
                     $scope.monitors[j].Monitor.isRunning = "true";
                     $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
+                    $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
                   } else if (data.statustext.indexOf("Unable to connect") > -1) {
                     $scope.monitors[j].Monitor.isRunning = "false";
                     $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
