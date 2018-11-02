@@ -408,7 +408,7 @@ angular.module('zmApp.controllers')
 
         var as = 'undefined';
 
-        if (!mid && monitors.length > 0) {
+        if (!mid && monitors && monitors.length > 0) {
           mid = monitors[0].Monitor.Id;
         }
 
@@ -2145,7 +2145,7 @@ angular.module('zmApp.controllers')
                   .then(function (data) {
                       //  console.log("HTTP success got " + JSON.stringify(data.monitors));
                       data = data.data;
-                      monitors = data.monitors;
+                      if (data.monitors) monitors = data.monitors;
 
 
                       if ($rootScope.authSession == 'undefined') {
