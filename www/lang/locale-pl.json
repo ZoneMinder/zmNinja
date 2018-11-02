@@ -355,6 +355,7 @@
     "kStateFreeMem"              :"Wolnej pamięci",
     "kStateHideControls"         :"Ukryj Przyciski ZoneMinder",
     "kStateHost"                 :"Host",
+    "kStateMultiServer"          :"wiele serwerów",
     "kStatePath"                 :"Ścieżka",
     "kStateServer"               :"Serwer",
     "kStateShowControls"         :"Pokaż Przyciski ZoneMinder",
