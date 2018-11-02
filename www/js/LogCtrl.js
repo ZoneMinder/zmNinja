@@ -70,7 +70,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   $scope.downloadLogs = function () {
     var body = "zmNinja version:" + $scope.zmAppVersion +
       " (" + $rootScope.platformOS + ")\n" +
-      "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion();
+      "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion()+"\n\n";
 
     body = $translate.instant('kSensitiveBody') + '\n\n\n' + body;
     var fname = $rootScope.appName + "-logs-" +
@@ -107,7 +107,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   $scope.attachLogs = function () {
     var body = "zmNinja version:" + $scope.zmAppVersion +
       " (" + $rootScope.platformOS + ")<br/>" +
-      "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion();
+      "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion() + "<br/>";
     body = '<b>' + $translate.instant('kSensitiveBody') + '</b><br/><br/>' + body;
 
     $fileLogger.checkFile()
@@ -254,6 +254,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
     };
 
     $scope.zmAppVersion = NVRDataModel.getAppVersion();
+    $scope.zmVersion = NVRDataModel.getCurrentServerVersion();
 
     /* intervalLogUpdateHandle = $interval(function ()
     {
