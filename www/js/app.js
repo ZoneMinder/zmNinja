@@ -1165,7 +1165,7 @@ angular.module('zmApp', [
                   }
                 }
 
-                var ldg = NVRDataModel.getLogin();
+                ldg = NVRDataModel.getLogin();
                 ldg.loginAPISupported = true;
                 NVRDataModel.setLogin(ldg);
 
@@ -1182,7 +1182,7 @@ angular.module('zmApp', [
 
               } catch (e) {
                 NVRDataModel.debug("Login API approach did not work...");
-                var ld = NVRDataModel.getLogin();
+                ld = NVRDataModel.getLogin();
                 ld.loginAPISupported = false;
                 NVRDataModel.setLogin(ld);
                 loginWebScrape()
