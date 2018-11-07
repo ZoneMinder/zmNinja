@@ -356,7 +356,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       }
 
       if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
-        NVRDataModel.debug ("setting basic auth");
+        NVRDataModel.debug ("setting basic auth with "+$scope.wizard.basicuser+":"+$scope.wizard.basicpassword);
         cordova.plugin.http.useBasicAuth($scope.wizard.basicuser, $scope.wizard.basicpassword);
 
       }
