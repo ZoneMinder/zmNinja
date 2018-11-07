@@ -293,15 +293,21 @@ angular.module('zmApp.controllers')
           var tm = $rootScope.tappedMid;
           $rootScope.tappedMid = 0;
           var monitem;
-          for (var m = 0; m < $scope.monitors.length; m++) {
-            if ($scope.monitors[m].Monitor.Id == tm) {
-              monitem = $scope.monitors[m];
-              break;
+
+          NVRDataModel.getMonitors(0)
+          .then ( function (data) {
+            $scope.monitors = data;
+            for (var m = 0; m < $scope.monitors.length; m++) {
+              if ($scope.monitors[m].Monitor.Id == tm) {
+                monitem = $scope.monitors[m];
+                break;
+              }
             }
+            openModal(monitem.Monitor.Id, monitem.Monitor.Controllable, monitem.Monitor.ControlId, monitem.Monitor.connKey, monitem);
+          });
+          
 
-          }
-
-          openModal(monitem.Monitor.Id, monitem.Monitor.Controllable, monitem.Monitor.ControlId, monitem.Monitor.connKey, monitem);
+          
         }
 
       });
