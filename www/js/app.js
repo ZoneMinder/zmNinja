@@ -1134,7 +1134,7 @@ angular.module('zmApp', [
 
                 if (!succ.version) {
                   NVRDataModel.debug("API login returned fake success, going back to webscrape");
-                  var ld = NVRDataModel.getLogin();
+                  ld = NVRDataModel.getLogin();
                   ld.loginAPISupported = false;
                   NVRDataModel.setLogin(ld);
 
@@ -1165,7 +1165,7 @@ angular.module('zmApp', [
                   }
                 }
 
-                ldg = NVRDataModel.getLogin();
+                var ldg = NVRDataModel.getLogin();
                 ldg.loginAPISupported = true;
                 NVRDataModel.setLogin(ldg);
 
