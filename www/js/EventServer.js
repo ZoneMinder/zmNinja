@@ -17,6 +17,7 @@ angular.module('zmApp.controllers')
     var pushInited = false;
     var isTimerOn = false;
     var nativeWebSocketId = -1;
+    var iClosed = false;
 
 
 
@@ -31,7 +32,10 @@ angular.module('zmApp.controllers')
       NVRDataModel.log("openHandshake: Websocket open, sending Auth");
       sendMessage("auth", {
         user: loginData.username,
-        password: loginData.password
+        password: loginData.password,
+        monlist: loginData.eventServerMonitors,
+        intlist: loginData.eventServerInterval
+      
       });
 
 
@@ -62,6 +66,13 @@ angular.module('zmApp.controllers')
     }
 
     function handleClose(event) {
+
+
+      if (iClosed) {
+        NVRDataModel.debug ("App closed socket, not reconnecting");
+        iClosed = false;
+        return;
+      }
 
       console.log("*********** WEBSOCKET CLOSE CALLED");
 
@@ -99,6 +110,7 @@ angular.module('zmApp.controllers')
 
         if (str.reason == 'APNSDISABLED') {
           console.log("FORCE CLOSING");
+          iClosed=true;
           ws.close();
           NVRDataModel.displayBanner('error', ['Event Server: APNS disabled'], 2000, 6000);
           $rootScope.apnsToken = "";
@@ -319,7 +331,7 @@ angular.module('zmApp.controllers')
 
       NVRDataModel.log("Clearing error/close cbk, disconnecting and deleting Event Server socket...");
 
-      if ($rootScope.platforOS == 'desktop') {
+      if ($rootScope.platformOS == 'desktop') {
         if (typeof ws === 'undefined') {
           NVRDataModel.log("Event server socket is empty, nothing to disconnect");
           return;
@@ -327,10 +339,12 @@ angular.module('zmApp.controllers')
 
 
         ws.onmessage = null;
+        iClosed = true;
         ws.close();
         ws = undefined;
       } else {
         if (nativeWebSocketId != -1) //native;
+        iClosed = true;
           CordovaWebsocketPlugin.wsClose(nativeWebSocketId, 1000, "Connection closed");
         nativeWebSocketId = -1;
 
@@ -478,6 +492,7 @@ angular.module('zmApp.controllers')
       // console.log("*********** MEDIA BLOG IS " + mediasrc);
       media = $cordovaMedia.newMedia(mediasrc);
 
+
       push.on('registration', function (data) {
         pushInited = true;
         NVRDataModel.debug("Push Notification registration ID received: " + JSON.stringify(data));
@@ -522,10 +537,6 @@ angular.module('zmApp.controllers')
 
               }
 
-
-
-              //console.log ("WUTPUT SENDING REG WITH "+monstring);
-
               $rootScope.monstring = monstring;
               $rootScope.intstring = intstring;
 
@@ -548,6 +559,7 @@ angular.module('zmApp.controllers')
       push.on('notification', function (data) {
 
         $ionicPlatform.ready(function () {
+          NVRDataModel.log("******* notification handler device ready");
           NVRDataModel.debug("received push notification");
 
           var ld = NVRDataModel.getLogin();
@@ -598,13 +610,13 @@ angular.module('zmApp.controllers')
 
               $rootScope.tappedMid = mid;
               $rootScope.tappedEid = eid;
-              NVRDataModel.log("Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
+              NVRDataModel.log("ES:Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
 
               if ($rootScope.platformOS == 'ios') {
 
-                NVRDataModel.debug("iOS only: clearing background push");
+                NVRDataModel.debug("ES:iOS only: clearing background push");
                 push.finish(function () {
-                  NVRDataModel.debug("processing of push data is finished");
+                  NVRDataModel.debug("ES:processing of push data is finished");
                 });
               }
 
@@ -616,7 +628,13 @@ angular.module('zmApp.controllers')
             }
             // keep this emit not broadcast
             // see Portal latch for reason
-            $rootScope.$emit('process-push');
+
+            //https://stackoverflow.com/a/22651128/1361529
+            $timeout ( function () {
+              NVRDataModel.debug ("EventServer: broadcasting process-push");
+              $rootScope.$broadcast('process-push');
+            },100);
+          
 
           } else // app is foreground
           {

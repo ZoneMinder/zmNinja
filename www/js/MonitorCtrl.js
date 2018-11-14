@@ -6,18 +6,12 @@
 // refer to comments in EventCtrl for the modal stuff. They are almost the same
 
 angular.module('zmApp.controllers')
-  .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'NVRDataModel', 'message', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate', '$q',
-    function ($ionicPopup, zm, $scope, NVRDataModel, message, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q) {
+  .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'NVRDataModel',  '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate', '$q',
+    function ($ionicPopup, zm, $scope, NVRDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q) {
 
-      //-----------------------------------------------------------------------
-      // Controller Main
-      //-----------------------------------------------------------------------
-
-      // var isModalOpen = false;
-
-      // console.log("***EVENTS: Waiting for Monitors to load before I proceed");
 
       var loginData;
+      $scope.monitorLoadStatus = "...";
 
       // --------------------------------------------------------
       // Handling of back button in case modal is open should
@@ -47,6 +41,8 @@ angular.module('zmApp.controllers')
       $scope.openMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
       };
+
+      
 
       //----------------------------------------------------------------
       // Alarm notification handling
@@ -251,6 +247,20 @@ angular.module('zmApp.controllers')
       // reset power state on exit as if it is called after we enter another
       // state, that effectively overwrites current view power management needs
       //------------------------------------------------------------------------
+
+      $scope.$on('$ionicView.beforeEnter', function() {
+
+        $scope.$on ( "process-push", function () {
+          NVRDataModel.debug (">> MonitorCtrl: push handler");
+          var s = NVRDataModel.evaluateTappedNotification();
+          NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+          $ionicHistory.nextViewOptions({
+            disableAnimate:true,
+            disableBack: true
+          });
+          $state.go(s[0],s[1],s[2]);
+        });
+      });
       $scope.$on('$ionicView.enter', function () {
         // console.log("**VIEW ** Monitor Ctrl Entered");
         NVRDataModel.setAwake(false);
@@ -260,24 +270,15 @@ angular.module('zmApp.controllers')
 
       $scope.$on('$ionicView.afterEnter', function () {
         // console.log("**VIEW ** Monitor Ctrl Entered");
+
+        NVRDataModel.debug ("Monitor Control afterEnter");
         $scope.monitors = [];
-        $scope.monitors = message;
+        $scope.monitorLoadStatus = $translate.instant ('kPleaseWait')+'...';
+   
 
         //console.log (">>>>>>>>>>>> MONITOR CTRL " + JSON.stringify($scope.monitors));
 
-        if ($scope.monitors.length == 0) {
-          $rootScope.zmPopup = $ionicPopup.alert({
-            title: $translate.instant('kNoMonitors'),
-            template: $translate.instant('kPleaseCheckCredentials')
-          });
-          $ionicHistory.nextViewOptions({
-            disableBack: true
-          });
-          $state.go("app.login", {
-            "wizard": false
-          });
-          return;
-        }
+       
 
         loginData = NVRDataModel.getLogin();
         monitorStateCheck();
@@ -292,15 +293,21 @@ angular.module('zmApp.controllers')
           var tm = $rootScope.tappedMid;
           $rootScope.tappedMid = 0;
           var monitem;
-          for (var m = 0; m < $scope.monitors.length; m++) {
-            if ($scope.monitors[m].Monitor.Id == tm) {
-              monitem = $scope.monitors[m];
-              break;
+
+          NVRDataModel.getMonitors(0)
+          .then ( function (data) {
+            $scope.monitors = data;
+            for (var m = 0; m < $scope.monitors.length; m++) {
+              if ($scope.monitors[m].Monitor.Id == tm) {
+                monitem = $scope.monitors[m];
+                break;
+              }
             }
+            openModal(monitem.Monitor.Id, monitem.Monitor.Controllable, monitem.Monitor.ControlId, monitem.Monitor.connKey, monitem);
+          });
+          
 
-          }
-
-          openModal(monitem.Monitor.Id, monitem.Monitor.Controllable, monitem.Monitor.ControlId, monitem.Monitor.connKey, monitem);
+          
         }
 
       });
@@ -399,7 +406,66 @@ angular.module('zmApp.controllers')
       //-----------------------------------------------------------------------
 
       function monitorStateCheck() {
+        
+       // console.log ("Checking monitors");
+        var ld = NVRDataModel.getLogin();
+        // force get for latest status of monitors if av.
+       NVRDataModel.getMonitors(1)
+        .then (function (data) {
+         
+          $scope.monitors = data;
+
+          if (!$scope.monitors.length) {
+            $scope.monitorLoadStatus = $translate.instant ('kNoMonitors');
+          }
+
+          if (!$scope.monitors[0].Monitor_Status ) {
+            NVRDataModel.debug ("no Monitor_Status found reverting to daemonCheck...");
+            forceDaemonCheck();
+          }
+          else {
+            NVRDataModel.debug ("reporting status of monitors from multi-server API");
+            processMonitorStatus();
+          }
+
+        },
+        function (err) {
+          NVRDataModel.debug ("Monitor fetch error, reverting to daemonCheck...");
+          $scope.monitorLoadStatus = $translate.instant ('kNoMonitors');
+          forceDaemonCheck();
+        });
+        
+      }
+
+      function processMonitorStatus () {
+
+        //array('Unknown','NotRunning','Running','NoSignal','Signal'),
+
+
+       // console.log (JSON.stringify($scope.monitors));
+        for (var j=0; j < $scope.monitors.length; j++) {
+
+          if ($scope.monitors[j].Monitor_Status.Status == 'Connected') {
+            $scope.monitors[j].Monitor.isRunning = "true";
+            $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
+            $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
+            $scope.monitors[j].Monitor.isRunningText = $scope.monitors[j].Monitor_Status.Status;
+          }
+          else {
+            $scope.monitors[j].Monitor.isRunning = "false";
+            $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
+            $scope.monitors[j].Monitor.char = "ion-close-circled";
+            $scope.monitors[j].Monitor.isRunningText = $scope.monitors[j].Monitor_Status.Status;
+          }
+          
+        }
+
+      }
+
+      function forceDaemonCheck() {
         var apiMonCheck;
+
+        $scope.loginData = NVRDataModel.getLogin();
 
         // The status is provided by zmdc.pl
         // "not running", "pending", "running since", "Unable to connect"
@@ -409,13 +475,10 @@ angular.module('zmApp.controllers')
             $scope.monitors[j].Monitor.isRunningText = "...";
             $scope.monitors[j].Monitor.isRunning = "...";
             $scope.monitors[j].Monitor.color = zm.monitorCheckingColor;
-            $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
-            apiMonCheck = loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
+            $scope.monitors[j].Monitor.char = "ion-help-circled";
+            apiMonCheck = $scope.loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
 
-            //apiMonCheck = apiMonCheck.replace(loginData.url, $scope.monitors[j].Monitor.baseURL);
-
-            // in multiserver replace apiurl with baseurl
-
+           
             NVRDataModel.debug("MonitorCtrl:monitorStateCheck: " + apiMonCheck);
             //console.log("**** ZMC CHECK " + apiMonCheck);
             $http.get(apiMonCheck)
@@ -432,6 +495,7 @@ angular.module('zmApp.controllers')
                   } else if (data.statustext.indexOf("running since") > -1) {
                     $scope.monitors[j].Monitor.isRunning = "true";
                     $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
+                    $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
                   } else if (data.statustext.indexOf("Unable to connect") > -1) {
                     $scope.monitors[j].Monitor.isRunning = "false";
                     $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;

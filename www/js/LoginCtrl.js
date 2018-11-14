@@ -33,6 +33,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
   }
 
+ 
   //----------------------------------------------------------------
   // Alarm notification handling
   //----------------------------------------------------------------
@@ -233,6 +234,20 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   // state, that effectively overwrites current view power management needs
   //------------------------------------------------------------------------
   $scope.$on('$ionicView.beforeEnter', function () {
+
+
+    $scope.$on ( "process-push", function () {
+      NVRDataModel.debug (">> LoginCtrl: push handler. Not processing push, because you might be here due to login failure");
+      /*var s = NVRDataModel.evaluateTappedNotification();
+      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);*/
+    });
+
+    
     oldLoginData = '';
 
     $scope.loginData = NVRDataModel.getLogin();
@@ -261,11 +276,6 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     if ($stateParams.wizard == "true") {
       NVRDataModel.log("Creating new login entry for wizard");
       $scope.loginData = angular.copy(NVRDataModel.getDefaultLoginObject());
-
-      // default object has this as false
-      if ($rootScope.platformOS == 'ios') {
-        $scope.loginData.disableSimulStreaming = true;
-      }
 
       $scope.loginData.serverName = $rootScope.wizard.serverName;
       $scope.loginData.url = $rootScope.wizard.loginURL;

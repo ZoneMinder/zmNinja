@@ -10,6 +10,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
   };
 
+  
   //----------------------------------------------------------------
   // Alarm notification handling
   //----------------------------------------------------------------
@@ -47,6 +48,19 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
   // state, that effectively overwrites current view power management needs
   //------------------------------------------------------------------------
   $scope.$on('$ionicView.beforeEnter', function () {
+
+    $scope.$on ( "process-push", function () {
+      NVRDataModel.debug (">> DevOptionsCtrl: push handler");
+      var s = NVRDataModel.evaluateTappedNotification();
+      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);
+    });
+  
+
     //console.log("**VIEW ** DevOptions Ctrl Entered");
     $scope.loginData = NVRDataModel.getLogin();
     console.log("DEV LOGS=" + $scope.loginData.enableLogs);

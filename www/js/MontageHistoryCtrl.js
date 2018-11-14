@@ -11,6 +11,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
   var viewCleaned = false;
   $scope.isScreenReady = false;
 
+
+
+
   //--------------------------------------------------------------------------------------
   // Handles bandwidth change, if required
   //
@@ -1064,6 +1067,18 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     }
   }
   $scope.$on('$ionicView.beforeEnter', function () {
+
+    $scope.$on ( "process-push", function () {
+      NVRDataModel.debug (">> MontageHistoryCtrl: push handler");
+      var s = NVRDataModel.evaluateTappedNotification();
+      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);
+    });
+    
     // This rand is really used to reload the monitor image in img-src so it is not cached
     // I am making sure the image in montage view is always fresh
     // I don't think I am using this anymore FIXME: check and delete if needed

@@ -47,15 +47,11 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
   $scope.constructFrames = function (event, alarm) {
 
     var stream = "";
-    if (event.Event.imageMode == 'path') {
-      stream = event.Event.baseURL + "/index.php?view=image" +
-        "&path=" + event.Event.relativePath + alarm.fname +
-        "&height=380";
-    } else if (event.Event.imageMode == 'fid') {
-      stream = event.Event.baseURL + "/index.php?view=image" +
+  
+      stream = event.Event.recordingURL + "/index.php?view=image" +
         "&fid=" + alarm.id;
 
-    }
+    
     if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
 
     stream += NVRDataModel.insertBasicAuthToken();
@@ -125,13 +121,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
   $scope.showImage = function (p, r, f, fid, e, imode, id) {
     var img;
     //console.log("Image Mode " + imode);
-    if (imode == 'path')
-
-      img = "<img width='100%' ng-src='" + p + "/index.php?view=image&path=" + r + f + "'>";
-    else {
+ 
       img = "<img width='100%' ng-src='" + p + "/index.php?view=image&fid=" + id + "'>";
       // console.log ("IS MULTISERVER SO IMAGE IS " + img);
-    }
+    
     $rootScope.zmPopup = $ionicPopup.alert({
       title: 'frame:' + fid + '/Event:' + e,
       template: img,
@@ -300,7 +293,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         fid: event.event.Frame[i].FrameId,
         id: event.event.Frame[i].Id,
         //group:i,
-        relativePath: computeRelativePath(event.event),
+        
         score: event.event.Frame[i].Score,
         fname: padToN(event.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg",
 
@@ -317,7 +310,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
           eid: event.event.Event.Id,
           fid: event.event.Frame[i].FrameId,
           //group:i,
-          relativePath: computeRelativePath(event.event),
+         
           score: event.event.Frame[i].Score,
           fname: padToN(event.event.Frame[i].FrameId, eventImageDigits) + "-capture.jpg",
           id: event.event.Frame[i].Id,
@@ -361,10 +354,10 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
       //console.log ("You tapped " + ndx);
       $scope.alarm_images = [];
-      $scope.playbackURL = $scope.event.Event.baseURL;
+      $scope.playbackURL = $scope.event.Event.recordingURL;
       var items = current_data.datasets[0].frames[ndx];
       $scope.alarm_images.push({
-        relativePath: items.relativePath,
+  
         fid: items.fid,
         id: items.id,
         fname: items.fname,
@@ -376,56 +369,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
 
   }
 
-  //--------------------------------------------------------
-  // utility function
-  //--------------------------------------------------------
-
-  function computeRelativePath(event) {
-    var relativePath = "";
-    var loginData = NVRDataModel.getLogin();
-    var str = event.Event.StartTime;
-    var yy = moment(str).locale('en').format('YY');
-    var mm = moment(str).locale('en').format('MM');
-    var dd = moment(str).locale('en').format('DD');
-    var hh = moment(str).locale('en').format('HH');
-    var min = moment(str).locale('en').format('mm');
-    var sec = moment(str).locale('en').format('ss');
-    relativePath = event.Event.MonitorId + "/" +
-      yy + "/" +
-      mm + "/" +
-      dd + "/" +
-      hh + "/" +
-      min + "/" +
-      sec + "/";
-    return relativePath;
-
-  }
-
-  //--------------------------------------------------------
-  // utility function
-  //--------------------------------------------------------
-
-  function computeBasePath(event) {
-    var basePath = "";
-    var loginData = NVRDataModel.getLogin();
-    var str = event.Event.StartTime;
-    var yy = moment(str).locale('en').format('YY');
-    var mm = moment(str).locale('en').format('MM');
-    var dd = moment(str).locale('en').format('DD');
-    var hh = moment(str).locale('en').format('HH');
-    var min = moment(str).locale('en').format('mm');
-    var sec = moment(str).locale('en').format('ss');
-
-    basePath = loginData.url + "/events/" +
-      event.Event.MonitorId + "/" +
-      yy + "/" +
-      mm + "/" +
-      dd + "/" +
-      hh + "/" +
-      min + "/" +
-      sec + "/";
-    return basePath;
-  }
+  
 
   function humanizeTime(str) {
     return moment.tz(str, NVRDataModel.getTimeZoneNow()).fromNow();
