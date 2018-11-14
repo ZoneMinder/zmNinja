@@ -101,6 +101,11 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
           console.log('-->Error setting SSL permissive');
         });
 
+        if ($rootScope.platformOS == 'android') {
+          log (">>> Android: enabling inline image view for self signed certs");
+          cordova.plugins.certificates.trustUnsecureCerts(true);
+        }
+
       } else {
 
         NVRDataModel.log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");

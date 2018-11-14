@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.029";
+      var zmAppVersion = "1.3.030";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -220,6 +220,11 @@ angular.module('zmApp.controllers')
           }, function () {
             console.log('-->Error setting SSL permissive');
           });
+
+          if ($rootScope.platformOS == 'android') {
+            log (">>> Android: enabling inline image view for self signed certs");
+            cordova.plugins.certificates.trustUnsecureCerts(true);
+          }
 
         } else {
 
@@ -2182,7 +2187,19 @@ angular.module('zmApp.controllers')
 
                               // make them all show for now
 
-                            
+                              var recordingType = '';
+                              if (monitors[i].Monitor.SaveJPEGs>0) {
+                                recordingType = $translate.instant('kImages');
+                              }
+                              if (monitors[i].Monitor.VideoWriter > 0) {
+                                if (recordingType.length) recordingType +=" + ";
+                                recordingType = recordingType + $translate.instant('kVideo') + " (";
+                                recordingType = recordingType + ( monitors[i].Monitor.VideoWriter == 1 ? $translate.instant('kMonitorVideoEncode'): $translate.instant('kMonitorVideoPassThru')) + ")";
+                              }
+
+                              // in 1.30.4 these fields did not exist
+                              
+                              monitors[i].Monitor.recordingType = recordingType ? recordingType : $translate.instant ('kImages');
                               monitors[i].Monitor.listDisplay = 'show';
                               monitors[i].Monitor.isAlarmed = false;
                               monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();

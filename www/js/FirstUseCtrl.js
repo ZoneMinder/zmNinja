@@ -23,6 +23,12 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
       }, function () {
         console.log('-->First Use -> Error setting SSL permissive');
       });
+
+      if ($rootScope.platformOS == 'android') {
+        log (">>> Android: enabling inline image view for self signed certs");
+        cordova.plugins.certificates.trustUnsecureCerts(true);
+      }
+
     }
 
 

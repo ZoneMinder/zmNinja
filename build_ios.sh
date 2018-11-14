@@ -1,7 +1,7 @@
 echo "*** Using old build system due to XCode 10 issues ** "
 echo "see https://forum.ionicframework.com/t/how-to-build-ionic-cordova-with-xcode-10/142044"
 
-#ionic cordova plugin add cordova-plugin-ionic-webview@latest
+ionic cordova plugin add https://github.com/pliablepixels/cordova-plugin-ionic-webview.git
 
 #echo "--- readding certificate plugin to make sure... ---"
 #ionic cordova plugin remove cordova-plugin-certificates
