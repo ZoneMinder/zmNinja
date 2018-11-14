@@ -47,7 +47,7 @@
           <br /> {{'kAlarmFrameCount' |translate}}: {{monitor.Monitor.AlarmFrameCount}}
           <br /> {{'kStatus' | translate}}: {{monitor.Monitor.isRunningText}}
           <br /> {{'kId' | translate}}: {{monitor.Monitor.Id}}
-          <br /> {{'kEventRecording' | translate}}: {{(monitor.Monitor.VideoWriter>0?'kVideo':'kImages') | translate}}
+          <br /> {{'kEventRecording' | translate}}: {{monitor.Monitor.recordingType}}
           <br />{{'kMonStreamingURL' | translate}}: {{monitor.Monitor.streamingURL}}
           <br />{{'kMonPortalURL' | translate}}: {{monitor.Monitor.baseURL}}
           <br />{{'kMonRecordingURL' | translate}}: {{monitor.Monitor.controlURL}}
