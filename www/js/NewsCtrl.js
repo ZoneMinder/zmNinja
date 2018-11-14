@@ -27,6 +27,8 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
     }
   };
 
+  
+
   //-------------------------------------------------------------------------
   // Lets make sure we set screen dim properly as we enter
   // The problem is we enter other states before we leave previous states
@@ -34,6 +36,22 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
   // reset power state on exit as if it is called after we enter another
   // state, that effectively overwrites current view power management needs
   //------------------------------------------------------------------------
+  
+  
+  $scope.$on ('$ionicView.beforeEnter', function () {
+
+    $scope.$on ( "process-push", function () {
+      NVRDataModel.debug (">> NewsCtrl: push handler");
+      var s = NVRDataModel.evaluateTappedNotification();
+      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);
+    });
+  });
+  
   $scope.$on('$ionicView.enter', function () {
     // console.log("**VIEW ** News Ctrl Entered");
     NVRDataModel.setAwake(false);

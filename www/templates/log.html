@@ -4,7 +4,10 @@
 
     &nbsp;
     <button ng-class="selectOn? 'button button-icon button-clear ion-ios-copy':'button button-icon button-clear ion-ios-copy-outline'"
-      ng-click="selectToggle()"></button>
+      ng-click="selectToggle()"></button> &nbsp;
+
+
+     
 
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
@@ -13,10 +16,10 @@
     <a class="button button-icon icon ion-arrow-swap" ng-href="" ng-click="flipLogs()"></a>
     <a ng-if="logEntity == $root.appName" class="button button-icon icon ion-trash-a" ng-href="" ng-click="deleteLogs()"></a>
     <div ng-if="$root.platformOS!='desktop'">
-      <a class="button button-icon icon ion-email" ng-href="" ng-click="sendEmail(log.logString)"> </a>
+      <a class="button button-icon icon ion-email" ng-href="" ng-click="attachLogs()"> </a>
     </div>
     <div ng-if="$root.platformOS=='desktop'">
-      <a class="button button-icon icon ion-android-download" ng-href="" ng-click="sendEmail(log.logString)"> </a>
+      <a class="button button-icon icon ion-android-download" ng-href="" ng-click="downloadLogs()"> </a>
     </div>
   </ion-nav-buttons>
   <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
@@ -31,11 +34,14 @@
       <button class="button button-small button-stable icon ion-chevron-left" ng-click="changePage(1)">
       </button>
       <button class="button button-small button-stable icon ion-chevron-right" ng-click="changePage(-1)">
-      </button>
+      </button><br/>
+      <b>ZoneMinder {{'kVersion'|translate}}: {{zmVersion}} </b><br/>
+
     </div>
 
     <div ng-if="logEntity==$root.appName">
-      <b>{{$root.appName}} {{'kVersion'|translate}}: {{zmAppVersion}} ({{$root.platformOS}})</b>
+      <b>{{$root.appName}} {{'kVersion'|translate}}: {{zmAppVersion}} ({{$root.platformOS}})</b><br/>
+      <b>ZoneMinder {{'kVersion'|translate}}: {{zmVersion}} </b>
     </div>
 
     <div ng-if="selectOn" class="aside-1">{{'kLogsCopyPaste' | translate }}</div>

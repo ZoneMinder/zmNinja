@@ -47,6 +47,10 @@ angular.module('zmApp.controllers')
 
     var broadcastHandles = [];
 
+    
+  
+ 
+
     var as = $scope.$on("auth-success", function () {
 
       /* var tnow = new Date();
@@ -217,13 +221,6 @@ angular.module('zmApp.controllers')
           $state.go('app.refresh', {
             "view": 'app.montage'
           });
-
-
-          /* $state.transitionTo($state.current, $stateParams, {
-               reload: true,
-               inherit: false,
-               notify: true
-           });*/
 
         });
 
@@ -1823,6 +1820,19 @@ angular.module('zmApp.controllers')
     // minimal has to be beforeEnter or header won't hide
     $scope.$on('$ionicView.beforeEnter', function () {
 
+
+      $scope.$on ( "process-push", function () {
+        NVRDataModel.debug (">> MontageCtrl: push handler");
+        var s = NVRDataModel.evaluateTappedNotification();
+        NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+        $ionicHistory.nextViewOptions({
+          disableAnimate:true,
+          disableBack: true
+        });
+        $state.go(s[0],s[1],s[2]);
+      });
+     
+
       timeInMontage = new Date();
       broadcastHandles = [];
       randToAvoidCacheMem = new Date().getTime();
@@ -2019,6 +2029,11 @@ angular.module('zmApp.controllers')
       currentStreamState = streamState.STOPPED;
       viewCleanup();
       viewCleaned = true;
+      //NVRDataModel.debug("Deregistering broadcast handles");
+    for (var i = 0; i < broadcastHandles.length; i++) {
+      broadcastHandles[i]();
+    }
+    broadcastHandles = [];
 
     });
 

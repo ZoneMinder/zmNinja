@@ -1,10 +1,14 @@
 #!/bin/bash
 
+    ./electron_js/sync_versions.sh
+
     APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns.*/\1/'`
     # multipleApk adds 2 and 4 in Xwalk builds for arm and x86 respectively
     ver_pre5=${APPVER//.} 
     ver=${APPVER//.}9
 
+    echo "About to build version: $APPVER"
+    read -p "Press any key..."
 # App signining credentials in this file
 NINJAKEYSTORE=~/Desktop/zmNinja.keystore
 
@@ -13,22 +17,8 @@ if [ ! -f "$NINJAKEYSTORE" ]; then
         exit
 fi
 
-rm -f release_files 2>/dev/null
+rm -rf release_files 2>/dev/null
 mkdir release_files
-
-# no arguments - build both
-# 1 == build crosswalk only
-# 2 == build native only
-BUILD_MODE="all"
-if [ "$1" = "1" ]; then
-        BUILD_MODE="xwalk"
-        echo "only building crosswalk"
-fi
-        
-if [ "$1" = "2" ]; then
-        BUILD_MODE="native"
-        echo "only building native view (5+)"
-fi
 
 echo "----------> Only building native. Not building crosswalk anymore due to compatibility issues <----------------------"
 BUILD_MODE="native"
@@ -39,7 +29,7 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     echo "${ver}: Building Release mode for android 5+..."
     echo "--------------------------------------------"
     
-#    No longger needed as we are not supporting Xwalk
+#    No longer needed as we are not supporting Xwalk
 #    echo "Removing android and re-adding..."
 #    cordova platform remove android
 #    cordova platform add android@6.4.0

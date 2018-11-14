@@ -28,7 +28,8 @@ angular.module('zmApp', [
     'uk.ac.soton.ecs.videogular.plugins.cuepoints',
     'dcbImgFallback',
     'ngImageAppear',
-    'angular-websocket'
+    'angular-websocket',
+    'ngCookies'
 
 
   ])
@@ -41,7 +42,7 @@ angular.module('zmApp', [
   .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
     recommendedAppVersion: '1.32.0',
-    minEventServerVersion: '2.0',
+    minEventServerVersion: '2.4',
     castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
     gcmSenderId: '710936220256',
@@ -49,7 +50,7 @@ angular.module('zmApp', [
     largeHttpTimeout: 30000,
     logFile: 'zmNinjaLog.txt',
     authoremail: 'pliablepixels+zmNinja@gmail.com',
-    logFileMaxSize: 30000, // after this limit log gets reset
+    logFileMaxSize: 100000, // after this limit log gets reset
 
     updateCheckInterval: 86400000, // 24 hrs
     loadingTimeout: 15000,
@@ -714,6 +715,14 @@ angular.module('zmApp', [
         }
 
         //console.log ("HTTP response");
+
+      
+        if (response.data && typeof(response.data) == 'string' && response.data.startsWith("<pre class=\"cake-error\">")) {
+            console.log ("cake error detected, attempting fix...");
+            response.data = JSON.parse(response.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
+            //console.log ("FIXED="+response.data);
+        }
+        //"data":"<pre class=\"cake-error\">
         return response;
       }
 
@@ -852,7 +861,7 @@ angular.module('zmApp', [
   // This service automatically logs into ZM at periodic intervals
   //------------------------------------------------------------------
 
-  .factory('zmAutoLogin', function ($interval, NVRDataModel, $http, zm, $browser, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory, $translate) {
+  .factory('zmAutoLogin', ['$interval', 'NVRDataModel', '$http', 'zm', '$timeout', '$q', '$rootScope', '$ionicLoading', '$ionicPopup', '$state', '$ionicContentBanner', 'EventServer', '$ionicHistory', '$translate', '$cookies',function ($interval, NVRDataModel, $http, zm, $timeout, $q, $rootScope, $ionicLoading, $ionicPopup, $state, $ionicContentBanner, EventServer, $ionicHistory, $translate, $cookies) {
     var zmAutoLoginHandle;
 
     //------------------------------------------------------------------
@@ -956,17 +965,34 @@ angular.module('zmApp', [
     // which actually means auth failed, but ZM treats it as a success
     //------------------------------------------------------------------
 
+    function _doLoginNoLogout (str) {
+    
+      return _doLogin(str);
+    }
 
-    function doLogoutAndLogin(str) {
+    function _doLogoutAndLogin(str) {
+      NVRDataModel.debug ("Clearing cookies");
+
+      if (window.cordova) {
+        // we need to do this or ZM will send same auth hash
+        // this was fixed in a PR dated Oct 18
+       
+        cordova.plugin.http.clearCookies();
+      }
+    /*  else {
+       angular.forEach($cookies, function (v, k) {
+         $cookies.remove(k);
+        });
+      }*/
       return NVRDataModel.logout()
         .then(function (ans) {
-          return doLogin(str);
+          return _doLogin(str);
 
         });
     }
 
 
-    function doLogin(str) {
+    function _doLogin(str) {
       var d = $q.defer();
       var ld = NVRDataModel.getLogin();
 
@@ -979,13 +1005,6 @@ angular.module('zmApp', [
         return d.promise;
 
       }
-
-      if ($rootScope.isDownloading) {
-        NVRDataModel.log("Skipping login process as we are downloading...");
-        d.resolve("success");
-        return d.promise;
-      }
-
       NVRDataModel.debug("Resetting zmCookie...");
       $rootScope.zmCookie = '';
       // first try to login, if it works, good
@@ -995,7 +1014,7 @@ angular.module('zmApp', [
       proceedWithLogin()
         .then(function (success) {
 
-            NVRDataModel.debug("Storing login time as " + moment().toString());
+            //NVRDataModel.debug("Storing login time as " + moment().toString());
             localforage.setItem("lastLogin", moment().toString());
             d.resolve(success);
             return d.promise;
@@ -1115,7 +1134,7 @@ angular.module('zmApp', [
 
                 if (!succ.version) {
                   NVRDataModel.debug("API login returned fake success, going back to webscrape");
-                  var ld = NVRDataModel.getLogin();
+                  ld = NVRDataModel.getLogin();
                   ld.loginAPISupported = false;
                   NVRDataModel.setLogin(ld);
 
@@ -1132,6 +1151,7 @@ angular.module('zmApp', [
                   return d.promise;
                 }
                 NVRDataModel.debug("API based login returned... ");
+                console.log (JSON.stringify(succ));
                 NVRDataModel.setCurrentServerVersion(succ.version);
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
@@ -1157,11 +1177,12 @@ angular.module('zmApp', [
 
 
                 d.resolve("Login Success");
-
                 $rootScope.$broadcast('auth-success', succ);
+                return d.promise;
+
               } catch (e) {
                 NVRDataModel.debug("Login API approach did not work...");
-                var ld = NVRDataModel.getLogin();
+                ld = NVRDataModel.getLogin();
                 ld.loginAPISupported = false;
                 NVRDataModel.setLogin(ld);
                 loginWebScrape()
@@ -1217,7 +1238,7 @@ angular.module('zmApp', [
 
 
             }
-          );
+          ); // post
 
 
 
@@ -1380,7 +1401,7 @@ angular.module('zmApp', [
       $interval.cancel(zmAutoLoginHandle);
       //doLogin();
       zmAutoLoginHandle = $interval(function () {
-        doLogin("");
+        _doLogin("");
 
       }, zm.loginInterval); // Auto login every 5 minutes
       // PHP timeout is around 10 minutes
@@ -1400,9 +1421,11 @@ angular.module('zmApp', [
     return {
       start: start,
       stop: stop,
-      doLogin: doLogoutAndLogin
+      doLogin: _doLogoutAndLogin,
+      doLoginNoLogout: _doLoginNoLogout
+
     };
-  })
+  }])
 
   //====================================================================
   // First run in ionic
@@ -1414,6 +1437,7 @@ angular.module('zmApp', [
     $ionicPlatform.ready(function () {
       //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
+      NVRDataModel.log("******* app .run device ready");
       $fileLogger.setStorageFilename(zm.logFile);
       $fileLogger.setTimestampFormat('MMM d, y ' + NVRDataModel.getTimeFormatSec());
 
@@ -1452,26 +1476,6 @@ angular.module('zmApp', [
       NVRDataModel.log("You are running on " + $rootScope.platformOS);
 
 
-      /*if (window.cordova && $rootScope.platformOS == 'android') {
-
-        cordova.plugins.diagnostic.isExternalStorageAuthorized(function (authorized) {
-          if (!authorized) cordova.plugins.diagnostic.requestExternalStorageAuthorization(okperm, nopermerr);
-        }, function (err) {
-          console.log("diagnostic external storage error " + err);
-        });
-
-
-      }*/
-
-
-      function nopermerr() {
-        NVRDataModel.displayBanner('error', ['Storage permission must be allowed'], "", 4000);
-      }
-
-      function okperm() {
-        //console.log("cool");
-        NVRDataModel.displayBanner('success', ['Storage permission acquired'], "", 4000);
-      }
 
       $rootScope.appName = "zmNinja";
       $rootScope.zmGlobalCookie = "";
@@ -1508,12 +1512,16 @@ angular.module('zmApp', [
         //navigator.app.exitApp();
 
       };
-
+ 
       // This is a global exception interceptor
       $rootScope.exceptionMessage = function (error) {
         NVRDataModel.debug("**EXCEPTION**" + error.reason + " caused by " + error.cause);
       };
 
+      // for .config block
+      $rootScope.debug = function (msg) {
+        NVRDataModel.debug(msg);
+      };
 
       if ($rootScope.platformOS == 'desktop' && 0) {
 
@@ -1656,29 +1664,37 @@ angular.module('zmApp', [
       // lets see if it really works
       $rootScope.online = navigator.onLine;
 
-      document.addEventListener("offline", function () {
-        //console.log ("OFFLINE------------------------------------");
+      // set up network state handlers after 3secs
+      // android seems to howl about this at app start?
+      $timeout (function() {
+
+      NVRDataModel.log ("--------->Setting up network state handlers....");
+      document.addEventListener("offline", onOffline, false);
+      document.addEventListener("online", onOnline, false);
+
+      },3000);
+
+
+      function onOffline() {
         $timeout(function () {
           $rootScope.online = false;
-          NVRDataModel.log("Your network went offline");
+          NVRDataModel.log("************** Your network went offline");
 
           //$rootScope.$emit('network-change', "offline");
 
         });
-      }, false);
+      }
 
-      document.addEventListener("online", function () {
-        //console.log ("ONLINE------------------------------------");
+      function onOnline() {
         $timeout(function () {
-
-
-          NVRDataModel.log("Your network came back online");
+          if ($rootScope.online == true) {
+            NVRDataModel.log ("**** network online, but looks like it was not offline, not doing anything");
+            return;
+          }
+          NVRDataModel.log("************ Your network came back online");
 
           $rootScope.online = true;
-
-          $timeout(function () {
-            // NVRDataModel.debug ("Ignoring - Alex R. Hack");
-            if (0) {
+  
               var networkState = "browser not supported";
               if (navigator.connection) networkState = navigator.connection.type;
               NVRDataModel.debug("Detected network type as: " + networkState);
@@ -1693,15 +1709,13 @@ angular.module('zmApp', [
                 NVRDataModel.debug("Not changing bandwidth state, as auto change is not on");
               }
               NVRDataModel.log("Your network is online, re-authenticating");
-              zmAutoLogin.doLogin($translate.instant('kReAuthenticating'));
-            }
-
-          }, 1000); // need a time gap, seems network type registers late
-
-
+              zmAutoLogin.doLoginNoLogout($translate.instant('kReAuthenticating'));
+    
 
         });
-      }, false);
+
+      }
+      
 
       // This code takes care of trapping the Android back button
       // and takes it to the menu.
@@ -1787,7 +1801,7 @@ angular.module('zmApp', [
             toState.name != "app.zm-portal-login"
           ) {
 
-            NVRDataModel.debug("Setting last-desktop-state to:" + JSON.stringify(toState));
+           // NVRDataModel.debug("Setting last-desktop-state to:" + JSON.stringify(toState));
             localforage.setItem('last-desktop-state', {
               'name': toState.name,
               'params': toState.params
@@ -1826,7 +1840,7 @@ angular.module('zmApp', [
         // to work in Windows
 
 
-        NVRDataModel.debug("Setting last-desktop-state to:" + JSON.stringify(toState) + " with params:" + JSON.stringify(toParams));
+        //NVRDataModel.debug("Setting last-desktop-state to:" + JSON.stringify(toState) + " with params:" + JSON.stringify(toParams));
         localforage.setItem('last-desktop-state', {
           'name': toState,
           'params': toParams
@@ -1998,7 +2012,7 @@ angular.module('zmApp', [
         $rootScope.$stateParams = $stateParams;
 
         if (window.cordova) {
-          console.log("------------->Keyboard foonone");
+          
           //window.cordova.plugins.Keyboard.disableScroll(true);
         }
         if (window.StatusBar) {
@@ -2082,7 +2096,7 @@ angular.module('zmApp', [
 
           localforage.getItem('last-desktop-state')
             .then(function (succ) {
-              console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
+//              console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
 
               // sanitize this
               if (!succ.name || typeof succ.name !== 'string') {
@@ -2157,10 +2171,19 @@ angular.module('zmApp', [
 
 
         function resumeHandler() {
+         
           NVRDataModel.setBackground(false);
           NVRDataModel.setJustResumed(true);
           $ionicPlatform.ready(function () {
+
+            NVRDataModel.log("******* resumeHandler device ready");
             NVRDataModel.log("App is resuming from background");
+
+            NVRDataModel.log ("-->Re-registering online/offine");
+            document.addEventListener("offline", onOffline, false);
+            document.addEventListener("online", onOnline, false);
+
+
             $rootScope.isDownloading = false;
 
             var ld = NVRDataModel.getLogin();
@@ -2178,8 +2201,8 @@ angular.module('zmApp', [
               $rootScope.lastState = $ionicHistory.currentView().stateName;
               $rootScope.lastStateParam =
                 $ionicHistory.currentView().stateParams;
-              NVRDataModel.debug("Last State recorded:" +
-                JSON.stringify($ionicHistory.currentView()));
+              //NVRDataModel.debug("Last State recorded:" +
+                //JSON.stringify($ionicHistory.currentView()));
 
               if ($rootScope.lastState == "app.zm-portal-login") {
                 NVRDataModel.debug("Last state was portal-login, so forcing montage");
@@ -2208,6 +2231,11 @@ angular.module('zmApp', [
         }
 
         function pauseHandler() {
+
+          NVRDataModel.log ("-->Clearing online/offine");
+          document.removeEventListener("offline", onOffline, false);
+          document.removeEventListener("online", onOnline, false);
+
           NVRDataModel.setBackground(true);
           NVRDataModel.setJustResumed(false);
           // NVRDataModel.setJustResumed(true); // used for window stop
@@ -2255,7 +2283,7 @@ angular.module('zmApp', [
   //------------------------------------------------------------------
 
   // My route map connecting menu options to their respective templates and controllers
-  .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, /*$ionicNativeTransitionsProvider,*/ $logProvider, $translateProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $ionicConfigProvider, $provide, $compileProvider, /*$ionicNativeTransitionsProvider,*/ $logProvider, $translateProvider, $injector) {
 
     //$logProvider.debugEnabled(false);
     //$compileProvider.debugInfoEnabled(false);
@@ -2286,9 +2314,10 @@ angular.module('zmApp', [
     // a) https://www.exratione.com/2013/08/angularjs-wrapping-http-for-fun-and-profit/
     // b) https://gist.github.com/adamreisnz/354364e2a58786e2be71
 
-    $provide.decorator('$http', ['$delegate', '$q', function ($delegate, $q) {
+    $provide.decorator('$http', ['$delegate', '$q', '$injector', function ($delegate, $q, $injector) {
       // create function which overrides $http function
       var $http = $delegate;
+      var logger = $injector.get("$rootScope");
 
       var wrapper = function () {
         var url;
@@ -2300,19 +2329,31 @@ angular.module('zmApp', [
         if (window.cordova && isOutgoingRequest) {
 
 
+
           var d = $q.defer();
           var options = {
             method: method,
             data: arguments[0].data,
             headers: arguments[0].headers,
-            timeout: arguments[0].timeout,
+           // timeout: arguments[0].timeout, 
             responseType: arguments[0].responseType
           };
+
+          if (arguments[0].timeout) options.timeout = arguments[0].timeout;
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
           cordova.plugin.http.sendRequest(encodeURI(url), options,
             function (succ) {
               // automatic JSON parse if no responseType: text
               // fall back to text if JSON parse fails too
+
+                   // work around for cake-error leak
+
+                  // console.log ("HTTP RESPONSE:" + JSON.stringify(succ.data));
+                   if (succ.data && succ.data.startsWith("<pre class=\"cake-error\">") ) {
+                    logger.debug ("**** Native: cake-error in message, trying fix...");
+                    succ.data = JSON.parse(succ.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
+                  }
+
               if (options.responseType == 'text') {
                 // don't parse into JSON
                 d.resolve({
@@ -2320,6 +2361,9 @@ angular.module('zmApp', [
                 });
                 return d.promise;
               } else {
+
+           
+
                 try {
                   d.resolve({
                     "data": JSON.parse(succ.data)
@@ -2337,7 +2381,7 @@ angular.module('zmApp', [
               }
             },
             function (err) {
-              console.log("***  Inside native HTTP error: " + JSON.stringify(err));
+              logger.debug("***  Inside native HTTP error: " + JSON.stringify(err));
 
               d.reject(err);
               return d.promise;
@@ -2495,12 +2539,12 @@ angular.module('zmApp', [
         data: {
           requireLogin: true
         },
-        resolve: {
+        /*resolve: {
           message: function (NVRDataModel) {
             // console.log("Inside app.montage resolve");
             return NVRDataModel.getMonitors(0);
           }
-        },
+        },*/
         url: "/monitors",
         cache: false,
         templateUrl: "templates/monitors.html",

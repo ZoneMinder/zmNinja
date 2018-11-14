@@ -48,8 +48,11 @@
           <br /> {{'kStatus' | translate}}: {{monitor.Monitor.isRunningText}}
           <br /> {{'kId' | translate}}: {{monitor.Monitor.Id}}
           <br /> {{'kEventRecording' | translate}}: {{(monitor.Monitor.VideoWriter>0?'kVideo':'kImages') | translate}}
-          <br />
-          <br />
+          <br />{{'kMonStreamingURL' | translate}}: {{monitor.Monitor.streamingURL}}
+          <br />{{'kMonPortalURL' | translate}}: {{monitor.Monitor.baseURL}}
+          <br />{{'kMonRecordingURL' | translate}}: {{monitor.Monitor.controlURL}}
+          <br /> <br/>
+     
         </p>
         <div style="float:right;">
           <a class="button button-small icon icon-left icon ion-gear-a" href="" ng-click="changeConfig(monitor.Monitor.Name, monitor.Monitor.Id,monitor.Monitor.Enabled,monitor.Monitor.Function);">{{'kConfiguration'
@@ -61,7 +64,7 @@
       </div>
     </div>
     <ion-item ng-show="!monitors.length">
-      {{'kNoMonitors' | translate}}
+      {{monitorLoadStatus}}
     </ion-item>
   </ion-content>
 </ion-view>

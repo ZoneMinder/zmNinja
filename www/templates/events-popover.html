@@ -11,8 +11,13 @@
       </a>
       <a class="item" ng-href="" ng-click="popover.hide();toggleMinAlarmFrameCount();" ng-if="loginData.enableAlarmCount">{{'kShowAllEvents'
         | translate}}</a>
+
       <a class="item" ng-href="" ng-click="popover.hide();toggleMinAlarmFrameCount();" ng-if="!loginData.enableAlarmCount">
         {{'kShowAlarmedEvents' | translate}}</a>
+
+        <a class="item" ng-href="" ng-click="popover.hide();footerToggle();" >
+          {{ 'kToggleSummary' | translate}}</a>
+
     </div>
   </ion-content>
 </ion-popover-view>

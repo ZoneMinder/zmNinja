@@ -810,7 +810,7 @@ progress[aria-valuenow]:before {
 }
 
 .list .item.item-accordion {
-    line-height: 200px;
+    line-height: 100%;
     padding-top: 0;
     padding-bottom: 0;
     transition: 3s all linear;
