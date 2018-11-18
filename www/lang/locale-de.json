@@ -227,6 +227,8 @@
     "kMonStreamingURL"           :"Streaming URL",
     "kMonitorSingleImageScale"   :"Livebild Einzelbildgröße",
     "kMonitors"                  :"Kameras",
+    "kMonitorVideoPassThru"      :"H264 Durchlauf",   
+    "kMonitorVideoEncode"        :"X264 Videocodierung", 
     "kMontage"                   :"Übersicht",
     "kMontageDefaultProfile"     :"Alle Kameras",
     "kMontageImageScale"         :"Livebild Bildgröße",
