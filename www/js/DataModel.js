@@ -25,6 +25,10 @@ angular.module('zmApp.controllers')
       var justResumed = false;
       var timeSinceResumed = -1;
       var monitorsLoaded = 0;
+      var snapshotFrame = 1; // will be 'snapshot'
+                             // if ZM >= 1.31
+
+
 
       var monitors = [];
       var multiservers = [];
@@ -1780,10 +1784,19 @@ angular.module('zmApp.controllers')
           $http.get(apiurl)
             .then(function (success) {
                 if (success.data.version) {
-                  // console.log ("API VERSION RETURNED: " + JSON.stringify(success));
+                  console.log ("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
+                
+                  if (versionCompare(success.data.version, '1.31.0') != -1 ) {
+                    debug ("snapshot  supported in image.php");
+                    snapshotFrame = 'snapshot';
+                  }
+                  else {
+                    debug ("snapshot NOT supported in image.php");
+                    snapshotFrame = 1;
+                  }
                   setCurrentServerVersion(success.data.version);
-                  debug("getAPI version succeded with " + success.data.version);
+                  debug("getAPI version succeeded with " + success.data.version);
                   d.resolve(success.data.version);
                 } else {
                   debug("Setting APIValid to false as API version was not retrieved");
@@ -1950,6 +1963,10 @@ angular.module('zmApp.controllers')
         //--------------------------------------------------------------------------
         getBandwidth: function () {
           return getBandwidth();
+        },
+
+        getSnapshotFrame: function () {
+            return snapshotFrame;
         },
 
         //-----------------------------------------------------------------------------

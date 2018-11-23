@@ -17,7 +17,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   var excludeMonitors = [];
   var excludeMonitorsFilter = "";
   var momentType = "StartTime";
-  $scope.isMaxScoreFramePresent = false;
+  
 
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
@@ -269,7 +269,8 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var stream = "";
     // console.log ($scope.isMaxScoreFramePresent);
     stream = moment.Event.recordingURL + "/index.php?view=image" +
-      ($scope.isMaxScoreFramePresent ? "&fid=" + moment.Event.MaxScoreFrameId : "&eid=" + moment.Event.Id + "&fid=1") +
+    "&eid=" + moment.Event.Id + "&fid=" +
+    NVRDataModel.getSnapshotFrame() +
       "&width=" + moment.Event.thumbWidth * 2 +
       "&height=" + moment.Event.thumbHeight * 2;
 
@@ -638,7 +639,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
         id: 'footage',
         showLive: sl,
         snapshot: 'enabled',
-        snapshotId: $scope.isMaxScoreFramePresent ? event.Event.MaxScoreFrameId : undefined,
+        snapshotId: 'snapshot',
         eventId: event.Event.Id
         //eventId:event.Event.Id
 
@@ -791,14 +792,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
           moments = objSort(moments, [sortCondition, ascordesc], ["dateObject", true]);
         }
 
-        // check the very first element for presence of maxscoreframe id
-        // if its not there, we can't show snuff
-        if (moments.length && !moments[0].Event.MaxScoreFrameId) {
-          $scope.isMaxScoreFramePresent = false;
-
-        } else {
-          $scope.isMaxScoreFramePresent = true;
-        }
+       
         $scope.moments = moments;
         $timeout(function () {
           initMasonry();
@@ -859,7 +853,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
     $scope.expand = ld.montageReviewCollapse;
     console.log(">>>>>>>>> RESTORING EXPAND AS:" + $scope.expand);
-    $scope.isMaxScoreFramePresent = false;
+   
 
     $scope.loadingStatus = $translate.instant('kLoading');
     $scope.gridSize = ld.momentGridSize;

@@ -90,9 +90,9 @@ angular.module('zmApp', [
     minCycleTime: 5,
 
     loginInterval: 1800000, //30m*60s*1000 - ZM auto login after 30 mins
-    //loginInterval: 60000, // testing 1 min
-    eventPlaybackQueryLowBW: 6000,
+    //loginInterval: 20000, // testing 20sec
     loginIntervalLowBW: 1800000, //30m login
+    eventPlaybackQueryLowBW: 6000,
 
     eventSingleImageQualityLowBW: 70,
     monSingleImageQualityLowBW: 70,

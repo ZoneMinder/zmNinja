@@ -2606,7 +2606,7 @@ angular.module('zmApp.controllers')
           id: 'footage',
           showLive: sl, // seems bool is not allowed...
           snapshot: snapshot,
-          snapshotId: event.Event.MaxScoreFrameId,
+          snapshotId: NVRDataModel.getSnapshotFrame(),
           eventId: event.Event.Id
         })
         .then(function (modal) {
@@ -2881,7 +2881,7 @@ angular.module('zmApp.controllers')
       var stream = "";
       stream = event.Event.recordingURL +
         "/index.php?view=image&show=capture&fid=" +
-        (event.Event.MaxScoreFrameId ? event.Event.MaxScoreFrameId : "1&eid=" + event.Event.Id) +
+        NVRDataModel.getSnapshotFrame()+"&eid="+event.Event.Id  +
         "&width=" + event.Event.thumbWidth * 2 +
         "&height=" + event.Event.thumbHeight * 2;
       if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
