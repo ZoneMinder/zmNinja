@@ -23,7 +23,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   var gEvent;
   var handle;
   var showLive = true;
-  var isGlobalFid = false; // true if its set to MaxScoreFrameId in events
+  //var isGlobalFid = false; // true if its set to MaxScoreFrameId in events
   var eventId = 0;
   var isSnapShotEnabled = false;
 
@@ -1051,7 +1051,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.changeSnapshot = function (id) {
     $scope.snapshotFrameId = id;
-    isGlobalFid = false;
+    //isGlobalFid = false;
   };
 
   $scope.constructStream = function (monitor) {
@@ -1067,7 +1067,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       stream = currentEvent.Event.recordingURL +
         "/index.php?view=image" +
         "&fid=" + $scope.snapshotFrameId +
-        (!isGlobalFid ? "&eid=" + $scope.eventId : "") +
+        "&eid=" + $scope.eventId +
         "&scale=" + $scope.singleImageQuality +
         $rootScope.authSession;
     } else if (currentStreamState == streamState.ACTIVE) {
@@ -1134,10 +1134,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       currentStreamState = streamState.SNAPSHOT;
       if (m.snapshotId) {
        
-        $scope.snapshotFrameId = m.snapshotId;
-        
-        $scope.snapshotFrameId = m.snapshotId;
-        isGlobalFid = true;
+        $scope.snapshotFrameId = NVRDataModel.getSnapshotFrame();
+       // isGlobalFid = false;
       } else {
         $scope.snapshotFrameId = 1;
         isSnapShotEnabled = false;
@@ -1611,7 +1609,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   function jumpToEvent(eid, dirn) {
     $scope.snapshotFrameId = 1;
     $scope.isPaused = false;
-    isGlobalFid = false;
+    //isGlobalFid = false;
     var oState;
     NVRDataModel.log("HERE: Event jump called with:" + eid);
     if (eid == "") {
