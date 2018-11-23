@@ -227,6 +227,8 @@
     "kMonStreamingURL"           :"url Streamingu",
     "kMonitorSingleImageScale"   :"Skalowanie pojedynczego obrazy Podglądu na żywo",
     "kMonitors"                  :"Monitory",
+    "kMonitorVideoPassThru"      :"Obsługa H264",   
+    "kMonitorVideoEncode"        :"Kodowanie video X264",
     "kMontage"                   :"Podgląd",
     "kMontageDefaultProfile"     :"wszystkie Podglądy",
     "kMontageImageScale"         :"Skalowanie obrazu Podglądu",
