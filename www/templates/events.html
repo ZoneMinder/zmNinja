@@ -89,7 +89,7 @@
 
 
               <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}" on-tap="closeIfOpen(event);openModalWithSnapshot(event)"
-                width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" />
+                width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px"  fallback-src="img/frameerror.png" />
 
 
             </div>
