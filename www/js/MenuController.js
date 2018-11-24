@@ -147,7 +147,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
         // possible image digits changed between servers
         NVRDataModel.getKeyConfigParams(0);
-
+        $rootScope.runMode = NVRDataModel.getBandwidth();
         NVRDataModel.log("Validating APIs at " + apiurl);
         $http.get(apiurl)
           .then(function (data) {
