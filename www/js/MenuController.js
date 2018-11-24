@@ -300,9 +300,10 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
     $rootScope.zmPopup = $ionicPopup.show({
       scope: $scope,
-      template: '<ion-radio-fix ng-if="item" ng-repeat="item in avs" ng-value="item" ng-model="newServer.val"> {{item}} </ion-radio-fix>',
+      template: '<ion-radio-fix ng-if="item" ng-repeat="item in avs" ng-value="item" ng-model="newServer.val" > {{item}} </ion-radio-fix>',
 
       title: $translate.instant('kSelect'),
+      subTitle: $translate.instant('kActive') + ': '+ NVRDataModel.getLogin().serverName,
 
       buttons: [{
           text: $translate.instant('kButtonCancel'),
