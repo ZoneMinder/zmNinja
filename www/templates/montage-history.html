@@ -24,7 +24,7 @@
       <span ng-repeat="monitor in MontageMonitors | onlyEnabledAndEventHas |limitTo: currentLimit">
 
 
-        <div ng-if="monitor.Monitor.eventUrl != 'img/noevent.png' && monitor.Monitor.connKey !=''">
+        <div ng-if="monitor.Monitor.eventUrl != 'img/noimage.png' && monitor.Monitor.connKey !=''">
           <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}"
             data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}">
             <figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-if=" monitor.Monitor.listDisplay!='noshow'">
@@ -70,7 +70,7 @@
 
         <!-- valid auth session &!background -->
         <!--<div ng-if="!$root.authSession=='undefined' || isBackground()">
-							<img image-spinner-src="img/pausevideo.png" />
+							<img image-spinner-src="img/noimage.png" />
 						</div>-->
       </span>
     </div>

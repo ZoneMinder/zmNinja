@@ -10,7 +10,7 @@
           <div style="white-space:nowrap;">
             <span ng-repeat="alarm in alarm_images">
               <figure class="animated slideInLeft" style="display:inline-block">
-                <img ng-src="{{constructFrame(alarm.frameid)}}" fallback-src="img/frameerror.png" style="width: auto; height: auto;max-width: 100%;max-height: 100px"
+                <img ng-src="{{constructFrame(alarm.frameid)}}" fallback-src="img/noimage.png" style="width: auto; height: auto;max-width: 100%;max-height: 100px"
                   ng-click="changeSnapshot(alarm.frameid)" on-double-tap="closeModal();" />
               </figure>
             </span>
