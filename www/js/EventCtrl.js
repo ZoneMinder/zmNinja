@@ -1825,6 +1825,12 @@ angular.module('zmApp.controllers')
 
       var af = "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
+      if (ld.objectDetectionFilter) {
+        af = af + '/Notes%20REGEXP:detected%3A';
+      }
+
+     
+
       var apiurl = ld.apiurl + "/events/consoleEvents/1 hour" + af + ".json";
       //NVRDataModel.debug("consoleEvents API:" + apiurl);
 
@@ -2921,6 +2927,17 @@ angular.module('zmApp.controllers')
 
     };
 
+    $scope.toggleObjectDetectionFilter = function () {
+      
+      var ld = NVRDataModel.getLogin();
+      ld.objectDetectionFilter = !ld.objectDetectionFilter;
+      NVRDataModel.setLogin(ld);
+      NVRDataModel.debug ("object detection filter: "+ld.objectDetectionFilter);
+      $scope.loginData = NVRDataModel.getLogin();
+      doRefresh();
+
+    };
+
     $scope.toggleMinAlarmFrameCount = function () {
 
       var ld = NVRDataModel.getLogin();
@@ -3008,6 +3025,8 @@ angular.module('zmApp.controllers')
 
     function doRefresh() {
       // console.log("***Pull to Refresh");
+
+      
 
       NVRDataModel.debug("Reloading monitors");
       maxEventsPage = 1;
