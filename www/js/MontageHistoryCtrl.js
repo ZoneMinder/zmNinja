@@ -234,7 +234,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       if ($rootScope.platformOS != 'ios') {
         NVRDataModel.debug("Killing existing streams, if alive...");
         for (i = 0; i < $scope.MontageMonitors.length; i++) {
-          if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noevent.png') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
+          if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noimage.png') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
         }
       } else {
         NVRDataModel.stopNetwork("montage-history footerCollapse");
@@ -249,7 +249,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       for (i = 0; i < $scope.MontageMonitors.length; i++) {
         //$scope.MontageMonitors[i].Monitor.connKey='';
         //$scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 99999) + 1)).toString();
-        $scope.MontageMonitors[i].Monitor.eventUrl = 'img/noevent.png';
+        $scope.MontageMonitors[i].Monitor.eventUrl = 'img/noimage.png';
         $scope.MontageMonitors[i].Monitor.eid = "-1";
         $scope.MontageMonitors[i].Monitor.eventUrlTime = "";
         $scope.MontageMonitors[i].Monitor.isPaused = false;
@@ -296,7 +296,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             $scope.MontageMonitors[j].Monitor.isPaused = false;
             // that's the earliest match and play gapless from there
             if ($scope.MontageMonitors[j].Monitor.Id == mid) {
-              if ($scope.MontageMonitors[j].Monitor.eventUrl == 'img/noevent.png') {
+              if ($scope.MontageMonitors[j].Monitor.eventUrl == 'img/noimage.png') {
                 // console.log ("Old value of event url " + $scope.MontageMonitors[j].eventUrl);
                 //console.log ("ldurl is " + ld.streamingurl);
                 var bw = NVRDataModel.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
@@ -325,7 +325,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         var promises = [];
         for (i = 0; i < $scope.MontageMonitors.length; i++) {
           //console.log("Fair chance check for " + $scope.MontageMonitors[i].Monitor.Name);
-          if ($scope.MontageMonitors[i].Monitor.eventUrl == 'img/noevent.png') {
+          if ($scope.MontageMonitors[i].Monitor.eventUrl == 'img/noimage.png') {
             var indivGrab = ld.apiurl + "/events/index/MonitorId:" + $scope.MontageMonitors[i].Monitor.Id + "/StartTime >=:" + TimeObjectFrom + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json";
             NVRDataModel.debug("Monitor " + $scope.MontageMonitors[i].Monitor.Id + ":" + $scope.MontageMonitors[i].Monitor.Name + " does not have events, trying " + indivGrab);
             var p = getExpandedEvents(i, indivGrab);
@@ -396,7 +396,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 //console.log(">>> Setting Event for " + $scope.MontageMonitors[i].Monitor.Name + " to " + data.events[0].Event.Id);
                 NVRDataModel.log("Found expanded event " + data.events[0].Event.Id + " for monitor " + $scope.MontageMonitors[i].Monitor.Id);
               } else {
-                // $scope.MontageMonitors[i].eventUrl="img/noevent.png";
+                // $scope.MontageMonitors[i].eventUrl="img/noimage.png";
                 //    $scope.MontageMonitors[i].eventUrlTime = "";
                 //    NVRDataModel.log ("Setting img src to null as data received in background");
               }
@@ -436,7 +436,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       // don't check for monitors that are not shown
       // because nph connkey won't exist and the response
       // will fail
-      if ($scope.MontageMonitors[i].Monitor.eventUrl != "" && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noevent.png' && $scope.MontageMonitors[i].Monitor.connKey != '' && $scope.MontageMonitors[i].Monitor.Function != 'None' && $scope.MontageMonitors[i].Monitor.listDisplay != 'noshow' && $scope.MontageMonitors[i].Monitor.Enabled != '0') {
+      if ($scope.MontageMonitors[i].Monitor.eventUrl != "" && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noimage.png' && $scope.MontageMonitors[i].Monitor.connKey != '' && $scope.MontageMonitors[i].Monitor.Function != 'None' && $scope.MontageMonitors[i].Monitor.listDisplay != 'noshow' && $scope.MontageMonitors[i].Monitor.Enabled != '0') {
         // NVRDataModel.debug("Checking event status for " + $scope.MontageMonitors[i].Monitor.Name + ":" + $scope.MontageMonitors[i].Monitor.eventUrl + ":" + $scope.MontageMonitors[i].Monitor.Function + ":" + $scope.MontageMonitors[i].Monitor.listDisplay);
         // console.log ("Sending query 99 for " + $scope.MontageMonitors[i].Monitor.Name + " with ck="+$scope.MontageMonitors[i].Monitor.connKey);
         controlEventStream('99', '', $scope.MontageMonitors[i].Monitor.connKey, i);
@@ -814,7 +814,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
       NVRDataModel.debug("Killing all streams in montage to save memory/nw...");
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-        if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noevent.png') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
+        if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noimage.png') NVRDataModel.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
 
       }
 
@@ -1112,7 +1112,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     for (var i = 0; i < $scope.MontageMonitors.length; i++) {
       //$scope.MontageMonitors[i].Monitor.connKey='';
       $scope.MontageMonitors[i].Monitor.eid = "-1";
-      $scope.MontageMonitors[i].Monitor.eventUrl = 'img/noevent.png';
+      $scope.MontageMonitors[i].Monitor.eventUrl = 'img/noimage.png';
       $scope.MontageMonitors[i].Monitor.eid = "-1";
       $scope.MontageMonitors[i].Monitor.eventUrlTime = "";
       $scope.MontageMonitors[i].Monitor.isPaused = false;

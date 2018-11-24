@@ -201,7 +201,7 @@ angular.module('zmApp', [
 
       angular.forEach(input, function (item) {
 
-        if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0') && (item.Monitor.eventUrl != 'img/noevent.png') && (item.Monitor.listDisplay != 'noshow')) {
+        if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0') && (item.Monitor.eventUrl != 'img/noimage.png') && (item.Monitor.listDisplay != 'noshow')) {
           out.push(item);
         }
 
@@ -523,7 +523,7 @@ angular.module('zmApp', [
             loader.remove();
 
 
-            var url = 'img/novideo.png';
+            var url = 'img/noimage.png';
 
 
             var w = $attributes.imgSpinnerW;
@@ -597,7 +597,7 @@ angular.module('zmApp', [
 
                   $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')';
 
-                //$element[0].style.backgroundImage = 'url(' + 'img/novideo.png'+ ')';
+                //$element[0].style.backgroundImage = 'url(' + 'img/noimage.png'+ ')';
 
               };
 
