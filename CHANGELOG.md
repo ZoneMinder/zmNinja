@@ -1,5 +1,18 @@
 # Change Log
 
+## [v1.3.032](https://github.com/pliablepixels/zmNinja/tree/v1.3.032) (2018-11-23)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.029...v1.3.032)
+
+**Closed issues:**
+
+- Events playback doens't work in zmNinja with ZoneMinder 1.32.2 but works on native web interface [\#744](https://github.com/pliablepixels/zmNinja/issues/744)
+
+**Merged pull requests:**
+
+- more storage areas fixes [\#743](https://github.com/pliablepixels/zmNinja/pull/743) ([florie1706](https://github.com/florie1706))
+- more storage areas fixes [\#742](https://github.com/pliablepixels/zmNinja/pull/742) ([maymaymay](https://github.com/maymaymay))
+- Some corrections in translation [\#741](https://github.com/pliablepixels/zmNinja/pull/741) ([dado-ca](https://github.com/dado-ca))
+
 ## [v1.3.029](https://github.com/pliablepixels/zmNinja/tree/v1.3.029) (2018-11-07)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.018...v1.3.029)
 
@@ -693,7 +706,6 @@
 **Closed issues:**
 
 - Switching servers without saving first causes the app to freeze \(android/ios\) [\#320](https://github.com/pliablepixels/zmNinja/issues/320)
-- Cycle monitors [\#319](https://github.com/pliablepixels/zmNinja/issues/319)
 
 ## [v1.2.18](https://github.com/pliablepixels/zmNinja/tree/v1.2.18) (2016-09-02)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.17...v1.2.18)
@@ -1031,7 +1043,7 @@
 - Developer setting for Frame Update allows decimals  [\#114](https://github.com/pliablepixels/zmNinja/issues/114)
 
 ## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.3)
 
 **Closed issues:**
 
@@ -1045,11 +1057,11 @@
 - Bulk frames are causing problems with the scrub bar positioning of alarmed frames [\#102](https://github.com/pliablepixels/zmNinja/issues/102)
 - Gapless playback showing events from non-persisted monitors [\#86](https://github.com/pliablepixels/zmNinja/issues/86)
 
-## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
-
 ## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87)
+
+## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
 
 **Closed issues:**
 
