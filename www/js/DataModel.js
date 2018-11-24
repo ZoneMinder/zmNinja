@@ -190,6 +190,7 @@ angular.module('zmApp.controllers')
         'currentServerVersion': '',
         'saveToCloud': true,
         'montageReviewCollapse': true,
+        'objectDetectionFilter': false,
 
 
       };
@@ -1501,6 +1502,12 @@ angular.module('zmApp.controllers')
 
                   }
 
+                  if (typeof loginData.objectDetectionFilter == 'undefined') {
+
+                    loginData.objectDetectionFilter = false;
+
+                  }
+
 
                   loginData.canSwipeMonitors = true;
                   loginData.forceImageModePath = false;
@@ -2649,6 +2656,12 @@ angular.module('zmApp.controllers')
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
+          //https:///zm/api/events/index/Notes%20REGEXP:detected%3A.json
+          if (loginData.objectDetectionFilter) {
+            myurl = myurl + '/Notes%20REGEXP:detected%3A';
+          }
+          
+
           myurl = myurl + ".json";
           //console.log (">>>>>Constructed URL " + myurl);
 
@@ -2731,6 +2744,11 @@ angular.module('zmApp.controllers')
             myurl = myurl + "/EndTime <=:" + endTime;
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+
+          //https:///zm/api/events/index/Notes%20REGEXP:detected%3A.json
+          if (loginData.objectDetectionFilter) {
+            myurl = myurl + '/Notes%20REGEXP:detected%3A';
+          }
 
           myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId;
 

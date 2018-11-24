@@ -15,6 +15,9 @@
       <a class="item" ng-href="" ng-click="popover.hide();toggleMinAlarmFrameCount();" ng-if="!loginData.enableAlarmCount">
         {{'kShowAlarmedEvents' | translate}}</a>
 
+      <a class="item" ng-href="" ng-click="popover.hide();toggleObjectDetectionFilter();" > <i ng-if="loginData.objectDetectionFilter" class="ion-record" style="color:green;">&nbsp;</i> {{'kShowObjectDetectionEvents'
+          | translate}}</a>
+
         <a class="item" ng-href="" ng-click="popover.hide();footerToggle();" >
           {{ 'kToggleSummary' | translate}}</a>
 
