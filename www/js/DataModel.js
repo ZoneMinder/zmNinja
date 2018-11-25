@@ -2745,9 +2745,9 @@ angular.module('zmApp.controllers')
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
-          //https:///zm/api/events/index/Notes%20REGEXP:detected%3A.json
+          //https:///zm/api/events/index/Notes%20REGEXP: detected%3A.json
           if (loginData.objectDetectionFilter) {
-            myurl = myurl + '/Notes%20REGEXP:detected%3A';
+            myurl = myurl + '/Notes REGEXP:detected:';
           }
 
           myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId;
