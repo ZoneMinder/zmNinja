@@ -54,14 +54,7 @@
             </span>{{'kMoment24Heading'|translate}}
           </ion-item>
 
-          <!-- <ion-item  ng-click="navigateView('app.montage-history')" menu-close>-->
-          <ion-item id="menu-move-5" href="#/app/montage-history" ng-click="go('/app/montage-history')">
-            <span class=" item-icon-left">
-              <i class="icon ion-ios-keypad-outline"></i>
-            </span>{{'kMenuEventMontage'|translate}}
-          </ion-item>
-
-
+         
           <!--<ion-item ng-click="navigateView('app.monitors')" menu-close>-->
           <ion-item id="menu-move-6" href="#/app/monitors" ng-click="go('/app/monitors')">
             <span class=" item-icon-left">
@@ -76,6 +69,7 @@
             </span> {{'kMenuSystemStatus'|translate}}
           </ion-item>
 
+           
           <!--<ion-item nav-clear menu-close ng-click="navigateView('app.login', {wizard:false})" >-->
           <ion-item id="menu-move-8" nav-clear href="#/app/login/false" ng-click="go('/app/login/false')">
             <span class=" item-icon-left">
@@ -88,6 +82,8 @@
             </span>
           </ion-item>
 
+          
+
           <ion-item id="menu-move-9" nav-clear href="#/app/devoptions" ng-click="go('/app/devoptions')">
             <!--<ion-item nav-clear menu-close ng-click="navigateView('app.devoptions')">-->
             <span class=" item-icon-left">
@@ -95,6 +91,13 @@
             </span> {{'kMenuDevSettings'|translate}}
           </ion-item>
 
+          <!-- <ion-item  ng-click="navigateView('app.montage-history')" menu-close>-->
+            <ion-item id="menu-move-5" href="#/app/montage-history" ng-click="go('/app/montage-history')">
+              <span class=" item-icon-left">
+                <i class="icon ion-ios-keypad-outline"></i>
+              </span>{{'kMenuEventMontage'|translate}}
+            </ion-item>
+            
           <ion-item ng-click="switchLang()" nav-clear menu-close>
             <span class=" item-icon-left">
               <i class="icon ion-earth"></i>
@@ -109,12 +112,15 @@
           </ion-item>
 
 
+
           <!--<ion-item nav-clear menu-close ng-click="navigateView('app.wizard')" >-->
           <ion-item id="menu-move-11" nav-clear href="#/app/wizard" ng-click="go('/app/wizard')">
             <span class=" item-icon-left">
               <i class="icon ion-wand"></i>
             </span> {{'kMenuWizard'|translate}}
           </ion-item>
+
+
 
           <div ng-if="$root.showBlog">
             <!--<ion-item nav-clear menu-close ng-click="navigateView('app.news')" >-->
