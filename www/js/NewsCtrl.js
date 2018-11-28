@@ -106,13 +106,14 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
 
 
   $http.get(zm.blogUrl, {
-      responseType: 'text'
+      responseType: 'text',
+      transformResponse:null
     })
     .then(function (datastr) {
       datastr = datastr.data;
       var trunc = "])}while(1);</x>";
       datastr = datastr.substr(trunc.length);
-      // console.log ("DATA:"+data);
+    
       // 
       var data = JSON.parse(datastr);
       for (var i = 0; i < data.payload.posts.length; i++) {
