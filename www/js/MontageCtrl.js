@@ -53,6 +53,9 @@ angular.module('zmApp.controllers')
 
     var as = $scope.$on("auth-success", function () {
 
+      NVRDataModel.debug ("Auth success, recomputing rand value...");
+      randEachTime();
+
       /* var tnow = new Date();
       var s = Math.round((tnow - timeInMontage) / 1000);
       NVRDataModel.debug ("Montage re-auth: time since we are here: " + s + 
@@ -1779,7 +1782,7 @@ angular.module('zmApp.controllers')
         "/nph-zms?mode=" + getMode() +
         "&monitor=" + monitor.Monitor.Id +
         "&scale=" + $scope.LoginData.montageQuality +
-        "&rand=" + randToAvoidCacheMem +
+        "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id + 
         "&buffer=1000" +
         $rootScope.authSession +
         appendConnKey(monitor.Monitor.connKey);
