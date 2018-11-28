@@ -27,9 +27,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.csize = ($rootScope.platformOS == 'desktop') ? 10 : 20;
 
 
-  window.addEventListener("resize", function () {
-    imageLoaded();
-  }, false);
+  window.addEventListener("resize", imageLoaded, false);
 
 
   //$rootScope.authSession = "undefined";
@@ -750,7 +748,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }*/
 
     $scope.isModalStreamPaused = false;
-    NVRDataModel.debug("Modal image loaded, switching to streaming");
+    //NVRDataModel.debug("Modal image loaded, switching to streaming");
 
 
 
@@ -1367,6 +1365,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   });
 
   $scope.$on('modal.removed', function () {
+
+    window.removeEventListener("resize", imageLoaded, false);
 
     if ($rootScope.platformOS == 'android') {
       NVRDataModel.debug("Deregistering handlers for multi-window");
