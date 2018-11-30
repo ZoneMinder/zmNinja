@@ -435,7 +435,7 @@ angular.module('zmApp.controllers')
         debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
         $http.get(myurl)
           .then(function (success) {
-              // console.log ("**** RESULT IS " + JSON.stringify(success));
+              //console.log ("**** RESULT IS " + JSON.stringify(success));
               // Look for auth=
               var auth = success.data.match("auth=(.*?)&");
               if (auth && (auth[1] != null)) {
