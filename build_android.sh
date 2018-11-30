@@ -76,6 +76,7 @@ build_release() {
 
 # parse arguments
 # credit: https://stackoverflow.com/a/14203146/1361529
+MODE="release"
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -101,6 +102,7 @@ APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns
 ver_pre5=${APPVER//.} 
 ver=${APPVER//.}9
 
+
 echo "About to build version: $APPVER ($MODE)"
 read -p "Press any key..."
 
@@ -108,11 +110,13 @@ echo "Removing wkwebview, adding certificate fork..."
 cordova plugin remove cordova-plugin-ionic-webview > /dev/null 2>&1
 cordova plugin add cordova-plugin-certificates-pp-fork > /dev/null 2>&1
 
+
 if [ "${MODE}" = "debug" ]; then
         build_debug
 else
         build_release
 fi
+
 
 
 echo "Adding back wkwebview and removing certificate fork..."
