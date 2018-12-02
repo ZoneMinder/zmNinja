@@ -2708,7 +2708,7 @@ angular.module('zmApp.controllers')
         // new reminder
         // 
         //https:///zm/api/events.json?&sort=StartTime&direction=desc&page=1
-        getEvents: function (monitorId, pageId, loadingStr, startTime, endTime) {
+        getEvents: function (monitorId, pageId, loadingStr, startTime, endTime, noObjectFilter) {
 
 
 
@@ -2746,7 +2746,7 @@ angular.module('zmApp.controllers')
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
           //https:///zm/api/events/index/Notes%20REGEXP: detected%3A.json
-          if (loginData.objectDetectionFilter) {
+          if (loginData.objectDetectionFilter && !noObjectFilter) {
             myurl = myurl + '/Notes REGEXP:detected:';
           }
 

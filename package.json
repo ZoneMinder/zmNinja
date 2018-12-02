@@ -50,10 +50,10 @@
       },
       "cordova-plugin-advanced-websocket": {},
       "cordova-plugin-x-socialsharing": {},
-      "cordova-plugin-media-pp-fork": {},
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-media-pp-fork": {}
     }
   },
   "dependencies": {
