@@ -39,12 +39,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     return moment(str).format('MMM Do, YYYY ' + NVRDataModel.getTimeFormat());
   };
 
-  function prettifyDate(str) {
-    if (NVRDataModel.getLogin().useLocalTimeZone)
-      return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('MMM Do');
-    else
-      return moment(str).format('MMM Do');
-  }
+  
   $scope.prettifyTime = function (str) {
     if (NVRDataModel.getLogin().useLocalTimeZone)
       return moment.tz(str, NVRDataModel.getTimeZoneNow()).tz(moment.tz.guess()).format('h:mm a');
@@ -273,11 +268,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     function getNextSetHistory() {
 
       // grab events that start on or after the time 
-      apiurl = ld.apiurl + "/events/index/StartTime >=:" + TimeObjectFrom + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json";
+      apiurl = ld.apiurl + "/events/index/StartTime >=:" + TimeObjectFrom + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json?sort=StartTime&direction=desc";
       NVRDataModel.log("Grabbing history using: " + apiurl);
       // make sure there are no more than 5 active streams (noevent is ok)
       $scope.currentLimit = $scope.monLimit;
       //qHttp.get(apiurl)
+      console.log ("GETTING "+apiurl);
       $http({
         method: 'get',
         url: apiurl
@@ -285,6 +281,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         var data = succ.data;
         var ld = NVRDataModel.getLogin();
         NVRDataModel.debug("Got " + data.events.length + "new history events...");
+        console.log (JSON.stringify(data));
         var eid, mid, stime;
         for (i = 0; i < data.events.length; i++) {
           mid = data.events[i].Event.MonitorId;
