@@ -344,9 +344,13 @@ angular.module('zmApp.controllers')
         ws = undefined;
       } else {
         if (nativeWebSocketId != -1) //native;
-        iClosed = true;
+        {
+          NVRDataModel.debug ("Closing native websocket as websocket = "+nativeWebSocketId);
+          iClosed = true;
           CordovaWebsocketPlugin.wsClose(nativeWebSocketId, 1000, "Connection closed");
-        nativeWebSocketId = -1;
+          nativeWebSocketId = -1;
+        }
+        
 
       }
 
