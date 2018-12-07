@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.033";
+      var zmAppVersion = "1.3.035";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -211,6 +211,9 @@ angular.module('zmApp.controllers')
        */
       function setCordovaHttpOptions() {
 
+        debug ("Cordova HTTP: disabling redirect till bug in library is fixed");
+        cordova.plugin.http.disableRedirect(true,
+          function(s) {debug ("redirect disabled");}, function (e) {debug ("redirect disable FAILED");});
         if (loginData.isUseBasicAuth) {
           debug("Cordova HTTP: configuring basic auth");
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);

@@ -298,6 +298,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 //console.log ("ldurl is " + ld.streamingurl);
                 var bw = NVRDataModel.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
 
+                
                 $scope.MontageMonitors[j].Monitor.eventUrl = $scope.MontageMonitors[j].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + eid + "&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[j].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
                 //console.log ("Setting event URL to " +$scope.MontageMonitors[j].Monitor.eventUrl);
                 //   console.log ("SWITCHING TO " + $scope.MontageMonitors[j].eventUrl);
