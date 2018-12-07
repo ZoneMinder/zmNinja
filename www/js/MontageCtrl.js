@@ -1762,12 +1762,15 @@ angular.module('zmApp.controllers')
     function getMode() {
 
       var mode = (simulStreaming && currentStreamState != streamState.SNAPSHOT && currentStreamState != streamState.STOPPED) ? 'jpeg' : 'single';
-      //console.log ("mode="+mode);
+    //console.log ("mode="+mode);
       return mode;
 
     }
 
-
+    $scope.processImageError = function(monitor) {
+      monitor.Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+      NVRDataModel.debug ("Image load error for: "+monitor.Monitor.Id+" regenerated connKey is:"+monitor.Monitor.connKey);
+    };
 
     $scope.constructStream = function (monitor) {
 
