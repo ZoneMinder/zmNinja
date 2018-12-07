@@ -25,7 +25,7 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
       });
 
       if ($rootScope.platformOS == 'android') {
-        log (">>> Android: enabling inline image view for self signed certs");
+        NVRDataModel.log (">>> Android: enabling inline image view for self signed certs");
         cordova.plugins.certificates.trustUnsecureCerts(true);
       }
 
