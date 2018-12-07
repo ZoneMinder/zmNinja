@@ -8,6 +8,7 @@ desktop/
 node_modules/
 platforms/
 release_files/
+debug_files/
 plugins/*
 engine/
 /ionic.project
