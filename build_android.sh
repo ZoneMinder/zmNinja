@@ -7,6 +7,7 @@ build_debug() {
         ionic cordova build android
         # adding back wkwebview clears platform debug directory later
         cp platforms/android/build/outputs/apk/debug/android-debug.apk debug_files
+        echo "*** Your debug file has been moved to  debug_files/android-debug.apk"
 }
 
 
