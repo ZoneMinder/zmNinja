@@ -126,14 +126,14 @@
             <div ng-if="!minimal">
               <img class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{constructStream(monitor)}}"
                 ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);"
-                image-spinner-loader="lines" img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}" />
+                image-spinner-loader="lines" img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}" image-on-error="processImageError(monitor);" />
 
 
             </div>
 
             <div ng-if="minimal">
               <img id="img-{{$index}}" image-spinner-src="{{constructStream(monitor)}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);"
-                image-spinner-loader="lines" img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}" />
+                image-spinner-loader="lines" img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}" image-on-error="processImageError(monitor);"/>
             </div>
 
 

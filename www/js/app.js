@@ -488,12 +488,13 @@ angular.module('zmApp', [
   // This directive is adapted from https://github.com/paveisistemas/ionic-image-lazy-load
   // I've removed lazyLoad and only made it show a spinner when an image is loading
   //--------------------------------------------------------------------------------------------
-  .directive('imageSpinnerSrc', ['$document', '$compile', 'imageLoadingDataShare', '$timeout',
-    function ($document, $compile, imageLoadingDataShare, $timeout) {
+  .directive('imageSpinnerSrc', ['$document', '$compile', 'imageLoadingDataShare', '$timeout', '$parse',
+    function ($document, $compile, imageLoadingDataShare, $timeout, $parse) {
       return {
         restrict: 'A',
         scope: {
-          imageSpinnerBackgroundImage: "@imageSpinnerBackgroundImage"
+          imageSpinnerBackgroundImage: "@imageSpinnerBackgroundImage",
+          imageOnError: '&'
         },
         link: function ($scope, $element, $attributes) {
 
@@ -519,7 +520,7 @@ angular.module('zmApp', [
 
           // show an image-missing image 
           $element.bind('error', function () {
-            // console.log ("DIRECTIVE: IMAGE ERROR");
+           
             loader.remove();
 
 
@@ -556,6 +557,16 @@ angular.module('zmApp', [
             // $element.prop('data-src', hurl);
 
             imageLoadingDataShare.set(0);
+
+            if ($attributes.imageOnError) {
+              //console.log (">>>>  ERROR CBK");
+              $scope.imageOnError();
+             // fn($scope, {});
+            }
+            else {
+              //console.log (">>>>>>>>>> NO ERROR CBK");
+            }
+              
           });
 
           function waitForFrame1() {
