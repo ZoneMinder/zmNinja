@@ -1534,33 +1534,7 @@ angular.module('zmApp', [
         NVRDataModel.debug(msg);
       };
 
-      if ($rootScope.platformOS == 'desktop' && 0) {
-
-        window.addEventListener('beforeunload', function (ev) {
-
-          // I don't think this works on windows
-          // the callback is not called, it seems
-
-          // This was causing android reload issues - holy palooza
-          /* if ($rootScope.platformOS != 'desktop') {
-             ev.returnValue = "true";
-             return;
-           }*/
-
-          localforage.setItem('last-desktop-state', {
-            'name': $ionicHistory.currentView().stateName,
-            'params': $ionicHistory.currentView().stateParams
-          }).then(function () {
-            return localforage.getItem('last-desktop-state');
-          }).then(function (value) {
-            ev.returnValue = "true";
-          }).catch(function (err) {
-            ev.returnValue = "true";
-          });
-
-        });
-      }
-
+     
       // DPAD Handler - disabled for now
       // when ready add ionic cordova plugin add https://github.com/pliablepixels/cordova-plugin-android-tv.git
 
@@ -2101,7 +2075,9 @@ angular.module('zmApp', [
 
       function continueRestOfInit() {
 
-        if ($rootScope.platformOS == 'desktop') {
+        // use desktop state for mobile too as 
+        // mobile now quits
+        if ($rootScope.platformOS == 'desktop' || 1) {
           $rootScope.lastState = "";
           $rootScope.lastStateParam = {};
 
