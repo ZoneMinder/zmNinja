@@ -1768,6 +1768,8 @@ angular.module('zmApp.controllers')
     }
 
     $scope.processImageError = function(monitor) {
+     // NVRDataModel.debug ("Image load error for: "+monitor.Monitor.Id+" regenerated connKey is:"+monitor.Monitor.connKey);
+      //if (1) return; // REMOVE 
       monitor.Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
       NVRDataModel.debug ("Image load error for: "+monitor.Monitor.Id+" regenerated connKey is:"+monitor.Monitor.connKey);
     };
