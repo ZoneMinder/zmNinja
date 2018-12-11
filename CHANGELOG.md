@@ -1,6 +1,24 @@
 # Change Log
 
-## [v1.3.032](https://github.com/pliablepixels/zmNinja/tree/v1.3.032) (2018-11-23)
+## [v1.3.035](https://github.com/pliablepixels/zmNinja/tree/v1.3.035) (2018-12-11)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.032...v1.3.035)
+
+**Closed issues:**
+
+- zmNinja montage stops working randomly [\#757](https://github.com/pliablepixels/zmNinja/issues/757)
+- Event server crashed during websocket close  \(mobile\) [\#755](https://github.com/pliablepixels/zmNinja/issues/755)
+- ZMNinja Server time zone wrong [\#754](https://github.com/pliablepixels/zmNinja/issues/754)
+- No camera controls when I click the push notification. Android. [\#752](https://github.com/pliablepixels/zmNinja/issues/752)
+- Sine Android update to 1.3.032 streaming does not work [\#748](https://github.com/pliablepixels/zmNinja/issues/748)
+- preview image on android is center cropped, not scaled. [\#747](https://github.com/pliablepixels/zmNinja/issues/747)
+- Various inputs/cleanups  [\#745](https://github.com/pliablepixels/zmNinja/issues/745)
+
+**Merged pull requests:**
+
+- integrate object detection mode in event list [\#751](https://github.com/pliablepixels/zmNinja/pull/751) ([florie1706](https://github.com/florie1706))
+- integrate object detection mode in event list [\#746](https://github.com/pliablepixels/zmNinja/pull/746) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.3.032](https://github.com/pliablepixels/zmNinja/tree/v1.3.032) (2018-11-24)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.029...v1.3.032)
 
 **Closed issues:**
@@ -612,7 +630,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
 
 **Closed issues:**
 
@@ -633,11 +651,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
-
 ## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
+
+## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
 
 **Closed issues:**
 
@@ -1043,7 +1061,7 @@
 - Developer setting for Frame Update allows decimals  [\#114](https://github.com/pliablepixels/zmNinja/issues/114)
 
 ## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.3)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
 
 **Closed issues:**
 
@@ -1057,11 +1075,11 @@
 - Bulk frames are causing problems with the scrub bar positioning of alarmed frames [\#102](https://github.com/pliablepixels/zmNinja/issues/102)
 - Gapless playback showing events from non-persisted monitors [\#86](https://github.com/pliablepixels/zmNinja/issues/86)
 
-## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87)
-
 ## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
+
+## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
 
 **Closed issues:**
 
