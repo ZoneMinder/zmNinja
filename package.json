@@ -6,9 +6,7 @@
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
   "cordova": {
-    "platforms": [
-      "ios"
-    ],
+    "platforms": [],
     "plugins": {
       "cordova-plugin-add-swift-support": {},
       "cordova-plugin-android-permissions": {},
@@ -54,7 +52,6 @@
   },
   "dependencies": {
     "clivas": "^0.2.0",
-    "cordova-ios": "~4.5.5",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-advanced-http": "^2.0.1",

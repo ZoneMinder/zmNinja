@@ -164,5 +164,4 @@
     <plugin name="cordova-plugin-x-socialsharing" spec="^5.4.1" />
     <plugin name="cordova-plugin-media-pp-fork" spec="^1.0.2-dev" />
     <plugin name="cordova-plugin-certificates-pp-fork" spec="^0.9.1" />
-    <engine name="ios" spec="~4.5.5" />
 </widget>
