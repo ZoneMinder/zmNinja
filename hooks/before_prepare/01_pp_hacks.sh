@@ -55,6 +55,14 @@ else
 	echo "Directory platforms/android/res/ does not exist, skipping..."
 fi
 
+echo "Copying Google services to android/app"
+echo "--------------------------------------------------"
+if [ -d "platforms/android" ]; then
+      exe cp google-services.json platforms/android/app/
+else
+      echo "Directory platforms/android doesn't exist"
+fi
+
 #echo "Fixing insecure SSL permission problem"
 #echo "--------------------------------------------------"
 #if [ -d "platforms/android/CordovaLib/src/org/apache/cordova/engine" ]; then
