@@ -1886,8 +1886,8 @@ angular.module('zmApp', [
 
 
       //console.log("Mobile acc");
-      if (window.cordova)
-        MobileAccessibility.getTextZoom(getTextZoomCallback);
+     /* if (window.cordova)
+        MobileAccessibility.getTextZoom(getTextZoomCallback);*/
 
       // $rootScope.lastState = "events";
       //$rootScope.lastStateParam = "0";
