@@ -50,7 +50,7 @@ build_release() {
             cordova build android --release -- --minSdkVersion=21 --versionCode=${ver}
 
             # copy build to release folder and sign
-            cp platforms/android/build/outputs/apk/release/android-release-unsigned.apk release_files/
+            cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk release_files/android-release-unsigned.apk
             echo "Copied files to release_files"
 
             cd release_files/
