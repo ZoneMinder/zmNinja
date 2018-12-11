@@ -48,7 +48,8 @@
       },
       "cordova-plugin-advanced-websocket": {},
       "cordova-plugin-x-socialsharing": {},
-      "cordova-plugin-media-pp-fork": {}
+      "cordova-plugin-media-pp-fork": {},
+      "cordova-plugin-certificates-pp-fork": {}
     }
   },
   "dependencies": {
