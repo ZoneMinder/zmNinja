@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REL="v2.0.3"
+REL="v3.0.11"
 #REL="v1.4.3"
 WGET='wget'
 WGET_ARGS='-q --show-progress'
