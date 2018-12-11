@@ -1,32 +1,26 @@
 {
   "name": "zmNinja",
-  "app_id": "",
-  "type": "ionic1",
   "integrations": {
-    "gulp": {},
     "cordova": {}
   },
-"proxies": [
+  "type": "ionic1",
+  "proxies": [
     {
       "path": "/zm",
       "proxyUrl": "yourpath1",
       "rejectUnauthorized": false
     },
     {
-     "path":"/zm2",
-     "proxyUrl":"yourpath2",
-     "rejectUnauthorized":false
-
+      "path": "/zm2",
+      "proxyUrl": "yourpath2",
+      "rejectUnauthorized": false
     },
     {
-     "path":"/zm3",
-     "proxyUrl":"yourpath3",
-     "rejectUnauthorized":false
-
+      "path": "/zm3",
+      "proxyUrl": "yourpath3",
+      "rejectUnauthorized": false
     }
-
   ],
-
   "watchPatterns": [
     "scss/**/*",
     "www/**/*",
