@@ -1304,7 +1304,7 @@ angular.module('zmApp', [
           method: 'post',
           timeout: httpDelay,
           //withCredentials: true,
-          url: loginData.url + '/index.php',
+          url: loginData.url + '/index.php?view=console',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',

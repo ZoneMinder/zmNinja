@@ -534,7 +534,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     var req = qHttp({
       method: 'POST',
       /*timeout: 15000,*/
-      url: loginData.url + '/index.php',
+      url: loginData.url + '/index.php?view=console',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded', //'Accept': '*/*',
       },

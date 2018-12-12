@@ -134,7 +134,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
 
     var apiurl = loginData.apiurl + '/host/getVersion.json';
-    var portalurl = loginData.url + '/index.php';
+    //var portalurl = loginData.url + '/index.php';
 
     zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;  color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating') + "...</button>")
       // Do the happy menu only if authentication works
