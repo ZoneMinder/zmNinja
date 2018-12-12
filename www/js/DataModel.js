@@ -805,7 +805,7 @@ angular.module('zmApp.controllers')
 
           var keepBuilding = true;
           while (keepBuilding == true && tLd) {
-            if (arrayObjectIndexOf(chainURLs, tLd.url + "/index.php", "url") == -1 && tLd.url !== undefined && tLd.url != '') // no loop
+            if (arrayObjectIndexOf(chainURLs, tLd.url + "/index.php?view=console", "url") == -1 && tLd.url !== undefined && tLd.url != '') // no loop
             {
               log("Adding to chain stack: " + tLd.serverName + ">" + tLd.url);
               chainURLs.push({
