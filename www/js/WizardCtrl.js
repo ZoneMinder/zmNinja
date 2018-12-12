@@ -458,7 +458,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
     $scope.wizard.fqportal = u;
 
-    u = u + '/index.php';
+    u = u + '/index.php?view=console';
     NVRDataModel.log("Wizard: login url is " + u);
 
     // now lets login

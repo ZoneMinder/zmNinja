@@ -210,10 +210,6 @@ angular.module('zmApp.controllers')
        * @returns 
        */
       function setCordovaHttpOptions() {
-
-        debug ("Cordova HTTP: disabling redirect till bug in library is fixed");
-        cordova.plugin.http.disableRedirect(true,
-          function(s) {debug ("redirect disabled");}, function (e) {debug ("redirect disable FAILED");});
         if (loginData.isUseBasicAuth) {
           debug("Cordova HTTP: configuring basic auth");
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
@@ -813,7 +809,7 @@ angular.module('zmApp.controllers')
             {
               log("Adding to chain stack: " + tLd.serverName + ">" + tLd.url);
               chainURLs.push({
-                url: tLd.url + "/index.php",
+                url: tLd.url + "/index.php?view=console",
                 server: tLd.serverName
               });
               log("Fallback of " + tLd.serverName + " is " + tLd.fallbackConfiguration);
@@ -3064,7 +3060,7 @@ angular.module('zmApp.controllers')
               method: 'POST',
               timeout: 7000,
               //withCredentials: true,
-              url: loginData.url + '/index.php',
+              url: loginData.url + '/index.php?view=console',
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': 'application/json',
