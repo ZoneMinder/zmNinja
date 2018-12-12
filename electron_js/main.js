@@ -75,7 +75,8 @@ function createAlternateWindow() {
 function createWindow() {
 
 
-const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
+// don't need these as we are using local menu bindings
+/*const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
 
     console.log('Command Or Control+F is pressed');
     isFs = !isFs;
@@ -85,7 +86,8 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
   const dbgx = globalShortcut.register('CommandOrControl+Alt+D', () => {
     console.log('CommandOrControl+Alt+D is pressed');
     win.webContents.openDevTools();
-  })
+  })*/
+
 
   /*const newwinx = globalShortcut.register('CommandOrControl+Alt+N', () => {
     console.log('CommandOrControl+Alt+N is pressed');
@@ -173,13 +175,13 @@ const mx = globalShortcut.register('CommandOrControl+Alt+F', () => {
     submenu: [
       {role: 'reload'},
       {role: 'forcereload'},
-      {role: 'toggledevtools'},
+      {role: 'toggledevtools', accelerator: 'CmdOrCtrl+Alt+D'},
       {type: 'separator'},
       {role: 'resetzoom'},
       {role: 'zoomin'},
       {role: 'zoomout'},
       {type: 'separator'},
-      {role: 'togglefullscreen'}
+      {role: 'togglefullscreen', accelerator: 'CmdOrCtrl+Alt+F'}
     ]
   },
   {
