@@ -54,11 +54,13 @@
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
+      "cordova-custom-config": {},
       "cordova-plugin-media-pp-fork": {}
     }
   },
   "dependencies": {
     "clivas": "^0.2.0",
+    "cordova-custom-config": "5.0.2",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-advanced-http": "^2.0.2",
