@@ -2083,7 +2083,9 @@ angular.module('zmApp', [
 
           localforage.getItem('last-desktop-state')
             .then(function (succ) {
-//              console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
+             console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
+
+             if (succ == null) succ = {name:"app.montage"};
 
               // sanitize this
               if (!succ.name || typeof succ.name !== 'string') {
@@ -2114,15 +2116,12 @@ angular.module('zmApp', [
               }
               loadServices();
             }, function (err) {
-              //console.log("ERR " + JSON.stringify(err));
+              
+              console.log("ERR " + JSON.stringify(err));
+              $rootScope.lastState = "app.montage";
               loadServices();
             });
-        } else
-
-        {
-
-          loadServices();
-        }
+        } 
 
         function loadServices() {
           NVRDataModel.log("Language file loaded, continuing with rest");
