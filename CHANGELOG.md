@@ -1,5 +1,16 @@
 # Change Log
 
+## [v1.3.039](https://github.com/pliablepixels/zmNinja/tree/v1.3.039) (2018-12-13)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.035...v1.3.039)
+
+**Closed issues:**
+
+- 1.3.037 - push notification icon in android is a block [\#762](https://github.com/pliablepixels/zmNinja/issues/762)
+- After update zmninja stops working [\#760](https://github.com/pliablepixels/zmNinja/issues/760)
+- Ctrl-Alt-D opens Chrome Developer Tools panel on Windows, no matter what app is active [\#759](https://github.com/pliablepixels/zmNinja/issues/759)
+- ZMninja ios update 1.3.033 'cleaning up' delays for failover switching [\#753](https://github.com/pliablepixels/zmNinja/issues/753)
+- Portals that implement redirects don't work with web scrape \(Wizard\) [\#716](https://github.com/pliablepixels/zmNinja/issues/716)
+
 ## [v1.3.035](https://github.com/pliablepixels/zmNinja/tree/v1.3.035) (2018-12-11)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.032...v1.3.035)
 
