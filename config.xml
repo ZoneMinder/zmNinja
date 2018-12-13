@@ -44,7 +44,7 @@
             <param name="ios-package" value="CDVWKWebViewEngine" />
         </feature>
         <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
-        <resource-file src="www/sounds/blop.caf" target="zmNinja/Resources/blop.caf" />
+        <resource-file src="www/sounds/blop.caf" target="blop.caf" />
         <resource-file src="GoogleService-Info.plist" />
         <custom-config-file parent="NSAppTransportSecurity" target="*-Info.plist">
             <dict>
@@ -101,11 +101,7 @@
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
         <resource-file src="build-extras.gradle" target="build-extras.gradle" />
-        <resource-file src="www/external/android-notification-icons/drawable-hdpi/ic_stat_notification.png" target="res/drawable-hdpi/ic_stat_notification.png" />
-        <resource-file src="www/external/android-notification-icons/drawable-mdpi/ic_stat_notification.png" target="res/drawable-mdpi/ic_stat_notification.png" />
-        <resource-file src="www/external/android-notification-icons/drawable-xhdpi/ic_stat_notification.png" target="res/drawable-xhdpi/ic_stat_notification.png" />
-        <resource-file src="www/external/android-notification-icons/drawable-xxhdpi/ic_stat_notification.png" target="res/drawable-xxhdpi/ic_stat_notification.png" />
-        <resource-file src="www/external/android-notification-icons/drawable-xxxhdpi/ic_stat_notification.png" target="res/drawable-xxxhdpi/ic_stat_notification.png" />
+        <resource-file src="www/external/android-notification-icons/ic_stat_notification.png" target="app/src/main/res/drawable/ic_stat_notification.png" />
         <resource-file src="www/external/android-tv-banner/banner.png" target="res/drawable/banner.png" />
         <resource-file src="google-services.json" target="app/google-services.json" />
         <resource-file src="www/sounds/blop.mp3" target="res/raw/blop.mp3" />
@@ -177,8 +173,9 @@
     </plugin>
     <plugin name="cordova-custom-config" spec="5.0.2" />
     <plugin name="cordova-plugin-media-pp-fork" spec="^1.0.2-dev" />
+    <engine name="ios" spec="4.5.5" />
+    <engine name="android" spec="7.1.4" />
     <plugin name="cordova-plugin-ionic-webview" spec="https://github.com/pliablepixels/cordova-plugin-ionic-webview.git">
         <variable name="ANDROID_SUPPORT_ANNOTATIONS_VERSION" value="27.+" />
     </plugin>
-    <engine name="android" spec="~7.1.4" />
 </widget>
