@@ -3,39 +3,24 @@
 exe() { echo "\$ $@" ; "$@" ; }
 
 # Custom stuff I need to do for zmNinja
-echo ----------------------------------------------------
+echo ---------------------------------------------------------
 echo Pliable Pixels build pre-preprocessing
-echo ----------------------------------------------------
-echo Curr Dir: `pwd`
+echo Nothing to be done - everything has mooved to config.xml
+echo ----------------------------------------------------------
 
-#if [ -d "plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/" ]; then
-#	echo "Copying Modified GCMIntentService for custom sound"
-#	exe cp www/external/GCMIntentService.java plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/
-#	exe cp www/external/GCMIntentService.java platforms/android/src/com/adobe/phonegap/push
-#else
-#	echo "Directory plugins/phonegap-plugin-push/src/android/com/adobe/phonegap/push/ does not exist, skipping..."
-#fi
-#echo "Copying gradle hack for push-plugin-2.1.3"
-#echo "-------------------------------------------"
-#
+
+
+
+#echo "Copying custom sound"
+#echo "---------------------"
+
 #if [ -d "platforms/android" ]; then
-#	exe cp www/external/build-extras.gradle platforms/android
+#	exe mkdir -p platforms/android/res/raw/
+#	exe cp www/sounds/blop.mp3 platforms/android/res/raw/
+#	exe cp www/sounds/blop.caf platforms/ios/zmNinja/Resources
 #else
 #	echo "Directory platforms/android does not exist, skipping..."
 #fi
-
-
-
-echo "Copying custom sound"
-echo "---------------------"
-
-if [ -d "platforms/android" ]; then
-	exe mkdir -p platforms/android/res/raw/
-	exe cp www/sounds/blop.mp3 platforms/android/res/raw/
-	exe cp www/sounds/blop.caf platforms/ios/zmNinja/Resources
-else
-	echo "Directory platforms/android does not exist, skipping..."
-fi
 
 #echo "Copying plist hack for iOS for non SSL connections"
 #echo "--------------------------------------------------"
@@ -45,23 +30,23 @@ fi
 #	echo "Directory platforms/ios/zmNinja does not exist, skipping..."
 #fi
 
-echo "Copying Android notification icons to resource dir"
-echo "--------------------------------------------------"
-if [ -d "platforms/android/res/" ]; then
-	exe cp -R www/external/android-notification-icons/ platforms/android/res/
-	exe cp -f www/external/android-tv-banner/banner.png platforms/android/res/drawable
+#echo "Copying Android notification icons to resource dir"
+#echo "--------------------------------------------------"
+#if [ -d "platforms/android/res/" ]; then
+#	exe cp -R www/external/android-notification-icons/ platforms/android/res/
+#	exe cp -f www/external/android-tv-banner/banner.png platforms/android/res/drawable
 
-else
-	echo "Directory platforms/android/res/ does not exist, skipping..."
-fi
+#else
+#	echo "Directory platforms/android/res/ does not exist, skipping..."
+#fi
 
-echo "Copying Google services to android/app"
-echo "--------------------------------------------------"
-if [ -d "platforms/android" ]; then
-      exe cp google-services.json platforms/android/app/
-else
-      echo "Directory platforms/android doesn't exist"
-fi
+#echo "Copying Google services to android/app"
+#echo "--------------------------------------------------"
+#if [ -d "platforms/android" ]; then
+#      exe cp google-services.json platforms/android/app/
+#else
+#      echo "Directory platforms/android doesn't exist"
+#fi
 
 #echo "Fixing insecure SSL permission problem"
 #echo "--------------------------------------------------"
