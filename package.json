@@ -7,6 +7,7 @@
   "license": "custom see LICENSE.md",
   "cordova": {
     "platforms": [
+      "ios",
       "android"
     ],
     "plugins": {
@@ -64,6 +65,7 @@
     "clivas": "^0.2.0",
     "cordova-android": "7.1.4",
     "cordova-custom-config": "5.0.2",
+    "cordova-ios": "4.5.5",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-advanced-http": "^2.0.2",
