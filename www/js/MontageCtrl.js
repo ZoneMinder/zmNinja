@@ -197,6 +197,9 @@ angular.module('zmApp.controllers')
 
 
     function forceReloadPage() {
+
+      //return;
+
       if ($scope.isDragabillyOn) {
         NVRDataModel.debug("not reloading, edit in progress");
         return;
