@@ -175,13 +175,13 @@ function createWindow() {
     submenu: [
       {role: 'reload'},
       {role: 'forcereload'},
-      {role: 'toggledevtools', accelerator: 'CmdOrCtrl+Alt+D'},
+      {role: 'toggledevtools', accelerator: 'CmdOrCtrl+Shift+D'},
       {type: 'separator'},
       {role: 'resetzoom'},
       {role: 'zoomin'},
       {role: 'zoomout'},
       {type: 'separator'},
-      {role: 'togglefullscreen', accelerator: 'CmdOrCtrl+Alt+F'}
+      {role: 'togglefullscreen', accelerator: 'CmdOrCtrl+Shift+F'}
     ]
   },
   {
