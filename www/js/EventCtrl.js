@@ -2855,7 +2855,18 @@ angular.module('zmApp.controllers')
         h: 0
       };
 
-      if (mo != 0) {
+      
+    /* seems I really should be using strings due to horz and very
+    but luckily parseInt will make them 0 which gets treated as "nothing to do"
+    '0' => translate('Normal'),
+    '90' => translate('RotateRight'),
+    '180' => translate('Inverted'),
+    '270' => translate('RotateLeft'),
+    'horz' => translate('FlippedHori'),
+    'vert' => translate('FlippedVert')
+
+    */
+      if (mo != 0 && mo != 180) {
 
         var tmp = mw;
         mw = mh;
