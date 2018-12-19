@@ -118,6 +118,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
       if (keyCode == keyCodes.ESC) {
 
+        if ($rootScope.zmPopup) $rootScope.zmPopup.close();
         $scope.closeModal();
 
       } else if (keyCode == keyCodes.LEFT) {
