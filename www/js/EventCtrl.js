@@ -2823,23 +2823,27 @@ angular.module('zmApp.controllers')
     function recomputeThumbSize() {
     //  NVRDataModel.debug("EventCtrl: recompute thumbnails");
 
-      for (var i = 0; i < $scope.events.length; i++) {
-        var tempMon = NVRDataModel.getMonitorObject($scope.events[i].Event.MonitorId);
-        if (tempMon != undefined) {
-
-          var mw = parseInt(tempMon.Monitor.Width);
-          var mh = parseInt(tempMon.Monitor.Height);
-          var mo = parseInt(tempMon.Monitor.Orientation);
-
-          var th = computeThumbnailSize(mw, mh, mo);
-          $scope.events[i].Event.thumbWidth = th.w;
-          $scope.events[i].Event.thumbHeight = th.h;
-          //console.log ("Setting to "+th.w+"*"+th.h);
-
+    // remember, devHeight/devWidth upate 300ms after rotation
+      $timeout ( function () {
+        for (var i = 0; i < $scope.events.length; i++) {
+          var tempMon = NVRDataModel.getMonitorObject($scope.events[i].Event.MonitorId);
+          if (tempMon != undefined) {
+  
+            var mw = parseInt(tempMon.Monitor.Width);
+            var mh = parseInt(tempMon.Monitor.Height);
+            var mo = parseInt(tempMon.Monitor.Orientation);
+  
+            var th = computeThumbnailSize(mw, mh, mo);
+            $scope.events[i].Event.thumbWidth = th.w;
+            $scope.events[i].Event.thumbHeight = th.h;
+            //console.log ("Setting to "+th.w+"*"+th.h);
+  
+          }
+  
+  
         }
-
-
-      }
+      },500);
+      
 
     }
 

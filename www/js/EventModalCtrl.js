@@ -1124,9 +1124,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     $ionicLoading.hide();
     if (m.id != 'footage')
-
       return;
 
+    $ionicSideMenuDelegate.canDragContent(false);
     showLive = true;
 
     if (m.snapshot == 'enabled') {
@@ -1295,6 +1295,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.$on('modal.removed', function (e, m) {
 
+    $ionicSideMenuDelegate.canDragContent(true);
     if ($rootScope.platformOS == 'desktop') {
       NVRDataModel.debug("Removing keyboard handler");
       window.removeEventListener('keydown', keyboardHandler, true);
@@ -2069,7 +2070,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
               autoPlay: true,
               responsive: false,
               nativeControls: false,
-              nativeFullScreen: false,
+              nativeFullScreen: true,
 
               playsInline: true,
               sources: [{

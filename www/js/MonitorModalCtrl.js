@@ -27,20 +27,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.csize = ($rootScope.platformOS == 'desktop') ? 10 : 20;
 
 
-  window.addEventListener("resize", imageLoaded, false);
-
-
-  //$rootScope.authSession = "undefined";
-
-  /* $ionicLoading.show({
-     template: $translate.instant('kNegotiatingStreamAuth') + '...',
-     animation: 'fade-in',
-     showBackdrop: false,
-     duration: zm.loadingTimeout,
-     maxWidth: 300,
-     showDelay: 0
-   });*/
-
   $scope.currentStreamMode = 'single';
   NVRDataModel.log("Using stream mode " + $scope.currentStreamMode);
 
@@ -1367,7 +1353,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   $scope.$on('modal.removed', function () {
 
-    window.removeEventListener("resize", imageLoaded, false);
 
     if ($rootScope.platformOS == 'android') {
       NVRDataModel.debug("Deregistering handlers for multi-window");
