@@ -69,12 +69,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     timefrom.toDate();
   };
 
-  function orientationChanged() {
-    //  NVRDataModel.debug("Detected orientation change, redoing packery resize");
-    /* $timeout(function () {
-         pckry.onresize();
-     });*/
-  }
+  
   //--------------------------------------
   // pause/unpause nph-zms
   //---------------------------------------
@@ -864,10 +859,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // make sure this is applied in scope digest to stop network pull
     // thats why we are doing it beforeLeave
     pckry.destroy();
-    window.removeEventListener("resize", orientationChanged, false);
-    //NVRDataModel.log("Forcing a window.stop() here");
-    //NVRDataModel.stopNetwork("MontageHistory-beforeLeave");
-
+    
   });
   $scope.$on('$ionicView.unloaded', function () {});
   $scope.sliderChanged = function (dirn) {
@@ -1294,7 +1286,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     $scope.isModalActive = false;
 
     $scope.hrsAgo = 4;
-    window.addEventListener("resize", orientationChanged, false);
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
 

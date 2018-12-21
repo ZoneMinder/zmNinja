@@ -1444,11 +1444,7 @@ angular.module('zmApp.controllers')
       if ($scope.modal) $scope.modal.remove();
     });
 
-    function orientationChanged() {
-
-    }
-
-
+    
     // remove a saved montage profile
     $scope.deleteMontageProfile = function () {
       var posArray;
@@ -2023,8 +2019,7 @@ angular.module('zmApp.controllers')
         initPackery();
       }, zm.packeryTimer);
       //console.log("**VIEW ** Montage Ctrl AFTER ENTER");
-      window.addEventListener("resize", orientationChanged, false);
-
+      
       if ($rootScope.platformOS != 'android') {
         document.addEventListener("pause", onPause, false);
       } else {

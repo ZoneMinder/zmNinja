@@ -1727,11 +1727,18 @@ angular.module('zmApp', [
       // http://stackoverflow.com/questions/1649086/detect-rotation-of-android-phone-in-the-browser-with-javascript
 
       var checkOrientation = function () {
+
+        // give rotation time to actually rotate, or width/height will be bogus
+        $timeout ( function() {
+      
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.pixelRatio = pixelRatio;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
-        //console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+
+       // console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+        },300);
+        
 
       };
 
