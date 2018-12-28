@@ -2901,7 +2901,7 @@ angular.module('zmApp.controllers')
     $scope.constructThumbnail = function (event) {
       var stream = "";
       stream = event.Event.recordingURL +
-        "/index.php?view=image&show=capture&fid=" +
+        "/index.php?view=image&fid=" +
         NVRDataModel.getSnapshotFrame()+"&eid="+event.Event.Id  +
         "&width=" + event.Event.thumbWidth * 2 +
         "&height=" + event.Event.thumbHeight * 2;
