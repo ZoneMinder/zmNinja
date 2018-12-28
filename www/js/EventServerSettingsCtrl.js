@@ -2,7 +2,7 @@
  /* jslint browser: true*/
  /* global cordova,StatusBar,angular,console */
 
- angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'NVRDataModel', '$ionicPlatform', '$ionicPopup', '$timeout', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, NVRDataModel, $ionicPlatform, $ionicPopup, $timeout, $translate) {
+ angular.module('zmApp.controllers').controller('zmApp.EventServerSettingsCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', 'EventServer', '$ionicHistory', '$rootScope', '$state', 'message', 'NVR', '$ionicPlatform', '$ionicPopup', '$timeout', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, EventServer, $ionicHistory, $rootScope, $state, message, NVR, $ionicPlatform, $ionicPopup, $timeout, $translate) {
    $scope.openMenu = function () {
      $ionicSideMenuDelegate.toggleLeft();
    };
@@ -53,7 +53,7 @@
    $scope.$on('$ionicView.beforeEnter', function () {
 
 
-     $scope.loginData = NVRDataModel.getLogin();
+     $scope.loginData = NVR.getLogin();
      //console.log ("Event server - before Enter, loginData is " + JSON.stringify($scope.loginData));
 
      //console.log ("BEFORE ENTER I GOT " + JSON.stringify($scope.loginData));
@@ -89,7 +89,7 @@
      // now if none are checked, assume it means all checked. This is related to the
      // fact that ES will start sending all monitors, even ones you don't have access to
      if (!monchecked) {
-       NVRDataModel.debug("Enabling all monitors for event server");
+       NVR.debug("Enabling all monitors for event server");
        for (var j = 0; j < $scope.monitors.length; j++) {
          $scope.monitors[i].Monitor.isChecked = true;
          $scope.monitors[i].Monitor.reportingInterval = 0;
@@ -104,7 +104,7 @@
 
    $scope.selectScreen = function () {
 
-     // var ld = NVRDataModel.getLogin();
+     // var ld = NVR.getLogin();
 
      $scope.myopt = {
        selectedState: $scope.loginData.onTapScreen
@@ -130,8 +130,8 @@
            onTap: function (e) {
 
              $scope.loginData.onTapScreen = $scope.myopt.selectedState;
-             NVRDataModel.log("Setting new onTap State:" + $scope.loginData.onTapScreen);
-             NVRDataModel.setLogin($scope.loginData);
+             NVR.log("Setting new onTap State:" + $scope.loginData.onTapScreen);
+             NVR.setLogin($scope.loginData);
              $scope.defScreen = $scope.myopt.selectedState;
              //$scope.loginData = ld;
 
@@ -166,7 +166,7 @@
    //----------------------------------------------------------------
 
    function saveItems() {
-     NVRDataModel.debug("Saving Event Server data");
+     NVR.debug("Saving Event Server data");
      var monstring = "";
      var intervalstring = "";
      var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
@@ -197,7 +197,7 @@
 
 
      // console.log ("SAVED: " + JSON.stringify($scope.loginData));
-     NVRDataModel.setLogin($scope.loginData);
+     NVR.setLogin($scope.loginData);
 
      var pushstate = "enabled";
      if ($scope.loginData.disablePush == true || $scope.loginData.isUseEventServer == false)
@@ -208,7 +208,7 @@
        EventServer.init()
          .then(function (data) {
              // console.log("Sending control filter");
-             NVRDataModel.debug("Sending Control message 'filter' with monlist=" + monstring + " and interval=" + intervalstring);
+             NVR.debug("Sending Control message 'filter' with monlist=" + monstring + " and interval=" + intervalstring);
              EventServer.sendMessage("control", {
                type: 'filter',
                monlist: monstring,
@@ -222,7 +222,7 @@
 
              {
                // we need to disable the token
-               NVRDataModel.debug("Sending token state " + pushstate);
+               NVR.debug("Sending token state " + pushstate);
                EventServer.sendMessage('push', {
                  type: 'token',
                  platform: plat,
@@ -234,7 +234,7 @@
 
            },
            function (err) {
-             NVRDataModel.debug("Event Server init failed");
+             NVR.debug("Event Server init failed");
            }
 
          );
@@ -247,7 +247,7 @@
 
        {
          // we need to disable the token
-         NVRDataModel.debug("Sending token state " + pushstate);
+         NVR.debug("Sending token state " + pushstate);
          EventServer.sendMessage('push', {
            type: 'token',
            platform: plat,
@@ -264,7 +264,7 @@
 
      }
 
-     NVRDataModel.displayBanner('info', ['settings saved']);
+     NVR.displayBanner('info', ['settings saved']);
    }
 
    //----------------------------------------------------------------

@@ -3,7 +3,7 @@
 /* global cordova,StatusBar,angular,console,moment */
 
 angular.module('zmApp.controllers')
-  .controller('zmApp.EventDateTimeFilterCtrl', ['$scope', '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', 'NVRDataModel', '$state', function ($scope, $ionicScrollDelegate, $ionicSideMenuDelegate, $rootScope, $ionicHistory, NVRDataModel, $state) {
+  .controller('zmApp.EventDateTimeFilterCtrl', ['$scope', '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', 'NVR', '$state', function ($scope, $ionicScrollDelegate, $ionicSideMenuDelegate, $rootScope, $ionicHistory, NVR, $state) {
 
       //----------------------------------------------------------------
       // Alarm notification handling
@@ -74,30 +74,30 @@ angular.module('zmApp.controllers')
         if (!$rootScope.fromDate) {
           //console.log("RESET fromDate");
           $rootScope.fromDate = new Date();
-          NVRDataModel.debug("DateTimeFilter: resetting from date");
+          NVR.debug("DateTimeFilter: resetting from date");
         }
 
         if (!$rootScope.toDate) {
           // console.log("RESET toDate");
           $rootScope.toDate = new Date();
-          NVRDataModel.debug("DateTimeFilter: resetting to date");
+          NVR.debug("DateTimeFilter: resetting to date");
         }
 
         if (!$rootScope.fromTime) {
           // console.log("RESET fromTime");
           $rootScope.fromTime = new Date(99, 5, 24, 0, 0, 0, 0); //moment().format("hh:mm:ss");
-          NVRDataModel.debug("DateTimeFilter: resetting from time");
+          NVR.debug("DateTimeFilter: resetting from time");
         }
 
         if (!$rootScope.toTime) {
           //console.log("RESET toTime");
           $rootScope.toTime = new Date(99, 5, 24, 23, 59, 59, 0);
           //$rootScope.toTime = "01:01:02"; //moment().format("hh:mm:ss");
-          NVRDataModel.debug("DateTimeFilter: resetting to time");
+          NVR.debug("DateTimeFilter: resetting to time");
         }
 
         if ($rootScope.fromDate > $rootScope.toDate) {
-          NVRDataModel.log("From date > To Date, swapping");
+          NVR.log("From date > To Date, swapping");
           var t = $rootScope.fromDate;
           $rootScope.fromDate = $rootScope.toDate;
           $rootScope.toDate = t;
@@ -111,7 +111,7 @@ angular.module('zmApp.controllers')
         //console.log("CONCAT DATES " + temp);
         //
         // var startDate = moment(temp).format("YYYY-MM-DD hh:mm:ss");
-        NVRDataModel.debug("DateTimeFilter: From/To is now: " + $rootScope.fromString + " & " + $rootScope.toString);
+        NVR.debug("DateTimeFilter: From/To is now: " + $rootScope.fromString + " & " + $rootScope.toString);
         $ionicHistory.goBack();
       };
 

@@ -4,8 +4,8 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', '$stateParams', function (
-  $ionicPopup, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate, $stateParams) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', '$stateParams', function (
+  $ionicPopup, $scope, zm, NVR, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate, $stateParams) {
 
   //----------------------------------------------------------------------
   // Controller main
@@ -22,7 +22,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
   $rootScope.zmPopup = "";
 
-  var loginData = NVRDataModel.getLogin();
+  var loginData = NVR.getLogin();
 
   var apiRun = loginData.apiurl + "/host/daemonCheck.json";
   var apiLoad = loginData.apiurl + "/host/getLoad.json";
@@ -81,7 +81,7 @@ $scope.toggleServer = function() {
 };
   /*
   $timeout(function () {
-          NVRDataModel.debug("invoking DiskStatus...");
+          NVR.debug("invoking DiskStatus...");
           getDiskStatus();
       }, 6000);
   */
@@ -100,9 +100,9 @@ $scope.toggleServer = function() {
     $scope.showServer = true;
 
     $scope.$on ( "process-push", function () {
-      NVRDataModel.debug (">> StateCtrl: push handler");
-      var s = NVRDataModel.evaluateTappedNotification();
-      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      NVR.debug (">> StateCtrl: push handler");
+      var s = NVR.evaluateTappedNotification();
+      NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
       $ionicHistory.nextViewOptions({
         disableAnimate:true,
         disableBack: true
@@ -113,7 +113,7 @@ $scope.toggleServer = function() {
   
   $scope.$on('$ionicView.enter', function () {
     // console.log("**VIEW ** Montage Ctrl Entered");
-    NVRDataModel.setAwake(false);
+    NVR.setAwake(false);
 
   });
 
@@ -131,11 +131,11 @@ $scope.toggleServer = function() {
   // if applicable
   //---------------------------------------------------------
   function getCurrentState() {
-    NVRDataModel.debug("StateCtrl: getting state using " + apiCurrentState);
+    NVR.debug("StateCtrl: getting state using " + apiCurrentState);
     $http.get(apiCurrentState)
       .then(
         function (success) {
-          NVRDataModel.debug("State results: " + JSON.stringify(success));
+          NVR.debug("State results: " + JSON.stringify(success));
           var customStateArray = success.data.states;
           var i = 0;
           var found = false;
@@ -151,7 +151,7 @@ $scope.toggleServer = function() {
 
         },
         function (error) {
-          NVRDataModel.debug("StateCtrl: Error retrieving state list " + JSON.stringify(error));
+          NVR.debug("StateCtrl: Error retrieving state list " + JSON.stringify(error));
           $scope.customState = "";
 
         }
@@ -190,7 +190,7 @@ $scope.toggleServer = function() {
       selectedState: ""
     };
     //console.log(JSON.stringify($scope.allStateNames));
-    NVRDataModel.log("List of custom states: " + JSON.stringify($scope.allStateNames));
+    NVR.log("List of custom states: " + JSON.stringify($scope.allStateNames));
     $rootScope.zmPopup = $ionicPopup.show({
       scope: $scope,
       template: '<ion-radio-fix ng-repeat="item in allStateNames" ng-value="item" ng-model="myopt.selectedState"> {{item}} </ion-radio-fix>',
@@ -231,7 +231,7 @@ $scope.toggleServer = function() {
   function getStorageStatus() {
 
     $scope.storage = [];
-    NVRDataModel.debug("StorageStatus: " + apiStorage);
+    NVR.debug("StorageStatus: " + apiStorage);
     $http.get(apiStorage)
       .then(
         function (success) {
@@ -243,7 +243,7 @@ $scope.toggleServer = function() {
         function (error) {
           $scope.zmDisk = "unknown";
           // console.log("ERROR:" + JSON.stringify(error));
-          NVRDataModel.log("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
+          NVR.log("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
         }
       );
   }
@@ -255,7 +255,7 @@ $scope.toggleServer = function() {
   function getServerStatus() {
 
     $scope.servers = [];
-    NVRDataModel.debug("ServerStatus: " + apiStorage);
+    NVR.debug("ServerStatus: " + apiStorage);
     $http.get(apiServer)
       .then(
         function (success) {
@@ -271,7 +271,7 @@ $scope.toggleServer = function() {
         function (error) {
           $scope.zmDisk = "unknown";
           // console.log("ERROR:" + JSON.stringify(error));
-          NVRDataModel.log("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
+          NVR.log("Error retrieving DiskStatus: " + JSON.stringify(error), "error");
         }
       );
   }
@@ -284,12 +284,12 @@ $scope.toggleServer = function() {
 
 
 
-    NVRDataModel.debug("StateCtrl/getRunStatus: " + apiRun);
+    NVR.debug("StateCtrl/getRunStatus: " + apiRun);
     $http.get(apiRun)
       .then(
         function (success) {
-          NVRDataModel.debug("StateCtrl/getRunStatus: success");
-          NVRDataModel.debug("Run results: " + JSON.stringify(success));
+          NVR.debug("StateCtrl/getRunStatus: success");
+          NVR.debug("Run results: " + JSON.stringify(success));
           switch (success.data.result) {
             case 1:
               $scope.zmRun = $translate.instant('kZMRunning');
@@ -310,7 +310,7 @@ $scope.toggleServer = function() {
         },
         function (error) {
           //console.log("ERROR in getRun: " + JSON.stringify(error));
-          NVRDataModel.log("Error getting RunStatus " + JSON.stringify(error), "error");
+          NVR.log("Error getting RunStatus " + JSON.stringify(error), "error");
           $scope.color = 'red';
           $scope.zmRun = $translate.instant('kZMUndetermined');
         }
@@ -322,21 +322,21 @@ $scope.toggleServer = function() {
   // gets ZM load - max[0], avg[1], min[2]
   //----------------------------------------------------------------------
   function getLoadStatus() {
-    NVRDataModel.debug("StateCtrl/getLoadStatus: " + apiLoad);
+    NVR.debug("StateCtrl/getLoadStatus: " + apiLoad);
     $http.get(apiLoad)
       .then(
         function (success) {
-          NVRDataModel.debug("Load results: " + JSON.stringify(success));
+          NVR.debug("Load results: " + JSON.stringify(success));
           //console.log(JSON.stringify(success));
           // load returns 3 params - one in the middle is avg.
-          NVRDataModel.debug("StateCtrl/getLoadStatus: success");
+          NVR.debug("StateCtrl/getLoadStatus: success");
           $scope.zmLoad = success.data.load[1];
 
           // console.log("X"+success.data.result+"X");
         },
         function (error) {
           //console.log("ERROR in getLoad: " + JSON.stringify(error));
-          NVRDataModel.log("Error retrieving loadStatus " + JSON.stringify(error), "error");
+          NVR.log("Error retrieving loadStatus " + JSON.stringify(error), "error");
           $scope.zmLoad = 'undetermined';
         }
       );
@@ -348,17 +348,17 @@ $scope.toggleServer = function() {
 
   function performZMoperation(str) {
 
-    NVRDataModel.debug("inside performZMoperation with " + str);
+    NVR.debug("inside performZMoperation with " + str);
 
     $scope.zmRun = "...";
     $scope.color = 'orange';
     $scope.customState = "";
-    NVRDataModel.debug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
+    NVR.debug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
     inProgress = 1;
     $http.post(apiExec + str + ".json")
       .then(
         function (success) {
-          NVRDataModel.debug("StateCtrl/controlZM: returned success");
+          NVR.debug("StateCtrl/controlZM: returned success");
           inProgress = 0;
           switch (str) {
             case "stop":
@@ -378,8 +378,8 @@ $scope.toggleServer = function() {
           //if (error.status) // it seems to return error with status 0 if ok
           // {
           //console.log("ERROR in Change State:" + JSON.stringify(error));
-          NVRDataModel.debug("StateCtrl/controlZM: returned error");
-          NVRDataModel.log("Error in change run state:" + JSON.stringify(error), "error");
+          NVR.debug("StateCtrl/controlZM: returned error");
+          NVR.log("Error in change run state:" + JSON.stringify(error), "error");
           $scope.zmRun = $translate.instant('kZMUndetermined');
           $scope.color = 'orange';
           inProgress = 0;
@@ -389,7 +389,7 @@ $scope.toggleServer = function() {
 
   function controlZM(str) {
     if (inProgress) {
-      NVRDataModel.debug("StateCtrl/controlZM: operation in progress");
+      NVR.debug("StateCtrl/controlZM: operation in progress");
       $ionicPopup.alert({
         title: $translate.instant('kOperationInProgressTitle'),
         template: $translate.instant('kOperationInProgressBody') + '...',
@@ -444,7 +444,7 @@ $scope.toggleServer = function() {
 
   $scope.doRefresh = function () {
     //console.log("***Pull to Refresh");
-    NVRDataModel.debug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
+    NVR.debug("StateCtrl/refresh: calling getRun/Load/Disk/CurrentState");
     getRunStatus();
     getLoadStatus();
     getCurrentState();

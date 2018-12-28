@@ -8,7 +8,7 @@
 // the main function is generateChart. I call generate chart with required parameters
 // from the template file
 
-angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$ionicHistory', '$state', function ($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $ionicHistory, $state) {
+angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$rootScope', '$http', '$ionicHistory', '$state', function ($ionicPlatform, $scope, zm, NVR, $ionicSideMenuDelegate, $rootScope, $http, $ionicHistory, $state) {
   //console.log("Inside Graphs controller");
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
@@ -47,7 +47,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
   //------------------------------------------------------------------------
   $scope.$on('$ionicView.enter', function () {
     // console.log("**VIEW ** EventsGraphs Ctrl Entered");
-    NVRDataModel.setAwake(false);
+    NVR.setAwake(false);
   });
 
   $scope.$on('$ionicView.leave', function () {
@@ -141,14 +141,14 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
     if (hrs) {
       // Apply a time based filter if I am not watching all events
       var cur = moment();
-      endDate = cur.format("YYYY-MM-DD " + NVRDataModel.getTimeFormat());
-      startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD " + NVRDataModel.getTimeFormat());
+      endDate = cur.format("YYYY-MM-DD " + NVR.getTimeFormat());
+      startDate = cur.subtract(hrs, 'hours').format("YYYY-MM-DD " + NVR.getTimeFormat());
       //console.log("Start and End " + startDate + "==" + endDate);
-      NVRDataModel.log("Generating graph for " + startDate + " to " + endDate);
+      NVR.log("Generating graph for " + startDate + " to " + endDate);
 
     }
 
-    var loginData = NVRDataModel.getLogin();
+    var loginData = NVR.getLogin();
     //$scope.chart.data = {};
     $scope.chart.data = {
       labels: [],
@@ -161,7 +161,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
       }, ]
     };
 
-    NVRDataModel.getMonitors(0).then(function (data) {
+    NVR.getMonitors(0).then(function (data) {
       monitors = data;
       var adjustedHeight = monitors.length * 30;
       if (adjustedHeight > $rootScope.devHeight) {
@@ -188,11 +188,11 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
             "/events/index/MonitorId:" + monitors[j].Monitor.Id + dateString +
             ".json?page=1";
           // console.log("Monitor event URL:" + url);
-          NVRDataModel.log("EventGraph: composed url is " + url);
+          NVR.log("EventGraph: composed url is " + url);
           $http.get(url /*,{timeout:15000}*/ )
             .then(function (data) {
                 data = data.data;
-                NVRDataModel.debug("Event count for monitor" +
+                NVR.debug("Event count for monitor" +
                   monitors[j].Monitor.Id + " is " + data.pagination.count);
                 $scope.chart.data.datasets[0].data[j] = data.pagination.count;
               },
@@ -201,7 +201,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
                 // but what I am really doing now is treating it like no events
                 // works but TBD: make this into a proper error handler
                 $scope.chart.data.datasets[0].data[j] = 0;
-                NVRDataModel.log("Error retrieving events for graph " + JSON.stringify(data), "error");
+                NVR.log("Error retrieving events for graph " + JSON.stringify(data), "error");
               });
         })(i); // j
       } //for

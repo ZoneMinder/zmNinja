@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVRDataModel', '$rootScope', '$ionicPopup', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVRDataModel, $rootScope, $ionicPopup, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVR', '$rootScope', '$ionicPopup', '$translate', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVR, $rootScope, $ionicPopup, $translate) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -19,13 +19,13 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
     // 
     if (window.cordova) {
       cordova.plugin.http.setSSLCertMode('nocheck', function () {
-        NVRDataModel.debug('--> First use -> SSL is permissive, will allow any certs for now. You can change it later.');
+        NVR.debug('--> First use -> SSL is permissive, will allow any certs for now. You can change it later.');
       }, function () {
         console.log('-->First Use -> Error setting SSL permissive');
       });
 
       if ($rootScope.platformOS == 'android') {
-        NVRDataModel.log (">>> Android: enabling inline image view for self signed certs");
+        NVR.log (">>> Android: enabling inline image view for self signed certs");
         cordova.plugins.certificates.trustUnsecureCerts(true);
       }
 
@@ -35,7 +35,7 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
   });
 
   $scope.switchLang = function () {
-    $scope.lang = NVRDataModel.getLanguages();
+    $scope.lang = NVR.getLanguages();
     $scope.myopt = {
       lang: ""
     };
@@ -56,8 +56,8 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
         {
           text: $translate.instant('kButtonOk'),
           onTap: function (e) {
-            NVRDataModel.log("Language selected:" + $scope.myopt.lang);
-            NVRDataModel.setDefaultLanguage($scope.myopt.lang, true);
+            NVR.log("Language selected:" + $scope.myopt.lang);
+            NVR.setDefaultLanguage($scope.myopt.lang, true);
 
             //return "OK";
 

@@ -9,7 +9,7 @@
 
 angular.module('zmApp.controllers')
 
-  .service('NVRDataModel', ['$ionicPlatform', '$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$translate', '$cordovaSQLite',
+  .service('NVR', ['$ionicPlatform', '$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$translate', '$cordovaSQLite',
     function ($ionicPlatform, $http, $q, $ionicLoading, $ionicBackdrop, $fileLogger,
       zm, $rootScope, $ionicContentBanner, $timeout, $cordovaPinDialog,
       $ionicPopup, $localstorage, $state, $translate) {
@@ -431,22 +431,22 @@ angular.module('zmApp.controllers')
         // Skipping monitor number as I only need an auth key
         // so no need to generate an image
         myurl = loginData.url + "/index.php?view=watch&mid=" + mid;
-        debug("DataModel: Getting auth from " + myurl + " with mid=" + mid);
+        debug("NVR: Getting auth from " + myurl + " with mid=" + mid);
         $http.get(myurl)
           .then(function (success) {
               //console.log ("**** RESULT IS " + JSON.stringify(success));
               // Look for auth=
               var auth = success.data.match("auth=(.*?)&");
               if (auth && (auth[1] != null)) {
-                log("DataModel: Extracted a stream authentication key of: " + auth[1]);
+                log("NVR: Extracted a stream authentication key of: " + auth[1]);
                 as = "&auth=" + auth[1];
                 $rootScope.authSession = as;
                 d.resolve(as);
               } else {
-                log("DataModel: Did not find a stream auth key, looking for user=");
+                log("NVR: Did not find a stream auth key, looking for user=");
                 auth = success.data.match("user=(.*?)&");
                 if (auth && (auth[1] != null)) {
-                  log("DataModel: Found simple stream auth mode (user=)");
+                  log("NVR: Found simple stream auth mode (user=)");
                   as = "&user=" + loginData.username + "&pass=" + loginData.password;
                   $rootScope.authSession = as;
                   d.resolve(as);
@@ -463,7 +463,7 @@ angular.module('zmApp.controllers')
 
             },
             function (error) {
-              log("DataModel: Error resolving auth key " + JSON.stringify(error));
+              log("NVR: Error resolving auth key " + JSON.stringify(error));
               d.resolve("undefined");
               return (d.promise);
             });
@@ -511,7 +511,7 @@ angular.module('zmApp.controllers')
               if (monitors[m].Monitor.Id == positions[p].attr) {
                 monitors[m].Monitor.listDisplay = positions[p].display;
                 positionFound = true;
-                //debug("DataModel: Setting MID:" + monitors[m].Monitor.Id + " to " + monitors[m].Monitor.listDisplay);
+                //debug("NVR: Setting MID:" + monitors[m].Monitor.Id + " to " + monitors[m].Monitor.listDisplay);
               }
 
             }
@@ -1022,7 +1022,7 @@ angular.module('zmApp.controllers')
         },
 
         init: function () {
-          // console.log("****** DATAMODEL INIT SERVICE CALLED ********")
+         
 
           log("ZMData init: checking for stored variables & setting up log file");
 
@@ -1344,7 +1344,7 @@ angular.module('zmApp.controllers')
                   }
 
                   $rootScope.runMode = getBandwidth();
-                  log("Setting DataModel init bandwidth to: " + $rootScope.runMode);
+                  log("Setting NVR init bandwidth to: " + $rootScope.runMode);
 
                   if (typeof loginData.refreshSecLowBW == 'undefined') {
 
@@ -1512,7 +1512,7 @@ angular.module('zmApp.controllers')
                   loginData.forceImageModePath = false;
                   loginData.enableBlog = true;
 
-                  log("DataModel init retrieved store loginData");
+                  log("NVR init retrieved store loginData");
                 } else {
                   log("defaultServer configuration NOT found. Keeping login at defaults");
                 }
@@ -1522,13 +1522,12 @@ angular.module('zmApp.controllers')
                 if (window.cordova) setCordovaHttpOptions();
 
 
-                // FIXME: HACK: This is the latest entry point into dataModel init, so start portal login after this
-                // not the neatest way
+               
                 $rootScope.$broadcast('init-complete');
               });
 
             monitorsLoaded = 0;
-            //console.log("Getting out of NVRDataModel init");
+            //console.log("Getting out of NVR init");
             $rootScope.showBlog = loginData.enableBlog;
             //debug("loginData structure values: " + JSON.stringify(loginData));
 
@@ -2004,7 +2003,7 @@ angular.module('zmApp.controllers')
           req = req + "&auth=" + myauthtoken;
           // req = req + "&command=17";
 
-          debug("DataModel: Pausing live stream ck:" + ck + " for " + name + " url:" + url);
+          debug("NVR: Pausing live stream ck:" + ck + " for " + name + " url:" + url);
           return $http.get(req + "&command=1")
             .then(
               function (s) {
@@ -2028,7 +2027,7 @@ angular.module('zmApp.controllers')
           req = req + "&auth=" + myauthtoken;
           // req = req + "&command=17";
 
-          debug("DataModel: Resuming live stream ck:" + ck + " for " + name);
+          debug("NVR: Resuming live stream ck:" + ck + " for " + name);
           return $http.get(req + "&command=2")
             .then(
               function (s) {
@@ -2053,7 +2052,7 @@ angular.module('zmApp.controllers')
           req = req + "&auth=" + myauthtoken;
           // req = req + "&command=17";
           if (name == undefined) name = "";
-          debug("DataModel: killing " + name + " live stream ck:" + ck);
+          debug("NVR: killing " + name + " live stream ck:" + ck);
           return $http.get(req + "&command=17")
             .then(
               function (s) {
@@ -2134,7 +2133,7 @@ angular.module('zmApp.controllers')
 
         regenConnKeys: function () {
 
-          debug("DataModel: Regenerating connkeys...");
+          debug("NVR: Regenerating connkeys...");
           for (var i = 0; i < monitors.length; i++) {
             monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
             monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
@@ -2156,7 +2155,7 @@ angular.module('zmApp.controllers')
           var d = $q.defer();
           if ((monitorsLoaded == 0) || (forceReload == 1)) // monitors are empty or force reload
           {
-            //console.log("NVRDataModel: Invoking HTTP get to load monitors");
+            //console.log("NVR: Invoking HTTP get to load monitors");
             log((forceReload == 1) ? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors";
@@ -2632,7 +2631,7 @@ angular.module('zmApp.controllers')
         // When I display events in the event controller, this is the first function I call
         // This returns the total number of pages
         // I then proceed to display pages in reverse order to display the latest events first
-        // I also reverse sort them in NVRDataModel to sort by date
+        // I also reverse sort them in NVR to sort by date
         // All this effort because the ZM APIs return events in sorted order, oldest first. Yeesh.
         //-----------------------------------------------------------------------------
 

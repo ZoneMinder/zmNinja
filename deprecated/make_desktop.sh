@@ -108,9 +108,9 @@ do
                 echo $APPVER > $BASENAME/version
                 exe cp resources/icon.png $BASENAME
                 exe cd $i 
-                cat app/www/js/DataModel.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/www/js/DataModel.js.tmp
-                exe rm -fr app/www/js/DataModel.js
-                exe mv app/www/js/DataModel.js.tmp app/www/js/DataModel.js
+                cat app/www/js/NVR.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/www/js/NVR.js.tmp
+                exe rm -fr app/www/js/NVR.js
+                exe mv app/www/js/NVR.js.tmp app/www/js/NVR.js
                 
                 
                 rm -fr app.asar

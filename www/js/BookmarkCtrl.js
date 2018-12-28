@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry */
 
-angular.module('zmApp.controllers').controller('zmApp.BookmarkCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$q', '$templateRequest', '$sce', '$compile', function ($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $q, $templateRequest, $sce, $compile) {
+angular.module('zmApp.controllers').controller('zmApp.BookmarkCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVR', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$q', '$templateRequest', '$sce', '$compile', function ($scope, $rootScope, $ionicModal, NVR, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $q, $templateRequest, $sce, $compile) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -37,7 +37,7 @@ angular.module('zmApp.controllers').controller('zmApp.BookmarkCtrl', ['$scope', 
   //------------------------------------------------------------------------
   $scope.$on('$ionicView.beforeEnter', function () {
     //console.log("**VIEW ** Help Ctrl Entered");
-    NVRDataModel.setAwake(false);
+    NVR.setAwake(false);
 
     $scope.bookmarks = [];
 

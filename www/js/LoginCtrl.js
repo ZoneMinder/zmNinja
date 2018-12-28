@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,alert,URI, localforage */
 
-angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$stateParams', '$translate', function ($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $stateParams, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVR', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', 'zmAutoLogin', '$cordovaPinDialog', 'EventServer', '$ionicHistory', '$state', '$ionicActionSheet', 'SecuredPopups', '$stateParams', '$translate', function ($scope, $rootScope, zm, $ionicModal, NVR, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, zmAutoLogin, $cordovaPinDialog, EventServer, $ionicHistory, $state, $ionicActionSheet, SecuredPopups, $stateParams, $translate) {
 
   var oldLoginData = ''; // used to track any changes    
   $scope.openMenu = function () {
@@ -23,12 +23,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   document.addEventListener("resume", onResume, false);
 
   function onResume() {
-    // NVRDataModel.log("Login screen resumed");
+    // NVR.log("Login screen resumed");
 
   }
 
   function onPause() {
-    NVRDataModel.log("Login screen going to background, saving data");
+    NVR.log("Login screen going to background, saving data");
     localforage.setItem("settings-temp-data", $scope.loginData);
 
   }
@@ -60,7 +60,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   //----------------------------------------------------------------
 
   $scope.selectFallback = function () {
-    var as = Object.keys(NVRDataModel.getServerGroups());
+    var as = Object.keys(NVR.getServerGroups());
     if (as.length < 2) {
       $rootScope.zmPopup = SecuredPopups.show('alert', {
         title: $translate.instant('kError'),
@@ -74,7 +74,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     var ab = [{
       text: $translate.instant('kClear')
     }];
-    var ld = NVRDataModel.getLogin();
+    var ld = NVR.getLogin();
     as.forEach(function (item) {
       if (item != ld.serverName) ab.push({
         text: item
@@ -91,7 +91,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
           $scope.loginData.fallbackConfiguration = "";
         else
           $scope.loginData.fallbackConfiguration = ab[index].text;
-        NVRDataModel.setLogin($scope.loginData);
+        NVR.setLogin($scope.loginData);
         return true;
       }
     });
@@ -116,24 +116,24 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         if (serverbuttons[index].text == $translate.instant('kServerAdd') + "...") {
 
-          $scope.loginData = angular.copy(NVRDataModel.getDefaultLoginObject());
+          $scope.loginData = angular.copy(NVR.getDefaultLoginObject());
           return true;
         }
 
-        var zmServers = NVRDataModel.getServerGroups();
+        var zmServers = NVR.getServerGroups();
         $scope.loginData = zmServers[serverbuttons[index].text];
 
         //console.log ("NEW LOGIN OBJECT IS " + JSON.stringify($scope.loginData));
 
 
-        NVRDataModel.debug("Retrieved state for this profile:" + JSON.stringify($scope.loginData));
+        NVR.debug("Retrieved state for this profile:" + JSON.stringify($scope.loginData));
 
         // lets make sure Event Server is loaded 
         // correctly
 
         // FIXME: But what happens if you don't save?
         // loginData gets written but auth is not done
-        NVRDataModel.setLogin($scope.loginData);
+        NVR.setLogin($scope.loginData);
 
         return true;
       },
@@ -141,7 +141,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       destructiveButtonClicked: function () {
 
         if (!$scope.loginData.serverName) {
-          NVRDataModel.debug("cannot delete empty entry");
+          NVR.debug("cannot delete empty entry");
           return true;
 
         }
@@ -161,21 +161,21 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         function actuallyDelete() {
 
-          var zmServers = NVRDataModel.getServerGroups();
+          var zmServers = NVR.getServerGroups();
           //console.log ("YOU WANT TO DELETE " + $scope.loginData.serverName);
           //console.log ("LENGTH OF SERVERS IS " + Object.keys(zmServers).length);
           if (Object.keys(zmServers).length > 1) {
 
-            NVRDataModel.log("Deleting " + $scope.loginData.serverName);
+            NVR.log("Deleting " + $scope.loginData.serverName);
             delete zmServers[$scope.loginData.serverName];
-            NVRDataModel.setServerGroups(zmServers);
+            NVR.setServerGroups(zmServers);
             // point to first element
             // better than nothing
             // note this is actually unordered
             $scope.loginData = zmServers[Object.keys(zmServers)[0]];
-            NVRDataModel.setLogin($scope.loginData);
+            NVR.setLogin($scope.loginData);
 
-            availableServers = Object.keys(NVRDataModel.getServerGroups());
+            availableServers = Object.keys(NVR.getServerGroups());
             serverbuttons = [{
               text: $translate.instant('kServerAdd') + "..."
             }];
@@ -187,7 +187,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             }
             //console.log (">>>>>>>delete: server buttons " + JSON.stringify(serverbuttons));    
           } else {
-            NVRDataModel.displayBanner('error', [$translate.instant('kBannerCannotDeleteNeedOne')]);
+            NVR.displayBanner('error', [$translate.instant('kBannerCannotDeleteNeedOne')]);
           }
 
 
@@ -204,9 +204,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   //----------------------------------------------------------------
 
   $scope.eventServerSettings = function () {
-    NVRDataModel.debug("Saving settings before going to Event Server settings");
+    NVR.debug("Saving settings before going to Event Server settings");
     //console.log ( "My loginData saved " + JSON.stringify($scope.loginData));
-    NVRDataModel.setLogin($scope.loginData);
+    NVR.setLogin($scope.loginData);
 
 
     if (!$rootScope.isLoggedIn) {
@@ -237,9 +237,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
 
     $scope.$on ( "process-push", function () {
-      NVRDataModel.debug (">> LoginCtrl: push handler. Not processing push, because you might be here due to login failure");
-      /*var s = NVRDataModel.evaluateTappedNotification();
-      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      NVR.debug (">> LoginCtrl: push handler. Not processing push, because you might be here due to login failure");
+      /*var s = NVR.evaluateTappedNotification();
+      NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
       $ionicHistory.nextViewOptions({
         disableAnimate:true,
         disableBack: true
@@ -250,16 +250,16 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     
     oldLoginData = '';
 
-    $scope.loginData = NVRDataModel.getLogin();
+    $scope.loginData = NVR.getLogin();
 
     //console.log (JSON.stringify($scope.loginData));
     //console.log("**VIEW ** LoginCtrl  Entered");
-    NVRDataModel.setAwake(false);
+    NVR.setAwake(false);
     //$scope.basicAuthUsed = false;
-    var ld = NVRDataModel.getLogin();
+    var ld = NVR.getLogin();
     oldName = ld.serverName;
 
-    availableServers = Object.keys(NVRDataModel.getServerGroups());
+    availableServers = Object.keys(NVR.getServerGroups());
     serverbuttons = [{
       text: $translate.instant('kServerAdd') + "..."
     }];
@@ -271,11 +271,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       //console.log (">>>>>>>ionicview enter: server buttons " + JSON.stringify(serverbuttons));
     }
 
-    NVRDataModel.debug("Does login need to hear the wizard? " + $stateParams.wizard);
+    NVR.debug("Does login need to hear the wizard? " + $stateParams.wizard);
 
     if ($stateParams.wizard == "true") {
-      NVRDataModel.log("Creating new login entry for wizard");
-      $scope.loginData = angular.copy(NVRDataModel.getDefaultLoginObject());
+      NVR.log("Creating new login entry for wizard");
+      $scope.loginData = angular.copy(NVR.getDefaultLoginObject());
 
       $scope.loginData.serverName = $rootScope.wizard.serverName;
       $scope.loginData.url = $rootScope.wizard.loginURL;
@@ -318,10 +318,10 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //console.log("**VIEW ** LoginCtrl  Entered");
     var newLoginData = JSON.stringify($scope.loginData);
     if ($scope.loginData.serverName && newLoginData != oldLoginData) {
-      NVRDataModel.log("Login data changed, saving...");
+      NVR.log("Login data changed, saving...");
       saveItems(false);
     } else {
-      NVRDataModel.log("Login data not changed, not saving");
+      NVR.log("Login data not changed, not saving");
     }
 
 
@@ -344,8 +344,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   /* Disabled - seems to crash with native transitions
     
   $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-      NVRDataModel.setAwake(false);
-      var ld = NVRDataModel.getLogin();
+      NVR.setAwake(false);
+      var ld = NVR.getLogin();
 
       if (ld.serverName != oldName) {
           event.preventDefault();
@@ -372,7 +372,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   // FIXME: Get rid of cordovaPinDialog. It's really not needed 
   //--------------------------------------------------------------------------
   $scope.pinPrompt = function (evt) {
-    NVRDataModel.log("Password prompt");
+    NVR.log("Password prompt");
     if ($scope.loginData.usePin) {
       $scope.loginData.pinCode = "";
       $cordovaPinDialog.prompt($translate.instant('kEnterPin'), $translate.instant('kPinProtect')).then(
@@ -383,12 +383,12 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             $cordovaPinDialog.prompt($translate.instant('kReconfirmPin'), $translate.instant('kPinProtect'))
               .then(function (result2) {
                   if (result1.input1 == result2.input1) {
-                    NVRDataModel.log("Pin code match");
+                    NVR.log("Pin code match");
                     $scope.loginData.pinCode = result1.input1;
                   } else {
-                    NVRDataModel.log("Pin code mismatch");
+                    NVR.log("Pin code mismatch");
                     $scope.loginData.usePin = false;
-                    NVRDataModel.displayBanner('error', [$translate.instant('kBannerPinMismatch')]);
+                    NVR.displayBanner('error', [$translate.instant('kBannerPinMismatch')]);
                   }
                 },
                 function (error) {
@@ -405,7 +405,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         });
 
     } else {
-      NVRDataModel.debug("Password disabled");
+      NVR.debug("Password disabled");
     }
   };
 
@@ -467,15 +467,15 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //console.log ("*********** SAVE ITEMS CALLED ");
     //console.log('Saving login');
 
-    NVRDataModel.debug("Inside save Items");
+    NVR.debug("Inside save Items");
 
     $rootScope.alarmCount = 0;
     $rootScope.isAlarm = false;
 
 
-    NVRDataModel.setFirstUse(false);
-    NVRDataModel.setCurrentServerVersion('');
-    NVRDataModel.setCurrentServerMultiPortSupported(false);
+    NVR.setFirstUse(false);
+    NVR.setCurrentServerVersion('');
+    NVR.setCurrentServerMultiPortSupported(false);
 
     // used for menu display
 
@@ -552,7 +552,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     if ($scope.loginData.isUseAuth) {
       if (!$scope.loginData.username) $scope.loginData.username = "x";
       if (!$scope.loginData.password) $scope.loginData.password = "x";
-      //NVRDataModel.log("Authentication is disabled, setting dummy user & pass");
+      //NVR.log("Authentication is disabled, setting dummy user & pass");
     }
 
     if (parseInt($scope.loginData.maxMontage) <= 0) {
@@ -564,7 +564,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     if (!$scope.loginData.isUseEventServer) {
       $rootScope.isAlarm = 0;
       if ($rootScope.apnsToken) {
-        NVRDataModel.log("Making sure we don't get push notifications");
+        NVR.log("Making sure we don't get push notifications");
         EventServer.sendMessage('push', {
           type: 'token',
           platform: $rootScope.platformOS,
@@ -585,7 +585,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     }
 
     //console.log ("SAVING: "+JSON.stringify($scope.loginData));
-    NVRDataModel.setLogin($scope.loginData);
+    NVR.setLogin($scope.loginData);
 
 
     $rootScope.authSession = '';
@@ -593,35 +593,35 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     if ($rootScope.platformOS != 'desktop') {
 
       if ($scope.loginData.isUseBasicAuth) {
-        NVRDataModel.debug("Cordova HTTP: configuring basic auth");
+        NVR.debug("Cordova HTTP: configuring basic auth");
         cordova.plugin.http.useBasicAuth($scope.loginData.basicAuthUser, $scope.loginData.basicAuthPassword);
       }
 
       if (!$scope.loginData.enableStrictSSL) {
 
         //alert("Enabling insecure SSL");
-        NVRDataModel.log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+        NVR.log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
         cordova.plugin.http.setSSLCertMode('nocheck', function () {
-          NVRDataModel.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+          NVR.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
         }, function () {
           console.log('-->Error setting SSL permissive');
         });
 
         if ($rootScope.platformOS == 'android') {
-          NVRDataModel.log (">>> Android: enabling inline image view for self signed certs");
+          NVR.log (">>> Android: enabling inline image view for self signed certs");
           cordova.plugins.certificates.trustUnsecureCerts(true);
         }
 
       } else {
 
-        NVRDataModel.log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+        NVR.log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
 
       }
 
       if ($scope.loginData.saveToCloud) {
-        NVRDataModel.debug("writing data to cloud");
+        NVR.debug("writing data to cloud");
 
-        var serverGroupList = NVRDataModel.getServerGroups();
+        var serverGroupList = NVR.getServerGroups();
         serverGroupList[$scope.loginData.serverName] = angular.copy($scope.loginData);
 
         var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
@@ -631,24 +631,24 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             'defaultServerName': $scope.loginData.serverName
           },
           function () {
-            NVRDataModel.debug("local data synced with cloud...");
+            NVR.debug("local data synced with cloud...");
 
 
           },
           function (err) {
-            NVRDataModel.debug("error syncing cloud data..." + JSON.stringify(err));
+            NVR.debug("error syncing cloud data..." + JSON.stringify(err));
 
           }, true);
 
       } else {
-        NVRDataModel.debug("Clearing cloud settings...");
+        NVR.debug("Clearing cloud settings...");
         window.cordova.plugin.cloudsettings.save({},
           function () {
-            NVRDataModel.debug("cloud data cleared");
+            NVR.debug("cloud data cleared");
 
           },
           function (err) {
-            NVRDataModel.debug("error clearing cloud data: " + err);
+            NVR.debug("error clearing cloud data: " + err);
 
           }, true);
       }
@@ -657,7 +657,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     }
 
 
-    $rootScope.runMode = NVRDataModel.getBandwidth();
+    $rootScope.runMode = NVR.getBandwidth();
 
     oldName = $scope.loginData.serverName;
 
@@ -665,7 +665,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       EventServer.init()
         .then(function (succ) {
             if ($rootScope.apnsToken && $scope.loginData.disablePush != true) {
-              NVRDataModel.log("Making sure we get push notifications");
+              NVR.log("Making sure we get push notifications");
               EventServer.sendMessage('push', {
                 type: 'token',
                 platform: $rootScope.platformOS,
@@ -681,7 +681,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
             });
           },
           function (err) {
-            NVRDataModel.log("Event server init failed");
+            NVR.log("Event server init failed");
           });
 
 
@@ -701,50 +701,50 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
         // note that due to reachability, it might have switched to another server
 
-        if ($scope.loginData.serverName != NVRDataModel.getLogin().serverName) {
-          NVRDataModel.debug(">>> Server information has changed, likely a fallback took over!");
-          $scope.loginData = NVRDataModel.getLogin();
+        if ($scope.loginData.serverName != NVR.getLogin().serverName) {
+          NVR.debug(">>> Server information has changed, likely a fallback took over!");
+          $scope.loginData = NVR.getLogin();
           apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
           portalurl = $scope.loginData.url + '/index.php';
         }
 
         // possible image digits changed between servers
-        NVRDataModel.getKeyConfigParams(0);
+        NVR.getKeyConfigParams(0);
 
-        NVRDataModel.log("Validating APIs at " + apiurl);
+        NVR.log("Validating APIs at " + apiurl);
         $http.get(apiurl)
           .then(function (data) {
 
               data = data.data;
-              NVRDataModel.getTimeZone(true);
+              NVR.getTimeZone(true);
               var loginStatus = $translate.instant('kExploreEnjoy') + " " + $rootScope.appName + "!";
               EventServer.refresh();
 
               // now grab and report PATH_ZMS
-              NVRDataModel.getPathZms()
+              NVR.getPathZms()
                 .then(function (data) {
-                  var ld = NVRDataModel.getLogin();
+                  var ld = NVR.getLogin();
                   var zm_cgi = data.toLowerCase();
 
                   var user_cgi = (ld.streamingurl).toLowerCase();
-                  NVRDataModel.log("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
+                  NVR.log("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
 
                   $http.get(ld.streamingurl + "/zms")
                     .then(function (data) {
                         data = data.data;
-                        NVRDataModel.debug("Urk! cgi-path returned  success, but it should not have come here");
+                        NVR.debug("Urk! cgi-path returned  success, but it should not have come here");
                         loginStatus = $translate.instant('kLoginStatusNoCgi');
 
-                        NVRDataModel.debug("refreshing API version...");
-                        NVRDataModel.getAPIversion()
+                        NVR.debug("refreshing API version...");
+                        NVR.getAPIversion()
                           .then(function (data) {
-                              var refresh = NVRDataModel.getMonitors(1);
+                              var refresh = NVR.getMonitors(1);
                               $rootScope.apiVersion = data;
                             },
                             function (error) {
-                              var refresh = NVRDataModel.getMonitors(1);
+                              var refresh = NVR.getMonitors(1);
                               $rootScope.apiVersion = "0.0.0";
-                              NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+                              NVR.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
                             });
 
                         if (showalert) {
@@ -756,7 +756,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                           }).then(function (res) {
 
                             $ionicSideMenuDelegate.toggleLeft();
-                            NVRDataModel.debug("Force reloading monitors...");
+                            NVR.debug("Force reloading monitors...");
 
                           });
                         }
@@ -778,23 +778,23 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
                           }).then(function (res) {
 
                             $ionicSideMenuDelegate.toggleLeft();
-                            NVRDataModel.debug("Force reloading monitors...");
+                            NVR.debug("Force reloading monitors...");
 
                           });
                         } else // make sure CGI error is always shown
                         {
-                          NVRDataModel.displayBanner((status < 500) ? 'error' : 'info', [loginStatus]);
+                          NVR.displayBanner((status < 500) ? 'error' : 'info', [loginStatus]);
                         }
-                        NVRDataModel.debug("refreshing API version...");
-                        NVRDataModel.getAPIversion()
+                        NVR.debug("refreshing API version...");
+                        NVR.getAPIversion()
                           .then(function (data) {
-                              var refresh = NVRDataModel.getMonitors(1);
+                              var refresh = NVR.getMonitors(1);
                               $rootScope.apiVersion = data;
                             },
                             function (error) {
-                              var refresh = NVRDataModel.getMonitors(1);
+                              var refresh = NVR.getMonitors(1);
                               $rootScope.apiVersion = "0.0.0";
-                              NVRDataModel.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+                              NVR.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
                             });
 
                       });
@@ -802,8 +802,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
             },
             function (error) {
-              NVRDataModel.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
-              NVRDataModel.log("API login error " + JSON.stringify(error));
+              NVR.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
+              NVR.log("API login error " + JSON.stringify(error));
 
               $rootScope.zmPopup = SecuredPopups.show('alert', {
                 title: $translate.instant('kLoginValidAPIFailedTitle'),
@@ -823,8 +823,8 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
   $scope.saveItems = function () {
 
-    NVRDataModel.debug("User tapped save, calling SaveItems");
-    NVRDataModel.clearZmsMultiPortSupport();
+    NVR.debug("User tapped save, calling SaveItems");
+    NVR.clearZmsMultiPortSupport();
     if (!$scope.loginData.serverName) {
       $rootScope.zmPopup = $ionicPopup.alert({
           title: $translate.instant('kError'),
@@ -835,7 +835,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
         });
     } else {
       saveItems(true);
-      availableServers = Object.keys(NVRDataModel.getServerGroups());
+      availableServers = Object.keys(NVR.getServerGroups());
       serverbuttons = [{
         text: $translate.instant('kServerAdd') + "..."
       }];

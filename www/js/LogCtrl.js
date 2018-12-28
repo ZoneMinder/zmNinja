@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 
-angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', '$http', 'SecuredPopups', function ($scope, $rootScope, zm, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate, $http, SecuredPopups) {
+angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$rootScope', 'zm', '$ionicModal', 'NVR', '$ionicSideMenuDelegate', '$fileLogger', '$cordovaEmailComposer', '$ionicPopup', '$timeout', '$ionicHistory', '$state', '$interval', '$ionicLoading', '$translate', '$http', 'SecuredPopups', function ($scope, $rootScope, zm, $ionicModal, NVR, $ionicSideMenuDelegate, $fileLogger, $cordovaEmailComposer, $ionicPopup, $timeout, $ionicHistory, $state, $interval, $ionicLoading, $translate, $http, SecuredPopups) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -70,7 +70,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   $scope.downloadLogs = function () {
     var body = "zmNinja version:" + $scope.zmAppVersion +
       " (" + $rootScope.platformOS + ")\n" +
-      "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion()+"\n\n";
+      "ZoneMinder version:" + NVR.getCurrentServerVersion()+"\n\n";
 
     body = $translate.instant('kSensitiveBody') + '\n\n\n' + body;
     var fname = $rootScope.appName + "-logs-" +
@@ -92,7 +92,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
             okType: 'button-stable'
           },
           function (e) {
-            NVRDataModel.debug("Error getting log file:" + JSON.stringify(e));
+            NVR.debug("Error getting log file:" + JSON.stringify(e));
           }
 
         );
@@ -107,21 +107,21 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   $scope.attachLogs = function () {
     var body = "zmNinja version:" + $scope.zmAppVersion +
       " (" + $rootScope.platformOS + ")<br/>" +
-      "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion() + "<br/>";
+      "ZoneMinder version:" + NVR.getCurrentServerVersion() + "<br/>";
     body = '<b>' + $translate.instant('kSensitiveBody') + '</b><br/><br/>' + body;
 
     $fileLogger.checkFile()
       .then(function (d) {
           var fileWithPath = cordova.file.dataDirectory + d.name;
-          NVRDataModel.log("file location:" + fileWithPath);
+          NVR.log("file location:" + fileWithPath);
 
           var onSuccess = function (result) {
-            NVRDataModel.log("Share completed? " + result.completed);
-            NVRDataModel.log("Shared to app: " + result.app);
+            NVR.log("Share completed? " + result.completed);
+            NVR.log("Shared to app: " + result.app);
           };
 
           var onError = function (msg) {
-            NVRDataModel.log("Sharing failed with message: " + msg);
+            NVR.log("Sharing failed with message: " + msg);
           };
 
           window.plugins.socialsharing.shareViaEmail(
@@ -137,7 +137,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
         },
         function (e) {
-          NVRDataModel.debug("Error attaching log file:" + JSON.stringify(e));
+          NVR.debug("Error attaching log file:" + JSON.stringify(e));
         });
 
 
@@ -145,7 +145,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
 
   function loadZMlogs() {
-    var ld = NVRDataModel.getLogin();
+    var ld = NVR.getLogin();
     var lapi = ld.apiurl + "/logs.json?sort=TimeKey&direction=desc&page=" + $scope.zmPage;
     $http.get(lapi)
       .then(function (success) {
@@ -162,7 +162,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
           $scope.log.logString = tLogs;
         },
         function (error) {
-          NVRDataModel.log("Error getting ZM logs:" + JSON.stringify(error));
+          NVR.log("Error getting ZM logs:" + JSON.stringify(error));
           $scope.log.logString = "Error getting log: " + JSON.stringify(error);
 
 
@@ -220,9 +220,9 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
   $scope.$on('$ionic.beforeEnter', function () {
 
     $scope.$on("process-push", function () {
-      NVRDataModel.debug(">> LogCtrl: push handler");
-      var s = NVRDataModel.evaluateTappedNotification();
-      NVRDataModel.debug("tapped Notification evaluation:" + JSON.stringify(s));
+      NVR.debug(">> LogCtrl: push handler");
+      var s = NVR.evaluateTappedNotification();
+      NVR.debug("tapped Notification evaluation:" + JSON.stringify(s));
       $ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true
@@ -244,7 +244,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
     $ionicSideMenuDelegate.canDragContent(false);
     $scope.selectOn = false;
-    NVRDataModel.setAwake(false);
+    NVR.setAwake(false);
     $scope.logEntity = $rootScope.appName;
     $scope.zmPage = 1;
     $scope.zmMaxPage = 1;
@@ -253,8 +253,8 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
       logString: ""
     };
 
-    $scope.zmAppVersion = NVRDataModel.getAppVersion();
-    $scope.zmVersion = NVRDataModel.getCurrentServerVersion();
+    $scope.zmAppVersion = NVR.getAppVersion();
+    $scope.zmVersion = NVR.getCurrentServerVersion();
 
     /* intervalLogUpdateHandle = $interval(function ()
     {

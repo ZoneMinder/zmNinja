@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,moment*/
 
-angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$http', 'zm', function ($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $http, zm) {
+angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVR', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$http', 'zm', function ($scope, $rootScope, $ionicModal, NVR, $ionicSideMenuDelegate, $ionicHistory, $state, $http, zm) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -41,9 +41,9 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
   $scope.$on ('$ionicView.beforeEnter', function () {
 
     $scope.$on ( "process-push", function () {
-      NVRDataModel.debug (">> NewsCtrl: push handler");
-      var s = NVRDataModel.evaluateTappedNotification();
-      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      NVR.debug (">> NewsCtrl: push handler");
+      var s = NVR.evaluateTappedNotification();
+      NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
       $ionicHistory.nextViewOptions({
         disableAnimate:true,
         disableBack: true
@@ -54,12 +54,12 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
   
   $scope.$on('$ionicView.enter', function () {
     // console.log("**VIEW ** News Ctrl Entered");
-    NVRDataModel.setAwake(false);
+    NVR.setAwake(false);
 
   });
 
   $scope.isUnread = function (itemdate) {
-    var lastDate = NVRDataModel.getLatestBlogPostChecked();
+    var lastDate = NVR.getLatestBlogPostChecked();
     //console.log ("BLOG DATE="+itemdate+"  LAST DATE="+lastDate);
     //get("latestBlogPostChecked");
     if (!lastDate) return true;
@@ -73,22 +73,22 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
 
   $scope.loadPost = function (item, itemdate) {
     var lastDate =
-      NVRDataModel.getLatestBlogPostChecked(); //zmStorageService.get("latestBlogPostChecked");
+      NVR.getLatestBlogPostChecked(); //zmStorageService.get("latestBlogPostChecked");
 
     if (!lastDate) {
-      NVRDataModel.debug("First time checking blog posts, I see");
-      NVRDataModel.setLatestBlogPostChecked(itemdate);
+      NVR.debug("First time checking blog posts, I see");
+      NVR.setLatestBlogPostChecked(itemdate);
       //zmStorageService.set("latestBlogPostChecked", itemdate);
     } else {
-      NVRDataModel.debug("last  post checked is " + lastDate);
-      NVRDataModel.debug("current post dated is " + itemdate);
+      NVR.debug("last  post checked is " + lastDate);
+      NVR.debug("current post dated is " + itemdate);
 
       var mLastDate = moment(lastDate);
       var mItemDate = moment(itemdate);
       if (mItemDate.diff(mLastDate, 'seconds') > 0) {
-        NVRDataModel.debug("Updating lastDate to this post");
+        NVR.debug("Updating lastDate to this post");
 
-        NVRDataModel.setLatestBlogPostChecked(itemdate); //zmStorageService.set("latestBlogPostChecked", itemdate);
+        NVR.setLatestBlogPostChecked(itemdate); //zmStorageService.set("latestBlogPostChecked", itemdate);
 
         if (itemdate == $scope.newsItems[0].date) {
           // we are reading the latest post
