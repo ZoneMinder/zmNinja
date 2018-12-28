@@ -3,7 +3,7 @@
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment, vis , Chart, DJS*/
 
-angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope', '$rootScope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, NVRDataModel, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
+angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope', '$rootScope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', function ($scope, $rootScope, zm, NVR, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate) {
 
   var Graph2d;
   var tcGraph;
@@ -23,7 +23,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
 
   $scope.$on('modal.removed', function (e, m) {
-    //NVRDataModel.debug("Deregistering broadcast handles");
+    //NVR.debug("Deregistering broadcast handles");
     for (var i = 0; i < broadcastHandles.length; i++) {
       // broadcastHandles[i]();
     }
@@ -106,7 +106,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
   var as = $scope.$on("auth-success", function () {
 
-    NVRDataModel.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
+    NVR.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
 
   });
   broadCastHandles.push(as);
@@ -222,7 +222,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     if ($scope.graphWidth < $rootScope.devWidth)
       $scope.graphWidth = $rootScope.devWidth;
 
-    // NVRDataModel.log ("Changing graph width to " + $scope.graphWidth);
+    // NVR.log ("Changing graph width to " + $scope.graphWidth);
 
     for (var i = 0; i < event.event.Frame.length; i++) {
 
@@ -266,7 +266,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
     cv = document.getElementById("tcchart");
     ctx = cv.getContext("2d");
 
-    if (NVRDataModel.getLogin().timelineModalGraphType == 'all') {
+    if (NVR.getLogin().timelineModalGraphType == 'all') {
       btype = 'line';
       current_data = data;
     } else {
@@ -295,14 +295,14 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
       //console.log ("You tapped " + ndx);
       $scope.alarm_images = [];
-      $scope.playbackURL = NVRDataModel.getLogin().url;
+      $scope.playbackURL = NVR.getLogin().url;
       var items = current_data.datasets[0].frames[ndx];
       $scope.alarm_images.push({
         relativePath: items.relativePath,
         fid: items.fid,
         fname: items.fname,
         score: items.score,
-        time: moment(items.x).format("MMM D," + NVRDataModel.getTimeFormatSec()),
+        time: moment(items.x).format("MMM D," + NVR.getTimeFormatSec()),
         eid: items.eid
       });
     });
@@ -315,7 +315,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
   function computeRelativePath(event) {
     var relativePath = "";
-    var loginData = NVRDataModel.getLogin();
+    var loginData = NVR.getLogin();
     var str = event.Event.StartTime;
     var yy = moment(str).locale('en').format('YY');
     var mm = moment(str).locale('en').format('MM');
@@ -340,7 +340,7 @@ angular.module('zmApp.controllers').controller('EventsModalGraphCtrl', ['$scope'
 
   function computeBasePath(event) {
     var basePath = "";
-    var loginData = NVRDataModel.getLogin();
+    var loginData = NVR.getLogin();
     var str = event.Event.StartTime;
     var yy = moment(str).locale('en').format('YY');
     var mm = moment(str).locale('en').format('MM');

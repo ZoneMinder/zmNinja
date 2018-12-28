@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory', '$state', 'SecuredPopups', '$translate', function ($scope, $rootScope, $ionicModal, zm, NVRDataModel, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'NVR', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory', '$state', 'SecuredPopups', '$translate', function ($scope, $rootScope, $ionicModal, zm, NVR, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate) {
 
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
@@ -50,9 +50,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
   $scope.$on('$ionicView.beforeEnter', function () {
 
     $scope.$on ( "process-push", function () {
-      NVRDataModel.debug (">> DevOptionsCtrl: push handler");
-      var s = NVRDataModel.evaluateTappedNotification();
-      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      NVR.debug (">> DevOptionsCtrl: push handler");
+      var s = NVR.evaluateTappedNotification();
+      NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
       $ionicHistory.nextViewOptions({
         disableAnimate:true,
         disableBack: true
@@ -62,27 +62,27 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
   
 
     //console.log("**VIEW ** DevOptions Ctrl Entered");
-    $scope.loginData = NVRDataModel.getLogin();
+    $scope.loginData = NVR.getLogin();
     console.log("DEV LOGS=" + $scope.loginData.enableLogs);
 
     $scope.isMultiPort = false;
 
-    NVRDataModel.getZmsMultiPortSupport()
+    NVR.getZmsMultiPortSupport()
       .then(function (data) {
         $scope.isMultiPort = (data == 0) ? false : true;
-        NVRDataModel.debug("Multiport report:" + $scope.isMultiPort);
+        NVR.debug("Multiport report:" + $scope.isMultiPort);
       });
 
 
-    NVRDataModel.setAwake(false);
+    NVR.setAwake(false);
   });
 
   $scope.isTzSupported = function () {
-    return NVRDataModel.isTzSupported();
+    return NVR.isTzSupported();
   };
 
   $scope.getTimeZoneNow = function () {
-    return NVRDataModel.getTimeZoneNow();
+    return NVR.getTimeZoneNow();
   };
 
   $scope.checkMultiPortToggle = function () {
@@ -94,7 +94,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
   //------------------------------------------------------------------
 
   function saveDevOptions() {
-    NVRDataModel.debug("SaveDevOptions: called");
+    NVR.debug("SaveDevOptions: called");
 
     if (parseInt($scope.loginData.cycleMonitorsInterval) < zm.minCycleTime) {
       $scope.loginData.cycleMonitorsInterval = zm.minCycleTime.toString();
@@ -104,7 +104,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     }
 
     if (parseInt($scope.loginData.refreshSec) <= 0) {
-      NVRDataModel.debug("SaveDevOptions: refresh sec was too low at " +
+      NVR.debug("SaveDevOptions: refresh sec was too low at " +
         $scope.loginData.refreshSec + " reset to 1");
       $scope.loginData.refreshSec = 1;
 
@@ -135,9 +135,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     }
 
 
-    NVRDataModel.debug("SaveDevOptions: Saving to disk");
-    NVRDataModel.setLogin($scope.loginData);
-    NVRDataModel.getMonitors(1);
+    NVR.debug("SaveDevOptions: Saving to disk");
+    NVR.setLogin($scope.loginData);
+    NVR.getMonitors(1);
 
   }
 

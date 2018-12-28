@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry */
 
-angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVRDataModel', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$q', '$templateRequest', '$sce', '$compile', function ($scope, $rootScope, $ionicModal, NVRDataModel, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $q, $templateRequest, $sce, $compile) {
+angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVR', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$q', '$templateRequest', '$sce', '$compile', function ($scope, $rootScope, $ionicModal, NVR, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $q, $templateRequest, $sce, $compile) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -34,7 +34,7 @@ angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$ro
 
   function insertHelp() {
 
-    var l = NVRDataModel.getDefaultLanguage() || 'en';
+    var l = NVR.getDefaultLanguage() || 'en';
     var lang = "lang/help/help-" + l + ".html";
     //console.log ("LANG IS " + lang);
     var templateUrl = $sce.getTrustedResourceUrl(lang);
@@ -47,14 +47,14 @@ angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$ro
           $compile(elem.html(template).contents())($scope);
         },
         function (error) {
-          NVRDataModel.log("Language file " + lang + " not found, falling back");
+          NVR.log("Language file " + lang + " not found, falling back");
           $templateRequest(templateUrlFB)
             .then(function (template) {
                 var elem = angular.element(document.getElementById('insertHelp'));
                 $compile(elem.html(template).contents())($scope);
               },
               function (error) {
-                NVRDataModel.log("fallback help not found");
+                NVR.log("fallback help not found");
               });
         }
       );
@@ -70,8 +70,8 @@ angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$ro
   //------------------------------------------------------------------------
   $scope.$on('$ionicView.enter', function () {
     //console.log("**VIEW ** Help Ctrl Entered");
-    NVRDataModel.setAwake(false);
-    $scope.zmAppVersion = NVRDataModel.getAppVersion();
+    NVR.setAwake(false);
+    $scope.zmAppVersion = NVR.getAppVersion();
     insertHelp();
 
   });

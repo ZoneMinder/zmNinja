@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------
 
 angular.module('zmApp.controllers')
-  .factory('EventServer', ['NVRDataModel', '$rootScope', '$websocket', '$ionicPopup', '$timeout', '$q', 'zm', '$ionicPlatform', '$cordovaMedia', '$translate', function (NVRDataModel, $rootScope, $websocket, $ionicPopup, $timeout, $q, zm, $ionicPlatform, $cordovaMedia, $translate) {
+  .factory('EventServer', ['NVR', '$rootScope', '$websocket', '$ionicPopup', '$timeout', '$q', 'zm', '$ionicPlatform', '$cordovaMedia', '$translate', function (NVR, $rootScope, $websocket, $ionicPopup, $timeout, $q, zm, $ionicPlatform, $cordovaMedia, $translate) {
 
     var ws;
 
@@ -27,9 +27,9 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
     function handleOpen(data) {
 
-      NVRDataModel.debug("WebSocket open called with:" + JSON.stringify(data));
-      var loginData = NVRDataModel.getLogin();
-      NVRDataModel.log("openHandshake: Websocket open, sending Auth");
+      NVR.debug("WebSocket open called with:" + JSON.stringify(data));
+      var loginData = NVR.getLogin();
+      NVR.log("openHandshake: Websocket open, sending Auth");
       sendMessage("auth", {
         user: loginData.username,
         password: loginData.password,
@@ -41,12 +41,12 @@ angular.module('zmApp.controllers')
 
       if ($rootScope.apnsToken != '') {
         var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
-        var ld = NVRDataModel.getLogin();
+        var ld = NVR.getLogin();
         var pushstate = "enabled";
         if (ld.disablePush == true)
           pushstate = "disabled";
 
-        NVRDataModel.debug("openHandShake: state of push is " + pushstate);
+        NVR.debug("openHandShake: state of push is " + pushstate);
         // let's do this only if disabled. If enabled, I suppose registration
         // will be called?
         //if (ld.disablePush)
@@ -69,17 +69,17 @@ angular.module('zmApp.controllers')
 
 
       if (iClosed) {
-        NVRDataModel.debug ("App closed socket, not reconnecting");
+        NVR.debug ("App closed socket, not reconnecting");
         iClosed = false;
         return;
       }
 
       console.log("*********** WEBSOCKET CLOSE CALLED");
 
-      if (!NVRDataModel.getLogin().isUseEventServer) return;
+      if (!NVR.getLogin().isUseEventServer) return;
 
       if (!isTimerOn) {
-        NVRDataModel.log("Will try to reconnect in 10 sec..");
+        NVR.log("Will try to reconnect in 10 sec..");
         $timeout(init, 10000);
         isTimerOn = true;
       }
@@ -88,31 +88,31 @@ angular.module('zmApp.controllers')
     function handleError(event) {
 
       console.log("*********** WEBSOCKET ERROR CALLED");
-      if (!NVRDataModel.getLogin().isUseEventServer) return;
+      if (!NVR.getLogin().isUseEventServer) return;
 
       if (!isTimerOn) {
-        NVRDataModel.log("Will try to reconnect in 10 sec..");
+        NVR.log("Will try to reconnect in 10 sec..");
         $timeout(init, 10000);
         isTimerOn = true;
       }
     }
 
     function handleMessage(smsg) {
-      //NVRDataModel.debug ("Websocket received message:"+smsg);
+      //NVR.debug ("Websocket received message:"+smsg);
       str = JSON.parse(smsg);
-      NVRDataModel.debug("Real-time event: " + JSON.stringify(str));
+      NVR.debug("Real-time event: " + JSON.stringify(str));
 
 
 
       // Error messages
       if (str.status != 'Success') {
-        NVRDataModel.log("Event Error: " + JSON.stringify(str));
+        NVR.log("Event Error: " + JSON.stringify(str));
 
         if (str.reason == 'APNSDISABLED') {
           console.log("FORCE CLOSING");
           iClosed=true;
           ws.close();
-          NVRDataModel.displayBanner('error', ['Event Server: APNS disabled'], 2000, 6000);
+          NVR.displayBanner('error', ['Event Server: APNS disabled'], 2000, 6000);
           $rootScope.apnsToken = "";
         }
 
@@ -121,7 +121,7 @@ angular.module('zmApp.controllers')
       if (str.status == 'Success' && (str.event == 'auth')) {
         if (str.version == undefined)
           str.version = "0.1";
-        if (NVRDataModel.versionCompare(str.version, zm.minEventServerVersion) == -1) {
+        if (NVR.versionCompare(str.version, zm.minEventServerVersion) == -1) {
           $rootScope.zmPopup = $ionicPopup.alert({
             title: $translate.instant('kEventServerVersionTitle'),
             template: $translate.instant('kEventServerVersionBody1') + " " + str.version + ". " + $translate.instant('kEventServerVersionBody2') + " " +
@@ -153,7 +153,7 @@ angular.module('zmApp.controllers')
           }
 
         } else {
-          NVRDataModel.debug("received supplementary event information over websockets");
+          NVR.debug("received supplementary event information over websockets");
         }
         var eventsToDisplay = [];
         var listOfMonitors = [];
@@ -172,7 +172,7 @@ angular.module('zmApp.controllers')
         localNotText = localNotText.substring(0, localNotText.length - 1);
 
         // if we are in background, do a local notification, else do an in app display
-        if (!NVRDataModel.isBackground()) {
+        if (!NVR.isBackground()) {
 
           //emit alarm details - this is when received over websockets
           $rootScope.$broadcast('alarm', {
@@ -181,14 +181,14 @@ angular.module('zmApp.controllers')
 
           if (str.supplementary != 'true') {
 
-            NVRDataModel.debug("App is in foreground, displaying banner");
+            NVR.debug("App is in foreground, displaying banner");
             if (eventsToDisplay.length > 0) {
 
               if (eventsToDisplay.length == 1) {
                 //console.log("Single Display: " + eventsToDisplay[0]);
-                NVRDataModel.displayBanner('alarm', [eventsToDisplay[0]], 5000, 5000);
+                NVR.displayBanner('alarm', [eventsToDisplay[0]], 5000, 5000);
               } else {
-                NVRDataModel.displayBanner('alarm', eventsToDisplay,
+                NVR.displayBanner('alarm', eventsToDisplay,
                   5000, 5000 * eventsToDisplay.length);
               }
 
@@ -210,22 +210,22 @@ angular.module('zmApp.controllers')
       isTimerOn = false;
 
       var d = $q.defer();
-      var loginData = NVRDataModel.getLogin();
+      var loginData = NVR.getLogin();
 
       if (loginData.isUseEventServer == false || !loginData.eventServer) {
-        NVRDataModel.log("No Event Server present. Not initializing");
+        NVR.log("No Event Server present. Not initializing");
         d.reject("false");
         return d.promise;
       }
 
-      NVRDataModel.log("Initializing Websocket with URL " +
+      NVR.log("Initializing Websocket with URL " +
         loginData.eventServer);
 
       if ($rootScope.platformOS == 'desktop') {
-        NVRDataModel.debug("Using browser websockets...");
+        NVR.debug("Using browser websockets...");
         return setupDesktopSocket();
       } else {
-        NVRDataModel.debug("Using native websockets...");
+        NVR.debug("Using native websockets...");
         return setupMobileSocket();
 
       }
@@ -236,7 +236,7 @@ angular.module('zmApp.controllers')
 
     function setupMobileSocket() {
 
-      var loginData = NVRDataModel.getLogin();
+      var loginData = NVR.getLogin();
       var d = $q.defer();
 
       var wsOptions = {
@@ -261,7 +261,7 @@ angular.module('zmApp.controllers')
           nativeWebSocketId = success.webSocketId;
           handleOpen(success);
           if (!pushInited) {
-            NVRDataModel.debug("Initializing FCM push");
+            NVR.debug("Initializing FCM push");
             pushInit();
           }
           d.resolve(true);
@@ -281,14 +281,14 @@ angular.module('zmApp.controllers')
 
     function setupDesktopSocket() {
 
-      var loginData = NVRDataModel.getLogin();
+      var loginData = NVR.getLogin();
       var d = $q.defer();
       ws = new WebSocket(loginData.eventServer);
 
       ws.onopen = function (event) {
         handleOpen(event.data);
         if (!pushInited) {
-          NVRDataModel.debug("Initializing FCM push");
+          NVR.debug("Initializing FCM push");
           pushInit();
         }
         d.resolve("true");
@@ -329,11 +329,11 @@ angular.module('zmApp.controllers')
     function disconnect() {
 
 
-      NVRDataModel.log("Clearing error/close cbk, disconnecting and deleting Event Server socket...");
+      NVR.log("Clearing error/close cbk, disconnecting and deleting Event Server socket...");
 
       if ($rootScope.platformOS == 'desktop') {
         if (typeof ws === 'undefined') {
-          NVRDataModel.log("Event server socket is empty, nothing to disconnect");
+          NVR.log("Event server socket is empty, nothing to disconnect");
           return;
         }
 
@@ -345,7 +345,7 @@ angular.module('zmApp.controllers')
       } else {
         if (nativeWebSocketId != -1) //native;
         {
-          NVRDataModel.debug ("Closing native websocket as websocket = "+nativeWebSocketId);
+          NVR.debug ("Closing native websocket as websocket = "+nativeWebSocketId);
           iClosed = true;
           CordovaWebsocketPlugin.wsClose(nativeWebSocketId, 1000, "Connection closed");
           nativeWebSocketId = -1;
@@ -366,14 +366,14 @@ angular.module('zmApp.controllers')
     // let ZMES know not to send us messages
     //--------------------------------------------------------------------------
     function sendMessage(type, obj, isForce) {
-      var ld = NVRDataModel.getLogin();
+      var ld = NVR.getLogin();
       if (ld.isUseEventServer == false && isForce != 1) {
-        NVRDataModel.debug("Not sending WSS message as event server is off");
+        NVR.debug("Not sending WSS message as event server is off");
         return;
       }
 
       if (typeof ws === 'undefined' && nativeWebSocketId == -1) {
-        NVRDataModel.debug("Event server not initalized, not sending message");
+        NVR.debug("Event server not initalized, not sending message");
         return;
       }
 
@@ -385,7 +385,7 @@ angular.module('zmApp.controllers')
       };
 
       var jmsg = JSON.stringify(msg);
-      NVRDataModel.debug("~~~~ sendMessage: Sending->" + jmsg);
+      NVR.debug("~~~~ sendMessage: Sending->" + jmsg);
 
       if ($rootScope.platformOS == 'desktop') {
         ws.send(jmsg);
@@ -393,7 +393,7 @@ angular.module('zmApp.controllers')
         if (nativeWebSocketId != -1)
           CordovaWebsocketPlugin.wsSend(nativeWebSocketId, jmsg);
         else
-          NVRDataModel.debug("ERROR:native websocket not initialized, can't send " + jmsg);
+          NVR.debug("ERROR:native websocket not initialized, can't send " + jmsg);
       }
 
 
@@ -403,10 +403,10 @@ angular.module('zmApp.controllers')
     // Called each time we resume 
     //--------------------------------------------------------------------------
     function refresh() {
-      var loginData = NVRDataModel.getLogin();
+      var loginData = NVR.getLogin();
 
       if ((!loginData.eventServer) || (loginData.isUseEventServer == false)) {
-        NVRDataModel.log("No Event Server configured, skipping refresh");
+        NVR.log("No Event Server configured, skipping refresh");
 
         // Let's also make sure that if the socket was open 
         // we close it - this may happen if you disable it after using it
@@ -414,7 +414,7 @@ angular.module('zmApp.controllers')
         if (typeof ws !== 'undefined') {
           /*(if (ws.$status() != ws.$CLOSED)
           {
-              NVRDataModel.debug("Closing open websocket as event server was disabled");
+              NVR.debug("Closing open websocket as event server was disabled");
               ws.$close();
           }*/
         }
@@ -423,7 +423,7 @@ angular.module('zmApp.controllers')
       }
 
       if (typeof ws === 'undefined') {
-        NVRDataModel.debug("Calling websocket init");
+        NVR.debug("Calling websocket init");
         init();
       }
 
@@ -436,23 +436,23 @@ angular.module('zmApp.controllers')
 
       /*if (ws.$status() == ws.$CLOSED)
       {
-          NVRDataModel.log("Websocket was closed, trying to re-open");
+          NVR.log("Websocket was closed, trying to re-open");
           ws.$open();
       }*/
 
     }
 
     function pushInit() {
-      NVRDataModel.log(">>>Setting up push registration");
+      NVR.log(">>>Setting up push registration");
       var push;
       var mediasrc;
       var media;
-      var ld = NVRDataModel.getLogin();
+      var ld = NVR.getLogin();
 
       var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
 
       if ($rootScope.platformOS == 'desktop') {
-        NVRDataModel.log("Desktop instance, not setting up push. Websockets only, I hope");
+        NVR.log("Desktop instance, not setting up push. Websockets only, I hope");
         return;
       }
 
@@ -499,11 +499,11 @@ angular.module('zmApp.controllers')
 
       push.on('registration', function (data) {
         pushInited = true;
-        NVRDataModel.debug("Push Notification registration ID received: " + JSON.stringify(data));
+        NVR.debug("Push Notification registration ID received: " + JSON.stringify(data));
         $rootScope.apnsToken = data.registrationId;
 
         var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
-        var ld = NVRDataModel.getLogin();
+        var ld = NVR.getLogin();
         var pushstate = "enabled";
         if (ld.disablePush == true)
           pushstate = "disabled";
@@ -516,7 +516,7 @@ angular.module('zmApp.controllers')
 
         var monstring = '';
         var intstring = '';
-        NVRDataModel.getMonitors()
+        NVR.getMonitors()
           .then(function (succ) {
               var mon = succ;
 
@@ -525,7 +525,7 @@ angular.module('zmApp.controllers')
                 // so we don't overwrite 
                 monstring = ld.eventServerMonitors;
                 intstring = ld.eventServerInterval;
-                NVRDataModel.debug("loading saved monitor list and interval of " + monstring + ">>" + intstring);
+                NVR.debug("loading saved monitor list and interval of " + monstring + ">>" + intstring);
 
               } else { // build new list
 
@@ -555,7 +555,7 @@ angular.module('zmApp.controllers')
 
             },
             function (err) {
-              NVRDataModel.log("Could not get monitors, can't send push reg");
+              NVR.log("Could not get monitors, can't send push reg");
             });
 
       });
@@ -563,19 +563,19 @@ angular.module('zmApp.controllers')
       push.on('notification', function (data) {
 
         $ionicPlatform.ready(function () {
-          NVRDataModel.log("******* notification handler device ready");
-          NVRDataModel.debug("received push notification");
+          NVR.log("******* notification handler device ready");
+          NVR.debug("received push notification");
 
-          var ld = NVRDataModel.getLogin();
+          var ld = NVR.getLogin();
           if (ld.isUseEventServer == false) {
-            NVRDataModel.debug("received push notification, but event server disabled. Not acting on it");
+            NVR.debug("received push notification, but event server disabled. Not acting on it");
             return;
           }
 
           if (data.additionalData.foreground == false) {
             // This means push notification tap in background
 
-            NVRDataModel.debug("*** PUSH NOTFN.>>>>" + JSON.stringify(data));
+            NVR.debug("*** PUSH NOTFN.>>>>" + JSON.stringify(data));
 
             // set tappedMid to monitor 
             //*** PUSH DATA>>>>{"sound":"blop","message":"Alarms: Basement (2854) ","additionalData":{"mid":"2","coldstart":false,"collapse_key":"do_not_collapse","foreground":false}}
@@ -583,7 +583,7 @@ angular.module('zmApp.controllers')
             if (data.additionalData.dismissed != undefined || data.additionalData.coldstart == true || $rootScope.platformOS == 'ios') // user tapped on notification
             // in iOS case, since content-av is not there this notification won't be called unless you tap
             {
-              NVRDataModel.debug("Notification Tapped");
+              NVR.debug("Notification Tapped");
               $rootScope.alarmCount = "0";
               $rootScope.isAlarm = 0;
               $rootScope.tappedNotification = 1;
@@ -614,18 +614,18 @@ angular.module('zmApp.controllers')
 
               $rootScope.tappedMid = mid;
               $rootScope.tappedEid = eid;
-              NVRDataModel.log("ES:Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
+              NVR.log("ES:Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
 
               if ($rootScope.platformOS == 'ios') {
 
-                NVRDataModel.debug("ES:iOS only: clearing background push");
+                NVR.debug("ES:iOS only: clearing background push");
                 push.finish(function () {
-                  NVRDataModel.debug("ES:processing of push data is finished");
+                  NVR.debug("ES:processing of push data is finished");
                 });
               }
 
             } else {
-              NVRDataModel.debug("App started via icon, not notification");
+              NVR.debug("App started via icon, not notification");
               $rootScope.tappedNotification = 0;
               $rootScope.tappedEid = 0;
               $rootScope.tappedMid = 0;
@@ -635,7 +635,7 @@ angular.module('zmApp.controllers')
 
             //https://stackoverflow.com/a/22651128/1361529
             $timeout ( function () {
-              NVRDataModel.debug ("EventServer: broadcasting process-push");
+              NVR.debug ("EventServer: broadcasting process-push");
               $rootScope.$broadcast('process-push');
             },100);
           
@@ -646,7 +646,7 @@ angular.module('zmApp.controllers')
             // this flag honors the HW mute button. Go figure
             // http://ilee.co.uk/phonegap-plays-sound-on-mute/
 
-            NVRDataModel.debug("--> *** PUSH IN FOREGROUND");
+            NVR.debug("--> *** PUSH IN FOREGROUND");
 
             $rootScope.tappedNotification = 0;
             $rootScope.tappedEid = 0;
@@ -662,7 +662,7 @@ angular.module('zmApp.controllers')
             // console.log ("***STRING: " + str + " " +str.status);
             var eventsToDisplay = [];
 
-            NVRDataModel.displayBanner('alarm', [str], 0, 5000 * eventsToDisplay.length);
+            NVR.displayBanner('alarm', [str], 0, 5000 * eventsToDisplay.length);
 
             $rootScope.isAlarm = 1;
 
@@ -679,7 +679,7 @@ angular.module('zmApp.controllers')
       });
 
       push.on('error', function (e) {
-        NVRDataModel.debug("Push error: " + JSON.stringify(e));
+        NVR.debug("Push error: " + JSON.stringify(e));
         // console.log("************* PUSH ERROR ******************");
       });
     }

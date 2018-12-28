@@ -3,7 +3,7 @@
 /*This is for the loop closure I am using in line 143 */
 /* jslint browser: true*/
 /* global vis,cordova,StatusBar,angular,console,moment */
-angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVRDataModel', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', 'EventServer', '$translate', '$ionicPopup', function ($ionicPlatform, $scope, zm, NVRDataModel, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, EventServer, $translate, $ionicPopup) {
+angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionicPlatform', '$scope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$rootScope', '$http', '$q', '$state', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', '$ionicModal', '$timeout', 'zmAutoLogin', '$ionicHistory', 'EventServer', '$translate', '$ionicPopup', function ($ionicPlatform, $scope, zm, NVR, $ionicSideMenuDelegate, $rootScope, $http, $q, $state, $ionicLoading, $ionicPopover, $ionicScrollDelegate, $ionicModal, $timeout, zmAutoLogin, $ionicHistory, EventServer, $translate, $ionicPopup) {
 
  
   var broadcastHandles = [];
@@ -18,7 +18,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
   
 
   $scope.$on('$ionicView.beforeLeave', function () {
-    //NVRDataModel.debug("Portal: Deregistering broadcast handles");
+    //NVR.debug("Portal: Deregistering broadcast handles");
     for (var i = 0; i < broadcastHandles.length; i++) {
       //broadcastHandles[i]();
     }
@@ -41,14 +41,14 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
         processPush = true;
 
         if (!alreadyTransitioned) {
-          NVRDataModel.debug (">> PortalLogin: push handler, marking to resolve later");
+          NVR.debug (">> PortalLogin: push handler, marking to resolve later");
         
         }
         else {
-          NVRDataModel.debug (">> PortalLoginCtrl: push handler");
+          NVR.debug (">> PortalLoginCtrl: push handler");
           processPush = false;
-          var s = NVRDataModel.evaluateTappedNotification();
-          NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+          var s = NVR.evaluateTappedNotification();
+          NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
           $ionicHistory.nextViewOptions({
             disableAnimate:true,
             disableBack: true
@@ -61,10 +61,10 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
       });
     
 
-      NVRDataModel.setJustResumed(false);
+      NVR.setJustResumed(false);
 
-      NVRDataModel.debug("Inside Portal login Enter handler");
-      loginData = NVRDataModel.getLogin();
+      NVR.debug("Inside Portal login Enter handler");
+      loginData = NVR.getLogin();
 
       $ionicHistory.nextViewOptions({
         disableAnimate:true,
@@ -76,29 +76,29 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
       $scope.pindata = {};
       if ($ionicSideMenuDelegate.isOpen()) {
         $ionicSideMenuDelegate.toggleLeft();
-        NVRDataModel.debug("Sliding menu close");
+        NVR.debug("Sliding menu close");
       }
 
       $scope.pinPrompt = false; // if true, then PIN is displayed else skip 
 
-      if (NVRDataModel.hasLoginInfo()) {
-        NVRDataModel.log("User credentials are provided");
+      if (NVR.hasLoginInfo()) {
+        NVR.log("User credentials are provided");
 
         // You can login either via touch ID or typing in your code     
 
-        var ld = NVRDataModel.getLogin();
+        var ld = NVR.getLogin();
 
         if (ld.reloadInMontage == true) {
           // we are in montage reload, so don't re-auth
-          NVRDataModel.log("skipping validation, as this is montage reload");
+          NVR.log("skipping validation, as this is montage reload");
           ld.reloadInMontage = false;
-          NVRDataModel.setLogin(ld);
+          NVR.setLogin(ld);
           unlock(true);
 
         } else if ($ionicPlatform.is('android') && loginData.usePin) {
 
           FingerprintAuth.isAvailable(function (result) {
-              NVRDataModel.debug("FingerprintAuth available: " + JSON.stringify(result));
+              NVR.debug("FingerprintAuth available: " + JSON.stringify(result));
               if (result.isAvailable == true && result.hasEnrolledFingerprints == true) {
                 var encryptConfig = {
                   clientId: "zmNinja",
@@ -111,15 +111,15 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   dialogHint: "",
                 }; // See config object for required parameters
                 FingerprintAuth.encrypt(encryptConfig, function (succ) {
-                  NVRDataModel.log("Touch success");
+                  NVR.log("Touch success");
                   unlock(true);
                 }, function (err) {
-                  NVRDataModel.log("Touch Failed " + JSON.stringify(msg));
+                  NVR.log("Touch Failed " + JSON.stringify(msg));
                 });
               } // if available                            
             },
             function (err) {
-              NVRDataModel.log("Fingerprint auth not available or not compatible with Android specs: " + JSON.stringify(err));
+              NVR.log("Fingerprint auth not available or not compatible with Android specs: " + JSON.stringify(err));
             }
 
           ); //isAvailable
@@ -131,11 +131,11 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
               window.plugins.touchid.verifyFingerprint(
                 $translate.instant('kPleaseAuthenticate'), // this will be shown in the native scanner popup
                 function (msg) {
-                  NVRDataModel.log("Touch success");
+                  NVR.log("Touch success");
                   unlock(true);
                 }, // success handler: fingerprint accepted
                 function (msg) {
-                  NVRDataModel.log("Touch Failed " + JSON.stringify(msg));
+                  NVR.log("Touch Failed " + JSON.stringify(msg));
                 } // error handler with errorcode and localised reason
               );
             },
@@ -148,22 +148,22 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                    $cordovaTouchID.authenticate("")
                        .then(function()
                            {
-                               NVRDataModel.log("Touch Success");
+                               NVR.log("Touch Success");
                                // Don't assign pin as it may be alphanum
                                unlock(true);
 
                            },
                            function()
                            {
-                               NVRDataModel.log("Touch Failed");
+                               NVR.log("Touch Failed");
                            });
                }, function(error)
                {
-                   NVRDataModel.log("TouchID not supported");
+                   NVR.log("TouchID not supported");
                });*/
         } else // touch was not used
         {
-          NVRDataModel.log("not checking for touchID");
+          NVR.log("not checking for touchID");
         }
 
         if (loginData.usePin) {
@@ -179,9 +179,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
       } else // login creds are not present
       {
-        NVRDataModel.debug("PortalLogin: Not logged in, so going to login");
-        if (NVRDataModel.isFirstUse()) {
-          NVRDataModel.debug("First use, showing warm and fuzzy...");
+        NVR.debug("PortalLogin: Not logged in, so going to login");
+        if (NVR.isFirstUse()) {
+          NVR.debug("First use, showing warm and fuzzy...");
           $ionicHistory.nextViewOptions({
             disableAnimate: true,
             disableBack: true
@@ -236,14 +236,14 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
     zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating') + "...</button>")
       .then(function (data) // success
         {
-          NVRDataModel.debug("2nd auth login worked");
-          NVRDataModel.getAPIversion()
+          NVR.debug("2nd auth login worked");
+          NVR.getAPIversion()
             .then(function (data) {
-                NVRDataModel.getKeyConfigParams(1);
-                NVRDataModel.log("2nd auth:Got API version: " + data);
+                NVR.getKeyConfigParams(1);
+                NVR.log("2nd auth:Got API version: " + data);
                 $rootScope.apiVersion = data;
-                var ld = NVRDataModel.getLogin();
-                if (NVRDataModel.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0") {
+                var ld = NVR.getLogin();
+                if (NVR.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0") {
 
                   $state.go('app.lowversion', {
                     "ver": data
@@ -251,13 +251,13 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   return;
                 }
 
-                if (NVRDataModel.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
+                if (NVR.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
 
-                  NVRDataModel.hrsSinceChecked("zmVersion")
+                  NVR.hrsSinceChecked("zmVersion")
                     .then(function (val) {
-                      NVRDataModel.debug("ZM Version nag: Checking " + val + " with " + zm.zmVersionCheckNag);
+                      NVR.debug("ZM Version nag: Checking " + val + " with " + zm.zmVersionCheckNag);
                       if (val >= zm.zmVersionCheckNag && 0) {
-                        NVRDataModel.updateHrsSinceChecked("zmVersion");
+                        NVR.updateHrsSinceChecked("zmVersion");
                         $state.go('app.importantmessage', {
                           "ver": data
                         });
@@ -271,8 +271,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 /*if (data == "0.0.0")
                 {
 
-                    NVRDataModel.log("2nd Auth:API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
-                    NVRDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
+                    NVR.log("2nd Auth:API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
+                    NVR.displayBanner('error', ['ZoneMinder authentication failed']);
                     $state.go("login",
                     {
                         "wizard": false
@@ -283,8 +283,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 //EventServer.init();
 
                 var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
-                //NVRDataModel.debug ("logging state transition");
-                NVRDataModel.debug("2nd Auth: Transitioning state to: " +
+                //NVR.debug ("logging state transition");
+                NVR.debug("2nd Auth: Transitioning state to: " +
                   statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
 
                 alreadyTransitioned = true;
@@ -293,7 +293,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
               },
               function (error) {
-                NVRDataModel.debug("2nd auth API failed, going to login");
+                NVR.debug("2nd auth API failed, going to login");
                 d.reject("failed 2nd auth");
                 return (d.promise);
 
@@ -301,7 +301,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
         },
         function (error) {
-          NVRDataModel.debug("2nd auth hack failed, going to login");
+          NVR.debug("2nd auth hack failed, going to login");
           d.reject("failed 2nd auth");
           return (d.promise);
         });
@@ -319,9 +319,9 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                == false means check PIN
     */
 
-    NVRDataModel.debug("unlock called with check PIN=" + idVerified);
+    NVR.debug("unlock called with check PIN=" + idVerified);
     if (idVerified || ($scope.pindata.pin == loginData.pinCode)) {
-      NVRDataModel.debug("PIN code entered is correct, or there is no PIN set");
+      NVR.debug("PIN code entered is correct, or there is no PIN set");
       $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
       zmAutoLogin.stop(); //safety
       zmAutoLogin.start();
@@ -330,17 +330,17 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
       zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating') + "...</button>")
         .then(function (data) // success
           {
-            NVRDataModel.debug("PortalLogin: auth success");
+            NVR.debug("PortalLogin: auth success");
 
 
             // $state.go("login" ,{"wizard": false});
             //login was ok, so get API details
-            NVRDataModel.getAPIversion()
+            NVR.getAPIversion()
               .then(function (data) {
-                  NVRDataModel.log("Got API version: " + data);
+                  NVR.log("Got API version: " + data);
                   $rootScope.apiVersion = data;
-                  var ld = NVRDataModel.getLogin();
-                  if (NVRDataModel.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0") {
+                  var ld = NVR.getLogin();
+                  if (NVR.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0") {
 
                     $state.go('app.lowversion', {
                       "ver": data
@@ -348,16 +348,16 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                     return;
                   }
 
-                  if (NVRDataModel.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
+                  if (NVR.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
 
-                    NVRDataModel.hrsSinceChecked("zmVersion")
+                    NVR.hrsSinceChecked("zmVersion")
                       .then(function (val) {
 
-                        NVRDataModel.debug("ZM Version nag: Checking " + val + " with " + zm.zmVersionCheckNag);
+                        NVR.debug("ZM Version nag: Checking " + val + " with " + zm.zmVersionCheckNag);
                         if (val >= zm.zmVersionCheckNag && 0) {
                           //https://api.github.com/repos/zoneminder/zoneminder/releases/latest
                           //tag_name
-                          NVRDataModel.updateHrsSinceChecked("zmVersion");
+                          NVR.updateHrsSinceChecked("zmVersion");
                           $state.go('app.importantmessage', {
                             "ver": data
                           });
@@ -372,8 +372,8 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   /*if (data == "0.0.0")
                   {
 
-                      NVRDataModel.log("API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
-                      NVRDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
+                      NVR.log("API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
+                      NVR.displayBanner('error', ['ZoneMinder authentication failed']);
                       $state.go("login",
                       {
                           "wizard": false
@@ -384,11 +384,11 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   // coming here means continue
                   // console.log (">>>>>>>>>>>>>>>>>>>>>>>>>NEVER");
 
-                  NVRDataModel.getKeyConfigParams(1);
-                  NVRDataModel.getTimeZone();
+                  NVR.getKeyConfigParams(1);
+                  NVR.getTimeZone();
                   EventServer.init();
 
-                  NVRDataModel.zmPrivacyProcessed()
+                  NVR.zmPrivacyProcessed()
                     .then(function (val) {
                     //  console.log(">>>>>>>>>>>>>>>>>>> PRIVACY PROCESSED:" + val);
                       if (!val) {
@@ -411,21 +411,21 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 
                     //console.log ("NOTIFICATION TAPPED INSIDE CHECK IS "+$rootScope.tappedNotification);
                     var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
-                    //  NVRDataModel.debug("logging state transition");
+                    //  NVR.debug("logging state transition");
 
                     if (!processPush) {
                       alreadyTransitioned = true;
-                      NVRDataModel.debug("Transitioning state to: " +
+                      NVR.debug("Transitioning state to: " +
                       statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
 
                     $state.go(statetoGo, $rootScope.lastStateParam);
                     return;
                     }
                     else {
-                      NVRDataModel.debug ("Deferred handling of push:");
+                      NVR.debug ("Deferred handling of push:");
                       processPush = false;
-                      var s = NVRDataModel.evaluateTappedNotification();
-                      NVRDataModel.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+                      var s = NVR.evaluateTappedNotification();
+                      NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
                       $ionicHistory.nextViewOptions({
                         disableAnimate:true,
                         disableBack: true
@@ -438,15 +438,15 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                
                 },
                 function (error) { // API Error
-                  NVRDataModel.log("API Error handler: going to login getAPI returned error: " + JSON.stringify(error));
-                  //NVRDataModel.displayBanner('error', ['ZoneMinder authentication failed']);
+                  NVR.log("API Error handler: going to login getAPI returned error: " + JSON.stringify(error));
+                  //NVR.displayBanner('error', ['ZoneMinder authentication failed']);
 
-                  NVRDataModel.debug("Doing the Aaron Hack after 1 sec....");
+                  NVR.debug("Doing the Aaron Hack after 1 sec....");
                   $timeout(function () {
                     tryLoggingSecondTimeHack()
                       .then(function success(s) {
-                          NVRDataModel.log("2nd time login hack worked!, nothing to do");
-                          NVRDataModel.getTimeZone();
+                          NVR.log("2nd time login hack worked!, nothing to do");
+                          NVR.getTimeZone();
                         },
                         function error(e) {
 
@@ -474,10 +474,10 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
           // coming here means auth error
           // so go back to login
           function (error) {
-            NVRDataModel.debug("PortalLogin: error authenticating " +
+            NVR.debug("PortalLogin: error authenticating " +
               JSON.stringify(error));
             if (!$rootScope.userCancelledAuth) {
-              NVRDataModel.displayBanner('error', ['ZoneMinder authentication failed', 'Please check API settings']);
+              NVR.displayBanner('error', ['ZoneMinder authentication failed', 'Please check API settings']);
               $ionicHistory.nextViewOptions({
                 disableAnimate: true,
                 disableBack: true
@@ -513,7 +513,7 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
   // Controller Main
   //-------------------------------------------------------------------------------
   // console.log("************* ENTERING PORTAL MAIN ");
-  NVRDataModel.log("Entering Portal Main");
+  NVR.log("Entering Portal Main");
   var loginData;
   $ionicSideMenuDelegate.canDragContent(true);
 
