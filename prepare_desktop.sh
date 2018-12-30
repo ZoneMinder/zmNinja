@@ -1,7 +1,7 @@
 #!/bin/bash
 
-REL="v3.0.11"
-#REL="v1.4.3"
+REL="v4.0.0"
+#REL="v3.0.11"
 WGET='wget'
 WGET_ARGS='-q --show-progress'
 UNZIP='unzip'
