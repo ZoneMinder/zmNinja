@@ -29,19 +29,21 @@ if (argv.path) {
 let win;
 app.commandLine.appendSwitch ('ignore-certificate-errors', 'true');
 
-const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, we should focus our window.
-  if (win) {
-    if (win.isMinimized()) win.restore();
-    win.focus();
-  }
-});
+const gotTheLock = app.requestSingleInstanceLock()
 
-if (shouldQuit) {
-  app.quit();
-  return;
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (myWindow) {
+      if (myWindow.isMinimized()) myWindow.restore()
+      myWindow.focus()
+    }
+  })
 }
 
+  
 function newWindow() {
   createAlternateWindow();
 }
