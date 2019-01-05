@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.040";
+      var zmAppVersion = "1.3.041";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -1792,7 +1792,7 @@ angular.module('zmApp.controllers')
                   console.log ("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
                 
-                  if (versionCompare(success.data.version, '1.31.0') != -1 ) {
+                  if (versionCompare(success.data.version, '1.32.0') != -1 ) {
                     debug ("snapshot  supported in image.php");
                     snapshotFrame = 'snapshot';
                   }
