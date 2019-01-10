@@ -915,7 +915,7 @@ angular.module('zmApp', [
 
       $rootScope.isLoggedIn = true;
       var contentBannerInstance = $ionicContentBanner.show({
-        text: ['ZoneMinder' + $translate.instant('kAuthSuccess')],
+        text: ['ZoneMinder ' + $translate.instant('kAuthSuccess')],
         interval: 2000,
         type: 'info',
         transition: 'vertical'
