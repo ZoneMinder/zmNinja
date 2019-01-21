@@ -313,43 +313,23 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var loginData = NVR.getLogin();
     //console.log("Sending CGI command to " + loginData.url);
     var rqtoken = rq ? rq : "stream";
-    var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+    
+    var cmdUrl = loginData.url + '/index.php?view=request&request='+rqtoken+'&connkey='+connkey+'&command='+cmd+$rootScope.authSession;
+    if (extras)
+      cmdUrl = cmdUrl+extras;
+
     //&auth=
+
+    NVR.debug ("Control: Sending "+cmdUrl);
     $http({
-        method: 'POST',
+        //method: 'POST',
+        method: 'GET',
         /*timeout: 15000,*/
-        url: loginData.url + '/index.php',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          //'Accept': '*/*',
-        },
-        transformRequest: function (obj) {
-          var str = [];
-          for (var p in obj)
-            str.push(encodeURIComponent(p) + "=" +
-              encodeURIComponent(obj[p]));
-          var foo = str.join("&");
-          if (extras) {
-            foo = foo + extras;
-            //console.log("EXTRAS****SUB RETURNING " + foo);
-          }
-          //console.log("CGI subcommand=" + foo);
-          return foo;
+        url: cmdUrl
 
-        },
-
-        data: {
-          view: "request",
-          request: rqtoken,
-          connkey: connkey,
-          command: cmd,
-          auth: myauthtoken,
-          // user: loginData.username,
-          // pass: loginData.password
-        }
       })
       .then(function (resp) {
-         // NVR.debug("sendCmd response:" + JSON.stringify(resp));
+          NVR.debug("sendCmd response:" + JSON.stringify(resp));
           d.resolve(resp);
           return (d.promise);
 
@@ -372,35 +352,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     var loginData = NVR.getLogin();
     //console.log("sending process Event command to " + loginData.url);
-    var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+    
+    var cmdUrl = loginData.url + '/index.php?view=request&request=stream&connkey='+connkey+'&command='+cmd+$rootScope.authSession;
     //&auth=
     return $http({
-        method: 'POST',
+        method: 'GET',
         /*timeout: 15000,*/
-        url: loginData.url + '/index.php',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          //'Accept': '*/*',
-        },
-        transformRequest: function (obj) {
-          var str = [];
-          for (var p in obj)
-            str.push(encodeURIComponent(p) + "=" +
-              encodeURIComponent(obj[p]));
-          var foo = str.join("&");
-          //console.log("****processEvent subcommands RETURNING " + foo);
-          return foo;
-        },
-
-        data: {
-          view: "request",
-          request: "stream",
-          connkey: connkey,
-          command: cmd,
-          auth: myauthtoken,
-          // user: loginData.username,
-          // pass: loginData.password
-        }
+        url: cmdUrl,
+        
       })
       .then(function (resp) {
           //NVR.debug ("processEvent success:"+JSON.stringify(resp));
