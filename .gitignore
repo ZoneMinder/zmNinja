@@ -19,6 +19,7 @@ zmNinja.sublime-workspace
 typings/
 package-lock.json
 dist/
+.gradle/
 
 
 
