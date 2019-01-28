@@ -1,13 +1,14 @@
 #!/bin/bash
 
+
 build_debug() {
         echo "*********** Building Debug Build **************"
         rm -rf debug_files 2>/dev/null
         mkdir debug_files
         ionic cordova build android
         # adding back wkwebview clears platform debug directory later
-        cp platforms/android/build/outputs/apk/debug/android-debug.apk debug_files
-        echo "*** Your debug file has been moved to  debug_files/android-debug.apk"
+        cp platforms/android/app/build/outputs/apk/debug/app-debug.apk  debug_files
+        echo "*** Your debug file has been moved to  debug_files/app-debug.apk"
 }
 
 
@@ -107,7 +108,7 @@ ver=${APPVER//.}9
 echo "About to build version: $APPVER ($MODE)"
 read -p "Press any key..."
 
-echo "Removing wkwebview, adding certificate fork..."
+echo "Removing wkwebview, adding cordova-plugin-certificates-pp-fork..."
 cordova plugin remove cordova-plugin-ionic-webview > /dev/null 2>&1
 cordova plugin add cordova-plugin-certificates-pp-fork > /dev/null 2>&1
 
@@ -124,5 +125,6 @@ echo "Adding back wkwebview and removing certificate fork..."
 cordova plugin remove cordova-plugin-certificates-pp-fork > /dev/null 2>&1
 cordova plugin add  https://github.com/pliablepixels/cordova-plugin-ionic-webview.git > /dev/null 2>&1
 
+echo "If you faced DEX etc goofy errors, cd platform/android && gradle clean or try removing/adding android"
 
   
