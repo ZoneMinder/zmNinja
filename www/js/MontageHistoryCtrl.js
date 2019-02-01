@@ -917,7 +917,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
         NVR.debug ("--->updating videoURL for mid="+m.Monitor.Id+ "to:"+videoURL);
         m.Monitor.eid = success.eid;
-        m.Monitor.StartTime = success.stime;
+        m.Monitor.eventUrlTime = success.stime;
         $timeout (function () {
           m.Monitor.handle.play();
         });
