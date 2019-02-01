@@ -869,7 +869,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     .then (function (success) {
       NVR.debug ("next event for monitor:"+m.Monitor.Id+" is "+success.eid);
 
-      if (success.eid != "null" && success.eid != m.Monitor.eid) {
+      if (success.eid != "null" && success.eid != m.Monitor.eid && success.eid !="-1") {
        
         var videoURL= m.Monitor.baseURL  + "/index.php?view=view_video&eid=" + success.eid;
 

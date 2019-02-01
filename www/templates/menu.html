@@ -33,6 +33,7 @@
             </span>{{'kMenuMontage'|translate}}
           </ion-item>
 
+            
           <!--<ion-item ng-click="navigateView('app.timeline')" menu-close>-->
           <ion-item id="menu-move-2" href="#/app/timeline" ng-click="go('/app/timeline')">
             <span class=" item-icon-left">
@@ -47,6 +48,14 @@
             </span>{{'kMenuEvents'|translate}}
           </ion-item>
 
+          <!-- <ion-item  ng-click="navigateView('app.montage-history')" menu-close>-->
+              <ion-item id="menu-move-5" href="#/app/montage-history" ng-click="go('/app/montage-history')">
+                <span class=" item-icon-left">
+                  <i class="icon ion-ios-keypad-outline"></i>
+                </span>{{'kMenuEventMontage'|translate}}
+              </ion-item>
+              
+              
           <!--<ion-item  ng-click="navigateView('app.moment')" menu-close>-->
           <ion-item id="menu-move-4" ng-click="go('/app/moment')" href="#/app/moment" ng-click="go('/app/moment')">
             <span class=" item-icon-left">
@@ -91,12 +100,6 @@
             </span> {{'kMenuDevSettings'|translate}}
           </ion-item>
 
-          <!-- <ion-item  ng-click="navigateView('app.montage-history')" menu-close>-->
-            <ion-item id="menu-move-5" href="#/app/montage-history" ng-click="go('/app/montage-history')">
-              <span class=" item-icon-left">
-                <i class="icon ion-ios-keypad-outline"></i>
-              </span>{{'kMenuEventMontage'|translate}}
-            </ion-item>
             
           <ion-item ng-click="switchLang()" nav-clear menu-close>
             <span class=" item-icon-left">
