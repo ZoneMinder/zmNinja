@@ -3,7 +3,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,ionic,Masonry,moment,Packery, Draggabilly, imagesLoaded, Chart */
 // FIXME: This is a copy of montageCtrl - needs a lot of code cleanup
-angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$scope', '$rootScope', 'NVR', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$translate', 'qHttp', '$q', function ($scope, $rootScope, NVR, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $translate, qHttp, $q) {
+angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$scope', '$rootScope', 'NVR', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$translate', 'qHttp', '$q', '$sce',function ($scope, $rootScope, NVR, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $translate, qHttp, $q, $sce) {
   var broadcastHandles = [];
   var isMultiPort = false;
   $scope.isMultiPort = isMultiPort;
@@ -240,6 +240,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         //$scope.MontageMonitors[i].Monitor.connKey='';
         //$scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 99999) + 1)).toString();
         $scope.MontageMonitors[i].Monitor.eventUrl = 'img/noimage.png';
+        $scope.MontageMonitors[i].Monitor.eventType = "";
         $scope.MontageMonitors[i].Monitor.eid = "-1";
         $scope.MontageMonitors[i].Monitor.eventUrlTime = "";
         $scope.MontageMonitors[i].Monitor.isPaused = false;
@@ -281,6 +282,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         for (i = 0; i < data.events.length; i++) {
           mid = data.events[i].Event.MonitorId;
           eid = data.events[i].Event.Id;
+          
+          var eType = (data.events[i].Event.DefaultVideo != '')? 'video':'jpeg';
+          //console.log ("====SETTING video type to "+eType+" for "+mid);
+
           //console.log ("Event ID:"+eid);
           stime = data.events[i].Event.StartTime;
           // only take the first one for each monitor
@@ -293,7 +298,40 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 //console.log ("ldurl is " + ld.streamingurl);
                 var bw = NVR.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
 
+                if (eType=='video') {
+                  var videoURL= $scope.MontageMonitors[j].Monitor.baseURL  + "/index.php?view=view_video&eid=" + eid;
+
+                  if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
+                  if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
+
+          
+                  $scope.MontageMonitors[j].Monitor.videoObject = {
+                    config: {
+                      autoPlay: true,
+                      responsive: false,
+                      nativeControls: false,
+                      nativeFullScreen: true,
+        
+                      playsInline: true,
+                      sources: [{
+                          src: $sce.trustAsResourceUrl(videoURL),
+                          type: "video/mp4"
+                        }
+        
+                      ],
+        
+                      theme: "lib/videogular-themes-default/videogular.css",
+                      cuepoints: {
+                        theme: {
+                          url: "lib/videogular-cuepoints/cuepoints.css"
+                        },
+                        points: [],
+                      }
+                    }
+                  };
+                }
                 
+                $scope.MontageMonitors[j].Monitor.eventType = eType;
                 $scope.MontageMonitors[j].Monitor.eventUrl = $scope.MontageMonitors[j].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + eid + "&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[j].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
                 //console.log ("Setting event URL to " +$scope.MontageMonitors[j].Monitor.eventUrl);
                 //   console.log ("SWITCHING TO " + $scope.MontageMonitors[j].eventUrl);
@@ -373,10 +411,46 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
           url: indivGrab
         }).then(function (succ) {
             var data = succ.data;
-            // console.log ("EXPANDED DATA FOR MONITOR " + i + JSON.stringify(data));
+             //console.log ("EXPANDED DATA FOR MONITOR " + i + JSON.stringify(data));
             if (data.events.length > 0) {
               if (!NVR.isBackground()) {
                 var bw = NVR.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
+                var eType = data.events[0].Event.DefaultVideo != ''? 'video':'jpeg';
+
+
+                if (eType=='video') {
+                  var videoURL= $scope.MontageMonitors[j].Monitor.baseURL  + "/index.php?view=view_video&eid=" + eid;
+
+                  if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
+                  if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
+
+          
+                  $scope.MontageMonitors[j].Monitor.videoObject = {
+                    config: {
+                      autoPlay: true,
+                      responsive: false,
+                      nativeControls: false,
+                      nativeFullScreen: true,
+        
+                      playsInline: true,
+                      sources: [{
+                          src: $sce.trustAsResourceUrl(videoURL),
+                          type: "video/mp4"
+                        }
+        
+                      ],
+        
+                      theme: "lib/videogular-themes-default/videogular.css",
+                      cuepoints: {
+                        theme: {
+                          url: "lib/videogular-cuepoints/cuepoints.css"
+                        },
+                        points: [],
+                      }
+                    }
+                  };
+                }
+                $scope.MontageMonitors[i].Monitor.eventType = eType;
                 $scope.MontageMonitors[i].Monitor.eventUrl = $scope.MontageMonitors[i].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + data.events[0].Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[i].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
                 //console.log ("SWITCHING TO " + $scope.MontageMonitors[i].eventUrl);
                 $scope.MontageMonitors[i].Monitor.eventUrlTime = data.events[0].Event.StartTime;
@@ -429,10 +503,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       // don't check for monitors that are not shown
       // because nph connkey won't exist and the response
       // will fail
-      if ($scope.MontageMonitors[i].Monitor.eventUrl != "" && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noimage.png' && $scope.MontageMonitors[i].Monitor.connKey != '' && $scope.MontageMonitors[i].Monitor.Function != 'None' && $scope.MontageMonitors[i].Monitor.listDisplay != 'noshow' && $scope.MontageMonitors[i].Monitor.Enabled != '0') {
+      if ($scope.MontageMonitors[i].Monitor.eventUrl != "" && $scope.MontageMonitors[i].Monitor.eventUrl != 'img/noimage.png' && $scope.MontageMonitors[i].Monitor.connKey != '' && $scope.MontageMonitors[i].Monitor.Function != 'None' && $scope.MontageMonitors[i].Monitor.listDisplay != 'noshow' && $scope.MontageMonitors[i].Monitor.Enabled != '0' &&
+      $scope.MontageMonitors[i].Monitor.eventType == "jpeg") {
         // NVR.debug("Checking event status for " + $scope.MontageMonitors[i].Monitor.Name + ":" + $scope.MontageMonitors[i].Monitor.eventUrl + ":" + $scope.MontageMonitors[i].Monitor.Function + ":" + $scope.MontageMonitors[i].Monitor.listDisplay);
         // console.log ("Sending query 99 for " + $scope.MontageMonitors[i].Monitor.Name + " with ck="+$scope.MontageMonitors[i].Monitor.connKey);
-        controlEventStream('99', '', $scope.MontageMonitors[i].Monitor.connKey, i);
+       controlEventStream('99', '', $scope.MontageMonitors[i].Monitor.connKey, i);
       }
     }
   }
@@ -526,19 +601,29 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //console.log ("AUTH IS " + $rootScope.authSession);
     var myauthtoken = $rootScope.authSession.replace("&auth=", "");
     //&auth=
-    var req = qHttp({
+
+    var cmdUrl = loginData.url + '/index.php?view=request&request=stream'+'&connkey='+connkey+'&command='+cmd+$rootScope.authSession;
+    if (extras)
+      cmdUrl = cmdUrl+extras;
+
+    NVR.debug ("Control: Sending "+cmdUrl);
+
+    var req = $http({
+      method: 'GET',
+      url:cmdUrl
+    });
+    
+    /* var req = qHttp({
       method: 'POST',
-      /*timeout: 15000,*/
       url: loginData.url + '/index.php?view=console',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded', //'Accept': '*/*',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       transformRequest: function (obj) {
         var str = [];
         for (var p in obj) str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
         var foo = str.join("&");
         if (extras) foo = foo + extras;
-        //console.log("****RETURNING " + foo);
         return foo;
       },
       data: {
@@ -549,11 +634,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         auth: myauthtoken, // user: loginData.username,
         // pass: loginData.password
       }
-    });
+    });*/
     req.then(function (succ) {
       var resp = succ.data;
 
-      //console.log ("zms response: " + JSON.stringify(resp));
+      console.log ("zms response: " + JSON.stringify(resp));
 
       // move progress bar if event id is the same
       if (resp.result == "Ok" && ndx != -1 && (resp.status.event == $scope.MontageMonitors[ndx].Monitor.eid)) {
@@ -775,6 +860,40 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     NVR.setLogin(loginData);
     //console.log ("Switching orientation");
   };
+
+  $scope.onVideoError = function (event) {
+    $ionicLoading.hide();
+    NVR.debug("player reported a video error:" + JSON.stringify(event));
+
+  };
+
+  $scope.onPlayerReady = function (api) {
+
+    // we need this timeout to avoid load interrupting
+    // play -- I suppose its an angular digest foo thing
+    //console.log ("*********** ON PLAY READY");
+    var handle;
+    NVR.debug("On Play Ready invoked");
+    handle = api;
+    handle.mediaElement.attr("playsinline", "");
+
+    $ionicLoading.show({
+      template: "<ion-spinner icon='ripple' class='spinner-energized'></ion-spinner><br/>" + $translate.instant('kVideoLoading') + "...",
+
+    });
+    NVR.debug("Player is ready");
+    $timeout(function () {
+      handle.pause();
+      handle.setPlayback(NVR.getLogin().videoPlaybackSpeed);
+      handle.play();
+      NVR.debug("*** Invoking play");
+      playerReady = true;
+
+    }, 300);
+
+    // window.stop();
+  };
+
   //---------------------------------------------------------------------
   // In Android, the app runs full steam while in background mode
   // while in iOS it gets suspended unless you ask for specific resources
@@ -1103,6 +1222,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       //$scope.MontageMonitors[i].Monitor.connKey='';
       $scope.MontageMonitors[i].Monitor.eid = "-1";
       $scope.MontageMonitors[i].Monitor.eventUrl = 'img/noimage.png';
+      $scope.MontageMonitors[i].Monitor.eventType = "";
       $scope.MontageMonitors[i].Monitor.eid = "-1";
       $scope.MontageMonitors[i].Monitor.eventUrlTime = "";
       $scope.MontageMonitors[i].Monitor.isPaused = false;
