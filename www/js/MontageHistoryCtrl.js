@@ -960,10 +960,14 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     NVR.debug("Player is ready");
     $timeout(function () {
       m.Monitor.handle.pause();
-      m.Monitor.handle.setPlayback(NVR.getLogin().videoPlaybackSpeed);
+
+      $timeout(function() {
+        m.Monitor.handle.setPlayback(NVR.getLogin().videoPlaybackSpeed);
       m.Monitor.handle.play();
       NVR.debug("*** Invoking play");
       playerReady = true;
+      },300);
+      
 
     }, 300);
 
@@ -1371,7 +1375,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //console.log("Graphing on " + "eventchart-" + mid);
     var cv = document.getElementById("eventchart-" + mid);
     var ctx = cv.getContext("2d");
+   // ctx.height=30;
     frameoptions = {
+      maintainAspectRatio: false,
       responsive: true,
       legend: false,
       title: {
