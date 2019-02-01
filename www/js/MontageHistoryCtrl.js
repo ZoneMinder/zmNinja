@@ -417,15 +417,16 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 var bw = NVR.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
                 var eType = data.events[0].Event.DefaultVideo != ''? 'video':'jpeg';
 
+                var eid =  data.events[0].Event.Id;
 
                 if (eType=='video') {
-                  var videoURL= $scope.MontageMonitors[j].Monitor.baseURL  + "/index.php?view=view_video&eid=" + eid;
+                  var videoURL= $scope.MontageMonitors[i].Monitor.baseURL  + "/index.php?view=view_video&eid=" + eid;
 
                   if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
                   if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
 
           
-                  $scope.MontageMonitors[j].Monitor.videoObject = {
+                  $scope.MontageMonitors[i].Monitor.videoObject = {
                     config: {
                       autoPlay: true,
                       responsive: false,
@@ -641,7 +642,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       console.log ("zms response: " + JSON.stringify(resp));
 
       // move progress bar if event id is the same
-      if (resp.result == "Ok" && ndx != -1 && (resp.status.event == $scope.MontageMonitors[ndx].Monitor.eid)) {
+      if (resp.result == "Ok" && ndx != -1 && (resp.status && resp.status.event == $scope.MontageMonitors[ndx].Monitor.eid)) {
         if (!$scope.MontageMonitors[ndx].Monitor.seek) {
           $scope.MontageMonitors[ndx].Monitor.sliderProgress.progress = resp.status.progress;
         } else {
@@ -649,7 +650,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         }
       }
 
-      if (resp.result == "Ok" && ndx != -1 && ((resp.status.event != $scope.MontageMonitors[ndx].Monitor.eid) || $scope.MontageMonitors[ndx].Monitor.noGraph == true)) {
+      if (resp.result == "Ok" && resp.status &&  ndx != -1 && ((resp.status.event != $scope.MontageMonitors[ndx].Monitor.eid) || $scope.MontageMonitors[ndx].Monitor.noGraph == true)) {
         $scope.MontageMonitors[ndx].Monitor.noGraph = false;
         // $scope.MontageMonitors[ndx].Monitor.sliderProgress.progress = 0;
         NVR.debug("Fetching details, as event changed for " + $scope.MontageMonitors[ndx].Monitor.Name + " from " + $scope.MontageMonitors[ndx].Monitor.eid + " to " + resp.status.event);
