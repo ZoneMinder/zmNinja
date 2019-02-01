@@ -110,20 +110,29 @@
                 on-swipe-left="toggleControls()" on-swipe-right="toggleControls()" img-spinner-w="{{monitor.Monitor.Width}}"
                 img-spinner-h="{{monitor.Monitor.Height}}" />
 
+
+                <div ng-show="packeryDone" >
+
+                    <div class="range" style="position:absolute;top:20%;width:95%;z-index:999">
+                      <input on-release="seek(monitor.Monitor.Id,monitor.Monitor.sliderProgress.progress )" type="range" min="0"
+                        max="{{monitor.Monitor.eventDuration}}" ng-model="monitor.Monitor.sliderProgress.progress">
+      
+                       
+                    </div>
+                   
+                    <div id="history_canvas_video" style="height: 30px; position:absolute; top:20%">
+                        <canvas style="padding-left:23px;
+                                padding-right:23px; z-index:900" id="eventchart-{{monitor.Monitor.Id}}"
+        
+                               
+                         ></canvas>
+                      </div>
+                  </div>
+
             
             </figure>
             <!-- wait for packery otherwise we get large ranges -->
-            <div ng-show="packeryDone">
-              <div class="range" style="position:absolute;top:5%;width:95%;z-index:999">
-                <input on-release="seek(monitor.Monitor.Id,monitor.Monitor.sliderProgress.progress )" type="range" min="0"
-                  max="{{monitor.Monitor.eventDuration}}" ng-model="monitor.Monitor.sliderProgress.progress">
-              </div>
-              <div id="history_canvas_video">
-                <canvas style="padding-left:23px;
-                        padding-right:23px;z-index:998" id="eventchart-{{monitor.Monitor.Id}}"
-                  width="auto" height="20"></canvas>
-              </div>
-            </div>
+           
             <div ng-if="monitor.Monitor.seek" style="position:absolute;top:0px; left: 0px; width:100%;height:100%; background-color:rgba(0,0,0,0.3); z-index:99999">
               <div style="position:relative;top:50%;text-align:center;color:white;background-color:rgba(0,0,0,0.5);">{{'kPleaseWait'
                 | translate}}</div>
