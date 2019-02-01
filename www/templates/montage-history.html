@@ -34,13 +34,31 @@
             data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}">
             <figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-if=" monitor.Monitor.listDisplay!='noshow'">
 
+              
+              <figcaption class="normal-figheader-history" >
 
+                &nbsp; 
+
+                <i class="ion-ios-videocam"></i>
+                <span style="background-color:red;color:#fff" ng-if="monitor.Monitor.isPaused">&nbsp;
+
+                  <i class="ion-pause"></i>&nbsp;
+
+                </span> {{monitor.Monitor.Name}}&nbsp;
+                <div ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px"
+                  class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">[{{monitor.Monitor.eid}}]
+                  <i class="ion-clock"></i> {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}}
+                  ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp;
+                </div>
+              </figcaption>
               <videogular vg-can-play="onCanPlay()" vg-native-fullscreen="monitor.Monitor.videoObject.config.nativeFullScreen"
-                vg-player-ready="onPlayerReady($API)" vg-update-playback="onPlaybackUpdate($playBack)" vg-plays-inline="monitor.Monitor.videoObject.config.playsInline"
-                vg-theme="monitor.Monitor.videoObject.config.theme" vg-complete="playbackFinished()" vg-autoplay="monitor.Monitor.videoObject.config.autoPlay"
+                vg-player-ready="onPlayerReady($API, monitor)" vg-update-playback="onPlaybackUpdate($playBack)" vg-plays-inline="monitor.Monitor.videoObject.config.playsInline"
+                vg-theme="monitor.Monitor.videoObject.config.theme" vg-complete="playbackFinished(monitor)" vg-autoplay="true"
                 vg-responsive="monitor.Monitor.videoObject.config.responsive" vg-update-time="videoTime(event.Event.StartTime,$currentTime)"
                 vg-error="onVideoError($event)">
-                <vg-media vg-src="monitor.Monitor.videoObject.config.sources" vg-native-controls="monitor.Monitor.videoObject.config.nativeControls">
+                <vg-media vg-src="monitor.Monitor.videoObject.config.sources" 
+                
+                vg-native-controls="monitor.Monitor.videoObject.config.nativeControls">
                 </vg-media>
                 <vg-controls>
                   <vg-playback-button></vg-playback-button>
@@ -60,22 +78,7 @@
 
               </videogular>
 
-              <figcaption class="normal-figcaption">
-
-                &nbsp; [{{monitor.Monitor.eventType}}]
-
-                <i class="ion-ios-videocam"></i>
-                <span style="background-color:red;color:#fff" ng-if="monitor.Monitor.isPaused">&nbsp;
-
-                  <i class="ion-pause"></i>&nbsp;
-
-                </span> {{monitor.Monitor.Name}}&nbsp;
-                <div ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px"
-                  class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">[{{monitor.Monitor.eid}}]
-                  <i class="ion-clock"></i> {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}}
-                  ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp;
-                </div>
-              </figcaption>
+              
             </figure>
            
         
@@ -86,26 +89,28 @@
           <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}"
             data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}">
             <figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-if=" monitor.Monitor.listDisplay!='noshow'">
+
+                <figcaption class="normal-figheader-history">
+                    &nbsp; 
+                    <i class="ion-ios-videocam"></i>
+                    <span style="background-color:red;color:#fff" ng-if="monitor.Monitor.isPaused">&nbsp;
+    
+                      <i class="ion-pause"></i>&nbsp;
+    
+                    </span> {{monitor.Monitor.Name}}&nbsp;
+                    <div ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px"
+                      class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">[{{monitor.Monitor.eid}}]
+                      <i class="ion-clock"></i> {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}}
+                      ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp;
+                    </div>
+                  </figcaption>
+
               <img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{constructStream(monitor)}}"
                 image-spinner-loader="lines" on-tap="!isDragabillyOn?togglePause(monitor.Monitor.Id):toggleSelectItem($index)"
                 on-swipe-left="toggleControls()" on-swipe-right="toggleControls()" img-spinner-w="{{monitor.Monitor.Width}}"
                 img-spinner-h="{{monitor.Monitor.Height}}" />
-              <figcaption class="normal-figcaption">
 
-                &nbsp; [[ {{monitor.Monitor.eventType}}]]
-
-                <i class="ion-ios-videocam"></i>
-                <span style="background-color:red;color:#fff" ng-if="monitor.Monitor.isPaused">&nbsp;
-
-                  <i class="ion-pause"></i>&nbsp;
-
-                </span> {{monitor.Monitor.Name}}&nbsp;
-                <div ng-if="sliderVal.showTimeline && $root.runMode!='lowbw'" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:9px"
-                  class="header-event-id" id="{{monitor.Monitor.Id}}-timeline">[{{monitor.Monitor.eid}}]
-                  <i class="ion-clock"></i> {{prettifyDateTimeFirst(monitor.Monitor.eventUrlTime)}}
-                  ({{humanizeTime(monitor.Monitor.eventUrlTime)}})&nbsp;
-                </div>
-              </figcaption>
+            
             </figure>
             <!-- wait for packery otherwise we get large ranges -->
             <div ng-show="packeryDone">
