@@ -264,12 +264,12 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     function getNextSetHistory() {
 
       // grab events that start on or after the time 
-      apiurl = ld.apiurl + "/events/index/StartTime >=:" + TimeObjectFrom + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json?sort=StartTime&direction=desc";
+      apiurl = ld.apiurl + "/events/index/StartTime >=:" + TimeObjectFrom + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json?sort=StartTime&direction=asc";
       NVR.log("Grabbing history using: " + apiurl);
       // make sure there are no more than 5 active streams (noevent is ok)
       $scope.currentLimit = $scope.monLimit;
       //qHttp.get(apiurl)
-      console.log ("GETTING "+apiurl);
+      //console.log ("GETTING "+apiurl);
       $http({
         method: 'get',
         url: apiurl
@@ -861,21 +861,97 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //console.log ("Switching orientation");
   };
 
+
+  $scope.playbackFinished = function(m) {
+
+    console.log ("******* VIDEO PLAYBACK FINISHED FOR MONITOR:"+m.Monitor.Id+ " EVENT:" +m.Monitor.eid);
+    getNextEvent( m.Monitor.eid)
+    .then (function (success) {
+      NVR.debug ("next event for monitor:"+m.Monitor.Id+" is "+success.eid);
+
+      if (success.eid != "null" && success.eid != m.Monitor.eid) {
+       
+        var videoURL= m.Monitor.baseURL  + "/index.php?view=view_video&eid=" + success.eid;
+
+                  if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
+                  if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
+
+                  m.Monitor.videoObject = {
+                    config: {
+                      autoPlay: true,
+                      responsive: false,
+                      nativeControls: false,
+                      nativeFullScreen: true,
+        
+                      playsInline: true,
+                      sources: [{
+                          src: $sce.trustAsResourceUrl(videoURL),
+                          type: "video/mp4"
+                        }
+        
+                      ],
+        
+                      theme: "lib/videogular-themes-default/videogular.css",
+                      cuepoints: {
+                        theme: {
+                          url: "lib/videogular-cuepoints/cuepoints.css"
+                        },
+                        points: [],
+                      }
+                    }
+                  };
+            
+
+                  
+
+      //  m.Monitor.videoObject.config.sources[0].src = $sce.trustAsResourceUrl(videoURL);
+
+      var element = angular.element(document.getElementById(m.Monitor.Id + "-timeline"));
+      element.removeClass('animated flipInX');
+      element.addClass('animated flipOutX');
+
+      $timeout (function () {
+
+        element.removeClass('animated flipOutX');
+        element.addClass('animated flipInX');
+
+        NVR.debug ("--->updating videoURL for mid="+m.Monitor.Id+ "to:"+videoURL);
+        m.Monitor.eid = success.eid;
+        m.Monitor.StartTime = success.stime;
+        $timeout (function () {
+          m.Monitor.handle.play();
+        });
+
+      },700);
+
+        
+        
+      
+      // m.Monitor.handle.play();
+      
+       
+        }
+
+    });
+  };
+
+
   $scope.onVideoError = function (event) {
     $ionicLoading.hide();
     NVR.debug("player reported a video error:" + JSON.stringify(event));
 
   };
 
-  $scope.onPlayerReady = function (api) {
+  $scope.onPlayerReady = function (api,m) {
 
     // we need this timeout to avoid load interrupting
     // play -- I suppose its an angular digest foo thing
-    //console.log ("*********** ON PLAY READY");
-    var handle;
+    //console.log ("*********** ON PLAY READY")
+    m.Monitor.handle = api;
+    
     NVR.debug("On Play Ready invoked");
-    handle = api;
-    handle.mediaElement.attr("playsinline", "");
+  
+    m.Monitor.handle.mediaElement.attr("playsinline", "");
 
     $ionicLoading.show({
       template: "<ion-spinner icon='ripple' class='spinner-energized'></ion-spinner><br/>" + $translate.instant('kVideoLoading') + "...",
@@ -883,9 +959,9 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     });
     NVR.debug("Player is ready");
     $timeout(function () {
-      handle.pause();
-      handle.setPlayback(NVR.getLogin().videoPlaybackSpeed);
-      handle.play();
+      m.Monitor.handle.pause();
+      m.Monitor.handle.setPlayback(NVR.getLogin().videoPlaybackSpeed);
+      m.Monitor.handle.play();
       NVR.debug("*** Invoking play");
       playerReady = true;
 
@@ -894,6 +970,44 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     // window.stop();
   };
 
+  function getNextEvent(eid) {
+
+   
+    var d = $q.defer();
+    // now get event details to show alarm frames
+    var loginData = NVR.getLogin();
+    var myurl = loginData.apiurl + '/events/' + eid + ".json";
+
+    var r = {
+      eid:"",
+      stime:"",
+    };
+    $http.get(myurl)
+    .then( function (success) {
+      if (success.data.event.Event.NextOfMonitor) {
+        r.eid =  success.data.event.Event.NextOfMonitor;
+        r.stime = success.data.event.Event.StartTime;
+        d.resolve(r);
+      }
+      else {
+        r.eid = "-1";
+        r.stime = "-1";
+        d.resolve(r);
+      }
+      return (d.promise);
+    },
+    function (err) {
+      NVR.debug ("Error geting neighbors:"+JSON.stringify(err));
+      r.eid = "-1";
+      r.stime = "-1";
+      d.resolve(r);
+      return (d.promise);
+    });
+    
+
+    return (d.promise);
+
+  }
   //---------------------------------------------------------------------
   // In Android, the app runs full steam while in background mode
   // while in iOS it gets suspended unless you ask for specific resources

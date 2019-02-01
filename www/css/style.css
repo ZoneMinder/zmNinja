@@ -279,6 +279,7 @@ figcaption {
     white-space: nowrap;
 }
 
+
 .normal-figcaption {
     background: rgba(0, 0, 0, 0.2);
     color: #FFF;
@@ -309,6 +310,14 @@ figcaption {
     right: 0;
     opacity: 1;
     font-size: 80%;
+}
+
+.normal-figheader-history {
+    background: rgba(0, 0, 0, 0.7);
+    color: #FFF;
+    opacity: 1;
+    font-size: 80%;
+    top:0;
 }
 
 
