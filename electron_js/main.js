@@ -5,6 +5,7 @@ const {dialog} = require('electron')
 const path = require('path');
 const url = require('url');
 
+
 // Module to create native browser window.
 const {BrowserWindow} = electron;
 var isFs = false;
@@ -281,10 +282,12 @@ app.on('activate', () => {
   }
 });
 
+console.log ("Setting uncaught exception handler...");
 app.on('uncaughtException', function (err) {
   console.log("***WHOOPS TIME****"+err);
 });
 
+ 
 app.on('will-quit', () => {
   // Unregister all shortcuts.
   globalShortcut.unregisterAll()
