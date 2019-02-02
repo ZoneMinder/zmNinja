@@ -691,11 +691,11 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
             drawGraph(framearray, $scope.MontageMonitors[ndx].Monitor.Id);
           }, 100);
           var element = angular.element(document.getElementById($scope.MontageMonitors[ndx].Monitor.Id + "-timeline"));
-          element.removeClass('animated flipInX');
-          element.addClass('animated flipOutX');
+          element.removeClass('animated fadeIn');
+          element.addClass('animated fadeOut');
           $timeout(function () {
-            element.removeClass('animated flipOutX');
-            element.addClass('animated flipInX');
+            element.removeClass('animated fadeOut');
+            element.addClass('animated fadeIn');
             $scope.MontageMonitors[ndx].Monitor.eventUrlTime = data.event.Event.StartTime;
             var bw = NVR.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
 
@@ -926,13 +926,13 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       //  m.Monitor.videoObject.config.sources[0].src = $sce.trustAsResourceUrl(videoURL);
 
       var element = angular.element(document.getElementById(m.Monitor.Id + "-timeline"));
-      element.removeClass('animated flipInX');
-      element.addClass('animated flipOutX');
+      element.removeClass('animated fadeIn');
+      element.addClass('animated fadeOut');
 
       $timeout (function () {
 
-        element.removeClass('animated flipOutX');
-        element.addClass('animated flipInX');
+        element.removeClass('animated fadeOut');
+        element.addClass('animated fadeIn');
 
         NVR.debug ("--->updating videoURL for mid="+m.Monitor.Id+ "to:"+videoURL);
         m.Monitor.eid = success.eid;
