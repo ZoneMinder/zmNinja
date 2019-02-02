@@ -1107,7 +1107,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     //console.log ("**NOLANG" + fromDateNoLang  + " " + toDateNoLang);
 
-    NVR.getEventsPages(0, fromDateNoLang, toDateNoLang)
+    NVR.getEventsPages(0, fromDateNoLang, toDateNoLang, true)
       .then(function (epData) {
         var pages = 1;
         var itemsPerPage = parseInt(epData.limit);

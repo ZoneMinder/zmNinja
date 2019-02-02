@@ -2635,7 +2635,7 @@ angular.module('zmApp.controllers')
         // All this effort because the ZM APIs return events in sorted order, oldest first. Yeesh.
         //-----------------------------------------------------------------------------
 
-        getEventsPages: function (monitorId, startTime, endTime) {
+        getEventsPages: function (monitorId, startTime, endTime, noObjectFilter) {
           //console.log("********** INSIDE EVENTS PAGES ");
 
           var d = $q.defer();
@@ -2655,7 +2655,7 @@ angular.module('zmApp.controllers')
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
           //https:///zm/api/events/index/Notes%20REGEXP:detected%3A.json
-          if (loginData.objectDetectionFilter) {
+          if (loginData.objectDetectionFilter && !noObjectFilter) {
             myurl = myurl + '/Notes%20REGEXP:detected%3A';
           }
           
