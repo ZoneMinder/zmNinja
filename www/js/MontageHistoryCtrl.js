@@ -789,7 +789,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
 
 
-  }
+  };
   $scope.toggleControls = function () {
     $scope.showControls = !$scope.showControls;
   };
@@ -883,7 +883,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
   $scope.playbackFinished = function(m,d) {
 
-    console.log ("******* VIDEO PLAYBACK FINISHED FOR MONITOR:"+m.Monitor.Id+ " EVENT:" +m.Monitor.eid);
+    NVR.debug("--> Video playback finished for mon:"+m.Monitor.Id+ " evt:" +m.Monitor.eid);
     getNextEvent( m.Monitor.eid,d)
     .then (function (success) {
       NVR.debug ("next event for monitor:"+m.Monitor.Id+" is "+success.eid);
