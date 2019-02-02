@@ -777,6 +777,19 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //NVR.isBackground());
     return NVR.isBackground();
   };
+
+  $scope.skipImage = function (m, dirn) {
+
+    NVR.debug ("skipping image in direction:"+dirn);
+    var cmd = (dirn == -1)?12:13;
+    sendCmd(m.Monitor.Id, cmd);
+    //var CMD_PREV = 12;
+    //var CMD_NEXT = 13;
+
+
+
+
+  }
   $scope.toggleControls = function () {
     $scope.showControls = !$scope.showControls;
   };
