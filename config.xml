@@ -15,7 +15,8 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <preference name="KeyboardResizeMode" value="native" />
+    <preference name="KeyboardResize" value="true" />
+    <preference name="KeyboardResizeMode" value="ionic" />
     <preference name="xwalkMultipleApk" value="true" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="iosPersistentFileLocation" value="Library" />
