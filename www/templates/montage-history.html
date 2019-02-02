@@ -32,7 +32,7 @@
         <div ng-if="monitor.Monitor.eventType == 'video'">
           <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}"
             data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}}">
-            <figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-if=" monitor.Monitor.listDisplay!='noshow'">
+            <figure height="{{Monitor.monitor.height}}" width="{{Monitor.monitor.width}}" class="{{dragBorder}}" ng-if=" monitor.Monitor.listDisplay!='noshow'" on-swipe-left="skipVideo(monitor, 1)" on-swipe-right="skipVideo(monitor, -1)">
 
               
               <figcaption class="normal-figheader-history" >
