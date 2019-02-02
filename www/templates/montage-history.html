@@ -107,7 +107,7 @@
 
               <img class="{{monitor.Monitor.selectStyle}}" image-spinner-src="{{constructStream(monitor)}}"
                 image-spinner-loader="lines" on-tap="!isDragabillyOn?togglePause(monitor.Monitor.Id):toggleSelectItem($index)"
-                on-swipe-left="toggleControls()" on-swipe-right="toggleControls()" img-spinner-w="{{monitor.Monitor.Width}}"
+                on-swipe-left="skipImage(monitor,1)" on-swipe-right="skipImage(monitor,-1)" img-spinner-w="{{monitor.Monitor.Width}}"
                 img-spinner-h="{{monitor.Monitor.Height}}" />
 
 
