@@ -48,6 +48,8 @@ angular.module('zmApp.controllers')
       // Alarm notification handling
       //----------------------------------------------------------------
       $scope.handleAlarms = function () {
+       
+        //$rootScope.isAlarm = true;
         $rootScope.isAlarm = !$rootScope.isAlarm;
         if (!$rootScope.isAlarm) {
           $rootScope.alarmCount = "0";
@@ -58,8 +60,6 @@ angular.module('zmApp.controllers')
           $state.go("app.events", {
             "id": 0,
             "playEvent": false
-          }, {
-            reload: true
           });
           return;
         }
