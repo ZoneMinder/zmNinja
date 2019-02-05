@@ -917,6 +917,7 @@ angular.module('zmApp.controllers')
     // Alarm notification handling
     //----------------------------------------------------------------
     $scope.handleAlarms = function () {
+      //$rootScope.isAlarm = true;
       $rootScope.isAlarm = !$rootScope.isAlarm;
       if (!$rootScope.isAlarm)
       // if (1)
