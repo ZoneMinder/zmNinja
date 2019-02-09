@@ -83,7 +83,7 @@ angular.module('zmApp', [
     nphSwitchTimer: 3000,
     eventHistoryTimer: 5000,
     eventPlaybackQuery: 3000,
-
+    eventPageRefresh: 30000, // 30s
     packeryTimer: 500,
     dbName: 'zmninja',
     cipherKey: 'sdf#@#%FSXSA_AR',
