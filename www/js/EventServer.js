@@ -279,8 +279,8 @@ angular.module('zmApp.controllers')
       return d.promise;
     }
 
+    
     function setupDesktopSocket() {
-
       var loginData = NVR.getLogin();
       var d = $q.defer();
       ws = new WebSocket(loginData.eventServer);
@@ -388,7 +388,13 @@ angular.module('zmApp.controllers')
       NVR.debug("~~~~ sendMessage: Sending->" + jmsg);
 
       if ($rootScope.platformOS == 'desktop') {
-        ws.send(jmsg);
+        try {
+          ws.send(jmsg);
+        }
+        catch (e)  {
+          NVR.debug ("Exception sending ES message: "+JSON.stringify(e));
+        }
+        
       } else {
         if (nativeWebSocketId != -1)
           CordovaWebsocketPlugin.wsSend(nativeWebSocketId, jmsg);
@@ -674,6 +680,9 @@ angular.module('zmApp.controllers')
             if ($rootScope.alarmCount != "99+") {
               $rootScope.alarmCount = (parseInt($rootScope.alarmCount) + 1).toString();
             }
+
+          
+
           }
         });
       });
