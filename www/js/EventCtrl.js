@@ -127,13 +127,29 @@ angular.module('zmApp.controllers')
 
       }, 100);
 
-    /*  NVR.debug ("Starting page refresh timer");
+      NVR.debug ("Starting page refresh timer");
+      $interval.cancel(intervalReloadEvents);
       intervalReloadEvents = $interval(function () {
-        doRefresh();
-      }.bind(this), 10 * 1000);*/
+        timedPageReload();
+      }.bind(this), zm.eventPageRefresh);
 
     });
 
+    function timedPageReload() {
+
+     
+      if ($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top !=0 ) {
+        NVR.debug ("Not reloading as you have scrolled");
+
+      } 
+      else if ($scope.modal != undefined && $scope.modal.isShown()) {
+          NVR.debug ("Not reloading as you have a modal open");
+      }
+      else {
+        doRefresh();
+      }
+      
+    }
 
     function playSpecificEvent(eid) {
       NVR.log("Stuffing EID to play back " + eid);
@@ -153,8 +169,8 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.beforeLeave', function () {
 
-      /*NVR.debug ("Cancelling page reload timer");
-      $interval.cancel(intervalReloadEvents);*/
+      NVR.debug ("Cancelling page reload timer");
+      $interval.cancel(intervalReloadEvents);
       NVR.debug("EventCtrl: Deregistering resize listener");
       window.removeEventListener("resize", recomputeThumbSize, false);
       //NVR.debug("EventCtrl: Deregistering broadcast handles");
@@ -170,6 +186,18 @@ angular.module('zmApp.controllers')
       //
 
       $scope.mid = '';
+
+      $scope.$on ("alarm", function() {
+        NVR.debug ("EventCtrl: new event notiication, doing an immediate reload");
+        // do an immediate display reload and schedule timer again
+        $interval.cancel(intervalReloadEvents);
+        timedPageReload();
+        intervalReloadEvents = $interval(function () {
+          timedPageReload();
+        }.bind(this), zm.eventPageRefresh);
+
+
+      });
 
       $scope.$on ( "process-push", function () {
         NVR.debug (">> EventCtrl: push handler");
