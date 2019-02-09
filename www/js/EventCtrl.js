@@ -57,6 +57,7 @@ angular.module('zmApp.controllers')
     var nolangFrom;
     var nolangTo;
     var broadcastHandles = [];
+    var intervalReloadEvents;
 
     $scope.typeOfFrames = $translate.instant('kShowTimeDiffFrames');
     $scope.outlineMotion = false;
@@ -126,6 +127,11 @@ angular.module('zmApp.controllers')
 
       }, 100);
 
+    /*  NVR.debug ("Starting page refresh timer");
+      intervalReloadEvents = $interval(function () {
+        doRefresh();
+      }.bind(this), 10 * 1000);*/
+
     });
 
 
@@ -147,6 +153,8 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.beforeLeave', function () {
 
+      /*NVR.debug ("Cancelling page reload timer");
+      $interval.cancel(intervalReloadEvents);*/
       NVR.debug("EventCtrl: Deregistering resize listener");
       window.removeEventListener("resize", recomputeThumbSize, false);
       //NVR.debug("EventCtrl: Deregistering broadcast handles");
@@ -2411,16 +2419,18 @@ angular.module('zmApp.controllers')
       //  console.log("**VIEW ** Events Ctrl Entered");
       NVR.setAwake(false);
 
-      EventServer.sendMessage('push', {
-        type: 'badge',
-        badge: 0,
-      });
-
       $ionicPopover.fromTemplateUrl('templates/events-popover.html', {
         scope: $scope,
       }).then(function (popover) {
         $scope.popover = popover;
       });
+
+      EventServer.sendMessage('push', {
+        type: 'badge',
+        badge: 0,
+      });
+
+      
 
       //reset badge count
       if (window.cordova && window.cordova.plugins.notification) {
@@ -3049,6 +3059,7 @@ angular.module('zmApp.controllers')
       var refresh = NVR.getMonitors(1);
       refresh.then(function (data) {
         $scope.monitors = data;
+        message = data;
 
         /* var ld = NVR.getLogin();
          if (ld.persistMontageOrder) {
