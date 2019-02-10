@@ -19,6 +19,16 @@ angular.module('zmApp.controllers')
     var nativeWebSocketId = -1;
     var iClosed = false;
 
+    var isSocketReady = false;
+    var pendingMessages = [];
+    var connState = {
+        PENDING: 0,
+        SUCCESS: 1,
+        REJECT: 2
+    };
+
+    var authState = connState.PENDING;
+
 
 
 
@@ -27,6 +37,7 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
     function handleOpen(data) {
 
+      isSocketReady = true;
       NVR.debug("WebSocket open called with:" + JSON.stringify(data));
       var loginData = NVR.getLogin();
       NVR.log("openHandshake: Websocket open, sending Auth");
@@ -67,6 +78,9 @@ angular.module('zmApp.controllers')
 
     function handleClose(event) {
 
+      isSocketReady = false;
+      pendingMessages = [];
+      authState = connState.PENDING;
 
       if (iClosed) {
         NVR.debug ("App closed socket, not reconnecting");
@@ -89,6 +103,10 @@ angular.module('zmApp.controllers')
 
       console.log("*********** WEBSOCKET ERROR CALLED");
       if (!NVR.getLogin().isUseEventServer) return;
+
+      isSocketReady = false;
+      pendingMessages = [];
+      authState = connState.PENDING;
 
       if (!isTimerOn) {
         NVR.log("Will try to reconnect in 10 sec..");
@@ -119,6 +137,23 @@ angular.module('zmApp.controllers')
       }
 
       if (str.status == 'Success' && (str.event == 'auth')) {
+        authState = connState.SUCCESS;
+
+        // Now handle pending messages in queue
+
+        if (pendingMessages.length) {
+          NVR.debug ("Sending pending messages, as auth confirmation received");
+          while (pendingMessages.length) {
+            var p = pendingMessages.pop();
+            sendMessage (p.type, p.obj);
+          }
+        } else {
+          NVR.debug ("auth confirmation received, no pendingMessages in queue");
+        }
+        
+          
+        
+
         if (str.version == undefined)
           str.version = "0.1";
         if (NVR.versionCompare(str.version, zm.minEventServerVersion) == -1) {
@@ -205,6 +240,7 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
     function init() {
 
+
       $rootScope.isAlarm = 0;
       $rootScope.alarmCount = "0";
       isTimerOn = false;
@@ -220,6 +256,10 @@ angular.module('zmApp.controllers')
 
       NVR.log("Initializing Websocket with URL " +
         loginData.eventServer);
+
+      pendingMessages = [];
+      authState = connState.PENDING;
+      isSocketReady = false;
 
       if ($rootScope.platformOS == 'desktop') {
         NVR.debug("Using browser websockets...");
@@ -328,6 +368,9 @@ angular.module('zmApp.controllers')
 
     function disconnect() {
 
+     authState = connState.PENDING;
+     pendingMessages = [];
+     isSocketReady = false;
 
       NVR.log("Clearing error/close cbk, disconnecting and deleting Event Server socket...");
 
@@ -366,6 +409,16 @@ angular.module('zmApp.controllers')
     // let ZMES know not to send us messages
     //--------------------------------------------------------------------------
     function sendMessage(type, obj, isForce) {
+
+      var msg = {
+        'event': type,
+        'data': obj
+      };
+
+      var jmsg = JSON.stringify(msg);
+      NVR.debug("~~~~ sendMessage: received->" + jmsg);
+
+
       var ld = NVR.getLogin();
       if (ld.isUseEventServer == false && isForce != 1) {
         NVR.debug("Not sending WSS message as event server is off");
@@ -377,15 +430,22 @@ angular.module('zmApp.controllers')
         return;
       }
 
+      if (isSocketReady == false) {
+
+        NVR.debug ("ES Connection not yet ready, adding message to queue");
+        pendingMessages.push ({type:type, obj:obj});
+        return;
+      }
+
+      if ( authState == connState.PENDING && type != 'auth') {
+        NVR.debug ("ES Connection not yet authenticated, adding message to queue");
+        pendingMessages.push ({type:type, obj:obj});
+        return;
+      }
       // console.log (">>>>>>>>>>>>>>>>>EVENT SERVER SENDING: type="+type+" DATA="+JSON.stringify(obj));
 
-      var msg = {
-        'event': type,
-        'data': obj
-      };
-
-      var jmsg = JSON.stringify(msg);
-      NVR.debug("~~~~ sendMessage: Sending->" + jmsg);
+      NVR.debug("EventServer: ok to send message");
+  
 
       if ($rootScope.platformOS == 'desktop') {
         try {
