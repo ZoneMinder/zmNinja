@@ -437,6 +437,11 @@ angular.module('zmApp.controllers')
         return;
       }
 
+      if (authState == connState.REJECT && type != 'auth') {
+        NVR.debug ("ERROR: ES rejected authentication, not sending message");
+        return;
+      }
+
       if ( authState == connState.PENDING && type != 'auth') {
         NVR.debug ("ES Connection not yet authenticated, adding message to queue");
         pendingMessages.push ({type:type, obj:obj});
