@@ -1876,6 +1876,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     tempAlarms = [];
     $scope.FrameArray = [];
 
+
     //console.log ("FRAME ARRAY: "+JSON.stringify(data));
     if (data.event && data.event.Frame) $scope.FrameArray = data.event.Frame;
     var ts = 0;
@@ -1900,6 +1901,19 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
     if (tempAlarms.length > 1) // don't do it for just one too
       $scope.alarm_images = tempAlarms;
+
+    if (data.event.Event.Notes.indexOf('detected:') != -1) {
+          
+            NVR.debug ("You have object detection! Adding object detect frame");
+            $scope.alarm_images.unshift({
+                frameid: 'objdetect',
+                id: 'doesntseemtobeusedhuh'
+            });
+            NVR.debug ("Your ZM version is:"+NVR.getCurrentServerVersion()+" and your obj frame setting is:"+NVR.getLogin().showObjectDetectionFrame);
+
+    } else {
+      NVR.debug ("No object detection found in notes");
+    }
 
   }
 
