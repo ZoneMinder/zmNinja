@@ -348,6 +348,12 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       // this was fixed in a PR dated Oct 18
      
         cordova.plugin.http.clearCookies();
+        if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
+          NVR.debug ("setting basic auth with "+$scope.wizard.basicuser+":"+$scope.wizard.basicpassword);
+          cordova.plugin.http.useBasicAuth($scope.wizard.basicuser, $scope.wizard.basicpassword);
+  
+        }
+      
      }
       else {
         angular.forEach($cookies, function (v, k) {
@@ -355,12 +361,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
          });
       }
 
-      if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
-        NVR.debug ("setting basic auth with "+$scope.wizard.basicuser+":"+$scope.wizard.basicpassword);
-        cordova.plugin.http.useBasicAuth($scope.wizard.basicuser, $scope.wizard.basicpassword);
-
-      }
-    
+      
 
 
     $http({
