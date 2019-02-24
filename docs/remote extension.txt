@@ -23,8 +23,9 @@ Search path "${PROJECT_DIR}" recursive in zmNinjaNotification and archive?
 
 For Distribution:
 
-always embed swift standard libraries to No in both? (every time after cordova prepare)
+- always embed swift standard libraries to No in both? (every time after cordova prepare)
 make versions same in both - only needed for product archive
 
+- Manually change remote notification extension version to match app version
 
 
