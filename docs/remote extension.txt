@@ -1,0 +1,30 @@
+
+### Add Picture Notification Support (Optional)
+
+  
+  529  ionic cordova platform remove ios
+  530  ionic cordova platform add ios
+  531  open platforms/ios/
+
+Open up platforms/ios/zmNinja.xcworkspace
+File->New->Target->Notification Service Extension
+In the "Product Name" put in zmNinjaNotification (your BundleID should now read  com.pliablepixels.zmninja-pro.zmNinjaNotification)
+Say "Yes" to "Activate zmNinjaNotification scheme?" popup
+Now in XCode Targets, select zmNinjaNotification, and make sure you select a Team and make sure Deployment Target is 10 or above
+
+
+  532  cp www/external/NotificationService.swift platforms/ios/zmNinjaNotication/
+  533  cp www/external/NotificationService.swift platforms/ios/zmNinjaNotification/
+  534  cd platforms/ios/
+  535  pod install
+
+
+Search path "${PROJECT_DIR}" recursive in zmNinjaNotification and archive?
+
+For Distribution:
+
+always embed swift standard libraries to No in both? (every time after cordova prepare)
+make versions same in both - only needed for product archive
+
+
+
