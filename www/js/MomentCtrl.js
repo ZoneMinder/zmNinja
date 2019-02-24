@@ -5,7 +5,6 @@
 /* global cordova,StatusBar,angular,console, Masonry */
 
 
-//https:///zm/api/events/index/AlarmFrames%20%3E=:1/StartTime%20%3E=:2017-12-16%2009:08:50.json?sort=TotScore&direction=desc
 
 angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVR', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$templateRequest', '$sce', '$compile', '$http', '$ionicLoading', 'zm', '$timeout', '$q', '$ionicPopover', '$ionicPopup', 'message', '$ionicScrollDelegate', function ($scope, $rootScope, $ionicModal, NVR, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $templateRequest, $sce, $compile, $http, $ionicLoading, zm, $timeout, $q, $ionicPopover, $ionicPopup, message, $ionicScrollDelegate) {
 
@@ -746,9 +745,6 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     $scope.displayTimeTo = moment(timeTo).format("MMM DD," + NVR.getTimeFormat());
 
     NVR.debug("Moments from " + timeFrom + " to " + timeTo);
-
-    // format:
-    //https:///zm/api/events/index/AlarmFrames%20%3E=:1/StartTime%20%3E=:2017-12-16%2009:08:50.json?sort=TotScore&direction=desc
 
     var ld = NVR.getLogin();
 
