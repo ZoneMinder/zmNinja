@@ -339,7 +339,7 @@ angular.module('zmApp.controllers')
                   log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
                 } else {
                   setCurrentServerMultiPortSupported(false);
-                  log("ZM_MIN_STREAMING_PORT not configure, disabling");
+                  log("ZM_MIN_STREAMING_PORT not configured, disabling");
                   configParams.ZM_MIN_STREAMING_PORT = 0;
                 }
 

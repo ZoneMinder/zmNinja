@@ -651,50 +651,21 @@ angular.module('zmApp', [
         if (!config) return config;
         if (!config.url) return config;
 
-
-
         if ($rootScope.basicAuthHeader) {
-          // console.log ("BASIC AUTH="+$rootScope.basicAuthHeader);
+
           config.headers.Authorization = $rootScope.basicAuthHeader;
         }
-
 
         // handle basic auth properly
         if (config.url.indexOf("@") > -1) {
 
           NVR.debug(">>>>>>>>>> ERROR!!!!! url has a basic auth u:p!" + config.url);
 
-          /* var components = URI.parse(config.url);
-           var credentials = btoa(components.userinfo);
-           var authorization = {'Authorization': 'Basic ' + credentials};
-           config.headers.Authorization = 'Basic ' + credentials;
-           console.log ("Full headers: " + JSON.stringify(config.headers));
-           config.url = components.scheme + "://" + components.host;
-           if (components.port) config.url = config.url + ":" + components.port;
-           if (components.path) config.url = config.url + components.path;
-
-           console.log ("REWRITING URL TO: "+config.url);} */
-
-
-
-          //console.log (">>>>>>>>>>>>> INTERCEPT OBJECT " + JSON.stringify(config));
-
-          // if ($rootScope.zmCookie) {
-          //  config.headers.Cookie = "ZMSESSID=" + // $rootScope.zmCookie;
-          // console.log (">>>>> WOOOT HAVE COOKIE AND USING: "+$rootScope.zmCookie);
-          // } else {
-          //  console.log ("No cookie present in " + config.url);
-          //   }
-
-          // if ($rootScope.apiAuth) {
-          // console.log("********** API AUTH");
-          /*if (config.url.indexOf("/api/") > -1) {
-            config.url = config.url + "&auth=" + $rootScope.authSession;*/
-          // console.log("********** API AUTH muggled to:" + config.url);
-
-          //     }
         }
 
+        // I don't think we need this - do we?
+
+        /*
         if ((config.url.indexOf("/api/states/change/") > -1) ||
           (config.url.indexOf("getDiskPercent.json") > -1) ||
           (config.url.indexOf("daemonCheck.json") > -1) ||
@@ -705,7 +676,7 @@ angular.module('zmApp', [
           // these can take time, so lets bump up timeout
           config.timeout = zm.largeHttpTimeout;
 
-        }
+        }*/
 
         return config;
       },
