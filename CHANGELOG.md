@@ -1,5 +1,22 @@
 # Change Log
 
+## [v1.3.043](https://github.com/pliablepixels/zmNinja/tree/v1.3.043) (2019-02-24)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.042...v1.3.043)
+
+**Implemented enhancements:**
+
+- Update Event List dynamically [\#779](https://github.com/pliablepixels/zmNinja/issues/779)
+
+**Fixed bugs:**
+
+- Fix Event Server message handling [\#781](https://github.com/pliablepixels/zmNinja/issues/781)
+- event popover doesn't work at times [\#780](https://github.com/pliablepixels/zmNinja/issues/780)
+- \[Desktop\] top menu bar goes away on specific event view [\#777](https://github.com/pliablepixels/zmNinja/issues/777)
+
+**Closed issues:**
+
+- zmNinjaPro is not showing remote-cameras [\#778](https://github.com/pliablepixels/zmNinja/issues/778)
+
 ## [v1.3.042](https://github.com/pliablepixels/zmNinja/tree/v1.3.042) (2019-02-02)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.039...v1.3.042)
 
@@ -507,7 +524,7 @@
 - Added new strings according to v1.2.41 [\#512](https://github.com/pliablepixels/zmNinja/pull/512) ([florie1706](https://github.com/florie1706))
 
 ## [v1.2.41](https://github.com/pliablepixels/zmNinja/tree/v1.2.41) (2017-04-11)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.41)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v1.2.41)
 
 **Implemented enhancements:**
 
@@ -534,11 +551,11 @@
 - montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
 -  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
 
-## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v/1.2.40)
-
 ## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.40)
+
+## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v/1.2.40)
 
 **Fixed bugs:**
 
@@ -780,7 +797,7 @@
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.29](https://github.com/pliablepixels/zmNinja/tree/v1.2.29) (2016-11-16)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.29)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v1.2.29)
 
 **Implemented enhancements:**
 
@@ -807,11 +824,11 @@
 - Create locale-pl.json [\#368](https://github.com/pliablepixels/zmNinja/pull/368) ([maymaymay](https://github.com/maymaymay))
 - Adding Russian language in App [\#365](https://github.com/pliablepixels/zmNinja/pull/365) ([BoskSpb](https://github.com/BoskSpb))
 
-## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.28...v/1.2.28)
-
 ## [v1.2.28](https://github.com/pliablepixels/zmNinja/tree/v1.2.28) (2016-11-08)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v1.2.28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.28...v1.2.28)
+
+## [v/1.2.28](https://github.com/pliablepixels/zmNinja/tree/v/1.2.28) (2016-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.26...v/1.2.28)
 
 **Implemented enhancements:**
 
