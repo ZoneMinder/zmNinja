@@ -191,6 +191,7 @@ angular.module('zmApp.controllers')
         'saveToCloud': true,
         'montageReviewCollapse': true,
         'objectDetectionFilter': false,
+        'enableEventRefresh': true,
 
 
       };
@@ -1504,6 +1505,12 @@ angular.module('zmApp.controllers')
                   if (typeof loginData.objectDetectionFilter == 'undefined') {
 
                     loginData.objectDetectionFilter = false;
+
+                  }
+
+                  if (typeof loginData.enableEventRefresh == 'undefined') {
+
+                    loginData.enableEventRefresh = true;
 
                   }
 

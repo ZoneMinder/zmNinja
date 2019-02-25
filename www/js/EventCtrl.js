@@ -137,6 +137,10 @@ angular.module('zmApp.controllers')
 
     function timedPageReload() {
 
+      if (!NVR.getLogin().enableEventRefresh) {
+        NVR.debug ("Event refresh disabled");
+        return;
+      }
      
       if ($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top !=0 ) {
         NVR.debug ("Not reloading as you have scrolled");
