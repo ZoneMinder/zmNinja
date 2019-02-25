@@ -7,7 +7,7 @@
   531  open platforms/ios/
 
 Open up platforms/ios/zmNinja.xcworkspace
-File->New->Target->Notification Service Extension
+File->New->Target->Notification Service Extension, select Objective C 
 In the "Product Name" put in zmNinjaNotification (your BundleID should now read  com.pliablepixels.zmninja-pro.zmNinjaNotification)
 Say "Yes" to "Activate zmNinjaNotification scheme?" popup
 Now in XCode Targets, select zmNinjaNotification, and make sure you select a Team and make sure Deployment Target is 10 or above
@@ -18,13 +18,6 @@ Now in XCode Targets, select zmNinjaNotification, and make sure you select a Tea
   534  cd platforms/ios/
   535  pod install
 
-
-Search path "${PROJECT_DIR}" recursive in zmNinjaNotification and archive?
-
-For Distribution:
-
-- always embed swift standard libraries to No in both? (every time after cordova prepare)
-make versions same in both - only needed for product archive
 
 - Manually change remote notification extension version to match app version
 
