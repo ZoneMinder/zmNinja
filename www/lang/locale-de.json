@@ -82,6 +82,7 @@
     "kEmailNotConfigured"        :"Email nicht eingerichtet",
     "kEnable24hr"                :"24-Stunden Zeitformat aktivieren",
     "kEnableDebug"               :"Aktiviere Debug Logs",
+    "kEnableEventRefresh"        :"Automatische Aktualisierung der Ereignissseite",
     "kEnableLogs"                :"Aktiviere Logs",
     "kEnableSlowLoading"         :"Benutze lange HTTP Timeouts",
     "kEnableStrictSSL"           :"Aktiviere strikten SSL Check",
