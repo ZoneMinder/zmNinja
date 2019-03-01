@@ -5,6 +5,7 @@
 //  Created by User on 29/09/16.
 //
 //
+// Credit https://github.com/Leanplum/Leanplum-iOS-Samples/blob/master/iOS_basicSetup/basicSetup/richPushExtension/NotificationService.m
 
 #import "NotificationService.h"
 
@@ -23,9 +24,7 @@
     self.bestAttemptContent = [request.content mutableCopy];
     NSDictionary *userInfo = request.content.userInfo;
     
-    // LP_URL is the key that is used from Leanplum to
-    // send the image URL in the payload.
-    //
+    
     // If there is no image in the payload than
     // the code will still show the push notification.
     if (userInfo == nil || userInfo[@"image_url_jpg"] == nil) {
