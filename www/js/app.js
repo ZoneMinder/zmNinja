@@ -2324,7 +2324,7 @@ angular.module('zmApp', [
           var d = $q.defer();
           var options = {
             method: method,
-            data: arguments[0].data,
+            data: arguments[0].data || {},
             headers: arguments[0].headers,
            // timeout: arguments[0].timeout, 
             responseType: arguments[0].responseType
