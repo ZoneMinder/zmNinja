@@ -358,7 +358,7 @@ $scope.toggleServer = function() {
     $http.post(apiExec + str + ".json")
       .then(
         function (success) {
-          NVR.debug("StateCtrl/controlZM: returned success");
+          NVR.debug("StateCtrl/controlZM: returned success with:"+JSON.stringify(success));
           inProgress = 0;
           switch (str) {
             case "stop":
