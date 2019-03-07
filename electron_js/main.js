@@ -283,7 +283,7 @@ app.on('activate', () => {
 });
 
 console.log ("Setting uncaught exception handler...");
-app.on('uncaughtException', function (err) {
+process.on('uncaughtException', function (err) {
   console.log("***WHOOPS TIME****"+err);
 });
 
