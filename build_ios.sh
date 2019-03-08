@@ -10,7 +10,8 @@ cordova plugin add cordova-plugin-media-pp-fork
 #ionic cordova plugin add cordova-plugin-certificates
 
 echo "-- building --"
-ionic cordova build ios --release --buildConfig="./build-auto.json"
+#ionic cordova build ios --release --buildConfig="./build-auto.json"
+ionic cordova build ios --buildConfig="./build-auto.json"
 
 echo "********* Done *************"
 echo "Make sure you are using Legacy build in XCode (File->Workspace) or push/etc may stop working"
