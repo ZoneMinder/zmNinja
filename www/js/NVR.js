@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.050";
+      var zmAppVersion = "1.3.051";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -764,6 +764,8 @@ angular.module('zmApp.controllers')
         getLatestBlogPostChecked: function () {
           return latestBlogPostChecked;
         },
+
+        
 
         // This function is called when the app is ready to run
         // sets up various variables
@@ -1773,6 +1775,8 @@ angular.module('zmApp.controllers')
 
         },
 
+
+
         //--------------------------------------------------------------------------
         // writes all params to local storage. FIXME: Move all of this into a JSON 
         // object
@@ -1784,6 +1788,8 @@ angular.module('zmApp.controllers')
 
 
         },
+
+       
 
         //-------------------------------------------------------
         // returns API version or none 

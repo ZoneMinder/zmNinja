@@ -75,7 +75,8 @@ angular.module('zmApp', [
     montageScaleFrequency: 300,
     eventsListDetailsHeight: 230.0,
     eventsListScrubHeight: 330,
-    loginScreenString: "var currentView = 'login'", // Isn't there a better way?
+    loginScreenString1: "var currentView = 'console'", // Isn't there a better way?
+    loginScreenString2: "var currentView = 'console'",
     desktopUrl: "/zm",
     desktopApiUrl: "/api/zm",
     latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
@@ -1307,7 +1308,8 @@ angular.module('zmApp', [
             // so we will check if the data has
             // <title>ZM - Login</title> -- it it does then its the login page
 
-            if (data.indexOf(zm.loginScreenString) == -1) {
+            if (data.indexOf(zm.loginScreenString1) >=0  ||
+            data.indexOf(zm.loginScreenString2) >=0 ) {
               //eventServer.start();
               //$rootScope.loggedIntoZm = 1;
 
@@ -2322,9 +2324,15 @@ angular.module('zmApp', [
 
 
           var d = $q.defer();
+
+          var dataPayload = {};
+          if (arguments[0].data !== undefined) {
+            dataPayload = arguments[0].data;
+          }
+
           var options = {
             method: method,
-            data: arguments[0].data || {},
+            data: dataPayload,
             headers: arguments[0].headers,
            // timeout: arguments[0].timeout, 
             responseType: arguments[0].responseType

@@ -42,7 +42,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           data = data.data;
           //console.log("LOOKING FOR " + zm.loginScreenString);
           //console.log("DATA RECEIVED " + JSON.stringify(data));
-          if (data.indexOf(zm.loginScreenString) == -1) {
+          if (data.indexOf(zm.loginScreenString1) == -1 && 
+              data.indexOf(zm.loginScreenString2) == -1 ) {
 
             $scope.wizard.loginURL = $scope.wizard.fqportal;
             $scope.wizard.portalValidText = $translate.instant('kPortal') + ": " + $scope.wizard.loginURL;
@@ -53,12 +54,17 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             //console.log("************ERROR");
             $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
             $scope.wizard.portalColor = "#e74c3c";
+           // NVR.debug("Login response form was invalid,I am going to try JSON login");
+
+
+
             d.reject(false);
             return d.promise;
           }
         },
         function (error) {
           // console.log("************ERROR:"+ JSON.stringify(error));
+          NVR.debug ("Login error returned: "+JSON.stringify(error));
           $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
           $scope.wizard.portalColor = "#e74c3c";
           d.reject(false);
@@ -416,9 +422,260 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
   // tries to log into the portal and then discover api and cgi-bin
   //--------------------------------------------------------------------------
 
-  function validateDataNewAPI() {
+  
+  function loginWebScrape(u,zmu,zmp) {
+    var d = $q.defer();
+    NVR.debug("Logging in using old web-scrape method");
 
+   
+
+    $ionicLoading.show({
+      template: $translate.instant('kAuthenticatingWebScrape'),
+      noBackdrop: true,
+      duration: zm.httpTimeout
+    });
+
+    u=u+'/index.php?view=console';
+    NVR.debug ("webscrape login to:"+u);
+   
+    //NVR.debug ("*** AUTH LOGIN URL IS " + loginData.url);
+    $http({
+
+        method: 'post',
+        timeout: zm.httpTimeout,
+        //withCredentials: true,
+        url: u ,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        transformRequest: function (obj) {
+          var str = [];
+          for (var p in obj)
+            str.push(encodeURIComponent(p) + "=" +
+              encodeURIComponent(obj[p]));
+          var params = str.join("&");
+          return params;
+        },
+
+        data: {
+          username: zmu,
+          password: zmp,
+          action: "login",
+          view: "console"
+        }
+      })
+      .then(function (data, status, headers) {
+          // console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
+          data = data.data;
+          $ionicLoading.hide();
+
+          console.log ("GOT "+data);
+
+          if (data.indexOf(zm.loginScreenString1) >=0 || 
+          data.indexOf(zm.loginScreenString2) >=0 ) {
+            //eventServer.start();
+            //$rootScope.loggedIntoZm = 1;
+
+            NVR.log("zmAutologin successfully logged into Zoneminder");
+            $scope.wizard.loginURL = $scope.wizard.fqportal;
+            $scope.wizard.portalValidText = $translate.instant('kPortal') + ": " + $scope.wizard.loginURL;
+            $scope.wizard.portalColor = "#16a085";
+            d.resolve(true);
+            return d.promise;
+
+            // now go to authKey part, so don't return yet...
+
+          } else //  this means login error
+          {
+            // $rootScope.loggedIntoZm = -1;
+            //console.log("**** ZM Login FAILED");
+            NVR.log("zmAutologin Error: Bad Credentials ", "error");
+            $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
+            $scope.wizard.portalColor = "#e74c3c";
+            d.reject("Login Error");
+            return (d.promise);
+            // no need to go to next code, so return above
+          }
+
+          // Now go ahead and re-get auth key 
+          // if login was a success
+         
+         
+
+        },
+        function (error, status) {
+
+          // console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
+          $ionicLoading.hide();
+
+          //console.log("**** ZM Login FAILED");
+
+          // FIXME: Is this sometimes results in null
+
+          NVR.log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
+          // bad urls etc come here
+          //$rootScope.loggedIntoZm = -1;
+          $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
+          $scope.wizard.portalColor = "#e74c3c";
+        
+          d.reject("Login Error");
+          return d.promise;
+        });
+    return d.promise;
   }
+
+  function wizardLogin(u,zmu,zmp) {
+
+    var d = $q.defer();
+    var loginAPI = u + '/api/host/login.json';
+    NVR.debug ("Inside wizardLogin: will try "+loginAPI);
+
+        $http({
+            method: 'post',
+            url: loginAPI,
+            timeout: zm.httpTimeout,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            responseType: 'text',
+            transformResponse: undefined,
+            transformRequest: function (obj) {
+              var str = [];
+              for (var p in obj)
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+              return str.join("&");
+            },
+            data: {
+              user: zmu,
+              pass: zmp
+            }
+          })
+          //$http.get(loginAPI)
+          .then(function (textsucc) {
+
+              $ionicLoading.hide();
+
+              var succ;
+              try {
+
+                succ = JSON.parse(textsucc.data);
+
+                if (!succ.version) {
+                  NVR.debug("API login returned fake success, going back to webscrape");
+                 
+
+                  loginWebScrape(u,zmu,zmp)
+                    .then(function (succ) {
+                        d.resolve("Login Success");
+                        return d.promise;
+                      },
+                      function (err) {
+                        $ionicLoading.hide();
+                        d.reject("Login Error");
+                        return (d.promise);
+                      });
+                  return d.promise;
+                }
+                NVR.debug("API based login returned... ");
+                console.log (JSON.stringify(succ));
+                $ionicLoading.hide();
+                //$rootScope.loggedIntoZm = 1;
+                $rootScope.authSession = '';
+
+                if (succ.credentials) {
+                  $rootScope.authSession = "&" + succ.credentials;
+                  if (succ.append_password == '1') {
+                    $rootScope.authSession = $rootScope.authSession +
+                      loginData.password;
+                  }
+                }
+
+              
+                NVR.log("Stream authentication construction: " +
+                  $rootScope.authSession);
+
+                NVR.log("zmAutologin successfully logged into Zoneminder via API");
+
+
+                $scope.wizard.loginURL = $scope.wizard.fqportal;
+                $scope.wizard.portalValidText = $translate.instant('kPortal') + ": " + $scope.wizard.loginURL;
+            $scope.wizard.portalColor = "#16a085";
+
+                d.resolve("Login Success");
+
+
+                return d.promise;
+
+              } catch (e) {
+                NVR.debug("Login API approach did not work...");
+              
+                loginWebScrape(u,zmu,zmp)
+                  .then(function (succ) {
+
+                    $scope.wizard.loginURL = $scope.wizard.fqportal;
+                    $scope.wizard.portalValidText = $translate.instant('kPortal') + ": " + $scope.wizard.loginURL;
+                    $scope.wizard.portalColor = "#16a085";
+
+                      d.resolve("Login Success");
+                      return d.promise;
+                    },
+                    function (err) {
+                      $ionicLoading.hide();
+                      $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
+                      $scope.wizard.portalColor = "#e74c3c";
+                      d.reject("Login Error");
+                      return (d.promise);
+                    });
+                return d.promise;
+
+              }
+
+
+
+            },
+            function (err) {
+              console.log("******************* API login error " + JSON.stringify(err));
+              $ionicLoading.hide();
+
+
+              if (1) {
+                //if (err  && err.data && 'success' in err.data) {
+                console.log("API based login not supported, need to use web scraping...");
+                
+                loginWebScrape(u,zmu,zmp)
+                  .then(function (succ) {
+                      d.resolve("Login Success");
+                      return d.promise;
+                    },
+                    function (err) {
+                      d.reject("Login Error");
+                      return (d.promise);
+                    });
+
+
+              } else {
+                // $rootScope.loggedIntoZm = -1;
+                //console.log("**** ZM Login FAILED");
+                NVR.log("zmAutologin Error via API: some meta foo", "error");
+                $rootScope.$broadcast('auth-error', "I'm confused why");
+
+                d.reject("Login Error");
+                return (d.promise);
+
+              }
+
+
+            }
+          ); // post
+
+
+
+        return d.promise;
+      }
+
+    
+
 
   function validateData() {
     $rootScope.authSession = 'undefined';
@@ -459,7 +716,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
     $scope.wizard.fqportal = u;
 
-    u = u + '/index.php?view=console';
+    //u = u + '/index.php?view=console';
     NVR.log("Wizard: login url is " + u);
 
     // now lets login
@@ -493,7 +750,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           duration: zm.httpTimeout
         });
         NVR.setCurrentServerVersion("");
-        login(u, zmu, zmp)
+        wizardLogin(u, zmu, zmp)
           .then(function (success) {
               $ionicLoading.hide();
               NVR.log("zmWizard: login succeeded");
