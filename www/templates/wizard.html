@@ -13,7 +13,7 @@
         <p>{{'kWizConfigPain' | translate}}</p>
         <h4>{{'kWizPortalUrl' | translate}}</h4>
         <label class="item item-input">
-          <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" placeholder="{{'kPortalUrlExample' | translate}}"
+          <input id="testaut_portal_input" autocorrect="off" autocapitalize="none" autocomplete="off" type="text" placeholder="{{'kPortalUrlExample' | translate}}"
             ng-model="wizard.portalurl">
         </label>
         <p ng-if="$root.platformOS=='android'" style="font-size:0.8em; color:gray">{{'kDisableSamsung' | translate}}</p>
@@ -24,26 +24,26 @@
           <img src="img/portalurl.png" width="30%">
         </div>
         <br />
-        <button class="button button-small icon icon-right ion-chevron-right" wz-next>{{'kNext' | translate}}</button>
+        <button id = "testaut_wiz1_next_button" class="button button-small icon icon-right ion-chevron-right" wz-next>{{'kNext' | translate}}</button>
       </wz-step>
       <!-- auth mode -->
       <wz-step wz-title="2">
         <h4>{{'kWizPortalAuth' | translate}}</h4>
         <!--<img src="img/wizard.svg" width="100px" style="float:left"/>-->
         <p>{{'kWizPortalText' | translate}}</p>
-        <ion-toggle ng-change="toggleAuth()" ng-model="wizard.useauth" toggle-class="toggle-calm">{{'kWizUseAuth' |
+        <ion-toggle id="testaut_useauth_toggle" ng-change="toggleAuth()" ng-model="wizard.useauth" toggle-class="toggle-calm">{{'kWizUseAuth' |
           translate}}</ion-toggle>
-        <ion-toggle ng-show="wizard.useauth" ng-model="wizard.usezmauth" toggle-class="toggle-calm">{{'kWizZMAuth' |
+        <ion-toggle id="testaut_usezmauth_toggle" ng-show="wizard.useauth" ng-model="wizard.usezmauth" toggle-class="toggle-calm">{{'kWizZMAuth' |
           translate}}</ion-toggle>
         <div ng-if="wizard.usezmauth">
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kUserName' | translate}}</span>
-            <input autocorrect="off" autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.zmuser"
+            <input id="testaut_zmauthusername_input" autocorrect="off" autocapitalize="none" autocomplete="off" type="text" ng-model="wizard.zmuser"
               placeholder="{{'kPlaceHolderZMAuthUser'|translate}}">
           </label>
           <label class="item item-text-wrap item-input item-floating-label">
             <span class="input-label">{{'kPassword' | translate}}</span>
-            <input type="password" ng-model="wizard.zmpassword" placeholder="{{'kPlaceHolderZMAuthPass'|translate}}">
+            <input id="testaut_zmauthpassword_input" type="password" ng-model="wizard.zmpassword" placeholder="{{'kPlaceHolderZMAuthPass'|translate}}">
             <!--<p >{{'kWizPasswdNote' | translate}}</p>-->
           </label>
         </div>
@@ -70,7 +70,7 @@
         </div>
         <br />
         <button class="button button-small icon icon-left ion-chevron-left" wz-previous>{{'kPrev' | translate}}</button>
-        <button class="button button-small icon icon-right ion-chevron-right" ng-click="exitAuth()">{{'kNext' |
+        <button id="testaut_wiz2_next_button" class="button button-small icon icon-right ion-chevron-right" ng-click="exitAuth()">{{'kNext' |
           translate}}</button>
       </wz-step>
       <wz-step wz-title="3">
