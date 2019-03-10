@@ -23,7 +23,7 @@ example: 1.32.3, Ubuntu Xenial
 **Device details:**
 
 ```
-example: Moto Go
+example: Moto G+
 ```
 
 **What is the nature of your issue**
