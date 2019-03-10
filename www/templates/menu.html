@@ -1,5 +1,5 @@
-<div ng-controller="MenuController">
-  <ion-side-menus delegate-handle="sideMenu" ng-cloak>
+<div id="testaut-menu-controller" ng-controller="MenuController">
+  <ion-side-menus id="testaut_app_menu" delegate-handle="sideMenu" ng-cloak>
     <ion-side-menu-content>
       <ion-nav-bar class="bar-stable nav-title-slide-ios7">
         <ion-nav-back-button class="button-icon">
@@ -25,7 +25,7 @@
             </span>{{'kBookmark'| translate}}
           </ion-item>
 
-          <ion-item id="menu-move-1" href="#/app/montage" ng-click="go('/app/montage')">
+          <ion-item id="testaut_menu_montage" href="#/app/montage" ng-click="go('/app/montage')">
 
             <!--<span ng-if="$root.runMode=='lowbw'" style="float:right;margin-top:-18px;background-color:#f1c40f;color:#000;font-size:11px;opacity:0.7;width:20px;border-radius: 0px 0px 5px 5px;display:inline-block;text-align:center;">&nbsp;<i class="icon ion-arrow-graph-down-left"></i>&nbsp;</span>-->
             <span class=" item-icon-left">
