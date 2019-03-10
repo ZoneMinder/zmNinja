@@ -4,19 +4,27 @@ Before you create an issue, please make sure you have read the [FAQ](https://git
 
 **Platform & OS Version**
 
-(example only, please edit this line) Android 6.0 Marshmallow
+```
+example: Android 7.1.1
+```
 
 **The version of zmNinja you are reporting:**
 
-(example only, please edit this line) 1.1
+```
+example: 1.3.050 
+```
 
-**The version of ZoneMinder you are using:**
+**The version and OS of ZoneMinder you are using:**
 
-(example only, please edit this line) 1.30.4
+```
+example: 1.32.3, Ubuntu Xenial 
+```
 
 **Device details:**
 
-(example only, please edit this line) Moto G
+```
+example: Moto Go
+```
 
 **What is the nature of your issue**
 
@@ -26,10 +34,23 @@ Before you create an issue, please make sure you have read the [FAQ](https://git
 
 Describe in detail. If its a bug, please describe what is happening, what should happen and how to reproduce if its not obvious
 
-**Debug Logs** (if applicable)
+**zmNinja Debug Logs** 
 ```
 
 <insert debug logs here, please make sure they are within the ``` quotes so they are formatted properly>
+
+```
+
+**Zoneminder Logs** (if applicable)
+```
+Zoneminder syslogs at the time the error occurs. Please add context to the logs (don't just add 1-2 lines)
+<insert debug logs here, please make sure they are within the ``` quotes so they are formatted properly>
+
+```
+
+**Web Server Error Logs** (if applicable, especially for streaming errors or API error)
+```
+typically tail -f /var/log/apache2/error.log - change to your web server of choice
 
 ```
 
