@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 '''
 Main zmNinja test driver
 Invokes other test cases
@@ -8,13 +10,14 @@ from time import sleep,localtime,strftime
 from appium import webdriver
 import os
 import glob
-
+import errno
 
 import common as c
 import wizard
 import app
 import montage
-import errno
+import state
+
  
 class ZmninjaAndroidTests(unittest.TestCase):
     'Class to run tests against zmNinja'
@@ -54,6 +57,7 @@ class ZmninjaAndroidTests(unittest.TestCase):
         configs = [];
 
         # Add as many as you need
+        
         configs.append ({
             'portal': 'https://demo.zoneminder.com/zm',
             'user': 'zmuser',
@@ -63,15 +67,39 @@ class ZmninjaAndroidTests(unittest.TestCase):
             'use_basic_auth': False,
             'basic_user': None,
             'basic_password': None,
-            'screenshot_dir': './screenshots'
+            'screenshot_dir': './screenshots',
+            'restart': False,
+            'prompt': False
         })
 
+        configs.append ({
+            'portal': 'https://10.6.1.16/zm',
+            'user': 'admin',
+            'password': 'admin',
+            'use_auth': True,
+            'use_zm_auth': True,
+            'use_basic_auth': False,
+            'basic_user': None,
+            'basic_password': None,
+            'screenshot_dir': './screenshots',
+            'restart': True,
+            'prompt': True
+        })
         
         self.wait_for_app_start()
 
         isFirstRun = True
         for config in configs:
+
+
             c.log ('\n\n***** Test Run for: {} *****\n\n'.format(config['portal']))
+            if config['prompt']:
+                proceed = input ("Should I run this profile? [y/N]")
+                if proceed.lower() != 'y':
+                    c.log ('Skipping profile')
+                    continue
+
+
             c.testConfig = config
             run_dir = strftime('%b-%d-%I_%M_%S%p', localtime())
             c.testConfig['screenshot_dir'] = './screenshots/'+run_dir
@@ -91,6 +119,8 @@ class ZmninjaAndroidTests(unittest.TestCase):
             wizard.run_tests(self, isFirstRun)
             isFirstRun = False
             montage.run_tests(self)
+            if c.testConfig['restart']:
+                state.run_tests(self)
 
 
     
