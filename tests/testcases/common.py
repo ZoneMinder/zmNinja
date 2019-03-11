@@ -124,6 +124,13 @@ def click_item(id=id, save_screenshot=False, save_screenshot_file=None, retry=3)
     _goto_element(element)
     _click_with_retry(element, retry)
 
+
+def click_item_js(id=id, save_screenshot=False, save_screenshot_file=None):
+    _wait_for_id(id=id, save_screenshot=save_screenshot,
+                 save_screenshot_file=save_screenshot_file)
+    element = driver.find_element_by_id(id)
+    log ("clicking {} using JS".format(id))
+    driver.execute_script("arguments[0].click()", element)
     # sleep(wait)
 
 # returns text value of loader

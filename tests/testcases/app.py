@@ -13,6 +13,7 @@ def tap_menu_js():
     c.log ('Tapping menu')
     c.driver.execute_script("angular.element(document.getElementById('testaut-menu-controller')).scope().openMenu();")
 
+
 # bah, in some cases this won't work, when the menu is open,
 # there are two left items
 # so I'm probably not going to use this

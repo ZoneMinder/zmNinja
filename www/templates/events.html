@@ -120,7 +120,7 @@
                 ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)">
                 <span translate="kAlarms"></span>
               </button>
-              <button class="button button-stable button-outline button-small icon icon-left ion-ios-eye" ng-click="closeIfOpen(event);openModal(event)">
+              <button id='testaut_events_footage_button-{{$index}}' class="button button-stable button-outline button-small icon icon-left ion-ios-eye" ng-click="closeIfOpen(event);openModal(event)">
                 <span translate="kFootage"></span>
               </button>
 
@@ -197,7 +197,7 @@
                 <br />
                 <br />
                 <div class="videogular-container">
-                  <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'"
+                  <videogular  vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'"
                     vg-responsive="true" vg-player-ready="readyToPlay($API)">
                     <vg-overlay-play></vg-overlay-play>
                     <vg-controls>
@@ -273,7 +273,7 @@
   </div>
   <ion-pull-up-footer class="zmPullup" on-expand="footerExpand()" on-collapse="footerCollapse()" initial-state="minimized"
     default-behavior="expand" state="footerState">
-    <ion-pull-up-handle width="100" height="25" toggle="ion-chevron-up ion-chevron-down" style="border-radius: 25px 25px 0 0">
+    <ion-pull-up-handle  id="testaut_events_footer_handle"  width="100" height="25" toggle="ion-chevron-up ion-chevron-down" style="border-radius: 25px 25px 0 0">
       <i class="icon ion-chevron-up"></i>
     </ion-pull-up-handle>
     <ion-pull-up-bar>
