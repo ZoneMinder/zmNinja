@@ -9,6 +9,7 @@ from appium import webdriver
 import os
 import glob
 
+
 import common as c
 import wizard
 import app
@@ -46,39 +47,50 @@ class ZmninjaAndroidTests(unittest.TestCase):
 
     def wait_for_app_start(self):
         c.log ('Waiting for app to start')
-        #sleep (5)
+      
 
     def test_app(self):
-        c.testConfig['portal'] = 'https://demo.zoneminder.com/zm'
-        c.testConfig['user'] = 'zmuser'
-        c.testConfig['password'] = 'zmpass'
 
-        c.testConfig['portal'] = 'https://192.168.1.134/zm'
-        c.testConfig['user'] = 'admin'
-        c.testConfig['password'] = 'admin'
+        configs = [];
 
-        c.testConfig['use_auth'] = True
-        c.testConfig['use_zm_auth'] = True
-        c.testConfig['use_basic_auth'] = False
+        # Add as many as you need
+        configs.append ({
+            'portal': 'https://demo.zoneminder.com/zm',
+            'user': 'zmuser',
+            'password': 'zmpass',
+            'use_auth': True,
+            'use_zm_auth': True,
+            'use_basic_auth': False,
+            'basic_user': None,
+            'basic_password': None,
+            'screenshot_dir': './screenshots'
+        })
 
-        run_dir = strftime('%b-%d-%I_%M_%S%p', localtime())
-        c.testConfig['screenshot_dir'] = './screenshots/'+run_dir
-        try:
-            os.makedirs(c.testConfig['screenshot_dir'])
-        except OSError as exc:
-            if exc.errno == errno.EEXIST and os.path.isdir(path):
-                pass
-            else:
-                raise
-
-
-        #files = glob.glob(c.testConfig['screenshot_dir']+'/*')
-        #for f in files:
-        #    os.remove(f)
-
+        
         self.wait_for_app_start()
-        wizard.run_tests(self)
-        montage.run_tests(self)
+
+        isFirstRun = True
+        for config in configs:
+            c.log ('\n\n***** Test Run for: {} *****\n\n'.format(config['portal']))
+            c.testConfig = config
+            run_dir = strftime('%b-%d-%I_%M_%S%p', localtime())
+            c.testConfig['screenshot_dir'] = './screenshots/'+run_dir
+            try:
+                os.makedirs(c.testConfig['screenshot_dir'])
+            except OSError as exc:
+                if exc.errno == errno.EEXIST and os.path.isdir(path):
+                    pass
+                else:
+                    raise
+
+
+            #files = glob.glob(c.testConfig['screenshot_dir']+'/*')
+            #for f in files:
+            #    os.remove(f)
+            
+            wizard.run_tests(self, isFirstRun)
+            isFirstRun = False
+            montage.run_tests(self)
 
 
     

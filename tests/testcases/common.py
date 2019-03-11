@@ -56,14 +56,14 @@ def _goto_element(e):
 
 # waits for an element to load
 # allows you to also specify if you want a screenshot after it comes in
-def _wait_for_id(id=id,dur=30, save_screenshot=False, save_screenshot_file=None):
+def _wait_for_id(id=id,dur=15, save_screenshot=False, save_screenshot_file=None):
     log ('Waiting for '+id+'...')
     WebDriverWait(driver, dur).until(EC.presence_of_element_located((By.ID, id)))
     if save_screenshot:
         take_screenshot(id,save_screenshot_file)
 
 
-def get_element_attributes(id=id, wait_dur=30, save_screenshot=False, save_screenshot_file=None):
+def get_element_attributes(id=id, save_screenshot=False, save_screenshot_file=None):
     _wait_for_id(id=id, save_screenshot=save_screenshot, save_screenshot_file = save_screenshot_file)
     element = driver.find_element_by_id(id)
     return element
@@ -108,6 +108,7 @@ def input_item(id=id,txt="you forgot to specify text", save_screenshot=False, sa
     _wait_for_id(id=id, save_screenshot=save_screenshot, save_screenshot_file = save_screenshot_file)
     element = driver.find_element_by_id(id)
     _goto_element(element)
+    element.clear()
     element.send_keys(txt)
     driver.hide_keyboard()
     #sleep(wait)
