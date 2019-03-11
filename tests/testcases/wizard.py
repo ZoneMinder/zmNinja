@@ -51,14 +51,17 @@ def run_tests(self, isFirstRun = False):
     self.assertEqual(api_color,success_color)
     
     # Wait for bit for cgi-bin. Don't really care, but hey if we catch it, cool
-    sleep(3)
+    sleep(5)
     c.take_screenshot(None,'wizard-detection-results.png')
+
 
     c.click_item('testaut_wizard_goto_login')
     c.click_item('testaut_settings_save')
 
 
     # discard the popup and get to sane state
-    c.click_popup(save_screenshot=True, save_screenshot_file='./screenshots/wizard-save-report.png')
-    sleep(3)
+    c.click_popup(save_screenshot=True, save_screenshot_file='wizard-save-report.png')
+    # we need this because at the end of wizard, it shows the menu,
+    # so close it
     app.tap_menu_js()
+

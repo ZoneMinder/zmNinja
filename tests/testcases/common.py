@@ -49,6 +49,21 @@ def take_screenshot(id,fname):
     log ('Screenshot stored in '+fname)
     image_counter = image_counter + 1
 
+# generic element clicker, will try retry times
+# because sometimes, async loaders interfere
+def _click_with_retry(element,max_retry=3):
+        retry_count = 1
+        while retry_count <= max_retry:
+                try:
+                        element.click()
+                except:
+                        log ('click error, try #{}...'.format(retry_count))
+                        retry_count = retry_count + 1
+                        sleep(2)
+                else:
+                        retry_count = max_retry + 1
+                        pass
+
 
 # makes sure we can see the element to avoid out of view issues
 def _goto_element(e):
@@ -59,8 +74,11 @@ def _goto_element(e):
 def _wait_for_id(id=id,dur=15, save_screenshot=False, save_screenshot_file=None):
     log ('Waiting for '+id+'...')
     WebDriverWait(driver, dur).until(EC.presence_of_element_located((By.ID, id)))
+    # angular refresh?
+    sleep(0.2)
     if save_screenshot:
         take_screenshot(id,save_screenshot_file)
+
 
 
 def get_element_attributes(id=id, save_screenshot=False, save_screenshot_file=None):
@@ -69,30 +87,39 @@ def get_element_attributes(id=id, save_screenshot=False, save_screenshot_file=No
     return element
 
 # handle ion-alerts. Only single button for now. May extend later if I need
-def click_popup(save_screenshot=False, save_screenshot_file=None):
+def click_popup(txt='ok', save_screenshot=False, save_screenshot_file=None):
     log ('Waiting for popup...')
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'popup-buttons')))
     if save_screenshot:
-        take_screenshot(None,'wizard-save-results.png')
-    element = driver.find_element_by_class_name('popup-buttons')
-    element = element.find_element_by_tag_name('button')
-    element.click()
-
-
+        take_screenshot(None,'popup-results.png')
+    buttons = driver.find_element_by_class_name('popup-buttons')
+    buttons  = buttons.find_elements_by_tag_name('button')
+    for element in buttons:
+        if element.text.lower() == txt:
+                log ('click_popup: clicking '+element.text)
+                _click_with_retry(element)
+               
+        else:
+                log ('click_popup: skipping '+element.text)
+        
+                
 # handle ion-toggle
 def tap_toggle(id, save_screenshot=False, save_screenshot_file=None):
     _wait_for_id(id=id, save_screenshot=save_screenshot, save_screenshot_file = save_screenshot_file)
     element = driver.find_element_by_id(id)
     _goto_element(element)
     element = element.find_element_by_tag_name('label')
-    element.click()
+    _click_with_retry(element)
+   
 
 # generates click event for any web element id
-def click_item(id=id, save_screenshot=False, save_screenshot_file=None):
+def click_item(id=id, save_screenshot=False, save_screenshot_file=None, retry=3):
     _wait_for_id(id=id, save_screenshot=save_screenshot, save_screenshot_file = save_screenshot_file)
     element = driver.find_element_by_id(id)
     _goto_element(element)
-    element.click()
+    _click_with_retry(element,retry)
+
+
     #sleep(wait)
 
 # generated double click event for any web element id
@@ -111,4 +138,5 @@ def input_item(id=id,txt="you forgot to specify text", save_screenshot=False, sa
     element.clear()
     element.send_keys(txt)
     driver.hide_keyboard()
+    sleep(1)
     #sleep(wait)
