@@ -13,6 +13,10 @@ def run_tests(self):
     c.click_item('img-0')
     sleep(4)
     c.take_screenshot(None,'montage-singleview.png')
+    c.log ('Trying to save to gallery...')
+    c.click_item('testaut_monitormodal_camera_button')
+    c.wait_for_loading_text(save_screenshot=True, save_screenshot_file='single-view-photo-save-results.png', text_options = ['done', 'Error - could not save'])
+    sleep(1)
     c.dbl_click_item('singlemonitor')
 
         

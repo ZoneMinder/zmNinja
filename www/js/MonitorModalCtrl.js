@@ -1026,7 +1026,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $ionicLoading.show({
       template: $translate.instant('kDone'),
       noBackdrop: true,
-      duration: 1000
+      duration: 3000
     });
     NVR.debug("ModalCtrl:Photo saved successfuly");
   }
@@ -1035,7 +1035,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $ionicLoading.show({
       template: $translate.instant('kErrorSave'),
       noBackdrop: true,
-      duration: 2000
+      duration: 3000
     });
     NVR.log("Error saving image: " + e);
     //console.log("***ERROR");
@@ -1254,6 +1254,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     } else {
 
       $ionicLoading.hide();
+      //SaveSuccess();
 
       $rootScope.zmPopup = SecuredPopups.show('alert', {
         title: $translate.instant('kNote'),
