@@ -24,4 +24,7 @@ Change Deployment target to 10.1 (same as zmNinja target)
 
 
 
-
+You can now build using ./build_ios
+Every time you build:
+1. Sync notification version with app version
+2. Change notification bundle ID back to com.pliablepixels.zmninja-pro.zmNinjaNotification (cordova removes the last word)
