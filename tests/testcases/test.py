@@ -32,7 +32,7 @@ class ZmninjaAndroidTests(unittest.TestCase):
             'appPackage': 'com.pliablepixels.zmninja_pro',
             'appActivity': 'com.pliablepixels.zmninja_pro.MainActivity'
         }
-        # Returns abs path relative to this file and not cwd
+       
         desired_caps['app'] = os.path.abspath(os.path.join(os.path.dirname(__file__),'./zmNinja.apk'))
         c.driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
         c.driver.switch_to.context('WEBVIEW_com.pliablepixels.zmninja_pro')
