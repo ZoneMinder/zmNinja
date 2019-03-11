@@ -10,7 +10,7 @@ def run_tests(self):
     app.tap_menu_js()
     c.log ('Validating montage')
     c.click_item('testaut_menu_montage')
-    c.click_item('img-1')
+    c.click_item('img-0')
     sleep(4)
     c.take_screenshot(None,'montage-singleview.png')
     c.dbl_click_item('singlemonitor')
