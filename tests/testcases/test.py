@@ -17,6 +17,7 @@ import wizard
 import app
 import montage
 import state
+import events
 
  
 class ZmninjaAndroidTests(unittest.TestCase):
@@ -119,6 +120,7 @@ class ZmninjaAndroidTests(unittest.TestCase):
             wizard.run_tests(self, isFirstRun)
             isFirstRun = False
             montage.run_tests(self)
+            events.run_tests(self)
             if c.testConfig['restart']:
                 state.run_tests(self)
 
