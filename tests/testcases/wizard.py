@@ -6,13 +6,20 @@ import common as c
 import app
 from time import sleep
 
-def run_tests(self):
+def run_tests(self, isFirstRun = False):
 
     success_color = 'rgba(22, 160, 133, 1)'
     fail_color = 'rgba(231, 76, 60, 1)'
 
     c.log ('Validating wizard test case')
-    c.click_item('testaut_wizard_button')
+
+    if isFirstRun:
+        c.log ('First run, assuming first use screen')
+        c.click_item('testaut_wizard_button')
+    else:
+        c.log ('Launching wizard via menu')
+        app.tap_menu_js()
+        c.click_item('testaut_menu_wizard')
 
     c.log ('Entering portal text')
     c.input_item('testaut_portal_input', c.testConfig['portal'])
@@ -29,8 +36,9 @@ def run_tests(self):
             c.input_item('testaut_zmauthpassword_input', c.testConfig['password'])
         if c.testConfig['use_basic_auth']:
             c.tap_toggle('testaut_usebasicauth_toggle')
-            c.input_item('testaut_basicauthusername_input', c.testConfig['user'])
-            c.input_item('testaut_basicauthpassword_input', c.testConfig['password'])
+            c.input_item('testaut_basicauthusername_input', c.testConfig['basic_user'])
+            c.input_item('testaut_basicauthpassword_input', c.testConfig['basic_password'])
+            #sleep(10)
     c.click_item('testaut_wiz2_next_button')
 
     # Now check wizard results
