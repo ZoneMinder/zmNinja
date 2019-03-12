@@ -55,8 +55,9 @@ def _click_with_retry(element, max_retry=3):
     while retry_count <= max_retry:
         try:
             element.click()
-        except:
+        except Exception as e:
             log('click error, try #{}...'.format(retry_count))
+            log (' Error reported was: '+str(e))
             retry_count = retry_count + 1
             sleep(2)
         else:
@@ -171,8 +172,9 @@ def dbl_click_item(id=id, save_screenshot=False, save_screenshot_file=None, max_
     while retry_count <= max_retry:
         try:
             actions.perform()
-        except:
+        except Exception as e:
             log('action error, try #{}...'.format(retry_count))
+            log ('Error reported was: '+str(e))
             retry_count = retry_count + 1
             sleep(2)
         else:
