@@ -6,7 +6,10 @@ Common functions used by test cases
 from time import sleep, strftime
 import os
 from selenium.webdriver.common.touch_actions import TouchActions
-from selenium.webdriver.common.action_chains import ActionChains
+from appium.webdriver.common.touch_action import TouchAction
+
+
+
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,6 +17,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # global pointer to chrome driver
 driver = None
+platform = None
+native_context = None
+web_context = None
 
 # keeps incrementing by 1 for screenshots saved
 image_counter = 1
@@ -71,7 +77,7 @@ def _goto_element(e):
 
 # waits for an element to load
 # allows you to also specify if you want a screenshot after it comes in
-def _wait_for_id(id=id, dur=15, save_screenshot=False, save_screenshot_file=None):
+def _wait_for_id(id=id, dur=30, save_screenshot=False, save_screenshot_file=None):
     log('Waiting for '+id+'...')
     WebDriverWait(driver, dur).until(
         EC.presence_of_element_located((By.ID, id)))
@@ -166,12 +172,19 @@ def dbl_click_item(id=id, save_screenshot=False, save_screenshot_file=None, max_
     _wait_for_id(id=id, save_screenshot=save_screenshot,
                  save_screenshot_file=save_screenshot_file)
     element = driver.find_element_by_id(id)
-    actions = TouchActions(driver)
-    actions.double_tap(element)
+    if platform == 'android':
+        actions = TouchActions(driver)
+        actions.double_tap(element)
     retry_count = 1
     while retry_count <= max_retry:
         try:
-            actions.perform()
+            if platform == 'ios':
+                # TBD fix to element
+                log ('hacky ios double tap')
+                driver.execute_script('mobile: doubleTap', {'x':100, 'y':100});
+                
+            else:
+                actions.perform()
         except Exception as e:
             log('action error, try #{}...'.format(retry_count))
             log ('Error reported was: '+str(e))
@@ -190,6 +203,7 @@ def input_item(id=id, txt="you forgot to specify text", save_screenshot=False, s
     _goto_element(element)
     element.clear()
     element.send_keys(txt)
-    driver.hide_keyboard()
+    driver.hide_keyboard(key_name='return')
+    #driver.hide_keyboard(key_name='Done')
     sleep(1)
     # sleep(wait)

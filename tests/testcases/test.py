@@ -11,6 +11,7 @@ from appium import webdriver
 import os
 import glob
 import errno
+import argparse
 
 import common as c
 import wizard
@@ -24,24 +25,55 @@ class ZmninjaAndroidTests(unittest.TestCase):
     'Class to run tests against zmNinja'
 
     def setUp(self):
-        c.log ('Setting up....')
-
-        desired_caps = {
-            'platformName': 'Android',
-            'automationName': 'UiAutomator2',
-            'platformVersion': '7.1.1',
-            'deviceName': 'Pixel',
-            'nativeWebTap': True,
-            'nativeWebScreenshot': True, # important, for screenshots
-            'autoAcceptAlerts': True,
-            'autoGrantPermissions': True,
-            'appPackage': 'com.pliablepixels.zmninja_pro',
-            'appActivity': 'com.pliablepixels.zmninja_pro.MainActivity'
-        }
+        c.log ('Setting up for platform: {}....'.format(c.platform))
+        app_name = None
+    
+        if c.platform == 'android':
+            app_name = "zmNinja.apk"
+            desired_caps = {
+                'platformName': 'Android',
+                'automationName': 'UiAutomator2',
+                'platformVersion': '7.1.1',
+                'deviceName': 'Pixel',
+                'nativeWebTap': True,
+                'nativeWebScreenshot': True, # important, for screenshots
+                'autoAcceptAlerts': True,
+                'autoGrantPermissions': True,
+                'appPackage': 'com.pliablepixels.zmninja_pro',
+                'appActivity': 'com.pliablepixels.zmninja_pro.MainActivity'
+            }
+           
+            
        
-        desired_caps['app'] = os.path.abspath(os.path.join(os.path.dirname(__file__),'./zmNinja.apk'))
+
+        else:
+            # iOS settings
+            app_name = "zmNinja.app"
+            desired_caps = {
+                'platformName': 'iOS',
+                'platformVersion': '12.1',
+                'deviceName': 'iPhone SE',
+                'nativeWebTap': False,
+                'permissions': '{"com.pliablepixels.zmninja-pro": {"photos": "YES"}}',
+                
+                #'connectHardwareKeyboard': True,
+                #'nativeWebScreenshot': True, # important, for screenshots
+                'autoAcceptAlerts': True,
+                'autoGrantPermissions': True # doesn't work with XCUI
+            }
+           # desired_caps['permissions']['com.pliablepixels.zmninja-pro']['photos'] = 'YES'
+            
+
+           
+        desired_caps['app'] = os.path.abspath(os.path.join(os.path.dirname(__file__),'./binary/'+app_name))
         c.driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
-        c.driver.switch_to.context('WEBVIEW_com.pliablepixels.zmninja_pro')
+        contexts = c.driver.contexts
+        c.log ("All app contexts: {}".format(contexts))
+        c.web_context = contexts[1]
+        c.native_context = contexts[0]
+        c.driver.switch_to.context(contexts[1])
+
+        #c.driver.switch_to.context('WEBVIEW_com.pliablepixels.zmninja_pro')
         
       
     def tearDown(self):
@@ -102,7 +134,7 @@ class ZmninjaAndroidTests(unittest.TestCase):
 
 
             c.testConfig = config
-            run_dir = strftime('%b-%d-%I_%M_%S%p', localtime())
+            run_dir = strftime(c.platform+'-%b-%d-%I_%M_%S%p', localtime())
             c.testConfig['screenshot_dir'] = './screenshots/'+run_dir
             try:
                 os.makedirs(c.testConfig['screenshot_dir'])
@@ -127,6 +159,20 @@ class ZmninjaAndroidTests(unittest.TestCase):
 
     
 #---START OF SCRIPT
-if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(ZmninjaAndroidTests)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+
+platform = None
+ap = argparse.ArgumentParser()
+ap.add_argument('-i', '--ios', action='store_true')
+ap.add_argument('-a', '--android', action='store_true')
+args, u = ap.parse_known_args()
+args = vars(args)
+
+if args['ios']:
+    c.platform = 'ios'
+else:
+    c.platform = 'android'
+
+
+
+suite = unittest.TestLoader().loadTestsFromTestCase(ZmninjaAndroidTests)
+unittest.TextTestRunner(verbosity=2).run(suite)
