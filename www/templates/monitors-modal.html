@@ -112,7 +112,7 @@
       </div>
     </div>
   </ion-modal-view>
-  <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up"
+  <nav id='testaut_monitormodal_nav_button' mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up"
     resting-icon="ion-chevron-down" toggling-method="click">
     <button mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFillScreen' | translate):('kFitScreen' | translate)}}"
       ng-click="scaleImage();">
@@ -128,7 +128,7 @@
     </button>
     <button mfb-button icon="ion-android-arrow-forward" label="{{'kNextMonitor' | translate}}" ng-click="onTap(monitorId,1);">
     </button>
-    <button mfb-button icon="ion-close" label="{{'kExitLiveView' | translate}}" ng-click="closeModal();">
+    <button id='testaut_monitormodal_nav_exit_button' mfb-button icon="ion-close" label="{{'kExitLiveView' | translate}}" ng-click="closeModal();">
     </button>
   </nav>
   <div id="flyoutmenu" style="position:absolute;bottom:80px;left:10px">
