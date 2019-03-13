@@ -1,3 +1,4 @@
-screenshots
+screenshots/
 *.png
 *.apk
+binary/
