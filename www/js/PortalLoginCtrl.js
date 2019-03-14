@@ -95,7 +95,49 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
           NVR.setLogin(ld);
           unlock(true);
 
-        } else if ($ionicPlatform.is('android') && loginData.usePin) {
+        } 
+        
+        else if ($rootScope.platformOS == 'desktop' && loginData.usePin) {
+
+            $scope.passwdData = {};
+            var myPopup = $ionicPopup.show({
+                template: '<input type="password" ng-model="passwdData.pass">',
+                title: $translate.instant('kPinProtect'),
+                scope: $scope,
+                buttons: [
+                  
+                  {
+                    text: $translate.instant('kButtonOk'),
+                    type: 'button-positive',
+                    onTap: function(e) {
+                      if (!$scope.passwdData.pass) {
+                        //don't allow the user to close unless he enters wifi password
+                        e.preventDefault();
+                      } else {
+                        if ($scope.passwdData.pass == loginData.pinCode) {
+                          NVR.log ("Pin code match");
+                          unlock(true);
+                        }
+                        else {
+                              $ionicLoading.show({
+                                  template: $translate.instant('kBannerPinMismatch') + "...",
+                                  noBackdrop: true,
+                                  duration: 1500
+                              });
+                            NVR.log ("Pin code mistmatch match");
+                            e.preventDefault();
+                        }
+                        
+                      }
+                    }
+                  }
+                ]
+              });
+      
+
+
+        }
+        else if ($ionicPlatform.is('android') && loginData.usePin) {
 
           FingerprintAuth.isAvailable(function (result) {
               NVR.debug("FingerprintAuth available: " + JSON.stringify(result));
@@ -166,12 +208,14 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
           NVR.log("not checking for touchID");
         }
 
-        if (loginData.usePin) {
+        if (loginData.usePin ) {
           // this shows the pin prompt on screen
-          $scope.pinPrompt = true;
+          if ($rootScope.platformOS != 'desktop') {
+              $scope.pinPrompt = true;
+          }
           // dont call unlock, let the user type in code
 
-        } else // no PIN Code so go directly to auth
+        } else  // no PIN Code so go directly to auth
         {
 
           unlock(true);
