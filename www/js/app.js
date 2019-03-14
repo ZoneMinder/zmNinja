@@ -20,7 +20,7 @@ angular.module('zmApp', [
     'fileLogger',
     'angular-carousel',
     'angularAwesomeSlider',
-    'com.2fdevs.videogular',
+    'com.2fdevs.videogular', 
     'com.2fdevs.videogular.plugins.controls',
     'com.2fdevs.videogular.plugins.overlayplay',
     'mgo-angular-wizard',
@@ -1629,6 +1629,12 @@ angular.module('zmApp', [
       NVR.log ("--------->Setting up network state handlers....");
       window.addEventListener("offline", onOffline, false);
       window.addEventListener("online", onOnline, false);
+
+      NVR.log ("--------->Setting up global key handler...");
+      if ($rootScope.platformOS == 'desktop') {
+        window.addEventListener('keydown', keyboardHandler, true);
+    
+      }
       if ($rootScope.platformOS == 'desktop') {
         NVR.log ("---> Hacked up waked detection...");
         detectWake();
@@ -1636,6 +1642,25 @@ angular.module('zmApp', [
 
       },3000);
 
+
+      function keyboardHandler(evt) {
+          if (evt.metaKey || evt.ctrlKey) {
+              if (evt.keyCode == 76) {
+                evt.preventDefault();
+                NVR.log ("****** Lock pressed ******");
+                $ionicHistory.nextViewOptions({
+                    disableAnimate: true
+                  });
+                if ($state.current.name != 'app.zm-portal-login') {
+                    $state.go ('app.zm-portal-login');
+                }
+                else {
+                    NVR.log ("Already at portal, not going again");
+                }
+                
+              }
+          }
+      }
 
       // credit: https://blog.alexmaccaw.com/javascript-wake-event
       function detectWake() {
