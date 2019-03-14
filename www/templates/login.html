@@ -97,13 +97,13 @@
         <i class="icon ion-ios-arrow-right">
         </i> {{'kEventServer' | translate}}
       </a>
-      <div ng-if="$root.platformOS != 'desktop'">
+      
         <label>
           <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();" toggle-class="toggle-calm">
             <span class="item-text-wrap">{{'kPassword' | translate}} {{'kProtect'|translate}}</span>
           </ion-toggle>
         </label>
-      </div>
+     
 
       <div ng-if="$root.platformOS != 'desktop'">
         <label>
