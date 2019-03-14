@@ -101,7 +101,9 @@ def click_popup(txt='ok', save_screenshot=False, save_screenshot_file=None):
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CLASS_NAME, 'popup-buttons')))
     if save_screenshot:
-        take_screenshot(None, 'popup-results.png')
+        if not save_screenshot_file:
+            save_screenshot_file = 'popup-results.png'
+        take_screenshot(None, save_screenshot_file)
     buttons = driver.find_element_by_class_name('popup-buttons')
     buttons = buttons.find_elements_by_tag_name('button')
     for element in buttons:
