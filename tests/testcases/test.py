@@ -74,11 +74,8 @@ class ZmninjaAndroidTests(unittest.TestCase):
         c.log ("All app contexts: {}".format(contexts))
         c.web_context = contexts[1]
         c.native_context = contexts[0]
-        c.driver.switch_to.context(contexts[1])
-
-        #c.driver.switch_to.context('WEBVIEW_com.pliablepixels.zmninja_pro')
+        c.driver.switch_to.context(c.web_context)
         
-      
     def tearDown(self):
         c.log ('Test complete')
         c.driver.quit()
