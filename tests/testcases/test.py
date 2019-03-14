@@ -35,6 +35,7 @@ class ZmninjaAndroidTests(unittest.TestCase):
                 'automationName': 'UiAutomator2',
                 'platformVersion': '7.1.1',
                 'deviceName': 'Pixel',
+                'avd': 'zmNinja',
                 'nativeWebTap': True,
                 'nativeWebScreenshot': True, # important, for screenshots
                 'autoAcceptAlerts': True,
@@ -62,6 +63,7 @@ class ZmninjaAndroidTests(unittest.TestCase):
                 'autoAcceptAlerts': True,
                 'autoGrantPermissions': True # doesn't work with XCUI
             }
+           
            # desired_caps['permissions']['com.pliablepixels.zmninja-pro']['photos'] = 'YES'
             
 
