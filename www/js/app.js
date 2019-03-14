@@ -1656,6 +1656,8 @@ angular.module('zmApp', [
                     disableAnimate: true
                   });
                 if ($state.current.name != 'app.zm-portal-login') {
+                    $rootScope.lastState = $state.current.name;
+                    $rootScope.$stateParams = $stateParams;
                     $state.go ('app.zm-portal-login');
                 }
                 else {
