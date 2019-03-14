@@ -56,7 +56,8 @@ class ZmninjaAndroidTests(unittest.TestCase):
                 'nativeWebTap': False,
                 'permissions': '{"com.pliablepixels.zmninja-pro": {"photos": "YES"}}',
                 
-                #'connectHardwareKeyboard': True,
+               #'connectHardwareKeyboard': False,
+               # 'sendKeyStrategy': 'grouped',
                 #'nativeWebScreenshot': True, # important, for screenshots
                 'autoAcceptAlerts': True,
                 'autoGrantPermissions': True # doesn't work with XCUI
@@ -149,6 +150,7 @@ class ZmninjaAndroidTests(unittest.TestCase):
             #for f in files:
             #    os.remove(f)
             
+            sleep(5)
             wizard.run_tests(self, isFirstRun)
             isFirstRun = False
             montage.run_tests(self)

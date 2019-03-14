@@ -172,17 +172,20 @@ def dbl_click_item(id=id, save_screenshot=False, save_screenshot_file=None, max_
     _wait_for_id(id=id, save_screenshot=save_screenshot,
                  save_screenshot_file=save_screenshot_file)
     element = driver.find_element_by_id(id)
+
+  
+
     if platform == 'android':
         actions = TouchActions(driver)
         actions.double_tap(element)
+
     retry_count = 1
     while retry_count <= max_retry:
         try:
             if platform == 'ios':
-                # TBD fix to element
-                log ('hacky ios double tap')
-                driver.execute_script('mobile: doubleTap', {'x':100, 'y':100});
-                
+                # Fix TBD
+                log ('Hacky iOS double tap to a fixed location')
+                driver.execute_script('mobile: doubleTap', {'x':200, 'y':200})
             else:
                 actions.perform()
         except Exception as e:
@@ -203,7 +206,14 @@ def input_item(id=id, txt="you forgot to specify text", save_screenshot=False, s
     _goto_element(element)
     element.clear()
     element.send_keys(txt)
-    driver.hide_keyboard(key_name='return')
+    '''
+    if platform == 'ios':
+        sleep(1)
+        driver.execute_script('mobile: tap', {'x':100, 'y':20})
+        sleep(1)
+    else:
+        driver.hide_keyboard()
     #driver.hide_keyboard(key_name='Done')
+    '''
     sleep(1)
     # sleep(wait)
