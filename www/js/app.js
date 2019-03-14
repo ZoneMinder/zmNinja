@@ -1647,7 +1647,11 @@ angular.module('zmApp', [
           if (evt.metaKey || evt.ctrlKey) {
               if (evt.keyCode == 76) {
                 evt.preventDefault();
-                NVR.log ("****** Lock pressed ******");
+                NVR.log ("---> Lock pressed");
+                if (!NVR.getLogin().usePin) {
+                    NVR.log ("not using pin, ignoring");
+                    return;
+                }
                 $ionicHistory.nextViewOptions({
                     disableAnimate: true
                   });
