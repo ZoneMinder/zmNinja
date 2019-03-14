@@ -117,7 +117,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         $scope.togglePTZ();
       } else { // rest of the functions are PTZ
         if (!$scope.showPTZ) {
-          NVR.debug("PTZ is not on, or disabled");
+          //NVR.debug("PTZ is not on, or disabled");
           return;
         }
         // coming here means PTZ is on
