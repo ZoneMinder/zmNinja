@@ -16,7 +16,7 @@ by many for home and commercial security monitoring.
 
 
 Help
------
+------
 * zmNinja has [instructional videos](https://github.com/pliablepixels/zmNinja/wiki/Help-Videos-for-zmNinja) to help you with usage questions - I'll add more over time
 * There is a detailed [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ). Please do read it - it has answers to many common questions
 * Post in the [ZoneMinder Mobile App forum](https://forums.zoneminder.com/viewforum.php?f=33) or find me on ZoneMinder's slack channel (you can join [here](http://zoneminder-chat.herokuapp.com/))
