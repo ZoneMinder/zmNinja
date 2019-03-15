@@ -41,8 +41,7 @@ It also runs on the desktop (see below)
 
 Desktop Platforms
 -----------------
-Please download binaries for Win 7, Linux or Mac from [here](https://github.com/pliablepixels/zmNinja/releases). 
-Please make sure you download the correct ZIP file (32/64 bit)
+Please download binaries from [here](https://github.com/pliablepixels/zmNinja/releases). 
 
 
 Key Features (just watch the video already)
