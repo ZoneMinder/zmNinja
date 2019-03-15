@@ -104,10 +104,10 @@ Keyboard bindings
 Desktop data storage locations
 ------------------------------
 
-User data is typically stored in the following locations: \*
-``%APPDATA%/zmNinjaDesktop`` for Windows, \*
-``$XDG_CONFIG_HOME/zmNinjaDesktop`` or ``~/.config/zmNinjaDesktop`` for
-Linux, and \* ``~/Library/Application Support/zmNinjaDesktop`` for OSX
+User data is typically stored in the following locations:
+- ``%APPDATA%/zmNinjaDesktop`` for Windows,
+- ``$XDG_CONFIG_HOME/zmNinjaDesktop`` or ``~/.config/zmNinjaDesktop`` for Linux, 
+- ``~/Library/Application Support/zmNinjaDesktop`` for OSX
 
 To completely remove the app, you may want to delete both the app
 bundle/binary and these locations as applicable on your system
