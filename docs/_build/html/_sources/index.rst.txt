@@ -15,6 +15,8 @@ Welcome to zmNinja's documentation!
         guides/contributing-language
         guides/source
 
+`Github Repository <https://github.com/pliablepixels/zmNinja>`__
+
 :doc:`guides/FAQ`
         A detailed FAQ for zmNinja, including common issues related to installation, streaming and troubleshooting
 :doc:`guides/validating-api`
