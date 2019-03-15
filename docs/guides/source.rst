@@ -200,10 +200,6 @@ You now have the following options:
 
 Your packages will be created in the ``dist`` folder
 
-For versions older than 1.3.018 (will not work in 1.3.018 and beyond)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Click to see details
 
 Set up desktop dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
