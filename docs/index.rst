@@ -9,22 +9,22 @@ Welcome to zmNinja's documentation!
 .. toctree::
         :hidden:
 
-        FAQ
-        validating-api
-        source
-        desktop
-        contributing-language
+        guides/FAQ
+        guides/validating-api
+        guides/source
+        guides/desktop
+        guides/contributing-language
 
 
-:doc:`FAQ`
+:doc:`guides/FAQ`
         A detailed FAQ for zmNinja, including common issues related to installation, streaming and troubleshooting
-:doc:`validating-api`
+:doc:`guides/validating-api`
         How to make sure your ZoneMinder installation has working/usable APIs
-:doc:`desktop`
+:doc:`guides/desktop`
         Various tips/tricks/shortcuts for the desktop port of zmNinja
-:doc:`contributing-language`
+:doc:`guides/contributing-language`
         Would you like to see zmNinja in your own language? It's easy. Here's how to go about contributing a new language for zmNinja
-:doc:`source`
+:doc:`guides/source`
         For the brave souls who want to build from source, your questions answered 
 
 
