@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Desktop port tips &mdash; zmNinja  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="zmNinja  documentation" href="index.html"/>
+        <link rel="prev" title="Building from Source" href="source.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> zmNinja
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="FAQ.html">zmNinja FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validating-api.html">Validating APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">Building from Source</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Desktop port tips</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scope">Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-parameters">Command Line parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiple-instances">Multiple instances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hotkeys">Hotkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#keyboard-bindings">Keyboard bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#desktop-data-storage-locations">Desktop data storage locations</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">zmNinja</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Desktop port tips</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/desktop.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="desktop-port-tips">
+<h1>Desktop port tips<a class="headerlink" href="#desktop-port-tips" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="scope">
+<h2>Scope<a class="headerlink" href="#scope" title="Permalink to this headline">¶</a></h2>
+<p>This page is dedicated to the Desktop version of zmNinja and tips &amp;
+tricks</p>
+</div>
+<div class="section" id="command-line-parameters">
+<h2>Command Line parameters<a class="headerlink" href="#command-line-parameters" title="Permalink to this headline">¶</a></h2>
+<p>The following command line parameters are supported:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">path</span><span class="o">=&lt;</span><span class="nb">dir</span><span class="o">&gt;</span>  <span class="o">-</span> <span class="n">starts</span> <span class="n">zmNinja</span> <span class="ow">and</span> <span class="n">stores</span> <span class="n">user</span> <span class="n">profile</span> <span class="n">information</span> <span class="n">to</span> <span class="n">that</span> <span class="n">directory</span><span class="o">.</span>
+                <span class="n">This</span> <span class="n">allows</span> <span class="n">you</span> <span class="n">to</span> <span class="n">switch</span> <span class="n">between</span> <span class="n">different</span> <span class="n">user</span> <span class="n">settings</span><span class="o">.</span>
+
+<span class="o">--</span><span class="n">fs</span>          <span class="o">-</span> <span class="n">starts</span> <span class="n">zmNinja</span> <span class="ow">in</span> <span class="n">full</span> <span class="n">screen</span> <span class="n">mode</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multiple-instances">
+<h2>Multiple instances<a class="headerlink" href="#multiple-instances" title="Permalink to this headline">¶</a></h2>
+<p>It is actually possible to launch multiple instances of the same desktop
+app from command line. This allows you to watch different servers at the
+same time as well as use multiple monitors. I strongly recommend you use
+unique <code class="docutils literal"><span class="pre">--path</span></code> arguments with each instance because otherwise one
+instance will conflict with another.</p>
+<p>So lets say you want to run 2 copies of zmNinja at the same time:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">instance1</span>
+<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">instance2</span>
+</pre></div>
+</div>
+<p>And then:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># for linux</span>
+<span class="n">zmninjapro</span><span class="o">-</span><span class="mf">1.3</span><span class="o">.</span><span class="mi">22</span><span class="o">-</span><span class="n">x86_64</span><span class="o">.</span><span class="n">AppImage</span>  <span class="o">--</span><span class="n">path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">instance1</span>
+<span class="n">zmninjapro</span><span class="o">-</span><span class="mf">1.3</span><span class="o">.</span><span class="mi">22</span><span class="o">-</span><span class="n">x86_64</span><span class="o">.</span><span class="n">AppImage</span>  <span class="o">--</span><span class="n">path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">instance2</span>
+
+<span class="c1">#for OSX. Note the -n is critical to launch a new instance</span>
+<span class="nb">open</span> <span class="o">-</span><span class="n">n</span> <span class="o">./</span><span class="n">zmninjapro</span><span class="o">.</span><span class="n">app</span> <span class="o">--</span><span class="n">args</span> <span class="o">--</span><span class="n">path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">instance1</span> <span class="o">&amp;</span>
+<span class="nb">open</span> <span class="o">-</span><span class="n">n</span> <span class="o">./</span><span class="n">zmninjapro</span><span class="o">.</span><span class="n">app</span> <span class="o">--</span><span class="n">args</span> <span class="o">--</span><span class="n">path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">instance2</span> <span class="o">&amp;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hotkeys">
+<h2>Hotkeys<a class="headerlink" href="#hotkeys" title="Permalink to this headline">¶</a></h2>
+<p>The following hotkeys are supported while the app is running:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Cmd</span><span class="o">/</span><span class="n">Ctrl</span><span class="p">]</span> <span class="o">+</span> <span class="n">L</span>         <span class="o">-&gt;</span> <span class="n">Lock</span> <span class="n">app</span> <span class="p">(</span><span class="k">if</span> <span class="n">pin</span> <span class="n">code</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">used</span><span class="p">)</span>
+<span class="p">[</span><span class="n">Cmd</span><span class="o">/</span><span class="n">Ctrl</span><span class="p">]</span> <span class="o">+</span> <span class="n">Shift</span> <span class="o">+</span> <span class="n">F</span> <span class="o">-&gt;</span> <span class="n">toggle</span> <span class="n">between</span> <span class="n">full</span> <span class="n">screen</span> <span class="ow">and</span> <span class="n">windowed</span> <span class="n">mode</span>
+<span class="p">[</span><span class="n">Cmd</span><span class="o">/</span><span class="n">Ctrl</span><span class="p">]</span> <span class="o">+</span> <span class="n">Shift</span> <span class="o">+</span> <span class="n">D</span> <span class="o">-&gt;</span> <span class="n">opens</span> <span class="n">the</span> <span class="n">debug</span> <span class="n">window</span><span class="o">.</span>
+                        <span class="n">Super</span> <span class="n">useful</span> <span class="n">to</span> <span class="n">see</span> <span class="n">what</span> <span class="ow">is</span> <span class="n">going</span> <span class="n">on</span><span class="p">,</span>
+                        <span class="n">especially</span> <span class="n">when</span> <span class="n">things</span> <span class="n">don</span><span class="s1">&#39;t work</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyboard-bindings">
+<h2>Keyboard bindings<a class="headerlink" href="#keyboard-bindings" title="Permalink to this headline">¶</a></h2>
+<p><strong>Live Monitor View (single view, not montage):</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Arrow</span> <span class="n">Left</span>  <span class="o">-&gt;</span> <span class="n">move</span> <span class="n">to</span> <span class="n">previous</span> <span class="n">monitor</span>
+<span class="n">Arrow</span> <span class="n">Right</span> <span class="o">-&gt;</span> <span class="n">move</span> <span class="n">to</span> <span class="nb">next</span> <span class="n">monitor</span>
+<span class="n">Esc</span>         <span class="o">-&gt;</span> <span class="n">remove</span> <span class="n">live</span> <span class="n">view</span>
+<span class="n">P</span>           <span class="o">-&gt;</span> <span class="n">toggle</span> <span class="n">PTZ</span>
+</pre></div>
+</div>
+<p><strong>PTZ Operations to move (PTZ should be toggled to on first):</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Q</span> <span class="n">W</span> <span class="n">E</span>  <span class="o">-&gt;</span> <span class="n">UpLeft</span><span class="p">,</span> <span class="n">Up</span><span class="p">,</span> <span class="n">UpRight</span>
+<span class="n">A</span> <span class="n">S</span> <span class="n">D</span>  <span class="o">-&gt;</span> <span class="n">Left</span><span class="p">,</span> <span class="n">Home</span><span class="p">,</span><span class="n">Right</span>
+<span class="n">Z</span> <span class="n">X</span> <span class="n">C</span>  <span class="o">-&gt;</span> <span class="n">DownLeft</span><span class="p">,</span> <span class="n">Down</span><span class="p">,</span> <span class="n">DownRight</span>
+</pre></div>
+</div>
+<p><strong>Event Footage View:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Arrow</span> <span class="n">Left</span>  <span class="o">-&gt;</span> <span class="n">move</span> <span class="n">to</span> <span class="n">previous</span> <span class="n">event</span>
+<span class="n">Arrow</span> <span class="n">Right</span> <span class="o">-&gt;</span> <span class="n">move</span> <span class="n">to</span> <span class="nb">next</span> <span class="n">event</span>
+<span class="n">Enter</span>       <span class="o">-&gt;</span> <span class="n">play</span> <span class="n">the</span> <span class="n">event</span> <span class="k">if</span> <span class="ow">in</span> <span class="n">snapshot</span> <span class="n">mode</span> <span class="p">(</span><span class="n">shows</span> <span class="n">red</span> <span class="n">play</span> <span class="n">button</span><span class="p">)</span>
+<span class="n">Esc</span>         <span class="o">-&gt;</span> <span class="n">remove</span> <span class="n">event</span> <span class="n">footage</span> <span class="n">view</span>
+</pre></div>
+</div>
+<p><strong>Timeline:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Arrow</span> <span class="n">Up</span>    <span class="o">-&gt;</span> <span class="n">Zoom</span> <span class="n">In</span>
+<span class="n">Arrow</span> <span class="n">Down</span>  <span class="o">-&gt;</span> <span class="n">Zoom</span> <span class="n">Out</span>
+<span class="n">Arrow</span> <span class="n">Left</span>  <span class="o">-&gt;</span> <span class="n">Pan</span> <span class="n">Left</span>
+<span class="n">Arrow</span> <span class="n">Right</span> <span class="o">-&gt;</span> <span class="n">Pan</span> <span class="n">Right</span>
+<span class="n">Esc</span>         <span class="o">-&gt;</span> <span class="n">Fit</span> <span class="n">timeline</span> <span class="n">back</span> <span class="n">to</span> <span class="n">view</span> <span class="p">(</span><span class="n">reset</span><span class="p">)</span>
+<span class="n">A</span>           <span class="o">-&gt;</span> <span class="n">Previous</span> <span class="n">Day</span>
+<span class="n">D</span>           <span class="o">-&gt;</span> <span class="n">Next</span> <span class="n">Day</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="desktop-data-storage-locations">
+<h2>Desktop data storage locations<a class="headerlink" href="#desktop-data-storage-locations" title="Permalink to this headline">¶</a></h2>
+<p>User data is typically stored in the following locations: *
+<code class="docutils literal"><span class="pre">%APPDATA%/zmNinjaDesktop</span></code> for Windows, *
+<code class="docutils literal"><span class="pre">$XDG_CONFIG_HOME/zmNinjaDesktop</span></code> or <code class="docutils literal"><span class="pre">~/.config/zmNinjaDesktop</span></code> for
+Linux, and * <code class="docutils literal"><span class="pre">~/Library/Application</span> <span class="pre">Support/zmNinjaDesktop</span></code> for OSX</p>
+<p>To completely remove the app, you may want to delete both the app
+bundle/binary and these locations as applicable on your system</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="source.html" class="btn btn-neutral" title="Building from Source" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Pliable Pixels.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
