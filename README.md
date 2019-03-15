@@ -10,7 +10,7 @@ zmNinja is a multi platform (iOS, Android, Windows Desktop, Mac Desktop, Linux D
 by many for home and commercial security monitoring. 
 
 
-<a href="https://itunes.apple.com/us/app/zmninja-pro/id1067914954?mt=8"><img src="http://www.pbase.com/arjunrc/image/162132546/original.jpg" width="200px" alt="Get in on App Store"></a>
+<a href="https://itunes.apple.com/us/app/zmninja-pro/id1067914954?mt=8"><img src="https://github.com/pliablepixels/zmNinja/blob/master/sample_images/appstore.png" width="200px" alt="Get in on App Store"></a>
 <a href="https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro&hl=en&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" width="200px"/></a>
 
 
