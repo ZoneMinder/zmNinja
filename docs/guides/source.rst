@@ -230,6 +230,7 @@ Your packages will be created in the ``dist`` folder
 Troubleshooting
 ---------------
 
-Lots of things can go wrong. \* Please make sure you don't post issues
-about why your own build is not working - please figure it out \* Look
-carefully at error messages
+Lots of things can go wrong. 
+
+* Please make sure you don't post issues about why your own build is not working - please figure it out
+* Look carefully at error messages

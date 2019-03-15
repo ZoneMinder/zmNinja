@@ -599,9 +599,9 @@ I upgraded ZoneMinder to 1.30.2 or above and zmNinja stopped working!
 ZoneMinder changed API packaging with ZM 1.30.2 and above. You will have
 to read your distro notes on how to **properly** update. Read
 `this <https://forums.zoneminder.com/viewtopic.php?f=36&t=26002&start=30&hilit=api+broken>`__
-thread. Before you think zmNinja is the problem, make sure your `APIs
-are
-working :doc:`validating-api`
+thread. Before you think zmNinja is the problem, make sure your APIs
+are working (see :doc:`validating-api`)
+
 Summary of reasons why zmNinja might have stopped working: - You did not
 check if your APIs are working after the upgrade - You did not upgrade
 properly (just updating the ZM package without following distro
