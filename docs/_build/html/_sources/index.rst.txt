@@ -13,6 +13,7 @@ Welcome to zmNinja's documentation!
         validating-api
         source
         desktop
+        contributing-language
 
 
 :doc:`FAQ`
@@ -21,6 +22,8 @@ Welcome to zmNinja's documentation!
         How to make sure your ZoneMinder installation has working/usable APIs
 :doc:`desktop`
         Various tips/tricks/shortcuts for the desktop port of zmNinja
+:doc:`contributing-language`
+        Would you like to see zmNinja in your own language? It's easy. Here's how to go about contributing a new language for zmNinja
 :doc:`source`
         For the brave souls who want to build from source, your questions answered 
 
