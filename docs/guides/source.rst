@@ -3,7 +3,7 @@ Building from Source
 
 **NOTE** If you want to run it on your desktop, you can directly
 download desktop binaries
-`here <https://github.com/pliablepixels/zmNinja#desktop-platforms>`__
+`here <https://github.com/pliablepixels/releases>`__
 and if you want it for Android/iOS you can get from the play/appstore.
 This is only for those who *want* to run from source.
 
@@ -113,6 +113,32 @@ installed. You also need to have your developer certificates/etc. (I am
 not going to detail this out - there are many internet resources on
 this)
 
+(Harder) If you need picture notification support in push
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+As of Mar 2019, cordova-ios does not support multiple targets, nor does 
+it support automatic building of notification extensions. So there is manual work to be done:
+
+- Open up ``platforms/ios/zmNinja.xcworkspace`` in XCode
+- Go to ``File->New->Target->Notification Service Extension``, select Objective C 
+- In the "Product Name" put in ``zmNinjaNotification`` (your BundleID should now read  ``com.pliablepixels.zmninja-pro.zmNinjaNotification``)
+- Say "Yes" to "Activate zmNinjaNotification scheme?" popup
+- Now go to zmNinjaNotification target and make version and  build same as zmNinja
+- Now in XCode Targets, select ``zmNinjaNotification``, and make sure you select a Team and make sure Deployment Target is 10 or above
+- Change Deployment target to 10.1 (same as zmNinja target)
+- ```cp www/external/NotificationService.m platforms/ios/zmNinjaNotication/``
+- ``cd platforms/ios/``
+- ``pod install``
+
+You can now do `build_ios.sh`. However, after you build, you will have to go back to XCode
+after the build to make the following changes:
+
+1. Sync notification version with app version
+2. Change notification bundle ID back to com.pliablepixels.zmninja-pro.zmNinjaNotification (cordova removes the last word)
+
+
+(Easier) If you don't need picture notification support in push
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 There are a few steps you need to take to get the iOS build working for
 the first time. If you don't do this, you may get a compilation error
 that says ``ld: library not found for -lGoogleToolboxForMac``
@@ -200,53 +226,6 @@ You now have the following options:
 
 Your packages will be created in the ``dist`` folder
 
-
-Set up desktop dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: bash
-
-     npm install -g electron
-     npm install -g asar
-
-Make sure ``electron`` is installed. You should be able to do a
-``which electron``
-
-Also make sure ``unzip`` and ``wget`` tools are installed in your
-system.
-
-First time setup
-~~~~~~~~~~~~~~~~
-
-If this is the first time you are building a desktop version, you need
-to download electron images for various platforms. There is a helper
-script called ``prepare_desktop.sh`` that you can run. This creates a
-directory called ``desktop`` inside your zmNinja directory. It currently
-downloads all supported platforms.
-
-.. code:: bash
-
-    ./prepare_desktop.sh
-
-This will download a bunch of files. If completed successfully, you can
-proceed to the next step.
-
-Make the desktop build
-~~~~~~~~~~~~~~~~~~~~~~
-
-Once you are done with ``prepare_desktop.sh``, you can do a
-``./make_desktop.sh``. This will actually build images for all
-platforms.
-
-Running desktop builds
-~~~~~~~~~~~~~~~~~~~~~~
-
-``cd`` into the desktop directory and run whichever port you want
-
-Subsequent builds
-~~~~~~~~~~~~~~~~~
-
-You need to ``./make_desktop.sh`` each time you make changes.
 
 Troubleshooting
 ---------------

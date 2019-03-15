@@ -49,13 +49,14 @@ response like:
     }
 
 -  Step 6: (If you find your APIs show ok, but zmNinja has issues)
--  Open a browser, log into ZM
--  Open a new tab, enter ``http://server/zm/api/host/getVersion.json``
--  Now, right click and do a ``View Source`` in your browser (different
-   browsers may have different names for it). This brings up a full
-   source code view of the page. Do you ONLY see the JSON output or do
-   you see gobs of HTML on top like ``<pre class=`` and lots of cake
-   related messages? If you do, you need to fix it.
+
+        -  Open a browser, log into ZM
+        -  Open a new tab, enter ``http://server/zm/api/host/getVersion.json``
+        -  Now, right click and do a ``View Source`` in your browser (different
+           browsers may have different names for it). This brings up a full
+           source code view of the page. Do you ONLY see the JSON output or do
+           you see gobs of HTML on top like ``<pre class=`` and lots of cake
+           related messages? If you do, you need to fix it.
 
 if you find the page empty, your APIs/permissions have a problem. Please
 post in the ZM forums (**please DON'T** contact me first as its not a
