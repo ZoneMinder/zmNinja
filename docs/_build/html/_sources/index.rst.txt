@@ -11,10 +11,9 @@ Welcome to zmNinja's documentation!
 
         guides/FAQ
         guides/validating-api
-        guides/source
         guides/desktop
         guides/contributing-language
-
+        guides/source
 
 :doc:`guides/FAQ`
         A detailed FAQ for zmNinja, including common issues related to installation, streaming and troubleshooting
