@@ -55,8 +55,7 @@ Try before buy
 
 Some users legitimately look around for an option to try before they buy
 and they are not savvy enough to `download the
-code <https://github.com/pliablepixels/zmNinja>`__ and
-`compile <https://github.com/pliablepixels/zmNinja/wiki/Running-zmNinja-from-Source>`__
+code <https://github.com/pliablepixels/zmNinja>`__ and compile (:doc:`source`) for 
 themselves. Fair enough. In that case, `download the Desktop
 version <https://github.com/pliablepixels/zmNinja/releases>`__ of
 zmNinja. It's free and is the same code as mobile. Make sure the desktop
@@ -128,12 +127,9 @@ How to report errors
 
 -  Before you create an issue, please make sure you have read the
    sections on `connection
-   issues <https://github.com/pliablepixels/zmNinja/wiki/FAQ#connectionauthentication-issues>`__
-   and
-   `streaming <https://github.com/pliablepixels/zmNinja/wiki/FAQ#live-streaming-issues>`__
-   issues and `Step 6 of
-   validating <https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM>`__
-   APIs.
+   issues <#connectionauthentication-issues>`__
+   and `streaming <#live-streaming-issues>`__
+   issues and Step 6 of :doc:`validating-api`
 
 -  Its often hard to infer a problem especially when its due to some
    unique apache/nginx mungling you might have done but haven't told me
@@ -332,7 +328,7 @@ In the above case my zmNinja cgi-bin setting is
 ``https://myserver:myport/zm/cgi-bin``
 
 -  You are using Basic Authentication. See
-   `here <#i-cant-see-streams-i-use-basic-auth>`__
+   `here <#i-can-t-see-streams-i-use-basic-auth>`__
 -  You have 'multi-server' configuration enabled and you have done it
    wrong. Go to ZM Web Console->Options->Servers - if you see any
    entries there and you don't know what multi-server is, or you don't
@@ -341,7 +337,7 @@ In the above case my zmNinja cgi-bin setting is
    - example Apache's ``error.log`` - see any image/jpg errors? That
    means you are missing libraries
 -  You have set up a multi-server install of ZM without knowing you did
-   See `here <#i-cant-see-streams--multi-server-is-enabled>`__
+   See `here <#i-can-t-see-streams-multi-server-is-enabled>`__
 -  Look at zmNinja, ZoneMinder and web server error logs at the time of
    error - one of them should give more clues. Please send me *all* the
    logs if you ask for help
@@ -605,7 +601,7 @@ to read your distro notes on how to **properly** update. Read
 `this <https://forums.zoneminder.com/viewtopic.php?f=36&t=26002&start=30&hilit=api+broken>`__
 thread. Before you think zmNinja is the problem, make sure your `APIs
 are
-working <https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM>`__.
+working :doc:`validating-api`
 Summary of reasons why zmNinja might have stopped working: - You did not
 check if your APIs are working after the upgrade - You did not upgrade
 properly (just updating the ZM package without following distro
@@ -651,8 +647,7 @@ discussion
 APIs are not working ! ZM console works fine.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Read
-`this <https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM>`__
+:doc:`validating-api`
 
 I'm using mocord/record and I don't see events without alarms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
