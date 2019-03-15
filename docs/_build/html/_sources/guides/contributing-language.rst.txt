@@ -55,5 +55,6 @@ How to recognize a new language:
 
 (This is only for zmNinja developers. Not relevant for language
 translators) 
-* Modify languages array in NVR.js (look for ``var languages``) 
-* register language glob code in app.js - make sure its added to array list and mapping (look for ``registerAvailableLanguageKeys``)
+
+- Modify languages array in NVR.js (look for ``var languages``) 
+- Register language glob code in app.js - make sure its added to array list and mapping (look for ``registerAvailableLanguageKeys``)
