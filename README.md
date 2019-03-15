@@ -17,15 +17,14 @@ by many for home and commercial security monitoring.
 
 Help
 ----
-* zmNinja has [instructional videos](https://github.com/pliablepixels/zmNinja/wiki/Help-Videos-for-zmNinja) to help you with usage questions - I'll add more over time
-* There is a detailed [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ). Please do read it - it has answers to many common questions
-* Post in the [ZoneMinder Mobile App forum](https://forums.zoneminder.com/viewforum.php?f=33) or find me on ZoneMinder's slack channel (you can join [here](http://zoneminder-chat.herokuapp.com/))
+* Official documents are [here](http://pliablepixels.github.io/zmNinja/)
+* Post in the [ZoneMinder Mobile App forum](https://forums.zoneminder.com/viewforum.php?f=33) or find me on ZoneMinder's slack channel (you can join [here](https://join.slack.com/t/zoneminder-chat/shared_invite/enQtNTU0NDkxMDM5NDQwLTlhZDU2MGU4MmZmN2MxOTg1MmNmNmZjZGRmY2EzMThhNGQ0MWNmZTg1ZmYzNDQ4YjliMzVmYTQ3MDc5MTkzODE))
 * If you believe you've discovered a bug, please create a [GitHub issue](https://github.com/pliablepixels/zmNinja/issues/)
 
 Before you ask for help
 -----------------------
-* Make sure you have read the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ)
-* Make sure you have [validated](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) that your APIs are working (if not, its a ZM issue, please post in ZM forums)
+* Make sure you have read the [FAQ](http://pliablepixels.github.io/zmNinja/_build/html/guides/FAQ.html)
+* Make sure you have [validated](http://pliablepixels.github.io/zmNinja/_build/html/guides/validating-api.html) that your APIs are working (if not, its a ZM issue, please post in ZM forums)
 * Please don't ask me for help with source compilation if you are not familiar with coding mobile apps - you should try and solve your own problems
 
 
@@ -48,7 +47,7 @@ Please make sure you download the correct ZIP file (32/64 bit)
 
 Key Features (just watch the video already)
 --------------------------------------------
-* Push Notifications for alarms (Needs the [eventserver](https://github.com/pliablepixels/zmeventserver) to be set up)
+* Push Notifications  Object detection/face recognition for alarms (Needs the [eventserver](https://github.com/pliablepixels/zmeventserver) to be set up)
 * Multiple languages (English, French, German, Spanish, Portugese, Dutch, and more)
 * H264 video branch support 
 * live views of monitors
@@ -65,7 +64,7 @@ But specifically, [Andrew Bauer](https://github.com/knight-of-ni) (knight-of-ni)
 
 Important Notes
 ---------------
-* zmNinja needs APIs enabled in ZoneMinder. If you are running ZM 1.29 or above, APIs should automatically be available. See [this](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) for instructions on how to make sure your APIs are working. If they are not working, zmNinja **will not** work.
+* zmNinja needs APIs enabled in ZoneMinder. See [this](http://pliablepixels.github.io/zmNinja/_build/html/guides/validating-api.html) for instructions on how to make sure your APIs are working. If they are not working, zmNinja **will not** work.
 
 
 Why did I develop zmNinja?
@@ -74,9 +73,6 @@ Why did I develop zmNinja?
 * I originally reached out to tinyCam to see if they were willing to do an app - did not get a response
 * I found zmView limited for my needs
 
-Running from source
-----------------------
-Please follow [these](https://github.com/pliablepixels/zmNinja/wiki/Running-zmNinja-from-Source) instructions.
 
 
 Screenshots:
