@@ -1902,6 +1902,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     if (tempAlarms.length > 1) // don't do it for just one too
       $scope.alarm_images = tempAlarms;
 
+      // add snapshot
+    if (NVR.getSnapshotFrame() == 'snapshot') {
+        $scope.alarm_images.unshift({
+            frameid: 'snapshot',
+            id: 'doesntseemtobeusedhuh'
+        });
+    }
     if (data.event.Event.Notes.indexOf('detected:') != -1) {
           
             NVR.debug ("You have object detection! Adding object detect frame");
