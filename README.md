@@ -17,7 +17,8 @@ by many for home and commercial security monitoring.
 
 Help
 ----
-* Official documents are [here](http://pliablepixels.github.io/zmNinja/)
+* Official documents [are here](http://pliablepixels.github.io/zmNinja/)
+* If you are looking for the Machine Learning powered [Event Server companion](https://github.com/pliablepixels/zmeventnotification), docs [are here](http://pliablepixels.github.io/zmeventnotification/docgen/html/index.html)
 * Post in the [ZoneMinder Mobile App forum](https://forums.zoneminder.com/viewforum.php?f=33) or find me on ZoneMinder's slack channel (you can join [here](https://join.slack.com/t/zoneminder-chat/shared_invite/enQtNTU0NDkxMDM5NDQwLTlhZDU2MGU4MmZmN2MxOTg1MmNmNmZjZGRmY2EzMThhNGQ0MWNmZTg1ZmYzNDQ4YjliMzVmYTQ3MDc5MTkzODE))
 * If you believe you've discovered a bug, please create a [GitHub issue](https://github.com/pliablepixels/zmNinja/issues/)
 
