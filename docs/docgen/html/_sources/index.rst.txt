@@ -14,6 +14,7 @@ Welcome to zmNinja's documentation!
         guides/desktop
         guides/contributing-language
         guides/source
+        Event Notification Server <http://pliablepixels.github.io/zmeventnotification/docgen/html/index.html>
 
 `Github Repository <https://github.com/pliablepixels/zmNinja>`__
 
@@ -27,5 +28,8 @@ Welcome to zmNinja's documentation!
         Would you like to see zmNinja in your own language? It's easy. Here's how to go about contributing a new language for zmNinja
 :doc:`guides/source`
         For the brave souls who want to build from source, your questions answered 
+`Event Notification Server <http://pliablepixels.github.io/zmeventnotification/docgen/html/index.html>`__
+        Documentation for the Machine Learning Event Notification server
+
 
 
