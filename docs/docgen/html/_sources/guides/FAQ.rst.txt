@@ -313,7 +313,7 @@ out later they skimmed details.
    but test zmninja on a WAN connection
 -  Always try with the `free desktop
    version <https://github.com/pliablepixels/zmNinja/releases>`__ first.
-   Enable debug view by hitting Ctrl/Cmd+Alt+D and you can see debug
+   Enable debug view by hitting Ctrl/Cmd+Shift+D and you can see debug
    logs in the console view. I can't emphasize enough how useful this
    is.
 -  Your ``cgi-bin`` setting in zmNinja is incorrect. Please run the
