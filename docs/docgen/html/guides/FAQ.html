@@ -100,7 +100,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#zmninja-doesn-t-work-actually-even-zoneminder-web-console-doesn-t-work-you-should-fix-this">zmNinja doesn’t work. Actually, even ZoneMinder web console doesn’t work. You should fix this!</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#zmninja-doesn-t-work-zoneminder-works-but-i-have-no-idea-why-apis-don-t-work-you-should-fix-this">zmNinja doesn’t work. Zoneminder works, but I have no idea why APIs don’t work. You should fix this!</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#i-can-t-compile-zmninja-help-me">I can’t compile zmNinja, help me!</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#how-to-report-errors">How to report errors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-report-errors">How to report errors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#if-zmninja-does-not-start-on-your-device">If zmNinja does not start on your device</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#profile-information-storage-related">Profile information storage related</a><ul>
@@ -328,8 +331,9 @@ you figured it out on your own. Feel free to create an issue after
 you’ve tried enough, but I can’t guarantee I’ll spend a lot of time on
 source code compile issues.</p>
 </div>
+</div>
 <div class="section" id="how-to-report-errors">
-<h3>How to report errors<a class="headerlink" href="#how-to-report-errors" title="Permalink to this headline">¶</a></h3>
+<h2>How to report errors<a class="headerlink" href="#how-to-report-errors" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>I don’t know why something is not working if you don’t provide
 sufficient inputs. Start by creating a <a class="reference external" href="https://github.com/pliablepixels/zmNinja/issues">GitHub
@@ -364,6 +368,15 @@ you upgraded ZM)</li>
 <li>What exactly is not working?</li>
 </ul>
 </li>
+</ul>
+<div class="section" id="if-zmninja-does-not-start-on-your-device">
+<h3>If zmNinja does not start on your device<a class="headerlink" href="#if-zmninja-does-not-start-on-your-device" title="Permalink to this headline">¶</a></h3>
+<p>There are some odd cases, where zmNinja does not start (or gets stuck in the splash screen) on specific devices.
+It is very hard for me to know why it fails on certain devices, but I can try. Here is what you need to do:</p>
+<p>You have to send me system logs of the device. To get system logs:</p>
+<ul class="simple">
+<li>You will have to install ADB (Android Debug Bridge). It comes along with the Android SDK but if you don’t have the SDK (most won’t) you can refer to <a class="reference external" href="https://www.xda-developers.com/install-adb-windows-macos-linux/">https://www.xda-developers.com/install-adb-windows-macos-linux/</a></li>
+<li>Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in <code class="docutils literal"><span class="pre">adb</span> <span class="pre">logcat</span> <span class="pre">&gt;result.txt</span></code> and try to start the app. A lot of logs will be generated. Please <a class="reference external" href="mailto:pliablepixels&#37;&#52;&#48;gmail&#46;com">email them to me</a></li>
 </ul>
 </div>
 </div>

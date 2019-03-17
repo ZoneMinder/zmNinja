@@ -110,7 +110,7 @@ you've tried enough, but I can't guarantee I'll spend a lot of time on
 source code compile issues.
 
 How to report errors
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 -  I don't know why something is not working if you don't provide
    sufficient inputs. Start by creating a `GitHub
@@ -150,6 +150,19 @@ How to report errors
    -  tell me what changed (got to be something. You updated the app,
       you upgraded ZM)
    -  What exactly is not working?
+
+If zmNinja does not start on your device
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+There are some odd cases, where zmNinja does not start (or gets stuck in the splash screen) on specific devices.
+It is very hard for me to know why it fails on certain devices, but I can try. Here is what you need to do:
+
+You have to send me system logs of the device. To get system logs:
+
+- You will have to install ADB (Android Debug Bridge). It comes along with the Android SDK but if you don't have the SDK (most won't) you can refer to https://www.xda-developers.com/install-adb-windows-macos-linux/
+
+- Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in ``adb logcat >result.txt`` and try to start the app. A lot of logs will be generated. Please `email them to me <mailto:pliablepixels@gmail.com>`__
+
+ 
 
 Profile information storage related
 -----------------------------------
