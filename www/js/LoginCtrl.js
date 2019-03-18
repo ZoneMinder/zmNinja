@@ -385,7 +385,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       else {
           mobilePinConfig();
       }
-  }
+  };
 
 
   function desktopPinConfig() {
@@ -472,7 +472,7 @@ function mobilePinConfig () {
     } else {
       NVR.debug("Password disabled");
     }
-  };
+  }
 
   //-------------------------------------------------------------------------------
   // Makes input easier
