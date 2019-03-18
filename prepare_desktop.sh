@@ -1,7 +1,8 @@
 #!/bin/bash
 
 REL="v4.0.0"
-#REL="v3.0.11"
+# If compiling on rPI make use 3.0.16
+#REL="v3.0.16"
 WGET='wget'
 WGET_ARGS='-q --show-progress'
 UNZIP='unzip'
@@ -30,7 +31,7 @@ cd desktop
 
 
 declare -a release_names=("darwin-x64" "win32-x64" "win32-ia32" "linux-arm" "linux-x64" "linux-ia32")
-declare -a release_renames=("zmNinja-mac.app" "zmNinja-win64bit" "zmNinja-win32bit" "zmNinja-linuxarm" "zmNinja-linux64bit" "zmNinja-linux32bit")
+declare -a release_renames=("zmNinja-mac.app" "zmNinja-win64bit" "zmNinja-win32bit" "zmNinja-linuxarmv7l" "zmNinja-linux64bit" "zmNinja-linux32bit")
 
 for i in "${!release_names[@]}"
 do
