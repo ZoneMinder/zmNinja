@@ -1,15 +1,12 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.3.053",
+  "version": "1.3.055",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
   "cordova": {
-    "platforms": [
-      "android",
-      "ios"
-    ],
+    "platforms": [],
     "plugins": {
       "cordova-plugin-add-swift-support": {},
       "cordova-plugin-android-permissions": {},
@@ -26,7 +23,6 @@
       "cordova-plugin-insomnia": {},
       "cordova-plugin-pin-dialog": {},
       "cordova-plugin-splashscreen": {},
-      "cordova-plugin-websocket": {},
       "cordova-plugin-whitelist": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-touch-id": {
@@ -48,7 +44,6 @@
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Save image alarms todisk"
       },
       "cordova-plugin-advanced-http": {},
-      "cordova-plugin-advanced-websocket": {},
       "cordova-plugin-x-socialsharing": {
         "ANDROID_SUPPORT_V4_VERSION": "24.1.1+"
       },
@@ -57,21 +52,21 @@
         "FCM_VERSION": "11.6.2"
       },
       "cordova-custom-config": {},
+      "cordova-plugin-media-pp-fork": {},
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
-      "cordova-plugin-media-pp-fork": {}
+      "cordova-plugin-advanced-websocket": {}
     }
   },
   "dependencies": {
     "clivas": "^0.2.0",
     "cordova-android": "7.1.4",
     "cordova-custom-config": "^5.0.2",
-    "cordova-ios": "5.0.0",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-advanced-http": "git+https://github.com/silkimen/cordova-plugin-advanced-http.git",
-    "cordova-plugin-advanced-websocket": "^1.1.4",
+    "cordova-plugin-advanced-websocket": "1.1.5",
     "cordova-plugin-android-fingerprint-auth": "^1.5.0",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-version": "^0.1.9",
@@ -94,7 +89,6 @@
     "cordova-plugin-splashscreen": "^4.1.0",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-touch-id": "^3.4.0",
-    "cordova-plugin-websocket": "^0.12.2",
     "cordova-plugin-whitelist": "^1.3.3",
     "cordova-plugin-x-socialsharing": "^5.4.4",
     "cordova-sqlite-storage": "^1.5.3",
