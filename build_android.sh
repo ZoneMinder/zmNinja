@@ -125,6 +125,6 @@ echo "Adding back wkwebview and removing certificate fork..."
 cordova plugin remove cordova-plugin-certificates-pp-fork > /dev/null 2>&1
 cordova plugin add  https://github.com/pliablepixels/cordova-plugin-ionic-webview.git > /dev/null 2>&1
 
-echo "If you faced DEX etc goofy errors, cd platform/android && gradle clean or try removing/adding android"
+echo "If you faced DEX etc goofy errors, cd platforms/android && gradle clean or try removing/adding android"
 
   
