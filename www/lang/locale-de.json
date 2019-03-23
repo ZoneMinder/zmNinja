@@ -360,6 +360,7 @@
     "kStateFreeMem"              :"Arbeitsspeicher frei",
     "kStateHideControls"         :"Verstecke ZoneMinder Bedienelemente",
     "kStateHost"                 :"Host",
+    "kStateMultiServer"          :"Multiserver",
     "kStatePath"                 :"Pfad",
     "kStateServer"               :"Server",
     "kStateShowControls"         :"Zeige ZoneMinder Bedienelemente",
