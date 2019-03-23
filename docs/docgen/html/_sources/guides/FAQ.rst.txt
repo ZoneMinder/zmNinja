@@ -20,10 +20,10 @@ more over time. See them
 Asking for refunds
 ------------------
 
-If you have bought the iOS version of the app, it doesn't look like I
-can process a refund anymore. If any developer knows how, please let me
-know. Apple wants you to contact them directly using
-`this <https://support.apple.com/en-us/HT204084>`__ link.
+For iOS: To get a refund, Apple wants you to contact them directly 
+using `this <https://support.apple.com/en-us/HT204084>`__ link. There used to be
+a time when I could process a refund myself, but it seems Apple doesn't provide
+that interface anymore.
 
 For Android: If you're not happy with zmNinja and have bought the app,
 please `send me an email <mailto:pliablepixels@gmail.com>`__ **with your
