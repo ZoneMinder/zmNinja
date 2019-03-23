@@ -34,8 +34,9 @@ class ZmninjaAndroidTests(unittest.TestCase):
                 'platformName': 'Android',
                 'automationName': 'UiAutomator2',
                 'platformVersion': '7.1.1',
-                'deviceName': 'Pixel',
-                'avd': 'zmNinja',
+                'deviceName': 'DoesntMatter',
+                'avd': 'zmNinja_7_1_1',
+               # 'avd': 'zmNinja_6_0',
                 'nativeWebTap': True,
                 'nativeWebScreenshot': True, # important, for screenshots
                 'autoAcceptAlerts': True,

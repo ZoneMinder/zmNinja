@@ -1,2 +1,2 @@
 #!/bin/bash
-appium --chromedriver-executable ./chromedriver/chromedriver
+appium --chromedriver-executable ./chromedriver/chromedriver55
