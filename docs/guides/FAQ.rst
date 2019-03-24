@@ -453,7 +453,7 @@ relevant section (``VirtualHost`` or others)
          RewriteRule (.*) - [E=QS_TOKEN:%1]
          RequestHeader set Authorization "Basic %{QS_TOKEN}e" env=QS_TOKEN
 
-**STEP 2 (Nginx)**: Thanks to user `@ysammy <https://github.com/ysammy>__`
+**STEP 2 (Nginx)**: Thanks to user `@ysammy <https://github.com/ysammy>`__
 
 .. code:: nginx
 
