@@ -392,14 +392,15 @@ plugins that attempt to do this, but don't work with streaming MJPEG
 images). Bottom line, this is a problem for apps like zmNinja and it
 affects you.
 
-How this affects you: \* If you are using HTTP Basic Authentication
+How this affects you: 
+-  If you are using HTTP Basic Authentication then your images won't show.
 
-Then your images won't show.
+Possible Workarounds: 
+- Configure your web server to skip basic authentication for ``nph-zms`` URLs 
+- If you are using a ReverseProxy, you can insert the authorization header inside the apache proxy 
+- Disable HTTP Basic auth for now 
+- Downgrade Chrome (but this may no longer be an option, Chrome will not revert to the old behavior any more)
 
-Possible Workarounds: \* Configure your web server to skip basic
-authentication for ``nph-zms`` URLs \* If you are using a ReverseProxy,
-you can insert the authorization header inside the apache proxy \*
-Disable HTTP Basic auth for now \* Downgrade Chrome
 
 Skipping auth for ``nph-zms`` URLs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
