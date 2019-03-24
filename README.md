@@ -17,15 +17,15 @@ by many for home and commercial security monitoring.
 
 Help
 ----
-* Official documents [are here](http://pliablepixels.github.io/zmNinja/)
-* If you are looking for the Machine Learning powered [Event Server companion](https://github.com/pliablepixels/zmeventnotification), docs [are here](http://pliablepixels.github.io/zmeventnotification/docgen/html/index.html)
+* Official documents [are here](https://zmninja.readthedocs.io/en/latest/index.html)
+* If you are looking for the Machine Learning powered [Event Server companion](https://github.com/pliablepixels/zmeventnotification), docs [are here](https://zmeventnotification.readthedocs.io/en/latest/index.html)
 * Post in the [ZoneMinder Mobile App forum](https://forums.zoneminder.com/viewforum.php?f=33) or find me on ZoneMinder's slack channel (you can join [here](https://join.slack.com/t/zoneminder-chat/shared_invite/enQtNTU0NDkxMDM5NDQwLTlhZDU2MGU4MmZmN2MxOTg1MmNmNmZjZGRmY2EzMThhNGQ0MWNmZTg1ZmYzNDQ4YjliMzVmYTQ3MDc5MTkzODE))
 * If you believe you've discovered a bug, please create a [GitHub issue](https://github.com/pliablepixels/zmNinja/issues/)
 
 Before you ask for help
 -----------------------
-* Make sure you have read the [FAQ](http://pliablepixels.github.io/zmNinja/docgen/html/guides/FAQ.html)
-* Make sure you have [validated](http://pliablepixels.github.io/zmNinja/docgen/html/guides/validating-api.html) that your APIs are working (if not, its a ZM issue, please post in ZM forums)
+* Make sure you have read the [FAQ](https://zmninja.readthedocs.io/en/latest/guides/FAQ.html)
+* Make sure you have [validated](https://zmninja.readthedocs.io/en/latest/guides/validating-api.html) that your APIs are working (if not, its a ZM issue, please post in ZM forums)
 * Please don't ask me for help with source compilation if you are not familiar with coding mobile apps - you should try and solve your own problems
 
 
@@ -64,7 +64,7 @@ But specifically, [Andrew Bauer](https://github.com/knight-of-ni) (knight-of-ni)
 
 Important Notes
 ---------------
-* zmNinja needs APIs enabled in ZoneMinder. See [this](http://pliablepixels.github.io/zmNinja/docgen/html/guides/validating-api.html) for instructions on how to make sure your APIs are working. If they are not working, zmNinja **will not** work.
+* zmNinja needs APIs enabled in ZoneMinder. See [this](https://zmninja.readthedocs.io/en/latest/guides/validating-api.html) for instructions on how to make sure your APIs are working. If they are not working, zmNinja **will not** work.
 
 
 Why did I develop zmNinja?
