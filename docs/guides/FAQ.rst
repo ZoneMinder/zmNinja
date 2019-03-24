@@ -170,11 +170,10 @@ Profile information storage related
 zmNinja is not saving my information. It keeps asking me to re-enter all my data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I've seen this happen in two cases: \* You are running out of space.
-Clean up some space and try again \* On specific Android devices,
-typically running Android OS less than 6.0, some (2-3) users have
-reported this issue. I still don't have a good answer. Please update to
-the latest app version and send me debug logs, please
+I've seen this happen in two cases: 
+
+- You are running out of space.  Clean up some space and try again  
+-  On specific Android devices, typically running Android OS less than 6.0, some (2-3) users have reported this issue. I still don't have a good answer. Please update to the latest app version and send me debug logs, please
 
 I updated my zmNinja app and all my server settings were cleared. Why?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -454,7 +453,7 @@ relevant section (``VirtualHost`` or others)
          RewriteRule (.*) - [E=QS_TOKEN:%1]
          RequestHeader set Authorization "Basic %{QS_TOKEN}e" env=QS_TOKEN
 
-**STEP 2 (Nginx)**: Thanks to user [@ysammy](https://github.com/ysammy)
+**STEP 2 (Nginx)**: Thanks to user `@ysammy <https://github.com/ysammy>__`
 
 .. code:: nginx
 
