@@ -47,7 +47,7 @@ angular.module('zmApp.controllers')
         // going back will only retain that monitor ID
         // so lets reload with all monitors
         // 
-        //console.log (">>> BACKVIEW="+$ionicHistory.backTitle());
+        
 
         if ($ionicHistory.backTitle() == 'Timeline') {
           $ionicHistory.nextViewOptions({
@@ -119,14 +119,35 @@ angular.module('zmApp.controllers')
         //
         // var startDate = moment(temp).format("YYYY-MM-DD hh:mm:ss");
         NVR.debug("DateTimeFilter: From/To is now: " + $rootScope.fromString + " & " + $rootScope.toString);
+
         $ionicHistory.nextViewOptions({
           disableBack: true
         });
-        $state.go("app.events", {
-          "id": 0,
-          "playEvent": false
-        });
-        return;
+
+        console.log (" >>>>>>>> BACK VIEW = "+$ionicHistory.backTitle());
+
+        if ($ionicHistory.backTitle() == 'Timeline') {
+            $ionicHistory.nextViewOptions({
+              disableBack: true
+            });
+            $state.go("app.timeline", {
+              "id": 0,
+              "playEvent": false
+            });
+            return;
+          } else // in events, backview is undefined?
+          {
+            $ionicHistory.nextViewOptions({
+              disableBack: true
+            });
+            $state.go("app.events", {
+              "id": 0,
+              "playEvent": false
+            });
+            return;
+          }
+
+       
       };
 
     }
