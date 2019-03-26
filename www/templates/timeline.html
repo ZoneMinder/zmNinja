@@ -52,6 +52,16 @@
         <div ng-if="follow.time">
           <p>{{newEvents}}</p>
         </div>
+            <br/>
+            <figure style="display:inline-block">
+                    <figcaption class="smallnote">
+                        {{thumbData.monName}}: {{thumbData.eid}} @ {{thumbData.time}}
+                    </figcaption>
+                    <img ng-src="{{thumbData.url}}" fallback-src="img/noimage.png" width="400px" on-tap="thumbnailClicked($event)"/>
+
+            </figure>
+            
+   
       </div>
     </ion-content>
   </ion-view>
