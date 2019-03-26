@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0, viewport-fit=cover">
 
-  <meta http-equiv="Content-Security-Policy" content="img-src * blob: android-webview-video-poster: cdvphotolibrary:  'self' data: ws: wss://*; default-src * blob: 'self' gap: wss: ws: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src * http: https: ws: wss:;">
+  <meta http-equiv="Content-Security-Policy" content="img-src * blob: android-webview-video-poster: cdvphotolibrary: 'self' data: 'unsafe-inline' 'unsafe-eval' ; default-src * blob: 'self' gap: wss: ws: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src * http: https: ws: wss:;">
 
 
 
@@ -22,7 +22,9 @@
   <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/angular-carousel.css">
   <link rel="stylesheet" href="lib/angular-awesome-slider/dist/css/angular-awesome-slider.min.css">
-  <link rel="stylesheet" href="lib/vis/dist/vis-timeline-graph2d.min.css">
+  <!-- <link rel="stylesheet" href="lib/vis/dist/vis-timeline-graph2d.min.css"> -->
+
+  <link rel="stylesheet" href="external/timeline.min.css">
   <link rel="stylesheet" href="lib/ion-datetime-picker/release/ion-datetime-picker.min.css">
   <link rel="stylesheet" href="lib/angular-wizard/dist/angular-wizard.min.css">
   <link href="css/ionic.app.min.css" rel="stylesheet">
@@ -61,7 +63,8 @@
   <script src="lib/ion-datetime-picker/release/ion-datetime-picker.min.js"></script>
   <script src="lib/angular-translate/angular-translate.min.js"></script>
   <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
-  <script src="lib/vis/dist/vis-timeline-graph2d.min.js"></script>
+
+  <!-- <script src="lib/vis/dist/vis-timeline-graph2d.min.js"></script>-->
   <script src="lib/moment/min/moment-with-locales.min.js"></script>
   <script src="lib/ng-mfb/src/mfb-directive.js"></script>
   <script src="lib/angular-touch/angular-touch.min.js"></script>
@@ -75,6 +78,7 @@
   <script src="external/moment-timezone-with-data.min.js"></script>
   <script src="external/angular-ios9-uiwebview.patch.js"></script>
   <script src="external/ionRadio.min.js"></script>
+  <script src="external/timeline.min.js"></script>
 
   <!--<script src="external/ng-websocket.min.js"></script>-->
   <script src="external/angular-websocket.js"></script>
