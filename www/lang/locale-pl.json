@@ -385,6 +385,8 @@
     "kTimelineMessage"           :"Podwójne stuknięcie - wyjście. Dotknięcie i przesuwanie elementów pozwala przeglądać klatki",
     "kTimelineOnlyDisplaying1"   :"wyświetla tylko {{maxItemsVal}} ostatnich zdarzeń",
     "kTimelineTap"               :"dotknij",
+    "kTimelineThumbDesktop"      :"najedź, aby wyświetlić miniatury",
+    "kTimelineThumbMobile"       :"przytrzymaj, aby wyświetlić miniatury",
     "kTo"                        :"do",
     "kToDate"                    :"Do Daty",
     "kToTime"                    :"Do Czasu",
