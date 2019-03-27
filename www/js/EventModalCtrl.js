@@ -22,6 +22,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   var event;
   var gEvent;
   var handle;
+  var playerPromise = undefined;
   var showLive = true;
   //var isGlobalFid = false; // true if its set to MaxScoreFrameId in events
   var eventId = 0;
@@ -206,13 +207,25 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       template: "<ion-spinner icon='ripple' class='spinner-energized'></ion-spinner><br/>" + $translate.instant('kVideoLoading') + "...",
 
     });
-    NVR.debug("Player is ready");
+
     $timeout(function () {
-      handle.pause();
-      handle.setPlayback(NVR.getLogin().videoPlaybackSpeed);
-      handle.play();
-      NVR.debug("*** Invoking play");
-      playerReady = true;
+      //  NVR.debug("Player is ready, invoking play");
+      //  handle.play()
+
+        /*
+        .then (function (succ) {
+            NVR.debug ("Pause completed, doing a play");
+            handle.play();
+        })
+        .catch (function (err) {
+            NVR.log ('Error invoking promised pause ' + JSON.stringify(err), 'error');
+        })*/
+       
+        /*playerPromise
+        .then (function (succ) {NVR.debug ("video should be playing");})
+        .catch ( function (err) {
+                NVR.log ('Error trying to play: '+JSON.stringify(err), 'error');
+            });*/
 
     }, 300);
 
@@ -252,6 +265,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         });
       }
     }
+    NVR.debug ("Invoking play as video can be played");
+    handle.play();
   };
 
   $scope.onVideoError = function (event) {
@@ -1446,7 +1461,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         // prev
         //  console.log ("NEXT:",JSON.stringify(data[0].data),"PREV:",JSON.stringify(data[1].data));
       }, function (error) {
-        NVR.log("Error retrieving neighbors" + JSON.stringify(err));
+        NVR.log("Error retrieving neighbors" + JSON.stringify(error));
         d.reject(neighbors);
         return (d.promise);
 
@@ -2060,10 +2075,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
               ],
 
-              theme: "lib/videogular-themes-default/videogular.css",
+              theme: "external/videogular2.2.1/videogular.min.css",
               cuepoints: {
                 theme: {
-                  url: "lib/videogular-cuepoints/cuepoints.css"
+                  url: "external/videogular2.2.1/videogular-cuepoints.min.css"
                 },
                 points: [],
               }
