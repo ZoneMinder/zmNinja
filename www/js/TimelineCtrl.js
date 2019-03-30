@@ -2,7 +2,7 @@
 /* jshint -W083 */
 /*This is for the loop closure I am using in line 143 */
 /* jslint browser: true*/
-/* global timeline,cordova,StatusBar,angular,console,moment, Hammer */
+/* global vis,timeline,cordova,StatusBar,angular,console,moment */
 
 // This controller creates a timeline
 // It uses the visjs library, but due to performance reasons
@@ -115,6 +115,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
   };
 
+ 
   //-----------------------------------------
   // Move by X days 
   //-----------------------------------------
@@ -228,7 +229,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       $scope.modal.remove();
     }
 
-    if ($scope.modalData.doRefresh) {
+    if ($scope.modalData && $scope.modalData.doRefresh) {
 
       $timeout(function () {
         drawGraph($scope.fromDate, $scope.toDate, maxItems);
@@ -257,6 +258,13 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     if ($scope.popover) $scope.popover.remove();
 
   }
+
+  $scope.doRefresh = function(){
+    // nothing, needs to be here
+    // as events modal close calls it
+    NVR.debug ("dummy doRefresh()");
+};
+
 
   //--------------------------------------------------------
   // This function is called by the graph ontapped function
@@ -403,27 +411,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     });
   }
 
-  //-------------------------------------------
-  // Entire reason for existence:
-  // double tap doesn't reliably work
-  // when paired with tap on mobiles
-  //-------------------------------------------
-
-  $scope.toggleTap = function () {
-
-    if ($scope.onTap == $translate.instant('kTimelineEvent')) {
-      $scope.onDTap = $translate.instant('kTimelineEvent');
-      $scope.onTap = $translate.instant('kTimelineGraph');
-
-    } else {
-      $scope.onTap = $translate.instant('kTimelineEvent');
-      $scope.onDTap = $translate.instant('kTimelineGraph');
-    }
-    $scope.timelineControls = $translate.instant('kTimelineTap') + ':' + $scope.onTap + " / " + $translate.instant('kTimelineDTap') + ':' + $scope.onDTap;
-    $scope.timelineControls = $scope.timelineControls + '/ ' + ($rootScope.platformOS == 'desktop'? $translate.instant('kTimelineThumbDesktop'): $translate.instant('kTimelineThumbMobile'));
-
-  };
-
+  
 
   //-------------------------------------------------
   // FIXME: shitty hackery -- Im using a rootScope
@@ -442,12 +430,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     $scope.onTap = $translate.instant('kTimelineEvent');
     $scope.onDTap = $translate.instant('kTimelineGraph');
-    $scope.timelineControls = $translate.instant('kTimelineTap') + ':' + $scope.onTap + " / " + $translate.instant('kTimelineDTap') + ':' + $scope.onDTap;
 
-    $scope.timelineControls = $scope.timelineControls + '/ ' + ($rootScope.platformOS == 'desktop'? $translate.instant('kTimelineThumbDesktop'): $translate.instant('kTimelineThumbMobile'));
+    $scope.timelineControls =  ($rootScope.platformOS == 'desktop')? $translate.instant('kTimelineControlsD'):$translate.instant('kTimelineControlsM');
 
-    //console.log("***AFTER ENTER");
-
+   
     $scope.follow = {
       'time': NVR.getLogin().followTimeLine
     };
@@ -1067,8 +1053,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       timeline_instance.destroy();
     }
 
-    groups = new timeline.DataSet();
-    graphData = new timeline.DataSet();
+    groups = new vis.DataSet();
+    graphData = new vis.DataSet();
     //console.log ("AFTER VIS");
 
     var tzs, tze;
@@ -1271,42 +1257,14 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               }
 
               //  console.log(">>>>> CREATING NEW TIMELINE with " + JSON.stringify(options));
-              timeline_instance = new timeline.Timeline(container[0], null, options);
+              timeline_instance = new vis.Timeline(container[0], null, options);
               // console.log ("GRAPH DATA");
               timeline_instance.setItems(graphData);
               //   console.log ("GROUPS");
               timeline_instance.setGroups(groups);
-             
+              timeline_instance.fit();
 
-              if (NVR.getLogin().timelineScale == -1)
-
-              {
-                // console.log ("SCALE NOT FOUND");
-
-                timeline_instance.fit();
-              } else {
-                timeline_instance.fit();
-
-                
-               
-                /*var d = NVR.getLogin().timelineScale;
-                console.log ("SCALE FOUND "+d+" SECONDS");
-                var w = timeline_instance.getWindow();
-                console.log ("Original s="+w.start+" e="+w.end);
-
-
-                var s = moment.tz(w.end, NVR.getTimeZoneNow()).subtract(d,'seconds').tz(moment.tz.guess());
-
-                //var s = moment(w.start).format("YYYY-MM-DD HH:mm:ss");
-                //
-                //var e = moment(w.start).add(d,'seconds').format("YYYY-MM-DD HH:mm:ss");
-
-                var e = moment.tz(w.end, NVR.getTimeZoneNow()).tz(moment.tz.guess());
-
-                console.log ("Start="+s+" End="+e);
-                $timeout (function() {timeline_instance.setWindow(s,e);},1000);*/
-
-              }
+              
 
               lastTimeForEvent = moment().tz(NVR.getLogin().useLocalTimeZone ? NVR.getLocalTimeZoneNow() : NVR.getTimeZoneNow());
               updateInterval = $interval(function () {
@@ -1319,24 +1277,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               $scope.navControls = false;
               dblclick = false;
 
-              // we don't really need this anymore - as we have an interval timer 
-              // ticking away
-
-              // this is called for each tick the bar moves
-              // speed moves depending on zoom factor
-              // 
-              /* timeline_instance.on('currentTimeTick', function() {
-
-                   if ($scope.follow.time) {
-                    
-                   }
-
-
-               });*/
-
-               //var Press = new Hammer.Press({time:500});
-            
-              
+          
                
               timeline_instance.on('rangechanged', function (s) {
                 ///console.log ("Range Changed:"+JSON.stringify(s));
@@ -1350,44 +1291,60 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                   var ld = NVR.getLogin();
                   ld.timelineScale = d;
                   NVR.setLogin(ld);
-
-               
-
-                  //console.log ("Stored user scale of "+d+" seconds");
                 }
-
               });
 
-             
-              timeline_instance.on('click', function (prop) {
-                console.log ("CLICK");
-                if ($scope.onTap == $translate.instant('kTimelineGraph'))
-                  timelineAnalyzeFrames(prop);
-                else
-                  timelineShowEvent(prop);
+              // different handlers for mobile and desktop
+              // due to how they seem to react to touch differently
 
+              if ($rootScope.platformOS == 'desktop') {
+                NVR.debug ("setting up desktop handlers");
+                timeline_instance.on('click', function (prop) {
+                    NVR.debug ("click handler called");
+                   timelineShowEvent(prop);   
+                  });
+
+                timeline_instance.on('doubleClick', function (prop) {
+                    NVR.debug ("double click handler called");
+                    timelineAnalyzeFrames(prop);
+                });
+              }
+              // mobile handlers
+              else {
+                 // click doesn't seem to work on mobile (iOS at least. wuh?)
+                 // this is called for both tap and double tap
+                 NVR.debug ("setting up mobile handlers");
+                 timeline_instance.on('click', function (prop) {
+                    NVR.debug ("click handler called");
+
+                    if (dblclick) {
+                        NVR.debug ("Double click detected <= 300ms");
+                        timelineAnalyzeFrames(prop);
+                    }
+                    // differntiate between dbl click and click
+                    if (!dblclick) {
+                        dblclick = true;
+                        $timeout (function () {
+                            dblclick = false;
+                            NVR.debug ("Timeout for double click >300ms, single click assumed");
+                            timelineShowHover(prop);
+                        },300);
+                    }
 
               });
+            }
+            
+       
 
-              timeline_instance.on('itemover', function (prop) {
-                console.log ("ITEMOVER");
-               timelineShowHover(prop);
-              });
+              // hover is only desktop
+              if ($rootScope.platformOS == 'desktop') {
+                timeline_instance.on('itemover', function (prop) {
+                    timelineShowHover(prop);
+                   });
 
-              timeline_instance.on('select', function (prop) {
-                console.log ("SELECT");
-               timelineShowHover(prop);
-              });
-
-
-              timeline_instance.on('doubleClick', function (prop) {
-                console.log ("DBL CLICK");
-                if ($scope.onDTap == $translate.instant('kTimelineGraph'))
-                  timelineAnalyzeFrames(prop);
-                else
-                  timelineShowEvent(prop);
-
-              });
+                
+              }
+     
             },
             function (error) {
               NVR.displayBanner('error', 'Timeline error', 'Please try again');
@@ -1399,7 +1356,6 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   }
 
   $scope.thumbnailClicked = function(event) {
-
    console.log ("Thumb tapped");
     if (!$scope.currentThumbEvent) {
         // will this ever be? Don't think so
@@ -1415,137 +1371,102 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   };
 
   function timelineShowEvent(prop) {
-    $timeout(function () {
-      if (dblclick) {
-        //console.log ("IGNORING CLICK AS DBL CLICK");
-        $timeout(function () {
-          dblclick = false;
-        }, 400);
-        return;
-      }
-      //console.log ("CLICK");
-      //console.log ("I GOT " + JSON.stringify(prop));
-      // console.log ("EVENT IS " + JSON.stringify(properties.event));
-      //var properties =  timeline_instance.getEventProperties(prop);
-      // console.log ( "I GOT " + properties);
+
       var itm = prop.item;
-      //console.log ("ITEM CLICKED " + itm);
-      if (itm && !isNaN(itm)) {
+      if (!itm) {
+          itm = getClosestId(prop);
+          if (!itm) {
+            NVR.log ("did not find an item to display", "error");
+            return;
+        }
+      }
+
+      if (itm) {
         NVR.debug("TimelineCtrl/drawGraph:You clicked on item " + itm);
         var item = graphData.get(itm);
         NVR.debug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
         showEvent(item.myevent);
 
-      } else {
-        NVR.debug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
-        if (prop.group) {
-          var visible = timeline_instance.getVisibleItems();
-          NVR.debug("Show Event: Visible items=" + JSON.stringify(visible));
-          var closestItem = null;
-          var minDist = 99999;
-          var _item;
-          for (var x = 0; x < visible.length; x++) {
-            _item = timeline_instance.itemSet.items[x];
-            if (_item && _item.data && _item.data.group == prop.group) {
-              if (Math.abs(_item.left - prop.x) < minDist) {
-                closestItem = _item;
-                minDist = Math.abs(_item.left - prop.x);
-                NVR.debug("Temporary closest " + _item.left);
-                //console.log (_item);
-              }
-            }
+      } 
+   
+  }
 
-          }
+  function getClosestId(prop) {
+    prop = timeline_instance.getEventProperties(prop.event);
+    var closestId = null;
 
-          if (closestItem != null) {
-            NVR.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
-            showEvent(closestItem.data.myevent);
-          } else {
-            NVR.log("Did not find a visible item match");
-           
-          }
-        } else // no group row tapped, do nothing
-        {
-
-          /*$ionicLoading.show({
-              template: "",
-              animation: 'fade-in',
-              showBackdrop: false,
-              maxWidth: 200,
-              showDelay: 0,
-              duration: 1500,
-          });*/
+    var target = new Date(prop.time).getTime();
+    NVR.debug ("item is not exact, so guessing from time " + target + " with group=" + prop.group);
+    if (prop.group) {
+      var visible = timeline_instance.getVisibleItems();
+     NVR.debug("Show hover: Visible items=" + JSON.stringify(visible));
+     var minDist = Number.MAX_VALUE;
+     //var minDist = 1.8e7; // 5 hrs in milliseconds
+      var _item;
+      //NVR.debug("ITEM SET IS : " + JSON.stringify(timeline_instance.itemSet));
+      for (var x = 0; x < visible.length; x++) {
+        _item = graphData.get(visible[x]);
+        if (_item.group != prop.group) continue;
+        console.log ("ITEM start/end is:"+_item.start+'/'+_item.end);
+        var dist = Math.min( Math.abs(_item.start - target), Math.abs(_item.end - target));
+        if (dist < minDist ) {
+            closestId = _item.id;
+            minDist = dist;
+           // NVR.debug ("ID:"+closestId+' is closest for now, with dist='+dist);
         }
-        // console.log("Zoomed out too far to playback events");
       }
-    }, 400);
+
+      if (closestId != null) { 
+        NVR.log("Final closest item" + closestId + " group: " + prop.group);
+
+
+      } else {
+        NVR.log("Did not find a visible item match");
+        $scope.thumbData = {
+            url: '',
+            eid: $translate.instant('kMonNone'),
+            time: $translate.instant('kMonNone'),
+            monName: $translate.instant('kMonNone')
+        };
+       
+      }
+    } else // no group row tapped, do nothing
+    {
+       NVR.debug ("No group id found, cannot approximate");
+
+      /*$ionicLoading.show({
+          template: "",
+          animation: 'fade-in',
+          showBackdrop: false,
+          maxWidth: 200,
+          showDelay: 0,
+          duration: 1500,
+      });*/
+    }
+    return closestId;
   }
 
   function timelineShowHover(prop) {
-    // console.log ("DOUBLE");
-    //dblclick = true;
-  //  var itm = items[0];
-   // var itm = prop.item;
+
    var itm;
    if (prop.items) {
     itm = prop.items[0];
    }
-   else if (prop.item) {
+   if (prop.item) {
      itm = prop.item;
    }
-    
-
    if (!itm) {
-       prop = timeline_instance.getEventProperties(prop.event);
-       NVR.debug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
-       if (prop.group) {
-         var visible = timeline_instance.getVisibleItems();
-        NVR.debug("Show hover: Visible items=" + JSON.stringify(visible));
-         var closestItem = null;
-         var minDist = 99999;
-         var _item;
-         for (var x = 0; x < visible.length; x++) {
-           _item = timeline_instance.itemSet.items[x];
-           if (_item && _item.data && _item.data.group == prop.group) {
-             if (Math.abs(_item.left - prop.x) < minDist) {
-               closestItem = _item;
-               minDist = Math.abs(_item.left - prop.x);
-              NVR.debug("Temporary closest " + _item.left);
-               //console.log (_item);
-             }
-           }
-
-         }
-
-         if (closestItem != null) { 
-           NVR.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
-           itm = closestItem.left;
-
-         } else {
-           NVR.log("Did not find a visible item match");
-           return;
-         }
-       } else // no group row tapped, do nothing
-       {
-          NVR.debug ("No group id found, cannot approximate");
-          return;
-         /*$ionicLoading.show({
-             template: "",
-             animation: 'fade-in',
-             showBackdrop: false,
-             maxWidth: 200,
-             showDelay: 0,
-             duration: 1500,
-         });*/
-       }
-
-       
+        itm = getClosestId(prop);
+        if (!itm) {
+            NVR.log ("did not find an item to display", "error");
+            return;
+        }
    }
 
     //console.log ("ITEM HOVERED " + JSON.stringify(itm));
 
      // NVR.debug("TimelineCtrl/drawGraph:You hovered on item " + itm);
-      NVR.debug (" Eid=: "+itm);
+      //NVR.debug (" Eid=: "+itm);
       var item = graphData.get(itm);
 
       $scope.currentThumbEvent = timeline_instance.getEventProperties(prop.event);
@@ -1555,49 +1476,21 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
   function timelineAnalyzeFrames(prop) {
     // console.log ("DOUBLE");
-    dblclick = true;
     var itm = prop.item;
-    console.log ("ITEM CLICKED " + itm);
-    if (itm && !isNaN(itm)) {
+   // console.log ("ITEM CLICKED " + itm);
+    if (!itm) {
+        itm = getClosestId(prop);
+        if (!itm) {
+            NVR.log ("did not find an item to display", "error");
+            return;
+        }
+    }
+
+   
       NVR.debug("TimelineCtrl/drawGraph:You clicked on item " + itm);
       var item = graphData.get(itm);
       NVR.debug("TimelineCtrl/drawGraph: clicked item details:" + JSON.stringify(item));
       eventDetails(item.myevent);
-
-    } else {
-
-      NVR.debug("exact match not found, guessing item with co-ordinates X=" + prop.x + " group=" + prop.group);
-      if (prop.group) {
-        var visible = timeline_instance.getVisibleItems();
-        //NVR.debug("Visible items=" + JSON.stringify(visible));
-        var closestItem = null;
-        var minDist = 99999;
-        var _item;
-        for (var x = 0; x < visible.length; x++) {
-          _item = timeline_instance.itemSet.items[x];
-          if (_item.data.group == prop.group) {
-            if (Math.abs(_item.left - prop.x) < minDist) {
-              closestItem = _item;
-              minDist = Math.abs(_item.left - prop.x);
-              NVR.debug("Temporary closest " + _item.left);
-              //console.log (_item);
-            }
-          }
-
-        }
-        NVR.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
-        if (closestItem != null) {
-          NVR.log("Closest item " + closestItem.left + " group: " + closestItem.data.group);
-          showEvent(closestItem.data.myevent);
-        } else {
-          NVR.log("Did not find a visible item match");
-         
-          
-        }
-      }
-
-      // console.log("Zoomed out too far to playback events");
-    }
   }
 
   function showThumbnail (event) {
