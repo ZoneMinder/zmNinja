@@ -22,7 +22,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   var event;
   var gEvent;
   var handle;
-  var playerPromise = undefined;
+  //var playerPromise = undefined;
   var showLive = true;
   //var isGlobalFid = false; // true if its set to MaxScoreFrameId in events
   var eventId = 0;
