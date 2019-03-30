@@ -27,7 +27,6 @@ angular.module('zmApp', [
     'pascalprecht.translate',
     'uk.ac.soton.ecs.videogular.plugins.cuepoints',
     'dcbImgFallback',
-    'ngImageAppear',
     'angular-websocket',
     'ngCookies'
 
