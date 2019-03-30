@@ -7,7 +7,7 @@
       <button class="button button-icon button-clear ion-arrow-left-c" ng-click="moveDays(-1);"></button>
       <button class="button button-icon button-clear ion-arrow-right-c" ng-click="moveDays(1);"></button>
       <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
-        ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+    ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
       <button class="button button-icon button-clear ion-android-more-vertical" ng-click="popover.show($event); ">&nbsp;&nbsp;&nbsp;</button>
@@ -39,9 +39,6 @@
       <br />
       <div style="padding-left:15px; font-size:10px; color:grey">
 
-        <button ng-click="toggleTap()" class="button button-small button-dark">
-          {{'kTimelineTap' | translate}}:{{onTap}}
-        </button>
 
         <button ng-click="toggleFollowTime()" ng-class="follow.time? 'button button-small button-balanced':'button button-small button-assertive'">
           {{'kUpdateTimeline' | translate}}:&nbsp;{{follow.time? ('kTrue' | translate) : ('kFalse' | translate)}}
@@ -52,7 +49,8 @@
         <div ng-if="follow.time">
           <p>{{newEvents}}</p>
         </div>
-            <br/>
+        <div ng-if="thumbData.url != ''">
+            <br/><br/>
             <figure style="display:inline-block">
                     <figcaption class="smallnote">
                         {{thumbData.monName}}: {{thumbData.eid}} @ {{thumbData.time}}
@@ -60,6 +58,8 @@
                     <img ng-src="{{thumbData.url}}" fallback-src="img/noimage.png" width="400px" on-tap="thumbnailClicked($event)"/>
 
             </figure>
+        </div>
+           
             
    
       </div>
