@@ -20,13 +20,13 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.055";
+      var zmAppVersion = "1.3.056";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
       var monitorsLoaded = 0;
       var snapshotFrame = 1; // will be 'snapshot'
-                             // if ZM >= 1.31
+      // if ZM >= 1.31
 
 
 
@@ -227,7 +227,7 @@ angular.module('zmApp.controllers')
           });
 
           if ($rootScope.platformOS == 'android') {
-            log (">>> Android: enabling inline image view for self signed certs");
+            log(">>> Android: enabling inline image view for self signed certs");
             cordova.plugins.certificates.trustUnsecureCerts(true);
           }
 
@@ -685,19 +685,19 @@ angular.module('zmApp.controllers')
           debug(val);
         },
 
-        evaluateTappedNotification: function() {
+        evaluateTappedNotification: function () {
 
           var state = "";
           var stateParams1 = {};
           var stateParams2 = {};
-          
-          debug ("Inside evaluateNotifications");
-          
+
+          debug("Inside evaluateNotifications");
+
           if ($rootScope.tappedNotification == 2) { // url launch
             debug("Came via app url launch with mid=" + $rootScope.tappedMid);
             debug("Came via app url launch with eid=" + $rootScope.tappedEid);
-         
-          
+
+
             if (parseInt($rootScope.tappedMid) > 0) {
               debug("Going to live view ");
               state = "app.monitors";
@@ -714,19 +714,19 @@ angular.module('zmApp.controllers')
               };
 
             }
-         
-      
+
+
           } // 2
           else if ($rootScope.tappedNotification == 1) // push
           {
-      
-      
+
+
             debug("Came via push tap. onTapScreen=" + loginData.onTapScreen);
             if (loginData.onTapScreen == $translate.instant('kTapMontage')) {
               debug("Going to montage");
               state = "app.montage";
-      
-         
+
+
             } else if (loginData.onTapScreen == $translate.instant('kTapEvents')) {
               debug("Going to events");
               state = "app.events";
@@ -734,14 +734,14 @@ angular.module('zmApp.controllers')
                 "id": 0,
                 "playEvent": true
               };
-           
+
             } else // we go to live
             {
               debug("Going to live view ");
               state = "app.monitors";
-            
+
             }
-          } 
+          }
           $rootScope.tappedNotification = 0;
           return [state, stateParams1, stateParams2];
         },
@@ -765,7 +765,7 @@ angular.module('zmApp.controllers')
           return latestBlogPostChecked;
         },
 
-        
+
 
         // This function is called when the app is ready to run
         // sets up various variables
@@ -776,7 +776,7 @@ angular.module('zmApp.controllers')
         // the ZM authors fix this and streamline the access of images
         // from APIs, I don't have an option
 
-      
+
 
         // used when an empty server profile is created
         getDefaultLoginObject: function () {
@@ -980,7 +980,7 @@ angular.module('zmApp.controllers')
                     log("A cloud configuration has been found");
                     window.cordova.plugin.cloudsettings.load(function (cloudData) {
                       //console.log("CLOUD DATA FOUND" + JSON.stringify(cloudData));
-                     // debug("Cloud data retrieved is:" + JSON.stringify(cloudData));
+                      // debug("Cloud data retrieved is:" + JSON.stringify(cloudData));
                       if (cloudData && cloudData.defaultServerName && cloudData.serverGroupList) {
                         log("retrieved a valid cloud config with a defaultServerName of:" + cloudData.defaultServerName);
                         log("replacing local DB with cloud...");
@@ -1025,7 +1025,7 @@ angular.module('zmApp.controllers')
         },
 
         init: function () {
-         
+
 
           log("ZMData init: checking for stored variables & setting up log file");
 
@@ -1431,7 +1431,7 @@ angular.module('zmApp.controllers')
                     loginData.enableSlowLoading = false;
 
                   }
-                 
+
 
                   if (typeof loginData.enableStrictSSL == 'undefined') {
 
@@ -1531,7 +1531,7 @@ angular.module('zmApp.controllers')
                 if (window.cordova) setCordovaHttpOptions();
 
 
-               
+
                 $rootScope.$broadcast('init-complete');
               });
 
@@ -1789,7 +1789,7 @@ angular.module('zmApp.controllers')
 
         },
 
-       
+
 
         //-------------------------------------------------------
         // returns API version or none 
@@ -1802,15 +1802,14 @@ angular.module('zmApp.controllers')
           $http.get(apiurl)
             .then(function (success) {
                 if (success.data.version) {
-                  console.log ("API VERSION RETURNED: " + JSON.stringify(success));
+                  console.log("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
-                
-                  if (versionCompare(success.data.version, '1.32.0') != -1 ) {
-                    debug ("snapshot  supported in image.php");
+
+                  if (versionCompare(success.data.version, '1.32.0') != -1) {
+                    debug("snapshot  supported in image.php");
                     snapshotFrame = 'snapshot';
-                  }
-                  else {
-                    debug ("snapshot NOT supported in image.php");
+                  } else {
+                    debug("snapshot NOT supported in image.php");
                     snapshotFrame = 1;
                   }
                   setCurrentServerVersion(success.data.version);
@@ -1939,8 +1938,8 @@ angular.module('zmApp.controllers')
                 return (d.promise);
               });
           } else {
-           // log("ZM_EVENT_IMAGE_DIGITS is already configured for " +
-             // configParams.ZM_EVENT_IMAGE_DIGITS);
+            // log("ZM_EVENT_IMAGE_DIGITS is already configured for " +
+            // configParams.ZM_EVENT_IMAGE_DIGITS);
             d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
             return (d.promise);
           }
@@ -1984,7 +1983,7 @@ angular.module('zmApp.controllers')
         },
 
         getSnapshotFrame: function () {
-            return snapshotFrame;
+          return snapshotFrame;
         },
 
         //-----------------------------------------------------------------------------
@@ -2020,11 +2019,11 @@ angular.module('zmApp.controllers')
           return $http.get(req + "&command=1")
             .then(
               function (s) {
-              //  debug("pause success for ck:" + ck );
+                //  debug("pause success for ck:" + ck );
 
               },
               function (e) {
-           //     debug("pause error for ck:" + ck + " with:" + JSON.stringify(e));
+                //     debug("pause error for ck:" + ck + " with:" + JSON.stringify(e));
               }
             );
 
@@ -2044,11 +2043,11 @@ angular.module('zmApp.controllers')
           return $http.get(req + "&command=2")
             .then(
               function (s) {
-            //    debug("play success for ck:" + ck + " with:" + JSON.stringify(s));
+                //    debug("play success for ck:" + ck + " with:" + JSON.stringify(s));
 
               },
               function (e) {
-            //    debug("play error for ck:" + ck + " with:" + JSON.stringify(e));
+                //    debug("play error for ck:" + ck + " with:" + JSON.stringify(e));
               }
             );
 
@@ -2122,25 +2121,25 @@ angular.module('zmApp.controllers')
       },*/
 
         getMultiServersCached: function () {
-            return multiservers;
+          return multiservers;
         },
 
         // use non cached for daemon status
         getMultiServers: function () {
-          return $http.get (loginData.apiurl+'/servers.json');
+          return $http.get(loginData.apiurl + '/servers.json');
 
         },
 
         getMultiServer: function (id) {
 
           var ndx = -1;
-          for (var i=0; i < multiservers.length; i++) {
+          for (var i = 0; i < multiservers.length; i++) {
             if (multiservers[i].Server.Id == id) {
               ndx = i;
               break;
             }
           }
-          return ndx == -1 ? {}:multiservers[ndx];
+          return ndx == -1 ? {} : multiservers[ndx];
 
         },
 
@@ -2213,28 +2212,28 @@ angular.module('zmApp.controllers')
                             var multiserver_scheme = "http://";
                             //console.log ("PORTAL URL IS:"+loginData.url);
                             if (loginData.url && (loginData.url.toLowerCase().indexOf("https://") != -1)) {
-                              debug("Portal scheme is https, will use https for any multi-server");
+                              debug("Portal scheme is https, will use https for any multi-server without a protocol");
                               multiserver_scheme = "https://";
                             }
-                            debug("multi-server protocol will be:" + multiserver_scheme);
+                            debug("default multi-server protocol will be:" + multiserver_scheme);
 
                             for (var i = 0; i < monitors.length; i++) {
 
                               // make them all show for now
 
                               var recordingType = '';
-                              if (monitors[i].Monitor.SaveJPEGs>0) {
+                              if (monitors[i].Monitor.SaveJPEGs > 0) {
                                 recordingType = $translate.instant('kImages');
                               }
                               if (monitors[i].Monitor.VideoWriter > 0) {
-                                if (recordingType.length) recordingType +=" + ";
+                                if (recordingType.length) recordingType += " + ";
                                 recordingType = recordingType + $translate.instant('kVideo') + " (";
-                                recordingType = recordingType + ( monitors[i].Monitor.VideoWriter == 1 ? $translate.instant('kMonitorVideoEncode'): $translate.instant('kMonitorVideoPassThru')) + ")";
+                                recordingType = recordingType + (monitors[i].Monitor.VideoWriter == 1 ? $translate.instant('kMonitorVideoEncode') : $translate.instant('kMonitorVideoPassThru')) + ")";
                               }
 
                               // in 1.30.4 these fields did not exist
-                              
-                              monitors[i].Monitor.recordingType = recordingType ? recordingType : $translate.instant ('kImages');
+
+                              monitors[i].Monitor.recordingType = recordingType ? recordingType : $translate.instant('kImages');
                               monitors[i].Monitor.listDisplay = 'show';
                               monitors[i].Monitor.isAlarmed = false;
                               monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
@@ -2251,11 +2250,20 @@ angular.module('zmApp.controllers')
 
                               }
                               if (serverFound) {
+                                // we found a monitor using a multi-server
                                 if (!/^https?:\/\//i.test(multiservers[j].Server.Hostname)) {
-                                  multiservers[j].Server.Hostname = multiserver_scheme + multiservers[j].Server.Hostname;
+
+
+                                  if (multiservers[j].Server.Protocol) {
+                                    multiservers[j].Server.Hostname = multiservers[j].Server.Protocol +
+                                      "://" + multiservers[j].Server.Hostname;
+                                  } else {
+                                    multiservers[j].Server.Hostname = multiserver_scheme + multiservers[j].Server.Hostname;
+                                  }
+
                                 }
 
-                             //   debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
+                                //   debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
 
 
 
@@ -2266,32 +2274,18 @@ angular.module('zmApp.controllers')
                                 var m = URI.parse(multiservers[j].Server.Hostname);
                                 var p = URI.parse(loginData.url);
 
-                                /* if (!p.port && !isNaN(p.path)) {
-                              debug ("Portal: port path reversed?");
-                              var tp = p.port;
-                              p.port = p.path;
-                              p.path = tp;
-                            }
-
-                            if (!s.port && !isNaN(s.path)) {
-                              debug ("Recording: port path reversed?");
-                              var tp = s.port;
-                              s.port = s.path;
-                              s.path = tp;
-                            }
-*/
 
                                 debug("recording server reported  is " + JSON.stringify(m));
                                 debug("portal  parsed is " + JSON.stringify(p));
                                 debug("streaming url  parsed is " + JSON.stringify(s));
-                                debug ("multi-port is:"+zmsPort);
+                                debug("multi-port is:" + zmsPort);
 
                                 var st = "";
                                 var baseurl = "";
                                 var streamingurl = "";
 
 
-                               st += (m.scheme ? m.scheme : p.scheme) + "://"; // server scheme overrides 
+                                st += (m.scheme ? m.scheme : p.scheme) + "://"; // server scheme overrides 
 
 
 
@@ -2305,29 +2299,31 @@ angular.module('zmApp.controllers')
 
                                 //console.log ("STEP 1: ST="+st);
 
-                                if (zmsPort <= 0 || loginData.disableSimulStreaming) {
-                                  if (p.port || m.port) {
-                                    st += (m.port ? ":" + m.port : ":" + p.port);
-                                    streamingurl = st;
-                                    //console.log ("STEP 2 no ZMS: ST="+st);
-
-                                  }
-
+                                // now lets do port magic
+                                if (multiservers[j].Server.Port) {
+                                  debug("Found port inside multiserver: " + multiservers[j].Server.Id + ", using: " + multiservers[j].Server.Port);
+                                  st += ":" + multiservers[j].Server.Port;
                                 } else {
-                                  var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                                  st = st + ':' + sport;
-
-                                  if (p.port || m.port)
-                                    st += (m.port ? ":" + m.port : ":" + p.port);
-                                  //console.log ("STEP 2: ST="+st);
-
+                                  debug("No port in serverId:" + multiservers[j].Server.Id);
+                                  if (zmsPort <= 0 || loginData.disableSimulStreaming) {
+                                    // no multiport so take from portal or multiserver if there
+                                    if (p.port || m.port) {
+                                      st += (m.port ? ":" + m.port : ":" + p.port);
+                                      streamingurl = st;
+                                      //console.log ("STEP 2 no ZMS: ST="+st);
+                                    }
+                                  } else {
+                                    // we have multiserver
+                                    var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
+                                    st = st + ':' + sport;
+                                  }
+                                 
                                 }
 
-
                                 baseurl = st;
-                  
+
                                 controlURL = st;
-                                controlURL += (p.path ? p.path:'');
+                                controlURL += (p.path ? p.path : '');
 
                                 st += (s.path ? s.path : p.path);
                                 streamingurl += (s.path ? s.path : p.path);
@@ -2342,7 +2338,7 @@ angular.module('zmApp.controllers')
                                 monitors[i].Monitor.controlURL = controlURL;
 
 
-                                debug ("Storing baseurl="+baseurl+" streamingURL="+st+" recordingURL="+controlURL);
+                                debug("Storing baseurl=" + baseurl + " streamingURL=" + st + " recordingURL=" + controlURL);
                                 //console.log ("** Streaming="+st+" **base="+baseurl);
                                 // starting 1.30 we have fid=xxx mode to return images
                                 monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
@@ -2352,8 +2348,9 @@ angular.module('zmApp.controllers')
                                 //debug ("Base URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.baseURL );
 
                               } else {
+                                // Non multiserver case
                                 //monitors[i].Monitor.listDisplay = 'show';
-                                debug ("No servers matched, filling defaults...");
+                                debug("No servers matched, filling defaults...");
                                 monitors[i].Monitor.isAlarmed = false;
                                 monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                                 monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
@@ -2381,7 +2378,7 @@ angular.module('zmApp.controllers')
                                   if (p3.path) controlURL += p3.path;
                                 }
 
-                                debug ("Storing streaming="+st2+" recording="+controlURL);
+                                debug("Storing streaming=" + st2 + " recording=" + controlURL);
 
                                 monitors[i].Monitor.streamingURL = st2;
                                 monitors[i].Monitor.controlURL = controlURL;
@@ -2390,8 +2387,8 @@ angular.module('zmApp.controllers')
                                 monitors[i].Monitor.baseURL = loginData.url;
                                 monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
 
-                              
-                              }
+
+                              } // non multiserver end
                             }
                             // now get packery hide if applicable
                             reloadMonitorDisplayStatus();
@@ -2671,7 +2668,7 @@ angular.module('zmApp.controllers')
           if (loginData.objectDetectionFilter && !noObjectFilter) {
             myurl = myurl + '/Notes%20REGEXP:detected%3A';
           }
-          
+
 
           myurl = myurl + ".json";
           //console.log (">>>>>Constructed URL " + myurl);
@@ -3039,7 +3036,7 @@ angular.module('zmApp.controllers')
           $rootScope.authSession = "undefined";
 
 
-         // console.log("CURRENT SERVER: " + loginData.currentServerVersion);
+          // console.log("CURRENT SERVER: " + loginData.currentServerVersion);
 
           if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
