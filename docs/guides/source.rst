@@ -118,13 +118,15 @@ As of Mar 2019, cordova-ios does not support multiple targets, nor does
 it support automatic building of notification extensions. So there is manual work to be done:
 
 - Open up ``platforms/ios/zmNinja.xcworkspace`` in XCode
+- Go to ``File->Workspace Settings`` and select ``Legacy Build System``
+- Go to ``Target->zmNinja->Build Settings`` and set "Swift Language Version" to ``Swift 4``
 - Go to ``File->New->Target->Notification Service Extension``, select Objective C 
 - In the "Product Name" put in ``zmNinjaNotification`` (your BundleID should now read  ``com.pliablepixels.zmninja-pro.zmNinjaNotification``)
 - Say "Yes" to "Activate zmNinjaNotification scheme?" popup
 - Now go to zmNinjaNotification target and make version and  build same as zmNinja
 - Now in XCode Targets, select ``zmNinjaNotification``, and make sure you select a Team and make sure Deployment Target is 10 or above
 - Change Deployment target to 10.1 (same as zmNinja target)
-- ```cp www/external/NotificationService.m platforms/ios/zmNinjaNotication/``
+- ``cp etc/NotificationService.m platforms/ios/zmNinjaNotification/``
 - ``cd platforms/ios/``
 - ``pod install``
 

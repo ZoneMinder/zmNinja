@@ -102,8 +102,8 @@
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
         <resource-file src="build-extras.gradle" target="build-extras.gradle" />
-        <resource-file src="www/external/android-notification-icons/ic_stat_notification.png" target="app/src/main/res/drawable/ic_stat_notification.png" />
-        <resource-file src="www/external/android-tv-banner/banner.png" target="res/drawable/banner.png" />
+        <resource-file src="etc/android-notification-icons/ic_stat_notification.png" target="app/src/main/res/drawable/ic_stat_notification.png" />
+        <resource-file src="etc/android-tv-banner/banner.png" target="res/drawable/banner.png" />
         <resource-file src="google-services.json" target="app/google-services.json" />
         <resource-file src="www/sounds/blop.mp3" target="res/raw/blop.mp3" />
         <preference name="android-manifest/@android:installLocation" value="auto" />
@@ -176,4 +176,6 @@
         <variable name="ANDROID_SUPPORT_ANNOTATIONS_VERSION" value="27.+" />
     </plugin>
     <plugin name="cordova-plugin-media-pp-fork" spec="^1.0.2-dev" />
+    <engine name="android" spec="7.1.4" />
+    <engine name="ios" spec="4.5.5" />
 </widget>
