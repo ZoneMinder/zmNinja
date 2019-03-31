@@ -56,6 +56,7 @@ done
 
 echo ----------------------------------------------------
 echo Pliable Pixels Desktop build process
+echo This is DEPRECATED. Please use the new build process
 echo ----------------------------------------------------
 APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns.*/\1/'`
 APPVER+="D"

@@ -58,12 +58,12 @@ Dec 2018, I'm using Node ``v8.11.2``. I use
 `n <https://github.com/tj/n>`__ to manage node versions and switch
 between them.
 
-Install cordova, ionic, and bower
+Install cordova and ionic
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: bash
 
-    npm install -g cordova ionic bower 
+    npm install -g cordova ionic 
     npm install @ionic/v1-toolkit --save-dev
 
 And some more:
@@ -101,7 +101,6 @@ Configure build configure zmNinja and get all required plugins
 
     cd zmNinja
     npm install
-    bower install
     ionic cordova platform add android (or ios)
     cordova prepare
 
@@ -210,7 +209,6 @@ Typically, just running
 ::
 
     npm install
-    bower install
 
 Should have installed everything. Validate by checking you have
 ``electron`` installed by invoking it on the command line
