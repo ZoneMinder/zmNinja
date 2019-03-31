@@ -320,10 +320,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
                       ],
         
-                      theme: "lib/videogular-themes-default/videogular.css",
+                      theme: "external/videogular2.2.1/videogular.min.css",
                       cuepoints: {
                         theme: {
-                          url: "lib/videogular-cuepoints/cuepoints.css"
+                          url: "external/videogular2.2.1/videogular-cuepoints.min.css"
                         },
                         points: [],
                       }
@@ -441,10 +441,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
                       ],
         
-                      theme: "lib/videogular-themes-default/videogular.css",
+                      theme: "external/videogular2.2.1/videogular.min.css",
                       cuepoints: {
                         theme: {
-                          url: "lib/videogular-cuepoints/cuepoints.css"
+                          url: "external/videogular2.2.1/videogular-cuepoints.min.css"
                         },
                         points: [],
                       }
@@ -910,10 +910,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         
                       ],
         
-                      theme: "lib/videogular-themes-default/videogular.css",
+                      theme: "external/videogular2.2.1/videogular.min.css",
                       cuepoints: {
                         theme: {
-                          url: "lib/videogular-cuepoints/cuepoints.css"
+                          url: "external/videogular2.2.1/videogular-cuepoints.min.css"
                         },
                         points: [],
                       }
