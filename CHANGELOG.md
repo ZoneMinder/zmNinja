@@ -1,5 +1,41 @@
 # Change Log
 
+## [v1.3.056](https://github.com/pliablepixels/zmNinja/tree/v1.3.056) (2019-04-02)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.050...v1.3.056)
+
+**Implemented enhancements:**
+
+- Add thumbnail to timeline and hover \(desktop only\) capability [\#796](https://github.com/pliablepixels/zmNinja/issues/796)
+- Add automated test harness [\#791](https://github.com/pliablepixels/zmNinja/issues/791)
+- Password protect desktop instance [\#784](https://github.com/pliablepixels/zmNinja/issues/784)
+
+**Fixed bugs:**
+
+- Fix multi-server port/protocol differences [\#800](https://github.com/pliablepixels/zmNinja/issues/800)
+- App not working on Android 6 10 inch tablet [\#793](https://github.com/pliablepixels/zmNinja/issues/793)
+- Unable to change state [\#786](https://github.com/pliablepixels/zmNinja/issues/786)
+
+**Closed issues:**
+
+- remove bower [\#801](https://github.com/pliablepixels/zmNinja/issues/801)
+- Everything looks good but no push notifications [\#799](https://github.com/pliablepixels/zmNinja/issues/799)
+- Unable start after build [\#788](https://github.com/pliablepixels/zmNinja/issues/788)
+- Video URLs undefined [\#787](https://github.com/pliablepixels/zmNinja/issues/787)
+- iOS log view issues & improvements [\#767](https://github.com/pliablepixels/zmNinja/issues/767)
+
+**Merged pull requests:**
+
+- \#796 initial support [\#798](https://github.com/pliablepixels/zmNinja/pull/798) ([florie1706](https://github.com/florie1706))
+- \#796 initial support [\#797](https://github.com/pliablepixels/zmNinja/pull/797) ([maymaymay](https://github.com/maymaymay))
+- Fixing typo [\#794](https://github.com/pliablepixels/zmNinja/pull/794) ([gtozzi](https://github.com/gtozzi))
+- migrate to sphinx [\#792](https://github.com/pliablepixels/zmNinja/pull/792) ([pliablepixels](https://github.com/pliablepixels))
+- Appium [\#790](https://github.com/pliablepixels/zmNinja/pull/790) ([pliablepixels](https://github.com/pliablepixels))
+- \#779 add options in dev to disable [\#783](https://github.com/pliablepixels/zmNinja/pull/783) ([florie1706](https://github.com/florie1706))
+- \#779 add options in dev to disable [\#782](https://github.com/pliablepixels/zmNinja/pull/782) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.3.050](https://github.com/pliablepixels/zmNinja/tree/v1.3.050) (2019-02-25)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.043...v1.3.050)
+
 ## [v1.3.043](https://github.com/pliablepixels/zmNinja/tree/v1.3.043) (2019-02-24)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.042...v1.3.043)
 
@@ -244,8 +280,6 @@
 
 **Fixed bugs:**
 
-- Event list incorrect after deleting first event in the list [\#651](https://github.com/pliablepixels/zmNinja/issues/651)
-- Time not properly displayed in the event modal when selecting 'next event' [\#649](https://github.com/pliablepixels/zmNinja/issues/649)
 - zmNinja - montage view - monitors don't show on first run, but show after login saved [\#641](https://github.com/pliablepixels/zmNinja/issues/641)
 
 **Closed issues:**
