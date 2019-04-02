@@ -208,28 +208,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     });
 
-    $timeout(function () {
-      //  NVR.debug("Player is ready, invoking play");
-      //  handle.play()
-
-        /*
-        .then (function (succ) {
-            NVR.debug ("Pause completed, doing a play");
-            handle.play();
-        })
-        .catch (function (err) {
-            NVR.log ('Error invoking promised pause ' + JSON.stringify(err), 'error');
-        })*/
-       
-        /*playerPromise
-        .then (function (succ) {NVR.debug ("video should be playing");})
-        .catch ( function (err) {
-                NVR.log ('Error trying to play: '+JSON.stringify(err), 'error');
-            });*/
-
-    }, 300);
-
-    // window.stop();
+   
   };
 
   $scope.onPlaybackUpdate = function (rate) {

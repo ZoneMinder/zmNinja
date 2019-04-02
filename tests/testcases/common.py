@@ -18,6 +18,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # global pointer to chrome driver
 driver = None
 platform = None
+avd = 'zmNinja_8_0'
 native_context = None
 web_context = None
 
@@ -74,9 +75,12 @@ def _click_with_retry(element, max_retry=3):
 # makes sure we can see the element to avoid out of view issues
 def _goto_element(e):
     driver.execute_script("arguments[0].scrollIntoView();", e)
+    #driver.execute_script("mobile:scroll", {"direction": 'up', 'element': e})
 
 # waits for an element to load
 # allows you to also specify if you want a screenshot after it comes in
+
+
 def _wait_for_id(id=id, dur=30, save_screenshot=False, save_screenshot_file=None):
     log('Waiting for '+id+'...')
     WebDriverWait(driver, dur).until(
@@ -85,6 +89,8 @@ def _wait_for_id(id=id, dur=30, save_screenshot=False, save_screenshot_file=None
     sleep(0.2)
     if save_screenshot:
         take_screenshot(id, save_screenshot_file)
+
+
 
 # element properties
 def get_element_attributes(id=id, save_screenshot=False, save_screenshot_file=None):

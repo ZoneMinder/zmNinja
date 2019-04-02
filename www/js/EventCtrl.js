@@ -67,6 +67,9 @@ angular.module('zmApp.controllers')
     var eventsListScrubHeight = eventsListScrubHeight;
     var eventsListDetailsHeight = eventsListDetailsHeight;
 
+    var eHandle;
+    var scrubOngoing = false;
+
 
     //---------------------------------------------------
     // initial code
@@ -148,6 +151,9 @@ angular.module('zmApp.controllers')
       } 
       else if ($scope.modal != undefined && $scope.modal.isShown()) {
           NVR.debug ("Not reloading as you have a modal open");
+      }
+      else if (scrubOngoing) {
+          NVR.debug ("Not reloading, as video scrub is on");
       }
       else {
         doRefresh();
@@ -825,8 +831,15 @@ angular.module('zmApp.controllers')
 
     $scope.readyToPlay = function (api) {
 
-      api.mediaElement.attr("playsinline", "");
+      eHandle = api;
+      eHandle.mediaElement.attr("playsinline", "");
 
+
+    };
+
+    $scope.eventCanPlay = function() {
+        NVR.debug("This video can be played");
+        eHandle.play();
 
     };
 
@@ -2109,6 +2122,11 @@ angular.module('zmApp.controllers')
         scrollbynumber = 0;
       }
 
+      if (scrubOngoing) { 
+          NVR.debug ("making sure scrub is off");
+          scrubOngoing = false;
+      }
+
       if (oldEvent && event != oldEvent) {
 
         NVR.debug("EventCtrl:Old event scrub will hide now");
@@ -2207,6 +2225,7 @@ angular.module('zmApp.controllers')
         {
 
           NVR.debug("EventCtrl: Scrubbing will turn on now");
+          scrubOngoing = true;
           $scope.currentEvent = "";
           $scope.event = event;
           //$ionicScrollDelegate.freezeScroll(true);
@@ -2313,7 +2332,7 @@ angular.module('zmApp.controllers')
 
             ],
 
-            theme: "lib/videogular-themes-default/videogular.css",
+            theme: "external/videogular2.2.1/videogular.min.css",
 
           };
 
