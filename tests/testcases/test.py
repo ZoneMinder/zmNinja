@@ -19,6 +19,7 @@ import app
 import montage
 import state
 import events
+import logs
 
  
 class ZmninjaAndroidTests(unittest.TestCase):
@@ -33,10 +34,10 @@ class ZmninjaAndroidTests(unittest.TestCase):
             desired_caps = {
                 'platformName': 'Android',
                 'automationName': 'UiAutomator2',
-                'platformVersion': '7.1.1',
+                'platformVersion': '8.0',
                 'deviceName': 'DoesntMatter',
-                'avd': 'zmNinja_7_1_1',
-               # 'avd': 'zmNinja_6_0',
+                'avd': c.avd,
+                # 'avd': 'zmNinja_6_0',
                 'nativeWebTap': True,
                 'nativeWebScreenshot': True, # important, for screenshots
                 'autoAcceptAlerts': True,
@@ -135,7 +136,7 @@ class ZmninjaAndroidTests(unittest.TestCase):
 
 
             c.testConfig = config
-            run_dir = strftime(c.platform+'-%b-%d-%I_%M_%S%p', localtime())
+            run_dir = strftime(c.avd+'_'+c.platform+'-%b-%d-%I_%M_%S%p', localtime())
             c.testConfig['screenshot_dir'] = './screenshots/'+run_dir
             try:
                 os.makedirs(c.testConfig['screenshot_dir'])
@@ -153,8 +154,9 @@ class ZmninjaAndroidTests(unittest.TestCase):
             sleep(5)
             wizard.run_tests(self, isFirstRun)
             isFirstRun = False
-            montage.run_tests(self)
-            events.run_tests(self)
+            #montage.run_tests(self)
+            #events.run_tests(self)
+            logs.run_tests(self)
             if c.testConfig['restart']:
                 state.run_tests(self)
 
@@ -166,6 +168,7 @@ platform = None
 ap = argparse.ArgumentParser()
 ap.add_argument('-i', '--ios', action='store_true')
 ap.add_argument('-a', '--android', action='store_true')
+ap.add_argument('--avd')
 args, u = ap.parse_known_args()
 args = vars(args)
 
@@ -173,6 +176,9 @@ if args['ios']:
     c.platform = 'ios'
 else:
     c.platform = 'android'
+
+if args['avd']:
+    c.avd = args['avd']
 
 
 

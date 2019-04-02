@@ -701,8 +701,9 @@ angular.module('zmApp', [
       
         if (response.data && typeof(response.data) == 'string' && response.data.startsWith("<pre class=\"cake-error\">")) {
             console.log ("cake error detected, attempting fix...");
+            //console.log ("BAD = "+ JSON.stringify(response.data));
             response.data = JSON.parse(response.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
-            //console.log ("FIXED="+response.data);
+           // console.log ("FIXED="+JSON.stringify(response.data));
         }
         //"data":"<pre class=\"cake-error\">
         return response;
