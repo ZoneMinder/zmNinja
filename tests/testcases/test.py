@@ -20,6 +20,7 @@ import montage
 import state
 import events
 import logs
+import timeline
 
  
 class ZmninjaAndroidTests(unittest.TestCase):
@@ -92,6 +93,22 @@ class ZmninjaAndroidTests(unittest.TestCase):
         configs = [];
 
         # Add as many as you need
+
+        '''
+        configs.append ({
+            'portal': 'https://zm',
+            'user': 'admin',
+            'password': '',
+            'use_auth': True,
+            'use_zm_auth': True,
+            'use_basic_auth': False,
+            'basic_user': None,
+            'basic_password': None,
+            'screenshot_dir': './screenshots',
+            'restart': False,
+            'prompt': True
+        })
+        '''
         
         configs.append ({
             'portal': 'https://demo.zoneminder.com/zm',
@@ -104,11 +121,11 @@ class ZmninjaAndroidTests(unittest.TestCase):
             'basic_password': None,
             'screenshot_dir': './screenshots',
             'restart': False,
-            'prompt': False
+            'prompt': True
         })
 
         configs.append ({
-            'portal': 'https://10.6.1.16/zm',
+            'portal': 'https://10.6.1.32/zm',
             'user': 'admin',
             'password': 'admin',
             'use_auth': True,
@@ -154,9 +171,10 @@ class ZmninjaAndroidTests(unittest.TestCase):
             sleep(5)
             wizard.run_tests(self, isFirstRun)
             isFirstRun = False
-            #montage.run_tests(self)
-            #events.run_tests(self)
             logs.run_tests(self)
+            montage.run_tests(self)
+            events.run_tests(self)
+            timeline.run_tests(self)
             if c.testConfig['restart']:
                 state.run_tests(self)
 
