@@ -2665,7 +2665,7 @@ angular.module('zmApp.controllers')
         sl = 'enabled';
       }
 
-      console.log (">>>>>>>>>>>>>> FOLLOW?"+$scope.followSameMonitor);
+      NVR.debug("Shall I follow the same monitor for prev/next?:"+$scope.followSameMonitor);
       $ionicModal.fromTemplateUrl('templates/events-modal.html', {
           scope: $scope,
           animation: 'slide-in-up',
