@@ -2657,7 +2657,7 @@ angular.module('zmApp.controllers')
       NVR.setAwake(NVR.getKeepAwake());
 
       $scope.currentEvent = event;
-      $scope.followSameMonitor = ($stateParams.id == "0") ? "0" : "1";
+      $scope.followSameMonitor = ($scope.id == "0") ? "0" : "1";
 
       var ld = NVR.getLogin();
       var sl = 'disabled';
@@ -2665,6 +2665,7 @@ angular.module('zmApp.controllers')
         sl = 'enabled';
       }
 
+      console.log (">>>>>>>>>>>>>> FOLLOW?"+$scope.followSameMonitor);
       $ionicModal.fromTemplateUrl('templates/events-modal.html', {
           scope: $scope,
           animation: 'slide-in-up',
