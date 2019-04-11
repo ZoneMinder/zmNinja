@@ -212,7 +212,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   };
 
   $scope.onPlaybackUpdate = function (rate) {
-    // console.log ("UPDATED RATE TO "+rate);
+    //console.log ("UPDATED RATE TO "+rate);
     var ld = NVR.getLogin();
     ld.videoPlaybackSpeed = rate;
     NVR.setLogin(ld);
@@ -244,7 +244,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         });
       }
     }
-    NVR.debug ("Invoking play as video can be played");
+    var rate = NVR.getLogin().videoPlaybackSpeed;
+    NVR.debug ("Invoking play at rate:"+rate+" as video can be played");
+    handle.setPlayback (rate);
     handle.play();
   };
 
