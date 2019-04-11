@@ -93,8 +93,6 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.afterEnter', function () {
 
-      // console.log ("********* AFTER ENTER");
-      //
       window.addEventListener("resize", recomputeThumbSize, false);
       $ionicListDelegate.canSwipeItems(true);
      // NVR.debug("enabling options swipe");

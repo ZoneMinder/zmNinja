@@ -69,6 +69,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
     var zmServers = NVR.getServerGroups();
     var loginData = zmServers[s];
     NVR.debug("Retrieved state for this profile:" + JSON.stringify(loginData));
+    NVR.checkInitSanity(loginData);
     NVR.setLogin(loginData);
 
 

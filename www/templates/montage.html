@@ -5,9 +5,11 @@
     &nbsp;
     <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
     </button>
-    <button id="montage-move-2" class="button button-icon button-clear ion-chevron-down" ng-click="toggleSubMenuFunction();">&nbsp;
+    <button id="montage-move-2" class="button button-icon button-clear ion-chevron-down"
+      ng-click="toggleSubMenuFunction();">&nbsp;
     </button>
-    <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
+    <button data-badge="{{$root.alarmCount}}"
+      class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
@@ -56,7 +58,8 @@
             </a>
           </li>
 
-          <li ng-style="{'background-color': isCycleOn()?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}" ng-if="!isDragabillyOn">
+          <li ng-style="{'background-color': isCycleOn()?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}"
+            ng-if="!isDragabillyOn">
             <a ng-click="toggleCycle()">
               <i class="ion-android-bicycle"></i>:{{getCycleStatus()}}</a>
           </li>
@@ -114,45 +117,93 @@
         <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}"
           data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} ">
 
-          <!--  <figure>
-                    <iframe  width="200" height="100" src="https://news.google.com" frameborder="2" ></iframe>
-                </figure>-->
+
+          <div class="row row-no-padding">
+            <div ng-class="monitor.Monitor.showSidebar?'col col-70 col-no-padding':'col col-no-padding'">
+              <figure role="group" class="{{dragBorder}}" ng-show="monitor.Monitor.listDisplay!='noshow'">
+                <!--<div ng-if="!isModalActive" >-->
+                <!--<div ng-if="$root.authSession!='undefined' && !isBackground() && !areImagesLoading">-->
+
+                <div class="montage-image">
+                  <div ng-if="LoginData.enableMontageOverlays" class="montage-buttons">
+                    <a ng-if="monitor.Monitor.lastEvent" class="button button-small button-assertive icon ion-ios-bell"
+                      ng-click="eventButtonClicked(monitor, true)"></a>&nbsp;&nbsp;<a ng-if="monitor.Monitor.lastEvent"
+                      class="button button-small button-balanced icon ion-checkmark"
+                      ng-click="eventButtonClicked(monitor, false)"></a>
+                  </div>
 
 
-          <figure class="{{dragBorder}}" ng-show="monitor.Monitor.listDisplay!='noshow'">
-            <!--<div ng-if="!isModalActive" >-->
-            <!--<div ng-if="$root.authSession!='undefined' && !isBackground() && !areImagesLoading">-->
+                  <a ng-if="LoginData.enableMontageOverlays && monitor.Monitor.Function !='None' && monitor.Monitor.Enabled != '0' && monitor.Monitor.Function != 'Monitor'"
+                    ng-class="monitor.Monitor.showSidebar ? 'montage-sidebar-button button button-small button-light icon ion-chevron-left':'montage-sidebar-button button button-small button-light icon ion-chevron-right' "
+                    ng-click="toggleSidebar(monitor)"></a>
 
-            <div ng-if="!minimal">
-              <img class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}" image-spinner-src="{{constructStream(monitor)}}"
-                ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);"
-                image-spinner-loader="lines" img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}" image-on-error="processImageError(monitor);" />
+
+                  <img class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}"
+                    image-spinner-src="{{constructStream(monitor)}}"
+                    ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);"
+                    image-spinner-loader="lines" img-spinner-w="{{monitor.Monitor.Width}}"
+                    img-spinner-h="{{monitor.Monitor.Height}}" image-on-error="processImageError(monitor);" />
+                </div>
+
+                <figcaption id="slowpulse"
+                  ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'">
+                  &nbsp;
+
+                  <span ng-if="monitor.Monitor.isStamp && isDragabillyOn">
+                    <i class="animated infinite flash ion-pin"></i>&nbsp;</span>
+                  <i class="ion-ios-videocam"></i>&nbsp; {{monitor.Monitor.Name}}&nbsp;
+                  <i ng-if="$root.runMode!='lowbw'" ng-style="{'color':monitor.Monitor.alarmState}"
+                    class="ion-record"></i>&nbsp;
+
+                </figcaption>
+
+              </figure>
+            </div>
+            <div ng-if="monitor.Monitor.showSidebar" class="col col-30 col-no-padding "
+              style="background:rgba(10, 61, 98,0.3)">
+              <!--sidebar details-->
+
+              <img style="height: 100%; width: 100%; object-fit: contain"
+                image-spinner-src="{{constructEventThumbnail(monitor) }}" image-spinner-loader="lines"
+                img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}"
+                image-on-error="processImageError(monitor);" ng-click="showEvent(monitor)" />
+
 
 
             </div>
+          </div>
+          <div ng-if="monitor.Monitor.showSidebar" class="montage-sidebar ">
 
-            <div ng-if="minimal">
-              <img id="img-{{$index}}" image-spinner-src="{{constructStream(monitor)}}" ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);"
-                image-spinner-loader="lines" img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}" image-on-error="processImageError(monitor);"/>
+            <div class="row row-no-padding">
+              <i class="ion-social-buffer"></i>&nbsp;{{'kMontageEventStorage' | translate }}:
+              {{formatBytes(monitor.Monitor.TotalEventDiskSpace,1)}}
+            </div>
+            <div ng-if="!monitor.Monitor.lastEvent">
+              <div class="row">{{'kMontageEventCaughtUp' | translate}}</div>
+            </div>
+            <div ng-if="monitor.Monitor.lastEvent">
+              <div class="row row-no-padding">
+                <i class="ion-ios-bell"></i>&nbsp;{{monitor.Monitor.lastEvent.pagination.count}}
+                {{'kMontageEventUnseenCount' | translate}}
+              </div>
+              <div class="row row-no-padding">
+                <i class="ion-ios-calendar-outline"></i>&nbsp;{{'kMontageEventLatest' | translate}}:
+                {{humanizeTime(monitor.Monitor.lastEvent.events[0].Event.StartTime)}}<br />
+              </div>
+              <div class="row row-no-padding">
+                <i class="ion-clipboard"></i>&nbsp; {{monitor.Monitor.lastEvent.events[0].Event.Notes}}<br />
+              </div>
+
             </div>
 
 
-
-
-            <figcaption id="slowpulse" ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'">&nbsp;
-
-              <span ng-if="monitor.Monitor.isStamp && isDragabillyOn">
-                <i class="animated infinite flash ion-pin"></i>&nbsp;</span>
-              <i class="ion-ios-videocam"></i>&nbsp; {{monitor.Monitor.Name}}&nbsp;
-              <i ng-if="$root.runMode!='lowbw'" ng-style="{'color':monitor.Monitor.alarmState}" class="ion-record"></i>&nbsp;
-
-            </figcaption>
-
-          </figure>
-
+          </div>
         </div>
-      </span>
-      <!-- ngrepeat -->
+
+
+    </div>
+    </span>
+    <!-- ngrepeat -->
     </div>
     <ion-item style="background-color:#444444; color:#fff;border:none;" ng-show="!MontageMonitors.length">
       {{'kNoMonitors' | translate}}
@@ -170,11 +221,15 @@
       </button>
       <!-- <button mfb-button icon="ion-refresh" label="{{'kRefresh' | translate}}" ng-click="resetSizes();">
             </button>-->
+      <button mfb-button icon="ion-android-apps" label="{{'kReflow'| translate}}" ng-click="squeezeMonitors()">
+      </button>
       <button mfb-button icon="ion-close" label="{{'kExitFullScreen'| translate}}" ng-click="switchMinimal()">
       </button>
+
     </nav>
     <span class="modal-alarm-badge">
-      <a data-badge="{{$root.alarmCount}}" class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive"
+      <a data-badge="{{$root.alarmCount}}"
+        class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive"
         ng-click="handleAlarmsWhileMinimized();" ng-if="$root.isAlarm"></a>
     </span>
   </div>

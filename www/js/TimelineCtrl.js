@@ -163,6 +163,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   //--------------------------------------------------------
   function openModal(event) {
 
+    //console.log (JSON.stringify(event));
+
     if ($scope.modalFromTimelineIsOpen == true) {
       // don't know why but some conflict from angular to timeline_instance lib
       // results in double modals at times

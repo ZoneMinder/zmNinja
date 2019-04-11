@@ -105,7 +105,8 @@ angular.module('zmApp', [
     forceMontageReloadDelay: 4500000, // 1 hr 15m,
     //forceMontageReloadDelay: 10000, // testing 10s
     thumbWidth: 200,
-    alarmStatusTime: 10000,
+    alarmStatusTime: 10000, // 10 sec
+    eventCheckTime: 30000, // 30 seconds
     eventServerErrorDelay: 5000, // time to wait till I report initial connect errors
     zmVersionCheckNag: 60 * 24, // in hrs 
     waitTimeTillResume: 5, // in sec, for ES error
@@ -2316,7 +2317,8 @@ angular.module('zmApp', [
     // if they occur. I suspect digest and other errors will be useful
     // for me to see
     //$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|cdvphotolibrary):/);
-
+    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|content|cdvphotolibrary|blob|unsafe|local):|data:image\//);
+  
     $provide.decorator("$exceptionHandler", ['$delegate', '$injector', function ($delegate, $injector) {
       return function (exception, cause) {
 
@@ -2470,7 +2472,7 @@ angular.module('zmApp', [
     // so it messes up scrolldelegate zoom and possibly others
     //$ionicConfigProvider.scrolling.jsScrolling(false);
     $compileProvider.debugInfoEnabled(false);
-    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|cdvphotolibrary):/);
+   
 
     /*$ionicNativeTransitionsProvider.setDefaultOptions({
       duration: 250,
