@@ -16,6 +16,7 @@ angular.module('zmApp.controllers')
     var intervalHandleAlarmStatus; // status of each alarm state
     var intervalHandleMontageCycle;
     var intervalHandleReloadPage;
+    var intervalHandleEventStatus;
 
     var gridcontainer;
     var pckry, draggie;
@@ -583,12 +584,92 @@ angular.module('zmApp.controllers')
 
     }
 
+    
+
+    $scope.humanizeTime = function(str) {
+        //console.log ("Time:"+str+" TO LOCAL " + moment(str).local().toString());
+        //if (NVR.getLogin().useLocalTimeZone)
+        return moment.tz(str, NVR.getTimeZoneNow()).fromNow();
+        // else    
+        //  return moment(str).fromNow();
+  
+      };
+
+    function getEventStatus(monitor) {
+        ld = NVR.getLogin();
+
+      //  https:///zm/api/events/index/MonitorId=:2.json?sort=StartTime&direction=desc&limit=1
+
+        var apiurl = ld.apiurl +'/events/index'; // we need some interval or it errors
+        apiurl += "/MonitorId =:" + monitor.Monitor.Id;
+        if (monitor.Monitor.Id in ld.lastEventCheckTimes) {
+
+            // now is server TZ time
+            var now = ld.lastEventCheckTimes[monitor.Monitor.Id];
+            apiurl += "/StartTime >:" + now;
+
+        }
+       
+        apiurl += "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+        
+        /*if ( !(monitor.Monitor.Id in ld.lastEventCheckTimes)) {
+            apiurl+= '/1 month';
+            NVR.debug ("No last time found for monitor:"+monitor.Monitor.Id+" assuming 1 month" )
+        } else {
+            var now = new moment();
+            var dur = moment.duration(now.diff(ld.lastEventCheckTimes[monitor.Monitor.Id]));
+            var interval = Math.floor(dur.asHours()) + moment.utc(dur.asMilliseconds()).format("-mm-ss");
+            NVR.debug ("Monitor "+monitor.Monitor.Id+" was last accessed "+interval+" ago");
+
+            apiurl += '/\'' + interval + '\' HOUR_SECOND';
+        }*/
+
+        apiurl  += '.json?sort=StartTime&direction=desc&limit=1';
+
+        NVR.debug ("Getting event count using:"+apiurl);
+        $http.get(apiurl)
+        .then (function (data) {
+           // console.log ("EVENTS GOT: "+JSON.stringify(data));
+            var res = data.data;
+            var mid = monitor.Monitor.Id;
+            if (res.events.length == 0) res = undefined;
+            monitor.Monitor.lastEvent = res;
+
+        },
+        function (err) {
+            NVR.debug ("event status load failed: "+JSON.stringify(data));
+        });
+    
+
+    }
+
+    function loadEventStatus() {
+       // console.log ("LOADING EVENT STATUS");
+
+       if (!NVR.getLogin().enableMontageOverlays) {
+           //NVR.debug ("not loading events, as overlay is off");
+           return;
+       }
+       
+        for (i = 0; i < $scope.MontageMonitors.length; i++) {
+            if ($scope.MontageMonitors[i].Monitor.Enabled == 0 ||
+            $scope.MontageMonitors[i].Monitor.listDisplay == 'noshow' ||
+            $scope.MontageMonitors[i].Monitor.Function == 'None') continue;
+            getEventStatus($scope.MontageMonitors[i]);
+
+        }
+
+
+    }
+
     //-----------------------------------------------------------------------
     // cycle through all displayed monitors and check alarm status
     //-----------------------------------------------------------------------
 
     function loadAlarmStatus() {
 
+      return; // lets focus on eventDetails now. Apr 2019
+      /*
       if ((NVR.versionCompare($rootScope.apiVersion, "1.30") == -1) ||
         (NVR.getBandwidth() == 'lowbw') ||
         (NVR.getLogin().disableAlarmCheckMontage == true)) {
@@ -605,7 +686,7 @@ angular.module('zmApp.controllers')
         }
         getAlarmStatus($scope.MontageMonitors[i]);
 
-      }
+      }*/
 
     }
 
@@ -953,6 +1034,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
 
 
@@ -995,6 +1077,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage); //we will renew on reload
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
 
       var ld = NVR.getLogin();
@@ -1224,6 +1307,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
 
 
@@ -1291,6 +1375,7 @@ angular.module('zmApp.controllers')
       // console.log ("closeModal: Cancelling timer");
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleReloadPage);
 
@@ -1304,6 +1389,12 @@ angular.module('zmApp.controllers')
         loadAlarmStatus();
         //  console.log ("Refreshing Image...");
       }.bind(this), zm.alarmStatusTime);
+
+      loadEventStatus();
+      intervalHandleEventStatus = $interval(function () {
+        loadEventStatus();
+        //  console.log ("Refreshing Image...");
+      }.bind(this), zm.eventCheckTime);
 
       intervalHandleMontageCycle = $interval(function () {
         cycleMontageProfiles();
@@ -1349,6 +1440,11 @@ angular.module('zmApp.controllers')
 
         cleanupOnCloseModal();
 
+      } else if ($scope.eventModalOpen) {
+
+        $scope.eventModalOpen = false;
+        NVR.debug ("event just played, need to force reload");
+        forceReloadPage();
       } else {
         NVR.debug("Ignoring double-invocation");
       }
@@ -1377,6 +1473,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
       if (pckry) pckry.destroy();
 
@@ -1774,6 +1871,128 @@ angular.module('zmApp.controllers')
       NVR.debug ("Image load error for: "+monitor.Monitor.Id+" regenerated connKey is:"+monitor.Monitor.connKey);
     };
 
+   
+    $scope.showEvent = function(monitor) {
+
+        var ld = NVR.getLogin();
+        var url = ld.apiurl;
+        url += '/events/'+monitor.Monitor.lastEvent.events[0].Event.Id+'.json';
+        var mid = monitor.Monitor.Id;
+
+        ld.lastEventCheckTimes[mid] = (new moment()).tz(NVR.getTimeZoneNow()).format('YYYY-MM-DD HH:mm:ss');
+        NVR.debug ("Updating monitor:"+mid+" event check time (server tz) to " + ld.lastEventCheckTimes[mid] );
+        NVR.setLogin(ld);
+        monitor.Monitor.lastEvent = undefined;
+        
+        $http.get(url)
+        .then ( function (succ) {
+            var data = succ.data;
+            
+            var event = data.event;
+            $scope.event = event;
+            $scope.currentEvent = event;
+
+            $scope.eventModalOpen = true;
+            // $scope.isModalActive = true;
+            // Note: no need to setAwake(true) as its already awake
+            // in montage view
+
+        currentStreamState = streamState.PAUSED;
+      $scope.isModalStreamPaused = true; // we stop montage and start modal stream in snapshot first
+      $timeout(function () { // after render
+
+
+        if (simulStreaming) {
+          NVR.debug("Killing all streams in montage to save memory/nw...");
+
+
+          for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+            if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
+          }
+
+        }
+
+      });
+      
+            NVR.log("Cancelling montage timer, opening Modal");
+            // NVR.log("Starting Modal timer");
+            //console.log ("openModal:Cancelling timer");
+            $interval.cancel(intervalHandleMontage);
+            $interval.cancel(intervalHandleMontageCycle);
+            $interval.cancel(intervalHandleAlarmStatus);
+            $interval.cancel(intervalHandleEventStatus);
+            $interval.cancel(intervalHandleReloadPage);
+      
+        
+                $scope.followSameMonitor = "1";
+                $scope.mycarousel = {
+                    index: 0
+                  };
+                  $scope.ionRange = {
+                    index: 1
+                  };
+        
+                //prepareModalEvent(event.Event.Id);
+        
+                var ld = NVR.getLogin();
+                var sl = 'disabled';
+                if (ld.showLiveForInProgressEvents) {
+                sl = 'enabled';
+                }
+        
+                $scope.modalData = {
+                    doRefresh: false
+                  };
+                  $ionicModal.fromTemplateUrl('templates/events-modal.html', {
+                      scope: $scope, // give ModalCtrl access to this scope
+                      animation: 'slide-in-up',
+                      id: 'footage',
+                      showLive: sl
+                    })
+                    .then(function (modal) {
+                      $scope.modal = modal;
+              
+                      $ionicLoading.show({
+                        template: $translate.instant('kPleaseWait') + "...",
+                        noBackdrop: true,
+                        duration: 10000,
+              
+                      });
+              
+                      $scope.modal.show();
+              
+                      var ld = NVR.getLogin();
+              
+                    });
+
+        });
+
+        
+
+    };
+    $scope.constructEventThumbnail = function (monitor) {
+        var stream = "";
+
+        if (!monitor.Monitor.lastEvent) {
+            return '';
+        }
+ 
+
+       // console.log (JSON.stringify(monitor));
+        stream = monitor.Monitor.recordingURL +
+          "/index.php?view=image&width=400&fid=snapshot" +
+          "&eid="+monitor.Monitor.lastEvent.events[0].Event.Id ;
+
+
+          
+        if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
+  
+        stream += NVR.insertBasicAuthToken();
+      //  console.log (stream);
+        return stream;
+  
+      };
+
     $scope.constructStream = function (monitor) {
 
       var stream;
@@ -1825,10 +2044,21 @@ angular.module('zmApp.controllers')
       NVR.setLogin(ld);
     };
 
+    $scope.toggleSidebar = function(monitor) {
+
+        monitor.Monitor.showSidebar = !monitor.Monitor.showSidebar;
+        $timeout (function() {
+           
+            $scope.squeezeMonitors();
+        }, 300);
+     
+    };
+
     // minimal has to be beforeEnter or header won't hide
     $scope.$on('$ionicView.beforeEnter', function () {
 
-
+        
+      $scope.eventModalOpen = false;
       $scope.$on ( "process-push", function () {
         NVR.debug (">> MontageCtrl: push handler");
         var s = NVR.evaluateTappedNotification();
@@ -1960,6 +2190,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
 
 
@@ -1978,6 +2209,12 @@ angular.module('zmApp.controllers')
         loadAlarmStatus();
         //  console.log ("Refreshing Image...");
       }.bind(this), zm.alarmStatusTime);
+
+      loadEventStatus();
+      intervalHandleEventStatus = $interval(function () {
+        loadEventStatus();
+        //  console.log ("Refreshing Image...");
+      }.bind(this), zm.eventCheckTime);
 
       intervalHandleReloadPage = $interval(function () {
         forceReloadPage();
@@ -2006,12 +2243,15 @@ angular.module('zmApp.controllers')
 
       NVR.log("Inside Montage Ctrl:We found " + $scope.monitors.length + " monitors");
 
+
       // set them all at 50% for packery
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         $scope.MontageMonitors[i].Monitor.gridScale = "50";
         $scope.MontageMonitors[i].Monitor.selectStyle = "";
         $scope.MontageMonitors[i].Monitor.alarmState = 'rgba(0,0,0,0)';
         $scope.MontageMonitors[i].Monitor.isStamp = false;
+        $scope.MontageMonitors[i].Monitor.eventCount = 0;
+        $scope.MontageMonitors[i].Monitor.showSidebar = false;
 
       }
 
@@ -2031,6 +2271,23 @@ angular.module('zmApp.controllers')
 
     });
 
+
+   $scope.eventButtonClicked = function (monitor, showEvents) {
+    var ld = NVR.getLogin();
+    mid = monitor.Monitor.Id;
+    // always use server tz to avoid confusion
+    ld.lastEventCheckTimes[mid] = (new moment()).tz(NVR.getTimeZoneNow()).format('YYYY-MM-DD HH:mm:ss');
+    NVR.debug ("Updating monitor:"+mid+" event check time (server tz) to " + ld.lastEventCheckTimes[mid] );
+    NVR.setLogin(ld);
+    monitor.Monitor.lastEvent = undefined;
+    if (!showEvents) return;
+    $state.go("app.events", {
+        "id": monitor.Monitor.Id,
+        "playEvent": false
+      });
+      return;
+
+   };
     $scope.$on('$ionicView.beforeLeave', function () {
 
       currentStreamState = streamState.STOPPED;
@@ -2087,7 +2344,8 @@ angular.module('zmApp.controllers')
             NVR.debug("doing the jiggle and dance...");
             pckry.resize(true);
             pckry.shiftLayout();
-          }, 300);
+          }, 600);
+          
 
           // $scope.slider.monsize = 2;
         });
@@ -2102,7 +2360,27 @@ angular.module('zmApp.controllers')
     }
 
 
+    $scope.formatBytes = function (bytes, decimals) {
+
+        return formatBytes (bytes, decimals);
+    };
+
+    //https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript?answertab=active#tab-top
+    function formatBytes(bytes, decimals) {
+        if (bytes === undefined) return '?';
+        if (bytes === null) return '0B';
+        if (bytes === 0) return '0B';
+        var k = 1024;
+        var  dm = decimals < 0 ? 0 : decimals;
+        var  sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
     $scope.squeezeMonitors = function () {
+      console.log ("squeezing");
       pckry.once('layoutComplete', resizeComplete);
       $timeout(function () {
         pckry.layout();

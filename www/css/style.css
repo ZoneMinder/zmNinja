@@ -279,17 +279,83 @@ figcaption {
     white-space: nowrap;
 }
 
+.montage-sidebar {
+    background: rgba(83, 92, 104,1.0);
+    color: #FFF;
+    font-size: 80%  !important;
+    padding: 5px  !important;
+    
+    box-sizing: border-box !important;
+    
+}
+
+.circle {
+    margin:auto;
+
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-color: #fff  !important;
+    font-size: 80%  !important;
+    font-style: bold !important;
+    color: #fff;
+    line-height: 40px;
+    text-align:center;
+    
+    background:rgba(155, 89, 182,1.0);
+  }
+
+.montage-image {
+    position:relative;
+}
+
+.montage-buttons {
+    z-index: 9999;
+    position: absolute;
+    right:0;
+    bottom:0;
+    opacity:0.7;
+    margin: auto;
+}
+
+.montage-sidebar-button {
+    z-index: 9999;
+    position: absolute;
+    right:0;
+    bottom:50%;
+    opacity:0.7;
+    margin: auto;
+}
 
 .normal-figcaption {
     background: rgba(0, 0, 0, 0.2);
     color: #FFF;
-    position: absolute;
+    /*position: absolute;
     bottom: 0;
     left: 0;
-    right: 0;
+    right: 0;*/
     opacity: 1;
     font-size: 80%;
 }
+
+.alarmed-figcaption {
+    background: #ba3e3e;
+    color: #ffffff;
+    opacity: 0.7;
+    font-size: 80%;
+}
+.extended-figcaption {
+    background: rgba(52, 152, 219,0.2);
+    color: #FFF;
+    /*position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;*/
+    opacity: 1;
+    font-size: 80%;
+}
+
+
 
 
 .normal-subfigcaption {
@@ -322,15 +388,7 @@ figcaption {
 
 
 
-.alarmed-figcaption {
-    background: #ba3e3e;
-    color: #ffffff;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    opacity: 0.7;
-}
+
 
 
 /* modified from:
