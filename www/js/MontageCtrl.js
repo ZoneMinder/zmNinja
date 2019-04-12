@@ -2272,6 +2272,13 @@ angular.module('zmApp.controllers')
     });
 
 
+   $scope.clearAllEvents = function () {
+
+    for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+        $scope.eventButtonClicked ($scope.MontageMonitors[i], false);
+    }
+    
+   };
    $scope.eventButtonClicked = function (monitor, showEvents) {
     var ld = NVR.getLogin();
     mid = monitor.Monitor.Id;

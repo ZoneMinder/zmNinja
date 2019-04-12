@@ -58,10 +58,16 @@
             </a>
           </li>
 
+          <li>
+            <a  ng-click="clearAllEvents()">
+              <i class="ion-checkmark"></i>
+            </a>
+          </li>
+
           <li ng-style="{'background-color': isCycleOn()?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}"
             ng-if="!isDragabillyOn">
             <a ng-click="toggleCycle()">
-              <i class="ion-android-bicycle"></i>:{{getCycleStatus()}}</a>
+              <i class="ion-android-bicycle"></i></a>
           </li>
 
           <li ng-if="isDragabillyOn">
@@ -75,11 +81,6 @@
             </a>
           </li>
 
-        </ul>
-      </div>
-
-      <div id="flyoutmenu" style="float:right">
-        <ul>
           <li>
             <a href="" ng-click="switchMontageProfile()">
               <i class="ion-navicon-round"></i>
@@ -98,9 +99,10 @@
             </a>
           </li>
 
-
         </ul>
       </div>
+
+   
       <div style="clear: both;"></div>
 
       <br />
