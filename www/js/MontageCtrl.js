@@ -595,7 +595,7 @@ angular.module('zmApp.controllers')
   
       };
 
-    function getEventStatus(monitor) {
+    function getEventStatus(monitor, expandSidebar) {
         ld = NVR.getLogin();
 
       //  https:///zm/api/events/index/MonitorId=:2.json?sort=StartTime&direction=desc&limit=1
@@ -634,6 +634,9 @@ angular.module('zmApp.controllers')
             var mid = monitor.Monitor.Id;
             if (res.events.length == 0) res = undefined;
             monitor.Monitor.lastEvent = res;
+            if (monitor.Monitor.lastEvent && expandSidebar) {
+                monitor.Monitor.showSidebar = true;
+            }
 
         },
         function (err) {
@@ -643,7 +646,7 @@ angular.module('zmApp.controllers')
 
     }
 
-    function loadEventStatus() {
+    function loadEventStatus(expandSidebars) {
        // console.log ("LOADING EVENT STATUS");
 
        if (!NVR.getLogin().enableMontageOverlays) {
@@ -655,7 +658,7 @@ angular.module('zmApp.controllers')
             if ($scope.MontageMonitors[i].Monitor.Enabled == 0 ||
             $scope.MontageMonitors[i].Monitor.listDisplay == 'noshow' ||
             $scope.MontageMonitors[i].Monitor.Function == 'None') continue;
-            getEventStatus($scope.MontageMonitors[i]);
+            getEventStatus($scope.MontageMonitors[i], expandSidebars);
 
         }
 
@@ -1390,7 +1393,7 @@ angular.module('zmApp.controllers')
         //  console.log ("Refreshing Image...");
       }.bind(this), zm.alarmStatusTime);
 
-      loadEventStatus();
+      loadEventStatus(true);
       intervalHandleEventStatus = $interval(function () {
         loadEventStatus();
         //  console.log ("Refreshing Image...");
@@ -2210,7 +2213,7 @@ angular.module('zmApp.controllers')
         //  console.log ("Refreshing Image...");
       }.bind(this), zm.alarmStatusTime);
 
-      loadEventStatus();
+      loadEventStatus(true);
       intervalHandleEventStatus = $interval(function () {
         loadEventStatus();
         //  console.log ("Refreshing Image...");

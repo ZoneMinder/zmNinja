@@ -193,7 +193,8 @@ angular.module('zmApp.controllers')
         'objectDetectionFilter': false,
         'enableEventRefresh': true,
         'lastEventCheckTimes':{}, 
-        'enableMontageOverlays': true
+        'enableMontageOverlays': true,
+        'showMontageSidebars': false
       
 
 
@@ -1048,6 +1049,11 @@ angular.module('zmApp.controllers')
 
                 if (typeof loginData.enableMontageOverlays == 'undefined') {
                     loginData.enableMontageOverlays = true;
+
+                  }
+
+                  if (typeof loginData.showMontageSidebars == 'undefined') {
+                    loginData.showMontageSidebars = false;
 
                   }
 

@@ -181,7 +181,13 @@
               {{formatBytes(monitor.Monitor.TotalEventDiskSpace,1)}}
             </div>
             <div ng-if="!monitor.Monitor.lastEvent">
-              <div class="row">{{'kMontageEventCaughtUp' | translate}}</div>
+              <div class="row row-no-padding">
+                  <div class="col col-no-padding">
+                        <a class="button button-small button icon ion-thumbsup" 
+                        ng-click="eventButtonClicked(monitor, true)"> {{'kMontageEventCaughtUp' | translate}} </a>
+                  </div>
+                 
+            </div>  
             </div>
             <div ng-if="monitor.Monitor.lastEvent">
               <div class="row row-no-padding">
