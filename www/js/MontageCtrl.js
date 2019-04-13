@@ -595,7 +595,7 @@ angular.module('zmApp.controllers')
   
       };
 
-    function getEventStatus(monitor, expandSidebar) {
+    function getEventStatus(monitor, showMontageSidebars) {
         ld = NVR.getLogin();
 
       //  https:///zm/api/events/index/MonitorId=:2.json?sort=StartTime&direction=desc&limit=1
@@ -634,7 +634,7 @@ angular.module('zmApp.controllers')
             var mid = monitor.Monitor.Id;
             if (res.events.length == 0) res = undefined;
             monitor.Monitor.lastEvent = res;
-            if (monitor.Monitor.lastEvent && expandSidebar) {
+            if (monitor.Monitor.lastEvent && showMontageSidebars) {
                 monitor.Monitor.showSidebar = true;
             }
 
@@ -646,7 +646,7 @@ angular.module('zmApp.controllers')
 
     }
 
-    function loadEventStatus(expandSidebars) {
+    function loadEventStatus(showMontageSidebars) {
        // console.log ("LOADING EVENT STATUS");
 
        if (!NVR.getLogin().enableMontageOverlays) {
@@ -658,7 +658,7 @@ angular.module('zmApp.controllers')
             if ($scope.MontageMonitors[i].Monitor.Enabled == 0 ||
             $scope.MontageMonitors[i].Monitor.listDisplay == 'noshow' ||
             $scope.MontageMonitors[i].Monitor.Function == 'None') continue;
-            getEventStatus($scope.MontageMonitors[i], expandSidebars);
+            getEventStatus($scope.MontageMonitors[i], showMontageSidebars);
 
         }
 
@@ -1393,7 +1393,7 @@ angular.module('zmApp.controllers')
         //  console.log ("Refreshing Image...");
       }.bind(this), zm.alarmStatusTime);
 
-      loadEventStatus(true);
+      loadEventStatus(ld.showMontageSidebars);
       intervalHandleEventStatus = $interval(function () {
         loadEventStatus();
         //  console.log ("Refreshing Image...");
@@ -2213,7 +2213,7 @@ angular.module('zmApp.controllers')
         //  console.log ("Refreshing Image...");
       }.bind(this), zm.alarmStatusTime);
 
-      loadEventStatus(true);
+      loadEventStatus(ld.showMontageSidebars);
       intervalHandleEventStatus = $interval(function () {
         loadEventStatus();
         //  console.log ("Refreshing Image...");
@@ -2279,6 +2279,7 @@ angular.module('zmApp.controllers')
 
     for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         $scope.eventButtonClicked ($scope.MontageMonitors[i], false);
+        $scope.MontageMonitors[i].Monitor.showSidebar = false;
     }
     
    };
