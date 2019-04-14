@@ -436,7 +436,8 @@ angular.module('zmApp.controllers')
             $timeout(function () {
               NVR.debug("doing the jiggle and dance...");
               pckry.resize(true);
-            }, 300);
+              $scope.squeezeMonitors();
+            }, 500);
 
           }, 100);
 
@@ -1877,8 +1878,14 @@ angular.module('zmApp.controllers')
    
     $scope.showEvent = function(monitor) {
 
+        if (!monitor.Monitor.lastEvent) {
+            NVR.debug ("Events cleared, nothing to show");
+            return;
+        }
+
         var ld = NVR.getLogin();
         var url = ld.apiurl;
+        var eid = monitor.Monitor.lastEvent.events[0].Event.Id;
         url += '/events/'+monitor.Monitor.lastEvent.events[0].Event.Id+'.json';
         var mid = monitor.Monitor.Id;
 
@@ -1950,6 +1957,8 @@ angular.module('zmApp.controllers')
                       scope: $scope, // give ModalCtrl access to this scope
                       animation: 'slide-in-up',
                       id: 'footage',
+                      snapshot: 'enabled',
+                      eventId: eid,
                       showLive: sl
                     })
                     .then(function (modal) {
@@ -2284,6 +2293,8 @@ angular.module('zmApp.controllers')
     
    };
    $scope.eventButtonClicked = function (monitor, showEvents) {
+
+
     var ld = NVR.getLogin();
     mid = monitor.Monitor.Id;
     // always use server tz to avoid confusion
@@ -2355,6 +2366,7 @@ angular.module('zmApp.controllers')
             NVR.debug("doing the jiggle and dance...");
             pckry.resize(true);
             pckry.shiftLayout();
+            $scope.squeezeMonitors();
           }, 600);
           
 
