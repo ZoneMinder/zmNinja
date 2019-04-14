@@ -12,7 +12,7 @@
         <a ng-class="{ 'item  item-avatar item-icon-right' :  item.Monitor.listDisplay == 'show', 'item  item-avatar item-icon-right eye-background-red' : item.Monitor.listDisplay!='show' }"
           ng-click="toggleHide($index)" href="">
 
-          <img src="{{reorderFrame(item)}}" fallback-src />
+          <img ng-src="{{reorderFrame(item)}}" fallback-src />
 
           <i ng-class="{'icon ion-eye':item.Monitor.listDisplay=='show','eye-red icon ion-eye-disabled':item.Monitor.listDisplay!='show'}">
           </i>
