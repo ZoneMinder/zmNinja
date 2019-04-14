@@ -2366,9 +2366,9 @@ angular.module('zmApp.controllers')
         }
       }
 
-      $timeout(function () {
+      
         pckry.reloadItems();
-
+        $timeout(function () {
         pckry.once('layoutComplete', function () {
           //console.log ("Layout complete");
           var positions = pckry.getShiftPositions('data-item-id');
