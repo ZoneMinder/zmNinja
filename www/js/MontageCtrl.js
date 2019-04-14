@@ -281,7 +281,13 @@ angular.module('zmApp.controllers')
       } else {
 
         //console.log ("POSITION STR IS " + positionsStr);
-        positions = JSON.parse(positionsStr);
+        try {
+            positions = JSON.parse(positionsStr);
+        }
+        catch (e) {
+            NVR.debug ("error parsing profile");
+        }
+        
         NVR.log("found a packery layout");
 
         layouttype = false;
@@ -1635,7 +1641,16 @@ angular.module('zmApp.controllers')
       ld.packeryPositions = ld.packeryPositionsArray[mName];
       ld.currentMontageProfile = mName;
       $scope.currentProfileName = mName;
-      //console.log ("NEW POS="+ld.packeryPositions);
+      console.log ("NEW POS="+ld.packeryPositions);
+
+      if (!ld.packeryPositions) {
+          ld.packeryPositions = [];
+          NVR.debug ("This profile doesn't seem to have been saved. Resetting it to defaults...");
+         $scope.resetSizes(true);
+       
+      }
+
+
       NVR.setLogin(ld);
 
 
@@ -1818,6 +1833,7 @@ angular.module('zmApp.controllers')
               // if you are saving to default all monitor profile
               // then I will undo any hidden monitors
               if ($scope.data.montageName == $translate.instant('kMontageDefaultProfile')) {
+                  NVR.debug ("All monitors is special, unhiding all");
                 for (var p = 0; p < getMonPos.length; p++) {
                   //console.log ("CHECK");
                   if (getMonPos[p].display != 'show') {
@@ -1829,7 +1845,7 @@ angular.module('zmApp.controllers')
 
               var pos = JSON.stringify(getMonPos);
 
-              //console.log ("SAVING POS = "+pos);
+             // console.log ("SAVING POS = "+pos);
 
               ld.packeryPositionsArray[$scope.data.montageName] = pos;
               NVR.debug("Saving " + $scope.data.montageName + " with:" + pos);
@@ -2327,9 +2343,12 @@ angular.module('zmApp.controllers')
 
     });
 
-    $scope.resetSizes = function () {
+    $scope.resetSizes = function (unhideAll) {
       var somethingReset = false;
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+        if (unhideAll) {
+            $scope.MontageMonitors[i].Monitor.listDisplay = 'show';
+        }
         if ($scope.isDragabillyOn) {
           if ($scope.MontageMonitors[i].Monitor.selectStyle == "dragborder-selected") {
             $scope.MontageMonitors[i].Monitor.gridScale = "50";
