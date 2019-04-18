@@ -2304,7 +2304,7 @@ angular.module('zmApp.controllers')
 
     for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         $scope.eventButtonClicked ($scope.MontageMonitors[i], false);
-        $scope.MontageMonitors[i].Monitor.showSidebar = false;
+      //  $scope.MontageMonitors[i].Monitor.showSidebar = false;
     }
     
    };
@@ -2318,6 +2318,7 @@ angular.module('zmApp.controllers')
     NVR.debug ("Updating monitor:"+mid+" event check time (server tz) to " + ld.lastEventCheckTimes[mid] );
     NVR.setLogin(ld);
     monitor.Monitor.lastEvent = undefined;
+    monitor.Monitor.showSidebar = false;
     if (!showEvents) return;
     $state.go("app.events", {
         "id": monitor.Monitor.Id,
