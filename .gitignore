@@ -3,7 +3,7 @@
 
 *.swp
 ionic.project
-www/lib/
+#www/lib/
 desktop/
 node_modules/
 platforms/
