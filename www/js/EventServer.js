@@ -520,10 +520,11 @@ angular.module('zmApp.controllers')
       var media;
       var ld = NVR.getLogin();
 
-      var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
+      //var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
+      var plat = $rootScope.platformOS;
 
       if ($rootScope.platformOS == 'desktop') {
-        NVR.log("Desktop instance, not setting up push. Websockets only, I hope");
+       NVR.log ('Not setting up push as this is desktop.');
         return;
       }
 
@@ -573,7 +574,7 @@ angular.module('zmApp.controllers')
         NVR.debug("EventSever: Push Notification registration ID received: " + JSON.stringify(data));
         $rootScope.apnsToken = data.registrationId;
 
-        var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
+        var plat = $rootScope.platformOS;
         var ld = NVR.getLogin();
         var pushstate = "enabled";
         if (ld.disablePush == true)
