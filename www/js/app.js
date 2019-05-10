@@ -700,7 +700,7 @@ angular.module('zmApp', [
         //console.log ("HTTP response");
 
       
-        if (response.data && typeof(response.data) == 'string' && response.data.startsWith("<pre class=\"cake-error\">")) {
+        if (response.data && typeof(response.data) == 'string' && (response.data.indexOf("<pre class=\"cake-error\">")==0)) {
             console.log ("cake error detected, attempting fix...");
             //console.log ("BAD = "+ JSON.stringify(response.data));
             response.data = JSON.parse(response.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
@@ -1333,7 +1333,7 @@ angular.module('zmApp', [
 
             // Now go ahead and re-get auth key 
             // if login was a success
-            $rootScope.authSession = "undefined";
+            $rootScope.authSession = '';
             var ld = NVR.getLogin();
             NVR.getAuthKey($rootScope.validMonitorId)
               .then(function (success) {
@@ -2381,7 +2381,7 @@ angular.module('zmApp', [
                    // work around for cake-error leak
 
                   // console.log ("HTTP RESPONSE:" + JSON.stringify(succ.data));
-                   if (succ.data && succ.data.startsWith("<pre class=\"cake-error\">") ) {
+                   if (succ.data && (succ.data.indexOf("<pre class=\"cake-error\">") == 0) ) {
                     logger.debug ("**** Native: cake-error in message, trying fix...");
                     succ.data = JSON.parse(succ.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
                   }
