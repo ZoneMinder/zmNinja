@@ -1184,11 +1184,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var loginData = NVR.getLogin();
     var url = loginData.streamingurl +
       '/zms?mode=single&monitor=' + mid;
-
-    if ($rootScope.authSession != 'undefined') {
       url += $rootScope.authSession;
 
-    }
+  
     url += NVR.insertBasicAuthToken();
 
     NVR.log("SavetoPhone:Trying to save image from " + url);

@@ -974,10 +974,10 @@ angular.module('zmApp.controllers')
 
       //$rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
 
-      if ($rootScope.authSession != 'undefined') {
+   
         $scope.imgsrc += $rootScope.authSession;
         $scope.fallbackImgSrc += $rootScope.authSession;
-      }
+  
 
 
       $scope.imgsrc += NVR.insertBasicAuthToken();
@@ -2316,7 +2316,7 @@ angular.module('zmApp.controllers')
 
         
           videoURL = event.Event.recordingURL + "/index.php?view=view_video&eid=" + event.Event.Id;
-          if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
+          videoURL += $rootScope.authSession;
           videoURL += NVR.insertBasicAuthToken();
 
 
@@ -2965,7 +2965,7 @@ angular.module('zmApp.controllers')
         NVR.getSnapshotFrame()+"&eid="+event.Event.Id  +
         "&width=" + event.Event.thumbWidth * 2 +
         "&height=" + event.Event.thumbHeight * 2;
-      if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
+      stream += $rootScope.authSession;
 
       stream += NVR.insertBasicAuthToken();
       return stream;
@@ -2979,7 +2979,7 @@ angular.module('zmApp.controllers')
         stream = event.Event.recordingURL + "/index.php?view=image" +
           "&fid=" + slide.id + $scope.outlineMotionParam;
       
-      if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
+     stream += $rootScope.authSession;
 
       stream += NVR.insertBasicAuthToken();
 
@@ -2994,7 +2994,7 @@ angular.module('zmApp.controllers')
         stream = event.Event.recordingURL +
           "/index.php?view=image&fid=" + alarm.id;
         if (motion) stream += $scope.outlineMotionParam;
-      if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
+      stream += $rootScope.authSession;
       stream += NVR.insertBasicAuthToken();
 
 //      console.log ("alarm:"+stream);

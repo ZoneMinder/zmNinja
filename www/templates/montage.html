@@ -123,8 +123,7 @@
           <div class="row row-no-padding">
             <div ng-class="monitor.Monitor.showSidebar?'col col-70 col-no-padding':'col col-no-padding'">
               <figure role="group" class="{{dragBorder}}" ng-show="monitor.Monitor.listDisplay!='noshow'">
-                <!--<div ng-if="!isModalActive" >-->
-                <!--<div ng-if="$root.authSession!='undefined' && !isBackground() && !areImagesLoading">-->
+              
 
                 <div class="montage-image">
                   <div ng-if="LoginData.enableMontageOverlays" class="montage-buttons">
@@ -174,10 +173,7 @@
           </div>
           <div ng-if="monitor.Monitor.showSidebar" class="montage-sidebar ">
 
-            <div class="row row-no-padding">
-              <i class="ion-social-buffer"></i>&nbsp;{{'kMontageEventStorage' | translate }}:
-              {{formatBytes(monitor.Monitor.TotalEventDiskSpace,1)}}
-            </div>
+           
             <div ng-if="!monitor.Monitor.lastEvent">
               <div class="row row-no-padding">
                   <div class="col col-no-padding">
@@ -197,9 +193,13 @@
                 {{humanizeTime(monitor.Monitor.lastEvent.events[0].Event.StartTime)}}<br />
               </div>
               <div class="row row-no-padding">
-                <i class="ion-clipboard"></i>&nbsp; {{monitor.Monitor.lastEvent.events[0].Event.Notes}}<br />
+                <i class="ion-clipboard"></i>&nbsp; <span ng-class="{'object-notes': monitor.Monitor.lastEvent.object}">{{monitor.Monitor.lastEvent.events[0].Event.Notes}}</span><br />
               </div>
 
+            </div>
+            <div class="row row-no-padding">
+              <i class="ion-social-buffer"></i>&nbsp;{{'kMontageEventStorage' | translate }}:
+              {{formatBytes(monitor.Monitor.TotalEventDiskSpace,1)}}
             </div>
 
 

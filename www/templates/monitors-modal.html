@@ -9,7 +9,7 @@
           <!--  -->
 
           <div id="monitorimage" style="height: 100vh;" class="main">
-            <div ng-if="$root.authSession!='undefined'">
+            
               <div ng-if="!animationInProgress">
 
                 <!--<span style="color:white">{{currentStreamMode}}</span>-->
@@ -22,11 +22,11 @@
               <div ng-if="animationInProgress">
                 <img style="width:100vw; height:100vh" ng-src="img/noimage.png" class="object-fit_contain" />
               </div>
-            </div>
-            <div ng-if="$root.authSession=='undefined'">
+           
+           
               <img id="singlemonitor" ng-src="img/noimage.png" style="width:100vw; height:100vh; display:block;"
                 class="object-fit_contain" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
-            </div>
+           
           </div>
         </ion-scroll>
 
@@ -39,7 +39,7 @@
           <!-- android needs this 100vh - otherwise max- does not work -->
           <!--  -->
           <div id="monitorimage" style="height: 100vh;" class="main">
-            <div ng-if="$root.authSession!='undefined'">
+           
               <div ng-if="!animationInProgress && !isBackground() && connKey">
                 <!--<span style="color:white">{{currentStreamMode}}</span>-->
 
@@ -51,11 +51,11 @@
               <div ng-if="animationInProgress || isBackground()">
                 <img style="width:100vw; height:100vh" ng-src="img/noimage.png" class="object-fit_contain" />
               </div>
-            </div>
-            <div ng-if="$root.authSession=='undefined'">
+          
+          
               <img id="singlemonitor" ng-src="img/noimage.png" style="width:100vw; height:100vh; display:block;"
                 class="object-fit_contain" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
-            </div>
+         
           </div>
         </ion-scroll>
 

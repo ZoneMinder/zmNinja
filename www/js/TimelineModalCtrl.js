@@ -52,7 +52,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
         "&fid=" + alarm.id;
 
     
-    if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
+     stream += $rootScope.authSession;
 
     stream += NVR.insertBasicAuthToken();
     return stream;
