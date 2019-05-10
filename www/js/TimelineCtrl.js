@@ -1501,7 +1501,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     stream = event.Event.recordingURL +
       "/index.php?view=image&fid=" +
       NVR.getSnapshotFrame()+"&eid="+event.Event.Id  + "&width=400" ;
-    if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
+    stream += $rootScope.authSession;
     stream += NVR.insertBasicAuthToken();
     $timeout ( function () {
 

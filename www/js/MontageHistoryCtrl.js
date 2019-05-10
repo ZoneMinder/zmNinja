@@ -301,7 +301,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 if (eType=='video') {
                   var videoURL= $scope.MontageMonitors[j].Monitor.baseURL  + "/index.php?view=view_video&eid=" + eid;
 
-                  if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
+                  videoURL += $rootScope.authSession;
                   if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
 
           
@@ -422,7 +422,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 if (eType=='video') {
                   var videoURL= $scope.MontageMonitors[i].Monitor.baseURL  + "/index.php?view=view_video&eid=" + eid;
 
-                  if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
+                  videoURL += $rootScope.authSession;
                   if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
 
           
@@ -892,7 +892,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
        
         var videoURL= m.Monitor.baseURL  + "/index.php?view=view_video&eid=" + success.eid;
 
-                  if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
+                  videoURL += $rootScope.authSession;
                   if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
 
                   m.Monitor.videoObject = {

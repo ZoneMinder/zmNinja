@@ -636,11 +636,25 @@ angular.module('zmApp.controllers')
         NVR.debug ("Getting event count using:"+apiurl);
         $http.get(apiurl)
         .then (function (data) {
-           // console.log ("EVENTS GOT: "+JSON.stringify(data));
+            console.log ("EVENTS GOT: "+JSON.stringify(data));
             var res = data.data;
             var mid = monitor.Monitor.Id;
             if (res.events.length == 0) res = undefined;
+            
             monitor.Monitor.lastEvent = res;
+
+            if (monitor.Monitor.lastEvent) {
+              var notes = res.events[0].Event.Notes;
+              if (notes.indexOf('detected:') != -1) {
+                monitor.Monitor.lastEvent.object = true;
+              }
+              else {
+                monitor.Monitor.lastEvent.object = false;
+              }
+
+            }
+            
+
             if (monitor.Monitor.lastEvent && showMontageSidebars) {
                 monitor.Monitor.showSidebar = true;
             }
@@ -868,7 +882,7 @@ angular.module('zmApp.controllers')
         "&monitor=" + item.Monitor.Id +
         "&scale=50";
 
-      if ($rootScope.authSession != 'undefined') frame += $rootScope.authSession;
+     frame += $rootScope.authSession;
       frame += NVR.insertBasicAuthToken();
       return frame;
     };
@@ -1908,7 +1922,7 @@ angular.module('zmApp.controllers')
         ld.lastEventCheckTimes[mid] = (new moment()).tz(NVR.getTimeZoneNow()).format('YYYY-MM-DD HH:mm:ss');
         NVR.debug ("Updating monitor:"+mid+" event check time (server tz) to " + ld.lastEventCheckTimes[mid] );
         NVR.setLogin(ld);
-        monitor.Monitor.lastEvent = undefined;
+      
         
         $http.get(url)
         .then ( function (succ) {
@@ -1941,6 +1955,7 @@ angular.module('zmApp.controllers')
       });
       
             NVR.log("Cancelling montage timer, opening Modal");
+
             // NVR.log("Starting Modal timer");
             //console.log ("openModal:Cancelling timer");
             $interval.cancel(intervalHandleMontage);
@@ -1969,6 +1984,8 @@ angular.module('zmApp.controllers')
                 $scope.modalData = {
                     doRefresh: false
                   };
+
+                  monitor.Monitor.lastEvent = undefined;
                   $ionicModal.fromTemplateUrl('templates/events-modal.html', {
                       scope: $scope, // give ModalCtrl access to this scope
                       animation: 'slide-in-up',
@@ -2013,10 +2030,12 @@ angular.module('zmApp.controllers')
 
 
           
-        if ($rootScope.authSession != 'undefined') stream += $rootScope.authSession;
+          
+        stream += $rootScope.authSession;
   
         stream += NVR.insertBasicAuthToken();
       //  console.log (stream);
+      //console.log ("EVENT="+stream);
         return stream;
   
       };
@@ -2024,7 +2043,7 @@ angular.module('zmApp.controllers')
     $scope.constructStream = function (monitor) {
 
       var stream;
-      if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' || $rootScope.authSession == 'undefined') {
+      if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' ) {
         //console.log ("STREAM=empty and auth="+$rootScope.authSession);
         return "";
       }
@@ -2048,7 +2067,7 @@ angular.module('zmApp.controllers')
       //"&rand="+$scope.randToAvoidCacheMem +
 
 
-      // console.log("STREAM=" + stream);
+      console.log("STREAM=" + stream);
       return stream;
 
     };

@@ -678,7 +678,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
 
   function validateData() {
-    $rootScope.authSession = 'undefined';
+    $rootScope.authSession = '';
     $rootScope.zmCookie = '';
 
     $scope.wizard.portalValidText = "";

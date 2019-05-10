@@ -577,6 +577,20 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
     opacity: 0.7;
 }
 
+.object-notes {
+  background-color:rgba(255, 242, 0,1.0);
+  color: black;
+  border-radius: 5px;
+  padding-left:4px;
+  padding-right:4px;
+  margin-top:1px;
+  margin-bottom:1px;
+}
+
+.regular-notes {
+  color:white;
+}
+
 .events-modal-camera-icon {
     position: absolute;
     bottom: 120px;
