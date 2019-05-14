@@ -33,24 +33,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   NVR.debug("MonitorModalCtrl called from " + $ionicHistory.currentStateName());
 
 
-  //no need to recompute auth in modal
-  /*$rootScope.validMonitorId = $scope.monitors[0].Monitor.Id;
-  NVR.getAuthKey($rootScope.validMonitorId, $scope.monitors[0].Monitor.connKey)
-    .then(function (success) {
-        $ionicLoading.hide();
-        $rootScope.authSession = success;
-        NVR.log("Modal: Stream authentication construction: " + $rootScope.authSession);
-
-      },
-      function (error) {
-
-        $ionicLoading.hide();
-        NVR.debug("ModalCtrl: Error details of stream auth:" + error);
-        //$rootScope.authSession="";
-        NVR.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-      });
-*/
-
   $interval.cancel(intervalModalHandle);
   $interval.cancel(cycleHandle);
 
@@ -437,7 +419,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     ];
     //console.log ("Inside Modal timer...");
     var apiurl = NVR.getLogin().apiurl;
-    var alarmurl = apiurl + "/monitors/alarm/id:" + $scope.monitorId + "/command:status.json";
+    var alarmurl = apiurl + "/monitors/alarm/id:" + $scope.monitorId + "/command:status.json?"+$rootScope.authSession;
     NVR.log("Invoking " + alarmurl);
 
     $http.get(alarmurl)
@@ -1072,7 +1054,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     function triggerAlarm(mid, mode) {
       var apiurl = NVR.getLogin().apiurl;
       var c = mode == 'on' ? 'on' : 'off';
-      var alarmurl = apiurl + "/monitors/alarm/id:" + mid + "/command:" + c + ".json";
+      var alarmurl = apiurl + "/monitors/alarm/id:" + mid + "/command:" + c + ".json?"+$rootScope.authSession;
       NVR.log("Invoking " + alarmurl);
 
       var status = mode ? $translate.instant('kForcingAlarm') : $translate.instant('kCancellingAlarm');
@@ -1430,6 +1412,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     */
 
     var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+ 
     //&auth=
     var req = $http({
       method: 'POST',
@@ -1463,7 +1446,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         resp = resp.data;
         if (resp.result == "Ok" && ndx != -1) {
           var ld = NVR.getLogin();
-          var apiurl = ld.apiurl + "/events/" + resp.status.event + ".json";
+          var apiurl = ld.apiurl + "/events/" + resp.status.event + ".json?"+$rootScope.authSession;
           //console.log ("API " + apiurl);
           $http.get(apiurl)
             .then(function (data) {
@@ -1558,7 +1541,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     NVR.debug("configurePTZ: called with mid=" + mid);
     var ld = NVR.getLogin();
-    var url = ld.apiurl + "/monitors/" + mid + ".json";
+    var url = ld.apiurl + "/monitors/" + mid + ".json?"+$rootScope.authSession;
     $http.get(url)
       .then(function (data) {
           data = data.data;
@@ -1572,7 +1555,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           if ($scope.isControllable == '1') {
 
             var apiurl = NVR.getLogin().apiurl;
-            var myurl = apiurl + "/controls/" + $scope.controlid + ".json";
+            var myurl = apiurl + "/controls/" + $scope.controlid + ".json?"+$rootScope.authSession;
             NVR.debug("configurePTZ : getting controllable data " + myurl);
 
             $http.get(myurl)
@@ -1758,7 +1741,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   function getZones() {
     //https://server/zm/api/zones/forMonitor/7.json
-    var api = NVR.getLogin().apiurl + "/zones/forMonitor/" + $scope.monitorId + ".json";
+    var api = NVR.getLogin().apiurl + "/zones/forMonitor/" + $scope.monitorId + ".json?"+$rootScope.authSession;
     NVR.debug("Getting zones using:" + api);
     originalZones = [];
     $http.get(api)

@@ -24,11 +24,11 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
 
   var loginData = NVR.getLogin();
 
-  var apiRun = loginData.apiurl + "/host/daemonCheck.json";
-  var apiLoad = loginData.apiurl + "/host/getLoad.json";
-  var apiStorage = loginData.apiurl + "/storage.json";
-  var apiServer = loginData.apiurl + "/servers.json";
-  var apiCurrentState = loginData.apiurl + "/States.json";
+  var apiRun = loginData.apiurl + "/host/daemonCheck.json?"+$rootScope.authSession;
+  var apiLoad = loginData.apiurl + "/host/getLoad.json?"+$rootScope.authSession;
+  var apiStorage = loginData.apiurl + "/storage.json?"+$rootScope.authSession;
+  var apiServer = loginData.apiurl + "/servers.json?"+$rootScope.authSession;
+  var apiCurrentState = loginData.apiurl + "/States.json?"+$rootScope.authSession;
 
   var apiExec = loginData.apiurl + "/states/change/";
 
@@ -355,7 +355,7 @@ $scope.toggleServer = function() {
     $scope.customState = "";
     NVR.debug("StateCtrl/controlZM: POST Control command is " + apiExec + str + ".json");
     inProgress = 1;
-    $http.post(apiExec + str + ".json")
+    $http.post(apiExec + str + ".json?"+$rootScope.authSession)
       .then(
         function (success) {
           NVR.debug("StateCtrl/controlZM: returned success with:"+JSON.stringify(success));

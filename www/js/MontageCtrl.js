@@ -631,7 +631,7 @@ angular.module('zmApp.controllers')
             apiurl += '/\'' + interval + '\' HOUR_SECOND';
         }*/
 
-        apiurl  += '.json?sort=StartTime&direction=desc&limit=1';
+        apiurl  += '.json?sort=StartTime&direction=desc&limit=1'+$rootScope.authSession;
 
         NVR.debug ("Getting event count using:"+apiurl);
         $http.get(apiurl)
@@ -721,7 +721,7 @@ angular.module('zmApp.controllers')
       var apiurl = NVR.getLogin().apiurl;
       //console.log ("ALARM CALLED WITH " +JSON.stringify(monitor));
 
-      var alarmurl = apiurl + "/monitors/alarm/id:" + monitor.Monitor.Id + "/command:status.json";
+      var alarmurl = apiurl + "/monitors/alarm/id:" + monitor.Monitor.Id + "/command:status.json?"+$rootScope.authSession;
       //  console.log("Alarm Check: Invoking " + alarmurl);
 
       $http.get(alarmurl)
@@ -1916,7 +1916,7 @@ angular.module('zmApp.controllers')
         var ld = NVR.getLogin();
         var url = ld.apiurl;
         var eid = monitor.Monitor.lastEvent.events[0].Event.Id;
-        url += '/events/'+monitor.Monitor.lastEvent.events[0].Event.Id+'.json';
+        url += '/events/'+monitor.Monitor.lastEvent.events[0].Event.Id+'.json?'+$rootScope.authSession;
         var mid = monitor.Monitor.Id;
 
         ld.lastEventCheckTimes[mid] = (new moment()).tz(NVR.getTimeZoneNow()).format('YYYY-MM-DD HH:mm:ss');

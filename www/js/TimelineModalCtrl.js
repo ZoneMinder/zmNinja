@@ -179,7 +179,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     var eid = $scope.event.Event.Id;
     //eid = 22302;
     var ld = NVR.getLogin();
-    var apiurl = ld.apiurl + "/events/" + eid + ".json";
+    var apiurl = ld.apiurl + "/events/" + eid + ".json?"+$rootScope.authSession;
     NVR.log("Getting " + apiurl);
     $http.get(apiurl)
       .then(function (success) {

@@ -83,7 +83,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
   function getFirstMonitor() {
     var d = $q.defer();
-    $http.get($scope.wizard.apiURL + "/monitors.json")
+    $http.get($scope.wizard.apiURL + "/monitors.json?"+$rootScope.authSession)
       .then(function (success) {
           // console.log("getfirst monitor success: " + JSON.stringify(success));
           if (success.data.monitors.length > 0) {
@@ -202,7 +202,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     var urls = [a1, a2, a3, a4, a5];
 
     // can't use getPathZms as loginData is not inited yet
-    $http.get($scope.wizard.apiURL + "/configs/viewByName/ZM_PATH_ZMS.json")
+    $http.get($scope.wizard.apiURL + "/configs/viewByName/ZM_PATH_ZMS.json?"+$rootScope.authSession)
       //NVR.getPathZms() // what does ZM have stored in PATH_ZMS?
       .then(function (data) {
           // remove zms or nph-zms
@@ -321,7 +321,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     // lets try both /zm/api and /api. What else is there?
     var apilist = [api1, api2, api3];
 
-    findFirstReachableUrl(apilist, '/host/getVersion.json')
+    findFirstReachableUrl(apilist, '/host/getVersion.json?'+$rootScope.authSession)
       .then(function (success) {
           NVR.log("Valid API response found with:" + success);
           $scope.wizard.apiURL = success;

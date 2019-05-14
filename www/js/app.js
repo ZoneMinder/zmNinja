@@ -1040,20 +1040,12 @@ angular.module('zmApp', [
 
 
       function proceedWithLogin() {
-        // recompute rand anyway so even if you don't have auth
-        // your stream should not get frozen
-        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-
-        // console.log ("***** STATENAME IS " + statename);
 
         var d = $q.defer();
         var ld = NVR.getLogin();
-        NVR.log("zmAutologin called");
-        var httpDelay = NVR.getLogin().enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
 
-        // This is a good time to check if auth is used :-p
-        if (!ld.isUseAuth) {
+         // This is a good time to check if auth is used :-p
+         if (!ld.isUseAuth) {
           NVR.log("Auth is disabled, setting authSession to empty");
           $rootScope.apiValid = true;
           $rootScope.authSession = '';
@@ -1064,6 +1056,75 @@ angular.module('zmApp', [
 
         }
 
+
+        // lets first try tokens and stored tokens
+        if (ld.isTokenSupported) {
+          NVR.log ("Detected token login supported");
+          var now = moment.utc();
+          var diff_access = moment.utc(ld.accessTokenExpires).diff(now, 'minutes');
+          var diff_refresh = moment.utc(ld.refreshTokenExpires).diff(now, 'minutes');
+
+          // first see if we can work with access token
+          if (moment.utc(ld.accessTokenExpires).isAfter(now) &&  diff_access  >=30) {
+            NVR.log ("Access token still has "+diff_access+" minutes left, using it");
+            $rootScope.authSession = '&token='+ld.accessToken;
+            d.resolve("Login success via access token");
+            $rootScope.$broadcast('auth-success', ''  );
+            return d.promise;
+          } 
+          // then see if we have at least 30 mins left for refresh token
+          else if (moment.utc(ld.refreshTokenExpires).isAfter(now) &&  diff_refresh  >=30) {
+            NVR.log ("Refresh token still has "+diff_refresh+" minutes left, using it");
+            var loginAPI = loginData.apiurl + '/host/login.json?token='+ld.refreshToken;
+            $http.get($loginAPI)
+            .then (function (succ) {
+              succ = succ.data;
+              if (succ.access_token) {
+                $rootScope.authSession = '&token='+succ.access_token;
+                NVR.log ("New access token retrieved:"+succ.access_token);
+                ld.accessToken = succ.access_token;
+                ld.accessTokenExpires = moment.utc().add(succ.access_token_expires,'seconds');
+                NVR.log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
+                NVR.log ("New access token expires on: UTC "+ld.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                NVR.log ("New access token expires on:"+ld.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                ld.isTokenSupported = true;
+                NVR.setLogin(ld);
+                d.resolve("Login success via refresh token");
+                $rootScope.$broadcast('auth-success', ''  );
+                return d.promise;
+              }
+              else {
+                NVR.log ('ERROR:Trying to refresh with refresh token:'+JSON.stringify(succ));
+                return proceedWithFreshLogin();
+
+              }
+            },
+            function (err) {
+                NVR.log ('access token login HTTP failed with: '+JSON.stringify(err));
+                return proceedWithFreshLogin();
+            });
+          } // valid refresh
+
+        } // is token supported
+        NVR.log ("Token login not being used");
+        // coming here means token reloads fell through
+        return proceedWithFreshLogin();
+      }
+
+      function proceedWithFreshLogin() {
+        // recompute rand anyway so even if you don't have auth
+        // your stream should not get frozen
+        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+
+        // console.log ("***** STATENAME IS " + statename);
+
+        var d = $q.defer();
+        var ld = NVR.getLogin();
+        NVR.log("Doing fresh login to ZM");
+        var httpDelay = NVR.getLogin().enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
+
+       
         if (!str) str = $translate.instant('kAuthenticating');
 
         if (str) {
@@ -1081,7 +1142,9 @@ angular.module('zmApp', [
 
 
         //first login using new API
+        $rootScope.authSession = '';
         var loginAPI = loginData.apiurl + '/host/login.json';
+
 
 
         $http({
@@ -1108,10 +1171,7 @@ angular.module('zmApp', [
           .then(function (textsucc) {
 
               $ionicLoading.hide();
-
               var succ;
-
-
               try {
 
                 succ = JSON.parse(textsucc.data);
@@ -1141,13 +1201,39 @@ angular.module('zmApp', [
                 //$rootScope.loggedIntoZm = 1;
                 $rootScope.authSession = '';
 
-                if (succ.credentials) {
-                  $rootScope.authSession = "&" + succ.credentials;
-                  if (succ.append_password == '1') {
-                    $rootScope.authSession = $rootScope.authSession +
-                      loginData.password;
+                if (succ.refresh_token) {
+                  $rootScope.authSession = '&token='+succ.access_token;
+                  NVR.log ("New refresh token retrieved:"+succ.refresh_token);
+                  ld.isTokenSupported = true;
+               
+                  ld.accessToken = succ.access_token;
+                  ld.accessTokenExpires = moment.utc().add(succ.access_token_expires, 'seconds');
+                  ld.refreshToken = succ.refresh_token;
+                
+                  ld.refreshTokenExpires = moment.utc().add(succ.refresh_token_expires, 'seconds');
+              
+                  NVR.log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
+                  NVR.log ("New refresh token expires on: UTC "+ld.refreshTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                  NVR.log ("New access token expires on: UTC "+ld.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                  NVR.setLogin(ld);
+
+                }
+                else {
+                  if (succ.credentials) {
+                    NVR.log ("Could not recover token details, trying old auth credentials");
+                    ld.isTokenSupported = false;
+                    NVR.setLogin(ld);
+                    $rootScope.authSession = "&" + succ.credentials;
+                    if (succ.append_password == '1') {
+                      $rootScope.authSession = $rootScope.authSession +
+                        loginData.password;
+                    }
+                  }
+                  else {
+                    NVR.log ("Neither token nor old cred worked. Seems like an error");
                   }
                 }
+                
 
                 var ldg = NVR.getLogin();
                 ldg.loginAPISupported = true;
@@ -1166,8 +1252,10 @@ angular.module('zmApp', [
 
               } catch (e) {
                 NVR.debug("Login API approach did not work...");
+               
                 ld = NVR.getLogin();
                 ld.loginAPISupported = false;
+                ld.isTokenSupported = false;
                 NVR.setLogin(ld);
                 loginWebScrape()
                   .then(function (succ) {
@@ -1189,42 +1277,24 @@ angular.module('zmApp', [
             function (err) {
               console.log("******************* API login error " + JSON.stringify(err));
               $ionicLoading.hide();
-
-
-              if (1) {
-                //if (err  && err.data && 'success' in err.data) {
-                console.log("API based login not supported, need to use web scraping...");
-                // login using old web scraping
-                var ld = NVR.getLogin();
-                ld.loginAPISupported = false;
-                NVR.setLogin(ld);
-                loginWebScrape()
-                  .then(function (succ) {
-                      d.resolve("Login Success");
-                      return d.promise;
-                    },
-                    function (err) {
-                      d.reject("Login Error");
-                      return (d.promise);
-                    });
-
-
-              } else {
-                // $rootScope.loggedIntoZm = -1;
-                //console.log("**** ZM Login FAILED");
-                NVR.log("zmAutologin Error via API: some meta foo", "error");
-                $rootScope.$broadcast('auth-error', "I'm confused why");
-
-                d.reject("Login Error");
-                return (d.promise);
-
-              }
-
+              //if (err  && err.data && 'success' in err.data) {
+              console.log("API based login not supported, need to use web scraping...");
+              // login using old web scraping
+              var ld = NVR.getLogin();
+              ld.loginAPISupported = false;
+              NVR.setLogin(ld);
+              loginWebScrape()
+                .then(function (succ) {
+                    d.resolve("Login Success");
+                    return d.promise;
+                  },
+                  function (err) {
+                    d.reject("Login Error");
+                    return (d.promise);
+                  });
 
             }
-          ); // post
-
-
+          ); // post .then
 
         return d.promise;
       }

@@ -746,7 +746,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // we can add alarmCount as this is really for completed events
     //completedEvents = completedEvents + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
-    completedEvents = completedEvents + ".json";
+    completedEvents = completedEvents + ".json?"+$rootScope.authSession;
 
     // now get currently ongoing events
     // as it turns out various events get stored withn null and never recover
@@ -755,7 +755,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     var st = moment(lastTimeForEvent).tz(NVR.getTimeZoneNow());
     st = st.subtract(10, 'minutes').locale('en').format("YYYY-MM-DD HH:mm:ss");
-    var ongoingEvents = ld.apiurl + '/events/index/StartTime >=:' + st + '/EndTime =:.json';
+    var ongoingEvents = ld.apiurl + '/events/index/StartTime >=:' + st + '/EndTime =:.json?'+$rootScope.authSession;
     //NVR.debug("Getting incremental events using: " + completedEvents);
 
     NVR.debug("Completed events API:" + completedEvents);
