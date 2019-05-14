@@ -648,7 +648,7 @@ angular.module('zmApp', [
     //console.log ("HERE TIMEOUT");
     return {
 
-      'request': function (config) {
+      request: function (config) {
         if (!config) return config;
         if (!config.url) return config;
 
@@ -682,7 +682,25 @@ angular.module('zmApp', [
         return config;
       },
 
-      'response': function (response) {
+      responseError: function (rejection) {
+        if (rejection.status == 401) {
+          nvr = $injector.get('NVR');
+          nvr.log ("******** INTERCEPTOR CAUGHT ERROR, RE-LOGIN NEEDED");
+         
+          return nvr.recreateTokens()
+          .then (function() {
+            return $injector.get('$http')(rejection.config);
+          })
+        } 
+        else {
+          nvr.log ("NOT 401");
+          return response;
+        }
+        
+      },
+
+      response: function (response) {
+
         var cookies = response.headers("Set-Cookie");
         if (cookies != null) {
 
@@ -698,6 +716,7 @@ angular.module('zmApp', [
         }
 
         //console.log ("HTTP response");
+
 
       
         if (response.data && typeof(response.data) == 'string' && (response.data.indexOf("<pre class=\"cake-error\">")==0)) {
@@ -1037,7 +1056,7 @@ angular.module('zmApp', [
 
       return d.promise;
 
-
+      
 
       function proceedWithLogin() {
 
@@ -1065,7 +1084,7 @@ angular.module('zmApp', [
           var diff_refresh = moment.utc(ld.refreshTokenExpires).diff(now, 'minutes');
 
           // first see if we can work with access token
-          if (moment.utc(ld.accessTokenExpires).isAfter(now) &&  diff_access  >=30) {
+          if (moment.utc(ld.accessTokenExpires).isAfter(now) &&  diff_access  >=5) {
             NVR.log ("Access token still has "+diff_access+" minutes left, using it");
             $rootScope.authSession = '&token='+ld.accessToken;
             d.resolve("Login success via access token");
@@ -1075,8 +1094,8 @@ angular.module('zmApp', [
           // then see if we have at least 30 mins left for refresh token
           else if (moment.utc(ld.refreshTokenExpires).isAfter(now) &&  diff_refresh  >=30) {
             NVR.log ("Refresh token still has "+diff_refresh+" minutes left, using it");
-            var loginAPI = loginData.apiurl + '/host/login.json?token='+ld.refreshToken;
-            $http.get($loginAPI)
+            var loginAPI = ld.apiurl + '/host/login.json?token='+ld.refreshToken;
+            $http.get(loginAPI)
             .then (function (succ) {
               succ = succ.data;
               if (succ.access_token) {
@@ -1116,17 +1135,17 @@ angular.module('zmApp', [
         // your stream should not get frozen
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
         $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-
+  
         // console.log ("***** STATENAME IS " + statename);
-
+  
         var d = $q.defer();
         var ld = NVR.getLogin();
         NVR.log("Doing fresh login to ZM");
         var httpDelay = NVR.getLogin().enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
-
+  
        
         if (!str) str = $translate.instant('kAuthenticating');
-
+  
         if (str) {
           $ionicLoading.show({
             template: str,
@@ -1134,19 +1153,19 @@ angular.module('zmApp', [
             duration: httpDelay
           });
         }
-
+  
         //console.log(">>>>>>>>>>>>>> ISRECAPTCHA");
-
+  
         var loginData = NVR.getLogin();
         var currentServerVersion = NVR.getCurrentServerVersion();
-
-
+  
+  
         //first login using new API
         $rootScope.authSession = '';
         var loginAPI = loginData.apiurl + '/host/login.json';
-
-
-
+  
+  
+  
         $http({
             method: 'post',
             url: loginAPI,
@@ -1169,19 +1188,19 @@ angular.module('zmApp', [
           })
           //$http.get(loginAPI)
           .then(function (textsucc) {
-
+  
               $ionicLoading.hide();
               var succ;
               try {
-
+  
                 succ = JSON.parse(textsucc.data);
-
+  
                 if (!succ.version) {
                   NVR.debug("API login returned fake success, going back to webscrape");
                   ld = NVR.getLogin();
                   ld.loginAPISupported = false;
                   NVR.setLogin(ld);
-
+  
                   loginWebScrape()
                     .then(function (succ) {
                         d.resolve("Login Success");
@@ -1200,7 +1219,7 @@ angular.module('zmApp', [
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
                 $rootScope.authSession = '';
-
+  
                 if (succ.refresh_token) {
                   $rootScope.authSession = '&token='+succ.access_token;
                   NVR.log ("New refresh token retrieved:"+succ.refresh_token);
@@ -1216,7 +1235,7 @@ angular.module('zmApp', [
                   NVR.log ("New refresh token expires on: UTC "+ld.refreshTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
                   NVR.log ("New access token expires on: UTC "+ld.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
                   NVR.setLogin(ld);
-
+  
                 }
                 else {
                   if (succ.credentials) {
@@ -1234,22 +1253,22 @@ angular.module('zmApp', [
                   }
                 }
                 
-
+  
                 var ldg = NVR.getLogin();
                 ldg.loginAPISupported = true;
                 NVR.setLogin(ldg);
-
+  
                 NVR.log("Stream authentication construction: " +
                   $rootScope.authSession);
-
+  
                 NVR.log("zmAutologin successfully logged into Zoneminder via API");
-
-
-
+  
+  
+  
                 d.resolve("Login Success");
                 $rootScope.$broadcast('auth-success', succ);
                 return d.promise;
-
+  
               } catch (e) {
                 NVR.debug("Login API approach did not work...");
                
@@ -1268,11 +1287,11 @@ angular.module('zmApp', [
                       return (d.promise);
                     });
                 return d.promise;
-
+  
               }
-
-
-
+  
+  
+  
             },
             function (err) {
               console.log("******************* API login error " + JSON.stringify(err));
@@ -1292,16 +1311,20 @@ angular.module('zmApp', [
                     d.reject("Login Error");
                     return (d.promise);
                   });
-
+  
             }
           ); // post .then
-
+  
         return d.promise;
       }
+
 
       return d.promise;
 
     }
+
+
+ 
 
     function loginWebScrape() {
       var loginData = NVR.getLogin();
