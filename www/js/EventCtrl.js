@@ -317,7 +317,7 @@ angular.module('zmApp.controllers')
 
     function getEventObject(eid) {
 
-      var apiurl = NVR.getLogin().apiurl + '/events/' + eid + '.json';
+      var apiurl = NVR.getLogin().apiurl + '/events/' + eid + '.json?'+$rootScope.authSession;
 
       $http.get(apiurl)
         .then(function (data) {},
@@ -1222,7 +1222,7 @@ angular.module('zmApp.controllers')
     function prepareImages(e) {
       var d = $q.defer();
       var imglist = [];
-      var myurl = loginData.apiurl + '/events/' + e.Event.Id + ".json";
+      var myurl = loginData.apiurl + '/events/' + e.Event.Id + ".json?"+$rootScope.authSession;
       $http.get(myurl)
         .then(function (succ) {
             var data = succ.data;
@@ -1656,7 +1656,7 @@ angular.module('zmApp.controllers')
 
       NVR.debug("Archiving request for EID=" + eid);
       var loginData = NVR.getLogin();
-      var apiArchive = loginData.apiurl + "/events/" + eid + ".json";
+      var apiArchive = loginData.apiurl + "/events/" + eid + ".json?"+$rootScope.authSession;
       var setArchiveBit = ($scope.events[ndx].Event.Archived == '0') ? "1" : "0";
 
       NVR.debug("Calling archive with:" + apiArchive + " and Archive=" + setArchiveBit);
@@ -1743,7 +1743,7 @@ angular.module('zmApp.controllers')
       //$scope.eventList.showDelete = false;
       //curl -XDELETE http://server/zm/api/events/1.json
       var loginData = NVR.getLogin();
-      var apiDelete = loginData.apiurl + "/events/" + id + ".json";
+      var apiDelete = loginData.apiurl + "/events/" + id + ".json?"+$rootScope.authSession;
       NVR.debug("DeleteEvent: ID=" + id + " item=" + itemid);
       NVR.log("Delete event " + apiDelete);
 
@@ -1882,7 +1882,7 @@ angular.module('zmApp.controllers')
 
      
 
-      var apiurl = ld.apiurl + "/events/consoleEvents/1 hour" + af + ".json";
+      var apiurl = ld.apiurl + "/events/consoleEvents/1 hour" + af + ".json?"+$rootScope.authSession;
       //NVR.debug("consoleEvents API:" + apiurl);
 
       $http.get(apiurl)
@@ -1919,7 +1919,7 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1 day" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 day" + af + ".json?"+$rootScope.authSession;
       //NVR.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {
@@ -1952,7 +1952,7 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1 week" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 week" + af + ".json?"+$rootScope.authSession;
       //NVR.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {
@@ -1986,7 +1986,7 @@ angular.module('zmApp.controllers')
           }
         });
 
-      apiurl = ld.apiurl + "/events/consoleEvents/1 month" + af + ".json";
+      apiurl = ld.apiurl + "/events/consoleEvents/1 month" + af + ".json?"+$rootScope.authSession;
       //NVR.debug("consoleEvents API:" + apiurl);
       $http.get(apiurl)
         .then(function (data) {
@@ -2163,7 +2163,7 @@ angular.module('zmApp.controllers')
           $scope.alarm_images = [];
           event.Event.height = (eventsListDetailsHeight + eventsListScrubHeight);
           $ionicScrollDelegate.resize();
-          var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json";
+          var myurl = loginData.apiurl + '/events/' + event.Event.Id + ".json?"+$rootScope.authSession;
           NVR.log("API for event details" + myurl);
           $http.get(myurl)
             .then(function (data) {
@@ -2274,7 +2274,7 @@ angular.module('zmApp.controllers')
           var i;
 
           
-            var myurl_frames = loginData.apiurl + '/events/' + event.Event.Id + ".json";
+            var myurl_frames = loginData.apiurl + '/events/' + event.Event.Id + ".json?"+$rootScope.authSession;
             NVR.log("API for event details" + myurl_frames);
             $http.get(myurl_frames)
               .then(function (data) {
@@ -2334,7 +2334,7 @@ angular.module('zmApp.controllers')
 
           };
 
-          var myurl2 = loginData.apiurl + '/events/' + event.Event.Id + ".json";
+          var myurl2 = loginData.apiurl + '/events/' + event.Event.Id + ".json?"+$rootScope.authSession;
           NVR.log("API for event details" + myurl2);
           $http.get(myurl2)
             .then(function (data) {

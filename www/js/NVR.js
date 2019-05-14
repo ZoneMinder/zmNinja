@@ -194,9 +194,12 @@ angular.module('zmApp.controllers')
         'enableEventRefresh': true,
         'lastEventCheckTimes':{}, 
         'enableMontageOverlays': true,
-        'showMontageSidebars': false
-      
-
+        'showMontageSidebars': false,
+        'isTokenSupported': false,
+        'accessTokenExpires': '',
+        'refreshTokenExpires': '',
+        'accessToken': '',
+        'refreshToken': ''
 
       };
 
@@ -332,7 +335,7 @@ angular.module('zmApp.controllers')
         if (configParams.ZM_MIN_STREAMING_PORT == -1 || forceReload) {
           log("Checking value of ZM_MIN_STREAMING_PORT for the first time");
           var apiurl = loginData.apiurl;
-          var myurl = apiurl + '/configs/viewByName/ZM_MIN_STREAMING_PORT.json';
+          var myurl = apiurl + '/configs/viewByName/ZM_MIN_STREAMING_PORT.json?'+$rootScope.authSession;
           $http.get(myurl)
             .then(function (data) {
                 data = data.data;
@@ -382,6 +385,12 @@ angular.module('zmApp.controllers')
           return d.promise;
         }
 
+        if ($rootScope.authSession != '' && $rootScope.authSession != 'undefined') {
+          log ("We already have an auth key of:"+$rootScope.authSession);
+          d.resolve($rootScope.authSession);
+          return d.promise;
+        }
+
         if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
           myurl = loginData.apiurl + '/host/getCredentials.json';
@@ -391,7 +400,7 @@ angular.module('zmApp.controllers')
 
                 debug("Credentials API returned: " + JSON.stringify(s));
                 if (!s.data || !s.data.credentials) {
-                  $rootScope.authSession = "undefined";
+                  $rootScope.authSession = "";
                   d.resolve($rootScope.authSession);
                   debug("getCredentials() API Succeded, but did NOT return credentials key: " + JSON.stringify(s));
                   return d.promise;
@@ -408,7 +417,7 @@ angular.module('zmApp.controllers')
 
               },
               function (e) {
-                $rootScope.authSession = "undefined";
+                $rootScope.authSession = "";
                 d.resolve($rootScope.authSession);
                 debug("AuthHash API Error: " + JSON.stringify(e));
                 return d.promise;
@@ -1061,6 +1070,32 @@ angular.module('zmApp.controllers')
                     loginData.showMontageSidebars = false;
 
                   }
+
+                  if (typeof loginData.isTokenSupported == 'undefined') {
+                    loginData.isTokenSupported = false;
+
+                  }
+
+                  if (typeof loginData.accessTokenExpires == 'undefined') {
+                    loginData.accessTokenExpires = '';
+
+                  }
+
+                  if (typeof loginData.refreshTokenExpires == 'undefined') {
+                    loginData.refreshTokenExpires = '';
+
+                  }
+
+                  if (typeof loginData.refreshToken == 'undefined') {
+                    loginData.refreshToken = '';
+
+                  }
+
+                  if (typeof loginData.accessToken == 'undefined') {
+                    loginData.accessToken = '';
+
+                  }
+
 
                   loginData.canSwipeMonitors = true;
                   loginData.forceImageModePath = false;
@@ -1830,7 +1865,7 @@ angular.module('zmApp.controllers')
         getAPIversion: function () {
 
           var d = $q.defer();
-          var apiurl = loginData.apiurl + '/host/getVersion.json';
+          var apiurl = loginData.apiurl + '/host/getVersion.json?'+$rootScope.authSession;
           debug("getAPIversion called with " + apiurl);
           $http.get(apiurl)
             .then(function (success) {
@@ -1942,7 +1977,7 @@ angular.module('zmApp.controllers')
 
         getAuthHashLogin: function () {
 
-          return $http.get(loginData.apiurl + '/configs/viewByName/ZM_AUTH_HASH_LOGINS.json');
+          return $http.get(loginData.apiurl + '/configs/viewByName/ZM_AUTH_HASH_LOGINS.json?'+$rootScope.authSession);
 
         },
 
@@ -1952,7 +1987,7 @@ angular.module('zmApp.controllers')
 
           if (forceReload == 1 || configParams.ZM_EVENT_IMAGE_DIGITS == '-1') {
             var apiurl = loginData.apiurl;
-            var myurl = apiurl + '/configs/viewByName/ZM_EVENT_IMAGE_DIGITS.json';
+            var myurl = apiurl + '/configs/viewByName/ZM_EVENT_IMAGE_DIGITS.json?'+$rootScope.authSession;
             //debug("Config URL for digits is:" + myurl);
             $http.get(myurl)
               .then(function (data) {
@@ -1989,7 +2024,7 @@ angular.module('zmApp.controllers')
 
 
           var apiurl = loginData.apiurl;
-          var myurl = apiurl + '/configs/viewByName/ZM_PATH_ZMS.json';
+          var myurl = apiurl + '/configs/viewByName/ZM_PATH_ZMS.json?'+$rootScope.authSession;
           debug("Config URL for ZMS PATH is:" + myurl);
           $http.get(myurl)
             .then(function (data) {
@@ -2159,7 +2194,7 @@ angular.module('zmApp.controllers')
 
         // use non cached for daemon status
         getMultiServers: function () {
-          return $http.get(loginData.apiurl + '/servers.json');
+          return $http.get(loginData.apiurl + '/servers.json?'+$rootScope.authSession);
 
         },
 
@@ -2204,7 +2239,7 @@ angular.module('zmApp.controllers')
             log((forceReload == 1) ? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors";
-            myurl += "/index/Type !=:WebSite.json";
+            myurl += "/index/Type !=:WebSite.json?"+$rootScope.authSession;
 
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
@@ -2220,7 +2255,7 @@ angular.module('zmApp.controllers')
                       if (data.monitors) monitors = data.monitors;
 
 
-                      if ($rootScope.authSession == 'undefined') {
+                      if ($rootScope.authSession == '') {
                         log("Now that we have monitors, lets get AuthKey...");
                         getAuthKey(monitors[0].Monitor.Id, (Math.floor((Math.random() * 999999) + 1)).toString());
                       }
@@ -2234,7 +2269,7 @@ angular.module('zmApp.controllers')
 
                       debug("Inside getMonitors, will also regen connkeys");
                       debug("Now trying to get multi-server data, if present");
-                      $http.get(apiurl + "/servers.json")
+                      $http.get(apiurl + "/servers.json?"+$rootScope.authSession)
                         .then(function (data) {
                             data = data.data;
                             // We found a server list API, so lets make sure
@@ -2502,7 +2537,7 @@ angular.module('zmApp.controllers')
 
         zmPrivacyProcessed: function () {
           var apiurl = loginData.apiurl;
-          var myurl = apiurl + '/configs/viewByName/ZM_SHOW_PRIVACY.json';
+          var myurl = apiurl + '/configs/viewByName/ZM_SHOW_PRIVACY.json?'+$rootScope.authSession;
           var d = $q.defer();
 
           $http({
@@ -2641,7 +2676,7 @@ angular.module('zmApp.controllers')
           if (!tz || isForce) {
 
             log("First invocation of TimeZone, asking server");
-            var apiurl = loginData.apiurl + '/host/getTimeZone.json';
+            var apiurl = loginData.apiurl + '/host/getTimeZone.json?'+$rootScope.authSession;
             $http.get(apiurl)
               .then(function (success) {
                   tz = success.data.tz;
@@ -2704,7 +2739,7 @@ angular.module('zmApp.controllers')
           }
 
 
-          myurl = myurl + ".json";
+          myurl = myurl + ".json?"+$rootScope.authSession;
           //console.log (">>>>>Constructed URL " + myurl);
 
           $ionicLoading.show({
@@ -2792,7 +2827,7 @@ angular.module('zmApp.controllers')
             myurl = myurl + '/Notes REGEXP:detected:';
           }
 
-          myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId;
+          myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId+$rootScope.authSession;
 
 
           debug("getEvents:" + myurl);
@@ -3056,8 +3091,14 @@ angular.module('zmApp.controllers')
         },
 
         logout: function () {
+          var d = $q.defer();
 
           // always resolves
+          if (!loginData.isUseAuth || (loginData.loginAPISupported && loginData.isTokenSupported)) {
+            log ("No need for logout!");
+            d.resolve(true);
+            return d.promise;
+          }
 
           $ionicLoading.show({
             template: $translate.instant('kCleaningUp'),
@@ -3065,7 +3106,7 @@ angular.module('zmApp.controllers')
 
           });
 
-          var d = $q.defer();
+         
           log(loginData.url + "=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "undefined";
 

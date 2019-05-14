@@ -186,7 +186,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
           }
           var url = loginData.apiurl +
             "/events/index/MonitorId:" + monitors[j].Monitor.Id + dateString +
-            ".json?page=1";
+            ".json?page=1"+$rootScope.authSession;
           // console.log("Monitor event URL:" + url);
           NVR.log("EventGraph: composed url is " + url);
           $http.get(url /*,{timeout:15000}*/ )

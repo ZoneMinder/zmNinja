@@ -610,9 +610,8 @@ function mobilePinConfig () {
          // don't do it for WSS - lets mandate that
      }*/
 
-    var apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
-    var portalurl = $scope.loginData.url + '/index.php';
-
+    var apiurl = $scope.loginData.apiurl + '/host/getVersion.json?'+$rootScope.authSession;
+  
     // Check if isUseAuth is set make sure u/p have a dummy value
     if ($scope.loginData.isUseAuth) {
       if (!$scope.loginData.username) $scope.loginData.username = "x";
@@ -769,7 +768,7 @@ function mobilePinConfig () {
         if ($scope.loginData.serverName != NVR.getLogin().serverName) {
           NVR.debug(">>> Server information has changed, likely a fallback took over!");
           $scope.loginData = NVR.getLogin();
-          apiurl = $scope.loginData.apiurl + '/host/getVersion.json';
+          apiurl = $scope.loginData.apiurl + '/host/getVersion.json?'+$rootScope.authSession;
           portalurl = $scope.loginData.url + '/index.php';
         }
 
