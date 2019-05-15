@@ -1480,14 +1480,20 @@ angular.module('zmApp', [
       var ld = NVR.getLogin();
       // lets keep this timer irrespective of auth or no auth
       //$rootScope.loggedIntoZm = 0;
-      $interval.cancel(zmAutoLoginHandle);
-      //doLogin();
-      zmAutoLoginHandle = $interval(function () {
-        _doLogin("");
 
-      }, zm.loginInterval); // Auto login every 5 minutes
-      // PHP timeout is around 10 minutes
-      // should be ok?
+      if (!ld.isTokenSupported) {
+        $interval.cancel(zmAutoLoginHandle);
+        //doLogin();
+        zmAutoLoginHandle = $interval(function () {
+          _doLogin("");
+
+        }, zm.loginInterval); // Auto login every 5 minutes
+        // PHP timeout is around 10 minutes
+        // should be ok?
+      } else {
+        NVR.log ("Disabling login timer, as we are using tokens");
+      }
+        
 
     }
 
