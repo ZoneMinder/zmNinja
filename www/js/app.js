@@ -694,11 +694,11 @@ angular.module('zmApp', [
             rejection.config.url = rejection.config.url.replace(/&token=([^&]*)/, $rootScope.authSession);
             return $injector.get('$http')(rejection.config);
           }, function (err) {
-            return response;
+            return err;
           });
         } 
         else {
-          return response;
+          return rejection;
         }
         
       },
