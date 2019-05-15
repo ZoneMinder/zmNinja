@@ -636,7 +636,7 @@ angular.module('zmApp.controllers')
         NVR.debug ("Getting event count using:"+apiurl);
         $http.get(apiurl)
         .then (function (data) {
-            console.log ("EVENTS GOT: "+JSON.stringify(data));
+           // console.log ("EVENTS GOT: "+JSON.stringify(data));
             var res = data.data;
             var mid = monitor.Monitor.Id;
             if (res.events.length == 0) res = undefined;
