@@ -491,8 +491,8 @@ angular.module('zmApp', [
   // This directive is adapted from https://github.com/paveisistemas/ionic-image-lazy-load
   // I've removed lazyLoad and only made it show a spinner when an image is loading
   //--------------------------------------------------------------------------------------------
-  .directive('imageSpinnerSrc', ['$document', '$compile', 'imageLoadingDataShare', '$timeout', '$parse',
-    function ($document, $compile, imageLoadingDataShare, $timeout, $parse) {
+  .directive('imageSpinnerSrc', ['$document', '$compile', 'imageLoadingDataShare', '$timeout', '$parse', 'NVR', '$rootScope',
+    function ($document, $compile, imageLoadingDataShare, $timeout, $parse, NVR,  $rootScope) {
       return {
         restrict: 'A',
         scope: {
@@ -618,7 +618,15 @@ angular.module('zmApp', [
               bgImg.src = $attributes.imageSpinnerSrc;
 
             } else {
-              $element[0].src = $attributes.imageSpinnerSrc; // set src attribute on element (it will load image)
+
+              var ld = NVR.getLogin();
+              if (ld.isUseAuth && $rootScope.authSession=='' ) {
+                NVR.log ("waiting for authSession to have a value...");
+
+              } else {
+                $element[0].src = $attributes.imageSpinnerSrc; // set src 
+              }
+          
 
             }
           }
