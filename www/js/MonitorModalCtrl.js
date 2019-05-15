@@ -793,6 +793,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       };
     }
 
+    if ($rootScope.authSession.indexOf("&token=")!=-1) {
+      ptzData['token']=$rootScope.authSession.match(/&token=([^&]*)/)[1];
+    }
+
+
     //console.log("Command value " + cmd + " with MID=" + monitorId);
     //console.log("PTZDATA is " + JSON.stringify(ptzData));
     $ionicLoading.hide();
@@ -824,7 +829,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           str.push(encodeURIComponent(p) + "=" +
             encodeURIComponent(obj[p]));
         var foo = str.join("&");
-        //console.log("****RETURNING " + foo);
+        console.log("****PTZ RETURNING " + foo);
         return foo;
       },
 
@@ -1411,9 +1416,22 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var CMD_QUERY = 99;
     */
 
-    var myauthtoken = $rootScope.authSession.replace("&auth=", "");
- 
-    //&auth=
+   // var myauthtoken='';
+
+    var data_payload = {
+      view: "request",
+      request: "stream",
+      connkey: connkey,
+      command: cmd
+    };
+
+    if ($rootScope.authSession.indexOf("&auth=")!=-1) {
+      data_payload['auth']=$rootScope.authSession.match(/&auth=([^&]*)/)[1];
+    }
+    else if ($rootScope.authSession.indexOf("&token=")!=-1) {
+      data_payload['token']=$rootScope.authSession.match(/&token=([^&]*)/)[1];
+    }
+
     var req = $http({
       method: 'POST',
       /*timeout: 15000,*/
@@ -1428,18 +1446,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           str.push(encodeURIComponent(p) + "=" +
             encodeURIComponent(obj[p]));
         var foo = str.join("&");
-        //console.log("****RETURNING " + foo);
+        console.log("****CONTROL RETURNING " + foo);
         return foo;
       },
 
-      data: {
-        view: "request",
-        request: "stream",
-        connkey: connkey,
-        command: cmd,
-        auth: myauthtoken,
-
-      }
+      data: data_payload
     });
     req.then(function (resp) {
 

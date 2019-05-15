@@ -111,7 +111,9 @@ angular.module('zmApp', [
     zmVersionCheckNag: 60 * 24, // in hrs 
     waitTimeTillResume: 5, // in sec, for ES error
     versionWithLoginAPI: "1.31.47",
-    androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw"
+    androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw",
+    accessTokenLeewayMin: 5,
+    refreshTokenLeewayMin: 30
 
   })
 
@@ -685,15 +687,17 @@ angular.module('zmApp', [
       responseError: function (rejection) {
         if (rejection.status == 401) {
           nvr = $injector.get('NVR');
-          nvr.log ("******** INTERCEPTOR CAUGHT ERROR, RE-LOGIN NEEDED");
-         
+          nvr.log ("Browser Http intecepted 401, will try reauth");
           return nvr.recreateTokens()
-          .then (function() {
+          .then (function(succ) {
+
+            rejection.config.url = rejection.config.url.replace(/&token=([^&]*)/, $rootScope.authSession);
             return $injector.get('$http')(rejection.config);
-          })
+          }, function (err) {
+            return response;
+          });
         } 
         else {
-          nvr.log ("NOT 401");
           return response;
         }
         
@@ -1084,7 +1088,7 @@ angular.module('zmApp', [
           var diff_refresh = moment.utc(ld.refreshTokenExpires).diff(now, 'minutes');
 
           // first see if we can work with access token
-          if (moment.utc(ld.accessTokenExpires).isAfter(now) &&  diff_access  >=5) {
+          if (moment.utc(ld.accessTokenExpires).isAfter(now) &&  diff_access  >=zm.accessTokenLeewayMin) {
             NVR.log ("Access token still has "+diff_access+" minutes left, using it");
             $rootScope.authSession = '&token='+ld.accessToken;
             d.resolve("Login success via access token");
@@ -1092,7 +1096,7 @@ angular.module('zmApp', [
             return d.promise;
           } 
           // then see if we have at least 30 mins left for refresh token
-          else if (moment.utc(ld.refreshTokenExpires).isAfter(now) &&  diff_refresh  >=30) {
+          else if (moment.utc(ld.refreshTokenExpires).isAfter(now) &&  diff_refresh  >=zm.refreshTokenLeewayMin) {
             NVR.log ("Refresh token still has "+diff_refresh+" minutes left, using it");
             var loginAPI = ld.apiurl + '/host/login.json?token='+ld.refreshToken;
             $http.get(loginAPI)
@@ -1599,6 +1603,10 @@ angular.module('zmApp', [
       // for .config block
       $rootScope.debug = function (msg) {
         NVR.debug(msg);
+      };
+
+      $rootScope.recreateTokens = function() {
+        return NVR.recreateTokens();
       };
 
      
@@ -2436,7 +2444,8 @@ angular.module('zmApp', [
     $provide.decorator('$http', ['$delegate', '$q', '$injector', function ($delegate, $q, $injector) {
       // create function which overrides $http function
       var $http = $delegate;
-      var logger = $injector.get("$rootScope");
+      var nvr = $injector.get("$rootScope");
+    
 
       var wrapper = function () {
         var url;
@@ -2475,7 +2484,7 @@ angular.module('zmApp', [
 
                   // console.log ("HTTP RESPONSE:" + JSON.stringify(succ.data));
                    if (succ.data && (succ.data.indexOf("<pre class=\"cake-error\">") == 0) ) {
-                    logger.debug ("**** Native: cake-error in message, trying fix...");
+                    nvr.debug ("**** Native: cake-error in message, trying fix...");
                     succ.data = JSON.parse(succ.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
                   }
 
@@ -2506,10 +2515,32 @@ angular.module('zmApp', [
               }
             },
             function (err) {
-              logger.debug("***  Inside native HTTP error: " + JSON.stringify(err));
-
-              d.reject(err);
-              return d.promise;
+              var d = $q.defer();
+              nvr.debug("***  Inside native HTTP error: " + JSON.stringify(err));
+              if (err.status == 401) {
+                nvr.debug ("** Native intercept: Got 401, going to try recreating tokens");
+                return nvr.recreateTokens()
+                .then (function() {
+                          nvr.debug ("** Native, tokens generated, retrying old request");
+                          url = url.replace(/&token=([^&]*)/, nvr.authSession);
+                          cordova.plugin.http.sendRequest(encodeURI(url), options, 
+                          function (succ) {
+                            d.resolve(succ);
+                            return d.promise;
+                          }, 
+                          function (err) {
+                            d.resolve(err);
+                            return d.promise;
+                          });
+                          return d.promise;
+                }, function (err) {d.reject(err); return d.promise;});
+              }
+              else {
+                // not a 401, so pass on rejection
+                d.reject(err);
+                return d.promise;
+              }
+              
             });
           return d.promise;
 
