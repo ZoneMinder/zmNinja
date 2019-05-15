@@ -531,7 +531,21 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
   function subControlStream(cmd, connkey) {
     var loginData = NVR.getLogin();
-    var myauthtoken = $rootScope.authSession.replace("&auth=", "");
+    
+    var data_payload = {
+      view: "request",
+      request: "stream",
+      connkey: connkey,
+      command: cmd
+    };
+
+    if ($rootScope.authSession.indexOf("&auth=")!=-1) {
+      data_payload['auth']=$rootScope.authSession.match(/&auth=([^&]*)/)[1];
+    }
+    else if ($rootScope.authSession.indexOf("&token=")!=-1) {
+      data_payload['token']=$rootScope.authSession.match(/&token=([^&]*)/)[1];
+    }
+
     //&auth=
     var req = qHttp({
       method: 'POST',
@@ -544,17 +558,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         var str = [];
         for (var p in obj) str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
         var foo = str.join("&");
-        //console.log("****SUB RETURNING " + foo);
+        console.log("****HISTORY CONTROL RETURNING " + foo);
         return foo;
       },
-      data: {
-        view: "request",
-        request: "stream",
-        connkey: connkey,
-        command: cmd,
-        auth: myauthtoken, // user: loginData.username,
-        // pass: loginData.password
-      }
+      data: data_payload
     });
     req.then(function (succ) {
       NVR.debug("subControl success:" + JSON.stringify(succ));
@@ -614,28 +621,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       url:cmdUrl
     });
     
-    /* var req = qHttp({
-      method: 'POST',
-      url: loginData.url + '/index.php?view=console',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      transformRequest: function (obj) {
-        var str = [];
-        for (var p in obj) str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        var foo = str.join("&");
-        if (extras) foo = foo + extras;
-        return foo;
-      },
-      data: {
-        view: "request",
-        request: "stream",
-        connkey: connkey,
-        command: cmd,
-        auth: myauthtoken, // user: loginData.username,
-        // pass: loginData.password
-      }
-    });*/
+   
     req.then(function (succ) {
       var resp = succ.data;
 

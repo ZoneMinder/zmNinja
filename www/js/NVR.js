@@ -2143,49 +2143,7 @@ angular.module('zmApp.controllers')
             );
         },
 
-        /*killStream: function (ck) {
-          debug ("Killing connKey: "+ck);
-          var myauthtoken = $rootScope.authSession.replace("&auth=", "");
-          var req = $http(
-            {
-                method: 'POST',
-      
-                url: loginData.url + '/index.php',
-                headers:
-                {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    ,
-                },
-                transformRequest: function(obj)
-                {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" +
-                            encodeURIComponent(obj[p]));
-                    var foo = str.join("&");
-                    //console.log("****RETURNING " + foo);
-                    return foo;
-                },
-    
-                data:
-                {
-                    view: "request",
-                    request: "stream",
-                    connkey: ck,
-                    command: 3,
-                    auth: myauthtoken,
-    
-                }
-            })
-            .then (function (succ) {
-                console.log ("STOP/KILL OK WITH: " + JSON.stringify(succ));
-            },
-            function (err) {
-              console.log ("KILL ERROR WITH: " + JSON.stringify(err));
-            });
-
-
-      },*/
+       
 
         getMultiServersCached: function () {
           return multiservers;
@@ -2626,7 +2584,7 @@ angular.module('zmApp.controllers')
                 } catch (e) {
                   debug("Login API approach did not work...");
 
-                  d.reject("API based login failed")
+                  d.reject("API based login failed");
                   return d.promise;
 
                 }
