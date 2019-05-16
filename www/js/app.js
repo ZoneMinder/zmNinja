@@ -654,8 +654,7 @@ angular.module('zmApp', [
   //------------------------------------------------------------------
   .factory('timeoutHttpIntercept', ['$rootScope', '$q', 'zm', '$injector', function ($rootScope, $q, zm, $injector) {
     $rootScope.zmCookie = "";
-    //console.log ("HHHHHHHHHHHHHH**************************");
-    //console.log ("HERE TIMEOUT");
+    
     return {
 
       request: function (config) {
@@ -667,27 +666,6 @@ angular.module('zmApp', [
           config.headers.Authorization = $rootScope.basicAuthHeader;
         }
 
-        // handle basic auth properly
-        if (config.url.indexOf("@") > -1) {
-
-          NVR.debug(">>>>>>>>>> ERROR!!!!! url has a basic auth u:p!" + config.url);
-
-        }
-
-        // I don't think we need this - do we?
-
-        /*
-        if ((config.url.indexOf("/api/states/change/") > -1) ||
-          (config.url.indexOf("getDiskPercent.json") > -1) ||
-          (config.url.indexOf("daemonCheck.json") > -1) ||
-          (config.url.indexOf("getLoad.json") > -1))
-
-        {
-
-          // these can take time, so lets bump up timeout
-          config.timeout = zm.largeHttpTimeout;
-
-        }*/
 
         return config;
       },
@@ -1112,7 +1090,7 @@ angular.module('zmApp', [
               succ = succ.data;
               if (succ.access_token) {
                 $rootScope.authSession = '&token='+succ.access_token;
-                NVR.log ("New access token retrieved:"+succ.access_token);
+                NVR.log ("New access token retrieved: ..."+succ.access_token.substr(-5));
                 ld.accessToken = succ.access_token;
                 ld.accessTokenExpires = moment.utc().add(succ.access_token_expires,'seconds');
                 NVR.log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
@@ -1135,8 +1113,8 @@ angular.module('zmApp', [
                 return proceedWithFreshLogin();
             });
           } // valid refresh
-
-        } // is token supported
+            return d.promise;
+          } // is token supported
         NVR.log ("Token login not being used");
         // coming here means token reloads fell through
         return proceedWithFreshLogin();
@@ -1225,8 +1203,8 @@ angular.module('zmApp', [
                       });
                   return d.promise;
                 }
-                NVR.debug("API based login returned... ");
-                console.log (JSON.stringify(succ));
+                NVR.debug("API based login returned. ");
+                //console.log (JSON.stringify(succ));
                 NVR.setCurrentServerVersion(succ.version);
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
@@ -1234,7 +1212,7 @@ angular.module('zmApp', [
   
                 if (succ.refresh_token) {
                   $rootScope.authSession = '&token='+succ.access_token;
-                  NVR.log ("New refresh token retrieved:"+succ.refresh_token);
+                  NVR.log ("New refresh token retrieved: ..."+succ.refresh_token.substr(-5));
                   ld.isTokenSupported = true;
                
                   ld.accessToken = succ.access_token;
@@ -2237,7 +2215,7 @@ angular.module('zmApp', [
 
           localforage.getItem('last-desktop-state')
             .then(function (succ) {
-             console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
+             //console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
 
              if (succ == null) succ = {name:"app.montage"};
 
@@ -2281,7 +2259,7 @@ angular.module('zmApp', [
           NVR.log("Language file loaded, continuing with rest");
           NVR.init();
           zmCheckUpdates.start();
-          NVR.log("Setting up POST LOGIN timer");
+         // NVR.log("Setting up POST LOGIN timer");
           zmAutoLogin.start();
           setupPauseAndResume();
 
