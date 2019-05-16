@@ -791,31 +791,31 @@ angular.module('zmApp.controllers')
         }
 
         if (typeof loginData.EHpackeryPositions == 'undefined') {
-          debug("EHpackeryPositions does not exist. Setting to empty");
+          //debug("EHpackeryPositions does not exist. Setting to empty");
           loginData.EHpackeryPositions = "";
 
         }
 
         if (typeof loginData.packerySizes == 'undefined') {
-          debug("packerySizes does not exist. Setting to empty");
+          //debug("packerySizes does not exist. Setting to empty");
           loginData.packerySizes = "";
 
         }
 
         if (typeof loginData.use24hr == 'undefined') {
-          debug("use24hr does not exist. Setting to false");
+          //debug("use24hr does not exist. Setting to false");
           loginData.use24hr = false;
 
         }
 
         if (typeof timelineModalGraphType == 'undefined') {
-          debug("timeline graph type not set. Setting to all");
+          //debug("timeline graph type not set. Setting to all");
           loginData.timelineModalGraphType = $translate.instant('kGraphAll');
           //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + loginData.timelineModalGraphType);
         }
 
         if (typeof loginData.resumeDelay == 'undefined') {
-          debug("resumeDelay does not exist. Setting to 0");
+          //debug("resumeDelay does not exist. Setting to 0");
           loginData.resumeDelay = 0;
 
         }
@@ -1879,7 +1879,7 @@ angular.module('zmApp.controllers')
           $http.get(apiurl)
             .then(function (success) {
                 if (success.data.version) {
-                  console.log("API VERSION RETURNED: " + JSON.stringify(success));
+                  //console.log("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
 
                   if (versionCompare(success.data.version, '1.32.0') != -1) {
