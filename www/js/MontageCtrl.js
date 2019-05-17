@@ -656,7 +656,16 @@ angular.module('zmApp.controllers')
             
 
             if (monitor.Monitor.lastEvent && showMontageSidebars) {
-                monitor.Monitor.showSidebar = true;
+
+                if (ld.objectDetectionFilter) {
+                  if (monitor.Monitor.lastEvent.object)  {
+                    monitor.Monitor.showSidebar = true; 
+                  } 
+                }
+                else {
+                  monitor.Monitor.showSidebar = true;
+                }
+                
             }
 
         },
