@@ -784,85 +784,32 @@ function mobilePinConfig () {
               var loginStatus = $translate.instant('kExploreEnjoy') + " " + $rootScope.appName + "!";
               EventServer.refresh();
 
-              // now grab and report PATH_ZMS
-              NVR.getPathZms()
+              NVR.debug("refreshing API version...");
+              NVR.getAPIversion()
                 .then(function (data) {
-                  var ld = NVR.getLogin();
-                  var zm_cgi = data.toLowerCase();
+                    var refresh = NVR.getMonitors(1);
+                    $rootScope.apiVersion = data;
+                    console.log ("ALERT="+showalert);
+                    if (showalert) {
+                      $rootScope.zmPopup = SecuredPopups.show('alert', {
+                        title: $translate.instant('kLoginValidatedTitle'),
+                        template: loginStatus,
+                        okText: $translate.instant('kButtonOk'),
+                        cancelText: $translate.instant('kButtonCancel'),
+                      }).then(function (res) {
 
-                  var user_cgi = (ld.streamingurl).toLowerCase();
-                  NVR.log("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
-
-                  $http.get(ld.streamingurl + "/zms")
-                    .then(function (data) {
-                        data = data.data;
-                        NVR.debug("Urk! cgi-path returned  success, but it should not have come here");
-                        loginStatus = $translate.instant('kLoginStatusNoCgi');
-
-                        NVR.debug("refreshing API version...");
-                        NVR.getAPIversion()
-                          .then(function (data) {
-                              var refresh = NVR.getMonitors(1);
-                              $rootScope.apiVersion = data;
-                            },
-                            function (error) {
-                              var refresh = NVR.getMonitors(1);
-                              $rootScope.apiVersion = "0.0.0";
-                              NVR.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
-                            });
-
-                        if (showalert) {
-                          $rootScope.zmPopup = SecuredPopups.show('alert', {
-                            title: $translate.instant('kLoginValidatedTitle'),
-                            template: loginStatus,
-                            okText: $translate.instant('kButtonOk'),
-                            cancelText: $translate.instant('kButtonCancel'),
-                          }).then(function (res) {
-
-                            $ionicSideMenuDelegate.toggleLeft();
-                            NVR.debug("Force reloading monitors...");
-
-                          });
-                        }
-                      },
-                      function (error, status) {
-                        // If its 5xx, then the cgi-bin path is valid
-                        // if its 4xx then the cgi-bin path is not valid
-
-                        if (status < 500) {
-                          loginStatus = $translate.instant('kLoginStatusNoCgiAlt');
-                        }
-
-                        if (showalert) {
-                          $rootScope.zmPopup = SecuredPopups.show('alert', {
-                            title: $translate.instant('kLoginValidatedTitle'),
-                            template: loginStatus,
-                            okText: $translate.instant('kButtonOk'),
-                            cancelText: $translate.instant('kButtonCancel'),
-                          }).then(function (res) {
-
-                            $ionicSideMenuDelegate.toggleLeft();
-                            NVR.debug("Force reloading monitors...");
-
-                          });
-                        } else // make sure CGI error is always shown
-                        {
-                          NVR.displayBanner((status < 500) ? 'error' : 'info', [loginStatus]);
-                        }
-                        NVR.debug("refreshing API version...");
-                        NVR.getAPIversion()
-                          .then(function (data) {
-                              var refresh = NVR.getMonitors(1);
-                              $rootScope.apiVersion = data;
-                            },
-                            function (error) {
-                              var refresh = NVR.getMonitors(1);
-                              $rootScope.apiVersion = "0.0.0";
-                              NVR.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
-                            });
+                        $ionicSideMenuDelegate.toggleLeft();
+                        NVR.debug("Force reloading monitors...");
 
                       });
-                });
+                    }
+
+                  },
+                  function (error) {
+                    var refresh = NVR.getMonitors(1);
+                    $rootScope.apiVersion = "0.0.0";
+                    NVR.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
+                  });
 
             },
             function (error) {

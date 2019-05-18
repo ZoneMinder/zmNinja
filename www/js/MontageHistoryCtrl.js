@@ -540,10 +540,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     };
 
     if ($rootScope.authSession.indexOf("&auth=")!=-1) {
-      data_payload['auth']=$rootScope.authSession.match(/&auth=([^&]*)/)[1];
+      data_payload.auth=$rootScope.authSession.match(/&auth=([^&]*)/)[1];
     }
     else if ($rootScope.authSession.indexOf("&token=")!=-1) {
-      data_payload['token']=$rootScope.authSession.match(/&token=([^&]*)/)[1];
+      data_payload.token=$rootScope.authSession.match(/&token=([^&]*)/)[1];
     }
 
     //&auth=

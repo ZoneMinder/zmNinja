@@ -794,7 +794,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     }
 
     if ($rootScope.authSession.indexOf("&token=")!=-1) {
-      ptzData['token']=$rootScope.authSession.match(/&token=([^&]*)/)[1];
+      ptzData.token=$rootScope.authSession.match(/&token=([^&]*)/)[1];
     }
 
 
@@ -1426,10 +1426,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     };
 
     if ($rootScope.authSession.indexOf("&auth=")!=-1) {
-      data_payload['auth']=$rootScope.authSession.match(/&auth=([^&]*)/)[1];
+      data_payload.auth=$rootScope.authSession.match(/&auth=([^&]*)/)[1];
     }
     else if ($rootScope.authSession.indexOf("&token=")!=-1) {
-      data_payload['token']=$rootScope.authSession.match(/&token=([^&]*)/)[1];
+      data_payload.token=$rootScope.authSession.match(/&token=([^&]*)/)[1];
     }
 
     var req = $http({

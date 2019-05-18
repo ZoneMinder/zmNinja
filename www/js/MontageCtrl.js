@@ -639,7 +639,8 @@ angular.module('zmApp.controllers')
            // console.log ("EVENTS GOT: "+JSON.stringify(data));
             var res = data.data;
             var mid = monitor.Monitor.Id;
-            if (res.events.length == 0) res = undefined;
+            if (!res.events) res = undefined;
+            else if (res.events.length == 0) res = undefined;
             
             monitor.Monitor.lastEvent = res;
 
