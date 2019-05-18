@@ -378,6 +378,311 @@ angular.module('zmApp.controllers')
 
       }
 
+      function proceedWithFreshLogin(noBroadcast) {
+
+     
+        // recompute rand anyway so even if you don't have auth
+        // your stream should not get frozen
+        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
+        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
+  
+        // console.log ("***** STATENAME IS " + statename);
+  
+        var d = $q.defer();
+              log("Doing fresh login to ZM");
+        var httpDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
+  
+      
+        str = $translate.instant('kAuthenticating');
+  
+        if (str) {
+          $ionicLoading.show({
+            template: str,
+            noBackdrop: true,
+            duration: httpDelay
+          });
+        }
+  
+  
+        //first login using new API
+        $rootScope.authSession = '';
+        var loginAPI = loginData.apiurl + '/host/login.json';
+  
+  
+  
+        $http({
+            method: 'post',
+            url: loginAPI,
+            timeout: httpDelay,
+            skipIntercept: true,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            responseType: 'text',
+            transformResponse: undefined,
+            transformRequest: function (obj) {
+              var str = [];
+              for (var p in obj)
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+              return str.join("&");
+            },
+            data: {
+              user: loginData.username,
+              pass: loginData.password
+            }
+          })
+          //$http.get(loginAPI)
+          .then(function (textsucc) {
+  
+              $ionicLoading.hide();
+              var succ;
+              try {
+  
+                succ = JSON.parse(textsucc.data);
+  
+                if (!succ.version) {
+                  debug("API login returned fake success, going back to webscrape");
+                  
+                  loginData.loginAPISupported = false;
+                  setLogin(loginData);
+  
+                  loginWebScrape()
+                    .then(function () {
+                        d.resolve("Login Success");
+                        return d.promise;
+                      },
+                      function () {
+                        $ionicLoading.hide();
+                        d.reject("Login Error");
+                        return (d.promise);
+                      });
+                  return d.promise;
+                }
+                debug("API based login returned. ");
+                //console.log (JSON.stringify(succ));
+                setCurrentServerVersion(succ.version);
+                $ionicLoading.hide();
+                //$rootScope.loggedIntoZm = 1;
+                $rootScope.authSession = '';
+  
+                if (succ.refresh_token) {
+                  $rootScope.authSession = '&token='+succ.access_token;
+                  log ("New refresh token retrieved: ..."+succ.refresh_token.substr(-5));
+                  loginData.isTokenSupported = true;
+              
+                  loginData.accessToken = succ.access_token;
+                  loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires, 'seconds');
+                  loginData.refreshToken = succ.refresh_token;
+                
+                  loginData.refreshTokenExpires = moment.utc().add(succ.refresh_token_expires, 'seconds');
+              
+                  log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
+                  log ("New refresh token expires on: UTC "+loginData.refreshTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                  log ("New access token expires on: UTC "+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                  setLogin(loginData);
+  
+                }
+                else {
+                  if (succ.credentials) {
+                    log ("Could not recover token details, trying old auth credentials");
+                    loginData.isTokenSupported = false;
+                    setLogin(loginData);
+                    $rootScope.authSession = "&" + succ.credentials;
+                    if (succ.append_password == '1') {
+                      $rootScope.authSession = $rootScope.authSession +
+                        loginData.password;
+                    }
+                  }
+                  else {
+                    log ("Neither token nor old cred worked. Seems like an error");
+                  }
+                }
+                
+  
+                
+                loginData.loginAPISupported = true;
+                setLogin(loginData);
+  
+                log("Stream authentication construction: " +
+                  $rootScope.authSession);
+  
+                log("Successfully logged into Zoneminder via API");
+  
+  
+  
+                d.resolve("Login Success");
+                if (!noBroadcast) $rootScope.$broadcast('auth-success', succ);
+                return d.promise;
+  
+              } catch (e) {
+                debug("Login API approach did not work...");
+              
+               
+                loginData.loginAPISupported = false;
+                loginData.isTokenSupported = false;
+                setLogin(ld);
+                loginWebScrape()
+                  .then(function () {
+                      d.resolve("Login Success");
+                      return d.promise;
+                    },
+                    function (err) {
+                      $ionicLoading.hide();
+                      d.reject("Login Error");
+                      return (d.promise);
+                    });
+                return d.promise;
+  
+              }
+
+            },
+            function (err) {
+              console.log("******************* API login error " + JSON.stringify(err));
+              $ionicLoading.hide();
+              //if (err  && err.data && 'success' in err.data) {
+              console.log("API based login not supported, need to use web scraping...");
+              // login using old web scraping
+              
+              loginData.loginAPISupported = false;
+              setLogin(ld);
+               loginWebScrape()
+                .then(function () {
+                    d.resolve("Login Success");
+                    return d.promise;
+                  },
+                  function (err) {
+                    d.reject("Login Error");
+                    return (d.promise);
+                  });
+  
+            }
+          ); // post .then
+  
+        return d.promise;
+        
+      }
+
+    function loginWebScrape(noBroadcast) {
+     
+      var d = $q.defer();
+      debug("Logging in using old web-scrape method");
+
+      $ionicLoading.show({
+        template: $translate.instant('kAuthenticatingWebScrape'),
+        noBackdrop: true,
+        duration: httpDelay
+      });
+
+
+     
+
+      var httpDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
+      //NVR.debug ("*** AUTH LOGIN URL IS " + loginData.url);
+      $http({
+
+          method: 'post',
+          timeout: httpDelay,
+          //withCredentials: true,
+          url: loginData.url + '/index.php?view=console',
+          skipIntercept:true,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+          },
+          transformRequest: function (obj) {
+            var str = [];
+            for (var p in obj)
+              str.push(encodeURIComponent(p) + "=" +
+                encodeURIComponent(obj[p]));
+            var params = str.join("&");
+            return params;
+          },
+
+          data: {
+            username: loginData.username,
+            password: loginData.password,
+            action: "login",
+            view: "console"
+          }
+        })
+        .then(function (data, status, headers) {
+            // console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
+            data = data.data;
+            $ionicLoading.hide();
+
+            // Coming here does not mean success
+            // it could also be a bad login, but
+            // ZM returns you to login.php and returns 200 OK
+            // so we will check if the data has
+            // <title>ZM - Login</title> -- it it does then its the login page
+
+            if (data.indexOf(zm.loginScreenString1) >=0) {
+              //eventServer.start();
+              //$rootScope.loggedIntoZm = 1;
+
+              log("zmAutologin successfully logged into Zoneminder");
+              $rootScope.apiValid = true;
+
+              // now go to authKey part, so don't return yet...
+
+            } else //  this means login error
+            {
+              // $rootScope.loggedIntoZm = -1;
+              //console.log("**** ZM Login FAILED");
+              log("zmAutologin Error: Bad Credentials ", "error");
+              if (!noBroadcast) $rootScope.$broadcast('auth-error', "incorrect credentials");
+
+              d.reject("Login Error");
+              return (d.promise);
+              // no need to go to next code, so return above
+            }
+
+            // Now go ahead and re-get auth key 
+            // if login was a success
+            $rootScope.authSession = '';
+            getAuthKey($rootScope.validMonitorId)
+              .then(function (success) {
+
+                  //console.log(success);
+                  $rootScope.authSession = success;
+                  log("Stream authentication construction: " +
+                    $rootScope.authSession);
+                  d.resolve("Login Success");
+                  $rootScope.$broadcast('auth-success', data);
+                  return d.promise;
+
+                },
+                function (error) {
+                  //console.log(error);
+
+                  log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
+                  debug("Error was: " + JSON.stringify(error));
+                  d.resolve("Login Success");
+                  if (!noBroadcast) $rootScope.$broadcast('auth-success', data);
+                });
+
+            return (d.promise);
+
+          },
+          function (error, status) {
+
+            // console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
+            $ionicLoading.hide();
+
+            //console.log("**** ZM Login FAILED");
+
+            // FIXME: Is this sometimes results in null
+
+            log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
+            // bad urls etc come here
+            //$rootScope.loggedIntoZm = -1;
+            if (!noBroadcast) $rootScope.$broadcast('auth-error', error);
+
+            d.reject("Login Error");
+            return d.promise;
+          });
+      return d.promise;
+    }
 
       function getAuthKey(mid, ck) {
 
@@ -883,8 +1188,7 @@ angular.module('zmApp.controllers')
           loginData.enableLowBandwidth = false;
 
         }
-        // wtf is wrong with this ternary?
-        //$rootScope.runMode = (loginData.enableLowBandwith==true)? "low": "normal";
+ 
 
         if (typeof loginData.autoSwitchBandwidth == 'undefined') {
 
@@ -2502,113 +2806,134 @@ angular.module('zmApp.controllers')
 
         },
 
-        recreateTokens: function () {
+        proceedWithLogin: function (obj) {
+
+          var noBroadcast = false;
+          var tryAccess = true;
+          var tryRefresh = true;
+
+          if (obj) {
+            noBroadcast = obj.nobroadcast;
+            tryAccess = obj.access;
+            tryRefresh = obj.refresh;
+
+          }
 
           var d = $q.defer();
-
-          log("Doing fresh login to ZM");
-          var httpDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
-
-          //first login using new API
-          $rootScope.authSession = '';
-          var loginAPI = loginData.apiurl + '/host/login.json';
-
-
-          $http({
-              method: 'post',
-              url: loginAPI,
-              timeout: httpDelay,
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-              responseType: 'text',
-              transformResponse: undefined,
-              transformRequest: function (obj) {
-                var str = [];
-                for (var p in obj)
-                  str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                return str.join("&");
-              },
-              data: {
-                user: loginData.username,
-                pass: loginData.password
-              }
-            })
-            //$http.get(loginAPI)
-            .then(function (textsucc) {
-                var succ;
-                //log (JSON.stringify(textsucc));
-                try {
-
-                  succ = JSON.parse(textsucc.data);
-
-                  if (!succ.version) {
-                    d.reject("No version retrieved in API");
-                    return d.promise;
-
-                  }
-                  debug("API based login returned... ");
-
-                  $rootScope.authSession = '';
-                  if (succ.refresh_token) {
-                    $rootScope.authSession = '&token=' + succ.access_token;
-                    log("New refresh token retrieved:" + succ.refresh_token);
-                    loginData.isTokenSupported = true;
-
-                    loginData.accessToken = succ.access_token;
-                    loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires, 'seconds');
-                    loginData.refreshToken = succ.refresh_token;
-
-                    loginData.refreshTokenExpires = moment.utc().add(succ.refresh_token_expires, 'seconds');
-
-                    log("Current time is: UTC " + moment.utc().format("YYYY-MM-DD hh:mm:ss"));
-                    log("New refresh token expires on: UTC " + loginData.refreshTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
-                    log("New access token expires on: UTC " + loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
-                    setLogin(loginData);
-
-                  } else {
-                    if (succ.credentials) {
-                      log("Could not recover token details, trying old auth credentials");
-                      loginData.isTokenSupported = false;
-                      setLogin(loginData);
-                      $rootScope.authSession = "&" + succ.credentials;
-                      if (succ.append_password == '1') {
-                        $rootScope.authSession = $rootScope.authSession +
-                          loginData.password;
-                      }
-                    } else {
-                      log("Neither token nor old cred worked. Seems like an error");
-                    }
-                  }
-
-                  loginData.loginAPISupported = true;
+        
+           // This is a good time to check if auth is used :-p
+           if (!loginData.isUseAuth) {
+            log("Auth is disabled, setting authSession to empty");
+            $rootScope.apiValid = true;
+            $rootScope.authSession = '';
+            d.resolve("Login Success");
+  
+            if (!noBroadcast) $rootScope.$broadcast('auth-success', 'no auth');
+            return (d.promise);
+  
+          }
+  
+  
+          // lets first try tokens and stored tokens
+          if (loginData.isTokenSupported) 
+          {
+            log ("Detected token login supported");
+            var now = moment.utc();
+            var diff_access = moment.utc(loginData.accessTokenExpires).diff(now, 'minutes');
+            var diff_refresh = moment.utc(loginData.refreshTokenExpires).diff(now, 'minutes');
+  
+            // first see if we can work with access token
+            if (moment.utc(loginData.accessTokenExpires).isAfter(now) &&  diff_access  >=zm.accessTokenLeewayMin && tryAccess) {
+              log ("Access token still has "+diff_access+" minutes left, using it");
+              $rootScope.authSession = '&token='+loginData.accessToken;
+              d.resolve("Login success via access token");
+              if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
+              return d.promise;
+            } 
+            // then see if we have at least 30 mins left for refresh token
+            else if (moment.utc(loginData.refreshTokenExpires).isAfter(now) &&  diff_refresh  >=zm.refreshTokenLeewayMin && tryRefresh) {
+              log ("Refresh token still has "+diff_refresh+" minutes left, using it");
+              var loginAPI = loginData.apiurl + '/host/login.json?token='+loginData.refreshToken;
+              $http({
+                method:'GET',
+                url: loginAPI,
+                skipIntercept:true,
+              })
+              .then (function (succ) {
+                succ = succ.data;
+                if (succ.access_token) {
+                  $rootScope.authSession = '&token='+succ.access_token;
+                  log ("New access token retrieved: ..."+succ.access_token.substr(-5));
+                  loginData.accessToken = succ.access_token;
+                  loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires,'seconds');
+                  log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
+                  log ("New access token expires on: UTC "+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                  log ("New access token expires on:"+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                  loginData.isTokenSupported = true;
                   setLogin(loginData);
-
-                  log("Stream authentication construction: " +
-                    $rootScope.authSession);
-
-                  log("zmAutologin successfully logged into Zoneminder via API");
-                  d.resolve("Login Success");
+                  d.resolve("Login success via refresh token");
+                  if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
                   return d.promise;
-
-                } catch (e) {
-                  debug("Login API approach did not work...");
-
-                  d.reject("API based login failed");
-                  return d.promise;
-
+                }
+                else {
+                  log ('ERROR:Trying to refresh with refresh token:'+JSON.stringify(succ));
+                  return proceedWithFreshLogin(noBroadcast)
+                  .then (function (succ) { 
+                    d.resolve(succ); 
+                    return (d.promise);
+                  },
+                  function(err) { 
+                    d.resolve(err); 
+                    return (d.promise);
+                  });
+  
                 }
               },
               function (err) {
-                log("Error using login.json:" + JSON.stringify(err));
-                d.reject("Error in HTTP call to login.json");
-                return d.promise;
-              }
-            ); // post .then
-
-          return d.promise;
-
+                  log ('access token login HTTP failed with: '+JSON.stringify(err));
+                  return proceedWithFreshLogin(noBroadcast)
+                  .then (function (succ) { 
+                    d.resolve(succ); 
+                    return (d.promise);
+                  },
+                  function(err) { 
+                    d.resolve(err); 
+                    return (d.promise);});
+              });
+            } // valid refresh
+            else {
+              log ('both access and refresh tokens are expired, using a fresh login');
+              return proceedWithFreshLogin(noBroadcast)
+              .then (function (succ) {
+                 d.resolve(succ); 
+                 return (d.promise);
+                },
+              function(err) { 
+                d.resolve(err); 
+                return (d.promise);
+              });
+            }
+         
+          } // is token supported
+          else {
+            log ("Token login not being used");
+          // coming here means token reloads fell through
+            return proceedWithFreshLogin(noBroadcast)
+            .then (function (succ) { 
+              d.resolve(succ); 
+              return (d.promise);
+            },
+            function(err) { 
+              d.resolve(err); 
+              return (d.promise);
+            });
+          }
+          return (d.promise);
+        
         },
+  
+       
+  
 
         zmPrivacyProcessed: function () {
           var apiurl = loginData.apiurl;
@@ -2713,6 +3038,7 @@ angular.module('zmApp.controllers')
           }
           return d.promise;
         },
+      
 
         // returns if this mid is hidden or not
         isNotHidden: function (mid) {
