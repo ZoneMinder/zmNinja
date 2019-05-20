@@ -653,7 +653,7 @@ function mobilePinConfig () {
 
 
     $rootScope.authSession = '';
-    console.log ("***** CLEARING AUTHSESSION IN SAVEITEMS");
+    //console.log ("***** CLEARING AUTHSESSION IN SAVEITEMS");
 
     if ($rootScope.platformOS != 'desktop') {
 
@@ -669,7 +669,7 @@ function mobilePinConfig () {
         cordova.plugin.http.setSSLCertMode('nocheck', function () {
           NVR.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
         }, function () {
-          console.log('-->Error setting SSL permissive');
+          NVR.log('-->Error setting SSL permissive');
         });
 
         if ($rootScope.platformOS == 'android') {
@@ -790,7 +790,7 @@ function mobilePinConfig () {
                 .then(function (data) {
                     var refresh = NVR.getMonitors(1);
                     $rootScope.apiVersion = data;
-                    console.log ("ALERT="+showalert);
+                   // console.log ("ALERT="+showalert);
                     if (showalert) {
                       $rootScope.zmPopup = SecuredPopups.show('alert', {
                         title: $translate.instant('kLoginValidatedTitle'),

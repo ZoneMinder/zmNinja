@@ -277,7 +277,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         var data = succ.data;
         var ld = NVR.getLogin();
         NVR.debug("Got " + data.events.length + "new history events...");
-        console.log (JSON.stringify(data));
+        //console.log (JSON.stringify(data));
         var eid, mid, stime;
         for (i = 0; i < data.events.length; i++) {
           mid = data.events[i].Event.MonitorId;

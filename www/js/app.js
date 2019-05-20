@@ -720,7 +720,7 @@ angular.module('zmApp', [
 
       
         if (response.data && typeof(response.data) == 'string' && (response.data.indexOf("<pre class=\"cake-error\">")==0)) {
-            console.log ("cake error detected, attempting fix...");
+            NVR.debug ("cake error detected, attempting fix...");
             //console.log ("BAD = "+ JSON.stringify(response.data));
             response.data = JSON.parse(response.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
            // console.log ("FIXED="+JSON.stringify(response.data));
@@ -935,7 +935,8 @@ angular.module('zmApp', [
 
             },
             function (err) {
-              console.log("AUTH HASH ERROR: " + JSON.stringify(conf));
+            
+             NVR.debug("Auth Hash error: " + JSON.stringify(conf));
             });
       }
 
@@ -1278,7 +1279,7 @@ angular.module('zmApp', [
               $rootScope.dpadId = 0;
               $rootScope.dpadState = $state.current.name.replace('app.', "");
             }
-            console.log("dpad State is: " + $rootScope.dpadState);
+            //console.log("dpad State is: " + $rootScope.dpadState);
             handled = true;
           } else if (keyCode == keyCodes.SELECT) { // select
             if ($rootScope.dpadId > 0) {
@@ -1329,7 +1330,7 @@ angular.module('zmApp', [
                 nextel[0].scrollIntoView();
                 $rootScope.dpadId = nextId;
               }
-              console.log("dpadID=" + $rootScope.dpadId + " with state=" + $rootScope.dpadState);
+             // console.log("dpadID=" + $rootScope.dpadId + " with state=" + $rootScope.dpadState);
             }
             handled = true;
           }
@@ -1877,7 +1878,7 @@ angular.module('zmApp', [
               loadServices();
             }, function (err) {
               
-              console.log("ERR " + JSON.stringify(err));
+            //  console.log("ERR " + JSON.stringify(err));
               $rootScope.lastState = "app.montage";
               loadServices();
             });

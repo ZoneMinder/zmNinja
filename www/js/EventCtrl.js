@@ -456,7 +456,7 @@ angular.module('zmApp.controllers')
           pageLoaded = true;
           //$scope.viewTitle.title = data.pagination.count;
 
-          console.log(JSON.stringify(data.pagination));
+         // console.log(JSON.stringify(data.pagination));
           if (data.pagination && data.pagination.pageCount)
             maxEventsPage = data.pagination.pageCount;
 
@@ -919,7 +919,7 @@ angular.module('zmApp.controllers')
 
         function onError(error) {
           $ionicLoading.hide();
-          console.log("Error: " + error);
+          NVR.debug("Error: " + error);
 
         }
       }
@@ -2320,7 +2320,7 @@ angular.module('zmApp.controllers')
           videoURL += NVR.insertBasicAuthToken();
 
 
-          console.log("************** VIDEO IS " + videoURL);
+         //  console.log("************** VIDEO IS " + videoURL);
           event.Event.video.config = {
             autoPlay: true,
             sources: [{
@@ -2751,13 +2751,13 @@ angular.module('zmApp.controllers')
       // the events API does not return an error for anything
       // except greater page limits than reported
 
-      console.log("***** LOADING MORE INFINITE SCROLL ****");
+      //console.log("***** LOADING MORE INFINITE SCROLL ****");
 
       if ((currEventsPage >= maxEventsPage) && (pageLoaded)) {
         moreEvents = false;
         NVR.debug("No more - We have a total of " + maxEventsPage + " and are at page=" + currEventsPage);
 
-        console.log("*** At Page " + currEventsPage + " of " + maxEventsPage + ", not proceeding");
+       // console.log("*** At Page " + currEventsPage + " of " + maxEventsPage + ", not proceeding");
         $ionicLoading.hide();
         return;
       }
@@ -2776,7 +2776,7 @@ angular.module('zmApp.controllers')
       if ($scope.search.text != "") {
     
         var toastStr = $translate.instant('kPleaseWait') +'...'+ currEventsPage;
-        console.log ("SHOW " + toastStr );
+       // console.log ("SHOW " + toastStr );
         $ionicLoading.show({
           maxwidth: 100,
           noBackdrop:true,
@@ -3017,7 +3017,7 @@ angular.module('zmApp.controllers')
 
       var ld = NVR.getLogin();
 
-      console.log("Toggling " + ld.enableAlarmCount);
+     // console.log("Toggling " + ld.enableAlarmCount);
       ld.enableAlarmCount = !ld.enableAlarmCount;
       NVR.setLogin(ld);
       $scope.loginData = NVR.getLogin();
