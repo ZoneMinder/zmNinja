@@ -113,7 +113,7 @@ angular.module('zmApp', [
     versionWithLoginAPI: "1.31.47",
     androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw",
     accessTokenLeewayMin: 5,
-    refreshTokenLeewayMin: 30
+    refreshTokenLeewayMin: 10
 
   })
 

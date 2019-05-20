@@ -653,6 +653,7 @@ function mobilePinConfig () {
 
 
     $rootScope.authSession = '';
+    console.log ("***** CLEARING AUTHSESSION IN SAVEITEMS");
 
     if ($rootScope.platformOS != 'desktop') {
 

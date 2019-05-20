@@ -383,7 +383,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     $timeout(function () {
       var keyCode = evt.keyCode;
 
-      console.log(keyCode + " PRESSED");
+      //console.log(keyCode + " PRESSED");
 
       if (keyCode == keyCodes.UP) {
 
