@@ -1358,7 +1358,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   }
 
   $scope.thumbnailClicked = function(event) {
-   console.log ("Thumb tapped");
+   //console.log ("Thumb tapped");
     if (!$scope.currentThumbEvent) {
         // will this ever be? Don't think so
         NVR.debug ("No thumb rendered");
