@@ -95,7 +95,7 @@ angular.module('zmApp.controllers').controller('zmApp.BookmarkCtrl', ['$scope', 
       disableAnimate: true,
       expire: 300
     });
-    console.log("GOIN WITH " + JSON.stringify(item.params));
+    //console.log("GOIN WITH " + JSON.stringify(item.params));
     $state.go(item.state, item.params);
   };
 

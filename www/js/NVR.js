@@ -230,7 +230,7 @@ angular.module('zmApp.controllers')
           cordova.plugin.http.setSSLCertMode('nocheck', function () {
             debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
           }, function () {
-            console.log('-->Error setting SSL permissive');
+            NVR.log('-->Error setting SSL permissive');
           });
 
           if ($rootScope.platformOS == 'android') {
@@ -463,6 +463,7 @@ angular.module('zmApp.controllers')
                 setCurrentServerVersion(succ.version);
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
+                //console.log ("***** CLEARING AUTHSESSION IN LINE 466");
                 $rootScope.authSession = '';
   
                 if (succ.refresh_token) {
@@ -537,10 +538,10 @@ angular.module('zmApp.controllers')
 
             },
             function (err) {
-              console.log("******************* API login error " + JSON.stringify(err));
+              //console.log("******************* API login error " + JSON.stringify(err));
               $ionicLoading.hide();
               //if (err  && err.data && 'success' in err.data) {
-              console.log("API based login not supported, need to use web scraping...");
+              NVR.log("API based login not supported, need to use web scraping..."+JSON.stringify(err));
               // login using old web scraping
               
               loginData.loginAPISupported = false;
@@ -639,11 +640,13 @@ angular.module('zmApp.controllers')
 
             // Now go ahead and re-get auth key 
             // if login was a success
+           // console.log ("***** CLEARING AUTHSESSION IN AUTHKEY");
             $rootScope.authSession = '';
             getAuthKey($rootScope.validMonitorId)
               .then(function (success) {
 
                   //console.log(success);
+                  //console.log ("***** SETTING AUTHSESSION IN AUTHKEY"+success);
                   $rootScope.authSession = success;
                   log("Stream authentication construction: " +
                     $rootScope.authSession);
@@ -727,6 +730,8 @@ angular.module('zmApp.controllers')
 
               },
               function (e) {
+
+                //console.log ("***** CLEARING AUTHSESSION IN GETCREDENTIALS");
                 $rootScope.authSession = "";
                 d.resolve($rootScope.authSession);
                 debug("AuthHash API Error: " + JSON.stringify(e));
@@ -2545,7 +2550,7 @@ angular.module('zmApp.controllers')
                             data = data.data;
                             // We found a server list API, so lets make sure
                             // we get the hostname as it will be needed for playback
-                            log("multi server list loaded:" + JSON.stringify(data));
+                            log("multi server list loaded");
                             multiservers = data.servers;
 
                             var multiserver_scheme = "http://";
@@ -2615,8 +2620,8 @@ angular.module('zmApp.controllers')
 
 
                                 debug("recording server reported  is " + JSON.stringify(m));
-                                debug("portal  parsed is " + JSON.stringify(p));
-                                debug("streaming url  parsed is " + JSON.stringify(s));
+                                //debug("portal  parsed is " + JSON.stringify(p));
+                                //debug("streaming url  parsed is " + JSON.stringify(s));
                                 debug("multi-port is:" + zmsPort);
 
                                 var st = "";
@@ -2845,6 +2850,7 @@ angular.module('zmApp.controllers')
             // first see if we can work with access token
             if (moment.utc(loginData.accessTokenExpires).isAfter(now) &&  diff_access  >=zm.accessTokenLeewayMin && tryAccess) {
               log ("Access token still has "+diff_access+" minutes left, using it");
+             // console.log ("**************** TOKEN SET="+loginData.accessToken);
               $rootScope.authSession = '&token='+loginData.accessToken;
               d.resolve("Login success via access token");
               if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
@@ -2862,6 +2868,8 @@ angular.module('zmApp.controllers')
               .then (function (succ) {
                 succ = succ.data;
                 if (succ.access_token) {
+
+                 // console.log ("**************** TOKEN SET="+succ.access_token);
                   $rootScope.authSession = '&token='+succ.access_token;
                   log ("New access token retrieved: ..."+succ.access_token.substr(-5));
                   loginData.accessToken = succ.access_token;
@@ -3509,7 +3517,7 @@ angular.module('zmApp.controllers')
 
 
           log(loginData.url + "=>Logging out of any existing ZM sessions...");
-          $rootScope.authSession = "undefined";
+          $rootScope.authSession = "";
 
 
           // console.log("CURRENT SERVER: " + loginData.currentServerVersion);

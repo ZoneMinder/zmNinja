@@ -470,7 +470,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           data = data.data;
           $ionicLoading.hide();
 
-          console.log ("GOT "+data);
+         // console.log ("GOT "+data);
 
           if (data.indexOf(zm.loginScreenString1) >=0 || 
           data.indexOf(zm.loginScreenString2) >=0 ) {
@@ -578,7 +578,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                   return d.promise;
                 }
                 NVR.debug("API based login returned... ");
-                console.log (JSON.stringify(succ));
+              //  console.log (JSON.stringify(succ));
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
                 $rootScope.authSession = '';
@@ -635,13 +635,13 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
             },
             function (err) {
-              console.log("******************* API login error " + JSON.stringify(err));
+              NVR.debug("******************* API login error " + JSON.stringify(err));
               $ionicLoading.hide();
 
 
               if (1) {
                 //if (err  && err.data && 'success' in err.data) {
-                console.log("API based login not supported, need to use web scraping...");
+                NVR.log("API based login not supported, need to use web scraping...");
                 
                 loginWebScrape(u,zmu,zmp)
                   .then(function (succ) {
@@ -678,6 +678,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
 
   function validateData() {
+    //console.log ("***** CLEARING AUTHSESSION IN VALIDATEDATA");
     $rootScope.authSession = '';
     $rootScope.zmCookie = '';
 

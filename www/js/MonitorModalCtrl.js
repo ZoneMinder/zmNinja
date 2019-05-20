@@ -82,7 +82,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $timeout(function () {
       var keyCode = evt.keyCode;
 
-      console.log(keyCode + " PRESSED");
+      //console.log(keyCode + " PRESSED");
 
       if (keyCode == keyCodes.ESC) {
 
@@ -829,7 +829,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           str.push(encodeURIComponent(p) + "=" +
             encodeURIComponent(obj[p]));
         var foo = str.join("&");
-        console.log("****PTZ RETURNING " + foo);
+        //console.log("****PTZ RETURNING " + foo);
         return foo;
       },
 
@@ -1446,7 +1446,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           str.push(encodeURIComponent(p) + "=" +
             encodeURIComponent(obj[p]));
         var foo = str.join("&");
-        console.log("****CONTROL RETURNING " + foo);
+        //console.log("****CONTROL RETURNING " + foo);
         return foo;
       },
 

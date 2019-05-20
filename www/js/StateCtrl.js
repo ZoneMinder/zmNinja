@@ -120,7 +120,7 @@ $scope.toggleServer = function() {
   $scope.$on('$ionicView.afterEnter', function () {
     // console.log("**VIEW ** Montage Ctrl Entered");
 
-    console.log("STATE SHORTCUT: " + JSON.stringify($stateParams));
+   // console.log("STATE SHORTCUT: " + JSON.stringify($stateParams));
     $stateParams.shortcut && $stateParams.shortcut.fn &&
       $scope[$stateParams.shortcut.fn]($stateParams.shortcut.fnargs); // jshint ignore:line
 

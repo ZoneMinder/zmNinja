@@ -324,7 +324,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var ld = NVR.getLogin();
     ld.montageReviewCollapse = $scope.expand;
 
-    console.log(">>>>>>>>> SAVING EXPAND AS:" + $scope.expand);
+   // console.log(">>>>>>>>> SAVING EXPAND AS:" + $scope.expand);
     NVR.setLogin(ld);
 
   };
@@ -848,7 +848,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
 
     $scope.expand = ld.montageReviewCollapse;
-    console.log(">>>>>>>>> RESTORING EXPAND AS:" + $scope.expand);
+    //console.log(">>>>>>>>> RESTORING EXPAND AS:" + $scope.expand);
    
 
     $scope.loadingStatus = $translate.instant('kLoading');

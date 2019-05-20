@@ -639,7 +639,7 @@ angular.module('zmApp.controllers')
            // console.log ("EVENTS GOT: "+JSON.stringify(data));
             var res = data.data;
             var mid = monitor.Monitor.Id;
-            if (!res.events) res = undefined;
+            if (!res || !res.events) res = undefined;
             else if (res.events.length == 0) res = undefined;
             
             monitor.Monitor.lastEvent = res;
@@ -2452,7 +2452,7 @@ angular.module('zmApp.controllers')
     }
 
     $scope.squeezeMonitors = function () {
-      console.log ("squeezing");
+      NVR.debug ("squeezing");
       pckry.once('layoutComplete', resizeComplete);
       $timeout(function () {
         pckry.layout();

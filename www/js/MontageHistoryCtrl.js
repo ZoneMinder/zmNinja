@@ -558,7 +558,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         var str = [];
         for (var p in obj) str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
         var foo = str.join("&");
-        console.log("****HISTORY CONTROL RETURNING " + foo);
+        //console.log("****HISTORY CONTROL RETURNING " + foo);
         return foo;
       },
       data: data_payload
@@ -625,7 +625,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     req.then(function (succ) {
       var resp = succ.data;
 
-      console.log ("zms response: " + JSON.stringify(resp));
+      //console.log ("zms response: " + JSON.stringify(resp));
 
       // move progress bar if event id is the same
       if (resp.result == "Ok" && ndx != -1 && (resp.status && resp.status.event == $scope.MontageMonitors[ndx].Monitor.eid)) {
