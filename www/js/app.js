@@ -677,7 +677,17 @@ angular.module('zmApp', [
 
          /* rejection.data && rejection.data.data && rejection.data.data.message.indexOf('Token revoked') != -1) */
 
+         if (rejection && rejection.data && rejection.data.data) {
+
           console.log ("MESSAGE:"+rejection.data.data.message);
+            if (rejection.data.data.message.indexOf('API Disabled') != -1) {
+              $rootScope.apiValid = false;
+              return rejection;
+            }
+         }
+          
+
+          
     
           nvr.log ("Browser Http intecepted 401, will try reauth");
           return nvr.proceedWithLogin({'nobroadcast':true, 'access':false, 'refresh':true})
@@ -1160,7 +1170,7 @@ angular.module('zmApp', [
       $rootScope.dpadId = 0;
       $rootScope.textScaleFactor = 1.0;
       $rootScope.isLoggedIn = false;
-      $rootScope.apiValid = false;
+      $rootScope.apiValid = true;
 
       $rootScope.db = null;
       $rootScope.runMode = NVR.getBandwidth();
@@ -2139,8 +2149,15 @@ angular.module('zmApp', [
             },
             function (err) {
             
-              nvr.debug("***  Inside native HTTP error" + JSON.stringify(err));
-              if (err.status == 401 && !skipIntercept) {
+              nvr.debug("***  Inside native HTTP error");
+              if (err.status == 401 && !skipIntercept && nvr.apiValid) {
+                if (err.error && err.error.indexOf("API is disabled for user") != -1) {
+                  nvr.apiValid = false;
+                  nvr.debug ("Setting API to "+nvr.apiValid);
+                  d.reject(err);
+                  return d.promise;
+                  
+                  }
                 nvr.debug ("** Native intercept: Got 401, going to try logging in");
                 return nvr.proceedWithLogin({'nobroadcast':true, 'access':false, 'refresh':true})
                 .then (function(succ) {
