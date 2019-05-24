@@ -545,7 +545,7 @@ angular.module('zmApp.controllers')
               // login using old web scraping
               
               loginData.loginAPISupported = false;
-              setLogin(ld);
+              setLogin(loginData);
                loginWebScrape()
                 .then(function () {
                     d.resolve("Login Success");
@@ -2201,12 +2201,7 @@ angular.module('zmApp.controllers')
                   setCurrentServerVersion(success.data.version);
                   debug("getAPI version succeeded with " + success.data.version);
                   d.resolve(success.data.version);
-                } else {
-                  debug("Setting APIValid to false as API version was not retrieved");
-                  $rootScope.apiValid = false;
-                  setCurrentServerVersion("");
-                  d.reject("-1.-1.-1");
-                }
+                } 
                 return (d.promise);
 
               },
@@ -3231,10 +3226,11 @@ angular.module('zmApp.controllers')
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
+          // don't know why but adding page messes up Notes
           //https:///zm/api/events/index/Notes%20REGEXP: detected%3A.json
-          if (loginData.objectDetectionFilter && !noObjectFilter) {
-            myurl = myurl + '/Notes REGEXP:detected:';
-          }
+          /*if (loginData.objectDetectionFilter && !noObjectFilter) {
+            myurl = myurl + '/Notes REGEXP:"detected:"';
+          }*/
 
           myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId + $rootScope.authSession;
 
@@ -3251,6 +3247,8 @@ angular.module('zmApp.controllers')
                 data = data.data;
                 if (loadingStr != 'none') $ionicLoading.hide();
                 //myevents = data.events;
+
+
                 myevents = data;
 
 
@@ -3503,7 +3501,7 @@ angular.module('zmApp.controllers')
           var d = $q.defer();
 
           // always resolves
-          if (!loginData.isUseAuth || (loginData.loginAPISupported && loginData.isTokenSupported)) {
+          if (!loginData.isUseAuth ||  loginData.isTokenSupported) {
             log("No need for logout!");
             d.resolve(true);
             return d.promise;
