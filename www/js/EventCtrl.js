@@ -1888,7 +1888,7 @@ angular.module('zmApp.controllers')
       $http.get(apiurl)
         .then(function (data) {
           data = data.data;
-         // NVR.debug(JSON.stringify(data));
+         // NVR.debug(JSON.stringify(data));  
           $scope.hours = [];
           var p = data.results;
           for (var key in data.results) {
