@@ -344,7 +344,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         url: '',
         eid: $translate.instant('kMonNone'),
         time: $translate.instant('kMonNone'),
-        monName: $translate.instant('kMonNone')
+        monName: $translate.instant('kMonNone'),
+        notes: ''
     };
 
     $scope.newEvents = '';
@@ -744,7 +745,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // 
     var completedEvents = ld.apiurl + '/events/index/EndTime >=:' + from;
     // we can add alarmCount as this is really for completed events
-    //completedEvents = completedEvents + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+    completedEvents = completedEvents + "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+
+    if (ld.objectDetectionFilter) {
+      completedEvents = completedEvents + '/Notes REGEXP:"detected:"';
+    }
 
     completedEvents = completedEvents + ".json?"+$rootScope.authSession;
 
@@ -1133,7 +1138,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         // I am waiting for the full data to load before I draw
         var promises = [];
         while ((pages <= epData.pageCount) && (iterCount > 0)) {
-          var promise = NVR.getEvents(0, pages, "none", fromDateNoLang, toDateNoLang, true);
+          var promise = NVR.getEvents(0, pages, "none", fromDateNoLang, toDateNoLang, false);
           promises.push(promise);
 
           pages++;
@@ -1161,6 +1166,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               for (var j = 0; j < data.length; j++) {
                 var myevents = data[j].events;
 
+
                 //   console.log ("****************DATA ="+JSON.stringify(data[j]));
                 // console.log ("**********************************");
                 if (graphIndex > count) {
@@ -1174,6 +1180,11 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                   // make sure group id exists before adding
                   var idfound = true;
                   var ld = NVR.getLogin();
+
+                  // skip non detections here because we can't query to DB due to page attribute
+                  if (ld.objectDetectionFilter && myevents[i].Event.Notes.indexOf('detected:') == -1) {
+                    continue;
+                  }
 
                   if (ld.persistMontageOrder) {
 
@@ -1509,7 +1520,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
             url: stream,
             eid: event.Event.Id,
             time: prettifyTimeSec(event.Event.StartTime),
-            monName: event.Event.MonitorName
+            monName: event.Event.MonitorName,
+            notes: event.Event.Notes
         };
       
     });
