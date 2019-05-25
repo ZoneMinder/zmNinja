@@ -407,8 +407,7 @@ angular.module('zmApp.controllers')
         //first login using new API
         $rootScope.authSession = '';
         var loginAPI = loginData.apiurl + '/host/login.json';
-  
-  
+      
   
         $http({
             method: 'post',
@@ -3228,9 +3227,9 @@ angular.module('zmApp.controllers')
 
           // don't know why but adding page messes up Notes
           //https:///zm/api/events/index/Notes%20REGEXP: detected%3A.json
-          /*if (loginData.objectDetectionFilter && !noObjectFilter) {
+          if (loginData.objectDetectionFilter && !noObjectFilter) {
             myurl = myurl + '/Notes REGEXP:"detected:"';
-          }*/
+          }
 
           myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId + $rootScope.authSession;
 
