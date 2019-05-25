@@ -692,9 +692,10 @@ angular.module('zmApp', [
           nvr.log ("Browser Http intecepted 401, will try reauth");
           return nvr.proceedWithLogin({'nobroadcast':true, 'access':false, 'refresh':true})
           .then (function(succ) {
-            nvr.log ("Interception proceedWithLogin completed, retrying old request");
+            nvr.log ("Interception proceedWithLogin completed, retrying old request with skipIntercept = true");
            // console.log ("OLD URL-"+rejection.config.url );
             rejection.config.url = rejection.config.url.replace(/&token=([^&]*)/, $rootScope.authSession);
+            rejection.config.skipIntercept = true;
           //  console.log ("NEW URL-"+rejection.config.url );
             return $injector.get('$http')(rejection.config);
           }, function (err) {
@@ -2103,7 +2104,8 @@ angular.module('zmApp', [
             data: dataPayload,
             headers: arguments[0].headers,
            // timeout: arguments[0].timeout, 
-            responseType: arguments[0].responseType
+            responseType: arguments[0].responseType,
+            skipIntercept:skipIntercept
           };
 
           if (arguments[0].timeout) options.timeout = arguments[0].timeout;
@@ -2150,7 +2152,7 @@ angular.module('zmApp', [
             function (err) {
             
               nvr.debug("***  Inside native HTTP error");
-              if (err.status == 401 && !skipIntercept && nvr.apiValid) {
+              if (err.status == 401 && !options.skipIntercept && nvr.apiValid) {
                 if (err.error && err.error.indexOf("API is disabled for user") != -1) {
                   nvr.apiValid = false;
                   nvr.debug ("Setting API to "+nvr.apiValid);
@@ -2161,9 +2163,10 @@ angular.module('zmApp', [
                 nvr.debug ("** Native intercept: Got 401, going to try logging in");
                 return nvr.proceedWithLogin({'nobroadcast':true, 'access':false, 'refresh':true})
                 .then (function(succ) {
-                          nvr.debug ("** Native, tokens generated, retrying old request");
+                          nvr.debug ("** Native, tokens generated, retrying old request with skipIntercept = true");
                           //console.log ("I GOT: "+ JSON.stringify(succ));
                           url = url.replace(/&token=([^&]*)/, nvr.authSession);
+                          options.skipIntercept = true;
                           cordova.plugin.http.sendRequest(encodeURI(url), options, 
                           function (succ) {
                             d.resolve(succ);
@@ -2178,7 +2181,7 @@ angular.module('zmApp', [
                 }, function (err) {d.reject(err); return d.promise;});
               }
               else {
-                if (skipIntercept) {
+                if (options.skipIntercept) {
                   nvr.debug ("Not intercepting as skipIntercept is true");
                 }
                 // not a 401, so pass on rejection
