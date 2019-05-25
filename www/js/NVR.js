@@ -458,7 +458,7 @@ angular.module('zmApp.controllers')
                   return d.promise;
                 }
                 debug("API based login returned. ");
-                //console.log (JSON.stringify(succ));
+                console.log (JSON.stringify(succ));
                 setCurrentServerVersion(succ.version);
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
@@ -503,6 +503,7 @@ angular.module('zmApp.controllers')
                 loginData.loginAPISupported = true;
                 setLogin(loginData);
   
+
                 log("Stream authentication construction: " +
                   $rootScope.authSession);
   
@@ -3138,7 +3139,7 @@ angular.module('zmApp.controllers')
 
           //https:///zm/api/events/index/Notes%20REGEXP:detected%3A.json
           if (loginData.objectDetectionFilter && !noObjectFilter) {
-            myurl = myurl + '/Notes%20REGEXP:detected%3A';
+            myurl = myurl + '/Notes REGEXP:detected:';
           }
 
 
@@ -3228,7 +3229,7 @@ angular.module('zmApp.controllers')
           // don't know why but adding page messes up Notes
           //https:///zm/api/events/index/Notes%20REGEXP: detected%3A.json
           if (loginData.objectDetectionFilter && !noObjectFilter) {
-            myurl = myurl + '/Notes REGEXP:"detected:"';
+            myurl = myurl + '/Notes REGEXP:detected:';
           }
 
           myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId + $rootScope.authSession;

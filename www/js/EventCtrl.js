@@ -1877,7 +1877,7 @@ angular.module('zmApp.controllers')
       var af = "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
       if (ld.objectDetectionFilter) {
-        af = af + '/Notes REGEXP:"detected:"';
+        af = af + '/Notes REGEXP:detected:';
       }
 
      

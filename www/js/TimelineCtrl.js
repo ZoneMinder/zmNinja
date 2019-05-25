@@ -1138,7 +1138,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         // I am waiting for the full data to load before I draw
         var promises = [];
         while ((pages <= epData.pageCount) && (iterCount > 0)) {
-          var promise = NVR.getEvents(0, pages, "none", fromDateNoLang, toDateNoLang, false);
+          var promise = NVR.getEvents(0, pages, "none", fromDateNoLang, toDateNoLang, true);
           promises.push(promise);
 
           pages++;
