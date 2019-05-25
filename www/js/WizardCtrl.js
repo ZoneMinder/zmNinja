@@ -229,7 +229,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       getFirstMonitor()
         .then(function (success) {
             $ionicLoading.hide();
-            var tail = "/nph-zms?mode=single&monitor=" + success + $rootScope.authSession;
+            var tail = "/nph-zms?mode=single&monitor=" + success;//+ $rootScope.authSession;
             if ($scope.wizard.useauth && $scope.wizard.usezmauth) {
 
               var ck = Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
