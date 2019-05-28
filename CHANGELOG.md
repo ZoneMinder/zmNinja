@@ -1,5 +1,38 @@
 # Change Log
 
+## [v1.3.057](https://github.com/pliablepixels/zmNinja/tree/v1.3.057) (2019-05-28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.056...v1.3.057)
+
+**Implemented enhancements:**
+
+- Support new token system in ZM [\#817](https://github.com/pliablepixels/zmNinja/issues/817)
+- Montage Bling: Unseen events, event playback, event details [\#806](https://github.com/pliablepixels/zmNinja/issues/806)
+- Add menu item for navigation from monitor live view to event list [\#803](https://github.com/pliablepixels/zmNinja/issues/803)
+
+**Fixed bugs:**
+
+- iOS App. API Access Error. ZM 1.33.9 [\#820](https://github.com/pliablepixels/zmNinja/issues/820)
+- ZMNinja pro gets stuck with grey empty screen before even getting to setup step [\#816](https://github.com/pliablepixels/zmNinja/issues/816)
+-  Error: File to import not found or unreadable: www/lib/ionic/scss/ionic [\#809](https://github.com/pliablepixels/zmNinja/issues/809)
+- Montage profiles breaks if you don't save all-monitors at least once [\#808](https://github.com/pliablepixels/zmNinja/issues/808)
+- Incorrect behaviour when using "next event" in the event modal depending on how zmNinja was started. [\#807](https://github.com/pliablepixels/zmNinja/issues/807)
+- Event list footage play speed is no longer persisted [\#805](https://github.com/pliablepixels/zmNinja/issues/805)
+
+**Closed issues:**
+
+- What does the man on bicycle icon does? [\#818](https://github.com/pliablepixels/zmNinja/issues/818)
+- zmNinja push toasts not fully rendering image [\#813](https://github.com/pliablepixels/zmNinja/issues/813)
+- Enhancement: View Object Detection Images in zmninja [\#804](https://github.com/pliablepixels/zmNinja/issues/804)
+- Cannot run zmN v1.3.42 or v1.3.50 on RPi 3 Model B [\#789](https://github.com/pliablepixels/zmNinja/issues/789)
+- Do not see video with ios 10.3.3 Ipad [\#785](https://github.com/pliablepixels/zmNinja/issues/785)
+
+**Merged pull requests:**
+
+- Api tokens [\#819](https://github.com/pliablepixels/zmNinja/pull/819) ([pliablepixels](https://github.com/pliablepixels))
+- \#806 allow viewing events for caught up montage, auto expand sidebar … [\#811](https://github.com/pliablepixels/zmNinja/pull/811) ([florie1706](https://github.com/florie1706))
+- \#796 simplification, \#806 [\#810](https://github.com/pliablepixels/zmNinja/pull/810) ([maymaymay](https://github.com/maymaymay))
+- Missing translation [\#802](https://github.com/pliablepixels/zmNinja/pull/802) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.3.056](https://github.com/pliablepixels/zmNinja/tree/v1.3.056) (2019-04-02)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.050...v1.3.056)
 
@@ -280,6 +313,8 @@
 
 **Fixed bugs:**
 
+- Event list incorrect after deleting first event in the list [\#651](https://github.com/pliablepixels/zmNinja/issues/651)
+- Time not properly displayed in the event modal when selecting 'next event' [\#649](https://github.com/pliablepixels/zmNinja/issues/649)
 - zmNinja - montage view - monitors don't show on first run, but show after login saved [\#641](https://github.com/pliablepixels/zmNinja/issues/641)
 
 **Closed issues:**
