@@ -631,15 +631,16 @@ angular.module('zmApp.controllers')
             apiurl += '/\'' + interval + '\' HOUR_SECOND';
         }*/
 
-        apiurl  += '.json?sort=StartTime&direction=desc&limit=1';
+        apiurl  += '.json?sort=StartTime&direction=desc&limit=1'+$rootScope.authSession;
 
-        NVR.debug ("Getting event count using:"+apiurl);
+        NVR.debug ("Getting event count");
         $http.get(apiurl)
         .then (function (data) {
-            console.log ("EVENTS GOT: "+JSON.stringify(data));
+           // console.log ("EVENTS GOT: "+JSON.stringify(data));
             var res = data.data;
             var mid = monitor.Monitor.Id;
-            if (res.events.length == 0) res = undefined;
+            if (!res || !res.events) res = undefined;
+            else if (res.events.length == 0) res = undefined;
             
             monitor.Monitor.lastEvent = res;
 
@@ -656,7 +657,16 @@ angular.module('zmApp.controllers')
             
 
             if (monitor.Monitor.lastEvent && showMontageSidebars) {
-                monitor.Monitor.showSidebar = true;
+
+                if (ld.objectDetectionFilter) {
+                  if (monitor.Monitor.lastEvent.object)  {
+                    monitor.Monitor.showSidebar = true; 
+                  } 
+                }
+                else {
+                  monitor.Monitor.showSidebar = true;
+                }
+                
             }
 
         },
@@ -721,7 +731,7 @@ angular.module('zmApp.controllers')
       var apiurl = NVR.getLogin().apiurl;
       //console.log ("ALARM CALLED WITH " +JSON.stringify(monitor));
 
-      var alarmurl = apiurl + "/monitors/alarm/id:" + monitor.Monitor.Id + "/command:status.json";
+      var alarmurl = apiurl + "/monitors/alarm/id:" + monitor.Monitor.Id + "/command:status.json?"+$rootScope.authSession;
       //  console.log("Alarm Check: Invoking " + alarmurl);
 
       $http.get(alarmurl)
@@ -1916,7 +1926,7 @@ angular.module('zmApp.controllers')
         var ld = NVR.getLogin();
         var url = ld.apiurl;
         var eid = monitor.Monitor.lastEvent.events[0].Event.Id;
-        url += '/events/'+monitor.Monitor.lastEvent.events[0].Event.Id+'.json';
+        url += '/events/'+monitor.Monitor.lastEvent.events[0].Event.Id+'.json?'+$rootScope.authSession;
         var mid = monitor.Monitor.Id;
 
         ld.lastEventCheckTimes[mid] = (new moment()).tz(NVR.getTimeZoneNow()).format('YYYY-MM-DD HH:mm:ss');
@@ -2442,7 +2452,7 @@ angular.module('zmApp.controllers')
     }
 
     $scope.squeezeMonitors = function () {
-      console.log ("squeezing");
+      NVR.debug ("squeezing");
       pckry.once('layoutComplete', resizeComplete);
       $timeout(function () {
         pckry.layout();

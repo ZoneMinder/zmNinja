@@ -140,8 +140,8 @@ angular.module('zmApp.controllers')
                   NVR.debug("MonitorCtrl:changeConfig selection:" + $scope.monfunc.myenabled +
                     $scope.monfunc.myfunc);
                   var loginData = NVR.getLogin();
-                  var apiRestart = loginData.apiurl + "/states/change/restart.json";
-                  var apiMon = loginData.apiurl + "/monitors/" + item + ".json";
+                  var apiRestart = loginData.apiurl + "/states/change/restart.json?"+$rootScope.authSession;
+                  var apiMon = loginData.apiurl + "/monitors/" + item + ".json?"+$rootScope.authSession;
 
                   NVR.debug("MonitorCtrl: URLs for changeConfig save:" + apiMon);
 
@@ -476,7 +476,7 @@ angular.module('zmApp.controllers')
             $scope.monitors[j].Monitor.isRunning = "...";
             $scope.monitors[j].Monitor.color = zm.monitorCheckingColor;
             $scope.monitors[j].Monitor.char = "ion-help-circled";
-            apiMonCheck = $scope.loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json";
+            apiMonCheck = $scope.loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json?"+$rootScope.authSession;
 
            
             NVR.debug("MonitorCtrl:monitorStateCheck: " + apiMonCheck);

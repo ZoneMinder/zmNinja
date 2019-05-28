@@ -591,7 +591,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         // console.log ("STEP 0 progress is " + $scope.currentProgress.progress);
         $scope.slides = [];
 
-        var apiurl = $scope.loginData.apiurl + "/events/" + $scope.eventId + ".json";
+        var apiurl = $scope.loginData.apiurl + "/events/" + $scope.eventId + ".json?"+$rootScope.authSession;
         NVR.debug("prepared to get frame details using " + apiurl);
         $http.get(apiurl)
           .then(function (success) {
@@ -1392,20 +1392,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var d = $q.defer();
     // now get event details to show alarm frames
     var loginData = NVR.getLogin();
-    var myurl = loginData.apiurl + '/events/' + eid + ".json";
-
     var nextEvent = loginData.apiurl + "/events/index" +
       "/StartTime >: " + currentEvent.Event.StartTime +
       ($scope.followSameMonitor == '1' ? "/MonitorId =: " + currentEvent.Monitor.Id : "") +
       "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0) +
-      ".json?sort=StartTime&direction=asc&limit=1";
+      ".json?sort=StartTime&direction=asc&limit=1"+$rootScope.authSession;
 
 
     var prevEvent = loginData.apiurl + "/events/index" +
       "/StartTime <: " + currentEvent.Event.StartTime +
       ($scope.followSameMonitor == '1' ? "/MonitorId =: " + currentEvent.Monitor.Id : "") +
       "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0) +
-      ".json?sort=StartTime&direction=desc&limit=1";
+      ".json?sort=StartTime&direction=desc&limit=1"+$rootScope.authSession;
 
 
     NVR.debug("Neighbor next URL=" + nextEvent);
@@ -1485,7 +1483,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     //$scope.eventList.showDelete = false;
     //curl -XDELETE http://server/zm/api/events/1.json
     var loginData = NVR.getLogin();
-    var apiDelete = loginData.apiurl + "/events/" + id + ".json";
+    var apiDelete = loginData.apiurl + "/events/" + id + ".json?"+$rootScope.authSession;
     NVR.debug("DeleteEvent: ID=" + id);
     NVR.log("Delete event " + apiDelete);
 
@@ -1949,7 +1947,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     // Lets get the detailed event API
     var loginData = NVR.getLogin();
-    var myurl = loginData.apiurl + '/events/' + eid + ".json";
+    var myurl = loginData.apiurl + '/events/' + eid + ".json?"+$rootScope.authSession;
     NVR.log("*** Constructed API for detailed events: " + myurl);
     $scope.humanizeTime = "...";
     $scope.mName = "...";
