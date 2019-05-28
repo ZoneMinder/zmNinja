@@ -324,7 +324,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var ld = NVR.getLogin();
     ld.montageReviewCollapse = $scope.expand;
 
-    console.log(">>>>>>>>> SAVING EXPAND AS:" + $scope.expand);
+   // console.log(">>>>>>>>> SAVING EXPAND AS:" + $scope.expand);
     NVR.setLogin(ld);
 
   };
@@ -749,7 +749,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var ld = NVR.getLogin();
 
     // in API, always sort by StartTime so all monitors are represented
-    var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1" + excludeMonitorsFilter + "/StartTime >=:" + timeFrom + "/StartTime <=:" + timeTo + ".json?sort=" + "StartTime" + "&direction=desc";
+    var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1" + excludeMonitorsFilter + "/StartTime >=:" + timeFrom + "/StartTime <=:" + timeTo + ".json?sort=" + "StartTime" + "&direction=desc"+$rootScope.authSession;
     NVR.debug("Retrieving " + myurl);
 
 
@@ -848,7 +848,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
 
 
     $scope.expand = ld.montageReviewCollapse;
-    console.log(">>>>>>>>> RESTORING EXPAND AS:" + $scope.expand);
+    //console.log(">>>>>>>>> RESTORING EXPAND AS:" + $scope.expand);
    
 
     $scope.loadingStatus = $translate.instant('kLoading');

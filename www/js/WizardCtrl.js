@@ -83,7 +83,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
   function getFirstMonitor() {
     var d = $q.defer();
-    $http.get($scope.wizard.apiURL + "/monitors.json")
+    $http.get($scope.wizard.apiURL + "/monitors.json?"+$rootScope.authSession)
       .then(function (success) {
           // console.log("getfirst monitor success: " + JSON.stringify(success));
           if (success.data.monitors.length > 0) {
@@ -202,7 +202,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     var urls = [a1, a2, a3, a4, a5];
 
     // can't use getPathZms as loginData is not inited yet
-    $http.get($scope.wizard.apiURL + "/configs/viewByName/ZM_PATH_ZMS.json")
+    $http.get($scope.wizard.apiURL + "/configs/viewByName/ZM_PATH_ZMS.json?"+$rootScope.authSession)
       //NVR.getPathZms() // what does ZM have stored in PATH_ZMS?
       .then(function (data) {
           // remove zms or nph-zms
@@ -229,7 +229,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       getFirstMonitor()
         .then(function (success) {
             $ionicLoading.hide();
-            var tail = "/nph-zms?mode=single&monitor=" + success;
+            var tail = "/nph-zms?mode=single&monitor=" + success;//+ $rootScope.authSession;
             if ($scope.wizard.useauth && $scope.wizard.usezmauth) {
 
               var ck = Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
@@ -321,7 +321,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     // lets try both /zm/api and /api. What else is there?
     var apilist = [api1, api2, api3];
 
-    findFirstReachableUrl(apilist, '/host/getVersion.json')
+    findFirstReachableUrl(apilist, '/host/getVersion.json?'+$rootScope.authSession)
       .then(function (success) {
           NVR.log("Valid API response found with:" + success);
           $scope.wizard.apiURL = success;
@@ -470,7 +470,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           data = data.data;
           $ionicLoading.hide();
 
-          console.log ("GOT "+data);
+         // console.log ("GOT "+data);
 
           if (data.indexOf(zm.loginScreenString1) >=0 || 
           data.indexOf(zm.loginScreenString2) >=0 ) {
@@ -578,7 +578,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                   return d.promise;
                 }
                 NVR.debug("API based login returned... ");
-                console.log (JSON.stringify(succ));
+              //  console.log (JSON.stringify(succ));
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
                 $rootScope.authSession = '';
@@ -635,13 +635,13 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
             },
             function (err) {
-              console.log("******************* API login error " + JSON.stringify(err));
+              NVR.debug("******************* API login error " + JSON.stringify(err));
               $ionicLoading.hide();
 
 
               if (1) {
                 //if (err  && err.data && 'success' in err.data) {
-                console.log("API based login not supported, need to use web scraping...");
+                NVR.log("API based login not supported, need to use web scraping...");
                 
                 loginWebScrape(u,zmu,zmp)
                   .then(function (succ) {
@@ -678,6 +678,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
 
   function validateData() {
+    //console.log ("***** CLEARING AUTHSESSION IN VALIDATEDATA");
     $rootScope.authSession = '';
     $rootScope.zmCookie = '';
 

@@ -111,7 +111,9 @@ angular.module('zmApp', [
     zmVersionCheckNag: 60 * 24, // in hrs 
     waitTimeTillResume: 5, // in sec, for ES error
     versionWithLoginAPI: "1.31.47",
-    androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw"
+    androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw",
+    accessTokenLeewayMin: 5,
+    refreshTokenLeewayMin: 10
 
   })
 
@@ -489,8 +491,8 @@ angular.module('zmApp', [
   // This directive is adapted from https://github.com/paveisistemas/ionic-image-lazy-load
   // I've removed lazyLoad and only made it show a spinner when an image is loading
   //--------------------------------------------------------------------------------------------
-  .directive('imageSpinnerSrc', ['$document', '$compile', 'imageLoadingDataShare', '$timeout', '$parse',
-    function ($document, $compile, imageLoadingDataShare, $timeout, $parse) {
+  .directive('imageSpinnerSrc', ['$document', '$compile', 'imageLoadingDataShare', '$timeout', '$parse', 'NVR', '$rootScope',
+    function ($document, $compile, imageLoadingDataShare, $timeout, $parse, NVR,  $rootScope) {
       return {
         restrict: 'A',
         scope: {
@@ -616,7 +618,15 @@ angular.module('zmApp', [
               bgImg.src = $attributes.imageSpinnerSrc;
 
             } else {
-              $element[0].src = $attributes.imageSpinnerSrc; // set src attribute on element (it will load image)
+
+              var ld = NVR.getLogin();
+              if (ld.isUseAuth && $rootScope.authSession=='' ) {
+                NVR.log ("waiting for authSession to have a value...");
+
+              } else {
+                $element[0].src = $attributes.imageSpinnerSrc; // set src 
+              }
+          
 
             }
           }
@@ -644,11 +654,10 @@ angular.module('zmApp', [
   //------------------------------------------------------------------
   .factory('timeoutHttpIntercept', ['$rootScope', '$q', 'zm', '$injector', function ($rootScope, $q, zm, $injector) {
     $rootScope.zmCookie = "";
-    //console.log ("HHHHHHHHHHHHHH**************************");
-    //console.log ("HERE TIMEOUT");
+    
     return {
 
-      'request': function (config) {
+      request: function (config) {
         if (!config) return config;
         if (!config.url) return config;
 
@@ -657,32 +666,52 @@ angular.module('zmApp', [
           config.headers.Authorization = $rootScope.basicAuthHeader;
         }
 
-        // handle basic auth properly
-        if (config.url.indexOf("@") > -1) {
-
-          NVR.debug(">>>>>>>>>> ERROR!!!!! url has a basic auth u:p!" + config.url);
-
-        }
-
-        // I don't think we need this - do we?
-
-        /*
-        if ((config.url.indexOf("/api/states/change/") > -1) ||
-          (config.url.indexOf("getDiskPercent.json") > -1) ||
-          (config.url.indexOf("daemonCheck.json") > -1) ||
-          (config.url.indexOf("getLoad.json") > -1))
-
-        {
-
-          // these can take time, so lets bump up timeout
-          config.timeout = zm.largeHttpTimeout;
-
-        }*/
 
         return config;
       },
 
-      'response': function (response) {
+      responseError: function (rejection) {
+        nvr = $injector.get('NVR');
+//       console.log (JSON.stringify(rejection));
+        if (rejection.status == 401 && !rejection.config.skipIntercept) {
+
+         /* rejection.data && rejection.data.data && rejection.data.data.message.indexOf('Token revoked') != -1) */
+
+         if (rejection && rejection.data && rejection.data.data) {
+
+          console.log ("MESSAGE:"+rejection.data.data.message);
+            if (rejection.data.data.message.indexOf('API Disabled') != -1) {
+              $rootScope.apiValid = false;
+              return rejection;
+            }
+         }
+          
+
+          
+    
+          nvr.log ("Browser Http intecepted 401, will try reauth");
+          return nvr.proceedWithLogin({'nobroadcast':true, 'access':false, 'refresh':true})
+          .then (function(succ) {
+            nvr.log ("Interception proceedWithLogin completed, retrying old request with skipIntercept = true");
+           // console.log ("OLD URL-"+rejection.config.url );
+            rejection.config.url = rejection.config.url.replace(/&token=([^&]*)/, $rootScope.authSession);
+            rejection.config.skipIntercept = true;
+          //  console.log ("NEW URL-"+rejection.config.url );
+            return $injector.get('$http')(rejection.config);
+          }, function (err) {
+            nvr.log ("Interception proceedWithLogin failed, NOT retrying old request");
+            return err;
+          });
+        } 
+        else {
+          if (rejection.config.skipIntercept) nvr.log ("Not intercepting as skipIntercept true");
+          return rejection;
+        }
+        
+      },
+
+      response: function (response) {
+
         var cookies = response.headers("Set-Cookie");
         if (cookies != null) {
 
@@ -699,9 +728,10 @@ angular.module('zmApp', [
 
         //console.log ("HTTP response");
 
+
       
         if (response.data && typeof(response.data) == 'string' && (response.data.indexOf("<pre class=\"cake-error\">")==0)) {
-            console.log ("cake error detected, attempting fix...");
+            NVR.debug ("cake error detected, attempting fix...");
             //console.log ("BAD = "+ JSON.stringify(response.data));
             response.data = JSON.parse(response.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
            // console.log ("FIXED="+JSON.stringify(response.data));
@@ -916,7 +946,8 @@ angular.module('zmApp', [
 
             },
             function (err) {
-              console.log("AUTH HASH ERROR: " + JSON.stringify(conf));
+            
+             NVR.debug("Auth Hash error: " + JSON.stringify(conf));
             });
       }
 
@@ -989,13 +1020,39 @@ angular.module('zmApp', [
         return d.promise;
 
       }
+
+      NVR.isReCaptcha()
+      .then(function (result) {
+        if (result == true) {
+          $ionicLoading.hide();
+        
+          NVR.displayBanner('error', ['reCaptcha must be disabled', ], "", 8000);
+          var alertPopup = $ionicPopup.alert({
+            title: 'reCaptcha enabled',
+            template: $translate.instant('kRecaptcha'),
+            okText: $translate.instant('kButtonOk'),
+            cancelText: $translate.instant('kButtonCancel'),
+          });
+
+          // close it after 5 seconds
+          $timeout(function () {
+
+            alertPopup.close();
+          }, 5000);
+
+          d.reject("Error-disable recaptcha");
+          return (d.promise);
+        }
+
+      });
+
       NVR.debug("Resetting zmCookie...");
       $rootScope.zmCookie = '';
       // first try to login, if it works, good
       // else try to do reachability
 
       //console.log(">>>>>>>>>>>> CALLING DO LOGIN");
-      proceedWithLogin()
+      NVR.proceedWithLogin()
         .then(function (success) {
 
             //NVR.debug("Storing login time as " + moment().toString());
@@ -1014,7 +1071,7 @@ angular.module('zmApp', [
             NVR.debug(">>>>>>>>>>>> Failed  first login, trying reachability");
             NVR.getReachableConfig(true)
               .then(function (data) {
-                  proceedWithLogin()
+                  NVR.proceedWithLogin()
                     .then(function (success) {
                         d.resolve(success);
                         $ionicLoading.hide();
@@ -1037,360 +1094,31 @@ angular.module('zmApp', [
 
       return d.promise;
 
-
-
-      function proceedWithLogin() {
-        // recompute rand anyway so even if you don't have auth
-        // your stream should not get frozen
-        $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-        $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-
-        // console.log ("***** STATENAME IS " + statename);
-
-        var d = $q.defer();
-        var ld = NVR.getLogin();
-        NVR.log("zmAutologin called");
-        var httpDelay = NVR.getLogin().enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
-
-        // This is a good time to check if auth is used :-p
-        if (!ld.isUseAuth) {
-          NVR.log("Auth is disabled, setting authSession to empty");
-          $rootScope.apiValid = true;
-          $rootScope.authSession = '';
-          d.resolve("Login Success");
-
-          $rootScope.$broadcast('auth-success', 'no auth');
-          return (d.promise);
-
-        }
-
-        if (!str) str = $translate.instant('kAuthenticating');
-
-        if (str) {
-          $ionicLoading.show({
-            template: str,
-            noBackdrop: true,
-            duration: httpDelay
-          });
-        }
-
-        //console.log(">>>>>>>>>>>>>> ISRECAPTCHA");
-
-        var loginData = NVR.getLogin();
-        var currentServerVersion = NVR.getCurrentServerVersion();
-
-
-        //first login using new API
-        var loginAPI = loginData.apiurl + '/host/login.json';
-
-
-        $http({
-            method: 'post',
-            url: loginAPI,
-            timeout: httpDelay,
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            responseType: 'text',
-            transformResponse: undefined,
-            transformRequest: function (obj) {
-              var str = [];
-              for (var p in obj)
-                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-              return str.join("&");
-            },
-            data: {
-              user: loginData.username,
-              pass: loginData.password
-            }
-          })
-          //$http.get(loginAPI)
-          .then(function (textsucc) {
-
-              $ionicLoading.hide();
-
-              var succ;
-
-
-              try {
-
-                succ = JSON.parse(textsucc.data);
-
-                if (!succ.version) {
-                  NVR.debug("API login returned fake success, going back to webscrape");
-                  ld = NVR.getLogin();
-                  ld.loginAPISupported = false;
-                  NVR.setLogin(ld);
-
-                  loginWebScrape()
-                    .then(function (succ) {
-                        d.resolve("Login Success");
-                        return d.promise;
-                      },
-                      function (err) {
-                        $ionicLoading.hide();
-                        d.reject("Login Error");
-                        return (d.promise);
-                      });
-                  return d.promise;
-                }
-                NVR.debug("API based login returned... ");
-                console.log (JSON.stringify(succ));
-                NVR.setCurrentServerVersion(succ.version);
-                $ionicLoading.hide();
-                //$rootScope.loggedIntoZm = 1;
-                $rootScope.authSession = '';
-
-                if (succ.credentials) {
-                  $rootScope.authSession = "&" + succ.credentials;
-                  if (succ.append_password == '1') {
-                    $rootScope.authSession = $rootScope.authSession +
-                      loginData.password;
-                  }
-                }
-
-                var ldg = NVR.getLogin();
-                ldg.loginAPISupported = true;
-                NVR.setLogin(ldg);
-
-                NVR.log("Stream authentication construction: " +
-                  $rootScope.authSession);
-
-                NVR.log("zmAutologin successfully logged into Zoneminder via API");
-
-
-
-                d.resolve("Login Success");
-                $rootScope.$broadcast('auth-success', succ);
-                return d.promise;
-
-              } catch (e) {
-                NVR.debug("Login API approach did not work...");
-                ld = NVR.getLogin();
-                ld.loginAPISupported = false;
-                NVR.setLogin(ld);
-                loginWebScrape()
-                  .then(function (succ) {
-                      d.resolve("Login Success");
-                      return d.promise;
-                    },
-                    function (err) {
-                      $ionicLoading.hide();
-                      d.reject("Login Error");
-                      return (d.promise);
-                    });
-                return d.promise;
-
-              }
-
-
-
-            },
-            function (err) {
-              console.log("******************* API login error " + JSON.stringify(err));
-              $ionicLoading.hide();
-
-
-              if (1) {
-                //if (err  && err.data && 'success' in err.data) {
-                console.log("API based login not supported, need to use web scraping...");
-                // login using old web scraping
-                var ld = NVR.getLogin();
-                ld.loginAPISupported = false;
-                NVR.setLogin(ld);
-                loginWebScrape()
-                  .then(function (succ) {
-                      d.resolve("Login Success");
-                      return d.promise;
-                    },
-                    function (err) {
-                      d.reject("Login Error");
-                      return (d.promise);
-                    });
-
-
-              } else {
-                // $rootScope.loggedIntoZm = -1;
-                //console.log("**** ZM Login FAILED");
-                NVR.log("zmAutologin Error via API: some meta foo", "error");
-                $rootScope.$broadcast('auth-error', "I'm confused why");
-
-                d.reject("Login Error");
-                return (d.promise);
-
-              }
-
-
-            }
-          ); // post
-
-
-
-        return d.promise;
-      }
-
-      return d.promise;
+  
 
     }
 
-    function loginWebScrape() {
-      var loginData = NVR.getLogin();
-      var d = $q.defer();
-      NVR.debug("Logging in using old web-scrape method");
 
-      $ionicLoading.show({
-        template: $translate.instant('kAuthenticatingWebScrape'),
-        noBackdrop: true,
-        duration: httpDelay
-      });
-
-
-      NVR.isReCaptcha()
-        .then(function (result) {
-          if (result == true) {
-            $ionicLoading.hide();
-            NVR.displayBanner('error', ['reCaptcha must be disabled', ], "", 8000);
-            $ionicLoading.hide();
-            var alertPopup = $ionicPopup.alert({
-              title: 'reCaptcha enabled',
-              template: $translate.instant('kRecaptcha'),
-              okText: $translate.instant('kButtonOk'),
-              cancelText: $translate.instant('kButtonCancel'),
-            });
-
-            // close it after 5 seconds
-            $timeout(function () {
-
-              alertPopup.close();
-            }, 5000);
-
-            d.reject("Error-disable recaptcha");
-            return (d.promise);
-          }
-
-        });
-
-      var httpDelay = NVR.getLogin().enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
-      //NVR.debug ("*** AUTH LOGIN URL IS " + loginData.url);
-      $http({
-
-          method: 'post',
-          timeout: httpDelay,
-          //withCredentials: true,
-          url: loginData.url + '/index.php?view=console',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-          },
-          transformRequest: function (obj) {
-            var str = [];
-            for (var p in obj)
-              str.push(encodeURIComponent(p) + "=" +
-                encodeURIComponent(obj[p]));
-            var params = str.join("&");
-            return params;
-          },
-
-          data: {
-            username: loginData.username,
-            password: loginData.password,
-            action: "login",
-            view: "console"
-          }
-        })
-        .then(function (data, status, headers) {
-            // console.log(">>>>>>>>>>>>>> PARALLEL POST SUCCESS");
-            data = data.data;
-            $ionicLoading.hide();
-
-            // Coming here does not mean success
-            // it could also be a bad login, but
-            // ZM returns you to login.php and returns 200 OK
-            // so we will check if the data has
-            // <title>ZM - Login</title> -- it it does then its the login page
-
-            if (data.indexOf(zm.loginScreenString1) >=0  ||
-            data.indexOf(zm.loginScreenString2) >=0 ) {
-              //eventServer.start();
-              //$rootScope.loggedIntoZm = 1;
-
-              NVR.log("zmAutologin successfully logged into Zoneminder");
-              $rootScope.apiValid = true;
-
-              // now go to authKey part, so don't return yet...
-
-            } else //  this means login error
-            {
-              // $rootScope.loggedIntoZm = -1;
-              //console.log("**** ZM Login FAILED");
-              NVR.log("zmAutologin Error: Bad Credentials ", "error");
-              $rootScope.$broadcast('auth-error', "incorrect credentials");
-
-              d.reject("Login Error");
-              return (d.promise);
-              // no need to go to next code, so return above
-            }
-
-            // Now go ahead and re-get auth key 
-            // if login was a success
-            $rootScope.authSession = '';
-            var ld = NVR.getLogin();
-            NVR.getAuthKey($rootScope.validMonitorId)
-              .then(function (success) {
-
-                  //console.log(success);
-                  $rootScope.authSession = success;
-                  NVR.log("Stream authentication construction: " +
-                    $rootScope.authSession);
-                  d.resolve("Login Success");
-                  $rootScope.$broadcast('auth-success', data);
-                  return d.promise;
-
-                },
-                function (error) {
-                  //console.log(error);
-
-                  NVR.log("Modal: Error returned Stream authentication construction. Retaining old value of: " + $rootScope.authSession);
-                  NVR.debug("Error was: " + JSON.stringify(error));
-                  d.resolve("Login Success");
-                  $rootScope.$broadcast('auth-success', data);
-                });
-
-            return (d.promise);
-
-          },
-          function (error, status) {
-
-            // console.log(">>>>>>>>>>>>>> PARALLEL POST ERROR");
-            $ionicLoading.hide();
-
-            //console.log("**** ZM Login FAILED");
-
-            // FIXME: Is this sometimes results in null
-
-            NVR.log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
-            // bad urls etc come here
-            //$rootScope.loggedIntoZm = -1;
-            $rootScope.$broadcast('auth-error', error);
-
-            d.reject("Login Error");
-            return d.promise;
-          });
-      return d.promise;
-    }
+ 
 
     function start() {
       var ld = NVR.getLogin();
       // lets keep this timer irrespective of auth or no auth
       //$rootScope.loggedIntoZm = 0;
-      $interval.cancel(zmAutoLoginHandle);
-      //doLogin();
-      zmAutoLoginHandle = $interval(function () {
-        _doLogin("");
 
-      }, zm.loginInterval); // Auto login every 5 minutes
-      // PHP timeout is around 10 minutes
-      // should be ok?
+      if (!ld.isTokenSupported) {
+        $interval.cancel(zmAutoLoginHandle);
+        //doLogin();
+        zmAutoLoginHandle = $interval(function () {
+          _doLogin("");
+
+        }, zm.loginInterval); // Auto login every 5 minutes
+        // PHP timeout is around 10 minutes
+        // should be ok?
+      } else {
+        NVR.log ("Disabling login timer, as we are using tokens");
+      }
+        
 
     }
 
@@ -1443,7 +1171,7 @@ angular.module('zmApp', [
       $rootScope.dpadId = 0;
       $rootScope.textScaleFactor = 1.0;
       $rootScope.isLoggedIn = false;
-      $rootScope.apiValid = false;
+      $rootScope.apiValid = true;
 
       $rootScope.db = null;
       $rootScope.runMode = NVR.getBandwidth();
@@ -1508,6 +1236,11 @@ angular.module('zmApp', [
         NVR.debug(msg);
       };
 
+
+      $rootScope.proceedWithLogin = function(obj) {
+        return NVR.proceedWithLogin(obj);
+      };
+
      
       // DPAD Handler - disabled for now
       // when ready add ionic cordova plugin add https://github.com/pliablepixels/cordova-plugin-android-tv.git
@@ -1557,7 +1290,7 @@ angular.module('zmApp', [
               $rootScope.dpadId = 0;
               $rootScope.dpadState = $state.current.name.replace('app.', "");
             }
-            console.log("dpad State is: " + $rootScope.dpadState);
+            //console.log("dpad State is: " + $rootScope.dpadState);
             handled = true;
           } else if (keyCode == keyCodes.SELECT) { // select
             if ($rootScope.dpadId > 0) {
@@ -1608,7 +1341,7 @@ angular.module('zmApp', [
                 nextel[0].scrollIntoView();
                 $rootScope.dpadId = nextId;
               }
-              console.log("dpadID=" + $rootScope.dpadId + " with state=" + $rootScope.dpadState);
+             // console.log("dpadID=" + $rootScope.dpadId + " with state=" + $rootScope.dpadState);
             }
             handled = true;
           }
@@ -2122,7 +1855,7 @@ angular.module('zmApp', [
 
           localforage.getItem('last-desktop-state')
             .then(function (succ) {
-             console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
+             //console.log("FOUND  STATE" + JSON.stringify(succ) + ":" + succ);
 
              if (succ == null) succ = {name:"app.montage"};
 
@@ -2156,7 +1889,7 @@ angular.module('zmApp', [
               loadServices();
             }, function (err) {
               
-              console.log("ERR " + JSON.stringify(err));
+            //  console.log("ERR " + JSON.stringify(err));
               $rootScope.lastState = "app.montage";
               loadServices();
             });
@@ -2166,7 +1899,7 @@ angular.module('zmApp', [
           NVR.log("Language file loaded, continuing with rest");
           NVR.init();
           zmCheckUpdates.start();
-          NVR.log("Setting up POST LOGIN timer");
+         // NVR.log("Setting up POST LOGIN timer");
           zmAutoLogin.start();
           setupPauseAndResume();
 
@@ -2343,7 +2076,8 @@ angular.module('zmApp', [
     $provide.decorator('$http', ['$delegate', '$q', '$injector', function ($delegate, $q, $injector) {
       // create function which overrides $http function
       var $http = $delegate;
-      var logger = $injector.get("$rootScope");
+      var nvr = $injector.get("$rootScope");
+    
 
       var wrapper = function () {
         var url;
@@ -2358,6 +2092,8 @@ angular.module('zmApp', [
 
           var d = $q.defer();
 
+          var skipIntercept = arguments[0].skipIntercept || false;
+
           var dataPayload = {};
           if (arguments[0].data !== undefined) {
             dataPayload = arguments[0].data;
@@ -2368,7 +2104,8 @@ angular.module('zmApp', [
             data: dataPayload,
             headers: arguments[0].headers,
            // timeout: arguments[0].timeout, 
-            responseType: arguments[0].responseType
+            responseType: arguments[0].responseType,
+            skipIntercept:skipIntercept
           };
 
           if (arguments[0].timeout) options.timeout = arguments[0].timeout;
@@ -2382,7 +2119,7 @@ angular.module('zmApp', [
 
                   // console.log ("HTTP RESPONSE:" + JSON.stringify(succ.data));
                    if (succ.data && (succ.data.indexOf("<pre class=\"cake-error\">") == 0) ) {
-                    logger.debug ("**** Native: cake-error in message, trying fix...");
+                    nvr.debug ("**** Native: cake-error in message, trying fix...");
                     succ.data = JSON.parse(succ.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
                   }
 
@@ -2413,10 +2150,45 @@ angular.module('zmApp', [
               }
             },
             function (err) {
-              logger.debug("***  Inside native HTTP error: " + JSON.stringify(err));
-
-              d.reject(err);
-              return d.promise;
+            
+              nvr.debug("***  Inside native HTTP error");
+              if (err.status == 401 && !options.skipIntercept && nvr.apiValid) {
+                if (err.error && err.error.indexOf("API is disabled for user") != -1) {
+                  nvr.apiValid = false;
+                  nvr.debug ("Setting API to "+nvr.apiValid);
+                  d.reject(err);
+                  return d.promise;
+                  
+                  }
+                nvr.debug ("** Native intercept: Got 401, going to try logging in");
+                return nvr.proceedWithLogin({'nobroadcast':true, 'access':false, 'refresh':true})
+                .then (function(succ) {
+                          nvr.debug ("** Native, tokens generated, retrying old request with skipIntercept = true");
+                          //console.log ("I GOT: "+ JSON.stringify(succ));
+                          url = url.replace(/&token=([^&]*)/, nvr.authSession);
+                          options.skipIntercept = true;
+                          cordova.plugin.http.sendRequest(encodeURI(url), options, 
+                          function (succ) {
+                            d.resolve(succ);
+                            return d.promise;
+                          }, 
+                          function (err) {
+                            d.reject(err);
+                            return d.promise;
+                   
+                          });
+                          return d.promise;
+                }, function (err) {d.reject(err); return d.promise;});
+              }
+              else {
+                if (options.skipIntercept) {
+                  nvr.debug ("Not intercepting as skipIntercept is true");
+                }
+                // not a 401, so pass on rejection
+                d.reject(err);
+                return d.promise;
+              }
+              
             });
           return d.promise;
 

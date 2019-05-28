@@ -124,7 +124,7 @@ angular.module('zmApp.controllers')
           disableBack: true
         });
 
-        console.log (" >>>>>>>> BACK VIEW = "+$ionicHistory.backTitle());
+        //console.log (" >>>>>>>> BACK VIEW = "+$ionicHistory.backTitle());
 
         if ($ionicHistory.backTitle() == 'Timeline') {
             $ionicHistory.nextViewOptions({

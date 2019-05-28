@@ -50,7 +50,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
     $rootScope.alarmCount = 0;
     $rootScope.isAlarm = false;
     $rootScope.authSession = '';
-
+    //console.log ("******************* AUTHSESSION RESET!!!!!!");
 
 
 
@@ -99,7 +99,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
         cordova.plugin.http.setSSLCertMode('nocheck', function () {
           NVR.debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
         }, function () {
-          console.log('-->Error setting SSL permissive');
+          NVR.log('-->Error setting SSL permissive');
         });
 
         if ($rootScope.platformOS == 'android') {
@@ -134,7 +134,8 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
     }
 
 
-    var apiurl = loginData.apiurl + '/host/getVersion.json';
+    
+
     //var portalurl = loginData.url + '/index.php';
 
     zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;  color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating') + "...</button>")
@@ -149,6 +150,11 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
         // possible image digits changed between servers
         NVR.getKeyConfigParams(0);
         $rootScope.runMode = NVR.getBandwidth();
+        //console.log ("HERE");
+        var apiurl = loginData.apiurl + '/host/getVersion.json?'+$rootScope.authSession;
+
+    //console.log ("****** MENU CONTROLLER:"+apiurl);
+
         NVR.log("Validating APIs at " + apiurl);
         $http.get(apiurl)
           .then(function (data) {
@@ -185,7 +191,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                                     disableBack: true
                                   });
 
-                                  console.log("+++ state go after getMonitors force");
+                                  //console.log("+++ state go after getMonitors force");
                                   $state.go('app.refresh', {
                                     "view": $state.current.name
                                   });
@@ -197,7 +203,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                             function (error) {
                               var refresh = NVR.getMonitors(1)
                                 .then(function () {
-                                  console.log("+++ state go after API version error: " + error);
+                                  //console.log("+++ state go after API version error: " + error);
                                   $rootScope.apiVersion = "0.0.0";
                                   NVR.debug("Error, failed API version, setting to " + $rootScope.apiVersion);
 
@@ -238,7 +244,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                                     disableBack: true
                                   });
 
-                                  console.log("+++ state go after 5xx");
+                                  //console.log("+++ state go after 5xx");
                                   $state.go('app.refresh', {
                                     "view": $state.current.name
                                   });
@@ -254,7 +260,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                                   $ionicHistory.nextViewOptions({
                                     disableBack: true
                                   });
-                                  console.log("+++ state go after API version force");
+                                  //console.log("+++ state go after API version force");
                                   $state.go('app.refresh', {
                                     "view": $state.current.name
                                   });

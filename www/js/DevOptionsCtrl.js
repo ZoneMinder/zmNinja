@@ -63,7 +63,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
     //console.log("**VIEW ** DevOptions Ctrl Entered");
     $scope.loginData = NVR.getLogin();
-    console.log("DEV LOGS=" + $scope.loginData.enableLogs);
+    //console.log("DEV LOGS=" + $scope.loginData.enableLogs);
 
     $scope.isMultiPort = false;
 

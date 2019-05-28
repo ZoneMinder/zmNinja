@@ -146,7 +146,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
 
   function loadZMlogs() {
     var ld = NVR.getLogin();
-    var lapi = ld.apiurl + "/logs.json?sort=TimeKey&direction=desc&page=" + $scope.zmPage;
+    var lapi = ld.apiurl + "/logs.json?sort=TimeKey&direction=desc&page=" + $scope.zmPage+$rootScope.authSession;
     $http.get(lapi)
       .then(function (success) {
           $ionicLoading.hide();
