@@ -16,7 +16,21 @@
       <span class="input-label">{{'kToTime'|translate}}</span>
       <input type="time" ng-model="$root.toTime">
     </label>
-    <br />
+   
+    <ion-item class="custom-list" ng-click="toggleMonitors()">
+        <i class="icon" ng-class="monitorsExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp;Filter Monitors
+      </ion-item>
+      <ion-item class="item-accordion" ng-show="monitorsExpanded" ng-repeat="monitor in monitors">
+        <span class="item-checkbox">
+
+          {{monitor.Monitor.Name}}
+          <label class="checkbox">
+            <input type="checkbox" ng-model="monitor.Monitor.isChecked">
+          </label>
+        </span>
+      </ion-item>
+      <br/>
+   
     <center>
       <button class="button" ng-click="saveFilters();"> {{'kSave'|translate}}
       </button>

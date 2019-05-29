@@ -3189,7 +3189,7 @@ angular.module('zmApp.controllers')
         // new reminder
         // 
         //https:///zm/api/events.json?&sort=StartTime&direction=desc&page=1
-        getEvents: function (monitorId, pageId, loadingStr, startTime, endTime, noObjectFilter) {
+        getEvents: function (monitorId, pageId, loadingStr, startTime, endTime, noObjectFilter, monListFilter) {
 
 
 
@@ -3225,6 +3225,10 @@ angular.module('zmApp.controllers')
             myurl = myurl + "/EndTime <=:" + endTime;
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+
+          //console.log ('********* MON FILTER '+monListFilter);
+          if (monListFilter) 
+            myurl = myurl + monListFilter;
 
           // don't know why but adding page messes up Notes
           //https:///zm/api/events/index/Notes%20REGEXP: detected%3A.json
