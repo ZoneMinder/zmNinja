@@ -752,7 +752,7 @@ angular.module('zmApp.controllers')
 
         if (!mid) {
           log("Deferring auth key, as monitorId unknown");
-          d.resolve("undefined");
+          d.resolve("");
           $rootScope.authSession = as;
           return (d.promise);
         }
@@ -793,7 +793,7 @@ angular.module('zmApp.controllers')
             },
             function (error) {
               log("NVR: Error resolving auth key " + JSON.stringify(error));
-              d.resolve("undefined");
+              d.resolve("");
               return (d.promise);
             });
         return (d.promise);
