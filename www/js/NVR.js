@@ -541,7 +541,7 @@ angular.module('zmApp.controllers')
               //console.log("******************* API login error " + JSON.stringify(err));
               $ionicLoading.hide();
               //if (err  && err.data && 'success' in err.data) {
-              NVR.log("API based login not supported, need to use web scraping..."+JSON.stringify(err));
+              log("API based login not supported, need to use web scraping..."+JSON.stringify(err));
               // login using old web scraping
               
               loginData.loginAPISupported = false;
