@@ -1538,7 +1538,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.onSwipeEvent = function (eid, dirn) {
 
-    console.log("CALLED WITH " + eid + " dirn " + dirn);
+    //console.log("CALLED WITH " + eid + " dirn " + dirn);
     if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1) {
       //console.log("Image is zoomed in - not honoring swipe");
       return;
