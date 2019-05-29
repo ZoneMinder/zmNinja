@@ -450,7 +450,7 @@ angular.module('zmApp.controllers')
       if ($rootScope.toString)
         nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-      NVR.getEvents($scope.id, currEventsPage, "", nolangFrom, nolangTo)
+      NVR.getEvents($scope.id, currEventsPage, "", nolangFrom, nolangTo, false, $rootScope.monitorsFilter)
         .then(function (data) {
 
           pageLoaded = true;
@@ -1820,6 +1820,7 @@ angular.module('zmApp.controllers')
           $rootScope.toTime = "";
           $rootScope.fromString = "";
           $rootScope.toString = "";
+          $rootScope.monitorsFilter = '';
 
           $scope.id = 0;
           $scope.showEvent = false;
@@ -2795,7 +2796,7 @@ angular.module('zmApp.controllers')
       if ($rootScope.toString)
         nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-      NVR.getEvents($scope.id, currEventsPage, loadingStr, nolangFrom, nolangTo)
+      NVR.getEvents($scope.id, currEventsPage, loadingStr, nolangFrom, nolangTo, false,$rootScope.monitorsFilter)
         .then(function (data) {
             var loginData = NVR.getLogin();
             // console.log("Got new page of events with Page=" + eventsPage);
