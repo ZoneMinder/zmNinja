@@ -194,6 +194,17 @@
           </a>
         </li>
 
+        <li ng-if="$root.platformOS == 'desktop' && isToggleListMenu">
+          <a href="" ng-click="zoomImage(1)">
+            <i class="ion-plus-round"></i>
+          </a>
+        </li>
+        <li ng-if="$root.platformOS == 'desktop' && isToggleListMenu">
+          <a href="" ng-click="zoomImage(-1)">
+            <i class="ion-minus-round"></i>
+          </a>
+        </li>
+
       </ul>
     </div>
   </div>
