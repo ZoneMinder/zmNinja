@@ -1019,6 +1019,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
   }
 
+  function noop() {
+
+  };
+  
   //-------------------------------------------------
   // This function draws the graph
   //-------------------------------------------------
@@ -1364,7 +1368,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
             }
 
-          ); // get Events
+          )
+          .catch (noop); // get Events
       });
   }
 
