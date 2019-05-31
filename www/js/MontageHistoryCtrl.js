@@ -261,6 +261,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     });
 
 
+    function noop() {}
+    
     function getNextSetHistory() {
 
       // grab events that start on or after the time 
@@ -373,7 +375,8 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
           }
 
-        );
+        )
+        .catch (noop);
 
         // At this stage, we have both a general events grab, and specific event grabs for MIDS that were empty
 

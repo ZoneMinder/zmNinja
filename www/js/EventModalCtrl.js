@@ -1375,7 +1375,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   // This function returns neighbor events if applicable
 
-
+  function noop() {
+    
+  }
 
 
   function neighborEvents(eid, mid) {
@@ -1444,7 +1446,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         d.reject(neighbors);
         return (d.promise);
 
-      });
+      })
+      .catch (noop);
 
     return (d.promise);
 

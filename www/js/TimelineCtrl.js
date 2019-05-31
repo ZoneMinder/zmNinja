@@ -1013,7 +1013,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
           NVR.debug("Error getting incremental timeline data");
           isProcessNewEventsWaiting = false;
 
-        });
+        })
+        .catch (noop);
 
     // check all events that started 10+10 seconds ago
 
@@ -1022,7 +1023,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   function noop() {
 
   };
-  
+
   //-------------------------------------------------
   // This function draws the graph
   //-------------------------------------------------
