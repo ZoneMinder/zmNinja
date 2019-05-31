@@ -131,8 +131,9 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       if (tail) t = tail;
       //$ionicLoading.show({template: 'trying ' + urls[0].server});
       NVR.log("zmWizard test.." + urls[0] + t);
-      return $http.get(urls[0] + t).then(function () {
+       return $http.get(urls[0] + t).then(function (succ) {
         NVR.log("Success:  on " + urls[0] + t);
+        //NVR.log (JSON.stringify(succ));
         //$ionicLoading.hide();
         d.resolve(urls[0]);
         return d.promise;
