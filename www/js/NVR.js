@@ -483,15 +483,24 @@ angular.module('zmApp.controllers')
   
                 }
                 else {
-                  if (succ.credentials) {
-                    log ("Could not recover token details, trying old auth credentials");
-                    loginData.isTokenSupported = false;
-                    setLogin(loginData);
-                    $rootScope.authSession = "&" + succ.credentials;
-                    if (succ.append_password == '1') {
-                      $rootScope.authSession = $rootScope.authSession +
-                        loginData.password;
+                  if (succ.credentials != undefined) {
+                    if (succ.credentials != '') {
+                      log ("Could not recover token details, trying old auth credentials");
+                      loginData.isTokenSupported = false;
+                      setLogin(loginData);
+                      $rootScope.authSession = "&" + succ.credentials;
+                      if (succ.append_password == '1') {
+                        $rootScope.authSession = $rootScope.authSession +
+                          loginData.password;
+                      }
+                    } else {
+                      // incase auth is turned off, but user said
+                    // its on. 
+                      $rootScope.authSession="&nonauth=none";
+                      debug ('Your auth seems to be turned off, but you said yes');
+                      
                     }
+                    
                   }
                   else {
                     log ("Neither token nor old cred worked. Seems like an error");
@@ -706,24 +715,33 @@ angular.module('zmApp.controllers')
 
         if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
 
-          myurl = loginData.apiurl + '/host/getCredentials.json';
-          debug("Server version " + loginData.currentServerVersion + " > 1.31.41, so using getCredentials API:" + myurl);
+          myurl = loginData.apiurl + '/host/login.json';
+          debug("Server version " + loginData.currentServerVersion + " > 1.31.41, so using login API:" + myurl);
           $http.get(myurl)
             .then(function (s) {
 
                 debug("Credentials API returned: " + JSON.stringify(s));
-                if (!s.data || !s.data.credentials) {
+                if (!s.data || s.data.credentials == undefined) {
                   $rootScope.authSession = "";
                   d.resolve($rootScope.authSession);
-                  debug("getCredentials() API Succeded, but did NOT return credentials key: " + JSON.stringify(s));
+                  debug("login() API Succeded, but did NOT return credentials key: " + JSON.stringify(s));
                   return d.promise;
 
                 } else {
-                  $rootScope.authSession = "&" + s.data.credentials;
-                  if (s.data.append_password == '1') {
-                    $rootScope.authSession = $rootScope.authSession +
-                      loginData.password;
+                  if (s.data.credentials != '') {
+                    $rootScope.authSession = "&" + s.data.credentials;
+                    if (s.data.append_password == '1') {
+                      $rootScope.authSession = $rootScope.authSession +
+                        loginData.password;
+                    }
                   }
+                  else {
+                    // incase auth is turned off, but user said
+                    // its on. 
+                    $rootScope.authSession="&nonauth=none";
+                    debug ('Your auth seems to be turned off, but you said yes');
+                  }
+                  
                   d.resolve($rootScope.authSession);
                   return d.promise;
                 }
