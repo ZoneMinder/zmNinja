@@ -64,6 +64,8 @@ angular.module('zmApp.controllers')
           return;
         }
       };
+
+      function noop() {}
       //-----------------------------------------------------------------------
       // This function takes care of changing monitor parameters
       // For now, I've only limited it to enable/disable and change monitor mode
@@ -221,7 +223,8 @@ angular.module('zmApp.controllers')
                          });*/
                     doRefresh();
                   }
-                });
+                })
+                .catch (noop);
               }
 
             },
