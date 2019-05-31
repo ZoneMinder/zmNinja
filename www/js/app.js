@@ -667,7 +667,7 @@ angular.module('zmApp', [
         }
 
 
-        return config;
+        return config || $q.when(config);
       },
 
       responseError: function (rejection) {
@@ -682,7 +682,7 @@ angular.module('zmApp', [
           console.log ("MESSAGE:"+rejection.data.data.message);
             if (rejection.data.data.message.indexOf('API Disabled') != -1) {
               $rootScope.apiValid = false;
-              return rejection;
+              return $q.reject(rejection);
             }
          }
           
@@ -700,12 +700,12 @@ angular.module('zmApp', [
             return $injector.get('$http')(rejection.config);
           }, function (err) {
             nvr.log ("Interception proceedWithLogin failed, NOT retrying old request");
-            return err;
+            return $q.reject(err);
           });
         } 
         else {
           if (rejection.config.skipIntercept) nvr.log ("Not intercepting as skipIntercept true");
-          return rejection;
+          return $q.reject(rejection);
         }
         
       },
@@ -737,7 +737,7 @@ angular.module('zmApp', [
            // console.log ("FIXED="+JSON.stringify(response.data));
         }
         //"data":"<pre class=\"cake-error\">
-        return response;
+        return response || $q.when(response);
       }
 
     };
