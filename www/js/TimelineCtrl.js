@@ -1022,7 +1022,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
   function noop() {
 
-  };
+  }
 
   //-------------------------------------------------
   // This function draws the graph
