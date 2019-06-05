@@ -74,6 +74,7 @@
 
               <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
               <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
+              <i class="ion-monitor"></i> {{event.Event.MonitorId}} &nbsp;
               <br />
               <span style="font-size:80%; color:rgb(110,110,110)">
                 {{humanize(event.Event.Length)}}
@@ -289,7 +290,7 @@
         <div ng-repeat="hour in hours|filter:{ monitor: '!'+'(Unknown)'}" id="hour-{{$index}}">
           <span style="color:black">
             <a class="item item-icon-right" href="" ng-click="showEvents('1', 'hour',hour.mid);">
-              <b>{{hour.monitor}}</b> {{hour.events}}
+              <b>{{hour.monitor}} ({{hour.mid}})</b> {{hour.events}}
               <span translate="kEvents"></span>
               <i class="icon ion-android-arrow-dropright"></i>
             </a>
@@ -303,7 +304,7 @@
         <div ng-repeat="day in days|filter:{ monitor: '!'+'(Unknown)'}" id="day-{{$index}}">
           <span style="color:black">
             <a class="item item-icon-right" href="" ng-click="showEvents('1', 'day',day.mid);">
-              <b>{{day.monitor}}</b> {{day.events}}
+              <b>{{day.monitor}} ({{day.mid}})</b> {{day.events}}
               <span translate="kEvents"></span>
               <i class="icon ion-android-arrow-dropright"></i>
             </a>
@@ -317,7 +318,7 @@
         <div ng-repeat="week in weeks|filter:{ monitor: '!'+'(Unknown)'}" id="week-{{$index}}">
           <span style="color:black">
             <a class="item item-icon-right" href="" ng-click="showEvents('1', 'week',week.mid);">
-              <b>{{week.monitor}}</b> {{week.events}}
+              <b>{{week.monitor}} ({{week.mid}})</b> {{week.events}}
               <span translate="kEvents"></span>
               <i class="icon ion-android-arrow-dropright"></i>
             </a>
