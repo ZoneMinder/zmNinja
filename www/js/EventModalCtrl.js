@@ -724,13 +724,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
       url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand +
         "&eid=" + $scope.eventId +
-        "&fid=" + $scope.slides[$scope.mycarousel.index - 1].id;
+        "&fid=" + $scope.slides[$scope.mycarousel.index - 1].id + $rootScope.authSession;
     
 
-    if ($rootScope.authSession != 'undefined') {
-      url += $rootScope.authSession;
-
-    }
+    
     if ($rootScope.basicAuthToken) {
       url += "&basicauth=" + $rootScope.basicAuthToken;
 
@@ -757,12 +754,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if ($scope.slideIndex > 0) $scope.slideIndex--;
 
        
-              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id;
+              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id+ $rootScope.authSession;
             
-            if ($rootScope.authSession != 'undefined') {
-              $scope.selectEventUrl += $rootScope.authSession;
-
-            }
+           
             if ($rootScope.basicAuthToken) {
               $scope.selectEventUrl += "&basicauth=" + $rootScope.basicAuthToken;
 
@@ -783,12 +777,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if ($scope.slideIndex < $scope.slideLastIndex) $scope.slideIndex++;
 
        
-              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id;
+              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id+ $rootScope.authSession;
             
-            if ($rootScope.authSession != 'undefined') {
-              $scope.selectEventUrl += $rootScope.authSession;
-
-            }
+          
             if ($rootScope.basicAuthToken) {
               $scope.selectEventUrl += "&basicauth=" + $rootScope.basicAuthToken;
 
@@ -810,12 +801,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $scope.slideIndex = tempVar;
 
        
-              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id;
-            
-            if ($rootScope.authSession != 'undefined') {
-              $scope.selectEventUrl += $rootScope.authSession;
-
-            }
+              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id+ $rootScope.authSession;
+           
             if ($rootScope.basicAuthToken) {
               $scope.selectEventUrl += "&basicauth=" + $rootScope.basicAuthToken;
 
@@ -837,12 +824,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             if ($scope.slideIndex < $scope.slideLastIndex) $scope.slideIndex++;
 
           
-              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id;
+              $scope.selectEventUrl = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand + "&eid=" + $scope.eventId + "&fid=" + $scope.slides[$scope.slideIndex].id+ $rootScope.authSession;
             
-            if ($rootScope.authSession != 'undefined') {
-              $scope.selectEventUrl += $rootScope.authSession;
-
-            }
+           
             if ($rootScope.basicAuthToken) {
               $scope.selectEventUrl += "&basicauth=" + $rootScope.basicAuthToken;
 
