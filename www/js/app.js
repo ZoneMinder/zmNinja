@@ -711,7 +711,7 @@ angular.module('zmApp', [
       },
 
       response: function (response) {
-
+        nvr = $injector.get('NVR');
         var cookies = response.headers("Set-Cookie");
         if (cookies != null) {
 
@@ -731,7 +731,7 @@ angular.module('zmApp', [
 
       
         if (response.data && typeof(response.data) == 'string' && (response.data.indexOf("<pre class=\"cake-error\">")==0)) {
-            NVR.debug ("cake error detected, attempting fix...");
+            nvr.log ("cake error detected, attempting fix...");
             //console.log ("BAD = "+ JSON.stringify(response.data));
             response.data = JSON.parse(response.data.replace(/<pre class=\"cake-error\">[\s\S]*<\/pre>/,''));
            // console.log ("FIXED="+JSON.stringify(response.data));
