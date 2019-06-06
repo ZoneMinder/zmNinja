@@ -122,7 +122,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     var img;
     //console.log("Image Mode " + imode);
  
-      img = "<img width='100%' ng-src='" + p + "/index.php?view=image&fid=" + id + "'>";
+      img = "<img width='100%' ng-src='" + p + "/index.php?view=image&fid=" + id + $rootScope.authSession + "'>";
       // console.log ("IS MULTISERVER SO IMAGE IS " + img);
     
     $rootScope.zmPopup = $ionicPopup.alert({
