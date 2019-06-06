@@ -967,16 +967,14 @@ angular.module('zmApp.controllers')
       }
 
      
-        $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam;
-        $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
+        $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam+$rootScope.authSession;
+        $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id+$rootScope.authSession;
 
    
 
       //$rootScope.zmPopup = $ionicPopup.alert({title: kFrame+':'+fid+'/'+kEvent+':'+e,template:img,  cssClass:'popup80'});
 
    
-        $scope.imgsrc += $rootScope.authSession;
-        $scope.fallbackImgSrc += $rootScope.authSession;
   
 
 
@@ -1024,8 +1022,8 @@ angular.module('zmApp.controllers')
               $scope.ndx = nndx;
 
              
-                $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam;
-                $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
+                $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam+$rootScope.authSession;
+                $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id+$rootScope.authSession;
 
          
 
@@ -1057,8 +1055,8 @@ angular.module('zmApp.controllers')
               $scope.ndx = nndx;
 
              
-                $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam;
-                $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id;
+                $scope.imgsrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id + $scope.outlineMotionParam+$rootScope.authSession;
+                $scope.fallbackImgSrc = p + "/index.php?view=image&fid=" + $scope.parray[$scope.ndx].id+$rootScope.authSession;
 
               
 
@@ -1236,7 +1234,7 @@ angular.module('zmApp.controllers')
                 var fname;
                 //console.log ("PATH="+e.Event.imageMode);
                 
-                  fname = e.Event.recordingURL + "/index.php?view=image&width=" + zm.maxGifWidth + "&fid=" + data.event.Frame[i].Id;
+                  fname = e.Event.recordingURL + "/index.php?view=image&width=" + zm.maxGifWidth + "&fid=" + data.event.Frame[i].Id+$rootScope.authSession;
              
 
                 if (data.event.Frame[i].TimeStamp != lastTime /*|| fps < 2*/ )
@@ -2605,7 +2603,7 @@ angular.module('zmApp.controllers')
       }
 
 
-      $scope.thumbnailLarge = b + '/index.php?view=image&fid=' + f;
+      $scope.thumbnailLarge = b + '/index.php?view=image&fid=' + f+$rootScope.authSession;
       $ionicModal.fromTemplateUrl('templates/image-modal.html', {
           scope: $scope,
           animation: 'slide-in-up',
