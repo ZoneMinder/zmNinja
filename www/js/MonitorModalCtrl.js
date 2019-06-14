@@ -1261,6 +1261,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       "/nph-zms?mode=" + getSingleStreamMode() +
       "&monitor=" + $scope.monitorId +
       "&scale=" + $scope.quality +
+      '&buffer=1000' +
       $rootScope.authSession +
       "&rand=" + $rootScope.modalRand +
       appendSingleStreamConnKey();
