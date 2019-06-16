@@ -20,7 +20,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.061";
+      var zmAppVersion = "1.3.062";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -123,6 +123,7 @@ angular.module('zmApp.controllers')
         'eventServerInterval': '', // list of intervals for all monitors
         'refreshSec': '2', // timer value for frame change in sec 
         'refreshSecLowBW': 8,
+        'liveFPS':'',
         'enableLogs': true,
         'enableDebug': true, // if enabled with log messages with "debug"
         'usePin': false,
@@ -1225,6 +1226,12 @@ angular.module('zmApp.controllers')
         if (typeof loginData.refreshSecLowBW == 'undefined') {
 
           loginData.refreshSecLowBW = 8;
+
+        }
+
+        if (typeof loginData.liveFPS == 'undefined') {
+
+          loginData.liveFPS = '';
 
         }
 
