@@ -1257,12 +1257,17 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
 
     var stream;
+    var fps = NVR.getLogin().liveFPS;
     stream = $scope.monitor.Monitor.streamingURL +
       "/nph-zms?mode=" + getSingleStreamMode() +
       "&monitor=" + $scope.monitorId +
       "&scale=" + $scope.quality +
-      '&buffer=1000' +
-      $rootScope.authSession +
+      '&buffer=1000';
+
+    if (fps) {
+      stream +='&maxfps='+fps;
+    }
+    stream += $rootScope.authSession +
       "&rand=" + $rootScope.modalRand +
       appendSingleStreamConnKey();
 

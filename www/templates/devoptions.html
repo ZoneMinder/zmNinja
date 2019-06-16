@@ -14,12 +14,23 @@
         <i class="ion-android-settings" style="font-size:150%"></i> {{'kDeveloperOptionsFor'|translate}}
         {{loginData.serverName}}
       </span>
-      <div class="item item-input-inset">
+      <div class="item item-input-inset item-text-wrap">
         {{'kFrameUpdate'|translate}} ({{'kSec'|translate}}.)&nbsp;
         <label class="item-input-wrapper">
           <input id="devoptions-move-3" type="tel" placeholder="min is 1s" ng-model="loginData.refreshSec">
         </label>
       </div>
+
+      <div class="item item-input-inset item-text-wrap">
+        {{'kSingleViewFPS'|translate}} ({{'kSec'|translate}}.)
+       
+          <label class="item-input-wrapper">
+            <input id="devoptions-move-3_1" type="tel" placeholder="leave empty for auto" ng-model="loginData.liveFPS">
+          </label>
+        
+      </div>
+
+
       <label>
         <ion-toggle id="devoptions-move-4" ng-model="loginData.use24hr" toggle-class="toggle-calm">
           <span class="item-text-wrap">{{'kEnable24hr' | translate}}</span>

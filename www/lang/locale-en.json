@@ -173,6 +173,7 @@
     "kLanguage"                  :"Language",
     "kLatestEvents"              :"latest events",
     "kLiveView"                  :"Live View",
+     
     "kLoad"                      :"load",
     "kLoading"                   :"loading",
     "kLoadingEvents"             :"loading events",
@@ -359,6 +360,7 @@
     "kShowLiveForInProgress"     :"play live feed if event recording in progress",
     "kShowTimeDiffFrames"        :"unique times",
     "kShowTip"                   :"show tip",
+    "kSingleViewFPS"             :"single live view FPS",   
     "kSoundOnPush"               :"Play sound on push",
     "kSpeed"                     :"speed",
     "kStart"                     :"Start",
