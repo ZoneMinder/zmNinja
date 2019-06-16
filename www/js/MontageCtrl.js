@@ -2455,7 +2455,7 @@ angular.module('zmApp.controllers')
       NVR.debug ("squeezing");
       pckry.once('layoutComplete', resizeComplete);
       $timeout(function () {
-        pckry.layout();
+        pckry.shiftLayout();
       });
 
       function resizeComplete() {
