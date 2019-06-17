@@ -442,7 +442,8 @@ angular.module('zmApp.controllers')
             $timeout(function () {
               NVR.debug("doing the jiggle and dance...");
               pckry.resize(true);
-              $scope.squeezeMonitors();
+              pckry.shiftLayout();
+              //$scope.squeezeMonitors();
             }, 500);
 
           }, 100);
@@ -2106,7 +2107,8 @@ angular.module('zmApp.controllers')
         monitor.Monitor.showSidebar = !monitor.Monitor.showSidebar;
         $timeout (function() {
            
-            $scope.squeezeMonitors();
+            pckry.shiftLayout();
+           // $scope.squeezeMonitors();
         }, 300);
      
     };
@@ -2415,7 +2417,7 @@ angular.module('zmApp.controllers')
             NVR.debug("doing the jiggle and dance...");
             pckry.resize(true);
             pckry.shiftLayout();
-            $scope.squeezeMonitors();
+            //$scope.squeezeMonitors();
           }, 600);
           
 
@@ -2455,7 +2457,7 @@ angular.module('zmApp.controllers')
       NVR.debug ("squeezing");
       pckry.once('layoutComplete', resizeComplete);
       $timeout(function () {
-        pckry.shiftLayout();
+        pckry.layout();
       });
 
       function resizeComplete() {
