@@ -30,6 +30,7 @@ angular.module('zmApp.controllers')
     var reloadPage = zm.forceMontageReloadDelay;
     var viewCleaned = false;
     var randToAvoidCacheMem;
+    var beforeReorderPositions=[];
 
 
     var streamState = {
@@ -196,6 +197,12 @@ angular.module('zmApp.controllers')
         
     };*/
 
+    function jiggleMontage() {
+      if ($scope.reOrderActive) return;
+      NVR.debug ('window resized');
+      initPackery();
+    }
+
 
     function forceReloadPage() {
 
@@ -339,7 +346,11 @@ angular.module('zmApp.controllers')
         // lay out every image if a pre-arranged position has not been found
 
         $timeout(function () {
-          if (layouttype || 1) pckry.layout();
+          if (layouttype)  { 
+            pckry.layout();
+          } else {
+            pckry.shiftLayout();
+          }
         }, 100);
 
         progressCalled = true;
@@ -440,8 +451,7 @@ angular.module('zmApp.controllers')
             if (!layouttype && positions) pckry.initShiftLayout(positions, "data-item-id");
             // now do a jiggle 
             $timeout(function () {
-              NVR.debug("doing the jiggle and dance...");
-              pckry.resize(true);
+              NVR.debug("inside drag items:doing the jiggle and dance...");
               pckry.shiftLayout();
               //$scope.squeezeMonitors();
             }, 500);
@@ -456,23 +466,26 @@ angular.module('zmApp.controllers')
 
       function itemDragged(item) {
         NVR.debug("drag complete");
-        $timeout(function () {
+       /* $timeout(function () {
           pckry.shiftLayout();
-        }, 20);
+        }, 20);*/
 
-        pckry.once('layoutComplete', function () {
+     
+          $timeout (function () {
+            var positions = pckry.getShiftPositions('data-item-id');
+            //console.log ("POSITIONS MAP " + JSON.stringify(positions));
+            var ld = NVR.getLogin();
+            ld.packeryPositions = JSON.stringify(positions);
+            //  console.log ("Saving " + ld.packeryPositions);
+            // console.log ("FULL OBJECT "+ JSON.stringify(ld));
+            ld.currentMontageProfile = "";
+            $scope.currentProfileName = $translate.instant('kMontage');
+            NVR.setLogin(ld);
+            NVR.debug("saved new positions: " + ld.packeryPositions);
+            //pckry.reloadItems();
+          },300);
+         
 
-          var positions = pckry.getShiftPositions('data-item-id');
-          //console.log ("POSITIONS MAP " + JSON.stringify(positions));
-          var ld = NVR.getLogin();
-          ld.packeryPositions = JSON.stringify(positions);
-          //  console.log ("Saving " + ld.packeryPositions);
-          // console.log ("FULL OBJECT "+ JSON.stringify(ld));
-          ld.currentMontageProfile = "";
-          $scope.currentProfileName = $translate.instant('kMontage');
-          NVR.setLogin(ld);
-          NVR.debug("saved new positions");
-        });
 
         //pckry.getItemElements().forEach(function (itemElem) {
 
@@ -813,7 +826,10 @@ angular.module('zmApp.controllers')
 
     $scope.cancelReorder = function () {
       $scope.modal.remove();
-      finishReorder();
+      $timeout ( function () {
+        finishReorder();
+      },300);
+  
     };
 
     $scope.saveReorder = function () {
@@ -821,61 +837,47 @@ angular.module('zmApp.controllers')
 
       $scope.modal.remove();
       $scope.MontageMonitors = $scope.copyMontage;
-      finishReorder();
-
+      // call finish reorder after modal is gone
+      $timeout ( function () {
+        finishReorder();
+      },300);
+      
     };
 
     function finishReorder() {
-
-      for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-        $scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-      }
+  
       currentStreamState = streamState.STOPPED;
-      // don't call initPackery - we need to savePackeryOrder
-      $timeout(function () // after render
-        {
-          draggies.forEach(function (drag) {
-            drag.destroy();
-          });
 
-          pckry.reloadItems();
-          draggies = [];
-          pckry.once('layoutComplete', savePackeryOrder);
-          pckry.layout();
-        }, zm.packeryTimer);
+      for (var i=0; i < $scope.MontageMonitors.length; i++) {
+        var display= $scope.MontageMonitors[i].Monitor.listDisplay;
+        var id=$scope.MontageMonitors[i].Monitor.Id;
+        for (var j=0; j < beforeReorderPositions.length; j++) {
+          if (beforeReorderPositions[j].attr == id) {
+            beforeReorderPositions[j].display = display;
+            break;
+          }
+        } // before reorder array
+      } // montage monitors
 
-    }
+      console.log ("AFTER REORDER="+JSON.stringify(beforeReorderPositions));
 
-    function savePackeryOrder() {
-      $timeout(function () {
-        var positions = pckry.getShiftPositions('data-item-id');
-        NVR.debug("POSITIONS MAP " + JSON.stringify(positions));
-        var ld = NVR.getLogin();
-        ld.packeryPositions = JSON.stringify(positions);
+      for (var n = 0; i < $scope.MontageMonitors.length; i++) {
+        $scope.MontageMonitors[n].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+      }
+
+      var ld = NVR.getLogin();
+      ld.packeryPositions = JSON.stringify(beforeReorderPositions);
         //console.log ("Savtogging " + ld.packeryPositions);
-        ld.currentMontageProfile = "";
-        $scope.currentProfileName = $translate.instant('kMontage');
-        NVR.setLogin(ld);
-
-        pckry.getItemElements().forEach(function (itemElem) {
-          draggie = new Draggabilly(itemElem);
-          pckry.bindDraggabillyEvents(draggie);
-          draggies.push(draggie);
-          draggie.disable();
-        });
-
-        $ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
-
-        // Now also ask NVR to update its monitor display status
-        NVR.reloadMonitorDisplayStatus();
-        //$scope.MontageMonitors = angular.copy(NVR.getMonitorsNow());
-        //$scope.MontageMonitors = NVR.getMonitorsNow();
-        pckry.layout();
-
-
-        $scope.areImagesLoading = false;
-        currentStreamState = streamState.SNAPSHOT;
-
+      ld.currentMontageProfile = "";
+      $scope.currentProfileName = $translate.instant('kMontage');
+      NVR.setLogin(ld)
+      .then (function () {
+        initPackery();
+        //$ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
+        //NVR.reloadMonitorDisplayStatus();
+        //$scope.areImagesLoading = false;
+        //currentStreamState = streamState.SNAPSHOT;
+        /*
         if (simulStreaming) {
 
           $timeout(function () {
@@ -883,10 +885,14 @@ angular.module('zmApp.controllers')
             currentStreamState = streamState.ACTIVE;
           }, 100);
         }
-      }, 20);
+      }, 20);*/
+    },
+    function (err) {
+        NVR.log ('ERROR:'+JSON.stringify(err));
+      });
     }
 
-
+    
     $scope.reorderFrame = function (item) {
       var frame = "";
       frame = item.Monitor.streamingURL + "/nph-zms?mode=single" +
@@ -936,11 +942,13 @@ angular.module('zmApp.controllers')
       // this is to avoid packery screw ups while you are hiding/unhiding
 
       $scope.copyMontage = angular.copy($scope.MontageMonitors);
+      beforeReorderPositions = pckry.getShiftPositions('data-item-id');
+      console.log ("BEFORE REORDER="+JSON.stringify(beforeReorderPositions));
 
       if (simulStreaming) {
         NVR.debug("Killing all streams in montage to save memory/nw...");
         currentStreamState = streamState.STOPPED;
-        NVR.stopNetwork()
+        NVR.stopNetwork("",true)
           .then(function (succ) {
             for (var i = 0; i < $scope.MontageMonitors.length; i++) {
               if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
@@ -1249,6 +1257,9 @@ angular.module('zmApp.controllers')
     function dragToggle() {
       var i;
       $scope.isDragabillyOn = !$scope.isDragabillyOn;
+      //currentStreamState  = $scope.isDragabillyOn? streamState.STOPPED:streamState.ACTIVE;
+     
+
 
       for (i = 0; i < $scope.MontageMonitors.length; i++) {
         $scope.MontageMonitors[i].Monitor.isStamp = false;
@@ -2128,6 +2139,8 @@ angular.module('zmApp.controllers')
         });
         $state.go(s[0],s[1],s[2]);
       });
+
+      window.addEventListener("resize", jiggleMontage, false);
      
 
       timeInMontage = new Date();
@@ -2360,6 +2373,7 @@ angular.module('zmApp.controllers')
    };
     $scope.$on('$ionicView.beforeLeave', function () {
 
+      window.removeEventListener("resize", jiggleMontage, false);
       currentStreamState = streamState.STOPPED;
       viewCleanup();
       viewCleaned = true;
@@ -2399,31 +2413,32 @@ angular.module('zmApp.controllers')
       }
 
       
-        pckry.reloadItems();
+       
         $timeout(function () {
-        pckry.once('layoutComplete', function () {
-          //console.log ("Layout complete");
-          var positions = pckry.getShiftPositions('data-item-id');
-          //console.log ("POSITIONS MAP " + JSON.stringify(positions));
-          var ld = NVR.getLogin();
+          pckry.layout();
+          pckry.once('layoutComplete', function () {
+            //console.log ("Layout complete");
+            var positions = pckry.getShiftPositions('data-item-id');
+            //console.log ("POSITIONS MAP " + JSON.stringify(positions));
+            var ld = NVR.getLogin();
 
-          ld.packeryPositions = JSON.stringify(positions);
-          //console.log ("Saving " + ld.packeryPositions);
-          ld.currentMontageProfile = "";
-          $scope.currentProfileName = $translate.instant('kMontage');
-          NVR.setLogin(ld);
+            ld.packeryPositions = JSON.stringify(positions);
+            //console.log ("Saving " + ld.packeryPositions);
+            ld.currentMontageProfile = "";
+            $scope.currentProfileName = $translate.instant('kMontage');
+            NVR.setLogin(ld);
 
-          $timeout(function () {
-            NVR.debug("doing the jiggle and dance...");
-            pckry.resize(true);
-            pckry.shiftLayout();
-            //$scope.squeezeMonitors();
-          }, 600);
-          
+            $timeout(function () {
+              NVR.debug("inside reset sizes:doing the jiggle and dance...");
+              //pckry.resize(true);
+              pckry.shiftLayout();
+              //$scope.squeezeMonitors();
+            }, 600);
+            
 
-          // $scope.slider.monsize = 2;
-        });
-        pckry.layout();
+            // $scope.slider.monsize = 2;
+          });
+        //pckry.layout();
 
       }, 20);
 
@@ -2512,7 +2527,7 @@ angular.module('zmApp.controllers')
         var sz = elem.getAttribute("data-item-size");
         if (isNaN(sz)) sz = 20;
         oldScales[id] = sz;
-        // console.log("REMEMBERING " + id + ":" + sz);
+         //console.log("REMEMBERING " + id + ":" + sz);
 
       });
 
@@ -2559,10 +2574,13 @@ angular.module('zmApp.controllers')
         //console.log("Calling re-layout");
         //pckry.reloadItems(); 
 
-        if (dirn == 1) //expand
-        {
-          pckry.once('layoutComplete', resizeComplete);
+        pckry.once('layoutComplete', resizeComplete);
           pckry.layout();
+          
+         
+
+         
+          
 
           /* pckry.getItemElements().forEach(function (elem) {
              var id = elem.getAttribute("data-item-id");
@@ -2576,13 +2594,7 @@ angular.module('zmApp.controllers')
 
              }
            });*/
-        } else //shrink
-        {
-          //console.log("Calling shift");
-          pckry.once('layoutComplete', resizeComplete);
-          pckry.shiftLayout();
-
-        }
+     
 
       }, 150);
 
@@ -2601,6 +2613,7 @@ angular.module('zmApp.controllers')
       function resizeComplete() {
         //console.log ("HERE");
         $timeout(function () {
+         
           var positions = pckry.getShiftPositions('data-item-id');
           //console.log("SAVING");
           var ld = NVR.getLogin();

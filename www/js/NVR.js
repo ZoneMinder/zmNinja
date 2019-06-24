@@ -1971,13 +1971,13 @@ angular.module('zmApp.controllers')
           return timeSinceResumed;
         },
 
-        stopNetwork: function (str) {
+        stopNetwork: function (str, dontDoIt) {
           var d = $q.defer();
           var s = "";
           if (str) s = str + ":";
-          if (justResumed) {
+          if (justResumed || dontDoIt) {
             // we don't call stop as we did stop on pause
-            log(s + " Not calling window stop as we just resumed");
+            log(s + " Not calling window stop ");
             d.resolve(true);
             return (d.promise);
 
