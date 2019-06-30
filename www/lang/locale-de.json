@@ -358,6 +358,7 @@
     "kShowLiveForInProgress"     :"Spiele Livebild während Aufzeichnung läuft",
     "kShowTimeDiffFrames"        :"eindeutige Zeiten",
     "kShowTip"                   :"zeige Hinweis",
+    "kSingleViewFPS"             :"Einzelne Livebild FPS",      
     "kSoundOnPush"               :"Spiele Sound on push",
     "kSpeed"                     :"Geschwindigkeit",
     "kStart"                     :"Start",
