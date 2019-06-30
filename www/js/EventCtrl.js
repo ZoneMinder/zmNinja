@@ -2543,6 +2543,7 @@ angular.module('zmApp.controllers')
    
 
     $scope.modalGraph = function () {
+      $scope.lastVideoStateTime = '';
       $ionicModal.fromTemplateUrl('templates/events-modalgraph.html', {
           scope: $scope, // give ModalCtrl access to this scope
           animation: 'slide-in-up',
@@ -2663,7 +2664,9 @@ angular.module('zmApp.controllers')
       if (ld.showLiveForInProgressEvents) {
         sl = 'enabled';
       }
-
+      $scope.lastVideoStateTime = {
+        'time':''
+      };
       NVR.debug("Shall I follow the same monitor for prev/next?:"+$scope.followSameMonitor);
       $ionicModal.fromTemplateUrl('templates/events-modal.html', {
           scope: $scope,
@@ -2690,6 +2693,12 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------
     $scope.closeModal = function () {
       NVR.debug(">>>EventCtrl:Close & Destroy Modal");
+      var diff = moment().diff($scope.lastVideoStateTime.time);
+      if (diff <= 300) {
+        NVR.debug ("Not closing model, time interval was only:"+diff+" ms");
+        return;
+      }
+      
       NVR.setAwake(false);
       if ($scope.modal !== undefined) {
         $scope.modal.remove();

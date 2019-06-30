@@ -69,7 +69,9 @@
                <div on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" ng-style="{'height':$root.devHeight+'px', 'width':$root.devWidth+'px'}">
 
                 <videogular id="testaut_events_playwindow" vg-can-play="onCanPlay()" vg-native-fullscreen="videoObject.config.nativeFullScreen"
-                  vg-player-ready="onPlayerReady($API)" vg-update-playback="onPlaybackUpdate($playBack)"
+                  vg-player-ready="onPlayerReady($API)" 
+                  vg-update-state="onPlayerState($state)"
+                  vg-update-playback="onPlaybackUpdate($playBack)"
                   vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()"
                   on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive"
                   vg-update-time="videoTime(event.Event.StartTime,$currentTime)" vg-error="onVideoError($event)">

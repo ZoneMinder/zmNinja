@@ -194,6 +194,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   };
 
+
+  $scope.onPlayerState = function (state) {
+    // parent scope
+    $scope.lastVideoStateTime.time = moment();
+  };
+
   $scope.onPlayerReady = function (api) {
 
     // we need this timeout to avoid load interrupting
@@ -1055,6 +1061,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.alarm_images = [];
     $scope.snapshotFrameId = 1;
     currentStreamState = streamState.STOPPED;
+    
+
 
   });
 
