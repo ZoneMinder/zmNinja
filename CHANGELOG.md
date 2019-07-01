@@ -1,5 +1,35 @@
 # Change Log
 
+## [v1.3.065](https://github.com/pliablepixels/zmNinja/tree/v1.3.065) (2019-06-30)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.061...v1.3.065)
+
+**Fixed bugs:**
+
+- Don't close event playback if video controls were pressed quickly [\#827](https://github.com/pliablepixels/zmNinja/issues/827)
+- Linux installer - doesn't install into favorites [\#826](https://github.com/pliablepixels/zmNinja/issues/826)
+- Layout No Longer Saves [\#823](https://github.com/pliablepixels/zmNinja/issues/823)
+- It is not possible to view a full-size frame from a thumbnail in the analysis view [\#822](https://github.com/pliablepixels/zmNinja/issues/822)
+
+**Closed issues:**
+
+- \[Desktop\] Request - Zoom for events on none touchscreen. [\#815](https://github.com/pliablepixels/zmNinja/issues/815)
+- Enhancement: add system state info in  "System status" item menu [\#812](https://github.com/pliablepixels/zmNinja/issues/812)
+
+**Merged pull requests:**
+
+- added livefps option [\#825](https://github.com/pliablepixels/zmNinja/pull/825) ([florie1706](https://github.com/florie1706))
+- added livefps option [\#824](https://github.com/pliablepixels/zmNinja/pull/824) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.3.061](https://github.com/pliablepixels/zmNinja/tree/v1.3.061) (2019-06-06)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.060...v1.3.061)
+
+**Closed issues:**
+
+- Unable to view video streams [\#821](https://github.com/pliablepixels/zmNinja/issues/821)
+
+## [v1.3.060](https://github.com/pliablepixels/zmNinja/tree/v1.3.060) (2019-06-05)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.057...v1.3.060)
+
 ## [v1.3.057](https://github.com/pliablepixels/zmNinja/tree/v1.3.057) (2019-05-28)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.056...v1.3.057)
 
