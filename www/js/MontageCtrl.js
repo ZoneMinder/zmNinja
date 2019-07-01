@@ -441,22 +441,23 @@ angular.module('zmApp.controllers')
             }
 
             NVR.debug("All images loaded, doing image layout");
+            $timeout(function () {
+              //NVR.log("Force calling resize");
+              ///pckry.reloadItems();
+              ///positions is defined only if layouttype was false
+              //(">>> Positions is " + JSON.stringify(positions));
+              if (!layouttype && positions) pckry.initShiftLayout(positions, "data-item-id");
+              // now do a jiggle 
+              $timeout(function () {
+                NVR.debug("inside drag items:doing the jiggle and dance...");
+                pckry.shiftLayout();
+                //$scope.squeezeMonitors();
+              }, 500);
+  
+            }, 100);
 
           }
-          $timeout(function () {
-            //NVR.log("Force calling resize");
-            ///pckry.reloadItems();
-            ///positions is defined only if layouttype was false
-            //(">>> Positions is " + JSON.stringify(positions));
-            if (!layouttype && positions) pckry.initShiftLayout(positions, "data-item-id");
-            // now do a jiggle 
-            $timeout(function () {
-              NVR.debug("inside drag items:doing the jiggle and dance...");
-              pckry.shiftLayout();
-              //$scope.squeezeMonitors();
-            }, 500);
-
-          }, 100);
+       
 
           //pckry.onresize();
 
