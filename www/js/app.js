@@ -1117,7 +1117,7 @@ angular.module('zmApp', [
         _doLogin("");
 
       } else {
-        NVR.debug ('We will relogin every '+timeInterval/1000+' seconds, token supported='+ld.isTokenSupported)
+        NVR.debug ('We will relogin every '+timeInterval/1000+' seconds, token supported='+ld.isTokenSupported);
       zmAutoLoginHandle = $interval(function () {
         _doLogin("");
       }, timeInterval); 
