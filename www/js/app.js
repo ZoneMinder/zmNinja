@@ -114,8 +114,8 @@ angular.module('zmApp', [
     androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw",
     accessTokenLeewayMin: 5,
     refreshTokenLeewayMin: 10,
-    defaultAccessTokenExpiresMs: 30000
-    //defaultAccessTokenExpiresMs: 1800000 // half of 3600s
+   // defaultAccessTokenExpiresMs: 30000
+   // defaultAccessTokenExpiresMs: 1800000 // half of 3600s
 
   })
 
@@ -884,6 +884,12 @@ angular.module('zmApp', [
     // doLogin() emits this when there is an auth error in the portal
     //------------------------------------------------------------------
 
+    $rootScope.$on("token-expiry", function () {
+      NVR.log ('-----> Access token is about to expire, re-doing login');
+      _doLogin("");
+
+    });
+
     $rootScope.$on("auth-error", function () {
 
       NVR.debug("zmAutoLogin: Inside auth-error broadcast");
@@ -1105,12 +1111,18 @@ angular.module('zmApp', [
       //$rootScope.loggedIntoZm = 0;
       var timeInterval = ld.isTokenSupported ? zm.defaultAccessTokenExpiresMs: zm.loginInterval;
       $interval.cancel(zmAutoLoginHandle);
-      //doLogin();
-      NVR.debug ('We will relogin every '+timeInterval/1000+' seconds, token supported='+ld.isTokenSupported)
+
+      if (ld.isTokenSupported) {
+        NVR.debug ("------> Not starting login timer for token. We will start a one time timer when we know how soon the access token will live");
+        _doLogin("");
+
+      } else {
+        NVR.debug ('We will relogin every '+timeInterval/1000+' seconds, token supported='+ld.isTokenSupported)
       zmAutoLoginHandle = $interval(function () {
         _doLogin("");
       }, timeInterval); 
-        
+
+      }
 
     }
 
