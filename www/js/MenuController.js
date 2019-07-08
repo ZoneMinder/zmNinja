@@ -79,7 +79,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                         duration: 1500
                     });
                   NVR.log ("Kiosk code mistmatch");
-                  $scope.loginData.isKiosk = false;
+                 // $scope.loginData.isKiosk = false;
                   e.preventDefault();
               }
               
