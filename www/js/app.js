@@ -113,7 +113,9 @@ angular.module('zmApp', [
     versionWithLoginAPI: "1.31.47",
     androidBackupKey: "AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw",
     accessTokenLeewayMin: 5,
-    refreshTokenLeewayMin: 10
+    refreshTokenLeewayMin: 10,
+    defaultAccessTokenExpiresMs: 30000
+    //defaultAccessTokenExpiresMs: 1800000 // half of 3600s
 
   })
 
@@ -1097,27 +1099,17 @@ angular.module('zmApp', [
   
 
     }
-
-
- 
-
     function start() {
       var ld = NVR.getLogin();
       // lets keep this timer irrespective of auth or no auth
       //$rootScope.loggedIntoZm = 0;
-
-      if (!ld.isTokenSupported) {
-        $interval.cancel(zmAutoLoginHandle);
-        //doLogin();
-        zmAutoLoginHandle = $interval(function () {
-          _doLogin("");
-
-        }, zm.loginInterval); // Auto login every 5 minutes
-        // PHP timeout is around 10 minutes
-        // should be ok?
-      } else {
-        NVR.log ("Disabling login timer, as we are using tokens");
-      }
+      var timeInterval = ld.isTokenSupported ? zm.defaultAccessTokenExpiresMs: zm.loginInterval;
+      $interval.cancel(zmAutoLoginHandle);
+      //doLogin();
+      NVR.debug ('We will relogin every '+timeInterval/1000+' seconds, token supported='+ld.isTokenSupported)
+      zmAutoLoginHandle = $interval(function () {
+        _doLogin("");
+      }, timeInterval); 
         
 
     }
@@ -1900,7 +1892,7 @@ angular.module('zmApp', [
           NVR.init();
           zmCheckUpdates.start();
          // NVR.log("Setting up POST LOGIN timer");
-          zmAutoLogin.start();
+          
           setupPauseAndResume();
 
         }

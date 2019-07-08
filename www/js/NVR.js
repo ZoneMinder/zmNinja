@@ -474,6 +474,7 @@ angular.module('zmApp.controllers')
                   loginData.accessToken = succ.access_token;
                   loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires, 'seconds');
                   loginData.refreshToken = succ.refresh_token;
+                  $rootScope.tokenExpires = succ.access_token_expires;
                 
                   loginData.refreshTokenExpires = moment.utc().add(succ.refresh_token_expires, 'seconds');
               
@@ -531,7 +532,7 @@ angular.module('zmApp.controllers')
                
                 loginData.loginAPISupported = false;
                 loginData.isTokenSupported = false;
-                setLogin(ld);
+                setLogin(loginData);
                 loginWebScrape()
                   .then(function () {
                       d.resolve("Login Success");
@@ -2248,6 +2249,11 @@ angular.module('zmApp.controllers')
         isReCaptcha: function () {
           // always resolves
           var d = $q.defer();
+          if (loginData.isTokenSupported) {
+            debug ('No need for re-captcha checks with tokens');
+            d.resolve(false);
+            return (d.promise);
+          }
 
           var myurl = loginData.url;
           log("Checking if reCaptcha is enabled in ZM...");
@@ -2872,6 +2878,7 @@ angular.module('zmApp.controllers')
               log ("Access token still has "+diff_access+" minutes left, using it");
              // console.log ("**************** TOKEN SET="+loginData.accessToken);
               $rootScope.authSession = '&token='+loginData.accessToken;
+              $rootScope.tokenExpires = 
               d.resolve("Login success via access token");
               if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
               return d.promise;
@@ -2894,6 +2901,7 @@ angular.module('zmApp.controllers')
                   log ("New access token retrieved: ..."+succ.access_token.substr(-5));
                   loginData.accessToken = succ.access_token;
                   loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires,'seconds');
+                  $rootScope.tokenExpires = succ.access_token_expires;
                   log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
                   log ("New access token expires on: UTC "+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
                   log ("New access token expires on:"+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));

@@ -686,7 +686,7 @@ angular.module('zmApp.controllers')
 
         },
         function (err) {
-            NVR.debug ("event status load failed: "+JSON.stringify(data));
+            NVR.debug ("event status load failed: "+JSON.stringify(err));
         });
     
 
