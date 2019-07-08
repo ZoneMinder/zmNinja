@@ -12,9 +12,10 @@ angular.module('zmApp.controllers')
   .service('NVR', ['$ionicPlatform', '$http', '$q', '$ionicLoading', '$ionicBackdrop', '$fileLogger', 'zm', '$rootScope', '$ionicContentBanner', '$timeout', '$cordovaPinDialog', '$ionicPopup', '$localstorage', '$state', '$translate', '$cordovaSQLite',
     function ($ionicPlatform, $http, $q, $ionicLoading, $ionicBackdrop, $fileLogger,
       zm, $rootScope, $ionicContentBanner, $timeout, $cordovaPinDialog,
-      $ionicPopup, $localstorage, $state, $translate) {
+      $ionicPopup, $localstorage, $state, $translate, $cordovaSQLite ) {
 
       var currentServerMultiPortSupported = false;
+      var tokenExpiryTimer = null;
 
       /*
         DO NOT TOUCH zmAppVersion
@@ -475,6 +476,14 @@ angular.module('zmApp.controllers')
                   loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires, 'seconds');
                   loginData.refreshToken = succ.refresh_token;
                   $rootScope.tokenExpires = succ.access_token_expires;
+
+                  log ('----> Setting token re-login after '+succ.access_token_expires+' seconds');
+                  if (tokenExpiryTimer) $timeout.cancel(tokenExpiryTimer);
+                  //succ.access_token_expires = 30;
+                  tokenExpiryTimer = $timeout ( function () {
+                    $rootScope.$broadcast('token-expiry');
+                  }, succ.access_token_expires * 1000);
+                  
                 
                   loginData.refreshTokenExpires = moment.utc().add(succ.refresh_token_expires, 'seconds');
               
@@ -2876,9 +2885,15 @@ angular.module('zmApp.controllers')
             // first see if we can work with access token
             if (moment.utc(loginData.accessTokenExpires).isAfter(now) &&  diff_access  >=zm.accessTokenLeewayMin && tryAccess) {
               log ("Access token still has "+diff_access+" minutes left, using it");
+              log ('----> Setting token re-login after '+diff_access*60+' seconds');
+                  if (tokenExpiryTimer) $timeout.cancel(tokenExpiryTimer);
+                  tokenExpiryTimer = $timeout ( function () {
+                    $rootScope.$broadcast('token-expiry');
+                  }, diff_access * 60  * 1000);
+                  
+              
              // console.log ("**************** TOKEN SET="+loginData.accessToken);
               $rootScope.authSession = '&token='+loginData.accessToken;
-              $rootScope.tokenExpires = 
               d.resolve("Login success via access token");
               if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
               return d.promise;
@@ -2901,7 +2916,13 @@ angular.module('zmApp.controllers')
                   log ("New access token retrieved: ..."+succ.access_token.substr(-5));
                   loginData.accessToken = succ.access_token;
                   loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires,'seconds');
+                  //succ.access_token_expires = 30;
                   $rootScope.tokenExpires = succ.access_token_expires;
+                  log ('----> Setting token re-login after '+succ.access_token_expires+' seconds');
+                  if (tokenExpiryTimer) $timeout.cancel(tokenExpiryTimer);
+                  tokenExpiryTimer = $timeout ( function () {
+                    $rootScope.$broadcast('token-expiry');
+                  }, succ.access_token_expires * 1000);
                   log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
                   log ("New access token expires on: UTC "+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
                   log ("New access token expires on:"+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
