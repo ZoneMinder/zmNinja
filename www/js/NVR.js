@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.066";
+      var zmAppVersion = "1.3.067";
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -201,7 +201,9 @@ angular.module('zmApp.controllers')
         'accessTokenExpires': '',
         'refreshTokenExpires': '',
         'accessToken': '',
-        'refreshToken': ''
+        'refreshToken': '',
+        'isKiosk': false,
+        'kioskPassword': '',
 
       };
 
@@ -916,6 +918,8 @@ angular.module('zmApp.controllers')
 
 
         loginData = angular.copy(newLogin);
+        $rootScope.LoginData = loginData;
+
         serverGroupList[loginData.serverName] = angular.copy(loginData);
 
         var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
@@ -1449,6 +1453,11 @@ angular.module('zmApp.controllers')
 
         }
 
+        if (typeof loginData.isKiosk == 'undefined') {
+          loginData.isKiosk = false;
+
+        }
+
 
         loginData.canSwipeMonitors = true;
         loginData.forceImageModePath = false;
@@ -1551,6 +1560,15 @@ angular.module('zmApp.controllers')
           var stateParams2 = {};
 
           debug("Inside evaluateNotifications");
+
+          if ($rootScope.LoginData.isKiosk) {
+            NVR.log ('>>> evaluation: You are in kiosk mode, forcing transition to montage');
+            state = "app.montage";
+            $rootScope.tappedNotification = 0;
+            return [state, stateParams1, stateParams2];
+            
+
+          }
 
           if ($rootScope.tappedNotification == 2) { // url launch
             debug("Came via app url launch with mid=" + $rootScope.tappedMid);
@@ -1952,7 +1970,7 @@ angular.module('zmApp.controllers')
                 if (window.cordova) setCordovaHttpOptions();
 
 
-
+                $rootScope.LoginData = loginData;
                 $rootScope.$broadcast('init-complete');
               });
 

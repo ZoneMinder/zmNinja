@@ -289,44 +289,23 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 var ld = NVR.getLogin();
                 if (NVR.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0") {
 
-                  $state.go('app.lowversion', {
-                    "ver": data
-                  });
+                  $rootScope.importantMessageHeader = $translate.instant('kImportant');
+                  $rootScope.importantMessageSummary = $translate.instant('kVersionIncompatible', {currentVersion: data, minVersion: zm.minAppVersion});
+
+
+                  $state.go('app.importantmessage');
                   return;
                 }
 
-                if (NVR.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
-
-                  NVR.hrsSinceChecked("zmVersion")
-                    .then(function (val) {
-                      NVR.debug("ZM Version nag: Checking " + val + " with " + zm.zmVersionCheckNag);
-                      if (val >= zm.zmVersionCheckNag && 0) {
-                        NVR.updateHrsSinceChecked("zmVersion");
-                        $state.go('app.importantmessage', {
-                          "ver": data
-                        });
-                        return;
-                      }
-
-                    });
-
-                }
-
-                /*if (data == "0.0.0")
-                {
-
-                    NVR.log("2nd Auth:API getVersion succeeded but returned 0.0.0 " + JSON.stringify(data));
-                    NVR.displayBanner('error', ['ZoneMinder authentication failed']);
-                    $state.go("login",
-                    {
-                        "wizard": false
-                    });
-                    return;
-                }*/
-                // coming here means continue
-                //EventServer.init();
+           
 
                 var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
+                if ($rootScope.LoginData.isKiosk) {
+                  NVR.log ('>>> You are in kiosk mode');
+                  statetoGo = 'app.montage';
+                  $rootScope.lastStateParam='';
+
+                }
                 //NVR.debug ("logging state transition");
                 NVR.debug("2nd Auth: Transitioning state to: " +
                   statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
@@ -384,34 +363,21 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                   NVR.log("Got API version: " + data);
                   $rootScope.apiVersion = data;
                   var ld = NVR.getLogin();
+                  console.log (">>>>>>>> COMPARING "+data+" to "+zm.minAppVersion);
                   if (NVR.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0") {
 
-                    $state.go('app.lowversion', {
-                      "ver": data
+                    $rootScope.importantMessageHeader = $translate.instant('kImportant');
+                    $rootScope.importantMessageSummary = $translate.instant('kVersionIncompatible', {currentVersion: data, minVersion: zm.minAppVersion});
+                    $ionicHistory.nextViewOptions({
+                      disableAnimate:true,
+                      disableBack: true
                     });
-                    return;
+                    $state.go('app.importantmessage');
+
+                      return;
                   }
 
-                  if (NVR.versionCompare(data, zm.recommendedAppVersion) == -1 && data != "0.0.0") {
-
-                    NVR.hrsSinceChecked("zmVersion")
-                      .then(function (val) {
-
-                        NVR.debug("ZM Version nag: Checking " + val + " with " + zm.zmVersionCheckNag);
-                        if (val >= zm.zmVersionCheckNag && 0) {
-                          //https://api.github.com/repos/zoneminder/zoneminder/releases/latest
-                          //tag_name
-                          NVR.updateHrsSinceChecked("zmVersion");
-                          $state.go('app.importantmessage', {
-                            "ver": data
-                          });
-                          return;
-
-                        }
-
-                      });
-
-                  }
+              
 
                   /*if (data == "0.0.0")
                   {
@@ -459,8 +425,18 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
                     if (!processPush) {
                       alreadyTransitioned = true;
+
+                      if ($rootScope.LoginData.isKiosk) {
+                        NVR.log ('>>> You are in kiosk mode');
+                        statetoGo = 'app.montage';
+                        $rootScope.lastStateParam='';
+      
+                      }
+
                       NVR.debug("Transitioning state to: " +
                       statetoGo + " with param " + JSON.stringify($rootScope.lastStateParam));
+
+                    
 
                     $state.go(statetoGo, $rootScope.lastStateParam);
                     return;

@@ -45,6 +45,55 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
   };
 
+  $scope.exitKiosk = function() {
+    $scope.data = {};     
+    // An elaborate, custom popup
+    var myPopup = $ionicPopup.show({
+      template: '<small>'+$translate.instant('kKioskPassword')+'</small><input type="password" ng-model="data.p1"><br/><small>',
+      title: $translate.instant('kPassword'),
+      scope: $scope,
+      buttons: [
+        { text: 'Cancel',
+            type: 'button-assertive',
+            onTap: function (e) {
+                $scope.loginData.isKiosk = false;
+            }
+        },
+        {
+          text: '<b>'+$translate.instant('kButtonSave')+'</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.data.p1) {
+              //don't allow the user to close unless he enters wifi password
+              e.preventDefault();
+            } else {
+              var ld = NVR.getLogin();
+              if ($scope.data.p1 == ld.kioskPassword) {
+                ld.isKiosk = false;
+                NVR.setLogin(ld);
+              }
+              else {
+                    $ionicLoading.show({
+                        template: $translate.instant('kBannerPinMismatch') + "...",
+                        noBackdrop: true,
+                        duration: 1500
+                    });
+                  NVR.log ("Kiosk code mistmatch");
+                  $scope.loginData.isKiosk = false;
+                  e.preventDefault();
+              }
+              
+            }
+          }
+        }
+      ]
+    });
+
+
+   
+
+  };
+
   function switchToServer(s) {
 
     $rootScope.alarmCount = 0;

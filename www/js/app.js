@@ -40,7 +40,7 @@ angular.module('zmApp', [
 
   .constant('zm', {
     minAppVersion: '1.28.107', // if ZM is less than this, the app won't work
-    recommendedAppVersion: '1.32.0',
+    //minAppVersion:'1.44',
     minEventServerVersion: '2.4',
     castAppId: 'BA30FB4C',
     alarmFlashTimer: 20000, // time to flash alarm
@@ -1887,6 +1887,8 @@ angular.module('zmApp', [
 
                 NVR.debug("last state=" + $rootScope.lastState + " param=" + $rootScope.lastStateParam);
 
+                
+
 
 
               }
@@ -2409,7 +2411,7 @@ angular.module('zmApp', [
         },
 
         cache: false,
-        url: "/importantmessage/:ver",
+        url: "/importantmessage",
         templateUrl: "templates/important_message.html",
         controller: 'zmApp.ImportantMessageCtrl',
 
