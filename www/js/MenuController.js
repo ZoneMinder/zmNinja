@@ -53,10 +53,10 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
       title: $translate.instant('kPassword'),
       scope: $scope,
       buttons: [
-        { text: 'Cancel',
+        { text: $translate.instant('kButtonCancel'),
             type: 'button-assertive',
             onTap: function (e) {
-                $scope.loginData.isKiosk = false;
+               
             }
         },
         {
