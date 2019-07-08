@@ -145,8 +145,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
       // box
 
       .then(function (data) {
-
-
+        zmAutoLogin.start();
         // possible image digits changed between servers
         NVR.getKeyConfigParams(0);
         $rootScope.runMode = NVR.getBandwidth();
