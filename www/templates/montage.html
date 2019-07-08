@@ -3,26 +3,33 @@
   <ion-nav-buttons side="left">
     <button id="montage-move-1" class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
     &nbsp;
-    <button class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
+    <button ng-if="!$root.LoginData.isKiosk" class="button button-icon button-clear ion-eye" ng-click="hideUnhide();">&nbsp;
     </button>
-    <button id="montage-move-2" class="button button-icon button-clear ion-chevron-down"
+    <button  id="montage-move-2" class="button button-icon button-clear ion-chevron-down"
       ng-click="toggleSubMenuFunction();">&nbsp;
     </button>
+
+
+    <button ng-if="$root.LoginData.isKiosk" class="button button-icon button-danger ion-locked" style="color:red !important">
+    </button>
+
+
+
     <button data-badge="{{$root.alarmCount}}"
       class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
-      ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
+      ng-click="handleAlarms();" ng-if="$root.isAlarm && !$root.LoginData.isKiosk"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
     <span ng-click="toggleTimeType()" class="icon montage-time">
       <i ng-class="(iconTimeNow=='server')?'icon-server':'ion-ios-location'"></i>
       {{timeNow}}&nbsp;</span>
-    <button class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp;
+    <button ng-if="!$root.LoginData.isKiosk" class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp;
     </button>
     <!--
         <button class="button button-icon button-clear ion-monitor" ng-click="cast();">&nbsp;
         </button>
         -->
-    <button id="montage-move-3" class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
+    <button ng-if="!$root.LoginData.isKiosk" id="montage-move-3" class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
     </button>
     <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
     </button>
@@ -42,12 +49,12 @@
                                 <a href="" ng-click="killAllImages()"> <i class="ion-ionic"></i></a>
                             </li>-->
 
-          <li>
+          <li ng-if="!$root.LoginData.isKiosk">
             <a id="montage-move-4" ng-click="sliderChanged(1)">
               <i class="ion-plus-circled"></i>
             </a>
           </li>
-          <li>
+          <li ng-if="!$root.LoginData.isKiosk">
             <a id="montage-move-5" ng-click="sliderChanged(-1)">
               <i class="ion-minus-circled"></i>
             </a>
@@ -58,7 +65,7 @@
             </a>
           </li>
 
-          <li>
+          <li ng-if="!$root.LoginData.isKiosk">
             <a  ng-click="clearAllEvents()">
               <i class="ion-checkmark"></i>
             </a>
@@ -87,13 +94,13 @@
             </a>
           </li>
 
-          <li>
+          <li ng-if="!$root.LoginData.isKiosk">
             <a href="" ng-click="saveMontageProfile()">
               <i class="ion-heart"></i>
             </a>
           </li>
 
-          <li>
+          <li ng-if="!$root.LoginData.isKiosk">
             <a href="" ng-click="deleteMontageProfile()">
               <i class="ion-trash-a"></i>
             </a>
@@ -126,7 +133,7 @@
               
 
                 <div class="montage-image">
-                  <div ng-if="LoginData.enableMontageOverlays" class="montage-buttons">
+                  <div ng-if="LoginData.enableMontageOverlays && !$root.LoginData.isKiosk" class="montage-buttons">
                     <a ng-if="monitor.Monitor.lastEvent" class="button button-small button-assertive icon ion-ios-bell"
                       ng-click="eventButtonClicked(monitor, true)"></a>&nbsp;&nbsp;<a ng-if="monitor.Monitor.lastEvent"
                       class="button button-small button-balanced icon ion-checkmark"
@@ -221,9 +228,9 @@
   <div ng-show="minimal">
     <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down"
       resting-icon="ion-chevron-up" toggling-method="click">
-      <button mfb-button icon="ion-arrow-expand" label="{{'kIncreaseSize' | translate}}" ng-click="sliderChanged(1)">
+      <button ng-if="!$root.LoginData.isKiosk" mfb-button icon="ion-arrow-expand" label="{{'kIncreaseSize' | translate}}" ng-click="sliderChanged(1)">
       </button>
-      <button mfb-button icon="ion-arrow-shrink" label="{{'kDecreaseSize' | translate}}" ng-click="sliderChanged(-1)">
+      <button ng-if="!$root.LoginData.isKiosk" mfb-button icon="ion-arrow-shrink" label="{{'kDecreaseSize' | translate}}" ng-click="sliderChanged(-1)">
       </button>
       <!-- <button mfb-button icon="ion-refresh" label="{{'kRefresh' | translate}}" ng-click="resetSizes();">
             </button>-->
@@ -233,7 +240,7 @@
       </button>
 
     </nav>
-    <span class="modal-alarm-badge">
+    <span ng-if="!$root.LoginData.isKiosk" class="modal-alarm-badge">
       <a data-badge="{{$root.alarmCount}}"
         class="animated infinite tada button icon  ion-ios-bell notification-badge button-assertive"
         ng-click="handleAlarmsWhileMinimized();" ng-if="$root.isAlarm"></a>

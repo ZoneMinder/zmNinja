@@ -102,6 +102,10 @@
           <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();" toggle-class="toggle-calm">
             <span class="item-text-wrap">{{'kPassword' | translate}} {{'kProtect'|translate}}</span>
           </ion-toggle>
+
+          <ion-toggle ng-model="loginData.isKiosk" toggle-class="toggle-calm" ng-change="kioskPinConfig();" >
+            <span class="item-text-wrap">{{'kKioskMode' | translate}} </span>
+          </ion-toggle>
         </label>
      
 

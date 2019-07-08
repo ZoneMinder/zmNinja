@@ -13,9 +13,6 @@ angular.module('zmApp.controllers').controller('zmApp.ImportantMessageCtrl', ['$
   $scope.$on('$ionicView.enter', function () {
     // console.log("**VIEW ** LowVersion Ctrl Entered");
     $ionicSideMenuDelegate.canDragContent(true);
-    $scope.requiredVersion = zm.minAppVersion;
-    $scope.currentVersion = $stateParams.ver;
-    $scope.recommendedVersion = zm.recommendedAppVersion;
 
   });
 

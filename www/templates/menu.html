@@ -10,7 +10,7 @@
     </ion-side-menu-content>
     <ion-side-menu>
       <ion-header-bar class="bar bar-header bar-stable">
-        <button class="button icon ion-person-stalker" ng-click="switchProfiles()"></button>
+        <button ng-if="!root.LoginData.isKiosk" class="button icon ion-person-stalker" ng-click="switchProfiles()"></button>
         <h1 class="title">{{'kMenuOptions'|translate}}</h1>
         </button>
       </ion-header-bar>
@@ -18,13 +18,13 @@
         <!-- <ion-scroll scrollbar-y="false" style="height:100%" >-->
         <ion-list>
           <!--<ion-item ng-click="navigateView('app.montage')" menu-close>-->
-
-          <ion-item ng-if="0" href="#/app/bookmark" ng-click="go('/app/bookmark)')">
+        <!--
+          <ion-item  href="#/app/bookmark" ng-click="go('/app/bookmark)')">
             <span class=" item-icon-left">
               <i class="icon ion-bookmark"></i>
             </span>{{'kBookmark'| translate}}
           </ion-item>
-
+        -->
           <ion-item id="testaut_menu_montage" href="#/app/montage" ng-click="go('/app/montage')">
 
             <!--<span ng-if="$root.runMode=='lowbw'" style="float:right;margin-top:-18px;background-color:#f1c40f;color:#000;font-size:11px;opacity:0.7;width:20px;border-radius: 0px 0px 5px 5px;display:inline-block;text-align:center;">&nbsp;<i class="icon ion-arrow-graph-down-left"></i>&nbsp;</span>-->
@@ -35,6 +35,7 @@
 
             
           <!--<ion-item ng-click="navigateView('app.timeline')" menu-close>-->
+          <span ng-if="!$root.LoginData.isKiosk">
           <ion-item id="testaut_menu_timeline" href="#/app/timeline" ng-click="go('/app/timeline')">
             <span class=" item-icon-left">
               <i class="icon ion-android-time"></i>
@@ -163,6 +164,10 @@
             <span ng-if="$root.isTzSupported()">
               <i class="icon icon-server"></i> {{$root.getServerTimeZoneNow();}} </span>
           </ion-item>
+        </span>
+        <ion-item ng-if="$root.LoginData.isKiosk" ng-click="exitKiosk()">
+          <i class="ion-unlocked"></i> {{'kKioskModeExit' | translate}}
+        </ion-item>
         </ion-list>
         <!--</ion-scroll>-->
       </ion-content>

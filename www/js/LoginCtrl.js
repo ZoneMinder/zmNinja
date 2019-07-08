@@ -235,7 +235,19 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
   //------------------------------------------------------------------------
   $scope.$on('$ionicView.beforeEnter', function () {
 
-
+    var ld = NVR.getLogin();
+    if (ld.isKiosk) {
+      NVR.log ("You are in kiosk mode, cannot show login screen");
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $rootScope.importantMessageHeader = $translate.instant('kKioskErrorHeader');
+      $rootScope.importantMessageSummary = $translate.instant('kKioskErrorMessage');
+      $state.go('app.importantmessage');
+      return;
+    }
+    
     $scope.$on ( "process-push", function () {
       NVR.debug (">> LoginCtrl: push handler. Not processing push, because you might be here due to login failure");
       /*var s = NVR.evaluateTappedNotification();
@@ -256,7 +268,7 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
     //console.log("**VIEW ** LoginCtrl  Entered");
     NVR.setAwake(false);
     //$scope.basicAuthUsed = false;
-    var ld = NVR.getLogin();
+    
     oldName = ld.serverName;
 
     availableServers = Object.keys(NVR.getServerGroups());
@@ -387,6 +399,58 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
       }
   };
 
+
+  $scope.kioskPinConfig = function () {
+
+    $scope.data = {};     
+    // An elaborate, custom popup
+    var myPopup = $ionicPopup.show({
+      template: '<small>'+$translate.instant('kKioskPassword')+'</small><input type="password" ng-model="data.p1"><br/><small>'+$translate.instant('kKioskPasswordConfirm')+'</small><input type="password" ng-model="data.p2">',
+      title: $translate.instant('kPassword'),
+      scope: $scope,
+      buttons: [
+        { text: $translate.instant('kButtonCancel'),
+            type: 'button-assertive',
+            onTap: function (e) {
+                $scope.loginData.isKiosk = false;
+            }
+        },
+        {
+          text: '<b>'+$translate.instant('kButtonSave')+'</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.data.p1) {
+              //don't allow the user to close unless he enters wifi password
+              e.preventDefault();
+            } else {
+              if ($scope.data.p1 == $scope.data.p2) {
+                NVR.log ("Kiosk code match");
+                $scope.loginData.kioskPassword = $scope.data.p1;
+                $scope.loginData.isKiosk = true;
+                NVR.setLogin($scope.loginData);
+                $ionicHistory.nextViewOptions({
+                  disableBack: true
+                });
+                $state.go('app.montage');
+                return;
+              }
+              else {
+                    $ionicLoading.show({
+                        template: $translate.instant('kBannerPinMismatch') + "...",
+                        noBackdrop: true,
+                        duration: 1500
+                    });
+                  NVR.log ("Kiosk code mistmatch");
+                  $scope.loginData.isKiosk = false;
+                  e.preventDefault();
+              }
+              
+            }
+          }
+        }
+      ]
+    });
+  };
 
   function desktopPinConfig() {
 
