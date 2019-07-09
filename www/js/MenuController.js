@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVR', '$rootScope', '$ionicPopup', '$translate', '$timeout', '$location', 'EventServer', 'zmAutoLogin', '$http', 'SecuredPopups', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVR, $rootScope, $ionicPopup, $translate, $timeout, $location, EventServer, zmAutoLogin, $http, SecuredPopups) {
+angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$ionicSideMenuDelegate', 'zm', '$stateParams', '$ionicHistory', '$state', 'NVR', '$rootScope', '$ionicPopup', '$translate', '$timeout', '$location', 'EventServer', 'zmAutoLogin', '$http', 'SecuredPopups', '$ionicLoading', function ($scope, $ionicSideMenuDelegate, zm, $stateParams, $ionicHistory, $state, NVR, $rootScope, $ionicPopup, $translate, $timeout, $location, EventServer, zmAutoLogin, $http, SecuredPopups, $ionicLoading) {
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -56,7 +56,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
         { text: $translate.instant('kButtonCancel'),
             type: 'button-assertive',
             onTap: function (e) {
-               
+              $ionicSideMenuDelegate.toggleLeft();
             }
         },
         {
