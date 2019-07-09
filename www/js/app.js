@@ -1584,11 +1584,13 @@ angular.module('zmApp', [
         }
 
         if (requireLogin) {
+      
+          NVR.displayBanner('error', [$translate.instant('kCredentialsBody')]);
 
-          $ionicPopup.alert({
+        /*  $ionicPopup.alert({
             title: $translate.instant('kCredentialsTitle'),
             template: $translate.instant('kCredentialsBody')
-          });
+          });*/
           // for whatever reason, .go was resulting in digest loops.
           // if you don't prevent, states will stack
           event.preventDefault();

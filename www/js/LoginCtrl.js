@@ -402,10 +402,11 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
   $scope.kioskPinConfig = function () {
 
-    $scope.data = {};     
+    var ld = NVR.getLogin();
+    $scope.data = {p1:ld.kioskPassword};     
     // An elaborate, custom popup
     var myPopup = $ionicPopup.show({
-      template: '<small>'+$translate.instant('kKioskPassword')+'</small><input type="password" ng-model="data.p1"><br/><small>'+$translate.instant('kKioskPasswordConfirm')+'</small><input type="password" ng-model="data.p2">',
+      template: '<small>'+$translate.instant('kKioskPassword')+'</small><input type="password" ng-model="data.p1"><br/><small>'+$translate.instant('kKioskPasswordConfirm')+'</small><input type="password"  ng-model="data.p2">',
       title: $translate.instant('kPassword'),
       scope: $scope,
       buttons: [
