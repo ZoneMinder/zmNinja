@@ -38,7 +38,8 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
         window.stop();
         // after window stop executes, in next cycle
         // this _should_ ensure stop concludes before
-        // exit/entry lifecycles kick in?
+        // exit/entry lifecycles kick in?z
+        
         $timeout (function() {$state.go(view,args);});
         
       });*/

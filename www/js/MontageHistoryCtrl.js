@@ -237,8 +237,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
       NVR.debug(">>Initializing monitor array with history specific stuff...");
       for (i = 0; i < $scope.MontageMonitors.length; i++) {
-        //$scope.MontageMonitors[i].Monitor.connKey='';
-        //$scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 99999) + 1)).toString();
         $scope.MontageMonitors[i].Monitor.eventUrl = 'img/noimage.png';
         $scope.MontageMonitors[i].Monitor.eventType = "";
         $scope.MontageMonitors[i].Monitor.eid = "-1";
