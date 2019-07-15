@@ -65,6 +65,14 @@ angular.module('zmApp.controllers')
         }
       };
 
+      $scope.gotoEvents = function (mid) {
+        $state.go("app.events", {
+          "id": mid,
+          "playEvent": false
+        });
+        return;
+      };
+
       function noop() {}
       //-----------------------------------------------------------------------
       // This function takes care of changing monitor parameters
