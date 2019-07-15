@@ -994,7 +994,7 @@ angular.module('zmApp', [
     }
 
     function _doLogoutAndLogin(str) {
-      NVR.debug ("Clearing cookies");
+      NVR.debug ("_doLogoutAndLogin: Clearing cookies");
 
       if (window.cordova) {
         // we need to do this or ZM will send same auth hash
@@ -1007,11 +1007,22 @@ angular.module('zmApp', [
          $cookies.remove(k);
         });
       }*/
-      return NVR.logout()
+      return NVR.getReachableConfig(false)
+      .then (
+        function(data ) {
+        return NVR.logout()
         .then(function (ans) {
           return _doLogin(str);
 
         });
+        },
+        function (err) {
+          NVR.log('No reachable config: '+JSON.stringify(err));
+          $state.go("app.invalidapi");
+          return;
+        }
+      );
+      
     }
 
 
@@ -1019,16 +1030,17 @@ angular.module('zmApp', [
       var d = $q.defer();
       var ld = NVR.getLogin();
 
-      var statename = $ionicHistory.currentStateName();
+      //var statename = $ionicHistory.currentStateName();
+      NVR.debug ("Inside _doLogin()");
 
-
+/*
       if (statename == "montage-history") {
         NVR.log("Skipping login process as we are in montage history. Re-logging will mess up the stream");
         d.resolve("success");
         return d.promise;
 
       }
-
+*/
       NVR.isReCaptcha()
       .then(function (result) {
         if (result == true) {
@@ -1069,35 +1081,10 @@ angular.module('zmApp', [
             return d.promise;
           },
           function (error)
-          // login to main failed, so try others
           {
-            $ionicLoading.show({
-              template: $translate.instant('kReachabilityFailed'),
-              noBackdrop: true,
-
-            });
-            NVR.debug(">>>>>>>>>>>> Failed  first login, trying reachability");
-            NVR.getReachableConfig(true)
-              .then(function (data) {
-                  NVR.proceedWithLogin()
-                    .then(function (success) {
-                        d.resolve(success);
-                        $ionicLoading.hide();
-                        return d.promise;
-                      },
-                      function (error) {
-                        $ionicLoading.hide();
-                        d.reject(error);
-                        return d.promise;
-                      });
-
-                },
-                function (error) {
-                  $ionicLoading.hide();
-                  d.reject(error);
-                  return d.promise;
-                });
-
+              $ionicLoading.hide();
+              d.reject(error);
+              return d.promise;
           });
 
       return d.promise;
@@ -2118,6 +2105,8 @@ angular.module('zmApp', [
 
           if (arguments[0].timeout) options.timeout = arguments[0].timeout;
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
+         
+          
           cordova.plugin.http.sendRequest(encodeURI(url), options,
             function (succ) {
               // automatic JSON parse if no responseType: text
@@ -2159,7 +2148,7 @@ angular.module('zmApp', [
             },
             function (err) {
             
-              nvr.debug("***  Inside native HTTP error");
+              nvr.debug("***  Inside native HTTP error for url:"+err.url);
               if (err.status == 401 && !options.skipIntercept && nvr.apiValid) {
                 if (err.error && err.error.indexOf("API is disabled for user") != -1) {
                   nvr.apiValid = false;
