@@ -310,6 +310,11 @@ out later they skimmed details.
 -  Please enable ``AUTH_HASH_LOGINS`` as well as set ``AUTH_RELAY`` to
    "hashed"
 
+- If you are using multi-server, please make sure the user account has 
+  "System View" permissions. This is needed to get access to the server API. 
+  If zmNinja is unable to read the API, it will use the default portal URL, which
+  may fail.
+
 -  You think your APIs are working, but they are really not. If you open
    a browser and type in ``https://yourserver/zm/api/monitors.json`` and
    you see some text on top followed by monitor data, your APIs are
@@ -500,6 +505,18 @@ I can't see streams: you have cgi-bin issues
    that is filled in won't work. Here is a hint, go to
    zoneminder->options->paths and check the value of the cgi-bin path -
    your zmNinja path will be "base path of your server" + cgi-bin path.
+
+I can't see some streams (some work): you have multi-server access issues
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are in a situation where some live streams work and some don't,
+it is possible you are using multi-server. In this case, you need to make 
+sure the user account has "view" privileges for "System". zmNinja uses the 
+``/server.json`` API to get multi-server data so it can figure out which IP:port
+is used for streaming for that server. If it fails, it will fallback to the portal
+URL which will likely be wrong. 
+
+
 
 zmNinja montage does not seem smooth - feeds seem a little delayed compared to ZM console
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
