@@ -421,6 +421,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var apiurl = NVR.getLogin().apiurl;
     var alarmurl = apiurl + "/monitors/alarm/id:" + $scope.monitorId + "/command:status.json?"+$rootScope.authSession;
     NVR.log("Invoking " + alarmurl);
+    console.log ("ALARM = "+alarmurl);
 
     $http.get(alarmurl)
       .then(function (data) {
@@ -1061,6 +1062,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       var c = mode == 'on' ? 'on' : 'off';
       var alarmurl = apiurl + "/monitors/alarm/id:" + mid + "/command:" + c + ".json?"+$rootScope.authSession;
       NVR.log("Invoking " + alarmurl);
+      
 
       var status = mode ? $translate.instant('kForcingAlarm') : $translate.instant('kCancellingAlarm');
       $ionicLoading.show({
@@ -1257,7 +1259,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
 
     var stream;
-    var fps = NVR.getLogin().liveFPS;
+    var fps = NVR.getLogin().singleliveFPS;
     stream = $scope.monitor.Monitor.streamingURL +
       "/nph-zms?mode=" + getSingleStreamMode() +
       "&monitor=" + $scope.monitorId +

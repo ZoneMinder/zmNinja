@@ -596,7 +596,7 @@ angular.module('zmApp.controllers')
 
         apiurl  += '.json?sort=StartTime&direction=desc&limit=1'+$rootScope.authSession;
 
-        NVR.debug ("Getting event count");
+        NVR.debug ("Getting event count "+apiurl);
         $http.get(apiurl)
         .then (function (data) {
            // console.log ("EVENTS GOT: "+JSON.stringify(data));
@@ -2022,6 +2022,7 @@ angular.module('zmApp.controllers')
     $scope.constructStream = function (monitor) {
 
       var stream;
+      var fps = NVR.getLogin().montageliveFPS;
       if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' ) {
         //console.log ("STREAM=empty and auth="+$rootScope.authSession);
         return "";
@@ -2033,8 +2034,13 @@ angular.module('zmApp.controllers')
         "&monitor=" + monitor.Monitor.Id +
         "&scale=" + $scope.LoginData.montageQuality +
         "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id + 
-        "&buffer=1000" +
-        $rootScope.authSession +
+        "&buffer=1000" 
+
+        if (fps) {
+          stream +='&maxfps='+fps;
+        }
+        
+        stream  += $rootScope.authSession +
         appendConnKey(monitor.Monitor.connKey);
 
       if (stream) stream += NVR.insertBasicAuthToken();
