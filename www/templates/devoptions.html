@@ -22,10 +22,19 @@
       </div>
 
       <div class="item item-input-inset item-text-wrap">
-        {{'kSingleViewFPS'|translate}} ({{'kSec'|translate}}.)
+        {{'kMontageLiveViewFPS'|translate}} ({{'kSec'|translate}}.)
        
           <label class="item-input-wrapper">
-            <input id="devoptions-move-3_1" type="tel" placeholder="leave empty for auto" ng-model="loginData.liveFPS">
+            <input  type="tel" placeholder="leave empty for auto" ng-model="loginData.montageliveFPS">
+          </label>
+        
+      </div>
+
+      <div class="item item-input-inset item-text-wrap">
+        {{'kSingleLiveViewFPS'|translate}} ({{'kSec'|translate}}.)
+       
+          <label class="item-input-wrapper">
+            <input id="devoptions-move-3_1" type="tel" placeholder="leave empty for auto" ng-model="loginData.singleliveFPS">
           </label>
         
       </div>

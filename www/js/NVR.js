@@ -124,7 +124,8 @@ angular.module('zmApp.controllers')
         'eventServerInterval': '', // list of intervals for all monitors
         'refreshSec': '2', // timer value for frame change in sec 
         'refreshSecLowBW': 8,
-        'liveFPS':'',
+        'singleliveFPS':'',
+        'montageliveFPS':'',
         'enableLogs': true,
         'enableDebug': true, // if enabled with log messages with "debug"
         'usePin': false,
@@ -1243,9 +1244,15 @@ angular.module('zmApp.controllers')
 
         }
 
-        if (typeof loginData.liveFPS == 'undefined') {
+        if (typeof loginData.singleliveFPS == 'undefined') {
 
-          loginData.liveFPS = '';
+          loginData.singleliveFPS = '';
+
+        }
+
+        if (typeof loginData.montageliveFPS == 'undefined') {
+
+          loginData.montageLiveFPS = '';
 
         }
 
