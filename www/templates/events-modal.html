@@ -77,7 +77,7 @@
                   vg-update-time="videoTime(event.Event.StartTime,$currentTime)" vg-error="onVideoError($event)">
                   <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
                   </vg-media>
-                  <vg-controls>
+                  <vg-controls >
                     <vg-playback-button></vg-playback-button>
                     <vg-play-pause-button></vg-play-pause-button>
                     <vg-time-display>{{ videoTime(event.Event.StartTime, currentTime ); }}</vg-time-display>
@@ -131,7 +131,7 @@
 
 
   <div ng-show="!liveFeedMid">
-    <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-down"
+    <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-down"
       resting-icon="ion-chevron-up" toggling-method="click">
       <a mfb-button icon="ion-arrow-right-c" label="{{'kNextEvent'|translate}}" ng-click="jumpToEvent(nextId,1);"></a>
       <a mfb-button icon="ion-arrow-left-c" label="{{'kPrevEvent'|translate}}" ng-click="jumpToEvent(prevId,-1);"></a>

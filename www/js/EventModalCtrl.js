@@ -27,6 +27,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   //var isGlobalFid = false; // true if its set to MaxScoreFrameId in events
   var eventId = 0;
   var isSnapShotEnabled = false;
+  var playState = 'play'
 
 
 
@@ -197,6 +198,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.onPlayerState = function (state) {
     // parent scope
+    playState = state;
     $scope.lastVideoStateTime.time = moment();
   };
 
@@ -253,7 +255,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var rate = NVR.getLogin().videoPlaybackSpeed;
     NVR.debug ("Invoking play at rate:"+rate+" as video can be played");
     handle.setPlayback (rate);
-    handle.play();
+    if (playState== 'play') handle.play();
+
   };
 
   $scope.onVideoError = function (event) {
@@ -1533,6 +1536,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.onSwipeEvent = function (eid, dirn) {
 
+    var diff = moment().diff($scope.lastVideoStateTime.time);
+      if (diff <= 1000) {
+        NVR.debug ("Not swiping, time interval was only:"+diff+" ms");
+        return;
+      }
     //console.log("CALLED WITH " + eid + " dirn " + dirn);
     if ($ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom != 1) {
       //console.log("Image is zoomed in - not honoring swipe");
