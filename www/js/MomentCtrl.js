@@ -817,6 +817,9 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
   $scope.toggleIcons = function () {
 
     $scope.showIcons = !$scope.showIcons;
+    ld = NVR.getLogin();
+    ld.momentShowIcons  =  $scope.showIcons;
+    NVR.setLogin(ld);
   };
 
   //----------------------------------------------------------------
@@ -843,7 +846,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     masonry = null;
     var ld = NVR.getLogin();
 
-    $scope.showIcons = true;
+    $scope.showIcons = ld.momentShowIcons;
     $scope.areImagesLoading = true;
 
 

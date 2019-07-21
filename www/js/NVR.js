@@ -184,6 +184,7 @@ angular.module('zmApp.controllers')
         'momentGridSize': 40,
         'momentMonitorFilter': [],
         'enableMomentSubMenu': true,
+        'momentShowIcons':false,
         'momentArrangeBy': 'StartTime',
         'showLiveForInProgressEvents': true,
         'disableSimulStreaming': false,
@@ -1351,6 +1352,13 @@ angular.module('zmApp.controllers')
           loginData.enableMomentSubMenu = true;
 
         }
+
+        if (typeof loginData.momentShowIcons == 'undefined') {
+
+          loginData.momentShowIcons = true;
+
+        }
+
 
         if (typeof loginData.momentMonitorFilter == 'undefined') {
 
