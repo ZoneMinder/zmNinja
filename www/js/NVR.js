@@ -1746,11 +1746,21 @@ angular.module('zmApp.controllers')
                 log("reached end of chain loop");
               }
             } else {
-              log("detected loop when " + tLd.serverName + " fallsback to " + tLd.fallbackConfiguration);
+              if (tLd.fallbackConfiguration) {
+                log("detected loop when " + tLd.serverName + " fallsback to " + tLd.fallbackConfiguration);
+              }
+              
               keepBuilding = false;
             }
           }
+          
+          if (chainURLs.length == 1) {
+            log ('No need to do a reachability test, as there are no fallbacks');
+            d.resolve("done");
+            return d.promise;
+          }
 
+          console.log ('chainURLS:'+ chainURLs.length);
           //contactedServers.push(loginData.serverName);
           findFirstReachableUrl(chainURLs).then(function (firstReachableUrl) {
             d.resolve(firstReachableUrl);
