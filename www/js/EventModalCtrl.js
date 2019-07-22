@@ -1856,6 +1856,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
               $scope.nextId = success.next;
               $scope.prevId = success.prev;
               NVR.debug("Gapless move to event " + $scope.nextId);
+              playState = 'play';
               jumpToEvent($scope.nextId, 1);
             }, 1000);
           },
