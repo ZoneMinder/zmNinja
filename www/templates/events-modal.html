@@ -158,7 +158,7 @@
             <i ng-class="(isToggleListMenu) ? 'icon  ion-chevron-left': 'icon ion-chevron-right'"></i>
           </a>
         </li>
-        <li ng-if="defaultVideo=='' && isToggleListMenu" ng-style="{'background-color': loginData.gapless?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}">
+        <li ng-if="isToggleListMenu" ng-style="{'background-color': loginData.gapless?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}">
           <a href="" ng-click="toggleGapless()">
             <i class="ion-ios-loop-strong"></i>-{{loginData.gapless? ('kOn' | translate): ('kOff' | translate)}}</a>
         </li>
