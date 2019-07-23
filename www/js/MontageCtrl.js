@@ -2034,7 +2034,7 @@ angular.module('zmApp.controllers')
         "&monitor=" + monitor.Monitor.Id +
         "&scale=" + $scope.LoginData.montageQuality +
         "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id + 
-        "&buffer=1000" 
+        "&buffer=1000";
 
         if (fps) {
           stream +='&maxfps='+fps;
