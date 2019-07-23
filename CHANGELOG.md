@@ -1,6 +1,33 @@
 # Change Log
 
-## [v1.3.065](https://github.com/pliablepixels/zmNinja/tree/v1.3.065) (2019-06-30)
+## [v1.3.070](https://github.com/pliablepixels/zmNinja/tree/v1.3.070) (2019-07-23)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.066...v1.3.070)
+
+**Implemented enhancements:**
+
+- gapless playback support for mp4 events [\#837](https://github.com/pliablepixels/zmNinja/issues/837)
+- Allow kiosk mode  [\#830](https://github.com/pliablepixels/zmNinja/issues/830)
+
+**Fixed bugs:**
+
+- fallbacks are broken [\#833](https://github.com/pliablepixels/zmNinja/issues/833)
+- Navigation from monitor view to event view broke in mobile devices [\#832](https://github.com/pliablepixels/zmNinja/issues/832)
+- Add a relogin timer for tokens [\#829](https://github.com/pliablepixels/zmNinja/issues/829)
+
+**Closed issues:**
+
+- Got a stream wtihin local network. No stream from outside network [\#834](https://github.com/pliablepixels/zmNinja/issues/834)
+
+**Merged pull requests:**
+
+- allow max FPS settings for Montage Mode \(irrelevant if not using mult… [\#836](https://github.com/pliablepixels/zmNinja/pull/836) ([florie1706](https://github.com/florie1706))
+- allow max FPS settings for Montage Mode \(irrelevant if not using mult… [\#835](https://github.com/pliablepixels/zmNinja/pull/835) ([maymaymay](https://github.com/maymaymay))
+- \#830 lockdown kiosk mode initial implementation [\#831](https://github.com/pliablepixels/zmNinja/pull/831) ([maymaymay](https://github.com/maymaymay))
+
+## [v1.3.066](https://github.com/pliablepixels/zmNinja/tree/v1.3.066) (2019-07-01)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.065...v1.3.066)
+
+## [v1.3.065](https://github.com/pliablepixels/zmNinja/tree/v1.3.065) (2019-07-01)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.061...v1.3.065)
 
 **Fixed bugs:**
@@ -1443,7 +1470,7 @@
 - Cannot get video [\#115](https://github.com/pliablepixels/zmNinja/issues/115)
 
 ## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.3)
 
 **Implemented enhancements:**
 
@@ -1463,11 +1490,11 @@
 
 - Timeline on v0.87.2 shows only motion events [\#105](https://github.com/pliablepixels/zmNinja/issues/105)
 
-## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
-
 ## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87)
+
+## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
 
 **Fixed bugs:**
 
