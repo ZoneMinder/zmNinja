@@ -27,7 +27,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   //var isGlobalFid = false; // true if its set to MaxScoreFrameId in events
   var eventId = 0;
   var isSnapShotEnabled = false;
-  var playState = 'play'
+  var playState = 'play';
 
 
 

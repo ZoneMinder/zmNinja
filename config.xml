@@ -177,5 +177,5 @@
     </plugin>
     <plugin name="cordova-plugin-media-pp-fork" spec="^1.0.2-dev" />
     <engine name="android" spec="7.1.4" />
-    <engine name="ios" spec="5.0.0" />
+    <engine name="ios" spec="4.5.5" />
 </widget>
