@@ -1650,8 +1650,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
       }
 
-
-
       playerReady = false;
       $scope.defaultVideo = "";
       $scope.video_url = "";

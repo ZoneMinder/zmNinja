@@ -2966,6 +2966,7 @@ angular.module('zmApp.controllers')
 
     }
 
+   
     $scope.constructThumbnail = function (event) {
       var stream = "";
       stream = event.Event.recordingURL +
