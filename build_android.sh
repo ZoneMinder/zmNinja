@@ -1,4 +1,5 @@
 #!/bin/bash
+SDK_VERSION='29.0.1'
 
 
 build_debug() {
@@ -48,7 +49,7 @@ build_release() {
             cp "$NINJAKEYSTORE" platforms/android/
 
             # Make sure native builds are only deployed in devices >= Android 5
-            cordova build android --release -- --minSdkVersion=21 --versionCode=${ver}
+            cordova build android --release -- --minSdkVersion=28 --versionCode=${ver}
 
             # copy build to release folder and sign
             cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk release_files/android-release-unsigned.apk
@@ -56,7 +57,7 @@ build_release() {
 
             cd release_files/
             jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ../platforms/android/zmNinja.keystore android-release-unsigned.apk zmNinja
-            ~/Library/Android/sdk/build-tools/25.0.2/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
+            ~/Library/Android/sdk/build-tools/${SDK_VERSION}/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
             rm -f android-release-unsigned.apk 
             cd ..
 
