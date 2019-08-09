@@ -49,7 +49,7 @@ build_release() {
             cp "$NINJAKEYSTORE" platforms/android/
 
             # Make sure native builds are only deployed in devices >= Android 5
-            cordova build android --release -- --minSdkVersion=28 --versionCode=${ver}
+            cordova build android --release -- --minSdkVersion=21 --targetSdkVersion=28  --versionCode=${ver}
 
             # copy build to release folder and sign
             cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk release_files/android-release-unsigned.apk
