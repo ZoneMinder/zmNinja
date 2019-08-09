@@ -1,3 +1,5 @@
+import { transcode } from "buffer";
+
 // Common Controller for the montage view
 /* jshint -W041 */
 /* jslint browser: true*/
@@ -1944,7 +1946,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   //--------------------------------------------------------
 
   function prepareModalEvent(eid) {
-
 
 
     // Lets get the detailed event API
