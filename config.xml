@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninja_pro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.3.071" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninja_pro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.3.074" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>zmNinja</name>
     <description>
 	High performance ZoneMinder client
@@ -35,7 +35,8 @@
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="FadeSplashScreen" value="false" />
     <preference name="BackgroundColor" value="#444444" />
-    <preference name="android-targetSdkVersion" value="26" />
+    <preference name="android-targetSdkVersion" value="28" />
+    <preference name="android-minSdkVersion" value="21" />
     <preference name="SplashScreenBackgroundColor" value="#ababab" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
@@ -101,6 +102,9 @@
         <config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
         <resource-file src="build-extras.gradle" target="build-extras.gradle" />
         <resource-file src="etc/android-notification-icons/ic_stat_notification.png" target="app/src/main/res/drawable/ic_stat_notification.png" />
         <resource-file src="etc/android-tv-banner/banner.png" target="res/drawable/banner.png" />
