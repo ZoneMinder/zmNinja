@@ -1,5 +1,17 @@
 # Change Log
 
+## [v1.3.074](https://github.com/pliablepixels/zmNinja/tree/v1.3.074) (2019-08-10)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.070...v1.3.074)
+
+**Fixed bugs:**
+
+- Android 9.0 breaks HTTP access [\#841](https://github.com/pliablepixels/zmNinja/issues/841)
+- Analyze event option - exit broke [\#840](https://github.com/pliablepixels/zmNinja/issues/840)
+
+**Closed issues:**
+
+- Works on iPad but not on iPhone [\#838](https://github.com/pliablepixels/zmNinja/issues/838)
+
 ## [v1.3.070](https://github.com/pliablepixels/zmNinja/tree/v1.3.070) (2019-07-23)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.066...v1.3.070)
 
@@ -1470,7 +1482,7 @@
 - Cannot get video [\#115](https://github.com/pliablepixels/zmNinja/issues/115)
 
 ## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.3)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
 
 **Implemented enhancements:**
 
@@ -1490,11 +1502,11 @@
 
 - Timeline on v0.87.2 shows only motion events [\#105](https://github.com/pliablepixels/zmNinja/issues/105)
 
-## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87)
-
 ## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
+
+## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
 
 **Fixed bugs:**
 
