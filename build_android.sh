@@ -49,7 +49,8 @@ build_release() {
             cp "$NINJAKEYSTORE" platforms/android/
 
             # Make sure native builds are only deployed in devices >= Android 5
-            cordova build android --release -- --minSdkVersion=21 --targetSdkVersion=28  --versionCode=${ver}
+            # minSdk and targetSdk version are in config.xml
+            cordova build android --release --  --versionCode=${ver}
 
             # copy build to release folder and sign
             cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk release_files/android-release-unsigned.apk
@@ -70,8 +71,8 @@ build_release() {
             echo "***VERSION CODE CHECKS:"
             for f in release_files/*; do
                 echo "$f:"
-                `echo $ANDROID_HOME`/build-tools/23.0.1/aapt dump badging $f | grep versionCode
-                `echo $ANDROID_HOME`/build-tools/23.0.1/aapt dump badging $f | grep native-code
+                `echo $ANDROID_HOME`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep versionCode
+                `echo $ANDROID_HOME`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep native-code
             done
 
   }
