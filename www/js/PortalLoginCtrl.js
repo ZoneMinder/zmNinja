@@ -470,12 +470,19 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         },
                         function error(e) {
 
+                          $ionicHistory.nextViewOptions({
+                            disableAnimate:true,
+                            disableBack: true
+                          });
+
                           if ($rootScope.apiValid == true) {
                             $state.go("app.login", {
                               "wizard": false
                             });
                             return;
                           } else {
+                            NVR.log ('Portal login:invalid api');
+                            if (!$rootScope.userCancelledAuth)
                             $state.go("app.invalidapi");
                             return;
                           }
