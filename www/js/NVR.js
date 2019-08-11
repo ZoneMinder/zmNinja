@@ -399,7 +399,9 @@ angular.module('zmApp.controllers')
         var httpDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
   
       
-        str = $translate.instant('kAuthenticating');
+        str =  "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating')+"</a>";
+        
+       
   
         if (str) {
           $ionicLoading.show({
@@ -590,16 +592,23 @@ angular.module('zmApp.controllers')
     function loginWebScrape(noBroadcast) {
      
       var d = $q.defer();
+      if ($rootScope.userCancelledAuth) {
+        debug ('NVR loginWebScrape: User cancelled auth, not proceeding');
+        d.reject(true);
+        return d.promise;
+      }
       debug("Logging in using old web-scrape method");
 
       $ionicLoading.show({
-        template: $translate.instant('kAuthenticatingWebScrape'),
+       
+        template: "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticatingWebScrape')+"</a>",
         noBackdrop: true,
         duration: httpDelay
       });
 
 
-     
+      
+         
 
       var httpDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
       //NVR.debug ("*** AUTH LOGIN URL IS " + loginData.url);
@@ -1793,8 +1802,12 @@ angular.module('zmApp.controllers')
 
           function findFirstReachableUrl(urls) {
             if (urls.length > 0 && $rootScope.userCancelledAuth != true) {
+
+             
+
               $ionicLoading.show({
-                template: $translate.instant('kTrying') + ' ' + urls[0].server
+                template: "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kTrying')+ ' ' + urls[0].server+"</a>",
+                noBackdrop: true,
               });
               log("Reachability test.." + urls[0].url);
 
@@ -2958,9 +2971,10 @@ angular.module('zmApp.controllers')
                   }, diff_access * 60  * 1000);
                   
               
-             // console.log ("**************** TOKEN SET="+loginData.accessToken);
+              
               $rootScope.authSession = '&token='+loginData.accessToken;
               d.resolve("Login success via access token");
+              console.log ("**************** TOKEN SET="+$rootScope.authSession);
               if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
               return d.promise;
             } 
@@ -3623,7 +3637,11 @@ angular.module('zmApp.controllers')
 
         logout: function () {
           var d = $q.defer();
-
+          if ($rootScope.userCancelledAuth) {
+            debug ('NVR logout: User cancelled auth, not proceeding');
+            d.reject(true);
+            return d.promise;
+          }
           // always resolves
           if (!loginData.isUseAuth ||  loginData.isTokenSupported) {
             log("No need for logout!");
@@ -3631,8 +3649,13 @@ angular.module('zmApp.controllers')
             return d.promise;
           }
 
+         
+         // $ionicLoading.show({ template: '<button class="button button-clear" style="line-height: normal; min-height: 0; min-width: 0;" ng-click="$root.cancel()"></button><i class="icon ion-chevron-up"></i> Loading...' });
+
+        
           $ionicLoading.show({
-            template: $translate.instant('kCleaningUp'),
+            //template:$translate.instant('kCleaningUp'),
+            template: "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kCleaningUp')+"</a>",
             noBackdrop: true,
 
           });
