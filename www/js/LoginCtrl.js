@@ -841,7 +841,7 @@ function mobilePinConfig () {
 
         // possible image digits changed between servers
         NVR.getKeyConfigParams(0);
-        console.log ('In loginCtrl, token is '+$rootScope.authSession)
+        console.log ('In loginCtrl, token is '+$rootScope.authSession);
         apiurl = $scope.loginData.apiurl + '/host/getVersion.json?'+$rootScope.authSession;
         
         NVR.log("Validating APIs at " + apiurl);
@@ -886,7 +886,7 @@ function mobilePinConfig () {
               if ($rootScope.userCancelledAuth) {
                 return;
               }
-              
+
               NVR.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
               NVR.log("API login error " + JSON.stringify(error));
 
