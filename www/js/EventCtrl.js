@@ -97,11 +97,15 @@ angular.module('zmApp.controllers')
       $ionicListDelegate.canSwipeItems(true);
      // NVR.debug("enabling options swipe");
 
-      // see if we come from monitors, if so, don't filter events
-      if ($ionicHistory.backTitle() == 'Monitors') {
-        showHiddenMonitors = true;
-      } else {
+      // only filter events on the Event Montage view, not monitors,
+      // event viewer, etc.
+      // we can't easily whitelist the views that should always show
+      // them because the event viewer's title is a time based string,
+      // not a static one like other views.
+      if ($ionicHistory.backTitle() != 'Event Montage') {
         showHiddenMonitors = false;
+      } else {
+        showHiddenMonitors = true;
       }
 
       if (NVR.getLogin().useLocalTimeZone) {
