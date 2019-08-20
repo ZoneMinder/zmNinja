@@ -1,5 +1,5 @@
 #!/bin/bash
-SDK_VERSION='29.0.1'
+SDK_VERSION='29.0.2'
 
 
 build_debug() {

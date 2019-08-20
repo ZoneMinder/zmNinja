@@ -13,6 +13,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     ACTIVE: 2, // using zms
     STOPPED: 3 // starts off in this mode
   };
+
+
   // from parent scope
   var currentEvent = $scope.currentEvent;
   var nphTimer;
@@ -30,6 +32,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   var isSnapShotEnabled = false;
   var playState = 'play';
 
+  $scope.useFilters = true;
 
 
   var broadcastHandles = [];
@@ -48,7 +51,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   var frameoptions = [];
 
-  var eventImageDigits = 5; // failsafe
+  
+  var eventImageDigits = 5; // failsafe 
   $scope.currentProgress = {
     progress: 0
   };
@@ -1106,6 +1110,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       NVR.debug("If recording is in progress, live feed will be shown");
     }
     $scope.isToggleListMenu = true;
+    $scope.isToggleListEventParamsMenu = false;
     $scope.videoDynamicTime = "";
     $scope.videoIsReady = false;
     var ld = NVR.getLogin();
@@ -1332,10 +1337,55 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   };
 
+  $scope.toggleFilters = function () {
+    $scope.useFilters=!$scope.useFilters;
+    $scope.nextId = "...";
+    $scope.prevId = "...";
+    neighborEvents($scope.eventId)
+    .then(function (success) {
+        $scope.nextId = success.next;
+        $scope.prevId = success.prev;
+      },
+      function (error) {
+        //console.log(JSON.stringify(error));
+      });
+
+  };
+
+  $scope.toggleFollowSameMonitor = function () {
+
+    if ($scope.followSameMonitor == '1') {
+      NVR.debug ('followSame Monitor was 1, making null');
+      $scope.followSameMonitor = '';
+    } else {
+      NVR.debug ('followSame Monitor was null, making 1');
+      $scope.followSameMonitor = '1';
+    }
+    $scope.nextId = "...";
+    $scope.prevId = "...";
+    neighborEvents($scope.eventId)
+    .then(function (success) {
+        $scope.nextId = success.next;
+        $scope.prevId = success.prev;
+      },
+      function (error) {
+        //console.log(JSON.stringify(error));
+      });
+
+
+  };
+
   $scope.toggleListMenu = function () {
 
     $scope.isToggleListMenu = !$scope.isToggleListMenu;
   };
+
+  $scope.toggleListEventParamsMenu = function () {
+
+    $scope.isToggleListEventParamsMenu = !$scope.isToggleListEventParamsMenu;
+  };
+
+ 
 
   $scope.toggleGapless = function () {
     // console.log(">>>>>>>>>>>>>>GAPLESS TOGGLE INSIDE MODAL");
@@ -1392,16 +1442,22 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var loginData = NVR.getLogin();
     var nextEvent = loginData.apiurl + "/events/index" +
       "/StartTime >: " + currentEvent.Event.StartTime +
-      ($scope.followSameMonitor == '1' ? "/MonitorId =: " + currentEvent.Monitor.Id : "") +
-      "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0) +
-      ".json?sort=StartTime&direction=asc&limit=1"+$rootScope.authSession;
-
+      ($scope.followSameMonitor == '1' ? "/MonitorId =: " + currentEvent.Monitor.Id : "") ;
+      if ($scope.useFilters) {
+        nextEvent = nextEvent + "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+      }
+      nextEvent = nextEvent + ".json?sort=StartTime&direction=asc&limit=1"+$rootScope.authSession;
+      
 
     var prevEvent = loginData.apiurl + "/events/index" +
       "/StartTime <: " + currentEvent.Event.StartTime +
-      ($scope.followSameMonitor == '1' ? "/MonitorId =: " + currentEvent.Monitor.Id : "") +
-      "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0) +
-      ".json?sort=StartTime&direction=desc&limit=1"+$rootScope.authSession;
+      ($scope.followSameMonitor == '1' ? "/MonitorId =: " + currentEvent.Monitor.Id : "");
+
+      if ($scope.useFilters) {
+        prevEvent = prevEvent + "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+      }
+      prevEvent = prevEvent + ".json?sort=StartTime&direction=desc&limit=1"+$rootScope.authSession;
+
 
 
     NVR.debug("Neighbor next URL=" + nextEvent);

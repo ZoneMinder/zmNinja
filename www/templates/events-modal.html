@@ -155,6 +155,29 @@
       <i class="ion-arrow-right-b"></i>&nbsp;{{videoDynamicTime}} ({{humanizeTime}}) [{{d_eventId}}]
       <span class="events-range-modal-warning-text">{{eventWarning}}</span>
     </div>
+
+    <div id="flyoutmenu" style="position:absolute;bottom:150px;left:10px">
+      <ul>
+        <li>
+          <a href="" ng-click="toggleListEventParamsMenu()">
+              <i ng-class="(isToggleListEventParamsMenu) ? 'icon  ion-chevron-left': 'icon ion-chevron-right'"></i>
+          </a>
+        </li>
+        
+    
+          <li ng-if="isToggleListEventParamsMenu" ng-style="{'background-color': followSameMonitor=='1'?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}">
+            <a href="" ng-click="toggleFollowSameMonitor()">
+              <i class="ion-monitor"></i>-{{followSameMonitor? ('kOn' | translate): ('kOff' | translate)}}</a>
+          </li>
+
+          <li ng-if="isToggleListEventParamsMenu" ng-style="{'background-color': useFilters?'rgba(69, 170, 242,0.7)':'rgba(108, 122, 137, 0.7)'}">
+              <a href="" ng-click="toggleFilters()">
+                <i class="ion-funnel"></i>-{{useFilters? ('kOn' | translate): ('kOff' | translate)}}</a>
+            </li>
+
+        </ul>
+    </div>
+
     <div id="flyoutmenu" style="position:absolute;bottom:100px;left:10px">
       <ul>
         <li>
