@@ -1,3 +1,4 @@
+
 [![Donate with Bitcoin](https://en.cryptobadges.io/badge/micro/32YBHDAnnDUWwjsscJQQ1Z92UWJgpsDF86)](https://en.cryptobadges.io/donate/32YBHDAnnDUWwjsscJQQ1Z92UWJgpsDF86) [![Donate with Ethereum](https://en.cryptobadges.io/badge/micro/0x86A5cB50158EFDbd1eCDa872290A7B58857B267a)](https://en.cryptobadges.io/donate/0x86A5cB50158EFDbd1eCDa872290A7B58857B267a) [![Donate with Bountysource](https://img.shields.io/badge/Donate-BountySource-brightgreen.svg)](https://www.bountysource.com/teams/zmninja/)
 
 

@@ -817,6 +817,7 @@ function mobilePinConfig () {
 
     }
 
+    
     zmAutoLogin.doLogin("<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;  color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating') + "...</button>")
       // Do the happy menu only if authentication works
       // if it does not work, there is an emitter for auth
@@ -834,13 +835,15 @@ function mobilePinConfig () {
         if ($scope.loginData.serverName != NVR.getLogin().serverName) {
           NVR.debug(">>> Server information has changed, likely a fallback took over!");
           $scope.loginData = NVR.getLogin();
-          apiurl = $scope.loginData.apiurl + '/host/getVersion.json?'+$rootScope.authSession;
+          
           portalurl = $scope.loginData.url + '/index.php';
         }
 
         // possible image digits changed between servers
         NVR.getKeyConfigParams(0);
-
+        console.log ('In loginCtrl, token is '+$rootScope.authSession);
+        apiurl = $scope.loginData.apiurl + '/host/getVersion.json?'+$rootScope.authSession;
+        
         NVR.log("Validating APIs at " + apiurl);
         $http.get(apiurl)
           .then(function (data) {
@@ -879,6 +882,11 @@ function mobilePinConfig () {
 
             },
             function (error) {
+
+              if ($rootScope.userCancelledAuth) {
+                return;
+              }
+
               NVR.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
               NVR.log("API login error " + JSON.stringify(error));
 
