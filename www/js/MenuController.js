@@ -324,6 +324,10 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
             },
             function (error) {
+
+              if ($rootScope.userCancelledAuth) {
+                return;
+              }
               NVR.displayBanner('error', [$translate.instant('kBannerAPICheckFailed'), $translate.instant('kBannerPleaseCheck')]);
               NVR.log("API login error " + JSON.stringify(error));
 

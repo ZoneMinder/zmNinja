@@ -1007,9 +1007,12 @@ angular.module('zmApp', [
          $cookies.remove(k);
         });
       }*/
+    
+      $rootScope.userCancelledAuth = false;
       return NVR.getReachableConfig(false)
       .then (
         function(data ) {
+         
         return NVR.logout()
         .then(function (ans) {
           return _doLogin(str);
@@ -1018,16 +1021,30 @@ angular.module('zmApp', [
         },
         function (err) {
           NVR.log('No reachable config: '+JSON.stringify(err));
-          $state.go("app.invalidapi");
+          $ionicHistory.nextViewOptions({
+            disableAnimate:true,
+            disableBack: true
+          });
+          if (!$rootScope.userCancelledAuth)
+            $state.go("app.invalidapi");
           return;
         }
       );
+    
+      
+      
       
     }
 
 
     function _doLogin(str) {
       var d = $q.defer();
+
+      if ($rootScope.userCancelledAuth) {
+        NVR.debug ('_doLogin - not proceeding as user cancelled auth');
+        d.reject(false);
+        return d.promise;
+      }
       var ld = NVR.getLogin();
 
       //var statename = $ionicHistory.currentStateName();
@@ -1511,9 +1528,10 @@ angular.module('zmApp', [
           disableBack: true
         });
         $rootScope.userCancelledAuth = true;
-        window.stop();
+        //window.stop();
 
         //console.log ("inside cancelAuth , calling wizard");
+        //$ionicSideMenuDelegate.toggleLeft();
         $state.go("app.login", {
           "wizard": false
         });
@@ -1532,9 +1550,10 @@ angular.module('zmApp', [
 
 
         if ($rootScope.apiValid == false && toState.name != 'app.invalidapi' && toState.data.requireLogin == true) {
-          event.preventDefault();
+          /*event.preventDefault();
           $rootScope.dpadState = "app.invalidapi";
-          $state.transitionTo('app.invalidapi');
+          $state.transitionTo('app.invalidapi');*/
+          NVR.log ('API not valid, not going to this state');
           return;
 
         }
@@ -1582,6 +1601,7 @@ angular.module('zmApp', [
           // if you don't prevent, states will stack
           event.preventDefault();
           $rootScope.dpadState = "login";
+          
           $state.transitionTo('app.login');
           return;
         }
@@ -2047,7 +2067,7 @@ angular.module('zmApp', [
     //$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|cdvphotolibrary):/);
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|content|cdvphotolibrary|blob|unsafe|local):|data:image\//);
   
-    $provide.decorator("$exceptionHandler", ['$delegate', '$injector', function ($delegate, $injector) {
+     $provide.decorator("$exceptionHandler", ['$delegate', '$injector', function ($delegate, $injector) {
       return function (exception, cause) {
 
         var $rootScope = $injector.get("$rootScope");
@@ -2056,10 +2076,10 @@ angular.module('zmApp', [
           cause: cause
         });
 
-        $delegate(exception, cause);
+       $delegate(exception, cause);
 
       };
-    }]);
+    }]); 
 
 
     // Wraps around $http that switches between browser XHR
