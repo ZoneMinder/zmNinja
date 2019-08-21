@@ -55,11 +55,11 @@
       "cordova-plugin-photo-library": {
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Save monitor photos to albums "
       },
-      "cordova-plugin-media-pp-fork": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-media-pp-fork": {}
     }
   },
   "dependencies": {
