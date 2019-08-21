@@ -1013,6 +1013,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     //console.log ("STREAMSTATE ="+currentStreamState);
     if ($scope.animationInProgress) return "";
     var stream = "";
+    //console.log ("SNAPSHOT FID IS "+$scope.snapshotFrameId );
     // eventId gets populated when prepareModal completes
     if (currentStreamState == streamState.STOPPED || !$scope.eventId) {
       stream = "";
@@ -1039,7 +1040,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     //console.log ("EID="+$scope.eventId);
     if ($rootScope.basicAuthToken && stream) stream += "&basicauth=" + $rootScope.basicAuthToken;
 
-    //console.log ("STREAM="+stream);
+    //console.log ("SNAPSHOT IS:="+$scope.snapshotFrameId );
     return stream;
 
   };
@@ -1621,7 +1622,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   };
 
   function jumpToEvent(eid, dirn) {
-    $scope.snapshotFrameId = 1;
+
+    if (isSnapShotEnabled) {
+      $scope.snapshotFrameId = NVR.getSnapshotFrame();
+    } else {
+      $scope.snapshotFrameId = 1;
+    }
+    
     $scope.isPaused = false;
     //isGlobalFid = false;
     var oState;
