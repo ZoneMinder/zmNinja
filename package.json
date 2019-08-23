@@ -57,7 +57,7 @@
       "cordova-plugin-media-pp-fork": {},
       "cordova-plugin-add-swift-support": {},
       "cordova-plugin-photo-library": {
-        "PHOTO_LIBRARY_USAGE_DESCRIPTION": " "
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Save monitor photos to albums"
       },
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
