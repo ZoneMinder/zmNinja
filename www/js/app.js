@@ -925,20 +925,26 @@ angular.module('zmApp', [
     $rootScope.$on("auth-success", function () {
 
       $rootScope.isLoggedIn = true;
-      var contentBannerInstance = $ionicContentBanner.show({
-        text: ['ZoneMinder ' + $translate.instant('kAuthSuccess')],
-        interval: 2000,
-        type: 'info',
-        transition: 'vertical'
-      });
-
-      $timeout(function () {
-        contentBannerInstance();
-      }, 2000);
-      NVR.debug("auth-success broadcast:Successful");
-
 
       var ld = NVR.getLogin();
+      if (ld.isUseAuth || ld.isUseBasicAuth) {
+        var contentBannerInstance = $ionicContentBanner.show({
+          text: ['ZoneMinder ' + $translate.instant('kAuthSuccess')],
+          interval: 2000,
+          type: 'info',
+          transition: 'vertical'
+        });
+  
+        $timeout(function () {
+          contentBannerInstance();
+        }, 2000);
+        NVR.debug("auth-success broadcast:Successful");
+
+      }
+      else {
+        NVR.debug ("auth not being used, not creating banner");
+      }
+     
 
       // we need AUTH_HASH_LOGIN to be on for WKWebView /mobile
       if (ld.isUseAuth && $rootScope.platformOS != 'desktop') {
