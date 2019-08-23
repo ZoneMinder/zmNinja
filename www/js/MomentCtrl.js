@@ -749,7 +749,7 @@ angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$
     var ld = NVR.getLogin();
 
     // in API, always sort by StartTime so all monitors are represented
-    var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1" + excludeMonitorsFilter + "/StartTime >=:" + timeFrom + "/StartTime <=:" + timeTo + ".json?sort=" + "StartTime" + "&direction=desc"+$rootScope.authSession;
+    var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1" + excludeMonitorsFilter + "/StartTime <=:" + timeTo + "/EndTime >=:" + timeFrom + ".json?sort=" + "StartTime" + "&direction=desc"+$rootScope.authSession;
     NVR.debug("Retrieving " + myurl);
 
 

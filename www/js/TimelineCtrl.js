@@ -348,6 +348,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         notes: ''
     };
 
+    $scope.lastVideoStateTime = {
+      'time':''
+    };
     $scope.newEvents = '';
 
     
@@ -664,6 +667,19 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     loginData.followTimeLine = $scope.follow.time;
     NVR.setLogin(loginData);
   };
+
+  $scope.toggleObjectDetectionFilter = function () {
+      
+    var ld = NVR.getLogin();
+    ld.objectDetectionFilter = !ld.objectDetectionFilter;
+    NVR.setLogin(ld);
+    NVR.debug ("object detection filter: "+ld.objectDetectionFilter);
+    $scope.loginData = NVR.getLogin();
+    drawGraph(fromDate, toDate, maxItems);
+
+  };
+  
+
   //-------------------------------------------------
   // Called with day/week/month
   // so we can redraw the graph
