@@ -2974,7 +2974,7 @@ angular.module('zmApp.controllers')
               
               $rootScope.authSession = '&token='+loginData.accessToken;
               d.resolve("Login success via access token");
-              console.log ("**************** TOKEN SET="+$rootScope.authSession);
+//              console.log ("**************** TOKEN SET="+$rootScope.authSession);
               if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
               return d.promise;
             } 
@@ -3370,6 +3370,7 @@ angular.module('zmApp.controllers')
             myurl = myurl + '/Notes REGEXP:detected:';
           }
 
+      
           myurl = myurl + ".json?&sort=StartTime&direction=desc&page=" + pageId + $rootScope.authSession;
 
 
