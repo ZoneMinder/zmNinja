@@ -3265,9 +3265,9 @@ angular.module('zmApp.controllers')
           if (monitorId != 0)
             myurl = myurl + "/MonitorId:" + monitorId;
           if (startTime)
-            myurl = myurl + "/StartTime >=:" + startTime;
+            myurl = myurl + "/StartTime <=:" + endTime;
           if (endTime)
-            myurl = myurl + "/EndTime <=:" + endTime;
+            myurl = myurl + "/EndTime >=:" + startTime;
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
@@ -3354,9 +3354,9 @@ angular.module('zmApp.controllers')
           if (monitorId != 0)
             myurl = myurl + "/MonitorId:" + monitorId;
           if (startTime)
-            myurl = myurl + "/StartTime >=:" + startTime;
+            myurl = myurl + "/StartTime <=:" + endTime;
           if (endTime)
-            myurl = myurl + "/EndTime <=:" + endTime;
+            myurl = myurl + "/EndTime >=:" + startTime;
 
           myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
@@ -3374,6 +3374,7 @@ angular.module('zmApp.controllers')
 
 
           debug("getEvents:" + myurl);
+          //console.log ("LOG: "+myurl);
           // Simulated data
 
           // myurl = "https://api.myjson.com/bins/4jx44.json";
@@ -3388,6 +3389,7 @@ angular.module('zmApp.controllers')
 
 
                 myevents = data;
+                console.log (myevents);
 
 
                 d.resolve(myevents);
