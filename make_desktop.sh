@@ -107,6 +107,7 @@ do
                 exe cp electron_js/main.js $i/app/electron_js
                 exe cp www/ZMNINJA-LICENSE-DESKTOP-CLIENT.txt $BASENAME
                 echo $APPVER > $BASENAME/version
+                echo "APP VER IS $APPVER"
                 exe cp resources/icon.png $BASENAME
                 exe cd $i 
                 cat app/www/js/NVR.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/www/js/NVR.js.tmp

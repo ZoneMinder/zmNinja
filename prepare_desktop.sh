@@ -1,8 +1,8 @@
 #!/bin/bash
 
-REL="v4.0.0"
+#REL="v4.0.0"
 # If compiling on rPI make use 3.0.16
-#REL="v3.0.16"
+REL="v3.1.3"
 WGET='wget'
 WGET_ARGS='-q --show-progress'
 UNZIP='unzip'
