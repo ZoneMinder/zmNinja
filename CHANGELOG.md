@@ -1,5 +1,24 @@
 # Change Log
 
+## [v1.3.078](https://github.com/pliablepixels/zmNinja/tree/v1.3.078) (2019-08-23)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.074...v1.3.078)
+
+**Fixed bugs:**
+
+- Timescale logic is wrong for filtering everywhere [\#848](https://github.com/pliablepixels/zmNinja/issues/848)
+- Android 9: Back button doesn't work properly [\#846](https://github.com/pliablepixels/zmNinja/issues/846)
+- No exit event view option on iOS v1.3.070 release [\#839](https://github.com/pliablepixels/zmNinja/issues/839)
+
+**Closed issues:**
+
+- "Authentication Success" reported, even when not possible [\#847](https://github.com/pliablepixels/zmNinja/issues/847)
+- cannot view events from monitors not present in montage view [\#844](https://github.com/pliablepixels/zmNinja/issues/844)
+- Cannot select different server while connection attempt is ongoing [\#842](https://github.com/pliablepixels/zmNinja/issues/842)
+
+**Merged pull requests:**
+
+- What a login mess [\#843](https://github.com/pliablepixels/zmNinja/pull/843) ([pliablepixels](https://github.com/pliablepixels))
+
 ## [v1.3.074](https://github.com/pliablepixels/zmNinja/tree/v1.3.074) (2019-08-10)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.070...v1.3.074)
 
