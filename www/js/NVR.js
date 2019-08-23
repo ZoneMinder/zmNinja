@@ -3389,7 +3389,7 @@ angular.module('zmApp.controllers')
 
 
                 myevents = data;
-                console.log (myevents);
+                //console.log (myevents);
 
 
                 d.resolve(myevents);
