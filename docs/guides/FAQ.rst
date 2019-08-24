@@ -310,6 +310,9 @@ out later they skimmed details.
 -  Please enable ``AUTH_HASH_LOGINS`` as well as set ``AUTH_RELAY`` to
    "hashed"
 
+- If you are NOT using authentication in ZM, please turn OFF authentication in zmNinja too.
+  If you don't, zmNinja will keep waiting for an authentication token
+
 - If you are using multi-server, please make sure the user account has 
   "System View" permissions. This is needed to get access to the server API. 
   If zmNinja is unable to read the API, it will use the default portal URL, which
