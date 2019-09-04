@@ -607,6 +607,21 @@ image etc. I limit this to 5 because I need 1 for control messages.
 Other misc. issues
 ------------------
 
+APIs seem to work in the browser but zmNinja says APIs don't work
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+There could be several reasons, but this one is common: look in the logs. If you see something like:
+
+::
+
+  DEBUG **EXCEPTION**SyntaxError: Unexpected token < in JSON at position 0 caused by undefined.
+
+Then that means the ZM API layer is throwing warning messages which you don't see in your browser, but will show up
+if you do an inspect source. The solution is to edit ``/usr/share/zoneminder/www/api/app/Config/core.php`` 
+(or whichever path your ZM is installed in) and around line 34-ish, you'll see something like ``Configure::write('debug',2)``.
+Change it to ``Configure::write('debug',0)``
+
+
+
 I suddently see an error message saying I need to enable ZM\_AUTH\_HASH\_LOGINS. This wasn't there before
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
