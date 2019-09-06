@@ -124,8 +124,8 @@ it support automatic building of notification extensions. So there is manual wor
 - In the "Product Name" put in ``zmNinjaNotification`` (your BundleID should now read  ``com.pliablepixels.zmninja-pro.zmNinjaNotification``)
 - Say "Yes" to "Activate zmNinjaNotification scheme?" popup
 - Now go to zmNinjaNotification target and make version and  build same as zmNinja
-- Now in XCode Targets, select ``zmNinjaNotification``, and make sure you select a Team and make sure Deployment Target is 10 or above
-- Change Deployment target to 10.1 (same as zmNinja target)
+- Now in XCode Targets, select ``zmNinjaNotification``, and make sure you select a Team and make sure Deployment Target is 11 or above
+- Change Deployment target to 11 or above (same as zmNinja target)
 - ``cp etc/NotificationService.m platforms/ios/zmNinjaNotification/``
 - ``cd platforms/ios/``
 - ``pod install``
