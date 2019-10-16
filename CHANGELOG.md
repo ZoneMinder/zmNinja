@@ -1,5 +1,24 @@
 # Change Log
 
+## [v1.3.079](https://github.com/pliablepixels/zmNinja/tree/v1.3.079) (2019-10-16)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.078...v1.3.079)
+
+**Implemented enhancements:**
+
+- Hide buttons and controls in live/events view if you single tap \(toggle on off on tap\) [\#854](https://github.com/pliablepixels/zmNinja/issues/854)
+
+**Closed issues:**
+
+- Link to desktop builds on website [\#853](https://github.com/pliablepixels/zmNinja/issues/853)
+- Do we have support for ionic4 [\#851](https://github.com/pliablepixels/zmNinja/issues/851)
+- zmNinja issue when connected via Mobile data [\#850](https://github.com/pliablepixels/zmNinja/issues/850)
+- event playback mode [\#849](https://github.com/pliablepixels/zmNinja/issues/849)
+- cycle montage not working [\#828](https://github.com/pliablepixels/zmNinja/issues/828)
+
+**Merged pull requests:**
+
+- fixed german language typos [\#852](https://github.com/pliablepixels/zmNinja/pull/852) ([londonjob](https://github.com/londonjob))
+
 ## [v1.3.078](https://github.com/pliablepixels/zmNinja/tree/v1.3.078) (2019-08-23)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.074...v1.3.078)
 
