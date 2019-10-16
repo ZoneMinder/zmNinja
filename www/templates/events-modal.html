@@ -35,6 +35,7 @@
 
             
               <img ng-if="!liveFeedMid" id="testaut_events_playwindow" image-spinner-src="{{constructStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"
+                on-tap="showHideControls();"
                 on-double-tap="closeModal();" img-spinner-w="1024" img-spinner-h="768" image-spinner-loader="lines"
                 imageonload="modalImageLoaded()" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" />
 
@@ -42,7 +43,9 @@
               <div ng-if="liveFeedMid">
                 
                 <img id="testaut_events_playwindow" image-spinner-src="{{currentEvent.Event.streamingURL}}/nph-zms?mode=jpeg&monitor={{liveFeedMid}}&connkey={{connKey}}{{$root.authSession}}"
-                  ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" on-double-tap="closeModal();"
+                  ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}" 
+                  on-tap="showHideControls();"
+                  on-double-tap="closeModal();"
                   img-spinner-w="1024" img-spinner-h="768" image-spinner-loader="lines" imageonload="modalImageLoaded()"
                   on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" />
                 <div class="events-range-modal-text">
@@ -73,6 +76,7 @@
                   vg-update-state="onPlayerState($state)"
                   vg-update-playback="onPlaybackUpdate($playBack)"
                   vg-plays-inline="videoObject.config.playsInline" vg-theme="videoObject.config.theme" vg-complete="playbackFinished()"
+                  on-tap="showHideControls();"
                   on-double-tap="closeModal();" vg-autoplay="videoObject.config.autoPlay" vg-responsive="videoObject.config.responsive"
                   vg-update-time="videoTime(event.Event.StartTime,$currentTime)" vg-error="onVideoError($event)">
                   <vg-media vg-src="videoObject.config.sources" vg-native-controls="videoObject.config.nativeControls">
@@ -130,7 +134,7 @@
 
 
 
-  <div ng-show="!liveFeedMid">
+  <div ng-show="!liveFeedMid && displayControls">
     <nav mfb-menu position="tr" effect="zoomin" label="{{'kCollapse'|translate}}" active-icon="ion-chevron-down"
       resting-icon="ion-chevron-up" toggling-method="click">
       <a mfb-button icon="ion-arrow-right-c" label="{{'kNextEvent'|translate}}" ng-click="jumpToEvent(nextId,1);"></a>

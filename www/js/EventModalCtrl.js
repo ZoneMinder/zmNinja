@@ -1075,9 +1075,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   });
 
+  $scope.showHideControls = function () {
+    $scope.displayControls = !$scope.displayControls;
+    NVR.debug ('control display is:'+$scope.displayControls);
+  };
 
   $scope.$on('modal.shown', function (e, m) {
 
+    $scope.displayControls = true;
     $ionicLoading.hide();
     if (m.id != 'footage')
       return;
