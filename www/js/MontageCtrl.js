@@ -1065,6 +1065,20 @@ angular.module('zmApp.controllers')
       NVR.debug("MontageCtrl: switch minimal is " + $scope.minimal);
       // console.log("Hide Statusbar");
       ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
+
+      // hiding status bar messes up X
+      /*if ($scope.minimal) {
+        if ($rootScope.platformOS !='desktop') {
+          NVR.debug ('hiding device status bar');
+          return StatusBar.hide();
+        }
+      } else {
+        if ($rootScope.platformOS !='desktop') {
+          NVR.debug ('showing device status bar');
+          return StatusBar.show();
+        }
+      }*/
+
       //console.log ("minimal switch:Cancelling timer");
       $interval.cancel(intervalHandleMontage); //we will renew on reload
       $interval.cancel(intervalHandleMontageCycle);

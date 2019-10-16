@@ -5,6 +5,7 @@
 
 angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$rootScope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', 'SecuredPopups', '$translate', '$cordovaFile', function ($scope, $rootScope, zm, NVR, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, SecuredPopups, $translate, $cordovaFile) {
 
+  $scope.displayControls = true;
   $scope.animationInProgress = false;
   $scope.imageFit = true;
   $scope.isModalActive = true;
@@ -1782,9 +1783,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   }
 
+  $scope.showHideControls = function () {
+    $scope.displayControls = !$scope.displayControls;
+    NVR.debug ('control display is:'+$scope.displayControls);
+  };
+
   $scope.$on('modal.shown', function () {
 
-
+    $scope.displayControls = true;
     if (0 && $rootScope.platformOS == 'ios') {
       NVR.debug("Webkit hack, hammering window.stop();");
       NVR.stopNetwork();

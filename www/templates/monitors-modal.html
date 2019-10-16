@@ -17,6 +17,7 @@
                 <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines"
                   image-spinner-src="{{constructSingleStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"
                   on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();"
+                  on-tap="showHideControls();"
                   imageonload="imageLoaded()" />
               </div>
               <div ng-if="animationInProgress">
@@ -112,7 +113,8 @@
       </div>
     </div>
   </ion-modal-view>
-  <nav id='testaut_monitormodal_nav_button' mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up"
+
+  <nav ng-if="displayControls" id='testaut_monitormodal_nav_button' mfb-menu position="tr" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-up"
     resting-icon="ion-chevron-down" toggling-method="click">
     <button mfb-button icon="ion-arrow-resize" label="{{imageFit? ('kFillScreen' | translate):('kFitScreen' | translate)}}"
       ng-click="scaleImage();">
@@ -122,7 +124,7 @@
     <button mfb-button icon="ion-arrow-expand" label="{{'kControl'| translate}}" ng-click="togglePTZ();">
     </button>
   </nav>
-  <nav mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down"
+  <nav ng-if="displayControls"  mfb-menu position="br" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down"
     resting-icon="ion-chevron-up" toggling-method="click">
     <button mfb-button icon="ion-android-arrow-back" label="{{'kPrevMonitor' | translate}} " ng-click="onTap(monitorId,-1);">
     </button>
@@ -131,7 +133,7 @@
     <button id='testaut_monitormodal_nav_exit_button' mfb-button icon="ion-close" label="{{'kExitLiveView' | translate}}" ng-click="closeModal();">
     </button>
   </nav>
-  <div id="flyoutmenu" style="position:absolute;bottom:80px;left:10px">
+  <div id="flyoutmenu" ng-if="displayControls" style="position:absolute;bottom:80px;left:10px">
     <ul>
 
       <li>
@@ -208,7 +210,7 @@
       </li>
     </ul>
   </div>
-  <div ng-if="!showPTZ" class="monitor-modal-text">{{monitorName}} &nbsp;
+  <div ng-if="!showPTZ && displayControls" class="monitor-modal-text">{{monitorName}} &nbsp;
     <span ng-style="{'background-color':stateColor()}">&nbsp;{{monStatus}}&nbsp;</span>
   </div>
 </div>
