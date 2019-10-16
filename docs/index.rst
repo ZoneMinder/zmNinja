@@ -15,7 +15,8 @@ Welcome to zmNinja's documentation!
         guides/contributing-language
         guides/source
         Event Notification Server <https://zmeventnotification.readthedocs.io/en/latest/index.html>
-
+        Help for each screen <https://docs.google.com/document/d/1BqAe1NbvzLpr02LJK4Sfz41L_mI9fmB4I99GriKcNvg/edit?usp=sharing>
+        
 `Github Repository <https://github.com/pliablepixels/zmNinja>`__
 
 :doc:`guides/FAQ`

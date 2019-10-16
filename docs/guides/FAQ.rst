@@ -13,9 +13,8 @@ devices are supported.
 zmNinja Help
 ------------
 
-I've just started uploading instructional videos for zmNinja. I'll add
-more over time. See them
-`here <https://github.com/pliablepixels/zmNinja/wiki/Help-Videos-for-zmNinja>`__
+All screens have annotated descriptions now. They are maintained in a google document, so I can easily edit it in future. Click `here <https://docs.google.com/document/d/1BqAe1NbvzLpr02LJK4Sfz41L_mI9fmB4I99GriKcNvg/edit?usp=sharing>`__ for the document.
+
 
 Asking for refunds
 ------------------
