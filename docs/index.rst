@@ -15,7 +15,7 @@ Welcome to zmNinja's documentation!
         guides/contributing-language
         guides/source
         Event Notification Server <https://zmeventnotification.readthedocs.io/en/latest/index.html>
-        Help for each screen <https://docs.google.com/document/d/1BqAe1NbvzLpr02LJK4Sfz41L_mI9fmB4I99GriKcNvg/edit?usp=sharing>
+        Help for each screen <https://docs.google.com/document/d/e/2PACX-1vS9z-ANNUbPRMhCWbS-PFJtB_6y6O_vwrZfLE6-TjPo3O0bPQeMUjjeTSXFvILU_w4ZTgU01CM9Hz8p/pub>
 
 `Github Repository <https://github.com/pliablepixels/zmNinja>`__
 
@@ -31,7 +31,7 @@ Welcome to zmNinja's documentation!
         For the brave souls who want to build from source, your questions answered 
 `Event Notification Server <https://zmeventnotification.readthedocs.io/en/latest/index.html>`__
         Documentation for the Machine Learning Event Notification server
-`Help for Each Screen <https://docs.google.com/document/d/1BqAe1NbvzLpr02LJK4Sfz41L_mI9fmB4I99GriKcNvg/edit?usp=sharing>`__ 
-        Help for each screen
+`Help for Each Screen <https://docs.google.com/document/d/e/2PACX-1vS9z-ANNUbPRMhCWbS-PFJtB_6y6O_vwrZfLE6-TjPo3O0bPQeMUjjeTSXFvILU_w4ZTgU01CM9Hz8p/pub>`__ 
+        Describes each zmNinja screen in more detail and what the options do
 
 

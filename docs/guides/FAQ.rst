@@ -13,7 +13,7 @@ devices are supported.
 zmNinja Help
 ------------
 
-All screens have annotated descriptions now. They are maintained in a google document, so I can easily edit it in future. Click `here <https://docs.google.com/document/d/1BqAe1NbvzLpr02LJK4Sfz41L_mI9fmB4I99GriKcNvg/edit?usp=sharing>`__ for the document.
+All screens have annotated descriptions now. They are maintained in a google document, so I can easily edit it in future. Click `here <https://docs.google.com/document/d/e/2PACX-1vS9z-ANNUbPRMhCWbS-PFJtB_6y6O_vwrZfLE6-TjPo3O0bPQeMUjjeTSXFvILU_w4ZTgU01CM9Hz8p/pub>`__ for the document.
 
 
 Asking for refunds
