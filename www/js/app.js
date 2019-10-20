@@ -961,7 +961,7 @@ angular.module('zmApp', [
             },
             function (err) {
             
-             NVR.debug("Auth Hash error: " + JSON.stringify(conf));
+             NVR.debug("Auth Hash error: " + JSON.stringify(err));
             });
       }
 
