@@ -104,6 +104,7 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
 
   $scope.newsItems = [];
 
+  /*
 
   $http.get(zm.blogUrl, {
       responseType: 'text',
@@ -124,6 +125,6 @@ angular.module('zmApp.controllers').controller('zmApp.NewsCtrl', ['$scope', '$ro
         });
       }
 
-    });
+    }); */
 
 }]);
