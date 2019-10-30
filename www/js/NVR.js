@@ -2420,7 +2420,11 @@ angular.module('zmApp.controllers')
         getKeyConfigParams: function (forceReload) {
 
           var d = $q.defer();
+          configParams.ZM_EVENT_IMAGE_DIGITS = 5;
+          d.resolve(configParams.ZM_EVENT_IMAGE_DIGITS);
+          return (d.promise);
 
+          /*
           if (forceReload == 1 || configParams.ZM_EVENT_IMAGE_DIGITS == '-1') {
             var apiurl = loginData.apiurl;
             var myurl = apiurl + '/configs/viewByName/ZM_EVENT_IMAGE_DIGITS.json?' + $rootScope.authSession;
@@ -2448,7 +2452,7 @@ angular.module('zmApp.controllers')
             return (d.promise);
           }
           return (d.promise);
-
+          */
         },
 
         //--------------------------------------------------------------------------
