@@ -22,6 +22,7 @@ angular.module('zmApp.controllers')
         It is changed by sync_version.sh
       */
       var zmAppVersion = "1.3.079";
+      var zmAPIVersion = null;
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -206,6 +207,7 @@ angular.module('zmApp.controllers')
         'refreshToken': '',
         'isKiosk': false,
         'kioskPassword': '',
+        'useHTTPCaching': true
 
       };
 
@@ -339,7 +341,108 @@ angular.module('zmApp.controllers')
       }
 
 
+      // custom caching function
+      // as native http doesn't cache
 
+      function delete_cache (key) {
+        return localforage.removeItem(key);
+      }
+
+      function delete_all_caches() {
+        return localforage.removeItem('cached_monitors')
+        .then ( function () {return localforage.removeItem('cached_api_version');})
+        .then ( function () {return localforage.removeItem('cached_multi_servers');})
+        .then ( function () {return localforage.removeItem('cached_multi_port');})
+        .then ( function () {return localforage.removeItem('cached_timezone');})
+        .catch ( function (err) {debug ('Error removing all caches: '+JSON.stringify(err));});
+      }
+
+      function cache_or_http(url,key,doCrypt, expiry) {
+
+      
+        if (!loginData.useHTTPCaching) {
+          debug ('CACHE: Not being used, as it is disabled');
+          return $http.get(url);
+        }
+      
+       // debug ('Inside cache_or_http with key:'+key+' crypt:'+doCrypt+'  exp:'+expiry);
+        var d = $q.defer();
+        
+        if (!expiry) expiry = 3600;
+        if (!doCrypt) doCrypt = false;
+
+        localforage.getItem(key)
+        .then (function (cache_data) {
+            if (cache_data) {
+              debug ('CACHE: found for key: '+key+' with expiry of:'+cache_data.expiry+'s');
+
+              data = cache_data.data;
+              t = moment(cache_data.time);
+              diff = moment().diff(t,'seconds');
+              
+              if (diff >=cache_data.expiry) {
+                debug ('CACHE: cached value for key:'+key+' has expired as '+diff+' >='+cache_data.expiry);
+                localforage.removeItem (key)
+                .then (function() {return cache_or_http(url, key, doCrypt, expiry);})
+                .catch (function(err) {
+                  debug ('CACHE: error deleting key, err:'+JSON.stringify(err)+' but still proceeding with another call to cache_or_http');
+                  return cache_or_http(url, key, doCrypt, expiry);
+                });
+              }
+              else {
+                debug ('CACHE: cached value for key:'+key+' is good as '+diff+' <'+cache_data.expiry);
+              }
+
+              //data = JSON.parse(data);
+              if (doCrypt) {
+                debug ('CACHE: decryption requested');
+                var bytes = CryptoJS.AES.decrypt(data.toString(), zm.cipherKey);
+                data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+              }
+              else
+                data = JSON.parse(data);
+              
+              d.resolve(data);
+              return (d.promise);
+            } else {
+              debug ('CACHE: NOT found for:'+key+ ' reverting to HTTP');
+              return $http.get(url)
+              .then ( function (data) {
+                cache_entry = {
+                  'data': null,
+                  'time': null,
+                  'expiry': expiry
+                };
+                debug ('CACHE: storing key data in cache now, with expiry of '+expiry);
+                if (doCrypt) {
+                  debug ('CACHE: encrypting request');
+                  var ct = CryptoJS.AES.encrypt(JSON.stringify(data), zm.cipherKey).toString();
+                  cache_entry.data = ct;
+                }
+                else {
+                  cache_entry.data = JSON.stringify(data);
+                }
+                cache_entry.time = moment().toString();
+                //debug ('Setting key:'+key+' data value to:'+cache_entry.data);
+                localforage.setItem(key, cache_entry);
+                d.resolve(data);
+                return d.promise;
+              })
+              .catch ( function (err) {
+                log ('CACHE: error with http get '+err);
+                d.reject(err);
+                return d.promise;
+              });
+            }
+            
+        })
+        .catch ( function (err) {
+          debug ('cache_or_http error:'+err);
+          return $http.get(url);
+        }) ;
+        debug ('returning promise');
+        return d.promise;
+      }
 
       function getZmsMultiPortSupport(forceReload) {
         var d = $q.defer();
@@ -347,7 +450,7 @@ angular.module('zmApp.controllers')
           log("Checking value of ZM_MIN_STREAMING_PORT for the first time");
           var apiurl = loginData.apiurl;
           var myurl = apiurl + '/configs/viewByName/ZM_MIN_STREAMING_PORT.json?' + $rootScope.authSession;
-          $http.get(myurl)
+          cache_or_http(myurl,'cached_multi_port', false, 3600*24)
             .then(function (data) {
                 data = data.data;
                 //console.log ("GOT " + JSON.stringify(data));
@@ -374,7 +477,7 @@ angular.module('zmApp.controllers')
                 return (d.promise);
               });
         } else {
-          log("sending Cached ZM_MIN_STREAMING_PORT " +
+          log("sending stored ZM_MIN_STREAMING_PORT " +
             configParams.ZM_MIN_STREAMING_PORT);
           d.resolve(configParams.ZM_MIN_STREAMING_PORT);
           return (d.promise);
@@ -1481,7 +1584,10 @@ angular.module('zmApp.controllers')
           loginData.isKiosk = false;
 
         }
+        if (typeof loginData.useHTTPCaching == 'undefined') {
+          loginData.useHTTPCaching = true;
 
+        }
 
         loginData.canSwipeMonitors = true;
         loginData.forceImageModePath = false;
@@ -1842,7 +1948,7 @@ angular.module('zmApp.controllers')
           return d.promise;
 
         },
-
+ 
         cloudSync: function () {
 
           var d = $q.defer();
@@ -2303,7 +2409,7 @@ angular.module('zmApp.controllers')
           var d = $q.defer();
           var apiurl = loginData.apiurl + '/host/getVersion.json?' + $rootScope.authSession;
           debug("getAPIversion called with " + apiurl);
-          $http.get(apiurl)
+          cache_or_http(apiurl,'cached_api_version',false, 3600*24)
             .then(function (success) {
                 if (success.data.version) {
                   //console.log("API VERSION RETURNED: " + JSON.stringify(success));
@@ -2584,31 +2690,6 @@ angular.module('zmApp.controllers')
             );
         },
 
-       
-
-        getMultiServersCached: function () {
-          return multiservers;
-        },
-
-        // use non cached for daemon status
-        getMultiServers: function () {
-          return $http.get(loginData.apiurl + '/servers.json?' + $rootScope.authSession);
-
-        },
-
-        getMultiServer: function (id) {
-
-          var ndx = -1;
-          for (var i = 0; i < multiservers.length; i++) {
-            if (multiservers[i].Server.Id == id) {
-              ndx = i;
-              break;
-            }
-          }
-          return ndx == -1 ? {} : multiservers[ndx];
-
-        },
-
         regenConnKeys: function (mon) {
 
          return regenConnKeys (mon);
@@ -2617,6 +2698,7 @@ angular.module('zmApp.controllers')
         getMonitors: function (forceReload) {
           //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
 
+          
           $ionicLoading.show({
             template: $translate.instant('kLoadingMonitors'),
             animation: 'fade-in',
@@ -2642,7 +2724,8 @@ angular.module('zmApp.controllers')
 
                 debug("ZMS Multiport reported: " + zmsPort);
                 debug("Monitor URL to fetch is:" + myurl);
-                $http.get(myurl /*,{timeout:15000}*/ )
+                cache_or_http(myurl,'cached_monitors', true,3600*24)
+                //$http.get(myurl /*,{timeout:15000}*/ )
                   .then(function (data) {
                       //  console.log("HTTP success got " + JSON.stringify(data.monitors));
                       data = data.data;
@@ -2663,7 +2746,7 @@ angular.module('zmApp.controllers')
 
                       debug("Inside getMonitors, will also regen connkeys");
                       debug("Now trying to get multi-server data, if present");
-                      $http.get(apiurl + "/servers.json?" + $rootScope.authSession)
+                      cache_or_http(apiurl + "/servers.json?" + $rootScope.authSession, 'cached_multi_servers', true, 3600*24)
                         .then(function (data) {
                             data = data.data;
                             // We found a server list API, so lets make sure
@@ -3212,6 +3295,10 @@ angular.module('zmApp.controllers')
           return isTzSupported;
         },
 
+        flushAPICache: function () {
+            return delete_all_caches();
+        },
+
         getTimeZone: function (isForce) {
 
           var d = $q.defer();
@@ -3219,7 +3306,7 @@ angular.module('zmApp.controllers')
 
             log("First invocation of TimeZone, asking server");
             var apiurl = loginData.apiurl + '/host/getTimeZone.json?' + $rootScope.authSession;
-            $http.get(apiurl)
+            cache_or_http(apiurl, "cached_timezone", false, 3600*24)
               .then(function (success) {
                   tz = success.data.tz;
                   d.resolve(tz);
