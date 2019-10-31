@@ -400,6 +400,35 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
   };
 
 
+  $scope.flushAPICache = function() {
+
+    NVR.flushAPICache()
+    .then ( function () {
+      showCachePopup($translate.instant('kFlushAllCachesMessageOk'));
+    })
+    .catch (function (err) {
+      showCachePopup($translate.instant('kFlushAllCachesMessageOk')+JSON.stringify(err));
+    });
+
+    function showCachePopup(str) {
+      $rootScope.zmPopup = $ionicPopup.alert({
+        template: str,
+  
+        title: $translate.instant('kNote'),
+  
+        buttons: [
+          {
+            text: $translate.instant('kButtonOk'),
+          }
+        ]
+      });
+  
+      
+    }
+   
+  };
+
+
   $scope.switchLang = function () {
     $scope.lang = NVR.getLanguages();
     $scope.myopt = {

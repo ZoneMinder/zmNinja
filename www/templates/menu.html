@@ -124,6 +124,11 @@
             </span> {{'kMenuWizard'|translate}}
           </ion-item>
 
+          <ion-item ng-click="flushAPICache()" nav-clear menu-close>
+            <span class=" item-icon-left">
+              <i class="icon ion-trash-a"></i>
+            </span> {{'kFlushAllCaches'|translate}}
+          </ion-item>
 
 
           <div ng-if="$root.showBlog && 0">
