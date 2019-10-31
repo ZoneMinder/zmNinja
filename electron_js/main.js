@@ -141,6 +141,11 @@ function createWindow() {
        win.webContents.session.setProxy({proxyRules:argv.proxy}, function() {});
   }
 
+  if (argv.debug) {
+    // Open the DevTools.
+    win.webContents.openDevTools();
+  }
+  //win.webContents.openDevTools();
   // and load the index.html of the app.
 
   const startUrl = process.env.ELECTRON_START_URL || url.format({
@@ -246,8 +251,7 @@ if (process.platform === 'darwin') {
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
 
-// Open the DevTools.
-//win.webContents.openDevTools();
+
 // Emitted when the window is closed.
 win.on('closed', () => {
   // Dereference the window object, usually you would store windows
