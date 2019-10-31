@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.079";
+      var zmAppVersion = "1.3.080";
       var zmAPIVersion = null;
       var isBackground = false;
       var justResumed = false;
@@ -349,6 +349,7 @@ angular.module('zmApp.controllers')
       }
 
       function delete_all_caches() {
+        debug ('CACHE: Flushing all network API caches...');
         return localforage.removeItem('cached_monitors')
         .then ( function () {return localforage.removeItem('cached_api_version');})
         .then ( function () {return localforage.removeItem('cached_multi_servers');})

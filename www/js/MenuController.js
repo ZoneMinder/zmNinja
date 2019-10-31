@@ -384,7 +384,18 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
             }
             if (NVR.getLogin().serverName != $scope.newServer.val)
-              switchToServer($scope.newServer.val);
+            {
+              NVR.flushAPICache()
+              .then (function() {
+                switchToServer($scope.newServer.val);
+              })
+              .catch (function(err) {
+                NVR.debug ('Error clearing cache:'+JSON.stringify(err));
+                switchToServer($scope.newServer.val);
+              });
+            }
+            
+              
 
             //$rootScope.$broadcast('server-changed');
 

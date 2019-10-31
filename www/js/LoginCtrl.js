@@ -594,6 +594,18 @@ function mobilePinConfig () {
 
   function saveItems(showalert) {
 
+    NVR.flushAPICache()
+    .then (function() {
+      _saveItems(showalert);
+    })
+    .catch (function(err) {
+      NVR.debug ('Error clearing cache:'+JSON.stringify(err));
+      _saveItems(showalert);
+    });
+
+  }
+  function _saveItems(showalert) {
+
     //console.log ("*********** SAVE ITEMS CALLED ");
     //console.log('Saving login');
 
