@@ -2047,7 +2047,7 @@ angular.module('zmApp.controllers')
 
       if (currentStreamState == streamState.SNAPSHOT_LOWQUALITY) {
         stream = monitor.Monitor.streamingURL +
-        "/nph-zms?mode=single&scale=10&monitor="+ monitor.Monitor.Id ;
+        "/nph-zms?mode=single&scale=10&monitor="+ monitor.Monitor.Id +  "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id ;
        // console.log(stream);
       
       } else {
