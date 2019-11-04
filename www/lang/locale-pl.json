@@ -279,6 +279,8 @@
     "kPathToCgiExample"          :"np. server/zm/cgi-bin",
     "kPause"                     :"pauza",
     "kPaused"                    :"wstrzymane",
+    "kPauseStreams"              :"pauzuj/wznów strumień w celu oszczędzenia transferu",
+    "kPauseStreamsNote"          :"ma zastosowanie w przypadku użycia multi-port",
     "kPinProtect"                :"Ochrona PIN",
     "kPlaceHolderBasicAuthPass"  :"hasło prostego uwierzytelniania",
     "kPlaceHolderBasicAuthUser"  :"użytkownik zwykłego uwierzytelniania",
