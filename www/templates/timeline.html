@@ -19,7 +19,7 @@
     <!--<ion-content data-tap-disabled="true">-->
     <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
       <div style="padding-left:15px; font-size:10px; color:grey">
-        {{prettify(fromDate)}} - {{prettify(toDate)}} &nbsp;{{tzAbbr}}&nbsp; ({{'kTimelineOnlyDisplaying1' |
+         {{prettify(fromDate)}} - {{prettify(toDate)}} &nbsp;{{tzAbbr}}&nbsp; ({{'kTimelineOnlyDisplaying1' |
         translate:translationData}})
         <strong>
           <br />{{timelineControls}}</strong>
@@ -33,10 +33,10 @@
         </center>
       </div>
       <div style="padding-left:15px; padding-right:15px;">
-        <div id="visualization" data-tap-disabled="true">
+        <div id="visualization" data-tap-disabled="true"  >
         </div>
       </div>
-      <br />
+      <br/>
       <div style="padding-left:15px; font-size:10px; color:grey">
 
 
@@ -47,7 +47,7 @@
           {{'kNow' | translate}}
         </button>
         <div ng-if="follow.time">
-          <p>{{newEvents}}</p>
+          <p> {{newEvents}}</p>
         </div>
         <div ng-if="thumbData.url != ''">
             <br/><br/>
