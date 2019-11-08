@@ -196,7 +196,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
         scope: $scope, // give ModalCtrl access to this scope
         animation: 'slide-in-up',
         id: 'footage',
-        showLive: sl
+        showLive: sl,
+        disableDrag: true
       })
       .then(function (modal) {
         $scope.modal = modal;
@@ -227,6 +228,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     NVR.debug("TimelineCtrl:Close & Destroy Modal");
     NVR.stopNetwork("TimelineCtrl: closeModal");
     NVR.setAwake(false);
+  
     if ($scope.modal !== undefined) {
       $scope.modal.remove();
     }
@@ -235,6 +237,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
       $timeout(function () {
         drawGraph($scope.fromDate, $scope.toDate, maxItems);
+        
       }, 500);
 
     }
@@ -324,18 +327,18 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   });*/
 
   $scope.$on('$ionicView.beforeEnter', function () {
-
-  $scope.$on ( "process-push", function () {
-    NVR.debug (">> TimelineCtrl: push handler");
-    var s = NVR.evaluateTappedNotification();
-    NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
-    $ionicHistory.nextViewOptions({
-      disableAnimate:true,
-      disableBack: true
+    $ionicSideMenuDelegate.canDragContent(false);
+    $scope.$on ( "process-push", function () {
+      NVR.debug (">> TimelineCtrl: push handler");
+      var s = NVR.evaluateTappedNotification();
+      NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
+      $ionicHistory.nextViewOptions({
+        disableAnimate:true,
+        disableBack: true
+      });
+      $state.go(s[0],s[1],s[2]);
     });
-    $state.go(s[0],s[1],s[2]);
-  });
-  
+    
     //$ionicHistory.clearCache();
     //$ionicHistory.clearHistory();
     timeline_instance = '';
@@ -448,7 +451,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     // Make sure sliding for menu is disabled so it
     // does not interfere with graph panning
-    $ionicSideMenuDelegate.canDragContent(false);
+   
     var ld = NVR.getLogin();
     maxItemsConf = ($rootScope.platformOS == 'desktop') ? zm.graphDesktopItemMax : zm.graphItemMax;
     maxItems = ld.graphSize || maxItemsConf;
@@ -564,7 +567,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   var groups, graphData;
   var isProcessNewEventsWaiting = false;
   var options;
-  var dblclick = false;
+  var lastClicked = moment();
 
   $scope.mycarousel = {
     index: 0
@@ -1100,10 +1103,17 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //tzs = tzs.format("YYYY-MM-DD HH:mm:ss");
     //tze = tze.format("YYYY-MM-DD HH:mm:ss");
 
+   // var th = Math.round( window.height() * 0.85 ) + 'px';
     options = {
 
       showCurrentTime: true,
       editable: false,
+     verticalScroll: true,
+     height: '100%',
+     //zoomKey: 'ctrlKey',
+
+     //groupHeightMode:'fixed',
+     //height:$rootScope.devHeight - 10,
       moment: function (date) {
 
         //var t;
@@ -1116,6 +1126,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       },
       //throttleRedraw: 100,
       moveable: true,
+     // height:100,
       zoomable: true,
       selectable: true,
      // multiselect: true,
@@ -1309,7 +1320,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               $scope.graphLoaded = true;
               NVR.debug("graph loaded: " + $scope.graphLoaded);
               $scope.navControls = false;
-              dblclick = false;
+             
 
           
                
@@ -1329,18 +1340,20 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               });
 
               // different handlers for mobile and desktop
-              // due to how they seem to react to touch differently
+              // due to how they seeem to react to touch differently
 
               if ($rootScope.platformOS == 'desktop') {
                 NVR.debug ("setting up desktop handlers");
                 timeline_instance.on('click', function (prop) {
                     NVR.debug ("click handler called");
-                   timelineShowEvent(prop);   
+                    timelineShowHover(prop);
+                   
                   });
 
                 timeline_instance.on('doubleClick', function (prop) {
                     NVR.debug ("double click handler called");
-                    timelineAnalyzeFrames(prop);
+                    timelineShowEvent(prop);   
+                    //timelineAnalyzeFrames(prop);
                 });
               }
               // mobile handlers
@@ -1348,22 +1361,30 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                  // click doesn't seem to work on mobile (iOS at least. wuh?)
                  // this is called for both tap and double tap
                  NVR.debug ("setting up mobile handlers");
-                 timeline_instance.on('click', function (prop) {
-                    NVR.debug ("click handler called");
 
-                    if (dblclick) {
-                        NVR.debug ("Double click detected <= 300ms");
-                        timelineAnalyzeFrames(prop);
+                
+                 timeline_instance.on('touchstart', function (prop) {
+                   $timeout (function () {
+                    var now = moment();
+                    var diff = now.diff(lastClicked);
+                    NVR.debug ('Touch Start called with ms since last clicked:'+diff);
+                    lastClicked = now;
+                    //NVR.debug ('lastClick set to:'+lastClicked);
+                    if (diff <= 500) {
+                        NVR.debug ("Double tap detected <= 500ms");
+                        //timelineAnalyzeFrames(prop);
+                        timelineShowEvent(prop);
                     }
                     // differntiate between dbl click and click
-                    if (!dblclick) {
-                        dblclick = true;
-                        $timeout (function () {
-                            dblclick = false;
-                            NVR.debug ("Timeout for double click >300ms, single click assumed");
+                    else {                      
+                            NVR.debug ("single tap assumed (double tap timeout)");
                             timelineShowHover(prop);
-                        },300);
+      
                     }
+
+                   });
+                   
+                    
 
               });
             }
@@ -1442,7 +1463,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       for (var x = 0; x < visible.length; x++) {
         _item = graphData.get(visible[x]);
         if (_item.group != prop.group) continue;
-        console.log ("ITEM start/end is:"+_item.start+'/'+_item.end);
+        //console.log ("ITEM start/end is:"+_item.start+'/'+_item.end);
         var dist = Math.min( Math.abs(_item.start - target), Math.abs(_item.end - target));
         if (dist < minDist ) {
             closestId = _item.id;
