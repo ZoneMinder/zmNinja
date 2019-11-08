@@ -413,7 +413,7 @@
     "kUpdateTimeline"            :"aktualizacja dynamiczna",
     "kUseBasicAuth"              :"użyj prostego uwierzytelniania",
     "kUseEventServer"            :"Użyj serwera Zdarzeń",
-    "kUseHTTPCaching"            :"użyj cache'owania HTTP",
+    "kUseAPICaching"            :"użyj cache'owania API",
     "kUseVideoControls"          :"Użyj przełączników wideo odtwarzacza dla Zdarzeń H264. ZoneMinder jeszcze nie wspiera przełączników zms",
     "kUseZmAuth"                 :"Użyj uwierzytelniania ZM",
     "kUserName"                  :"nazwa użytkownika",

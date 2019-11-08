@@ -417,7 +417,7 @@
     "kUseVideoControls"          :"Please use video player controls for H264 events. ZoneMinder doesn't yet support zms controls",
     "kUseZmAuth"                 :"use ZM authentication",
     "kUserName"                  :"user name",
-    "kUseHTTPCaching"            : "use HTTP caching",
+    "kUseAPICaching"            : "use API caching",
     "kValidNameBasicAuth"        :"Please enter a valid username and password for basic auth",
     "kValidNameZMAuth"           :"Please enter a valid username and password for ZM auth",
     "kVersion"                   :"Version",
