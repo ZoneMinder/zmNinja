@@ -1257,7 +1257,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.$on('modal.removed', function (e, m) {
 
-    $ionicSideMenuDelegate.canDragContent(true);
+    if (!m.disableDrag )
+      $ionicSideMenuDelegate.canDragContent(true);
     if ($rootScope.platformOS == 'desktop') {
       NVR.debug("Removing keyboard handler");
       window.removeEventListener('keydown', keyboardHandler, true);
