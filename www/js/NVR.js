@@ -207,7 +207,8 @@ angular.module('zmApp.controllers')
         'refreshToken': '',
         'isKiosk': false,
         'kioskPassword': '',
-        'useHTTPCaching': true
+        'useHTTPCaching': true,
+        'pauseStreams': false,
 
       };
 
@@ -1587,6 +1588,11 @@ angular.module('zmApp.controllers')
         }
         if (typeof loginData.useHTTPCaching == 'undefined') {
           loginData.useHTTPCaching = true;
+
+        }
+
+        if (typeof loginData.pauseStreams == 'undefined') {
+          loginData.pauseStreams = false;
 
         }
 

@@ -97,6 +97,12 @@ image-loader {
     z-index: 9999;
 }
 
+
+
+#visualization {
+
+  height: 70vh;
+}
 ion-popover-view.fit {
     height: auto;
 }
