@@ -207,7 +207,7 @@ angular.module('zmApp.controllers')
         'refreshToken': '',
         'isKiosk': false,
         'kioskPassword': '',
-        'useHTTPCaching': true,
+        'useAPICaching': true,
         'pauseStreams': false,
 
       };
@@ -362,7 +362,7 @@ angular.module('zmApp.controllers')
       function cache_or_http(url,key,doCrypt, expiry) {
 
       
-        if (!loginData.useHTTPCaching) {
+        if (!loginData.useAPICaching) {
           debug ('CACHE: Not being used, as it is disabled');
           return $http.get(url);
         }
@@ -1586,8 +1586,8 @@ angular.module('zmApp.controllers')
           loginData.isKiosk = false;
 
         }
-        if (typeof loginData.useHTTPCaching == 'undefined') {
-          loginData.useHTTPCaching = true;
+        if (typeof loginData.useAPICaching == 'undefined') {
+          loginData.useAPICaching = true;
 
         }
 

@@ -410,7 +410,7 @@
     "kUseVideoControls"          :"Bitte nutze die Steuerung des Videoplayers für H264-Ereignisse. ZoneMinder unterstützt die zms controls noch nicht",
     "kUseZmAuth"                 :"ZM Authentifizierung",
     "kUserName"                  :"Benutzername",
-    "kUseHTTPCaching"            :"nutze HTTP Zwischenspeicher",
+    "kUseAPICaching"            :"nutze API Zwischenspeicher",
     "kValidNameBasicAuth"        :"Bitte gebe einen gültigen Benutzername mit Passwort für die basic auth ein",
     "kValidNameZMAuth"           :"Bitte gebe einen gültigen Benutzername mit Passwort für die ZM auth ein",
     "kVersion"                   :"Version",
