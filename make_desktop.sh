@@ -110,10 +110,10 @@ do
                 echo "APP VER IS $APPVER"
                 exe cp resources/icon.png $BASENAME
                 exe cd $i 
-                cat app/www/js/NVR.js | sed "s/var zmAppVersion[ ]*=[ ]*\"unknown\"/var zmAppVersion=\"$APPVER\"/" > app/www/js/NVR.js.tmp
+                cat app/www/js/NVR.js | sed "s/var zmAppVersion[ ]*=[ ]*\".*\"/var zmAppVersion=\"$APPVER\"/" > app/www/js/NVR.js.tmp
                 exe rm -fr app/www/js/NVR.js
                 exe mv app/www/js/NVR.js.tmp app/www/js/NVR.js
-                
+                exe cp app/www/js/NVR.js /tmp
                 
                 rm -fr app.asar
 
