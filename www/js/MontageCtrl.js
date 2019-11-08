@@ -589,7 +589,7 @@ angular.module('zmApp.controllers')
 
         apiurl  += '.json?sort=StartTime&direction=desc&limit=1'+$rootScope.authSession;
 
-        NVR.debug ("Getting event count "+apiurl);
+        NVR.debug ("Getting event count ");
         $http.get(apiurl)
         .then (function (data) {
            // console.log ("EVENTS GOT: "+JSON.stringify(data));
@@ -723,8 +723,9 @@ angular.module('zmApp.controllers')
     }
 
     function randEachTime() {
+      
       randToAvoidCacheMem = new Date().getTime();
-
+      
       //$scope.randToAvoidCacheMem =  "1";
       //console.log ("Generating:"+$scope.randToAvoidCacheMem);
     }
@@ -1376,7 +1377,11 @@ angular.module('zmApp.controllers')
 
     function cleanupOnCloseModal() {
 
-
+      if (simulStreaming){
+        randEachTime();
+        NVR.debug ('rand each time:'+randToAvoidCacheMem);
+      }
+      
       NVR.log("Restarting montage timers...");
       var ld = NVR.getLogin();
       // console.log ("closeModal: Cancelling timer");
@@ -2079,7 +2084,7 @@ angular.module('zmApp.controllers')
 
       if (stream) stream += NVR.insertBasicAuthToken();
 
-
+      //randEachTime();
 
 
       //"&rand=" + randToAvoidCacheMem;
