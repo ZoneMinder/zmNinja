@@ -2411,11 +2411,12 @@ angular.module('zmApp.controllers')
       }
 
       
-       
+    
         $timeout(function () {
-          pckry.layout();
+          
+          console.log ('******* DOING RESET');
           pckry.once('layoutComplete', function () {
-            //console.log ("Layout complete");
+            console.log ("Layout complete");
             var positions = pckry.getShiftPositions('data-item-id');
             //console.log ("POSITIONS MAP " + JSON.stringify(positions));
             var ld = NVR.getLogin();
@@ -2436,9 +2437,10 @@ angular.module('zmApp.controllers')
 
             // $scope.slider.monsize = 2;
           });
+          pckry.layout();
         //pckry.layout();
 
-      }, 20);
+      }, 20); 
 
     };
 
