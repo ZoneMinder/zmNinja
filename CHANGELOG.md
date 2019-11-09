@@ -1,5 +1,28 @@
 # Change Log
 
+## [v1.3.082](https://github.com/pliablepixels/zmNinja/tree/v1.3.082) (2019-11-08)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.079...v1.3.082)
+
+**Implemented enhancements:**
+
+- Allow timelines to scroll vertically within its window [\#859](https://github.com/pliablepixels/zmNinja/issues/859)
+- Implement an API caching layer for performance [\#857](https://github.com/pliablepixels/zmNinja/issues/857)
+
+**Fixed bugs:**
+
+- Fix timeline doubletapping on mobile \(iOS\) [\#863](https://github.com/pliablepixels/zmNinja/issues/863)
+
+**Closed issues:**
+
+- Enhancement: Zoom for Events List [\#855](https://github.com/pliablepixels/zmNinja/issues/855)
+
+**Merged pull requests:**
+
+- \#857 api caching layer [\#862](https://github.com/pliablepixels/zmNinja/pull/862) ([florie1706](https://github.com/florie1706))
+- add option to pause streams for simul, turn it off for default [\#861](https://github.com/pliablepixels/zmNinja/pull/861) ([maymaymay](https://github.com/maymaymay))
+- \#857 api caching layer [\#860](https://github.com/pliablepixels/zmNinja/pull/860) ([maymaymay](https://github.com/maymaymay))
+- Faster montage loads & Timeline fixes [\#858](https://github.com/pliablepixels/zmNinja/pull/858) ([pliablepixels](https://github.com/pliablepixels))
+
 ## [v1.3.079](https://github.com/pliablepixels/zmNinja/tree/v1.3.079) (2019-10-16)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.078...v1.3.079)
 

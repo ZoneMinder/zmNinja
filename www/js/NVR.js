@@ -1034,6 +1034,7 @@ angular.module('zmApp.controllers')
 
 
         loginData = angular.copy(newLogin);
+       // console.log ('****** SET LOGIN:'+JSON.stringify(loginData));
         $rootScope.LoginData = loginData;
 
         serverGroupList[loginData.serverName] = angular.copy(loginData);
@@ -3429,7 +3430,9 @@ angular.module('zmApp.controllers')
           //console.log("ZMData getEvents called with ID=" + monitorId + "and Page=" + pageId);
 
           if (!loadingStr) {
-            loadingStr = $translate.instant('kLoadingEvents') + "...";
+            loadingStr="<button class='button button-clear' style='line-height: normal; min-height: 0; min-width: 0;  color:#fff;' ng-click='$root.cancelAuth()'><i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kLoadingEvents') + "...</button>";
+
+            //loadingStr = $translate.instant('kLoadingEvents') + "...";
           }
           //if (loadingStr) loa
 
