@@ -1,6 +1,6 @@
 # Change Log
 
-## [v1.3.082](https://github.com/pliablepixels/zmNinja/tree/v1.3.082) (2019-11-08)
+## [v1.3.082](https://github.com/pliablepixels/zmNinja/tree/v1.3.082) (2019-11-12)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.079...v1.3.082)
 
 **Implemented enhancements:**
@@ -18,6 +18,8 @@
 
 **Merged pull requests:**
 
+- Update locale-de.json [\#865](https://github.com/pliablepixels/zmNinja/pull/865) ([florie1706](https://github.com/florie1706))
+- optimized translation [\#864](https://github.com/pliablepixels/zmNinja/pull/864) ([florie1706](https://github.com/florie1706))
 - \#857 api caching layer [\#862](https://github.com/pliablepixels/zmNinja/pull/862) ([florie1706](https://github.com/florie1706))
 - add option to pause streams for simul, turn it off for default [\#861](https://github.com/pliablepixels/zmNinja/pull/861) ([maymaymay](https://github.com/maymaymay))
 - \#857 api caching layer [\#860](https://github.com/pliablepixels/zmNinja/pull/860) ([maymaymay](https://github.com/maymaymay))
