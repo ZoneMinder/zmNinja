@@ -20,15 +20,56 @@
     <ion-item class="custom-list" ng-click="toggleMonitors()">
         <i class="icon" ng-class="monitorsExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp;Filter Monitors
       </ion-item>
+
+      <div class="list" ng-show="monitorsExpanded">
+        <div ng-repeat="monitor in monitors">
+            <div class="item item-divider item-toggle item-accordion item-icon-left" >
+              <i class="icon ion-monitor"></i> {{monitor.Monitor.Name}}  
+              <label class="toggle">
+                
+                  <input type="checkbox" ng-model="eventFilterCriteria[$index].included">
+                    <div class="track">
+                      <div class="handle"></div>
+                    </div>
+                 </label>
+                
+            </div> 
+           
+         
+            <div ng-show="eventFilterCriteria[$index].included">
+                <label>
+                    <ion-toggle ng-model="eventFilterCriteria[$index].objectonly" ng-change="alarmTypeToggle('objectonly', eventFilterCriteria[$index])" toggle-class="toggle-calm">
+                      <span class="item-text-wrap">{{'kShowObjectDetectionEvents' | translate}}</span>
+                    </ion-toggle>
+                </label>
+                <label>
+                    <ion-toggle ng-change="alarmTypeToggle('all', eventFilterCriteria[$index])" ng-model="eventFilterCriteria[$index].all" toggle-class="toggle-calm">
+                      <span class="item-text-wrap">{{'kShowAllEvents' | translate}}</span>
+                    </ion-toggle>
+                </label>
+                <label>
+                    <ion-toggle ng-change="alarmTypeToggle('alarmonly', eventFilterCriteria[$index])" ng-model="eventFilterCriteria[$index].alarmonly" toggle-class="toggle-calm">
+                      <span class="item-text-wrap">{{'kShowAlarmedEvents' | translate}}</span>
+                    </ion-toggle>
+                </label>
+            </div>
+           
+        
+        </div>
+       
+      </div>
+      
+    <!--
       <ion-item class="item-accordion" ng-show="monitorsExpanded" ng-repeat="monitor in monitors">
         <span class="item-checkbox">
-
           {{monitor.Monitor.Name}}
           <label class="checkbox">
             <input type="checkbox" ng-model="monitor.Monitor.isChecked">
           </label>
         </span>
       </ion-item>
+      
+    -->
       <br/>
    
     <center>

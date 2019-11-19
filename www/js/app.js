@@ -138,11 +138,39 @@ angular.module('zmApp', [
 
   // for events view
   .filter('eventListFilter', function (NVR) {
+
+    function otherEventChecks(item) {
+
+      var ld = NVR.getLogin();
+      var included = true;
+
+      for (var i=0; i < ld.eventFilterCriteria.length; i++) {
+        if (item.Event.MonitorId == ld.eventFilterCriteria[i].id) {
+          if (!ld.eventFilterCriteria[i].included) {
+            included = false;
+            break;
+          } else if (ld.eventFilterCriteria[i].objectonly) {
+              included = item.Event.Notes.indexOf('detected:')==-1?false:true;
+              break;
+
+          } else if (ld.eventFilterCriteria[i].alarmonly) {
+              included = item.Event.AlarmFrames >= ld.minAlarmCount;
+              break;
+
+          }
+
+        }
+
+      }
+      return included;
+     
+    }
+
     return function (input) {
       var ld = NVR.getLogin();
       var out = [];
       angular.forEach(input, function (item) {
-        if (item.Event.Archived == '0' || !ld.hideArchived) {
+        if ((item.Event.Archived == '0' || !ld.hideArchived) && otherEventChecks(item)) {
           out.push(item);
         }
       });

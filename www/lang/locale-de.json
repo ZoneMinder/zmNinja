@@ -127,7 +127,6 @@
     "kFastForward"               :"Vorspulen",
     "kFastRewind"                :"Zurückspulen",
     "kFillScreen"                :"Vollbildmodus",
-    "kFilterByDateTime"          :"Filter nach Tag/Zeit",
     "kFilterEvents"              :"Filter Ereignisse",
     "kFilterEventsBetween1"      :"Es werden Ereignisse angezeigt zwischen",
     "kFilterEventsBetween2"      :"Willst Du diesen Filter löschen?",

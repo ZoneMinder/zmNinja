@@ -5,6 +5,7 @@
 angular.module('zmApp.controllers')
   .controller('zmApp.EventDateTimeFilterCtrl', ['$scope', '$ionicSlideBoxDelegate', '$ionicSideMenuDelegate', '$rootScope', '$ionicHistory', 'NVR', '$state', function ($scope, $ionicScrollDelegate, $ionicSideMenuDelegate, $rootScope, $ionicHistory, NVR, $state) {
 
+     
       //----------------------------------------------------------------
       // Alarm notification handling
       //----------------------------------------------------------------
@@ -26,15 +27,31 @@ angular.module('zmApp.controllers')
       };
 
       $scope.$on('$ionicView.beforeEnter', function () {
+
+        var ld = NVR.getLogin();
+        $scope.eventFilterCriteria = ld.eventFilterCriteria;
+
+
         $scope.today = moment().format("YYYY-MM-DD");
         $scope.monitors = NVR.getMonitorsNow();
         if (!$scope.monitors.length) {
           NVR.getMonitors(1)
           .then (function (data) {
             $scope.monitors = data;
-            for (var i=0; i < $scope.monitors.length; i++) {
-              if ($scope.monitors[i].Monitor.isChecked == undefined)
-               $scope.monitors[i].Monitor.isChecked = true;
+            if (!$scope.eventFilterCriteria.length) {
+              NVR.debug ('filter criteria not specified, creating it');
+              for (var i=0; i < $scope.monitors.length; i++) {
+                $scope.eventFilterCriteria.push ({
+                  'id': $scope.monitors[i].Monitor.Id,
+                  'included': true,
+                 'objectonly': false,
+                 'alarmonly': true,
+                 'all': false,
+  
+                })
+            }
+            
+             
             }
           });
         }
@@ -54,6 +71,31 @@ angular.module('zmApp.controllers')
       //--------------------------------------------------------------------------
       // Clears filters 
       //--------------------------------------------------------------------------
+
+      $scope.alarmTypeToggle = function(cat,item) {
+
+        if (cat == 'all') {
+          if (item.all) {
+              item.objectonly = false;
+              item.alarmonly = false;
+
+          }
+        }
+        else if (cat == 'objectonly') {
+          if (item.objectonly) {
+              item.all = false;
+              item.alarmonly = false;
+
+          }
+        } 
+        else if (cat == 'alarmonly') {
+          if (item.alarmonly) {
+              item.all = false;
+              item.objectonly = false;
+
+          }
+        }
+      };
 
       $scope.removeFilters = function () {
         $rootScope.isEventFilterOn = false;
@@ -100,6 +142,11 @@ angular.module('zmApp.controllers')
       // don't root.
       //--------------------------------------------------------------------------
       $scope.saveFilters = function () {
+
+        ld = NVR.getLogin();
+        ld.eventFilterCriteria = $scope.eventFilterCriteria;
+        NVR.setLogin(ld);
+
         if (!$rootScope.fromDate) {
           //console.log("RESET fromDate");
           $rootScope.fromDate = new Date();

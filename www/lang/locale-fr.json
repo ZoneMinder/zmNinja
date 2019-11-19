@@ -106,7 +106,6 @@
     "kFastForward"               :"Avance rapide",
     "kFastRewind"                :"Retour rapide",
     "kFillScreen"                :"Plein écran",
-    "kFilterByDateTime"          :"Filtrer par date/heure",
     "kFilterEvents"              :"Filtrer les événements",
     "kFilterEventsBetween1"      :"Evénements entre",
     "kFilterEventsBetween2"      :"Voulez-vous supprimer ce filtre ?",

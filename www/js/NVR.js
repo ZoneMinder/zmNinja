@@ -209,6 +209,7 @@ angular.module('zmApp.controllers')
         'kioskPassword': '',
         'useAPICaching': true,
         'pauseStreams': false,
+        'eventFilterCriteria': []
 
       };
 
@@ -1546,7 +1547,10 @@ angular.module('zmApp.controllers')
           loginData.lastEventCheckTimes = {};
 
         }
+        if (typeof loginData.eventFilterCriteria == 'undefined') {
+          loginData.eventFilterCriteria = [];
 
+        }
 
         if (typeof loginData.enableMontageOverlays == 'undefined') {
           loginData.enableMontageOverlays = true;

@@ -104,7 +104,6 @@
     "kFastForward"               :"vooruitspoelen",
     "kFastRewind"                :"terugspoelen",
     "kFillScreen"                :"volledig scherm",
-    "kFilterByDateTime"          :"Filter op datum/tijd",
     "kFilterEvents"              :"Filter gebeurtenissen",
     "kFilterEventsBetween1"      :"Gebeurtenissen zichtbaar tussen",
     "kFilterEventsBetween2"      :"Filter verwijderen?",

@@ -121,7 +121,6 @@
     "kFastForward"               :"avance rápido",
     "kFastRewind"                :"retroceso rápido",
     "kFillScreen"                :"pantalla completa",
-    "kFilterByDateTime"          :"Filtrar por Hora/Fecha",
     "kFilterEvents"              :"Filtrar Eventos",
     "kFilterEventsBetween1"      :"Estás viendo los eventos entre",
     "kFilterEventsBetween2"      :"¿Quieres eliminar este filtro?",

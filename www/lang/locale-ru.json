@@ -99,7 +99,6 @@
     "kFastForward"               :"перемотка вперёд",
     "kFastRewind"                :"перемотка назад",
     "kFillScreen"                :"заполнить экран",
-    "kFilterByDateTime"          :"Фильтр по Дате/Времени",
     "kFilterEvents"              :"Фильтр событий",
     "kFilterEventsBetween1"      :"Вы просматриваете события между",
     "kFilterEventsBetween2"      :"Вы хотите удалить этот фильтр?",
