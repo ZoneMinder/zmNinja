@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version": "1.3.082",
+  "version":"1.3.083",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -116,6 +116,7 @@
     "@ionic/v1-toolkit": "^1.0.14",
     "bower": "^1.8.4",
     "electron": "^3.1.3",
+    "electron-builder": "^21.2.0",
     "electron-cli": "^0.2.8",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
@@ -126,10 +127,10 @@
   },
   "scripts": {
     "electron": "electron .",
-    "dist-mac": "./electron_js/sync_versions.sh && electron-builder -m",
-    "dist-win": "./electron_js/sync_versions.sh && electron-builder -w",
-    "dist-lin": "./electron_js/sync_versions.sh && electron-builder -l",
-    "dist-all": "./electron_js/sync_versions.sh && electron-builder -mwl"
+    "dist-mac": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -m",
+    "dist-win": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -w",
+    "dist-lin": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -l",
+    "dist-all": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -mwl"
   },
   "main": "electron_js/main.js",
   "build": {
