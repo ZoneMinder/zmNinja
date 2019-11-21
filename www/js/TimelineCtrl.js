@@ -326,6 +326,28 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     
   });*/
 
+
+  $scope.$on('sizechanged', function() {
+   
+    $timeout (function () {
+      if (timeline_instance) {
+        options.maxHeight = $rootScope.devHeight-100;
+        timeline_instance.setOptions(options);
+        timeline_instance.redraw();
+       // console.log ('******* TIMELINE REDRAW');
+      }
+    },10);
+
+  });
+ 
+   
+
+
+  $scope.$on('$ionicView.beforeLeave', function () {
+   // window.removeEventListener("resize", redrawTimeline, false);
+
+  });
+
   $scope.$on('$ionicView.beforeEnter', function () {
     $ionicSideMenuDelegate.canDragContent(false);
     $scope.$on ( "process-push", function () {
@@ -356,7 +378,6 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     };
     $scope.newEvents = '';
 
-    
 
 
     if ($rootScope.platformOS == 'desktop') {
@@ -1109,7 +1130,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       showCurrentTime: true,
       editable: false,
      verticalScroll: true,
-     height: '100%',
+     //height: '100%',
+     //maxHeight:"80%",
+     maxHeight:$rootScope.devHeight-100,
      //zoomKey: 'ctrlKey',
 
      //groupHeightMode:'fixed',
