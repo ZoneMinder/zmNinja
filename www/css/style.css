@@ -98,11 +98,12 @@ image-loader {
 }
 
 
-
+/*
 #visualization {
 
   height: 70vh;
-}
+}*/
+
 ion-popover-view.fit {
     height: auto;
 }
