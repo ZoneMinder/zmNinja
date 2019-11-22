@@ -1465,7 +1465,7 @@ angular.module('zmApp', [
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
 
-        //console.log("********NEW Computed Dev Width & Height as" + $rootScope.devWidth + "*" + $rootScope.devHeight);
+        NVR.debug("resize/orient: " + $rootScope.devWidth + "(w) * " + $rootScope.devHeight+"(h)");
 
         $rootScope.$broadcast('sizechanged');
 
