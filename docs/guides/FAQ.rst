@@ -343,6 +343,9 @@ out later they skimmed details.
 
 For example:
 
+.. image:: img/inspect-source.png
+   :width: 600
+
 In the above case my zmNinja cgi-bin setting is
 ``https://myserver:myport/zm/cgi-bin``
 
