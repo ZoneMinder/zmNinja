@@ -61,6 +61,15 @@ angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$ro
 
   }
 
+  $scope.launchUrl = function (url) {
+
+    options = {
+    };
+    console.log ('got '+url);
+    cordova.InAppBrowser.open(url, '_blank', options);
+
+  };
+
   //-------------------------------------------------------------------------
   // Lets make sure we set screen dim properly as we enter
   // The problem is we enter other states before we leave previous states
