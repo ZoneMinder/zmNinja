@@ -65,7 +65,7 @@ angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$ro
 
     options = {
     };
-    console.log ('got '+url);
+    //console.log ('got '+url);
     if ($rootScope.platformOS == 'desktop' ) {
       window.open(url, '_blank', options);
     } else {
