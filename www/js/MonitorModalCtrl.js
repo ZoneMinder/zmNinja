@@ -22,6 +22,24 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.ptzButtonsShown = true;
 
 
+  var streamState = {
+    SNAPSHOT: 1,
+    SNAPSHOT_LOWQUALITY:2,
+    ACTIVE: 3,
+    STOPPED: 4,
+    PAUSED: 5
+  };
+
+  var currentStreamState = streamState.SNAPSHOT_LOWQUALITY;
+
+  // incase imageload is never called
+  $timeout (function () {
+    if (currentStreamState != streamState.SNAPSHOT) {
+      currentStreamState = streamState.SNAPSHOT;
+      NVR.debug ('Forcing stream to regular quality, imageLoaded() was never called');
+    }
+    
+  },10000);
 
 
 
@@ -672,6 +690,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   // this is a good time to calculate scaled zone points
   function imageLoaded() {
 
+    currentStreamState = streamState.SNAPSHOT;
+
     if ($scope.animationInProgress) return;
     /*
     var img = document.getElementById("singlemonitor");
@@ -1259,12 +1279,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.constructSingleStream = function () {
 
 
+    var scale = (currentStreamState == streamState.SNAPSHOT_LOWQUALITY) ? '10':$scope.quality;
+
     var stream;
     var fps = NVR.getLogin().singleliveFPS;
     stream = $scope.monitor.Monitor.streamingURL +
       "/nph-zms?mode=" + getSingleStreamMode() +
       "&monitor=" + $scope.monitorId +
-      "&scale=" + $scope.quality +
+      "&scale=" + scale +
       '&buffer=1000';
 
     if (fps) {
