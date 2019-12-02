@@ -1584,6 +1584,10 @@ videogular div.event-time {
     white-space: nowrap;
 }
 
+.widepopup .popup {
+  width:70%;
+}
+
 .visred {
     fill: #FF0000;
 }
