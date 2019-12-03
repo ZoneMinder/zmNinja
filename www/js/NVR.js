@@ -1600,6 +1600,7 @@ angular.module('zmApp.controllers')
         loginData.canSwipeMonitors = true;
         loginData.forceImageModePath = false;
         loginData.enableBlog = true;
+        loginData.pauseStreams = false;
 
       }
 
