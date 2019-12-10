@@ -2773,7 +2773,8 @@ angular.module('zmApp.controllers')
 
                             for (var i = 0; i < monitors.length; i++) {
 
-                              // make them all show for now
+                               // zm 1.33.15 prefixes 'ROTATE_' to orientation
+                               monitors[i].Monitor.Orientation  = monitors[i].Monitor.Orientation.replace('ROTATE_','');
 
                               var recordingType = '';
                               if (monitors[i].Monitor.SaveJPEGs > 0) {
@@ -2955,6 +2956,8 @@ angular.module('zmApp.controllers')
 
                             for (var i = 0; i < monitors.length; i++) {
                               //monitors[i].Monitor.listDisplay = 'show';
+                              // zm 1.33.15 prefixes 'ROTATE_' to orientation
+                              monitors[i].Monitor.Orientation  = monitors[i].Monitor.Orientation.replace('ROTATE_','');
                               monitors[i].Monitor.isAlarmed = false;
                               monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                               monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
