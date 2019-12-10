@@ -1286,15 +1286,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     stream = $scope.monitor.Monitor.streamingURL +
       "/nph-zms?mode=" + getSingleStreamMode() +
       "&monitor=" + $scope.monitorId +
-      "&scale=" + scale +
-      '&buffer=1000';
+      "&scale=" + scale;
 
     if (fps) {
       stream +='&maxfps='+fps;
     }
     stream += $rootScope.authSession +
-      "&rand=" + $rootScope.modalRand +
       appendSingleStreamConnKey();
+
+      if (currentStreamState != streamState.SNAPSHOT_LOWQUALITY)
+        stream += "&rand=" + $rootScope.modalRand + "&buffer=1000";
 
     //console.log ("STREAM="+stream);
 
