@@ -509,6 +509,8 @@ angular.module('zmApp.controllers')
 
               var mw = parseInt(tempMon.Monitor.Width);
               var mh = parseInt(tempMon.Monitor.Height);
+
+             
               var mo = parseInt(tempMon.Monitor.Orientation);
               myevents[i].Event.Rotation = '';
 
@@ -2854,8 +2856,6 @@ angular.module('zmApp.controllers')
 
               var tempMon = NVR.getMonitorObject(myevents[i].Event.MonitorId);
               if (tempMon != undefined) {
-
-
                 var mw = parseInt(tempMon.Monitor.Width);
                 var mh = parseInt(tempMon.Monitor.Height);
                 var mo = parseInt(tempMon.Monitor.Orientation);
@@ -2926,6 +2926,8 @@ angular.module('zmApp.controllers')
     function computeThumbnailSize(mw, mh, mo) {
 
 
+      
+     
       tw = Math.min(Math.round(0.35 * $rootScope.devWidth), 200);
       th = 150;
 
@@ -2935,7 +2937,7 @@ angular.module('zmApp.controllers')
         h: 0
       };
 
-      
+    
     /* seems I really should be using strings due to horz and very
     but luckily parseInt will make them 0 which gets treated as "nothing to do"
     '0' => translate('Normal'),
