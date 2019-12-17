@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.083";
+      var zmAppVersion = "1.3.085";
       var zmAPIVersion = null;
       var isBackground = false;
       var justResumed = false;
@@ -209,6 +209,7 @@ angular.module('zmApp.controllers')
         'kioskPassword': '',
         'useAPICaching': true,
         'pauseStreams': false,
+        'liveStreamBuffer': 100,
 
       };
 
@@ -1595,6 +1596,10 @@ angular.module('zmApp.controllers')
         if (typeof loginData.pauseStreams == 'undefined') {
           loginData.pauseStreams = false;
 
+        }
+
+        if (typeof loginData.liveStreamBuffer == 'undefined') {
+          loginData.liveStreamBuffer = 100;
         }
 
         loginData.canSwipeMonitors = true;

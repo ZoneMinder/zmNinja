@@ -1278,11 +1278,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   $scope.constructSingleStream = function () {
 
+    var  ld = NVR.getLogin();
 
     var scale = (currentStreamState == streamState.SNAPSHOT_LOWQUALITY) ? '10':$scope.quality;
 
     var stream;
-    var fps = NVR.getLogin().singleliveFPS;
+    var fps =ld.singleliveFPS;
     stream = $scope.monitor.Monitor.streamingURL +
       "/nph-zms?mode=" + getSingleStreamMode() +
       "&monitor=" + $scope.monitorId +
@@ -1295,7 +1296,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       appendSingleStreamConnKey();
 
       if (currentStreamState != streamState.SNAPSHOT_LOWQUALITY)
-        stream += "&rand=" + $rootScope.modalRand + "&buffer=1000";
+        stream += "&rand=" + $rootScope.modalRand + "&buffer="+ld.liveStreamBuffer;
 
     //console.log ("STREAM="+stream);
 

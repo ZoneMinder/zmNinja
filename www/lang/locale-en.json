@@ -177,6 +177,7 @@
     "kKioskPasswordConfirm"      :"re-confirm kiosk unlock password",
     "kLanguage"                  :"Language",
     "kLatestEvents"              :"latest events",
+    "kLiveStreamBuffer"          :"Live stream buffer",
     "kLiveView"                  :"Live View",
     "kLoad"                      :"load",
     "kLoading"                   :"loading",
