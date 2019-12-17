@@ -209,7 +209,7 @@ angular.module('zmApp.controllers')
         'kioskPassword': '',
         'useAPICaching': true,
         'pauseStreams': false,
-        'liveStreamBuffer': 100,
+        'liveStreamBuffer': 10,
         'zmNinjaCustomId':undefined, // filled in init. custom header
 
       };
@@ -1604,7 +1604,7 @@ angular.module('zmApp.controllers')
         }
 
         if (typeof loginData.liveStreamBuffer == 'undefined') {
-          loginData.liveStreamBuffer = 100;
+          loginData.liveStreamBuffer = 10;
         }
 
         if ((typeof loginData.zmNinjaCustomId == undefined) || (loginData.zmNinjaCustomId == '')) {
