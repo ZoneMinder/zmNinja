@@ -7,8 +7,7 @@ What is the minimum supported version of ZoneMinder, Android and iOS?
 You need a minimum of ZM 1.30.4 with APIs working. You may get it to run
 in previous versions, but I don't support them, so you are on your own.
 
-Starting version 1.3.26 of zmNinja, only IOS 10+ and Android 5.0+
-devices are supported.
+zmNinja is supported  only on IOS 11+ and Android 5.0+
 
 zmNinja Help
 ------------
