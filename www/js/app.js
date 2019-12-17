@@ -2,14 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,alert,PushNotification, moment ,ionic, URI,Packery, ConnectSDK, CryptoJS, ContactFindOptions, localforage,$, Connection, MobileAccessibility, hello */
 
-// For desktop versions, this is replaced
-// with actual app version from config.xml by the 
-// ./make_desktop.sh script
 
-// For mobile versions, I use cordova app version plugin
-// to get it at run time
-
-var appVersion = "0.0.0";
 
 // core app start stuff
 angular.module('zmApp', [
@@ -662,11 +655,17 @@ angular.module('zmApp', [
       request: function (config) {
         if (!config) return config;
         if (!config.url) return config;
-
+        nvr = $injector.get('NVR');
         if ($rootScope.basicAuthHeader) {
 
           config.headers.Authorization = $rootScope.basicAuthHeader;
         }
+
+        var chdr = nvr.getCustomHeader();
+        if (chdr) {
+          config.headers['X-ZmNinja'] = chdr;
+        }
+        
 
 
         return config || $q.when(config);
@@ -1131,7 +1130,7 @@ angular.module('zmApp', [
 
 
 
-
+    
       $rootScope.dpadId = 0;
       $rootScope.textScaleFactor = 1.0;
       $rootScope.isLoggedIn = false;
@@ -1765,11 +1764,16 @@ angular.module('zmApp', [
 
           // console.log("app version");
           cordova.getAppVersion.getVersionNumber().then(function (version) {
-            appVersion = version;
-            NVR.log("App Version: " + appVersion);
-            NVR.setAppVersion(appVersion);
+          
+            NVR.log("App Version: " + version);
+            NVR.setAppVersion(version);
           });
         }
+        else {
+         // custom header
+         $rootScope.appVersion = NVR.getAppVersion();
+        }
+      
 
 
         // At this stage, NVR.init is not called yet

@@ -22,7 +22,7 @@ angular.module('zmApp.controllers')
         It is changed by sync_version.sh
       */
       var zmAppVersion = "1.3.085";
-      var zmAPIVersion = null;
+     
       var isBackground = false;
       var justResumed = false;
       var timeSinceResumed = -1;
@@ -210,6 +210,7 @@ angular.module('zmApp.controllers')
         'useAPICaching': true,
         'pauseStreams': false,
         'liveStreamBuffer': 100,
+        'zmNinjaHeader':undefined, // filled in init. custom header
 
       };
 
@@ -232,6 +233,10 @@ angular.module('zmApp.controllers')
           debug("Cordova HTTP: configuring basic auth");
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
         }
+
+        // setup custom header
+        cordova.plugin.http.setHeader('*', 'X-ZmNinja', loginData.zmNinjaHeader);
+
 
         if (!loginData.enableStrictSSL) {
 
@@ -1602,6 +1607,10 @@ angular.module('zmApp.controllers')
           loginData.liveStreamBuffer = 100;
         }
 
+        if ((typeof loginData.zmNinjaHeader == undefined) || (loginData.zmNinjaHeader == '')) {
+          loginData.zmNinjaHeader = 'zmNinja version:'+zmAppVersion;
+        }
+
         loginData.canSwipeMonitors = true;
         loginData.forceImageModePath = false;
         loginData.enableBlog = true;
@@ -2283,6 +2292,13 @@ angular.module('zmApp.controllers')
 
         setAppVersion: function (ver) {
           zmAppVersion = ver;
+          $rootScope.appVersion = ver; // for custom header
+
+          //console.log ('****** VER:'+$rootScope.appVersion);
+        },
+
+        getCustomHeader: function () {
+          return loginData.zmNinjaHeader;
         },
 
         getAppVersion: function () {

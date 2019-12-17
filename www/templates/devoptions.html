@@ -22,7 +22,7 @@
       </div>
 
       <div class="item item-input-inset item-text-wrap">
-        {{'kMontageLiveViewFPS'|translate}} ({{'kSec'|translate}}.)
+        {{'kMontageLiveViewFPS'|translate}} ({{'kSec'|translate}}.)&nbsp;
        
           <label class="item-input-wrapper">
             <input  type="tel" placeholder="leave empty for auto" ng-model="loginData.montageliveFPS">
@@ -31,7 +31,7 @@
       </div>
 
       <div class="item item-input-inset item-text-wrap">
-        {{'kSingleLiveViewFPS'|translate}} ({{'kSec'|translate}}.)
+        {{'kSingleLiveViewFPS'|translate}} ({{'kSec'|translate}}.)&nbsp;
        
           <label class="item-input-wrapper">
             <input id="devoptions-move-3_1" type="tel" placeholder="leave empty for auto" ng-model="loginData.singleliveFPS">
@@ -40,7 +40,7 @@
       </div>
 
       <div class="item item-input-inset item-text-wrap">
-        {{'kLiveStreamBuffer'|translate}}      
+        {{'kLiveStreamBuffer'|translate}}&nbsp;      
           <label class="item-input-wrapper">
             <input id="devoptions-move-3_1" type="tel" ng-model="loginData.liveStreamBuffer">
           </label>
@@ -265,6 +265,13 @@
         {{'kCycleMontageInterval'|translate}}({{'kSec'|translate}}.)&nbsp;
         <label class="item-input-wrapper">
           <input type="tel" placeholder="" ng-model="loginData.cycleMontageInterval">
+        </label>
+      </div>
+
+      <div class="item item-text-wrap item-input-inset">
+        {{'kCustomHeader'|translate}}&nbsp;
+        <label class="item-input-wrapper">
+          <input type="tel" placeholder="" ng-model="loginData.zmNinjaHeader" ng-change="useDefaultCustom()">
         </label>
       </div>
 

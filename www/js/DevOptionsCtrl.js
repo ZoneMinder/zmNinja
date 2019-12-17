@@ -141,6 +141,14 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
   }
 
+  $scope.useDefaultCustom = function() {
+    if ($scope.loginData.zmNinjaHeader=='') {
+      $scope.loginData.zmNinjaHeader = 'zmNinja version:'+NVR.getAppVersion();
+    }
+   
+
+  };
+
   $scope.saveDevOptions = function () {
 
     saveDevOptions();
