@@ -210,7 +210,7 @@ angular.module('zmApp.controllers')
         'useAPICaching': true,
         'pauseStreams': false,
         'liveStreamBuffer': 100,
-        'zmNinjaHeader':undefined, // filled in init. custom header
+        'zmNinjaCustomId':undefined, // filled in init. custom header
 
       };
 
@@ -235,7 +235,7 @@ angular.module('zmApp.controllers')
         }
 
         // setup custom header
-        cordova.plugin.http.setHeader('*', 'X-ZmNinja', loginData.zmNinjaHeader);
+        cordova.plugin.http.setHeader('*', 'X-ZmNinja', loginData.zmNinjaCustomId);
 
 
         if (!loginData.enableStrictSSL) {
@@ -1607,8 +1607,8 @@ angular.module('zmApp.controllers')
           loginData.liveStreamBuffer = 100;
         }
 
-        if ((typeof loginData.zmNinjaHeader == undefined) || (loginData.zmNinjaHeader == '')) {
-          loginData.zmNinjaHeader = 'zmNinja version:'+zmAppVersion;
+        if ((typeof loginData.zmNinjaCustomId == undefined) || (loginData.zmNinjaCustomId == '')) {
+          loginData.zmNinjaCustomId = 'zmNinja_'+zmAppVersion;
         }
 
         loginData.canSwipeMonitors = true;
@@ -1680,10 +1680,14 @@ angular.module('zmApp.controllers')
       return {
 
 
-        insertBasicAuthToken: function () {
+        insertSpecialTokens: function () {
 
-          return loginData.insertBasicAuthToken && $rootScope.basicAuthToken ? "&basicauth=" + $rootScope.basicAuthToken : "";
-
+          var tokens = '';
+          tokens+='&id='+loginData.zmNinjaCustomId;
+          if (loginData.insertBasicAuthToken && $rootScope.basicAuthToken) {
+            tokens += "&basicauth=" + $rootScope.basicAuthToken;
+          }
+          return tokens;
         },
 
         setCurrentServerMultiPortSupported: function (val) {
@@ -2298,7 +2302,7 @@ angular.module('zmApp.controllers')
         },
 
         getCustomHeader: function () {
-          return loginData.zmNinjaHeader;
+          return loginData.zmNinjaCustomId;
         },
 
         getAppVersion: function () {

@@ -276,7 +276,7 @@ var masonry = null;
       "&height=" + moment.Event.thumbHeight * 2;
 
     stream += $rootScope.authSession;
-    stream += NVR.insertBasicAuthToken();
+    stream += NVR.insertSpecialTokens();
     return stream;
 
   };

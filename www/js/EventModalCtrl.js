@@ -1999,7 +1999,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       "&height=" + 200;
 
     if ($rootScope.authSession != 'undefined') frame += $rootScope.authSession;
-    frame += NVR.insertBasicAuthToken();
+    frame += NVR.insertSpecialTokens();
     //console.log ("alarm:"+frame);
     return frame;
   };

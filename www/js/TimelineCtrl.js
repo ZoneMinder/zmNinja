@@ -1579,7 +1579,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       "/index.php?view=image&fid=" +
       NVR.getSnapshotFrame()+"&eid="+event.Event.Id  + "&width=400" ;
     stream += $rootScope.authSession;
-    stream += NVR.insertBasicAuthToken();
+    stream += NVR.insertSpecialTokens();
     $timeout ( function () {
 
         $scope.thumbData = {

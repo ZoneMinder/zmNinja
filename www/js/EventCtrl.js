@@ -980,8 +980,8 @@ angular.module('zmApp.controllers')
   
 
 
-      $scope.imgsrc += NVR.insertBasicAuthToken();
-      $scope.fallbackImgSrc += NVR.insertBasicAuthToken();
+      $scope.imgsrc += NVR.insertSpecialTokens();
+      $scope.fallbackImgSrc += NVR.insertSpecialTokens();
 
 
 
@@ -2318,7 +2318,7 @@ angular.module('zmApp.controllers')
         
           videoURL = event.Event.recordingURL + "/index.php?view=view_video&eid=" + event.Event.Id;
           videoURL += $rootScope.authSession;
-          videoURL += NVR.insertBasicAuthToken();
+          videoURL += NVR.insertSpecialTokens();
 
 
          //  console.log("************** VIDEO IS " + videoURL);
@@ -2986,7 +2986,7 @@ angular.module('zmApp.controllers')
         "&height=" + event.Event.thumbHeight * 2;
       stream += $rootScope.authSession;
 
-      stream += NVR.insertBasicAuthToken();
+      stream += NVR.insertSpecialTokens();
       return stream;
 
     };
@@ -3000,7 +3000,7 @@ angular.module('zmApp.controllers')
       
      stream += $rootScope.authSession;
 
-      stream += NVR.insertBasicAuthToken();
+      stream += NVR.insertSpecialTokens();
 
 
       return stream;
@@ -3014,7 +3014,7 @@ angular.module('zmApp.controllers')
           "/index.php?view=image&fid=" + alarm.id;
         if (motion) stream += $scope.outlineMotionParam;
       stream += $rootScope.authSession;
-      stream += NVR.insertBasicAuthToken();
+      stream += NVR.insertSpecialTokens();
 
 //      console.log ("alarm:"+stream);
       return stream;

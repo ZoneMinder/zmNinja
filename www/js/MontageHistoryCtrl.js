@@ -1528,7 +1528,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     //if (monitor.Monitor.isPaused) return "";
     stream = monitor.Monitor.eventUrl; //eventUrl already has all the foo
 
-    stream += NVR.insertBasicAuthToken();
+    stream += NVR.insertSpecialTokens();
     // console.log("STREAM=" + stream);
     return stream;
 

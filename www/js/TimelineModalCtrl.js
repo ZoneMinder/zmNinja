@@ -54,7 +54,7 @@ angular.module('zmApp.controllers').controller('TimelineModalCtrl', ['$scope', '
     
      stream += $rootScope.authSession;
 
-    stream += NVR.insertBasicAuthToken();
+    stream += NVR.insertSpecialTokens();
     return stream;
   };
 

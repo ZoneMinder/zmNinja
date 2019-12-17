@@ -49,7 +49,7 @@
     "kCredentialsBody"           :"Please provide your ZoneMinder credentials",
     "kCredentialsTitle"          :"Credentials Required",
     "kCurrentState"              :"current state",
-    "kCustomHeader"              : "Custom HTTP header",
+    "kCustomId"                  : "Custom ID",
     "kCustomRange"               :"Custom Range",
     "kCycleMonitors"             :"cycle monitors",
     "kCycleMonitorsInterval"     :"monitor cycle interval",
