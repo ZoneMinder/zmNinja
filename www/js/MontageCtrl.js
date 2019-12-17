@@ -843,7 +843,7 @@ angular.module('zmApp.controllers')
         "&scale=50";
 
      frame += $rootScope.authSession;
-      frame += NVR.insertBasicAuthToken();
+      frame += NVR.insertSpecialTokens();
       return frame;
     };
 
@@ -2043,7 +2043,7 @@ angular.module('zmApp.controllers')
           
         stream += $rootScope.authSession;
   
-        stream += NVR.insertBasicAuthToken();
+        stream += NVR.insertSpecialTokens();
       //  console.log (stream);
       //console.log ("EVENT="+stream);
         return stream;
@@ -2082,7 +2082,7 @@ angular.module('zmApp.controllers')
         stream  += $rootScope.authSession;
         stream += appendConnKey(monitor.Monitor.connKey);
 
-      if (stream) stream += NVR.insertBasicAuthToken();
+      if (stream) stream += NVR.insertSpecialTokens();
 
       //randEachTime();
 
