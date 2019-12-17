@@ -2070,7 +2070,7 @@ angular.module('zmApp.controllers')
         "/nph-zms?mode=" + getMode() +
         "&monitor=" + monitor.Monitor.Id +
         "&scale=" + $scope.LoginData.montageQuality +
-        "&buffer=1000"+
+        "&buffer="+ $scope.LoginData.liveStreamBuffer +
         "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id;
 
         if (fps) {
