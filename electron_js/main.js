@@ -22,6 +22,10 @@ if (argv.path) {
   console.log ("switching storage to: "+app.getPath("userData"));
 }
 
+if (argv.lang) {
+  console.log ('SET LANGUAGE TO '+argv.lang)
+  app.commandLine.appendSwitch('lang', argv.lang);
+}
 
 
 //
@@ -29,6 +33,7 @@ if (argv.path) {
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 app.commandLine.appendSwitch ('ignore-certificate-errors', 'true');
+
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -128,6 +133,9 @@ function createWindow() {
   });
 
   mainWindowState.manage(win);
+
+
+
   // fs will be arg 1 if its not run in electron debug mode
   if (argv.fs)
   {

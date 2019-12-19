@@ -19,6 +19,11 @@ The following command line parameters are supported:
 
     --fs          - starts zmNinja in full screen mode
 
+    --lang        - specifies a language profile that will be used to display input 
+                    dates etc. Just switching a "language" in zmNinja does not affect browser
+                    default language. I currently don't know how to wire this to zmNinja's language
+                    as this is electron stuff so you'll have to pass it as command line.
+
 Multiple instances
 ------------------
 
