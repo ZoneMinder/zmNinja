@@ -746,6 +746,10 @@ push notifications, it checks if the last time a push was sent for this
 monitor is < the time you specified. If it is, it does not send. That's
 all.
 
+When I switch languages, date/time inputs don't follow my locale in zmNinja Desktop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The only screen I am aware of where there is a date/time input is ``Events->Filter Events``. This happens because the desktop version uses an embedded chromium version which seems to default to ``en-us``. To work around this, you can start the desktop app with a ``--lang='<locale code>'`` option. Example ``--lang='ru'``. Note that you will have to do this each time and is completely related to any language you may choose in zmNinja. Thel language in zmNinja is only used to translate text strings. Nothing else. For an extended discussion see `this issue <https://github.com/pliablepixels/zmNinja/issues/875>`__. 
+
 Is zmNinja free?
 ----------------
 
