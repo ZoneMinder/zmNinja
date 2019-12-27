@@ -1,5 +1,33 @@
 # Change Log
 
+## [v1.3.085](https://github.com/pliablepixels/zmNinja/tree/v1.3.085) (2019-12-27)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.082...v1.3.085)
+
+**Implemented enhancements:**
+
+- Add custom header & id to zmninja \(X-ZmNinja/id=\) [\#876](https://github.com/pliablepixels/zmNinja/issues/876)
+- zmNinja Desktop Filter Event input dialog  ignores system date & time formats [\#875](https://github.com/pliablepixels/zmNinja/issues/875)
+
+**Fixed bugs:**
+
+- Thumbnails on Events List being displayed with incorrect aspect ratio [\#872](https://github.com/pliablepixels/zmNinja/issues/872)
+- browser links don't work on iOS 13+ [\#869](https://github.com/pliablepixels/zmNinja/issues/869)
+- Last row in timeline view layout pushes thumbnail off the screen [\#866](https://github.com/pliablepixels/zmNinja/issues/866)
+
+**Closed issues:**
+
+- zmNinja app will not open on iOS 10.3.4 [\#877](https://github.com/pliablepixels/zmNinja/issues/877)
+- API problem... [\#874](https://github.com/pliablepixels/zmNinja/issues/874)
+- clean up monitor change state view \(especially global\), allow folks to turn motion detection on/off easily [\#867](https://github.com/pliablepixels/zmNinja/issues/867)
+- Not playing live stream - iOS. Works on Desktop App version, and Mobile Zoneminder Website. [\#856](https://github.com/pliablepixels/zmNinja/issues/856)
+
+**Merged pull requests:**
+
+-  \#876 more logical naming [\#879](https://github.com/pliablepixels/zmNinja/pull/879) ([florie1706](https://github.com/florie1706))
+-  \#873, \#876 more logical naming [\#878](https://github.com/pliablepixels/zmNinja/pull/878) ([maymaymay](https://github.com/maymaymay))
+- \#867 clean up global code [\#871](https://github.com/pliablepixels/zmNinja/pull/871) ([florie1706](https://github.com/florie1706))
+- \#867 clean up global code [\#870](https://github.com/pliablepixels/zmNinja/pull/870) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.3.082](https://github.com/pliablepixels/zmNinja/tree/v1.3.082) (2019-11-12)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.079...v1.3.082)
 
