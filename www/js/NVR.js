@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.085";
+      var zmAppVersion = "1.3.086";
      
       var isBackground = false;
       var justResumed = false;
@@ -233,7 +233,7 @@ angular.module('zmApp.controllers')
           debug("Cordova HTTP: configuring basic auth");
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
         }
-
+        debug ("Setting cordova header X-ZmNinja to "+loginData.zmNinjaCustomId);
         // setup custom header
         cordova.plugin.http.setHeader('*', 'X-ZmNinja', loginData.zmNinjaCustomId);
 
@@ -1607,7 +1607,7 @@ angular.module('zmApp.controllers')
           loginData.liveStreamBuffer = 10;
         }
 
-        if ((typeof loginData.zmNinjaCustomId == undefined) || (loginData.zmNinjaCustomId == '')) {
+        if ((typeof loginData.zmNinjaCustomId == 'undefined') || (loginData.zmNinjaCustomId == '')) {
           loginData.zmNinjaCustomId = 'zmNinja_'+zmAppVersion;
         }
 
