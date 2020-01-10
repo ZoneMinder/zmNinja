@@ -67,6 +67,7 @@
   "dependencies": {
     "app-builder-lib": "^22.1.0",
     "clivas": "^0.2.0",
+    "object-keys": "^1.1.1",
     "cordova-android": "8.0.0",
     "cordova-custom-config": "^5.1.0",
     "cordova-ios": "^5.0.1",
@@ -156,7 +157,9 @@
       "node_modules/minimist/**/*",
       "node_modules/menu/**/*",
       "node_modules/clivas/**/*",
-      "node_modules/keypress/**/*"
+      "node_modules/keypress/**/*",
+      "node_modules/object-keys/**/*"
+
     ],
     "mac": {
       "category": "productivity",

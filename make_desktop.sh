@@ -100,6 +100,7 @@ do
                 exe cp -R node_modules/menu $i/app/node_modules
                 exe cp -R node_modules/clivas $i/app/node_modules
                 exe cp -R node_modules/keypress $i/app/node_modules
+                exe cp -R node_modules/object-keys $i/app/node_modules
                 
                 echo Copying over zmNinja code...
                 exe cp package.json $i/app
