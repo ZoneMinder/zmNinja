@@ -2765,7 +2765,21 @@ angular.module('zmApp.controllers')
                       data = data.data;
                       if (data.monitors) monitors = data.monitors;
 
+                      // Now let's make sure we remove repeating monitors
+                      // may happen in groups case
 
+                      debug ("Before duplicate processing, we have: "+monitors.length+" monitors");
+                      //console.log (JSON.stringify(monitors));
+                      var monitorHash = {};
+                      for (var mo in monitors) {
+                        monitorHash[monitors[mo].Monitor.Id] = monitors[mo];
+                      }
+                      monitors = [];
+                      for (mo in monitorHash) {
+                        monitors.push(monitorHash[mo]);
+                      }
+                      debug ("After duplicate processing, we have: "+monitors.length+" monitors");
+                      //console.log (JSON.stringify(monitors));
                       if ($rootScope.authSession == '') {
                         log("Now that we have monitors, lets get AuthKey...");
                         getAuthKey(monitors[0].Monitor.Id, (Math.floor((Math.random() * 999999) + 1)).toString());
