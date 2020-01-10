@@ -96,8 +96,12 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
   function saveDevOptions() {
     NVR.debug("SaveDevOptions: called");
 
-    $scope.loginData.zmNinjaCustomId = $scope.loginData.zmNinjaCustomId.replace(/\s+/g, '_');
+    //console.log (JSON.stringify($scope.loginData));
+    if (typeof $scope.loginData.zmNinjaCustomId !== 'undefined') {
+      $scope.loginData.zmNinjaCustomId = $scope.loginData.zmNinjaCustomId.replace(/\s+/g, '_');
 
+    }
+    
     if (parseInt($scope.loginData.cycleMonitorsInterval) < zm.minCycleTime) {
       $scope.loginData.cycleMonitorsInterval = zm.minCycleTime.toString();
     }
