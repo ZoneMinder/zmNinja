@@ -100,7 +100,17 @@ do
                 exe cp -R node_modules/menu $i/app/node_modules
                 exe cp -R node_modules/clivas $i/app/node_modules
                 exe cp -R node_modules/keypress $i/app/node_modules
+                exe cp -R node_modules/define-properties $i/app/node_modules
+                exe cp -R node_modules/es-abstract $i/app/node_modules
+                exe cp -R node_modules/function-bind $i/app/node_modules
+                exe cp -R node_modules/has $i/app/node_modules
+                exe cp -R node_modules/has-symbols $i/app/node_modules
+                exe cp -R node_modules/is-arguments $i/app/node_modules
+                exe cp -R node_modules/is-date-object $i/app/node_modules
+                exe cp -R node_modules/is-regex $i/app/node_modules
+                exe cp -R node_modules/object-is $i/app/node_modules
                 exe cp -R node_modules/object-keys $i/app/node_modules
+                exe cp -R node_modules/regexp.prototype.flags $i/app/node_modules
                 
                 echo Copying over zmNinja code...
                 exe cp package.json $i/app
