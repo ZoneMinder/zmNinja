@@ -271,6 +271,8 @@
     "kNormalPlay"                :"normal play",
     "kNote"                      :"Note",
     "kNow"                       :"now",
+    "kObfuscationAES"            :"AES (encrypt)",
+    "kObfuscationLZS"            :"LZS (compress)",
     "kOff"                       :"off",
     "kOn"                        :"on",
     "kOnTapNavigate"             :"on tap, navigate to",

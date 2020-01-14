@@ -423,6 +423,7 @@ angular.module('zmApp.controllers')
           else {
             NVR.debug ("reporting status of monitors from multi-server API");
             processMonitorStatus();
+           
           }
 
         },

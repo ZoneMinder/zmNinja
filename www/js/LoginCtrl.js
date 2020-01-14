@@ -766,8 +766,7 @@ function mobilePinConfig () {
         var serverGroupList = NVR.getServerGroups();
         serverGroupList[$scope.loginData.serverName] = angular.copy($scope.loginData);
 
-        var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
-
+        var ct = NVR.encrypt(serverGroupList);
         window.cordova.plugin.cloudsettings.save({
             'serverGroupList': ct,
             'defaultServerName': $scope.loginData.serverName
