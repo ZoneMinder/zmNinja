@@ -1,7 +1,7 @@
 /* jshint -W041 */
 
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console, URI, moment, localforage, CryptoJS, Connection */
+/* global cordova,StatusBar,angular,console, URI, moment, localforage, CryptoJS, Connection, LZString */
 
 // This is my central data respository and common functions
 // that many other controllers use
@@ -211,6 +211,7 @@ angular.module('zmApp.controllers')
         'pauseStreams': false,
         'liveStreamBuffer': 10,
         'zmNinjaCustomId':undefined, // filled in init. custom header
+        'obfuscationScheme': 'lzs' // or 'aes'
 
       };
 
@@ -404,8 +405,7 @@ angular.module('zmApp.controllers')
               //data = JSON.parse(data);
               if (doCrypt) {
                 debug ('CACHE: decryption requested');
-                var bytes = CryptoJS.AES.decrypt(data.toString(), zm.cipherKey);
-                data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                data = decrypt(data);
               }
               else
                 data = JSON.parse(data);
@@ -424,7 +424,7 @@ angular.module('zmApp.controllers')
                 debug ('CACHE: storing key data in cache now, with expiry of '+expiry);
                 if (doCrypt) {
                   debug ('CACHE: encrypting request');
-                  var ct = CryptoJS.AES.encrypt(JSON.stringify(data), zm.cipherKey).toString();
+                  var ct = encrypt(data);
                   cache_entry.data = ct;
                 }
                 else {
@@ -1031,6 +1031,7 @@ angular.module('zmApp.controllers')
 
 
         }
+       
       }
 
       function setLogin(newLogin) {
@@ -1045,8 +1046,8 @@ angular.module('zmApp.controllers')
 
         serverGroupList[loginData.serverName] = angular.copy(loginData);
 
-        var ct = CryptoJS.AES.encrypt(JSON.stringify(serverGroupList), zm.cipherKey).toString();
-
+        var ct = encrypt(serverGroupList);
+      
         //debug ("Crypto is: " + ct);
 
         return localforage.setItem("serverGroupList", ct)
@@ -1611,6 +1612,10 @@ angular.module('zmApp.controllers')
           loginData.zmNinjaCustomId = 'zmNinja_'+zmAppVersion;
         }
 
+        if (typeof loginData.obfuscationScheme == 'undefined')  {
+          loginData.obfuscationScheme = 'lzs';
+        }
+
         loginData.canSwipeMonitors = true;
         loginData.forceImageModePath = false;
         loginData.enableBlog = true;
@@ -1676,9 +1681,57 @@ angular.module('zmApp.controllers')
         debug("Setting server version to:" + val);
       }
 
+      function encrypt(data) {
+
+        var jsdata = JSON.stringify(data);
+        var compress;
+
+        if (loginData.obfuscationScheme == 'lzs') {
+          compress = '--Z--'+LZString.compressToUTF16(jsdata);
+
+        }
+        else if (loginData.obfuscationScheme == 'aes') {
+          compress = CryptoJS.AES.encrypt(jsdata, zm.cipherKey).toString();
+        } else {
+          log ('ERROR: obfuscation scheme:'+loginData.obfuscationScheme+' not recognized');
+          return undefined;
+        }
+    
+        debug ('obfuscate: original:'+jsdata.length+' obfuscated:'+compress.length+' scheme:'+loginData.obfuscationScheme);
+        return compress;
+      }
+
+      function decrypt(data) {
+        //debug ('-->deobfuscating '+data.length+' bytes using scheme:'+loginData.obfuscationScheme);
+        var decodedVal;
+        var scheme;
+        if (data.substr(0,5) == '--Z--') {
+          //debug ('unpacking');
+          scheme = 'lzs';
+          decodedVal = LZString.decompressFromUTF16(data.substr(5));
+        } else {
+          var bytes = CryptoJS.AES.decrypt(data.toString(), zm.cipherKey);
+          decodedVal = bytes.toString(CryptoJS.enc.Utf8);
+          scheme = 'aes';
+        }
+        
+        //console.log ('-->decrypted ' + decodedVal);
+        debug ('deobfuscate: before:'+data.length+' after:'+decodedVal.length+' scheme:'+scheme);
+        var decodedJSON = JSON.parse(decodedVal);
+       
+        return (decodedJSON);
+      }
+
 
       return {
 
+        encrypt: function(data) {
+          return encrypt(data);
+        },
+
+        decrypt: function(data) {
+          return decrypt(data);
+        },
 
         insertSpecialTokens: function () {
 
@@ -2009,8 +2062,8 @@ angular.module('zmApp.controllers')
 
                 if (typeof sgl == 'string') {
                   log("user profile encrypted, decoding...");
-                  var bytes = CryptoJS.AES.decrypt(sgl.toString(), zm.cipherKey);
-                  decodedSgl = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                  decodedSgl = decrypt(sgl);
+            
 
                 } else {
                   decodedSgl = sgl;
@@ -2128,8 +2181,7 @@ angular.module('zmApp.controllers')
 
             if (typeof val == 'string') {
               log("user profile encrypted, decoding...");
-              var bytes = CryptoJS.AES.decrypt(val.toString(), zm.cipherKey);
-              decodedVal = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+              decodedVal = decrypt(val);
 
             } else {
               log("user profile not encrypted");

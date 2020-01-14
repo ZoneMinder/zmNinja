@@ -243,6 +243,16 @@
       </label>
 
       <label>
+        <div class="item item-button-right">
+          Data obfuscation: {{loginData.obfuscationScheme}}<button class="button button-calm" ng-click="selectObfuscationScheme()">
+            <i class="icon ion-gear-b"></i>
+          </button>
+        </div>
+      </label>
+     
+
+
+      <label>
         <ion-toggle ng-model="loginData.enableLogs" toggle-class="toggle-calm">
           <span class="item-text-wrap">{{'kEnableLogs' | translate}}</span>
         </ion-toggle>

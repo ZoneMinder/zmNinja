@@ -2,7 +2,7 @@
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
-angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'NVR', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory', '$state', 'SecuredPopups', '$translate', function ($scope, $rootScope, $ionicModal, zm, NVR, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate) {
+angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope', '$rootScope', '$ionicModal', 'zm', 'NVR', '$ionicSideMenuDelegate', '$ionicPopup', '$http', '$q', '$ionicLoading', '$ionicHistory', '$state', 'SecuredPopups', '$translate','$ionicActionSheet', function ($scope, $rootScope, $ionicModal, zm, NVR, $ionicSideMenuDelegate, $ionicPopup, $http, $q, $ionicLoading, $ionicHistory, $state, SecuredPopups, $translate, $ionicActionSheet) {
 
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
@@ -153,6 +153,32 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     }
    
 
+  };
+
+  $scope.selectObfuscationScheme = function() {
+
+    var buttons = [
+      { text: $translate.instant('kObfuscationLZS'), value:'lzs' },
+      { text: $translate.instant('kObfuscationAES'), value:'aes' },
+     
+    ]
+
+    $ionicActionSheet.show({
+      titleText: $translate.instant('kSelect'),
+      buttons: buttons,
+    
+      cancelText: $translate.instant('kButtonCancel'),
+      cancel: function() {
+       NVR.debug ('obfuscation actionsheet cancelled');
+      },
+      buttonClicked: function(index) {
+       
+        $scope.loginData.obfuscationScheme = buttons[index].value;
+        NVR.debug ('changed obfuscation scheme to:'+$scope.loginData.obfuscationScheme );
+        return true;
+      },
+     
+    });
   };
 
   $scope.saveDevOptions = function () {

@@ -1698,7 +1698,8 @@ angular.module('zmApp', [
                     NVR.log(">>>>migrated latestBlogPostChecked...");
                     // lets encrypt serverGroupList
                     NVR.log("server group list is " + JSON.stringify(sgl));
-                    var ct = CryptoJS.AES.encrypt(JSON.stringify(sgl), zm.cipherKey);
+                    var ct = NVR.encrypt(sgl);
+                   
                     NVR.log("encrypted server group list is " + ct);
                     ct = sgl;
                     return localforage.setItem('serverGroupList', ct);
