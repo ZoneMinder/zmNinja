@@ -161,7 +161,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
       { text: $translate.instant('kObfuscationLZS'), value:'lzs' },
       { text: $translate.instant('kObfuscationAES'), value:'aes' },
      
-    ]
+    ];
 
     $ionicActionSheet.show({
       titleText: $translate.instant('kSelect'),
