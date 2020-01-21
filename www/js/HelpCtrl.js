@@ -69,9 +69,11 @@ angular.module('zmApp.controllers').controller('zmApp.HelpCtrl', ['$scope', '$ro
     if ($rootScope.platformOS == 'desktop' ) {
       window.open(url, '_blank', options);
     } else {
-      cordova.InAppBrowser.open(url, '_blank', options);
+      cordova.InAppBrowser.open(url, '_blank', 'location=no');
+      
+     // cordova.InAppBrowser.open(url, '_blank', options);
     }
-    
+    return false;
 
   };
 
