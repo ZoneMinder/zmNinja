@@ -2238,7 +2238,7 @@ angular.module('zmApp', [
 
     //$translateProvider.useLocalStorage();
 
-    $translateProvider.registerAvailableLanguageKeys(['en', 'ba', 'de', 'es', 'fr', 'it', 'ru', 'ja', 'ko', 'nl', 'pl', 'zh', 'zh_CN', 'zh_TW', 'pt', 'ar', 'hi', 'hu'], {
+    $translateProvider.registerAvailableLanguageKeys(['en', 'ba', 'de', 'es', 'fr', 'it', 'ru', 'ja', 'ko', 'nl', 'pl', 'zh', 'zh_CN', 'zh_TW', 'pt', 'ar', 'hi', 'hu', 'se'], {
       'en_*': 'en',
       'ba_*': 'ba',
       'de_*': 'de',
@@ -2254,6 +2254,7 @@ angular.module('zmApp', [
       'ar_*': 'ar',
       'hi_*': 'hi',
       'hu_*': 'hu',
+      'se_*': 'se',
       '*': 'en' // must be last
     });
 
