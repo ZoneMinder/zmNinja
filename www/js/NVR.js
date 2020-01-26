@@ -90,6 +90,10 @@ angular.module('zmApp.controllers')
           text: 'Русский',
           value: 'ru'
         },
+        {
+          text: 'Swedish',
+          value: 'se'
+        },
 
       ];
 
