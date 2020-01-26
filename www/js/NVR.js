@@ -1481,7 +1481,7 @@ angular.module('zmApp.controllers')
 
         if (typeof loginData.momentShowIcons == 'undefined') {
 
-          loginData.momentShowIcons = true;
+          loginData.momentShowIcons = false;
 
         }
 
