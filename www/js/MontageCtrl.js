@@ -2093,14 +2093,15 @@ angular.module('zmApp.controllers')
 
           if (succ.data && succ.data.result && succ.data.result == "Error") {
           
-            $scope.MontageMonitors[i].Monitor.isStreamGood = 'bad';
+            $scope.MontageMonitors[i].Monitor.streamState = 'bad';
               NVR.log ("Montage View: Regenerating Connkey as Failed:"+query);
               $scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
             
            
           } 
           else if (succ.data && succ.data.result && succ.data.result == "Ok"){
-            $scope.MontageMonitors[i].Monitor.isStreamGood = 'good';
+            $scope.MontageMonitors[i].Monitor.streamState = 'good';
+            //console.log (JSON.stringify(succ));
           }
 
         }, 

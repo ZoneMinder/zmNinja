@@ -576,7 +576,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   };
 
   $scope.imageLoaded = function () {
-    console.log ("**** SINGLE IMAGE LOADED");
+    NVR.debug ('single view image load complete');
+    //console.log ("**** SINGLE IMAGE LOADED");
     imageLoaded();
   };
 
@@ -1454,12 +1455,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         
             NVR.log ("Single view: regenerating Connkey as Failed:"+query);
             $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-            $scope.isStreamGood = 'bad';
+            $scope.streamState = 'bad';
           
          
         }
         else if (succ.data && succ.data.result && succ.data.result == "Ok") {
-          $scope.isStreamGood = 'good';
+          $scope.streamState = 'good';
         }
 
       }, 

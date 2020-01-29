@@ -585,7 +585,7 @@ angular.module('zmApp', [
                 loader.remove();
 
                 if ($attributes.imageonload) {
-                  console.log (">>>>  IMAGE LOADED CBK");
+                 
                   $scope.$apply($attributes.imageonload);
                  // fn($scope, {});
                 }
