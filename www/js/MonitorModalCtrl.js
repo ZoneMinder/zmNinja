@@ -11,6 +11,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.isModalActive = true;
   var intervalModalHandle;
   var cycleHandle;
+  var intervalStreamQueryHandle;
   var ld = NVR.getLogin();
   $scope.svgReady = false;
   $scope.zoneArray = [];
@@ -20,7 +21,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   var targetID = "";
   $scope.imageZoomable = true;
   $scope.ptzButtonsShown = true;
-
+  var streamQueryTimer = zm.streamQueryTimer;
+  
 
   var streamState = {
     SNAPSHOT: 1,
@@ -34,8 +36,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   // incase imageload is never called
   $timeout (function () {
-    if (currentStreamState != streamState.SNAPSHOT) {
-      currentStreamState = streamState.SNAPSHOT;
+    if (currentStreamState != streamState.ACTIVE) {
+      currentStreamState = streamState.ACTIVE;
       NVR.debug ('Forcing stream to regular quality, imageLoaded() was never called');
     }
     
@@ -51,14 +53,24 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   NVR.debug("MonitorModalCtrl called from " + $ionicHistory.currentStateName());
 
+  streamQueryTimer = (NVR.getBandwidth() == 'lowbw') ? zm.streamQueryStatusTimeLowBW: zm.streamQueryStatusTime;
+  NVR.debug ('Setting streamQuery timer to '+streamQueryTimer);
+
 
   $interval.cancel(intervalModalHandle);
   $interval.cancel(cycleHandle);
+  $interval.cancel(intervalStreamQueryHandle);
 
   intervalModalHandle = $interval(function () {
     loadModalNotifications();
     //  console.log ("Refreshing Image...");
   }.bind(this), zm.alarmStatusTime);
+
+
+  intervalStreamQueryHandle = $interval(function () {
+    loadStreamQuery();
+    //  console.log ("Refreshing Image...");
+  }.bind(this), streamQueryTimer);
 
 
 
@@ -370,6 +382,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   function onPause() {
     NVR.debug("ModalCtrl: onpause called");
     $interval.cancel(intervalModalHandle);
+    $interval.cancel(intervalStreamQueryHandle);
     $interval.cancel(cycleHandle);
 
     NVR.debug("Killing single stream...");
@@ -391,6 +404,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       NVR.log("ModalCtrl: Restarting Modal timer on resume");
 
       $interval.cancel(intervalModalHandle);
+      $interval.cancel(intervalStreamQueryHandle);
       $interval.cancel(cycleHandle);
 
       var ld = NVR.getLogin();
@@ -398,6 +412,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       intervalModalHandle = $interval(function () {
         loadModalNotifications();
       }.bind(this), zm.alarmStatusTime);
+
+      intervalStreamQueryHandle = $interval(function () {
+        loadStreamQuery();
+        //  console.log ("Refreshing Image...");
+      }.bind(this), streamQueryTimer);
 
       if (ld.cycleMonitors) {
         NVR.debug("Cycling enabled at " + ld.cycleMonitorsInterval);
@@ -552,7 +571,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       $scope.isZoneEdit = false;
   };
 
+  $scope.imageError = function() {
+    console.log ("*** IMAGE LOAD ERROR ");
+  };
+
   $scope.imageLoaded = function () {
+    console.log ("**** SINGLE IMAGE LOADED");
     imageLoaded();
   };
 
@@ -690,7 +714,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   // this is a good time to calculate scaled zone points
   function imageLoaded() {
 
-    currentStreamState = streamState.SNAPSHOT;
+    currentStreamState = streamState.ACTIVE;
 
     if ($scope.animationInProgress) return;
     /*
@@ -1349,6 +1373,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.isModalActive = false;
     $interval.cancel(intervalModalHandle);
     $interval.cancel(cycleHandle);
+    $interval.cancel(intervalStreamQueryHandle);
   });
 
   $scope.$on('$ionicView.beforeLeave', function () {
@@ -1367,6 +1392,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.isModalActive = false;
 
     $interval.cancel(intervalModalHandle);
+    $interval.cancel(intervalStreamQueryHandle);
     $interval.cance(cycleHandle);
 
   });
@@ -1403,6 +1429,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     //console.log("**MODAL REMOVED: Stopping modal timer");
     $interval.cancel(intervalModalHandle);
+    $interval.cancel(intervalStreamQueryHandle);
     $interval.cancel(cycleHandle);
 
     // NVR.debug("Modal removed - killing connkey");
@@ -1410,6 +1437,51 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     // Execute action
   });
+
+  function loadStreamQuery() {
+
+    function appendConnKey(ck) {
+      return "&connkey=" + ck;
+    }
+
+    function checkValidConnkey(query,i) {
+      $http.get(query)
+      .then (function (succ) {
+        
+        //console.log ("SUCCESS="+JSON.stringify(succ.data));
+
+        if (succ.data && succ.data.result && succ.data.result == "Error") {
+        
+            NVR.log ("Single view: regenerating Connkey as Failed:"+query);
+            $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+            $scope.isStreamGood = 'bad';
+          
+         
+        }
+        else if (succ.data && succ.data.result && succ.data.result == "Ok") {
+          $scope.isStreamGood = 'good';
+        }
+
+      }, 
+      function (err) {
+        NVR.log ("Single View: Stream Query ERR="+JSON.stringify(err));
+      });
+
+    }
+
+    //console.log (currentStreamState);
+    if (currentStreamState != streamState.ACTIVE) return;
+
+    NVR.debug ('Single view: stream status check');
+
+    var ld = NVR.getLogin();
+    var query;
+    query = ld.url+'/index.php?view=request&request=stream&command=99';
+    query= query + $rootScope.authSession;
+    query+= appendConnKey($scope.connKey);
+    checkValidConnkey(query,i);
+
+  }
 
   //-------------------------------------------------------------
   // called to kill connkey, not sure if we really need it

@@ -13,12 +13,15 @@
               <div ng-if="!animationInProgress">
 
                 <!--<span style="color:white">{{currentStreamMode}}</span>-->
+                
+             
 
                 <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines"
                   image-spinner-src="{{constructSingleStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"
                   on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();"
                   on-tap="showHideControls();"
-                  imageonload="imageLoaded()" />
+                  imageonload="imageLoaded();"  />
+
               </div>
               <div ng-if="animationInProgress">
                 <img style="width:100vw; height:100vh" ng-src="img/noimage.png" class="object-fit_contain" />
@@ -140,6 +143,7 @@
     </ul>
   </div>
   <div ng-if="!showPTZ && displayControls" class="monitor-modal-text">{{monitorName}} &nbsp;
+    <i ng-if="isStreamGood=='bad'" class="animated infinite flash ion-alert-circled assertive"></i>
     <span ng-style="{'background-color':stateColor()}">&nbsp;{{monStatus}}&nbsp;</span>
   </div>
 </div>

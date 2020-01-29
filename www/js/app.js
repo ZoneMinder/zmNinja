@@ -99,6 +99,8 @@ angular.module('zmApp', [
     //forceMontageReloadDelay: 10000, // testing 10s
     thumbWidth: 200,
     alarmStatusTime: 10000, // 10 sec
+    streamQueryStatusTime: 10000, //10 sec
+    streamQueryStatusTimeLowBW: 30000, // 30 sec
     eventCheckTime: 30000, // 30 seconds
     eventServerErrorDelay: 5000, // time to wait till I report initial connect errors
     zmVersionCheckNag: 60 * 24, // in hrs 
@@ -581,6 +583,12 @@ angular.module('zmApp', [
               if ($attributes.imageSpinnerLoader) {
                 //console.log ("DIRECTIVE: IMAGE LOADED");
                 loader.remove();
+
+                if ($attributes.imageonload) {
+                  console.log (">>>>  IMAGE LOADED CBK");
+                  $scope.$apply($attributes.imageonload);
+                 // fn($scope, {});
+                }
                 //imageLoadingDataShare.set(0);
                 //console.log ("rendered");
 
