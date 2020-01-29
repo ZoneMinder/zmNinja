@@ -17,6 +17,7 @@ angular.module('zmApp.controllers')
     var intervalHandleMontageCycle;
     var intervalHandleReloadPage;
     var intervalHandleEventStatus;
+    var intervalHandleStreamQuery;
 
 
     var gridcontainer;
@@ -33,6 +34,7 @@ angular.module('zmApp.controllers')
     var randToAvoidCacheMem;
     var beforeReorderPositions=[];
 
+    var streamQueryTimer;
 
     var streamState = {
       SNAPSHOT: 1,
@@ -79,11 +81,22 @@ angular.module('zmApp.controllers')
       NVR.displayBanner('net', [ds]);
       var ld = NVR.getLogin();
       refreshSec = (NVR.getBandwidth() == 'lowbw') ? ld.refreshSecLowBW : ld.refreshSec;
+      streamQueryTimer = (NVR.getBandwidth() == 'lowbw') ? zm.streamQueryStatusTimeLowBW: zm.streamQueryStatusTime;
+
 
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleReloadPage);
+      $interval.cancel(intervalHandleStreamQuery);
 
+      if (simulStreaming){
+       
+        intervalHandleStreamQuery = $interval(function () {
+          loadStreamQueryStatus();
+          //  console.log ("Refreshing Image...");
+        }.bind(this), streamQueryTimer);
+
+      }
 
       intervalHandleMontage = $interval(function () {
         loadNotifications();
@@ -1020,6 +1033,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleStreamQuery);
       $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
 
@@ -1077,6 +1091,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage); //we will renew on reload
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleStreamQuery);
       $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
 
@@ -1271,8 +1286,7 @@ angular.module('zmApp.controllers')
 
     $scope.openModal = function (mid, controllable, controlid, connKey, monitor) {
 
-      currentStreamState = streamState.PAUSED;
-      $scope.isModalStreamPaused = true; // we stop montage and start modal stream in snapshot first
+      
       $timeout(function () { // after render
 
 
@@ -1280,6 +1294,8 @@ angular.module('zmApp.controllers')
 
           var ld = NVR.getLogin();
           if (ld.pauseStreams) {
+            currentStreamState = streamState.PAUSED;
+            $scope.isModalStreamPaused = true; // we stop montage and start modal stream in snapshot first
             NVR.debug("Pausing all streams in montage to save memory/nw...");
             for (var i = 0; i < $scope.MontageMonitors.length; i++) {
               if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.pauseLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
@@ -1315,6 +1331,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleStreamQuery);
       $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
 
@@ -1380,6 +1397,9 @@ angular.module('zmApp.controllers')
       if (simulStreaming){
         randEachTime();
         NVR.debug ('rand each time:'+randToAvoidCacheMem);
+
+       
+
       }
       
       NVR.log("Restarting montage timers...");
@@ -1387,6 +1407,7 @@ angular.module('zmApp.controllers')
       // console.log ("closeModal: Cancelling timer");
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleStreamQuery);
       $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleReloadPage);
@@ -1401,6 +1422,15 @@ angular.module('zmApp.controllers')
         loadAlarmStatus();
         //  console.log ("Refreshing Image...");
       }.bind(this), zm.alarmStatusTime);
+
+      if (simulStreaming){
+       
+        intervalHandleStreamQuery = $interval(function () {
+          loadStreamQueryStatus();
+          //console.log ("Restarting Query Timer...");
+        }.bind(this), streamQueryTimer);
+
+      }
 
       loadEventStatus(ld.showMontageSidebars);
       intervalHandleEventStatus = $interval(function () {
@@ -1435,6 +1465,7 @@ angular.module('zmApp.controllers')
           for (var i = 0; i < $scope.MontageMonitors.length; i++) {
             if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.resumeLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
           }
+          currentStreamState = streamState.ACTIVE;
         } else {
           NVR.debug ("Not resuming streams as pauseStreams is off");
         }
@@ -1488,6 +1519,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleStreamQuery);
       $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
       if (pckry) pckry.destroy();
@@ -1971,6 +2003,7 @@ angular.module('zmApp.controllers')
             $interval.cancel(intervalHandleMontage);
             $interval.cancel(intervalHandleMontageCycle);
             $interval.cancel(intervalHandleAlarmStatus);
+            $interval.cancel(intervalHandleStreamQuery);
             $interval.cancel(intervalHandleEventStatus);
             $interval.cancel(intervalHandleReloadPage);
       
@@ -2049,6 +2082,58 @@ angular.module('zmApp.controllers')
         return stream;
   
       };
+
+    function loadStreamQueryStatus () {
+
+      function checkValidConnkey(query,i) {
+        $http.get(query)
+        .then (function (succ) {
+          
+          //console.log ("SUCCESS="+JSON.stringify(succ.data));
+
+          if (succ.data && succ.data.result && succ.data.result == "Error") {
+          
+            $scope.MontageMonitors[i].Monitor.isStreamGood = 'bad';
+              NVR.log ("Montage View: Regenerating Connkey as Failed:"+query);
+              $scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+            
+           
+          } 
+          else if (succ.data && succ.data.result && succ.data.result == "Ok"){
+            $scope.MontageMonitors[i].Monitor.isStreamGood = 'good';
+          }
+
+        }, 
+        function (err) {
+          NVR.log ("Stream Query ERR="+JSON.stringify(err));
+        });
+
+      }
+      //console.log ("MONTAGE: "+currentStreamState);
+      if (currentStreamState != streamState.ACTIVE || !simulStreaming) return;
+
+      NVR.debug ('Montage View: Stream Status check');
+      var ld = NVR.getLogin();
+      
+      var query;
+      for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+        if (($scope.MontageMonitors[i].Monitor.Function == 'None') ||
+          ($scope.MontageMonitors[i].Monitor.Enabled == '0') ||
+          ($scope.MontageMonitors[i].Monitor.listDisplay == 'noshow')) {
+          continue;
+        }
+        query = ld.url+'/index.php?view=request&request=stream&command=99';
+        query= query + $rootScope.authSession;
+        query+= appendConnKey($scope.MontageMonitors[i].Monitor.connKey);
+        //if (query) query += NVR.insertSpecialTokens();
+        //console.log ("QUERY="+query);  
+        checkValidConnkey(query,i);
+
+       
+
+      }
+      
+    }
 
     $scope.constructStream = function (monitor) {
 
@@ -2191,6 +2276,9 @@ angular.module('zmApp.controllers')
     //avoid bogus scale error
     $scope.LoginData = NVR.getLogin();
 
+    streamQueryTimer = (NVR.getBandwidth() == 'lowbw') ? zm.streamQueryStatusTimeLowBW: zm.streamQueryStatusTime;
+    NVR.debug ('Setting streamQuery timer to '+streamQueryTimer);
+
     $scope.toggleTimeType = function () {
       if (NVR.isTzSupported()) {
         if ($scope.iconTimeNow == 'server') {
@@ -2260,6 +2348,7 @@ angular.module('zmApp.controllers')
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
       $interval.cancel(intervalHandleAlarmStatus);
+      $interval.cancel(intervalHandleStreamQuery);
       $interval.cancel(intervalHandleEventStatus);
       $interval.cancel(intervalHandleReloadPage);
 
@@ -2279,6 +2368,15 @@ angular.module('zmApp.controllers')
         loadAlarmStatus();
         //  console.log ("Refreshing Image...");
       }.bind(this), zm.alarmStatusTime);
+
+      if (simulStreaming){
+       
+        intervalHandleStreamQuery = $interval(function () {
+          loadStreamQueryStatus();
+          //  console.log ("Refreshing Image...");
+        }.bind(this), streamQueryTimer);
+
+      }
 
       loadEventStatus(ld.showMontageSidebars);
       intervalHandleEventStatus = $interval(function () {
