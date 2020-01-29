@@ -143,7 +143,7 @@
     </ul>
   </div>
   <div ng-if="!showPTZ && displayControls" class="monitor-modal-text">{{monitorName}} &nbsp;
-    <i ng-if="isStreamGood=='bad'" class="animated infinite flash ion-alert-circled assertive"></i>
+    <i ng-if="streamState=='bad'" class="animated infinite flash ion-alert-circled assertive"></i>
     <span ng-style="{'background-color':stateColor()}">&nbsp;{{monStatus}}&nbsp;</span>
   </div>
 </div>
