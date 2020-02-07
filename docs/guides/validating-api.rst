@@ -31,15 +31,7 @@ helps)
    version/apiversion may be different. If you don't see such a
    response, your APIs are **not** working
 
-- Step 5: Make sure there are no CakePHP related errors that are hidden
-
-  Unfortunately, even if the APIs display properly on your browser, it does not mean
-  they are working properly. Some times, you'll see cakePHP related errors that don't
-  show up in the browser but are basically hidden in the display. To make sure, when you 
-  get the API results as above, do a right click->view page source and make sure you don't
-  see error messages before the API results.
-
--  Step 6:Make sure you can see monitors and events:
+-  Step 5:Make sure you can see monitors and events:
 
 Type in ``http://server/zm/api/monitors.json`` --> you should see a
 response like:
@@ -56,7 +48,7 @@ response like:
             }]
     }
 
--  Step 7: (If you find your APIs show ok, but zmNinja has issues)
+-  Step 6: (If you find your APIs show ok, but zmNinja has issues)
 
         -  Open a browser, log into ZM
         -  Open a new tab, enter ``http://server/zm/api/host/getVersion.json``
