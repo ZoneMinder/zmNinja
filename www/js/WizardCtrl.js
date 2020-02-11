@@ -583,8 +583,12 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
                 $rootScope.authSession = '';
-
-                if (succ.credentials) {
+                if (succ.access_token) {
+                  NVR.debug ('Got token, using it');
+                  $rootScope.authSession = "&token=" + succ.access_token; 
+                }
+                else if (succ.credentials) {
+                  NVR.debug ('Got auth= not token, using it');
                   $rootScope.authSession = "&" + succ.credentials;
                   if (succ.append_password == '1') {
                     $rootScope.authSession = $rootScope.authSession +
