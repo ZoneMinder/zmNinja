@@ -1,5 +1,38 @@
 # Change Log
 
+## [v1.3.088](https://github.com/pliablepixels/zmNinja/tree/v1.3.088) (2020-02-20)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.085...v1.3.088)
+
+**Implemented enhancements:**
+
+- Add swedish language [\#892](https://github.com/pliablepixels/zmNinja/issues/892)
+
+**Fixed bugs:**
+
+- live streams do not recover after monitors crash [\#901](https://github.com/pliablepixels/zmNinja/issues/901)
+- Configuration wizard appears fails - uses old credentials when new tokens are available [\#900](https://github.com/pliablepixels/zmNinja/issues/900)
+- montage sporadic freezes \(possibly triggered by unstable RTSP\) [\#894](https://github.com/pliablepixels/zmNinja/issues/894)
+- Help buttons don't seem to work on Android [\#890](https://github.com/pliablepixels/zmNinja/issues/890)
+- Error: Cannot find module 'object-keys' [\#884](https://github.com/pliablepixels/zmNinja/issues/884)
+- SaveDevOptions -\> \*\*EXCEPTION\*\*TypeError: Cannot read property 'replace' of undefined caused by undefined [\#883](https://github.com/pliablepixels/zmNinja/issues/883)
+- Performance issues with "24hr Review" mode [\#882](https://github.com/pliablepixels/zmNinja/issues/882)
+
+**Closed issues:**
+
+- Android 8 notification looks like it should be showing an image when expanded but it doesn't [\#899](https://github.com/pliablepixels/zmNinja/issues/899)
+- zmNinja getting wrong server time [\#898](https://github.com/pliablepixels/zmNinja/issues/898)
+- CryptoAES decryption takes time on mobile devices after a while [\#886](https://github.com/pliablepixels/zmNinja/issues/886)
+- Duplicate monitors appearing in montage [\#881](https://github.com/pliablepixels/zmNinja/issues/881)
+- PTZ - zmNinja sends start but no stop [\#880](https://github.com/pliablepixels/zmNinja/issues/880)
+- zmNinja live view fills PATH\_SWAP [\#873](https://github.com/pliablepixels/zmNinja/issues/873)
+- Provide a flatpak on flathub [\#868](https://github.com/pliablepixels/zmNinja/issues/868)
+
+**Merged pull requests:**
+
+-  \#886 add translate text [\#891](https://github.com/pliablepixels/zmNinja/pull/891) ([florie1706](https://github.com/florie1706))
+- \#886 add translate text [\#887](https://github.com/pliablepixels/zmNinja/pull/887) ([maymaymay](https://github.com/maymaymay))
+- Added missing dependencies that were causing a run-time error [\#885](https://github.com/pliablepixels/zmNinja/pull/885) ([neillbell](https://github.com/neillbell))
+
 ## [v1.3.085](https://github.com/pliablepixels/zmNinja/tree/v1.3.085) (2019-12-27)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.082...v1.3.085)
 
@@ -1140,6 +1173,10 @@
 
 ## [v1.2.19](https://github.com/pliablepixels/zmNinja/tree/v1.2.19) (2016-09-04)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.18...v1.2.19)
+
+**Implemented enhancements:**
+
+- Cycle monitors [\#319](https://github.com/pliablepixels/zmNinja/issues/319)
 
 **Fixed bugs:**
 
