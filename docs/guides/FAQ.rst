@@ -197,15 +197,15 @@ Connection/Authentication issues
 General tips
 ~~~~~~~~~~~~
 
-.. important::
-
-  Make sure of the following:
-  - `AUTH_RELAY` is set to hashed
-  - A valid `AUTH_HASH_SECRET` is provided (not empty)
-  - `AUTH_HASH_IPS` is disabled
-  - `OPT_USE_APIS` is enabled
-  - If you are using any version lower than ZM 1.34, `OPT_USE_GOOG_RECAPTCHA` is disabled
-  - If you are NOT using authentication at all in ZM, that is `OPT_USE_AUTH` is disabled, then make sure you also disable authentication in zmNinja, otherwise it will keep waiting for auth keys.
+.. important:: 
+  Make sure you have the following settings in ZM:
+  
+  - ``AUTH_RELAY`` is set to hashed
+  - A valid ``AUTH_HASH_SECRET`` is provided (not empty)
+  - ``AUTH_HASH_IPS`` is disabled
+  - ``OPT_USE_APIS`` is enabled
+  - If you are using any version lower than ZM 1.34, ``OPT_USE_GOOG_RECAPTCHA`` is disabled
+  - If you are NOT using authentication at all in ZM, that is ``OPT_USE_AUTH`` is disabled, then make sure you also disable authentication in zmNinja, otherwise it will keep waiting for auth keys.
 
 
 -  Disable server redirects like 302 and then try if using the mobile
