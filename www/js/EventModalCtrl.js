@@ -117,7 +117,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $timeout(function () {
       var keyCode = evt.keyCode;
 
-      console.log(keyCode + " PRESSED");
+      //console.log(keyCode + " PRESSED");
 
       if (keyCode == keyCodes.ESC) {
 
@@ -203,6 +203,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.onPlayerState = function (state) {
     // parent scope
+    NVR.debug ("Video state="+state);
     playState = state;
     $scope.lastVideoStateTime.time = moment();
   };
@@ -211,31 +212,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     // we need this timeout to avoid load interrupting
     // play -- I suppose its an angular digest foo thing
-    //console.log ("*********** ON PLAY READY");
     NVR.debug("On Play Ready invoked");
     handle = api;
     handle.mediaElement.attr("playsinline", "");
 
-    $ionicLoading.show({
-      template: "<ion-spinner icon='ripple' class='spinner-energized'></ion-spinner><br/>" + $translate.instant('kVideoLoading') + "...",
-
-    });
-
-   
-  };
-
-  $scope.onPlaybackUpdate = function (rate) {
-    //console.log ("UPDATED RATE TO "+rate);
-    var ld = NVR.getLogin();
-    ld.videoPlaybackSpeed = rate;
-    NVR.setLogin(ld);
-  };
-
-  $scope.onCanPlay = function () {
-
-    //console.log ("*********** CAN PLAY");
-    $ionicLoading.hide();
-    NVR.debug("This video can be played");
     $scope.videoObject.config.cuepoints.points = [];
     // now set up cue points
     NVR.debug("Setting cue points..");
@@ -251,17 +231,46 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         //console.log("START="+currentEvent.Event.StartTime);
         //console.log("END="+currentEvent.Frame[l].TimeStamp);
-        //NVR.debug ("alarm cue at:"+s+"s");
+        //console.log ("alarm cue at:"+s+"s");
         $scope.videoObject.config.cuepoints.points.push({
-          time: s
+          time: parseFloat(s)
         });
       }
     }
-    var rate = NVR.getLogin().videoPlaybackSpeed;
-    NVR.debug ("Invoking play at rate:"+rate+" as video can be played");
-    handle.setPlayback (rate);
-    if (playState== 'play') handle.play();
 
+    $ionicLoading.show({
+      template: "<ion-spinner icon='ripple' class='spinner-energized'></ion-spinner><br/>" + $translate.instant('kVideoLoading') + "...",
+
+    });
+
+   
+  };
+
+  $scope.onPlaybackUpdate = function (rate) {
+   
+
+    var ld = NVR.getLogin();
+    if (ld.videoPlaybackSpeed != rate) {
+      NVR.debug ("Update video rate to:"+rate);
+      ld.videoPlaybackSpeed = rate;
+    }
+    
+    NVR.setLogin(ld);
+  };
+
+  $scope.onCanPlay = function () {
+
+    $ionicLoading.hide();
+    NVR.debug("This video can be played");
+    
+    var rate = NVR.getLogin().videoPlaybackSpeed;
+   
+    handle.setPlayback (rate);
+    if (playState== 'play') {
+      NVR.debug ("Setting play at rate:"+rate+" as video can be played");
+      handle.play();
+
+    }
   };
 
   $scope.onVideoError = function (event) {
@@ -1077,7 +1086,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.showHideControls = function () {
     $scope.displayControls = !$scope.displayControls;
-    NVR.debug ('control display is:'+$scope.displayControls);
+    NVR.debug ('display overlays:'+$scope.displayControls);
   };
 
   $scope.$on('modal.shown', function (e, m) {

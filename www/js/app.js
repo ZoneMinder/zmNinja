@@ -2039,7 +2039,7 @@ angular.module('zmApp', [
     //$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|cdvphotolibrary):/);
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|content|cdvphotolibrary|blob|unsafe|local):|data:image\//);
   
-     $provide.decorator("$exceptionHandler", ['$delegate', '$injector', function ($delegate, $injector) {
+      $provide.decorator("$exceptionHandler", ['$delegate', '$injector', function ($delegate, $injector) {
       return function (exception, cause) {
 
         var $rootScope = $injector.get("$rootScope");

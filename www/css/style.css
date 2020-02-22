@@ -1087,6 +1087,14 @@ videogular div.event-time {
     background: rgba(255, 0, 0, 0.5);
 }
 
+videogular vg-scrub-bar {
+  z-index:100 !important;
+}
+
+videogular vg-cue-points vg-cue-point {
+  z-index:99 !important;
+}
+
 #full-screen-event {
     -webkit-animation-duration: 200ms;
     animation-duration: 200ms;
