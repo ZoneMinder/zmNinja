@@ -7,6 +7,8 @@
 angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', '$filter', 'SecuredPopups', '$cordovaFile', function ($scope, $rootScope, zm, NVR, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate, $filter, SecuredPopups, $cordovaFile) {
 
 
+  var videoPlaybarClicked = false;
+  
   var playerReady = false;
   var streamState = {
     SNAPSHOT: 1,
@@ -206,6 +208,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     NVR.debug ("Video state="+state);
     playState = state;
     $scope.lastVideoStateTime.time = moment();
+
+    if (!videoPlaybarClicked) {
+      videoPlaybarClicked = true;
+      $timeout(function () {videoPlaybarClicked = false;},1000);
+    }
   };
 
   $scope.onPlayerReady = function (api) {
@@ -256,6 +263,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
     
     NVR.setLogin(ld);
+
+    if (!videoPlaybarClicked) {
+      videoPlaybarClicked = true;
+      $timeout(function () {videoPlaybarClicked = false;},1000);
+    }
+    
   };
 
   $scope.onCanPlay = function () {
@@ -1085,6 +1098,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   });
 
   $scope.showHideControls = function () {
+
+    if (videoPlaybarClicked) {
+      NVR.debug ("Not toggling screen controls as video controls were just used");
+      return;
+    }
+
     $scope.displayControls = !$scope.displayControls;
     NVR.debug ('display overlays:'+$scope.displayControls);
   };
