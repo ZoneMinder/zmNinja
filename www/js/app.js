@@ -1471,6 +1471,7 @@ angular.module('zmApp', [
         $rootScope.pixelRatio = pixelRatio;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
         $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
+        $rootScope.videoHeight = $rootScope.devHeight - 20;
 
         NVR.debug("resize/orient: " + $rootScope.devWidth + "(w) * " + $rootScope.devHeight+"(h)");
 
