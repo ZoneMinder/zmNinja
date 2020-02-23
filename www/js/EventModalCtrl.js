@@ -2141,7 +2141,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           $scope.videoObject = {
             config: {
               autoPlay: true,
-              responsive: false,
+              responsive: true,
               nativeControls: false,
               nativeFullScreen: true,
 
