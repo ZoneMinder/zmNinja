@@ -276,6 +276,13 @@ angular.module('zmApp.controllers')
 
     function setupMobileSocket() {
 
+      if (!pushInited) {
+        NVR.debug ("Calling pushInit()");
+        pushInit();
+      } else {
+        NVR.debug ("pushInit() already done");
+      }
+
       var loginData = NVR.getLogin();
       var d = $q.defer();
 
@@ -300,10 +307,6 @@ angular.module('zmApp.controllers')
          // console.log("Connected to WebSocket with id: " + success.webSocketId);
           nativeWebSocketId = success.webSocketId;
           handleOpen(success);
-          if (!pushInited) {
-            NVR.debug("EventSever: Initializing FCM push");
-            pushInit();
-          }
           d.resolve(true);
           return d.promise;
         },
@@ -556,7 +559,7 @@ angular.module('zmApp.controllers')
               // "senderID": zm.gcmSenderId,
               "icon": "ic_stat_notification",
               sound: "true",
-              vibrate: ld.vibrateOnPush
+              vibrate: "true",
               //"sound": android_media_file
             }
           }
@@ -565,8 +568,20 @@ angular.module('zmApp.controllers')
 
       }
 
+      PushNotification.hasPermission(function (succ) {
+        NVR.debug ("Push permission returned: "+JSON.stringify(succ));
+      }, function (err) {
+        NVR.debug ("Push permission error returned: "+JSON.stringify(err));
+      });
       // console.log("*********** MEDIA BLOG IS " + mediasrc);
-      media = $cordovaMedia.newMedia(mediasrc);
+
+      try {
+        media = $cordovaMedia.newMedia(mediasrc);  
+      }
+      catch (err) {
+        NVR.debug ("Media init error:"+JSON.stringify(err));
+      }
+      
 
 
       push.on('registration', function (data) {
