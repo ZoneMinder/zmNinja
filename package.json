@@ -59,10 +59,10 @@
         "ANDROID_SUPPORT_V13_VERSION": "27.+",
         "FCM_VERSION": "17.0.+"
       },
+      "cordova-plugin-media-pp-fork": {},
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      },
-      "cordova-plugin-media-pp-fork": {}
+      }
     }
   },
   "dependencies": {
