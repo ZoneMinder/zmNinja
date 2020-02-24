@@ -26,11 +26,7 @@
       <br />
       <p>{{'kDisablePush' | translate }}</p>
     </ion-toggle>
-    <!-- vibrate app setting is not av. on iOS-->
-    <ion-toggle ng-if="loginData.isUseEventServer && $root.platformOS !='ios'" ng-model="loginData.vibrateOnPush"
-      toggle-class="toggle-calm">{{'kVibrateOnPush'| translate }}</ion-toggle>
-    <ion-toggle ng-if="loginData.isUseEventServer" ng-model="loginData.soundOnPush" toggle-class="toggle-calm" class="item-text-wrap">{{'kSoundOnPush'|
-      translate }}</ion-toggle>
+    
 
     <ion-list>
       <div ng-repeat="monitor in monitors">

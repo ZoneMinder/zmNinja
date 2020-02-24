@@ -46,10 +46,6 @@
       "cordova-plugin-x-socialsharing": {
         "ANDROID_SUPPORT_V4_VERSION": "24.1.1+"
       },
-      "phonegap-plugin-push": {
-        "ANDROID_SUPPORT_V13_VERSION": "27.+",
-        "FCM_VERSION": "11.6.2"
-      },
       "cordova-custom-config": {},
       "cordova-plugin-advanced-websocket": {},
       "cordova-plugin-splashscreen": {},
@@ -58,6 +54,11 @@
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Save monitor photos to albums"
       },
       "cordova-plugin-inappbrowser": {},
+      "cordova-support-google-services": {},
+      "phonegap-plugin-push": {
+        "ANDROID_SUPPORT_V13_VERSION": "27.+",
+        "FCM_VERSION": "17.0.+"
+      },
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       }
@@ -98,7 +99,7 @@
     "cordova-plugin-whitelist": "^1.3.4",
     "cordova-plugin-x-socialsharing": "^5.4.7",
     "cordova-sqlite-storage": "^1.5.3",
-    "cordova-support-google-services": "^1.1.0",
+    "cordova-support-google-services": "1.3.2",
     "deep-equal": "^1.0.1",
     "define-properties": "^1.1.3",
     "dialog": "^0.3.1",
@@ -119,7 +120,7 @@
     "object-is": "^1.0.2",
     "object-keys": "^1.1.1",
     "phonegap-plugin-multidex": "^1.0.0",
-    "phonegap-plugin-push": "^2.2.3",
+    "phonegap-plugin-push": "2.3.0",
     "regexp.prototype.flags": "^1.3.0"
   },
   "devDependencies": {

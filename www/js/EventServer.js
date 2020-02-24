@@ -536,7 +536,7 @@ angular.module('zmApp.controllers')
             "ios": {
               "alert": "true",
               "badge": "true",
-              "sound": ld.soundOnPush,
+              "sound": "true",
               //"sound": "true",
               "clearBadge": "true",
               //"fcmSandbox": "true"
