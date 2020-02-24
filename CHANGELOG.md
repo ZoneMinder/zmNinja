@@ -1,6 +1,18 @@
 # Change Log
 
-## [v1.3.088](https://github.com/pliablepixels/zmNinja/tree/v1.3.088) (2020-02-20)
+## [v1.3.089](https://github.com/pliablepixels/zmNinja/tree/v1.3.089) (2020-02-24)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.088...v1.3.089)
+
+**Fixed bugs:**
+
+- Push notifications don't take the app to the screen designated in ES Settings [\#903](https://github.com/pliablepixels/zmNinja/issues/903)
+- Navigating/scrubbing timeline for playback does not work over red motion indicators [\#897](https://github.com/pliablepixels/zmNinja/issues/897)
+
+**Closed issues:**
+
+- Update checker - Linux AppImage [\#902](https://github.com/pliablepixels/zmNinja/issues/902)
+
+## [v1.3.088](https://github.com/pliablepixels/zmNinja/tree/v1.3.088) (2020-02-21)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.085...v1.3.088)
 
 **Implemented enhancements:**
@@ -21,6 +33,7 @@
 
 - Android 8 notification looks like it should be showing an image when expanded but it doesn't [\#899](https://github.com/pliablepixels/zmNinja/issues/899)
 - zmNinja getting wrong server time [\#898](https://github.com/pliablepixels/zmNinja/issues/898)
+- API Problem \(Desktop and mobile\) [\#895](https://github.com/pliablepixels/zmNinja/issues/895)
 - CryptoAES decryption takes time on mobile devices after a while [\#886](https://github.com/pliablepixels/zmNinja/issues/886)
 - Duplicate monitors appearing in montage [\#881](https://github.com/pliablepixels/zmNinja/issues/881)
 - PTZ - zmNinja sends start but no stop [\#880](https://github.com/pliablepixels/zmNinja/issues/880)
