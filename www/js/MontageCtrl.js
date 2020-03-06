@@ -5,7 +5,7 @@
 /* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded, ConnectSDK, moment */
 
 angular.module('zmApp.controllers')
-  .controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVR', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups', 'EventServer', function ($scope, $rootScope, NVR, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups, EventServer) {
+  .controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVR', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups', 'EventServer', 'message', function ($scope, $rootScope, NVR, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups, EventServer, message) {
 
     //---------------------------------------------------------------------
     // Controller main
@@ -2232,12 +2232,14 @@ angular.module('zmApp.controllers')
       broadcastHandles = [];
       randToAvoidCacheMem = new Date().getTime();
   
-        $scope.monitors = NVR.getMonitorsNow();
+      
+      $scope.monitors = message;
+      NVR.debug ('Montage beforeEnter: got '+message.length+' monitors');
 
       //console.log ("MONITORS:"+JSON.stringify($scope.monitors));
 
       $scope.MontageMonitors = angular.copy($scope.monitors);
-
+      NVR.debug ('Montage beforeEnter: copying monitors to montage monitors');
 
 
       $scope.singleMonitorModalOpen = false;
