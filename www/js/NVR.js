@@ -2706,6 +2706,7 @@ angular.module('zmApp.controllers')
         // send the right list of monitors after registration
         // token
         getMonitorsNow: function () {
+          debug ('getMonitorsNow: returning '+monitors.length+' monitors');
           return monitors;
         },
 
