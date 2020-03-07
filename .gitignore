@@ -21,5 +21,6 @@ package-lock.json
 dist/
 .gradle/
 **/docgen/
+.env
 
 
