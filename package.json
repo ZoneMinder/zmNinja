@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.3.089",
+  "version":"1.3.090",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -141,10 +141,10 @@
   },
   "scripts": {
     "electron": "electron .",
-    "dist-mac": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -m",
     "dist-win": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -w",
     "dist-lin": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -l",
-    "dist-all": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -mwl"
+    "dist-mac": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -m",
+    "dist-all": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -wlm"
   },
   "main": "electron_js/main.js",
   "build": {
