@@ -1,5 +1,19 @@
 # Change Log
 
+## [v1.3.091](https://github.com/pliablepixels/zmNinja/tree/v1.3.091) (2020-03-18)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.089...v1.3.091)
+
+**Fixed bugs:**
+
+- Montage screen often doesn't load monitors [\#908](https://github.com/pliablepixels/zmNinja/issues/908)
+- “zmninjapro” Desktop app can’t be opened in Catalina because Apple cannot check it for malicious software. [\#906](https://github.com/pliablepixels/zmNinja/issues/906)
+
+**Closed issues:**
+
+- ZM APi not working [\#907](https://github.com/pliablepixels/zmNinja/issues/907)
+- Change the layout of the montage page? [\#905](https://github.com/pliablepixels/zmNinja/issues/905)
+- High value on AUTH\_HASH\_TTL in zoneminder gives zmninja auth timeout problems [\#893](https://github.com/pliablepixels/zmNinja/issues/893)
+
 ## [v1.3.089](https://github.com/pliablepixels/zmNinja/tree/v1.3.089) (2020-02-24)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.088...v1.3.089)
 
