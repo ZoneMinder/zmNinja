@@ -365,10 +365,6 @@ angular.module('zmApp.controllers')
       return d.promise;
     }
 
-
-
-
-
     function disconnect() {
 
      authState = connState.PENDING;
@@ -382,7 +378,6 @@ angular.module('zmApp.controllers')
           NVR.log("EventSever: Event server socket is empty, nothing to disconnect");
           return;
         }
-
 
         ws.onmessage = null;
         iClosed = true;
