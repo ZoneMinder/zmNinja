@@ -196,7 +196,7 @@ angular.module('zmApp.controllers')
       $scope.mid = '';
 
       $scope.$on ("alarm", function() {
-        NVR.debug ("EventCtrl: new event notiication, doing an immediate reload");
+        NVR.debug ("EventCtrl: new event notification, doing an immediate reload");
         // do an immediate display reload and schedule timer again
         $interval.cancel(intervalReloadEvents);
         timedPageReload();
