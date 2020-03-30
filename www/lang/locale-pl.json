@@ -367,6 +367,8 @@
     "kShowAlarmedEvents"         :"Pokaż zaalarmowane Zdarzenia",
     "kShowAllEvents"             :"Pokaż wszystkie Zdarzenia",
     "kShowAllFrames"             :"wszystkie",
+    "kShowAnimation"             :"Pokaż animację miniatury",
+    "kShowAnimationNote"         :"Tylko ZM 1.35+ jeśli włączone w obiekcie",
     "kShowLiveForInProgress"     :"odtwórz na żywo w trakcie nagrywania Wydarzenia",
     "kShowObjectDetectionEvents" :"Tylko wykryte obiekty",
     "kShowTimeDiffFrames"        :"unikatowe czasy",
