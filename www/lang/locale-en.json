@@ -367,6 +367,8 @@
     "kShowAlarmedEvents"         :"Show alarmed events",
     "kShowAllEvents"             :"Show all events",
     "kShowAllFrames"             :"all",
+    "kShowAnimation"             : "Show thumbnail animation",
+    "kShowAnimationNote"         : "only ZM 1.35+ if enabled in objdetect",
     "kShowLiveForInProgress"     :"play live feed if event recording in progress",
     "kShowObjectDetectionEvents" :"Only detected objects",
     "kShowTimeDiffFrames"        :"unique times",

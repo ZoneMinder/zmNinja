@@ -193,7 +193,6 @@
       <label>
         <ion-toggle ng-model="loginData.enableThumbs" toggle-class="toggle-calm">
           <span class="item-text-wrap">{{'kEnableThumbs' | translate}}
-            <p>{{'kEnableThumbsSub' | translate}}</p>
           </span>
         </ion-toggle>
       </label>
@@ -239,6 +238,13 @@
       <label>
         <ion-toggle ng-model="loginData.useAPICaching" toggle-class="toggle-calm">
           <span class="item-text-wrap">{{'kUseAPICaching' | translate}}</span>
+        </ion-toggle>
+      </label>
+
+      <label>
+        <ion-toggle ng-model="loginData.showAnimation" toggle-class="toggle-calm">
+          <span class="item-text-wrap">{{'kShowAnimation' | translate}}</span>
+          <p>{{'kShowAnimationNote' | translate}}</p>
         </ion-toggle>
       </label>
 
