@@ -2006,10 +2006,20 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     if (data.event.Event.Notes.indexOf('detected:') != -1) {
           
             NVR.debug ("You have object detection! Adding object detect frame");
+            var frameid = 'objdetect';
+            var ld = NVR.getLogin();
+            if (!ld.showAnimation) {
+              if (NVR.versionCompare(ld.currentServerVersion, '1.35') != -1) {
+               frameid = 'objdetect_jpg';
+              }
+
+            }
+          
             $scope.alarm_images.unshift({
-                frameid: 'objdetect',
-                id: 'doesntseemtobeusedhuh'
-            });
+                frameid: frameid,
+                id: 'whatever'
+             });
+
             NVR.debug ("Your ZM version is:"+NVR.getCurrentServerVersion()+" and your obj frame setting is:"+NVR.getLogin().showObjectDetectionFrame);
 
     } else {

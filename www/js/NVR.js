@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.091";
+      var zmAppVersion = "1.3.093";
      
       var isBackground = false;
       var justResumed = false;
@@ -215,7 +215,8 @@ angular.module('zmApp.controllers')
         'pauseStreams': false,
         'liveStreamBuffer': 10,
         'zmNinjaCustomId':undefined, // filled in init. custom header
-        'obfuscationScheme': 'lzs' // or 'aes'
+        'obfuscationScheme': 'lzs', // or 'aes'
+        'showAnimation': true
 
       };
 
@@ -1618,6 +1619,10 @@ angular.module('zmApp.controllers')
 
         if (typeof loginData.obfuscationScheme == 'undefined')  {
           loginData.obfuscationScheme = 'lzs';
+        }
+
+        if (typeof loginData.showAnimation == 'undefined')  {
+          loginData.showAnimation = true;
         }
 
         loginData.canSwipeMonitors = true;
