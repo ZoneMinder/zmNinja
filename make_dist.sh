@@ -1,2 +1,8 @@
+#!/bin/bash
+DISTROS="dist-all"
 rm -fr dist/
-npm run dist-all
+echo $1
+if [ ! -z "$1" ]; then
+  DISTROS=$1
+fi
+npm run dist-${DISTROS}

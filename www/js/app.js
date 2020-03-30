@@ -21,7 +21,7 @@ angular.module('zmApp', [
     'uk.ac.soton.ecs.videogular.plugins.cuepoints',
     'dcbImgFallback',
     'angular-websocket',
-    'ngCookies'
+    'ngCookies',
 
 
   ])
@@ -1832,7 +1832,7 @@ angular.module('zmApp', [
       }
 
       function continueRestOfInit() {
-
+        
         // use desktop state for mobile too as 
         // mobile now quits
         if ($rootScope.platformOS == 'desktop' || 1) {
