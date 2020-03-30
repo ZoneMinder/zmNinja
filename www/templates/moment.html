@@ -96,25 +96,29 @@
 
     <div class="grid" id="mygrid">
 
+     
+      <span ng-if="uiReady" class="grid-item grid-item-{{gridSize}}" ng-repeat="moment in moments">
+        <figure ng-show="!moment.Event.hide">
+          <figcaption ng-show="showIcons" class="normal-figheader">&nbsp;{{::moment.Event.monitorName}}({{::moment.Event.Id}})
+            <span style="float:right">
+              <button class="button button-small button-icon icon  {{moment.Event.icon}}" ng-click="toggleCollapse(moment.Event.MonitorId, moment.Event.Id)"></button>{{moment.Event.collapseCount}}&nbsp;</span>
+          </figcaption>
+          <img image-spinner-src="{{::constructFrame(moment)}}" img-spinner-w="{{::moment.Event.width}}" img-spinner-h="{{::moment.Event.height}}"
+            image-spinner-loader="lines" on-tap="playEvent(moment)" />
+  
+          <div ng-show="showIcons" class="normal-subfigcaption">
+            <button ng-class="moment.Event.pinned?  'button button-small button-icon icon ion-ios-flag assertive': 'button button-small button-icon icon ion-pin'"
+              ng-click="togglePin(moment.Event.Id)"></button>
+  
+          </div>
+          
+          <figcaption ng-show="showIcons" class="normal-figcaption">&nbsp;{{::moment.Event.humanizeTime}}
+            <span style="float:right">{{::hourmin(moment.Event.StartTime)}}&nbsp;</span>
+          </figcaption>
+        </figure>
 
-      <figure class="grid-item grid-item-{{gridSize}}" ng-repeat="moment in moments | onlyEnabledMoments">
-        <figcaption ng-if="showIcons" class="normal-figheader">&nbsp;{{::moment.Event.monitorName}}
-          <span style="float:right">
-            <button class="button button-small button-icon icon  {{moment.Event.icon}}" ng-click="toggleCollapse(moment.Event.MonitorId, moment.Event.Id)"></button>{{moment.Event.collapseCount}}&nbsp;</span>
-        </figcaption>
-        <img image-spinner-src="{{constructFrame(moment)}}" img-spinner-w="{{moment.Event.width}}" img-spinner-h="{{moment.Event.height}}"
-          image-spinner-loader="lines" on-tap="playEvent(moment)" />
+      </span>
 
-        <div ng-if="showIcons" class="normal-subfigcaption">
-          <button ng-class="moment.Event.pinned?  'button button-small button-icon icon ion-ios-flag assertive': 'button button-small button-icon icon ion-pin'"
-            ng-click="togglePin(moment.Event.Id)"></button>
-
-        </div>
-        
-        <figcaption ng-if="showIcons" class="normal-figcaption">&nbsp;{{::moment.Event.humanizeTime}}
-          <span style="float:right">{{hourmin(moment.Event.StartTime)}}&nbsp;</span>
-        </figcaption>
-      </figure>
 
     </div>
 

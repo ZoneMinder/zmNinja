@@ -6,7 +6,7 @@
 
 
 
-angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVR', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$templateRequest', '$sce', '$compile', '$http', '$ionicLoading', 'zm', '$timeout', '$q', '$ionicPopover', '$ionicPopup', 'message', '$ionicScrollDelegate', function ($scope, $rootScope, $ionicModal, NVR, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $templateRequest, $sce, $compile, $http, $ionicLoading, zm, $timeout, $q, $ionicPopover, $ionicPopup, message, $ionicScrollDelegate) {
+angular.module('zmApp.controllers').controller('zmApp.MomentCtrl', ['$scope', '$rootScope', '$ionicModal', 'NVR', '$ionicSideMenuDelegate', '$ionicHistory', '$state', '$translate', '$templateRequest', '$sce', '$compile', '$http', '$ionicLoading', 'zm', '$timeout', '$q', '$ionicPopover', '$ionicPopup', 'message', '$ionicScrollDelegate', '$filter', function ($scope, $rootScope, $ionicModal, NVR, $ionicSideMenuDelegate, $ionicHistory, $state, $translate, $templateRequest, $sce, $compile, $http, $ionicLoading, zm, $timeout, $q, $ionicPopover, $ionicPopup, message, $ionicScrollDelegate, $filter) {
 
 var masonry = null;
   var timeFrom;
@@ -99,8 +99,8 @@ var masonry = null;
   // params for moments display
   //----------------------------------------------------------------
   function process(rawdata) {
-    var data = rawdata.data;
-    NVR.debug("--------> attempting PAGE " + data.pagination.page + " of " + data.pagination.pageCount);
+    var data = angular.copy(rawdata.data);
+    NVR.debug("--------> Processing PAGE " + data.pagination.page + " of " + data.pagination.pageCount+ " total:events "+data.events.length+" EID start="+data.events[0].Event.Id + " EID end="+data.events[data.events.length-1].Event.Id );
     for (var i = 0; i < data.events.length; i++) {
       var d = getMonitorDimensions(data.events[i].Event.MonitorId);
       if (d) {
@@ -139,7 +139,9 @@ var masonry = null;
       data.events[i].Event.recordingURL = NVR.getLogin().url;
 
       data.events[i].Event.monitorName = NVR.getMonitorName(data.events[i].Event.MonitorId);
-      data.events[i].Event.dateObject = new Date(data.events[i].Event.StartTime);
+
+      data.events[i].Event.dateObject = moment.tz(data.events[i].Event.StartTime,NVR.getTimeZoneNow()).toDate();
+      //NVR.debug ("-----------> Created Date Object:"+data.events[i].Event.dateObject);
       data.events[i].Event.humanizeTime = humanizeTime(data.events[i].Event.StartTime);
       var mid = data.events[i].Event.MonitorId;
       data.events[i].Event.order = i; // likely not needed if I stop force sorting
@@ -147,13 +149,15 @@ var masonry = null;
       data.events[i].Event.pinned = false;
       moments.push(data.events[i]);
 
+      
+
 
     }
 
     if ($scope.expand)
       _expandAll(moments);
     else _collapseAll(moments);
-
+    NVR.debug ("Moments array length:"+moments.length);
   }
 
   // credit https://stackoverflow.com/a/17265125/1361529
@@ -478,6 +482,7 @@ var masonry = null;
 
   $scope.cancelMask = function () {
     $scope.modal.remove();
+    $timeout (function() {$scope.uiReady=true;},300);
   };
 
   //----------------------------------------------------------------
@@ -503,7 +508,7 @@ var masonry = null;
     NVR.setLogin(ld);
 
     getMoments(momentType);
-
+    $timeout (function() {$scope.uiReady=true;},300);
 
   };
 
@@ -532,6 +537,7 @@ var masonry = null;
   //----------------------------------------------------------------
 
   $scope.hideUnhide = function () {
+    $scope.uiReady=false;
     $scope.monitors = monitors;
     $ionicModal.fromTemplateUrl('templates/moment-mask.html', {
         scope: $scope,
@@ -555,14 +561,19 @@ var masonry = null;
   // of images. Pretty important for a timeline related function
   //----------------------------------------------------------------
   function initMasonry() {
+
+
     /*$ionicLoading.show({
       template: $translate.instant('kArrangingImages'),
       noBackdrop: true,
       duration: zm.loadingTimeout
     });*/
 
+    if (masonry) {
+      masonry.destroy();
+    }
     $scope.areImagesLoading = true;
-    var progressCalled = false;
+    //var progressCalled = false;
 
     var ld = NVR.getLogin();
 
@@ -576,9 +587,10 @@ var masonry = null;
 
     });
 
-    imagesLoaded(elem).on('progress', function (instance, img) {
-      masonry.layout();
 
+    imagesLoaded(elem).on('progress', function (instance, img) {
+      $timeout (function() {masonry.layout();},100);
+      
     });
     imagesLoaded(elem).once('always', function () {
 
@@ -587,11 +599,26 @@ var masonry = null;
       $scope.areImagesLoading = false;
       jiggleAway();
 
-      if (!progressCalled) {
+     /* if (!progressCalled) {
         NVR.log("***  PROGRESS WAS NOT CALLED");
         masonry.reloadItems();
         jiggleAway();
-      }
+      }*/
+
+    });
+
+    imagesLoaded(elem).once('fail', function () {
+
+      NVR.debug("Failure callback, all images did not load");
+      $ionicLoading.hide();
+      $scope.areImagesLoading = false;
+      jiggleAway();
+
+     /* if (!progressCalled) {
+        NVR.log("***  PROGRESS WAS NOT CALLED");
+        masonry.reloadItems();
+        jiggleAway();
+      }*/
 
     });
   }
@@ -612,6 +639,7 @@ var masonry = null;
 
   $scope.playEvent = function (event) {
 
+    //console.log (JSON.stringify(event));
     $scope.currentEvent = event;
     $scope.event = event;
     $scope.monitors = monitors;
@@ -634,6 +662,11 @@ var masonry = null;
     $scope.modalData = {
       doRefresh: false
     };
+
+    $scope.lastVideoStateTime = {
+      'time':''
+    };
+    
     $ionicModal.fromTemplateUrl('templates/events-modal.html', {
         scope: $scope,
         animation: 'slide-in-up',
@@ -708,6 +741,7 @@ var masonry = null;
   //----------------------------------------------------------------
 
   function getMoments(sortCondition, to) {
+    $scope.uiReady = false;
 
     if (sortCondition == 'MaxScore') {
       $scope.type = $translate.instant('kMomentMenuByScore');
@@ -722,7 +756,7 @@ var masonry = null;
     }
 
     $scope.apiurl = NVR.getLogin().apiurl;
-    moments.length = 0;
+    moments = [];
 
     NVR.setAwake(false);
 
@@ -770,31 +804,48 @@ var masonry = null;
 
         if (!moments.length) {
           $scope.loadingStatus = $translate.instant('kMomentNoneFound');
+        } else {
+          NVR.debug ("We got a total of "+moments.length+" events");
         }
 
         // not really sure we need this
         // will see later
         if (sortCondition == "StartTime") {
+         
+          NVR.debug ("Sorting by start time");
           moments.sort(function (a, b) {
             var da = a.Event.dateObject;
             var db = b.Event.dateObject;
-            return da > db ? -1 : da < db ? 1 : 0;
+            //NVR.debug ("Comparing b="+db+ " to "+da);
+            return db - da;
+            //return da > db ? -1 : da < db ? 1 : 0;
           });
+          
+         /* sorted_eids=[];
+          moments.forEach(function (m,i) {sorted_eids.push(m.Event.Id);});
+          NVR.debug ("EIDs after sorting:"+sorted_eids);*/
         }
 
         // if we use any other condition, we need to first sort by cond and then time
         if (sortCondition != "StartTime") {
           var ascordesc = true;
           if (sortCondition == 'monitorName') ascordesc = false;
-          //console.log("SORTING BY " + sortCondition);
+
+         
           moments = objSort(moments, [sortCondition, ascordesc], ["dateObject", true]);
         }
 
+        
        
         $scope.moments = moments;
-        $timeout(function () {
-          initMasonry();
-        }, 300);
+
+        $timeout (function() {
+          $scope.uiReady=true;
+          $timeout(function () {
+            initMasonry();
+          }, 300);
+        },300);
+        
 
       });
 
@@ -809,7 +860,7 @@ var masonry = null;
 
   $scope.$on('$ionicView.beforeLeave', function () {
     NVR.debug("Destroying masonry");
-    masonry.destroy();
+    if (masonry) masonry.destroy();
   });
 
 
@@ -830,7 +881,7 @@ var masonry = null;
 
   $scope.$on('$ionicView.beforeEnter', function () {
 
-
+    $scope.uiReady=false;
     $scope.$on ( "process-push", function () {
       NVR.debug (">> MomentCtrl: push handler");
       var s = NVR.evaluateTappedNotification();
