@@ -1,192 +1,195 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninja_pro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.3.094" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>zmNinja</name>
-    <description>
+<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninja_pro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.3.095" 
+  xmlns="http://www.w3.org/ns/widgets" 
+  xmlns:android="http://schemas.android.com/apk/res/android" 
+  xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>zmNinja</name>
+  <description>
 	High performance ZoneMinder client
-    </description>
-    <author email="pliablepixels@gmail.com" href="http://pliablepixels.us/">
+  </description>
+  <author email="pliablepixels@gmail.com" href="http://pliablepixels.us/">
 	Pliable Pixels
-    </author>
-    <content src="index.html" />
-    <allow-navigation href="gap://ready" />
-    <access launch-external="yes" origin="mailto:*" />
-    <access allows-arbitrary-loads-for-media="true" allows-arbitrary-loads-in-web-content="true" allows-local-networking="true" origin="*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <preference name="KeyboardResize" value="true" />
-    <preference name="KeyboardResizeMode" value="ionic" />
-    <preference name="xwalkMultipleApk" value="true" />
-    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-    <preference name="iosPersistentFileLocation" value="Library" />
-    <preference name="AllowInlineMediaPlayback" value="true" />
-    <preference name="CrosswalkAnimatable" value="true" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
-    <preference name="StatusBarBackgroundColor" value="#2980b9" />
-    <preference name="DisallowOverscroll" value="true" />
-    <preference name="BackupWebStorage" value="none" />
-    <preference name="AutoHideSplashScreen" value="false" />
-    <preference name="ShowSplashScreenSpinner" value="false" />
-    <preference name="SplashScreen" value="screen" />
-    <preference name="deployment-target" value="11.0" />
-    <preference name="SplashScreenDelay" value="300" />
-    <preference name="SplashMaintainAspectRatio" value="true" />
-    <preference name="FadeSplashScreen" value="false" />
-    <preference name="BackgroundColor" value="#444444" />
-    <preference name="android-targetSdkVersion" value="28" />
-    <preference name="android-minSdkVersion" value="21" />
-    <preference name="SplashScreenBackgroundColor" value="#ababab" />
-    <feature name="StatusBar">
-        <param name="ios-package" onload="true" value="CDVStatusBar" />
+  </author>
+  <content src="index.html" />
+  <allow-navigation href="gap://ready" />
+  <access launch-external="yes" origin="mailto:*" />
+  <access allows-arbitrary-loads-for-media="true" allows-arbitrary-loads-in-web-content="true" allows-local-networking="true" origin="*" />
+  <allow-intent href="mailto:*" />
+  <allow-intent href="http://*/*" />
+  <allow-intent href="https://*/*" />
+  <preference name="KeyboardResize" value="true" />
+  <preference name="KeyboardResizeMode" value="ionic" />
+  <preference name="xwalkMultipleApk" value="true" />
+  <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+  <preference name="iosPersistentFileLocation" value="Library" />
+  <preference name="AllowInlineMediaPlayback" value="true" />
+  <preference name="CrosswalkAnimatable" value="true" />
+  <preference name="webviewbounce" value="false" />
+  <preference name="UIWebViewBounce" value="false" />
+  <preference name="StatusBarBackgroundColor" value="#2980b9" />
+  <preference name="DisallowOverscroll" value="true" />
+  <preference name="BackupWebStorage" value="none" />
+  <preference name="AutoHideSplashScreen" value="false" />
+  <preference name="ShowSplashScreenSpinner" value="false" />
+  <preference name="SplashScreen" value="screen" />
+  <preference name="deployment-target" value="11.0" />
+  <preference name="SplashScreenDelay" value="300" />
+  <preference name="SplashMaintainAspectRatio" value="true" />
+  <preference name="FadeSplashScreen" value="false" />
+  <preference name="BackgroundColor" value="#444444" />
+  <preference name="android-targetSdkVersion" value="28" />
+  <preference name="android-minSdkVersion" value="21" />
+  <preference name="SplashScreenBackgroundColor" value="#ababab" />
+  <feature name="StatusBar">
+    <param name="ios-package" onload="true" value="CDVStatusBar" />
+  </feature>
+  <platform name="ios">
+    <preference name="WKWebViewOnly" value="true" />
+    <feature name="CDVWKWebViewEngine">
+      <param name="ios-package" value="CDVWKWebViewEngine" />
     </feature>
-    <platform name="ios">
-        <preference name="WKWebViewOnly" value="true" />
-        <feature name="CDVWKWebViewEngine">
-            <param name="ios-package" value="CDVWKWebViewEngine" />
-        </feature>
-        <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
-        <resource-file src="www/sounds/blop.caf" target="blop.caf" />
-        <resource-file src="GoogleService-Info.plist" />
-        <custom-config-file parent="NSAppTransportSecurity" target="*-Info.plist">
-            <dict>
-                <key>NSAllowsArbitraryLoads</key>
-                <true />
-            </dict>
-        </custom-config-file>
-        <config-file parent="NSPhotoLibraryAddUsageDescription" platform="ios" target="*-Info.plist">
-            <string>Store photos of events and live feeds</string>
-        </config-file>
-        <config-file parent="NSPhotoLibraryUsageDescription" platform="ios" target="*-Info.plist">
-            <string>Store photos of events and live feeds</string>
-        </config-file>
-        <config-file parent="NSFaceIDUsageDescription" platform="ios" target="*-Info.plist">
-            <string>Use Face ID for authentication into app</string>
-        </config-file>
-        <icon height="57" src="resources/ios/icon/icon.png" width="57" />
-        <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
-        <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
-        <icon height="80" src="resources/ios/icon/icon-40@2x.png" width="80" />
-        <icon height="120" src="resources/ios/icon/icon-40@3x.png" width="120" />
-        <icon height="50" src="resources/ios/icon/icon-50.png" width="50" />
-        <icon height="100" src="resources/ios/icon/icon-50@2x.png" width="100" />
-        <icon height="60" src="resources/ios/icon/icon-60.png" width="60" />
-        <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120" />
-        <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180" />
-        <icon height="72" src="resources/ios/icon/icon-72.png" width="72" />
-        <icon height="144" src="resources/ios/icon/icon-72@2x.png" width="144" />
-        <icon height="76" src="resources/ios/icon/icon-76.png" width="76" />
-        <icon height="152" src="resources/ios/icon/icon-76@2x.png" width="152" />
-        <icon height="167" src="resources/ios/icon/icon-83.5@2x.png" width="167" />
-        <icon height="29" src="resources/ios/icon/icon-small.png" width="29" />
-        <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
-        <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87" />
-        <splash src="resources/Default@2x~universal~anyany.png" />
-        <icon height="1024" src="resources/icon_for_apppublish_1024x1024_no_alpha.jpg" width="1024" />
-        <splash src="resources/ios/splash/Default@2x~universal~anyany.png" />
-        <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
-        <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
-        <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
-        <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
-        <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
-        <splash height="2048" src="resources/ios/splash/Default-Landscape@~ipadpro.png" width="2732" />
-        <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
-        <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
-        <splash height="2732" src="resources/ios/splash/Default-Portrait@~ipadpro.png" width="2048" />
-        <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
-        <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
-        <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
-        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
-    </platform>
-    <platform name="android">
-        <config-file parent="/*" target="AndroidManifest.xml">
-            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-        </config-file>
-        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
-            <application android:usesCleartextTraffic="true" />
-        </edit-config>
-        <resource-file src="build-extras.gradle" target="build-extras.gradle" />
-        <resource-file src="etc/android-notification-icons/ic_stat_notification.png" target="app/src/main/res/drawable/ic_stat_notification.png" />
-        <resource-file src="etc/android-tv-banner/banner.png" target="res/drawable/banner.png" />
-        <resource-file src="google-services.json" target="app/google-services.json" />
-        <resource-file src="www/sounds/blop.mp3" target="res/raw/blop.mp3" />
-        <preference name="android-manifest/@android:installLocation" value="auto" />
-        <preference name="loadUrlTimeoutValue" value="700000" />
-        <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
-        <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
-        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
-        <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
-        <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
-        <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
-        <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png" />
-        <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png" />
-        <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />
-        <splash density="land-xhdpi" src="resources/android/splash/drawable-land-xhdpi-screen.png" />
-        <splash density="land-xxhdpi" src="resources/android/splash/drawable-land-xxhdpi-screen.png" />
-        <splash density="land-xxxhdpi" src="resources/android/splash/drawable-land-xxxhdpi-screen.png" />
-        <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png" />
-        <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png" />
-        <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png" />
-        <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
-        <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
-        <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
-    </platform>
-    <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
-    <preference name="SplashShowOnlyFirstTime" value="false" />
-    <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
-        <variable name="URL_SCHEME" value="zmninja" />
-        <variable name="ANDROID_SCHEME" value=" " />
-        <variable name="ANDROID_HOST" value=" " />
-        <variable name="ANDROID_PATHPREFIX" value="/" />
-    </plugin>
-    <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
-    <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
-    <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
-    <plugin name="cordova-plugin-pin-dialog" spec="^0.1.3" />
-    <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
-    <plugin name="cordova-sqlite-storage" spec="^1.5.3" />
-    <plugin name="cordova-plugin-android-fingerprint-auth" spec="^1.5.0" />
-    <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
-    <plugin name="cordova-plugin-device" spec="^2.0.2" />
-    <plugin name="cordova-plugin-file" spec="^6.0.1" />
-    <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
-    <plugin name="cordova-library-helper-pp-fork" spec="^1.0.1" />
-    <plugin name="cordova-plugin-multi-window" spec="0.0.3" />
-    <plugin name="cordova-plugin-ignore-lint-translation" spec="0.0.1" />
-    <plugin name="cordova-plugin-cloud-settings" spec="^1.0.4">
-        <variable name="ANDROID_BACKUP_SERVICE_KEY" value="AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw" />
-    </plugin>
-    <plugin name="cordova-custom-config" spec="5.0.2" />
-    <plugin name="cordova-plugin-advanced-websocket" spec="1.1.5" />
-    <plugin name="cordova-plugin-add-swift-support" spec="1.7.2" />
-    <plugin name="cordova-plugin-photo-library" spec="https://github.com/pliablepixels/cordova-plugin-photo-library">
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value=" " />
-    </plugin>
-    <plugin name="cordova-support-google-services" spec="1.3.2" />
-    <plugin name="phonegap-plugin-push" spec="2.3.0">
-        <variable name="ANDROID_SUPPORT_V13_VERSION" value="27.+" />
-        <variable name="FCM_VERSION" value="17.0.+" />
-    </plugin>
-    <plugin name="cordova-plugin-advanced-http" spec="git+https://github.com/silkimen/cordova-plugin-advanced-http.git">
-        <variable name="OKHTTP_VERSION" value="3.10.0" />
-    </plugin>
-    <plugin name="cordova-plugin-x-socialsharing" spec="5.6.4">
-        <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
-        <variable name="PHOTO_LIBRARY_ADD_USAGE_DESCRIPTION" value="This app requires photo library access to function properly." />
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This app requires photo library access to function properly." />
-    </plugin>
-    <plugin name="cordova-plugin-ionic-keyboard" spec="2.2.0" />
-    <plugin name="cordova-plugin-touch-id" spec="3.4.0">
-        <variable name="FACEID_USAGE_DESCRIPTION" value="" />
-    </plugin>
-    <plugin name="cordova-plugin-android-permissions" spec="1.0.2" />
-    <plugin name="cordova-plugin-app-version" spec="0.1.9" />
-    <plugin name="cordova-plugin-inappbrowser" spec="https://github.com/apache/cordova-plugin-inappbrowser.git" />
-    <plugin name="cordova-plugin-ionic-webview" spec="https://github.com/pliablepixels/cordova-plugin-ionic-webview.git">
-        <variable name="ANDROID_SUPPORT_ANNOTATIONS_VERSION" value="27.+" />
-    </plugin>
-    <plugin name="cordova-plugin-media-pp-fork" spec="^1.0.2-dev" />
-    <engine name="android" spec="8.0.0" />
-    <engine name="ios" spec="5.1.1" />
+    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
+    <resource-file src="www/sounds/blop.caf" target="blop.caf" />
+    <resource-file src="GoogleService-Info.plist" />
+    <custom-config-file parent="NSAppTransportSecurity" target="*-Info.plist">
+      <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true />
+      </dict>
+    </custom-config-file>
+    <config-file parent="NSPhotoLibraryAddUsageDescription" platform="ios" target="*-Info.plist">
+      <string>Store photos of events and live feeds</string>
+    </config-file>
+    <config-file parent="NSPhotoLibraryUsageDescription" platform="ios" target="*-Info.plist">
+      <string>Store photos of events and live feeds</string>
+    </config-file>
+    <config-file parent="NSFaceIDUsageDescription" platform="ios" target="*-Info.plist">
+      <string>Use Face ID for authentication into app</string>
+    </config-file>
+    <icon height="57" src="resources/ios/icon/icon.png" width="57" />
+    <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
+    <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
+    <icon height="80" src="resources/ios/icon/icon-40@2x.png" width="80" />
+    <icon height="120" src="resources/ios/icon/icon-40@3x.png" width="120" />
+    <icon height="50" src="resources/ios/icon/icon-50.png" width="50" />
+    <icon height="100" src="resources/ios/icon/icon-50@2x.png" width="100" />
+    <icon height="60" src="resources/ios/icon/icon-60.png" width="60" />
+    <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120" />
+    <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180" />
+    <icon height="72" src="resources/ios/icon/icon-72.png" width="72" />
+    <icon height="144" src="resources/ios/icon/icon-72@2x.png" width="144" />
+    <icon height="76" src="resources/ios/icon/icon-76.png" width="76" />
+    <icon height="152" src="resources/ios/icon/icon-76@2x.png" width="152" />
+    <icon height="167" src="resources/ios/icon/icon-83.5@2x.png" width="167" />
+    <icon height="29" src="resources/ios/icon/icon-small.png" width="29" />
+    <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
+    <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87" />
+    <splash src="resources/Default@2x~universal~anyany.png" />
+    <icon height="1024" src="resources/icon_for_apppublish_1024x1024_no_alpha.jpg" width="1024" />
+    <splash src="resources/ios/splash/Default@2x~universal~anyany.png" />
+    <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
+    <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
+    <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
+    <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
+    <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
+    <splash height="2048" src="resources/ios/splash/Default-Landscape@~ipadpro.png" width="2732" />
+    <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
+    <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
+    <splash height="2732" src="resources/ios/splash/Default-Portrait@~ipadpro.png" width="2048" />
+    <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
+    <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
+    <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+    <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
+  </platform>
+  <platform name="android">
+    <config-file parent="/*" target="AndroidManifest.xml">
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    </config-file>
+    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+      <application android:usesCleartextTraffic="true" />
+    </edit-config>
+    <resource-file src="build-extras.gradle" target="build-extras.gradle" />
+    <resource-file src="etc/android-notification-icons/ic_stat_notification.png" target="app/src/main/res/drawable/ic_stat_notification.png" />
+    <resource-file src="etc/android-tv-banner/banner.png" target="res/drawable/banner.png" />
+    <resource-file src="google-services.json" target="app/google-services.json" />
+    <resource-file src="www/sounds/blop.mp3" target="res/raw/blop.mp3" />
+    <preference name="android-manifest/@android:installLocation" value="auto" />
+    <preference name="loadUrlTimeoutValue" value="700000" />
+    <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
+    <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
+    <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
+    <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
+    <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
+    <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
+    <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png" />
+    <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png" />
+    <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />
+    <splash density="land-xhdpi" src="resources/android/splash/drawable-land-xhdpi-screen.png" />
+    <splash density="land-xxhdpi" src="resources/android/splash/drawable-land-xxhdpi-screen.png" />
+    <splash density="land-xxxhdpi" src="resources/android/splash/drawable-land-xxxhdpi-screen.png" />
+    <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png" />
+    <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png" />
+    <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png" />
+    <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
+    <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
+    <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
+  </platform>
+  <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
+  <preference name="SplashShowOnlyFirstTime" value="false" />
+  <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
+    <variable name="URL_SCHEME" value="zmninja" />
+    <variable name="ANDROID_SCHEME" value=" " />
+    <variable name="ANDROID_HOST" value=" " />
+    <variable name="ANDROID_PATHPREFIX" value="/" />
+  </plugin>
+  <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
+  <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
+  <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
+  <plugin name="cordova-plugin-pin-dialog" spec="^0.1.3" />
+  <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
+  <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+  <plugin name="cordova-sqlite-storage" spec="^1.5.3" />
+  <plugin name="cordova-plugin-android-fingerprint-auth" spec="^1.5.0" />
+  <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
+  <plugin name="cordova-plugin-device" spec="^2.0.2" />
+  <plugin name="cordova-plugin-file" spec="^6.0.1" />
+  <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
+  <plugin name="cordova-library-helper-pp-fork" spec="^1.0.1" />
+  <plugin name="cordova-plugin-multi-window" spec="0.0.3" />
+  <plugin name="cordova-plugin-ignore-lint-translation" spec="0.0.1" />
+  <plugin name="cordova-plugin-cloud-settings" spec="^1.0.4">
+    <variable name="ANDROID_BACKUP_SERVICE_KEY" value="AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw" />
+  </plugin>
+  <plugin name="cordova-custom-config" spec="5.0.2" />
+  <plugin name="cordova-plugin-advanced-websocket" spec="1.1.5" />
+  <plugin name="cordova-plugin-add-swift-support" spec="1.7.2" />
+  <plugin name="cordova-plugin-photo-library" spec="https://github.com/pliablepixels/cordova-plugin-photo-library">
+    <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value=" " />
+  </plugin>
+  <plugin name="cordova-support-google-services" spec="1.3.2" />
+  <plugin name="phonegap-plugin-push" spec="2.3.0">
+    <variable name="ANDROID_SUPPORT_V13_VERSION" value="27.+" />
+    <variable name="FCM_VERSION" value="17.0.+" />
+  </plugin>
+  <plugin name="cordova-plugin-advanced-http" spec="git+https://github.com/silkimen/cordova-plugin-advanced-http.git">
+    <variable name="OKHTTP_VERSION" value="3.10.0" />
+  </plugin>
+  <plugin name="cordova-plugin-x-socialsharing" spec="5.6.4">
+    <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
+    <variable name="PHOTO_LIBRARY_ADD_USAGE_DESCRIPTION" value="This app requires photo library access to function properly." />
+    <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This app requires photo library access to function properly." />
+  </plugin>
+  <plugin name="cordova-plugin-ionic-keyboard" spec="2.2.0" />
+  <plugin name="cordova-plugin-touch-id" spec="3.4.0">
+    <variable name="FACEID_USAGE_DESCRIPTION" value="" />
+  </plugin>
+  <plugin name="cordova-plugin-android-permissions" spec="1.0.2" />
+  <plugin name="cordova-plugin-app-version" spec="0.1.9" />
+  <plugin name="cordova-plugin-inappbrowser" spec="https://github.com/apache/cordova-plugin-inappbrowser.git" />
+  <plugin name="cordova-plugin-ionic-webview" spec="https://github.com/pliablepixels/cordova-plugin-ionic-webview.git">
+    <variable name="ANDROID_SUPPORT_ANNOTATIONS_VERSION" value="27.+" />
+  </plugin>
+  <plugin name="cordova-plugin-media-pp-fork" spec="^1.0.2-dev" />
+  <engine name="android" spec="8.0.0" />
+  <engine name="ios" spec="5.1.1" />
 </widget>
