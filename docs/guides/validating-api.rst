@@ -105,3 +105,5 @@ zmNinja API notes:
 -  If you are accessing zmNinja remotely, make sure you first access ZM
    remotely from your desktop browser, ensure it works and then use the
    same DNS/IP for zmNinja
+
+- If you are sure everything looks good, but zmNinja is causing issues, also try and clear API cache (menu->clear API cache)
