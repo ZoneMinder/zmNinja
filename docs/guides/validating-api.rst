@@ -7,6 +7,18 @@ Please make sure you go through this before you wonder why zmNinja is not workin
     Assumption: Your ZM server is accessible at ``http://server/zm`` ->
     replace this with your actual path
 
+
+.. important:: 
+  Make sure you have the following settings in ZM:
+  
+  - ``AUTH_RELAY`` is set to hashed
+  - A valid ``AUTH_HASH_SECRET`` is provided (not empty)
+  - ``AUTH_HASH_IPS`` is disabled
+  - ``OPT_USE_APIS`` is enabled
+  - If you are using any version lower than ZM 1.34, ``OPT_USE_GOOG_RECAPTCHA`` is disabled
+  - If you are NOT using authentication at all in ZM, that is ``OPT_USE_AUTH`` is disabled, then make sure you also disable authentication in zmNinja, otherwise it will keep waiting for auth keys.
+
+
 Make sure ZM APIs are working:
 ''''''''''''''''''''''''''''''
 
@@ -74,16 +86,13 @@ empty, your APIs have a problem. Please post in the ZM forums (please
 
     {"events":[{"Event":{ /* many more details */ }}]}
 
-*Top reasons why monitors and events API returns blank while getVersion
-works:* \* You don't have monitor/event view permissions allocated to
-the user \* You have an invalid camera definition (happens sometimes
-when you remove and re-add cameras) \* If you are using non UTF8
-characters in your monitor names/zone names this can cause issues. Edit
-``/usr/share/zoneminder/www/api/app/Config/database.php`` (assuming ZM
-is in /usr/share) and make sure ``'encoding' => 'utf8'`` is
-*uncommented* (remove ``//``) around line 74. I've submitted a
-`patch <https://github.com/ZoneMinder/ZoneMinder/pull/1635/commits/92d7cad5f154359a5b249d7a63fb5034f7d1b51a>`__
-but till its merged, you might have to do it manually.
+Top reasons why monitors and events API returns blank while getVersion
+works:
+
+* You don't have monitor/event view permissions allocated
+* You don't have system view permissions (zmNinja needs this to access ``/servers.json`` API)
+* You have an invalid camera definition (happens sometimes when you remove and re-add cameras) 
+
 
 zmNinja API notes:
 ^^^^^^^^^^^^^^^^^^
