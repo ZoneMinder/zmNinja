@@ -1,5 +1,25 @@
 # Change Log
 
+## [v1.3.096](https://github.com/pliablepixels/zmNinja/tree/v1.3.096) (2020-04-01)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.091...v1.3.096)
+
+**Fixed bugs:**
+
+- 24hr format: incorrect sorting once in a while [\#912](https://github.com/pliablepixels/zmNinja/issues/912)
+
+**Closed issues:**
+
+- All live views are blank since upgrading to 1.34.8 [\#916](https://github.com/pliablepixels/zmNinja/issues/916)
+- Start removing any/all UIWebView references [\#914](https://github.com/pliablepixels/zmNinja/issues/914)
+- 24 hr format more performance improvements [\#913](https://github.com/pliablepixels/zmNinja/issues/913)
+- Full screen montage - menu button overrides monitor event buttons [\#909](https://github.com/pliablepixels/zmNinja/issues/909)
+- Feature request: skip over idle periods when playing videos from 'mocord' mode [\#896](https://github.com/pliablepixels/zmNinja/issues/896)
+
+**Merged pull requests:**
+
+- toggle option for animation frame in modal events [\#917](https://github.com/pliablepixels/zmNinja/pull/917) ([florie1706](https://github.com/florie1706))
+- toggle option for animation frame in modal events [\#915](https://github.com/pliablepixels/zmNinja/pull/915) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.3.091](https://github.com/pliablepixels/zmNinja/tree/v1.3.091) (2020-03-18)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.089...v1.3.091)
 
