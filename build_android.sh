@@ -101,7 +101,7 @@ done
 
 ./electron_js/sync_versions.sh
 
-APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns.*/\1/'`
+APPVER=`cat config.xml | grep "<widget" | sed -n 's/.*version="\([^"]*\).*/\1/p'`
 # multipleApk adds 2 and 4 in Xwalk builds for arm and x86 respectively
 ver_pre5=${APPVER//.} 
 ver=${APPVER//.}9
@@ -110,8 +110,10 @@ ver=${APPVER//.}9
 echo "About to build version: $APPVER ($MODE)"
 read -p "Press any key..."
 
-echo "Removing wkwebview, adding cordova-plugin-certificates-pp-fork..."
+echo "Removing wkwebview..."
 cordova plugin remove cordova-plugin-ionic-webview > /dev/null 2>&1
+
+echo "Adding cordova-plugin-certificates-pp-fork..."
 cordova plugin add cordova-plugin-certificates-pp-fork > /dev/null 2>&1
 
 
@@ -123,9 +125,9 @@ fi
 
 
 
-echo "Adding back wkwebview and removing certificate fork..."
+echo "Removing certificate fork..."
 cordova plugin remove cordova-plugin-certificates-pp-fork > /dev/null 2>&1
-cordova plugin add  https://github.com/pliablepixels/cordova-plugin-ionic-webview.git > /dev/null 2>&1
+#cordova plugin add  https://github.com/pliablepixels/cordova-plugin-ionic-webview.git > /dev/null 2>&1
 
 echo "If you faced DEX etc goofy errors, cd platforms/android && gradle clean or try removing/adding android"
 
