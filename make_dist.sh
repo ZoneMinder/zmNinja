@@ -1,5 +1,5 @@
 #!/bin/bash
-DISTROS="dist-all"
+DISTROS="all"
 rm -fr dist/
 echo $1
 if [ ! -z "$1" ]; then
