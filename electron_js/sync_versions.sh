@@ -1,5 +1,5 @@
 #!/bin/bash
-APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns.*/\1/'`
+APPVER=`cat config.xml | grep "<widget" | sed -n 's/.*version="\([^"]*\).*/\1/p'`
 
 echo "Config.xml: App version: ${APPVER}"
 echo "Syncing package.json and NVR.js with this version..."
