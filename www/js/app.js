@@ -1150,9 +1150,9 @@ angular.module('zmApp', [
       $rootScope.platformOS = "desktop";
       NVR.log("Device is ready");
 
-
+      //console.log ("*************** PLATFORM IS: "+ionic.Platform.platform());
       // var ld = NVR.getLogin();
-      if ($ionicPlatform.is('ios'))
+      if ($ionicPlatform.is('ios') || ionic.Platform.platform() == 'macintel')
         $rootScope.platformOS = "ios";
       if ($ionicPlatform.is('android'))
         $rootScope.platformOS = "android";
@@ -1758,10 +1758,7 @@ angular.module('zmApp', [
           //  console.log("statusbar");
           NVR.log("Updating statusbar");
           StatusBar.styleDefault();
-          if ($rootScope.platformOS == 'ios') {
-            // console.log ("<<<<<<<<<<<<<<<< OVERLAY");
-            StatusBar.overlaysWebView(false);
-          }
+         
 
           StatusBar.backgroundColorByHexString("#2980b9");
         }
