@@ -1476,20 +1476,20 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     // now get event details to show alarm frames
     var loginData = NVR.getLogin();
     var nextEvent = loginData.apiurl + "/events/index" +
-      "/StartTime >: " + currentEvent.Event.StartTime +
-      ($scope.followSameMonitor == '1' ? "/MonitorId =: " + currentEvent.Monitor.Id : "") ;
+      "/StartTime+>:+" + currentEvent.Event.StartTime +
+      ($scope.followSameMonitor == '1' ? "/MonitorId+=:+" + currentEvent.Monitor.Id : "") ;
       if ($scope.useFilters) {
-        nextEvent = nextEvent + "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+        nextEvent = nextEvent + "/AlarmFrames+>=:+" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
       }
       nextEvent = nextEvent + ".json?sort=StartTime&direction=asc&limit=1"+$rootScope.authSession;
       
 
     var prevEvent = loginData.apiurl + "/events/index" +
-      "/StartTime <: " + currentEvent.Event.StartTime +
-      ($scope.followSameMonitor == '1' ? "/MonitorId =: " + currentEvent.Monitor.Id : "");
+      "/StartTime+<:+" + currentEvent.Event.StartTime +
+      ($scope.followSameMonitor == '1' ? "/MonitorId+=:+" + currentEvent.Monitor.Id : "");
 
       if ($scope.useFilters) {
-        prevEvent = prevEvent + "/AlarmFrames >=: " + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+        prevEvent = prevEvent + "/AlarmFrames+>=:+" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
       }
       prevEvent = prevEvent + ".json?sort=StartTime&direction=desc&limit=1"+$rootScope.authSession;
 

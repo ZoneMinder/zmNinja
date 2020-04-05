@@ -182,7 +182,7 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
           var dateString = "";
           if (hrs) {
-            dateString = "/StartTime <=:" + endDate + "/EndTime >=:" + startDate;
+            dateString = "/StartTime+<=:" + endDate + "/EndTime+>=:" + startDate;
           }
           var url = loginData.apiurl +
             "/events/index/MonitorId:" + monitors[j].Monitor.Id + dateString +

@@ -2098,9 +2098,8 @@ angular.module('zmApp', [
 
           if (arguments[0].timeout) options.timeout = arguments[0].timeout;
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
-         
-          
-          cordova.plugin.http.sendRequest(encodeURI(url), options,
+
+          cordova.plugin.http.sendRequest(url, options,
             function (succ) {
               // automatic JSON parse if no responseType: text
               // fall back to text if JSON parse fails too
@@ -2157,7 +2156,7 @@ angular.module('zmApp', [
                           //console.log ("I GOT: "+ JSON.stringify(succ));
                           url = url.replace(/&token=([^&]*)/, nvr.authSession);
                           options.skipIntercept = true;
-                          cordova.plugin.http.sendRequest(encodeURI(url), options, 
+                          cordova.plugin.http.sendRequest(url, options,
                           function (succ) {
                             d.resolve(succ);
                             return d.promise;

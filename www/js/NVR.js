@@ -2811,7 +2811,7 @@ angular.module('zmApp.controllers')
             log((forceReload == 1) ? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors";
-            myurl += "/index/Type !=:WebSite.json?" + $rootScope.authSession;
+            myurl += "/index/Type+!=:WebSite.json?" + $rootScope.authSession;
 
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
@@ -3469,11 +3469,11 @@ angular.module('zmApp.controllers')
           if (monitorId != 0)
             myurl = myurl + "/MonitorId:" + monitorId;
           if (startTime)
-            myurl = myurl + "/StartTime <=:" + endTime;
+            myurl = myurl + "/StartTime+<=:" + endTime;
           if (endTime)
-            myurl = myurl + "/EndTime >=:" + startTime;
+            myurl = myurl + "/EndTime+>=:" + startTime;
 
-          myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+          myurl = myurl + "/AlarmFrames+>=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
           //https:///zm/api/events/index/Notes%20REGEXP:detected%3A.json
           if (loginData.objectDetectionFilter && !noObjectFilter) {
@@ -3560,11 +3560,11 @@ angular.module('zmApp.controllers')
           if (monitorId != 0)
             myurl = myurl + "/MonitorId:" + monitorId;
           if (startTime)
-            myurl = myurl + "/StartTime <=:" + endTime;
+            myurl = myurl + "/StartTime+<=:" + endTime;
           if (endTime)
-            myurl = myurl + "/EndTime >=:" + startTime;
+            myurl = myurl + "/EndTime+>=:" + startTime;
 
-          myurl = myurl + "/AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+          myurl = myurl + "/AlarmFrames+>=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
           //console.log ('********* MON FILTER '+monListFilter);
           if (monListFilter) 
