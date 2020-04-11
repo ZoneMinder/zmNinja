@@ -373,6 +373,7 @@ angular.module('zmApp.controllers')
         .then ( function () {return localforage.removeItem('cached_multi_port');})
         .then ( function () {return localforage.removeItem('cached_timezone');})
         .catch ( function (err) {debug ('Error removing all caches: '+JSON.stringify(err));});
+        
       }
 
       function cache_or_http(url,key,doCrypt, expiry) {
