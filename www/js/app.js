@@ -1151,8 +1151,10 @@ angular.module('zmApp', [
       NVR.log("Device is ready");
 
       //console.log ("*************** PLATFORM IS: "+ionic.Platform.platform());
+      var ua = navigator.userAgent.toLowerCase();
+      NVR.debug ("UA is "+ua);
       // var ld = NVR.getLogin();
-      if ($ionicPlatform.is('ios') || ionic.Platform.platform() == 'macintel')
+      if (($ionicPlatform.is('ios') || ionic.Platform.platform() == 'macintel') && ua.indexOf("electron") == -1)
         $rootScope.platformOS = "ios";
       if ($ionicPlatform.is('android'))
         $rootScope.platformOS = "android";
