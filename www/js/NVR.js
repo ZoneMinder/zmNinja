@@ -53,6 +53,10 @@ angular.module('zmApp.controllers')
           value: 'ba'
         },
         {
+          text: 'Simplified Chinese',
+          value: 'zh_CN'
+        },
+        {
           text: 'Deutsch',
           value: 'de'
         },
