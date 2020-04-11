@@ -2264,6 +2264,7 @@ angular.module('zmApp', [
       'hi_*': 'hi',
       'hu_*': 'hu',
       'se_*': 'se',
+      'zh_CN': 'zh_CN',
       '*': 'en' // must be last
     });
 
