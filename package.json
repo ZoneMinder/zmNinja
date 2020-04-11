@@ -64,8 +64,8 @@
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
-      "cordova-plugin-media-pp-fork": {},
-      "cordova-plugin-statusbar-pp-fork": {}
+      "cordova-plugin-statusbar-pp-fork": {},
+      "cordova-plugin-media-pp-fork": {}
     }
   },
   "dependencies": {
