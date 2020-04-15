@@ -2100,7 +2100,8 @@ angular.module('zmApp', [
          
          // nvr.debug ("cordova: got url "+url);
          // nvr.debug ("cordova: url after encode "+encodeURI(url));
-          cordova.plugin.http.sendRequest(encodeURI(url), options,
+          //cordova.plugin.http.sendRequest(encodeURI(url), options,
+          cordova.plugin.http.sendRequest(url, options,
             function (succ) {
               // automatic JSON parse if no responseType: text
               // fall back to text if JSON parse fails too

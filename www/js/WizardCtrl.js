@@ -238,7 +238,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 .then(function (success) {
                     if (success == "") {
                       NVR.log("getAuthKey returned null, so going user=&pwd= way");
-                      tail += "&user=" + $scope.wizard.zmuser + "&pass=" + $scope.wizard.zmpassword;
+                      tail += "&user=" + $scope.wizard.zmuser + "&pass=" + encodeURIComponent($scope.wizard.zmpassword);
                     } else {
                       tail += success;
                     }

@@ -182,10 +182,10 @@ angular.module('zmApp.controllers').controller('zmApp.EventsGraphsCtrl', ['$ioni
 
           var dateString = "";
           if (hrs) {
-            dateString = "/StartTime <=:" + endDate + "/EndTime >=:" + startDate;
+            dateString = "/"+encodeURIComponent("StartTime <=:") + endDate + "/"+encodeURIComponent("EndTime >=:") + startDate;
           }
           var url = loginData.apiurl +
-            "/events/index/MonitorId:" + monitors[j].Monitor.Id + dateString +
+            "/events/index/"+encodeURIComponent("MonitorId:") + monitors[j].Monitor.Id + dateString +
             ".json?page=1"+$rootScope.authSession;
           // console.log("Monitor event URL:" + url);
           NVR.log("EventGraph: composed url is " + url);
