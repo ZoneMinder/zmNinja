@@ -577,7 +577,7 @@ angular.module('zmApp.controllers')
       //  https:///zm/api/events/index/MonitorId=:2.json?sort=StartTime&direction=desc&limit=1
 
         var apiurl = ld.apiurl +'/events/index'; // we need some interval or it errors
-        apiurl += "/MonitorId =:" + monitor.Monitor.Id;
+        apiurl += "/"+encodeURIComponent("MonitorId =:") + monitor.Monitor.Id;
         if (monitor.Monitor.Id in ld.lastEventCheckTimes) {
 
             // now is server TZ time
@@ -586,7 +586,7 @@ angular.module('zmApp.controllers')
 
         }
        
-        apiurl += "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+        apiurl += "/"+encodeURIComponent("AlarmFrames >=:") + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
         
         /*if ( !(monitor.Monitor.Id in ld.lastEventCheckTimes)) {
             apiurl+= '/1 month';

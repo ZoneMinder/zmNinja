@@ -73,7 +73,7 @@ var masonry = null;
 
     excludeMonitorsFilter = "";
     for (var i = 0; i < excludeMonitors.length; i++) {
-      excludeMonitorsFilter = excludeMonitorsFilter + "/MonitorId !=:" + excludeMonitors[i];
+      excludeMonitorsFilter = excludeMonitorsFilter + "/"+encodeURIComponent("MonitorId !=:") + excludeMonitors[i];
     }
     NVR.debug("Constructed Monitor Filter =" + excludeMonitorsFilter);
   }
@@ -785,7 +785,7 @@ var masonry = null;
     var ld = NVR.getLogin();
 
     // in API, always sort by StartTime so all monitors are represented
-    var myurl = ld.apiurl + "/events/index/AlarmFrames >=:1" + excludeMonitorsFilter + "/StartTime <=:" + timeTo + "/EndTime >=:" + timeFrom + ".json?sort=" + "StartTime" + "&direction=desc"+$rootScope.authSession;
+    var myurl = ld.apiurl + "/events/index/"+encodeURIComponent("AlarmFrames >=:1") + excludeMonitorsFilter + "/"+encodeURIComponent("StartTime <=:") + timeTo + "/"+encodeURIComponent("EndTime >=:") + timeFrom + ".json?sort=" + "StartTime" + "&direction=desc"+$rootScope.authSession;
     NVR.debug("Retrieving " + myurl);
 
 

@@ -1875,10 +1875,10 @@ angular.module('zmApp.controllers')
       //https://server/zm/api/events/consoleEvents/5%20minute.json
       var ld = NVR.getLogin();
 
-      var af = "/AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+      var af = "/"+encodeURIComponent("AlarmFrames >=:") + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
       if (ld.objectDetectionFilter) {
-        af = af + '/Notes REGEXP:detected:';
+        af = af + '/'+encodeURIComponent('Notes REGEXP:detected:');
       }
 
      

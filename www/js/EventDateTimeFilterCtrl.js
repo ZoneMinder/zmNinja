@@ -154,11 +154,11 @@ angular.module('zmApp.controllers')
         for (var i=0; i < $scope.monitors.length; i++) {
           if ($scope.monitors[i].Monitor.isChecked) {
             totalChecked += 1;
-            includeString = includeString + '/MonitorId =:'+$scope.monitors[i].Monitor.Id;
+            includeString = includeString + '/'+encodeURIComponent('MonitorId =:')+$scope.monitors[i].Monitor.Id;
           }
           else {
             totalUnchecked +=1;
-            excludeString = excludeString + '/MonitorId !=:'+$scope.monitors[i].Monitor.Id;
+            excludeString = excludeString + '/'+encodeURIComponent('MonitorId !=:')+$scope.monitors[i].Monitor.Id;
           }
         }
         if (!totalUnchecked) {
