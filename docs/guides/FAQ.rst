@@ -322,6 +322,23 @@ out later they skimmed details.
 - If you are NOT using authentication in ZM, please turn OFF authentication in zmNinja too.
   If you don't, zmNinja will keep waiting for an authentication token
 
+-  Your ``cgi-bin`` setting in zmNinja is incorrect. Please run the
+   wizard. There are times when the wizard can fail. In those cases,
+   open up ZM web console, go to view the monitor and do an "Inspect
+   Source" in the browser. That will show you the cgi-bin link that you
+   can use in zmNinja. **Special Note**: Many people miss looking closely 
+   at cgi-bin. Your browser may show ``/cgi-bin/`` while your zmNinja may 
+   be set to ``<domain>/zm/cgi-bin/``. So the solution here is to remove ``/zm`` 
+   from zmNinja.
+
+For example:
+
+.. image:: img/inspect-source.png
+   :width: 600
+
+In the above case my zmNinja cgi-bin setting is
+``https://myserver:myport/zm/cgi-bin``
+
 - If you are using multi-server, please make sure the user account has 
   "System View" permissions. This is needed to get access to the server API. 
   If zmNinja is unable to read the API, it will use the default portal URL, which
@@ -345,20 +362,6 @@ out later they skimmed details.
    Enable debug view by hitting Ctrl/Cmd+Shift+D and you can see debug
    logs in the console view. I can't emphasize enough how useful this
    is.
--  Your ``cgi-bin`` setting in zmNinja is incorrect. Please run the
-   wizard. There are times when the wizard can fail. In those cases,
-   open up ZM web console, go to view the monitor and do an "Inspect
-   Source" in the browser. That will show you the cgi-bin link that you
-   can use in zmNinja.
-
-For example:
-
-.. image:: img/inspect-source.png
-   :width: 600
-
-In the above case my zmNinja cgi-bin setting is
-``https://myserver:myport/zm/cgi-bin``
-
 -  You are using Basic Authentication. See
    `here <#i-can-t-see-streams-i-use-basic-auth>`__
 -  You have 'multi-server' configuration enabled and you have done it
