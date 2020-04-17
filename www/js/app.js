@@ -2160,7 +2160,7 @@ angular.module('zmApp', [
                           options.skipIntercept = true;
                          // nvr.debug ("cordova: intercept got url "+url);
                           //nvr.debug ("cordova: intercept url after encode "+encodeURI(url));
-                          cordova.plugin.http.sendRequest(encodeURI(url), options, 
+                          cordova.plugin.http.sendRequest(url, options, 
                           function (succ) {
                             d.resolve(succ);
                             return d.promise;
