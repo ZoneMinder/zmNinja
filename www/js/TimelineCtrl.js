@@ -786,7 +786,6 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     var completedEvents = ld.apiurl + "/events/index/EndTime+" + ">=:" + from;
     // we can add alarmCount as this is really for completed events
     completedEvents = completedEvents + "/AlarmFrames+" + ">=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
-    NVR.debug("Completed events With AlarmFrames:" + completedEvents);
 
     if (ld.objectDetectionFilter) {
       completedEvents = completedEvents + '/Notes REGEXP:"detected:"';

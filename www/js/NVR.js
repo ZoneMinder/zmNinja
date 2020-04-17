@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.3.096";
+      var zmAppVersion = "1.4.1";
      
       var isBackground = false;
       var justResumed = false;
@@ -51,6 +51,10 @@ angular.module('zmApp.controllers')
         {
           text: 'Bosnian',
           value: 'ba'
+        },
+        {
+          text: '简体中文',
+          value: 'zh_CN'
         },
         {
           text: 'Deutsch',
@@ -369,6 +373,7 @@ angular.module('zmApp.controllers')
         .then ( function () {return localforage.removeItem('cached_multi_port');})
         .then ( function () {return localforage.removeItem('cached_timezone');})
         .catch ( function (err) {debug ('Error removing all caches: '+JSON.stringify(err));});
+        
       }
 
       function cache_or_http(url,key,doCrypt, expiry) {

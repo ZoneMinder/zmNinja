@@ -654,7 +654,7 @@ angular.module('zmApp.controllers')
             return;
           }
 
-          if (data.additionalData.foreground == false) {
+          if (data && data.additionalData && data.additionalData.foreground == false) {
             // This means push notification tap in background
 
             NVR.debug("EventSever: PUSH NOTF >>> " + JSON.stringify(data));
@@ -688,10 +688,13 @@ angular.module('zmApp.controllers')
 
 
               // if Multiple mids, take the first one
-              var mi = mid.indexOf(',');
-              if (mi > 0) {
-                mid = mid.slice(0, mi);
+              if (mid) {
+                var mi = mid.indexOf(',');
+                if (mi > 0) {
+                  mid = mid.slice(0, mi);
+                }
               }
+             
               mid = parseInt(mid);
 
               $rootScope.tappedMid = mid;

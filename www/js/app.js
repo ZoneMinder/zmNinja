@@ -1150,9 +1150,11 @@ angular.module('zmApp', [
       $rootScope.platformOS = "desktop";
       NVR.log("Device is ready");
 
-
+      //console.log ("*************** PLATFORM IS: "+ionic.Platform.platform());
+      var ua = navigator.userAgent.toLowerCase();
+      NVR.debug ("UA is "+ua);
       // var ld = NVR.getLogin();
-      if ($ionicPlatform.is('ios'))
+      if (($ionicPlatform.is('ios') || ionic.Platform.platform() == 'macintel') && ua.indexOf("electron") == -1)
         $rootScope.platformOS = "ios";
       if ($ionicPlatform.is('android'))
         $rootScope.platformOS = "android";
@@ -1758,10 +1760,7 @@ angular.module('zmApp', [
           //  console.log("statusbar");
           NVR.log("Updating statusbar");
           StatusBar.styleDefault();
-          if ($rootScope.platformOS == 'ios') {
-            // console.log ("<<<<<<<<<<<<<<<< OVERLAY");
-            StatusBar.overlaysWebView(false);
-          }
+         
 
           StatusBar.backgroundColorByHexString("#2980b9");
         }
@@ -2098,8 +2097,10 @@ angular.module('zmApp', [
 
           if (arguments[0].timeout) options.timeout = arguments[0].timeout;
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
-
-          cordova.plugin.http.sendRequest(url, options,
+         
+         // nvr.debug ("cordova: got url "+url);
+         // nvr.debug ("cordova: url after encode "+encodeURI(url));
+          cordova.plugin.http.sendRequest(encodeURI(url), options,
             function (succ) {
               // automatic JSON parse if no responseType: text
               // fall back to text if JSON parse fails too
@@ -2156,7 +2157,9 @@ angular.module('zmApp', [
                           //console.log ("I GOT: "+ JSON.stringify(succ));
                           url = url.replace(/&token=([^&]*)/, nvr.authSession);
                           options.skipIntercept = true;
-                          cordova.plugin.http.sendRequest(url, options,
+                         // nvr.debug ("cordova: intercept got url "+url);
+                          //nvr.debug ("cordova: intercept url after encode "+encodeURI(url));
+                          cordova.plugin.http.sendRequest(encodeURI(url), options, 
                           function (succ) {
                             d.resolve(succ);
                             return d.promise;
@@ -2263,6 +2266,7 @@ angular.module('zmApp', [
       'hi_*': 'hi',
       'hu_*': 'hu',
       'se_*': 'se',
+      'zh_CN': 'zh_CN',
       '*': 'en' // must be last
     });
 

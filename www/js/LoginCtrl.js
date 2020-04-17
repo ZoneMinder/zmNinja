@@ -726,6 +726,17 @@ function mobilePinConfig () {
     }
 
     //console.log ("SAVING: "+JSON.stringify($scope.loginData));
+
+    var ld = NVR.getLogin();
+    if ((ld.username != $scope.loginData.username) || (ld.password != $scope.loginData.password)) {
+      NVR.debug ('User information has changed, removing access tokens, if any');
+      $scope.loginData.accessToken='';
+      $scope.loginData.refreshToken = '';
+      $scope.loginData.accessTokenExpires = '';
+      $scope.loginData.refreshTokenExpires = '';
+
+    }
+
     NVR.setLogin($scope.loginData);
 
 
