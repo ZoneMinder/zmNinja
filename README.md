@@ -46,11 +46,11 @@ Desktop Platforms
 Please download binaries from [here](https://github.com/pliablepixels/zmNinja/releases). 
 
 
-Key Features (just watch the video already)
---------------------------------------------
+Key Features 
+-------------
 * Push Notifications  Object detection/face recognition for alarms (Needs the [eventserver](https://github.com/pliablepixels/zmeventserver) to be set up)
 * Multiple languages (English, French, German, Spanish, Portugese, Dutch, and more)
-* H264 video branch support 
+* H264 video support
 * live views of monitors
 * Montage view (with multiple montage profile settings/sizes)
 * Events history and list
@@ -58,10 +58,16 @@ Key Features (just watch the video already)
 * Camera pan/tilt/zoom (needs to have ZM support it first)
 * 24hr review 
 
+Key Limitations
+----------------
+* Client certificates are not supported 
+* If you use self signed certificates, you will likely have to install them in your phone (especially Android)
+* If you use Basic Authentication, you'll have to go through additional setup (see FAQ)
+
 Thanks
 ------
-To the zonemider community in general, and the awesome Stack Overflow community.
-But specifically, [Andrew Bauer](https://github.com/knight-of-ni) (knight-of-ni) who egged me on to take up this project and [Isaac Connor](http://github.com/connortechnology/) who has been incredibly supportive in helping fix various ZM issues that affected zmNinja
+To the Zonemider community in general, and the awesome Stack Overflow community.
+But specifically, [Andrew Bauer](https://github.com/knight-of-ni) (knight-of-ni) who egged me on to take up this project and [Isaac Connor](http://github.com/connortechnology/) who has been incredibly supportive in helping fix various ZM issues that affected zmNinja.
 
 Important Notes
 ---------------
