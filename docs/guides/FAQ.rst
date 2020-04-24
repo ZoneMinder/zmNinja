@@ -151,6 +151,15 @@ How to report errors
 
 If zmNinja does not start on your device
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In this case, I'll need logs.
+
+
+Case 1: The app does work, but it got stuck and you can't get out
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In this case, it is easier to extract logs. If you are using Android, use one of the many free android file explorer applications (google for it and install the one that works for you) and extract the log file (``zmNinjaLog.txt``). A common place for it to reside is in ``/data/data/com.pliablepixels.zmninja_pro/files``.  If you are using iOS, you can use an app like `IExplorer <https://macroplant.com/iexplorer>`__ to connect to your phone. The app is paid for, but the demo license works just fine to extract the logs. In my case, logs were in ``Apps->zmNinja->Library->NoCloud->zmNinjaLog.txt``
+
+Case 2: The app doesn't work at all and it gets stuck on the splash screen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 There are some odd cases, where zmNinja does not start (or gets stuck in the splash screen) on specific devices.
 It is very hard for me to know why it fails on certain devices, but I can try. Here is what you need to do:
 
@@ -160,7 +169,7 @@ You have to send me system logs of the device. To get system logs:
 
 - Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in ``adb logcat >result.txt`` and try to start the app. A lot of logs will be generated. Please `email them to me <mailto:pliablepixels@gmail.com>`__
 
- 
+- For iOS, use the method described in Case 1 above.
 
 Profile information storage related
 -----------------------------------
