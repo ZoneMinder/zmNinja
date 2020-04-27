@@ -587,6 +587,9 @@ angular.module('zmApp.controllers')
         }
        
         apiurl += "/"+encodeURIComponent("AlarmFrames >=:") + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+        if (ld.objectDetectionFilter) {
+          apiurl +='/'+encodeURIComponent('Notes REGEXP:detected:');
+        }
         
         /*if ( !(monitor.Monitor.Id in ld.lastEventCheckTimes)) {
             apiurl+= '/1 month';
