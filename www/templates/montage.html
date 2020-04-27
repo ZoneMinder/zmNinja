@@ -197,8 +197,7 @@
                 {{'kMontageEventUnseenCount' | translate}}
               </div>
               <div class="row row-no-padding">
-                <i class="ion-ios-calendar-outline"></i>&nbsp;{{'kMontageEventLatest' | translate}}:
-                {{humanizeTime(monitor.Monitor.lastEvent.events[0].Event.StartTime)}}<br />
+                <i class="ion-ios-calendar-outline"></i>&nbsp;{{'kMontageEventLatest' | translate}}: eid:{{monitor.Monitor.lastEvent.events[0].Event.Id}} ({{humanizeTime(monitor.Monitor.lastEvent.events[0].Event.StartTime)}}) <br />
               </div>
               <div class="row row-no-padding">
                 <i class="ion-clipboard"></i>&nbsp; <span ng-class="{'object-notes': monitor.Monitor.lastEvent.object}">{{monitor.Monitor.lastEvent.events[0].Event.Notes}}</span><br />
