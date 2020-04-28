@@ -1,5 +1,31 @@
 # Change Log
 
+## [v1.4.3](https://github.com/pliablepixels/zmNinja/tree/v1.4.3) (2020-04-28)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.096...v1.4.3)
+
+**Implemented enhancements:**
+
+- New language: Simplified Chinese [\#925](https://github.com/pliablepixels/zmNinja/issues/925)
+
+**Fixed bugs:**
+
+- ZM Authentication settings does not update user restricted monitors [\#926](https://github.com/pliablepixels/zmNinja/issues/926)
+- iOS push registration not working \(identifies as desktop\) [\#922](https://github.com/pliablepixels/zmNinja/issues/922)
+- Double encoded URLs [\#920](https://github.com/pliablepixels/zmNinja/issues/920)
+- iPadOS 13.4 header icons/controls overlay OS Time/date/battery etc. [\#919](https://github.com/pliablepixels/zmNinja/issues/919)
+
+**Closed issues:**
+
+-  Disable alarm  notification for a specific camera or all [\#929](https://github.com/pliablepixels/zmNinja/issues/929)
+- Live view not working in zmNinja Pro but is working in web browser [\#928](https://github.com/pliablepixels/zmNinja/issues/928)
+- zmNinja for Blue Iris. \(biNinja?\) [\#918](https://github.com/pliablepixels/zmNinja/issues/918)
+- \[DESKTOP\] Swiping through Event previews gets slower until returning to event view. [\#904](https://github.com/pliablepixels/zmNinja/issues/904)
+
+**Merged pull requests:**
+
+- Update Chinese\(Simplified\) translation [\#927](https://github.com/pliablepixels/zmNinja/pull/927) ([outline941](https://github.com/outline941))
+- Add Chinese \(Simplified\) translation [\#924](https://github.com/pliablepixels/zmNinja/pull/924) ([outline941](https://github.com/outline941))
+
 ## [v1.3.096](https://github.com/pliablepixels/zmNinja/tree/v1.3.096) (2020-04-01)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.091...v1.3.096)
 
