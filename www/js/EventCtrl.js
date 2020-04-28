@@ -2694,6 +2694,8 @@ angular.module('zmApp.controllers')
         });
     }
 
+
+    
     //--------------------------------------------------------
     //We need to destroy because we are instantiating
     // it on open
@@ -2708,7 +2710,7 @@ angular.module('zmApp.controllers')
         }
       }
      
-      
+      $ionicLoading.hide();
       NVR.setAwake(false);
       if ($scope.modal !== undefined) {
         $scope.modal.remove();
