@@ -245,13 +245,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       }
     }
 
-    $ionicLoading.show({
-      template: "<ion-spinner icon='ripple' class='spinner-energized'></ion-spinner><br/>" + $translate.instant('kVideoLoading') + "...",
-
-    });
-
+  
+    $scope.isVideoLoading = true;
+ 
    
   };
+
+  
 
   $scope.onPlaybackUpdate = function (rate) {
    
@@ -274,6 +274,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   $scope.onCanPlay = function () {
 
     $ionicLoading.hide();
+    $scope.isVideoLoading = false;
     NVR.debug("This video can be played");
     
     var rate = NVR.getLogin().videoPlaybackSpeed;
@@ -1092,7 +1093,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.alarm_images = [];
     $scope.snapshotFrameId = 1;
     currentStreamState = streamState.STOPPED;
-    
+    $scope.isVideoLoading = false;
 
 
   });
@@ -1110,6 +1111,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.$on('modal.shown', function (e, m) {
 
+    $scope.isVideoLoading = false;
     $scope.displayControls = true;
     $ionicLoading.hide();
     if (m.id != 'footage')

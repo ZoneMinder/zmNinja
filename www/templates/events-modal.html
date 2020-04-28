@@ -53,7 +53,7 @@
                 </div>
               </div>
 
-
+             
 
               <div ng-if="isPaused" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999"
                 class="header-paused">
@@ -64,6 +64,14 @@
           </div>
           <!-- no default video -->
           <div ng-if="defaultVideo!==undefined && defaultVideo!='' && !isSnapShot() && !isStreamStopped()">
+
+             
+            <div ng-if="isVideoLoading" style="position:absolute; top:50%; left:50%;white-space:nowrap;overflow:hidden;z-index:999999"
+            class="header-centered animated pulse infinite">
+            &nbsp;
+            {{'kVideoLoading' | translate}}...&nbsp;
+          </div>
+
             <div ng-if="videoIsReady">
 
            
