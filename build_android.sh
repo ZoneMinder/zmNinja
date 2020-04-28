@@ -107,7 +107,8 @@ ver_pre5=${APPVER//.}
 ver=${APPVER//.}9
 
 
-echo "About to build version: $APPVER ($MODE)"
+echo "About to build version: $APPVER [$ver] ($MODE)"
+echo $ver
 read -p "Press any key..."
 
 echo "Removing wkwebview..."
