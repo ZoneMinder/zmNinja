@@ -2802,7 +2802,7 @@ angular.module('zmApp.controllers')
           noBackdrop:true,
           scope: $scope,
           template: toastStr,
-         // template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >' + toastStr + '</button>'
+          //template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >' + toastStr + '</button>'
         });
 
         loadingStr = "none";
