@@ -71,7 +71,7 @@
     "kDisableAlarmMontageSub"    :"在服务器过载时可能有帮助",
     "kDisablePush"               :"禁用FCM",
     "kDisableSamsung"            :"如果您使用的是三星设备并且遇到输入问题，请暂时禁用自动更正",
-    "kDisableSimulStreaming"     :"忽略 ZM 1.32.0 multi-port",
+    "kDisableSimulStreaming"     :"忽略 ZM multi-port",
     "kDisableSimulStreamingNote" :"(由于会造成问题，在iOS被禁用了)",
     "kDiscovering"               :"检测中",
     "kDiscoveringAPI"            :"检测api中",

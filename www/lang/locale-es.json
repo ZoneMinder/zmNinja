@@ -67,7 +67,7 @@
     "kDisableAlarmMontageSub"    :"puede ser de ayuda si el servidor se sobrecarga",
     "kDisablePush"               :"deshabilitar APNS/GCM",
     "kDisableSamsung"            :"Si estás configurando desde un dispositivo samsung y tienes problemas al ingresar los datos, por favor, deshabilita la autocorrección temporalmente.",
-    "kDisableSimulStreaming"     :"Ignore el multipuerto de ZM 1.32.0",
+    "kDisableSimulStreaming"     :"Ignore el multipuerto de ZM",
     "kDisableSimulStreamingNote" :"(deshabilitar esta opción puede causar problemas en iOS)",
     "kDiscovering"               :"detectando",
     "kDiscoveringAPI"            :"detectando api",

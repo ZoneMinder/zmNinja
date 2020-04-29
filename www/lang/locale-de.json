@@ -71,7 +71,7 @@
     "kDisableAlarmMontageSub"    :"Wenn die Serverlast zu hoch ist, kann das helfen.",
     "kDisablePush"               :"deaktiviere FCM",
     "kDisableSamsung"            :"Bei Samsung-Geräten kann es zu Eingabeproblemen kommen. Falls dies bei Dir der Fall ist schalte bitte kurzzeitig die Auto-Korrektur ab.",
-    "kDisableSimulStreaming"     :"Ignoriere ZM 1.32.0 Multi-Port",
+    "kDisableSimulStreaming"     :"Ignoriere ZM Multi-Port",
     "kDisableSimulStreamingNote" :"(Bei iOS kann es zu Fehlern kommen, wenn es deaktiviert ist)",
     "kDiscovering"               :"Suche",
     "kDiscoveringAPI"            :"Suche API",

@@ -68,7 +68,7 @@
     "kDisableAlarmMontageSub"    :"može pomoci kada je server preopterećen",
     "kDisablePush"               :"isključi FCM",
     "kDisableSamsung"            :"Ukoliko imate Samsungov aparat i imate probleme sa unosom, privremeno iskljucite automatsko ispravljanje.",
-    "kDisableSimulStreaming"     :"Zanemari ZM 1.32.0 multi-port",
+    "kDisableSimulStreaming"     :"Zanemari multi-port",
     "kDisableSimulStreamingNote" :"(Isključivanje u IOS može uzrokovati probleme)",
     "kDiscovering"               :"detektujem",
     "kDiscoveringAPI"            :"detektujem api",

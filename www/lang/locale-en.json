@@ -71,7 +71,7 @@
     "kDisableAlarmMontageSub"    :"may help if server gets overloaded",
     "kDisablePush"               :"disable FCM",
     "kDisableSamsung"            :"If you are on a samsung device and are facing input issues, please temporarily disable auto-correction",
-    "kDisableSimulStreaming"     :"Ignore ZM 1.32.0 multi-port",
+    "kDisableSimulStreaming"     :"Ignore ZM multi-port",
     "kDisableSimulStreamingNote" :"(disabling in iOS may cause issues)",
     "kDiscovering"               :"discovering",
     "kDiscoveringAPI"            :"discovering api",
