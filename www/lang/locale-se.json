@@ -71,7 +71,7 @@
     "kDisableAlarmMontageSub"    :"kan hjälpa om servern blir överbelastad",
     "kDisablePush"               :"inaktivera FCM",
     "kDisableSamsung"            :"Om du befinner dig på en samsung-enhet och står inför inmatningsproblem, avaktivera tillfälligt autokorrigering",
-    "kDisableSimulStreaming"     :"Ignorera ZM 1.32.0 multi-port",
+    "kDisableSimulStreaming"     :"Ignorera ZM multi-port",
     "kDisableSimulStreamingNote" :"(inaktivering i iOS kan orsaka problem)",
     "kDiscovering"               :"upptäcker",
     "kDiscoveringAPI"            :"upptäcker api",
