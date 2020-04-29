@@ -280,6 +280,7 @@ angular.module('zmApp.controllers')
         NVR.log("Whoops!! Monitors have changed. I'm resetting layouts, sorry!");
         layouttype = true;
         positions = {};
+       // document.documentElement.style.setProperty('--grid-width', "50%");
       }
 
       var elem = angular.element(document.getElementById("mygrid"));
@@ -387,7 +388,12 @@ angular.module('zmApp.controllers')
                 if ($scope.MontageMonitors[i].Monitor.Id == positions[j].attr) {
                   if (isNaN(positions[j].size)) positions[j].size = 20;
                   if (positions[j].size == 0) positions[j].size = 20;
+                  
                   $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
+                  
+                  if (positions[j].display != 'show' && positions[j].display != 'noshow')
+                    positions[j].display = 'show';
+
                   $scope.MontageMonitors[i].Monitor.listDisplay = positions[j].display;
                   // NVR.debug("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " + positions[j].size + " and display:" + positions[j].display);
                 }
@@ -2491,26 +2497,73 @@ angular.module('zmApp.controllers')
 
     });
 
-    $scope.resetSizes = function (unhideAll) {
+    $scope.resetSizesWithInput = function () {
+      $scope.data = {};
+      var myPopup = $ionicPopup.show({
+        template: '<input type="number" ng-model="data.cols">',
+        title: $translate.instant('kMontageResizeCols'),
+        scope: $scope,
+        buttons: [
+          { text: $translate.instant('kButtonCancel') },
+          {
+            text: $translate.instant('kButtonOk'),
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.data.cols) {
+                //don't allow the user to close unless he enters wifi password
+                e.preventDefault();
+              } else {
+                return $scope.data.cols;
+              }
+            }
+          }
+        ]
+      });
+    
+      myPopup.then(function(res) {
+        if (res)  {
+          
+         
+         // var x = getComputedStyle(document.documentElement).getPropertyValue('--grid-width');
+        //  console.log ('*********** CURRENT WIDTH IS '+x);
+
+         // var p = parseInt(100.0/res + 0.2);
+          p = parseFloat (100.0/res).toFixed(3);
+          NVR.debug ("Resizing monitors to: "+p);
+          
+         // document.documentElement.style.setProperty('--grid-width', p+"%");
+         // document.documentElement.style.setProperty('--grid-width', p);
+       //  x = getComputedStyle(document.documentElement).getPropertyValue('--grid-width');
+//          var x = document.documentElement.style.getProperty('--grid-width');
+        //  console.log ('*********** NEW WIDTH IS '+x);
+
+
+          $scope.resetSizes(false, p);
+        }
+      });
+    };
+
+    $scope.resetSizes = function (unhideAll, percent) {
       var somethingReset = false;
+      if (!percent) percent="50%";
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         if (unhideAll) {
             $scope.MontageMonitors[i].Monitor.listDisplay = 'show';
         }
         if ($scope.isDragabillyOn) {
           if ($scope.MontageMonitors[i].Monitor.selectStyle == "dragborder-selected") {
-            $scope.MontageMonitors[i].Monitor.gridScale = "50";
+            $scope.MontageMonitors[i].Monitor.gridScale = percent;
             somethingReset = true;
           }
         } else {
-          $scope.MontageMonitors[i].Monitor.gridScale = "50";
+          $scope.MontageMonitors[i].Monitor.gridScale = percent;
           // somethingReset = true;
         }
       }
       if (!somethingReset && $scope.isDragabillyOn) // nothing was selected
       {
         for (i = 0; i < $scope.MontageMonitors.length; i++) {
-          $scope.MontageMonitors[i].Monitor.gridScale = "50";
+          $scope.MontageMonitors[i].Monitor.gridScale = percent;
         }
       }
 
@@ -2629,7 +2682,8 @@ angular.module('zmApp.controllers')
       pckry.getItemElements().forEach(function (elem) {
         var id = elem.getAttribute("data-item-id");
         var sz = elem.getAttribute("data-item-size");
-        if (isNaN(sz)) sz = 20;
+        //console.log ('********** GOT ID:'+id+" SIZE:"+sz);
+        //if (isNaN(sz)) sz = "20%";
         oldScales[id] = sz;
          //console.log("REMEMBERING " + id + ":" + sz);
 
@@ -2638,11 +2692,11 @@ angular.module('zmApp.controllers')
       // this only changes items that are selected
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
 
-        var curVal = parseInt($scope.MontageMonitors[i].Monitor.gridScale) || 20;
+        var curVal = parseFloat($scope.MontageMonitors[i].Monitor.gridScale) || 20;
         curVal = curVal + (ld.montageResizeSteps * dirn);
-        if (curVal < 10) curVal = 10;
+        if (curVal < 5) curVal = 5;
         if (curVal > 100) curVal = 100;
-        //console.log ("For Index: " + i + " From: " + $scope.MontageMonitors[i].Monitor.gridScale + " To: " + curVal);
+        console.log ("For Index: " + i + " From: " + $scope.MontageMonitors[i].Monitor.gridScale + " To: " + curVal);
 
         if ($scope.isDragabillyOn) {
           // only do this for selected monitors
@@ -2663,9 +2717,9 @@ angular.module('zmApp.controllers')
       if (!somethingReset && $scope.isDragabillyOn) // nothing was selected
       {
         for (i = 0; i < $scope.MontageMonitors.length; i++) {
-          var cv = parseInt($scope.MontageMonitors[i].Monitor.gridScale) || 20;
+          var cv = parseFloat($scope.MontageMonitors[i].Monitor.gridScale) || 20;
           cv = cv + (ld.montageResizeSteps * dirn);
-          if (cv < 10) cv = 10;
+          if (cv < 5) cv = 5;
           if (cv > 100) cv = 100;
           $scope.MontageMonitors[i].Monitor.gridScale = cv;
           //console.log ("*******GRIDSCALE="+)
