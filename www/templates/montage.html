@@ -29,13 +29,13 @@
         <button class="button button-icon button-clear ion-monitor" ng-click="cast();">&nbsp;
         </button>
         -->
-    <button ng-if="!$root.LoginData.isKiosk" id="montage-move-3" class="button button-icon button-clear ion-loop" ng-click="resetSizes();">&nbsp;
+    <button ng-if="!$root.LoginData.isKiosk" id="montage-move-3" class="button button-icon button-clear ion-loop" ng-click="resetSizesWithInput();">&nbsp;
     </button>
     <button class="button button-icon button-clear ion-android-contract" ng-click="switchMinimal()">
     </button>
   </ion-nav-buttons>
   <ion-content ng-cloak has-bouncing="false" style="background-color:#444444" delegate-handle="montage-delegate"
-    overflow-scroll="false">
+    overflow-scroll="false" padding="false">
 
     <div ng-if="areImagesLoading" class="screen-note">&nbsp;{{ 'kArrangingImages' | translate }}...&nbsp;</div>
 
@@ -123,7 +123,10 @@
 
 
       <span ng-repeat="monitor in MontageMonitors | onlyEnabled |limitTo: monLimit">
-        <div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}"
+        <!--<div class="grid-item grid-item-{{monitor.Monitor.gridScale}} " data-item-id="{{monitor.Monitor.Id}}"
+          data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} ">-->
+
+          <div class="grid-item" data-item-id="{{monitor.Monitor.Id}}" ng-style="{'width': monitor.Monitor.gridScale + '%'}"
           data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} ">
 
 
@@ -153,7 +156,7 @@
                     img-spinner-h="{{monitor.Monitor.Height}}" image-on-error="processImageError(monitor);" />
                 </div>
 
-                <figcaption id="slowpulse"
+                <figcaption ng-if="!LoginData.montageHideFooter" id="slowpulse"
                   ng-class="monitor.Monitor.isAlarmed==true?'alarmed-figcaption animated infinite flash':'normal-figcaption'">
                   &nbsp;
 

@@ -118,10 +118,10 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
     // make sure only ints are used as CSS classes only use ints
     // in grid scale
-    $scope.loginData.montageResizeSteps = parseInt($scope.loginData.montageResizeSteps);
+    $scope.loginData.montageResizeSteps = parseFloat($scope.loginData.montageResizeSteps);
 
-    if ($scope.loginData.montageResizeSteps < 1) {
-      $scope.loginData.montageResizeSteps = 1;
+    if ($scope.loginData.montageResizeSteps < 0.05) {
+      $scope.loginData.montageResizeSteps = 0.05;
 
     }
 

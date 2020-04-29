@@ -1,3 +1,4 @@
+
 @font-face {
     font-family: 'fontawesome';
     src: url('../lib/font-awesome/fonts/fontawesome-webfont.eot');
@@ -1160,6 +1161,12 @@ videogular vg-cue-points vg-cue-point {
 
 .grid-sizer {
     width: 1%;
+
+}
+
+.grid-item-dynamic {
+  
+ width: var(--grid-width) !important;
 }
 
 .grid-item {

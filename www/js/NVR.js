@@ -199,7 +199,7 @@ angular.module('zmApp.controllers')
         'disableSimulStreaming': false,
         'insertBasicAuthToken': false,
         'loginAPISupported': false,
-        'montageResizeSteps': 5,
+        'montageResizeSteps': 0.2,
         'currentServerVersion': '',
         'saveToCloud': true,
         'montageReviewCollapse': true,
@@ -220,7 +220,8 @@ angular.module('zmApp.controllers')
         'liveStreamBuffer': 10,
         'zmNinjaCustomId':undefined, // filled in init. custom header
         'obfuscationScheme': 'lzs', // or 'aes'
-        'showAnimation': true
+        'showAnimation': true,
+        'montageHideFooter': false,
 
       };
 
@@ -1051,7 +1052,7 @@ angular.module('zmApp.controllers')
 
 
         loginData = angular.copy(newLogin);
-       // console.log ('****** SET LOGIN:'+JSON.stringify(loginData));
+       //console.log ('****** SET LOGIN:'+JSON.stringify(loginData));
         $rootScope.LoginData = loginData;
 
         serverGroupList[loginData.serverName] = angular.copy(loginData);
@@ -1527,7 +1528,7 @@ angular.module('zmApp.controllers')
 
         if (typeof loginData.montageResizeSteps == 'undefined') {
 
-          loginData.montageResizeSteps = 5;
+          loginData.montageResizeSteps = 0.2;
 
         }
 
@@ -1629,6 +1630,12 @@ angular.module('zmApp.controllers')
         if (typeof loginData.showAnimation == 'undefined')  {
           loginData.showAnimation = true;
         }
+
+        if (typeof loginData.montageHideFooter == 'undefined')  {
+          loginData.montageHideFooter = false;
+        }
+
+        
 
         loginData.canSwipeMonitors = true;
         loginData.forceImageModePath = false;
