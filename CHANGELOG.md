@@ -1,5 +1,21 @@
 # Change Log
 
+## [v1.4.004](https://github.com/pliablepixels/zmNinja/tree/v1.4.004) (2020-04-30)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.4.3...v1.4.004)
+
+**Implemented enhancements:**
+
+- Add option to hide footers in montage [\#931](https://github.com/pliablepixels/zmNinja/issues/931)
+- Allow automatic distribution in montage based on number of columns [\#930](https://github.com/pliablepixels/zmNinja/issues/930)
+
+**Fixed bugs:**
+
+- 1.4.3 encode URL seems broken at least on iOS \(Event/24 hr filters etc\) [\#933](https://github.com/pliablepixels/zmNinja/issues/933)
+
+**Merged pull requests:**
+
+- \#930 \#931 - you can now reduce resize factor to fractions in dev opti… [\#932](https://github.com/pliablepixels/zmNinja/pull/932) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.4.3](https://github.com/pliablepixels/zmNinja/tree/v1.4.3) (2020-04-28)
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.096...v1.4.3)
 
