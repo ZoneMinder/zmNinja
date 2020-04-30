@@ -264,7 +264,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     function getNextSetHistory() {
 
       // grab events that start on or after the time 
-      apiurl = ld.apiurl + "/events/index/"+encodeURIComponent("StartTime >=:") + TimeObjectFrom + "/"+encodeURIComponent("AlarmFrames >=:") + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json?sort=StartTime&direction=asc"+$rootScope.authSession;
+      apiurl = ld.apiurl + "/events/index/"+"StartTime>=:" + TimeObjectFrom + "/"+"AlarmFrames>=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json?sort=StartTime&direction=asc"+$rootScope.authSession;
       NVR.log("Grabbing history using: " + apiurl);
       // make sure there are no more than 5 active streams (noevent is ok)
       $scope.currentLimit = $scope.monLimit;
@@ -357,7 +357,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
         for (i = 0; i < $scope.MontageMonitors.length; i++) {
           //console.log("Fair chance check for " + $scope.MontageMonitors[i].Monitor.Name);
           if ($scope.MontageMonitors[i].Monitor.eventUrl == 'img/noimage.png') {
-            var indivGrab = ld.apiurl + "/events/index/MonitorId:" + $scope.MontageMonitors[i].Monitor.Id + "/"+encodeURIComponent("StartTime >=:") + TimeObjectFrom + "/"+encodeURIComponent("AlarmFrames >=:") + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json?"+$rootScope.authSession;
+            var indivGrab = ld.apiurl + "/events/index/MonitorId:" + $scope.MontageMonitors[i].Monitor.Id + "/"+"StartTime>=:" + TimeObjectFrom + "/"+"AlarmFrames>=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0) + ".json?"+$rootScope.authSession;
             NVR.debug("Monitor " + $scope.MontageMonitors[i].Monitor.Id + ":" + $scope.MontageMonitors[i].Monitor.Name + " does not have events, trying " + indivGrab);
             var p = getExpandedEvents(i, indivGrab);
             promises.push(p);
