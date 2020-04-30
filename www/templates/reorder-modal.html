@@ -1,9 +1,11 @@
 <ion-modal-view cache-view="false" style="width: 90%; height: 90%; top: 5%; left: 5%; right: 5%; bottom: 5%;">
   <ion-header-bar class="bar-stable">
     <h1 class="title"></h1>
+    
     <div class="buttons">
-      <button class="button button-icon icon ion-checkmark" ng-click="saveReorder()"></button>
-      <button class="button button-icon icon ion-close" ng-click="cancelReorder()"></button>
+      <button ng-class="(reorder.selected)?'button button-icon icon ion-ios-checkmark':'button button-icon icon ion-ios-checkmark-outline'"  ng-click="selectUnselectAllToggleReorder()"></button>
+      <button class="button button-small button-dark" ng-click="saveReorder()">{{'kButtonOk'|translate}}</button>
+      <button class="button button-small" ng-click="cancelReorder()">{{'kButtonCancel'|translate}}</button>
     </div>
   </ion-header-bar>
   <ion-content>

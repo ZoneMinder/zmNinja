@@ -919,6 +919,10 @@ angular.module('zmApp.controllers')
               if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
             }
             // in context of timeout
+            $scope.reorder = {
+              selected:false
+            };
+
             $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
                 scope: $scope,
                 animation: 'slide-in-up',
@@ -949,6 +953,14 @@ angular.module('zmApp.controllers')
 
     };
 
+    $scope.selectUnselectAllToggleReorder = function () {
+      $scope.reorder.selected = !$scope.reorder.selected;
+
+      for (var i=0; i < $scope.copyMontage.length; i++) {
+        $scope.copyMontage[i].Monitor.listDisplay = $scope.reorder.selected ? 'show':'noshow';
+      }
+   
+    };
 
     $scope.$on('modal.removed', function (e, m) {
 
