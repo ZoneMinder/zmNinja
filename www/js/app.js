@@ -2098,8 +2098,8 @@ angular.module('zmApp', [
           if (arguments[0].timeout) options.timeout = arguments[0].timeout;
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
          
-          nvr.debug ("cordova: got url "+url);
-          nvr.debug ("cordova: url after encode "+encodeURI(url));
+         // nvr.debug ("cordova: got url "+url);
+          //nvr.debug ("cordova: url after encode "+encodeURI(url));
           //cordova.plugin.http.sendRequest(encodeURI(url), options,
           cordova.plugin.http.sendRequest(encodeURI(url), options,
             function (succ) {
