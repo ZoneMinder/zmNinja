@@ -240,6 +240,8 @@ angular.module('zmApp.controllers')
        * @returns 
        */
       function setCordovaHttpOptions() {
+        /*debug ("Cordova HTTP: Setting JSON serializer");
+        cordova.plugin.http.setDataSerializer('utf8');*/
         if (loginData.isUseBasicAuth) {
           debug("Cordova HTTP: configuring basic auth");
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
@@ -2823,7 +2825,7 @@ angular.module('zmApp.controllers')
             log((forceReload == 1) ? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors";
-            myurl += "/index/"+encodeURIComponent("Type !=:WebSite.json") + "?"+$rootScope.authSession;
+            myurl += "/index/"+"Type!=:WebSite.json" + "?"+$rootScope.authSession;
 
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
@@ -3479,17 +3481,17 @@ angular.module('zmApp.controllers')
 
           var myurl = apiurl + "/events/index";
           if (monitorId != 0)
-            myurl = myurl + "/"+encodeURIComponent("MonitorId:") + monitorId;
+            myurl = myurl + "/"+"MonitorId:" + monitorId;
           if (startTime)
-            myurl = myurl + "/"+encodeURIComponent("StartTime <=:") + endTime;
+            myurl = myurl + "/"+"StartTime<=:" + endTime;
           if (endTime)
-            myurl = myurl + "/"+encodeURIComponent("EndTime >=:") + startTime;
+            myurl = myurl + "/"+"EndTime>=:" + startTime;
 
-          myurl = myurl + "/"+encodeURIComponent("AlarmFrames >=:") + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+          myurl = myurl + "/"+"AlarmFrames>=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
           //https:///zm/api/events/index/Notes%20REGEXP:detected%3A.json
           if (loginData.objectDetectionFilter && !noObjectFilter) {
-            myurl = myurl +'/'+ encodeURIComponent('Notes REGEXP:detected:');
+            myurl = myurl +'/'+ 'Notes REGEXP:detected:';
           }
 
 
@@ -3570,13 +3572,13 @@ angular.module('zmApp.controllers')
 
           var myurl = apiurl + "/events/index";
           if (monitorId != 0)
-            myurl = myurl + "/"+encodeURIComponent("MonitorId:") + monitorId;
+            myurl = myurl + "/"+"MonitorId:" + monitorId;
           if (startTime)
-            myurl = myurl + "/"+encodeURIComponent("StartTime <=:") + endTime;
+            myurl = myurl + "/"+"StartTime<=:" + endTime;
           if (endTime)
-            myurl = myurl + "/"+encodeURIComponent("EndTime >=:") + startTime;
+            myurl = myurl + "/"+"EndTime>=:" + startTime;
 
-          myurl = myurl + "/"+encodeURIComponent("AlarmFrames >=:") + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+          myurl = myurl + "/"+"AlarmFrames>=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
 
           //console.log ('********* MON FILTER '+monListFilter);
           if (monListFilter) 
@@ -3585,7 +3587,7 @@ angular.module('zmApp.controllers')
           // don't know why but adding page messes up Notes
           //https:///zm/api/events/index/Notes%20REGEXP: detected%3A.json
           if (loginData.objectDetectionFilter && !noObjectFilter) {
-            myurl = myurl + '/'+encodeURIComponent('Notes REGEXP:detected:');
+            myurl = myurl + '/'+'Notes REGEXP:detected:';
           }
 
       
