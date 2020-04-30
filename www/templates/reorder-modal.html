@@ -3,7 +3,7 @@
     <h1 class="title"></h1>
     
     <div class="buttons">
-      <button ng-class="(reorder.selected)?'button button-icon icon ion-ios-checkmark':'button button-icon icon ion-ios-checkmark-outline'"  ng-click="selectUnselectAllToggleReorder()"></button>
+      <button ng-class="(reorder.selected)?'button button-icon icon ion-eye-disabled':'button button-icon icon ion-eye'"  ng-click="selectUnselectAllToggleReorder()"></button>
       <button class="button button-small button-dark" ng-click="saveReorder()">{{'kButtonOk'|translate}}</button>
       <button class="button button-small" ng-click="cancelReorder()">{{'kButtonCancel'|translate}}</button>
     </div>
