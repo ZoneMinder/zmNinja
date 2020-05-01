@@ -166,7 +166,7 @@ It is very hard for me to know why it fails on certain devices, but I can try. H
 You have to send me system logs of the device. To get system logs:
 
 - You will have to install ``adb`` (Android Debug Bridge). `This XDA post <https://www.xda-developers.com/quickly-install-adb/>`__ describes the process of downloading and installing the tools.
-- Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in ``adb logcat >result.txt`` and try to start the app. A lot of logs will be generated. Please `email them to me <mailto:pliablepixels@gmail.com>`__
+- Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in ``adb logcat >result.txt`` and try to start the app. A lot of logs will be generated. Please `email them to me <mailto:pliablepixels@gmail.com>`__. Note that to just filter out zmNinja logs, you can use ``adb logcat | grep "filelogger.min.js"``.
 
 - For iOS, use the method described in Case 1 above.
 
