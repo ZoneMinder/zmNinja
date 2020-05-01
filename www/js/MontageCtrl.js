@@ -583,16 +583,16 @@ angular.module('zmApp.controllers')
       //  https:///zm/api/events/index/MonitorId=:2.json?sort=StartTime&direction=desc&limit=1
 
         var apiurl = ld.apiurl +'/events/index'; // we need some interval or it errors
-        apiurl += "/"+"MonitorId=:" + monitor.Monitor.Id;
+        apiurl += "/"+"MonitorId =:" + monitor.Monitor.Id;
         if (monitor.Monitor.Id in ld.lastEventCheckTimes) {
 
             // now is server TZ time
             var now = ld.lastEventCheckTimes[monitor.Monitor.Id];
-            apiurl += "/StartTime>:" + now;
+            apiurl += "/StartTime >:" + now;
 
         }
        
-        apiurl += "/"+"AlarmFrames>=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+        apiurl += "/"+"AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
         if (ld.objectDetectionFilter) {
           apiurl +='/'+'Notes REGEXP:detected:';
         }
@@ -919,6 +919,7 @@ angular.module('zmApp.controllers')
               if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
             }
             // in context of timeout
+           
             $scope.reorder = {
               selected:false
             };
@@ -932,12 +933,18 @@ angular.module('zmApp.controllers')
                 $scope.modal = modal;
                 $scope.reOrderActive = true;
                 $scope.modal.show();
+                $scope.reorder = {
+                  selected:false
+                };
               });
 
           });
 
 
       } else {
+        $scope.reorder = {
+          selected:false
+        };
         $ionicModal.fromTemplateUrl('templates/reorder-modal.html', {
             scope: $scope,
             animation: 'slide-in-up',

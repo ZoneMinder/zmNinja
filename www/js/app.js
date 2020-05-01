@@ -1210,6 +1210,11 @@ angular.module('zmApp', [
       };
 
 
+      $rootScope.getLogin = function () {
+        return NVR.getLogin();
+      };
+
+
       $rootScope.proceedWithLogin = function(obj) {
         return NVR.proceedWithLogin(obj);
       };
@@ -2096,12 +2101,21 @@ angular.module('zmApp', [
           };
 
           if (arguments[0].timeout) options.timeout = arguments[0].timeout;
+
+
           // console.log ("**** -->"+method+"<-- using native HTTP with:"+encodeURI(url)+" payload:"+JSON.stringify(options));
          
          // nvr.debug ("cordova: got url "+url);
           //nvr.debug ("cordova: url after encode "+encodeURI(url));
           //cordova.plugin.http.sendRequest(encodeURI(url), options,
-          cordova.plugin.http.sendRequest(encodeURI(url), options,
+
+          if (!nvr.getLogin().httpCordovaNoEncode) {
+            url = encodeURI(url);
+            //nvr.debug("encoded URL="+url); 
+          }
+           
+
+          cordova.plugin.http.sendRequest(url, options,
             function (succ) {
               // automatic JSON parse if no responseType: text
               // fall back to text if JSON parse fails too
@@ -2142,7 +2156,7 @@ angular.module('zmApp', [
             },
             function (err) {
             
-              nvr.debug("***  Inside native HTTP error for url:"+JSON.stringify(url));
+              nvr.debug("***  Inside native HTTP error for url:"+JSON.stringify(err));
               if (err.status == 401 && !options.skipIntercept && nvr.apiValid) {
                 if (err.error && err.error.indexOf("API is disabled for user") != -1) {
                   nvr.apiValid = false;
