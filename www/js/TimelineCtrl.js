@@ -783,9 +783,9 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     // FIXME: totally ignoring event pages - hoping it wont be more than 100 or 150 whatever
     // the events per page limit is. Why? laziness.
     // 
-    var completedEvents = ld.apiurl + '/events/index/'+'EndTime>=:' + from;
+    var completedEvents = ld.apiurl + '/events/index/'+'EndTime >=:' + from;
     // we can add alarmCount as this is really for completed events
-    completedEvents = completedEvents + "/"+"AlarmFrames>=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+    completedEvents = completedEvents + "/"+"AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
 
     if (ld.objectDetectionFilter) {
       completedEvents = completedEvents + '/'+ 'Notes REGEXP:"detected:"';
@@ -800,7 +800,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     var st = moment(lastTimeForEvent).tz(NVR.getTimeZoneNow());
     st = st.subtract(10, 'minutes').locale('en').format("YYYY-MM-DD HH:mm:ss");
-    var ongoingEvents = ld.apiurl + '/'+'events/index/StartTime>=:' + st + '/EndTime=:.json'+'?'+$rootScope.authSession;
+    var ongoingEvents = ld.apiurl + '/'+'events/index/StartTime >=:' + st + '/EndTime =:.json'+'?'+$rootScope.authSession;
     //NVR.debug("Getting incremental events using: " + completedEvents);
 
     NVR.debug("Completed events API:" + completedEvents);

@@ -277,6 +277,12 @@
         </ion-toggle>
       </label>
 
+      <label>
+        <ion-toggle ng-if="$root.platformOS!='desktop'" ng-model="loginData.httpCordovaNoEncode" toggle-class="toggle-calm">
+          <span class="item-text-wrap">{{'kHTTPCordovaNoEncode' | translate}}</span>
+        </ion-toggle>
+      </label>
+
       <div class="item item-text-wrap item-input-inset">
         {{'kCycleMonitorsInterval'|translate}}({{'kSec'|translate}}.)&nbsp;
         <label class="item-input-wrapper">
