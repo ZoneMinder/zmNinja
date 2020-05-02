@@ -161,6 +161,7 @@
     "kHideTip"                   :"ukryj podpowiedź",
     "kHighBWDisplay"             :"wysoka przepustowość",
     "kHours"                     :"godzin",
+    "kHTTPCordovaNoEncode"       :"Nie szyfruj URLs",
     "kId"                        :"Id",
     "kImages"                    :"Obrazy",
     "kImportant"                 :"Ważne",
