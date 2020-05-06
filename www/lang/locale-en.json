@@ -273,6 +273,7 @@
     "kNoMoreEvents"              :"no more events",
     "kNormalPlay"                :"normal play",
     "kNote"                      :"Note",
+    "kNone"                      :"None",
     "kNow"                       :"now",
     "kObfuscation"               : "Data obfuscation",
     "kObfuscationAES"            :"AES (encrypt)",
