@@ -257,7 +257,7 @@ angular.module('zmApp.controllers')
             NVR.debug ("error parsing profile");
         }
         
-        NVR.log("found a packery layout");
+       // NVR.log("found a packery layout:"+positionsStr);
 
         layouttype = false;
       }
@@ -800,6 +800,10 @@ angular.module('zmApp.controllers')
     $scope.saveReorder = function () {
       NVR.debug("Saving monitor hide/unhide");
 
+      $scope.currentZMGroupName='';
+      var ld = NVR.getLogin();
+      ld.currentZMGroupName = '';
+      NVR.setLogin(ld);
       $scope.modal.remove();
       $scope.MontageMonitors = $scope.copyMontage;
       // call finish reorder after modal is gone
@@ -957,6 +961,89 @@ angular.module('zmApp.controllers')
           });
 
       }
+
+    };
+
+    $scope.selectZMGroup = function() {
+
+      $scope.newGroup = {
+        val: ""
+      };
+
+
+      
+
+      $scope.tempZMGroups = angular.copy($scope.zmGroups);
+      $scope.tempZMGroups.push($translate.instant('kNone'));
+
+      $rootScope.zmPopup = $ionicPopup.show({
+        scope: $scope,
+        template: '<ion-radio-fix ng-if="item" ng-repeat="item in tempZMGroups" ng-value="item" ng-model="newGroup.val" > {{item}} </ion-radio-fix>',
+  
+        title: $translate.instant('kSelect'),
+        subTitle: $translate.instant('kActive') + ': '+ NVR.getLogin().currentZMGroupName,
+  
+        buttons: [{
+            text: $translate.instant('kButtonCancel'),
+            onTap: function (e) {
+              
+            }
+  
+          },
+          {
+            text: $translate.instant('kButtonOk'),
+            onTap: function (e) {
+              NVR.log("Group selected:" + $scope.newGroup.val);
+              var ld = NVR.getLogin();
+              if ($scope.newGroup.val == $translate.instant('kNone')) $scope.newGroup.val='';
+
+              if ($scope.newGroup.val != ld.currentZMGroupName) {
+
+                ld.currentZMGroupName = $scope.newGroup.val;
+                NVR.setLogin(ld);
+                $scope.currentZMGroupName = ld.currentZMGroupName;
+
+                if (simulStreaming) currentStreamState = streamState.STOPPED;
+             
+                  for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+                    if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && simulStreaming) NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
+                 
+                    console.log ('Working on '+$scope.MontageMonitors[i].Monitor.Name+" with ZMG "+ld.currentZMGroupName );
+                      var isInGroup = !ld.currentZMGroupName ? true: false;
+                      if (ld.currentZMGroupName) {
+                        for (var k=0; k < $scope.MontageMonitors[i].Monitor.Group.length; k++) {
+                          if ($scope.MontageMonitors[i].Monitor.Group[k].name==ld.currentZMGroupName) {
+                            isInGroup = true;
+                            break;
+
+                          }   
+                        }
+                      }
+                      
+                      $scope.MontageMonitors[i].Monitor.listDisplay = isInGroup? 'show':'noshow';
+                     // console.log ('----> Setting '+ $scope.MontageMonitors[i].Monitor.Name+' to '+ $scope.MontageMonitors[i].Monitor.listDisplay);
+                
+
+                }
+
+                $timeout ( function () {
+                  beforeReorderPositions = pckry.getShiftPositions('data-item-id');
+                  finishReorder();
+                  $timeout(function () {
+                    pckry.layout();
+                  },600);
+                },300);
+
+              } else {
+                NVR.debug ("No action taken as selection is same as current");
+              }
+        
+          }
+        }
+        ]
+      });
+  
+
 
     };
 
@@ -2242,6 +2329,10 @@ angular.module('zmApp.controllers')
 
         
       $scope.eventModalOpen = false;
+
+      $scope.zmGroups  = NVR.listOfZMGroups();
+      $scope.currentZMGroupName = NVR.getLogin().currentZMGroupName;
+
       $scope.$on ( "process-push", function () {
         NVR.debug (">> MontageCtrl: push handler");
         var s = NVR.evaluateTappedNotification();

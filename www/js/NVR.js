@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.4.005";
+      var zmAppVersion = "1.4.006";
      
       var isBackground = false;
       var justResumed = false;
@@ -33,6 +33,7 @@ angular.module('zmApp.controllers')
 
 
       var monitors = [];
+      var zmgroups = [];
       var multiservers = [];
 
       var migrationComplete = false;
@@ -223,6 +224,9 @@ angular.module('zmApp.controllers')
         'showAnimation': true,
         'montageHideFooter': false,
         'httpCordovaNoEncode': false,
+        'currentZMGroupName': '',
+        'unsupported': {}
+        
 
       };
 
@@ -301,6 +305,22 @@ angular.module('zmApp.controllers')
         return true;
       }
 
+
+      function clear_unsupported() {
+        loginData.unsupported = {};
+        setLogin(loginData);
+      }
+
+      function set_unsupported(p) {
+        loginData.unsupported[p] = true;
+        debug ('Setting '+p+' to unsupported');
+        setLogin(loginData);
+      }
+
+      function get_unsupported(p) {
+        return  p? loginData.unsupported[p]:loginData.unsupported;
+      }
+
       function getBandwidth() {
         // if mode is not on always return high
         if (loginData.enableLowBandwidth == false) {
@@ -370,13 +390,19 @@ angular.module('zmApp.controllers')
       }
 
       function delete_all_caches() {
+        debug ('Clearing all unsupported flags');
+        clear_unsupported();
+
         debug ('CACHE: Flushing all network API caches...');
         return localforage.removeItem('cached_monitors')
         .then ( function () {return localforage.removeItem('cached_api_version');})
         .then ( function () {return localforage.removeItem('cached_multi_servers');})
         .then ( function () {return localforage.removeItem('cached_multi_port');})
         .then ( function () {return localforage.removeItem('cached_timezone');})
+        .then ( function () {return localforage.removeItem('cached_zmgroups');})
         .catch ( function (err) {debug ('Error removing all caches: '+JSON.stringify(err));});
+
+        
         
       }
 
@@ -451,7 +477,7 @@ angular.module('zmApp.controllers')
                 return d.promise;
               })
               .catch ( function (err) {
-                log ('CACHE: error with http get '+err);
+                log ('CACHE: error with http get '+JSON.stringify(err));
                 d.reject(err);
                 return d.promise;
               });
@@ -459,11 +485,65 @@ angular.module('zmApp.controllers')
             
         })
         .catch ( function (err) {
-          debug ('cache_or_http error:'+err);
-          return $http.get(url);
+          //debug ('cache_or_http error:'+JSON.stringify(err));
+          d.reject(err);
+          return d.promise;
+          //return $http.get(url);
         }) ;
-        debug ('returning promise');
+        //debug ('returning promise');
         return d.promise;
+      }
+
+      function getZMGroups() {
+        //{"groups":[{"Group":{"Id":"1","Name":"test","ParentId":null}},{"Group":{"Id":"2","Name":"test2","ParentId":null}}]}
+        var d = $q.defer();
+
+        if (get_unsupported('groups_associations')) {
+          debug ('Groups Association API is marked as unsupported, not invoking');
+          d.resolve(true);
+          return d.promise;
+        }
+       
+        var apiurl = loginData.apiurl+'/groups/associations.json?'+$rootScope.authSession;
+       
+        for (var m=0; m < monitors.length; m++ ) {
+          if (!monitors[m].Monitor.Group) monitors[m].Monitor.Group=[];
+        }
+
+        cache_or_http(apiurl, 'cached_zmgroups')
+        .then (function (data) {
+          data = data.data;
+//          console.log (JSON.stringify(data));
+         
+          debug ('Groups are:'+JSON.stringify(data));
+          if (data && data.groups) {
+            for (var i=0; i< data.groups.length; i++) {
+              zmgroups.push(data.groups[i].Group.Name);
+              //console.log( "Checking Group "+data.groups[i].Group.Name);
+             for (var j=0; j < data.groups[i].Monitor.length; j++) {
+               for (var k = 0; k < monitors.length; k++) {
+                // console.log(k);
+                 if (monitors[k].Monitor.Id == data.groups[i].Monitor[j].Id) {
+                  monitors[k].Monitor.Group.push({'id':data.groups[i].Group.Id, 'name':data.groups[i].Group.Name});
+                 // console.log ('Monitor: '+ monitors[k].Monitor.Name+" belongs to Group:"+data.groups[i].Group.Name);
+                 }
+               } // monitors
+             } // groups monitors
+            } // groups
+            d.resolve(true);
+            return (d.promise);
+          } else {
+            debug ('No groups found');
+            d.resolve(true);
+            return (d.promise);
+          }
+        }, function (err) {
+          debug('Error retrieving groups:'+JSON.stringify(err));
+          set_unsupported('groups_associations');
+          d.resolve(true);
+          return (d.promise);
+        });
+        return (d.promise);
       }
 
       function getZmsMultiPortSupport(forceReload) {
@@ -1637,13 +1717,24 @@ angular.module('zmApp.controllers')
         if (typeof loginData.montageHideFooter == 'undefined')  {
           loginData.montageHideFooter = false;
         }
+        
 
         
 
         if (typeof loginData.httpCordovaNoEncode == 'undefined')  {
           loginData.httpCordovaNoEncode = false;
         }
+
+        if (typeof loginData.currentZMGroupName == 'undefined')  {
+          loginData.currentZMGroupName = '';
+        }
+
+        if (typeof loginData.unsupported == 'undefined')  {
+          loginData.unsupported = {};
+        }
         
+        
+
 
         loginData.canSwipeMonitors = true;
         loginData.forceImageModePath = false;
@@ -1753,6 +1844,18 @@ angular.module('zmApp.controllers')
 
 
       return {
+
+        clear_unsupported: function () {
+          return clear_unsupported();
+        },
+
+        set_unsupported: function (data) {
+          return set_unsupported(data);
+        },
+
+        get_unsupported: function (data) {
+          return get_unsupported(data);
+        },
 
         encrypt: function(data) {
           return encrypt(data);
@@ -2626,6 +2729,9 @@ angular.module('zmApp.controllers')
 
         },
 
+        getZMGroups: function () {
+          return getZMGroups();
+        },
 
         //-----------------------------------------------------------------------------
         // This function returns the numdigits for padding capture images
@@ -2735,6 +2841,10 @@ angular.module('zmApp.controllers')
           return monitors;
         },
 
+        listOfZMGroups: function () {
+          return zmgroups;
+        },
+
         pauseLiveStream: function (ck, url, name) {
           if (!url) url = loginData.url;
 
@@ -2811,6 +2921,8 @@ angular.module('zmApp.controllers')
          return regenConnKeys (mon);
         },
 
+      
+
         getMonitors: function (forceReload) {
           //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
 
@@ -2832,7 +2944,7 @@ angular.module('zmApp.controllers')
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors";
             myurl += "/index/"+"Type !=:WebSite.json" + "?"+$rootScope.authSession;
-
+            
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
 
@@ -3069,7 +3181,11 @@ angular.module('zmApp.controllers')
                             }
                             // now get packery hide if applicable
                             reloadMonitorDisplayStatus();
-                            d.resolve(monitors);
+                            getZMGroups().then ( function (succ) {
+                              d.resolve(monitors);
+                            return d.promise;
+                            });
+                            return d.promise;
                           },
                           function (err) {
                             log("multi server list loading error");
@@ -3109,7 +3225,11 @@ angular.module('zmApp.controllers')
                               //debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
 
                             }
-                            d.resolve(monitors);
+                            getZMGroups().then ( function (succ) {
+                              d.resolve(monitors);
+                            return d.promise;
+                            });
+                            return d.promise;
 
                           });
 
@@ -3128,9 +3248,10 @@ angular.module('zmApp.controllers')
                       d.resolve(monitors);
                       $ionicLoading.hide();
                       monitorsLoaded = 0;
+                      return d.promise;
                     });
               });
-
+            
             return d.promise;
 
           } else // monitors are loaded
