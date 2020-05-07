@@ -114,7 +114,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
 
     NVR.debug("**Switching to new server...");
-
+    
     NVR.clearZmsMultiPortSupport();
     var zmServers = NVR.getServerGroups();
     var loginData = zmServers[s];
@@ -198,6 +198,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
         zmAutoLogin.start();
         // possible image digits changed between servers
         NVR.getKeyConfigParams(0);
+        NVR.getZMGroups();
         $rootScope.runMode = NVR.getBandwidth();
         //console.log ("HERE");
         var apiurl = loginData.apiurl + '/host/getVersion.json?'+$rootScope.authSession;
