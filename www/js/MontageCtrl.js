@@ -828,7 +828,7 @@ angular.module('zmApp.controllers')
         } // before reorder array
       } // montage monitors
 
-      console.log ("AFTER REORDER="+JSON.stringify(beforeReorderPositions));
+      //console.log ("AFTER REORDER="+JSON.stringify(beforeReorderPositions));
 
       for (var n = 0; i < $scope.MontageMonitors.length; i++) {
         $scope.MontageMonitors[n].Monitor.connKey = NVR.regenConnKeys($scope.MontageMonitors[i]);
@@ -912,7 +912,7 @@ angular.module('zmApp.controllers')
 
       $scope.copyMontage = angular.copy($scope.MontageMonitors);
       beforeReorderPositions = pckry.getShiftPositions('data-item-id');
-      console.log ("BEFORE REORDER="+JSON.stringify(beforeReorderPositions));
+      //console.log ("BEFORE REORDER="+JSON.stringify(beforeReorderPositions));
 
       if (simulStreaming) {
         NVR.debug("Killing all streams in montage to save memory/nw...");
@@ -1008,7 +1008,7 @@ angular.module('zmApp.controllers')
                   for (var i = 0; i < $scope.MontageMonitors.length; i++) {
                     if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && simulStreaming) NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
                  
-                    console.log ('Working on '+$scope.MontageMonitors[i].Monitor.Name+" with ZMG "+ld.currentZMGroupName );
+                   // console.log ('Working on '+$scope.MontageMonitors[i].Monitor.Name+" with ZMG "+ld.currentZMGroupName );
                       var isInGroup = !ld.currentZMGroupName ? true: false;
                       if (ld.currentZMGroupName) {
                         for (var k=0; k < $scope.MontageMonitors[i].Monitor.Group.length; k++) {

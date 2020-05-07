@@ -497,6 +497,7 @@ angular.module('zmApp.controllers')
       function getZMGroups() {
         //{"groups":[{"Group":{"Id":"1","Name":"test","ParentId":null}},{"Group":{"Id":"2","Name":"test2","ParentId":null}}]}
         var d = $q.defer();
+        zmgroups = [];
 
         if (get_unsupported('groups_associations')) {
           debug ('Groups Association API is marked as unsupported, not invoking');
@@ -515,7 +516,7 @@ angular.module('zmApp.controllers')
           data = data.data;
 //          console.log (JSON.stringify(data));
          
-          debug ('Groups are:'+JSON.stringify(data));
+          //debug ('Groups are:'+JSON.stringify(data));
           if (data && data.groups) {
             for (var i=0; i< data.groups.length; i++) {
               zmgroups.push(data.groups[i].Group.Name);
@@ -525,6 +526,25 @@ angular.module('zmApp.controllers')
                 // console.log(k);
                  if (monitors[k].Monitor.Id == data.groups[i].Monitor[j].Id) {
                   monitors[k].Monitor.Group.push({'id':data.groups[i].Group.Id, 'name':data.groups[i].Group.Name});
+                 
+                  var parent = data.groups[i].Group.ParentId;
+                  while (parent) {
+                    var parentFound = false;
+                    var x;
+                    for (x = 0; x < data.groups.length; x++) {
+                      if (data.groups[x].Group.Id == parent) {
+                        parentFound = true;
+                        break;
+                      }
+                    }
+                    if (parentFound) {
+                      monitors[k].Monitor.Group.push({'id':data.groups[x].Group.Id, 'name':data.groups[x].Group.Name});
+                    //  console.log (data.groups[x].Group.Id+ " is parent of "+data.groups[i].Group.Id);
+                      parent = data.groups[x].Group.ParentId;
+                    }
+                  }
+
+                //  console.log ('DONE HIERARCHY');
                  // console.log ('Monitor: '+ monitors[k].Monitor.Name+" belongs to Group:"+data.groups[i].Group.Name);
                  }
                } // monitors
