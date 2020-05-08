@@ -149,7 +149,7 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
   $scope.useDefaultCustom = function() {
     if ($scope.loginData.zmNinjaCustomId=='') {
-      $scope.loginData.zmNinjaCustomId = 'zmNinja_'+NVR.getAppVersion();
+      $scope.loginData.zmNinjaCustomId = 'zmNinja_%APPVER%';
     }
    
 
