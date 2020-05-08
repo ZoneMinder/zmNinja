@@ -224,7 +224,7 @@ angular.module('zmApp.controllers')
         'showAnimation': true,
         'montageHideFooter': false,
         'httpCordovaNoEncode': false,
-        'currentZMGroupName': '',
+        'currentZMGroupNames': [],
         'unsupported': {}
         
 
@@ -1745,8 +1745,8 @@ angular.module('zmApp.controllers')
           loginData.httpCordovaNoEncode = false;
         }
 
-        if (typeof loginData.currentZMGroupName == 'undefined')  {
-          loginData.currentZMGroupName = '';
+        if (typeof loginData.currentZMGroupNames == 'undefined')  {
+          loginData.currentZMGroupNames = [];
         }
 
         if (typeof loginData.unsupported == 'undefined')  {

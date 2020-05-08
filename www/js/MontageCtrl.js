@@ -966,22 +966,25 @@ angular.module('zmApp.controllers')
 
     $scope.selectZMGroup = function() {
 
-      $scope.newGroup = {
-        val: ""
-      };
+      $scope.tempZMGroups = [];
+      var ld = NVR.getLogin();
 
+      for (var i=0; i < $scope.zmGroups.length; i++) {
+       var val = ld.currentZMGroupNames.includes($scope.zmGroups[i])? true:false;
+       $scope.tempZMGroups.push ({
+         'name': $scope.zmGroups[i],
+         'selection': val
+       })
+      }
+      $scope.tempZMGroups.unshift({'name':$translate.instant('kNone'), 'selection':false});
 
-      
-
-      $scope.tempZMGroups = angular.copy($scope.zmGroups);
-      $scope.tempZMGroups.push($translate.instant('kNone'));
 
       $rootScope.zmPopup = $ionicPopup.show({
         scope: $scope,
-        template: '<ion-radio-fix ng-if="item" ng-repeat="item in tempZMGroups" ng-value="item" ng-model="newGroup.val" > {{item}} </ion-radio-fix>',
+        template: '<ion-checkbox ng-if="item" ng-repeat="item in tempZMGroups" ng-value="item.name" ng-model="item.selection" > {{item.name}} </ion-checkbox>',
   
         title: $translate.instant('kSelect'),
-        subTitle: $translate.instant('kActive') + ': '+ NVR.getLogin().currentZMGroupName,
+        subTitle: $translate.instant('kActive') + ': '+ NVR.getLogin().currentZMGroupNames,
   
         buttons: [{
             text: $translate.instant('kButtonCancel'),
@@ -993,34 +996,47 @@ angular.module('zmApp.controllers')
           {
             text: $translate.instant('kButtonOk'),
             onTap: function (e) {
-              NVR.log("Group selected:" + $scope.newGroup.val);
+              //NVR.log("Group selected:" + $scope.tempZMGroups);
               var ld = NVR.getLogin();
-              if ($scope.newGroup.val == $translate.instant('kNone')) $scope.newGroup.val='';
+              var old_ZMGroupNames = ld.currentZMGroupNames;
+              ld.currentZMGroupNames = [];
+             if (!$scope.tempZMGroups[0].selection) { // None is not selected
+                for (var i=1; i <$scope.tempZMGroups.length; i++) {
+                  if ($scope.tempZMGroups[i].selection)
+                    ld.currentZMGroupNames.push($scope.tempZMGroups[i].name);
+                }
+              }
 
-              if ($scope.newGroup.val != ld.currentZMGroupName) {
+              NVR.debug ("Group(s) selected:"+JSON.stringify(ld.currentZMGroupNames));
+              var are_equal = ld.currentZMGroupNames.length === old_ZMGroupNames.length && ld.currentZMGroupNames.sort().every(function(value, index) { return value === old_ZMGroupNames.sort()[index]});
 
-                ld.currentZMGroupName = $scope.newGroup.val;
+              if (!are_equal) {
+                
+                $scope.currentZMGroupName = ld.currentZMGroupNames[0] || '';
+                var ln = ld.currentZMGroupNames.length;
+                if (ln > 1) 
+                  $scope.currentZMGroupName = $scope.currentZMGroupName + '+'+(ln-1);
+                ld.currentZMGroupName = $scope.currentZMGroupName;
                 NVR.setLogin(ld);
-                $scope.currentZMGroupName = ld.currentZMGroupName;
-
+              
                 if (simulStreaming) currentStreamState = streamState.STOPPED;
              
                   for (var i = 0; i < $scope.MontageMonitors.length; i++) {
                     if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show' && simulStreaming) NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
-                 
-                   // console.log ('Working on '+$scope.MontageMonitors[i].Monitor.Name+" with ZMG "+ld.currentZMGroupName );
-                      var isInGroup = !ld.currentZMGroupName ? true: false;
-                      if (ld.currentZMGroupName) {
-                        for (var k=0; k < $scope.MontageMonitors[i].Monitor.Group.length; k++) {
-                          if ($scope.MontageMonitors[i].Monitor.Group[k].name==ld.currentZMGroupName) {
-                            isInGroup = true;
-                            break;
-
-                          }   
-                        }
+               
+                    // if length of selected groups is 0 then show all
+                    var isShow = ln? false: true;
+                    
+                    if (ln) {
+                      for (var k=0; k < $scope.MontageMonitors[i].Monitor.Group.length; k++) {
+                        if (ld.currentZMGroupNames.includes($scope.MontageMonitors[i].Monitor.Group[k].name)) {
+                          isShow = true;
+                          break;
+                        }   
                       }
-                      
-                      $scope.MontageMonitors[i].Monitor.listDisplay = isInGroup? 'show':'noshow';
+                    }
+                   
+                    $scope.MontageMonitors[i].Monitor.listDisplay = isShow? 'show':'noshow';
                      // console.log ('----> Setting '+ $scope.MontageMonitors[i].Monitor.Name+' to '+ $scope.MontageMonitors[i].Monitor.listDisplay);
                 
 
