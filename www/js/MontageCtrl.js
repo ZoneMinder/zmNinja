@@ -1029,9 +1029,6 @@ angular.module('zmApp.controllers')
                 $timeout ( function () {
                   beforeReorderPositions = pckry.getShiftPositions('data-item-id');
                   finishReorder();
-                  $timeout(function () {
-                    pckry.layout();
-                  },600);
                 },300);
 
               } else {
