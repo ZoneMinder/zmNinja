@@ -251,9 +251,10 @@ angular.module('zmApp.controllers')
           debug("Cordova HTTP: configuring basic auth");
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
         }
-        debug ("Setting cordova header X-ZmNinja to "+loginData.zmNinjaCustomId);
+        var cid = loginData.zmNinjaCustomId.replace('%APPVER%',zmAppVersion);
+        debug ("Setting cordova header X-ZmNinja to "+cid);
         // setup custom header
-        cordova.plugin.http.setHeader('*', 'X-ZmNinja', loginData.zmNinjaCustomId);
+        cordova.plugin.http.setHeader('*', 'X-ZmNinja', cid);
 
 
         if (!loginData.enableStrictSSL) {
@@ -1723,7 +1724,13 @@ angular.module('zmApp.controllers')
         }
 
         if ((typeof loginData.zmNinjaCustomId == 'undefined') || (loginData.zmNinjaCustomId == '')) {
-          loginData.zmNinjaCustomId = 'zmNinja_'+zmAppVersion;
+          loginData.zmNinjaCustomId = 'zmNinja_%APPVER%';
+        }
+
+        // Silly error to hardcode the version when I released
+        // 1.3.x. Let's fix it
+        if (loginData.zmNinjaCustomId.indexOf('zmNinja_1.3')!=-1) {
+          loginData.zmNinjaCustomId = 'zmNinja_%APPVER%';
         }
 
         if (typeof loginData.obfuscationScheme == 'undefined')  {
@@ -1888,7 +1895,8 @@ angular.module('zmApp.controllers')
         insertSpecialTokens: function () {
 
           var tokens = '';
-          tokens+='&id='+loginData.zmNinjaCustomId;
+          var cid = loginData.zmNinjaCustomId.replace('%APPVER%', zmAppVersion);
+          tokens+='&id='+cid;
           if (loginData.insertBasicAuthToken && $rootScope.basicAuthToken) {
             tokens += "&basicauth=" + $rootScope.basicAuthToken;
           }

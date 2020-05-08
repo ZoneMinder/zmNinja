@@ -976,7 +976,7 @@ angular.module('zmApp.controllers')
          'selection': val
        })
       }
-      $scope.tempZMGroups.unshift({'name':$translate.instant('kNone'), 'selection':false});
+      $scope.tempZMGroups.unshift({'name':$translate.instant('kAll'), 'selection':false});
 
 
       $rootScope.zmPopup = $ionicPopup.show({
@@ -1000,7 +1000,7 @@ angular.module('zmApp.controllers')
               var ld = NVR.getLogin();
               var old_ZMGroupNames = ld.currentZMGroupNames;
               ld.currentZMGroupNames = [];
-             if (!$scope.tempZMGroups[0].selection) { // None is not selected
+             if (!$scope.tempZMGroups[0].selection) { // All is not selected
                 for (var i=1; i <$scope.tempZMGroups.length; i++) {
                   if ($scope.tempZMGroups[i].selection)
                     ld.currentZMGroupNames.push($scope.tempZMGroups[i].name);
