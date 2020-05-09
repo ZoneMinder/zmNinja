@@ -1046,7 +1046,7 @@ angular.module('zmApp.controllers')
                 NVR.setLogin(ld)
                 .then (function() {
                   initPackery();
-                })
+                });
                 
 
 /*
