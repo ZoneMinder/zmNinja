@@ -519,6 +519,7 @@ angular.module('zmApp.controllers')
          
           //debug ('Groups are:'+JSON.stringify(data));
           if (data && data.groups) {
+            zmgroups = [];
             for (var i=0; i< data.groups.length; i++) {
               zmgroups.push(data.groups[i].Group.Name);
               //console.log( "Checking Group "+data.groups[i].Group.Name);
