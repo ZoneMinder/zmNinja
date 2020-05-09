@@ -5,7 +5,7 @@
 /* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded, ConnectSDK, moment */
 
 angular.module('zmApp.controllers')
-  .controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVR', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups', 'EventServer', 'message', function ($scope, $rootScope, NVR, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups, EventServer, message) {
+  .controller('zmApp.MontageCtrl', ['$scope', '$rootScope', 'NVR', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$ionicPopup', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', 'zm', '$ionicPopover', '$controller', 'imageLoadingDataShare', '$window', '$localstorage', '$translate', 'SecuredPopups', 'EventServer', 'message', '$q',function ($scope, $rootScope, NVR, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $ionicPopup, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, zm, $ionicPopover, $controller, imageLoadingDataShare, $window, $localstorage, $translate, SecuredPopups, EventServer, message,$q) {
 
     //---------------------------------------------------------------------
     // Controller main
@@ -226,6 +226,7 @@ angular.module('zmApp.controllers')
            duration: zm.loadingTimeout
        });*/
 
+       var d = $q.defer();
       currentStreamState = streamState.SNAPSHOT_LOWQUALITY;
 
       $scope.areImagesLoading = true;
@@ -361,6 +362,8 @@ angular.module('zmApp.controllers')
             //NVR.regenConnKeys();
             //randEachTime();
             currentStreamState = streamState.ACTIVE;
+            d.resolve(true);
+            return d.promise;
 
           },300);
          
@@ -455,6 +458,7 @@ angular.module('zmApp.controllers')
 
 
       }
+      return d.promise;
 
     }
 
@@ -1045,7 +1049,15 @@ angular.module('zmApp.controllers')
                 ld.packeryPositions = undefined;
                 NVR.setLogin(ld)
                 .then (function() {
-                  initPackery();
+                  initPackery().then (function () {
+                    NVR.debug ("initPackery over, storing positions");
+                    var positions = pckry.getShiftPositions('data-item-id');
+                    var ld = NVR.getLogin();
+
+                    ld.packeryPositions = JSON.stringify(positions);
+                    NVR.setLogin(ld);
+
+                  });
                 });
                 
 
