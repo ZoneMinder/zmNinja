@@ -36,7 +36,9 @@ angular.module('zmApp.controllers')
       var zmgroups = [];
       var multiservers = [];
 
+
       var migrationComplete = false;
+      $rootScope.initComplete = false; // will be true when init is fully done to take care of spurious state changes at times 
 
       var tz = "";
       var isTzSupported = false;
@@ -2371,9 +2373,11 @@ angular.module('zmApp.controllers')
                 if (!isEmpty(loadedData)) {
                   loginData = loadedData;
                   _checkInitSanity(loginData);
-                  log("NVR init retrieved store loginData");
+                  log("NVR init retrieved store loginData, marking init as complete");
+                  $rootScope.initComplete = true;
+
                 } else {
-                  log("defaultServer configuration NOT found. Keeping login at defaults");
+                  log("defaultServer configuration NOT found. Keeping login at defaults. Marking init as complete.");
                 }
 
 

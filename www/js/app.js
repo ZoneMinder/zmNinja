@@ -1122,6 +1122,7 @@ angular.module('zmApp', [
       //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
       NVR.log("******* app .run device ready");
+
       $fileLogger.setStorageFilename(zm.logFile);
       $fileLogger.setTimestampFormat('MMM d, y ' + NVR.getTimeFormatSec());
 
@@ -1517,6 +1518,15 @@ angular.module('zmApp', [
       //----------------------------------------------------------------------------
 
       $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+
+
+        if (!$rootScope.initComplete) {
+          NVR.debug ("---> Init not complete, ignoring state change request to "+toState.name);
+          event.preventDefault();
+          return;
+
+        };
+
         var requireLogin = toState.data.requireLogin;
 
         $rootScope.dpadId = 0;
