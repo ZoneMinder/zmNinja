@@ -207,12 +207,16 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 }
 
 .header-centered {
-  background: black;
-  color: #cccccc;
-  border-color: #ba3e3e;
-  border-style: none;
-  opacity: 80%;
+ 
+  background:rgba(0,0,0,0.7);
+  color: rgba(255,255,255);
+  
+  z-index:9999;
+  position:absolute;
+  top:50%;
+  left:40%;
   transform: translate(-50%, -50%);
+
 } 
 
 
