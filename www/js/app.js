@@ -1525,7 +1525,7 @@ angular.module('zmApp', [
           event.preventDefault();
           return;
 
-        };
+        }
 
         var requireLogin = toState.data.requireLogin;
 

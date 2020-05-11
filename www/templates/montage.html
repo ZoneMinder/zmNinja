@@ -238,14 +238,19 @@
   <div ng-show="minimal">
     <nav mfb-menu position="bl" effect="zoomin" label="{{'kCollapse' | translate}}" active-icon="ion-chevron-down"
       resting-icon="ion-chevron-up" toggling-method="click">
-      <button ng-if="!$root.LoginData.isKiosk" mfb-button icon="ion-arrow-expand" label="{{'kIncreaseSize' | translate}}" ng-click="sliderChanged(1)">
+      <button ng-if="!$root.LoginData.isKiosk" mfb-button icon="ion-plus" label="{{'kIncreaseSize' | translate}}" ng-click="sliderChanged(1)">
       </button>
-      <button ng-if="!$root.LoginData.isKiosk" mfb-button icon="ion-arrow-shrink" label="{{'kDecreaseSize' | translate}}" ng-click="sliderChanged(-1)">
+      <button ng-if="!$root.LoginData.isKiosk" mfb-button icon="ion-minus" label="{{'kDecreaseSize' | translate}}" ng-click="sliderChanged(-1)">
       </button>
       <!-- <button mfb-button icon="ion-refresh" label="{{'kRefresh' | translate}}" ng-click="resetSizes();">
             </button>-->
-      <button mfb-button icon="ion-android-apps" label="{{'kReflow'| translate}}" ng-click="squeezeMonitors()">
+  
+      <button mfb-button icon="ion-arrow-shrink" label="{{'kReflow'| translate}}" ng-click="squeezeMonitors()">
       </button>
+  <!--
+      <button mfb-button icon="ion-grid" label="{{'kArrange'| translate}}" ng-click="resetSizesWithInput()">
+      </button>
+    -->
       <button mfb-button icon="ion-close" label="{{'kExitFullScreen'| translate}}" ng-click="switchMinimal()">
       </button>
 
