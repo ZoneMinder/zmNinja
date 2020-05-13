@@ -214,7 +214,7 @@ Credit: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
   z-index:9999;
   position:absolute;
   top:50%;
-  left:40%;
+  left:50%;
   transform: translate(-50%, -50%);
 
 } 
