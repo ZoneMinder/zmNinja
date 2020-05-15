@@ -190,6 +190,6 @@
         <variable name="ANDROID_SUPPORT_ANNOTATIONS_VERSION" value="27.+" />
     </plugin>
     <plugin name="cordova-plugin-media-pp-fork" spec="^1.0.2-dev" />
-    <engine name="android" spec="8.0.0" />
-    <engine name="ios" spec="5.1.1" />
+    <engine name="android" spec="^8.0.0" />
+    <engine name="ios" spec="^5.1.1" />
 </widget>
