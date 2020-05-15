@@ -63,8 +63,10 @@ Install cordova and ionic
 
 .. code:: bash
 
-    npm install -g cordova ionic 
+    npm install -g cordova@8.1.2 ionic 
     npm install @ionic/v1-toolkit --save-dev
+
+Don't install later versions of cordova. I found compilation issues with cordova 9.
 
 And some more:
 
@@ -75,16 +77,20 @@ And some more:
     npm install async
     npm install jshint
 
+
 (Note you may need to do ``sudo`` depending on how your system is set
 up. It's `better you
 don't <https://johnpapa.net/how-to-use-npm-global-without-sudo-on-osx/>`__,
 but if you must, well, you must)
 
-If you get a newer version, you should adjust your cordova version to
-the mentioned version above in order to be able to successfully compile
-zmNinja. To change the version you can follow these instructions:
-`change cordova
-version <https://iphonedevlog.wordpress.com/2014/06/25/updating-and-reverting-to-different-cordova-phonegap-versions>`__
+You also need to install ``cocoapods`` (some of the plugins depend on them):
+
+.. code:: bash
+
+    sudo gem install cocoapods    
+
+If you don't have ``gem`` that means you need to install ruby. Installing ruby
+installs gobs of nonsense. Too bad. 
 
 Download zmNinja
 ----------------
