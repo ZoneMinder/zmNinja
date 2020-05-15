@@ -1520,7 +1520,7 @@ angular.module('zmApp', [
       $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
 
 
-        if (!$rootScope.initComplete && (toState!= 'app.first-use')) {
+        if (!$rootScope.initComplete && (toState.name!= 'app.first-use')) {
           NVR.debug ("---> Init not complete, ignoring state change request to "+toState.name);
           event.preventDefault();
           return;
