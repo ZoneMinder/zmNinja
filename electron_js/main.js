@@ -34,8 +34,9 @@ if (argv.lang) {
 let win;
 app.commandLine.appendSwitch ('ignore-certificate-errors', 'true');
 
-
+console.log ('ignore certs');
 const gotTheLock = app.requestSingleInstanceLock()
+console.log ('single instance locks');
 
 if (!gotTheLock) {
   app.quit()
@@ -58,7 +59,7 @@ function newWindow() {
 
 function createAlternateWindow() {
 
-
+  console.log ("new browser");
   var newWin = new BrowserWindow({
     x: 10,
     y: 10,
@@ -67,12 +68,14 @@ function createAlternateWindow() {
     icon: path.join(__dirname, '/../resources/icon.png'),
     webPreferences:{nodeIntegration:false}});
 
+    console.log ("startUrl");
     const startUrl = process.env.ELECTRON_START_URL || url.format({
       pathname: path.join(__dirname, '/../www/index.html'),
       protocol: 'file:',
       slashes: true
     });
 
+    console.log ("new win");
     newWin.loadURL(startUrl);
 
 }
@@ -124,13 +127,13 @@ function createWindow() {
 
 
 
-    win.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
+  /*  win.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
     if(d.responseHeaders['x-frame-options'] || d.responseHeaders['X-Frame-Options']){
         delete d.responseHeaders['x-frame-options'];
         delete d.responseHeaders['X-Frame-Options'];
     }
     c({cancel: false, responseHeaders: d.responseHeaders});
-  });
+  });*/
 
   mainWindowState.manage(win);
 
@@ -290,6 +293,7 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
+    console.log ("createWindow");
     createWindow();
   }
 });
@@ -299,7 +303,8 @@ process.on('uncaughtException', function (err) {
   console.log("***WHOOPS TIME****"+err);
 });
 
- 
+
+console.log ("will-quit");
 app.on('will-quit', () => {
   // Unregister all shortcuts.
   globalShortcut.unregisterAll()
