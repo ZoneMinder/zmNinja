@@ -245,6 +245,17 @@
           </a>
         </li>
 
+       
+        <li ng-if="!isVideoLoading">
+          <a href="" ng-click="videoSeek(-10000)">
+            <i class="ion-arrow-return-left"></i>-10
+          </a>
+        </li>
+        <li ng-if="!isVideoLoading">
+          <a href="" ng-click="videoSeek(10000)">
+            <i class="ion-arrow-return-right"></i>+10
+          </a>
+        </li>
       </ul>
     </div>
   </div>
