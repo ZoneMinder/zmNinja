@@ -1898,8 +1898,11 @@ angular.module('zmApp.controllers')
         insertSpecialTokens: function () {
 
           var tokens = '';
-          var cid = loginData.zmNinjaCustomId.replace('%APPVER%', zmAppVersion);
-          tokens+='&id='+cid;
+          if (loginData.zmNinjaCustomId) {
+            var cid = loginData.zmNinjaCustomId.replace('%APPVER%', zmAppVersion);
+            tokens+='&id='+cid;
+          }
+          
           if (loginData.insertBasicAuthToken && $rootScope.basicAuthToken) {
             tokens += "&basicauth=" + $rootScope.basicAuthToken;
           }
