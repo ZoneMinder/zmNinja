@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.4.006";
+      var zmAppVersion = "1.4.007";
      
       var isBackground = false;
       var justResumed = false;
@@ -1898,8 +1898,11 @@ angular.module('zmApp.controllers')
         insertSpecialTokens: function () {
 
           var tokens = '';
-          var cid = loginData.zmNinjaCustomId.replace('%APPVER%', zmAppVersion);
-          tokens+='&id='+cid;
+          if (loginData.zmNinjaCustomId) {
+            var cid = loginData.zmNinjaCustomId.replace('%APPVER%', zmAppVersion);
+            tokens+='&id='+cid;
+          }
+         
           if (loginData.insertBasicAuthToken && $rootScope.basicAuthToken) {
             tokens += "&basicauth=" + $rootScope.basicAuthToken;
           }
