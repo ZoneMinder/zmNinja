@@ -1832,6 +1832,7 @@ angular.module('zmApp', [
                     NVR.debug("isFirstUse returned: " + val);
                     if (val == null || val == true) {
                       NVR.log("First time detected ");
+                      $rootScope.initComplete = true;
                       $state.go("app.first-use");
                       return;
 
