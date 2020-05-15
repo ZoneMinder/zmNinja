@@ -33,7 +33,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   var eventId = 0;
   var isSnapShotEnabled = false;
   var playState = 'play';
-
+  var isSeeking = false;
   $scope.useFilters = true;
 
 
@@ -255,7 +255,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   $scope.onPlaybackUpdate = function (rate) {
    
-
+   
     var ld = NVR.getLogin();
     if (ld.videoPlaybackSpeed != rate) {
       NVR.debug ("Update video rate to:"+rate);
@@ -271,7 +271,33 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     
   };
 
+  $scope.videoSeek = function (val) {
+
+    if (!handle) {
+      NVR.debug ("Can't seek. Video not playing");
+      return;
+    }
+    isSeeking = true;
+    //console.log ("You asked:"+val);
+    //console.log (handle.totalTime);
+    //console.log(handle.timeLeft);
+    var newTime = handle.currentTime + val;
+    if (newTime > handle.totalTime) newTime =handle.totalTime;
+    if (newTime < 0) newTime =0;
+    NVR.debug ("Skipping from " + handle.currentTime + " to "+ newTime);
+    handle.seekTime(newTime/1000,false);
+
+
+
+  };
+
   $scope.onCanPlay = function () {
+
+    if (isSeeking) {
+      NVR.debug ("onCanPlay: triggered due to seek, skipping");
+      isSkipping = false;
+      return;
+    }
 
     $ionicLoading.hide();
     $scope.isVideoLoading = false;
@@ -1270,6 +1296,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   $scope.videoTime = function (s, c) {
 
     // console.log ("VIDEO TIME WITH "+s+ " and "+c);
+    //console.log ("$currentTime="+c);
+    //console.log ("handle currentTime="+handle.currentTime);
     var a, o;
     if (NVR.getLogin().useLocalTimeZone) {
       a = moment.tz(s, NVR.getTimeZoneNow()).tz(moment.tz.guess());
