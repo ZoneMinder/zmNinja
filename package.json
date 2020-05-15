@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.4.007",
+  "version": "1.4.007",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -61,11 +61,7 @@
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-app-version": {},
       "cordova-plugin-statusbar-pp-fork": {},
-      "cordova-plugin-ionic-webview": {
-        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      },
-      "cordova-plugin-media-pp-fork": {},
-      "cordova-plugin-statusbar": {}
+      "cordova-plugin-media-pp-fork": {}
     }
   },
   "dependencies": {
@@ -90,14 +86,12 @@
     "cordova-plugin-inappbrowser": "git+https://github.com/apache/cordova-plugin-inappbrowser.git",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-ionic-keyboard": "2.2.0",
-    "cordova-plugin-ionic-webview": "git+https://github.com/pliablepixels/cordova-plugin-ionic-webview.git",
     "cordova-plugin-media-pp-fork": "^1.0.2-dev",
     "cordova-plugin-multi-window": "0.0.3",
     "cordova-plugin-network-information": "^2.0.2",
     "cordova-plugin-photo-library": "git+https://github.com/pliablepixels/cordova-plugin-photo-library.git",
     "cordova-plugin-pin-dialog": "^0.1.3",
     "cordova-plugin-splashscreen": "git+https://github.com/prageeth/cordova-plugin-splashscreen.git",
-    "cordova-plugin-statusbar": "~2.4.4-dev",
     "cordova-plugin-statusbar-pp-fork": "^2.4.4-dev",
     "cordova-plugin-touch-id": "3.4.0",
     "cordova-plugin-whitelist": "^1.3.4",
@@ -132,7 +126,6 @@
   "devDependencies": {
     "@ionic/v1-toolkit": "^1.0.14",
     "bower": "^1.8.4",
-    "cordova-plugin-statusbar": "~2.4.4-dev",
     "dotenv": "^8.2.0",
     "electron": "^8.3.0",
     "electron-builder": "^22.6.0",
