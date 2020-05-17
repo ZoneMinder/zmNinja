@@ -33,6 +33,7 @@ if (argv.lang) {
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 app.commandLine.appendSwitch ('ignore-certificate-errors', 'true');
+app.commandLine.appendArgument('no-sandbox');
 
 
 const gotTheLock = app.requestSingleInstanceLock()
