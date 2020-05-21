@@ -16,7 +16,7 @@
     "kApplyingChanges"           :"Wende Änderungen an. Bitte warten",
     "kArrangingImages"           :"Ordne Kamerabilder",
     "kAt"                        :"um",
-    "kAuthHashDisabled"          :"AUTH_HASH_LOGINS muss aktiviert werden, damit Bilder angezeigt werden. Starte bitte nach dem Aktivieren ZM neu.",
+    "kAuthHashDisabled"          :"Bitte aktiviere AUTH_HASH_LOGINS und starte danach ZM neu.",
     "kAuthSuccess"               :"Authentifizierung erfolgreich",
     "kAuthenticating"            :"verbinde",
     "kAuthenticatingWebScrape"   :"verbinde über Web Scrape",
