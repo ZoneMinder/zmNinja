@@ -214,7 +214,7 @@ General tips
   - ``OPT_USE_APIS`` is enabled
   - If you are using any version lower than ZM 1.34, ``OPT_USE_GOOG_RECAPTCHA`` is disabled
   - If you are NOT using authentication at all in ZM, that is ``OPT_USE_AUTH`` is disabled, then make sure you also disable authentication in zmNinja, otherwise it will keep waiting for auth keys.
-
+  - I don't quite know why, but on some devices, connection issues are caused because ZM's CSRF code causes issues. See `this <https://forums.zoneminder.com/viewtopic.php?f=33&p=115422#p115422>`__ thread, for example. In this case, try turning off CSRF checks by going to  ``ZM->Options->System`` and disable "Enable CSRF magic"
 
 -  Disable server redirects like 302 and then try if using the mobile
    app
