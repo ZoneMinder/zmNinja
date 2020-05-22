@@ -29,6 +29,9 @@ example: 1.32.3, Ubuntu Xenial
 example: Moto G+, Android 8, or OSX, Desktop
 ```
 
+**Did you build the package from source code yourself?**
+Y or N
+
 
 **Describe the bug**
 A clear and concise description of what the bug is.
