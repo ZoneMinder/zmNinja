@@ -17,7 +17,7 @@ build_release() {
         echo "*********** Building Release Build **************"
         echo "----> Only building native. Not building crosswalk anymore due to compatibility issues <----------"
         # App signining credentials in this file
-        NINJAKEYSTORE=~/Desktop/zmNinja.keystore
+        NINJAKEYSTORE=~/personal/zmninja_keys/zmNinja.keystore
 
         if [ ! -f "$NINJAKEYSTORE" ]; then
                 echo "zmNinja keystore not found"
