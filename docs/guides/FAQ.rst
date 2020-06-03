@@ -328,7 +328,8 @@ out later they skimmed details.
    "hashed"
 
 - If you are NOT using authentication in ZM, please turn OFF authentication in zmNinja too.
-  If you don't, zmNinja will keep waiting for an authentication token
+  If you don't, zmNinja will keep waiting for an authentication token. If this is the cause,
+  you will see a "waiting for authSession to have a value" log in your zmNinja logs.
 
 -  Your ``cgi-bin`` setting in zmNinja is incorrect. Please run the
    wizard. There are times when the wizard can fail. In those cases,
@@ -384,6 +385,8 @@ In the above case my zmNinja cgi-bin setting is
 -  Look at zmNinja, ZoneMinder and web server error logs at the time of
    error - one of them should give more clues. Please send me *all* the
    logs if you ask for help
+-  On certain devices, Zoneminder's CSRF checks cause issues. Turn off CSRF in Zoneminder
+   by going to ``Options->System`` and turn off ``ENABLE_CSRF_MAGIC``
 -  Read the set of notes below
 
 General note
