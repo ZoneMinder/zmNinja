@@ -143,6 +143,7 @@
     "kFootage"                   :"Footage",
     "kForceAlarmConfirm"         :"Are you sure you want to force an alarm for Monitor:",
     "kForcingAlarm"              :"forcing alarm",
+    "kForceMjpeg"                :"force MJPEG event playback",
     "kFrame"                     :"frame",
     "kFrameUpdate"               :"Frame update",
     "kFrames"                    :"frames",

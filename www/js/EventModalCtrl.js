@@ -35,6 +35,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   var playState = 'play';
   var isSeeking = false;
   $scope.useFilters = true;
+  
 
 
   var broadcastHandles = [];
@@ -2136,7 +2137,19 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           }
 
 
-          $scope.defaultVideo = event.Event.DefaultVideo;
+          
+
+          var ld = NVR.getLogin();
+          if (ld.monitorSpecific[event.Event.MonitorId] &&
+              ld.monitorSpecific[event.Event.MonitorId].forceMjpeg) {
+                NVR.debug ('Monitor:'+event.Event.MonitorId+' has forced MJPEG playback');
+                $scope.defaultVideo ='';
+          } else {
+            
+            $scope.defaultVideo = event.Event.DefaultVideo;
+          }
+
+         
 
           $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 

@@ -227,7 +227,8 @@ angular.module('zmApp.controllers')
         'montageHideFooter': false,
         'httpCordovaNoEncode': false,
         'currentZMGroupNames': [],
-        'unsupported': {}
+        'unsupported': {},
+        'monitorSpecific': {}
         
 
       };
@@ -1761,6 +1762,10 @@ angular.module('zmApp.controllers')
 
         if (typeof loginData.unsupported == 'undefined')  {
           loginData.unsupported = {};
+        }
+
+        if (typeof loginData.monitorSpecific == 'undefined')  {
+          loginData.monitorSpecific = {};
         }
         
         

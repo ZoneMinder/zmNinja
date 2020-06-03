@@ -40,7 +40,11 @@
             <i class="icon {{monitor.Monitor.char}}" style="color:grey;"></i>
           </span>
         </div>
+      
+    
+
         <p>{{'kMode' | translate}} :{{monitor.Monitor.Function}}
+          <br /> {{'kForceMjpeg' | translate}}: {{monitor.Monitor.forceMjpeg}}
           <br /> {{'kResolution' | translate}}: {{monitor.Monitor.Width}}*{{monitor.Monitor.Height}}
           <br /> {{'kMaxFPS' | translate}}: {{monitor.Monitor.MaxFPS}}
           <br /> {{'kAlarmMaxFPS' | translate}}:{{monitor.Monitor.AlarmMaxFPS}}
@@ -54,8 +58,11 @@
           <br /> <br/>
      
         </p>
+
+       
+
         <div style="float:right;">
-          <a class="button button-small icon icon-left icon ion-gear-a" href="" ng-click="changeConfig(monitor.Monitor.Name, monitor.Monitor.Id,monitor.Monitor.Enabled,monitor.Monitor.Function);">{{'kConfiguration'
+          <a class="button button-small icon icon-left icon ion-gear-a" href="" ng-click="changeConfig(monitor.Monitor.Name, monitor.Monitor.Id,monitor.Monitor.Enabled,monitor.Monitor.Function, monitor.Monitor.forceMjpeg);">{{'kConfiguration'
             | translate}}</a>
           <a class="button button-small icon icon-left ion-calendar" ng-click="gotoEvents(monitor.Monitor.Id)">{{'kEventsCap'|translate}}</a>
           <a class="button button-small icon icon-left ion-ios-eye" ng-click="openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,  monitor)">{{'kLiveView'
