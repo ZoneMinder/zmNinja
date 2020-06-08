@@ -142,6 +142,7 @@
     "kFlushAllCachesMessageOk"   :"Cache API wyczyszczony. Może zajść potrzeba restartu aplikacji",
     "kFootage"                   :"Materiał",
     "kForceAlarmConfirm"         :"Czy na pewno chcesz wymusić alarm dla Monitora:",
+    "kForceMjpeg"                :"wymuś odtwarzanie zdarzeń w MJPEG",
     "kForcingAlarm"              :"wymuszanie alarmu",
     "kFrame"                     :"klatka",
     "kFrameUpdate"               :"Aktualizacja klatki",
