@@ -142,6 +142,7 @@
     "kFlushAllCachesMessageOk"   :"API Zwischenspeicher gelöscht. Bitte App neustarten.",
     "kFootage"                   :"Aufnahme",
     "kForceAlarmConfirm"         :"Bist Du sicher, dass ein erzwungener Alarm für folgende Kamera ausgelöst werden soll: ",
+    "kForceMjpeg"                :"Erzwinge MJPEG-Wiedergabe",
     "kForcingAlarm"              :"Erzwinge Alarm",
     "kFrame"                     :"Einzelbild",
     "kFrameUpdate"               :"Aktualisierung Einzelbilder",
