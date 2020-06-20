@@ -579,6 +579,16 @@ tab) and your webserver error logs.
 Also, Starting ZM 1.32 and beyond, please enable ``AUTH_HASH_LOGINS`` as
 well as set ``AUTH_RELAY`` to "hashed"
 
+I can't see events in zmNinja
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Make sure your APIs are working. An easy way to check is to try 
+``https://yourserver/zm/api/events.json`` in your browser after logging into ZM
+
+- By default, zmNinja only displays events with at least 1 alarmed frame. To view 
+  all events, tap on the vertical "..." icon on the top right of the event view, and select
+  "View all events". If you don't see "View all events" turn off "Only detected objects" option.
+
+
 Event stream viewing does not work
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
