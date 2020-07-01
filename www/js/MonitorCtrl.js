@@ -157,13 +157,12 @@ angular.module('zmApp.controllers')
         $rootScope.zmPopup = $ionicPopup.show({
           scope: $scope,
           cssClass:'widepopup',
-          template: '<ion-toggle ng-model="monfunc.myenabled"   toggle-class="toggle-calm">'
-                    +$translate.instant('kMotionEnabled')+'</ion-toggle>'
-                    +'<ion-toggle ng-model="forceMjpeg.value"   toggle-class="toggle-calm">'
-                    +$translate.instant('kForceMjpeg')+'</ion-toggle>'+
-                    '<div class="item item-divider" style="background:#666666;color:white;">'
-                    +$translate.instant('kChangeMode')
-                    +'</div><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
+          template: '<ion-toggle ng-model="monfunc.myenabled"   toggle-class="toggle-calm">'+
+                    $translate.instant('kMotionEnabled')+'</ion-toggle>'+
+                    '<ion-toggle ng-model="forceMjpeg.value"   toggle-class="toggle-calm">'+
+                    $translate.instant('kForceMjpeg')+'</ion-toggle>'+
+                    '<div class="item item-divider" style="background:#666666;color:white;">'+
+                    '</div><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
 
           title: $translate.instant('kChangeSettingsFor') + ' ' + monitorName,
 
